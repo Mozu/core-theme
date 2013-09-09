@@ -1,6 +1,6 @@
 ﻿'use strict';
 
-var allScripts = ['node_modules/when/when.js', 'node_modules/uritemplate/bin/uritemplate.js', 'node_modules/microevent/microevent.js', 'src/utils.js', 'src/reference.js', 'src/object.js', 'src/collection.js', 'src/interface.js', 'src/context.js', 'src/init.js'];
+var allScripts = ['lib/when/when.js', 'lib/uritemplate/bin/uritemplate.js', 'lib/microevent/microevent.js', 'src/utils.js', 'src/postprocessors.js', 'src/reference.js', 'src/object.js', 'src/collection.js', 'src/interface.js', 'src/context.js', 'src/init.js'];
 
 module.exports = function (grunt) {
 
@@ -11,22 +11,24 @@ module.exports = function (grunt) {
         exportAs: 'Mozu',
 
         releasetemp: '<%= pkg.name %>.tmp',
-        debugtemp: '<%= pkg.name %>.debug.tmp',
-
-        banner: grunt.file.read('banner.tpl'),
-
         
+        bower: {
+            install: {
+                cleanup: true
+            }
+        },
         clean: {
             dist: {
                 src: ['dist']
             },
             tmp: {
-                src: ['<%= releasetemp %>', '<%= debugtemp %>']
+                src: ['<%= releasetemp %>']
             }
         },
         concat: {
             options: {
-                stripBanners: true
+                banner: grunt.file.read('wrap_header.tpl'),
+                footer: grunt.file.read('wrap_footer.tpl')
             },
             dist: {
                 src: allScripts,
@@ -34,29 +36,7 @@ module.exports = function (grunt) {
             },
             debug: {
                 src: allScripts.concat('init_debug.js'),
-                dest: '<%= debugtemp %>'
-            }
-        },
-        wrap: {
-            release: {
-                wrapper: 'definewrapper.tpl',
-                src: '<%= concat.dist.dest %>',
-                dest: '<%= releasetemp %>',
-                data: {
-                    toExport: '<%= toExport %>',
-                    exportAs: '<%= exportAs %>',
-                    banner: '<%= banner %>'
-                }
-            },
-            debug: {
-                wrapper: '<%= wrap.release.wrapper %>',
-                src: '<%= debugtemp %>',
-                dest: '<%= pkg.main %>.debug.js',
-                data: {
-                    toExport: '<%= toExport %>',
-                    exportAs: '<%= exportAs %>',
-                    banner: '<%= banner %>'
-                }
+                dest: '<%= pkg.main %>.debug.js'
             }
         },
         uglify: {
@@ -64,19 +44,18 @@ module.exports = function (grunt) {
                 options: {
                     banner: '<%= banner %>'
                 },
-                src: '<%= wrap.release.dest %>',
+                src: '<%= concat.dist.dest %>',
                 dest: '<%= pkg.main %>.min.js'
             },
             beautify: {
                 options: {
-                    banner: '<%= banner %>',
                     beautify: true,
                     comments: true,
                     indent_level: 2,
                     compress: false,
                     mangle: false
                 },
-                src: '<%= wrap.release.dest %>',
+                src: '<%= concat.dist.dest %>',
                 dest: '<%= pkg.main %>.js'
             }
         },
@@ -87,7 +66,7 @@ module.exports = function (grunt) {
         },
         jasmine: {
             all: {
-                src: '<%= wrap.debug.dest %>',
+                src: '<%= concat.debug.dest %>',
                 options: {
                     errorReporting: true,
                     specs: 'tests/**/*.js'
@@ -103,24 +82,9 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-bower-task');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
-
-    grunt.registerMultiTask('wrap', 'Wraps the file using a lodash template.', function () {
-        var conf = this.data;
-        grunt.log.write('Looking for ' + conf.wrapper + ' and ' + conf.src + '....');
-        try {
-            var wrapper = grunt.file.read('./' + conf.wrapper, 'UTF-8'),
-                content = grunt.file.read('./' + conf.src, 'UTF-8');
-        } catch (e) {
-            if (!wrapper) grunt.log.error(conf.wrapper + ' not found') && grunt.fatal(e);
-            if (!content) grunt.log.error(conf.src + ' not found') && grunt.fatal(e);
-        }
-        grunt.log.ok();
-        conf.data.body = content;
-        grunt.file.write(conf.dest, grunt.template.process(wrapper, conf));
-        grunt.log.ok('Wrapped file saved to ' + conf.dest);
-    });
 
     grunt.registerMultiTask('browser', 'Opens a browser to view a specrunner', function () {
         var fserv = new (require('node-static')).Server();
@@ -171,7 +135,7 @@ module.exports = function (grunt) {
         });
     });
 
-    var order = ['clean:dist', 'concat', 'wrap', 'uglify', 'clean:tmp', 'tfscheckout', 'jasmine:all'];
+    var order = ['bower', 'clean:dist', 'concat', 'uglify', 'clean:tmp', 'tfscheckout', 'jasmine:all'];
 
     grunt.registerTask('default', order); // TODO: figure out real debug channel
     grunt.registerTask('test', ['jasmine:all']);

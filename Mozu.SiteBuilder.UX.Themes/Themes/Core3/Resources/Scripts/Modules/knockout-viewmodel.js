@@ -275,6 +275,8 @@
                     me.publish.apply(me, ['error',arguments]);
                 });
 
+                return apiModel;
+
             });
         },
         publish: function () {

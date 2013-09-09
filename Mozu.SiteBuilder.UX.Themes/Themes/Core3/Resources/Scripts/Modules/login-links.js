@@ -1,4 +1,4 @@
-﻿define(['jquery', 'modules/animatemodals', 'i18n!nls/messages'], function ($, animateModals, Messages) {
+﻿define(['modules/jquery-plus', 'modules/api', 'modules/animatemodals', 'i18n!nls/messages'], function ($, api, animateModals, Messages) {
     return $(document).ready(function () {
         animateModals({ jqSelector: '[data-mz-action="login"]' });
 
@@ -54,8 +54,13 @@
                     data: data,
                     success: function (response) {
                         if (response.success) {
-                            console.log('Welcome ' + response.data.firstName);
-                            window.location.reload(true);
+                            // login with the api client as well
+                            api.action('user', 'login', {
+                                EmailAddress: email.val(),
+                                Password: password.val()
+                            }).then(function() {
+                                window.location.reload(true);
+                            });
                         } else {
                             showMessage(response.message, true);
                             console.log(response.message);

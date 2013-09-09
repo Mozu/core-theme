@@ -437,6 +437,7 @@
     <Content Include="BuiltinScripts\RequireJS\plugins\i18n.js" />
     <Content Include="BuiltinScripts\RequireJS\plugins\shim.js" />
     <Content Include="BuiltinScripts\RequireJS\plugins\text.js" />
+    <Content Include="BuiltinScripts\SDK\src\postprocessors.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -498,11 +499,12 @@
       <DependentUpon>Web.config</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="BuiltinScripts\SDK\banner.tpl" />
-    <Content Include="BuiltinScripts\SDK\definewrapper.tpl" />
     <Content Include="BuiltinScripts\SDK\package.json" />
     <Content Include="BuiltinScripts\SDK\README.md" />
     <Content Include="BuiltinScripts\RequireJS\Manifest.ajaxmin" />
+    <Content Include="BuiltinScripts\SDK\wrap_footer.tpl" />
+    <Content Include="BuiltinScripts\SDK\wrap_header.tpl" />
+    <Content Include="BuiltinScripts\SDK\bower.json" />
     <None Include="Web.QA.config">
       <DependentUpon>Web.config</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

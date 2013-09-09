@@ -5,6 +5,10 @@ var ApiObject = (function () {
         this.data = data;
         this.api = iapi;
         this.type = type;
+        if (ApiPostProcessors[this.type]) {
+            this.postProcessor = ApiPostProcessors[this.type];
+            this.postProcessor(this);
+        }
     }
 
     ApiObjectConstructor.prototype = {
@@ -22,6 +26,7 @@ var ApiObject = (function () {
                     return returnObj;
                 } else {
                     utils.extend(me.data, rawJSON);
+                    if (me.postProcessor) me.postProcessor(me);
                     delete me.unsynced;
                     me.fire('sync', rawJSON, me.data);
                     me.api.fire('sync', me, rawJSON, me.data);

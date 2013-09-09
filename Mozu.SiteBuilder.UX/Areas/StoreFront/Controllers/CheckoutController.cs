@@ -60,8 +60,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //var id = OrderId;
             var id = orderId;
             if (string.IsNullOrWhiteSpace(id)) return RedirectToAction("Index", "Cart");
+            Order model;
+            try
+            {
 
-            var model = _orderWebApiClient.GetOrder(id).Result.ReadAsAsync().Result;
+                model = _orderWebApiClient.GetOrder(id).Result.ReadAsAsync().Result;
+            }
+            catch (Mozu.Core.Api.Client.Exceptions.ApiWebClientException e)
+            {
+                // TODO: more granular exception handling here
+                return RedirectToAction("Index", "Cart");
+            }
             if (model == null) return RedirectToAction("Index", "Cart");
             if (model.Status == "Submitted") return RedirectToAction("Confirmation", new { orderId = model.Id });
            
