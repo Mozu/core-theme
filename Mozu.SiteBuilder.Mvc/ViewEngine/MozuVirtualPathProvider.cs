@@ -61,7 +61,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             yield return view;
             if (theme.EnableCoreVaraints .GetValueOrDefault( false ))
             {
-                var pos = view.LastIndexOf('/');
+                var pos = view.LastIndexOf('\\');
                 if (pos > -1 && pos + 1 < view.Length)
                 {
                     yield return view.Substring(0, pos + 1) + "_" + view.Substring(pos + 1);
@@ -110,35 +110,38 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             return null;
         }
 
-        public IEnumerable<VirtualFile> GetInheritedFileList(string virtualPath)
-        {
+        //public IEnumerable<VirtualFile> GetInheritedFileList(string virtualPath)
+        //{
 
-            foreach (var theme in this.ThemeStack)
-            {
-                foreach (var vn in GetViewVariants(virtualPath, theme))
-                {
-                    var fullPath = this.MapLocalPath(vn, theme);
-                    if (System.IO.File.Exists(fullPath))
-                    {
-                        yield return new MozuVirtualFileSystemFile(virtualPath, fullPath);
-                    }
+        //    foreach (var theme in this.ThemeStack)
+        //    {
+        //        foreach (var vn in GetViewVariants(virtualPath, theme))
+        //        {
+        //            var fullPath = this.MapLocalPath(vn, theme);
+        //            if (System.IO.File.Exists(fullPath))
+        //            {
+        //                yield return new MozuVirtualFileSystemFile(virtualPath, fullPath);
+        //            }
 
-                }
-            }
-        }
+        //        }
+        //    }
+        //}
 
         public override VirtualFile GetFile(string virtualPath)
         {
-
+            virtualPath = virtualPath.ToLowerInvariant().Replace("/", "\\").Trim(new char[] {'\\'});
             foreach (var theme in this.ThemeStack)
             {
                 foreach (var vn in GetViewVariants(virtualPath, theme))
                 {
-                    var fullPath = this.MapLocalPath(vn, theme);
-                    if (System.IO.File.Exists(fullPath))
+                    var exists = theme.FileListing.Any(x => x.VirtualPath == vn);
+
+                    if (exists)
                     {
+                        var fullPath = this.MapLocalPath(vn, theme);
                         return new MozuVirtualFileSystemFile(virtualPath, fullPath);
                     }
+                   
 
                 }
             }
@@ -150,12 +153,13 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         public override bool FileExists(string virtualPath)
         {
+            virtualPath = virtualPath.ToLowerInvariant().Replace("/", "\\").Trim(new char[] { '\\' });
             foreach (var theme in this.ThemeStack)
             {
                 foreach (var vn in GetViewVariants(virtualPath, theme))
                 {
-                    var fullPath = this.MapLocalPath(vn, theme);
-                    if (File.Exists(fullPath))
+                    var exists = theme.FileListing.Any(x => x.VirtualPath == vn);
+                    if (exists)
                     {
                         return true;
                     }
@@ -203,6 +207,11 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
                 foreach (var theme in _mozuVirtualPathProvider.ThemeStack)
                 {
+                    var exists = theme.FileListing.Any(x => x.VirtualPath == this.VirtualPath);
+
+
+
+
                     var fullPath = _mozuVirtualPathProvider.MapLocalPath(this.VirtualPath, theme);
                     var di = new DirectoryInfo(fullPath);
                     if (!di.Exists)

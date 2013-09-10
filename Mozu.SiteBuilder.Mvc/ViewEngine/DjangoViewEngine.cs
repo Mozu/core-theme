@@ -42,9 +42,9 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             if (!Path.IsPathRooted(path))
             {
                 var vpath = path;
-                if (path.IndexOf("/", StringComparison.OrdinalIgnoreCase) == -1)
+                if (path.IndexOf("\\", StringComparison.OrdinalIgnoreCase) == -1)
                 {
-                    vpath = "layouts/" + path;
+                    vpath = "layouts\\" + path;
                 }
                 if (Path.GetExtension(vpath) == "")
                 {
@@ -65,9 +65,9 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             if (!Path.IsPathRooted(path))
             {
-                if (path.IndexOf("/", StringComparison.OrdinalIgnoreCase) == -1)
+                if (path.IndexOf("\\", StringComparison.OrdinalIgnoreCase) == -1)
                 {
-                    path = "layouts/" + path;
+                    path = "layouts\\" + path;
                 }
                 if (Path.GetExtension(path) == "")
                 {
@@ -141,15 +141,16 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         }
 
 
-        static string[] g_formats = new string[] { "modules/{0}.vol", "{0}.vol" };
+        static string[] g_formats = new string[] { "modules\\{0}.vol", "{0}.vol" };
 
-        static string[] g_layout_formats = new string[] { "layouts/{0}.vol" };
-        static string[] g_template_formats = new string[] { "templates/{0}.vol" };
-        static string[] g_widget_formats = new string[] { "widgets/{0}.vol" };
+        static string[] g_layout_formats = new string[] { "layouts\\{0}.vol" };
+        static string[] g_template_formats = new string[] { "templates\\{0}.vol" };
+        static string[] g_widget_formats = new string[] { "widgets\\{0}.vol" };
 
 
         public override ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
         {
+            partialViewName = partialViewName == null ? null : partialViewName.ToLowerInvariant().Replace("/", "\\");
             string area = controllerContext == null ? null : AreaHelpers.GetAreaName(controllerContext.RouteData);
             string controller = controllerContext == null ? null : controllerContext.RouteData.GetRequiredString("controller");
 
@@ -168,7 +169,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             
             if ( theme.EnableCoreVaraints.GetValueOrDefault(false ) )
             {
-                var pos = view.LastIndexOf('/');
+                var pos = view.LastIndexOf('\\');
                 if (pos > -1 && pos + 1 < view.Length)
                 {
                     yield return view.Substring(0, pos + 1) + "_" + view.Substring(pos + 1);
@@ -242,7 +243,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             var res = (MozuVirtualFileSystemFile)this.GetPathProviderFromContext(ctx).GetFile(relPath);
           //  var res =(MozuVirtualFileSystemFile ) this.VirtualPathProvider.GetFile(relPath);
-            if (res.Exists)
+            if (res != null && res.Exists)
             {
                 return res.MappedPath;
             }

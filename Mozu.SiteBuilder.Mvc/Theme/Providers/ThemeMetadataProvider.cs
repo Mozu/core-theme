@@ -107,7 +107,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
                                                                                Name = x.Name,
                                                                                FullPath = x.FullName ,
                                                                                RootPath = themePath ,
-                                                                               VirtualPath = x.FullName.Substring( themePath.Length ).TrimEnd(new char[]{'\\'})
+                                                                               VirtualPath = x.FullName.Substring( themePath.Length ).Trim( new char[]{'\\'}).ToLowerInvariant()
                                                                            }).ToArray() ;
 
             var widgetMetaDataDir = "\\metadata\\widgets";
