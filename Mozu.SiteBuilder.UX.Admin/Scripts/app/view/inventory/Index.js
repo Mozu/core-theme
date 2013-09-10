@@ -7,6 +7,7 @@ Ext.define('Taco.view.inventory.Index', {
     requires: ['Taco.model.InventoryProduct', 'Taco.store.InventoryProducts', 'Ext.grid.plugin.CellEditing', 'Taco.view.inventory.QuantityEdit'],
 
     typeName: 'Inventory',
+    gridHeaderLabel: 'product',
     plural: false,
     modelName: 'Taco.model.InventoryProduct',
     store: { type: 'Taco.store.InventoryProducts' },
