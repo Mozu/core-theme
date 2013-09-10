@@ -12,24 +12,36 @@ Ext.define('Taco.view.settings.tax.Form', {
     title: 'Tax',
     initComponent: function() {
 
-    
 
         this.taxStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.TaxRates');        
-        
+        this.taxStore.addListener('load', this.loadState, this);
         
         this.statesStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.States');
-
         this.stores = [this.taxStore];
+        
+        this.taxFreeCheck = Ext.create('Ext.form.field.Checkbox', {
+            boxLabel: 'Tax Exempt',
+            handler: this.taxExemptClick,
+            scope: this
+        });
+        
+
         this.statesInput = Ext.create('Taco.core.ux.form.BoxSelect', {
             forceSelection:true,
-            fieldLabel: 'Choose State',
+            fieldLabel: 'Choose State' ,
             store: this.statesStore,
             queryMode: 'local',
             displayField: 'Value',
             valueField: 'Code'
         });
 
-        this.items = [ this.statesInput];
+        this.taxFreeCheck = Ext.create('Ext.form.field.Checkbox', {
+            boxLabel: 'Tax Exempt',
+            handler: this.taxExemptClick,
+            scope: this
+        });
+
+        this.items = [this.taxFreeCheck, this.statesInput];
 
         this.callParent(arguments);
         if (this.taxStore.isLoading()) {
@@ -65,5 +77,21 @@ Ext.define('Taco.view.settings.tax.Form', {
         this.statesInput.setValue(val);
         this.statesInput.resetOriginalValue();
         this.resumeEvents();
+    },
+    loadState: function () {
+        if (this.taxStore.count() == 0) {
+            this.suspendEvents();
+            this.taxFreeCheck.setValue(true);
+            this.taxFreeCheck.resetOriginalValue();
+            this.resumeEvents();
+        }
+    },
+    taxExemptClick: function () {
+        if (this.taxFreeCheck.getValue()) {
+            this.statesInput.disable();
+            this.statesInput.clearValue();
+        } else {
+            this.statesInput.enable();
+        }
     }
 });
