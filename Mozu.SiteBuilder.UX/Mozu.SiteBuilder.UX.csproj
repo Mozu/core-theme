@@ -460,7 +460,6 @@
     <Content Include="BuiltinScripts\SDK\src\reference.js" />
     <Content Include="BuiltinScripts\SDK\src\utils.js" />
     <Content Include="BuiltinScripts\SDK\tests\SDKSpec.js" />
-    <Content Include="BuiltinScripts\SDK\_SpecRunner.html" />
     <Content Include="SetParameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
