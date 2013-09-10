@@ -1854,23 +1854,12 @@
                         });
                         return deferred.promise;
                     },
-                    action: function(type, actionName, conf, isRemote) {
-                        var me = this, requestConf = {}, fulfill = function(rawJSON) {
-                            var unsynced = rawJSON.__unsynced__;
-                            if (unsynced) delete rawJSON.__unsynced__;
-                            var newApiObject = ApiReference.tryCreateApiObject(requestConf.returnType || type, rawJSON, me);
-                            if (unsynced) newApiObject.unsynced = true;
-                            me.fire("spawn", newApiObject);
-                            return newApiObject;
-                        };
-                        isRemote = isRemote === false ? false : true;
-                        if (isRemote) {
-                            requestConf = ApiReference.getRequestConfig(actionName, type, conf, this.context);
-                            return this.request(ApiReference.basicOps[actionName], requestConf, conf).then(fulfill);
-                        } else {
-                            conf.__unsynced__ = true;
-                            return utils.when(conf, fulfill);
-                        }
+                    action: function(type, actionName, conf) {
+                        var me = this, requestConf = ApiReference.getRequestConfig(actionName, type, conf, this.context);
+                        return this.request(ApiReference.basicOps[actionName], requestConf, conf).then(function(rawJSON) {
+                            var newObj = me.createSync(requestConf.returnType || type, rawJSON);
+                            delete newObj.unsynced;
+                        });
                     },
                     all: function() {
                         return utils.when.join.apply(utils.when, arguments);
@@ -1888,6 +1877,12 @@
                 for (var i in ApiReference.basicOps) {
                     if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
                 }
+                ApiInterfaceConstructor.prototype.createSync = function(type, conf) {
+                    var newApiObject = ApiReference.tryCreateApiObject(type, conf, this);
+                    newApiObject.unsynced = true;
+                    this.fire("spawn", newApiObject);
+                    return newApiObject;
+                };
                 utils.addEvents(ApiInterfaceConstructor);
                 return ApiInterfaceConstructor;
             }();

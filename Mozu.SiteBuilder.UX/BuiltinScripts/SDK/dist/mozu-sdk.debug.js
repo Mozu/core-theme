@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-09-09
+ * Mozu JavaScript SDK - v0.1.0 - 2013-09-10
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2654,25 +2654,13 @@ var ApiInterface = (function () {
             
             return deferred.promise;
         },
-        action: function (type, actionName, conf, isRemote) {
+        action: function (type, actionName, conf) {
             var me = this,
-                requestConf = {},
-                fulfill = function (rawJSON) {
-                    var unsynced = rawJSON.__unsynced__;
-                    if (unsynced) delete rawJSON.__unsynced__;
-                    var newApiObject = ApiReference.tryCreateApiObject(requestConf.returnType || type, rawJSON, me);
-                    if (unsynced) newApiObject.unsynced = true;
-                    me.fire('spawn', newApiObject);
-                    return newApiObject;
-                };
-            isRemote = isRemote === false ? false : true;
-            if (isRemote) {
                 requestConf = ApiReference.getRequestConfig(actionName, type, conf, this.context);
-                return this.request(ApiReference.basicOps[actionName], requestConf, conf).then(fulfill);
-            } else {
-                conf.__unsynced__ = true;
-                return utils.when(conf, fulfill);
-            }
+            return this.request(ApiReference.basicOps[actionName], requestConf, conf).then(function (rawJSON) {
+                var newObj = me.createSync(requestConf.returnType || type, rawJSON);
+                delete newObj.unsynced;
+            });
         },
         all: function () {
             return utils.when.join.apply(utils.when, arguments);
@@ -2689,6 +2677,14 @@ var ApiInterface = (function () {
     };
     for (var i in ApiReference.basicOps) {
         if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
+    }
+
+    // add createSync method for a different style of development
+    ApiInterfaceConstructor.prototype.createSync = function (type, conf) {
+        var newApiObject = ApiReference.tryCreateApiObject(type, conf, this);
+        newApiObject.unsynced = true;
+        this.fire('spawn', newApiObject);
+        return newApiObject;
     }
 
     utils.addEvents(ApiInterfaceConstructor);
