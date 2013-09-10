@@ -13,6 +13,8 @@ Ext.define('Taco.view.order.subform.Detail', {
         'Taco.view.order.modal.EditOrderDetail'
     ],
     
+    itemId: "orderDetailPanel",
+    
     title: 'Order Details',
     alias: 'widget.taco-orderdetail',
     
@@ -48,7 +50,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         
 
         this.cls += ' ' + Taco.baseCSSPrefix + 'orderform-detail';
-
+        
         this.actionTrigger = Ext.create('Taco.core.ux.action.Button', {
             width: 50,
             height: 30,
@@ -58,21 +60,22 @@ Ext.define('Taco.view.order.subform.Detail', {
             autoEl: {
                 tag: 'a'
             },
+            
+            listeners: {
+                menushow: {
+                    fn: function (button, menu, eOpts) {
+                        // need to generate the menu each time since the menu options may change after the record is modified;
+                        menu.removeAll();
+                        menu.add(me.getMenuActions());
+                    },
+                    scope: me
+                }
+            },
             menu: {
                 plain: true,
-                items: [
-                    {
-                    text: 'Edit Details',
-                        handler: function (button, e) {
-                            var animationTarget = this.actionTrigger.el;
-                            this.editOrder(animationTarget);
-                        },
-                        scope: me
-                }, {
-                    text: 'Cancel Order',
-                    disabled: true
-            }
-                ]
+                items: [{
+                    text: ""
+                }]
             }
         });
     
@@ -100,6 +103,12 @@ Ext.define('Taco.view.order.subform.Detail', {
                         me.detailGrid.hasDraftToolbar = null;
                     },
                     scope: me
+                },
+                'orderCancelled': {
+                    fn: function() {
+                        me.record.reload();
+                    },
+                    scope:me
                 }
             }
         });
@@ -276,6 +285,42 @@ Ext.define('Taco.view.order.subform.Detail', {
         me.totalRow.setData(me.record.getData());
         me.rebuildItems();
         me.updateHasDraftToolbar();
+    },
+    
+
+    // sets up the action menu for the gear icon trigger;  Will be called every time the record loads since actions may become disabled and enabled after each change;
+    getMenuActions: function () {
+        var me = this,
+            menu = [],
+            availableActions = me.record.get("availableActions"),
+            canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
+            canEdit = true;
+        
+        menu.push(
+            {
+                text: 'Edit Details',
+                handler: function (button, e) {
+                    var animationTarget = this.actionTrigger.el;
+                    this.editOrder(animationTarget);
+                },
+                disabled: !canEdit,
+                scope: me
+            }
+        );
+        
+        menu.push(
+            {
+                text: 'Cancel Order',
+                handler:function() {
+                    this.detailGrid.cancelOrder();
+                },
+                scope:this,
+                disabled: !canCancel
+            }
+        );
+
+        return menu;
+        
     },
 
     /**
