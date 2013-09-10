@@ -198,8 +198,8 @@
 	            	scope: me
 	            }
 	        });
-           // basegridview = me.basegrid.view;
-           // basegridview.mon(basegridview, 'itemclick', me.onItemClick, me);
+            basegridview = me.basegrid.view;
+            basegridview.mon(basegridview, 'itemclick', me.onItemClick, me);
 	    },
 
 	    updateUserAccountRole: function (updateInfo) {
@@ -251,7 +251,6 @@
 	    },
 
 	    onItemClick: function (view, record, elm, index, e) {
-	        console.log('ere');
             if (e.target.className === 'resend-user-invite') {
                 e.preventDefault();
 
@@ -262,7 +261,7 @@
 
 	                	var res = Ext.JSON.decode(response.responseText);
 	                	if (res.success) {
-	                		e.target.style.display = "none"; // hide the link?
+	                		//e.target.style.display = "none"; // hide the link?
 	                	} else {
 	                		Ext.Msg.alert('Error', 'There was a problem resending the invite: ' + res.message);
 	                	}
