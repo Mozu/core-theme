@@ -68,7 +68,7 @@ Ext.define('Taco.view.Header', {
                 autoEl: {
                     tag: 'a',
                     href: '/admin',
-                    title: ' version:[' + Taco.apiVersion + '] date:[' + Ext.Date.format(Taco.buildDate, 'Y-m-d H:i:s') + ']'
+                    title: ' version:[' + Taco.apiVersion + '] date:[' + Ext.Date.format(new Date(Taco.buildDate), 'Y-m-d H:i:s') + ']'
                 }
             }, {
                 xtype: 'secondarymenu',
