@@ -129,7 +129,17 @@
         this.price = Ext.widget({
             xtype: 'component',
             cls: 'price',
-            tpl: 'Price {SalePrice:currency}'
+            tpl: [
+                'Price: <span style="',
+                    '<tpl if="SalePrice">',
+                        'text-decoration:line-through',
+                    '</tpl>',
+                '">',
+                '{Price:currency}</span>',
+                '<tpl if="SalePrice">',
+                    ' {SalePrice:currency}',
+                '</tpl>'
+            ]
         });
 
         this.quantity = Ext.widget({
@@ -178,10 +188,11 @@
 
     loadProduct: function (record) {
         if (record) this.record = record;
-
+        
         if (!this.record) {
             Taco.model.Product.load(this.productCode, {
                 success: function (record) {
+                    
                     this.loadProduct(record);
                 },
                 scope: this
@@ -191,6 +202,7 @@
 
         this.record.loadRuntimeProduct({
             success: function (data) {
+                
                 this.loadRuntimeProduct(JSON.parse(data.responseText));
             },
             scope: this
@@ -235,6 +247,7 @@
         this.optionsContainer.add(items);
 
         this.savableStateCheck();
+        
         this.price.update(this.runtimeData.Price);
     },
 
