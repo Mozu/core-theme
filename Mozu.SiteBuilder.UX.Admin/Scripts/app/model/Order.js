@@ -678,6 +678,7 @@ Ext.define('Taco.model.Order', {
     },
 
     capturePaymentManual: function (config) {
+        var me = this;
         Ext.apply(config, {
             url: '/admin/app/order/payment/manual/capture',
             method: "POST"
@@ -688,6 +689,7 @@ Ext.define('Taco.model.Order', {
     },
 
     voidPaymentManual: function (config) {
+        var me = this;
         Ext.apply(config, {
             url: '/admin/app/order/payment/manual/void',
             method: "POST"
@@ -698,6 +700,7 @@ Ext.define('Taco.model.Order', {
     },
 
     creditPaymentManual: function (config) {
+        var me = this;
         Ext.apply(config, {
             url: '/admin/app/order/payment/manual/credit',
             method: "POST"
@@ -708,6 +711,7 @@ Ext.define('Taco.model.Order', {
     },
 
     rollbackTransaction: function (config) {
+        var me = this;
         Ext.apply(config, {
             url: '/admin/app/order/payment/manual/rollback',
             method: "POST"
@@ -717,6 +721,7 @@ Ext.define('Taco.model.Order', {
     },
 
     addManualPayment: function (config) {
+        var me = this;
         Ext.apply(config, {
             url: '/admin/app/order/payment/manual/create',
             method: "POST"
