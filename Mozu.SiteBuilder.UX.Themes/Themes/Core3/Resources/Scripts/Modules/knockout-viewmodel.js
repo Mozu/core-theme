@@ -251,33 +251,28 @@
             return ko.toJS(ret);
         },
         createSDKObject: function(obj) {
-            var me = this;
-
-            this.apiPromise = api.create(this.mozuType, obj, false).then(function (apiModel) {
-                me.apiModel = apiModel;
-                $.each(apiModel.getAvailableActions(), function (ix, actionName) {
-                    (actionName in me ? apiModel : me)[actionName] = function (data) {
-                        // include self by default in update action
-                        if (actionName in { 'create': true, 'update': true }) data = data || me.toJS();
-                        // handle bad argument by nulling it--we don't want to stringify unstringifiable things
-                        if (typeof data === 'object' && !$.isArray(data) && !$.isPlainObject(data)) data = null;
-                        return apiModel.action(actionName, data);
-                    };
-                });
-
-                apiModel.on('sync', function (data) {
-                    me.populate($.extend(true, {}, data));
-                    me.publish('update', data);
-                });
-
-                apiModel.on('error', function () {
-                    me.submitting(false);
-                    me.publish.apply(me, ['error',arguments]);
-                });
-
-                return apiModel;
-
+            var me = this,
+            apiModel = this.apiModel = api.createSync(this.mozuType, obj);
+            $.each(apiModel.getAvailableActions(), function (ix, actionName) {
+                (actionName in me ? apiModel : me)[actionName] = function (data) {
+                    // include self by default in update action
+                    if (actionName in { 'create': true, 'update': true }) data = data || me.toJS();
+                    // handle bad argument by nulling it--we don't want to stringify unstringifiable things
+                    if (typeof data === 'object' && !$.isArray(data) && !$.isPlainObject(data)) data = null;
+                    return apiModel.action(actionName, data);
+                };
             });
+
+            apiModel.on('sync', function (data) {
+                me.populate($.extend(true, {}, data));
+                me.publish('update', data);
+            });
+
+            apiModel.on('error', function () {
+                me.submitting(false);
+                me.publish.apply(me, ['error',arguments]);
+            });
+
         },
         publish: function () {
             this.eventBus.trigger.apply(this.eventBus, arguments);
