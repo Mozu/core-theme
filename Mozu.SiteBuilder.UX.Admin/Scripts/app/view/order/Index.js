@@ -154,150 +154,86 @@ Ext.define('Taco.view.order.Index', {
                 }
             }, {
                 text: 'Cancel Order',
+                itemId: "cancelAction",
                 menuColumnHandler: function (item, eventData) {
-                    // open ui for cancel order or call the service method if one exists for this action.
+                    var me = this,
+                        record = eventData.record,
+                        grid = eventData.grid,
+                        index = eventData.rowIndex,
+                        row = Ext.get(grid.getView().getNode(record));
+                    
+
+                    /*
+                    var mask  = new Ext.LoadMask({
+                        msg: "Canceling Order...",
+                        constrain: true,
+                        target : row
+                        //constrainTo:Ext.fly(row)
+                    });
+                    
+                    */
+                    
+
+//                    row.unmask()
+                    //mask.show();
+
+                    
+
+                    Ext.MessageBox.show({
+                        title: 'Cancel Order',
+                        // pushes the buttons to the right to be consistant with our dialog ux.
+                        rightJustifyButtons: true,
+                        // reverses the order of the buttons
+                        reverseOrder: true,
+                        msg: 'Are you sure you want to cancel this order?',
+                        closable: false,
+                        buttons: Ext.Msg.YESNO,
+                        fn: function (rec) {
+                            if (rec === 'yes') {
+                                grid.setLoading(true);
+
+                                record.cancelOrder({
+                                    jsonData: {
+                                        orderId: record.get('id')
+                                    },
+                                    success: function (response) {
+                                        grid.setLoading(false);
+                                        var json = Ext.decode(response.responseText, true);
+                                        if (!json || !json.success) {
+                                            Taco.app.fireEvent('setmessage', "Error canceling order", 'error');
+                                            return;
+                                        }
+                                        record.reload();
+                                    },
+                                    failure: function (response) {
+                                        var json = Ext.decode(response.responseText, true),
+                                            msg = (json && json.Message) ? json.Message : "Error canceling order";
+                                        Taco.app.fireEvent('setmessage', msg, 'error');
+                                        grid.setLoading(false);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                    
                 }
             }],
             
             // do any processing needed to show menu
             onMenuShow: function (menu, eventData) {
-                
-                
-                
-                
 
-                /*
-                var previewAction = menu.items.get('preview'),
-                    defaults = eventData.header.menuItemDefaults;
+                var me = this,
+                    record = eventData.record,
+                    availableActions = record.get("availableActions"),
+                    canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
+                    cancelAction = menu.items.get('cancelAction');
 
-                previewAction.menu.removeAll();
-                eventData.record.productInSitesStore().each(function (record) {
-                    var site = record.get('site');
-                    previewAction.menu.add(Ext.applyIf({
-                        text: (site ? site.name : 'n/a'),
-                        menuColumnHandler: function (item, eventData) {
-                            window.open('/_gosite/' + record.getId() + '?environment=preview&redir=' + encodeURIComponent('/product/' + eventData.record.getId()), 'taco-preview');
-
-                            console.log(arguments);
-                        }
-                    }, defaults));
-                });
-                previewAction.setVisible(eventData.record.productInSitesStore().count());
-                */
+                cancelAction.setDisabled(!canCancel);
             }
         }]
 
-        /*
-        
-        ,
-        contextConf: {
-            c: {
-                useMultiGrid: true,
-                plugins: [{
-                    ptype: 'rowexpander',
-                    pluginId: 'expander',
-                    rowBodyTpl: new Ext.XTemplate(
-                        '<tpl for="productInSites"><tr class="x-grid-row-body">',
-                            '<td colspan="3" class="x-grid-cell"><div class="x-grid-cell-inner"></div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner"><a href="#" class="taco-launch-editor" data-site-id="{siteId}">{productName}</a></div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner">{price:this.formatPrice}</div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner">{salePrice:this.formatPrice}</div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner">{siteId:this.toSiteName}</div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner">{isContentOverridden:this.formatOverridden}</div></td>',
-                            '<td class="x-grid-cell"><div class="x-grid-cell-inner"></div></td>',
-                        '</tr></tpl>',
-                    {
-                        formatOverridden: function (value) {
-                            return value ? '<span class="overridden">Overridden</span>' : '';
-                        },
-                        formatPrice: function (value) {
-                            return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
-                        },
-                        toSiteName: function (value) {
-                            var site = Taco.app.context.findSite(value);
-                            return site ? site.name : 'n/a';
-                        }
-                    })
-                }]
-            }
-        }
-        */
-
     },
 
-
-
-    /*
-
-    bulkEditorColumns: [{
-        dataIndex: 'productCode',
-        text: 'Code',
-        width: 100
-    }, {
-        dataIndex: 'productName',
-        text: 'Name',
-        minWidth: 120,
-        flex: 1,
-        editor: {
-            xtype: 'textfield'
-        }
-    }, {
-        dataIndex: 'price',
-        text: 'Price',
-        width: 100,
-        renderer: function (value) {
-            return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
-        },
-        editor: {
-            xtype: 'currencyfield',
-            minValue: 0,
-            decimalPrecision: 2,
-            hideTrigger: true,
-            keyNavEnabled: false,
-            mouseWheelEnabled: false
-        }
-    }, {
-        dataIndex: 'salePrice',
-        text: 'Sale Price',
-        width: 100,
-        renderer: function (value) {
-            return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
-        },
-        editor: {
-            xtype: 'currencyfield',
-            minValue: 0,
-            decimalPrecision: 2,
-            hideTrigger: true,
-            keyNavEnabled: false,
-            mouseWheelEnabled: false
-        }
-    }],
-
-
-    */
-    
-    /*
-    tilePanelConf: {
-        actions: [{
-            iconCls: 'download',
-            tooltip: 'View Product',
-            eventName: 'viewitem'
-        }, {
-            iconCls: 'duplicate',
-            tooltip: 'Duplicate Product',
-            eventName: 'duplicateitem'
-        }, {
-            iconCls: 'delete',
-            tooltip: 'Delete Product',
-            eventName: 'deleteitem'
-        }],
-        imageCollection: 'productImages',
-        imageField: 'imagePath',
-        isDragable: false,
-        nameField: 'productName'
-    },
-
-    */
 
     launchLoadedEditor: function (record, options) {
         var site = Taco.app.context.getCurrentSite(),
@@ -308,81 +244,3 @@ Ext.define('Taco.view.order.Index', {
     }
 
 });
-
-
-
-
-
-/**
- * @class Taco.view.order.Index
- */
-
-
-/*
-
-Ext.define('Taco.view.order.Index', {
-    extend: 'Taco.core.ux.content.Container',
-    requires: [
-    //    'Taco.model.Order',
-        'Taco.view.order.Grid',
-        'Taco.view.order.Edit'
-    ],
-
-    initComponent: function () {
-        var me = this;
-
-        this.header = {
-            title: 'Orders'
-        };
-
-        this.store = Ext.create('Ext.data.Store', {
-            model: 'Taco.model.Order',
-            remoteSort: true,
-            remoteFilter: true,
-            pageSize: 25
-        });
-
-        this.gridpanel = Ext.create('Taco.view.order.Grid', {
-            store: this.store
-        });
-
-        Ext.apply(me.body, {
-            layout:'fit',
-            items: [me.gridpanel]
-        });
-
-        this.callParent(arguments);
-
-        this.gridpanel.on({
-            itemclick: {
-                fn: this.onItemClick,
-                scope: this
-            }
-        });
-
-        this.store.load();
-    },
-
-    launchEditor: function (record) {
-        var me = this,
-            editorView;
-
-        editorView = Ext.create('Taco.view.order.Edit', {
-            logicalParent: me,
-            recordId: record
-        });
-
-        Taco.app.contentView.add(editorView);
-    },
-
-    onItemClick: function (view, record, elm, index, e) {
-        // console.log(e.target);
-        if (e.target.className === 'taco-launch-editor') {
-            e.preventDefault();
-            this.launchEditor(record);
-            Taco.app.StateManager.addState('orders/edit/' + record.get('orderNumber'), { id: record.getId() });
-        }
-    }
-});
-
-*/

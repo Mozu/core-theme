@@ -42,31 +42,52 @@ Ext.define('Taco.view.order.Header', {
     ],
     
     initComponent: function () {
-        this.cls += ' ' + Taco.baseCSSPrefix + 'order-detail-header';
+        var me = this;
+        me.cls += ' ' + Taco.baseCSSPrefix + 'order-detail-header';
 
-        if (this.record) this.data = this.record.getData();
+        /*
+        if (me.record) {
+            me.data = me.record.getData();
+        }
+        */
 
-        Taco.model.CustomerAccount.load(this.record.get('customerId'), {
-            success: function (record) {
-                var data = Ext.apply({}, record.getData(), this.record.getData());
-                this.update(data);
-            },
-            scope: this
-        });
+
+        me.updateUI();
+        
+        // after the record is reloaded we will need to refresh the ui
+        me.record.on("aftercommit", function () {
+            me.onRecordChange();
+        }, me);
 
         this.callParent(arguments);
-        
+
         this.on({
             click: {
-                fn: function (e) {
+                fn: function(e) {
                     if (e.target.href && e.target.href > 2 && e.target.href.indexOf('#') > -1) {
-                        Taco.core.StateManager.attemptNavigate(e.target.href.substring(e.target.href.indexOf('#')+1));
+                        Taco.core.StateManager.attemptNavigate(e.target.href.substring(e.target.href.indexOf('#') + 1));
                         e.stopEvent();
                     }
                 },
                 element: 'el',
                 scope: this
             }
-        })
+        });
+    },
+    
+    updateUI: function () {
+        var me = this;
+        Taco.model.CustomerAccount.load(me.record.get('customerId'), {
+            success: function (record) {
+                me.customerData = record.getData();
+                var data = Ext.apply({}, me.customerData, me.record.getData());
+                this.update(data);
+            },
+            scope: me
+        });
+    },
+
+    onRecordChange: function () {
+        this.updateUI();
     }
 });

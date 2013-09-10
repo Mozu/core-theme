@@ -1472,5 +1472,39 @@ Ext.define('Taco.model.Order', {
         });
 
         Ext.Ajax.request(config);
+    },
+    
+    /**
+    * service call to cancel an order.
+    * @param {Object} config  A configuration object
+    * config object:
+    * 
+       {
+           jsonData: {
+               orderIds: ["987654321"]
+           },
+           success: function (response) {
+               // success handling here
+             so   var json = Ext.decode(response.responseText, true);
+               if (!json || !json.success) {
+                   // service didnt' return data properly
+                   return;
+               }
+           },
+           failure: function (response) {
+               // error handling here
+           },
+           scope: this
+       }
+
+    *
+    */
+    cancelOrder: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/cancel',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
     }
 });

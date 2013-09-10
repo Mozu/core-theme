@@ -1005,6 +1005,66 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         });
     },
     
+
+    cancelOrder: function () {
+        var me = this;
+        
+
+
+
+
+        Ext.MessageBox.show({
+            title: 'Cancel Order',
+            // pushes the buttons to the right to be consistant with our dialog ux.
+            rightJustifyButtons: true,
+            // reverses the order of the buttons
+            reverseOrder: true,
+            msg: 'Are you sure you want to cancel this order?',
+            closable: false,
+            buttons: Ext.Msg.YESNO,
+            fn: function (rec) {
+                if (rec === 'yes') {
+                    me.ownerCt.setLoading(true);
+
+                    me.record.cancelOrder({
+                        jsonData: {
+                            orderId: me.record.get('id')
+                        },
+                        success: function (response) {
+                            // success handling here
+                            var json = Ext.decode(response.responseText, true);
+                            if (!json || !json.success) {
+                                Taco.app.fireEvent('setmessage', "Error canceling order", 'error');
+                                me.fireEvent('saveFailure');
+                                return;
+                            }
+                            me.ownerCt.setLoading(false);
+                            me.fireEvent("orderCancelled", json);
+                            
+                        },
+                        failure: function (response) {
+                            me.setLoading(false);
+                            // error handling here
+                            var json = Ext.decode(response.responseText, true),
+                                msg = (json && json.Message) ? json.Message : "Error canceling order";
+                            Taco.app.fireEvent('setmessage', msg, 'error');
+                            me.ownerCt.setLoading(false);
+                            me.fireEvent('saveFailure');
+                        },
+                        scope: me
+                    });
+
+
+
+                }
+            }
+        });
+
+
+
+
+    },
+    
     suppressDiscount: function (config) {
         var me = this;
         config.jsonData.orderId = me.record.get('id'),
