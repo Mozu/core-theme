@@ -4,7 +4,7 @@
 Ext.define('Taco.view.location.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
   
-    requires: [],
+    requires: ['Taco.store.Locations'],
 
     typeName: 'Locations',
     gridHeaderLabel: 'Locations',
