@@ -314,15 +314,10 @@ Ext.define('Taco.core.ux.browser.Browsable', {
                             grid.setLoading(false);
                         },
                         failure: function (m) {
-                            var records = store.getRemovedRecords();
-                            Ext.each(records, function(record) {
-                                store.insert(record.index, record);
-                            });
-                                        
-                            records.splice(0, records.length);
+                            store.reload();
                             grid.setLoading(false);
-                            
-                            var text = "Unknown error."
+
+                            var text = "Unknown error.";
                             if (m.exceptions) {
                                 text = Taco.core.util.ExceptionWhiner.createHtmlList(m.exceptions);
                             }
@@ -331,7 +326,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
                                 autoShow: true,
                                 text: 'Delete Failed. <br />' + text
                             });
-                                        
+                            
                         }
                         
                     });
