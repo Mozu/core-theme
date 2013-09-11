@@ -29,6 +29,19 @@ Ext.define('Taco.store.Locations', {
             "name": "Max",
             "address": "435 Plaza Lane, Austin, Tx 78759"
         },
+        
+        {
+            "code": "MTX4",
+            "type": "Max Retail",
+            "name": "Max",
+            "address": "1245 Coit Rd, Dallas, Tx 78718"
+        },
+        {
+            "code": "MNM5",
+            "type": "Max Retail",
+            "name": "Max",
+            "address": "5542 Berry St, Dallas, Tx 76831"
+        },
         {
             "code": "MNM1",
             "type": "Max Retail",

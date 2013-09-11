@@ -9,6 +9,8 @@
         extend: 'Ext.data.Store',
         model: 'Taco.model.ItemFilter',
         pageSize: 25,
-        remoteSort: true,
-        remoteFilter: true
+        remoteSort: false,
+        remoteFilter: false,
+        autoLoad:true
+              
     });
