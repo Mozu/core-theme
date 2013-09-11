@@ -59,8 +59,9 @@
       .#{$vprefix}icon-nav-publishing::after {
         content: $glyph-publishing;
       }
-      .#{$vprefix}icon-nav-files::after {
-        content: $glyph-filemanager;
+      .#{$vprefix}icon-nav-locations::after {
+        content: $glyph-locations;
+        top: 10px;
       }
 
       ul {
@@ -201,8 +202,9 @@
         &.#{$vprefix}icon-nav-publishing::after {
           content: $glyph-publishing;
         }
-        &.#{$vprefix}icon-nav-files::after {
-          content: $glyph-filemanager;
+        &.#{$vprefix}icon-nav-locations::after {
+          content: $glyph-locations;
+          top: -4px;
         }
       }
 

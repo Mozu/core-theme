@@ -38,6 +38,13 @@
         font: $font-message; 
       }
       
+	  .#{$vprefix}back{
+		@include icon-font($glyph-back);
+		height:auto;
+		width:auto;
+		min-height: 20px;
+	  }
+
       .#{$vprefix}actions {
         .#{$vprefix}action {
           float: none;

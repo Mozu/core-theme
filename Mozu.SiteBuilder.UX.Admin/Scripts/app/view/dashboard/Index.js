@@ -96,12 +96,16 @@ Ext.define('Taco.view.dashboard.Index', {
                                     rotation = 'rotate(' + angle + 'deg)';
 
                                 Ext.defer(function () {
-                                    Ext.fly(cmp.slice0).setStyle({
-                                        '-webkit-transform': rotation,
-                                        '-moz-transform': rotation,
-                                        '-ms-transform': rotation,
-                                        'transform': rotation
-                                    });
+                                    try {
+                                        Ext.fly(cmp.slice0).setStyle({
+                                            '-webkit-transform': rotation,
+                                            '-moz-transform': rotation,
+                                            '-ms-transform': rotation,
+                                            'transform': rotation
+                                        });
+                                    } catch (e) {
+                                        console.log('element no longer exists');
+                                    }
                                 }, 2000);
                             }
                         }
@@ -210,12 +214,16 @@ Ext.define('Taco.view.dashboard.Index', {
                                     rotation = 'rotate(' + angle + 'deg)';
 
                                 Ext.defer(function () {
-                                    Ext.fly(cmp.slice0).setStyle({
-                                        '-webkit-transform': rotation,
-                                        '-moz-transform': rotation,
-                                        '-ms-transform': rotation,
-                                        'transform': rotation
-                                    });
+                                    try {
+                                        Ext.fly(cmp.slice0).setStyle({
+                                            '-webkit-transform': rotation,
+                                            '-moz-transform': rotation,
+                                            '-ms-transform': rotation,
+                                            'transform': rotation
+                                        });
+                                    } catch (e) {
+                                        console.log('element no longer exists');
+                                    }
                                 }, 2000);
                             }
                         }
@@ -292,18 +300,22 @@ Ext.define('Taco.view.dashboard.Index', {
 
                                 console.log(angle);
                                 Ext.defer(function () {
-                                    Ext.fly(cmp.slice0).setStyle({
-                                        '-webkit-transform': rotation,
-                                        '-moz-transform': rotation,
-                                        '-ms-transform': rotation,
-                                        'transform': rotation
-                                    });
-                                    Ext.fly(cmp.needle).setStyle({
-                                        '-webkit-transform': needleRotation,
-                                        '-moz-transform': needleRotation,
-                                        '-ms-transform': needleRotation,
-                                        'transform': needleRotation
-                                    });
+                                    try {
+                                        Ext.fly(cmp.slice0).setStyle({
+                                            '-webkit-transform': rotation,
+                                            '-moz-transform': rotation,
+                                            '-ms-transform': rotation,
+                                            'transform': rotation
+                                        });
+                                        Ext.fly(cmp.needle).setStyle({
+                                            '-webkit-transform': needleRotation,
+                                            '-moz-transform': needleRotation,
+                                            '-ms-transform': needleRotation,
+                                            'transform': needleRotation
+                                        });
+                                    } catch (e) {
+                                        console.log('elements no longer exist');
+                                    }
                                 }, 2000);
                             }
                         }

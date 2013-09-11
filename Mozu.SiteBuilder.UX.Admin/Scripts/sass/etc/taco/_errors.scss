@@ -2,21 +2,25 @@ $color-errortext: $color-neutral-mid;
 
 .#{$vprefix}view-error {
 	text-align: center;
-	font-size: 1.8em;
+	font-size: px-to-rem(30);
 	margin-top: 50px;
+
 	h1 {
-		color: $color-errortext;
-		font-size: 6em;
-		font-weight: normal;
-		line-height: 0.9em;
-		display: inline-block;
-		margin-bottom: 15px;
 		border-bottom: 4px solid $color-errortext;
+		color: $color-errortext;
+		display: inline-block;
+		font-size: px-to-rem(180);
+		font-weight: normal;
+		line-height: 1.0;
+		margin-bottom: 20px;
 	}
+
 	h2 {
 		color: $color-errortext;
-		font-size: 1.6em;
+		font-size: px-to-rem(48);
+		margin-bottom: 20px;
 	}
+
 	p {
 		color: $color-errortext;
 	}
