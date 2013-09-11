@@ -18,8 +18,6 @@ Ext.define('Taco.view.role.Index', {
             });
         }
 
-        this.navigation = Ext.create('Taco.view.account.Navigation');
-
         this.grid = Ext.create('Taco.core.ux.BaseGrid', {
             store: this.store,
             listeners: {
@@ -56,7 +54,6 @@ Ext.define('Taco.view.role.Index', {
                 align: 'stretch'
             },
             items: [
-                this.navigation,
                 this.grid
             ]
         };
