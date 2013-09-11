@@ -438,6 +438,7 @@
     <Content Include="BuiltinScripts\RequireJS\plugins\shim.js" />
     <Content Include="BuiltinScripts\RequireJS\plugins\text.js" />
     <Content Include="BuiltinScripts\SDK\src\postprocessors.js" />
+    <Content Include="BuiltinScripts\SDK\tests\SpecRunner.html" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

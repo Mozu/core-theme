@@ -60,6 +60,7 @@ var ApiInterface = (function () {
             return this.request(ApiReference.basicOps[actionName], requestConf, conf).then(function (rawJSON) {
                 var newObj = me.createSync(requestConf.returnType || type, rawJSON);
                 delete newObj.unsynced;
+                return newObj;
             });
         },
         all: function () {

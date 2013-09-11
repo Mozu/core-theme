@@ -77,7 +77,7 @@ var utils = {
             if (xhr.readyState === 4) {
                 clearTimeout(timeout);
                     var json = null;
-                    if (xhr.responseText.length > 0) {
+                    if (xhr.responseText && xhr.responseText.length > 0) {
                         try {
                             json = JSON.parse(xhr.responseText);
                         } catch (e) {
