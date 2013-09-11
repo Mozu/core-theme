@@ -81,7 +81,7 @@ Ext.define('Taco.view.product.option.Form', {
         this.productTypeOptions = this.productType.getOptions();
 
         if (this.productTypeOptions.count() === 0) {
-            this.hide();
+            //this.hide();
         } else {
             this.show();
         }
@@ -92,36 +92,40 @@ Ext.define('Taco.view.product.option.Form', {
 
     buildOptions: function () {
         var items = [];
+        
+        if (this.productTypeOptions.count() == 0) {
 
-        // this.productTypeOptions.each(function (ptAttribute) {
-        //     items.push({
-        //         xtype: 'component',
-        //         html: ptAttribute.get('attributeName')
-        //     });
-        // });
+            items.push({
+                xtype: 'component',
+                html: 'Sorry, but this product type does not have any options associated to it.'
+            });
 
-        items.push({
-            xtype: 'dataview',
-            store: this.productTypeOptions,
-            disableSelection: true,
-            autoEl: {
-                tag: 'ul',
-                cls: 'options-list'
-            },
-            itemSelector: '.option-item',
-            tpl: [
-                '<tpl for=".">',
-                    '<li class="option-item">{attributeName}</li>',
-                '</tpl>'
-            ]
-        });
+        } else {
+            items.push({
+                xtype: 'dataview',
+                store: this.productTypeOptions,
+                disableSelection: true,
+                autoEl: {
+                    tag: 'ul',
+                    cls: 'options-list'
+                },
+                itemSelector: '.option-item',
+                tpl: [
+                    '<tpl for=".">',
+                        '<li class="option-item">{attributeName}</li>',
+                    '</tpl>'
+                ]
+            });
 
-        items.push({
-            xtype: 'primarybutton',
-            text: 'Select Values',
-            click: this.launchModal,
-            scope: this
-        });
+            items.push({
+                xtype: 'primarybutton',
+                text: 'Select Values',
+                click: this.launchModal,
+                scope: this
+            });
+        }
+
+
 
         this.options.removeAll();
         this.options.add(items);
