@@ -587,6 +587,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="App_Readme\glimpse.readme.txt" />
     <Content Include="Scripts\app\app.js" />
+    <Content Include="Scripts\app\controller\Tbd.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
@@ -594,6 +595,7 @@
     <Content Include="Scripts\app\overrides\menu\Item.js" />
     <Content Include="Scripts\app\overrides\window\MessageBox.js" />
     <Content Include="Scripts\app\overrides\window\Window.js" />
+    <Content Include="Scripts\app\store\Locations.js" />
     <Content Include="Scripts\app\store\PackagingTypes.js" />
     <Content Include="Scripts\app\view\customers\subform\BillingInformation.js" />
     <Content Include="Scripts\app\view\customers\subform\Information.js" />
@@ -601,8 +603,10 @@
     <Content Include="Scripts\app\view\customers\subform\OrderHistory.js" />
     <Content Include="Scripts\app\view\customers\subform\ShippingInformation.js" />
     <Content Include="Scripts\app\view\customers\subform\Subform.js" />
+    <Content Include="Scripts\app\view\location\index.js" />
     <Content Include="Scripts\app\view\order\widget\DiscountRowBody.js" />
     <Content Include="Scripts\app\view\site\navigation\NavHeadings.js" />
+    <Content Include="Scripts\app\view\tbd\Index.js" />
     <Content Include="Scripts\build\all-classes.js" />
     <Content Include="Scripts\build\fonts\journal-webfont.eot" />
     <Content Include="Scripts\build\fonts\journal-webfont.ttf" />

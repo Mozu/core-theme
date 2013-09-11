@@ -116,6 +116,7 @@ Ext.define('Taco.Application',{
             'Settings',
             'PaymentAndCheckout',
             'PageTemplates',
+            'Tbd',
             'Themes',
             'Themesettings',
             'Account',
