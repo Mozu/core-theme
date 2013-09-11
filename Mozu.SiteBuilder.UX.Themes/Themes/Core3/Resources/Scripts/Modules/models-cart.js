@@ -27,11 +27,9 @@
             var price = self.UnitPrice();
             return price.BaseAmount != price.DiscountedAmount;
         });
-        this.apiPromise.then(function (apiModel) {
-            apiModel.on('error', function (e) {
-                self.parentCart.messages(e.Items);
-                self.parentCart.submitting(false);
-            });
+        this.apiModel.on('error', function (e) {
+            self.parentCart.messages(e.Items);
+            self.parentCart.submitting(false);
         });
         var origQuantity = this.Quantity(), newValue;
 
