@@ -20,8 +20,6 @@
 				autoLoad: true
 			});
 
-			me.navigation = Ext.create('Taco.view.account.Navigation');
-
 			me.addform = Ext.create('Ext.form.Panel', {
 	            layout: { type: 'hbox', align: 'middle' },
 	            hidden: true,
@@ -182,7 +180,7 @@
 
 	        Ext.apply(me.body, {
 	            layout: { type: 'vbox', align: 'stretch' },
-	            items: [ me.navigation, me.items ]
+	            items: [ me.items ]
 	        });
 
 	        me.callParent(arguments);

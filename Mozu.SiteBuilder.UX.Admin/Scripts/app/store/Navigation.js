@@ -169,9 +169,13 @@ Ext.define('Taco.store.Navigation', {
                 "label": "Shipping",
                 "address": "settings/shipping"
             }, {
-                "id": "account",
-                "label": "Users & Roles",
-                "address": "account"
+                "id": "users",
+                "label": "Users",
+                "address": "account/users"
+            }, {
+                "id": "roles",
+                "label": "Roles",
+                "address": "account/roles"
             }]
         }, {
             "id": "publishing",
