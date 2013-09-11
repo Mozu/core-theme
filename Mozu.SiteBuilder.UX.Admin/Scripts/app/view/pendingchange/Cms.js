@@ -42,21 +42,35 @@ Ext.define('Taco.view.pendingchange.Cms', {
                 }
             }
         }, {
-            xtype: 'primarysplitbutton',
+            xtype: 'splitbutton',
             itemId: 'publishAll',
-            text: '',
-            textTpl: new Ext.XTemplate('<span>{text} <em>({count} items)</em></span>'),
-            handler: function() {
-                this.getParentPage().publishAll();
+            ui: 'action-primary',
+            scale: 'medium',
+            menuAlign: 'tr-br?',
+            text: 'Publish All',
+            // textTpl: new Ext.XTemplate('<span>{text} <em>({count} items)</em></span>'),
+            menu: {
+                plain: true,
+                shadow: false,
+                items: [{
+                    text: 'Publish all pages and templates',
+                    handler: function(item) {
+                        item.up('contentcontainer').publishAll();
+                    }
+                }, {
+                    text: 'Publish all pages',
+                    handler: function (item) {
+                        item.up('contentcontainer').publishAll('page');
+                    }
+                }, {
+                    text: 'Publish all templates',
+                    handler: function (item) {
+                        item.up('contentcontainer').publishAll('template');
+                    }
+                }]
             },
-            updateCount: function (obj) {
-                this.setText([this.textTpl.apply(obj)]);
-            },
-            createMenuItems: function () {
-                var me = this;
-                return [{ text: 'Publish all pages and templates', handler: function() { me.getParentPage().publishAll(); } },
-                { text: 'Publish all pages', handler: function () { me.getParentPage().publishAll('page'); } },
-                { text: 'Publish all templates', handler: function () { me.getParentPage().publishAll('template'); } }];
+            handler: function (button) {
+                button.up('contentcontainer').publishAll();
             }
         }]
     },
@@ -69,9 +83,9 @@ Ext.define('Taco.view.pendingchange.Cms', {
     initComponent: function () {
         
         this.callParent(arguments);
-        this.mon(this.store, 'datachanged', this.updateChangeCount, this);
-        //this.store.load();
-        this.updateChangeCount();
+        // this.mon(this.store, 'datachanged', this.updateChangeCount, this);
+        // this.store.load();
+        // this.updateChangeCount();
     },
 
     gridPanelConf: {
@@ -80,19 +94,21 @@ Ext.define('Taco.view.pendingchange.Cms', {
             dock: 'top',
             border: false,
             items: [{
-                xtype:'taco.splitbutton',
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+                menuAlign: 'tr-br?',
                 text: 'Bulk Actions',
-                handler: function (btn) {
-                    btn.showMenu();
-                },
                 menu: {
-                    xtype:'menu',
-                    items: [ {
+                    plain: true,
+                    shadow: false,
+                    items: [{
                         text: 'Publish',
                         handler: function() {
                             var grid = this.grid || (this.grid = this.up('grid')),
                                 checkedModels = grid.getSelectionModel().getSelection(),
                                 store = grid.store;
+
                             if (checkedModels) {
                                 Ext.each(checkedModels, function(item) {
                                     item.set('isPublished', true);
@@ -104,12 +120,13 @@ Ext.define('Taco.view.pendingchange.Cms', {
                                 });
                             }
                         }
-                    },{
+                    }, {
                         text: 'Discard',
                         handler: function() {
                             var grid = this.up('grid'),
                                 checkedModels = grid.getSelectionModel().getSelection(),
                                 store = grid.store;
+
                             if (checkedModels) {
                                 store.remove(checkedModels);
                                 store.sync({

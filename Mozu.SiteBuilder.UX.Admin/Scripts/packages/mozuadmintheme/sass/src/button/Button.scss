@@ -206,6 +206,10 @@ $uis: $ui-link, $ui-action, $ui-action-primary;
             border-left-color: $color-action-primary-outline;
         }
     }
+
+    .#{$prefix}btn-inner {
+        text-shadow: 1px 1px transparentize($color-neutral-black, 0.75);
+    }
 }
 
 .#{$prefix}btn-action-primary-medium-over {
