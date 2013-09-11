@@ -128,7 +128,6 @@
 			</tr>
 		</tbody>
 	</table><!-- #purchase-details-->
-
 	<h3>Order Summary</h3>
 	<table id="mz-order-summary" class="mz-order-summary">
 	    <thead>
@@ -153,12 +152,12 @@
 					{{ item.UnitPrice.DiscountedAmount|currency }}
 				</td>
 	            <td>
-					{% if item.Subtotal != item.Total %}
+					{% if item.Subtotal != item.DiscountedTotal %}
 					<div class="mz-price-amt mz-strikethrough">
 					{{ item.Subtotal|currency }}
 					</div>
 					{% endif %}
-					{{ item.Total|currency }}
+					{{ item.DiscountedTotal|currency }}
 				</td>
 	        </tr>
             {% endfor %}

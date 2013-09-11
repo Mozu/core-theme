@@ -26,7 +26,7 @@ Ext.define('Taco.controller.Categories', {
                 options:options
             });
         } else {
-            
+
             store = Taco.core.data.StoreManager.getOrCreate('Taco.store.Categories');
 
             fnLoadEditor = function () {
