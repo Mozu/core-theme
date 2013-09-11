@@ -26,18 +26,24 @@ Ext.define('Taco.model.ItemFilter', {
   ],
 
     proxy: {
-        type: 'ajaxproxy',
-        api: {
-            read: '/admin/Scripts/app/mocks/itemfilters.json',
-            create: '/admin/app/Tax/create',
-            update: '/admin/app/Tax/edit',
-            destroy: '/admin/app/Tax/delete'
+        type: 'memory',
+        data: {
+            items:[{
+                "id": 1,
+                "name": "All",
+                "configuration": null
+            }]
         },
+        //api: {
+        //    read: '/admin/Scripts/app/mocks/itemfilters.json',
+        //    create: '/admin/app/Tax/create',
+        //    update: '/admin/app/Tax/edit',
+        //    destroy: '/admin/app/Tax/delete'
+        //},
         reader: {
             type: 'json',
-            root: 'items',
-            successProperty: 'success',
-            messageProperty: "message"
+            root: 'items'
+           
         },
         writer: {
             allowSingle: false,
