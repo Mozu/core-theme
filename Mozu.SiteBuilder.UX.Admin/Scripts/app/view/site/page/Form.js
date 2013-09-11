@@ -164,6 +164,7 @@ Ext.define('Taco.view.site.page.Form', {
         
 
         this.editSurface.setDirty(isDirty);
+
         if (isDirty) {
             this.toolBox.navigation.disable();
         } else {

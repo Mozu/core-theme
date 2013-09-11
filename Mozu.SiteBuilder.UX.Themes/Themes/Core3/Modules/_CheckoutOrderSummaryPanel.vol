@@ -22,7 +22,7 @@
                         <td><span class="mz-item-price" data-bind="currencyText: UnitPrice.BaseAmount"></span></td>
                         <td><span class="mz-item-price" data-bind="currencyText: Subtotal"></span></td>
                     </tr>
-                    <!-- ko if: DiscountTotal && DiscountTotal != Subtotal -->
+                    <!-- ko if: DiscountTotal && DiscountedTotal != Subtotal -->
                         <tr class="mz-line-item mz-discount">
                             <td colspan="2">
                                 <!-- ko if: $data.Discount -->
@@ -32,7 +32,7 @@
                                 <span class="mz-discount-amt" ><span data-bind="currencyText: DiscountTotal"></span> OFF</span>
                             </td>
                             <td><span data-bind="currencyText: UnitPrice.DiscountedAmount"></span></td>
-                            <td><span data-bind="currencyText: Total"></span></td>
+                            <td><span data-bind="currencyText: DiscountedTotal"></span></td>
                         </tr>
                     <!-- /ko -->
                 </tbody>
