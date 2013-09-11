@@ -576,9 +576,7 @@
             $.each(this.submodels, function (smName) {
                 var submodel = self[smName];
                 submodel.orderId = self.Id;
-                if (submodel.apiPromise) submodel.apiPromise.then(function (apiModel) {
-                    apiModel.prop('orderId',self.Id);
-                });
+                submodel.apiModel.prop('orderId', self.Id);
                 // consolidate messaging
                 self[smName].messages = self.messages;
             });
