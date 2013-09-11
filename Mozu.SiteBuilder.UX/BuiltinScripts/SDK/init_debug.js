@@ -3,6 +3,7 @@ Mozu.Utils = utils;
 Mozu.ApiContext = ApiContext;
 Mozu.ApiInterface = ApiInterface;
 Mozu.ApiObject = ApiObject;
+Mozu.ApiCollection = ApiCollection;
 Mozu.ApiReference = ApiReference;
 
 Mozu._expose = function (r) {

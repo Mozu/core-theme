@@ -2,6 +2,9 @@
 
 var allScripts = ['lib/when/when.js', 'lib/uritemplate/bin/uritemplate.js', 'lib/microevent/microevent.js', 'src/utils.js', 'src/postprocessors.js', 'src/reference.js', 'src/object.js', 'src/collection.js', 'src/interface.js', 'src/context.js', 'src/init.js'];
 
+var port = 9001,
+    testurl = "http://127.0.0.1:" + port + "/tests/SpecRunner.html";
+
 module.exports = function (grunt) {
 
     grunt.initConfig({
@@ -64,6 +67,14 @@ module.exports = function (grunt) {
                 dir: 'dist'
             }
         },
+        connect: {
+            server: {
+                options: {
+                    port: port,
+                    base: '.'
+                }
+            }
+        },
         jasmine: {
             all: {
                 src: '<%= concat.debug.dest %>',
@@ -73,9 +84,18 @@ module.exports = function (grunt) {
                 }
             }
         },
+        mocha: {
+            test: {
+                options: {
+                    reporter: 'Nyan',
+                    urls: [testurl],
+                    run: true
+                }
+            }
+        },
         browser: {
             test: {
-                url: "http://127.0.0.1:8080/_SpecRunner.html"
+                url: testurl,
             }
         }
     });
@@ -84,30 +104,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-bower-task');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-jasmine');
+    grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-mocha');
 
     grunt.registerMultiTask('browser', 'Opens a browser to view a specrunner', function () {
-        var fserv = new (require('node-static')).Server();
-        var done = this.async();
-        var server = require('http').createServer(function (req, res) {
-            req.addListener('end', function () {
-                fserv.serve(req, res);
-            });
-        }).listen(8080);
-
-        require('keypress')(process.stdin);
-        grunt.log.writeln('Opening ' + this.data.url);
         require('open')(this.data.url);
-        grunt.log.ok();
-        grunt.log.writeln('Running static HTTP server. Press ESC in this window to continue...');
-        process.stdin.on('keypress', function (ch, key) {
-            if (key && key.name === "escape") {
-                server.close();
-                done();
-            }
-        });
-        process.stdin.setRawMode(true);
-        process.stdin.resume();
     });
 
     grunt.registerMultiTask('tfscheckout', 'Using Team Foundation Server, checks out the files that will be modified, so TFS is aware that changes were made.', function () {
@@ -135,12 +136,12 @@ module.exports = function (grunt) {
         });
     });
 
-    var order = ['bower', 'clean:dist', 'concat', 'uglify', 'clean:tmp', 'tfscheckout', 'jasmine:all'];
+    var order = ['bower', 'clean:dist', 'concat', 'uglify', 'clean:tmp', 'tfscheckout', 'connect', 'mocha'];
 
     grunt.registerTask('default', order); // TODO: figure out real debug channel
-    grunt.registerTask('test', ['jasmine:all']);
-    grunt.registerTask('testdebug', ['jasmine:all:build', 'browser']);
-    grunt.registerTask('notest', order.slice(0, -1));
+    grunt.registerTask('test', ['connect','mocha']);
+    grunt.registerTask('testdebug', ['browser:test', 'connect:server:keepalive']);
+    grunt.registerTask('notest', order.slice(0, -2));
     grunt.registerTask('debug', ['notest', 'testdebug']);
 
 };

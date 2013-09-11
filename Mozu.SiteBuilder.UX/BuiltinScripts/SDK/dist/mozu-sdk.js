@@ -1274,7 +1274,7 @@
                         if (xhr.readyState === 4) {
                             clearTimeout(timeout);
                             var json = null;
-                            if (xhr.responseText.length > 0) {
+                            if (xhr.responseText && xhr.responseText.length > 0) {
                                 try {
                                     json = JSON.parse(xhr.responseText);
                                 } catch (e) {
@@ -1859,6 +1859,7 @@
                         return this.request(ApiReference.basicOps[actionName], requestConf, conf).then(function(rawJSON) {
                             var newObj = me.createSync(requestConf.returnType || type, rawJSON);
                             delete newObj.unsynced;
+                            return newObj;
                         });
                     },
                     all: function() {

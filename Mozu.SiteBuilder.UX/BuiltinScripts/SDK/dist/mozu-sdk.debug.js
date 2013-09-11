@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-09-10
+ * Mozu JavaScript SDK - v0.1.0 - 2013-09-11
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1970,7 +1970,7 @@ var utils = {
             if (xhr.readyState === 4) {
                 clearTimeout(timeout);
                     var json = null;
-                    if (xhr.responseText.length > 0) {
+                    if (xhr.responseText && xhr.responseText.length > 0) {
                         try {
                             json = JSON.parse(xhr.responseText);
                         } catch (e) {
@@ -2660,6 +2660,7 @@ var ApiInterface = (function () {
             return this.request(ApiReference.basicOps[actionName], requestConf, conf).then(function (rawJSON) {
                 var newObj = me.createSync(requestConf.returnType || type, rawJSON);
                 delete newObj.unsynced;
+                return newObj;
             });
         },
         all: function () {
@@ -2764,6 +2765,7 @@ Mozu.Utils = utils;
 Mozu.ApiContext = ApiContext;
 Mozu.ApiInterface = ApiInterface;
 Mozu.ApiObject = ApiObject;
+Mozu.ApiCollection = ApiCollection;
 Mozu.ApiReference = ApiReference;
 
 Mozu._expose = function (r) {
