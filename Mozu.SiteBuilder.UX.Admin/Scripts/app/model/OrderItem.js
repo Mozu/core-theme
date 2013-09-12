@@ -45,13 +45,16 @@ Ext.define('Taco.model.OrderItem', {
         },
         {
             "name": "unitPrice",
-            "type": "auto",
-            "defaultValue": []
+            "type": "float"
         },
         {
             "name": "listPrice",
-            "type": "auto",
-            "defaultValue": []
+            "type": "float"
+        },
+        {
+            "name": "salePrice",
+            "type": "float",
+            "useNull": true
         },
         {
             "name": "quantity",
@@ -82,6 +85,10 @@ Ext.define('Taco.model.OrderItem', {
             "name": "subtotal",
             "type": "float",
             "useNull": true
+        },
+        {
+            "name": "displaySubtotal",
+            "type": "float"
         },
         {
             "name": "total",

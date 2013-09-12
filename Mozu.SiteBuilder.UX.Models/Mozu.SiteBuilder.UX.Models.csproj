@@ -192,10 +192,6 @@
     <Reference Include="Mozu.BuildSupport.GetAssemblyFileVersionTask">
       <HintPath>..\packages\Mozu.BuildSupport.GetAssemblyFileVersionTask.1.0.0\lib\Mozu.BuildSupport.GetAssemblyFileVersionTask.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.0.13248.1\lib\Mozu.CommerceRuntime.Contracts.dll</HintPath>
-    </Reference>
     <Reference Include="Mozu.Content.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Content.Contracts.1.0.13240.1\lib\Mozu.Content.Contracts.dll</HintPath>
