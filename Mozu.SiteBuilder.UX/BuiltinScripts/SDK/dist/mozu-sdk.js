@@ -1,3 +1,10 @@
+/*! 
+ * Mozu JavaScript SDK - v0.1.0 - 2013-09-12
+ *
+ * Copyright (c) 2013 Volusion, Inc.
+ *
+ */
+
 (function() {
     var amds = [], internalDefine = function(deps, fn) {
         if (typeof deps === "function") fn = deps;
@@ -1322,9 +1329,6 @@
                                 return runTask(arg, task);
                             }, args);
                         });
-                    },
-                    areSameType: function(ljson, rjson) {
-                        return Object.keys(ljson).join() === Object.keys(rjson).join();
                     },
                     when: amds[0],
                     uritemplate: amds[1],

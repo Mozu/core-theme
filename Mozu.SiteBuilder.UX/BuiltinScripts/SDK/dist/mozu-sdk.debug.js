@@ -4,6 +4,7 @@
  * Copyright (c) 2013 Volusion, Inc.
  *
  */
+
  (function() {	// the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
     // this allows us to cleanly vendor AMD-compatible scripts without polluting scope.
     // only downside is, you have to refer to the build script (Gruntfile) to see what order you brought them in.
@@ -2027,10 +2028,6 @@ var utils = (function () {
                     return runTask(arg, task);
                 }, args);
             });
-        },
-        // TODO: the below is horrible. request that all types include their type parameter.
-        areSameType: function (ljson, rjson) {
-            return Object.keys(ljson).join() === Object.keys(rjson).join();
         },
 
         // the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.

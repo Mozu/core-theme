@@ -1,10 +1,4 @@
-﻿/*! 
- * <%= pkg.title || pkg.name %> - v<%=pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>
- *
- * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>
- *
- */
- (function() {	// the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
+﻿ (function() {	// the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
     // this allows us to cleanly vendor AMD-compatible scripts without polluting scope.
     // only downside is, you have to refer to the build script (Gruntfile) to see what order you brought them in.
 	var amds = [],

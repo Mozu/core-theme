@@ -451,8 +451,8 @@
     <Content Include="BuiltinScripts\SDK\dist\mozu-sdk.js" />
     <Content Include="BuiltinScripts\SDK\dist\mozu-sdk.min.js" />
     <Content Include="BuiltinScripts\SDK\Gruntfile.js" />
-    <Content Include="BuiltinScripts\SDK\init_debug.js" />
-    <Content Include="BuiltinScripts\SDK\SDK_README.html" />
+    <Content Include="BuiltinScripts\SDK\src\init_debug.js" />
+    <Content Include="BuiltinScripts\SDK\docs\SDK_README.html" />
     <Content Include="BuiltinScripts\SDK\src\collection.js" />
     <Content Include="BuiltinScripts\SDK\src\context.js" />
     <Content Include="BuiltinScripts\SDK\src\init.js" />
@@ -500,11 +500,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="BuiltinScripts\SDK\package.json" />
-    <Content Include="BuiltinScripts\SDK\README.md" />
+    <Content Include="BuiltinScripts\SDK\docs\README.md" />
     <Content Include="BuiltinScripts\RequireJS\Manifest.ajaxmin" />
-    <Content Include="BuiltinScripts\SDK\wrap_footer.tpl" />
-    <Content Include="BuiltinScripts\SDK\wrap_header.tpl" />
+    <Content Include="BuiltinScripts\SDK\src\wrap_footer.tpl" />
+    <Content Include="BuiltinScripts\SDK\src\wrap_header.tpl" />
     <Content Include="BuiltinScripts\SDK\bower.json" />
+    <Content Include="BuiltinScripts\SDK\src\banner.tpl" />
     <None Include="Web.QA.config">
       <DependentUpon>Web.config</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -515,7 +516,6 @@
     <Folder Include="Areas\Misc\Views\Shared\" />
     <Folder Include="Areas\StoreFront\Models\" />
     <Folder Include="Areas\StoreFront\Views\Shared\" />
-    <Folder Include="BuiltinScripts\SDK\docs\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
