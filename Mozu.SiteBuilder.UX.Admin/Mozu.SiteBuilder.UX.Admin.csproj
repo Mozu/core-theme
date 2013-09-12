@@ -391,7 +391,6 @@
     <Compile Include="Api\BaseController.cs" />
     <Compile Include="Api\BehaviorCategoriesController.cs" />
     <Compile Include="Api\BehaviorsController.cs" />
-    <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\CmsDocumentController.cs" />
     <Compile Include="Api\CmsPublishingController.cs" />
