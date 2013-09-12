@@ -155,7 +155,7 @@ Ext.define('Taco.view.discount.Index', {
         */
         
         
-        ],
+        ]
     },
     //ToDo: WTF is this used for
     initComponent2: function (eOpts) {

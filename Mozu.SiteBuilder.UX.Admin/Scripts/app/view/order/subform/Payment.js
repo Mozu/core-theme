@@ -67,7 +67,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         
                 var modal = Ext.create('Taco.view.order.modal.AddPayment', {
                     record: me.record,
-                    isCreateMode: !me.orderForm.isEdit(),
+                    isCreateMode: !me.orderForm.isEdit()
                 });
         
                 modal.show();

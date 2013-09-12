@@ -28,11 +28,11 @@ Ext.define('Taco.view.location.Index', {
             width: 100
         }, {
             dataIndex: 'type',
-            text: 'Type',
+            text: 'Type'
             
         }, {
             dataIndex: 'name',
-            text: 'Name',
+            text: 'Name'
            
         }, {
             dataIndex: 'address',
@@ -40,7 +40,7 @@ Ext.define('Taco.view.location.Index', {
             flex:1
 
         }]
-    },
+    }
 
    
 });

@@ -17,7 +17,7 @@ Ext.define('Taco.view.customers.subform.OrderHistory', {
                 { xtype: 'datecolumn', text: 'Order Date', dataIndex: 'createDate', flex: 1 },
                 { text: 'Order Amount', dataIndex: 'total', flex: 1 },
                 { text: 'Status', dataIndex: 'paymentStatus', flex: 1 }
-            ],
+            ]
 
         }];
 

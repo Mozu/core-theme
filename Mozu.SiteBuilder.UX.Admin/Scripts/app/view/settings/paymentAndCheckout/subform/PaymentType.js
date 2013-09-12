@@ -26,7 +26,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
             value: this.record.get('gatewayDefinitionId'),
             displayField: 'name',
             triggerOnClick:true,
-            valueField: 'id',
+            valueField: 'id'
             
 
         });

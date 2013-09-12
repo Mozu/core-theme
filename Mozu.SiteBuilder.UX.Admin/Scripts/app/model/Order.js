@@ -141,7 +141,7 @@ Ext.define('Taco.model.Order', {
         /* sum cost of all products with line-item discounts applied */
         {
             "name": "discountedSubtotal",
-            "type": "float",
+            "type": "float"
         },
         /* sum of all discounts */
         {
