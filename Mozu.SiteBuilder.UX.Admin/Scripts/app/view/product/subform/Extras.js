@@ -241,7 +241,12 @@ Ext.define('Taco.view.product.subform.Extras', {
                 unitAtEnd: false,
                 name: this.getFieldName(ptAttribute),
                 fieldLabel: 'Extra Cost',
-                value: pExtra ? pExtra.get('values')[0].delta : null
+                value: pExtra ? pExtra.get('values')[0].delta : null,
+                listeners: {
+                    change: function (field, value) {
+                        pExtra.get('values')[0].delta = value;
+                    }
+                }
             }]
         };
     },

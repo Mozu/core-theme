@@ -106,7 +106,10 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                 html: listItem.value,
                 width: 275
             }, {
-                xtype: 'textfield',
+                xtype: 'unitfield',
+                unitString: '$',
+                emptyText: '0',
+                unitAtEnd: false,
                 fieldLabel: 'Extra Cost',
                 value: value.delta || 0,
                 extraValueObj: value,
