@@ -48,7 +48,7 @@ var ApiReference = (function () {
             var oType = objectTypes[typeName];
             
             // there may not be one
-            if (!oType) return typeName;
+            if (!oType) throw Mozu.Utils.Exceptions.NoRequestConfigFound(typeName, operation);
 
             // get specific details of the requested operation
             if (operation) operation = utils.dashCase(operation);
@@ -61,7 +61,7 @@ var ApiReference = (function () {
             if (typeof oType === "string") oType = { template: oType };
 
             // a template is required
-            if (!oType.template) "No URL template found for '" + typeName + "'.";
+            if (!oType.template) throw Mozu.Utils.Exceptions.NoRequestConfigFound(typeName, operation);
 
             returnObj = {};
             tptData = {};
@@ -80,7 +80,7 @@ var ApiReference = (function () {
 
             // shortcutparam allows you to use the most commonly used conf property as a string or number argument
             if (conf !== undefined && typeof conf !== "object") {
-                if (!oType.shortcutParam) throw "No shortcut parameter available for '" + typeName + "'. Please supply a configuration object instead of '" + conf + "'.";
+                if (!oType.shortcutParam) throw Mozu.Utils.Exceptions.NoShortcutParamFound(typeName, conf);
                 tptData[oType.shortcutParam] = conf;
             } else if (conf) {
                 // add the conf argued directly into this request fn to the tpt context

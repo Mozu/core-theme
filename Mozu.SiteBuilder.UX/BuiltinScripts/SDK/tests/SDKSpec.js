@@ -10,7 +10,6 @@
         "SearchService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/commerce/catalog/storefront/productsearch/",
         "CmsService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Content.WebApi/content/documents/",
         "ReferenceService": "http://aus01pdweb001.ads.volusion.com:9090/Mozu.reference.WebApi/platform/reference",
-        "UnknownService": "http://aus01pdweb001.ads.volusion.com:9090/Mozu.unknown.WebApi/"
     };
 
     Mozu.setServiceUrls(ServiceUrls);
@@ -24,8 +23,10 @@
             ]
         },
         SampleProductCode: "Sample",
+        SampleProductUrl: ServiceUrls.ProductService + 'Sample',
         SampleProduct: {
-            ProductCode: "Sample"
+            ProductCode: "Sample",
+            ProductName: "Sample Name"
         },
         SampleCart: {
             Items: [
@@ -38,6 +39,16 @@
             ],
             Total: 200
         },
+        EmptyCart: {
+            Items: [],
+            Total: 0
+        },
+        SampleCartItem: {
+            Id: 'kjagsdkjhagsdkjahg',
+            Product: {
+                ProductCode: 'hai'
+            }
+        },
         SampleUnknownType: {
             someProp: "someValue"
         }
@@ -49,10 +60,12 @@
         server = sinon.fakeServer.create();
         // TODO: add all respondWiths
 
-        server.respondWith('GET', new RegExp(ServiceUrls.ProductService + "\?.*"), JSON.stringify(Fixtures.SampleProductCollection));
-        server.respondWith('GET', ServiceUrls.ProductService + Fixtures.SampleProductCode, JSON.stringify(Fixtures.SampleProduct));
+        server.respondWith('GET', ServiceUrls.ProductService, JSON.stringify(Fixtures.SampleProductCollection));
+        server.respondWith('GET', new RegExp(ServiceUrls.ProductService + "\\?.*"), JSON.stringify(Fixtures.SampleProductCollection));
+        server.respondWith('GET', new RegExp(Fixtures.SampleProductUrl + "\\?.*"), JSON.stringify(Fixtures.SampleProduct));
         server.respondWith('GET', ServiceUrls.CartService + "current", JSON.stringify(Fixtures.SampleCart));
-        server.respondWith('GET', ServiceUrls.UnknownService, JSON.stringify(Fixtures.SampleUnknownType));
+        server.respondWith('DELETE', ServiceUrls.CartService + "current/items/", JSON.stringify(Fixtures.EmptyCart));
+        server.respondWith('POST', ServiceUrls.CartService + "current/items/", JSON.stringify(Fixtures.SampleCartItem));
         server.respondWith('GET', new RegExp(ServiceUrls.BadUrl), [404, {}, ""]);
 
         server.autoRespond = true; 
@@ -246,7 +259,7 @@
                 var promise = api.get('product', { ProductCode: Fixtures.SampleProductCode });
 
                 expect(Mozu.ApiReference.getRequestConfig).to.have.been.calledWith("get", "product", { ProductCode: Fixtures.SampleProductCode }, api.context);
-                expect(Mozu.Utils.ajax).to.have.been.calledWithMatch(/GET/, new RegExp(ServiceUrls.ProductService + Fixtures.SampleProductCode + ".*"));
+                expect(Mozu.Utils.ajax).to.have.been.calledWithMatch(/GET/, new RegExp(Fixtures.SampleProductUrl + ".*"));
 
                 return Mozu.Utils.when.all([
                     expect(promise).to.be.fulfilled,
@@ -311,259 +324,241 @@
         });
 
         describe("has an api.all method, that ", function () {
-        
-            var foo, cart;
-        
             it("should make a bunch of API calls at once and return them all to a handler", function (done) {
                 return api.all(api.get('product', Fixtures.SampleProductCode), api.get('cart')).spread(function (f, c) {
-                    expect(f).to.be.an.instanceof(Mozu.ApiObject).and.to.have.property('type', 'product').and.to.have.deep.property('data', Fixtures.SampleProduct);
-                    expect(c).to.be.an.instanceof(Mozu.ApiObject).and.to.have.property('type', 'cart').and.to.have.property('data', Fixtures.SampleCart);
-                    done();
-                }).otherwise(done);
+                    expect(f).to.be.an.instanceof(Mozu.ApiObject).and.to.have.property('type', 'product')
+                    expect(f).to.have.property('data').that.is.deep.equal(Fixtures.SampleProduct);
+                    expect(c).to.be.an.instanceof(Mozu.ApiObject).and.to.have.property('type', 'cart')
+                    expect(c).to.have.property('data').that.is.deep.equal(Fixtures.SampleCart);
+                });
             });
         });
 
 
-        //describe("has an api.steps method, that", function () {
+        describe("has an api.steps method, that", function () {
 
-        //    var product, cart, res;
+            it("should make calls in sequence, passing the arguments from the previous call to the next one", function () {
 
-        //    it("should make calls in sequence, passing the arguments from the previous call to the next one", function () {
+                var checkers = [], product, cart;
 
-        //        runs(function () {
+                return api.steps(
+                    function() {
+                        checkers.push(1);
+                        return api.get('product', Fixtures.SampleProduct);
+                    },
+                    function(p) {
+                        checkers.push(2);
+                        product = p;
+                        return api.get('cart');
+                    },
+                    function(c) {
+                        checkers.push(3);
+                        cart = c;
+                        return 5;
+                    },
+                    function(five) {
+                        expect(product).to.have.property("data").that.deep.equal(Fixtures.SampleProduct);
+                        expect(cart).to.have.property("data").that.deep.equal(Fixtures.SampleCart);
+                        expect(five).to.equal(5);
+                        expect(checkers).to.deep.equal([1,2,3]);
+                    }
+                ); 
+            });
+        });
 
-        //            api.steps(function () {
-        //                return api.get('product', existingProductCode);
-        //            }, function (foo) {
-        //                product = foo;
-        //                return api.get('cart');
-        //            }, function (c) {
-        //                cart = c;
-        //                return cart.action('empty');
-        //            }, function (emptyCart) {
-        //                expect(cart.data.Items.length).toBe(0);
-        //                return cart.action('addProduct', {
-        //                    Product: product.data,
-        //                    Quantity: 1
-        //                });
-        //            }, function (cartItem) {
-        //                return cart.get()
-        //            }, function (newCart) {
-        //                res = newCart;
-        //            });
+        describe("has a 'createSync' method that", function () {
+            var syncProd;
+            before(function () {
+                sinon.spy(Mozu.Utils, 'ajax');
+                sinon.spy(Mozu.ApiReference, "getRequestConfig");
+            });
+            after(function () {
+                Mozu.Utils.ajax.restore();
+                Mozu.ApiReference.getRequestConfig.restore();
+            });
 
-        //        });
+            it("synchronously creates ApiObject objects", function () {
+                expect(api).to.respondTo('createSync');
+                expect(api.createSync('product', {})).to.be.an.instanceof(Mozu.ApiObject).with.a.property('type').that.equal('product');
+                expect(syncProd = api.createSync('product', Fixtures.SampleProduct)).to.have.a.property('data').that.deep.equal(Fixtures.SampleProduct);
+                expect(api.createSync('cart')).to.have.a.property('unsynced').that.is.true;
+                expect(Mozu.Utils.ajax).not.to.have.been.called;
+            });
 
-        //        waitsFor(function () { return res; }, 3000);
+            it("produces sync objects that act just like asynchronously returned ones", function () {
+                var promise = syncProd.get();
+                expect(Mozu.ApiReference.getRequestConfig).to.have.been.calledWith("get", "product", syncProd.data, api.context);
+                expect(Mozu.Utils.ajax).to.have.been.calledWithMatch(/GET/, new RegExp(Fixtures.SampleProductUrl + ".*"));
+                return expect(promise).to.be.fulfilled;
+            });
+        });
 
-        //        runs(function () {
-        //            expect(res.data.Items.length).toBe(1);
-        //            expect(res.data.Items[0].Product.ProductCode).toBe(existingProductCode);
-        //        });
+        describe("fulfills its promises with an ApiObject object, that", function () {
 
-        //    });
-        //});
-        //describe("fulfills its promises with an ApiObject object, that", function () {
+            beforeEach(function () {
+                sinon.spy(Mozu.Utils, "ajax");
+            });
+
+            afterEach(function () {
+                Mozu.Utils.ajax.restore();
+            });
+
+            it("should contain the original json at a 'data' property", function () {
+                var rawJSON;
+                function getJSON(raw) {
+                    rawJSON = raw;
+                }
+                api.on('success', getJSON);
+                return api.get('products').then(function (products) {
+                    api.off(getJSON);
+                    expect(products.data).to.deep.equal(rawJSON);
+                });
+            });
+
+            describe("should have a 'prop' method that", function () {
+
+                it("gets underlying properties from the raw JSON", function () {
+                    return api.get('product', Fixtures.SampleProduct).then(function (product) {
+                        expect(product).to.respondTo("prop");
+                        expect(product.prop("ProductCode")).to.equal(Fixtures.SampleProduct.ProductCode);
+                    });
+                });
+
+                it("sets single underlying properties from the raw JSON", function () {
+                    return api.get('product', Fixtures.SampleProduct).then(function (product) {
+                        var newName = product.prop("ProductName") + "_MODIFIED";
+                        product.prop("ProductName", newName);
+                        expect(product.data.ProductName).to.equal(newName)
+                    });
+
+                });
+
+                it("sets multiple underlying properties from the raw JSON", function () {
+                    return api.get('product', Fixtures.SampleProduct).then(function (product) {
+                        var newStuff = {
+                            ProductName: product.prop("ProductName") + "_MODIFIED",
+                            ProductCode: product.prop("ProductCode") + "_MODIFIED"
+                        };
+                        product.prop(newStuff);
+                        expect(product.data.ProductName).to.equal(newStuff.ProductName);
+                        expect(product.data.ProductCode).to.equal(newStuff.ProductCode);
+                    });
+                });
+
+            });
+
+            it("should have an actions method that peforms common actions for the object type", function () {
+
+                return Mozu.Utils.when.all([api.get('product', Fixtures.SampleProductCode).then(function (product) {
+                    expect(product).to.respondTo('action');
+                    return product.action('addToCart').then(function (cartitem) {
+                        expect(cartitem).to.have.property('data').that.is.deep.equal(Fixtures.SampleCartItem);
+                    });
+                }),
+                api.get('cart').then(function (cart) {
+                    expect(cart).to.respondTo('action');
+                    return cart.action('empty').then(function (emptycart) {
+                        expect(emptycart).to.have.property('data').that.is.deep.equal(Fixtures.EmptyCart);
+                    });
+                })]);
+
+            });
+
+            it("should have a getAvailableActions method that returns all actions that can be performed on this resource", function () {
+                return api.get('cart').then(function (cart) {
+                    expect(cart).to.respondTo('getAvailableActions');
+                    expect(cart.getAvailableActions()).to.include("empty");
+                });
+            });
+
+            it("should fire an 'action' event when you successfully run an action method", function () {
+                var product = api.createSync('product', Fixtures.SampleProduct),
+                    actionName = "addToCart",
+                    onAction = sinon.spy();
+                product.on('action', onAction);
+                product.action('addToCart');
+                expect(onAction).to.have.been.calledWith(actionName);
+            });
+
+            it("should fire a 'sync' event when it syncs its own data from the server", function () {
+                var product = api.createSync('product', { ProductCode: Fixtures.SampleProductCode }),
+                    onSync = sinon.spy();
+                product.on('sync', onSync);
+                return product.get().then(function () {
+                    expect(onSync).to.have.been.calledWith(Fixtures.SampleProduct);
+                });
+            });
+
+            it("should, instead of updating itself, create new ApiObjects of a different type for some actions, and throw a 'spawn' event", function () {
+                var product = api.createSync('product', { ProductCode: Fixtures.SampleProductCode }),
+                    onSpawn = sinon.spy();
+                product.on('spawn', onSpawn);
+                return product.action('addToCart').then(function (cartItem) {
+                    expect(onSpawn).to.have.been.calledWith(cartItem);
+                });
+            });
+
+        });
             
-        //    var res;
-        //    var product, cart;
+        it("should fire an 'action' event when you successfully run an action method on any product that belongs to it", function () {
+            var product = api.createSync('product', Fixtures.SampleProduct),
+                actionName = "addToCart",
+                onAction = sinon.spy();
+            product.api.on('action', onAction);
+            product.action('addToCart');
+            expect(onAction).to.have.been.calledWith(product, actionName);
+        });
 
-        //    it("should contain the original json at a 'data' property", function () {
-        //        var p, rawJSON;
-        //        function getJSON(raw) {
-        //            rawJSON = raw;
-        //        }
-        //        runs(function () {
-        //            api.on('success', getJSON);
-        //            api.get('product', existingProductCode).then(function (foo) {
-        //                p = foo;
-        //            });
-        //        });
-        //        waitsFor(function () {
-        //            return p;
-        //        }, 3000);
-        //        runs(function () {
-        //            api.off('success', getJSON);
-        //            expect(p.data).toEqual(rawJSON);
-        //        });
-        //    });
 
-        //    describe("should have a prop method that", function () {
-        //        var p;
-        //        beforeEach(function () {
-        //            runs(function () {
-        //                api.get('product', existingProductCode).then(function (foo) {
-        //                    p = foo;
-        //                })
-        //            });
-        //            waitsFor(function () {
-        //                return p;
-        //            });
-        //        });
-        //        afterEach(function () {
-        //            p = null;
-        //        });
-        //        it("gets underlying properties from the raw JSON", function () {
-        //            expect(p.prop("ProductCode")).toEqual(p.data.ProductCode);
-        //        });
-        //        it("sets single underlying properties from the raw JSON", function () {
-        //            var newName = p.prop("ProductName") + "_MODIFIED";
-        //            p.prop("ProductName", newName);
-        //            expect(p.data.ProductName).toBe(newName);
-        //        });
-        //        it("sets multiple underlying properties from the raw JSON", function () {
-        //            var newStuff = {
-        //                ProductName: p.prop("ProductName") + "_MODIFIED",
-        //                ProductCode: p.prop("ProductCode") + "_MODIFIED"
-        //            };
-        //            p.prop(newStuff);
-        //            expect(p.data.ProductName).toBe(newStuff.ProductName);
-        //            expect(p.data.ProductCode).toBe(newStuff.ProductCode);
-        //        });
-                
-        //    });
+        it("should fire a 'sync' event when any product that belongs to it syncs its own data from the server", function () {
+            var product = api.createSync('product', { ProductCode: Fixtures.SampleProductCode }),
+                onSync = sinon.spy();
+            product.api.on('sync', onSync);
+            return product.get().then(function () {
+                expect(onSync).to.have.been.calledWith(product, Fixtures.SampleProduct);
+            });
+        });
+
+        describe("should, for collections returned by the API, be of a special ApiCollection type, that", function () {
+            var productsCollection, origLen, newItems = [{}, {}, {}, {}, {}];
+            beforeEach(function() {
+                return api.get("products").then(function (p) {
+                    productsCollection = p;
+                    origLen = p.length;
+                });
+            })
+            afterEach(function () {
+                productsCollection = null;
+            });
+            it("should have an \"isCollection\" flag set to true", function () {
+                expect(productsCollection.isCollection).to.be.ok;
+                expect(productsCollection).to.be.an.instanceof(Mozu.ApiCollection);
+            });
+            it("should be an array-like object with a length property", function () {
+                expect(productsCollection).to.have.property("length").that.is.a("number");
+            });
+            it("should have a string type property and a string itemType property, for the collection type and the type of its items", function() {
+                expect(productsCollection).to.have.a.property("type").that.is.a("string").and.is.to.equal("products");
+                expect(productsCollection).to.have.a.property("itemType").that.is.a("string").and.is.to.equal("product");
+            });
+            it("should have an .add method that adds new items", function () {
+                expect(productsCollection).to.respondTo("add");
+            });
+            it("should increase in length when items are added", function() {
+                productsCollection.add(newItems);
+                expect(productsCollection.length).to.equal(origLen + newItems.length);
+            });
+            it("should contain items of its item type", function() {
+                productsCollection.add(newItems);
+                expect(productsCollection[0]).to.be.an.instanceof(Mozu.ApiObject).and.to.have.a.property("type").that.is.to.equal(productsCollection.itemType);
+            });
+            it("should increment its underlying data.Items property to stay in sync when items are added", function () {
+                expect(productsCollection.length).to.equal(productsCollection.prop("Items").length);
+                productsCollection.add(newItems);
+                expect(productsCollection.length).to.equal(productsCollection.prop("Items").length);
+            });
+        });
             
-            
-
-        //    it("should have an actions method that peforms common actions for the object type", function () {
-        //        runs(function () {
-
-        //            api.get('product', existingProductCode).then(function (foo) {
-        //                product = foo;
-        //                return api.get('cart')
-        //            }).then(function (c) {
-        //                cart = c;
-        //                return cart.action('empty');
-        //            }).then(function (emptyCart) {
-        //                cart = emptyCart;
-        //                expect(cart.data.Items.length).toBe(0);
-        //                return cart.action('addProduct', {
-        //                    Product: product.data,
-        //                    Quantity: 1
-        //                })
-        //            }).then(function (cartItem) {
-        //                return cart.action('get');
-        //            }).then(function (newCart) {
-        //                res = newCart;
-        //            });
-        //        });
-
-        //        waitsFor(function () {
-        //            return res;
-        //        }, 3000);
-
-        //        runs(function () {
-        //            expect(res.data.Items.length).toBe(1);
-        //            expect(res.data.Items[0].Product.ProductCode).toBe(existingProductCode);
-        //        });
-                    
-        //    });
-
-        //    it("should have a getAvailableActions method that returns all actions that can be performed on this resource", function () {
-        //        expect(res.getAvailableActions()).toContain("empty");
-        //    });
-
-        //    it("should create dummy ApiObjects with no data if you set the third 'isRemote' argument to false", function () {
-        //        var p, dummyProduct, m;
-        //        p = api.get('product', existingProductCode, false).then(function (product) {
-        //            m = "promise resolves immediately";
-        //            dummyProduct = product;
-        //        });
-        //        expect(m).toBe("promise resolves immediately");
-        //        expect(Mozu.Utils.ajax).not.toHaveBeenCalled();
-        //        expect(dummyProduct.action).toBeTruthy();
-        //    });
-
-        //    it("should throw an 'action' event when you successfully run an action method and a 'sync' event if self-updating", function () {
-        //        var p, actionName, requestConf, syncEventCalled;
-        //        api.get('product', existingProductCode, false).then(function (dummyProduct) {
-        //            p = dummyProduct;
-        //        });
-        //        p.on('action', function (_a, _r) {
-        //            actionName = _a;
-        //            requestConf = _r;
-        //        });
-        //        p.on('sync', function () {
-        //            syncEventCalled = true;
-        //        });
-        //        p.get();
-        //        waitsFor(function () {
-        //            return syncEventCalled;
-        //        }, 3000);
-        //        runs(function () {
-        //            expect(actionName).toBe('get');
-        //            expect(requestConf).not.toBeTruthy();
-        //            expect(syncEventCalled).toBeTruthy();
-        //        });
-        //    });
-
-        //    it("should, instead of updating itself, create new ApiObjects of a different type for some actions, and throw a 'spawn' event", function () {
-        //        var res, spawnEventThrown, onSpawn = function () {
-        //            spawnEventThrown = true;
-        //        };
-        //        runs(function () {
-        //            cart.on('spawn', onSpawn);
-        //            cart.action('addProduct', {
-        //                Product: product.data,
-        //                Quantity: 3
-        //            }).then(function (cartItem) {
-        //                res = cartItem;
-        //            });
-        //        });
-
-        //        waitsFor(function () { return res; }, 3000);
-
-        //        runs(function () {
-        //            cart.off('spawn', onSpawn);
-        //            expect(res.type).toBe('cartitem');
-        //        });
-        //    });
-
-        //    describe("should, for collections returned by the API, be of a special ApiCollection type, that", function () {
-        //        var productsCollection, origLen, newItems = [{}, {}, {}, {}, {}];
-        //        beforeEach(function() {
-        //            api.get("products").then(function (p) {
-        //                productsCollection = p;
-        //                origLen = p.length;
-        //            });
-        //            waitsFor(function() {
-        //                return productsCollection;
-        //            });
-        //        })
-        //        afterEach(function () {
-        //            productsCollection = null;
-        //        });
-        //        it("should have an \"isCollection\" flag set to true", function () {
-        //            expect(productsCollection.isCollection).toBeTruthy();
-        //        });
-        //        it("should be an array-like object with a length property", function () {
-        //            expect(productsCollection.length).toBeDefined();
-        //        });
-        //        it("should have a string type property and a string itemType property, for the collection type and the type of its items", function() {
-        //            expect(typeof productsCollection.type).toBe("string");
-        //            expect(typeof productsCollection.itemType).toBe("string");
-        //        });
-        //        it("should have an .add method that adds new items", function () {
-        //            expect(typeof productsCollection.add).toBe("function");
-        //        });
-        //        it("should increase in length when items are added", function() {
-        //            productsCollection.add(newItems);
-        //            expect(productsCollection.length).toBe(origLen + newItems.length);
-        //        });
-        //        it("should contain items of its item type", function() {
-        //            productsCollection.add(newItems);
-        //            expect(productsCollection[0] instanceof Mozu.ApiObject).toBeTruthy();
-        //            expect(productsCollection[0].type).toBe(productsCollection.itemType);
-        //        });
-        //        it("should increment its underlying data.Items property to stay in sync when items are added", function () {
-        //            expect(productsCollection.length).toEqual(productsCollection.prop("Items").length);
-        //            productsCollection.add(newItems);
-        //            expect(productsCollection.length).toEqual(productsCollection.prop("Items").length);
-        //        });
-        //    });
-            
-        //});
-        
     });
 
 });
