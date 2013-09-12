@@ -157,11 +157,25 @@ Ext.define('Taco.view.order.widget.Package', {
 
                     '<div class="trackingNumberRow">',
                         ' Tracking Number: ',
-                        '<tpl if="values.trackingNumber">',
-                            '<a class="shipmentAction" shipmentAction="addTrackingNumber">{trackingNumber}</a>',
+                
+                        '<tpl if="values.shipmentStatus==\'Shipped\'">',
+                            '<tpl if="values.trackingNumber">',
+                                '<span>{trackingNumber}</span>',
+                            '<tpl else>',
+                                '<span>No tracking number</span>',
+                            '</tpl>',
                         '<tpl else>',
-                            '<a class="shipmentAction" shipmentAction="addTrackingNumber">Add Tracking Number</a>',
+                            '<tpl if="values.trackingNumber">',
+                                '<a class="shipmentAction" shipmentAction="addTrackingNumber">{trackingNumber}</a>',
+                            '<tpl else>',
+                                '<a class="shipmentAction" shipmentAction="addTrackingNumber">Add Tracking Number</a>',
+                            '</tpl>',
                         '</tpl>',
+
+
+
+
+
                     '</div>',
                     '<div class="orderCountRow">',
                         '<tpl if="values.itemTotal">',
