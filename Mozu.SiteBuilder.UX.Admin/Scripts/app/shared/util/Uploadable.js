@@ -14,27 +14,11 @@ Ext.define('Taco.shared.util.Uploadable', {
 
         Ext.each(fileList, function (file) { files.push(file); });
         Ext.each(files, function (file) {
-            var fileRecord,
-                fileRecordIdx = me.store ? me.store.find('name', file.name) : -1;
+            var fileRecordIdx = me.store ? me.store.find('name', file.name) : -1;
             if (fileRecordIdx > -1) {
-                fileRecord = me.store.getAt(fileRecordIdx);
                 Ext.create('Taco.core.ux.modal.Alert', {
                     autoShow: true,
                     text: '<div style="text-align:center"> File:  "<i>' + file.name + '</i>" already exists<br/></div>',
-
-                    listeners: {
-                        confirm: function () {
-                            Ext.Array.remove(files, file);
-                            this.fireEvent('existingfile', [fileRecord]);
-                            if (files.length > 0) {
-                                Ext.defer(function () {
-                                    me.onUploadFile(files);
-                                }, 100);
-
-                            }
-                        },
-                        scope: me
-                    }
                 });
                 shouldBreak = true;
                 return false;
