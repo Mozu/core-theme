@@ -73,14 +73,13 @@ module.exports = function (grunt) {
                     port: port,
                     base: '.'
                 }
-            }
-        },
-        jasmine: {
-            all: {
-                src: '<%= concat.debug.dest %>',
+            },
+            browser: {
                 options: {
-                    errorReporting: true,
-                    specs: 'tests/**/*.js'
+                    port: port,
+                    base: '.',
+                    keepalive: true,
+                    open: testurl
                 }
             }
         },
@@ -92,11 +91,6 @@ module.exports = function (grunt) {
                     run: true
                 }
             }
-        },
-        browser: {
-            test: {
-                url: testurl,
-            }
         }
     });
 
@@ -106,10 +100,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-mocha');
-
-    grunt.registerMultiTask('browser', 'Opens a browser to view a specrunner', function () {
-        require('open')(this.data.url);
-    });
 
     grunt.registerMultiTask('tfscheckout', 'Using Team Foundation Server, checks out the files that will be modified, so TFS is aware that changes were made.', function () {
         var done = this.async(),
@@ -136,11 +126,11 @@ module.exports = function (grunt) {
         });
     });
 
-    var order = ['bower', 'clean:dist', 'concat', 'uglify', 'clean:tmp', 'tfscheckout', 'connect', 'mocha'];
+    var order = ['bower', 'clean:dist', 'concat', 'uglify', 'clean:tmp', 'tfscheckout', 'connect:server', 'mocha'];
 
-    grunt.registerTask('default', order); // TODO: figure out real debug channel
-    grunt.registerTask('test', ['connect','mocha']);
-    grunt.registerTask('testdebug', ['browser:test', 'connect:server:keepalive']);
+    grunt.registerTask('default', order);
+    grunt.registerTask('test', ['connect:server','mocha']);
+    grunt.registerTask('testdebug', ['connect:browser']);
     grunt.registerTask('notest', order.slice(0, -2));
     grunt.registerTask('debug', ['notest', 'testdebug']);
 
