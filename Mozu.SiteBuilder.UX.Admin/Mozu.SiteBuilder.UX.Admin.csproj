@@ -391,6 +391,7 @@
     <Compile Include="Api\BaseController.cs" />
     <Compile Include="Api\BehaviorCategoriesController.cs" />
     <Compile Include="Api\BehaviorsController.cs" />
+    <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\CmsDocumentController.cs" />
     <Compile Include="Api\CmsPublishingController.cs" />
@@ -511,7 +512,6 @@
     <Compile Include="Api\Models\Checkout\GatewayCredentialFieldValue.cs" />
     <Compile Include="Api\Models\Checkout\OrderProcessingSettings.cs" />
     <Compile Include="Api\Models\Checkout\PaymentSetting.cs" />
-    <Compile Include="Api\Models\PhoneOrder\RuntimeProduct.cs" />
     <Compile Include="Api\Models\ProductModels\Product.cs" />
     <Compile Include="Api\Models\ProductModels\ProductInSiteInfo.cs" />
     <Compile Include="Api\Models\Response.cs" />
@@ -523,7 +523,6 @@
     <Compile Include="Api\OpeationHandlers\PagingParamatersRequestHandlers.cs" />
     <Compile Include="Api\PageTypeDefinitionController.cs" />
     <Compile Include="Api\CheckoutSettingsController.cs" />
-    <Compile Include="Api\PhoneOrderController.cs" />
     <Compile Include="Api\ProductInSiteInfoController.cs">
       <SubType>Code</SubType>
     </Compile>
