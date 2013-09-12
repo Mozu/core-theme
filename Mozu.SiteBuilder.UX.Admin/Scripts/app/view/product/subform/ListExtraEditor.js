@@ -148,8 +148,9 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
         });
 
         this.doneButton = Ext.widget({
-            xtype: 'dirtybutton',
+            xtype: 'primarybutton',
             text: 'Done',
+            setDirty:Ext.emptyFn,
             click: function () {
                 var results = [];
 
@@ -158,7 +159,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                 });
 
                 this.buildList(results);
-                this.productExtra.set('values', results);
+                this.productExtra.set('values', this.extraValues);
                 this.getLayout().setActiveItem(0);
             },
             scope: this
