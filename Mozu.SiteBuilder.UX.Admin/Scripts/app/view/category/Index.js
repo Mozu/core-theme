@@ -43,16 +43,6 @@ Ext.define('Taco.view.category.Index', {
 
         
         me.store = Taco.core.data.StoreManager.getCategoryTreeBySite();
-        //  me.store = { type: 'Taco.store.CategoriesTree' };
-     
-        
-    
-
-        
-        
-        //me.store.on("load", function(s, node, records, successful, eOpts) {
-        //    me.setHidden(records);
-        //});
 
         me.treelist = Ext.create('Taco.core.ux.TreeList', {
             store: me.store,
@@ -237,11 +227,6 @@ Ext.define('Taco.view.category.Index', {
                         failure: function (m) {
                            
                             grid.setLoading(false);
-                            Ext.create('Taco.core.ux.modal.Alert', {
-                                autoShow: true,
-                                text: 'Delete Failed. <br /> TODO get error text'
-                            });
-
                         }
 
                     });
