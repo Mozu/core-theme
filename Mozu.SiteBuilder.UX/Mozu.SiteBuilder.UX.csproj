@@ -500,7 +500,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="BuiltinScripts\SDK\package.json" />
-    <Content Include="BuiltinScripts\SDK\docs\README.md" />
+    <Content Include="BuiltinScripts\SDK\README.md" />
     <Content Include="BuiltinScripts\RequireJS\Manifest.ajaxmin" />
     <Content Include="BuiltinScripts\SDK\src\wrap_footer.tpl" />
     <Content Include="BuiltinScripts\SDK\src\wrap_header.tpl" />
