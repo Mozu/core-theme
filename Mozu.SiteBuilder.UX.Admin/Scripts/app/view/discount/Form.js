@@ -334,7 +334,7 @@ Ext.define('Taco.view.discount.Form', {
         });
         me.couponCodeInput = Ext.create('Ext.form.field.Text', {
             name: 'couponCode',
-            width: 500,
+            width: 500
         });
         me.couponCodeBox = Ext.create('Ext.container.Container', {
             layout: {

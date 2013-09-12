@@ -283,7 +283,7 @@ Ext.define('Taco.core.ux.window.MessageBox', {
                 };
             }
             return this.show(cfg);
-        },
+        }
     }, function () {
         /**
      * @class Ext.MessageBox
