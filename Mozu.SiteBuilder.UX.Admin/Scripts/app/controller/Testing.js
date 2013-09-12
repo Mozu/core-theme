@@ -245,15 +245,6 @@ Ext.define('Taco.controller.Testing', {
         });
     },
 
-    fosterOrder: function() {
-        var orderStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Orders');
-        orderStore.load({
-            callback: function (records, operation, success) {
-                window.foster = orderStore.getById("o124");
-            }
-        });        
-    },
-
     productExtras: function() {
 
         /*var store = Ext.data.StoreManager.lookup('Taco.store.Products'),
@@ -334,49 +325,6 @@ Ext.define('Taco.controller.Testing', {
                     }
                 }]
             }
-        });
-    },
-
-    fostercms: function() {
-
-
-        // var docuStore = Ext.data.StoreManager.lookup('Taco.store.CmsDocumentDrafts');
-        var docuStore = Taco.core.data.StoreManager.getOrCreate( { type:'Taco.store.CmsDocumentDrafts',  clearFilters: true, clearSort: true, autoLoad: true });
-        docuStore.load();
-
-        this.createContentView('Taco.core.ux.content.Container', {
-
-            header: {
-                title: "Foster CMS"
-            },
-            body: {
-                layout: 'auto',
-                items: [{
-                    xtype: 'box',
-                    autoEl: 'hr'
-                },
-                {
-                    xtype: "gridpanel",
-                    store: docuStore,
-                    columns: [
-                        {
-                            xtype: 'gridcolumn',
-                            dataIndex: 'id',
-                            text: 'Id'
-                        },
-                        {
-                            xtype: 'gridcolumn',
-                            dataIndex: 'name',
-                            text: 'Name'
-                        },
-                        {
-                            xtype: 'gridcolumn',
-                            dataIndex: 'publishState',
-                            text: 'PublishState'
-                        }
-                    ]
-                }] // /items
-            } // /body
         });
     },
 

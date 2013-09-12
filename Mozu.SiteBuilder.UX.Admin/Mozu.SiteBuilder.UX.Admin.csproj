@@ -252,7 +252,7 @@
     </Reference>
     <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.0.13240.1\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.0.13255.1001\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -391,6 +391,7 @@
     <Compile Include="Api\BaseController.cs" />
     <Compile Include="Api\BehaviorCategoriesController.cs" />
     <Compile Include="Api\BehaviorsController.cs" />
+    <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\CmsDocumentController.cs" />
     <Compile Include="Api\CmsPublishingController.cs" />
@@ -401,6 +402,7 @@
     <Compile Include="Api\Models\RuntimeProductOption.cs" />
     <Compile Include="Api\Models\Returns\Return.cs" />
     <Compile Include="Api\OrderDiscountController.cs" />
+    <Compile Include="Api\PublishingSettingsController.cs" />
     <Compile Include="Api\ReturnController.cs" />
     <Compile Include="Api\CustomerController.cs" />
     <Compile Include="Api\FacetController.cs" />
@@ -603,6 +605,7 @@
     <Content Include="Scripts\app\view\customers\subform\Subform.js" />
     <Content Include="Scripts\app\view\location\index.js" />
     <Content Include="Scripts\app\view\order\widget\DiscountRowBody.js" />
+    <Content Include="Scripts\app\view\pendingchange\Catalog.js" />
     <Content Include="Scripts\app\view\site\navigation\NavHeadings.js" />
     <Content Include="Scripts\app\view\tbd\Index.js" />
     <Content Include="Scripts\build\all-classes.js" />

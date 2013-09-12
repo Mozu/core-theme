@@ -14,6 +14,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         private const string STOCK_ON_HAND_PROPERTY = "stockOnHand";
         private const string SITE_ID_PROPERTY = "productinsites.siteId";
         private const string PRODUCT_FULL_DESCRIPTION = "productinsites.content.productFullDescription";
+        private const string PRODUCT_PUBLISHED_STATE = "publishinginfo.publishedstate";
 
         /// <summary>
         /// Converts a FilterCollection for Product to a mozu services-compatible filter string.
@@ -69,6 +70,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                     return string.Format("{2} {1} {0}", filter.value, filter.comparison, STOCK_ON_HAND_PROPERTY);
                 case "siteid":
                     return string.Format("{1} eq {0}", filter.value, SITE_ID_PROPERTY);
+                case "publishedstate":
+                    return String.Format("{1} eq {0}", filter.value, PRODUCT_PUBLISHED_STATE);
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);
