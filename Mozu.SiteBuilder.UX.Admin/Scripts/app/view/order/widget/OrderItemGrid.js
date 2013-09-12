@@ -241,7 +241,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     sortable: false,
                     align: "right",
                     renderer: 'usMoney',
-                    dataIndex: 'total'
+                    dataIndex: 'displaySubtotal'
                 },
                 {
                     //xtype: 'taco.menucolumn',

@@ -28,6 +28,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "listPrice")]
         public decimal ListPrice { get; set; }
 
+        [DataMember(Name = "salePrice")]
+        public decimal? SalePrice { get; set; }
+
         [DataMember(Name = "unitWeight")]
         public decimal? UnitWeight { get; set; }
 
@@ -46,8 +49,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "shippingDiscounts", EmitDefaultValue = true)]
         public List<ShippingDiscount> ShippingDiscounts { get; set; }
 
+        /// <summary>
+        /// Subtotal of this line.
+        /// Warning: This is calculated as list price * quantity.
+        /// Items which have a sale price may behave unexpectedly.
+        /// </summary>
         [DataMember(Name = "subtotal")]
         public decimal Subtotal { get; set; }
+
+        /// <summary>
+        /// The subtotal intended to be displayed to the user.
+        /// This is: sale/list price * quantity
+        /// NOT including line-item discounts.
+        /// </summary>
+        [DataMember(Name = "displaySubtotal")]
+        public decimal DisplaySubtotal { get; set; }
 
         [DataMember(Name = "total")]
         public decimal Total { get; set; }
