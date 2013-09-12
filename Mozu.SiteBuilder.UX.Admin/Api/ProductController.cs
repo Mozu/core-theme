@@ -50,8 +50,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             string filter = extFilter.ToFilterString();
             string sort = pagingParams.sort.ToSortString();
+		    string q = extFilter.ToQString();
+            int? qLimit = extFilter.SearchType == "global" ? (int?)3 : (int?)null;
 
-            ProductCollection res = (await _productClient.GetProducts( startIndex : pagingParams.startIndex ,pageSize: pagingParams.pageSize, sortBy: sort,responseGroups:responseGroups, filter:filter)).ReadAsSync();
+
+            ProductCollection res = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, sortBy: sort, responseGroups: responseGroups, filter: filter, q: q, qLimit: qLimit)).ReadAsSync();
 
             var mapped = res.Items.Map<List<Product>>();
             return List2(mapped, (int)res.TotalCount);

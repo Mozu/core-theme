@@ -20,9 +20,10 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
         emptyText: 'No matching items found.',
         width:400,
         // Custom rendering template for each item
+        //removing count because of service optimization it doesnt return.
         getInnerTpl: function () {
             return '<tpl if="isHeader">' +
-                '<h3>{name}&nbsp;&nbsp;&nbsp;<i><a>see all ({count})</a></i></h3>' +
+                '<h3>{name}&nbsp;&nbsp;&nbsp;<i><a>see all</a></i></h3>' +
                 '<tpl else>' +
                 '<div>&nbsp;&nbsp;&nbsp;{itemId}- {name}</div>' +
                 '</tpl>';

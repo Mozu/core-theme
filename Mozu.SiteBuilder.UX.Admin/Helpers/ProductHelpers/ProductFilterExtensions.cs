@@ -30,17 +30,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
             // if (!string.IsNullOrEmpty(extFilter.query))
             //     extFilter.Add(new FilterCollectionItem { comparison = "cont", field = PropertyGuy.Convert(x => x.Content.ProductName), value = extFilter.query });
 
-            var stateMents = extFilter.Where(x => x.value != null).Where(x => !String.IsNullOrEmpty(x.value.ToString())).SelectMany(x => x.value.ToString().Split(' ').Select(_ => GetFilter(_, x)));
+            var stateMents = extFilter.Where(x => x.value != null && x.property != "all").Where(x => !String.IsNullOrEmpty(x.value.ToString())).SelectMany(x => x.value.ToString().Split(' ').Select(_ => GetFilter(_, x)));
 
             return string.Join(" and ", stateMents);
         }
 
+
+         public static string ToQString(this FilterCollection extFilter, bool? withVariations = null)
+         {
+             string allString;
+             if (extFilter.TryGetValue<string>("all", out allString) && !string.IsNullOrWhiteSpace(allString))
+             {
+                 return string.Join(" ", allString.Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(x=> x+"*")).Trim();
+             }
+             return null;
+         }
         private static string GetFilter(string value, FilterCollectionItem filter)
         {
             switch (filter.property.ToLowerInvariant())
             {
-                case "all": //commenting out full desc till supported by service
-                    return string.Format(/*({1} cont \"{0}\" or */"({2} sw \"{0}\" or {3} cont \"{0}\")", value, PRODUCT_FULL_DESCRIPTION, PRODUCT_CODE_PROPERTY, PRODUCT_NAME_PROPERTY);
                 case "categoryids":
                     return string.Format("productinsites.productcategories.categoryid eq {0}", filter.value);
                 case "isactive":

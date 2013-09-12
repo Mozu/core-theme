@@ -30,12 +30,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
             // if (!string.IsNullOrEmpty(extFilter.query))
             //     extFilter.Add(new FilterCollectionItem { comparison = "cont", field = PropertyGuy.Convert(x => x.Content.ProductName), value = extFilter.query });
 
-            var stateMents = extFilter.Select(GetFilter);
+            var stateMents = extFilter.Where(x=> x.property != "all").Select(GetFilter);
             if (!extFilter.Any(x => string.Equals(x.property, "status", StringComparison.OrdinalIgnoreCase)))
             {
                 stateMents = stateMents.Concat(new string[] { "Status ne \"Created\"" });
             }
             return string.Join(" and ", stateMents);
+        }
+        public static string ToQString(this FilterCollection extFilter, bool? withVariations = null)
+        {
+            string allString;
+            if (extFilter.TryGetValue<string>("all", out allString) && !string.IsNullOrWhiteSpace(allString))
+            {
+                return string.Join(" ", allString.Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x + "*")).Trim();
+            }
+            return null;
         }
 
         private static string GetFilter(FilterCollectionItem filter)
@@ -43,16 +52,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
 
             switch (filter.property.ToLowerInvariant())
             {
-                case "all": //commenting out full desc till supported by service
-                    int i;
-                    if (int.TryParse(filter.value as string, out i))
-                    {
-                        return string.Format("({1} eq {0})", filter.value, ORDERNUMBER);
-                    }
-                    else
-                    {
-                        return string.Format("( {1} cont \"{0}\" or {2} sw \"{0}\" or {3} sw \"{0}\" or {4} sw \"{0}\" )", filter.value, BILLINGCONTACTADDRESS, BILLINGCONTACTFIRSTNAME, BILLINGCONTACTFIRSTNAME, BILLINGCONTACTLASTNAMEORSURNAME);   
-                    }
+               
                 case "ordernumber": 
                     return string.Format("({1} eq {0})", filter.value, ORDERNUMBER);
                 case "billingcontactfirstname":
