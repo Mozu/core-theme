@@ -187,6 +187,11 @@ Ext.define('Taco.store.Navigation', {
                 "id": "cmspublishing",
                 "label": "Content",
                 "address": "/pendingchanges/cms"
+            },
+            {
+                "id": "catlogpublishing",
+                "label": "Catalog",
+                "address": "/pendingchanges/catalog"
             }]
         }, {
             "id": "locations",
