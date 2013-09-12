@@ -35,6 +35,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
             return string.Join(" and ", sortCollection.Select(x => GetFilter(x, useSiteContext) + (x.IsAscending ? " asc" : " desc")));
         }
 
+       
+
         private static string GetFilter(SortingCollectionItem item, bool useSiteContext)
         {
             switch (item.property.ToLowerInvariant())

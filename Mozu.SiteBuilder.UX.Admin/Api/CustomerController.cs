@@ -65,8 +65,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter)
         {
-            var filter = extFilter.ToFilterString();
-
             if (pagingParameters.id != null)
             {
                 int customerId = Convert.ToInt32(pagingParameters.id);
@@ -76,10 +74,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(customer);
             }
 
+            var filter = extFilter.ToFilterString();
+            var q = extFilter.ToQString();
+            int? qLimit = q == null ? (int?)null : 3;
+            var sort = pagingParameters.sort.ToSortString();
             var dcCustomers = (await _customerWebApiClient.GetAccounts(
                                 startIndex: pagingParameters.startIndex,
                                 pageSize: pagingParameters.pageSize,
-                                sortBy: "Id desc",
+                                sortBy: sort,
+                                qLimit :qLimit,
+                                q:q ,
                                 filter: filter
                             )).ReadAsSync();
 

@@ -67,7 +67,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             else
             {
                 var filter = extFilter.ToFilterString();
-                var dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), filter)).ReadAsSync();
+                var q = extFilter.ToQString();
+                int? qLimit = q == null ?(int?) null : 3;
+                var dcOrders = (await _orderWebApiClient.GetOrders(startIndex: startIndex, pageSize: pageSize, sortBy: pagingParams.sort.ToSortString(), filter: filter, q: q, qLimit: qLimit)).ReadAsSync();
                 return List2(Mapper.Map<List<Order>>(dcOrders.Items), (int)dcOrders.TotalCount);
             }
         }
