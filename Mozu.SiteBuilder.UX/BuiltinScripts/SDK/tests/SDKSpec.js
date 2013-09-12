@@ -58,7 +58,6 @@
     
     before(function () {
         server = sinon.fakeServer.create();
-        // TODO: add all respondWiths
 
         server.respondWith('GET', ServiceUrls.ProductService, JSON.stringify(Fixtures.SampleProductCollection));
         server.respondWith('GET', new RegExp(ServiceUrls.ProductService + "\\?.*"), JSON.stringify(Fixtures.SampleProductCollection));

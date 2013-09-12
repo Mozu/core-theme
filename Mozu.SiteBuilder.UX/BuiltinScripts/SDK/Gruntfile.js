@@ -14,6 +14,8 @@ module.exports = function (grunt) {
         exportAs: 'Mozu',
 
         releasetemp: '<%= pkg.name %>.tmp',
+
+        banner: grunt.file.read("src/banner.tpl"),
         
         bower: {
             install: {
@@ -30,15 +32,15 @@ module.exports = function (grunt) {
         },
         concat: {
             options: {
-                banner: grunt.file.read('wrap_header.tpl'),
-                footer: grunt.file.read('wrap_footer.tpl')
+                banner: '<%= banner %>' + grunt.file.read('src/wrap_header.tpl'),
+                footer: grunt.file.read('src/wrap_footer.tpl')
             },
             dist: {
                 src: allScripts,
                 dest: '<%= releasetemp %>'
             },
             debug: {
-                src: allScripts.concat('init_debug.js'),
+                src: allScripts.concat('src/init_debug.js'),
                 dest: '<%= pkg.main %>.debug.js'
             }
         },
@@ -52,6 +54,7 @@ module.exports = function (grunt) {
             },
             beautify: {
                 options: {
+                    banner: '<%= banner %>',
                     beautify: true,
                     comments: true,
                     indent_level: 2,
