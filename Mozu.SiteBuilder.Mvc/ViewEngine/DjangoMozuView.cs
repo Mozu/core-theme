@@ -145,6 +145,10 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             requestContext["Html"] = requestContext["html"] = html = new HtmlHelper(viewContext, this);
             requestContext["ViewData"] = requestContext["viewData"] = viewContext.ViewData;
             requestContext["Model"] = requestContext["model"] = viewContext.ViewData.Model;
+            if (viewContext.ParentActionViewContext != null)
+            {
+                requestContext["PageModel"] = requestContext["pageModel"] = viewContext.ParentActionViewContext.ViewData.Model;
+            }
             requestContext["Session"] = requestContext["session"] = viewContext.HttpContext.Session;
             //requestContext["Templates"] = new TemplateLocator(html, this.TemplateManager);
             requestContext["SiteContext"] = requestContext["siteContext"] = siteBuilderContext;
