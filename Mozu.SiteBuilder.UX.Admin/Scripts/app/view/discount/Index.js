@@ -73,15 +73,15 @@ Ext.define('Taco.view.discount.Index', {
             width: 180,
             hidden: false,
             renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-
+                console.log(record);
                 var val = "";
 
-                if (record.get("targetType") == "allproducts") {
+                if (record.get("products").length === 0) {
                     val = "All products";
                     return val;
                 }
 
-                if (record.get("products").length > 0) {
+                if (record.get("products").length) {
                     val = record.get("products").length + ((record.get("products").length > 1) ? " Products" : " Product");
                 }
 
