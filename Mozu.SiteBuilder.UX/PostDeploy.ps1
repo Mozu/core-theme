@@ -40,5 +40,5 @@ if($ScaleUnitId)
 	}
 }
 
-start-service "W3SVC"
+
 
