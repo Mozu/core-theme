@@ -18,7 +18,7 @@ Ext.define('Taco.shared.util.Uploadable', {
             if (fileRecordIdx > -1) {
                 Ext.create('Taco.core.ux.modal.Alert', {
                     autoShow: true,
-                    text: '<div style="text-align:center"> File:  "<i>' + file.name + '</i>" already exists<br/></div>',
+                    text: '<div style="text-align:center"> File:  "<i>' + file.name + '</i>" already exists<br/></div>'
                 });
                 shouldBreak = true;
                 return false;
