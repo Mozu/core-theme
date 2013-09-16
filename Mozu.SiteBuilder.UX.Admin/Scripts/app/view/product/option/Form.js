@@ -97,7 +97,7 @@ Ext.define('Taco.view.product.option.Form', {
 
             items.push({
                 xtype: 'component',
-                html: 'This product type does not have any associated options."'
+                html: 'This product type does not have any associated options.'
             });
 
         } else {
