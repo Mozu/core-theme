@@ -23,7 +23,7 @@ Ext.define('Taco.view.attribute.Index', {
                 xtype: 'primarybutton',
                 text: 'Create New Attribute',
                 click: function () {
-                    me.launchEditor(Ext.create('Taco.model.Attribute'));
+                    Taco.core.StateManager.attemptNavigate('attributes/create');
                 }
             }]
         };
