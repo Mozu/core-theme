@@ -24,7 +24,7 @@ Ext.define('Taco.view.discount.Index', {
                 xtype: 'primarybutton',
                 text: 'Create New Discount',
                 click: function () {
-                    me.launchEditor(Ext.create('Taco.model.Discount'));
+                    Taco.core.StateManager.attemptNavigate('discounts/create');
                 }
             }]
         };
