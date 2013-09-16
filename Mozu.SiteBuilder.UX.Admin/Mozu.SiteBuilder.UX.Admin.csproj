@@ -606,6 +606,7 @@
     <Content Include="Scripts\app\view\location\index.js" />
     <Content Include="Scripts\app\view\order\widget\DiscountRowBody.js" />
     <Content Include="Scripts\app\view\pendingchange\Catalog.js" />
+    <Content Include="Scripts\app\view\settings\publishing\Index.js" />
     <Content Include="Scripts\app\view\site\navigation\NavHeadings.js" />
     <Content Include="Scripts\app\view\tbd\Index.js" />
     <Content Include="Scripts\build\all-classes.js" />

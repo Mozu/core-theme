@@ -1,15 +1,17 @@
-﻿/**
- * @class Taco.controller.Products
- * @author Jason Cochran
- * The Products controller
- */
+﻿
 
 Ext.define('Taco.controller.Settings', {
     extend: 'Taco.core.Controller',
-    requires: ['Taco.view.settings.paymentAndCheckout.Edit', 'Taco.view.settings.tax.Edit', 'Taco.view.settings.shipping.Edit', 'Taco.model.SiteShippingSettings'],
-    //editorView: 'Taco.view.product.Edit',
+    requires: [
+        'Taco.view.settings.paymentAndCheckout.Edit',
+        'Taco.view.settings.tax.Edit',
+        'Taco.view.settings.shipping.Edit',
+        'Taco.model.SiteShippingSettings',
+        'Taco.view.settings.publishing.Index'
+    ],
     listView: null,
     models: ['Taco.model.Product'],
+
     paymentAndCheckout: function () {
         Taco.app.setLoading();
         if (!this.requiresSiteContext()) {
@@ -29,16 +31,14 @@ Ext.define('Taco.controller.Settings', {
                 scope: this
             });
         }
-
-
     },
+
     tax: function () {
         this.createContentView('Taco.view.settings.tax.Edit', {
             record: null
         });
-
-
     },
+
     shipping: function () {
         Taco.app.setLoading();
         if (!this.requiresSiteContext()) {
@@ -58,28 +58,9 @@ Ext.define('Taco.controller.Settings', {
                 scope: this
             });
         }
-        
+    },
 
-
+    publishing: function () {
+        this.createContentView('Taco.view.settings.publishing.Index');
     }
-//stores: ['Taco.store.Products'],
-    //views: ['product.Index'],
-    //modelName: 'Product'
-
-    //contextPlaceholders: {
-    //    t: function () {
-    //        return Ext.create('Taco.core.ux.content.Container', {
-    //            header: {
-    //                title: "choose a site collection"
-    //            },
-
-    //            body: {
-    //                layout: 'auto',
-    //                items: [{
-    //                    html: 'placeholder for choose site collection interstitial '
-    //                }]
-    //            }
-    //        });
-    //    }
-    //}
 });
