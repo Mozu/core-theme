@@ -97,7 +97,7 @@ Ext.define('Taco.view.product.subform.Extras', {
     getEmptyComponent: function () {
         return {
             xtype: 'component',
-            html: 'This product type does not have any associated extras."'
+            html: 'This product type does not have any associated extras.'
         };
     },
 

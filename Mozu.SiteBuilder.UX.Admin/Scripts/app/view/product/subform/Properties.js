@@ -142,7 +142,7 @@ Ext.define('Taco.view.product.subform.Properties', {
     getEmptyComponent: function () {
         return {
             xtype: 'component',
-            html: 'This product type does not have any associated properties."'
+            html: 'This product type does not have any associated properties.'
         };
     },
 
