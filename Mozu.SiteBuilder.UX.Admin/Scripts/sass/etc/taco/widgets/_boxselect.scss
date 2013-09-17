@@ -2,6 +2,7 @@
   $boxselect-item-font-size: px-to-rem(14);
 
   .#{$prefix}boxselect {
+
     input {
       background: none transparent;
       border: 0px none;
@@ -13,7 +14,7 @@
 
     &.#{$prefix}form-text {
       cursor: text;
-      // height: 30px !important; // TODO: remove !important hack once generic field styling is fixed
+     //height: 390px !important; // TODO: remove !important hack once generic field styling is fixed
       height: auto !important;
       overflow-y: auto;
       padding: 0px !important; // TODO: remove !important hack once generic field styling is fixed
@@ -23,14 +24,14 @@
   ul.#{$prefix}boxselect-list {
     font-size: $font-size;
     line-height: $font-size;
-    padding: 1px 6px;
-
+    padding: 1px 9px;
+    height: 100%;
     &.#{$prefix}boxselect-singleselect {
       overflow: hidden;
       white-space: nowrap;
     }
   }
-
+   
   .#{$prefix}boxselect-input {
     display: inline-block;
     min-width: 100px;
