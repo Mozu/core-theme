@@ -52,14 +52,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 // read existing shit from a cookie.
                 HttpCookie oldCookie = _cookieMonster.GetRequestCookie(COOKIE_NAME);
                 if (oldCookie != null && !String.IsNullOrEmpty(oldCookie.Value))
-                    oldCookie.Value.Split(';').ToList().ForEach(cfg => sitegroupPublishingPreferences.Add(cfg.Split(':')[0], cfg.Split(':')[1]));
+                    oldCookie.Value.Split('|').ToList().ForEach(cfg => sitegroupPublishingPreferences.Add(cfg.Split(':')[0], cfg.Split(':')[1]));
 
                 // inject the new preferences into the list.
                 sitegroupPublishingPreferences[args.SiteGroupId.ToString()] = args.ProductPublishingMode;
 
                 // write a cookie back out.
                 string[] prefsList = sitegroupPublishingPreferences.Select(kvp => kvp.Key + ":" + kvp.Value).ToArray();
-                HttpCookie newCookie = new HttpCookie(COOKIE_NAME, String.Join(";", prefsList));
+                HttpCookie newCookie = new HttpCookie(COOKIE_NAME, String.Join("|", prefsList));
                 _cookieMonster.SaveResponseCookie(COOKIE_NAME, newCookie);
 
                 res = new DC.SiteGroup { Id = args.SiteGroupId, ProductPublishingMode = args.ProductPublishingMode };
