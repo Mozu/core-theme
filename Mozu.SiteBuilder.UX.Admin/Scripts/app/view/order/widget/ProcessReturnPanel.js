@@ -319,6 +319,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         });
 
     },
+
     onItemEdit: function () {
         //todo:validate
         var me = this;
@@ -328,13 +329,16 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         me.record.set('rmaDeadline', me.rmaDeadline.getValue());
         me.record.set('totalLossAmount', me.totalLossAmount.getValue());
 
-        me.record.save({
-            callback: function () {
-                me.returnActionButtons.each(function (button) {
-                    button.setDisabled(false);
-                });
-            }
-        });
-
+        // Debounce Ext pattern, based on http://www.sencha.com/blog/tips-and-tricks-for-ext-js-component-developers/
+        me.onItemEditTask = me.onItemEditTask || new Ext.util.DelayedTask(function () {
+            me.record.save({
+                callback: function () {
+                    me.returnActionButtons.each(function (button) {
+                        button.setDisabled(false);
+                    });
+                }
+            });
+        }, this);
+        me.onItemEditTask.delay(500);
     }
 });
