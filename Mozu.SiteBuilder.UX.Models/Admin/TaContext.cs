@@ -29,6 +29,9 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
+        [DataMember(Name = "productPublishingMode")]
+        public string ProductPublishingMode { get; set; }
+
         [DataMember(Name = "sites")]
         public List<TaContextSite> Sites { get; set; }
     }
@@ -47,5 +50,8 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
 
         [DataMember(Name = "defaultHost")]
         public string DefaultHost { get; set; }
+
+        [DataMember(Name = "contentPublishingMode")]
+        public string ContentPublishingMode { get; set; }
     }
 }
