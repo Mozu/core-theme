@@ -579,7 +579,6 @@
     <Compile Include="MockServices\AbstractInMemoryResourceApiClient.cs" />
     <Compile Include="MockServices\InMemoryProductTypeApiClient.cs" />
     <Compile Include="MockServices\InMemoryAttributeWebApiClient.cs" />
-    <Compile Include="MockServices\InSessionDocumentWebApiClient.cs" />
     <Compile Include="MockServices\InMemoryProductWebApiClient.cs" />
     <Compile Include="MockServices\Mocks\Attributes.cs" />
     <Compile Include="MockServices\TestResponse.cs" />
