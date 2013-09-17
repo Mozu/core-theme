@@ -20,10 +20,11 @@ Ext.define('Taco.view.order.widget.ProductPickerField', {
     //height: 24,
     listConfig: {
         loadingText: 'Searching...',
+        cls : "product-picker-menu",
         emptyText: 'No matching products found.',
         // Custom rendering template for each item
         getInnerTpl: function () {
-            return "{productCode} - {productName}"
+            return "<span class='product-name'>{productName}</span> <span class='product-code'>{productCode}</span>"
         },
 
         // this is an override that hides the paging toolbar when the list only contains a single page of results;
@@ -49,10 +50,10 @@ Ext.define('Taco.view.order.widget.ProductPickerField', {
     allQuery: "",
     
     
+
     // modify the format of the query data to fit the service filtering pattern.
     formatQuery: function (queryEvent, e) {
         // need to format the search text from the combobox into a filter structure the service wants;
-        
         // always force the query to match what's in the field.
         // after a selection the queryEvent.query is initially set to "" which is incorrect in this situation;
         var queryText = queryEvent.combo.getValue() || "";

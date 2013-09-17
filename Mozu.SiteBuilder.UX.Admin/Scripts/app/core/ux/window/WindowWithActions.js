@@ -102,7 +102,10 @@ Ext.define('Taco.core.ux.window.WindowWithActions', {
                 defaultMargins: '0 0 0 10'
             },
             items: [{
-                xtype: 'secondaryaction',
+                xtype: 'button',
+                //xtype: 'secondaryaction',
+                ui: "action",
+                scale:"medium",
                 text: this.secondaryText,
                 listeners: {
                     click: function() {

@@ -24,6 +24,10 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     width: 800,
     height: 600,
     border: false,
+    // disabling the default window escape key to close behavior
+    onEsc: function() {
+        return false;
+    },
     layout: {
         type:"vbox",
         align: 'stretch'
@@ -41,7 +45,6 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     
     afterRender: function () {
         this.callParent(arguments);
-
     },
     
     initComponent: function (eOpts) {
@@ -118,20 +121,19 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             }
         ];
         
-        if (!me.record) {
-            me.loadRecord();
-        }
         this.callParent(arguments);
+        
+        
     },
     
     // onShow show the loading mask while we wait for the service to respond with the draft record;
     show : function() {
         var me = this;
+        
         me.callParent(arguments);
 
         if (!me.record) {
-            me.setLoading(true, me.body);
-        }
+            me.loadRecord();}
         else {
             me.onLoadRecord();
         }
@@ -148,7 +150,13 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         var me = this,
             orderId = me.record ? me.record.getId() : me.recordId,
             orderModel = Ext.ModelManager.getModel('Taco.model.Order');
-
+        
+        var mask = me.setLoading({
+            msg: "Loading",
+            // making the initial loading mask white to avoid the screen flash
+            maskCls: "x-mask taco-white-mask"
+        }, me.body);
+        
         orderModel.load(orderId, {
             params: { 'draft': me.isDraftMode },
             failure: function (record, operation) {
@@ -168,6 +176,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     // when the draft record has loaded create and add the total and grid and hide the loading mask;
     onLoadRecord : function() {
         var me = this;
+        
         // initialize the ui when the record loads the first time.
         if (!this.totalRow) {
             me.initUi();
@@ -266,7 +275,9 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                     me.hide();
                 },
                 'save': function () {
-                    me.setLoading(true, me.body);
+                    me.setLoading({
+                        maskCls: "x-mask taco-white-mask"
+                    }, me.body);
                     me.setHasDraft(true);
                 },
                 'saveSuccess': function (data) {

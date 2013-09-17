@@ -25,3 +25,16 @@
 		padding:20px 20px 20px 20px;		
 	}
 }
+
+
+// a css class that is added to a window body (or overriden target dom node) when an overflow happens;
+.x-window-body-overflow{
+	border-top:1px dashed $color-neutral-75 !important;
+	border-bottom:1px dashed $color-neutral-75 !important;
+}
+
+
+// creating a temporary load mask override to lighten the mask when loading on all white dialogs;
+.taco-white-mask{
+	opacity:.35;
+}

@@ -72,8 +72,11 @@ Ext.define('Taco.view.order.subform.Return', {
         });
         this.callParent(arguments);
     },
-    onOrderChange:function () {
+    onOrderChange: function () {
+        Ext.suspendLayouts();
         this.initCreateButton();
+        Ext.resumeLayouts(true);
+        
     },
     initCreateButton:function () {
         var me = this,

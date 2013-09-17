@@ -22,14 +22,21 @@
         ),
 
         slideDown: function () {
-
-            this.show();
-            this.el.animate({
+            var me = this;
+            
+            me.show();
+            me.el.animate({
                 duration: 250,
                 easing: "easeOut",
                 to: {
                     top: -40,
                     opacity: 1
+                },
+                listeners: {
+                    afteranimate: function () {
+                        me.el.down("a").focus();
+                    },
+                    scope: me
                 }
             });
         },
@@ -54,19 +61,36 @@
         initComponent: function () {
             this.renderTo = Ext.getBody();
             this.callParent(arguments);
+            
+            this.keyMap = new Ext.util.KeyMap({
+                target:this.renderTo,
+                key: Ext.EventObject.ESC,
+                handler: function (key, event) {
+                    this.close();
+                },
+                stopEvent: true,
+                scope:this
+            });
+
+
             this.mon(this, {
                 click: {
                     element: 'el',
                     fn: function (e) {
                         if (e.target.tagName.toLowerCase() == 'a') {
-                            this.slideUp();
                             e.preventDefault();
+                            //this.slideUp();
+                            this.close();
                         }
                     },
                     scope: this
                 }
             });
 
+        },
+        
+        close : function() {
+            this.slideUp();
         },
 
         afterRender: function () {

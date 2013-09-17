@@ -2,13 +2,13 @@
  * @class Taco.view.order.modal.AddPayment
  */
 Ext.define('Taco.view.order.modal.AddPayment', {
-    //extend: 'Taco.core.ux.modal.Modal',
     extend: 'Ext.window.Window',
     requires: ['Taco.core.ux.form.DateTime', 'Taco.core.ux.form.CurrencyField'],
     cls: Taco.baseCSSPrefix + 'order-modal ' + Taco.baseCSSPrefix + 'window-plain',
-    autoShow: true,
+    autoShow: false,
     
     ghost: false,
+    
     resizeable: false,
     modal: true,
     
@@ -147,11 +147,15 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     }, {
                         xtype: 'numberfield',
                         name: 'expireMonth',
+                        hideTrigger:true,
+                        mouseWheelEnabled:false,
                         fieldLabel: 'Exp Month',
                         minValue: 1,
                         maxValue: 12
                     }, {
                         xtype: 'numberfield',
+                        hideTrigger: true,
+                        mouseWheelEnabled: false,
                         name: 'expireYear',
                         fieldLabel: 'Exp Year'
                     }]
