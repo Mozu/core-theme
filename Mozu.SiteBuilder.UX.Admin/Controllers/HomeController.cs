@@ -72,7 +72,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                     if (cookie == null)
                         return sgcReturn;
 
-                    var sitegroupPrefs = cookie.Value.Split(';');
+                    var sitegroupPrefs = cookie.Value.Split('|');
                     foreach (var sgline in sitegroupPrefs)
                     {
                         var sgconfig = sgline.Split(':');
