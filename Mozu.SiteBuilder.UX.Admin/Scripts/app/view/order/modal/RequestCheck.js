@@ -31,12 +31,10 @@ Ext.define('Taco.view.order.modal.RequestCheck', {
                 items: [
                 {
                     name: 'firstName',
-                    fieldLabel: 'First Name',
-                    value: 'Bob'
+                    fieldLabel: 'First Name'
                 }, {
                     name: 'lastName',
-                    fieldLabel: 'Last Name',
-                    value: 'Checkwriter'
+                    fieldLabel: 'Last Name'
                 }, {
                     xtype: 'currencyfield',
                     name: 'amount',
