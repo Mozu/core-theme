@@ -238,7 +238,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 }))
                 .ForMember(x => x.Interactions, op => op.MapFrom(dc => dc.Interactions.OrderByDescending(t => t.AuditInfo.CreateDate)))
                 .ForMember(x => x.PaymentType, op => op.MapFrom(dc => dc.PaymentType))
-                .ForMember(x => x.CardType, op => op.MapFrom(dc => dc.BillingInfo.Card != null ? dc.BillingInfo.Card.PaymentOrCardType : null))
+                .ForMember(x => x.CardType, op => op.MapFrom(dc => dc.BillingInfo.Card != null && dc.PaymentType == PaymentsDC.PaymentTypeConst.CREDIT_CARD ? dc.BillingInfo.Card.PaymentOrCardType : null))
                 .ForMember(x => x.CardNumber, op => op.MapFrom(dc => dc.BillingInfo.Card != null ? dc.BillingInfo.Card.CardNumberPartOrMask : null))
                 .ForMember(x => x.NameOnCard, op => op.MapFrom(dc => dc.BillingInfo.Card != null ? dc.BillingInfo.Card.NameOnCard : null))
                 .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
