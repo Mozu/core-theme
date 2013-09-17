@@ -5,10 +5,15 @@
     name: '',
     id: -1,
     sites: null,
+
+    // config: {
+    //     productPublishingMode: 'Live'
+    // },
     
     constructor: function (config) {
         var me = this;
         var sites = [];
+        //debugger;
         if (me.sites) {
             sites = Ext.Array.clone(me.sites);
         }
@@ -51,5 +56,22 @@
     getSiteGroupId: function () { 
 
         return this.id;
+    },
+
+    updateProductPublishingMode: function (mode) {
+        Ext.Ajax.request({
+            url: '/admin/app/settings/publishing/product',
+            method: 'PUT',
+            jsonData: {
+                siteGroupId: this.id,
+                productPublishingMode: mode
+            },
+            success: function () {
+                console.log('SUCCESS UPDATE PROD PUB ->', this.id, mode);
+                //this.setProductPublishingMode(mode);
+                this.productPublishingMode = mode;
+            },
+            scope: this
+        });
     }
 });

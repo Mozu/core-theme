@@ -605,7 +605,7 @@
     <Content Include="Scripts\app\view\location\index.js" />
     <Content Include="Scripts\app\view\order\widget\DiscountRowBody.js" />
     <Content Include="Scripts\app\view\pendingchange\Catalog.js" />
-    <Content Include="Scripts\app\view\settings\publishing\Index.js" />
+    <Content Include="Scripts\app\view\settings\Publishing.js" />
     <Content Include="Scripts\app\view\site\navigation\NavHeadings.js" />
     <Content Include="Scripts\app\view\tbd\Index.js" />
     <Content Include="Scripts\build\all-classes.js" />
@@ -869,6 +869,7 @@
     <Content Include="Scripts\sass\src\overrides\window\MessageBox.scss" />
     <Content Include="Scripts\sass\src\overrides\window\Window.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\panel\Tool.scss" />
+    <Content Include="Scripts\sass\src\view\settings\Publishing.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -3228,6 +3229,7 @@
     <Folder Include="Modules\" />
     <Folder Include="Scripts\app\model\Context\" />
     <Folder Include="Scripts\app\view\address\" />
+    <Folder Include="Scripts\app\view\settings\publishing\" />
     <Folder Include="Scripts\resources\scss\taco\widgets\" />
     <Folder Include="Scripts\sass\src\core\ux\window\" />
     <Folder Include="Scripts\sass\var\" />
