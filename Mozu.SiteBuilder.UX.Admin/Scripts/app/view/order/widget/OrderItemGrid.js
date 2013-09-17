@@ -171,29 +171,70 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             })],
 
             columns: [
-                {
-                    text: 'Products',
-                    draggable: false,
-                    xtype: 'templatecolumn',
-                    flex: 1,
-                    sortable: false,
-                    resizable: false,
-                    menuDisabled: true,
-                    tpl: [
-                        '<tpl if="isDeleted">',
-                        '<span class="productLinkDisabled" productCode="{productCode}">{productName}</span>',
-                        '<tpl else>',
-                        '<a class="productLink" productCode="{productCode}" target="_blank" href="/admin/' + siteContext + '/products/edit/{productCode}">{productName}</a>',
-                        '</tpl>',
-                        '<div class="productOptions">',
-                        '<tpl for="options">',
-                            '<span class="option"><tpl if="xindex &gt; 1">, </tpl>{Name}',
-                                ': {Value}',
-                            '</span>',
-                        '</tpl>',
-                        '</div>'
-                    ],
-                    dataIndex: 'productName'
+            {
+                text: 'Products',
+                draggable: false,
+                xtype: 'templatecolumn',
+                flex: 1,
+                sortable: false,
+                resizable: false,
+                menuDisabled: true,
+                tpl: new Ext.XTemplate(
+                    '<tpl if="isDeleted">',
+                    '<span class="productLinkDisabled" productCode="{productCode}">{productName}</span>',
+                    '<tpl else>',
+                    '<a class="productLink" productCode="{productCode}" target="_blank" href="/admin/' + siteContext + '/products/edit/{productCode}">{productName}</a>',
+                    '</tpl>',
+                    '<div class="productOptions">',
+                    '<tpl for="options">',
+                    '<span class="option"><tpl if="xindex &gt; 1">, </tpl>{Name}',
+                    ': {Value}',
+                    '</span>',
+                    '</tpl>',
+                    '</div>'
+                    ),
+                    dataIndex: 'productName',
+                    listeners: {
+                        click: {
+                            fn: function (view, cell, cellIndex, rowIndex, e, record, row, eOpt) {
+                                
+                                var editMode = view.ownerCt.editMode;
+                                if (!editMode || e.target.tagName != "A") {
+                                    return;
+                                }
+                                
+                                //temporarily disabling while we add service support for updating the options and extras.
+                                return;
+
+                                // prevent the default link behavior
+                                e.preventDefault();
+                                
+                                var productCode = record.get("productCode"),
+                                isConfigurable = record.get("isConfigurable");
+
+                                // determine if we need to show the configurator
+                                //if (isConfigurable) {
+                                
+                                    var win = Ext.create('Taco.view.order.modal.ProductConfigurator', {
+                                        productCode: productCode,
+                                        configuredProduct: record,
+                                        listeners: {
+                                            'configureproduct': {
+                                                fn: function (configurationData) {
+                                                    //this.addConfiguredProduct([configurationData]);
+                                                    
+                                                },
+                                                scope: this
+                                            }
+                                        }
+                                    });
+                                //}
+                                
+                            },
+                            scope: this
+                        }
+                        
+                    }
                 },
                 {
                     text: 'Price',
@@ -498,13 +539,23 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         var me = this,
             tbConfig;
 
+        
+        var store = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.Products',
+            pageSize: me.productsPerPage,
+            // note that clearSort is required to avoid having the sorters get cleared when the store is instantiated;
+            clearSort: false,
+            remoteSort: true,
+            sorters: [{
+                property: 'productName',
+                direction: 'ASC'
+            }],
+            autoLoad: true
+        });
+        
         this.activeSearchField = Ext.create('Taco.view.order.widget.ProductPickerField', {
             fieldCls: "toolbar-field",
-            store: Taco.core.data.StoreManager.getOrCreate({
-                type: 'Taco.store.Products',
-                pageSize: me.productsPerPage,
-                autoLoad: true
-            }),
+            store: store,
             pageSize: me.productsPerPage,
             listeners: {
                 'specialkey':{
@@ -838,7 +889,6 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         var me = this;
         
         me.fireEvent('save');
-
         me.record.addOrderItem({
             jsonData: {
                 orderId: me.record.get('id'),
@@ -1024,7 +1074,9 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             buttons: Ext.Msg.YESNO,
             fn: function (rec) {
                 if (rec === 'yes') {
-                    me.ownerCt.setLoading(true);
+                    me.ownerCt.setLoading({
+                        maskCls: "x-mask taco-white-mask"
+                    });
 
                     me.record.cancelOrder({
                         jsonData: {

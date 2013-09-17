@@ -5,6 +5,12 @@ Ext.define('Taco.core.ux.window.Window', {
     alias: 'widget.taco.window',
 
     /**
+    * Enabale overflow listeners for the window body. this will add a css class to the body 
+    */
+    manageOverflow: true,
+    
+
+    /**
      * @cfg {"small"/"medium"/"large"} scale
      * The size of the Window. Three values are allowed:
      *
@@ -18,7 +24,11 @@ Ext.define('Taco.core.ux.window.Window', {
     autoShow: false,
     constrain: true,
     draggable: false,
-    ghost: false,
+    
+    // we can't make this false by default since its a function and not a boolean.
+    // this will prevent its use when needed;
+    ghostDisabled:true,
+    
     modal: false,
     resizable: false,
     shadow: false,
@@ -53,6 +63,11 @@ Ext.define('Taco.core.ux.window.Window', {
     },
 
     initComponent: function () {
+        
+        if (this.ghostDisabled) {
+            this.ghost = false;
+        }
+
         var scales = this.statics().scales,
             scale = this.scale || null;
 
@@ -63,7 +78,10 @@ Ext.define('Taco.core.ux.window.Window', {
 
         this.callParent(arguments);
 
-        this.attachBodyListeners();
+        if (this.manageOverflow) {
+            this.attachBodyListeners();
+        }
+        
     },
     
     attachBodyListeners: function () {

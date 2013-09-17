@@ -45,8 +45,9 @@ Ext.define('Taco.core.ux.grid.Pager', {
     onClick: function (e, t, options) {
         e.preventDefault();
         var page = t.getAttribute('href');
-        this.store.loadPage(page);
-
+        if (page) {
+            this.store.loadPage(page);
+        }
     },
 
     getPageData: function () {
@@ -54,7 +55,7 @@ Ext.define('Taco.core.ux.grid.Pager', {
             currentPage = parseInt(store.currentPage, 10),
             lastPage = Math.ceil(store.totalCount / store.pageSize),
             i, data;
-
+        
         if (lastPage < 2) {
             if (store.count() === 0 && currentPage > 1) {
                 store.loadPage(1);

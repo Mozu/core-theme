@@ -1,16 +1,9 @@
 ﻿Ext.define('Taco.view.order.widget.ProductConfigurator', {
     extend: 'Taco.core.ux.form.Form',
-    layout: {
-        type: 'hbox',
-        align: 'stretch'
-    },
-
     cls: 'taco-product-configurator',
-
     requires: [
         'Taco.core.ux.form.SelectField'
     ],
-
     statics: {
 
         updates: {
@@ -27,7 +20,8 @@
         builds: {
             'Default': function (option) {
                 return {
-                    fieldLabel: option.AttributeDetail.Name,
+                    fieldLabel: Ext.String.capitalize(option.AttributeDetail.Name),
+                    anchor: '100%',
                     labelAlign: 'left',
                     name: option.AttributeFQN,
                     value: option.Value,
@@ -98,10 +92,15 @@
         }
     },
 
-    initComponent: function () {
-        this.addEvents([
-            'savablestatechange'
+    initComponent: function() {
+        var me = this;
+
+        me.addEvents([
+            'savablestatechange',
+            'loadFailure'
         ]);
+
+        me.on('loadFailure', me.onLoadFailure, me);
 
         this.imageContainer = Ext.widget({
             xtype: 'container',
@@ -109,20 +108,51 @@
                 tag: 'ul',
                 cls: 'images'
             },
-            width: 150
+            items: [
+                {
+                    xtype: "component",
+                    cls: "image-item images-loading",
+                    html: "Loading Images"
+                }
+            ]
         });
+
+        this.optionsHeading = Ext.widget({
+            xtype: 'component',
+            cls: "fieldSetHeading",
+            hidden: true,
+            html: "Choose your options..."
+        });
+
 
         this.optionsContainer = Ext.widget({
             xtype: 'container',
             cls: 'options',
+            width: "100%",
+            layout:"anchor",
             items: [{
                 xtype: 'component',
-                html: 'Loading runtime options...'
+                html: ''
             }]
+        });
+
+        this.productName = Ext.widget({
+            xtype: 'component',
+            cls: 'productName'
+        });
+
+        this.productCodeField = Ext.widget({
+            xtype: 'component',
+            cls: 'productCode',
+            tpl: [
+                '<span class="label">Product Code:</span> <span class="value">{code}</span>'
+            ]
         });
 
         this.description = Ext.widget({
             xtype: 'component',
+            flex: 1,
+            //style:"border:1px solid red",
             cls: 'description'
         });
 
@@ -130,23 +160,25 @@
             xtype: 'component',
             cls: 'price',
             tpl: [
-                'Price: <span style="',
-                    '<tpl if="SalePrice">',
-                        'text-decoration:line-through',
-                    '</tpl>',
+                '<span class="label">Price:</span><span class="price-value',
+                '<tpl if="SalePrice">',
+                ' onsale',
+                '</tpl>',
                 '">',
                 '{Price:currency}</span>',
                 '<tpl if="SalePrice">',
-                    ' {SalePrice:currency}',
+                '<span class="price-value">{SalePrice:currency}</span>',
                 '</tpl>'
             ]
         });
 
         this.quantity = Ext.widget({
             xtype: 'numberfield',
+            anchor:'100%',
             labelAlign: 'left',
             mouseWheelEnabled: false,
-            hideTrigger:true,
+            hideTrigger: true,
+            hidden: true,
             fieldLabel: 'Quantity',
             allowBlank: false,
             minValue: 1,
@@ -155,22 +187,78 @@
         });
 
         this.items = [
-            this.imageContainer, {
-                xtype: 'container',
-                flex: 1,
-                autoScroll: true,
+            {
+                layout: "hbox",
+                padding:20,
                 items: [
-                    this.description,
-                    this.price,
-                    this.optionsContainer,
-                    this.quantity
+                    {
+                            xtype: 'container',
+                        cls: "left-column",
+                        width: 170,
+                        items: [
+                            this.imageContainer
+                        ]
+                    },
+                    {
+                        xtype: 'container',
+                        flex: 1,
+                        //layout:'hbox',
+                        items: [
+                            this.productName,
+                            {
+                                xtype: 'container',
+                                layout: 'hbox',
+                                items: [
+                                    {
+                                        flex:1,
+                                        xtype: 'container',
+                                        layout:"anchor",
+                                        items: [
+                                            this.optionsHeading,
+                                            this.optionsContainer,
+                                            this.quantity
+                                        ]
+                                    },
+                                    {
+                                        flex:1,
+                                        xtype: 'container',
+                                        padding: "0 0 0 20",
+                                        items: [
+                                            this.productCodeField,
+                                            this.description,
+                                            this.price
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
                 ]
             }
         ];
+        
+        /*
+        this.items = [{
+            xtype: "component",
+            //bodyStyle: "padding:20px;",
+            html: "asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>"
 
+        }];
+    */
+        
         this.loadProduct();
 
         this.callParent(arguments);
+    },
+
+    onLoadFailure : function() {
+        this.removeAll();
+        this.add({
+            xtype: "component",
+            flex:1,
+            cls: "error-loading",
+            html: "Error loading this product configuration"
+        });
     },
 
     isDirty: function () {
@@ -192,8 +280,14 @@
         if (!this.record) {
             Taco.model.Product.load(this.productCode, {
                 success: function (record) {
-                    
                     this.loadProduct(record);
+                },
+                failure: function (response) {
+                    // error handling here
+                    var json = Ext.decode(response.responseText, true),
+                        msg = (json && json.Message) ? json.Message : "Error adding coupon.";
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+                    this.fireEvent('loadFailure');
                 },
                 scope: this
             });
@@ -201,16 +295,63 @@
         }
 
         this.record.loadRuntimeProduct({
-            success: function (data) {
+            success: function (response) {
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    Taco.app.fireEvent('setmessage', "Error loading product information.", 'error');
+                    return;
+                }
                 
-                this.loadRuntimeProduct(JSON.parse(data.responseText));
+                Ext.suspendLayouts();
+                this.quantity.show();
+                this.buildImages();
+                this.loadRuntimeProduct(json);
+                Ext.resumeLayouts(true);
+                if (this.ownerCt) {
+                    this.ownerCt.center();
+                }
+                this.fireEvent('viewReady',this);
             },
+            
+            failure: function (response) {
+                // error handling here
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.Message) ? json.Message : "Error adding coupon.";
+                Taco.app.fireEvent('setmessage', msg, 'error');
+                this.fireEvent('loadFailure');
+            },
+
             scope: this
         });
 
-        this.description.update(this.record.get('productFullDescription'));
+        this.productName.update(this.record.get('productName'));
+        this.productCodeField.update({ code:this.record.get('productCode') });
+        
 
-        this.buildImages();
+        var description = "";
+        var longDescription = this.record.get('productFullDescription');
+        var shortDescription = this.record.get('productShortDescription');
+        
+        if (!longDescription.length || longDescription == "<br>") {
+            // no long description. check for a short description
+            if (shortDescription.length && shortDescription != "<br>") {
+                description = shortDescription;
+            }
+        } else {
+            description = longDescription;
+        }
+        
+        // check to see if the product has a description.
+        if (!description.length) {
+            this.description.hide();
+        } else {
+            this.description.update(description);
+        }
+        
+
+
+        
+        
     },
 
     loadRuntimeProduct: function (data) {
@@ -220,34 +361,47 @@
     },
 
     buildImages: function () {
-        var items = [];
+        var items = [],
+            images = this.record.get('productImages');
+        
+        if (images.length) {
+            Ext.each(images, function(image) {
+                items.push({
+                    xtype: 'component',
+                    autoEl: 'li',
+                    cls : "image-item",
+                    style: {
+                        backgroundImage: 'url(' + image.url + '?size=150)'
+                    }
+                });
+            }, this);
 
-        Ext.each(this.record.get('productImages'), function (image) {
-            items.push({
-                xtype: 'component',
-                autoEl: 'li',
-                style: {
-                    backgroundImage: 'url(' + image.url + '?size=150)'
-                }
+            this.imageContainer.removeAll();
+            this.imageContainer.add(items);
+        } else {
+            this.imageContainer.removeAll();
+            this.imageContainer.add({
+                xtype: "component",
+                cls: "image-item images-none",
+                html:"No Images Available"
             });
-        }, this);
-
-        this.imageContainer.removeAll();
-        this.imageContainer.add(items);
+        }
     },
 
     buildOptions: function (options) {
         var items = [];
-
-        Ext.each(options, function (option) {
-            items.push(this.buildOption(option));
-        }, this);
-
-        this.optionsContainer.removeAll();
-        this.optionsContainer.add(items);
-
-        this.savableStateCheck();
         
+        this.optionsHeading.show();
+        this.optionsContainer.removeAll();
+        
+        if (options.length) {
+            Ext.each(options, function (option) {
+                items.push(this.buildOption(option));
+            }, this);
+            this.optionsContainer.add(items);
+        }
+        
+        this.savableStateCheck();
         this.price.update(this.runtimeData.Price);
     },
 

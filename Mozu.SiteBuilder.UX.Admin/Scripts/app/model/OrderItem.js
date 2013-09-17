@@ -98,7 +98,7 @@ Ext.define('Taco.model.OrderItem', {
         
 
         
-        // not currently in json
+        
         {
             "name": "weight",
             "type": "float",
@@ -106,11 +106,17 @@ Ext.define('Taco.model.OrderItem', {
             "defaultValue": 1
         },
         
-        // not currently in json
+        
         {
-            "name": "options", //<== get list of options or extras
-            "type": "auto",
-            "defaultValue": []
+            name: "extras",
+            type: "auto",
+            defaultValue: []
+        },
+        
+        {
+            name: "options",
+            type: "auto",
+            defaultValue: []
         },
         
         // added this so the ui can modify its behavior when products are deleted
@@ -118,6 +124,14 @@ Ext.define('Taco.model.OrderItem', {
             "name": "isDeleted", 
             "type": "auto",
             "defaultValue": false
+        },
+        
+        {
+            name: "isConfigurable",
+            type: 'boolean',
+            convert: function (v, record) {
+                return (record.get("options").length || record.get("extras").length);
+            }
         }
         
         
