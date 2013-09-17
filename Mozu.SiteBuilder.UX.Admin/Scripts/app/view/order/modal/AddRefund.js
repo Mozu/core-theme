@@ -31,7 +31,7 @@ Ext.define('Taco.view.order.modal.AddRefund', {
             data: me.order.data.payments,
             filters: [
                 function (item) {
-                    return item.raw.status == 'Collected';
+                    return (item.raw.status == 'Collected' && item.raw.paymentType != 'Check');
                 }
             ]
         });
