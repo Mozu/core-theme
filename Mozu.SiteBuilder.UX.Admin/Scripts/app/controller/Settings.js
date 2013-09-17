@@ -7,7 +7,7 @@ Ext.define('Taco.controller.Settings', {
         'Taco.view.settings.tax.Edit',
         'Taco.view.settings.shipping.Edit',
         'Taco.model.SiteShippingSettings',
-        'Taco.view.settings.publishing.Index'
+        'Taco.view.settings.Publishing'
     ],
     listView: null,
     models: ['Taco.model.Product'],
@@ -61,6 +61,6 @@ Ext.define('Taco.controller.Settings', {
     },
 
     publishing: function () {
-        this.createContentView('Taco.view.settings.publishing.Index');
+        this.createContentView('Taco.view.settings.Publishing');
     }
 });
