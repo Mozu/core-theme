@@ -74,8 +74,8 @@ Ext.define('Taco.view.discount.Form', {
             forceSelection: true,
             displayField: 'text',
             valueField: 'value',
-
-            flex: 1,
+            width:600,
+           // flex: 1,
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: ['text', 'value'],
                 data: [
@@ -438,12 +438,14 @@ Ext.define('Taco.view.discount.Form', {
             name: 'maxRedemptionCount',
             hideTrigger: true,
             width:600,
-            fieldLabel: 'Redemption limit',
+            fieldLabel: 'Redemption limit' + (me.record.get('currentRedemptionCount') ? '&nbsp;&nbsp;&nbsp;&nbsp;<i>(current redemptions:&nbsp;' + me.record.get('currentRedemptionCount') + '</i>)' : ''),
             emptyText: 'unlimited',
             minValue: 0
         });
-        
 
+        //me.redemptions = Ext.create('Ext.Component', {
+        //    html: me.record.get('currentRedemptionCount')  ? 'Current RedemptionCount:' + me.record.get('currentRedemptionCount') : ''
+        //});
         me.minimumLifetimeValueAmount = Ext.create('Taco.core.ux.form.UnitField', {
             name: 'minimumLifetimeValueAmount',
             hidden: this.record.get('scope') != 'Order',
@@ -482,6 +484,7 @@ Ext.define('Taco.view.discount.Form', {
             me.datesContainer,
             //createHr(),
             me.redemptionLimits,
+         //   me.redemptions,
             me.requiresCouponInput,
             me.couponCodeBox
         ];
@@ -550,6 +553,8 @@ Ext.define('Taco.view.discount.Form', {
         me.shippingList.setVisible(me.targetTypeInput.getValue() == 'Shipping');
         me.categoriesBox.setVisible(!me.includeAllProductsInput.getValue() && nonOrderScope);
         me.productsBox.setVisible(!me.includeAllProductsInput.getValue() && nonOrderScope);
+        me.productsExcludeBox.setVisible(!me.includeAllProductsInput.getValue() && nonOrderScope);
+        me.exclueCategoriesBox.setVisible(!me.includeAllProductsInput.getValue() && nonOrderScope);
         me.minimumLifetimeValueAmount.setVisible(!nonOrderScope);
     },
     
@@ -625,26 +630,7 @@ Ext.define('Taco.view.discount.Form', {
             console.log(value, list.getValue());
             return false;
         }
-    },
-    /**
-     * Populates the list with the selected values from the modal's TreePanel.
-     * @param  {Taco.core.ux.modal.Modal} modal The modal that fired the save event.
-     * @param  {Object} values An object with category data for the list.
-     * @private
-     */
-    updateCategoryList: function(modal, values) {
-        var me = this,
-            list = me.categoryList,
-            store = list.getStore();
-        Ext.each(values, function(value) {
-            if (!store.data.getByKey(value.getId())) {
-                store.add(value);
-            }
-        });
-
-
-        list.setValue(store.collect('id'));
-
-    },
+    }
+ 
     
 });
