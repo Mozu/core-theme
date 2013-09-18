@@ -42,6 +42,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             
 
         }
+        protected override void AddFilters(HttpConfiguration httpConfiguration, Core.Api.Filters.Exception.ApiExceptionFilter exceptionFilter, Core.Api.Routing.ReflectedControllerIndex controllers)
+        {
+            httpConfiguration.Filters.Add(exceptionFilter);
+
+        }
         protected override void ApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)
         {
             base.ApplicationStart(httpConfiguration);

@@ -30,11 +30,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
 
 
         [DataMember(EmitDefaultValue = false, Name = "includeAllProducts")]
-        public bool? IncludeAllProducts { get; set; } 
-        
+        public bool? IncludeAllProducts { get; set; }
 
-      
 
+
+        /// <summary>
+        /// List of categories this discount applies to.
+        /// </summary>
+        [DataMember(Name = "excludedCategories")]
+        public List<int> ExcludedCategories { get; set; }
+
+        /// <summary>
+        /// List of products this discount applies to.
+        /// </summary>
+        [DataMember(Name = "excludedProducts")]
+        public List<string> ExcludedProducts { get; set; }
 
 
         
@@ -60,6 +70,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
 
         [DataMember(EmitDefaultValue = false,Name = "minimumOrderAmount")]
         public Decimal? MinimumOrderAmount { get; set; }
+
+
+         [DataMember(EmitDefaultValue = false, Name = "minimumLifetimeValueAmount")]
+        public Decimal? MinimumLifetimeValueAmount { get; set; }
+
+        
 
 
         [DataMember(Name = "maxRedemptionCount")]

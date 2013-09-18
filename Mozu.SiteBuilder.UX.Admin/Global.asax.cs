@@ -49,10 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin
             _bsa = new BootStrapperAdmin();
             _bsa.Bootstrap(GlobalConfiguration.Configuration);
 
-            GlobalConfiguration.Configuration.Filters
-                .Where(x => x.Instance.GetType().FullName.Contains("Mozu.Core.Api.Filters.Auth"))
-                .ToList()
-                .ForEach( x =>GlobalConfiguration.Configuration.Filters.Remove(x.Instance));
+          
 
 
 
