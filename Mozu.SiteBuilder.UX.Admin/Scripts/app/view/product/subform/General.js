@@ -11,7 +11,7 @@ Ext.define('Taco.view.product.subform.General', {
     ],
 
     title: 'General',
-
+    margin: '20 0',
     initComponent: function () {
         var readOnly,requiredContent,visable;
 
