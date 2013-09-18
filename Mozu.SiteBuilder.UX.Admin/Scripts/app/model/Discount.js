@@ -63,6 +63,12 @@ Ext.define('Taco.model.Discount', {
             useNull: true
         },
         {
+            name: 'currentRedemptionCount',
+            type: 'int',
+            useNull: true,
+            defaultValue: null
+        },
+        {
             name: 'minimumLifetimeValueAmount',
             type: 'int',
             useNull: true
