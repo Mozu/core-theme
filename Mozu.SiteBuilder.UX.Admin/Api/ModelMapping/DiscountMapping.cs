@@ -23,10 +23,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<DC.Discount, Discount>()
                   .ForMember(x => x.TargetType, opt => opt.MapFrom(x=> x.Target.Type ))
                   .ForMember(x => x.IncludeAllProducts   , opt => opt.MapFrom(x=> x.Target.IncludeAllProducts  ))
+                  .ForMember(x => x.MinimumLifetimeValueAmount, opt => opt.MapFrom(x => x.Target.MinimumLifetimeValueAmount))
                   .ForMember(x => x.Categories    , opt => opt.MapFrom(x=> (x.Target.Categories ?? Enumerable.Empty<DC.TargetedCategory>()).Select( _=> _.Id ).ToList()  ))
                   .ForMember(x => x.Products     , opt => opt.MapFrom(x=> (x.Target.Products  ?? Enumerable.Empty<DC.TargetedProduct >()).Select( _=> _.Code  ).ToList()  ))
-                  .ForMember(x => x.ShippingMethods     , opt => opt.MapFrom(x=> (x.Target.ShippingMethods   ?? Enumerable.Empty<DC.TargetedShippingMethod  >()).Select( _=> _.Code  ).ToList()  ))
+                  .ForMember(x => x.ExcludedCategories, opt => opt.MapFrom(x => (x.Target.ExcludedCategories ?? Enumerable.Empty<DC.TargetedCategory>()).Select(_ => _.Id).ToList()))
+                  .ForMember(x => x.ExcludedProducts, opt => opt.MapFrom(x => (x.Target.ExcludedProducts ?? Enumerable.Empty<DC.TargetedProduct>()).Select(_ => _.Code).ToList()))
+                  .ForMember(x => x.ShippingMethods, opt => opt.MapFrom(x => (x.Target.ShippingMethods ?? Enumerable.Empty<DC.TargetedShippingMethod>()).Select(_ => _.Code).ToList()))
                   .ForMember(x => x.MinimumOrderAmount     , opt => opt.MapFrom(x=> x.Target.MinimumOrderAmount   ))
+                  
                   .ForMember(x => x.Name , op => op.ResolveUsing(dc => dc.Content.Name ));
 
             // To data contract
@@ -36,10 +40,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                         {
                                                                             Type = x.TargetType,
                                                                             Categories = (x.Categories ?? Enumerable.Empty<int>()).Select(_ => new DC.TargetedCategory() {Id = _}).ToList(),
+                                                                            ExcludedCategories  = (x.ExcludedCategories  ?? Enumerable.Empty<int>()).Select(_ => new DC.TargetedCategory()  { Id = _ }).ToList(),
+                                                                            ExcludedProducts = (x.ExcludedProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedProduct() { Code = _ }).ToList(),
                                                                             Products = (x.Products ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedProduct() {Code = _}).ToList(),
                                                                             ShippingMethods = (x.ShippingMethods ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedShippingMethod() {Code = _}).ToList(),
                                                                             MinimumOrderAmount = x.MinimumOrderAmount,
-                                                                            IncludeAllProducts = x.IncludeAllProducts
+                                                                            IncludeAllProducts = x.IncludeAllProducts,
+                                                                            MinimumLifetimeValueAmount = x.MinimumLifetimeValueAmount
                                                                         }))
                   .AfterMap((s, d) =>
                       {
@@ -47,6 +54,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                           {
                               d.Target.Products = null;
                               d.Target.Categories = null;
+                              //d.Target.ExcludedCategories = null;
+                              //d.Target.ExcludedProducts = null;
                           }
                       });
 

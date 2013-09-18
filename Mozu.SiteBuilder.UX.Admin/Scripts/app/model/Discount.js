@@ -39,6 +39,16 @@ Ext.define('Taco.model.Discount', {
             defaultValue: []
         },
         {
+            name: 'excludedCategories',
+            type: 'auto',
+            defaultValue: []
+        },
+        {
+            name: 'excludedProducts',
+            type: 'auto',
+            defaultValue: []
+        },
+        {
             name: 'shippingMethods',
             type: 'auto',
             defaultValue: []
@@ -49,6 +59,11 @@ Ext.define('Taco.model.Discount', {
         },
         {
             name: 'maxRedemptionCount',
+            type: 'int',
+            useNull: true
+        },
+        {
+            name: 'minimumLifetimeValueAmount',
             type: 'int',
             useNull: true
         },
@@ -77,7 +92,7 @@ Ext.define('Taco.model.Discount', {
             type: 'string'
         }],
 
-    getProductStore: function() {
+    getProductStore: function () {
         var me = this;
 
         if (me.productStore == null) {
@@ -97,7 +112,7 @@ Ext.define('Taco.model.Discount', {
         return me.productStore;
     },
 
-    getCategoryStore: function() {
+    getCategoryStore: function () {
         var me = this;
         if (me.categoryStore == null) {
             me.categoryStore = Taco.core.data.StoreManager.getOrCreate(
