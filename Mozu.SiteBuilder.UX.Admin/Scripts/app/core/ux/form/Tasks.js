@@ -54,9 +54,9 @@
                 }
                 task.saveRecord.save({
                     failure: function (record,operation ) {
-                       
-                        var msg = operation.error;
-                        if (msg.remoteException) {
+
+                        var msg = operation.error ;
+                        if (msg && msg.remoteException) {
                             msg = msg.remoteException.getMessage();
                         }
                         

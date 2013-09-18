@@ -111,19 +111,16 @@ Ext.define('Taco.view.attribute.Form', {
                         },
                         keydown: function (field, e) {
                             if (e.getKey() === e.ENTER && field.isValid()) {
-                                var value = field.getValue(),
-                                    attributeId = me.record.getId(),
-                                    record;
+                                var value = field.getValue();
 
                                 if (!Ext.isEmpty(Ext.String.trim(value))) {
                                     field.reset();
 
-                                    record = me.valuesStore.add({
-                                        attributeId: attributeId,
+                                    me.valuesStore.add({
                                         value: value
-                                    })[0];
+                                    });
 
-                                    record.set('id', value);
+
                                 }
                             }
                         }
