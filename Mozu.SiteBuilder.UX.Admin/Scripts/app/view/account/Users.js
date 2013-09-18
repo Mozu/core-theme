@@ -239,7 +239,7 @@
                 	if (res.success) {
                 		me.store.load();
                 	} else {
-                		Ext.Msg.alert('Error', 'There was a problem inviting the user: ' + res.message);
+                	    Taco.MessageBox.alert('Error', 'There was a problem inviting the user: ' + res.message);
                 	}
                 },
                 failure: function (response) {
@@ -261,7 +261,7 @@
 	                	if (res.success) {
 	                		//e.target.style.display = "none"; // hide the link?
 	                	} else {
-	                		Ext.Msg.alert('Error', 'There was a problem resending the invite: ' + res.message);
+	                	    Taco.MessageBox.alert('Error', 'There was a problem resending the invite: ' + res.message);
 	                	}
 	                },
 	                failure: function (response) {
@@ -281,7 +281,7 @@
 	                	if (res.success) {
 	                		me.store.load();
 	                	} else {
-	                		Ext.Msg.alert('Error', 'There was a problem deleting the user/invite: ' + res.message);
+	                	    Taco.MessageBox.alert('Error', 'There was a problem deleting the user/invite: ' + res.message);
 	                	}
 	                },
 	                failure: function (response) {
