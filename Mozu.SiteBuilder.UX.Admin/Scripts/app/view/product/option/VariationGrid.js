@@ -11,7 +11,6 @@ Ext.define('Taco.view.product.option.VariationGrid', {
     requires: ['Ext.grid.plugin.CellEditing'],
 
     disableSelection: true,
-    
 
     initComponent: function () {
         var optionColumns = [],
@@ -24,57 +23,57 @@ Ext.define('Taco.view.product.option.VariationGrid', {
         ]);
 
         staticColumns = [{
-            text: 'Product Code',
-            dataIndex: 'productCode',
-            editor: {
-                xtype: 'textfield'
-            }
-        }, {
-            text: 'Quantity',
-            dataIndex: 'stockOnHand',
-            editor: {
-                xtype: 'numberfield',
-                minValue: 0,
-                decimalPrecision: 0,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false
-            }
-        }, {
-            text: 'Extra Cost',
-            dataIndex: 'deltaPrice',
-            editor: {
-                xtype: 'currencyfield',
-                minValue: 0,
-                decimalPrecision: 2,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false
-            }
-        }, {
-            text: 'Extra Weight',
-            dataIndex: 'deltaWeight',
-            editor: {
-                xtype: 'numberfield',
-                decimalPrecision: 2,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false
-            }
-        }, {
-            text: 'Invalid',
-            dataIndex: 'isActive',
-            renderer: function (value) {
-                return '<div class="invalidate"></div>';
-            }
-        }];
+                text: 'Product Code',
+                dataIndex: 'productCode',
+                editor: {
+                    xtype: 'textfield'
+                }
+            }, {
+                text: 'Quantity',
+                dataIndex: 'stockOnHand',
+                editor: {
+                    xtype: 'numberfield',
+                    minValue: 0,
+                    decimalPrecision: 0,
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false
+                }
+            }, {
+                text: 'Extra Cost',
+                dataIndex: 'deltaPrice',
+                editor: {
+                    xtype: 'currencyfield',
+                    minValue: 0,
+                    decimalPrecision: 2,
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false
+                }
+            }, {
+                text: 'Extra Weight',
+                dataIndex: 'deltaWeight',
+                editor: {
+                    xtype: 'numberfield',
+                    decimalPrecision: 2,
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false
+                }
+            }, {
+                text: 'Invalid',
+                dataIndex: 'isActive',
+                renderer: function (value) {
+                    return '<div class="invalidate"></div>';
+                }
+            }];
 
         tplColumnHeader = new Ext.Template('{name} <a href="#" class="edit-option" data-attribute-fqn="{attributeFQN}">EDIT</a>');
 
         this.product.getOptions().each(function (option, index) {
             optionColumns.push({
                 flex: 1,
-                text: tplColumnHeader.apply({name: this.findAttributeName(option), attributeFQN: option.get('attributeFQN')}),
+                text: tplColumnHeader.apply({ name: this.findAttributeName(option), attributeFQN: option.get('attributeFQN') }),
                 dataIndex: 'options',
                 sortable: false,
                 renderer: function (value) {
@@ -101,7 +100,7 @@ Ext.define('Taco.view.product.option.VariationGrid', {
                 
             })
         ];
-        
+
         this.callParent(arguments);
 
         this.getView().getRowClass = function (record) {
@@ -110,6 +109,7 @@ Ext.define('Taco.view.product.option.VariationGrid', {
 
         this.on({
             cellclick: this.onCellClick,
+            beforeedit: this.onBeforeEdit,
             scope: this
         });
     },
@@ -123,13 +123,16 @@ Ext.define('Taco.view.product.option.VariationGrid', {
 
         this.fireEvent('editoption', this, el.getAttribute('data-attribute-fqn'));
     },
-
+    onBeforeEdit: function (editor, e) {
+        return e.record.get('isActive') === true;
+    },
     onCellClick: function (grid, td, cellIndex, record, tr, rowIndex, e, eOtps) {
         var el = Ext.fly(e.target);
         if (el.hasCls('invalidate')) {
             e.stopPropagation();
             e.preventDefault();
             record.set('isActive', !record.get('isActive'));
+
             return;
         }
     },
@@ -139,6 +142,6 @@ Ext.define('Taco.view.product.option.VariationGrid', {
 
         if (!option) return;
 
-        return  option.get('attributeName');
+        return option.get('attributeName');
     }
 });
