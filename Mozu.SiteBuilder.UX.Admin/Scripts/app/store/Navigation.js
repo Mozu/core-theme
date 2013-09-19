@@ -94,11 +94,6 @@ Ext.define('Taco.store.Navigation', {
                 "behaviorIds": [16],
                 "label": "Orders",
                 "address": "orders"
-            }, {
-                "id": "offline",
-                "behaviorIds": [16],
-                "label": "Offline",
-                "address": "orders/create"
             }]
         }, {
             "id": "marketing",
