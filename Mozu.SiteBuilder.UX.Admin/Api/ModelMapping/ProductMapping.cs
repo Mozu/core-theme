@@ -29,9 +29,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             var NULLCONTENT = new DC.ProductLocalizedContent();
             var NULLPRICE = new DC.ProductPrice();
-
+            var NULLPUB = new DC.ProductPublishingInfo();
 
             Mapper.CreateMap<DC.Product, Product>()
+                .ForMember(x => x.PublishedState, op => op.MapFrom(dc => (dc.PublishingInfo?? NULLPUB).PublishedState ))
+                .ForMember(x => x.LastPublishedBy, op => op.MapFrom(dc => (dc.PublishingInfo ?? NULLPUB).LastPublishedBy))
+                .ForMember(x => x.LastPublishedDate, op => op.MapFrom(dc => (dc.PublishingInfo ?? NULLPUB).LastPublishedDate))
                 .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.ProductCode))
                 .ForMember(x => x.BaseProductCode, op => op.MapFrom(dc => dc.BaseProductCode))
                 .ForMember(x => x.ProductName, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductName))

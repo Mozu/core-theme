@@ -36,7 +36,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<Product>> PublishAll()
         {
             var response = await _publishingClient.PublishDrafts(ALL_PRODUCTS_SCOPE);
+            return new Response<Product> { Success = true };
+        }
 
+
+        /// <summary>
+        /// Publish catalog changes.
+        /// </summary>
+        [HttpPostRoute(UriTemplate = "publish")]
+        public async Task<Response<Product>> Publish(List<string> productCodes)
+        {
+            var response = await _publishingClient.PublishDrafts(new DC.PublishingScope()
+                                                                     {
+                                                                         ProductCodes = productCodes
+                                                                     });
             return new Response<Product> { Success = true };
         }
 
@@ -47,6 +60,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<Product>> DiscardAll()
         {
             var response = await _publishingClient.DiscardDrafts(ALL_PRODUCTS_SCOPE);
+
+            return new Response<Product> { Success = true };
+        }
+
+
+        /// <summary>
+        /// Discard  catalog changes.
+        /// </summary>
+        [HttpPostRoute(UriTemplate = "discard")]
+        public async Task<Response<Product>> Discard(List<string> productCodes)
+        {
+            var response = await _publishingClient.DiscardDrafts(new DC.PublishingScope()
+                                                                     {
+                                                                         ProductCodes = productCodes
+                                                                     });
 
             return new Response<Product> { Success = true };
         }

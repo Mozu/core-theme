@@ -127,6 +127,26 @@ Ext.define('Taco.core.data.StoreManager', {
             return true;
         });
     },
+    markChanged: function (selector, isChanged) {
+        var fn;
+        isChanged = isChanged === false ? false : true;
+        if (Ext.isFunction(selector)) {
+            fn = selector;
+        } else if (Ext.isString(selector)) {
+            fn = function (store) {
+                return store.$className == selector || store.model.$className == selector;
+            };
+        } else {
+            Ext.raise("bad");
+        }
+        
+        this.stores.each(function (store) {
+            if ( fn(store)) {
+                store.hasUpdates = isChanged;
+            }
+        });
+
+    },
     getCategoryTreeBySite: function (siteId) {
         if (!Ext.isNumeric(siteId)) {
             siteId = Taco.app.context.getCurrentSite().id;
