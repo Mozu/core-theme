@@ -74,8 +74,8 @@ Ext.define('Taco.view.discount.Form', {
             forceSelection: true,
             displayField: 'text',
             valueField: 'value',
-            width:600,
-           // flex: 1,
+            //width:600,
+           flex: 1,
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: ['text', 'value'],
                 data: [
@@ -92,30 +92,14 @@ Ext.define('Taco.view.discount.Form', {
                 scope: me
             }
         });
-        me.amountPrefix = Ext.create('Ext.Component', {
-            tpl: ['<tpl>',
-                '<tpl if="amountType == \'Amount\' ">',
-                '$',
-                '</tpl>',
-                '</tpl>'],
-            padding: '0 5 5 5',
-            data: this.record.data
-        });
-        me.amountSuffix = Ext.create('Ext.Component', {
-            tpl: ['<tpl>',
-                '<tpl if="amountType == \'Percentage\' ">',
-                '% Off',
-                '</tpl>',
-                '<tpl if="amountType == \'Amount\' ">',
-                'Off',
-                '</tpl>',
-                '</tpl>'],
-            padding: '0 5 5 5',
-            data: this.record.data
-        });
-        me.amountInput = Ext.create('Ext.form.field.Number', {
+
+        me.amountInput = Ext.create('Taco.core.ux.form.UnitField', {
             name: 'amount',
             minValue: 0,
+            width: 150,
+            margin: '0 0 0 10',
+            unitAtEnd: me.record.get('amountType')==='Amount'   ? false : true,
+            unitString: me.record.get('amountType') === 'Amount' ? '$' : '%',
             hideTrigger: true
         });
         me.targetTypeInput = Ext.create('Ext.form.field.ComboBox', {
@@ -471,9 +455,10 @@ Ext.define('Taco.view.discount.Form', {
                 width: 600,
                 items: [
                     me.amountTypeInput,
-                    me.amountPrefix,
-                    me.amountInput,
-                    me.amountSuffix]
+                
+                    me.amountInput
+            
+                ]
             },
             me.targetTypeInput,
             me.minimumOrderAmountInput,
@@ -504,10 +489,7 @@ Ext.define('Taco.view.discount.Form', {
             //return;
         }
 
-        me.amountPrefix.update(me.form.getValues());
-
-        me.amountSuffix.update(me.form.getValues());
-
+      
         // guard against this callback being called before the entire form is rendered
         if (!me.amountInput) {
             return;
@@ -523,7 +505,8 @@ Ext.define('Taco.view.discount.Form', {
     
     setTypeFieldVisibility: function (input) {
         var me = this,
-            value = input.getValue();
+            value = input.getValue(),
+            amount = me.amountInput.getValue();
 
         if (value === 'Free') {
             me.amountInput.hide();
@@ -540,6 +523,9 @@ Ext.define('Taco.view.discount.Form', {
             me.targetTypeInput.enable();
 
             me.amountInput.setMaxValue(value === 'Percentage' ? 100 : Number.MAX_VALUE);
+            me.amountInput.unitAtEnd = (value === 'Percentage' ? true : false );
+            me.amountInput.unitString = (value === 'Percentage' ? '%' : '$');
+            me.amountInput.setValue(amount);
         }
     },
 
