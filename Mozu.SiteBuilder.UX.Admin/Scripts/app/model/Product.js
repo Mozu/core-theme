@@ -31,12 +31,12 @@ Ext.define('Taco.model.Product', {
             useNull: true
         },
         {
-            name: "lastPublishedDate",
+            name: "LastPublishedBy",
             type: "string",
             useNull: true
         },
         {
-            "name": "createDate",
+            "name": "lastPublishedDate",
             "type": "date",
             "useNull": true
         },
