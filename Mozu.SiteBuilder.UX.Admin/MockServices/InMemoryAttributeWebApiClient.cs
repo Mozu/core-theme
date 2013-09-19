@@ -206,5 +206,89 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
             throw new NotImplementedException();
         }
 #pragma warning restore 1066
+
+        Task<ServiceClientResponse<DC.Attribute>> IAttributeWebApiClient.AddAttribute(DC.Attribute attribute, TargetContextLevelType targetContextLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ServiceClientResponse<DC.AttributeVocabularyValue>> IAttributeWebApiClient.AddAttributeVocabularyValue(DC.AttributeVocabularyValue attributeVocabularyValue, string attributeFQN, TargetContextLevelType targetContextLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ServiceClientResponse<StreamContent>> IAttributeWebApiClient.DeleteAttribute(string attributeFQN, TargetContextLevelType targetContextLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ServiceClientResponse<StreamContent>> IAttributeWebApiClient.DeleteAttributeVocabularyValue(string attributeFQN, string value, TargetContextLevelType targetContextLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ServiceClientResponse<DC.Attribute>> IAttributeWebApiClient.GetAttribute(string attributeFQN, string responseGroups, TargetContextLevelType targetContextLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ServiceClientResponse<DC.AttributeTypeRuleCollection>> IAttributeWebApiClient.GetAttributeTypeRules(int? startIndex, int? pageSize, string sortBy, string filter, TargetContextLevelType targetContextLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ServiceClientResponse<DC.AttributeVocabularyValue>> IAttributeWebApiClient.GetAttributeVocabularyValue(string attributeFQN, string value, TargetContextLevelType targetContextLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ServiceClientResponse<DC.AttributeCollection>> IAttributeWebApiClient.GetAttributes(int? startIndex, int? pageSize, string sortBy, string filter, string responseGroups, TargetContextLevelType targetContextLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ServiceClientResponse<Core.Extensible.Contracts.Namespace>> IAttributeWebApiClient.RegisterNamespace(Core.Extensible.Contracts.Namespace name, TargetContextLevelType targetContextLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ServiceClientResponse<DC.Attribute>> IAttributeWebApiClient.UpdateAttribute(DC.Attribute attribute, string attributeFQN, TargetContextLevelType targetContextLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ServiceClientResponse<DC.AttributeVocabularyValue>> IAttributeWebApiClient.UpdateAttributeVocabularyValue(DC.AttributeVocabularyValue attributeVocabularyValue, string attributeFQN, string value, TargetContextLevelType targetContextLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ServiceClientResponse<List<DC.AttributeVocabularyValue>>> IAttributeWebApiClient.UpdateAttributeVocabularyValues(List<DC.AttributeVocabularyValue> vocabularyValues, string attributeFQN, TargetContextLevelType targetContextLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        IServiceClientMessageHandler IServiceClientBase<IAttributeWebApiClient>.Handler
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        ConfigOptions IServiceClientBase<IAttributeWebApiClient>.Options
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

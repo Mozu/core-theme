@@ -63,14 +63,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
 
         [DataMember(EmitDefaultValue = false, Name = "createDate")]
         public DateTime? CreateDate { get; set; }
-          [DataMember(EmitDefaultValue = false, Name = "updateDate")]
+
+        [DataMember(EmitDefaultValue = false, Name = "updateDate")]
         public DateTime? UpdateDate { get; set; }
-        
     }
 
     [DataContract(Namespace = "Mozu.services.contracts")]
     public class ReturnItem
     {
+        [DataMember(EmitDefaultValue = false, Name = "productLossAmount")]
+        public Decimal? ProductLossAmount { get; set; }
+
+        [DataMember(EmitDefaultValue = false, Name = "productLossTaxAmount")]
+        public Decimal? ProductLossTaxAmount { get; set; }
+
+        [DataMember(EmitDefaultValue = false, Name = "shippingLossAmount")]
+        public Decimal? ShippingLossAmount { get; set; }
+
+        [DataMember(EmitDefaultValue = false, Name = "shippingLossTaxAmount")]
+        public Decimal? ShippingLossTaxAmount { get; set; }
+
 
         [DataMember(EmitDefaultValue = false, Name = "orderItemId")]
         public string OrderItemId { get; set; }
@@ -87,38 +99,39 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         [DataMember(EmitDefaultValue = false, Name = "quantityRestockable")]
         public int QuantityRestockable { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "priceSnapshot")]
-        public ReturnUnitPrice PriceSnapshot { get; set; }
 
         [DataMember(EmitDefaultValue = false, Name = "notes")]
         public List<OrderNote> Notes { get; set; }
+
         [DataMember(EmitDefaultValue = false, Name = "quantity")]
         public int Quantity { get; set; }
     }
-     [DataContract(Namespace = "Mozu.services.contracts")]
+
+    [DataContract(Namespace = "Mozu.services.contracts")]
     public class ReturnAction
     {
-         [DataMember(EmitDefaultValue = false, Name = "actionName")]
+        [DataMember(EmitDefaultValue = false, Name = "actionName")]
         public string ActionName { get; set; }
-         [DataMember(EmitDefaultValue = false, Name = "returnIds")]
+
+        [DataMember(EmitDefaultValue = false, Name = "returnIds")]
         public List<string> ReturnIds { get; set; }
     }
 
-    [DataContract(Namespace = "Mozu.services.contracts")]
-    public class ReturnUnitPrice
-    {
-        [DataMember(EmitDefaultValue = false, Name = "taxableAmount")]
-        public Decimal? TaxableAmount { get; set; }
+    //[DataContract(Namespace = "Mozu.services.contracts")]
+    //public class ReturnUnitPrice
+    //{
+    //    [DataMember(EmitDefaultValue = false, Name = "taxableAmount")]
+    //    public Decimal? TaxableAmount { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "shippingAmount")]
-        public Decimal? ShippingAmount { get; set; }
+    //    [DataMember(EmitDefaultValue = false, Name = "shippingAmount")]
+    //    public Decimal? ShippingAmount { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "itemTaxAmount")]
-        public Decimal? ItemTaxAmount { get; set; }
+    //    [DataMember(EmitDefaultValue = false, Name = "itemTaxAmount")]
+    //    public Decimal? ItemTaxAmount { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "shippingTaxAmount")]
-        public Decimal? ShippingTaxAmount { get; set; }
-    }
+    //    [DataMember(EmitDefaultValue = false, Name = "shippingTaxAmount")]
+    //    public Decimal? ShippingTaxAmount { get; set; }
+    //}
 
     [DataContract(Namespace = "Mozu.services.contracts")]
     public class OrderNote
