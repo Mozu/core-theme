@@ -58,7 +58,26 @@ Ext.define('Taco.view.catalog.Index', {
 
         outer = Ext.create('Ext.form.Panel', {
             ui: 'subform',
-            title: 'Outer Form',
+            tools: [{
+                type: 'gear',
+                menu: {
+                    plain: true,
+                    shadow: false,
+                    items: [{
+                        text: 'hello'
+                    }]
+                }
+            }],
+            header: {
+                title: 'Outer Form',
+                titlePosition: 0,
+                items: [{
+                    xtype: 'button',
+                    ui: 'action',
+                    scale: 'medium',
+                    text: 'Hello'
+                }]
+            },
             items: [{
                 xtype: 'textfield',
                 name: 'color',

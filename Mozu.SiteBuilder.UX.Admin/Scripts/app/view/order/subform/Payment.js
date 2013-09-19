@@ -14,13 +14,28 @@ Ext.define('Taco.view.order.subform.Payment', {
 
     title: 'Payment & Billing Information',
 
+    tools: [{
+        type: 'gear',
+        menu: {
+            plain: true,
+            shadow: false,
+            items: []
+        },
+        callback: function (owner, tool, e) {
+            var menu = tool.menu;
+
+            if (tool.hasVisibleMenu()) {
+                menu.removeAll();
+                menu.add(owner.getMenuActions());
+            }
+        }
+    }],
+
     config : {
         // order model
         originalRecord : null,
         record: null,
         itemId:"orderPayment",
-        // components to add to the panel header. typically used to add an actions menu button
-        tools: []
     },
     
     initComponent: function (eOpts) {
@@ -49,7 +64,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         this.callParent(arguments);
     },
     
-    initActionsMenu: function () {
+    getMenuActions: function () {
         var me = this,
             canVoidPayment = false,
             canApplyCheck = false,
@@ -103,35 +118,22 @@ Ext.define('Taco.view.order.subform.Payment', {
         });
 
         // add the tools the header using the pre defined actions above;
-        me.setTools({
-            xtype: 'taco.button',
-            width: 50,
-            height: 30,
-            text: ' ',
-            menuAlign: 'tr-br',
-            cls: Taco.baseCSSPrefix + 'editcontainer-menu-button',
-            autoEl: {
-                tag: 'a'
-            },
-            menu: {
-                plain: true,
-                items: [
-                    me.addPaymentAction,
-                    //me.issueCreditAction,
-                    //me.voidTransactionAction,
-                    //me.issueCreditPaymentAction,
-                    me.requestCheckAction,
-                    me.applyManualPayment
-                ]
-            }
-        });
+
+        return [
+            me.addPaymentAction,
+            //me.issueCreditAction,
+            //me.voidTransactionAction,
+            //me.issueCreditPaymentAction,
+            me.requestCheckAction,
+            me.applyManualPayment
+        ];
     },
     
     // initialize the views and actions menu
     initUI: function () {
         var me = this;
 
-        me.initActionsMenu();
+        // me.initActionsMenu();
         me.initHeader();
         me.initPaymentsUI();
     },

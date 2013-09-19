@@ -12,14 +12,31 @@ Ext.define('Taco.view.order.subform.Detail', {
         'Taco.view.order.widget.OrderItemGrid',
         'Taco.view.order.modal.EditOrderDetail'
     ],
-    
-    itemId: "orderDetailPanel",
-    
-    title: 'Order Details',
     alias: 'widget.taco-orderdetail',
     
+    itemId: 'orderDetailPanel',
+    title: 'Order Details',
+
+    tools: [{
+        type: 'gear',
+        itemId: 'actionTrigger',
+        menu: {
+            plain: true,
+            shadow: false,
+            items: []
+        },
+        callback: function (owner, tool, e) {
+            var menu = tool.menu;
+
+            if (tool.hasVisibleMenu()) {
+                menu.removeAll();
+                menu.add(owner.getMenuActions());
+            }
+        }
+    }],
+    
     config: {
-        
+
         // order model
         record: null,
         
@@ -34,7 +51,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         
         itemId:"orderDetails",
         // components to add to the panel header. typically used to add an actions menu button
-        tools: []
+        // tools: []
     },
         
     initComponent: function (eOpts) {
@@ -47,40 +64,39 @@ Ext.define('Taco.view.order.subform.Detail', {
         }, me);
         
         // var siteContext = Taco.app.context.getCurrent().urlToken;
-        
 
         this.cls += ' ' + Taco.baseCSSPrefix + 'orderform-detail';
         
-        this.actionTrigger = Ext.create('Taco.core.ux.action.Button', {
-            width: 50,
-            height: 30,
-            text: ' ',
-            menuAlign: 'tr-br',
-            cls: Taco.baseCSSPrefix + 'editcontainer-menu-button',
-            autoEl: {
-                tag: 'a'
-            },
+        // this.actionTrigger = Ext.create('Taco.core.ux.action.Button', {
+        //     width: 50,
+        //     height: 30,
+        //     text: ' ',
+        //     menuAlign: 'tr-br',
+        //     cls: Taco.baseCSSPrefix + 'editcontainer-menu-button',
+        //     autoEl: {
+        //         tag: 'a'
+        //     },
             
-            listeners: {
-                menushow: {
-                    fn: function (button, menu, eOpts) {
-                        // need to generate the menu each time since the menu options may change after the record is modified;
-                        menu.removeAll();
-                        menu.add(me.getMenuActions());
-                    },
-                    scope: me
-                }
-            },
-            menu: {
-                plain: true,
-                items: [{
-                    text: ""
-                }]
-            }
-        });
+        //     listeners: {
+        //         menushow: {
+        //             fn: function (button, menu, eOpts) {
+        //                 // need to generate the menu each time since the menu options may change after the record is modified;
+        //                 menu.removeAll();
+        //                 menu.add(me.getMenuActions());
+        //             },
+        //             scope: me
+        //         }
+        //     },
+        //     menu: {
+        //         plain: true,
+        //         items: [{
+        //             text: ""
+        //         }]
+        //     }
+        // });
     
         // add the action trigger icon in header;
-        this.setTools([this.actionTrigger]);
+        // this.setTools([this.actionTrigger]);
     
         // store that contains the orderItems for this order model
         orderItemStore = this.record.itemsStore;
@@ -145,7 +161,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         
     
     
-    editOrder: function (animationTarget) {
+    editOrder: function () {
         var me = this,
             isDraft = me.orderForm.isEdit(),
             win = Ext.create('Taco.view.order.modal.EditOrderDetail', {
@@ -291,33 +307,26 @@ Ext.define('Taco.view.order.subform.Detail', {
     // sets up the action menu for the gear icon trigger;  Will be called every time the record loads since actions may become disabled and enabled after each change;
     getMenuActions: function () {
         var me = this,
-            menu = [],
             availableActions = me.record.get("availableActions"),
             canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
-            canEdit = true;
+            canEdit = true,
+            menu;
         
-        menu.push(
-            {
-                text: 'Edit Details',
-                handler: function (button, e) {
-                    var animationTarget = this.actionTrigger.el;
-                    this.editOrder(animationTarget);
-                },
-                disabled: !canEdit,
-                scope: me
-            }
-        );
-        
-        menu.push(
-            {
-                text: 'Cancel Order',
-                handler:function() {
-                    this.detailGrid.cancelOrder();
-                },
-                scope:this,
-                disabled: !canCancel
-            }
-        );
+        menu = [{
+            text: 'Edit Details',
+            handler: function () {
+                this.editOrder();
+            },
+            scope: me,
+            disabled: !canEdit
+        }, {
+            text: 'Cancel Order',
+            handler: function() {
+                this.detailGrid.cancelOrder();
+            },
+            scope: me,
+            disabled: !canCancel
+        }];
 
         return menu;
         

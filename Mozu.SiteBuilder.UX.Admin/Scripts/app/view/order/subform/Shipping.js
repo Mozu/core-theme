@@ -14,6 +14,15 @@ Ext.define('Taco.view.order.subform.Shipping', {
     
     title: 'Shipment & Shipping Information',
 
+    tools: [{
+        type: 'gear',
+        menu: {
+            plain: true,
+            shadow: false,
+            items: []
+        }
+    }],
+
     config: {
         
         // order model
@@ -24,10 +33,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
         // width of the actionColumn. used to align the grid total container
         actionColumnWidth: 60,
         
-        itemId:"orderShipping",
-        
-        // components to add to the panel header. typically used to add an actions menu button
-        tools: []
+        itemId:"orderShipping"
     },
     
     initComponent: function (eOpts) {
