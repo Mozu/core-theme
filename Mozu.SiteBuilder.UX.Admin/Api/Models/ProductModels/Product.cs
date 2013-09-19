@@ -18,6 +18,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [DataMember(EmitDefaultValue = false, Name = "productCode")]
         public string ProductCode { get; set; }
 
+
+
+        [DataMember(EmitDefaultValue = false, Name = "publishedState")]
+        public string PublishedState { get; set; }
+
+        [DataMember(EmitDefaultValue = false, Name = "lastPublishedBy")]
+        public string LastPublishedBy { get; set; }
+
+        [DataMember(EmitDefaultValue = false, Name = "lastPublishedDate")]
+        public DateTime? LastPublishedDate { get; set; }
+
+
+
         /// <summary>
         /// The parent product code, if any.
         /// </summary>
