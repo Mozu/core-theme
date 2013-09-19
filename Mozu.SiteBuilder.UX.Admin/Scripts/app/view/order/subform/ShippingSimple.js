@@ -11,6 +11,23 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
     ],
     title: 'Shipping',
 
+    tools: [{
+        type: 'gear',
+        menu: {
+            plain: true,
+            shadow: false,
+            items: []
+        },
+        callback: function (owner, tool, e) {
+            var menu = tool.menu;
+
+            if (tool.hasVisibleMenu()) {
+                menu.removeAll();
+                menu.add(owner.getMenuActions());
+            }
+        }
+    }],
+
     config: {
         record: null
     },
@@ -86,29 +103,17 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
             this.shippingMethods
         ];
 
-        this.setTools({
-            xtype: 'taco.button',
-            width: 50,
-            height: 30,
-            text: ' ',
-            menuAlign: 'tr-br',
-            cls: Taco.baseCSSPrefix + 'editcontainer-menu-button',
-            autoEl: {
-                tag: 'a'
-            },
-            menu: {
-                plain: true,
-                items: [
-                    new Ext.Action({
-                        text: 'Edit Address',
-                        handler: this.launchEditor,
-                        scope: this
-                    })
-                ]
-            }
+        this.callParent(arguments);
+    },
+
+    getMenuActions: function () {
+        var action = new Ext.Action({
+            text: 'Edit Address',
+            handler: this.launchEditor,
+            scope: this
         });
 
-        this.callParent(arguments);
+        return [action];
     },
 
     setCustomer: function (customer) {

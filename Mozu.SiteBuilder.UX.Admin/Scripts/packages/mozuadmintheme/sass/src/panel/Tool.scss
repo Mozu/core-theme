@@ -13,3 +13,7 @@
 .#{$prefix}tool-edit {
     @include icon-font($glyph-pencil);
 }
+
+.#{$prefix}tool-gear {
+    @include icon-font($glyph-gear);
+}

@@ -3,101 +3,48 @@
  * @author Jimmy Sanford
  */
 Ext.define('Taco.core.ux.EditContainer', {
-    extend: 'Ext.container.Container',
-    //extend: 'Taco.core.ux.form.Form',
+    // extend: 'Ext.container.Container',
+    extend: 'Ext.panel.Panel',
     alias: 'widget.taco-editcontainer',
-    componentCls: Taco.baseCSSPrefix + 'editcontainer',
+
+    bodyPadding: '11 0 19',
     isEditContainer: true,
+    ui: 'subform',
 
     config: {
-        title: "Title",
-        tools: [],
-        actions:[]
+        actions: []
     },
 
     initComponent: function () {
-        var items = this.items || [],
-            headerConfig = this.header || {},
-            header;
-
-        header = this.buildHeader(headerConfig);
-        this.header = header;
-        
-        if (Ext.isArray(items)) {
-            items.unshift(header);
-        }
+        var actionBar = Ext.create('Ext.container.Container', {
+            itemId: 'actions',
+            items: this.getActions()
+        });
 
         this.callParent(arguments);
-    },
 
-    buildHeader: function (config) {
-        var items = [],
-            tools,
-            actions,
-            title,
-            header;
+        this.on({
+            boxready: {
+                scope: this,
+                fn: function () {
+                    var header = this.getHeader();
 
-        tools = Ext.create('Ext.container.Container', {
-            itemId: 'tools',
-            layout: {
-                type: 'hbox',
-                align: 'middle'
-            },
-            items: this.getTools() || []
+                    header.insert(1, actionBar);
+                }
+            }
         });
-        items.unshift(tools);
-
-        actions = Ext.create('Ext.container.Container', {
-            itemId: 'actions',
-            hidden: true,
-            layout: {
-                type: 'hbox',
-                align: 'middle'
-            },
-            items: this.getActions() || []
-        });
-        items.unshift(actions);
-
-        title = Ext.create('Ext.Component', {
-            itemId: 'title',
-            cls: this.componentCls + '-title',            
-            html: this.getTitle() || ' ',
-            flex: 1
-        });
-        items.unshift(title);
-
-        header = Ext.create(Ext.container.Container, {
-            height: 50,
-            border: '0 0 1',
-            padding: '0 0 20',
-            componentCls: this.componentCls + '-header',
-            layout: {
-                type: 'hbox',
-                align: 'middle'
-            },
-            items: items,
-            tools: tools,
-            actions: actions,
-            title: title
-        });
-
-        delete this.tools;
-        delete this.actions;
-        delete this.title;
-
-        return header;
     },
 
     toggleActions: function () {
-        var tools = this.header.items.get('tools'),
-            actions = this.header.items.get('actions');
+        var header = this.getHeader(),
+            tools = header.getTools(),
+            actions = header.items.get('actions'),
+            actionsAreHidden = actions.isHidden();
 
-        if (tools.isHidden()) {
-            actions.hide();
-            tools.show();
-        } else {
-            actions.show();
-            tools.hide();
-        }
+        actions[actionsAreHidden ? 'show' : 'hide']();
+
+        Ext.Array.forEach(tools, function (tool) {
+            tool[actionsAreHidden ? 'hide' : 'show']();
+        }, this);
     }
 });
