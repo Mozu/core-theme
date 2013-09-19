@@ -70,6 +70,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
             modal = Ext.create('Taco.shared.view.modal.Address', {
             record: me.addressRecord,
             addressHasNames: false,
+            validateAddress: true,
             listeners: {
                 savesuccess: function () {
                     me.record.set('siteShippingOriginAddress', Ext.apply({}, me.addressRecord.data));
