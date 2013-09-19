@@ -5,10 +5,13 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.Mvc.Customers;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Customers;
+using Mozu.Customer.Contracts.Clients;
+using AutoMapper;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -16,10 +19,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class AddressController : BaseController
     {
         private readonly IAccountContactRepository _accountContactRepository;
+        private readonly IAddressValidationWebApiClient _addressValidationWebApiClient;
 
-        public AddressController(IAccountContactRepository accountContactRepository)
+        public AddressController(IAccountContactRepository accountContactRepository, IAddressValidationWebApiClient addressValidationWebApiClient)
         {
             _accountContactRepository = accountContactRepository;
+            _addressValidationWebApiClient = addressValidationWebApiClient;
         }
 
 		[HttpGetRoute(UriTemplate = "read/accountcontact/?id={id}")]
@@ -71,6 +76,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var duplicate = await _accountContactRepository.Duplicate(accountContact);
 
             return Single2(duplicate);
+        }
+
+        [HttpPostRoute(UriTemplate = "validate")]
+        public async Task<Response<List<Models.Contact>>> ValidateAddress(Models.Contact contact)
+        {
+            var req = new Customer.Contracts.AddressValidationRequest()
+            {
+                Address = Mapper.Map<Core.Api.Contracts.Address>(contact)
+            };
+
+            var list = (await _addressValidationWebApiClient.CloneWithoutUserClaims().ValidateAddress(req))
+                .ReadAsSync()
+                .AddressCandidates.Select(x => Mapper.Map<Models.Contact>(x))
+                .ToList();
+            
+            return List2(list);
         }
     }
 }
