@@ -142,18 +142,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\FluentValidation.3.4.6.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
-    <Reference Include="FSharp.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.22\lib\FSharp.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="FSharp.PowerPack, Version=1.9.9.9, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.22\lib\FSharp.PowerPack.dll</HintPath>
-    </Reference>
-    <Reference Include="FSharp.PowerPack.Compatibility, Version=1.9.9.9, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.22\lib\FSharp.PowerPack.Compatibility.dll</HintPath>
-    </Reference>
     <Reference Include="Glimpse.Core">
       <HintPath>..\packages\Glimpse.0.87\lib\net40\Glimpse.Core.dll</HintPath>
     </Reference>
@@ -299,14 +287,6 @@
     </Reference>
     <Reference Include="Mozu.UspsShippingAdmin.Contracts">
       <HintPath>..\packages\Mozu.UspsShippingAdmin.Contracts.0.0.13010.1\lib\Mozu.UspsShippingAdmin.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="NDjango.Core40, Version=0.9.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.22\lib\NDjango.Core40.dll</HintPath>
-    </Reference>
-    <Reference Include="NDjangoFilters.NDjangoExtension40, Version=0.9.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Volusion.NDjango.Nuget.1.0.11332.22\lib\NDjangoFilters.NDjangoExtension40.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
