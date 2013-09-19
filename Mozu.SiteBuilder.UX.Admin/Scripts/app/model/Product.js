@@ -223,7 +223,7 @@ Ext.define('Taco.model.Product', {
     loadRuntimeProduct: function (cfg) {
 
         var me = this,
-            options = Ext.apply({
+            options = Ext.apply({}, {
                 url: '/admin/app/productruntime/read?productCode=' + this.getId(),
                 success: function (response) {
                     var res = Ext.JSON.decode(response.responseText) || {};
@@ -239,7 +239,7 @@ Ext.define('Taco.model.Product', {
     publish: function (cfg) {
 
         var me = this,
-            options = Ext.apply({
+            options = Ext.apply({}, {
                 url: '/admin/app/catalogpublishing/publish',
                 jsonData: [this.getId()],
                 success: function (response) {
@@ -257,7 +257,7 @@ Ext.define('Taco.model.Product', {
     discardDraft: function (cfg) {
 
         var me = this,
-            options = Ext.apply({
+            options = Ext.apply({}, {
                 url: '/admin/app/catalogpublishing/discard',
                 jsonData: [this.getId()],
                 success: function (response) {
