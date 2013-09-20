@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             DC.SiteGroup res;
 
             // TODO: no service support yet.
-            if (true)
+            if (false)
             {
                 var sitegroupPublishingPreferences = new Dictionary<string, string>();
                 
