@@ -1,9 +1,14 @@
 /**
  * @class Taco.view.pendingchange.Cms
  */
-Ext.define('Taco.view.pendingchange.Cms', {
+Ext.define('Taco.view.pendingChanges.Cms', {
     extend: 'Taco.core.ux.browser.BrowserPage',
-    requires: ['Taco.model.CmsDocumentDraft', 'Taco.store.CmsDocumentDrafts', 'Taco.core.ux.action.PrimarySplitButton', 'Taco.core.ux.grid.MenuColumn'],
+    requires: [
+        'Taco.model.CmsDocumentDraft',
+        'Taco.store.CmsDocumentDrafts',
+        'Taco.core.ux.action.PrimarySplitButton',
+        'Taco.core.ux.grid.MenuColumn'
+    ],
 
     typeName: 'Pending Changes',
     modelName: 'Taco.model.CmsDocumentDraft',
