@@ -115,18 +115,22 @@ Ext.define('Taco.core.ux.window.MessageBox', {
                 })
             ];
 
-            me.bottomTb = new Ext.toolbar.Toolbar({
-                id: baseId + '-toolbar',
-                ui: 'footer',
+            me.bottomTb = Ext.widget({
+                xtype: 'container',
+                cls: 'action-bar',
                 dock: 'bottom',
+                padding: '19 19 0',
                 layout: {
-                    pack: 'center'
+                    type: 'hbox',
+                    align: 'middle',
+                    pack: 'end',
+                    defaultMargins: '0 0 0 10'
                 },
                 items: [
-                    me.msgButtons[0],
-                    me.msgButtons[1],
+                    me.msgButtons[3],
                     me.msgButtons[2],
-                    me.msgButtons[3]
+                    me.msgButtons[1],
+                    me.msgButtons[0]
                 ]
             });
 
@@ -136,12 +140,15 @@ Ext.define('Taco.core.ux.window.MessageBox', {
         },
 
         onPromptKey: Ext.emptyFn,
+
         makeButton: function (btnIdx) {
             var btnId = this.buttonIds[btnIdx];
             return new Ext.button.Button({
                 handler: this.btnCallback,
                 itemId: btnId,
                 scope: this,
+                ui: btnId === 'ok' ? 'action-primary' : 'action',
+                scale: 'medium',
                 text: this.buttonText[btnId],
                 minWidth: 75
             });
@@ -168,6 +175,11 @@ Ext.define('Taco.core.ux.window.MessageBox', {
             }
             return buttons;
         },
+
+        updateOkButtonText: function (text) {
+            debugger;
+        },
+
         btnCallback: function (btn) {
             var me = this,
                 value,
@@ -190,16 +202,19 @@ Ext.define('Taco.core.ux.window.MessageBox', {
 
         show: function (cfg) {
             var me = this,
-                i,
+                msgButtons = me.msgButtons,
                 hideToolbar = true,
+                closeTool,
                 textArea,
                 textField,
-                msgButtons = me.msgButtons,
                 buttons;
+
             me.cfg = cfg;
 
 
             me.setScale(cfg.scale || 'small');
+
+            me.modal = cfg.modal || false;
 
             // Create the buttons based upon passed bitwise config
             buttons = cfg.buttons || 0;
@@ -217,6 +232,11 @@ Ext.define('Taco.core.ux.window.MessageBox', {
                 }
             }
             me.bottomTb.setVisible(!hideToolbar);
+            
+
+            //if (closeTool && closeTool.isComponent) closeTool.setVisible(hideToolbar);
+            //me.down('tool[type="close"]').setVisible(hideToolbar);
+
 
             me.setTitle(cfg.title);
 
@@ -255,6 +275,12 @@ Ext.define('Taco.core.ux.window.MessageBox', {
             
             me.callParent(arguments);
 
+            // Init the close tool on the window
+            if (!me.closeTool) me.closeTool = me.down('tool[type="close"]');
+
+            // Hide the Close if there are no Buttons
+            if (me.closeTool) me.closeTool.setVisible(hideToolbar);
+
         },
 
 
@@ -276,14 +302,36 @@ Ext.define('Taco.core.ux.window.MessageBox', {
                 cfg = {
                     title: cfg,
                     msg: msg,
-                    buttons: this.OK,
+                    //buttons: this.OK,
                     fn: fn,
                     scope: scope,
                     scale:'small'
                 };
             }
             return this.show(cfg);
-        }
+        },
+
+        confirm: function (cfg, msg, fn, scope) {
+            if (Ext.isString(cfg)) {
+                cfg = {
+                    title: cfg,
+                    msg: msg,
+                    buttons: this.OKCANCEL,
+                    fn: fn,
+                    scope: scope,
+                    scale: 'small'
+                };
+            } else {
+                cfg = Ext.apply({}, cfg, {
+                    buttons: this.OKCANCEL,
+                    scale: 'small'
+                });
+            }
+            return this.show(cfg);
+        },
+
+
+
     }, function () {
         /**
      * @class Ext.MessageBox
