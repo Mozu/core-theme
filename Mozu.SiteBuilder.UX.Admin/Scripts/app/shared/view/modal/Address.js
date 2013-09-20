@@ -5,7 +5,8 @@ Ext.define('Taco.shared.view.modal.Address', {
     extend: 'Taco.core.ux.window.WindowWithActions',
     requires: [
         'Taco.model.Contact',
-        'Taco.shared.view.form.Address'
+        'Taco.shared.view.form.Address',
+        'Ext.window.MessageBox'
     ],
 
     autoShow: true,
@@ -34,55 +35,54 @@ Ext.define('Taco.shared.view.modal.Address', {
         
         this.callParent(arguments);
 
+        //ToDo: Fix this. It doesn't resubmit the second time you click save.
+        //ToDo: Fix this. If multiple recs are returned
         this.on({
             save: function () {
                 if (this.validateAddress) {
-                    console.log('TODO: Validate Address');
-                    this.form.save();
-/* TODO: Replace two lines above with the following:
+                    this.setLoading(true);
+                    Ext.Ajax.request({
+                        url: '/admin/app/address/validate',
+                        method: 'POST',
+                        jsonData: this.form.getValues(),
+                        scope: this,
+                        success: function (response) {
+                            this.json = JSON.parse(response.responseText);
+                            if (this.json.total > 0) {
+                                var message = '';
+                                message += this.json.items[0]['address1'] + ', ';
+                                if (this.json.items[0]['address2'] != '') {
+                                    message += this.json.items[0]['address2'] + ', ';
+                                }
+                                message += this.json.items[0]['cityOrTown'] + ' ';
+                                message += this.json.items[0]['state'] + ', ';
+                                message += this.json.items[0]['countryCode'] + ', ';
+                                message += this.json.items[0]['zipCode'];
+                                Ext.Msg.show({
+                                    title: 'Address',
+                                    msg: 'Did you mean: ' + message,
+                                    buttons: Ext.Msg.YESNO,
+                                    closable: false,
+                                    rightJustifyButtons: true,
+                                    scope: this,
+                                    fn: function (rec) {
+                                        if (rec === "yes") {
+                                            for (item in this.json.items[0]) {
+                                                this.form.record.data[item] = this.json.items[0][item];
+                                            }
+                                            this.form.loadRecord(this.form.record);
+                                            this.form.save();
+                                            //this.setLoading(false);
+                                        } else {
+                                            //this.setLoading(false);
+                                        }
+                                    }
+                                });
+                            }
+                            this.setLoading(false);
 
-1) invoke /app/address/validate with a body that looks like this:
-    {
-        "firstName": "ojas",
-        "middleName": "",
-        "lastName": "patel",
-        "companyName": "ojas's company",
-        "address1": "po box 1271",
-        "address2": "",
-        "address3": "",
-        "address4": "",
-        "cityOrTown": "austin",
-        "countryCode": "US",
-        "zipCode": "78701",
-        "state": "TX",
-        "homePhone": "512-589-2634",
-        "mobilePhone": "",
-        "workPhone": ""
-    }
-
-2) response will contain array of validated addresses like this:
-    {
-        "items": [
-            {
-            "address1": "PO BOX 1271", 
-            "address2": "", 
-            "cityOrTown": "AUSTIN", 
-            "countryCode": "US", 
-            "state": "TX", 
-            "zipCode": "78767-1271"
-            }
-        ], 
-        "success": true, 
-        "total": 1
-    }
-
-3) if total == 0:
-        this.form.save()
-   else:
-        display confirmation window "Use this address?" that shows first address with two buttons:
-        - Yes: update record with validate address, then call this.form.save()
-        - No: call this.form.save()
-*/
+                        }
+                    });
                 } else {
                     this.form.save();
                 }
