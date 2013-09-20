@@ -132,6 +132,7 @@
             listConfig: {
                 selModel: {
                     allowDeselect: false,
+                    deselectOnContainerClick: false,
                     mode: 'SINGLE',
                     listeners: {
                         selectionchange: function (selectionModel, records) {
@@ -199,7 +200,8 @@
             minWidth: this.containerWidth,
             listConfig: {
                 cls: Ext.baseCSSPrefix + 'boundlist-with-hidden-selections',
-                selModel: { 
+                selModel: {
+                    deselectOnContainerClick: false,
                     mode: 'SIMPLE',
                     listeners: {
                         selectionchange: function (selectionModel, selected) {
