@@ -604,7 +604,7 @@
     <Content Include="Scripts\app\view\customers\subform\Subform.js" />
     <Content Include="Scripts\app\view\location\index.js" />
     <Content Include="Scripts\app\view\order\widget\DiscountRowBody.js" />
-    <Content Include="Scripts\app\view\pendingchange\Product.js" />
+    <Content Include="Scripts\app\view\pendingChange\Product.js" />
     <Content Include="Scripts\app\view\settings\Publishing.js" />
     <Content Include="Scripts\app\view\site\navigation\NavHeadings.js" />
     <Content Include="Scripts\app\view\tbd\Index.js" />
@@ -1081,7 +1081,7 @@
     <Content Include="Scripts\app\view\order\widget\UnpackagedItems.js" />
     <Content Include="Scripts\app\view\pageTemplate\Edit.js" />
     <Content Include="Scripts\app\view\pageTemplate\Index.js" />
-    <Content Include="Scripts\app\view\pendingchange\Cms.js" />
+    <Content Include="Scripts\app\view\pendingChange\Cms.js" />
     <Content Include="Scripts\app\view\productType\AttributeForm.js" />
     <Content Include="Scripts\app\view\productType\AttributeGroup.js" />
     <Content Include="Scripts\app\view\productType\Edit.js" />
