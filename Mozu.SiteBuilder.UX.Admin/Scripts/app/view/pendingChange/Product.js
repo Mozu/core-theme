@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.pendingChange.Product', {
     extend: 'Taco.core.ux.browser.BrowserPage',
-    alias: 'widget.prodindex',
+
     requires: [
         'Taco.model.Product',
         'Taco.store.Products'
@@ -11,11 +11,7 @@ Ext.define('Taco.view.pendingChange.Product', {
 
     typeName: 'Product',
     modelName: 'Taco.model.Product',
-    store: { 
-        type: 'Taco.store.Products', 
-        filters: [{ property: 'publishedstate', value: 'Pending'}],
-        clearFilters: false
-    },
+
     editorName: 'Taco.view.product.Edit',
     filterProperty: 'productName2',
     useTilePanel: false,
@@ -60,6 +56,18 @@ Ext.define('Taco.view.pendingChange.Product', {
         property: 'productFullDescription',
         text: 'Description'
     }],
+    
+    initComponent: function () {
+        this.store = {
+            type: 'Taco.store.Products',
+            id: 'product.publishing',
+            filters: [{ property: 'publishedstate', value: 'Pending' }],
+            clearFilters: false
+        };
+       
+        this.callParent(arguments);
+         
+    },
     
 //    initComponent: function () {
 //        var me = this;
