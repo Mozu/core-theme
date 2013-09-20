@@ -70,13 +70,10 @@ Ext.define('Taco.shared.view.modal.Address', {
                                             var newRec = this.form.getValues();
                                             for (item in this.json.items[0]) {
                                                 newRec[item] = this.json.items[0][item];
-                                            }
-                                            debugger
+                                            }                          
                                             this.form.loadRecord(newRec);
                                             this.form.save();
-                                            //this.setLoading(false);
                                         } else {
-                                            //this.setLoading(false);
                                         }
                                     }
                                 });
