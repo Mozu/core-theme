@@ -78,6 +78,52 @@ Ext.define('Taco.view.pendingChange.Product', {
 //    },
     
     gridPanelConf: {
+        dockedItems: [{
+            xtype: 'toolbar',
+            dock: 'top',
+            border: false,
+            items: [{
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+                menuAlign: 'tr-br?',
+                text: 'Bulk Actions',
+                menu: {
+                    plain: true,
+                    shadow: false,
+                    items: [{
+                        text: 'Publish',
+                        handler: function () {
+                            var grid = this.grid || (this.grid = this.up('grid')),
+                                checkedModels = grid.getSelectionModel().getSelection(),
+                                store = grid.store;
+
+                            // Get out if no selections
+                            if (!checkedModels) return;
+
+                            var codes = Ext.Array.pluck(Ext.Array.pluck(checkedModels, 'data'), 'productCode');
+
+                            Taco.model.Product.publishBulk({
+                                data: codes,
+                                success: function () {
+                                    store.sync({
+                                        callback: function () {
+                                            store.reload();
+                                        }
+                                    });
+                                },
+                                failure: function () {
+                                    Taco.MessageBox.alert(
+                                        'Sorry!',
+                                        'The selected product changes could not be published.'
+                                    );
+                                }
+                            })
+                        }
+                    }]
+                }
+            }]
+        }],
         columns: [{
             dataIndex: 'productCode',
             text: 'Code',

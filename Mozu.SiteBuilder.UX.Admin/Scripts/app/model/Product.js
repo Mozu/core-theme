@@ -6,7 +6,56 @@
 
 Ext.define('Taco.model.Product', {
     extend: 'Taco.core.data.Model',
-    requires: ['Taco.model.ProductOption', 'Taco.model.ProductProperty', 'Taco.model.ProductExtra', 'Taco.model.ProductVariation', 'Ext.data.association.HasMany', 'Taco.model.ProductInSiteInfo', 'Taco.model.ProductVariation'],
+    requires: [
+        'Taco.model.ProductOption',
+        'Taco.model.ProductProperty',
+        'Taco.model.ProductExtra',
+        'Taco.model.ProductVariation',
+        'Ext.data.association.HasMany',
+        'Taco.model.ProductInSiteInfo',
+        'Taco.model.ProductVariation'
+    ],
+
+    statics: {
+        publishBulk: function (cfg) {
+            this.doPublish(Ext.apply({}, {
+                url: '/admin/app/catalogpublishing/publish',
+                jsonData: cfg.data
+            }, cfg));
+        },
+        
+        discardBulk: function (cfg) {
+            this.doPublish(Ext.apply({}, {
+                url: '/admin/app/catalogpublishing/discard',
+                jsonData: cfg.data
+            }, cfg));
+        },
+        
+        publishAll: function (cfg) {
+            this.doPublish(Ext.apply({}, {
+                url: '/admin/app/catalogpublishing/publishall'
+            }, cfg));
+        },
+        
+        discardAll: function (cfg) {
+            this.doPublish(Ext.apply({}, {
+                url: '/admin/app/catalogpublishing/discardall'
+            }, cfg));
+        },
+
+        doPublish: function (cfg) {
+            var me = this,
+                options = Ext.apply({}, {
+                    method: 'POST',
+                    success: function (response) {
+                        Taco.core.data.StoreManager.markChanged('Taco.model.Product');
+                        if (cfg.success) cfg.success.apply(cfg.scope || this, arguments);
+                    }
+                }, cfg);
+            Ext.Ajax.request(options);
+        }
+    },
+
     behaviors: {
         read: 4,
         create: 1,
@@ -254,6 +303,7 @@ Ext.define('Taco.model.Product', {
         Ext.Ajax.request(options);
 
     },
+
     discardDraft: function (cfg) {
 
         var me = this,

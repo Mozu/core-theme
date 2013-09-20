@@ -11,6 +11,13 @@
         var me = this;
 
         this.additionalActions = [{
+            xtype: 'dirtybutton',
+            itemId: 'publish',
+            text: 'Publish',
+            beforeItemId: 'save',
+            margin: '0 0 0 10',
+            visible: true
+        }, {
             xtype: 'button',
             itemId: 'moreButton',
             ui: 'action',
@@ -72,5 +79,9 @@
 
     preview: function (pis) {
         window.open('/_gosite/' + pis.getId() + '?environment=preview&redir=' + encodeURIComponent('/product/' + this.record.getId()), 'taco-preview');
+    },
+
+    onBeforeRender: function () {
+        this.callParent(arguments);
     }
 });

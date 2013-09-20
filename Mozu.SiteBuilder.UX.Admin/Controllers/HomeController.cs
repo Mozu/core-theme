@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             
             // TODO: the siteGroup service is not ready. We mock it.
             Task<ServiceClientResponse<DCproduct.SiteGroupCollection>> siteGroupsTask;
-            if (true)
+            if (false)
             {
                 var mockTask = new TaskCompletionSource<Mozu.Core.Api.Contracts.Client.ServiceClientResponse<Mozu.ProductAdmin.Contracts.SiteGroupCollection>>();
                 var mockResp = new ServiceClientResponse<ProductAdmin.Contracts.SiteGroupCollection>();

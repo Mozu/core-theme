@@ -1,5 +1,5 @@
 /**
- * @class Taco.view.pendingchange.Cms
+ * @class Taco.view.pendingChange.Cms
  */
 Ext.define('Taco.view.pendingChange.Cms', {
     extend: 'Taco.core.ux.browser.BrowserPage',
