@@ -75,21 +75,38 @@ Ext.define('Taco.core.ux.window.WindowWithActions', {
          * @param {Boolean} isValid
          */
         'validitychange');
-
+/*
         this.dirtyButton = Ext.create('Taco.core.ux.action.DirtyButton', {
             text: this.primaryText,
             listeners: {
-                click: function() {
+                click: function () {
+                    debugger
                     if (this.fireEvent('beforesave') === false) {
                         return;
                     }
-
+                    console.log('ere');
                     this.fireEvent('save');
                 },
                 scope: this
             }
         });
+*/
 
+        this.dirtyButton = Ext.create('Ext.button.Button', {
+            text: this.primaryText,
+            ui: 'action-primary',
+            scale: 'medium',
+            disabled: true,
+            listeners: {
+                click: function () {
+                    if (this.fireEvent('beforesave') === false) {
+                        return;
+                    }
+                    this.fireEvent('save');
+                },
+                scope: this
+            }
+        });
         this.dockedItems = [{
             xtype: 'container',
             cls: 'action-bar',
@@ -103,9 +120,8 @@ Ext.define('Taco.core.ux.window.WindowWithActions', {
             },
             items: [{
                 xtype: 'button',
-                //xtype: 'secondaryaction',
                 ui: "action",
-                scale:"medium",
+                scale: "medium",
                 text: this.secondaryText,
                 listeners: {
                     click: function() {
@@ -158,7 +174,12 @@ Ext.define('Taco.core.ux.window.WindowWithActions', {
     },
 
     setSavable: function (value) {
-        this.dirtyButton.setDirty(value);
+        //this.dirtyButton.setDirty(value);
+        if (value) {
+            this.dirtyButton.enable();
+        } else {
+            this.dirtyButton.disable();
+        }
     },
 
     /**
@@ -166,6 +187,11 @@ Ext.define('Taco.core.ux.window.WindowWithActions', {
      */
     checkSavableButton: function() {
         console.log('checksavable');
-        this.dirtyButton.setDirty(this.isDirty && this.isValid);
+        // this.dirtyButton.setDirty(this.isDirty && this.isValid);
+        if (this.isDirty && this.isValid) {
+            this.dirtyButton.enable();
+        } else {
+            this.dirtyButton.disable();
+        }
     }
 });
