@@ -9,14 +9,14 @@
 
     initComponent: function () {
         var me = this;
-
+        
         this.additionalActions = [{
             xtype: 'dirtybutton',
             itemId: 'publish',
             text: 'Publish',
             beforeItemId: 'save',
             margin: '0 0 0 10',
-            visible: true
+            hidden: !this.checkProductPublishing()
         }, {
             xtype: 'button',
             itemId: 'moreButton',
@@ -83,5 +83,24 @@
 
     onBeforeRender: function () {
         this.callParent(arguments);
+
+        this.publishButton = this.down('dirtybutton#publish');
+
+        this.form.on({
+            savablestatechange: function (form, isSavable) {
+                isSavable = this.checkSavable(isSavable) || this.record.get('publishedState') !== 'Live';
+
+                this.publishButton.setDirty(isSavable);
+            },
+            scope: this
+        });
+    },
+
+    checkProductPublishing: function () {
+        var ctx = Taco.app.context.currentCtx;
+
+        if (ctx.siteCollection) ctx = ctx.siteCollection;
+
+        return ctx.productPublishingMode == 'Pending';
     }
 });
