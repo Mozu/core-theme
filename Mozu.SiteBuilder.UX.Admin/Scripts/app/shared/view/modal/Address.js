@@ -19,6 +19,7 @@ Ext.define('Taco.shared.view.modal.Address', {
     formCfg: null,
 
     initComponent: function () {
+        var me = this;
         this.cls += ' ' + Taco.baseCSSPrefix + 'address-editor';
 
         if (!this.record || !this.record.isModel) {
@@ -35,9 +36,8 @@ Ext.define('Taco.shared.view.modal.Address', {
         
         this.callParent(arguments);
 
-        //ToDo: Fix this. It doesn't resubmit the second time you click save.
         //ToDo: Fix this. If multiple recs are returned
-        this.on({
+        me.on({
             save: function () {
                 if (this.validateAddress) {
                     this.setLoading(true);
@@ -67,10 +67,12 @@ Ext.define('Taco.shared.view.modal.Address', {
                                     scope: this,
                                     fn: function (rec) {
                                         if (rec === "yes") {
+                                            var newRec = this.form.getValues();
                                             for (item in this.json.items[0]) {
-                                                this.form.record.data[item] = this.json.items[0][item];
+                                                newRec[item] = this.json.items[0][item];
                                             }
-                                            this.form.loadRecord(this.form.record);
+                                            debugger
+                                            this.form.loadRecord(newRec);
                                             this.form.save();
                                             //this.setLoading(false);
                                         } else {
@@ -87,7 +89,7 @@ Ext.define('Taco.shared.view.modal.Address', {
                     this.form.save();
                 }
             },
-            scope: this
+            scope: me
         });
     }
 });
