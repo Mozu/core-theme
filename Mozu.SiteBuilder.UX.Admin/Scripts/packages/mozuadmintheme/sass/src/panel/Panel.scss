@@ -14,7 +14,7 @@
     $ui-header-font-weight: normal,
     $ui-header-line-height: 24px,
     $ui-header-border-color: $color-neutral-75,
-    $ui-header-border-width: 0px,
+    $ui-header-border-width: 0px 0px 1px,
     $ui-header-border-style: solid,
     $ui-header-background-color: $color-neutral-white,
     $ui-header-background-gradient: null,
@@ -22,7 +22,7 @@
     $ui-header-inner-border-width: 0px,
     $ui-header-text-padding: 0px,
     $ui-header-text-transform: none,
-    $ui-header-padding: 19px 0px 11px,
+    $ui-header-padding: 19px 0px 10px,
     $ui-header-icon-width: 16px,
     $ui-header-icon-height: 16px,
     $ui-header-icon-spacing: 16px,
@@ -35,7 +35,7 @@
 
     $ui-body-color: $color-neutral-20,
     $ui-body-border-color: $color-neutral-white,
-    $ui-body-border-width: 1px 0px,
+    $ui-body-border-width: 0px,
     $ui-body-border-style: solid,
     $ui-body-background-color: $color-neutral-white,
     $ui-body-font-size: 16px,
@@ -55,7 +55,12 @@
 /* SUBFORM PANEL UI RULES */
 
 .#{$prefix}panel-header-subform {
+    border-color: $color-neutral-75;
     line-height: 1.0;
+
+    .#{$prefix}panel-header-text-container {
+        line-height: 30px;
+    }
 }
 
 .#{$prefix}panel-body-subform {
