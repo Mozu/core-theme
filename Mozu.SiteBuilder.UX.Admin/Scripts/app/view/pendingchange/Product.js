@@ -1,10 +1,13 @@
 /**
- * @class Taco.view.product.Index
+ * @class Taco.view.pendingChange.Catalog
  */
-Ext.define('Taco.view.pendingchange.Catalog', {
+Ext.define('Taco.view.pendingChange.Product', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     alias: 'widget.prodindex',
-    requires: ['Taco.model.Product', 'Taco.store.Products'],
+    requires: [
+        'Taco.model.Product',
+        'Taco.store.Products'
+   ],
 
     typeName: 'Product',
     modelName: 'Taco.model.Product',
