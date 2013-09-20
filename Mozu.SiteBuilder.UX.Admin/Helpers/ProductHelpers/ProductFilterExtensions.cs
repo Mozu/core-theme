@@ -71,7 +71,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                 case "siteid":
                     return string.Format("{1} eq {0}", filter.value, SITE_ID_PROPERTY);
                 case "publishedstate":
-                    return String.Format("{1} eq {0}", filter.value, PRODUCT_PUBLISHED_STATE);
+                    return String.Format("{1} ne Live", filter.value, PRODUCT_PUBLISHED_STATE);
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);
