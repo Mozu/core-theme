@@ -17,16 +17,21 @@
         me.callParent([config]);
         me.urlToken = me.contextType +'-'+ me.id;
     },
-    getSiteId: function () {
-        
+    
+    getSiteId: function () {    
         return this.id;
-
     },
+    
     getSiteGroupId: function () {
         return this.siteCollection.getSiteGroupId();
     },
-    getSiteGroup:function() {
+    
+    getSiteGroup: function() {
         return this.siteCollection;
+    },
+
+    updateContentPublishingMode: function(value) {
+        console.log('updateContentPublishingMode for Site ID', this.id, ' -> ', value);
     }
 
 });
