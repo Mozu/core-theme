@@ -161,18 +161,7 @@
 
         this.form.on({
             savablestatechange: function (form, isSavable) {
-                var forms;
-
-                if (isSavable && this.validateSavableStateChange) {
-                    forms = this.query('form.form');
-                    Ext.each(forms, function (childForm) {
-                        if (!childForm.isValid()) {
-                            isSavable = false;
-                            return;
-                        }
-                    });
-                }
-                this.dirtybutton.setDirty(isSavable);
+                this.dirtybutton.setDirty(this.checkSavable(isSavable));
             },
             savesuccess: function () {
                 console.log('savesuccess');
@@ -198,6 +187,18 @@
         });
 
         this.updateTitle(this.form.title);
+    },
+
+    checkSavable: function (isSavable) {
+        if (isSavable && this.validateSavableStateChange) {
+            Ext.each(this.query('form.form'), function (childForm) {
+                if (!childForm.isValid()) {
+                    isSavable = false;
+                    return;
+                }
+            });
+        }
+        return isSavable;
     },
 
     updateTitle: function (title) {

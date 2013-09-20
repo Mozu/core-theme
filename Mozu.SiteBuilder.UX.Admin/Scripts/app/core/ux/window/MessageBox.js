@@ -177,7 +177,7 @@ Ext.define('Taco.core.ux.window.MessageBox', {
         },
 
         updateOkButtonText: function (text) {
-            debugger;
+            // TODO: Add code
         },
 
         btnCallback: function (btn) {
