@@ -91,5 +91,5 @@ Ext.define('Taco.overrides.window.MessageBox', {
         Ext.MessageBox.destroy();
     }
    
-    Ext.MessageBox = new this();
+    Ext.MessageBox = Ext.Msg = new this();
 });
