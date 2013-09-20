@@ -70,6 +70,7 @@
         if (!this.actions) {
             this.actions = [{
                 xtype: 'secondarybutton',
+                itemId: 'cancel',
                 text: this.cancelText,
                 click: this.cancel,
                 hidden: this.cancelHidden || !this.allowCreate(),
@@ -77,15 +78,35 @@
             }, {
                 xtype: 'dirtybutton',
                 text: this.saveText,
+                itemId: 'save',
                 click: this.save,
                 hidden: this.saveHidden || !this.allowCreate(),
                 scope: this
             }];
         }
 
-        if (this.additionalActions && this.additionalActions.length) {
-            this.actions = this.additionalActions.concat(this.actions);
-        }
+        Ext.each(this.additionalActions, function (additionalAction) {
+            var beforeItemId = additionalAction.beforeItemId,
+                insertIndex;
+            
+            if (beforeItemId) {
+                Ext.each(this.actions, function (action, index) {
+                    if (action.itemId !== beforeItemId) return;
+                    insertIndex = index + 1;
+                    return false;
+                });
+            }
+
+            if (insertIndex) {
+                this.actions = Ext.Array.insert(this.actions, insertIndex, [additionalAction]);
+            } else {
+                this.actions.unshift(additionalAction);
+            }
+        }, this);
+
+        // if (this.additionalActions && this.additionalActions.length) {
+        //     this.actions = this.additionalActions.concat(this.actions);
+        // }
 
         this.on({
             beforerender: this.onBeforeRender,
@@ -132,7 +153,7 @@
     },
     
     onBeforeRender: function () {
-        this.dirtybutton = this.down('dirtybutton');
+        this.dirtybutton = this.down('dirtybutton#save');
 
         if (!this.form) {
             return;

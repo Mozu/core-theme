@@ -9,6 +9,10 @@ Ext.define('Taco.core.ux.action.DirtyButton', {
     dirtyState: false,
 
     initComponent: function () {
+        this.addEvents([
+            ''
+        ]);
+
         this.callParent(arguments);
 
         this.on({

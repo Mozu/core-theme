@@ -181,11 +181,11 @@ Ext.define('Taco.store.Navigation', {
             "items": [{
                 "id": "cmspublishing",
                 "label": "Content",
-                "address": "/pendingchanges/cms"
+                "address": "/pendingChanges/cms"
             }, {
                 "id": "catlogpublishing",
                 "label": "Product",
-                "address": "/pendingchanges/catalog"
+                "address": "/pendingChanges/product"
             }]
         }, {
             "id": "locations",

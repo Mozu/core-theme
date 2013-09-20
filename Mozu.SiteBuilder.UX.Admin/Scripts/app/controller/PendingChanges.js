@@ -18,14 +18,14 @@ Ext.define('Taco.controller.PendingChanges', {
     modelName: 'Pending Change',
 
     index: function () {
-        Taco.core.StateManager.attemptNavigate('pendingchanges/cms');
+        Taco.core.StateManager.attemptNavigate('pendingChanges/cms');
     },
 
     cms: function () {
         this.createContentView('Taco.view.pendingChange.Cms');
     },
 
-    catalog: function() {
+    product: function() {
         this.createContentView('Taco.view.pendingChange.Product');
     }
 });
