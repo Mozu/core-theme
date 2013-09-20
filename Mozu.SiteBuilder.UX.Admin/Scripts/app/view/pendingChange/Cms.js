@@ -1,7 +1,7 @@
 /**
  * @class Taco.view.pendingchange.Cms
  */
-Ext.define('Taco.view.pendingChanges.Cms', {
+Ext.define('Taco.view.pendingChange.Cms', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     requires: [
         'Taco.model.CmsDocumentDraft',
