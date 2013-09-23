@@ -49,37 +49,60 @@ Ext.define('Taco.shared.view.modal.Address', {
                         success: function (response) {
                             this.json = JSON.parse(response.responseText);
                             if (this.json.total > 0) {
-                                var message = '';
-                                message += this.json.items[0]['address1'] + ', ';
-                                if (this.json.items[0]['address2'] != '') {
-                                    message += this.json.items[0]['address2'] + ', ';
-                                }
-                                message += this.json.items[0]['cityOrTown'] + ' ';
-                                message += this.json.items[0]['state'] + ', ';
-                                message += this.json.items[0]['countryCode'] + ', ';
-                                message += this.json.items[0]['zipCode'];
-                                Ext.Msg.show({
-                                    title: 'Address',
-                                    msg: 'Did you mean: ' + message,
-                                    buttons: Ext.Msg.YESNO,
-                                    closable: false,
-                                    rightJustifyButtons: true,
-                                    scope: this,
-                                    fn: function (rec) {
-                                        if (rec === "yes") {
-                                            var newRec = this.form.getValues();
-                                            for (item in this.json.items[0]) {
-                                                newRec[item] = this.json.items[0][item];
-                                            }                          
-                                            this.form.loadRecord(newRec);
-                                            this.form.save();
-                                        } else {
-                                        }
+                                var addrChanged = false;
+                                var validatedAddr = this.json.items[0];
+                                var rawAddr = this.form.getValues();
+
+                                for (item in validatedAddr) {
+                                    if (rawAddr[item] != validatedAddr[item]) {
+                                        addrChanged = true;
+                                        break;
                                     }
-                                });
+                                }
+
+                                if (addrChanged) {
+                                    var message = '';
+                                    message += validatedAddr['address1'] + ', ';
+                                    if (validatedAddr['address2'] != '') {
+                                        message += validatedAddr['address2'] + ', ';
+                                    }
+                                    message += validatedAddr['cityOrTown'] + ' ';
+                                    message += validatedAddr['state'] + ', ';
+                                    message += validatedAddr['countryCode'] + ', ';
+                                    message += validatedAddr['zipCode'];
+                                    Ext.Msg.show({
+                                        title: 'Address',
+                                        msg: 'Did you mean: ' + message,
+                                        buttons: Ext.Msg.YESNO,
+                                        closable: false,
+                                        rightJustifyButtons: true,
+                                        scope: this,
+                                        fn: function (rec) {
+                                            if (rec === "yes") {
+                                                for (item in validatedAddr) {
+                                                    me.record.set(item, validatedAddr[item]);
+                                                }
+                                                this.form.loadRecord(me.record);
+                                                this.form.save();
+                                            } else {
+                                                this.form.save();
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    this.form.save();
+                                }
                             }
                             this.setLoading(false);
 
+                        },
+                        failure: function () {
+                            Ext.Msg.show({
+                                title: 'Address',
+                                msg: 'Unable to validate address'
+                            });
+                            this.setLoading(false);
+                            this.form.save();
                         }
                     });
                 } else {
