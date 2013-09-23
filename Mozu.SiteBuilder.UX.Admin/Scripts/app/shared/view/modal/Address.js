@@ -14,7 +14,7 @@ Ext.define('Taco.shared.view.modal.Address', {
     width: 700,
 
     addressHasNames: true,
-    validateAddress: false,
+    validateAddress: true,
 
     formCfg: null,
 
