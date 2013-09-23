@@ -110,8 +110,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
                                                                                VirtualPath = x.FullName.Substring( themePath.Length ).Trim( new char[]{'\\'}).ToLowerInvariant()
                                                                            }).ToArray() ;
 
-            var widgetMetaDataDir = "\\metadata\\widgets";
-            var pageTypesMetaDataDir = "\\metadata\\PageTypes";
+            var widgetMetaDataDir = "metadata\\widgets";
+            var pageTypesMetaDataDir = "metadata\\pagetypes";
             var jSerializer = new JsonSerializer();
 
             tmd.Widgets= tmd.FileListing.Where(x => x.VirtualPath.StartsWith(widgetMetaDataDir, StringComparison.OrdinalIgnoreCase) && x.Name.Equals ("definition.json", StringComparison.OrdinalIgnoreCase))
