@@ -163,7 +163,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpPostRoute(UriTemplate = "paymentActions")]
-        public async Task<Response<List<Return>>> CreatePaymentActionForReturn(List<PaymentAction> actions)
+        public async Task<Response<List<Return>>> CreatePaymentActionsForReturn(List<PaymentAction> actions)
         {
             var retList = new List<Return>();
             foreach (var action in actions)
