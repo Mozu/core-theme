@@ -180,8 +180,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
         me.unShippedPackages = Ext.create('Taco.core.ux.EditContainer', {
             header: true,
             title: "Unshipped Packages",
-            border: true,
-            margin: "80px,0px,0px,0px ",
+            cls:"package-container",
             items: packages
         });
 
@@ -262,8 +261,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
         me.shippedPackages = Ext.create('Taco.core.ux.EditContainer', {
             header: true,
             title: "Shipped Packages",
-            border: true,
-            margin: "80px,0px,0px,0px ",
+            cls: "package-container",
             items: packages
         });
     },

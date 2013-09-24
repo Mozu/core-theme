@@ -1,1 +1,23 @@
-﻿
+﻿.taco-add-refund-modal{
+
+	// overriding some default ext behavior that changes the border color of the first row when the second row is hovered;
+    .x-grid-row-before-over .x-grid-td {	 
+        border-bottom-color: #ededed;
+    }
+
+	// border that matches background color to keep the container height from changing on mouseover 
+    .#{$prefix}grid-cell {
+        vertical-align:top;   
+        // border that matches background color to keep the container height from changing on mouseover 
+        .#{$prefix}grid-cell-inner {
+            border: 1px solid transparent;
+        }     
+    } 
+
+	.editableCell {
+		// highlight editable cell when mouseover
+		.x-grid-cell-inner:hover {
+			border: 1px dashed #cccccc;
+		}
+	} 
+}

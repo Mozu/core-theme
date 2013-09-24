@@ -1,119 +1,112 @@
 ﻿
 // title toolbar in the order detail editor
 .title-toolbar {	
-	padding:2px 10px 2px 10px; 
-	background-color:#fff;
+    padding:2px 10px 2px 10px; 
+    background-color:#fff;
 
-	.title{
-		padding:0px 5px 0px 0px; 
-		font-size: px-to-rem(18);
-	}
+    .title{
+        padding:0px 5px 0px 0px; 
+        font-size: px-to-rem(18);
+    }
 
-	// fixing the font size for the buttons in the toolbar. 
-	// todo: remove this when the theme is stable;
-	.x-btn {
-		.x-btn-inner {
-		    font-size: px-to-rem(14);
-		}
-	}
+    // fixing the font size for the buttons in the toolbar. 
+    // todo: remove this when the theme is stable;
+    .x-btn {
+        .x-btn-inner {
+            font-size: px-to-rem(14);
+        }
+    }
 }
-
 
 // add to the title-toolbar for the draft toolbar - only visible in the readonly version of the grid
 .draft-toolbar{
-	border-color:#CCC;
-	background-color:#f1f1f1;	
-	border-width:1px;
-	
-	.title{	
-		color:#990000;
-		font-size: px-to-rem(14);
-	}
+    border-color:#CCC;
+    background-color:#f1f1f1;	
+    border-width:1px;
+    
+    .title{	
+        color:#990000;
+        font-size: px-to-rem(14);
+    }
 }
 
 
 .additem-toolbar{
     border-color:#CCC;
-	background-color:#f1f1f1;
-	padding:5px;
-	border-width:1px;
+    background-color:#f1f1f1;
+    padding:5px;
+    border-width:1px;
 
-	// fixing the font size for the buttons in the toolbar. 
-	// todo: remove this when the theme is stable;
-	.x-btn {
-		.x-btn-inner {
-		    font-size: px-to-rem(14);
-		}
-	}
+    // fixing the font size for the buttons in the toolbar. 
+    // todo: remove this when the theme is stable;
+    .x-btn {
+        .x-btn-inner {
+            font-size: px-to-rem(14);
+        }
+    }
 }
 
 
 // this is the default readonly grid;
 .taco-orderform-orderitemgrid{
-	background-color:#fff;    
+    
+	background-color:#fff;
 
-
-
-
-	.x-column-header-align-right .x-column-header-text {
-		margin-right: 0px;
-	}
-
-	// hide the column actions icon triggers when the column is disabled;  this will be the case when the grid is readonly mode;
-	.taco-grid-row-action-trigger.x-item-disabled{
-		visibility:hidden
-	}
-	
-
-	// adding a temporary hover state for the link buttons since they don't have one currently
-	.taco-toolbar-link.x-btn-link-medium-over, .taco-toolbar-link.x-btn-link-toolbar-medium-over {
-		.x-btn-inner{
-			text-decoration:underline;		
-		}	    
-	}
-
-
-	
-     
-	.emptyGridMessage{
-		padding:10px;
-		color:#990000
-	} 
-
-	// link to the product in the order detail product column
-	.productLink{   
-		color:blue;
-		white-space: normal;
-	}
-
-	// product in the order detail product column but link is disabled since the product was deleted and is no longer linkable
-	.productLinkDisabled{   
-		white-space: normal;    
-	}
-
-	// descriptive options for the product in the order detail product column
-	// forces the content to wrap in the cell
-	.productOptions{
-		white-space: normal;
-	} 
-
-	// border that matches background color to keep the container height from changing on mouseover 
-	.#{$prefix}grid-cell {
-		vertical-align:top;   
-		// border that matches background color to keep the container height from changing on mouseover 
-		.#{$prefix}grid-cell-inner {
-			border: 1px solid transparent;
-		}     
-	} 
-	
-	// formatting for active discounts;
-	.isActive{	
-	    text-decoration:none;	
+    .x-column-header-align-right .x-column-header-text {
+        margin-right: 0px;
     }
 
-	// formatting for inactive or suppressed discounts
+    // hide the column actions icon triggers when the column is disabled;  this will be the case when the grid is readonly mode;
+    .taco-grid-row-action-trigger.x-item-disabled{
+        visibility:hidden
+    }
+
+    // adding a temporary hover state for the link buttons since they don't have one currently
+    .taco-toolbar-link.x-btn-link-medium-over, .taco-toolbar-link.x-btn-link-toolbar-medium-over {
+        .x-btn-inner{
+            text-decoration:underline;		
+        }	    
+    }
+     
+    .empty-grid-message{
+        padding:10px;
+        color:#990000
+    } 
+
+    // link to the product in the order detail product column
+    .product-link{   
+        color:$color-action-link;
+        white-space: normal;
+    }
+
+    // product in the order detail product column but link is disabled since the product was deleted and is no longer linkable
+    .product-link-disabled{   
+        white-space: normal;    
+    }
+
+    // descriptive options for the product in the order detail product column
+    // forces the content to wrap in the cell
+    .product-options{
+        white-space: normal;
+    } 
+
+    // border that matches background color to keep the container height from changing on mouseover 
+    .#{$prefix}grid-cell {
+        vertical-align:top;   
+        // border that matches background color to keep the container height from changing on mouseover 
+        .#{$prefix}grid-cell-inner {
+            border: 1px solid transparent;
+        }     
+    } 
+    
+    // formatting for active discounts;
+    .isActive{	
+        text-decoration:none;	
+    }
+
+    // formatting for inactive or suppressed discounts
     .isSuppressed{    
-	    text-decoration:line-through;
+        text-decoration:line-through;
     }	
 }
 
@@ -122,81 +115,75 @@
 //this is the overrides of the default read only grid. ie the editor version
 .#{$vprefix}orderform-editor {  
 
-	// the remove icon in the right hand action column
-	.taco-grid-row-action-trigger-remove{
-	    
-		@include icon-font($glyph-close);				
-
-		height: 20px;
-		width: 30px;
-		cursor:pointer;				
-		
-		&::after {
-			left: 8px;
-			top:2px;
-			font-size: 1.4rem;
-			line-height: 1.4rem;			
-		}			
-
-		&:hover{				
-			color:red !important;	
-		}
-	}
-
-	
-	
-	// override of some inherited snerst
-	.#{$prefix}panel .#{$prefix}grid-body {
-		border-bottom-width:1px;
-	}
-		
-	// override of some inherited snerst
-	.x-grid-with-row-lines .x-grid-table-over-first {		
-		border-top-color: #ededed;
-	}
-	
-	// override of some inherited snerst
-	.x-grid-with-row-lines .x-grid-table-selected-first {	
-		border-top-color: #ededed;
-	}
-
-	// overriding some default ext behavior that changes the border color of the first row when the second row is hovered;
-	.x-grid-row-before-over .x-grid-td {	 
-	    border-bottom-color: #ededed;
-	}
-
-	.editmode-enabled {
-
-		.editableCell {
-			// highlight editable cell when mouseover
-			.#{$prefix}grid-cell-inner:hover {
-				border: 1px dashed #cccccc;
-			}
-		} 
-	}
-	 
-	// not sure if this is still used. todo:remove after testing;      
-	.x-grid-row-adjustment{
-		.adjustment-cell {
-			//font-size: px-to-rem(14);
-			//line-height: px-to-rem(19);
+    // the remove icon in the right hand action column
+    .taco-grid-row-action-trigger-remove{
         
-			//border-color: #ededed;
-			//border-bottom-width:1px;
-			//border-bottom-style:solid;
+        @include icon-font($glyph-close);				
 
-			// fixing font size for the adjustment row
-			.adjustment-cell-inner {
-				//font-size: 1.4rem !important;
-				//line-height: 0px;
-				.taco-grid-row-menu-trigger{					
-					//height:20px
-				}
-			}
-		}     
-	}
-	  
-	
+        height: 20px;
+        width: 30px;
+        cursor:pointer;				
+        
+        &::after {
+            left: 8px;
+            top:2px;
+            font-size: 1.4rem;
+            line-height: 1.4rem;			
+        }			
+
+        &:hover{				
+            color:red !important;	
+        }
+    }
+
+    
+    
+    // override of some inherited snerst
+    .#{$prefix}panel .#{$prefix}grid-body {
+        border-bottom-width:1px;
+    }
+        
+    // override of some inherited snerst
+    .x-grid-with-row-lines .x-grid-table-over-first {		
+        border-top-color: #ededed;
+    }
+    
+    // override of some inherited snerst
+    .x-grid-with-row-lines .x-grid-table-selected-first {	
+        border-top-color: #ededed;
+    }
+
+    // overriding some default ext behavior that changes the border color of the first row when the second row is hovered;
+    .x-grid-row-before-over .x-grid-td {	 
+        border-bottom-color: #ededed;
+    }
+
+    .editmode-enabled {
+
+        .editableCell {
+            // highlight editable cell when mouseover
+            .#{$prefix}grid-cell-inner:hover {
+                border: 1px dashed #cccccc;
+            }
+        } 
+    }
+     
+    // not sure if this is still used. todo:remove after testing;      
+    .x-grid-row-adjustment{
+        .adjustment-cell {
+            
+            // fixing font size for the adjustment row
+            .adjustment-cell-inner {
+                //font-size: 1.4rem !important;
+                //line-height: 0px;
+                .taco-grid-row-menu-trigger{					
+                    //height:20px
+                }
+            }
+        }     
+    }
+      
+    
   
    
     
@@ -204,6 +191,6 @@
 
     // rows without a discount should hide the row body row. Need to look at way to render rowbody dom selectively
     .noDiscount {
-	    //display:none;   
+        //display:none;   
     }    
 }

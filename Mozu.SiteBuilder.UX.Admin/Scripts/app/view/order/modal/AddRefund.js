@@ -1,67 +1,154 @@
 ﻿/**
- * @class Taco.view.order.modal.IssueCredit
+ * @class Taco.view.order.modal.AddRefund
  */
 Ext.define('Taco.view.order.modal.AddRefund', {
-    extend: 'Taco.core.ux.modal.Modal',
-    requires: [
-      //  'Taco.model.PaymentReference',
-      //  'Taco.model.Shipment'
-    ],
-    cls: Taco.baseCSSPrefix + 'order-modal',
-    autoShow: true,
-    destroyOnHide: true,
+    extend: 'Ext.window.Window',
+    requires: [],
+    cls: Taco.baseCSSPrefix + 'add-refund-modal ' + Taco.baseCSSPrefix + 'window-plain',
+    ghost: false,
+    resizeable: false,
+    modal: true,
+    title: "Add Refund",
     width: 700,
-    //    data: {},
-    //    field: '',
+    //height: 530,
+    autoShow: true,
+    //destroyOnHide: true,
+    
+    constrain: true,
+    
+    layout:"fit",
+    
     initComponent: function (eOpts) {
-        var me = this,
-            validPaymetns = [];
-        //Ext.each(me.order.data.payments, function (payment) {
-        //    if ( payment.status == 'Collected')
-        //})
+        var me = this;
 
         me.store = Ext.create('Ext.data.Store', {
             fields: [
-                'id', 'cardType', 'cardNumber', 'amountCollected', {
+                'id',
+                'cardType',
+                'cardNumber',
+                'amountCollected',
+                'amountAuthorized',
+                'amountCredited',
+                'paymentType',
+                'status',
+                {
                     name: 'amountToRefund',
                     type: 'number',
-                    defaultValue:0
+                    defaultValue: 0
+                    
                 }
             ],
             data: me.order.data.payments,
             filters: [
                 function (item) {
-                    return (item.raw.status == 'Collected' && item.raw.paymentType != 'Check');
+                    //return (item.raw.status == 'Collected' && item.raw.paymentType != 'Check');
+                    return (item.raw.status == 'Collected');
                 }
             ]
         });
+
+        
         me.grid = Ext.create('Taco.core.ux.grid.Panel', {
             store: me.store,
             viewConfig: {
-                cls: 'editmode-enabled'
+                //cls: 'editmode-enabled',
+                overItemCls: 'taco-grid-row-over',
+                stripeRows: false
             },
             columns: [
                 {
-                    text: 'Card Type',
-                    dataIndex: 'cardType'
+                    text: 'Payment details',
+                    flex:1,
+                    draggable: false,
+                    sortable: false,
+                    resizable: false,
+                    menuDisabled: true,
+                    dataIndex: 'cardType',
+                    cardTemplate: new Ext.XTemplate([
+                        "{cardType}: {cardNumber}"
+                    ]),
+                    checkTemplate: new Ext.XTemplate([
+                        "Check"
+                    ]),
+                    renderer: function (value, metaData, record) {
+                        var str = "";
+
+                        if (record.get("paymentType") == "CreditCard") {
+                            str =  metaData.column.cardTemplate.apply(record.getData());
+                        } else {
+                            str = metaData.column.checkTemplate.apply(record.getData());
+                        }
+
+                        return str;
+
+                        /*
+                        //raw credit card
+
+                        NameOnCard: "asdf"
+                          amountAuthorized: 0
+                          amountCollected: 33
+                          amountCredited: 0
+                        availableActions: Array[2]
+                        cardNumber: "************1111"
+                        cardType: "Visa"
+                          createDate: "2013-09-20T15:05:21.631Z"
+                        id: "96db63f2eecf40d1a43da88494de4bce"
+                        interactions: Array[2]
+                          isManual: false
+                        orderId: "0330d2264fdce026f46c6d9100000059"
+                        paymentServiceTransactionId: "479797a566214ab292693f9774e8f8ea"
+                        paymentType: "CreditCard"
+                        status: "Collected"
+
+
+
+
+                        //raw check
+                          amountAuthorized: 0
+                          amountCollected: 90.99
+                          amountCredited: 0
+                        availableActions: Array[3]
+                          createDate: "2013-09-20T15:01:56.575Z"
+                        id: "df843c583a214ff8ad515d8da950a355"
+                        interactions: Array[2]
+                          isManual: false
+                        orderId: "0330d2264fdce026f46c6d9100000059"
+                        paymentType: "Check"
+                        status: "Collected"
+
+
+
+
+
+
+                        */
+
+                    }
                 },
                 {
-                    text: 'Card Number',
-                    dataIndex: 'cardNumber',
-                    flex:1
+                    text: 'Amount Collected',
+                    width:150,
+                    draggable: false,
+                    sortable: false,
+                    resizable: false,
+                    menuDisabled: true,
+                    dataIndex: 'amountCollected',
+                    renderer: Ext.util.Format.usMoney
                 },
-            {
-                text: 'Card Number',
-                dataIndex: 'amountCollected',
-                renderer: Ext.util.Format.usMoney
-            },
                 {
-                    text: 'RefundAmount',
+                    text: 'Refund Amount',
+                    width:150,
+                    draggable: false,
+                    sortable: false,
+                    resizable: false,
+                    menuDisabled: true,
                     tdCls: "editableCell",
                     dataIndex: 'amountToRefund',
                     editor: {
                         xtype: 'numberfield',
                         hideTrigger: true,
+                        selectOnFocus: true,
+                        mouseWheelEnabled:false,
                         minValue: 0
                     },
                     renderer: Ext.util.Format.usMoney
@@ -69,6 +156,17 @@ Ext.define('Taco.view.order.modal.AddRefund', {
             ],
             //selType: 'cellmodel',
             listeners: {
+                select: function (view, record, index, eOpts) {
+                    var me =this;
+                    
+                    // pass focus to the editable sell when the row is selected
+                    Ext.Function.defer(function () {
+                        //me.grid.getPlugin().startEditByPosition({ row: index, column: 2 });
+                    }, 500, me);
+                    
+
+                },
+                //validateedit : me.onGridEdit,
                 edit: me.onGridEdit,
                 scope: me
             },
@@ -78,55 +176,60 @@ Ext.define('Taco.view.order.modal.AddRefund', {
                 })
             ]
         });
+
+        me.items = [
+            me.grid
+        ];
+        
         
 
-        me.content = {
-            xtype: 'container',
-            items: [
-                {
-                    xtype: 'component',
-                    autoEl: {
-                        tag: 'h2',
-                        cls: 'order-modal-title',
-                        html: 'Add Refund'
-                    }
-                },
-                 me.grid
-            ]
-        };
-
         me.dirtyButton = Ext.create('Taco.core.ux.action.DirtyButton', {
-            xtype: 'dirtybutton',
+            //xtype: 'dirtybutton',
             text: 'Save',
             onClick: function () {
                 me.save();
             }
         });
-
-        me.actions = {
-            xtype: 'container',
-            items: [this.dirtyButton, {
-                xtype: 'action',
+        
+        this.buttons = [
+            {
+                xtype: 'button',
+                ui: "action",
+                scale: "medium",
                 text: 'Cancel',
-                onClick: function () {
-                    me.fireEvent('cancel',me);
-                }
-            }]
-        };
-
-
+                margin: {
+                    right: 10
+                },
+                handler: function () {
+                    me.hide();
+                },
+                scope: me
+            },
+            this.dirtyButton
+        ];
         
         this.callParent(arguments);
-
-
-        
     },
+    
+    show: function () {
+        var me = this;
+        this.callParent(arguments);
+        // need to defer this to wait for the grid to load its child data and force the window to resize;
+        Ext.Function.defer(function () {
+            // check to see if the window has overflown its viewport
+            //this.processRelativeSize();
+            //center the dialog after its resize;
+            //this.center();
+        }, 1, me);
+    },
+
     onGridEdit: function () {
         var me = this,
             savableState = me.store.findBy(function (item) { return item.get('amountToRefund') > 0; }) > -1;
+        
         me.dirtyButton.setDirty(savableState);
-
     },
+    
     save: function () {
         var me = this,
             payments = [];
@@ -142,16 +245,15 @@ Ext.define('Taco.view.order.modal.AddRefund', {
             }
 
         });
-        me.fireEvent('save',me, payments);
-
-        //order.Id, paymentId,
-        //                                             new Contracts.Payments.PaymentAction
-        //{
-        //    ActionName = Constants.ActionNames.Payment.ApplyCheck,
-        //    Amount = order.Total,
-        //    CheckNumber = "123445",
-        //    ISOCurrencyCode = "USD"
-        //})
-
+        
+        me.setLoading(true, me.body);
+        
+        me.record.performPaymentAction(payments, {
+            success: function () {
+                me.setLoading(false, me.body);
+                me.fireEvent('save');
+                me.hide();
+            }
+        });
     }
 });

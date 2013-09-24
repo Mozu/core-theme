@@ -35,7 +35,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         // order model
         originalRecord : null,
         record: null,
-        itemId:"orderPayment",
+        itemId:"orderPayment"
     },
     
     initComponent: function (eOpts) {

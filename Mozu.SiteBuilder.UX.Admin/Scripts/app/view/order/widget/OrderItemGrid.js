@@ -4,6 +4,7 @@
 Ext.define('Taco.view.order.widget.OrderItemGrid', {
     extend: 'Ext.grid.Panel',
     requires: [
+        'Ext.MessageBox',
         'Taco.view.order.modal.ProductConfigurator',
         'Taco.view.order.widget.ProductPickerField',
         'Taco.view.order.widget.DiscountPickerField',
@@ -141,7 +142,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 trackOver: (this.getEditMode()),
                 // changing the hover class to get rid of taco overrides of grid
                 overItemCls: 'taco-orderItem-grid-row-over',
-                emptyText: '<div class="emptyGridMessage">No order items to display</div>',
+                emptyText: '<div class="empty-grid-message">No order items to display</div>',
                 deferEmptyText: false,
                 stripeRows: false,
                 disabled: false,  // disables the grid, prevents the field editors from opening. prevents default hover behavior. Makes text grey and background grey. TODOs, explore this as an option for making the grid readony.
@@ -181,11 +182,11 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 menuDisabled: true,
                 tpl: new Ext.XTemplate(
                     '<tpl if="isDeleted">',
-                    '<span class="productLinkDisabled" productCode="{productCode}">{productName}</span>',
+                    '<span class="product-link-disabled" productCode="{productCode}">{productName}</span>',
                     '<tpl else>',
-                    '<a class="productLink" productCode="{productCode}" target="_blank" href="/admin/' + siteContext + '/products/edit/{productCode}">{productName}</a>',
+                    '<a class="product-link" productCode="{productCode}" target="_blank" href="/admin/' + siteContext + '/products/edit/{productCode}">{productName}</a>',
                     '</tpl>',
-                    '<div class="productOptions">',
+                    '<div class="product-options">',
                     '<tpl for="options">',
                     '<span class="option"><tpl if="xindex &gt; 1">, </tpl>{Name}',
                     ': {Value}',
@@ -432,7 +433,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 menuDisabled: true,
                 tpl: [
                     '<span class="productname" >{productName}</span>',
-                    '<span class="productOptions">',
+                    '<span class="product-options">',
                     '<tpl for="options">',
                     '<span class="option">{.}, </span>',
                     '</tpl>',

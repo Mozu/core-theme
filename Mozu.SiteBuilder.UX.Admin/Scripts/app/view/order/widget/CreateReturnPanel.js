@@ -1,11 +1,12 @@
 ﻿/**
- * @class Taco.view.order.widget.PaymentPanel
+ * @class Taco.view.order.widget.CreateReturnPanel
  */
 Ext.define('Taco.view.order.widget.CreateReturnPanel', {
     extend: 'Ext.form.Panel',
     requires: [
     ],
-    margin: '10 0 10 0',
+    //margin: '10 0 10 0',
+    cls: "return-item return-create",
     initComponent: function (eOpts) {
         var me = this;
         me.order = me.record;
@@ -19,6 +20,8 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
 
         me.grid = Ext.create('Taco.core.ux.grid.Panel', {
             store: me.store,
+            title: 'Items',
+            margin: "10px 0px 0px 0px ",
             viewConfig: {
                 cls: 'editmode-enabled'
             },
@@ -26,15 +29,29 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
                 {
                     text: 'Name',
                     dataIndex: 'productName',
+                    draggable: false,
+                    sortable: false,
+                    resizable: false,
+                    menuDisabled: true,
                     flex: 1
                 },
                 {
                     text: 'Order Quantity',
+                    draggable: false,
+                    sortable: false,
+                    resizable: false,
+                    menuDisabled: true,
+                    width:150,
                     dataIndex: 'quantity'
                 },
                 {
                     text: 'Return Quantity',
                     tdCls: "editableCell",
+                    draggable: false,
+                    sortable: false,
+                    resizable: false,
+                    menuDisabled: true,
+                    width: 150,
                     renderer: function (value) {
                         return value || 0;
                     },
@@ -64,7 +81,7 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
                 change: me.onCreateStateChange,
                 scope: me
             },
-            labelAlign: 'left',
+            labelAlign: 'top',
             fieldLabel: 'Type',
             name: 'type'
         });
@@ -81,15 +98,15 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
                 change: me.onCreateStateChange,
                 scope: me
             },
-            labelAlign: 'left',
+            labelAlign: 'top',
             fieldLabel: 'Reason',
             name: 'reason'
         });
-        
+
 
         me.rmaDeadline = Ext.create('Taco.core.ux.form.DateTime', {
             fieldLabel: 'Deadline',
-            labelAlign: 'left',
+            labelAlign: 'top',
             emptyText: 'Any Time',
             value: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDay()),
             name: 'rmaDeadline'
@@ -108,7 +125,7 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
                     me.store.each(function (item) {
                         if (item.data.returnQuantity > 0) {
                             returnData.items.push({
-                                orderItemId:item.getId(),
+                                orderItemId: item.getId(),
                                 quantity: item.data.returnQuantity,
                                 reason: me.returnReason.getValue()
                             });
@@ -119,8 +136,10 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
             }
         });
 
-        me.cancelButton = Ext.create('Taco.core.ux.action.SecondaryButton', {
+        me.cancelButton = Ext.create('Ext.button.Button', {
             text: 'Cancel',
+            ui: "action",
+            scale:"medium",
             listeners: {
                 click: function () {
                     me.fireEvent('cancel');
@@ -128,30 +147,46 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
             }
         });
 
+
+
+
         me.dockedItems = [
             {
-                xtype: 'toolbar',
-                
-                // style: "padding:10px 10px 28px 10px;",
+                xtype: 'container',
                 dock: 'top',
                 weight: 1,
+                cls: "header",
                 items: [
-                    me.returnType,
-                    me.returnReason,
-                    me.rmaDeadline
+                    {
+                        xtype: "component",
+                        cls: "title-row",
+                        html: "Create a return"
+                    },
+                    {
+                        xtype: "container",
+                        layout: 'hbox',
+                        items: [
+                            me.returnType,
+                            me.returnReason,
+                            me.rmaDeadline
+                        ]
+                    }
                 ]
             },
+
             {
                 xtype: 'toolbar',
                 dock: 'bottom',
                 weight: 1,
                 ui: 'footer',
-                style: "padding:28px 28px 28px 28px;",
+                cls:"rma-footer",
+                //style: "padding:28px 28px 28px 28px;",
                 defaults: {
                     minWidth: 100,
                     margin: "0px 0px 0px 10px"
                 },
                 items: [
+                    "->",
                     me.cancelButton,
                     me.createButton
                 ]

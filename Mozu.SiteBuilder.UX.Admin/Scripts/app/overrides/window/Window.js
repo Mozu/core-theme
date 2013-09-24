@@ -176,6 +176,8 @@ Ext.define('Taco.overrides.window.Window', {
         if (this.relativeWidth) {
             this.setRelativeWidth();
         }
+
+        this.center();
     },
     
     
@@ -224,8 +226,8 @@ Ext.define('Taco.overrides.window.Window', {
         // call the superclass to get the default behavior
         this.callParent(arguments);
 
-        // do any relative width and height adjustments if they are enabled;
-        this.processRelativeSize();
+        // do any relative width and height adjustments if they are enabled; Makeing this a defer to allow the child panels to do their resizing;
+        Ext.Function.defer(this.processRelativeSize, 1, me);
     
         if (me.enableOverflowCls) {
             
