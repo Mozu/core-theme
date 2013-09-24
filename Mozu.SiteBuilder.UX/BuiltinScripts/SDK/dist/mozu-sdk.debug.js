@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-09-13
+ * Mozu JavaScript SDK - v0.1.0 - 2013-09-23
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2353,6 +2353,17 @@ var ApiReference = (function () {
             includeSelf: true
         },
         'login': '{+UserService}Login',
+        'address': {
+            "validate-address": {
+                verb: 'POST',
+                template: '{+AddressValidationService}',
+                includeSelf: {
+                    asProperty: 'Address'
+                },
+                overridePostData: true,
+                returnType: 'address'
+            }
+        },
         'order': {
             template: '{+OrderService}{Id}',
             includeSelf: true,

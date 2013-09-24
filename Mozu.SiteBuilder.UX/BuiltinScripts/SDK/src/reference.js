@@ -265,6 +265,17 @@ var ApiReference = (function () {
             includeSelf: true
         },
         'login': '{+UserService}Login',
+        'address': {
+            "validate-address": {
+                verb: 'POST',
+                template: '{+AddressValidationService}',
+                includeSelf: {
+                    asProperty: 'Address'
+                },
+                overridePostData: true,
+                returnType: 'address'
+            }
+        },
         'order': {
             template: '{+OrderService}{Id}',
             includeSelf: true,
