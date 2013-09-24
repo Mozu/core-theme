@@ -1,13 +1,16 @@
 ﻿
 
 Ext.define('Taco.view.product.option.Modal', {
-    extend: 'Taco.core.ux.modal.ContentWithActions',
+    extend: 'Taco.core.ux.window.WindowWithActions',
 
     autoShow: true,
     autoSize: true,
     primaryText: 'Create Child Products',
     title: 'Select Values to Create Child Products',
 
+    layout: {
+        type: 'fit'
+    },
 
     initComponent: function () {
         var fields = [];
@@ -39,25 +42,14 @@ Ext.define('Taco.view.product.option.Modal', {
         }, this);
 
         this.form = Ext.create('Taco.core.ux.form.Form', {
-            autoScroll: true,
-            manageHeight: false,
+            overflowX: 'auto',
+            overflowY: 'auto',
             layout: {
                 type: 'hbox',
+                align: 'stretch',
                 defaultMargins: '0 10 0 0'
             },
-            items: fields,
-            isValid: function (a,b,c,d,e,f) {
-                var ret = false;
-                
-                this.getForm().getFields().each(function (field) {
-                    if (!field.getValue().length) return;
-
-                    ret = true;
-                    return true;
-                });
-
-                return ret;
-            }
+            items: fields
         });
 
         this.relayEvents(this.form, ['savablestatechange']);
