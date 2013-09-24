@@ -296,16 +296,10 @@
 
         this.record.loadRuntimeProduct({
             success: function (response) {
-                var json = Ext.decode(response.responseText, true);
-                if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', "Error loading product information.", 'error');
-                    return;
-                }
-                
                 Ext.suspendLayouts();
                 this.quantity.show();
                 this.buildImages();
-                this.loadRuntimeProduct(json);
+                this.loadRuntimeProduct(response);
                 Ext.resumeLayouts(true);
                 if (this.ownerCt) {
                     this.ownerCt.center();
@@ -355,8 +349,8 @@
     },
 
     loadRuntimeProduct: function (data) {
-        if (data) this.runtimeData = data.items;
-        console.log('RUNTIME DATA', this.runtimeData);
+        this.runtimeData = data;
+        //console.log('RUNTIME DATA', this.runtimeData);
         this.buildOptions(this.runtimeData.Options);
     },
 

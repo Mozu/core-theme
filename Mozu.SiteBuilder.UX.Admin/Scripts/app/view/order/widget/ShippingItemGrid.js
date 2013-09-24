@@ -125,7 +125,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             viewConfig: {
                 // changing the hover class to get rid of taco overrides of grid
                 overItemCls: 'taco-order-shippingItem-grid-row-over',
-                emptyText: '<div class="emptyGridMessage">No items to display</div>',
+                emptyText: '<div class="empty-grid-message">No items to display</div>',
                 deferEmptyText: false,
                 stripeRows: false,
                 disabled: false,  // disables the grid, prevents the field editors from opening. prevents default hover behavior. Makes text grey and background grey. TODOs, explore this as an option for making the grid readony.
@@ -450,7 +450,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
                 menuDisabled: true,
                 tpl: [
                     '<span class="productname" >{productName}</span>',
-                    '<span class="productOptions">',
+                    '<span class="product-options">',
                     '<tpl for="options">',
                     '<span class="option">{.}, </span>',
                     '</tpl>',

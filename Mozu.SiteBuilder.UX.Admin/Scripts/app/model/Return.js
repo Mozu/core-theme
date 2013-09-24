@@ -1,5 +1,5 @@
 ﻿/**
- * @class Taco.model.Order
+ * @class Taco.model.Return
  */
 Ext.define('Taco.model.Return', {
     extend: 'Taco.core.data.Model',
@@ -173,7 +173,10 @@ Ext.define('Taco.model.Return', {
         Ext.Ajax.request(config);
     },
     
-    performPaymentAction: function ( payment, config) {
+
+    // Note: payments should be an array
+    
+    performPaymentAction: function ( payments, config) {
         var me = this;
         if (config.success) {
             config.success2 = config.success;
@@ -183,12 +186,16 @@ Ext.define('Taco.model.Return', {
             config.failure2 = config.failure;
             config.scope2 = config.scope;
         }
-        Ext.applyIf(config, {
-            jsonData:payment,
+        Ext.apply(config, {
+            jsonData:payments,
             success: function(response){
                 var json = Ext.decode(response.responseText, true);
                 if (json.items && json.items.length) {
-                    me.set(json.items[0]);
+
+                    
+                    Ext.each(json.items,function(item) {
+                        me.set(item);
+                    });
                     me.commit();
                 }
                 if (config.success2) {
@@ -202,11 +209,11 @@ Ext.define('Taco.model.Return', {
                 if (config.failure2) {
                     config.failure2.apply(config.scope2 || me, [response, options, json]);
                 } else {
-                    msg = json && json.Message ? json.Message : 'Error Adding Payment '
+                    msg = json && json.Message ? json.Message : 'Error Adding Payments ';
                     Taco.app.fireEvent('setmessage', msg, 'error');
                 }
             },
-            url: '/admin/app/return/paymentAction',
+            url: '/admin/app/return/paymentActions',
             method: "POST"
             
         });

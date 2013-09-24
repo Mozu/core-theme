@@ -24,7 +24,7 @@ Ext.define('Taco.view.order.subform.Return', {
     initComponent: function (eOpts) {
         var me = this;
 
-        this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-payment'].join(' ');
+        this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-returns'].join(' ');
 
         // after the record is reloaded we will need to refresh the ui
         me.record.on("aftercommit", function () {
@@ -35,6 +35,9 @@ Ext.define('Taco.view.order.subform.Return', {
         if (me.record.get('returnStatus') && me.record.get('returnStatus') != 'None') {
             me.returnsStore.load();
         }
+        
+
+
         me.createButton = Ext.create('Taco.core.ux.action.SecondaryButton', {
             text: 'Create a return ',
             
@@ -73,6 +76,7 @@ Ext.define('Taco.view.order.subform.Return', {
         this.callParent(arguments);
     },
     onOrderChange: function () {
+        
         Ext.suspendLayouts();
         this.initCreateButton();
         Ext.resumeLayouts(true);

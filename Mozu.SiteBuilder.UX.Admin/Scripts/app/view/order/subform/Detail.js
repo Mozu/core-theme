@@ -49,7 +49,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         // width of the row total Column. used to align the grid total container
         rowTotalColumnWidth: 100,
         
-        itemId:"orderDetails",
+        itemId:"orderDetails"
         // components to add to the panel header. typically used to add an actions menu button
         // tools: []
     },
