@@ -41,8 +41,7 @@ Ext.define('Taco.view.order.modal.AddRefund', {
             data: me.order.data.payments,
             filters: [
                 function (item) {
-                    //return (item.raw.status == 'Collected' && item.raw.paymentType != 'Check');
-                    return (item.raw.status == 'Collected');
+                    return (item.raw.amountCollected);
                 }
             ]
         });
@@ -52,6 +51,8 @@ Ext.define('Taco.view.order.modal.AddRefund', {
             store: me.store,
             viewConfig: {
                 //cls: 'editmode-enabled',
+                deferEmptyText:false,
+                emptyText:"No payments available to refund. Check to make sure the payments have been captured;",
                 overItemCls: 'taco-grid-row-over',
                 stripeRows: false
             },
