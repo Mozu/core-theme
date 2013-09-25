@@ -10,7 +10,7 @@ Ext.define('Taco.view.pendingChange.Cms', {
         'Taco.core.ux.grid.MenuColumn'
     ],
 
-    typeName: 'Pending Changes',
+    typeName: 'Pending Content Changes',
     modelName: 'Taco.model.CmsDocumentDraft',
     store: { type: 'Taco.store.CmsDocumentDrafts' },
     filterProperty: 'productName',
