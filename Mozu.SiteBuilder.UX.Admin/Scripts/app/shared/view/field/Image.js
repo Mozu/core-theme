@@ -96,8 +96,8 @@ Ext.define('Taco.shared.view.field.Image', {
         this.items = [
             this.emptyDropZone,
             this.imageView,
-            this.uploadAction,
-            { xtype: 'component', html: ' | ', autoEl: { tag: 'span' } },
+//            this.uploadAction,
+//            { xtype: 'component', html: ' | ', autoEl: { tag: 'span' } },
             this.fileManagerAction
         ];
        
