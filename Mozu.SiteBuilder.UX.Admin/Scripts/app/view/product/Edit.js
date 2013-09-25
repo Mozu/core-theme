@@ -16,7 +16,10 @@
             text: 'Publish',
             beforeItemId: 'save',
             margin: '0 0 0 10',
-            hidden: !this.checkProductPublishing()
+            hidden: !this.checkProductPublishing(),
+            click: this.onClickPublish,
+            scope: this,
+            dirtyState: this.record.get('publishedState') !== 'Live'
         }, {
             xtype: 'button',
             itemId: 'moreButton',
@@ -94,6 +97,15 @@
             },
             scope: this
         });
+
+        this.on({
+            aftersave: function () {
+                if (this.doPublishAfterSave) {
+                    this.doPublish()
+                }
+            },
+            scope: this
+        });
     },
 
     checkProductPublishing: function () {
@@ -102,5 +114,33 @@
         if (ctx.siteCollection) ctx = ctx.siteCollection;
 
         return ctx.productPublishingMode == 'Pending';
+    },
+
+    onClickPublish: function () {
+        if (this.form.getSavableState()) {
+            this.doPublishAfterSave = true;
+            this.save();
+        } else {
+            this.doPublish();
+        }
+    },
+
+    doPublish: function () {
+        Taco.model.Product.publishBulk({
+            data: [this.record.getId()],
+            success: function () {
+                this.publishButton.setDirty(false);
+            },
+            failure: function () {
+                Taco.MessageBox.alert(
+                    'Sorry!',
+                    'Product change was unable to be published.'
+                );
+            },
+            callback: function () {
+                this.doPublishAfterSave = false;
+            },
+            scope: this
+        });
     }
 });

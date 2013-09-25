@@ -6,14 +6,16 @@ Ext.define('Taco.view.pendingChange.Product', {
 
     requires: [
         'Taco.model.Product',
-        'Taco.store.Products'
+        'Taco.store.Products',
+        'Taco.core.ux.action.PrimarySplitButton',
+        'Taco.core.ux.grid.MenuColumn'
    ],
 
-    typeName: 'Product',
+    typeName: 'Pending Product Changes',
     modelName: 'Taco.model.Product',
 
-    editorName: 'Taco.view.product.Edit',
     filterProperty: 'productName2',
+    store: { type: 'Taco.store.Products' },
     useTilePanel: false,
 
     requiresContextOfType: ['c', 's'],
@@ -56,6 +58,29 @@ Ext.define('Taco.view.pendingChange.Product', {
         property: 'productFullDescription',
         text: 'Description'
     }],
+
+    header: {
+        actions: [{
+            xtype: 'button',
+            text: 'Discard All',
+            margin: '0 10 0 0',
+            ui: 'action',
+            scale: 'medium',
+            handler: function (button) {
+                button.up('contentcontainer').discardAll();
+            }
+        }, {
+            xtype: 'button',
+            itemId: 'publishAll',
+            ui: 'action-primary',
+            scale: 'medium',
+            menuAlign: 'tr-br?',
+            text: 'Publish All',
+            handler: function (button) {
+                button.up('contentcontainer').publishAll();
+            }
+        }]
+    },
     
     initComponent: function () {
         this.store = {
@@ -106,11 +131,7 @@ Ext.define('Taco.view.pendingChange.Product', {
                             Taco.model.Product.publishBulk({
                                 data: codes,
                                 success: function () {
-                                    store.sync({
-                                        callback: function () {
-                                            store.reload();
-                                        }
-                                    });
+                                    store.reload();
                                 },
                                 failure: function () {
                                     Taco.MessageBox.alert(
@@ -118,7 +139,32 @@ Ext.define('Taco.view.pendingChange.Product', {
                                         'The selected product changes could not be published.'
                                     );
                                 }
-                            })
+                            });
+                        }
+                    }, {
+                        text: 'Discard',
+                        handler: function () {
+                            var grid = this.up('grid'),
+                            checkedModels = grid.getSelectionModel().getSelection(),
+                            store = grid.store;
+
+                            // Get out if no selections
+                            if (!checkedModels) return;
+
+                            var codes = Ext.Array.pluck(Ext.Array.pluck(checkedModels, 'data'), 'productCode');
+
+                            Taco.model.Product.discardBulk({
+                                data: codes,
+                                success: function () {
+                                    store.reload();
+                                },
+                                failure: function () {
+                                    Taco.MessageBox.alert(
+                                        'Sorry!',
+                                        'The selected product changes could not be discarded.'
+                                    );
+                                }
+                            });
                         }
                     }]
                 }
@@ -139,214 +185,96 @@ Ext.define('Taco.view.pendingChange.Product', {
 
             }
         }, {
-            dataIndex: 'price',
-            text: 'Price',
-            width: 70,
-            renderer: function (value, metaData, record) {
-                value = record.getContextualValue('price');
-                return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
-            }
+            dataIndex: 'publishedState',
+            text: 'Modification',
+            width: 130
         }, {
-            dataIndex: 'salePrice',
-            text: 'Sale Price',
-            width: 100,
-            renderer: function (value, metaData, record) {
-                value = record.getContextualValue('salePrice');
-                return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
-            }
+            dataIndex: 'updateDate',
+            text: 'Last Modified',
+            width: 150,
+            renderer: Ext.util.Format.dateRenderer('d M, Y')
         }, {
-            dataIndex: 'productInSites',
-            text: 'Sites',
-            sortable:false,
-            width: 120,
-            renderer: function (value) {
-                return !Ext.isEmpty(value) ? value.length : '--';
-            }
+            dataIndex: 'updateBy',
+            text: 'Modified By',
+            width: 150
         }, {
-            dataIndex: 'productInSites',
-            text: 'Overridden',
-            sortable: false,
-            width: 100,
-            renderer: function (value) {
-                var output;
-
-                if (Ext.isEmpty(value)) {
-                    output = '--';
-                } else {
-                    output = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true) ? 'Yes' : 'No';
-                }
-
-                return output;
-            }
+            dataIndex: 'lastPublishedDate',
+            text: 'Last Published',
+            width: 150,
+            renderer: Ext.util.Format.dateRenderer('d M, Y')
         }, {
-            dataIndex: 'stockOnHand',
-            text: 'Stock',
-            width: 70,
-            renderer: function (value) {
-                return Ext.isNumeric(value) ? value : '--';
-            }
+            dataIndex: 'lastPublishedBy',
+            text: 'Published By',
+            width: 150
         }, {
             xtype: 'taco.menucolumn',
             text: 'Actions',
-            menuItems:[{
-                itemId: 'preview',
-                text: 'Preview in',
-                hideOnClick :false,
-                menu: {
-                    plain: true,
-                    shadow: false,
-                    cls: Taco.baseCSSPrefix + 'grid-row-menu',
-                    items:[]
-                }
-            }, {
-                text: 'Delete',
-                requiredBehaviors: {
-                    model: 'Taco.model.Product',
-                    behavior:'destroy'
-                },
-                menuColumnHandler: 'destroyMenuColumnHandler'
-            }, {
-                text: 'Edit',
-                requiredBehaviors: {
-                    model: 'Taco.model.Product',
-                    behavior: 'update'
-                },
+            menuItems: [{
+                text: 'Publish',
                 menuColumnHandler: function (item, eventData) {
-                    var page = eventData.grid.getParentPage(),
-                        record = eventData.record,
-                        metaData = { id: record.getId() };
-
-                    page.launchEditor(record, metaData);
-                   
+                    Taco.model.Product.publishBulk({
+                        data: [eventData.record.getId()],
+                        success: function () {
+                            eventData.grid.store.reload();
+                        },
+                        failure: function () {
+                            Taco.MessageBox.alert(
+                                'Sorry!',
+                                'Failed to publish pending product changes.'
+                            );
+                        }
+                    });
                 }
-            }],
-            onMenuShow: function(menu, eventData) {
-                var previewAction = menu.items.get('preview'),
-                    defaults = eventData.header.menuItemDefaults;
-
-                previewAction.menu.removeAll();
-                eventData.record.productInSitesStore().each(function (record) {
-                    var site = record.get('site');
-                    previewAction.menu.add(Ext.applyIf({
-                        text: (site ? site.name : 'n/a'),
-                        menuColumnHandler: function (item, eventData) {
-                            window.open('/_gosite/' + record.getId() + '?environment=preview&redir=' + encodeURIComponent('/product/' + eventData.record.getId()), 'taco-preview');
-                           
-                            console.log(arguments);
-                        }
-                    }, defaults));
-                });
-                previewAction.setVisible(eventData.record.productInSitesStore().count());
-            }
-        }],
-        contextConf: {
-            c: {
-                useMultiGrid: true,
-                plugins: [{
-                    ptype: 'rowexpander',
-                    pluginId: 'expander',
-                    rowBodyTpl: new Ext.XTemplate(
-                        '<tpl for="productInSites"><tr class="x-grid-row-body">',
-                            '<td colspan="3" class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
-                            '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><a href="#" class="taco-launch-editor" data-site-id="{siteId}">{productName}</a></div></td>',
-                            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{price:this.formatPrice}</div></td>',
-                            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{salePrice:this.formatPrice}</div></td>',
-                            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{siteId:this.toSiteName}</div></td>',
-                            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{isContentOverridden:this.formatOverridden}</div></td>',
-                            '<td class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
-                        '</tr></tpl>',
-                    {
-                        formatOverridden: function (value) {
-                            return value ? '<span class="overridden">Overridden</span>' : '';
+            }, {
+                text: 'Discard',
+                menuColumnHandler: function (item, eventData) {
+                    Taco.model.Product.discardBulk({
+                        data: [eventData.record.getId()],
+                        success: function () {
+                            eventData.grid.store.reload();
                         },
-                        formatPrice: function (value) {
-                            return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
-                        },
-                        toSiteName: function (value) {
-                            var site = Taco.app.context.findSite(value);
-                            return site ? site.name : 'n/a';
+                        failure: function () {
+                            Taco.MessageBox.alert(
+                                'Sorry!',
+                                'Failed to discard pending product changes.'
+                            );
                         }
-                    })
-                }]
+                    });
+                }
+            }]
+        }]
+    },
+
+
+    publishAll: function () {
+        var store = this.store;
+
+        Taco.model.Product.publishAll({
+            success: function () {
+                store.reload();
+            },
+            failure: function () {
+                Taco.MessageBox.alert(
+                    'Sorry!',
+                    'Failed to publish all pending product changes.'
+                );
             }
-        }
+        })
     },
 
-    bulkEditorColumns: [{
-        dataIndex: 'productCode',
-        text: 'Code',
-        width: 100
-    }, {
-        dataIndex: 'productName',
-        text: 'Name',
-        minWidth: 120,
-        flex: 1,
-        editor: {
-            xtype: 'textfield'
-        }
-    }, {
-        dataIndex: 'price',
-        text: 'Price',
-        width: 100,
-        renderer: function (value) {
-            return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
-        },
-        editor: {
-            xtype: 'currencyfield',
-            minValue: 0,
-            decimalPrecision: 2,
-            hideTrigger: true,
-            keyNavEnabled: false,
-            mouseWheelEnabled: false
-        }
-    }, {
-        dataIndex: 'salePrice',
-        text: 'Sale Price',
-        width: 100,
-        renderer: function (value) {
-            return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
-        },
-        editor: {
-            xtype: 'currencyfield',
-            minValue: 0,
-            decimalPrecision: 2,
-            hideTrigger: true,
-            keyNavEnabled: false,
-            mouseWheelEnabled: false
-        }
-    }],
+    discardAll: function () {
+        var store = this.store;
 
-    tilePanelConf: {
-        actions: [{
-            iconCls: 'download',
-            tooltip: 'View Product',
-            eventName: 'viewitem'
-        }, {
-            iconCls: 'duplicate',
-            tooltip: 'Duplicate Product',
-            eventName: 'duplicateitem'
-        }, {
-            iconCls: 'delete',
-            tooltip: 'Delete Product',
-            eventName: 'deleteitem'
-        }],
-        imageCollection: 'productImages',
-        imageField: 'imagePath',
-        isDragable: false,
-        nameField: 'productName'
-    },
-
-    launchLoadedEditor: function (record, options) {
-        var site = Taco.app.context.getCurrentSite(),
-            infoStore,
-            infoRecord;
-
-        this.callParent(arguments);
-    },
-    launchEditor: function (record) {
-        Ext.defer(function () {
-            Taco.core.StateManager.attemptNavigate('product/edit/' + record.getId(), { complexMetaData: { record: record } });
-        }, 1, this);
-        return;
+        Taco.model.Product.discardAll({
+            success: function () {
+                store.reload();
+            },
+            failure: function () {
+                Taco.MessageBox.alert(
+                    'Sorry!',
+                    'Failed to discard all pending product changes.'
+                );
+            }
+        })
     }
 });
