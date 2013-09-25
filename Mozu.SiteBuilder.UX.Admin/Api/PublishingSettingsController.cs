@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Threading.Tasks;
 using Mozu.Core.Api.Routing;
-using Mozu.Core.Settings;
+using Mozu.Core.Logging;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -17,22 +12,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [WebApi("app/settings/publishing", SuppressDescriptorGeneration = true)]
     public class PublishingSettingsController : BaseController
     {
-        private const string COOKIE_NAME = "publishing_preferences";
+        private DC.PublishingScope ALL_PRODUCTS_SCOPE = new DC.PublishingScope { AllPending = true };
 
         private ISiteBuilderApiContext _ctx;
         private IGeneralSettingsWebApiClient _siteSettingsClient;
         private ISiteGroupWebApiClient _siteGroupClient;
         private ICookieProvider _cookieMonster;
+        private IPublishingWebApiClient _publishingClient;
+        private ILogger _log;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public PublishingSettingsController(ISiteBuilderApiContext ctx, IGeneralSettingsWebApiClient siteSettingsClient, ISiteGroupWebApiClient siteGroupClient, ICookieProvider cookieMonster)
+        public PublishingSettingsController(ISiteBuilderApiContext ctx, IGeneralSettingsWebApiClient siteSettingsClient, ISiteGroupWebApiClient siteGroupClient, IPublishingWebApiClient publishingClient, ILogger log)
         {
             _ctx = ctx;
             _siteSettingsClient = siteSettingsClient;
             _siteGroupClient = siteGroupClient;
-            _cookieMonster = cookieMonster;
+            _publishingClient = publishingClient;
+            _log = log;
         }
 
         public class PublishingPreferencesArgs {
@@ -42,35 +40,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPutRoute(UriTemplate = "product")]
         public async Task<Response<DC.SiteGroup>> UpdateProductPublishingPreferences(PublishingPreferencesArgs args)
         {
-            DC.SiteGroup res;
+            var dcSettings = (await _siteGroupClient.GetSiteGroup(args.SiteGroupId)).ReadAsSync();
+            dcSettings.ProductPublishingMode = args.ProductPublishingMode;
+            var svcResponse = await _siteGroupClient.UpdateSiteGroup(dcSettings, args.SiteGroupId);
 
-            // TODO: no service support yet.
-            if (false)
+            // handle "you cannot change modes because there is unpublished content by publishing all content."
+            if (svcResponse.HasException && svcResponse.ResponseMessage.StatusCode == System.Net.HttpStatusCode.Conflict)
             {
-                var sitegroupPublishingPreferences = new Dictionary<string, string>();
-                
-                // read existing shit from a cookie.
-                HttpCookie oldCookie = _cookieMonster.GetRequestCookie(COOKIE_NAME);
-                if (oldCookie != null && !String.IsNullOrEmpty(oldCookie.Value))
-                    oldCookie.Value.Split('|').ToList().ForEach(cfg => sitegroupPublishingPreferences.Add(cfg.Split(':')[0], cfg.Split(':')[1]));
+                _log.Info("Caught error changing publishing preferences, attempting to publish first..");
+                var publishResponse = await _publishingClient.PublishDrafts(ALL_PRODUCTS_SCOPE);
+                if (!publishResponse.HasException && publishResponse.ResponseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+                    _log.Info("Published successfully.");
+                else
+                    publishResponse.ReadAsSync(); // read will throw an exception which will bubble.
 
-                // inject the new preferences into the list.
-                sitegroupPublishingPreferences[args.SiteGroupId.ToString()] = args.ProductPublishingMode;
-
-                // write a cookie back out.
-                string[] prefsList = sitegroupPublishingPreferences.Select(kvp => kvp.Key + ":" + kvp.Value).ToArray();
-                HttpCookie newCookie = new HttpCookie(COOKIE_NAME, String.Join("|", prefsList));
-                _cookieMonster.SaveResponseCookie(COOKIE_NAME, newCookie);
-
-                res = new DC.SiteGroup { Id = args.SiteGroupId, ProductPublishingMode = args.ProductPublishingMode };
-            }
-            else
-            {
-                var dcSettings = (await _siteGroupClient.GetSiteGroup(args.SiteGroupId)).ReadAsSync();
-                dcSettings.ProductPublishingMode = args.ProductPublishingMode;
-                res = (await _siteGroupClient.UpdateSiteGroup(dcSettings, args.SiteGroupId)).ReadAsSync();
+                svcResponse = await _siteGroupClient.UpdateSiteGroup(dcSettings, args.SiteGroupId);
             }
 
+            DC.SiteGroup res = svcResponse.ReadAsSync();
             return Single2(res);
         }
 
