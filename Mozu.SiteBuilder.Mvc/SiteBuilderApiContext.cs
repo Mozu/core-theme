@@ -93,6 +93,7 @@ namespace Mozu.SiteBuilder.Mvc
                 if (req.QueryString["IsEditMode"] == "true")
                 {
                     CmsDraftState = Mozu.Content.Contracts.PublishStates.Latest;
+                    this.DataViewMode = DataViewModeType.Pending;
                 }
                 //used to demo outside of rp 
                 else if (req.QueryString["publishMode"] == "true")
@@ -105,6 +106,7 @@ namespace Mozu.SiteBuilder.Mvc
                     this.DataViewMode = dmt;
                     this.CmsDraftState = dmt == DataViewModeType.Pending ?  Mozu.Content.Contracts.PublishStates.Latest : Mozu.Content.Contracts.PublishStates.Active;
                 }
+
 
                 if (req.Headers.AllKeys.Any(x => x == Mozu.Core.Api.Contracts.Constants.Headers.TENANT))
                 {
