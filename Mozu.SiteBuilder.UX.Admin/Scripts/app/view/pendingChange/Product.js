@@ -189,14 +189,18 @@ Ext.define('Taco.view.pendingChange.Product', {
             text: 'Modification',
             width: 130
         }, {
-            dataIndex: 'updateDate',
+            dataIndex: 'lastModifiedDate',
             text: 'Last Modified',
             width: 150,
             renderer: Ext.util.Format.dateRenderer('d M, Y')
         }, {
-            dataIndex: 'updateBy',
+            dataIndex: 'lastModifiedBy',
             text: 'Modified By',
-            width: 150
+            width: 150,
+            renderer: function(value, metaData, record) {
+                var u = record.get('lastModifiedByUser');
+                return u.FirstName + " " + u.LastName;
+            }
         }, {
             dataIndex: 'lastPublishedDate',
             text: 'Last Published',
@@ -205,7 +209,11 @@ Ext.define('Taco.view.pendingChange.Product', {
         }, {
             dataIndex: 'lastPublishedBy',
             text: 'Published By',
-            width: 150
+            width: 150,
+            renderer: function(value, metaData, record) {
+                var u = record.get('lastPublishedByUser');
+                return u.FirstName + " " + u.LastName;
+            }
         }, {
             xtype: 'taco.menucolumn',
             text: 'Actions',

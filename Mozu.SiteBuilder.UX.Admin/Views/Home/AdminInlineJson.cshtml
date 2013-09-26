@@ -40,7 +40,8 @@
                                             },
                                  apiVersion = ver.FileVersion,
                                  localizationValues = locValues, paymentApiBaseUrl,
-                                 buildDate = verDate
+                                 buildDate = verDate,
+                                 siteUsersRaw = siteUsers
                              };
     };
     window.Taco = @Html.Raw(JsonConvert.SerializeObject(windowTaco));
