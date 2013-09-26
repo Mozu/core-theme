@@ -70,9 +70,9 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
                                       .WithLibrary(typeof (AutofacModule).Assembly)
                                       .WithSetting("settings.DEFAULT_AUTOESCAPE", false)
                                       .WithLoader(c.Resolve<ITemplateLoader>()))
-                                      .As<TemplateManagerProvider>()
-                                      .As<ITemplateManagerProvider>()
-                                      .SingleInstance();
+                   .As<TemplateManagerProvider>()
+                   .As<ITemplateManagerProvider>()
+                   .InstancePerLifetimeScope();
             
 
             builder.Register(c => c.Resolve<TemplateManagerProvider>().GetNewManager()).As<ITemplateManager>();
