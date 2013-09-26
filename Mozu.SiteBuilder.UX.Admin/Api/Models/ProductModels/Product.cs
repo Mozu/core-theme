@@ -23,6 +23,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [DataMember(EmitDefaultValue = false, Name = "publishedState")]
         public string PublishedState { get; set; }
 
+        [DataMember(EmitDefaultValue = false, Name = "lastModifiedBy")]
+        public string LastModifiedBy { get; set; }
+
         [DataMember(EmitDefaultValue = false, Name = "lastPublishedBy")]
         public string LastPublishedBy { get; set; }
 

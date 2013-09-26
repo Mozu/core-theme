@@ -33,6 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<DC.Product, Product>()
                 .ForMember(x => x.PublishedState, op => op.MapFrom(dc => (dc.PublishingInfo?? NULLPUB).PublishedState ))
+                .ForMember(x => x.LastModifiedBy, op => op.MapFrom(dc => dc.AuditInfo.UpdateBy))
                 .ForMember(x => x.LastPublishedBy, op => op.MapFrom(dc => (dc.PublishingInfo ?? NULLPUB).LastPublishedBy))
                 .ForMember(x => x.LastPublishedDate, op => op.MapFrom(dc => (dc.PublishingInfo ?? NULLPUB).LastPublishedDate))
                 .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.ProductCode))
