@@ -80,7 +80,17 @@ Ext.define('Taco.model.Product', {
             useNull: true
         },
         {
-            name: "LastPublishedBy",
+            name: "lastModifiedBy",
+            type: "string",
+            useNull: true
+        },
+        {
+            name: "lastModifiedDate",
+            type: "date",
+            useNull: true
+        },
+        {
+            name: "lastPublishedBy",
             type: "string",
             useNull: true
         },
@@ -88,6 +98,24 @@ Ext.define('Taco.model.Product', {
             "name": "lastPublishedDate",
             "type": "date",
             "useNull": true
+        },
+        {
+            name: "lastModifiedByUser",
+            type: "auto",
+            convert: function(v, record) {
+                // look up user id in magical site users global object.
+                var id = record.raw.lastModifiedBy;
+                return Ext.Array.findBy(window.Taco.siteUsersRaw, function(u) { return u.Id === id })
+            }
+        },
+        {
+            name: "lastPublishedByUser",
+            type: "auto",
+            convert: function(v, record) {
+                // look up user id in magical site users global object.
+                var id = record.raw.lastPublishedBy;
+                return Ext.Array.findBy(window.Taco.siteUsersRaw, function(u) { return u.Id === id })
+            }
         },
         {
             "name": "createDate",
@@ -149,16 +177,6 @@ Ext.define('Taco.model.Product', {
         {
             "name": "upc",
             "type": "int",
-            "useNull": true
-        },
-        {
-            "name": "updateBy",
-            "type": "string",
-            "useNull": true
-        },
-        {
-            "name": "updateDate",
-            "type": "date",
             "useNull": true
         },
         {
