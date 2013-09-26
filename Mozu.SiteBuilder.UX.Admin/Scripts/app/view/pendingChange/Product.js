@@ -199,7 +199,10 @@ Ext.define('Taco.view.pendingChange.Product', {
             width: 150,
             renderer: function(value, metaData, record) {
                 var u = record.get('lastModifiedByUser');
-                return u.FirstName + " " + u.LastName;
+
+                return u
+                    ? u.FirstName + " " + u.LastName
+                    : '--';
             }
         }, {
             dataIndex: 'lastPublishedDate',
@@ -210,9 +213,12 @@ Ext.define('Taco.view.pendingChange.Product', {
             dataIndex: 'lastPublishedBy',
             text: 'Published By',
             width: 150,
-            renderer: function(value, metaData, record) {
+            renderer: function (value, metaData, record) {
                 var u = record.get('lastPublishedByUser');
-                return u.FirstName + " " + u.LastName;
+                return u
+                   ? u.FirstName + " " + u.LastName
+                   : '--';
+                
             }
         }, {
             xtype: 'taco.menucolumn',
