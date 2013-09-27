@@ -167,7 +167,7 @@
                     '</tpl>',
                     '">',
                     '{Price.Price:currency}</span>',
-                    '<tpl if="SalePrice">',
+                    '<tpl if="Price.SalePrice">',
                     '<span class="price-value">{Price.SalePrice:currency}</span>',
                     '</tpl>',
                 '</tpl>',
