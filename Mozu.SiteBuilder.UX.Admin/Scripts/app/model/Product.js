@@ -102,19 +102,25 @@ Ext.define('Taco.model.Product', {
         {
             name: "lastModifiedByUser",
             type: "auto",
-            convert: function(v, record) {
-                // look up user id in magical site users global object.
-                var id = record.raw.lastModifiedBy;
-                return Ext.Array.findBy(window.Taco.siteUsersRaw, function(u) { return u.Id === id })
+            convert: function (v, record) {
+                if (record.raw) {
+                    // look up user id in magical site users global object.
+                    var id = record.raw.lastModifiedBy;
+                    return Ext.Array.findBy(window.Taco.siteUsersRaw, function(u) { return u.Id === id })
+                }
+                return null;
             }
         },
         {
             name: "lastPublishedByUser",
             type: "auto",
-            convert: function(v, record) {
-                // look up user id in magical site users global object.
-                var id = record.raw.lastPublishedBy;
-                return Ext.Array.findBy(window.Taco.siteUsersRaw, function(u) { return u.Id === id })
+            convert: function (v, record) {
+                if (record.raw) {
+                    // look up user id in magical site users global object.
+                    var id = record.raw.lastPublishedBy;
+                    return Ext.Array.findBy(window.Taco.siteUsersRaw, function(u) { return u.Id === id })
+                }
+                return null;
             }
         },
         {

@@ -160,14 +160,46 @@
             xtype: 'component',
             cls: 'price',
             tpl: [
-                '<span class="label">Price:</span><span class="price-value',
-                '<tpl if="SalePrice">',
-                ' onsale',
+                '<tpl if="Price">',
+                    '<span class="label">Price:</span><span class="price-value',
+                    '<tpl if="Price.SalePrice">',
+                    ' onsale',
+                    '</tpl>',
+                    '">',
+                    '{Price.Price:currency}</span>',
+                    '<tpl if="SalePrice">',
+                    '<span class="price-value">{Price.SalePrice:currency}</span>',
+                    '</tpl>',
                 '</tpl>',
-                '">',
-                '{Price:currency}</span>',
-                '<tpl if="SalePrice">',
-                '<span class="price-value">{SalePrice:currency}</span>',
+                /*
+                PriceRange: {
+                  Lower:{Price:123},
+                  Upper:{Price:123},
+                }
+                */
+
+                '<tpl if="PriceRange">',
+
+                    '<span class="label">Price:</span><span class="price-value',
+                    '<tpl if="PriceRange.Lower.SalePrice">',
+                        ' onsale',
+                    '</tpl>',
+                    '">',
+                    '{PriceRange.Lower.Price:currency}</span>',
+                    '<tpl if="PriceRange.Lower.SalePrice">',
+                        '<span class="price-value">{PriceRange.Lower.SalePrice:currency}</span>',
+                    '</tpl>',
+                    
+                    ' - <span class="price-value',
+                    '<tpl if="PriceRange.Upper.SalePrice">',
+                        ' onsale',
+                    '</tpl>',
+                    '">',
+                    '{PriceRange.Upper.Price:currency}</span>',
+                    '<tpl if="PriceRange.Upper.SalePrice">',
+                        '<span class="price-value">{PriceRange.Upper.SalePrice:currency}</span>',
+                    '</tpl>',
+
                 '</tpl>'
             ]
         });
@@ -396,7 +428,10 @@
         }
         
         this.savableStateCheck();
-        this.price.update(this.runtimeData.Price);
+        this.price.update({
+            Price: this.runtimeData.Price,
+            PriceRange: this.runtimeData.PriceRange
+        });
     },
 
     buildOption: function (option) {
@@ -495,6 +530,12 @@
                 Ext.each(this.runtimeData.Options, function (option) {
                     this.updateOption(option);
                 }, this);
+                
+                // update the price
+                this.price.update({
+                    Price: this.runtimeData.Price,
+                    PriceRange: this.runtimeData.PriceRange
+                });
 
                 this.savableStateCheck();
             },
