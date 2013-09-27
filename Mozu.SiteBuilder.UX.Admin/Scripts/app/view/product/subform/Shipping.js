@@ -25,7 +25,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 decimalPrecision: 3,
                 minValue :.001,
                 hideTrigger: true,
-                value:this.record.get('packageWeight') || 1,
+                value:(this.record.phantom )? 1 : this.record.get('packageWeight'),
                 keyNavEnabled: false,
                 required: true,
                 allowBlank: false,
