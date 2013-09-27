@@ -46,7 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _settings = settings;
             _httpContext = httpContext;
             _adminUserWebApiClient = adminUserWebApiClient;
-            _siteGroupClient = siteGroupClient;
+            _siteGroupClient = siteGroupClient.CloneWithoutUserClaims();
         }
 
         // GET: /Home/
