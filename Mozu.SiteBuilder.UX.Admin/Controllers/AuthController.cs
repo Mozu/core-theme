@@ -88,7 +88,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var redir = _settings.LoginPath;
             if (_settings.AppSettings("ReverseProxy") != "true")
             {
-                redir += "&postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
+                redir += "?postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
             }
             return Redirect(redir);
 
