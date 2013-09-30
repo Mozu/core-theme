@@ -85,7 +85,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         public ActionResult Launchpad()
         {
-            var redir = _settings.LoginPath + "/to?scopeType=Tenant";
+            var redir = _settings.LoginPath;
             if (_settings.AppSettings("ReverseProxy") != "true")
             {
                 redir += "&postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
