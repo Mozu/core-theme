@@ -118,14 +118,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront
                 "StoreFront_Prefixed_default",
                 "storefront/{controller}/{action}/{id}",
                 new {action = "Index", id = UrlParameter.Optional},
-                new {controller = @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget"}
+                new {controller = @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|search|sitemap|template|widget"}
                 );
             //removing default... add a matching route above
             context.MapRoute(
                 "StoreFront_default",
                 "{controller}/{action}/{id}",
                 new {action = "Index", id = UrlParameter.Optional},
-                new {controller = @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget"}
+                new {controller = @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|search|sitemap|template|widget"}
                 );
 
 
