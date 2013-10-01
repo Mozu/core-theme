@@ -236,7 +236,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                 },
                 "processDiscount": {
                     fn: function (data) {
-                        if (data.isActive) {
+                        if (data.isActive === true || data.isActive.toLowerCase() === "true") {
                             me.detailGrid.suppressDiscount({
                                 jsonData: {
                                     discountId: data.discountId
