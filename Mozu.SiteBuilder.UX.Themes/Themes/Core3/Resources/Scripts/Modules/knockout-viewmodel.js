@@ -99,7 +99,8 @@
 
     KnockoutVM = function(obj, parent) {
         var me = this,
-            objCopy = $.extend(true, {}, obj),
+            sdkCopy = $.extend(true, {}, obj),
+            initCopy = $.extend(true, {}, sdkCopy),
             processedObj;
         this.__parentVM = parent;
         this.exclusionList = makeExclusionList(this);
@@ -108,10 +109,10 @@
         this.populate(processedObj || obj);
         this.submitting = ko.observable(false);
         if (this.mozuType) 
-            this.createSDKObject(objCopy);
+            this.createSDKObject(sdkCopy);
         if (this.hasMessages)
             makeMessageBus(this);
-        this.initialize.apply(this, arguments);
+        this.initialize.call(this, initCopy, parent);
         this.initialized = true;
     };
 

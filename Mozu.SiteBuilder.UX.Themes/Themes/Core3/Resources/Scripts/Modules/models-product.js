@@ -93,7 +93,8 @@
             PurchasableState: {}
         },
         submodels: {
-            Price: PriceModels.ProductPrice
+            Price: PriceModels.ProductPrice,
+            PriceRange: PriceModels.ProductPriceRange
         },
         submodelArrays: {
             Options: ProductOption
@@ -122,17 +123,18 @@
         updateConfiguration: function () {
             var me = this;
             this.submitting(true);
-            me.configure({ Options: this.getConfiguredOptions() }).then(function () {
+            me.configure({ Options: this.getConfiguredOptions() }).then(function (conf) {
                 me.submitting(false);
+                me.Price.hasRange(!conf.data.Price);
             });
-        }
-    }, function constructProduct() {
+        },
+    }, function constructProduct(conf) {
         var self = this;
         this.isPurchasable = ko.computed(function () {
             var pState = self.PurchasableState();
             return pState && pState.IsPurchasable;
         });
-
+        self.Price.hasRange(!conf.Price);
     });
 
 
