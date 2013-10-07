@@ -211,6 +211,8 @@
         }
     };
 
+    ko.virtualElements.allowedBindings.currencyText = true;
+
     /**
     * Returns a comma-delimited number (groups of three: 1,000,000)
     * @param ungroupedNum

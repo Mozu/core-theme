@@ -16,6 +16,14 @@
 
 							<div class="mz-price-stack-wrap">       
 								<div class="mz-price-label" data-bind="text: ProductCode"></div>
+                                <!-- ko if: $data.PriceRange -->
+                                <div class="mz-price-sub-wrap">
+                                  <div class="mz-price-amt mz-price-range">
+                                    <!-- ko currencyText: PriceRange.Lower.Price --><!-- /ko --> &ndash; <!-- ko currencyText: PriceRange.Upper.Price --><!-- /ko -->
+                                  </div>
+                                </div>
+                                <!-- /ko -->
+                                <!-- ko if: !$data.PriceRange -->
 								<div class="mz-price-sub-wrap" data-bind="with: Price">
 									<!-- ko if: SalePrice() && (Price() !== SalePrice()) -->
 									<div class="mz-price-amt mz-strikethrough" data-bind="currencyText: Price"></div>
@@ -30,6 +38,7 @@
 									<div class="mz-price-amt" data-bind="currencyText: Price"></div>
 									<!-- /ko -->
 								</div>
+                                <!-- /ko -->
 							</div>
 						</div> <!-- .mz-product-info-wrap -->
 
