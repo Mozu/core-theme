@@ -24,7 +24,6 @@
             var salePrice = me.SalePrice();
             return salePrice !== null && !isNaN(salePrice);
         });
-        this.hasRange = ko.observable();
     });
 
 

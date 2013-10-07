@@ -99,13 +99,6 @@
         submodelArrays: {
             Options: ProductOption
         },
-        doNotSubmit: ["price", "config"],
-        toJS: function () {
-            // server expects the options collection to belong to this model as well
-            var j = Product.prototype.toJS.apply(this);
-            //j.options = this.config.emitAllOptions();
-            return j;
-        },
         getConfiguredOptions: function() {
             var me = this;
             return ko.utils.arrayMap(ko.utils.arrayFilter(me.Options(), function (opt) { return me.configuredOptions[opt.id]; }), function (i) { return i.toJS(); });
@@ -125,7 +118,7 @@
             this.submitting(true);
             me.configure({ Options: this.getConfiguredOptions() }).then(function (conf) {
                 me.submitting(false);
-                me.Price.hasRange(!conf.data.Price);
+                me.hasPriceRange(!!conf.data.PriceRange);
             });
         },
     }, function constructProduct(conf) {
@@ -134,7 +127,7 @@
             var pState = self.PurchasableState();
             return pState && pState.IsPurchasable;
         });
-        self.Price.hasRange(!conf.Price);
+        this.hasPriceRange = ko.observable(!!conf.PriceRange);
     });
 
 

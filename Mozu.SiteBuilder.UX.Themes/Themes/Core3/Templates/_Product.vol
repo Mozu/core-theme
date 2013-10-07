@@ -40,7 +40,7 @@
 	<div class="mz-price-stack-wrap">		
 		<h3 class="mz-price-label">Our Price:</h3>
 		<div class="mz-price">
-			<!-- ko if: Price.hasRange() -->
+			<!-- ko if: hasPriceRange() -->
                 <!-- ko if: PriceRange.hasDiscountedRange() -->
                   <div data-bind="with: PriceRange" class="mz-price-amt mz-strikethrough mz-price-range">
                     <!-- ko currencyText: Lower().Price --><!-- /ko --> &ndash; <!-- ko currencyText: Upper().Price --><!-- /ko -->
@@ -67,7 +67,7 @@
                         </div>
                     <!-- /ko -->
 			<!-- /ko -->
-			<!-- ko if: !Price.hasRange() -->
+			<!-- ko if: !hasPriceRange() -->
 				<span class="mz-price-amt" data-bind="currencyText: Price.Price, css: { 'mz-strikethrough': Price.hasSalePrice }"></span>
 				<span class="mz-price-amt mz-price-saleprice" data-bind="visible: Price.hasSalePrice, currencyText: Price.SalePrice"></span>
 			<!-- /ko -->

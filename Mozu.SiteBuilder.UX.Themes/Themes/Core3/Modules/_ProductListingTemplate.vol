@@ -16,7 +16,7 @@
 
 							<div class="mz-price-stack-wrap">       
 								<div class="mz-price-label" data-bind="text: ProductCode"></div>
-                                <!-- ko if: Price.hasRange -->
+                                <!-- ko if: hasPriceRange -->
                                 <div class="mz-price-sub-wrap" data-bind="with: PriceRange">
                                   <!-- ko if: hasDiscountedRange -->
                                   <div class="mz-price-amt mz-strikethrough mz-price-range">
@@ -45,7 +45,7 @@
                                     <!-- /ko -->
                                 </div>
                                 <!-- /ko -->
-                                <!-- ko if: !Price.hasRange() -->
+                                <!-- ko if: !hasPriceRange() -->
 								<div class="mz-price-sub-wrap" data-bind="with: Price">
 									<!-- ko if: SalePrice() && (Price() !== SalePrice()) -->
 									<div class="mz-price-amt mz-strikethrough" data-bind="currencyText: Price"></div>
