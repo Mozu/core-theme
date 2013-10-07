@@ -49,6 +49,7 @@
                 var self = this;
                 var parent = this.getParentModel();
                 parent.update().then(function () {
+                    parent.apiModel.prop('orderId', parent.orderId); // dirty hack to maintain order IDs
                     self.stepStatus('submitting');
                     parent.getShippingMethods().then(function (methodsJSON) {
                         self.stepStatus('complete');
@@ -101,6 +102,7 @@
                 var parent = this.getParentModel();
                 // have to manually create the payload here because a full order contains a blank BillingInfo, and a blank BillingInfo throws too-early validation errors
                 parent.update({ ShippingInfo: this.toJS() }).then(function () {
+                    self.apiModel.prop('orderId', self.orderId); // dirty hack to maintain order IDs
                     self.checkStepStatus();
                 });
             },
@@ -330,6 +332,7 @@
                         return this.pciProcessor.process();
                     } else {
                         return parent.update().then(function () {
+                            self.apiModel.prop('orderId', self.orderId); // dirty hack to maintain order IDs
                             self.stepStatus("complete");
                         });
                     }

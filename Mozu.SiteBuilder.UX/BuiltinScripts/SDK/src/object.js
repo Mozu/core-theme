@@ -25,7 +25,7 @@ var ApiObject = (function () {
                     me.api.fire('spawn', returnObj, me);
                     return returnObj;
                 } else {
-                    utils.extend(me.data, rawJSON);
+                    me.data = JSON.parse(JSON.stringify(rawJSON)); // cheap copy :)
                     if (me.postProcessor) me.postProcessor(me);
                     delete me.unsynced;
                     me.fire('sync', rawJSON, me.data);
