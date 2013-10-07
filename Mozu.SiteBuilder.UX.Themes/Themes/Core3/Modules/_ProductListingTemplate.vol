@@ -16,14 +16,36 @@
 
 							<div class="mz-price-stack-wrap">       
 								<div class="mz-price-label" data-bind="text: ProductCode"></div>
-                                <!-- ko if: $data.PriceRange -->
-                                <div class="mz-price-sub-wrap">
-                                  <div class="mz-price-amt mz-price-range">
-                                    <!-- ko currencyText: PriceRange.Lower.Price --><!-- /ko --> &ndash; <!-- ko currencyText: PriceRange.Upper.Price --><!-- /ko -->
+                                <!-- ko if: Price.hasRange -->
+                                <div class="mz-price-sub-wrap" data-bind="with: PriceRange">
+                                  <!-- ko if: hasDiscountedRange -->
+                                  <div class="mz-price-amt mz-strikethrough mz-price-range">
+                                    <!-- ko currencyText: Lower().Price --><!-- /ko --> &ndash; <!-- ko currencyText: Upper().Price --><!-- /ko -->
                                   </div>
+                                  <div class="mz-price-amt mz-price-saleprice mz-price-range">
+                                    <!-- ko if: hasDiscountedLower -->
+                                    <span class="mz-price-amt" data-bind="currencyText: Lower().SalePrice"></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: !hasDiscountedLower() -->
+                                        <!-- ko currencyText: PriceRange.Lower().Price --><!-- /ko -->
+                                    <!-- /ko -->
+                                    &ndash;
+                                    <!-- ko if: hasDiscountedUpper -->
+                                    <span class="mz-price-amt" data-bind="currencyText: Upper().SalePrice"></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: !hasDiscountedUpper() -->
+                                    <!-- ko currencyText: PriceRange.Upper().Price --><!-- /ko -->
+                                    <!-- /ko -->
+                                  </div>
+                                      <!-- /ko -->
+                                    <!-- ko if: !hasDiscountedRange() -->
+                                        <div class="mz-price-amt mz-price-range">
+                                          <!-- ko currencyText: Lower().Price --><!-- /ko --> &ndash; <!-- ko currencyText: Upper().Price --><!-- /ko -->
+                                        </div>
+                                    <!-- /ko -->
                                 </div>
                                 <!-- /ko -->
-                                <!-- ko if: !$data.PriceRange -->
+                                <!-- ko if: !Price.hasRange() -->
 								<div class="mz-price-sub-wrap" data-bind="with: Price">
 									<!-- ko if: SalePrice() && (Price() !== SalePrice()) -->
 									<div class="mz-price-amt mz-strikethrough" data-bind="currencyText: Price"></div>

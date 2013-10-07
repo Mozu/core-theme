@@ -24,13 +24,33 @@
             var salePrice = me.SalePrice();
             return salePrice !== null && !isNaN(salePrice);
         });
-        this.hasRange = ko.computed(function () {
-            return !isNaN(me.LowerBoundPrice + me.UpperBoundPrice);
+        this.hasRange = ko.observable();
+    });
+
+
+    var ProductPriceRange = KnockoutVM.extend({
+        observables: {
+            Lower: {},
+            Upper: {}
+        }
+    }, function () {
+        var self = this;
+        this.hasDiscountedUpper = ko.computed(function () {
+            var upper = self.Upper();
+            return upper.SalePrice && upper.SalePrice < upper.Price;
+        });
+        this.hasDiscountedLower = ko.computed(function () {
+            var lower = self.Lower();
+            return lower.SalePrice && lower.SalePrice < lower.Price;
+        });
+        this.hasDiscountedRange = ko.computed(function () {
+            return self.hasDiscountedLower() || self.hasDiscountedUpper();
         });
     });
 
     return {
-        ProductPrice: ProductPrice
+        ProductPrice: ProductPrice,
+        ProductPriceRange: ProductPriceRange
     };
 
 });
