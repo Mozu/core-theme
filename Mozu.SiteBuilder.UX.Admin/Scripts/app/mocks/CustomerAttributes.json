@@ -1,0 +1,13 @@
+{
+    "items": [
+      {
+         "code":"123",
+         "name":"Age",
+         "required":"true",
+         "displaygroup":"Admin"
+      }
+    ],
+    "message": "Some message",
+    "success": true,
+    "total": 1
+}

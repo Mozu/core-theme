@@ -103,6 +103,7 @@ Ext.define('Taco.Application',{
             'Dashboard',
             'Navigation',
             'Customers',
+            'CustomerAttributes',
             'Categories',
             'Products',
             'PendingChanges',
