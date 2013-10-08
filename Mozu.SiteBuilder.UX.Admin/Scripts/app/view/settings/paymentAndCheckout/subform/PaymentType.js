@@ -41,8 +41,13 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
                 this.gateWayContainer,
                 {
                     xtype: 'checkbox',
+                    name: 'paypalExpress',
+                    fieldLabel: 'Accept PayPal Express'
+                }, 
+                {
+                    xtype: 'checkbox',
                     name: 'payByMail',
-                    fieldLabel: 'Allow pay by mail'
+                    fieldLabel: 'Accept checks by mail'
                 }
 
             ]

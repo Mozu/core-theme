@@ -20,9 +20,10 @@ Ext.define('Taco.model.PaymentAndCheckout', {
         { name: "gatewayDefinitionId", type: "string" },
         { name: "credentialsSet", type: "boolean" },
         { name: "payByMail", type: "boolean" },
+        { name: "paypalExpress", type: "boolean" },
         { name: "credentials", type: "any" ,defaultValue: {} },
         { name: "customerCheckoutType", type: "string" },
-        { name: "paymentProcessingFlowType", type: "string" }
+        { name: "paymentProcessingFlowType", type: "string" } 
     ],
 
     //set: function (fieldName, newValue) {
