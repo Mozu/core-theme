@@ -4,10 +4,11 @@
  */
 Ext.define('Taco.controller.CustomerAttributes', {
     extend: 'Taco.core.Controller',
-    //modelName: 'CustomerAttributes',
-    //requires: ['Taco.model.CustomerAccount', 'Taco.view.customers.Index', 'Taco.view.customers.Edit'],
-    requires: ['Taco.view.customerAttribute.Index'],
-    //views: ['customerAttribute.Index'],
-    //indexView: 'Taco.view.customerAttributes.Index'/*,
-    //editorView:'Taco.view.customerAttributes.Edit'*/
+    requires: ['Taco.view.customerAttribute.Index', 'Taco.view.customerAttribute.Edit'],
+    modelName: 'CustomerAttribute',
+    models: ['Taco.model.CustomerAttribute'],
+    stores: ['Taco.store.CustomerAttributes'],
+    views: ['customerAttribute.Index'],
+    indexView: 'Taco.view.customerAttribute.Index',
+    editorView:'Taco.view.customerAttribute.Edit'
 });
