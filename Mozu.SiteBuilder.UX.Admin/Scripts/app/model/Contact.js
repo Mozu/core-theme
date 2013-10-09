@@ -89,6 +89,10 @@ Ext.define('Taco.model.Contact', {
             "name": "mobilePhone",
             "type": "string",
             "useNull": true
+        },
+        {
+            "name": "addressIsValidated",
+            "type": "boolean"
         }
     ]
 });

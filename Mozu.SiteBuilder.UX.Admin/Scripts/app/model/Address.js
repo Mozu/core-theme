@@ -16,6 +16,7 @@ Ext.define('Taco.model.Address', {
         { name: 'stateOrProvince',       type: 'string' },
         { name: 'countryCode',           type: 'string' },
         { name: 'postalOrZipCode',       type: 'string' },
+        { name: 'addressIsValidated',    type: 'boolean' },
         { name: 'phoneNumber',           type: 'string' }
     ],
 
