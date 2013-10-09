@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var redir = _settings.LoginPath + "/to?scopeType=Tenant&redirectUrl=" + returnUrl;
             if (_settings.AppSettings("useTenantDomainNames") != "true")
             {
-                redir += "&postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
+                redir += "&PostbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
             }
 
             var message = new System.Net.Http.HttpResponseMessage(HttpStatusCode.Redirect);
@@ -94,221 +94,49 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             return message;
         }
 
-        //public ActionResult Launchpad()
-        //{
-        //    var redir = _settings.LoginPath + "/to?scopeType=Tenant";
-        //    if (_settings.AppSettings("ReverseProxy") != "true")
-        //    {
-        //        redir += "&postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
-        //    }
-        //    return Redirect(redir);
-
-        //    //var userId = _apiContext.UserClaims.UserId;
-        //    //var res = _rolesHelper.SiteRolesList(userId);
-        //    //var contexts = Mapper.Map<List<TaContext>>(res);
-        //    //return View("Roles", contexts);
-        //}
-
-
-        
-        // GET: /Auth/
       
 
-        //[HttpPost]
-        //public async Task<ActionResult> Login(LoginUser login)
+        //public bool  DeleteRole(int siteId, int roleId)
         //{
-        //    if (string.IsNullOrEmpty(login.EmailAddress  ) || string.IsNullOrEmpty(login.Password))
-        //    {
-        //        if (string.IsNullOrEmpty(login.EmailAddress))
-        //            ModelState.AddModelError("EmailAddress", "Please enter your user EmailAddress");
-        //        if (string.IsNullOrEmpty(login.Password))
-        //            ModelState.AddModelError("Password", "Please enter your Password!");
-
-        //        return View("Index");
-        //    }
-
-        //    try
-        //    {
-        //        // If the user authenticates, redirect them to the admin app
-        //        var tenants = _loginHelper.VolusionLogIn(login);
-
-        //        if (tenants.Skip(1).Any()) // more than 1
-        //        {
-        //            var contexts = Mapper.Map<List<TaContext>>(tenants);
-        //            // Launch Pad with Tenant Names
-        //            return View("Roles", contexts);
-        //        }
-        //        if (tenants.Any())
-        //        {
-        //            // Auto login to tenant
-        //            var taContext = tenants.First();
-
-        //            //var tenant = await _contextSwitcher.ChangeTenant(taContext.Id);
-        //            if (taContext != null)
-        //            {
-
-        //                _sbc.SiteId = null;
-        //                _sbc.SiteGroupId = null;
-        //                _sbc.TenantId = taContext.Id;
-        //                _sbc.Save();
-
-
-        //                if (_settings.AppSettings("useTenantDomainNames") == "true")
-        //                {
-        //                    return Redirect(string.Format("http://{0}/admin", taContext.Domain.DomainName ));
-        //                }
-        //                else
-        //                {
-        //                    return Redirect("/admin");
-        //                }
-        //            }
-        //            return null;
-        //        }
-
-        //        ModelState.AddModelError("General", "You don't have access to any sites.");
-        //        return View("Index");
-        //    }
-
-        //    catch (AggregateException exception)
-        //    {
-        //        // Otherwise, send the login error message
-        //        ModelState.AddModelError("General", exception.UnwrapAgg().Message);
-
-        //        return View("Index");
-        //    }
-        //    catch (Mozu.Core.Api.Client.Exceptions.ApiWebClientException ex)
-        //    {
-        //        if (ex.RemoteError != null && ex.RemoteError.Items != null && ex.RemoteError.Items.Count > 0 && ex.RemoteError.Items[0].ErrorCode == "ITEM_NOT_FOUND")
-        //        {
-        //            ModelState.AddModelError("General", "Invalid Credentials");
-        //        }
-        //        else
-        //        {
-        //            ModelState.AddModelError("General", ex.Message);
-        //        }
-                
-        //        return View("Index");
-             
-        //    }
+        //    _rolesHelper.RemoveRoleFromSite(siteId, roleId);
+        //    return true;
         //}
+          [HttpGet]
+        public HttpResponseMessage  Launchpad()
+          {
+              var redir = _settings.LoginPath + "/to?scopeType=Tenant";
+            if (_settings.AppSettings("useTenantDomainNames") != "true")
+            {
+                redir += "&postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
+            }
+            
 
 
-     
-
-        //[HttpPost]
-        //public JsonResult ForgotPassword(LoginUser user)
-        //{
-        //    try
-        //    {
-        //        _passwordHelper.CreatePasswordResetRequest(user.EmailAddress );
-
-        //        return new JsonResult { Data = true };
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return new JsonResult { Data = false };
-        //    }
-        //}
+            var resp = new HttpResponseMessage(HttpStatusCode.Redirect);
+            resp.Headers.Location = new Uri(redir);
+            return resp;
 
 
-        //[HttpPost ]
-        //public ActionResult NewAccountInvitation(LoginUser user, FormCollection form)
-        //{
-        //    if (string.IsNullOrEmpty(user.Password))
-        //    {
-        //        if (string.IsNullOrEmpty(user.Password))
-        //            ModelState.AddModelError("Password", "Please enter your password!");
 
-        //        return View();
-        //    }
-
-        //    // If the user authenticates, redirect them to the admin app
-        //    try
-        //    {
-        //        var tenants =  _loginHelper.VolusionLogIn(user);
-        //        var contexts = Mapper.Map<List<TaContext>>(tenants);
-        //        if (tenants.Skip(1).Any()) // checking for "greater than 1" without enumerating the collection
-        //        {
-        //            return View("Roles", contexts);
-        //        }
-
-        //        return Redirect("/admin");
-                
-              
-        //    }
-        //    catch (AggregateException exception)
-        //    {
-        //        var message = exception.UnwrapAgg().Message;
-        //        ModelState.AddModelError("General", message);
-        //    }
-
-        //    // Otherwise, send the login error message
-        //    ModelState.AddModelError("General", "Authentication failed!");
-
-        //    return View();
-        //}
-
-        //public ActionResult ResetPassword(string validateToken, string userId)
-        //{
-
-        //    var user = new LoginUser();
-        //    user.ConfirmationCode = validateToken;
-        //    var userObj = _userHelper.GetUser(userId);
-
-        //    if ( userObj == null )
-        //    {
-        //        //tbd error.
-        //    }
-        //    user.EmailAddress = userObj.EmailAddress;
-
-        //    return View(user);
-        //}
-
-        
-
-        //[HttpPost]
-        //public async Task<ActionResult> ResetPassword(LoginUser user , FormCollection col)
-        //{
-        //    _passwordHelper.UpdateForgottenPassword(user);
-        //    return await Login(user);
-        //}
-
-        public bool  DeleteRole(int siteId, int roleId)
-        {
-            _rolesHelper.RemoveRoleFromSite(siteId, roleId);
-            return true;
+            //var userId = _apiContext.UserClaims.UserId;
+            //var res = _rolesHelper.SiteRolesList(userId);
+            //var contexts = Mapper.Map<List<TaContext>>(res);
+            //return View("Roles", contexts);
         }
 
-        //public async Task<ActionResult> ChangeTenant(int id, string redirectUrl = null)
-        //{
-        //    string url = String.IsNullOrEmpty(redirectUrl) ? "admin" : "admin/" + Regex.Replace(redirectUrl, "^/?admin/", "").TrimStart('/');
 
-        //    var tenant = await _contextSwitcher.ChangeTenant(id);
-        //    if (tenant != null)
-        //    {
-        //        if (_settings.AppSettings("useTenantDomainNames") == "true")
-        //        {
-        //            return Redirect(string.Format("http://{0}/{1}", tenant.Domain.DomainName, url));
-        //        }
-        //        else
-        //        {
-        //            return Redirect("/" + url);
-        //        }
-              
-        //    }
-        //    return View("Login");
-        //}
-
-
-        public ActionResult Logout()
+        [HttpGet]
+          public HttpResponseMessage Logout()
         {
          
             var redir = _settings.LoginPath + "/home/Logout";
             if (_settings.AppSettings("ReverseProxy") != "true")
             {
-                redir += "?postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
+                redir += "?PostbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
             }
-            return Redirect(redir);
+            var resp = new HttpResponseMessage(HttpStatusCode.Redirect );
+            resp.Headers.Location = new Uri(redir);
+            return resp;
         }
     }
 }
