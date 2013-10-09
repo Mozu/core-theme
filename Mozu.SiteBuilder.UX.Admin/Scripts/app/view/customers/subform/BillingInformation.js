@@ -15,13 +15,13 @@ Ext.define('Taco.view.customers.subform.BillingInformation', {
             tpl: [
                 '<tpl for=".">' +
                 '<div class="address">',
-                '<div class="edit"><a>Edit</a></div>',
+                '<div class="edit"><a>Edit</a> &nbsp; &nbsp; Address Validated: <tpl if="addressIsValidated">Yes<tpl else>No</tpl></div>',
                 '<hr>',
                 '<div class="name">{firstName} {middleName} {lastName}</div>',
                 '<div class="address-line-1">{address1}</div>',
                 '<div class="address-line-2">{address2}</div>',
                 '<div class="address-line-3">{address3}</div>',
-                '<div class="city-state-zip">{cityOrTown}, {state} {zipCode}</div>',
+                '<div class="city-state-zip">{cityOrTown}, {state} {zipCode} {countryCode}</div>',
                 '<div class="country">{email}</div>',
                 '<div class="phone">{homePhone}</div>',
                 '</div></tpl>'
