@@ -602,6 +602,8 @@
     <Content Include="Scripts\app\store\Locations.js" />
     <Content Include="Scripts\app\store\OrderAttributes.js" />
     <Content Include="Scripts\app\store\PackagingTypes.js" />
+    <Content Include="Scripts\app\view\customerAttribute\Edit.js" />
+    <Content Include="Scripts\app\view\customerAttribute\Form.js" />
     <Content Include="Scripts\app\view\customerAttribute\Index.js" />
     <Content Include="Scripts\app\view\customers\subform\BillingInformation.js" />
     <Content Include="Scripts\app\view\customers\subform\Information.js" />
