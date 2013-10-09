@@ -11,7 +11,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         'Taco.view.order.modal.CapturePaymentManual',
         'Taco.view.order.modal.VoidPaymentManual',
         'Taco.view.order.modal.CreditPaymentManual',
-        'Taco.view.order.modal.EditTransaction',
         'Ext.window.MessageBox'
     ],
     cls: 'orderform-payment-transaction',
