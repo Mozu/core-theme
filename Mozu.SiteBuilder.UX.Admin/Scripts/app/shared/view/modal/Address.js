@@ -40,6 +40,7 @@ Ext.define('Taco.shared.view.modal.Address', {
         me.on({
             save: function () {
                 if (this.validateAddress) {
+                    me.record.set('addressIsValidated', false);
                     this.setLoading(true);
                     Ext.Ajax.request({
                         url: '/admin/app/address/validate',
@@ -54,6 +55,8 @@ Ext.define('Taco.shared.view.modal.Address', {
                                 var rawAddr = this.form.getValues();
 
                                 for (item in validatedAddr) {
+                                    if (item == 'addressIsValidated')
+                                        continue;
                                     if (rawAddr[item] != validatedAddr[item]) {
                                         addrChanged = true;
                                         break;
@@ -79,17 +82,17 @@ Ext.define('Taco.shared.view.modal.Address', {
                                         scope: this,
                                         fn: function (rec) {
                                             if (rec === "yes") {
+                                                validatedAddr['addressIsValidated'] = true;
                                                 for (item in validatedAddr) {
                                                     me.record.set(item, validatedAddr[item]);
                                                 }
                                                 this.form.loadRecord(me.record);
-                                                this.form.save();
-                                            } else {
-                                                this.form.save();
                                             }
+                                            this.form.save();
                                         }
                                     });
                                 } else {
+                                    me.record.set('addressIsValidated', true);
                                     this.form.save();
                                 }
                             }
