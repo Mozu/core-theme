@@ -612,6 +612,7 @@
     <Content Include="Scripts\app\view\customers\subform\ShippingInformation.js" />
     <Content Include="Scripts\app\view\customers\subform\Subform.js" />
     <Content Include="Scripts\app\view\location\index.js" />
+    <Content Include="Scripts\app\view\orderAttribute\Index.js" />
     <Content Include="Scripts\app\view\order\widget\DiscountRowBody.js" />
     <Content Include="Scripts\app\view\pendingChange\Product.js" />
     <Content Include="Scripts\app\view\settings\Publishing.js" />
