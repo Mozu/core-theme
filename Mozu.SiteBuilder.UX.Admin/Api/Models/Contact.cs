@@ -66,6 +66,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 
         [DataMember(Name="state")]
         public string StateOrProvince { get; set; }
+
+        [DataMember(Name="addressIsValidated")]
+        public bool AddressIsValidated { get; set; }
         #endregion
 
         #region Phone Numbers

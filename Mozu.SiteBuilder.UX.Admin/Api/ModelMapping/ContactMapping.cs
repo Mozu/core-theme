@@ -32,6 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.CountryCode, op => op.MapFrom(dc => dc.Address != null ? dc.Address.CountryCode : null))
             .ForMember(x => x.PostalOrZipCode, op => op.MapFrom(dc => dc.Address != null ? dc.Address.PostalOrZipCode : null))
             .ForMember(x => x.StateOrProvince, op => op.MapFrom(dc => dc.Address != null ? dc.Address.StateOrProvince : null))
+            .ForMember(x => x.AddressIsValidated, op=>op.MapFrom(dc => dc.Address.IsValidated))
             .ForMember(x => x.HomePhone, op => op.MapFrom(dc => dc.PhoneNumbers != null ? dc.PhoneNumbers.Home : null))
             .ForMember(x => x.WorkPhone, op => op.MapFrom(dc => dc.PhoneNumbers != null ? dc.PhoneNumbers.Work : null))
             .ForMember(x => x.MobilePhone, op => op.MapFrom(dc => dc.PhoneNumbers != null ? dc.PhoneNumbers.Mobile : null))
@@ -52,7 +53,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                  CityOrTown = x.CityOrTown,
                  CountryCode = x.CountryCode,
                  PostalOrZipCode = x.PostalOrZipCode,
-                 StateOrProvince = x.StateOrProvince
+                 StateOrProvince = x.StateOrProvince,
+                 IsValidated = x.AddressIsValidated
             }))
             .ForMember(dc => dc.PhoneNumbers, op => op.MapFrom(x => new DC.Phone {
                 Home = x.HomePhone,
