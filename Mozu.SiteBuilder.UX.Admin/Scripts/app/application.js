@@ -124,6 +124,7 @@ Ext.define('Taco.Application',{
             'GeneralSettings',
             'Email',
             'Orders',
+            'OrderAttributes',
             'Errors',
             'Roles',
             'ProductTypes',
