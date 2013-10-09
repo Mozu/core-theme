@@ -322,9 +322,9 @@ Ext.define('Taco.core.ux.browser.Browsable', {
                                 text = Taco.core.util.ExceptionWhiner.createHtmlList(m.exceptions);
                             }
 
-                            Ext.create('Taco.core.ux.modal.Alert', {
+                            Ext.create('Taco.core.ux.window.Alert', {
                                 autoShow: true,
-                                text: 'Delete Failed. <br />' + text
+                                html: 'Delete Failed. <br />' + text
                             });
                             
                         }

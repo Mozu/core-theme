@@ -3,7 +3,7 @@
  * @author  Jason *The Cock* Cochran
  */
 Ext.define('Taco.shared.util.Uploadable', {
-    requires: ['Taco.core.ux.modal.Alert'],
+    requires: ['Taco.core.ux.window.Alert'],
 
     onUploadFile: function (fileList, e, callback) {
         var me = this,
@@ -16,9 +16,9 @@ Ext.define('Taco.shared.util.Uploadable', {
         Ext.each(files, function (file) {
             var fileRecordIdx = me.store ? me.store.find('name', file.name) : -1;
             if (fileRecordIdx > -1) {
-                Ext.create('Taco.core.ux.modal.Alert', {
+                Ext.create('Taco.core.ux.window.Alert', {
                     autoShow: true,
-                    text: '<div style="text-align:center"> File:  "<i>' + file.name + '</i>" already exists<br/></div>'
+                    html: '<div style="text-align:center"> File:  "<i>' + file.name + '</i>" already exists<br/></div>'
                 });
                 shouldBreak = true;
                 return false;

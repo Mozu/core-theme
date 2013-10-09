@@ -8,32 +8,51 @@ Ext.define('Taco.core.ux.form.Form', {
         'Taco.core.ux.form.Tasks',
         'Taco.core.ux.form.StepContainer'
     ],
-
-    componentCls: Taco.baseCSSPrefix + 'formform',
-
-    model: '',
-    storeType: '',
-    records: null,
-    savePrefix: null,
     mixins: {
         formInterface: 'Taco.core.ux.form.Interface'
     },
-    form: null,
-    isFormForm: true,
-    isFormContainer: false,
-    forms: null,
-    savableState: false,
-    formCfg: null,
-    trackResetOnLoad: true,
-    createTitle: 'Create',
-    editTitle: 'Edit',
-    // header: { layout: 'auto' },
-    persistChangesToModel: false,
-    enableStoreSyncTasks: false,
-    tasksKeyPrefix: '',
+
     cascadeChildTasks: true,
     cascadeRecordLoad: true,
+    enableStoreSyncTasks: false,
+    form: null,
+    forms: null,
+    formCfg: null,
+    isFormForm: true,
+    isFormContainer: false,
+    persistChangesToModel: false,
+    records: null,
+    savableState: false,
+    savePrefix: null,
+
+    createTitle: 'Create',
+    editTitle: 'Edit',
+    model: '',
+    storeType: '',
+    tasksKeyPrefix: '',
+
     manageHeight: false,
+    trackResetOnLoad: true,
+
+    componentCls: Taco.baseCSSPrefix + 'formform',
+
+    basicFormConfigs: [
+        'api', 
+        'baseParams', 
+        'errorReader', 
+        'jsonSubmit',
+        'method', 
+        'paramOrder',
+        'paramsAsHash',
+        'reader',
+        'requireDirty',
+        'standardSubmit',
+        'timeout',
+        'trackResetOnLoad',
+        'url',
+        'waitMsgTarget',
+        'waitTitle'
+    ],
 
     initComponent: function () {
         var formCfg;

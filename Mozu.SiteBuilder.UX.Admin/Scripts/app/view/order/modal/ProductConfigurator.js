@@ -1,5 +1,5 @@
 ﻿Ext.define('Taco.view.order.modal.ProductConfigurator', {
-    extend: 'Taco.core.ux.window.WindowWithActions',
+    extend: 'Taco.core.ux.window.Modal',
 
     requires: [
         'Taco.view.order.widget.ProductConfigurator'

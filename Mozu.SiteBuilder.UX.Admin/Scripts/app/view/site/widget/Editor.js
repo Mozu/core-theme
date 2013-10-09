@@ -2,7 +2,7 @@
  * @class Taco.view.site.widget.Editor
  */
 Ext.define('Taco.view.site.widget.Editor', {
-    extend: 'Taco.core.ux.window.WindowWithActions',
+    extend: 'Taco.core.ux.window.Modal',
     autoSize: true,
     scale: 'large',
     /**
