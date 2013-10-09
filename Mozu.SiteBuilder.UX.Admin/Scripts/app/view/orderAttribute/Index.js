@@ -13,7 +13,7 @@ Ext.define('Taco.view.orderAttribute.Index', {
     store: {
         type: 'Taco.store.OrderAttributes'
     },
-    //editorName: 'Taco.view.attribute.Edit',
+    editorName: 'Taco.view.orderAttribute.Edit',
     filterProperty: 'name',
     typeName: 'Order Attributes',
     initComponent: function () {
@@ -23,7 +23,7 @@ Ext.define('Taco.view.orderAttribute.Index', {
                 xtype: 'primarybutton',
                 text: 'Create New Attribute',
                 click: function () {
-                    Taco.core.StateManager.attemptNavigate('attributes/create');
+                    Taco.core.StateManager.attemptNavigate('orderattribute/create');
                 }
             }]
         };
@@ -69,7 +69,7 @@ Ext.define('Taco.view.orderAttribute.Index', {
     
     launchEditor: function (record) {
         Ext.defer(function () {
-            Taco.core.StateManager.attemptNavigate('attribute/edit/' + record.getId(), { complexMetaData: { record: record } });
+            Taco.core.StateManager.attemptNavigate('orderattribute/edit/' + record.getId(), { complexMetaData: { record: record } });
         }, 1, this);
         return;
     }
