@@ -581,7 +581,10 @@
     <Content Include="Scripts\app\controller\Tbd.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
+    <Content Include="Scripts\app\core\ux\window\Alert.js" />
+    <Content Include="Scripts\app\core\ux\window\Drawer.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
+    <Content Include="Scripts\app\core\ux\window\Modal.js" />
     <Content Include="Scripts\app\model\CustomerAttribute.js" />
     <Content Include="Scripts\app\model\OrderAttribute.js" />
     <Content Include="Scripts\app\model\ShippingMethod.js" />
@@ -955,7 +958,6 @@
     <Content Include="Scripts\app\core\ux\tab\Panel.js" />
     <Content Include="Scripts\app\core\ux\tinymce\WindowManager.js" />
     <Content Include="Scripts\app\core\ux\window\Window.js" />
-    <Content Include="Scripts\app\core\ux\window\WindowWithActions.js" />
     <Content Include="Scripts\app\locale\Strings.js" />
     <Content Include="Configs\AppSettings.SI.config">
       <SubType>Designer</SubType>
