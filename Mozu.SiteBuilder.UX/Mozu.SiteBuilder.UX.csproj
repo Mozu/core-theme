@@ -424,7 +424,6 @@
     <Compile Include="Hypr\Tags\IncludeProductsTag.cs" />
     <Compile Include="Navigation\CategoryNavigationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\AssemblyInfo.log4net.cs" />
     <Compile Include="Tags\CMS\FieldTag.cs" />
   </ItemGroup>
   <ItemGroup>

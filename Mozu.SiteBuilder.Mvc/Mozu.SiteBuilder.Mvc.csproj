@@ -413,7 +413,6 @@
     <Compile Include="MediaTypeFormatters\HtmlErrorMediaTypeHyperFormatter.cs" />
     <Compile Include="MessageHandler\Copy of HttpContextInjectingMessageHandler.cs" />
     <Compile Include="MessageHandler\HttpContextInjectingMessageHandler.cs" />
-    <Compile Include="Properties\AssemblyInfo.log4net.cs" />
     <Compile Include="SiteBuilderApiContextBuilder.cs" />
     <Compile Include="Tags\PreloadJsonTag.cs" />
     <Compile Include="Tags\ParentTag.cs" />
