@@ -1,8 +1,15 @@
-﻿{% if themeSettings.useOptimizedJs == "true" %}
+﻿{% debug_all_scripts %}
+
+{% comment %}
+Pending the decommissioning of Core3 we're just gonna stick it permanently in debug mode, since productionalization of themes is going in a different direction.
+
+{% if themeSettings.useOptimizedJs == "true" %}
     {% load_all_scripts %}
 {% else %}
     {% debug_all_scripts %}
 {% endif %}
+
+{% endcomment %}
 
 {% if SiteContext.GoogleAnalyticsEnabled %}
     {% include "Modules/GoogleAnalyticsTrackingCode" %}
