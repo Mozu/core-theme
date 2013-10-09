@@ -338,12 +338,12 @@ Ext.define('Taco.view.customerAttribute.Form', {
     initComponent: function () {
         this.buildFormComponents();
 
-        this.valuesStore = this.record.getAttributeValues();
-        this.valuesStore.rejectChanges();
+        //this.valuesStore = this.record.getAttributeValues();
+        //this.valuesStore.rejectChanges();
 
-        this.stores = [this.valuesStore];
+        //this.stores = [this.valuesStore];
 
-        this.title = this.record.data.name;
+        //this.title = this.record.data.name;
         this.callParent(arguments);
         
 
