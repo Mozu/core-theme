@@ -1840,11 +1840,8 @@
     <Content Include="Scripts\app\view\email\Index.js" />
     <Content Include="Scripts\app\view\inventory\QuantityEdit.js" />
     <Content Include="Scripts\app\view\order\Grid.js" />
-    <Content Include="Scripts\app\view\order\modal\Address.js" />
     <Content Include="Scripts\app\view\order\Edit-old.js" />
     <Content Include="Scripts\app\view\order\Index.js" />
-    <Content Include="Scripts\app\view\order\modal\ShipmentAction.js" />
-    <Content Include="Scripts\app\view\order\modal\PaymentAction.js" />
     <Content Include="Scripts\app\view\paymentAndCheckout\FieldDescription.js" />
     <Content Include="Scripts\app\view\paymentAndCheckout\Index.js" />
     <Content Include="Scripts\app\view\paymentAndCheckout\RadioList.js" />
