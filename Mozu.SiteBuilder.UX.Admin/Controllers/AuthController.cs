@@ -1,18 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
+using System.Web.Http;
+
 using AutoMapper;
 using Mozu.AdminUser.Contracts;
 using Mozu.Core;
 using Mozu.Core.Logging;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Security;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
@@ -21,7 +27,8 @@ using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
-    public class AuthController : Controller
+    
+    public class AuthController : ApiControllerBase
     {
         
         private IAuthenticationHelper _authenticationHelper;
@@ -51,64 +58,61 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _log = LoggingService.LoggerFor<AuthController>();
         }
 
-        protected override void OnActionExecuted(ActionExecutedContext filterContext)
-        {
-            if ( filterContext.HttpContext != null && filterContext.HttpContext.Request.HttpMethod == "GET" )
-            {
-                ModelState.Clear();
-            }
-            base.OnActionExecuted(filterContext);
-        }
 
-        public ActionResult FedLogin(string returnUrl)
+        [HttpGet]
+        public HttpResponseMessage FedLogin(string returnUrl)
         {
 
             var redir = _settings.LoginPath + "/to?scopeType=Tenant&redirectUrl=" + returnUrl;
-            if (_settings.AppSettings( "useTenantDomainNames") !=  "true")
+            if (_settings.AppSettings("useTenantDomainNames") != "true")
             {
                 redir += "&postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
             }
-            return Redirect(redir);
+
+            var message = new System.Net.Http.HttpResponseMessage(HttpStatusCode.Redirect);
+            message.Headers.Location = new Uri(redir);
+            return message;
         }
 
         [HttpPost]
-        public ActionResult Pants(string accessToken, string redirect)
+       // public HttpResponseMessage Pants(string accessToken, string redirectUrl = null)
+            public HttpResponseMessage Pants(HttpRequestMessage request )
         {
+            var form = request.Content.ReadAsFormDataAsync().Result;
+            string accessToken = form["accessToken"];
+            string redirectUrl = form["redirectUrl"];
+            //redirectUrl=%2Fadmin&accessToken=4BOtDlSWnUJ%2Fyli1jpWidgFVEkpey96IBLWO8Kve5Ka8un912AIQsvoOqOJEIC8CVoMYv8x2tsDg99NLkK8%2BiH%2BSvXNi0RrfsTTpieIUyps69%2FnXf6wK8yKouea9k1QLSjcgF72Dyzj4mY4YCYLg0DDKycD28XbrdGHnPIUGFp3svwaK5Ca2PAw1qMasMvut525lcNDVYjdTXbA1gIEqLGiONo5InlFfjduQRPaBhoGtCUuDcspYMG9nHVkKxjSFXdVqEX%2FTmvBMEt4Rh9ruXpbyO5zOB9LqwAtEU94tZxMlnvaJ8QgFN0pDAZ4uZGtOAbgo%2BXydVE76NNiOyqI9L5l%2FsU3pq3SbT96q%2F%2Blb%2FC3RRo5kiN%2F8DxpqlD2yl2AN
             var user = LightweightUserClaims.Parse(accessToken);
             _sbc.TenantId = user.GetUserScope().Id.Value;
             _sbc.Save();
             _apiContext.SetUser(user);
             _authenticationHelper.SaveAccessToken(  accessToken);
-            redirect = string.IsNullOrEmpty(redirect) ? "/admin" : redirect;
-            return Redirect(redirect);
+            redirectUrl = string.IsNullOrEmpty(redirectUrl) ? "/admin" : redirectUrl;
+
+            var message = new System.Net.Http.HttpResponseMessage(HttpStatusCode.Redirect );
+            message.Headers.Location = new Uri(redirectUrl, UriKind.Relative);
+            return message;
         }
 
-        public ActionResult Launchpad()
-        {
-            var redir = _settings.LoginPath;
-            if (_settings.AppSettings("ReverseProxy") != "true")
-            {
-                redir += "?postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
-            }
-            return Redirect(redir);
+        //public ActionResult Launchpad()
+        //{
+        //    var redir = _settings.LoginPath + "/to?scopeType=Tenant";
+        //    if (_settings.AppSettings("ReverseProxy") != "true")
+        //    {
+        //        redir += "&postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
+        //    }
+        //    return Redirect(redir);
 
-            //var userId = _apiContext.UserClaims.UserId;
-            //var res = _rolesHelper.SiteRolesList(userId);
-            //var contexts = Mapper.Map<List<TaContext>>(res);
-            //return View("Roles", contexts);
-        }
+        //    //var userId = _apiContext.UserClaims.UserId;
+        //    //var res = _rolesHelper.SiteRolesList(userId);
+        //    //var contexts = Mapper.Map<List<TaContext>>(res);
+        //    //return View("Roles", contexts);
+        //}
 
 
         
         // GET: /Auth/
-        public ActionResult Index(LoginUser login)
-        {
-            return FedLogin("");
-            //login = login ?? new LoginUser();
-            //login.EmailAddress = (string.IsNullOrEmpty(login.EmailAddress) && cUser != null) ? cUser.EmailAddress : login.EmailAddress;
-
-            //return View(login);
-        }
+      
 
         //[HttpPost]
         //public async Task<ActionResult> Login(LoginUser login)
@@ -189,10 +193,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         //}
 
 
-        public ActionResult ForgotPassword()
-        {
-            return View();
-        }
+     
 
         //[HttpPost]
         //public JsonResult ForgotPassword(LoginUser user)
@@ -209,23 +210,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         //    }
         //}
 
-        public ActionResult NewAccountInvitation(LoginUser user)
-        {
-            //if (user.SiteId.GetValueOrDefault() != _sbc.SiteId)
-            //{
-            //    _sbc.SiteId = user.SiteId.GetValueOrDefault();
-            //    _sbc.TenantId = user.TenantId.GetValueOrDefault();
-            //    _sbc.Save();
-            //    return this.Redirect(ControllerContext.HttpContext.Request.Url.PathAndQuery);
-            //}
-            
-            if (_userHelper.UserExists(user))
-            {
-                return RedirectToRoute("login",  user);
-            }
-             
-            return View(user);
-        }
 
         //[HttpPost ]
         //public ActionResult NewAccountInvitation(LoginUser user, FormCollection form)
@@ -289,14 +273,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         //    return await Login(user);
         //}
 
-        public ActionResult DeleteRole(int siteId, int roleId)
+        public bool  DeleteRole(int siteId, int roleId)
         {
             _rolesHelper.RemoveRoleFromSite(siteId, roleId);
-            return new JsonResult
-                       {
-                           Data = true,
-                           JsonRequestBehavior = JsonRequestBehavior.AllowGet
-                       };
+            return true;
         }
 
         //public async Task<ActionResult> ChangeTenant(int id, string redirectUrl = null)

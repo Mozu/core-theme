@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Web.Mvc;
+
 using System.Reflection;
 namespace Mozu.SiteBuilder.UX.Models
 {
@@ -14,7 +14,7 @@ namespace Mozu.SiteBuilder.UX.Models
 
     public interface ICmsMetaDataExtrator
     {
-        System.Web.Mvc.ModelMetadata GetCmsModelMetadata(string expression );
+        Dictionary<string,object> GetCmsModelMetadata(string expression );
 
     }
     public static class CaseInsensitiveNamingContainerExtension
@@ -38,11 +38,11 @@ namespace Mozu.SiteBuilder.UX.Models
                 {
                     dic[att.Name] = fn2;
                 }
-                foreach (var att in prop.GetCustomAttributes(false).OfType<AdditionalMetadataAttribute>().Where(x => x.Name == "fieldName"))
-                //foreach (var att in prop.GetCustomAttributes(false).Where(x => x is AdditionalMetadataAttribute).Cast<AdditionalMetadataAttribute>().Where(x => x.Name == "fieldName"))
-                {
-                    dic[(string)att.Value] = fn2;
-                }
+                //foreach (var att in prop.GetCustomAttributes(false).OfType<AdditionalMetadataAttribute>().Where(x => x.Name == "fieldName"))
+                ////foreach (var att in prop.GetCustomAttributes(false).Where(x => x is AdditionalMetadataAttribute).Cast<AdditionalMetadataAttribute>().Where(x => x.Name == "fieldName"))
+                //{
+                //    dic[(string)att.Value] = fn2;
+                //}
             }
             return dic;
         }
@@ -59,10 +59,10 @@ namespace Mozu.SiteBuilder.UX.Models
                 {
                     dic[att.Name] = prop;
                 }
-                foreach (var att in prop.GetCustomAttributes(false).OfType<AdditionalMetadataAttribute>().Where(x => x.Name == "fieldName"))
-                {
-                    dic[(string)att.Value] = prop;
-                }
+                //foreach (var att in prop.GetCustomAttributes(false).OfType<AdditionalMetadataAttribute>().Where(x => x.Name == "fieldName"))
+                //{
+                //    dic[(string)att.Value] = prop;
+                //}
             }
             return dic;
         }

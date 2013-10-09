@@ -16,6 +16,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
+using Mozu.User.Contracts.Clients;
 using Constants = Mozu.Core.Api.Contracts.Constants;
 
 namespace Mozu.SiteBuilder.Mvc
@@ -25,37 +26,47 @@ namespace Mozu.SiteBuilder.Mvc
         private readonly ICookieProvider _cookieProvider;
         private readonly ISettings _settings;
         private readonly IAuthenticationHelper _authenticationHelper;
+        private readonly HttpRequestMessage _httpRequestMessage;
 
-        internal const string CONTEXT_KEY = "V:STORECTX";
+
         internal const string COOKIENAME = "SBCONTEXT";
 
 
 
 
-        public SiteBuilderApiContext(System.Web.HttpContextBase context, ICookieProvider cookieProvider, ISettings settings, IAuthenticationHelper authenticationHelper)
+        public SiteBuilderApiContext(System.Web.HttpContextBase context, ICookieProvider cookieProvider, ISettings settings, IAuthenticationHelper authenticationHelper, HttpRequestMessage httpRequestMessage)
             : base()
         {
             TenantId = -1;
             _cookieProvider = cookieProvider;
             _settings = settings;
             _authenticationHelper = authenticationHelper;
+            _httpRequestMessage = httpRequestMessage;
 
-            //if using the rp then default to active.  rp will send the datamode header.
-            CmsDraftState = _settings.AppSettings("ReverseProxy") == "true" ? Mozu.Content.Contracts.PublishStates.Active  : Mozu.Content.Contracts.PublishStates.Latest;// "active";
+            DataViewMode = DataViewModeType.Live;
+            IsEditMode = false;
 
-            Load(context, cookieProvider);
-            LoadUser(context, cookieProvider);
+            Load();
+            LoadUser();
+            ValidateUser();
         }
 
         private static System.Collections.Concurrent.ConcurrentDictionary<string, Site> g_domainSiteLookup = new ConcurrentDictionary<string, Site>(StringComparer.OrdinalIgnoreCase);
 
-        /// <summary>
-        /// "active" or "draft".
-        /// </summary>
-        public string CmsDraftState { get; set; }
 
-        public void LoadUser(HttpContextBase ctx, ICookieProvider cookieProvider)
+
+        public void LoadUser()
         {
+
+
+            IEnumerable<string> values;
+            if (_httpRequestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.USER_CLAIMS, out values))
+            {
+                return;
+            }
+
+            //todo check refreshToken Loc
+            string token = _authenticationHelper.GetRefreshToken();
             var accessToken = _authenticationHelper.GetAccessToken();
             LightweightUserClaims claims;
             if (!string.IsNullOrEmpty(accessToken) && LightweightUserClaims.TryParse(accessToken, out claims))
@@ -63,93 +74,126 @@ namespace Mozu.SiteBuilder.Mvc
                 //todo validate tenant and site 
                 this.UserClaims = claims;
             }
-                
+
+
+
+
         }
 
-       
-
-        
-
-        public void Load(HttpContextBase ctx, ICookieProvider cookieProvider)
+        bool ValidateUser()
         {
-            this.LocaleCode = "en-US";
-            this.CurrencyCode = "usd";
-            
-            HttpRequestBase req = null;
-            try
+            string bagVal;
+            int tmpInt;
+            if (this.UserClaims == null)
             {
-                if ( ctx != null )
-                {
-                    req = ctx.Request;
-                }
+                this.HasInvalidCredentials = true;
+                return false;
             }
-            catch 
+            if (!this.UserClaims.Bag.TryGetValue("TenantId", out bagVal) || !int.TryParse(bagVal, out tmpInt) || tmpInt != this.TenantId)
             {
-                
-            }
-            
-            if (req != null)
-            {
-                if (req.QueryString["IsEditMode"] == "true")
+                if (ScopeType == UserScopeType.Shopper)
                 {
-                    CmsDraftState = Mozu.Content.Contracts.PublishStates.Latest;
-                    this.DataViewMode = DataViewModeType.Pending;
-                }
-                //used to demo outside of rp 
-                else if (req.QueryString["publishMode"] == "true")
-                {
-                    CmsDraftState = Mozu.Content.Contracts.PublishStates.Active;
-                }
-                DataViewModeType dmt;
-                if (Enum.TryParse<DataViewModeType>(req.Headers[Constants.Headers.DATA_VIEW_MODE], out dmt))
-                {
-                    this.DataViewMode = dmt;
-                    this.CmsDraftState = dmt == DataViewModeType.Pending ?  Mozu.Content.Contracts.PublishStates.Latest : Mozu.Content.Contracts.PublishStates.Active;
-                }
-
-
-                if (req.Headers.AllKeys.Any(x => x == Mozu.Core.Api.Contracts.Constants.Headers.TENANT))
-                {
-
-                    var headers = new HttpRequestMessage().Headers;
-
-                    foreach (var key in req.Headers.AllKeys.Where(x => x.StartsWith("x-")))
-                    {
-                        headers.TryAddWithoutValidation(key, req.Headers.GetValues(key));
-                    }
-
-                    this.InitFromHeaders(headers);
-                    
+                    this.UserClaims = LightweightUserClaims.CreateForAnonymousShopper(this.TenantId, this.SiteId.HasValue ? this.SiteId.Value : -1);
                 }
                 else
                 {
-                    string host = req.Url.Host;
-                    Site site = g_domainSiteLookup.GetOrAdd(host, LookupSiteByDomain);
-
-                    if (site != null)
-                    {
-                        this.SiteId = site.Id;
-                        this.SiteGroupId = site.SiteGroupId;
-                        this.TenantId = site.TenantId;
-                        return;
-                    }    
+                    this.UserClaims = LightweightUserClaims.CreateForAdminUser(Guid.NewGuid().ToString("N"), new int[0], new UserScope() { Id = this.TenantId, Type = UserScopeType.Tenant }, DateTime.Today.AddYears(1));
+                    this.UserClaims.IsAnonymous = true;
                 }
-                if (!SiteId.HasValue)
-                {
-                    InitFromCookie(cookieProvider);    
-                }
-                
-                    
-                
+                this.HasInvalidCredentials = true;
+                return false;
 
-               
-               
             }
-            
-            
+            if (ScopeType == UserScopeType.Shopper && (!this.UserClaims.Bag.TryGetValue("SiteId", out bagVal) || !int.TryParse(bagVal, out tmpInt) || tmpInt != this.SiteId))
+            {
+                this.UserClaims = LightweightUserClaims.CreateForAnonymousShopper(this.TenantId, this.SiteId.HasValue ? this.SiteId.Value : -1 );
+                this.HasInvalidCredentials = true;
+                return false;
+
+
+            }
+            return true;
         }
 
-        private void InitFromCookie(ICookieProvider cookieProvider)
+        UserScopeType ScopeType
+        {
+            get
+            {
+                if (this._httpRequestMessage.RequestUri.PathAndQuery.IndexOf("/admin", StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    return UserScopeType.Tenant;
+                }
+                return UserScopeType.Shopper;
+                ;
+            }
+        }
+
+
+
+        public void Load()
+        {
+            this.LocaleCode = "en-US";
+            this.CurrencyCode = "usd";
+
+
+
+
+
+            IEnumerable<string> values;
+            if (_httpRequestMessage.GetQueryNameValuePairs().Any(x => string.Equals(x.Key, "IsEditMode", StringComparison.OrdinalIgnoreCase) && x.Value == "true"))
+            {
+                this.IsEditMode = true;
+                this.DataViewMode = DataViewModeType.Pending;
+            }
+            else
+            {
+                DataViewModeType dmt;
+
+                if (_httpRequestMessage.Headers.TryGetValues(Constants.Headers.DATA_VIEW_MODE, out values))
+                {
+                    this.DataViewMode = (DataViewModeType)Enum.Parse(typeof(DataViewModeType), values.First());
+                }
+
+            }
+
+
+            if (_httpRequestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.TENANT, out values))
+            {
+                this.InitFromHeaders(_httpRequestMessage.Headers);
+            }
+            else if (!_httpRequestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
+            {
+
+                //todo:hyper check rp flag.
+                //testing without proxy...
+                string host = _httpRequestMessage.RequestUri.Host;
+                Site site = g_domainSiteLookup.GetOrAdd(host, LookupSiteByDomain);
+
+                if (site != null)
+                {
+                    this.SiteId = site.Id;
+                    this.SiteGroupId = site.SiteGroupId;
+                    this.TenantId = site.TenantId;
+                    return;
+                }
+            }
+
+            if (!SiteId.HasValue)
+            {
+                LoadFromCookie(_cookieProvider);
+            }
+
+
+
+
+
+
+
+
+
+        }
+
+        private void LoadFromCookie(ICookieProvider cookieProvider)
         {
             var cookie = cookieProvider.GetRequestCookie(COOKIENAME);
             if (cookie != null && cookie.HasKeys)
@@ -175,22 +219,32 @@ namespace Mozu.SiteBuilder.Mvc
             }
         }
 
-        Site LookupSiteByDomain(string host )
+
+
+
+
+
+
+        Site LookupSiteByDomain(string host)
         {
-            var client = new SitesWebApiClient(new ServiceClientMessageHandler(new ApiContext(), _settings ));
+            var client = new SitesWebApiClient(new ServiceClientMessageHandler(new ApiContext(), _settings));
             var sites = client.GetSites(filter: "domainname eq " + host).Result.ReadAsSync();
             return sites.Items.FirstOrDefault();
 
         }
 
 
-    
-        
+
+
 
 
         public void SetUser(LightweightUserClaims user)
         {
             this.UserClaims = user;
         }
+
+        public bool IsEditMode { get; set; }
+
+        public bool HasInvalidCredentials { get; set; }
     }
 }

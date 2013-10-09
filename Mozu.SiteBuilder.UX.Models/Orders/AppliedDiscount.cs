@@ -5,13 +5,13 @@ namespace Mozu.SiteBuilder.UX.Models.Orders
     [DataContract]
     public class AppliedDiscount : ModelBase
     {
-        [DataMember(Name = "impact")]
+        [DataMember(Name = "Impact")]
         public decimal Impact { get; set; }
 
-        [DataMember(Name = "discount")]
+        [DataMember(Name = "Discount")]
         public Discount Discount { get; set; }
 
-        [DataMember(Name = "couponCode")]
+        [DataMember(Name = "CouponCode")]
         public string CouponCode { get; set; }
     }
 }

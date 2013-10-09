@@ -1,0 +1,261 @@
+﻿{% extends "layouts\default" %}
+
+{% block Init %}
+	{% setTemplateVariables BodyTagClasses="mz-checkout-confirmation" %}
+	{% setTemplateVariables IsConfirmationPage="true" %}
+	{{ block.super }}
+{% endblock Init%}
+
+{% block BodyContent %}
+
+
+<div id="mz-order-confirmation" class="mz-order-confirmation">
+	<h2>Order Confirmation</h2>
+
+	<p class="mz-desc">Thank you for your order!  You will receive email confirmation&hellip;</p>
+
+	<table id="mz-purchase-details" class="mz-purchase-details">
+		<thead>
+			<tr>
+				<td class="mz-field-interstitial" colspan="2">Order#: <strong>{{ Model.OrderNumber }}</strong></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="mz-field-interstitial" colspan="2"><hr></td>
+			</tr>
+			{% if Model.BillingInfo.PaymentType == PaymentTypes.CreditCard %}
+			<tr>
+				<td class="mz-field-label">Billing Name:</td>
+				<td>{{ Model.BillingInfo.BillingContact.FirstName }} {{ Model.BillingInfo.BillingContact.LastNameOrSurname }}</td>
+			</tr>
+			<tr>
+				<td class="mz-field-label">Billing Address:</td>
+				<td>{{ Model.BillingInfo.BillingContact.Address.Address1 }}</td>
+			</tr>
+				{% if Model.BillingInfo.BillingContact.Address.Address2 %}
+			<tr>
+				<td></td>
+				<td>{{ Model.BillingInfo.BillingContact.Address.Address2 }}</td>
+			</tr>
+				{% endif %}
+			<tr>
+				<td></td>
+				<td>{{ Model.BillingInfo.BillingContact.Address.CityOrTown }}, {{ Model.BillingInfo.BillingContact.Address.StateOrProvince }} {{ Model.BillingInfo.BillingContact.Address.PostalOrZipCode }}</td>
+			</tr>
+			<tr>
+				<td class="mz-field-label">Phone:</td>
+				<td>{{ Model.BillingInfo.BillingContact.PhoneNumbers.Home }}</td>
+			</tr>
+			<tr>
+				<td class="mz-field-label">Email:</td>
+				<td>{{ Model.BillingInfo.BillingContact.Email }}</td>
+			</tr>
+			<tr>
+				<td class="mz-field-interstitial" colspan="2"><hr></td>
+			</tr>
+			<tr>
+				<td class="mz-field-label">Card Type:</td>
+				<td>{{ Model.BillingInfo.Card.PaymentOrCardType }}</td>
+			</tr>
+			<tr>
+				<td class="mz-field-label">Credit Card #:</td>
+				<td>{{ Model.BillingInfo.Card.CardNumberPartOrMask }}</td>
+			</tr>
+			{% comment %} {# this isn't returned by the services #}
+			<tr>
+				<td class="mz-field-label">Expiration:</td>
+				<td>{{ Model.BillingInfo.Card.ExpireMonth }}.{{ Model.BillingInfo.Card.ExpireYear }}</td>
+			</tr>
+			{% endcomment %}
+			{% else %} {# "Pay by Check" #}
+			<tr>
+				<td class="mz-field-label">Payment Type:</td>
+				<td>{{ Model.BillingInfo.PaymentType }}</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td class="mz-field-label"><strong>Mail check to:</strong></td>
+				<td>
+					{% if ViewData.MailCheckTo.CompanyOrOrganization %}
+					{{ ViewData.MailCheckTo.CompanyOrOrganization }}
+					{% else %}
+					{{ ViewData.MailCheckTo.FirstName }} {{ ViewData.MailCheckTo.LastNameOrSurname }}
+					{% endif %}
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>{{ ViewData.MailCheckTo.Address.Address1 }}</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>{{ ViewData.MailCheckTo.Address.CityOrTown }}, {{ ViewData.MailCheckTo.Address.StateOrProvince }} {{ ViewData.MailCheckTo.Address.PostalOrZipCode }} </td>
+			</tr>
+			{% endif %}
+			<tr>
+				<td></td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td class="mz-field-label">Ship to:</td>
+				<td>{{ Model.ShippingInfo.ShippingContact.FirstName }} {{ Model.ShippingInfo.ShippingContact.LastNameOrSurname }}</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>{{ Model.ShippingInfo.ShippingContact.Address.Address1 }}</td>
+			</tr>
+			{% if Model.ShippingInfo.ShippingContact.Address.Address2  %}
+			<tr>
+				<td></td>
+				<td>{{ Model.ShippingInfo.ShippingContact.Address.Address2 }}</td>
+			</tr>
+			{% endif %}
+			<tr>
+				<td></td>
+				<td>{{ Model.ShippingInfo.ShippingContact.Address.CityOrTown }}, {{ Model.ShippingInfo.ShippingContact.Address.StateOrProvince }} {{ Model.ShippingInfo.ShippingContact.Address.PostalOrZipCode }}</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td class="mz-field-label">Shipping Method:</td>
+				<td><strong>{{ Model.ShippingInfo.ShippingMethodName }}</strong></td>
+			</tr>
+		</tbody>
+	</table><!-- #purchase-details-->
+
+	<h3>Order Summary</h3>
+	<table id="mz-order-summary" class="mz-order-summary">
+	    <thead>
+	        <tr>
+	            <th>Description</th>
+	            <th>Qty</th>
+	            <th>Unit Price</th>
+	            <th>Total Price</th>
+	        </tr>
+	    </thead>
+	    <tbody>
+            {% for item in Model.Items %}
+	        <tr class="mz-item-row">
+	            <td>{{ item.Product.Name }}</td>
+	            <td>{{ item.Quantity }}</td>
+	            <td>
+					{% if item.UnitPrice.BaseAmount != item.UnitPrice.DiscountedAmount %}
+					<div class="mz-price-amt mz-strikethrough">
+					{{ item.UnitPrice.BaseAmount|currency }}
+					</div>
+					{% endif %}
+					{{ item.UnitPrice.DiscountedAmount|currency }}
+				</td>
+	            <td>
+					{% if item.Subtotal != item.Total %}
+					<div class="mz-price-amt mz-strikethrough">
+					{{ item.Subtotal|currency }}
+					</div>
+					{% endif %}
+					{{ item.Total|currency }}
+				</td>
+	        </tr>
+            {% endfor %}
+	    </tbody>
+	    <tfoot>
+	        <tr>
+	            <td colspan="3">
+                {% if Model.ShopperNotes.Comments %}
+	                Comments:<br>
+                        <p>{{ Model.ShopperNotes.Comments }}</p>
+                {% endif %}
+                {% if Model.ShopperNotes.GiftMessage %}
+                    Gift Message:<br>
+                        <p>{{ Model.ShopperNotes.GiftMessage }}</p>
+                {% endif %}
+                </td>
+	            <td colspan="2">
+	                <table>
+						{% for discount in Model.OrderDiscounts %}
+						{% if not discount.Excluded %}
+                        <tr>
+                            <td>{{ discount.Discount.Name }}:</td>
+	                        <td>-{{ discount.Impact|currency }}</td>
+                        </tr>
+						{% endif %}
+						{% endfor %}
+	                    <tr>
+	                        <td>Sub-Total:</td>
+	                        <td>{{ Model.DiscountedTotal|currency }}</td>
+	                    </tr>
+	                    <tr>
+	                        <td>Tax:</td>
+	                        <td>{{ Model.TaxTotal|currency }}</td>
+	                    </tr>
+						{% for discount in Model.ShippingDiscounts %}
+						{% if not discount.Excluded %}
+	                    <tr>
+							<td>{{ discount.Discount.Discount.Name }} (Save {{ discount.Discount.Impact|currency }})</td>
+						</tr>
+						{% endif %}
+						{% endfor %}
+	                    <tr>
+	                        <td>Shipping & Handling:</td>
+	                        <td>{{ Model.ShippingTotal|currency }}</td>
+	                    </tr>
+						{% if Model.HandlingAmount != 0 %}
+	                    <tr>
+	                        <td>Additional Handling:</td>
+	                        <td>{{ Model.HandlingAmount|currency }}</td>
+	                    </tr>
+						{% endif %}
+	                    <tr>
+	                        <td>Total:</td>
+	                        <td>{{ Model.Total|currency }}</td>
+	                    </tr>
+	                </table>
+	            </td>
+	        </tr>
+	    </tfoot>
+	</table>
+</div><!-- #order-confirmation -->
+
+{% endblock BodyContent %}
+
+{% block TrailingScripts %}
+	{{ block.super }}
+	{% if SiteContext.GoogleAnalyticsEnabled and SiteContext.GoogleAnalyticsEcommerceEnabled %}
+	<script>
+	_gaq.push(['_addTrans',
+		'{{ Model.OrderNumber }}',						
+		'{{ siteContext.settings.general.websiteName }}',
+		'{{ Model.Total }}',							
+		'{{ Model.TaxTotal }}',					
+		'{{ Model.ShippingTotal }}',		
+		'{{ Model.ShippingInfo.ShippingContact.Address.CityOrTown }}',
+		'{{ Model.ShippingInfo.ShippingContact.Address.StateOrProvince }}',			
+		'USA'
+	]);
+
+	{% for item in Model.items %}
+	_gaq.push(['_addItem',
+		'{{ Model.OrderNumber }}',	
+		'{{ item.Product.ProductCode }}',
+		'{{ item.Product.Name }}',
+		'',
+		'{{ item.Price.Price }}',
+		'{{ item.Quantity }}'
+
+	]);
+	{% endfor %}
+
+	_gaq.push(['_trackTrans']);
+	</script>
+	{% endif %}
+
+{% endblock TrailingScripts %}
+
+		
+		
+		

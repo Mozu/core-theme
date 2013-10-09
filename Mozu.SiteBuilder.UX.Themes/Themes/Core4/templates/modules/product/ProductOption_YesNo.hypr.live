@@ -1,0 +1,1 @@
+﻿<input class="mz-checkbox mz-option" type="checkbox" data-mz-product-option="{{ option.Id }}" />

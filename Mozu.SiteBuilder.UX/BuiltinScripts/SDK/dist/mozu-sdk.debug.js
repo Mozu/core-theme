@@ -1,20 +1,24 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-10-07
+ * Mozu JavaScript SDK - v0.1.0 - 2013-10-09
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
  */
 
- (function() {	// the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
-    // this allows us to cleanly vendor AMD-compatible scripts without polluting scope.
+ (function(root) {	// the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
+    // this allows us to cleanly vendor AMD-compatible scripts without polluting scope or registering 
+    // private scripts in the root require namespace.
     // only downside is, you have to refer to the build script (Gruntfile) to see what order you brought them in.
 	var amds = [],
-	internalDefine = function(deps, fn) {
-		if (typeof deps === "function") fn = deps;
-		amds.push(fn());
+	internalDefine = function() {
+        var fac = [].pop.apply(arguments);
+        amds.push(typeof fac == "function" ? fac() : fac);
 	};
-	internalDefine.amd = true;
-	(function (define, exportFn) {
+	internalDefine.amd = {};
+    // only while this library is evaluating, let's replace window.define
+    var externalDefine = root.define;
+    var define = root.define = internalDefine;
+	(function (exportFn) {
 		exportFn(function () {
 /** @license MIT License (c) copyright 2011-2013 original author or authors */
 
@@ -27,7 +31,7 @@
  *
  * @author Brian Cavalier
  * @author John Hann
- * @version 2.4.0
+ * @version 2.4.1
  */
 (function(define, global) { 'use strict';
 define(function (require) {
@@ -719,12 +723,11 @@ define(function (require) {
 				function resolveOne(item, i) {
 					when(item, mapFunc, fallback).then(function(mapped) {
 						results[i] = mapped;
-						notify(mapped);
 
 						if(!--toResolve) {
 							resolve(results);
 						}
-					}, reject);
+					}, reject, notify);
 				}
 			}
 		});
@@ -802,7 +805,7 @@ define(function (require) {
 
 	var reduceArray, slice, fcall, nextTick, handlerQueue,
 		setTimeout, funcProto, call, arrayProto, monitorApi,
-		cjsRequire, undef;
+		cjsRequire, MutationObserver, undef;
 
 	cjsRequire = require;
 
@@ -848,17 +851,21 @@ define(function (require) {
 	// Allow attaching the monitor to when() if env has no console
 	monitorApi = typeof console != 'undefined' ? console : when;
 
-	// Prefer setImmediate or MessageChannel, cascade to node,
-	// vertx and finally setTimeout
-	/*global setImmediate,MessageChannel,process*/
-	if (typeof setImmediate === 'function') {
-		nextTick = setImmediate.bind(global);
-	} else if(typeof MessageChannel !== 'undefined') {
-		var channel = new MessageChannel();
-		channel.port1.onmessage = drainQueue;
-		nextTick = function() { channel.port2.postMessage(0); };
-	} else if (typeof process === 'object' && process.nextTick) {
+	// Sniff "best" async scheduling option
+	// Prefer process.nextTick or MutationObserver, then check for
+	// vertx and finally fall back to setTimeout
+	/*global process*/
+	if (typeof process === 'object' && process.nextTick) {
 		nextTick = process.nextTick;
+	} else if(MutationObserver = global.MutationObserver || global.WebKitMutationObserver) {
+		nextTick = (function(document, MutationObserver, drainQueue) {
+			var el = document.createElement('div');
+			new MutationObserver(drainQueue).observe(el, { attributes: true });
+
+			return function() {
+				el.setAttribute('x', 'x');
+			};
+		}(document, MutationObserver, drainQueue));
 	} else {
 		try {
 			// vert.x 1.x || 2.x
@@ -2707,6 +2714,9 @@ var ApiInterface = (function () {
         steps: function () {
             var args = Object.prototype.toString.call(arguments[0]) === "[object Array]" ? arguments[0] : Array.prototype.slice.call(arguments);
             return utils.pipeline(Array.prototype.slice.call(args));
+        },
+        getAvailableActionsFor: function (type) {
+            return ApiReference.getActionsFor(type);
         }
     };
         var setOp = function (fnName) {
@@ -2815,14 +2825,15 @@ Mozu.ApiObject.prototype.inspect = function () {
     return JSON.stringify(this.data, true, 2);
 };			return Mozu;
 		});
-		// boilerplate below makes this library compatible with AMD, CJS, and a plain browser environment
-	})(internalDefine,
-		typeof define === "function" && define.amd
-		? define
-		: function (fn) {
+		// UMD boilerplate
+	})(typeof externalDefine === "function" && externalDefine.amd
+		? externalDefine
+		: function (factory) {
 			typeof exports === "object" && typeof module === "object"
-				? (module.exports = fn())
-				: (this.Mozu = fn())
+				? (module.exports = factory())
+				: root.Mozu = factory()
 		}
 	);
-}());
+    // put that back where you found it, young man
+    root.define = externalDefine;
+}(this));

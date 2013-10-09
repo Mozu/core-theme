@@ -1,0 +1,83 @@
+﻿    <h3 class="mz-panel-header">
+        Payment Information
+        <button type="button" class="mz-edit-button" data-mz-action="edit">Edit</button>
+    </h3>
+    <div class="mz-panel-wrap">
+        <div class="mz-inner-panel">
+            <p class="mz-desc">How to bill?</p>
+            <div class="mz-completed-summary">
+                <h4>{{ Model.PaymentType }}</h4>
+                {% if Model.PaymentType == "Check" %}
+                    <span>{{ Model.Check.CheckNumber }}</span>
+                {% endif %}
+                {% if Model.PaymentType == "CreditCard" %}
+                    <span>{{ Model.Card.CardNumberPartOrMask }}</span>
+                {% endif %}
+
+                <h4>Billing Address</h4>
+                {% include "Modules/Common/AddressSummary" with Model.BillingContact %}
+
+                <h4>Billing Contact Information</h4>
+                <span>Phone: <strong>{{ Model.BillingContact.PhoneNumbers.Home }}</strong></span>
+                <span>Email: <strong>{{ Model.BillingContact.Email }}</strong></span>
+            </div>
+
+            <div class="mz-form-fields">
+                <p class="mz-desc">
+                    <select data-mz-value="PaymentType">
+                        <option>Select payment method</option>
+                        <option {% if Model.PaymentType == "CreditCard" %}selected="selected"{% endif %} value="CreditCard">Credit Card</option>
+                        <option {% if Model.PaymentType == "Check" %}selected="selected"{% endif %} value="Check">Check by Mail</option>
+                    </select>
+                    <span class="mz-validation-message" data-mz-validation-message-for="PaymentType"></span>
+                </p>
+
+                {% if Model.PaymentType == "CreditCard" %}
+                    <div class="mz-form-fieldgroup">
+                        {% include "Modules/Checkout/CreditCardForm" with Model %}
+                </div>
+                {% endif %}
+
+                {% if Model.PaymentType == "Check" %}
+                    <div class="mz-form-fieldgroup">
+                        {% include "Modules/Checkout/CheckingAccountForm" with Model %}
+                    </div>
+                {% endif %}
+
+                <h4>Billing Address</h4>
+                <div class="mz-single-setting"><label class="mz-inline"><input type="checkbox" data-mz-value="IsSameBillingShippingAddress" value="true" {% if Model.IsSameBillingShippingAddress %}checked="checked"{% endif %}> Use my shipping address</label></div>
+                {% if Model.IsSameBillingShippingAddress %}
+                    <div class="mz-completed-summary mz-same-as-shipping-summary" id="mz-same-as-shipping-summary">
+                        {% include "Modules/Common/AddressSummary" with Model.BillingContact %}
+                    </div>
+                {% else %}
+                <div class="mz-form-fieldgroup mz-form-fields">
+                    {% include "Modules/Checkout/CheckoutBillingAddressForm" with Model.BillingContact %}
+                </div>
+                {% endif %}
+                <h4>Billing Contact Info</h4>
+                <div class="mz-form-fieldgroup">
+                    <div class="mz-form-field-row">
+                        <div class="mz-form-field-cell">
+                            <label for="billing-email">Email<span class="mz-required-field"> *</span>:</label>
+                        </div>
+                        <div class="mz-form-field-cell">
+                            <input type="text" id="billing-email" name="billing-email" data-mz-value="BillingContact.Email" value="{{ Model.BillingContact.Email }}">
+                            <span class="mz-validation-message" data-mz-validation-message-for="BillingContact.Email"></span>
+                        </div>
+                    </div>
+                    <div class="mz-form-field-row">
+                        <div class="mz-form-field-cell"></div>
+                        <div class="mz-form-field-cell">
+                            <label class="mz-inline"><input type="checkbox" name="special-offers" checked style="float: left; margin-right: 8px;"> Yes! I want to be receive news<br>and special offers from you!</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mz-next-step">
+                    {% include "Modules/Common/LoadingBar" %}
+                    <button type="button" class="mz-submit-button" data-mz-action="next">Next</button>
+                </div>
+            </div>
+        </div><!-- .mz-inner-panel -->
+    </div><!-- .mz-panel-wrap -->

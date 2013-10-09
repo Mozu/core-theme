@@ -1,0 +1,19 @@
+﻿    <h3 class="mz-panel-header">
+        Shipping Information
+        <button class="mz-edit-button" data-mz-action="edit">Edit</button>
+    </h3>
+    <div class="mz-panel-wrap">
+        <div class="mz-inner-panel">
+            <p class="mz-desc">Where to?</p>
+            <div class="mz-completed-summary">
+                {% include "Modules/Common/AddressSummary" with Model %}
+            </div>
+            <div class="mz-form-fieldgroup mz-form-fields">
+                {% include "Modules/Common/AddressForm" with Model %}
+            </div>
+            <div class="mz-next-step">
+                {% include "Modules/Common/LoadingBar" %}
+                <button type="button" class="mz-submit-button" data-mz-action="next">Next</button>
+            </div>
+        </div><!-- .mz-inner-panel -->
+    </div>

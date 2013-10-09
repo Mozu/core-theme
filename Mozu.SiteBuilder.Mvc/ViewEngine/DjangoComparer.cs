@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Runtime.Caching;
 using System.Web;
-using System.Web.Mvc;
+
 using Autofac;
 using NDjango;
 using NDjango.Interfaces;

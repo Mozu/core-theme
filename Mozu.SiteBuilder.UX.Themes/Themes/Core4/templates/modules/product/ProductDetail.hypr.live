@@ -1,0 +1,39 @@
+
+<div class="mz-details-full-description" >
+    {{ Model.Content.ProductFullDescription }}
+</div>
+
+<dl class="mz-details-properties">
+    {% for property in Model.Properties %}
+        <dt>{{property.AttributeDetail.Name}}</dt>
+        {% for v in property.Values %}
+            <dd>{% if v.StringValue %}{{v.StringValue}}{% else %}{{v.Value}}{% endif %}</dd>
+        {% endfor %}
+    {% endfor %}
+</dl>
+
+{% include "Modules/Product/ProductOptions" %}
+    
+<div class="mz-price-stack-wrap">		
+{% include "Modules/Product/ProductPagePriceStack" %}
+</div>
+{% if not Model.PurchasableState.IsPurchasable %}
+    <div class="mz-not-purchasable-text">
+        Not Purchasable:
+        {% for message in Model.PurchasableState.Messages %}
+            <span>{{ message.Message }}</span>
+        {% endfor %}
+    </div>
+{% endif %}
+<section class="mz-conversion-wrap">
+    <span class="mz-qty-label">Qty</span>
+    <input class="mz-qty-input" type="number" value="1" {% if not Model.PurchasableState.IsPurchasable %} disabled="disabled" {% endif %} data-mz-value="Quantity" />
+    <button class="mz-button mz-btn-cta mz-btn-add-to-cart" {% if not Model.PurchasableState.IsPurchasable %} disabled="disabled" {% endif %} data-mz-action="addToCart" >
+        Add To Cart
+    </button>
+  {% include "Modules/Common/LoadingBar" %}
+  <span class="mz-validation-message" data-mz-validation-message-for="Quantity"></span>
+</section>
+
+    
+    

@@ -1,9 +1,0 @@
-﻿<root>
-  <arguments>-warn:4</arguments>
-    <output path="dist\require.min.js">
-        <input path="dist\require.js" />
-        <input path="plugins\text.js" />
-        <input path="plugins\i18n.js" />
-        <input path="plugins\shim.js" />
-    </output>
-</root>

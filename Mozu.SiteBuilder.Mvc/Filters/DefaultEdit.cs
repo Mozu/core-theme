@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mozu.SiteBuilder.Mvc.Tags;
 
 namespace Mozu.SiteBuilder.Mvc.Filters
 {
@@ -14,19 +15,10 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
 
 
-        public object PerformWithParamAndContext(object value, object parameter, NDjango.Interfaces.IContext context)
-        {
-            return PerformWithParam(value, parameter);
-        }
 
-        public object DefaultValue
+        object NDjango.Interfaces.IFilterWithContext.PerformWithParamAndContext(object value, IEnumerable<object> parameter, NDjango.Interfaces.IContext context)
         {
-            get { return null; }
-        }
-
-        public object PerformWithParam(object value, object parameter)
-        {
-            var isEditmode = SiteBuilderContext.Current.IsEditMode;
+            var isEditmode = context.SiteBuilderContext().IsEditMode;
             if (!isEditmode)
             {
                 return value;
@@ -38,7 +30,17 @@ namespace Mozu.SiteBuilder.Mvc.Filters
             return value;
         }
 
-        public object Perform(object value)
+        object NDjango.Interfaces.IFilter.DefaultValue
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        object NDjango.Interfaces.IFilter.PerformWithParam(object value, object parameter)
+        {
+            throw new NotImplementedException();
+        }
+
+        object NDjango.Interfaces.ISimpleFilter.Perform(object value)
         {
             throw new NotImplementedException();
         }

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
+
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Security;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.User.Contracts;
@@ -15,8 +17,8 @@ using VMUser = Mozu.SiteBuilder.UX.Models.Customers.User;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    [ValidateInput(false)]
-    public class AuthController : BaseController
+  
+    public class AuthController : BaseApiController
     {
         private Mozu.User.Contracts.Clients.IUserWebApiClient _userWebApiClient;
         private Mozu.User.Contracts.Clients.IAuthTicketWebApiClient _authTicketWebApiClient;
@@ -34,8 +36,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
         //
         // GET: /StoreFront/Auth/
-
-        public JsonDCResult LogOut()
+          [System.Web.Http.HttpGet]
+        public Response<string> LogOut()
         {
             var user = LightweightUserClaims.CreateForAnonymousShopper(_apiContext.TenantId, _apiContext.SiteId.Value);
             _authenticationHelper.SaveAuthTicket(new UserAuthTicket()
@@ -47,22 +49,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _apiContext.SetUser(user);
             //_authenticationHelper.LogOut(_apiContext);
             //_cookieProvider.SaveResponseCookie("order", new HttpCookie("")); // uggh, but it works
-            return new JsonDCResult()
-            {
-                Data = new Response<string>()
-                {
-                    Success = true
-                }
-            };
+           return    new Response<string>()
+                  {
+                      Success = true
+                  };
+
 
         }
-        [HttpGet]
+        [System.Web.Http.HttpGet]
         public ActionResult SignIn(string returnUrl)
         {
             return View("SignIn");
         }
-        [HttpPost]
-        public ActionResult SignIn(string email, string password, string returnUrl, FormCollection collection)
+        [System.Web.Http.HttpPost]
+        public object  SignIn(string email, string password, string returnUrl, HttpRequest  collection)
         {
 
             var res = _userWebApiClient.CloneWithoutUserClaims().Login(new Mozu.Core.Api.Contracts.UserAuthInfo()
@@ -102,7 +102,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return View("SignIn" , new { email = email });
             }
         }
-        public JsonDCResult SignIn(string email, string password)
+         [System.Web.Http.HttpPost]
+        public object  SignIn(string email, string password)
         {
             var res = _userWebApiClient.CloneWithoutUserClaims().Login(new Mozu.Core.Api.Contracts.UserAuthInfo()
             {
@@ -111,7 +112,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 Password = password
 
             }).Result;
-            var answer = new JsonDCResult();
+        
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
                 var user = _userWebApiClient.CloneWithoutUserClaims().GetUserByEmail(email).Result.ReadAsSync();
@@ -130,7 +131,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     _authenticationHelper.SaveAuthTicket(ticket); 
                     _apiContext.SetUser(LightweightUserClaims.Parse(ticket.AccessToken));
                     
-                    answer.Data = new
+                    return  new
                     {
                         Message = String.Format("Logged in as {0}.", email)
                     };
@@ -138,55 +139,46 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             else
             {
-                answer.Data = new
+                return  new
                 {
-                    Message = String.Format("There was an error logging in as {0}. Please check your username and password.")
+                    Message = String.Format("There was an error logging in as {0}. Please check your username and password.", email)
                 };
             }
-            return answer;
+            
         }
-        public JsonDCResult AjaxResetPassword(string email)
+          [System.Web.Http.HttpPost]
+         public object  AjaxResetPassword(string email)
         {
             var res = _userWebApiClient.ResetPassword( new ResetPasswordInfo(){
                 EmailAddress = email
             }).Result;
-            if (res.ResponseMessage.IsSuccessStatusCode)
-            {
+              if (res.ResponseMessage.IsSuccessStatusCode)
+              {
 
-                return new JsonDCResult()
-                {
-                    Data = new Response<bool>()
-                    {
-                        Data = true,
-                        Success = true
-                    }
+                  return new Response<bool>()
+                             {
+                                 Data = true,
+                                 Success = true
+                             };
+              }
+              else
+              {
 
+                  var ex = res.ReadException();
 
-                };
-            }
-            else
-            {
+                  var errorCollection = ex.Data["DataContract"] as ErrorCollection;
 
-                var ex = res.ReadException();
+                  return new Response<string>()
+                             {
+                                 Message = "nope you stink",
+                                 ServiceErrorCollection = errorCollection,
+                                 Success = false
 
-                var errorCollection = ex.Data["DataContract"] as ErrorCollection;
-
-                return new JsonDCResult()
-                {
-                    Data = new Response<string>()
-                    {
-                        Message = "nope you stink",
-                        ServiceErrorCollection = errorCollection,
-                        Success = false
-
-                    }
-
-                };
-            }
-
+                             };
+              }
         }
-        
-        public JsonDCResult AjaxSignIn(string email, string password)
+          [System.Web.Http.HttpPost]
+        public object  AjaxSignIn(string email, string password)
         {
             var info = new Core.Api.Contracts.UserAuthInfo { EmailAddress = email, Password = password };
 
@@ -201,37 +193,31 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 _authenticationHelper.SaveAuthTicket(user);
                 _apiContext.SetUser(LightweightUserClaims.Parse(user.AccessToken));
 
-              
 
-                return new JsonDCResult
-                {
-                    Data = new Response<VMUser>
-                    {
-                        Data = new VMUser
-                        {
-                            FirstName = user.User.FirstName ,
-                            LastName = user.User.LastName,
-                            Email = user.User.EmailAddress,
-                            UserId = user.User.UserId,
-                            IsAuthenticated = true
-                        },
-                        Success = true
-                    }
-                };
+
+                return new Response<VMUser>
+                           {
+                               Data = new VMUser
+                                          {
+                                              FirstName = user.User.FirstName,
+                                              LastName = user.User.LastName,
+                                              Email = user.User.EmailAddress,
+                                              UserId = user.User.UserId,
+                                              IsAuthenticated = true
+                                          },
+                               Success = true
+                           };
             }
 
             var ex = res.ReadException();
             var errorCollection = ex.Data["DataContract"] as ErrorCollection;
 
-            return new JsonDCResult()
-            {
-                Data = new Response<string>()
-                {
-                    Message = ex.Message,
-                    ServiceErrorCollection = errorCollection,
-                    Success = false
-                }
-            };
+              return new Response<string>()
+                         {
+                             Message = ex.Message,
+                             ServiceErrorCollection = errorCollection,
+                             Success = false
+                         };
         }
     }
 }

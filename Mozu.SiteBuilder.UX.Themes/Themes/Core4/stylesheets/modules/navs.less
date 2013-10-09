@@ -1,0 +1,110 @@
+﻿
+
+/* Canopy Site Nav ------------------------------- */
+.mz-utility-nav-wrap {
+	float: right;
+	clear: both;
+	padding: 10px 20px;
+
+}
+.mz-utility-nav {	
+	color: white;
+	font-size: 11px;
+}
+.mz-utility-nav-item {
+	float: left;
+	margin: 0;
+	padding: 0 10px;
+	text-align: right;
+}
+.mz-utility-nav-item:last-child {
+	padding-right: 0;
+	text-align:right;
+}
+
+/* Main Site Nav ------------------------------- */
+@navHeight: 37px;
+.mz-site-nav-wrapper {
+	width: 100%;
+	position: absolute;
+	left: 0;
+	bottom: 0px;
+	background: #333;
+    height: @navHeight;
+
+    .mz-site-nav-item {
+        float: left;
+        position: relative;
+
+        &:hover .mz-site-nav-sub {
+            visibility: visible;
+            .transition-delay(0s);
+        }
+    }
+
+    .mz-site-nav-sub {
+        background: #333;
+        top: @navHeight - 1;
+        position: absolute;
+        z-index: 1;
+        visibility: hidden;
+        .transition(visibility 0s ease-out .25s);
+    }
+
+    .mz-site-nav-item.mz-site-nav-l2 {
+        clear: both;
+        width: 100%;
+        .mz-site-nav-link {
+            .transition-property(~"height, padding, opacity");
+            .transition-duration(~".25s, .25s, .08s");
+            .transition-delay(~"0s, 0s, .05s");
+            height: 0px;
+            opacity: 0;
+            padding: 0;
+            display: block;
+            white-space: nowrap;
+        }
+    }
+
+    .mz-site-nav-item:hover .mz-site-nav-link {
+        height: 20px;
+        padding: 10px 15px;
+        opacity: 1;
+
+    }
+
+	.mz-site-nav-link {
+		color: {{themeSettings.siteNavColor}};
+		text-decoration: none;
+		font: {{themeSettings.siteNavFont}};
+		display: inline-block;
+		padding: 10px 15px;
+		position: relative;
+		&:visited {
+			color: {{themeSettings.siteNavColor}};
+		}
+		&:hover {
+			background-color: #555;
+			color: {{themeSettings.siteNavHoverColor}};
+		}
+	}
+}
+
+
+/* SubCategory List -------------- */
+.mz-left-nav-wrap {
+	width: 180px;
+	float: left;
+	margin-right: 30px;
+}
+.mz-category-subhead {
+	margin-top: 12px;
+}
+.mz-category-list-item {
+	margin: 0 0 8px 0;
+}
+
+.mz-category-list-sub {
+	padding-left: 16px;
+	margin-top: 5px;
+}

@@ -69,6 +69,9 @@ var ApiInterface = (function () {
         steps: function () {
             var args = Object.prototype.toString.call(arguments[0]) === "[object Array]" ? arguments[0] : Array.prototype.slice.call(arguments);
             return utils.pipeline(Array.prototype.slice.call(args));
+        },
+        getAvailableActionsFor: function (type) {
+            return ApiReference.getActionsFor(type);
         }
     };
         var setOp = function (fnName) {

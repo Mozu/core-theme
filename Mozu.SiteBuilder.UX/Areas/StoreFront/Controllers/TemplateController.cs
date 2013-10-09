@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
+
 using Autofac;
-using Autofac.Integration.Mvc;
+
 using Mozu.ProductRuntime.Contracts;
+using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
@@ -30,8 +32,8 @@ using ProductOption = Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductOptio
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    [ValidateInput(false)]
-    public class TemplatesController : BaseController
+    
+    public class TemplatesController : BaseApiController
     {
         private readonly ISiteBuilderContext _siteBuilderContext;
 
@@ -60,7 +62,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var pageType = _siteBuilderContext.Theme.PageTypes.FirstOrDefault(x => x.Id == templateId);
             if (pageType == null)
             {
-                return new HttpNotFoundResult("template not found");
+                return new HttpNotFoundResult();
             }
             var pc = this.SiteContext.PageContext;
 
@@ -72,7 +74,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                     Collection="templates"
                                   }
             };
-            await this.AsyncInitData();
+            
             return View(pageType.Template, GetModel(pageType));
         }
 
@@ -86,10 +88,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 case "cart":
                     {
-                        return new Mozu.SiteBuilder.UX.Models.StoreFront.Cart.Cart()
-                           {
-                               Items = new List<CartItem>()
-                           };
+                        //return new Mozu.SiteBuilder.UX.Models.StoreFront.Cart.Cart()
+                        //   {
+                        //       Items = new List<CartItem>()
+                        //   };
+                        throw new NotImplementedException();
+                        // TODO: replace with new cart viewmodel
                     }
                 case "product":
                     {

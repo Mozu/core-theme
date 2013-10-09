@@ -49,6 +49,19 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
         {
             return AutoMapper.Mapper.Map<T>(obj);
         }
+
+        public static string GetFilePathNameWithoutExtension(this string path)
+        {
+            var slashIndex = path.LastIndexOf('\\');
+            if (slashIndex == -1)
+            {
+                slashIndex = 0;
+            }
+            var extIndex = path.IndexOf('.', slashIndex);
+            return extIndex > 0 ? path.Substring(0, extIndex) : path;
+        }
+
+
         public static T Map<T>(this object obj, T dest)
         {
             return AutoMapper.Mapper.Map( obj, dest);

@@ -1,0 +1,4 @@
+﻿    <label for="coupon-code">Coupon Code</label>
+    <input type="text" id="mz-coupon-code" name="coupon-code" value="{{ Model.CouponCode }}" data-mz-value="CouponCode">
+    <button type="button" id="mz-coupon-submit" class="mz-submit-button" data-mz-action="addCoupon" {% if not Model.CouponCode %} disabled="disabled" {% endif %}>Apply</button>
+    {% include "Modules/Common/LoadingBar" %}

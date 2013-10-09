@@ -14,8 +14,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags.Data
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using System.Web.Mvc.Html;
-    using System.Web.Mvc;
+
     using System.Web.Routing;
 
     using System.Web;
@@ -27,17 +26,19 @@ namespace Mozu.SiteBuilder.Mvc.Tags.Data
 
 
     [NDjango.Interfaces.Name("cms_data_attributes")]
-    public class CmsDataAttributesTag : DynamicTagBase
+    public class CmsDataAttributesTag : SimpleTagBase
     {
-        protected override string ProcessTag(HtmlHelper html, ArgumentCollection arguments, ref NDjango.Interfaces.IContext context)
+        protected override void ProcessTag(ArgumentCollection arguments, ref NDjango.Interfaces.IContext context, out string buffer, out string templateName)
         {
-            var isEditmode = SiteBuilderContext.Current.IsEditMode;
+            buffer = null;
+            templateName = null;
+            var isEditmode = context.SiteBuilderContext().IsEditMode;
 
             if (!isEditmode)
-                return string.Empty;
+                return ;
 
             var obj = arguments[0].Value;
-            ModelMetadata mmd = null;
+            Dictionary<string,object > mmd = null;
 
             var exp = arguments[0].TokenValue;
             var dotParts = exp.Split('.');
@@ -50,29 +51,29 @@ namespace Mozu.SiteBuilder.Mvc.Tags.Data
                     mmd = extractor.GetCmsModelMetadata( exp);
                     if (arguments.Count > 1)
                     {
-                        mmd.AdditionalValues["fieldType"] = arguments[1].TokenValue;
+                        mmd["fieldType"] = arguments[1].TokenValue;
                     }
                 }
 
                 if (mmd != null)
                 {
-                    return Convert(mmd);
+                    buffer = Convert(mmd);
                 }
             }
-            return string.Empty;
+            return;
 
         }
-        string Convert(ModelMetadata mmd)
+        string Convert(Dictionary<String,object> mmd)
         {
 
             var sw = new StringWriter();
             object obj;
             string attributeName = "data-editing-element";
-            if (mmd.AdditionalValues.TryGetValue("data-attribute-name", out obj))
+            if (mmd.TryGetValue("data-attribute-name", out obj))
             {
                 attributeName = obj.ToString();
             }
-            if (mmd.AdditionalValues.TryGetValue("data-editing", out obj))
+            if (mmd.TryGetValue("data-editing", out obj))
             {
                 if (obj is JsonValue)
                 {
@@ -98,9 +99,9 @@ namespace Mozu.SiteBuilder.Mvc.Tags.Data
                 var json = new JsonObject();
                 JsonPrimitive jPrim;
 
-                if (mmd.AdditionalValues != null)
+                if (mmd != null)
                 {
-                    foreach (var item in mmd.AdditionalValues)
+                    foreach (var item in mmd)
                     {
                         if (JsonPrimitive.TryCreate(item.Value, out jPrim))
                         {
@@ -175,5 +176,8 @@ namespace Mozu.SiteBuilder.Mvc.Tags.Data
 
 
         // }
+
+       
+       
     }
 }

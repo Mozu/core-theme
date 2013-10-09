@@ -1,0 +1,30 @@
+﻿
+<html  lang="en">
+   
+  <head>
+
+    <style>
+        body{
+            background-color: #FFF;
+            padding:20px;
+        }
+
+    </style>
+</head>
+  
+      
+    <body class=""  >
+        <h1>You've been added to somebodys site!!!</h1>
+        <div {% data_attributes ViewData.content.html_1 %}> {{ ViewData.content.html_1 }}</div>
+        <div > click the below get access to somebodys sites </div>
+        <div > <a href="{{"/admin/auth"|absolute_url}}?EmailAddress={{Model.EmailAddress}}&SiteId={{Model.SiteId}}&TenantId={{Model.TenantId}}&invitation={{Model.Id}}">click me</a> </div>
+        <div > Or paste the below into  a browser {{"/admin/auth"|absolute_url}}?EmailAddress={{Model.EmailAddress}}&SiteId={{Model.SiteId}}&TenantId={{Model.TenantId}}&invitation={{Model.Id}}</div>
+		
+        <div {% data_attributes ViewData.content.html_2 %}> {{ViewData.content.html_2}}</div>
+        
+        
+        <div style="visibility:hidden">{% dump Model %}</div>
+    </body>
+
+ 
+</html>

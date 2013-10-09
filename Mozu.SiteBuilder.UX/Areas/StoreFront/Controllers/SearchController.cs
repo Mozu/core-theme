@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
+
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    public class SearchController : BaseController
+    public class SearchController : BaseApiController
     {
         private readonly IProductCategoryRuntimeWebApiClient _catClient;
         private readonly IProductRuntimeWebApiClient _productClient;

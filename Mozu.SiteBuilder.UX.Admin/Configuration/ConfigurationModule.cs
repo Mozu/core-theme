@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.ServiceModel;
-using System.Web.Mvc;
+//
+using System.Web.Http;
 using Autofac;
-using Autofac.Integration.Mvc;
+//using Autofac.Integration.Mvc;
+using Autofac.Integration.WebApi;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
@@ -23,6 +25,7 @@ using Mozu.User.Contracts.Clients;
 using NDjango;
 using NDjango.Interfaces;
 using Api = Mozu.SiteBuilder.UX.Admin.Api;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.UX.Admin.Configuration
 {
@@ -32,7 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
         {
             RegisterServiceContracts(builder);
          
-            RegisterOtherStuff(builder);
+            
             RegisterServiceClients(builder);
         }
 
@@ -46,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             //var platformService = typeof(PlatformService.Contracts.Clients.ReferenceDataWebApiClient).Assembly;
             //builder.ScanAssemblyAndRegisterTypes(platformService, x => x.IsAssignableFrom(typeof(PlatformService.Contracts.Clients.IReferenceDataWebApiClient)));
             
-            
+            builder.RegisterHttpRequestMessage(GlobalConfiguration.Configuration);
             builder.RegisterType<SiteBuilderContext>().As<ISiteBuilderContext>().InstancePerLifetimeScope();
 
             builder.RegisterType<SbApiContextBuilder>().As<IApiContextBuilder>();
@@ -82,7 +85,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             builder.RegisterInstance<System.Runtime.Caching.ObjectCache>(System.Runtime.Caching.MemoryCache.Default);
             builder.RegisterType<SiteBuilderContext>().As<ISiteBuilderContext>().InstancePerLifetimeScope();
             //builder.RegisterModule(new AutofacWebTypesModule());
-            builder.Register<System.Web.HttpContextBase>((c, p) => new System.Web.HttpContextWrapper(System.Web.HttpContext.Current)).InstancePerDependency();
+           // builder.Register<System.Web.HttpContextBase>((c, p) => new System.Web.HttpContextWrapper(System.Web.HttpContext.Current)).InstancePerDependency();
 
             builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
             
@@ -98,8 +101,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             builder.Register(c => new ProductRuntimeWebApiClient(c.Resolve<IServiceClientMessageHandler>())).As<IProductRuntimeWebApiClient>().InstancePerLifetimeScope();
             builder.Register(c => new ProductSearchWebApiClient(c.Resolve<IServiceClientMessageHandler>())).As<IProductSearchWebApiClient>().InstancePerLifetimeScope();
 
-            builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>();
-            builder.RegisterType<System.Web.Mvc.RazorViewEngine>().As<IViewEngine>();
+            
 
             builder.RegisterType<AdminCategoryTreeProvider>().As<ICategoryTreeProvider>();
             builder.RegisterType<CategoryNavigationProvider>().As<ICategoryNavigationProvider>();
@@ -118,24 +120,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
 
 
-        
-        class SbApiContextBuilder:IApiContextBuilder
+
+        class SbApiContextBuilder : IApiContextBuilder
         {
 
             public IApiContext BuildApiContext(IApiContext apiContext, System.Net.Http.HttpRequestMessage request)
             {
-                return DependencyResolver.Current.GetService<IApiContext>();
+                return request.LifetimeScope().Resolve<IApiContext>();
+
             }
         }
 
 
-        private void RegisterOtherStuff(ContainerBuilder builder)
-        {
-            //Registers controllers and allows property injection into action filters
-            builder.RegisterControllers(ThisAssembly);
-
-            //Registers all IModelBinder implementations with MVC
-            builder.RegisterModelBinders(ThisAssembly);
-        }
+       
     }
 }

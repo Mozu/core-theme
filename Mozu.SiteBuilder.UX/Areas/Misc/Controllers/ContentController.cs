@@ -7,22 +7,24 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Web;
-using System.Web.Mvc;
+
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
-    public class ContentController : BaseController
+    public class ContentController : BaseApiController
     {
          IDocumentListWebApiClient  _docRepo;
         IApiContext _appCtx;
         public ContentController(IDocumentListWebApiClient docRepo, IApiContext appCtx)
         {
-            SuppressMissingContextRedirect = true;
+           // SuppressMissingContextRedirect = true;
             _docRepo = docRepo.CloneWith(x => { x.SiteId = null; });
            
             _appCtx =appCtx;
@@ -30,6 +32,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
         //
         // GET:/Img/
+
+        
         Stream ResizeToMaxDimension(Stream stream, int maxSize)
         {
             var initPos = stream.Position;
@@ -174,7 +178,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return GetFromFSCache(ctx, collection, documentId);
             
         }
-        //todo make async  test mutex carefully 
+          [System.Web.Http.HttpGet]
         public  ActionResult Index(int tenant, int sitegroup, string site, string collection, string documentId, int size = 0, int max = 0)
         {
            var context = new ApiContext()
@@ -330,7 +334,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 throw new NotImplementedException();
             }
         }
-        
+          [System.Web.Http.HttpGet]
         public ActionResult Download(string collection, string documentId)
         {
             var doc = _docRepo.GetDocument( documentListName:collection, documentId:documentId ).Result.ReadAsSync();

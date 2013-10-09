@@ -5,31 +5,31 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Cart
     [DataContract]
     public class CartItem
     {
-        [DataMember(Name = "id")]
+        [DataMember(Name = "Id")]
         public string Id { get; set; }
 
-        [DataMember(Name = "product")]
+        [DataMember(Name = "Product")]
         public Product Product { get; set; }
 
-        [DataMember(Name = "unitPrice")]
+        [DataMember(Name = "UnitPrice")]
         public CartItemPrice UnitPrice { get; set; }
 
-        [DataMember(Name = "quantity")]
+        [DataMember(Name = "Quantity")]
         public int Quantity { get; set; }
 
-        [DataMember(Name = "subTotal")]
+        [DataMember(Name = "Subtotal")]
         public decimal? SubTotal { get; set; }
 
-        [DataMember(Name = "discountTotal")]
+        [DataMember(Name = "DiscountTotal")]
         public decimal? DiscountTotal { get; set; }
 
-        [DataMember(Name = "taxTotal")]
-        public decimal? TaxTotal { get; set; }
+        [DataMember(Name = "TaxableTotal")]
+        public decimal? TaxableTotal { get; set; }
 
-        [DataMember(Name = "feeTotal")]
+        [DataMember(Name = "FeeTotal")]
         public decimal? FeeTotal { get; set; }
 
-        [DataMember(Name = "total")]
+        [DataMember(Name = "Total")]
         public decimal? Total { get; set; }
     }
 }

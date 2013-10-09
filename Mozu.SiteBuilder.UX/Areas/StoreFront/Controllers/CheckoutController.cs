@@ -5,22 +5,31 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using System.Web.Http;
+
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core.Api.Contracts.Client;
 
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Orders;
 using Mozu.SiteBuilder.Mvc.Security;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.Checkout;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    public class CheckoutController : BaseController
+    //text/html
+
+
+
+
+
+    public class CheckoutController : BaseApiController
     {
         private readonly IOrderService _orderService;
         private readonly IAuthenticationHelper _authHelper;
@@ -46,6 +55,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             get { return _merchantId ?? (_merchantId = _orderService.GetMerchantId()); }
         }*/
 
+        [System.Web.Http.HttpGet]
         public async Task<ActionResult> Index(string orderId)
         {
             var pc = this.SiteContext.PageContext;
@@ -59,34 +69,39 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
             //var id = OrderId;
             var id = orderId;
-            if (string.IsNullOrWhiteSpace(id)) return RedirectToAction("Index", "Cart");
+            if (string.IsNullOrWhiteSpace(id)) return Redirect("/cart");
             Order model;
-            var res = (await _orderWebApiClient.GetOrder(id));
-            if (res.ResponseMessage.StatusCode == HttpStatusCode.Forbidden) {
-                return RedirectToAction("Index", "Cart");
-            }
-            model = res.ReadAsAsync().Result;
-            if (model == null) return RedirectToAction("Index", "Cart");
-            if (model.Status == "Submitted") return RedirectToAction("Confirmation", new { orderId = model.Id });
-           
-            
-          
+            try
+            {
 
-            if (model.ShippingInfo != null && model.ShippingInfo.ShippingContact  != null && model.ShippingInfo.ShippingContact .Address  != null)
+                model = _orderWebApiClient.GetOrder(id).Result.ReadAsAsync().Result;
+            }
+            catch (Mozu.Core.Api.Client.Exceptions.ApiWebClientException e)
+            {
+                // TODO: more granular exception handling here
+                return Redirect("/cart");
+            }
+            if (model == null) return Redirect("/cart");
+            if (model.Status == "Submitted") return Redirect("/checkout/" + model.Id + "/confirmation");
+
+
+
+
+            if (model.ShippingInfo != null && model.ShippingInfo.ShippingContact != null && model.ShippingInfo.ShippingContact.Address != null)
             {
                 ViewData["availableShippingMethods"] = _orderWebApiClient.GetAvailableShipmentMethods(id).Result.ReadAsSync();
             }
-           
-            await this.AsyncInitData();
+
+
 
             ViewData["paymentApiBase"] = _pciSettingsProvider.GetPaymentApiBase();
             ViewData["availableCountries"] = _orderService.GetShippableCountries().Select(x => new { code = x.Key, name = x.Value } as object).ToList();
-            
-            
+
+
             return View("checkout", model);
         }
 
-     
+
 
         //protected string LastOrderId
         //{
@@ -116,12 +131,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //    return new JsonDCResult { Data = data };
         //}
 
+        [System.Web.Http.HttpGet]
         public ActionResult Confirmation(string orderId)
         {
             var order = _orderWebApiClient.GetOrder(orderId).Result.ReadAsSync();
             if (order == null)
-                return RedirectToAction("Index");
-            this.ViewData["MailCheckTo"] = SiteBuilderContext.Current.Settings.Shipping.SiteShippingOriginAddress;
+                return Redirect("/cart");
+            this.ViewData["MailCheckTo"] = this.SiteContext.Settings.Shipping.SiteShippingOriginAddress;
             return View("confirmation", order);
         }
 

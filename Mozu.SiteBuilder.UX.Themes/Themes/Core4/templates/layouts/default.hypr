@@ -1,0 +1,61 @@
+﻿{% block Init %}
+<!doctype html>
+
+{% comment %}
+    The comment tag lets you write comments that will be visible when editing the template file, but don't appear in the rendered HTML. It's essentially just an "ignore this" tag.
+{% endcomment %}
+
+{% comment %}
+    The conditional statements below detect if visitor is on a particular
+    version of IE and adds the appropriate classes to the HTML element. You can then target
+    these browsers in your CSS without hacks, like:
+
+        .thing {
+        padding: 10px;
+        }
+        .ie6 .thing {
+        padding: 12px;
+        }
+
+    no-js:
+    The Modernizr library we're using will replace the class "no-js" with "js" if javascript 
+    available. Again you can use this as a way to make sensible fallbacks if javascript
+    is not available.
+{% endcomment %}
+
+
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if IE 9]>    <html class="no-js ie9" lang="en"> <![endif]-->
+<!--[if (gt IE 9)|(!IE) ]><!--> 
+<html class="no-js" lang="en">
+<!--<![endif]-->
+{%endblock Init%}
+    {% block HeadTag %}
+        {% include "Modules/HeadTag" %}
+    {% endblock HeadTag %}
+    <body class="{{templateVariables.BodyTagClasses }}" {% data_attributes SiteContext %} >
+        <div class="mz-main-container" id="mz-main-container">
+            {% block Header %}
+                {% include "Modules/PageHeader" %}
+            {% endblock Header %}
+            <div role="main" id="mz-content-section" class="{{templateVariables.ArticleClasses }} mz-content-section">
+                {% block BreadcrumbsContainer %}
+                    {% include "Modules/Common/Breadcrumbs" %}
+                {% endblock BreadcrumbsContainer %}
+                {% block BodyContent %}
+                    {% dropzone "body" %}
+					
+                {% endblock BodyContent %}
+                {% dropzone "body-bottom" "template" %}
+            </div>
+            {% block Footer %}
+                {% include "Modules/PageFooter" %}
+            {% endblock Footer %}
+        </div>
+        {% block TrailingScripts %}
+            {% include "Modules/TrailingScripts" %}
+        {% endblock TrailingScripts %}
+    </body>
+</html>

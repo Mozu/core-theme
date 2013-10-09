@@ -4,13 +4,16 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Net.Http.Headers;
+using System.Web.Http.Filters;
+
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-using System.Web.Mvc;
+
     using System.Web;
 
     /// <summary>
@@ -32,9 +35,11 @@ using System.Web.Mvc;
         {
             ConfigKey = "default";
         }
-        public override void OnActionExecuted(ActionExecutedContext filterContext)
+
+        public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
-            if ( ConfigKey == null )
+           
+            if (ConfigKey == null)
                 return;
 
             var val = System.Configuration.ConfigurationManager.AppSettings["clientCacheHeaderLength:" + ConfigKey];
@@ -42,18 +47,46 @@ using System.Web.Mvc;
             {
                 val = System.Configuration.ConfigurationManager.AppSettings["clientCacheHeaderLength:default"];
             }
-            if (val == null|| val == "0")
+            if (val == null || val == "0")
                 return;
             int duration = int.Parse(val);
 
+
+
+            var cache = actionExecutedContext.Response.Headers.CacheControl = actionExecutedContext.Response.Headers.CacheControl ?? new CacheControlHeaderValue();
            
-            HttpCachePolicyBase cache = filterContext.HttpContext.Response.Cache;
             TimeSpan cacheDuration = TimeSpan.FromSeconds(duration);
 
-            cache.SetCacheability(HttpCacheability.Public);
-            cache.SetExpires(DateTime.Now.Add(cacheDuration));
-            cache.SetMaxAge(cacheDuration);
-            
+            cache.MaxAge = cacheDuration;
+            cache.Public = true;
+           
+            //cache.
+            //cache.SetCacheability(HttpCacheability.Public);
+            //cache.SetExpires(DateTime.Now.Add(cacheDuration));
+            //cache.SetMaxAge(cacheDuration);
         }
+        //public  void OnActionExecuted(ActionExecutedContext filterContext)
+        //{
+        //    if ( ConfigKey == null )
+        //        return;
+
+        //    var val = System.Configuration.ConfigurationManager.AppSettings["clientCacheHeaderLength:" + ConfigKey];
+        //    if (val == null)
+        //    {
+        //        val = System.Configuration.ConfigurationManager.AppSettings["clientCacheHeaderLength:default"];
+        //    }
+        //    if (val == null|| val == "0")
+        //        return;
+        //    int duration = int.Parse(val);
+
+           
+        //    HttpCachePolicyBase cache = filterContext.HttpContext.Response.Cache;
+        //    TimeSpan cacheDuration = TimeSpan.FromSeconds(duration);
+
+        //    cache.SetCacheability(HttpCacheability.Public);
+        //    cache.SetExpires(DateTime.Now.Add(cacheDuration));
+        //    cache.SetMaxAge(cacheDuration);
+            
+        //}
     }
 }

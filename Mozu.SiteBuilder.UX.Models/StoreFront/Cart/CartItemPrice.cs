@@ -6,25 +6,19 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Cart
     [DataContract]
     public class CartItemPrice
     {
-        [DataMember(Name = "baseAmount")]
+        [DataMember(Name = "BaseAmount")]
         public decimal BaseAmount { get; set; }
 
-        [DataMember(Name = "discountAmount")]
+        [DataMember(Name = "DiscountAmount")]
         public decimal? DiscountAmount { get; set; }
 
-        [DataMember(Name = "preTaxAmount")]
-        public decimal PreTaxAmount { get; set; }
+        [DataMember(Name = "DiscountedAmount")]
+        public decimal? DiscountedAmount { get; set; }
 
-        [DataMember(Name = "taxAmount")]
-        public decimal? TaxAmount { get; set; }
+        [DataMember(Name = "ListAmount")]
+        public decimal? ListAmount { get; set; }
 
-        [DataMember(Name = "fees")]
-        public List<Fee> Fees { get; set; }
-
-        [DataMember(Name = "finalAmount")]
-        public decimal FinalAmount { get; set; }
-
-        [DataMember(Name = "shippingAmount")]
-        public decimal? ShippingAmount { get; set; }
+        [DataMember(Name = "SaleAmount")]
+        public decimal? SaleAmount { get; set; }
     }
 }

@@ -1,0 +1,17 @@
+{% extends "layouts\default" %}
+
+{% block Init %}
+    {% setTemplateVariables BodyTagClasses="mz-category" %}
+    {{ block.super }}
+{% endblock Init %}
+
+{% block BodyContent %}
+
+{% require_script "pages/category" %}
+
+<div id="mz-layout-container" data-mz-category="{{Model.CategoryId}}" class="mz-layout-container mz-content-inner-wrap mz-blog-list-page">
+    <h1 class="mz-page-header">{{ Model.Name }}</h1>
+    {% include_products "modules/product/product-listing-faceted" with includeFacets=true and pageWithUrl=true as_parameter %}
+</div>
+
+{% endblock BodyContent %}

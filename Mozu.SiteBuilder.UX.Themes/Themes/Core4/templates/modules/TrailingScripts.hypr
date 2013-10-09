@@ -1,0 +1,9 @@
+﻿{% if themeSettings.useOptimizedJs == "true" %}
+    {% load_all_scripts %}
+{% else %}
+    {% debug_all_scripts %}
+{% endif %}
+
+{% if SiteContext.GoogleAnalyticsEnabled %}
+    {% include "Modules/GoogleAnalyticsTrackingCode" %}
+{% endif %}

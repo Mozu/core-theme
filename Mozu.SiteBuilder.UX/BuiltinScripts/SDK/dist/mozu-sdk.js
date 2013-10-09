@@ -1,17 +1,19 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-10-07
+ * Mozu JavaScript SDK - v0.1.0 - 2013-10-09
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
  */
 
-(function() {
-    var amds = [], internalDefine = function(deps, fn) {
-        if (typeof deps === "function") fn = deps;
-        amds.push(fn());
+(function(root) {
+    var amds = [], internalDefine = function() {
+        var fac = [].pop.apply(arguments);
+        amds.push(typeof fac == "function" ? fac() : fac);
     };
-    internalDefine.amd = true;
-    (function(define, exportFn) {
+    internalDefine.amd = {};
+    var externalDefine = root.define;
+    var define = root.define = internalDefine;
+    (function(exportFn) {
         exportFn(function() {
             (function(define, global) {
                 "use strict";
@@ -331,11 +333,10 @@
                                 function resolveOne(item, i) {
                                     when(item, mapFunc, fallback).then(function(mapped) {
                                         results[i] = mapped;
-                                        notify(mapped);
                                         if (!--toResolve) {
                                             resolve(results);
                                         }
-                                    }, reject);
+                                    }, reject, notify);
                                 }
                             }
                         });
@@ -372,7 +373,7 @@
                             state: "pending"
                         };
                     }
-                    var reduceArray, slice, fcall, nextTick, handlerQueue, setTimeout, funcProto, call, arrayProto, monitorApi, cjsRequire, undef;
+                    var reduceArray, slice, fcall, nextTick, handlerQueue, setTimeout, funcProto, call, arrayProto, monitorApi, cjsRequire, MutationObserver, undef;
                     cjsRequire = require;
                     handlerQueue = [];
                     function enqueue(task) {
@@ -389,16 +390,18 @@
                     }
                     setTimeout = global.setTimeout;
                     monitorApi = typeof console != "undefined" ? console : when;
-                    if (typeof setImmediate === "function") {
-                        nextTick = setImmediate.bind(global);
-                    } else if (typeof MessageChannel !== "undefined") {
-                        var channel = new MessageChannel();
-                        channel.port1.onmessage = drainQueue;
-                        nextTick = function() {
-                            channel.port2.postMessage(0);
-                        };
-                    } else if (typeof process === "object" && process.nextTick) {
+                    if (typeof process === "object" && process.nextTick) {
                         nextTick = process.nextTick;
+                    } else if (MutationObserver = global.MutationObserver || global.WebKitMutationObserver) {
+                        nextTick = function(document, MutationObserver, drainQueue) {
+                            var el = document.createElement("div");
+                            new MutationObserver(drainQueue).observe(el, {
+                                attributes: true
+                            });
+                            return function() {
+                                el.setAttribute("x", "x");
+                            };
+                        }(document, MutationObserver, drainQueue);
                     } else {
                         try {
                             nextTick = cjsRequire("vertx").runOnLoop || cjsRequire("vertx").runOnContext;
@@ -1911,6 +1914,9 @@
                     steps: function() {
                         var args = Object.prototype.toString.call(arguments[0]) === "[object Array]" ? arguments[0] : Array.prototype.slice.call(arguments);
                         return utils.pipeline(Array.prototype.slice.call(args));
+                    },
+                    getAvailableActionsFor: function(type) {
+                        return ApiReference.getActionsFor(type);
                     }
                 };
                 var setOp = function(fnName) {
@@ -1977,7 +1983,8 @@
             }();
             var Mozu = new ApiContext();
         });
-    })(internalDefine, typeof define === "function" && define.amd ? define : function(fn) {
-        typeof exports === "object" && typeof module === "object" ? module.exports = fn() : this.Mozu = fn();
+    })(typeof externalDefine === "function" && externalDefine.amd ? externalDefine : function(factory) {
+        typeof exports === "object" && typeof module === "object" ? module.exports = factory() : root.Mozu = factory();
     });
-})();
+    root.define = externalDefine;
+})(this);

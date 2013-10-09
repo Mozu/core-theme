@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Runtime.Serialization;
 using System.Web;
-using System.Web.Mvc;
+
 using Autofac;
-using Autofac.Integration.Mvc;
+
 using Mozu.Core;
 using Mozu.Core.Logging;
 using Mozu.Core.Settings;
@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.Mvc
 	    private readonly ILifetimeScope _lifetimeScope;
 	    private readonly IAuthenticationHelper _authenticationHelper;
 
-	    Lazy<ISettingsRepository> _settings;
+	    ISettingsRepository _settings;
 	    private readonly Lazy<ICatalogContext> _catContext;
         private readonly ICookieProvider _cookieProvider;
         private readonly IMobileDetectionProvider _mobileProvider;
@@ -74,7 +74,7 @@ namespace Mozu.SiteBuilder.Mvc
         private Lazy<NavigationGandalf> _gandalf;
         private ICategoryTreeProvider _categoryTreeProvider;
 
-        public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, Lazy<ISettingsRepository> settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings, ICategoryTreeProvider categoryTreeProvider, Lazy<NavigationGandalf> gandalf, ISettings configSettings = null, HttpContextBase httpContext = null, ILifetimeScope lifetimeScope= null , IAuthenticationHelper authenticationHelper=  null )
+        public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, ISettingsRepository settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings, ICategoryTreeProvider categoryTreeProvider, Lazy<NavigationGandalf> gandalf, ISettings configSettings = null, HttpContextBase httpContext = null, ILifetimeScope lifetimeScope= null , IAuthenticationHelper authenticationHelper=  null )
 		{
 			PageContext = new PageContext();
            
@@ -98,6 +98,11 @@ namespace Mozu.SiteBuilder.Mvc
             if (httpContext != null)
             {
                 httpContext.Items[CONTEXT_KEY] = this;
+                bool isEditModeFlg;
+                if (bool.TryParse(httpContext.Request ["isEditMode"] as string, out isEditModeFlg) && isEditModeFlg)
+                {
+                    this.IsEditMode = isEditModeFlg;
+                }
             }
             // attempt to look up theme by value of "SBTHEME".
             HttpCookie themeCookie = _cookieProvider.GetRequestCookie(FORCE_THEME_COOKIE_NAME);
@@ -115,7 +120,7 @@ namespace Mozu.SiteBuilder.Mvc
             // needs to be lazy because _settings is lazy
             _desktopTheme = new Lazy<Theme >(() =>
             {
-                string themeName = _settings.Value.General.DesktopTheme;
+                string themeName = _settings.General.DesktopTheme;
 
                 return themeRepository.GetThemeOrDefault(themeName);
             });
@@ -123,8 +128,8 @@ namespace Mozu.SiteBuilder.Mvc
             // needs to be lazy because _settings is lazy
             _mobileTheme = new Lazy<Theme>(() =>
             {
-                string themeName = _settings.Value.General.MobileTheme;
-                if (String.IsNullOrEmpty(_settings.Value.General.MobileTheme))
+                string themeName = _settings.General.MobileTheme;
+                if (String.IsNullOrEmpty(_settings.General.MobileTheme))
                     return null;
 
                 try
@@ -139,39 +144,17 @@ namespace Mozu.SiteBuilder.Mvc
                 }
             });
 
-	        _googleAnalyticsCode = new Lazy<string>(() => GetGeneralSettingValue(x => x.GoogleAnalyticsCode));
-            _googleAnalyticsEnabled = new Lazy<bool>(() => GetGeneralSettingValue(x => x.IsGoogleAnalyticsEnabled) ?? false);
-            _googleAnalyticsEcommerceEnabled = new Lazy<bool>(() => GetGeneralSettingValue(x => x.IsGoogleAnalyticsEcommerceEnabled) ?? false);
+	        _googleAnalyticsCode = new Lazy<string>(() => settings.General.GoogleAnalyticsCode );
+            _googleAnalyticsEnabled = new Lazy<bool>(() => settings.General.IsGoogleAnalyticsEnabled.GetValueOrDefault(false ));
+            _googleAnalyticsEcommerceEnabled = new Lazy<bool>(() => settings.General.IsGoogleAnalyticsEcommerceEnabled.GetValueOrDefault(false ));
 		}
         
-        private T GetGeneralSettingValue<T>(Func<GeneralSettings, T> expression)
-        {
-            try
-            {
-                var task = _generalSettings.GetGeneralSettings();
-                var generalSettingsResult = task.Result.ReadAsAsync().Result;
-
-                return expression(generalSettingsResult);
-            }
-            catch (Exception)
-            {
-                return default(T);
-            }
-        }
+      
         public T Resolve<T>()
         {
             return _lifetimeScope.Resolve<T>();
         }
-		public static ISiteBuilderContext Current
-		{
-			get
-			{
-                ISiteBuilderContext sc = AutofacDependencyResolver.Current.RequestLifetimeScope.Resolve<ISiteBuilderContext>();
-
-				return sc;
-			}
-			
-		}
+		
         public static ISiteBuilderContext GetFromContext ( HttpContextBase ctx )
         {
             return (ISiteBuilderContext) ctx.Items[SiteBuilderContext.CONTEXT_KEY];
@@ -307,11 +290,11 @@ namespace Mozu.SiteBuilder.Mvc
         // <add key="default-tenant" value="139"/>
   //  <add key="default-site" value="9001"/>
 
-        public System.Web.Mvc.ModelMetadata GetModelMetadata()
+        public Dictionary<string,object > GetModelMetadata()
         {
-            var mmd = ModelMetadataProviders.Current.GetMetadataForType(() => this, typeof(SiteBuilderContext));
-            mmd.AdditionalValues ["data-editing"] = this;
-            mmd.AdditionalValues["data-attribute-name"] = "data-editing-document";
+            var mmd = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase );
+            mmd ["data-editing"] = this;
+            mmd["data-attribute-name"] = "data-editing-document";
             return mmd;
         }
 
@@ -374,7 +357,7 @@ namespace Mozu.SiteBuilder.Mvc
 
         public ISettingsRepository Settings
         {
-            get { return _settings.Value; }
+            get { return _settings; }
         }
 
         /// <summary>

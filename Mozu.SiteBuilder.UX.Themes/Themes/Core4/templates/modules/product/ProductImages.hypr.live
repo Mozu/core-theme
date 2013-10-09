@@ -1,0 +1,17 @@
+<div data-mz-role="productimages-container" class="mz-product-images">
+    {% if Model.Content.ProductImages and Model.Content.ProductImages.Count > 0 %}
+       <figure data-mz-role="productimages-main" class="mz-product-image-main">
+            <img class="mz-product-image-main-link" src="{{ Model.MainImage.ImageUrl }}" />
+        </figure>	
+        <figure class="mz-product-image-thumb">
+            {% for image in Model.Content.ProductImages %}
+                <a data-mz-role="productimages-link" class="mz-product-image-thumb-link" href="{{ image.ImageUrl }}">
+                    <img class="mz-product-image-thumb-img"  src="{{ image.ImageUrl }}" />
+                </a>
+            {% endfor %}
+        </figure>
+    {% else %}
+        <span class="mz-no-image-message">[no image]</span>
+    {% endif %}
+</div>
+

@@ -1,0 +1,22 @@
+﻿
+<html  lang="en">
+   
+  <head>
+
+    <style>
+        body{
+            background-color: #FFF;
+            padding:20px;
+        }
+
+    </style>
+</head>
+  
+  
+  <body class=""  >
+  
+    <div {% data_attributes ViewData.content.html_1 %}> {{ViewData.content.html_1}}</div>
+      <div>{% dump Model %}</div>
+      <div {% data_attributes ViewData.content.html_2 %}> {{ViewData.content.html_2}}</div>
+  </body>
+</html>

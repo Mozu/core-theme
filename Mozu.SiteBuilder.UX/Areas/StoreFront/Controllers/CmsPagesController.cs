@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
+
 using Autofac;
-using Autofac.Integration.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using DC = Mozu.Content.Contracts;
@@ -23,8 +24,8 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    [ValidateInput(false)]
-    public class CmsPagesController : BaseController
+    
+    public class CmsPagesController : BaseApiController
     {
 
         protected IDocumentListWebApiClient _docRepo;
@@ -33,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         protected ISiteBuilderContext _context;
         protected ICmsTypeHelper _cmsTypeHelper;
         private ILifetimeScope _lifetimeScope;
-        private readonly IViewEngine _viewEngine;
+     
 
         public CmsPagesController(
             IDocumentListWebApiClient docRepo,
@@ -41,7 +42,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ISiteBuilderContext context,
             ICmsServiceWrapper cmsService,
             ICmsTypeHelper cmsTypeHelper,
-            IViewEngine viewEngine,
             ILifetimeScope lifetimeScope 
 
             )
@@ -52,19 +52,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _cmsService = cmsService;
             _context = context;
             _cmsTypeHelper= cmsTypeHelper;
-            _viewEngine = viewEngine;
+        
             _lifetimeScope = lifetimeScope;
         }
 
 
 
 
-
-        public ActionResult Index()
-        {
-            
-            return View();
-        }
+       
 
       
 
@@ -82,7 +77,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //}
         //
         // GET: /StoreFront/Details/5
-        [HttpGet]
+   
+        [System.Web.Http.HttpGet]
         public async Task<ActionResult> Page(string collection, string pageName)
         {
             
@@ -97,10 +93,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 } 
                 
             };
-            await this.AsyncInitData();
 
-            if (pc.CmsContext.Page.Document == null)
-                return new HttpNotFoundResult("not found");
+            var helper = new CmsHelper(CmsService);
+            await helper.InitCmsPageContext(SiteContext.PageContext.CmsContext);
+           
 
             var vm = Mapper.Map<DC.Document, VM.Document>(pc.CmsContext.Page.Document ,
                                                           opt => opt.ConstructServicesUsing(_lifetimeScope .Resolve ));
@@ -122,7 +118,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 if (pc.CmsContext.Page.Document.Get<bool>("hidden", false))
                 {
-                    return new HttpNotFoundResult("not found");
+                    return new HttpNotFoundResult();
                 }
                 string redir;
 
@@ -135,12 +131,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
             //return View(template, vm);
-            var vr = _viewEngine .FindView(this.ControllerContext, template, null, true);
-            if (vr.View == null)
-            {
-                vr = _viewEngine.FindView(this.ControllerContext, "blankpage", null, true);
-            }
-            var result = View(vr.View, vm);
+            //var vr = _viewEngine .FindView(this.ControllerContext, template, null, true);
+            //if (vr.View == null)
+            //{
+            //    vr = _viewEngine.FindView(this.ControllerContext, "blankpage", null, true);
+            //}
+
+            //todo:lookup view and fall back to blankpage if theme doesnt support it.
+            
+
+            var result = View(template ?? "blankpage", vm);
 
             return result;
         }

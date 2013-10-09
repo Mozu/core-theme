@@ -1,31 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Web;
-using System.Web.Mvc;
+using System.Web.Http;
+using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.Controllers;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
-    public class TestController : Controller
+    public class TestController : ApiControllerBase 
     {
         //
         // GET: /Test/
 
-        public ActionResult Index()
-        {
-            return View();
-        }
+         [HttpGet]
         public ActionResult DecryptTicket()
         {
-            return  View();
+            return View("DecryptTicket");
         }
         [HttpPost]
-        public ActionResult DecryptTicket(FormCollection collection)
+        public ActionResult DecryptTicket(HttpRequest   collection)
         {
+            
             var ticketString = collection["ticket"];
             var user = Mozu.Core.LightweightUserClaims.Parse(ticketString);
             this.ViewData["user"] = user;
-            return View();
+            return View("DecryptTicket");
         }
     }
 }

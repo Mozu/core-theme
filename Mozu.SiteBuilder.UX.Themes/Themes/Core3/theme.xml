@@ -2,7 +2,7 @@
 <theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\Tools\Theme.xsd">
   <name>Core3</name>
   <author>Volusion</author>
-  <extends></extends>
+  <extends>Core4</extends>
   <isDesktop>true</isDesktop>
   <isMobile>false</isMobile>
   

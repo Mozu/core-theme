@@ -10,7 +10,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using System.Web.Mvc;
+  
     using Newtonsoft.Json;
 
     
@@ -18,12 +18,12 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     public class DumpTag : DynamicTagBase
     {
 
-        public MvcHtmlString Process(object model)
+        public string Process(object model)
         {
             model = model ?? "null";
             string json = JsonConvert.SerializeObject(model, Formatting.Indented );
 
-            return new MvcHtmlString("<pre>" + model.GetType ().FullName +"\r\n" + json + "</pre>");
+            return ("<pre>" + model.GetType ().FullName +"\r\n" + json + "</pre>");
         }
     }
 }

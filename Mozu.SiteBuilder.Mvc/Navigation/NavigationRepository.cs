@@ -52,20 +52,10 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                                       if (serviceClientResponse != null && serviceClientResponse.ResponseMessage != null && serviceClientResponse.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
                                       {
                                           var doc = CreateNavigationDocument(new NavigationSet());
-                                          if (_siteBuilderApiContext.CmsDraftState == Mozu.Content.Contracts.PublishStates.Active)
-                                          {
+                                          var res = new TestResponse<DC.Document>(doc);
+                                          return res.Task;
 
-                                              var res = new TestResponse<DC.Document>(doc);
-                                              return res.Task;
-                                             
 
-                                          }
-                                          else
-                                          {
-                                              return _cmsService.RawCreate2(doc);
-                                          }
-                                          
-                                         
                                       }
 
                                       // otherwise, pass through the result.

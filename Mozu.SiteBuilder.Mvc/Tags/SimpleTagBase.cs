@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Microsoft.FSharp.Core;
 using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
@@ -13,17 +14,19 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     using System.Linq;
     using System.Text;
     using NDjango.Interfaces;
-    using System.Web.Mvc;
+
     using System.Web.Routing;
 
-    
-
-
-    
-    
 
 
 
+
+
+
+    public interface IHyprNode
+    {
+        Walker Walk(ITemplateManager manager, Walker walker);
+    }
  
     /// <summary>
     /// TODO: Update summary.
@@ -62,14 +65,14 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             return tokens;
         }
 
-        protected abstract string ProcessTag(HtmlHelper html, ArgumentCollection arguments, ref  IContext context);
+        protected abstract void  ProcessTag(ArgumentCollection arguments, ref  IContext context , out string buffer , out string templateName );
 
         protected virtual ArgumentCollection.ParseStrategy ArguemntParserStrategy { get; set; }
 
 
         IEnumerable<NDjango.Expressions.FilterExpression> ParamFilters;
 
-        class TagNodeImpl : NDjango.ParserNodes.TagNode
+        class TagNodeImpl : NDjango.ParserNodes.TagNode, IHyprNode
         {
 
             public SimpleTagBase TagBase
@@ -85,6 +88,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             }
             IParsingContext ParsingContext;
             NDjango.Lexer.BlockToken BlockToken;
+
             public override Walker walk(ITemplateManager manager, Walker walker)
             {
                 var arguments = ProcessArguments(walker);
@@ -94,22 +98,49 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 }
                 var ctx = walker.context;
 
-                HtmlHelper html = (HtmlHelper)ctx.tryfind("Html").Value;
-                var buff = TagBase.ProcessTag(html, arguments, ref ctx);
+
+
+                string buffer;
+                string templateName;
+                TagBase.ProcessTag(arguments, ref ctx, out buffer, out templateName);
                 if (arguments.OutputVariableName != null)
                 {
                     if (arguments.OutputValue == null)
                     {
-                        arguments.OutputValue = buff;
-                        buff = string.Empty;
+                        arguments.OutputValue = buffer;
+                        buffer = string.Empty;
                     }
                     ctx = ctx.add(new Tuple<string, object>(arguments.OutputVariableName, arguments.OutputValue));
                 }
-                walker = new Walker(walker.parent, walker.nodes, walker.buffer + buff, walker.bufferIndex, ctx);
+                bool walked = false;
+                if (!string.IsNullOrEmpty(buffer))
+                {
+                    walker = new Walker(walker.parent, walker.nodes, walker.buffer + buffer, walker.bufferIndex, ctx);
+                    walker = TagBase.Walk(arguments, ctx, manager, walker, this);
+                    walked = true;
+                }
+                if (!string.IsNullOrEmpty(templateName))
+                {
+                    var template = manager.GetTemplate(templateName);
+                    walker = new Walker(new FSharpOption<Walker>(walker), template.Nodes, walker.buffer, walker.bufferIndex, ctx);
+                    walker = TagBase.Walk(arguments, ctx, manager, walker, this);
+                    walked = true;
+                    
+                }
+                if (!walked)
+                {
+                    walker = TagBase.Walk(arguments, ctx, manager, walker, this);
+                }
+                return walker;
+
+
+
+
                 
-                return base.walk(manager, walker);
-                
+
+
             }
+
             static string[] g_emptyStringArray = new string[0];
             private ArgumentCollection ProcessArguments(Walker walker)
             {
@@ -158,6 +189,11 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 }
                 return arguments;
             }
+
+            Walker IHyprNode.Walk(ITemplateManager templateManager, Walker walker)
+            {
+                return base.walk( templateManager, walker);
+            }
         }
 
         public virtual bool is_header_tag { get; set; }
@@ -171,5 +207,11 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             }
         }
 
+
+        protected virtual Walker Walk(ArgumentCollection arguments, IContext context, ITemplateManager templateManager, Walker walker, IHyprNode tagNode)
+        {
+            return tagNode.Walk( templateManager, walker);
+          
+        }
     }
 }

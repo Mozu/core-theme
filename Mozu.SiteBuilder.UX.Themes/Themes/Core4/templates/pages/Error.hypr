@@ -1,0 +1,18 @@
+﻿{% extends "layouts\default" %}
+
+{% block Init %}
+    {% setTemplateVariables BodyTagClasses="mz-error-page" %}
+    {{ block.super }}
+{% endblock Init %}
+
+{% block BodyContent %}
+<div id="mz-error-page" class="mz-error-page" >
+
+	<h2 class="mz-error-head">Sorry, an error occurred. <span class="mz-error-subhead">Mozu encountered an error it couldn't resolve.</span><span class="mz-error-text">{{Model.Message}}</span></h2>
+	<a href="javascript:;" id="mz-error-detail-link" class="mz-error-detail-expander">stack trace</a>
+	<blockquote id="mz-error-detail" class="mz-error-detail">
+	<pre><code>{% dump Model %}</code></pre>
+	</blockquote>
+</div>
+{% require_script "pages/error" %}
+{% endblock BodyContent %}

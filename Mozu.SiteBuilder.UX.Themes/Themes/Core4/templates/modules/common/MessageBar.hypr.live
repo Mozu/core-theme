@@ -1,0 +1,9 @@
+﻿<div class="mz-messages" data-mz-message-bar>
+    {% if Model.length > 0 %}
+    <ul class="is-showing mz-errors">
+        {% for message in Model %}
+            <li>{{ message.Message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>

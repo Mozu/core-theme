@@ -13,6 +13,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using Mozu.Core;
 using Mozu.Core.Settings;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.Themes.Exceptions;
@@ -102,16 +103,23 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
                 return null;
 
             tmd.FileListing = dirinfo.GetFileSystemInfos("*.*", SearchOption.AllDirectories)
-                                                          .Select(x => new ThemeFileSystemInfo()
-                                                                           {
-                                                                               Name = x.Name,
-                                                                               FullPath = x.FullName ,
-                                                                               RootPath = themePath ,
-                                                                               VirtualPath = x.FullName.Substring( themePath.Length ).Trim( new char[]{'\\'}).ToLowerInvariant()
-                                                                           }).ToArray() ;
+                                                          .Select(x =>
+                                                              {
+                                                                  var vPath = x.FullName.Substring(themePath.Length).Trim(new char[] {'\\'}).ToLowerInvariant();
+                                                                  var vPathNoExt = vPath.GetFilePathNameWithoutExtension();
+                                                                  return new ThemeFileSystemInfo()
+                                                                             {
+                                                                                 Name = x.Name,
+                                                                                 FullPath = x.FullName,
+                                                                                 RootPath = themePath,
+                                                                                 VirtualPathNoExt = vPathNoExt,
+                                                                                 VirtualPath = vPath
+                                                                             };
+                                                              }
+            ).ToArray() ;
 
             var widgetMetaDataDir = "metadata\\widgets";
-            var pageTypesMetaDataDir = "metadata\\pagetypes";
+            var pageTypesMetaDataDir = "metadata\\PageTypes";
             var jSerializer = new JsonSerializer();
 
             tmd.Widgets= tmd.FileListing.Where(x => x.VirtualPath.StartsWith(widgetMetaDataDir, StringComparison.OrdinalIgnoreCase) && x.Name.Equals ("definition.json", StringComparison.OrdinalIgnoreCase))

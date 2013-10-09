@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web.Hosting;
 using System.Web;
 using System.IO;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.Themes.Providers;
 using Mozu.SiteBuilder.Mvc.Themes.Repositories;
@@ -23,19 +24,11 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             _siteBuilderContext = siteBuilderContext;
         }
 
-         //public IEnumerable<KeyValuePair<string, string>> Themes
-        //{
-        //    get { return _mozuVirtualPathDataProvider.Themes ; }
-        //}
-
-
+        //todo:refactor to use themefileinfos
         public string MapLocalPath(string virtualPath, Theme  theme)
         {
-
             var t = theme;
             return t.ThemePath +"\\"  + virtualPath;
-
-
         }
 
 
@@ -76,99 +69,77 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         }
 
 
-
-        public override string CombineVirtualPaths(string basePath, string relativePath)
-        {
-            return base.CombineVirtualPaths(basePath, relativePath);
-        }
-        public override bool DirectoryExists(string virtualDir)
-        {
-            return base.DirectoryExists(virtualDir);
-        }
-        public override System.Web.Caching.CacheDependency GetCacheDependency(string virtualPath, System.Collections.IEnumerable virtualPathDependencies, DateTime utcStart)
-        {
-            return base.GetCacheDependency(virtualPath, virtualPathDependencies, utcStart);
-        }
-        public override string GetCacheKey(string virtualPath)
-        {
-            return base.GetCacheKey(virtualPath);
-        }
-
        
         public override VirtualDirectory GetDirectory(string virtualDir)
         {
-            foreach (var theme in this.ThemeStack)
+            var fileInfo = GetThemeFileInfo(virtualDir);
+            if (fileInfo != null)
             {
-                var fullPath = this.MapLocalPath(virtualDir, theme);
-                if (Directory.Exists(fullPath))
-                {
-                    return new MozuVirtualDirectory(virtualDir, fullPath, this);
-                }
+                return new MozuVirtualDirectory(fileInfo.VirtualPath, fileInfo.FullPath, this);
             }
-
-
             return null;
         }
 
-        //public IEnumerable<VirtualFile> GetInheritedFileList(string virtualPath)
-        //{
-
-        //    foreach (var theme in this.ThemeStack)
-        //    {
-        //        foreach (var vn in GetViewVariants(virtualPath, theme))
-        //        {
-        //            var fullPath = this.MapLocalPath(vn, theme);
-        //            if (System.IO.File.Exists(fullPath))
-        //            {
-        //                yield return new MozuVirtualFileSystemFile(virtualPath, fullPath);
-        //            }
-
-        //        }
-        //    }
-        //}
-
-        public override VirtualFile GetFile(string virtualPath)
+       
+         public override VirtualFile GetFile(string virtualPath)
+         {
+             return GetFile(virtualPath, true);
+         }
+        public  VirtualFile GetFile(string virtualPath, bool withExt   )
         {
-            virtualPath = virtualPath.ToLowerInvariant().Replace("/", "\\").Trim(new char[] {'\\'});
+            var fileInfo = GetThemeFileInfo(virtualPath, withExt);
+            if (fileInfo != null)
+            {
+                return new MozuVirtualFileSystemFile(fileInfo.VirtualPath, fileInfo.FullPath );
+            }
+            return null;
+        }
+
+         public IEnumerable<ThemeFileSystemInfo> GetLveTemplates()
+         {
+             return this.ThemeStack.SelectMany(x=> x.FileListing ).Where(x => x.FullPath.EndsWith(".live")).Where(x => GetThemeFileInfo(x.VirtualPathNoExt, false) == x);
+            
+         }
+
+         public ThemeFileSystemInfo GetThemeFileInfo(string virtualPath, bool withExt = true  )
+         {
+             virtualPath = virtualPath.ToLowerInvariant().Replace("/", "\\").Trim(new char[] {'\\'});
+            if (!withExt)
+            {
+                virtualPath = virtualPath.GetFilePathNameWithoutExtension();
+            }
             foreach (var theme in this.ThemeStack)
             {
                 foreach (var vn in GetViewVariants(virtualPath, theme))
                 {
-                    var exists = theme.FileListing.Any(x => x.VirtualPath == vn);
+                  
+                    var file = theme.FileListing.FirstOrDefault( x => withExt ? x.VirtualPath == vn : x.VirtualPathNoExt == vn);
 
-                    if (exists)
+                    if (file != null )
                     {
-                        var fullPath = this.MapLocalPath(vn, theme);
-                        return new MozuVirtualFileSystemFile(virtualPath, fullPath);
+                        return file;
                     }
                    
 
                 }
             }
-
             return null;
-        }
+
+         }
 
         static Dictionary<string, MozuVirtualMongoFile> g_fileCache = new Dictionary<string, MozuVirtualMongoFile>();
 
-        public override bool FileExists(string virtualPath)
-        {
-            virtualPath = virtualPath.ToLowerInvariant().Replace("/", "\\").Trim(new char[] { '\\' });
-            foreach (var theme in this.ThemeStack)
-            {
-                foreach (var vn in GetViewVariants(virtualPath, theme))
-                {
-                    var exists = theme.FileListing.Any(x => x.VirtualPath == vn);
-                    if (exists)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
+         public override bool FileExists(string virtualPath)
+         {
+             return FileExists(virtualPath, true);
+         }
 
-        }
+         public  bool FileExists(string virtualPath, bool withExt )
+         {
+             return GetThemeFileInfo(virtualPath, withExt) != null;
 
+         }
+          
 
          private const string HTTP_ITEMS_KEY = "MOZUVIRPATPROV";
 
@@ -177,6 +148,8 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             ctx.Items[HTTP_ITEMS_KEY] = this;
             
         }
+
+        
     }
 
     class MozuVirtualDirectory : System.Web.Hosting.VirtualDirectory

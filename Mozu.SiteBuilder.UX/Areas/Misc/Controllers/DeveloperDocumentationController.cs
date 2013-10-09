@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Tags;
 using System.Text;
 using System.Web.Routing;
@@ -15,28 +15,27 @@ using NDjango.Interfaces;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
-    [MediaTypeProcessor()]
-    public class DeveloperDocumentationController : BaseController
+
+    public class DeveloperDocumentationController : BaseApiController
     {
-        private DjangoMozuViewEngine _viewEngine;
+    
         private readonly ITemplateManagerProvider _templateManagerProvider;
 
-        public DeveloperDocumentationController(DjangoMozuViewEngine viewEngine, ITemplateManagerProvider templateManagerProvider)
+        public DeveloperDocumentationController(ITemplateManagerProvider templateManagerProvider)
         {
-            _viewEngine = viewEngine;
-            _templateManagerProvider = templateManagerProvider;
+           _templateManagerProvider = templateManagerProvider;
         }
 
         //
         // GET: /Misc/DeveloperDocumentation/
-
+           [System.Web.Http.HttpGet]
         public ActionResult Tags()
         {
             List<DjangoItemInfo> tagInfos = BuildTagInfos();
 
             return View("documentation/tags", tagInfos);
         }
-
+           [System.Web.Http.HttpGet]
         public ActionResult Filters()
         {
           
@@ -68,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
        
         private List<DjangoItemInfo> BuildTagInfos()
         {
-            var ve = _viewEngine;
+           
 
 
             List<DjangoItemInfo> tagInfos = new List<DjangoItemInfo>();

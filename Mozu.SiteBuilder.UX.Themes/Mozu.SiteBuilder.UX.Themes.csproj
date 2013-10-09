@@ -121,37 +121,36 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.3.1.1\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac.Integration.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Autofac.Mvc4.3.1.0\lib\net40\Autofac.Integration.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="Autofac.Integration.WebApi, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.WebApi.3.1.0\lib\net40\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
-    <Reference Include="AutoMapper, Version=2.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+    <Reference Include="AutoMapper, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AutoMapper.2.2.1\lib\net40\AutoMapper.dll</HintPath>
+      <HintPath>..\packages\AutoMapper.3.0.0\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper.Net4">
+      <HintPath>..\packages\AutoMapper.3.0.0\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
     <Reference Include="FiftyOne.Foundation, Version=2.1.15.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\51Degrees.mobi.2.1.15.1\lib\NET40\FiftyOne.Foundation.dll</HintPath>
     </Reference>
-    <Reference Include="FluentValidation, Version=3.4.6.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="FluentValidation, Version=4.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\FluentValidation.3.4.6.0\lib\Net40\FluentValidation.dll</HintPath>
+      <HintPath>..\packages\FluentValidation.4.0.0.1\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.0.13267.1\lib\FSharp.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.0.13268.1001\lib\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.PowerPack, Version=4.0.0.1, Culture=neutral, PublicKeyToken=f536804aa0eb945b, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.0.13267.1\lib\FSharp.PowerPack.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.0.13268.1001\lib\FSharp.PowerPack.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.PowerPack.Compatibility, Version=4.0.0.1, Culture=neutral, PublicKeyToken=f536804aa0eb945b, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.0.13267.1\lib\FSharp.PowerPack.Compatibility.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.0.13268.1001\lib\FSharp.PowerPack.Compatibility.dll</HintPath>
     </Reference>
     <Reference Include="Glimpse.Core, Version=0.87.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -165,9 +164,9 @@
       <HintPath>..\packages\Jolt.1.0.0\lib\net40\Jolt.Testing.GeneratedTypes.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="log4net, Version=1.2.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.1\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Json, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -181,68 +180,68 @@
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MongoDB.Bson, Version=1.8.1.20, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
+    <Reference Include="MongoDB.Bson, Version=1.8.2.34, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Bson.dll</HintPath>
+      <HintPath>..\packages\mongocsharpdriver.1.8.2\lib\net35\MongoDB.Bson.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Driver, Version=1.8.1.20, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
+    <Reference Include="MongoDB.Driver, Version=1.8.2.34, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Driver.dll</HintPath>
+      <HintPath>..\packages\mongocsharpdriver.1.8.2\lib\net35\MongoDB.Driver.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.AdminUser.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.0.13267.1\lib\Mozu.AdminUser.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.0.13269.1001\lib\Mozu.AdminUser.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.BuildSupport.GetAssemblyFileVersionTask">
       <HintPath>..\packages\Mozu.BuildSupport.GetAssemblyFileVersionTask.1.0.0\lib\Mozu.BuildSupport.GetAssemblyFileVersionTask.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.0.13267.2\lib\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.0.13269.1001\lib\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Content.Contracts.1.0.13267.1\lib\Mozu.Content.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Content.Contracts.1.0.13269.1001\lib\Mozu.Content.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.1.0.13264.5\lib\Mozu.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.1.0.13270.1007\lib\Mozu.Core.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Api.1.0.13267.1\lib\Mozu.Core.Api.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Api.1.0.13270.1001\lib\Mozu.Core.Api.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Api.Client.1.0.13267.1\lib\Mozu.Core.Api.Client.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Api.Client.1.0.13268.1001\lib\Mozu.Core.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Api.Contracts.1.0.13264.1\lib\Mozu.Core.Api.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Api.Contracts.1.0.13269.1001\lib\Mozu.Core.Api.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Caching, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Caching.1.0.13267.1\lib\Mozu.Core.Caching.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Caching.1.0.13268.1001\lib\Mozu.Core.Caching.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Extensible.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Extensible.Contracts.1.0.13267.1\lib\Mozu.Core.Extensible.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Extensible.Contracts.1.0.13269.1001\lib\Mozu.Core.Extensible.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Messaging.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Messaging.Contracts.1.0.13264.1\lib\Mozu.Core.Messaging.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Messaging.Contracts.1.0.13269.1002\lib\Mozu.Core.Messaging.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Mongo, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Mongo.1.0.13267.1\lib\Mozu.Core.Mongo.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Mongo.1.0.13264.1\lib\Mozu.Core.Mongo.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.ThirdParty, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.ThirdParty.1.0.13267.1\lib\Mozu.Core.ThirdParty.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.ThirdParty.1.0.13264.2\lib\Mozu.Core.ThirdParty.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Customer.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Customer.Contracts.1.0.13267.1\lib\Mozu.Customer.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Customer.Contracts.1.0.13269.1001\lib\Mozu.Customer.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.CustomShippingRates.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -250,55 +249,55 @@
     </Reference>
     <Reference Include="Mozu.MongoAdmin.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.MongoAdmin.Contracts.1.0.13264.2\lib\Mozu.MongoAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.MongoAdmin.Contracts.1.0.13269.1001\lib\Mozu.MongoAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.PaymentService.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.PaymentService.Contracts.1.0.13264.2\lib\Mozu.PaymentService.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.PaymentService.Contracts.1.0.13269.1001\lib\Mozu.PaymentService.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.0.13267.1\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.0.13269.1001\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.0.13267.1\lib\Mozu.ProductRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.0.13269.1001\lib\Mozu.ProductRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Provisioning.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Provisioning.Contracts.1.0.13267.1\lib\Mozu.Provisioning.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Provisioning.Contracts.1.0.13269.1001\lib\Mozu.Provisioning.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Reference.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Reference.Contracts.1.0.13267.1\lib\Mozu.Reference.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Reference.Contracts.1.0.13269.1001\lib\Mozu.Reference.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ShippingAdmin.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.0.13264.2\lib\Mozu.ShippingAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.0.13269.1001\lib\Mozu.ShippingAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.0.13267.1\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.0.13264.1\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ShippingRuntime.Contracts.Constants, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.0.13267.1\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
+      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.0.13264.1\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.0.13267.1\lib\Mozu.SiteSettings.General.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.0.13269.1001\lib\Mozu.SiteSettings.General.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.Order.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.0.13267.1\lib\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.0.13269.1001\lib\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Tenant.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Tenant.Contracts.1.0.13267.1\lib\Mozu.Tenant.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Tenant.Contracts.1.0.13269.1001\lib\Mozu.Tenant.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.User.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.User.Contracts.1.0.13267.1\lib\Mozu.User.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.User.Contracts.1.0.13264.1\lib\Mozu.User.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.UspsShippingAdmin.Contracts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -306,18 +305,19 @@
     </Reference>
     <Reference Include="NDjango.Core40, Version=0.0.0.0, Culture=neutral, PublicKeyToken=ac1e89aa411d579d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.0.13267.1\lib\NDjango.Core40.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.0.13268.1001\lib\NDjango.Core40.dll</HintPath>
     </Reference>
-    <Reference Include="NDjangoFilters.NDjangoExtension40, Version=0.9.9.6, Culture=neutral, PublicKeyToken=ac1e89aa411d579d, processorArchitecture=MSIL">
+    <Reference Include="NDjangoFilters.NDjangoExtension40, Version=0.9.9.7, Culture=neutral, PublicKeyToken=ac1e89aa411d579d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.0.13267.1\lib\NDjangoFilters.NDjangoExtension40.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.0.13268.1001\lib\NDjangoFilters.NDjangoExtension40.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="protobuf-net">
-      <HintPath>..\packages\protobuf-net.2.0.0.640\lib\net40\protobuf-net.dll</HintPath>
+    <Reference Include="protobuf-net, Version=2.0.0.666, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\protobuf-net.2.0.0.666\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -326,8 +326,14 @@
     <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.15\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.30506.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.15\lib\net45\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
@@ -343,35 +349,16 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Http">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.30506.0\lib\net40\System.Web.Http.dll</HintPath>
       <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.30506.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.20715.0\lib\net40\System.Web.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -379,6 +366,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.log4net.cs" />
     <Content Include="App_Readme\glimpse.readme.txt" />
     <Content Include="buildcore.bat" />
     <None Include="Docs\Mozu_Themeing_Concepts.md" />
@@ -398,6 +386,57 @@
     <Content Include="SampleThemes\helloWorld\Resources\Scripts\Vendor\jquery.colorbox-min.js" />
     <Content Include="SampleThemes\helloWorld\theme.xml" />
     <Content Include="Scripts\backbone.d.ts" />
+    <Content Include="Themes\Core4\scripts\modules\mixin-paging.js" />
+    <Content Include="Themes\Core4\scripts\modules\views-paging.js" />
+    <Content Include="Themes\Core4\MetaData\build.js" />
+    <Content Include="Themes\Core4\MetaData\core_thumb.jpg" />
+    <Content Include="Themes\Core4\MetaData\example.build.js" />
+    <Content Include="Themes\Core4\MetaData\ThemeSettings.xml" />
+    <Content Include="Themes\Core4\MetaData\Widgets\catalog\featuredproducts\_0007_featured-products.png" />
+    <Content Include="Themes\Core4\MetaData\Widgets\cms\content\_0004_html.png" />
+    <Content Include="Themes\Core4\MetaData\Widgets\cms\horizontalrule\_0005_horizontal-divider.png" />
+    <Content Include="Themes\Core4\MetaData\Widgets\cms\paragraphWithHeader\_0003_text.png" />
+    <Content Include="Themes\Core4\MetaData\Widgets\social\addthis\_0008_share.png" />
+    <Content Include="Themes\Core4\MetaData\Widgets\social\facebookComments\_0008_share.png" />
+    <Content Include="Themes\Core4\resources\images\error-exclamation.png" />
+    <Content Include="Themes\Core4\scripts\modules\animatemodals.js" />
+    <Content Include="Themes\Core4\scripts\modules\api.js" />
+    <Content Include="Themes\Core4\scripts\modules\cart-monitor.js" />
+    <Content Include="Themes\Core4\scripts\modules\common.js" />
+    <Content Include="Themes\Core4\scripts\modules\backbone-mozu.js" />
+    <Content Include="Themes\Core4\scripts\modules\jquery-mozu.js" />
+    <Content Include="Themes\Core4\scripts\modules\loading-bars.js" />
+    <Content Include="Themes\Core4\scripts\modules\login-links.js" />
+    <Content Include="Themes\Core4\scripts\modules\models-address.js" />
+    <Content Include="Themes\Core4\scripts\modules\models-cart.js" />
+    <Content Include="Themes\Core4\scripts\modules\models-checkout.js" />
+    <Content Include="Themes\Core4\scripts\modules\models-customer.js" />
+    <Content Include="Themes\Core4\scripts\modules\models-faceting.js" />
+    <Content Include="Themes\Core4\scripts\modules\models-myaccount.js" />
+    <Content Include="Themes\Core4\scripts\modules\models-price.js" />
+    <Content Include="Themes\Core4\scripts\modules\models-product.js" />
+    <Content Include="Themes\Core4\scripts\modules\models-user.js" />
+    <Content Include="Themes\Core4\scripts\modules\product-images.js" />
+    <Content Include="Themes\Core4\scripts\nls\fr\messages-checkout.js" />
+    <Content Include="Themes\Core4\scripts\nls\fr\messages.js" />
+    <Content Include="Themes\Core4\scripts\nls\messages-checkout.js" />
+    <Content Include="Themes\Core4\scripts\nls\messages.js" />
+    <Content Include="Themes\Core4\scripts\pages\cart.js" />
+    <Content Include="Themes\Core4\scripts\pages\category.js" />
+    <Content Include="Themes\Core4\scripts\pages\checkout.js" />
+    <Content Include="Themes\Core4\scripts\pages\error.js" />
+    <Content Include="Themes\Core4\scripts\pages\myaccount.js" />
+    <Content Include="Themes\Core4\scripts\pages\product.js" />
+    <Content Include="Themes\Core4\scripts\vendor\backbone.js" />
+    <Content Include="Themes\Core4\scripts\vendor\bootstrap-affix.js" />
+    <Content Include="Themes\Core4\scripts\vendor\jquery-colorbox.js" />
+    <Content Include="Themes\Core4\scripts\vendor\jquery-cookie.js" />
+    <Content Include="Themes\Core4\scripts\vendor\jquery.history.js" />
+    <Content Include="Themes\Core4\scripts\vendor\jquery.tools.dateinput.js" />
+    <Content Include="Themes\Core4\scripts\vendor\modernizr-respond.min.js" />
+    <Content Include="Themes\Core4\scripts\vendor\pci-temp.js" />
+    <Content Include="Themes\Core4\scripts\vendor\underscore.js" />
+    <Content Include="Themes\Core4\theme.xml" />
     <Content Include="Themes\Core3\MetaData\Widgets\catalog\featuredproducts\_0007_featured-products.png" />
     <Content Include="Themes\Core3\MetaData\Widgets\cms\content\_0004_html.png" />
     <Content Include="Themes\Core3\MetaData\Widgets\cms\horizontalrule\_0005_horizontal-divider.png" />
@@ -478,7 +517,21 @@
     <Content Include="Themes\Core3\Resources\Scripts\Modules\login-links.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\tagcloud.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Pages\error.js" />
-    <None Include="Themes\Core3\Templates\Documentation\Tags.vol" />
+    <None Include="Themes\Core4\templates\modules\product\product-listing-faceted.hypr" />
+    <Content Include="Themes\Core4\templates\modules\product\ProductOption_Date.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\product\ProductOption_List.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\product\ProductOption_TextArea.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\product\ProductOption_TextBox.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\product\ProductOption_YesNo.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\product\ProductOptions.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\product\ProductPagePriceStack.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\product\ProductStack.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\checkout\CheckoutBillingAddressForm.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Themes\Core4\templates\modules\common\PagingControls.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\common\PageNumbers.hypr.live" />
+    <None Include="Themes\Core4\templates\pages\Documentation\Tags.vol" />
     <Content Include="Themes\Core3\theme.xml" />
     <Content Include="Themes\Core3\MetaData\ThemeSettings.xml" />
     <Content Include="Themes\Core3\Resources\Images\Bootstrap\glyphicons-halflings-white.png" />
@@ -670,6 +723,152 @@
     <Content Include="Themes\MobileCore\Modules\CartTableFooter.vol">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Themes\Core4\MetaData\PageTypes\catalog\category\definition.json" />
+    <Content Include="Themes\Core4\MetaData\PageTypes\catalog\product\definition.json" />
+    <Content Include="Themes\Core4\MetaData\PageTypes\catalog\search\definition.json" />
+    <Content Include="Themes\Core4\MetaData\PageTypes\cms\404\definition.json" />
+    <Content Include="Themes\Core4\MetaData\PageTypes\cms\about_us1\definition.json" />
+    <Content Include="Themes\Core4\MetaData\PageTypes\cms\blank_page1\definition.json" />
+    <Content Include="Themes\Core4\MetaData\PageTypes\cms\blog\definition.json" />
+    <Content Include="Themes\Core4\MetaData\PageTypes\cms\home1\definition.json" />
+    <Content Include="Themes\Core4\MetaData\PageTypes\cms\landing1\definition.json" />
+    <Content Include="Themes\Core4\MetaData\PageTypes\cms\post\definition.json" />
+    <Content Include="Themes\Core4\MetaData\PageTypes\commerce\cart\definition.json" />
+    <Content Include="Themes\Core4\MetaData\PageTypes\email\definition.json" />
+    <Content Include="Themes\Core4\MetaData\Widgets\blog\blogarchive\definition.json" />
+    <Content Include="Themes\Core4\MetaData\Widgets\blog\blogRss\definition.json" />
+    <Content Include="Themes\Core4\MetaData\Widgets\blog\recentposts\definition.json" />
+    <Content Include="Themes\Core4\MetaData\Widgets\blog\tagcollection\definition.json" />
+    <Content Include="Themes\Core4\MetaData\Widgets\catalog\featuredproducts\definition.json" />
+    <Content Include="Themes\Core4\MetaData\Widgets\cms\columndivider\definition.json" />
+    <Content Include="Themes\Core4\MetaData\Widgets\cms\content\definition.json" />
+    <Content Include="Themes\Core4\MetaData\Widgets\cms\horizontalrule\definition.json" />
+    <Content Include="Themes\Core4\MetaData\Widgets\cms\image\definition.json" />
+    <Content Include="Themes\Core4\MetaData\Widgets\cms\imagesGallery\definition.json" />
+    <Content Include="Themes\Core4\MetaData\Widgets\cms\paragraphWithHeader\definition.json" />
+    <Content Include="Themes\Core4\MetaData\Widgets\misc\pickles\definition.json" />
+    <Content Include="Themes\Core4\MetaData\Widgets\social\addthis\definition.json" />
+    <Content Include="Themes\Core4\MetaData\Widgets\social\facebookComments\definition.json" />
+    <Content Include="Themes\Core4\stylesheets\modules\admin-injections.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\breadcrumbs.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\colorbox.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\common-elements.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\common-mixins.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\common-variables.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\content-section.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\datepicker.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\dot-loader.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\featured-products-widget.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\icons.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\image-gallery.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\image-module.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\layout.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\messages.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\mini-modal.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\navs.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\normalize.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\paging.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\price-stack.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\product-listing.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\product-stack.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\search.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\site-footer.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\site-header.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\typography.less" />
+    <Content Include="Themes\Core4\stylesheets\pages\blog.less" />
+    <Content Include="Themes\Core4\stylesheets\pages\cart.less" />
+    <Content Include="Themes\Core4\stylesheets\pages\category.less" />
+    <Content Include="Themes\Core4\stylesheets\pages\checkout.less" />
+    <Content Include="Themes\Core4\stylesheets\pages\confirmation.less" />
+    <Content Include="Themes\Core4\stylesheets\pages\error.less" />
+    <Content Include="Themes\Core4\stylesheets\pages\myaccount.less" />
+    <Content Include="Themes\Core4\stylesheets\pages\product-details.less" />
+    <Content Include="Themes\Core4\stylesheets\pages\search-results.less" />
+    <Content Include="Themes\Core4\stylesheets\storefront.less" />
+    <Content Include="Themes\Core4\stylesheets\textonly.less" />
+    <Content Include="Themes\Core4\templates\email\AdminInvite.hypr" />
+    <Content Include="Themes\Core4\templates\email\AdminRoleAdded.hypr" />
+    <Content Include="Themes\Core4\templates\email\NewUser.hypr" />
+    <Content Include="Themes\Core4\templates\email\OrderStatus.hypr" />
+    <Content Include="Themes\Core4\templates\email\ResetPassword.hypr" />
+    <Content Include="Themes\Core4\templates\email\TBD.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\social\addthis.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\social\facebookcomments.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\misc\pickels.hypr" />
+    <Content Include="Themes\Core4\templates\pages\404.hypr" />
+    <Content Include="Themes\Core4\templates\pages\BlankPage.hypr" />
+    <Content Include="Themes\Core4\templates\pages\Blog.hypr" />
+    <Content Include="Themes\Core4\templates\pages\Cart.hypr" />
+    <Content Include="Themes\Core4\templates\pages\category.hypr" />
+    <Content Include="Themes\Core4\templates\pages\Checkout.hypr" />
+    <Content Include="Themes\Core4\templates\pages\Confirmation.hypr" />
+    <Content Include="Themes\Core4\templates\pages\Error.hypr" />
+    <Content Include="Themes\Core4\templates\pages\home.hypr" />
+    <Content Include="Themes\Core4\templates\pages\Index.hypr" />
+    <Content Include="Themes\Core4\templates\pages\MyAccount.hypr" />
+    <Content Include="Themes\Core4\templates\pages\NoResults.hypr" />
+    <Content Include="Themes\Core4\templates\pages\Post.hypr" />
+    <Content Include="Themes\Core4\templates\pages\Product.hypr" />
+    <Content Include="Themes\Core4\templates\pages\SearchResults.hypr" />
+    <Content Include="Themes\Core4\templates\pages\SignIn.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\cms\columndivider.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\cms\content.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\cms\content2col.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\cms\horizontalrule.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\cms\image.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\cms\imagesGallery.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\cms\paragraphwithheader.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\catalog\featuredproducts.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\blog\blogarchive.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\blog\blogRss.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\blog\recentposts.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\blog\tagcollection.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\blog\tags.hypr" />
+    <Content Include="Themes\Core4\templates\layouts\default.hypr" />
+    <None Include="Themes\Core4\templates\modules\common\AddressForm.hypr.live" />
+    <None Include="Themes\Core4\templates\modules\common\AddressSummary.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\Archive.hypr" />
+    <Content Include="Themes\Core4\templates\modules\common\BreadCrumbs.hypr" />
+    <None Include="Themes\Core4\templates\modules\checkout\CheckingAccountForm.hypr.live">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Themes\Core4\templates\modules\checkout\CheckoutCommentsField.hypr.live" />
+    <None Include="Themes\Core4\templates\modules\checkout\CheckoutCouponCodeField.hypr.live" />
+    <None Include="Themes\Core4\templates\modules\checkout\CheckoutOrderSummaryPanel.hypr.live" />
+    <None Include="Themes\Core4\templates\modules\checkout\CheckoutPaymentInfoPanel.hypr.live" />
+    <None Include="Themes\Core4\templates\modules\checkout\CheckoutReviewPanel.hypr.live" />
+    <None Include="Themes\Core4\templates\modules\checkout\CheckoutShippingAddressPanel.hypr.live" />
+    <None Include="Themes\Core4\templates\modules\checkout\CheckoutShippingMethodPanel.hypr.live" />
+    <None Include="Themes\Core4\templates\modules\checkout\CreditCardForm.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\DebugScripts.hypr">
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Themes\Core4\templates\modules\product\FacetingPanel.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\FeaturedProducts.hypr" />
+    <Content Include="Themes\Core4\templates\modules\GoogleAnalyticsTrackingCode.hypr" />
+    <Content Include="Themes\Core4\templates\modules\HeadTag.hypr" />
+    <Content Include="Themes\Core4\templates\modules\LeftNav.hypr" />
+    <None Include="Themes\Core4\templates\modules\common\LoadingBar.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\common\LoginModal.hypr" />
+    <None Include="Themes\Core4\templates\modules\common\MessageBar.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\PageFooter.hypr" />
+    <Content Include="Themes\Core4\templates\modules\PageHeader.hypr" />
+    <Content Include="Themes\Core4\templates\modules\Paging.hypr" />
+    <Content Include="Themes\Core4\templates\modules\PagingOptions.hypr" />
+    <Content Include="Themes\Core4\templates\modules\cart\CartTableBody.hypr.live" />
+    <None Include="Themes\Core4\templates\modules\common\PriceStack.hypr.live" />
+    <None Include="Themes\Core4\templates\modules\product\ProductDetail.hypr.live" />
+    <None Include="Themes\Core4\templates\modules\product\ProductImages.hypr.live" />
+    <None Include="Themes\Core4\templates\modules\product\ProductListingTiles.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\RecentPosts.hypr" />
+    <Content Include="Themes\Core4\templates\modules\RenderScripts.hypr" />
+    <Content Include="Themes\Core4\templates\modules\SearchBox.hypr" />
+    <Content Include="Themes\Core4\templates\modules\TagCloud.hypr" />
+    <Content Include="Themes\Core4\templates\modules\TagCollection.hypr" />
+    <Content Include="Themes\Core4\templates\modules\Tags.hypr" />
+    <Content Include="Themes\Core4\templates\modules\TopNav.hypr" />
+    <Content Include="Themes\Core4\templates\modules\TrailingScripts.hypr" />
+    <Content Include="Themes\Core4\templates\modules\UtilityNav.hypr" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -709,6 +908,9 @@
     <Folder Include="SampleThemes\helloWorld\Resources\Scripts\Pages\" />
     <Folder Include="Themes\Core3\Resources\Fonts\" />
     <Folder Include="Themes\Core3\Resources\Images\c2Images\" />
+    <Folder Include="Themes\Core3\Templates\Documentation\" />
+    <Folder Include="Themes\Core3\Templates\Pages\" />
+    <Folder Include="Themes\Core4\build\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Tools\ThemeSettings.xsd">
@@ -818,8 +1020,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core3\Layouts\_Default.vol" />
-    <Content Include="Themes\Core3\Modules\_HeadTag.vol" />
-    <Content Include="Themes\Core3\Modules\_DebugScripts.vol" />
+    <Content Include="Themes\Core3\Modules\_HeadTag.vol">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Themes\Core3\Modules\_DebugScripts.vol">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Themes\Core3\Resources\Stylesheets\Modules\dot-loader.less" />
     <Content Include="Themes\Core3\Resources\Stylesheets\Pages\checkout.less">
       <Compile>True</Compile>
@@ -959,6 +1165,11 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 
        Other similar extension points exist, see Microsoft.Common.targets.

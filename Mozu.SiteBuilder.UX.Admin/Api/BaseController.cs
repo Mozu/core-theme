@@ -16,7 +16,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [Resource(PrimaryResourceType =typeof( Product))]
 	[BehaviorAuthorization("No security here")]
-    [SiteBuilderWebApiAuthorize]
+    [SiteBuilderAdminAuthorizeAttribute]
     public abstract class BaseController : WebApiController
     {
         [Obsolete]

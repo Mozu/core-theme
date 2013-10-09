@@ -1,0 +1,19 @@
+{
+  "UserCreatable": false,
+  "DefaultValues": {
+    "contentCollection": "email",
+    "documentType": "email",
+    "items": [
+      {
+        "key": "page_type",
+        "value": "email"
+      }
+    ]
+  },
+  "DisplayName": "Email",
+  "DocumentType": "email",
+  "EntityType": "email",
+  "Icon": "",
+  "Id": "email",
+  "Template": "email"
+}

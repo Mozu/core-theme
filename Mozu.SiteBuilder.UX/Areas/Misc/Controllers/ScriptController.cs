@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
-	public class ScriptController : BaseController
+    public class ScriptController : BaseApiController
 	{
 		public ActionResult Add(string scriptName)
 		{
-			var scripts = (List<string>) SiteBuilderContext.Current["scripts"];
+			var scripts = (List<string>)  this.SiteContext ["scripts"];
 			if (scripts == null)
 			{
 				SiteContext["scripts"] = scripts = new List<string>();
@@ -19,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 			return null;
 		}
 
-
+           [System.Web.Http.HttpGet]
 		public ActionResult RenderScripts()
 		{
 			var scriptsArray = (List<string>) SiteContext["scripts"];
@@ -34,6 +36,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         // this now does exactly the same thing as RenderScripts, where before it tried a different URL.
         // we now know to use requirejs's baseUrl to do this
         // so now these should probably be turned into a single method that selects its view based on whether "debug_all_scripts" or "load_all_scripts" was used
+
+           [System.Web.Http.HttpGet]
         public ActionResult DebugScripts()
         {
             var scriptsArray = (List<string>)SiteContext["scripts"];

@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
+//
+
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Navigation;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    public class HomeController : BaseController
+    public class HomeController : BaseApiController
     {
         // private INavigationRuntimeFactory _navigationRuntimeFactory;
         private readonly IWebToolsRepository _webToolsRepository;
@@ -24,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         //
         // GET: /StoreFront/Home/
-        
+        [System.Web.Http.HttpGet  ]
         public async Task<ActionResult> Index()
         {
             var nav = SiteContext.Navigation;
@@ -47,14 +50,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                                               Path="index"
                                                                           }
                                                     };
-            await this.AsyncInitData();
+         
             
             return this.View("index");
 
 
         }
 
-        [HttpGet]
+        [System.Web.Http.HttpGet]
         public async Task<ActionResult> NotFound()
         {
 
@@ -67,7 +70,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     Path = "404"
                 }
             };
-            await this.AsyncInitData();
+        
             return this.View("404");
         }
 

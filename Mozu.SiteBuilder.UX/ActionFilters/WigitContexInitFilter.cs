@@ -1,24 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-
-namespace Mozu.SiteBuilder.UX.ActionFilters
-{
-    public class WigitContexInitFilter : FilterAttribute , IActionFilter
-    {
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Web;
 
 
+//namespace Mozu.SiteBuilder.UX.ActionFilters
+//{
+//    public class WigitContexInitFilter : FilterAttribute , IActionFilter
+//    {
 
-        public void OnActionExecuted(ActionExecutedContext filterContext)
-        {
+
+
+//        public void OnActionExecuted(ActionExecutedContext filterContext)
+//        {
             
-        }
+//        }
 
-        public void OnActionExecuting(ActionExecutingContext filterContext)
-        {
+//        public void OnActionExecuting(ActionExecutingContext filterContext)
+//        {
             
-        }
-    }
-}
+//        }
+//    }
+//}

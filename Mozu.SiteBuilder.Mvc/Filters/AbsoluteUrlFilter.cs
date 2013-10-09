@@ -15,24 +15,22 @@ namespace Mozu.SiteBuilder.Mvc.Filters
     {
 
 
-
-        public object PerformWithParamAndContext(object value, object parameter, NDjango.Interfaces.IContext context)
+        object NDjango.Interfaces.IFilterWithContext.PerformWithParamAndContext(object value, IEnumerable<object> parameter, NDjango.Interfaces.IContext context)
         {
-            //todo get sitecontext out of context look up site url.
             return string.Format("http://{0}{1}", System.Web.HttpContext.Current.Request.Url.Host, value);
         }
 
-        public object DefaultValue
+        object NDjango.Interfaces.IFilter.DefaultValue
         {
-            get { return "Xxx"; }
+            get { throw new NotImplementedException(); }
         }
 
-        public object PerformWithParam(object value, object parameter)
+        object NDjango.Interfaces.IFilter.PerformWithParam(object value, object parameter)
         {
             throw new NotImplementedException();
         }
 
-        public object Perform(object value)
+        object NDjango.Interfaces.ISimpleFilter.Perform(object value)
         {
             throw new NotImplementedException();
         }
