@@ -366,7 +366,6 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.log4net.cs" />
     <Content Include="App_Readme\glimpse.readme.txt" />
     <Content Include="buildcore.bat" />
     <None Include="Docs\Mozu_Themeing_Concepts.md" />

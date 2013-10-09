@@ -450,7 +450,6 @@
     <Compile Include="Orders\ShippingPrice.cs" />
     <Compile Include="Orders\ShopperNotes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\AssemblyInfo.log4net.cs" />
     <Compile Include="Response.cs" />
     <Compile Include="Settings\IPBlock.cs" />
     <Compile Include="Settings\Settings.cs" />
