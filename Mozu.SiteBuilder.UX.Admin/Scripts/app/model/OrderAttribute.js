@@ -1,7 +1,7 @@
 /**
  * @class Taco.model.CustomerAttribute
  */
-Ext.define('Taco.model.CustomerAttribute', {
+Ext.define('Taco.model.OrderAttribute', {
     extend: 'Taco.core.data.Model',
     behaviors: {
         read: 24,
