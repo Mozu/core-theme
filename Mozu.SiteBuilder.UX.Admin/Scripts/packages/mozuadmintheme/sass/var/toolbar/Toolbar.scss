@@ -1,14 +1,14 @@
-$toolbar-background-color: $base-color;
+$toolbar-background-color: $color-neutral-95;
 $toolbar-background-gradient: null;
 $toolbar-border-width: 0px;
-$toolbar-border-color: border-for($color-neutral-95);
+$toolbar-border-color: $color-neutral-75;
 $toolbar-horizontal-spacing: 0px;
 $toolbar-vertical-spacing: 0px;
 $toolbar-footer-horizontal-spacing: 0px;
 $toolbar-footer-vertical-spacing: 0px;
 $toolbar-spacer-width: 0;
 
-$toolbar-separator-color: border-for($color-neutral-95);
+$toolbar-separator-color: $color-neutral-75;
 $toolbar-separator-highlight-color: $color-neutral-white;
 
 $toolbar-font-size: $font-size;

@@ -2,7 +2,7 @@
  * @class Taco.view.shared.modal.Address
  */
 Ext.define('Taco.shared.view.modal.Address', {
-    extend: 'Taco.core.ux.window.WindowWithActions',
+    extend: 'Taco.core.ux.window.Modal',
     requires: [
         'Taco.model.Contact',
         'Taco.shared.view.form.Address',

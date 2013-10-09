@@ -1,18 +1,36 @@
-﻿
+﻿/**
+ * @class Taco.core.ux.window.Window
+ * @author Jimmy Sanford
+ *
+ * The base class for a dialog window.
+ * 
+ * Dialogs are used to display useful information and give feedback to the user. This dialog is not modal; a
+ * reponse from the user is not required.
+ *
+ * This class is extends the Ext class for windows, {@link Ext.window.Window}, applying typical configuration
+ * settings as defaults.
+ */
 
 Ext.define('Taco.core.ux.window.Window', {
     extend: 'Ext.window.Window',
-    alias: 'widget.taco.window',
+    alias: 'widget.taco-window',
 
     /**
-    * Enabale overflow listeners for the window body. this will add a css class to the body 
-    */
+     * @cfg {Boolean} ghostDisabled
+     * If true, sets ghost to false during instantiation of the window. Since the default value of ghost is a
+     * function, not a Boolean, ghost should not be modified in the class definition.
+     */
+    ghostDisabled: true,
+
+    /**
+     * @cfg {Boolean} manageOverflow
+     * If true, a scroll listener will be attached to the window. Defaults to true.
+     */
     manageOverflow: true,
-    
 
     /**
      * @cfg {"small"/"medium"/"large"} scale
-     * The size of the Window. Three values are allowed:
+     * The size of the window. Three values are allowed:
      *
      * - 'small' - Results in the window element being 400px in width and 270px in height.
      * - 'medium' - Results in the window element being 600px in width and 400px in height.
@@ -20,15 +38,9 @@ Ext.define('Taco.core.ux.window.Window', {
      */
     scale: 'medium',
 
-    autoScroll: true,
     autoShow: false,
     constrain: true,
     draggable: false,
-    
-    // we can't make this false by default since its a function and not a boolean.
-    // this will prevent its use when needed;
-    ghostDisabled:true,
-    
     modal: false,
     resizable: false,
     shadow: false,
@@ -36,7 +48,9 @@ Ext.define('Taco.core.ux.window.Window', {
     bodyPadding: '11 19 19',
     closeAction: 'hide',
     componentCls: Taco.baseCSSPrefix + 'window',
-    ui: 'modal',
+    overflowX: 'hidden',
+    overflowY: 'auto',
+    ui: 'dialog',
 
     header: {
         layout: {
@@ -63,17 +77,16 @@ Ext.define('Taco.core.ux.window.Window', {
     },
 
     initComponent: function () {
-        
-        if (this.ghostDisabled) {
-            this.ghost = false;
-        }
-
         var scales = this.statics().scales,
             scale = this.scale || null;
 
         if (Ext.Array.contains(['small', 'medium', 'large'], scale)) {
             this.width = this.width || scales[scale]['width'];
             this.height = this.height || scales[scale]['height'];
+        }
+
+        if (this.ghostDisabled) {
+            this.ghost = false;
         }
 
         this.callParent(arguments);

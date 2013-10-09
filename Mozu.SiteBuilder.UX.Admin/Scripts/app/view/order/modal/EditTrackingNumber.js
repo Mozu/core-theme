@@ -2,114 +2,75 @@
  * @class Taco.view.order.modal.EditTrackingNumber
  */
 Ext.define('Taco.view.order.modal.EditTrackingNumber', {
-    extend: 'Taco.core.ux.modal.Modal',
-    requires: [
-    
-    ],
-    cls: Taco.baseCSSPrefix + 'order-modal',
+    extend: 'Taco.core.ux.window.Modal',
+
     autoShow: true,
-    destroyOnHide:true,
-    width: 700,
+    scale: 'small',
+    title: 'Enter Tracking Number',
 
     initComponent: function (eOpts) {
-        var me = this;
-        
-        var trackingNumber = this.packageData.trackingNumber || "";
+        var me = this,
+            trackingNumber = this.packageData.trackingNumber || '';
 
-        this.formpanel = Ext.create('Ext.form.Panel', {
-            xtype: 'formpanel',
-            layout: { type: 'auto' },
-            defaults: {
-                xtype: 'textfield',
-                labelSeparator: '',
-                labelAlign: 'top',
-                width: 644
+        this.form = Ext.create('Taco.core.ux.form.Form', {
+            requireDirty: true,
+            layout: {
+                type: 'auto'
             },
             items: [{
-                name: 'trackingNumber',
                 xtype: 'textfield',
+                name: 'trackingNumber',
+                itemId : 'trackingNumber',
                 fieldLabel: 'Tracking Number',
-                itemId : "trackingNumber",
                 required: false,
                 value: trackingNumber,
-                width: 120
+                width: '100%'
             }]
         });
 
-        this.content = {
-            xtype: 'container',
-            items: [
-                {
-                    xtype: 'component',
-                    autoEl: {
-                        tag: 'h2',
-                        cls: 'order-modal-title',
-                        html: 'Enter Tracking Number'
-                    }
-                },
-                this.formpanel
-            ]
-        };
-
-        this.dirtyButton = Ext.create('Taco.core.ux.action.DirtyButton', {
-            xtype: 'dirtybutton',
-            text: 'Save',
-            onClick: function() {
-                me.save();
-            }
-        });
-
-        this.actions = {
-            xtype: 'container',
-            items: [this.dirtyButton, {
-                xtype: 'action',
-                text: 'Cancel',
-                onClick: function () {
-                    me.hide();
-                }
-            }]
-        };
+        this.items = [this.form];
         
         this.callParent(arguments);
 
-        this.formpanel.on({
-            afterlayout: function (view) {
-                // preselect and focus on the first field in the form panel
-                
-                view.down('#trackingNumber').focus(true, 10);
+        this.on({
+            save: {
+                scope: this,
+                fn: 'save'
             },
-            dirtychange: {
-                fn: function (form, dirty) {
-                    this.dirtyButton.setDirty(true);
+            show: {
+                scope: this,
+                fn: function () {
+                    var field = this.down('#trackingNumber');
+
+                    if (field && field.rendered) {
+                        field.focus(true, 10);
+                    }
                 }
-            },
-            scope: this
+            }
         });
     },
-    
+
     save: function () {
         var me = this,
-            fm = this.formpanel.getForm();
-
-        var fm = this.formpanel.getForm();
-        var trackingNumber = fm.findField("trackingNumber").getValue();
-
+            basic = this.form.getForm(),
+            trackingNumber = basic.findField('trackingNumber').getValue();
 
         this.packageData.trackingNumber = trackingNumber;
-        
 
         Taco.app.viewPort.setLoading(true);
+
         this.record.changeTrackingNumber({
             jsonData: [this.packageData],
             success: function (response) {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
+
                 if (!json || !json.success) {
                     // service didnt' return data properly
                     Taco.app.viewPort.setLoading(false);
                     
-                    var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
-                        text: "Error saving tracking number."
+                    var errorDialog = Ext.create('Taco.core.ux.window.Alert', {
+                        html: 'Error saving tracking number.'
                     });
                     errorDialog.show();
                     
@@ -122,11 +83,11 @@ Ext.define('Taco.view.order.modal.EditTrackingNumber', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error saving tracking number.";
+                    msg = (json && json.Message) ? json.Message : 'Error saving tracking number.';
                 
                 Taco.app.viewPort.setLoading(false);
-                var errorDialog = Ext.create('Taco.core.ux.modal.Alert', {
-                    text: msg
+                var errorDialog = Ext.create('Taco.core.ux.window.Alert', {
+                    html: msg
                 });
                 errorDialog.show();
             },
