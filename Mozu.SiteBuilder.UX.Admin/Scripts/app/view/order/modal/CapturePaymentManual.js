@@ -1,133 +1,101 @@
 /**
  * @class Taco.view.order.modal.CapturePaymentManual
  */
+
 Ext.define('Taco.view.order.modal.CapturePaymentManual', {
-    extend: 'Taco.core.ux.modal.Modal',
-    requires: ['Taco.core.ux.form.DateTime', 'Taco.core.ux.form.CurrencyField'],
-    cls: Taco.baseCSSPrefix + 'order-modal',
+    extend: 'Taco.core.ux.window.Modal',
+    requires: [
+        'Taco.core.ux.form.DateTime',
+        'Taco.core.ux.form.CurrencyField'
+    ],
+
     autoShow: true,
-    width: 400,
-    data: {},
-    field: '',
+    scale: 'medium',
+    title: 'Manual Transaction: Capture Payment',
 
-    initComponent: function (eOpts) {
-        var me = this;
-
-        this.formpanel = Ext.create('Ext.form.Panel', {
-            xtype: 'formpanel',
-            bodyCls: Taco.baseCSSPrefix + 'flexform',
-            layout: { type: 'vbox' },
+    initComponent: function () {
+        this.form = Ext.create('Taco.core.ux.form.Form', {
+            layout: {
+                type: 'vbox'
+            },
             items: [{
                 xtype: 'container',
-                layout: {type: 'hbox'},
-                items: [{
-                    xtype: 'container',
-                    style: 'padding-right: 10px;',
-                    defaults: {
-                        xtype: 'textfield',
-                        labelSeparator: '',
-                        labelAlign: 'top',
-                        width: 150
-                    },
-                    items: [
-                    {
-                        xtype: 'textfield',
-                        name: 'gatewayInteractionId',
-                        fieldLabel: 'Gateway Interaction Id'
-                    }]
+                layout: {
+                    type: 'hbox'
                 },
-            {
-                xtype: 'container',
                 defaults: {
-                    xtype: 'textfield',
-                    labelSeparator: '',
-                    labelAlign: 'top',
-                    width: 150
+                    margin: '0 25 0 0',
+                    width: 230
                 },
                 items: [{
+                    xtype: 'textfield',
+                    name: 'gatewayInteractionId',
+                    fieldLabel: 'Gateway Interaction Id'
+                }, {
                     xtype: 'currencyfield',
                     name: 'amount',
                     fieldLabel: 'Amount Captured',
-                    value: me.record.data.amountAuthorized
+                    value: this.record.data.amountAuthorized,
+                    margin: '0 0 0 0'
+                }]
+            }, {
+                xtype: 'container',
+                layout: {
+                    type: 'hbox'
+                },
+                defaults: {
+                    width: 230
+                },
+                items: [{
+                    xtype: 'datetime',
+                    name: 'interactionDate',
+                    fieldLabel: 'Transaction Date'
                 }]
             }]
-
-            },
-            {
-                xtype: 'datetime',
-                name: 'interactionDate',
-                fieldLabel: 'Transaction Date'
-            }],
-            listeners: {
-                afterrender: function (panel) {
-                    Ext.destroy(panel.getLayout().clearEl);
-                }
-            }
         });
 
-        this.content = {
-            xtype: 'container',
-            items: [{
-                xtype: 'component',
-                autoEl: {
-                    tag: 'h2',
-                    cls: 'order-modal-title',
-                    html: 'Manual Transaction: Capture Payment'
-                }
-            }, 
-            this.formpanel
-            ]
-        };
-
-        this.primaryButton = Ext.widget('primarybutton', {
-            text: 'Save',
-            click: function () {
-                var me = this,
-                
-                data = {
-                    orderId: me.order.getId(),
-                    paymentId: me.record.getId(),
-                    amount: me.formpanel.getValues()['amount'],
-                    gatewayInteractionId: me.formpanel.getValues()['gatewayInteractionId'],
-                    interactionDate: me.formpanel.getValues()['interactionDate']
-                },
-
-                // pacakage up the data for the model to persist
-                cfg = {
-                    jsonData: data,
-                    success: function (response) {
-                        var json = Ext.decode(response.responseText, true);
-                        if (!json || !json.success) {
-                            // service didnt' return data properly
-                            return;
-                        }
-                        me.order.reload();
-                    },
-                    failure: function (response) {
-
-                    },
-                    scope: this
-                };
-
-                // call the model method to persist the change
-                this.order.capturePaymentManual(cfg);
-                
-                me.hide();
-            },
-            scope: this
-        });
-
-        this.actions = {
-            xtype: 'container',
-            items: [this.primaryButton, {
-                xtype: 'action',
-                text: 'Cancel',
-                click: function () {
-                    me.hide();
-                }
-            }]
-        };
+        this.items = [this.form];
 
         this.callParent(arguments);
+
+        this.on({
+            save: {
+                scope: this,
+                fn: 'save'
+            }
+        });
+    },
+
+    save: function () {
+        var me = this,
+            formValues = this.form.getValues(),
+            data,
+            cfg;
+        
+        data = {
+            orderId: this.order.getId(),
+            paymentId: this.record.getId(),
+            amount: formValues.amount,
+            gatewayInteractionId: formValues.gatewayInteractionId,
+            interactionDate: formValues.interactionDate
+        };
+
+        // package up the data for the model to persist
+        cfg = {
+            jsonData: data,
+            success: function (response) {
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didn't return data properly
+                    return;
+                }
+                me.order.reload();
+            },
+            failure: Ext.emptyFn,
+            scope: this
+        };
+
+        // call the model method to persist the change
+        this.order.capturePaymentManual(cfg);
     }
 });
