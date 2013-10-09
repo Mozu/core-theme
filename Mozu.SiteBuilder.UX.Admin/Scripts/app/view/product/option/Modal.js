@@ -1,16 +1,13 @@
 ﻿
 
 Ext.define('Taco.view.product.option.Modal', {
-    extend: 'Taco.core.ux.window.WindowWithActions',
+    extend: 'Taco.core.ux.window.Modal',
 
     autoShow: true,
-    autoSize: true,
-    primaryText: 'Create Child Products',
-    title: 'Select Values to Create Child Products',
 
-    layout: {
-        type: 'fit'
-    },
+    primaryText: 'Create',
+    scale: 'medium',
+    title: 'Create Child Products',
 
     initComponent: function () {
         var fields = [];
@@ -20,7 +17,6 @@ Ext.define('Taco.view.product.option.Modal', {
                 optionValues;
 
             if (this.isEdit() && option.get('attributeFQN') !== this.attributeFQN) return;
-
 
             store = Ext.create('Ext.data.Store', {
                 fields: ['id', 'value'],
@@ -42,17 +38,27 @@ Ext.define('Taco.view.product.option.Modal', {
         }, this);
 
         this.form = Ext.create('Taco.core.ux.form.Form', {
-            overflowX: 'auto',
-            overflowY: 'auto',
+            requireDirty: true,
             layout: {
                 type: 'hbox',
-                align: 'stretch',
                 defaultMargins: '0 10 0 0'
             },
             items: fields
+            // isValid: function (a,b,c,d,e,f) {
+            //     var ret = false;
+
+            //     this.getForm().getFields().each(function (field) {
+            //         if (!field.getValue().length) return;
+
+            //         ret = true;
+            //         return true;
+            //     });
+
+            //     return ret;
+            // }
         });
 
-        this.relayEvents(this.form, ['savablestatechange']);
+        // this.relayEvents(this.form, ['savablestatechange']);
 
         this.items = [this.form];
 
@@ -65,13 +71,11 @@ Ext.define('Taco.view.product.option.Modal', {
     },
 
     onBeforeSave: function () {
-        
         var options = this.product.getOptions();
 
-        this.form.getForm().getFields().each (function (field) {
-            
+        this.form.getForm().getFields().each(function (field) {
             var record = options.getById(field.option.getId());
-            
+
             if (record && !field.getValue().length && !this.isEdit()) options.remove(record);
             else if (!field.getValue().length) return;
 
@@ -80,8 +84,8 @@ Ext.define('Taco.view.product.option.Modal', {
                     attributeFQN: field.option.get('attributeFQN')
                 })[0];
             }
-            record.set('values', field.getValue());
 
+            record.set('values', field.getValue());
         }, this);
     },
 
@@ -90,7 +94,7 @@ Ext.define('Taco.view.product.option.Modal', {
 
         if (!option) return;
 
-        return  option.get('attributeName');
+        return option.get('attributeName');
     },
 
     getOptionValues: function () {
