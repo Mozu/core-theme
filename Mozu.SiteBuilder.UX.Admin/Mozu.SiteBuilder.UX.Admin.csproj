@@ -3050,7 +3050,6 @@
     <Content Include="Scripts\app\core\ux\form\SlugField.js" />
     <Content Include="Scripts\app\core\ux\GenEditor.js" />
     <Content Include="Scripts\app\core\ux\ListGridToggle.js" />
-    <Content Include="Scripts\app\core\ux\modal\Alert.js" />
     <Content Include="Scripts\app\core\ux\modal\Confirmation.js" />
     <Content Include="Scripts\app\core\ux\modal\Content.js" />
     <Content Include="Scripts\app\core\ux\modal\Cover.js" />
