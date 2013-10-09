@@ -138,6 +138,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public string FullPath { get; set; }
         public string RootPath { get; set; }
         public string VirtualPath { get; set; }
+        public string VirtualPathNoExt { get; set; }
         public System.IO.Stream  OpenRead()
         {
             return System.IO.File.OpenRead(FullPath);

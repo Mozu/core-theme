@@ -123,7 +123,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<AdminUser2>>> GetAccount()
         {
             LightweightUserClaims lwU = _apiContext.UserClaims;
-            var ctx = Mvc.SiteBuilderContext.Current;
+      
             var u = (await _usersRepo.GetUser(lwU.UserId, null)).ReadAsSync();
 
             return List2(Mapper.Map<AdminUser2>(u));
@@ -146,45 +146,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return _roles = roles.Items;
         }
 
-        //public async Task<Response<Tenant.Contracts.Tenant>> ChangeTenant(int tenantId)
-        //{
-        //    var tenant = await _contextSwitcher.ChangeTenant(tenantId);
-
-        //    return Single2(tenant);
-        //}
-
-        //public async Task<Site> ChangeSite(int siteId)
-        //{
-        //    var site = await _contextSwitcher.ChangeSite(siteId);
-
-        //    return site;
-        //}
-
-
-        //public List<Tuple<Site, int>> SiteRolesList(string userId)
-
-        //{
-
-        //    var userRepo = new UserWebApiClient(new VolusionApiWebClientFactory(new VolusionWebApiContext() { SiteId = VOLUSIONSITEID, TenantId = VOLUSIONTENANTID }));
-
-        //    var rolesTask = userRepo.GetUserRoles(userId, null).Result;
-
-        //    var roles = rolesTask.ResponseMessage.IsSuccessStatusCode ? rolesTask.ReadAsSync() : new RoleInSiteCollection() { Items = new List<RoleInSite>() };
-
-        //    var siteIds = roles.Items.Select(x => (int?)x.SiteId);
-
-        //    var sites = _siteClient.GetSites(0, int.MaxValue, null, string.Join(" or ", siteIds.Select(x => "id eq " + x))).Result.ReadAsSync();
-
-        //    var res = roles.Items.Select(role =>
-
-        //                new Tuple<Site, int>(sites.Items.FirstOrDefault(site => site.Id == role.SiteId), role.RoleId))
-
-        //        .Where(x => x.Item1 != null).OrderByDescending(x => x.Item1.TenantId).ToList();
-
-        //    return res;
-
-        //}
-
+      
         [HttpPostRoute(UriTemplate = "users/delete")]
         public async Task<Response<AccountUser>> DeleteUser(AccountUser accountUser)
         {

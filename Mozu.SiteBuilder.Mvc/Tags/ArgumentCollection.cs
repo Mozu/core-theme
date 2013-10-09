@@ -44,6 +44,23 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             argument = this.FirstOrDefault(x => string.Equals(parameterName, x.Name, StringComparison.OrdinalIgnoreCase));
             return argument != null;
         }
+
+        public T GetValueOrDefault<T>(string parameterName, T defaultValue = default(T))
+        {
+            TagArgument arg = this.FirstOrDefault(x => string.Equals(parameterName, x.Name, StringComparison.OrdinalIgnoreCase));
+            if (arg != null)
+            {
+                var value = arg.Value;
+                if (value is T)
+                {
+                    return (T)value;
+                }
+                return (T)Convert.ChangeType(value, typeof(T));
+
+            }
+            return defaultValue;
+        }
+
         public bool TryGetValue<T>(string parameterName, out T value)
         {
             TagArgument arg = this.FirstOrDefault(x => string.Equals(parameterName, x.Name, StringComparison.OrdinalIgnoreCase));

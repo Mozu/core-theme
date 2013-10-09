@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Web;
-using System.Web.Mvc;
+using System.Web.Http;
+using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Newtonsoft.Json.Linq;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.Content.Contracts.Clients;
@@ -24,8 +27,8 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
 
-     [ValidateInput(false)]
-    public class BlogsController : BaseController
+     
+    public class BlogsController : BaseApiController
     {
     
           
@@ -53,11 +56,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             
 
         }
-        protected override void OnResultExecuting(ResultExecutingContext filterContext)
-        {
-            
-            base.OnResultExecuting(filterContext);
-        }
+       
         //
         // GET: /StoreFront/Blog/
 
@@ -166,7 +165,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
          }
          public ActionResult Tags()
          {
-             var args = this.DjangoTemplateTagArguments;
+           
              return PartialView("tags", _cache.Tags);
          }
          public ActionResult Archive( int? count= 24 , string sort =null )
@@ -228,12 +227,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
          class RssBlogAction : ActionResult
          {
              public Blog blog;
-             public override void ExecuteResult(ControllerContext context)
+
+             public override void ExecuteResult(HttpRequestMessage requestMessage)
              {
-                 using (XmlWriter writer = XmlWriter.Create(context.HttpContext.Response.OutputStream ))
+
+                 using (XmlWriter writer = XmlWriter.Create(requestMessage.HttpContext().Response.OutputStream))
                  {
 
-                     context.HttpContext.Response.ContentType = "text/xml";
+                     requestMessage.HttpContext().Response.ContentType = "text/xml";
 
                      // Set the feed properties
                      SyndicationFeed feed = new SyndicationFeed((string)blog["title"], (string)blog["description"], new Uri("http://fud.com"));
@@ -248,7 +249,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                          item.Title = TextSyndicationContent.CreatePlaintextContent(post["title"] as string);
                          item.Content = SyndicationContent.CreateXhtmlContent(post["body"] as string);
                          item.PublishDate = new DateTimeOffset(post.date.Value);
-                         item.AttributeExtensions.Add ( new XmlQualifiedName("url"), new Uri(context.RequestContext.HttpContext.Request.Url, "/blogs/" + post.Name).ToString ());
+                         item.AttributeExtensions.Add(new XmlQualifiedName("url"), new Uri(requestMessage.HttpContext().Request.Url, "/blogs/" + post.Name).ToString());
                          //item.Links.Add(new SyndicationLink();
                          items.Add(item);
                      }
@@ -278,7 +279,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         
 
          [HttpGet]
-        public ActionResult Post(string post)
+        public object Post(string post)
         {
 
 
@@ -286,7 +287,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             //pants
             if (doc == null)
-                return new HttpNotFoundResult("not found dumb dumb");
+                return new HttpNotFoundResult();
 
             var vm = Mapper.Map<DC.Document , VM.Post>(doc);
 

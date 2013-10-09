@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Mozu.Core.Api.Exceptions;
 using Mozu.SiteSettings.Order.Contracts.Clients;
@@ -32,9 +33,9 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         IProvisioningWebApiClient _provisioningWebApiClient;
         Lazy<UX.Models.Settings.GeneralSettings> _genSettings;
         private Lazy<Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings> _shippingSettings;
-        Lazy<UX.Models.Settings.CheckoutSettings> _checkOutSettings;
-         ISiteBuilderContext _sbc;
-         public SettingsRepository(ISiteBuilderContext sbc, /*IReferenceDataWebApiClient refClient,*/ IGeneralSettingsWebApiClient genClient, IProvisioningWebApiClient provClient, ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, IShippingSettingsWebApiClient shippingSettingsWebApiClient)
+        Lazy<SiteSettings.Order.Contracts.CheckoutSettings> _checkOutSettings;
+        ISiteBuilderApiContext _sbc;
+         public SettingsRepository(ISiteBuilderApiContext  sbc, /*IReferenceDataWebApiClient refClient,*/ IGeneralSettingsWebApiClient genClient, IProvisioningWebApiClient provClient, ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, IShippingSettingsWebApiClient shippingSettingsWebApiClient)
         {
             //_referenceDataWebApiClient = refClient;
             _generalSettingsWebApiClient = genClient.CloneWithoutUserClaims();
@@ -42,57 +43,105 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             _shippingSettingsWebApiClient = shippingSettingsWebApiClient.CloneWithoutUserClaims();
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient.CloneWithoutUserClaims();
             _sbc = sbc;
-            _genSettings = new Lazy<UX.Models.Settings.GeneralSettings>(() =>
+            _genSettings = new Lazy<UX.Models.Settings.GeneralSettings>(()=>GeneralSettingsFactory().Result);
+            _checkOutSettings = new Lazy<SiteSettings.Order.Contracts.CheckoutSettings>(() => CheckoutSettingsFactory().Result);
+
+            _shippingSettings = new Lazy<Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings>(()=>SiteShippingSettingsFactory().Result);
+
+
+
+        }
+
+         private SiteSettings.Order.Contracts.CheckoutSettings _checkoutSettings;
+        Task<SiteSettings.Order.Contracts.CheckoutSettings> CheckoutSettingsFactory()
+        {
+            if (_checkoutSettings == null)
+            {
+                string key = _sbc.SiteId + _sbc.TenantId + typeof (UX.Models.Settings.CheckoutSettings).FullName;
+
+                var settings = System.Web.HttpRuntime.Cache.Get(key) as SiteSettings.Order.Contracts.CheckoutSettings;
+                if (settings == null)
+                {
+                    return  _checkoutSettingsWebApiClient.GetCheckoutSettings().ContinueWith(x =>
+                        {
+                            var  res  = x.Result.ReadAsSync();
+                            settings = res;// Mapper.Map<UX.Models.Settings.CheckoutSettings>(res);
+                            System.Web.HttpRuntime.Cache.Insert(key, settings, null, System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, 0, 3));
+                            return _checkoutSettings = settings;
+                        });
+
+                }
+                _checkoutSettings=  settings;
+            }
+            var tcs = new TaskCompletionSource<SiteSettings.Order.Contracts.CheckoutSettings>();
+            tcs.SetResult(_checkoutSettings );
+            return tcs.Task;
+        }
+
+        private Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings _siteShippingSettings;
+       Task< Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings> SiteShippingSettingsFactory()
+        {
+            if (_siteShippingSettings == null)
+            {
+                string key = _sbc.SiteId + _sbc.TenantId + typeof (Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings).FullName;
+
+                var settings = System.Web.HttpRuntime.Cache.Get(key) as Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings;
+                if (settings == null)
+                {
+                    return _shippingSettingsWebApiClient.GetSiteShippingSettings().ContinueWith(x =>
+                        {
+                            settings = x.Result.ReadAsSync();
+                            System.Web.HttpRuntime.Cache.Insert(key, settings, null, System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, 0, 3));
+                            return _siteShippingSettings = settings;
+                        });
+                    
+                    
+                }
+                _siteShippingSettings =  settings;
+            }
+            var tcs = new TaskCompletionSource<Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings>();
+            tcs.SetResult(_siteShippingSettings);
+            return tcs.Task;
+        }
+
+        private UX.Models.Settings.GeneralSettings _generalSettings;
+        private Task<UX.Models.Settings.GeneralSettings> GeneralSettingsFactory()
+        {
+            if (_generalSettings == null)
             {
                 var key = string.Format("{0}{1}{2}", _sbc.SiteId, _sbc.TenantId, typeof (GeneralSettings).FullName);
 
                 var settings = System.Web.HttpRuntime.Cache.Get(key) as UX.Models.Settings.GeneralSettings;
-                    if (settings == null)
-                    {
-                        var res = _generalSettingsWebApiClient.GetGeneralSettings().Result;
-                        try
-                        {
-                            settings = Mapper.Map<UX.Models.Settings.GeneralSettings>(res.ReadAsSync());
-                        }
-                        catch 
-                        {
-                            settings = new UX.Models.Settings.GeneralSettings();
-                        }
-                        System.Web.HttpRuntime.Cache.Insert(key, settings, null, System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, 0, 3));
-                    }
-                    return settings;
-            });
-            _checkOutSettings = new Lazy<UX.Models.Settings.CheckoutSettings>(() =>
+                if (settings == null)
                 {
-                    string key = _sbc.SiteId + _sbc.TenantId + typeof(UX.Models.Settings.CheckoutSettings).FullName;
+                    return _generalSettingsWebApiClient.GetGeneralSettings().ContinueWith(x =>
+                        {
+                            var res = x.Result;
+                            try
+                            {
+                                settings = Mapper.Map<UX.Models.Settings.GeneralSettings>(res.ReadAsSync());
+                            }
+                            catch
+                            {
+                                settings = new UX.Models.Settings.GeneralSettings();
+                            }
+                            System.Web.HttpRuntime.Cache.Insert(key, settings, null, System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, 0, 3));
+                            _generalSettings = settings;
+                            return _generalSettings;
+                        });
 
-                    var settings = System.Web.HttpRuntime.Cache.Get(key) as UX.Models.Settings.CheckoutSettings;
-                    if (settings == null)
-                    {
-                        var response = _checkoutSettingsWebApiClient.GetCheckoutSettings().Result.ReadAsSync();
-                        System.Web.HttpRuntime.Cache.Insert(key, settings, null, System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, 0, 3));
-                    }
-                    return settings;
-                });
 
-            _shippingSettings = new Lazy<Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings>(() =>
-                {
-                    string key = _sbc.SiteId + _sbc.TenantId + typeof(Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings).FullName;
+                }
 
-                    var settings = System.Web.HttpRuntime.Cache.Get(key) as Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings;
-                    if (settings == null)
-                    {
-                        settings = _shippingSettingsWebApiClient.GetSiteShippingSettings().Result.ReadAsSync();
-                        System.Web.HttpRuntime.Cache.Insert(key, settings, null, System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, 0, 3));
-                    }
-                    return settings;
-                });
-
-             
-
+                _generalSettings=  settings;
+            }
+            var tcs = new TaskCompletionSource<UX.Models.Settings.GeneralSettings>();
+                        
+            tcs.SetResult(_generalSettings);
+            return tcs.Task;
         }
 
-         public UX.Models.Settings.GeneralSettings General
+        public UX.Models.Settings.GeneralSettings General
         {
             get
             {
@@ -100,7 +149,18 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             }
         }
 
-        public CheckoutSettings Checkout
+
+         public System.Threading.Tasks.Task<bool> AsyncInit()
+         {
+             List<Task> tasks= new List<Task>()
+                                   {
+                                       CheckoutSettingsFactory(),
+                                       SiteShippingSettingsFactory(),
+                                       GeneralSettingsFactory()
+                                   };
+             return Task.WhenAll(tasks).ContinueWith(x => true);
+         }
+         public SiteSettings.Order.Contracts.CheckoutSettings Checkout
         {
             get { return _checkOutSettings.Value; }
         }
@@ -114,5 +174,8 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         {
             get { return this.GetAlternateNamedValue(key); }
         }
+
+
+       
     }
 }

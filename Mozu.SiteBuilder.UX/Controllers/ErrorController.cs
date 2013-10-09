@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 
 namespace Mozu.SiteBuilder.UX.Controllers
 {
-    public class ErrorController : BaseController 
+    public class ErrorController : BaseApiController 
     {
-        public ActionResult NotFound()
+        public object  NotFound()
         {
             var sc = this.SiteContext;
             return new HttpNotFoundResult();

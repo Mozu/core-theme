@@ -10,7 +10,7 @@ namespace Mozu.SiteBuilder.IntegrationTests
     {
         public MappingTestFixture()
         {
-            AutoMapper.Mapper.AddProfile<CartMapping>();
+            //AutoMapper.Mapper.AddProfile<CartMapping>();
             AutoMapper.Mapper.AddProfile<GeneralSettingsMapping>();
             AutoMapper.Mapper.AddProfile<ProductMapping>();
             AutoMapper.Mapper.AddProfile<DiscountMapping>();

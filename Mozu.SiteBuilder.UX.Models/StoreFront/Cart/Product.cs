@@ -7,35 +7,35 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Cart
     [DataContract]
     public class ProductPrice
     {
-        [DataMember(Name = "price")]
+        [DataMember(Name = "Price")]
         public decimal? Price { get; set; }
 
-        [DataMember(Name = "salePrice")]
+        [DataMember(Name = "SalePrice")]
         public decimal? SalePrice { get; set; }
 
-        [DataMember(Name = "discount")]
-        public AppliedDiscount Discount { get; set; }
+        //[DataMember(Name = "Discount")]
+        //public AppliedDiscount Discount { get; set; }
     }
 
     [DataContract]
     public class Product
     {
-        [DataMember(Name = "name")]
+        [DataMember(Name = "Name")]
         public string Name { get; set; }
 
-        [DataMember(Name = "description")]
+        [DataMember(Name = "Description")]
         public string Description { get; set; }
 
-        [DataMember(Name = "imageAlternateText")]
-        public string ImageAlternateText { get; set; }
+        //[DataMember(Name = "imageAlternateText")]
+        //public string ImageAlternateText { get; set; }
 
-        [DataMember(Name = "imagePath")]
-        public string ImagePath { get; set; }
+        //[DataMember(Name = "imagePath")]
+        //public string ImagePath { get; set; }
 
-        [DataMember(Name = "productCode")]
+        [DataMember(Name = "ProductCode")]
         public string ProductCode { get; set; }
 
-        [DataMember(Name = "variationProductCode")]
+        [DataMember(Name = "VariationProductCode")]
         public string VariationProductCode { get; set; }
 
         [DataMember(Name = "options")]

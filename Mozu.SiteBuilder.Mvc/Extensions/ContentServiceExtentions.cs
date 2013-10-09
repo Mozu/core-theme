@@ -77,11 +77,12 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
 
         public static T Get<T>(this Document doc, string key)
         {
+           
             return Get<T>(doc, key, default(T));
         }
         public static T Get<T>(this Document doc, string key, T defaulltValue)
         {
-            if (doc.Properties == null)
+            if (doc == null || doc.Properties == null)
             {
                 return defaulltValue;
             }
@@ -96,7 +97,7 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
         public static bool TryGet<T>(this Document doc, string key, out T value)
         {
             value = default(T);
-            if (doc.Properties == null)
+            if (doc == null || doc.Properties == null)
             {
                 return false ;
             }

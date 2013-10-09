@@ -132,7 +132,7 @@ The Pages folder contains a template for each of the different types of pages in
 
 Example page template:
 ```html
-{% extends "default" %}
+{% extends "layouts\default" %}
 
 {% block Init %}
 	{% setTemplateVariables BodyTagClasses="mz-my-account" %}

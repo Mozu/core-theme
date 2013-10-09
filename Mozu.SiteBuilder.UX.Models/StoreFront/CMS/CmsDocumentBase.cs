@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+
 using System.Runtime.Serialization;
+using System.Security.Principal;
+using System.Web.ModelBinding;
 using Mozu.Content.Contracts;
 using Newtonsoft.Json.Linq;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -64,7 +66,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
             {
                 if (_th == null)
                 {
-                    _th = DependencyResolver.Current.GetService<ICmsTypeHelper>();
+                    throw new NotImplementedException("oops... rework dep inj from mvc");
+                   // _th = DependencyResolver.Current.GetService<ICmsTypeHelper>();
                 }
                 return _th;
             }
@@ -110,37 +113,32 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
         public DateTime? UpdateDate { get; set; }
         public string Version { get; set; }
 
-        public Dictionary<string, ModelMetadata> ModelMetadataCache = new Dictionary<string, ModelMetadata>(StringComparer.OrdinalIgnoreCase);
-        public virtual System.Web.Mvc.ModelMetadata GetModelMetadata(string propertyName)
+
+        public virtual Dictionary<string,object > GetModelMetadata(string propertyName)
         {
-            
-            ModelMetadata mmd;
-            if (ModelMetadataCache.TryGetValue(propertyName, out mmd))
-            {
-                return mmd;
-            }
 
 
+
+            Dictionary<string, object> mmd = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase );
             
 
-            mmd = new ModelMetadata(ModelMetadataProviders.Current, this.GetType(), () => this[propertyName], typeof(string), propertyName);
-
+           
 
             //mmd = new ModelMetadata(ModelMetadataProviders.Current, this.GetType(), () => prop.GetValue(this, null), prop.PropertyType, propertyName);
-            mmd.AdditionalValues["documentId"] = this.Id ;
-            mmd.AdditionalValues["collection"] = this.Collection ;
-            mmd.AdditionalValues["documentType"] = this.DocumentTypeName ;
-            mmd.AdditionalValues["fieldName"] = propertyName.ToLowerInvariant() ;
-            mmd.AdditionalValues["isShadow"] = this.IsPreview ;
+            mmd["documentId"] = this.Id;
+            mmd["collection"] = this.Collection;
+            mmd["documentType"] = this.DocumentTypeName;
+            mmd["fieldName"] = propertyName.ToLowerInvariant();
+            mmd["isShadow"] = this.IsPreview ;
             
-            mmd.AdditionalValues["entityType"] = "cms";
+            mmd["entityType"] = "cms";
 
             var propInfo = TypeHelper.GetPropertyType(propertyName);
             if (propInfo == null)
             {
                 return mmd;
             }
-            mmd.AdditionalValues["fieldType"] = propInfo.PropertyValueType.Name + (propInfo.IsMultiValued.GetValueOrDefault(false) ? "-repeating" : null);
+            mmd["fieldType"] = propInfo.PropertyValueType.Name + (propInfo.IsMultiValued.GetValueOrDefault(false) ? "-repeating" : null);
 
 
             if (!propInfo.IsMultiValued.GetValueOrDefault (false ))
@@ -149,17 +147,17 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
                 {
                     case ("image"):
                         {
-                            mmd.AdditionalValues["editDefault"] = "{ \"src\":\"/admin/scripts/resources/images/legacy/AddPhotos.png\", \"alt\":\"food is good\" }";
+                            mmd["editDefault"] = "{ \"src\":\"/admin/scripts/resources/images/legacy/AddPhotos.png\", \"alt\":\"food is good\" }";
                             break;
                         }
                     case ("html"):
                         {
-                            mmd.AdditionalValues["editDefault"] = "Click here to edit.";
+                            mmd["editDefault"] = "Click here to edit.";
                             break;
                         }
                     case ("text"):
                         {
-                            mmd.AdditionalValues["editDefault"] = "Click here to edit.";
+                            mmd["editDefault"] = "Click here to edit.";
                             break;
                         }
                 }
@@ -171,16 +169,15 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
             return mmd;
         }
 
-        public virtual ModelMetadata GetModelMetadata()
+        public virtual Dictionary<string,object> GetModelMetadata()
         {
-            var mmd = ModelMetadataProviders.Current.GetMetadataForType(() => this, typeof(CmsDocumentBase));
-           
-            mmd.AdditionalValues["data-attribute-name"] = "data-editing-widget";
-            mmd.AdditionalValues["documentId"] = this.Id;
-            mmd.AdditionalValues["collection"] = this.Collection;
-            mmd.AdditionalValues["documentType"] = this.DocumentTypeName ;
+            var mmd = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            mmd["data-attribute-name"] = "data-editing-widget";
+            mmd["documentId"] = this.Id;
+            mmd["collection"] = this.Collection;
+            mmd["documentType"] = this.DocumentTypeName ;
 
-            mmd.AdditionalValues["isShadow"] = this.IsPreview;
+            mmd["isShadow"] = this.IsPreview;
             
 
 
@@ -267,7 +264,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
             {
                 if (_th == null)
                 {
-                    _th = DependencyResolver.Current.GetService<ICmsTypeHelper>();
+                    throw new IdentityNotMappedException("_th = DependencyResolver.Current.GetService<ICmsTypeHelper>();");
+
                 }
                 return _th;
             }

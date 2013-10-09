@@ -10,8 +10,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using System.Web.Mvc;
-    using System.Web.Mvc.Html;
+
     using Mozu.SiteBuilder.Mvc;
     
 
@@ -24,10 +23,18 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     public class RenderScriptsTag : DynamicTagBase
     {
 
-        protected override string ProcessTag(System.Web.Mvc.HtmlHelper html, ArgumentCollection arguments, ref NDjango.Interfaces.IContext context)
+        protected override void ProcessTag(ArgumentCollection arguments, ref NDjango.Interfaces.IContext context, out string buffer, out string templateName)
         {
+            buffer = templateName = null;
+            var sbc = context.SiteBuilderContext();
+            var scriptsArray = (List<string>)sbc["scripts"];
+            if (scriptsArray == null)
+                return ;
 
-            return html.Action("RenderScripts", "Script", new { area = "misc" }).ToHtmlString();
+
+            object model = string.Join(",", scriptsArray.Select(x => "'" + x + "'").ToArray());
+
+            buffer= context.Render("RenderScripts", model);
 
         }
     }

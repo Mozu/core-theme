@@ -1,0 +1,6 @@
+﻿<select {% if option.IsMultiValue %}multiple{% endif %} class="mz-dropdown mz-option" data-mz-product-option="{{ option.Id }}">
+    {% if not option.IsMultiValue %}<option></option>{% endif %}
+    {% for value in option.Values %}
+    <option {% if not value.IsEnabled %} class="mz-option-disabled" {% endif %} value="{{value.Value}}">{{value.Value}}</option>
+    {% endfor %}
+</select>

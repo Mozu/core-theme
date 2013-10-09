@@ -1,0 +1,143 @@
+﻿.mz-product-listing-wrap {
+
+    .mz-list-control {
+        overflow: auto;
+        .mz-list-item {
+            margin: 1rem;
+        }
+    }
+	.mz-product-title-link {
+		color: #5A533F;
+		font-weight: 100;
+		display: block;
+		text-align: center;
+		text-decoration: none;
+		&:visited {
+			color: #5A533F;
+		}
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+	.mz-product-image {
+		max-width: 100%;
+	}
+
+    .mz-price-stack-wrap {
+        text-align: right;
+        .mz-price-label {
+            font-size: 0.7rem;
+        }
+        .mz-price-saleprice {
+            .mz-price-amt {
+                font-weight: bold;
+                font-size: 1.1rem;
+            }
+        }
+    }
+
+}
+
+ul[data-items-per-row="2"] .mz-list-item {
+	width: 47%;
+	margin-right: 5%;
+}
+ul[data-items-per-row="3"] .mz-list-item {
+	width: 27%;
+	margin-right: 8%;
+}
+ul[data-items-per-row="4"] .mz-list-item {
+	width: 22%;
+	margin-right: 2%;
+}
+.mz-product-image-thumb-link {
+	border: 1px solid #777;
+	display: inline-block;
+	margin-right: 10px;
+}
+.mz-list-control-wrap {
+	overflow: hidden;
+}
+.mz-list-control {
+    padding: 0;
+    margin: 1rem;
+}
+.mz-list-item {
+	float: left;
+    list-style: none;
+}
+.mz-list-control .mz-list-item:last-child {
+	margin-right: 0;
+}
+.mz-list-spacer {
+	clear: both;
+	height: 30px;
+}
+/* Products -------------------- */
+.mz-product-item-wrap {
+	display: block;
+}
+.mz-product-image-link {
+	margin: 0 auto 20px auto;
+	display: block;
+}
+ul[data-items-per-row="3"] .mz-list-last {
+	margin-right: 0;
+}
+	
+/* Pager --------------------------- */
+.mz-paging-info {
+    text-align: right;
+    font-size: 0.8rem;
+    .mz-paging-pagesize-wrap {
+        display: block;
+        margin-top: 1rem;
+        select {
+            width: 60px;
+            height: 20px;
+        }
+    }
+}
+.mz-paging {
+    text-align: right;
+    a:link {
+        margin: 0 0.3rem;
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    .mz-paging-next {
+        display: inline-block;
+        &::after {
+            content: " \276f";
+        }
+        &.mz-disabled {
+            cursor: default;
+            color: #eee;
+            &::after {
+                content: "";
+            }
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
+
+    .mz-paging-prev {
+        display: inline-block;
+        &::before {
+            content: "\276e  ";
+        }
+        &.mz-disabled {
+            cursor: default;
+            color: #eee;
+            &::before {
+                content: "";
+            }
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
+}

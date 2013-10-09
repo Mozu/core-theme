@@ -10,7 +10,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using System.Web.Mvc;
+
     using Newtonsoft.Json;
     using System.Web;
 
@@ -19,7 +19,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     public class JsonAttributeTag : DynamicTagBase
     {
 
-        public MvcHtmlString Process(object model)
+        public string Process(object model)
         {
             model = model ?? "null";
 
@@ -29,7 +29,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 NullValueHandling = NullValueHandling.Ignore,
                 TypeNameHandling = TypeNameHandling.None
             });
-            return new MvcHtmlString(HttpUtility.HtmlAttributeEncode(serialModel));
+            return  (HttpUtility.HtmlAttributeEncode(serialModel));
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Repositories
     {
         private readonly ThemeFactory _themeFactory;
         private readonly IThemeMetaDataProvider _themeMetaDataProvider;
-        private const string DEFAULT_THEME = "Core3";
+        private const string DEFAULT_THEME = "Core4";
         private static System.Collections.Concurrent.ConcurrentDictionary<string, Theme> _themes = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
         private static List<System.IO.FileSystemWatcher> _watchers = null;
         public bool IsInitialized { get; private set; }

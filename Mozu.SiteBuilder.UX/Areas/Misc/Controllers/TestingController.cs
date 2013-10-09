@@ -1,9 +1,12 @@
-﻿using System.Web.Mvc;
+﻿
 using System.Linq;
+using System.Web.Http;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Settings;
 using Mozu.PaymentService.Contracts;
+using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteSettings.Order.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts;
@@ -15,10 +18,11 @@ using System;
 using System.Net;
 using System.Web;
 using System.Collections.Generic;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
-    public class TestingController : Mozu.SiteBuilder.UX.Controllers.BaseController
+    public class TestingController : BaseApiController
     {
         ISitesWebApiClient _wsRepo;
         ITenantsWebApiClient _tRepo;
@@ -42,21 +46,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             _cookies = cookies;
             _settings = settings;
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
-            SuppressMissingContextRedirect = true;
+//            SuppressMissingContextRedirect = true;
         }
 
-     
 
-        //
-        // GET: /Misc/Testing/
 
-        public ActionResult Index(  )
-        {
-            return View();
-        }
 
-       
 
+           [System.Web.Http.HttpGet]
         public ActionResult ForceTheme(string themeType = "", string redir = null)
         {
             ThemeMode mode = (ThemeMode)Enum.Parse(typeof(ThemeMode), themeType, true);
@@ -79,6 +76,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         /// Updates the sitebuildercontext and redirects the 
         /// GET: /_gosite/(siteid)?redir=...&environment=...
         /// </summary>
+           [System.Web.Http.HttpGet]
         public async Task<ActionResult> GoSite(int siteId, string redir= null, string environment= "production")
         {
             var res = await _wsRepo.GetSite(siteId);
@@ -134,8 +132,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
         }
 
-        [HttpPost]
-        public ActionResult ChangeSite(ChangeSiteModel model, FormCollection form)
+
+        [System.Web.Http.HttpPost]
+        public ActionResult ChangeSite(ChangeSiteModel model, HttpRequest  form)
         {
             Site  site = null;
             if (!string.IsNullOrEmpty(model.DomainName))

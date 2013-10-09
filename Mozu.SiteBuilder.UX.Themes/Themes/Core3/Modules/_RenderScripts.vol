@@ -1,11 +1,11 @@
-﻿
-<script src="/js/require/min.js"></script>
+﻿<script src="/js/require-min.js"></script>
 <script>
     require.config({
         urlArgs: "theme={{SiteContext.Theme.Id}}",
         baseUrl: "/resources/scriptsbuilt",
         paths: {
-            sdk: "../../js/sdk/min",
+            sdk: "../../js/sdk-min",
+            hyperlive: "../../js/hyperlive-min",
             pciaas: "vendor/pci-temp",
             jquery: "http://code.jquery.com/jquery.min"
         },

@@ -4,31 +4,33 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Linq;
+using NDjango;
+using NDjango.Interfaces;
+
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Web.Mvc;
-    using System.Web.Mvc.Html;
-    using Mozu.SiteBuilder.Mvc;
-    
-
     /// <summary>
-    /// TODO: Update summary.
+    ///     TODO: Update summary.
     /// </summary>
-    /// 
-    [NDjango.ParserNodes.Description("tbd")]
-    [NDjango.Interfaces.Name("debug_all_scripts")]
-    public class DebugScriptsTag : DynamicTagBase
+    [ParserNodes.DescriptionAttribute("tbd")]
+    [Name("debug_all_scripts")]
+    public class DebugScriptsTag : SimpleTagBase
     {
-
-        protected override string ProcessTag(System.Web.Mvc.HtmlHelper html, ArgumentCollection arguments, ref NDjango.Interfaces.IContext context)
+        protected override void ProcessTag(ArgumentCollection arguments, ref NDjango.Interfaces.IContext context, out string buffer, out string templateName)
         {
+            buffer = templateName = null;
+            ISiteBuilderContext siteContext = context.SiteBuilderContext();
 
-            return html.Action("DebugScripts", "Script", new { area = "misc" }).ToHtmlString();
 
+            var scriptsArray = (List<string>) siteContext["scripts"];
+            if (scriptsArray == null)
+                return ;
+
+
+            object model = string.Join(",", scriptsArray.Select(x => "'" + x + "'").ToArray());
+            buffer= context.Render("debugscripts", model);
         }
     }
 }

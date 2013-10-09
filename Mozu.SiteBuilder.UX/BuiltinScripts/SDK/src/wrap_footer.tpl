@@ -1,13 +1,14 @@
 ﻿			return <%= toExport %>;
 		});
-		// boilerplate below makes this library compatible with AMD, CJS, and a plain browser environment
-	})(internalDefine,
-		typeof define === "function" && define.amd
-		? define
-		: function (fn) {
+		// UMD boilerplate
+	})(typeof externalDefine === "function" && externalDefine.amd
+		? externalDefine
+		: function (factory) {
 			typeof exports === "object" && typeof module === "object"
-				? (module.exports = fn())
-				: (this.<%= exportAs %> = fn())
+				? (module.exports = factory())
+				: root.<%= exportAs %> = factory()
 		}
 	);
-}());
+    // put that back where you found it, young man
+    root.define = externalDefine;
+}(this));

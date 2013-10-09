@@ -1,0 +1,1 @@
+﻿<textarea class="mz-textarea mz-option" data-mz-product-option="{{ option.Id }}">{{ option.ShopperEnteredValue }}</textarea>

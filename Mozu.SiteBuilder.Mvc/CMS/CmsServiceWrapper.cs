@@ -263,7 +263,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                     documentListName: contentCollection, 
                               filter: filter, 
        
-                              publishState : _apiContext.CmsDraftState, 
+                            //  publishState : _apiContext.CmsDraftState, 
                               sortBy: sortBy, 
                             pageSize: pageSize, 
                           startIndex: startIndex
@@ -274,8 +274,9 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         {
             var task = _docRepo.GetTreeDocument(  
                 documentListName: contentCollection,
-                    documentName: name,
-                    publishState : status?? _apiContext.CmsDraftState
+                    documentName: name
+                    //,
+               //     publishState : status?? _apiContext.CmsDraftState
             );
 
             return task.ContinueWith(t =>
@@ -299,8 +300,9 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         {
             return _docRepo.GetDocument(
                 documentListName: contentCollection,
-                documentId: id,
-                publishState : _apiContext.CmsDraftState
+                documentId: id
+                //,
+         //       publishState : _apiContext.CmsDraftState
             );
         }
 
@@ -322,7 +324,9 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public Task<ServiceClientResponse<DC.Document>> RawCreate2(DC.Document doc)
         {
-            return _docRepo.CreateDocument(doc.DocumentListName, doc,publishState:"latest");
+            return _docRepo.CreateDocument(doc.DocumentListName, doc
+                //,publishState:"latest"
+                );
         }
 
         public Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(DC.Document doc)
@@ -332,7 +336,8 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(string documentListName, string documentId)
         {
-            return _docRepo.DeleteDocument(documentListName, documentId, _apiContext.CmsDraftState)
+            return _docRepo.DeleteDocument(documentListName, documentId)
+                //, _apiContext.CmsDraftState)
                 .ContinueWith(t => new Tuple<bool, ServiceClientResponse<StreamContent>>(t.Result.ResponseMessage.IsSuccessStatusCode, t.Result));
         }
     }

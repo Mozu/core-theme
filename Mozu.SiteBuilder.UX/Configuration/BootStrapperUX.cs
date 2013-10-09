@@ -1,14 +1,18 @@
-﻿using System.Reflection;
+﻿using System.Net.Http.Formatting;
+using System.Reflection;
 using System.Web.Http;
-using System.Web.Mvc;
+
 using System.Web.Routing;
 using Mozu.Core.Api;
 using Mozu.Core.Api.ErrorHandler;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.Logging;
+using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
+using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.ActionFilters;
+using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Tenant.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Configuration
@@ -20,18 +24,36 @@ namespace Mozu.SiteBuilder.UX.Configuration
         protected override void AddMessageHandlers(HttpConfiguration httpConfiguration, IHttpMessageHandlerErrorHandler messageErrorHandler)
         {
             base.AddMessageHandlers(httpConfiguration, messageErrorHandler);
-            GlobalFilters.Filters.Add(new AddCorrelationHeaderFilterAttribute());
-            GlobalFilters.Filters.Add(new PreserveApiContextFilterAttribute());
-            GlobalFilters.Filters.Add(new HandleAllTheMvcErrorsFilter());
-            GlobalFilters.Filters.Add(new NotFoundActionFilter());
+            httpConfiguration.MessageHandlers.Insert(0, new HttpContextInjectingMessageHandler());
+           
+           
         }
         protected override void ApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)
         {
-            base.ApplicationStart(httpConfiguration);
+            this.AddFormatters(httpConfiguration.Formatters);
+            new RouteConfig().Register(httpConfiguration.Routes);
         }
         public override void InitializeAutoMapperProfiles(System.Web.Http.HttpConfiguration httpConfiguration)
         {
             base.InitializeAutoMapperProfiles(httpConfiguration);
+        }
+        protected override void AddFilters(HttpConfiguration httpConfiguration, Core.Api.Filters.Exception.ApiExceptionFilter exceptionFilter, Core.Api.Routing.ReflectedControllerIndex controllers)
+        {
+         
+            httpConfiguration.Filters.Add( new AnonymousShopperFilterAttribute());
+            httpConfiguration.Filters.Add(new ErrorFilterAttribute());
+
+
+            //todo:hyperlive add as webapi filteres
+            // httpConfiguration.Filters.Add(new NotFoundActionHttpFilter());
+            //GlobalFilters.Filters.Add(new AddCorrelationHeaderFilterAttribute());
+            //GlobalFilters.Filters.Add(new PreserveApiContextFilterAttribute());
+            //GlobalFilters.Filters.Add(new HandleAllTheMvcErrorsFilter());
+            //httpConfiguration.Filters.Add(new NotFoundActionHttpFilter());
+
+
+
+            //base.AddFilters(httpConfiguration, exceptionFilter, controllers);
         }
         protected override void InitializeContainerFactory(Core.Configuration.AutofacContainerFactory containerFactory)
         {
@@ -63,79 +85,14 @@ namespace Mozu.SiteBuilder.UX.Configuration
             LogStartupMessage<MvcApplication>(APPLICATION_NAME);
         }
 
-        //protected override void RegisterControllerRoutes(System.Web.Http.HttpConfiguration httpConfiguration)
-        //{
-        //    base.RegisterControllerRoutes(httpConfiguration);
-           
-        //}
 
 
-        
-        public void RegisterMvcRoutes(RouteCollection routes)
+        void AddFormatters(MediaTypeFormatterCollection formatters)
         {
-
-           
-         
-
-
-            return;
-            // Content Routes
-#pragma warning disable 0162
-            routes.MapRoute("resources",
-                "resources/{action}/{*pathInfo}",
-                new { controller = "Resource", Action = "script", pathInfo = UrlParameter.Optional });
-
-            routes.MapRoute("legacyContent",
-                 "v/{*pathInfo}",
-                 new { controller = "Resource", Action = "LegacyStoreContent", pathInfo = UrlParameter.Optional });
-
-            // Ignore text, html, files.
-            routes.IgnoreRoute("{file}.txt");
-            routes.IgnoreRoute("{file}.htm");
-            routes.IgnoreRoute("{file}.html");
-
-            // Ignore axd files such as assest, image, sitemap etc
-            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
-            routes.MapRoute(
-                "Default", // Route name
-                "{controller}/{action}/{id}", // URL with parameters
-                new { controller = "home", action = "Index", area = "StoreFront", id = UrlParameter.Optional } // Parameter defaults
-            );
-            routes.IgnoreRoute("favicon.ico");
-
-            // Web Tools routes
-
-            routes.MapRoute(
-                "Robots",
-                "robots.txt",
-                new { controller = "Home", action = "RobotsTxt" });
-
-            routes.MapRoute(
-                "GoogleSiteVerification",
-                "google{hash}.html",
-                new { controller = "Home", action = "GoogleSiteVerification" },
-                new { hash = @"[a-f0-9]{16}" }
-                );
-
-            // RIA Routes
-
-            routes.MapRoute("img", "img/{collection}/{documentId}",
-                    new { action = "Index", controller = "img" });
-            routes.MapRoute("download", "download/{collection}/{documentId}",
-                     new { action = "Download", controller = "img" });
-
-            routes.IgnoreRoute("scripts/{*.pathInfo}");
-
-            routes.MapRoute("auth", "auth/{action}",
-                new { action = "Index", controller = "auth" });
-
-            routes.MapRoute("login", "auth",
-                new { action = "Index", controller = "auth" });
-
-            routes.MapRoute("RIA", "{*url}",
-                new { action = "Index", controller = "home" });
+            formatters.Insert(0, new HtmlActionResultMediaTypeFormatter());
+            formatters.Add(new HtmlErrorMediaTypeHyperFormatter());
         }
-#pragma warning restore 0162
+       
+
     }
 }

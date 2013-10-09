@@ -1,0 +1,16 @@
+{
+    "name": "mozu-hyperlive",
+    "title": "Mozu Hyper Live",
+    "author": "Volusion, Inc.",
+    "version": "0.2.0",
+    "dependencies": {
+        "swig": "~1.0.0-rc3"
+    },
+    "devDependencies": {
+        "grunt": "~0.4.0",
+        "grunt-contrib-clean": "~0.4.0",
+        "grunt-contrib-concat": "~0.1.2",
+        "grunt-contrib-uglify": "~0.1.1"
+    },
+    "main": "./dist/mozu-hyperlive"
+}

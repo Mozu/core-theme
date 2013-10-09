@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Web;
-using System.Web.Mvc;
+using System.Web.Http.Controllers;
+using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
+
 
 namespace Mozu.SiteBuilder.Mvc
 {
@@ -16,12 +20,10 @@ namespace Mozu.SiteBuilder.Mvc
             this.Url = url;
         }
 
-        public override void ExecuteResult(ControllerContext context)
+        public override void ExecuteResult(HttpRequestMessage requestMessage)
         {
-            if (context == null)
-                throw new ArgumentNullException("context");
 
-            var httpContext = HttpContext.Current;
+            var httpContext = requestMessage.HttpContext();
 
             // MVC 3 running on IIS 7+
             if (HttpRuntime.UsingIntegratedPipeline)
@@ -30,11 +32,8 @@ namespace Mozu.SiteBuilder.Mvc
             }
             else
             {
-                // Pre MVC 3
-                httpContext.RewritePath(this.Url, false);
-
-                IHttpHandler httpHandler = new MvcHttpHandler();
-                httpHandler.ProcessRequest(httpContext);
+                
+                throw new NotImplementedException("doh");
             }
         }
     }

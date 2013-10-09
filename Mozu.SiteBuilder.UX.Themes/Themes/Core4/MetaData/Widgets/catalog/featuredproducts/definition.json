@@ -1,0 +1,9 @@
+{
+    "id":"featured_product",
+    "displayName":"Featured Products",
+    "displayTemplate":"catalog/featuredproducts",
+    "icon":"_0007_featured-products.png",
+    "editView":"Taco.view.site.widget.FeaturedProducts",
+    "editViewConfig":"{listeners:{afterRender:function() {console.log('test of the editviewConfig system');}}}",
+    "properties":[]
+}

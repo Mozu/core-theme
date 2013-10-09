@@ -1,4 +1,5 @@
-using System.Web.Mvc;
+
+using System;
 using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
@@ -12,13 +13,13 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             TypeNameHandling = TypeNameHandling.None,
         };
 
-        public MvcHtmlString Process(object model)
+        public String Process(object model)
         {
             if (model == null)
-                return MvcHtmlString.Create("");
+                return ("");
 
             var json = JsonConvert.SerializeObject(model, Formatting.None, _jsonSerializerSettings);
-            return MvcHtmlString.Create(json);
+            return (json);
         }
     }
 }

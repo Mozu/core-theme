@@ -2,34 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Web.Mvc;
 
-using Mozu.SiteBuilder.UX.Models.ModelMetaData;
+
+
 
 namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
 {
     [DataContract]
-    public class Product: Mozu.ProductRuntime.Contracts.Product
+    public class Product : Mozu.ProductRuntime.Contracts.Product
     {
         public string ProductName
         {
-            get { return this.Content!= null ? this.Content.ProductName :null;}
+            get { return this.Content != null ? this.Content.ProductName : null; }
         }
+
         public ProductImageCollection Images
         {
             get { return this.Content != null ? this.Content.ProductImages : new ProductImageCollection(); }
         }
-       public string Url
-        {
-            get
-            {
-                
-                return "/product/" + this.ProductCode;
 
-            }
-        }
         [DataMember]
-       public new ProductContent Content { get; set; }
+        public ProductImage MainImage
+        {
+            get { return this.Images.FirstOrDefault(); }
+        }
+
+        public string Url
+        {
+            get { return "/product/" + this.ProductCode; }
+        }
+
+        [DataMember]
+        public new ProductContent Content { get; set; }
 
 
         [DataMember(EmitDefaultValue = false, IsRequired = false)]
@@ -39,16 +43,18 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
 
 
 
-  
+
     public class RepeaterItem
     {
         public string Text { get; set; }
         public bool Selected { get; set; }
         public object Value { get; set; }
     }
-    public class PagingModel 
+
+    public class PagingModel
     {
-        int? _cP;
+        private int? _cP;
+
         public int CurrentPage
         {
             get
@@ -56,21 +62,19 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 if (!_cP.HasValue && PageSize != 0)
                 {
                     this.
-                    _cP = (int)Math.Ceiling((double)StartIndex / (double)PageSize) + 1; 
+                        _cP = (int) Math.Ceiling((double) StartIndex/(double) PageSize) + 1;
                 }
                 return _cP.GetValueOrDefault(1);
             }
-            set
-            {
-                _cP = value;
-            }
+            set { _cP = value; }
         }
+
         public int CurrentItemsPerPage { get; set; }
         public string CurrentSort { get; set; }
-        List<RepeaterItem> _sorts;
-        List<RepeaterItem> _pageSizes;
-        List<RepeaterItem> _pages;
-        
+        private List<RepeaterItem> _sorts;
+        private List<RepeaterItem> _pageSizes;
+        private List<RepeaterItem> _pages;
+
         public List<RepeaterItem> Sorts
         {
             get
@@ -78,11 +82,9 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 Init();
                 return _sorts;
             }
-            set
-            {
-                _sorts = value;
-            }
+            set { _sorts = value; }
         }
+
         public List<RepeaterItem> PageSizes
         {
             get
@@ -90,10 +92,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 Init();
                 return _pageSizes;
             }
-            set
-            {
-                _pageSizes = value;
-            }
+            set { _pageSizes = value; }
         }
 
         public List<RepeaterItem> Pages
@@ -103,98 +102,108 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 Init();
                 return _pages;
             }
-            set
-            {
-                _pages = value;
-            }
+            set { _pages = value; }
         }
+
         public string UrlBase { get; set; }
-        bool _inited = false;
-        public void Init (bool force= false )
+        private bool _inited = false;
+
+        public void Init(bool force = false)
         {
             if (force || _inited)
             {
                 return;
             }
             _inited = true;
-                
+
             //CurrentPage = (int)Math.Ceiling((double)StartIndex / (double)PageSize ) + 1;
 
             Pages = new List<RepeaterItem>();
             for (int i = 1; i <= PageCount; i++)
             {
                 Pages.Add(new RepeaterItem()
-                {
-                    Selected = i == CurrentPage,
-                    Text = i.ToString(),
-                    Value = i
-                });
+                              {
+                                  Selected = i == CurrentPage,
+                                  Text = i.ToString(),
+                                  Value = i
+                              });
             }
 
             Sorts = new List<RepeaterItem>()
-            {
-                new RepeaterItem (){
-                    Text="Default",
-                    Value=""
-                },
-                new RepeaterItem (){
-                    Text="Price: Low to High",
-                    Value="price asc"
-                },
-                new RepeaterItem (){
-                    Text="Price: High to Low",
-                    Value="price desc"
+                        {
+                            new RepeaterItem()
+                                {
+                                    Text = "Default",
+                                    Value = ""
+                                },
+                            new RepeaterItem()
+                                {
+                                    Text = "Price: Low to High",
+                                    Value = "price asc"
+                                },
+                            new RepeaterItem()
+                                {
+                                    Text = "Price: High to Low",
+                                    Value = "price desc"
 
-                },
-                new RepeaterItem (){
-                    Text="Alphabetical: A-Z",
-                    Value="productName asc"
+                                },
+                            new RepeaterItem()
+                                {
+                                    Text = "Alphabetical: A-Z",
+                                    Value = "productName asc"
 
-                },
-                new RepeaterItem (){
-                    Text="Alphabetical: Z-A",
-                    Value="productName desc"
+                                },
+                            new RepeaterItem()
+                                {
+                                    Text = "Alphabetical: Z-A",
+                                    Value = "productName desc"
 
-                },
-                new RepeaterItem (){
-                    Text="Date Added: Most Recent First",
-                    Value="createDate desc"
+                                },
+                            new RepeaterItem()
+                                {
+                                    Text = "Date Added: Most Recent First",
+                                    Value = "createDate desc"
 
-                },
-                new RepeaterItem (){
-                    Text="Date Added: Most Recent Last",
-                    Value="createDate asc"
+                                },
+                            new RepeaterItem()
+                                {
+                                    Text = "Date Added: Most Recent Last",
+                                    Value = "createDate asc"
 
-                }
-            };
-            this.Sorts.ForEach(x => x.Selected = (string)x.Value == this.CurrentSort);
+                                }
+                        };
+            this.Sorts.ForEach(x => x.Selected = (string) x.Value == this.CurrentSort);
             PageSizes = new List<RepeaterItem>()
-            {
-                 new RepeaterItem (){
-                    Text="15 per page",
-                    Value=15
+                            {
+                                new RepeaterItem()
+                                    {
+                                        Text = "15 per page",
+                                        Value = 15
 
-                },
-                new RepeaterItem (){    
-                    Text="30 per page",
-                    Value=30
+                                    },
+                                new RepeaterItem()
+                                    {
+                                        Text = "30 per page",
+                                        Value = 30
 
-                },
-                new RepeaterItem (){
-                    Text="50 per page",
-                    Value=50
+                                    },
+                                new RepeaterItem()
+                                    {
+                                        Text = "50 per page",
+                                        Value = 50
 
-                },
-                new RepeaterItem (){
-                    Text="All",
-                    Value=999
+                                    },
+                                new RepeaterItem()
+                                    {
+                                        Text = "All",
+                                        Value = 999
 
-                }
-            };
-            this.PageSizes.ForEach(x => x.Selected = (int)x.Value == this.CurrentItemsPerPage );
-        
+                                    }
+                            };
+            this.PageSizes.ForEach(x => x.Selected = (int) x.Value == this.CurrentItemsPerPage);
+
         }
-        
+
 
         public int TotalCount { get; set; }
 
@@ -205,9 +214,9 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         public int PageCount { get; set; }
     }
 
+  
 
-
-    //public class CategoryFacet: Mozu.ProductRuntime.Contracts.CategoryFacet
+//public class CategoryFacet: Mozu.ProductRuntime.Contracts.CategoryFacet
     //{
         
     //}
@@ -216,10 +225,15 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         [DataMember(EmitDefaultValue = false)]
         public object Respell { get; set; }
 
+       
+     
         //[DataMember(EmitDefaultValue = false)]
         //public CategoryFacet CategoryFacet { get; set; }
 
         public string Query { get; set; }
+
+         [DataMember(EmitDefaultValue = false)]
+        public virtual List<Mozu.ProductRuntime.Contracts.Facet> Facets { get; set; }
     }
    
     //public class CategoryFacetItem:  Mozu.ProductRuntime.Contracts.CategoryFacetItem
@@ -583,19 +597,19 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         //public decimal? Price { get; set; }
         //[DataMember(EmitDefaultValue = false, Name = "salePrice")]
         //public decimal? SalePrice { get; set; }
-        [DataMember(EmitDefaultValue = false, Name = "discountId")]
+        [DataMember(EmitDefaultValue = false)]
         public int? DiscountId { get; set; }
-        [DataMember(EmitDefaultValue = false, Name = "discountName")]
+        [DataMember(EmitDefaultValue = false)]
         public string DiscountName { get; set; }
-        [DataMember(EmitDefaultValue = false, Name = "discountEndDate")]
+        [DataMember(EmitDefaultValue = false)]
         public DateTime? DiscountEndDate { get; set; }
-        [DataMember(EmitDefaultValue = false, Name = "lowerBoundPrice")]
+        [DataMember(EmitDefaultValue = false)]
         public decimal? LowerBoundPrice { get; set; }
-        [DataMember(EmitDefaultValue = false, Name = "lowerBoundSalePrice")]
+        [DataMember(EmitDefaultValue = false)]
         public decimal? LowerBoundSalePrice { get; set; }
-        [DataMember(EmitDefaultValue = false, Name = "upperBoundPrice")]
+        [DataMember(EmitDefaultValue = false)]
         public decimal? UpperBoundPrice { get; set; }
-        [DataMember(EmitDefaultValue = false, Name = "hasRange")]
+        [DataMember(EmitDefaultValue = false)]
         public bool HasRange
         {
             get
@@ -603,7 +617,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 return this.LowerBoundPrice.GetValueOrDefault(-1) > 0 || this.LowerBoundSalePrice.GetValueOrDefault(-1) > 0 || this.UpperBoundPrice.GetValueOrDefault(-1) > 0;
             }
         }
-        [DataMember(EmitDefaultValue = false, Name = "hasSalePrice")]
+        [DataMember(EmitDefaultValue = false)]
         public bool HasSalePrice
         {
             get
@@ -612,7 +626,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
             }
         }
 
-        [DataMember(EmitDefaultValue = false, Name = "hasDiscount")]
+        [DataMember(EmitDefaultValue = false)]
         public bool HasDiscount
         {
             get
@@ -622,7 +636,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         }
 
 
-        [DataMember(EmitDefaultValue = false, Name = "offerPrice")]
+        [DataMember(EmitDefaultValue = false)]
         public decimal? OfferPrice
         {
             get

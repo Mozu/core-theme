@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\Tools\Theme.xsd">
+  <name>Core4</name>
+  <author>Volusion</author>
+  <extends></extends>
+  <isDesktop>true</isDesktop>
+  <isMobile>true</isMobile>
+  
+  <!-- only set to true for core themes -->
+  <enableCoreVaraints>true</enableCoreVaraints>
+  
+</theme>

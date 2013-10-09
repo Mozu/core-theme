@@ -9,8 +9,10 @@ namespace Mozu.SiteBuilder.Mvc.Filters
     [NDjango.Interfaces.Name("stylesheet_tag")]
     public class Stylesheet:  NDjango.Interfaces.IFilterWithContext 
     {
-        public object PerformWithParamAndContext(object value, object parameter, NDjango.Interfaces.IContext context)
+
+        object NDjango.Interfaces.IFilterWithContext.PerformWithParamAndContext(object value, IEnumerable<object> parameters, NDjango.Interfaces.IContext context)
         {
+           
             var ctx = context.tryfind("SiteContext").Value as ISiteBuilderContext;
             var theme = ctx.Theme.Id;
             var ts = ctx.ThemeSettingsRepository.GetTimeStamp(theme);
@@ -20,17 +22,20 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
         }
 
-        public object DefaultValue
+        
+
+       
+        object NDjango.Interfaces.IFilter.DefaultValue
         {
             get { throw new NotImplementedException(); }
         }
 
-        public object PerformWithParam(object value, object parameter)
+        object NDjango.Interfaces.IFilter.PerformWithParam(object value, object parameter)
         {
             throw new NotImplementedException();
         }
 
-        public object Perform(object value)
+        object NDjango.Interfaces.ISimpleFilter.Perform(object value)
         {
             throw new NotImplementedException();
         }

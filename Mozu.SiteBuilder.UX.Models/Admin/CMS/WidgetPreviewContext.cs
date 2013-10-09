@@ -4,9 +4,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Web.Mvc;
+
 using Autofac;
-using Autofac.Integration.Mvc;
+
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.ModelMetaData;
@@ -69,17 +69,17 @@ using System.Runtime.Serialization;
 
         public WidgetDefinition Definition { get; set; }
 
-        public System.Web.Mvc.ModelMetadata GetModelMetadata()
+        public Dictionary<string,object > GetModelMetadata()
         {
-            
+           
             var mmd  = GetModelMetadata("___");
             //return mmd;
            // var wid = this.TypeHelper.GetWidgetDefintion(this.DefinitionId.ToString());
             var jobj = Newtonsoft.Json.Linq.JObject.FromObject(this);
           //  jobj["editView"] = wid.EditView;
 
-            mmd.AdditionalValues["data-attribute-name"] = "data-editing-widget";
-            mmd.AdditionalValues["data-editing"] = jobj;
+            mmd["data-attribute-name"] = "data-editing-widget";
+            mmd["data-editing"] = jobj;
             
 
             return mmd;
@@ -89,12 +89,13 @@ using System.Runtime.Serialization;
         {
             get
             {
-                return AutofacDependencyResolver.Current.RequestLifetimeScope.Resolve<ICmsTypeHelper>();
+                throw new NotImplementedException("return AutofacDependencyResolver.Current.RequestLifetimeScope.Resolve<ICmsTypeHelper>();");
+                
             }
         }
-        public System.Web.Mvc.ModelMetadata GetModelMetadata(string property)
+        public Dictionary<string,object > GetModelMetadata(string property)
         {
-            var mmd = new ModelMetadata(ModelMetadataProviders.Current, this.GetType(), () => "na", typeof(string), property);
+            var mmd = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             return mmd;
         }
 
@@ -117,22 +118,22 @@ using System.Runtime.Serialization;
             }
         }
 
-        public ModelMetadata GetCmsModelMetadata(string expression)
+        public Dictionary<string,object > GetCmsModelMetadata(string expression)
         {
             var parts = expression.Split('.');
             if (parts.Length < 2 && !string.Equals( parts[2] , "config", StringComparison.OrdinalIgnoreCase ))
             {
                 return null;
             }
-            var mmd = new ModelMetadata(ModelMetadataProviders.Current, this.GetType(), () => "na", typeof(string), expression);
+            var mmd = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             
-            mmd.AdditionalValues["data-attribute-name"] = "data-editing-element";
+            mmd["data-attribute-name"] = "data-editing-element";
 
-            mmd.AdditionalValues["id"] = this.Id ;
-            mmd.AdditionalValues["entityType"] = "widget";
-            mmd.AdditionalValues["fieldName"] = expression.Split('.').Last();
+            mmd["id"] = this.Id ;
+            mmd["entityType"] = "widget";
+            mmd["fieldName"] = expression.Split('.').Last();
             
-            // mmd.AdditionalValues["data-editing"] = jobj;
+            // mmd["data-editing"] = jobj;
             
             
 

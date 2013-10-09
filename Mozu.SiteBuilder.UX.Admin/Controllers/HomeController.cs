@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
+using System.Web.Http;
+using System.Web.Razor;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
@@ -12,18 +16,40 @@ using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Settings;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Security;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Api;
+using Mozu.SiteBuilder.UX.Admin.Filters;
 using Mozu.SiteBuilder.UX.Models.Admin;
 using Mozu.Tenant.Contracts.Clients;
 using DCproduct = Mozu.ProductAdmin.Contracts;
-
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
-    [Mozu.SiteBuilder.UX.Admin.Filters.SiteBuilderAuthorize]
-    [Mozu.SiteBuilder.Mvc.ActionFilters.AddCorrelationHeaderFilter]
-    public class HomeController : Controller
+ 
+//    [Mozu.SiteBuilder.Mvc.ActionFilters.AddCorrelationHeaderFilter]
+   
+
+    public class HomeController : AdminApiControllerBase 
     {
+        public override Task<System.Net.Http.HttpResponseMessage> ExecuteAsync(System.Web.Http.Controllers.HttpControllerContext controllerContext, CancellationToken cancellationToken)
+        {
+            if (this._apiContext.UserClaims  == null || this._apiContext.UserClaims.IsAnonymous )
+            {
+                System.Web.Security.FormsAuthentication.RedirectToLoginPage();
+                TaskCompletionSource<HttpResponseMessage> tcs = new TaskCompletionSource<HttpResponseMessage>();
+                var message = new System.Net.Http.HttpResponseMessage(HttpStatusCode.Redirect);
+                message.Headers.Location = new Uri(_httpContext.Response.RedirectLocation, UriKind.Relative);
+                tcs.SetResult(message);
+                return tcs.Task;
+            }
+            else
+            {
+                return base.ExecuteAsync(controllerContext, cancellationToken);
+            }
+            
+        }
         private readonly IAuthenticationHelper _authenticationHelper;
         private ISiteBuilderContext _sbc;
         private readonly ITenantsWebApiClient _tenantsWebApi;
@@ -49,7 +75,33 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _siteGroupClient = siteGroupClient.CloneWithoutUserClaims();
         }
 
+        public class TemplateBase
+        {
+            
+        }
+        void DoStuff()
+        {
+            var host = new RazorEngineHost(new CSharpRazorCodeLanguage());
+
+            // b. Set the base class
+            //host.DefaultBaseClass = typeof(TemplateBase).FullName;
+
+         
+            // d. Add default imports
+            host.NamespaceImports.Add("System");
+            host.NamespaceImports.Add("System.IO");
+
+            var engine = new RazorTemplateEngine(host);
+            using (TextReader rdr = System.IO.File.OpenText(this.HttpContext.Request.MapPath("~/views/home/index.cshtml")))
+            {
+                var result =  engine.GenerateCode(rdr);
+                
+            }
+
+        }
         // GET: /Home/
+
+        [HttpGet()]
         public async Task<ActionResult> Index()
         {
             var userDcTask = _adminUserWebApiClient.GetUser(_apiContext.UserClaims.UserId, UserScopeType.Tenant.ToString(), _apiContext.TenantId);
@@ -59,35 +111,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             
             // TODO: the siteGroup service is not ready. We mock it.
             Task<ServiceClientResponse<DCproduct.SiteGroupCollection>> siteGroupsTask;
-            if (false)
-            {
-                var mockTask = new TaskCompletionSource<Mozu.Core.Api.Contracts.Client.ServiceClientResponse<Mozu.ProductAdmin.Contracts.SiteGroupCollection>>();
-                var mockResp = new ServiceClientResponse<ProductAdmin.Contracts.SiteGroupCollection>();
-                mockResp.ReadAsSync = () => { 
-                    // ya this is gross. it's throwaway, give me a break.
-                    var sgcReturn = new DCproduct.SiteGroupCollection { Items = new List<DCproduct.SiteGroup>() };
-                    string COOKIE_NAME = "publishing_preferences";
-                    var cookie = _httpContext.Request.Cookies.Get(COOKIE_NAME);
-                    var returnItems = new List<DCproduct.SiteGroup>();
-                    if (cookie == null)
-                        return sgcReturn;
-
-                    var sitegroupPrefs = cookie.Value.Split('|');
-                    foreach (var sgline in sitegroupPrefs)
-                    {
-                        var sgconfig = sgline.Split(':');
-                        sgcReturn.Items.Add(new DCproduct.SiteGroup { Id = Convert.ToInt32(sgconfig[0]), ProductPublishingMode = sgconfig[1] });
-                    }
-                    return sgcReturn;
-                };
-                mockTask.SetResult(mockResp);
-
-                siteGroupsTask = mockTask.Task;
-            }
-            else
-            {
-                siteGroupsTask = _siteGroupClient.GetSiteGroups();
-            }
+             siteGroupsTask = _siteGroupClient.GetSiteGroups();
+            
             await Task.WhenAll(new Task[] { userDcTask, rolesTask, tenantTask, siteUsersTask, siteGroupsTask });
 
             var userDC = userDcTask.Result.ReadAsSync();
@@ -124,14 +149,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
          
             if (this.HttpContext.Request["testHarnessMode"] == "true")
             {
-                return View("TestHarnes");
+                return RazorView("TestHarnes");
             }
             if (System.Configuration.ConfigurationManager.AppSettings["use_compiled_taco"] == "true")
             {
-                return View("Index_Compiled");
+                return RazorView("Index_Compiled");
             }
 
-            return View();
+            return RazorView("index");
+            
         }
 
         public Task<List<UserRole>> GetUserSitesRoles(string userId)

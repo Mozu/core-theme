@@ -1,0 +1,15 @@
+﻿{% for prod in Model.Items %}
+	<div class="mz-featured-products-widget">
+		<figure class="mz-product-image mz-featured-product-image">
+			<a href={{prod.Url}}>
+				<img src="{{prod.Images.Main.Resize.100.Src}}" height="100" />
+			</a>
+		</figure>
+		<div class="mz-featured-product-caption">
+			<a class="mz-featured-products-link" href={{prod.Url}}>
+				<span >{{prod.ProductName}}</span>
+			</a>
+			{% html_partial "modules/PriceStack" prod %}
+		</div>
+	</div>
+{% endfor %} 

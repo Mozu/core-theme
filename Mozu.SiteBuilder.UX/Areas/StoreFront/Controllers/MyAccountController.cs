@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Core;
-
+using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.User.Contracts;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
@@ -21,8 +22,8 @@ using System.Linq;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    [ValidateInput(false)]
-    public class MyAccountController : BaseController
+
+    public class MyAccountController : BaseApiController
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IAccountContactRepository _accountContactRepository;
@@ -73,8 +74,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _apiContext = apiContext;
         }
 
-        [SiteBuilderAuthorize()]
-        public async Task<ActionResult> Index()
+        //todo:hyper  remiplement auth att.
+       // [SiteBuilderAuthorize()]
+        public async Task<object> Index()
         {
             var account = (await _customerAccountWebApiClient.GetAccounts(null, null, null, null, "UserId eq " + CurrentUser.UserId)).ReadAsSync().Items.FirstOrDefault();
 
@@ -94,54 +96,52 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("myaccount", account);
         }
 
-        public async Task<ActionResult> GetAccount()
+        public  Task<CustomerAccount  > GetAccount()
         {
-            var res = await _customerRepository.GetByUserId(CurrentUser.UserId);
-
-            return new JsonDCResult { Data = res };
+            return _customerRepository.GetByUserId(CurrentUser.UserId);
         }
 
         [HttpPost]
         // TODO: Do we need this? If so, do we trust the account ID that's passed in?
-        public async Task<ActionResult> Update(CustomerAccount account)
+        public  Task<CustomerAccount> Update(CustomerAccount account)
         {
-            var res = await _customerRepository.Update(account, account.Id);
+            return   _customerRepository.Update(account, account.Id);
 
-            return new JsonDCResult { Data = res };
         }
 
         [HttpPost]
-        public async Task<ActionResult> UpdateCustomerContact(CustomerAccountContact contact)
-        {
-            var account = await _customerRepository.GetByUserId(CurrentUser.UserId);
-
-            var res = await _accountContactRepository.Update(contact, account.Id);
-
-            return new JsonDCResult { Data = res };
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> AddCustomerContact(CustomerAccountContact contact)
+        public async Task<Mozu.SiteBuilder.UX.Models.Customers.CustomerAccountContact> UpdateCustomerContact(CustomerAccountContact contact)
         {
             var account = await _customerRepository.GetByUserId(CurrentUser.UserId);
 
-            var res = await _accountContactRepository.Create(contact, account.Id);
+            return  await  _accountContactRepository.Update(contact, account.Id);
 
-            return new JsonDCResult { Data = res };
+          
         }
 
         [HttpPost]
-        public async Task<ActionResult> DeleteCustomerContact(CustomerAccountContact contact)
+        public async Task<Mozu.SiteBuilder.UX.Models.Customers.CustomerAccountContact> AddCustomerContact(CustomerAccountContact contact)
+        {
+            var account = await _customerRepository.GetByUserId(CurrentUser.UserId);
+
+            return  await _accountContactRepository.Create(contact, account.Id);
+
+          
+        }
+
+        [HttpPost]
+        public async Task<bool> DeleteCustomerContact(CustomerAccountContact contact)
         {
             var account = await _customerRepository.GetByUserId(CurrentUser.UserId);
 
             _accountContactRepository.Delete(contact, account.Id);
 
-            return new JsonDCResult { Data = true };
+            return true;
+            
         }
 
         [HttpPost]
-        public async Task<ActionResult> UpdateEmail(string email)
+        public async Task<string> UpdateEmail(string email)
         {
             var userId = CurrentUser.UserId;
             var user = await _userWebApiClient.GetUser(userId).Result.ReadAsAsync();
@@ -150,16 +150,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var res = await _userWebApiClient.UpdateUser(user, userId).Result.ReadAsAsync();
 
-            return new JsonDCResult { Data = email };
+            return email;
         }
 
         [HttpPost]
-        public async Task<ActionResult> ChangePassword(PasswordInfo info)
+        public async Task<bool> ChangePassword(PasswordInfo info)
         {
             var passwordInfo = new Mozu.User.Contracts.PasswordInfo { NewPassword = info.NewPassword, OldPassword = info.OldPassword };
             var res = await _userWebApiClient.ChangePassword(passwordInfo, CurrentUser.UserId).Result.ReadAsAsync();
 
-            return new JsonDCResult { Data = true };
+            return true;
         }
 
         protected LightweightUserClaims CurrentUser

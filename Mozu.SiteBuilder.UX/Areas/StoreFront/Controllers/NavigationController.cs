@@ -1,14 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+
 using Mozu.SiteBuilder.Mvc.Navigation;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    [ValidateInput(false)]
-    public class NavigationController : BaseController
+
+    public class NavigationController : BaseApiController
     {
         private readonly INavigationRepository _navigationRepository;
 
@@ -17,16 +18,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _navigationRepository = navigationRepository;
         }
 
-        public ActionResult Primary()
+        public List<NavigationNode > Primary()
         {
-            var primaryNodes = GetPrimaryNodes();
-            return Json(primaryNodes, JsonRequestBehavior.AllowGet);
+            return GetPrimaryNodes();
+            
         }
 
-        public ActionResult Secondary(string parentId)
+        public List<NavigationNode> Secondary(string parentId)
         {
-            var secondaryNodes = GetSecondaryNodes(parentId);
-            return Json(secondaryNodes, JsonRequestBehavior.AllowGet);
+            return  GetSecondaryNodes(parentId);
+           
         }
 
         private List<NavigationNode> GetPrimaryNodes()

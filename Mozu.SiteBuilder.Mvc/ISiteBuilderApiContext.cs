@@ -5,8 +5,7 @@ namespace Mozu.SiteBuilder.Mvc
 {
     public interface ISiteBuilderApiContext : IApiContext
     {
-        string CmsDraftState { get; }
-        
+        bool IsEditMode { get; set; }
         void SetUser(LightweightUserClaims user);
     }
 }

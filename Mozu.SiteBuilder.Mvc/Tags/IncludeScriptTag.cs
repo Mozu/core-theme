@@ -10,8 +10,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using System.Web.Mvc;
-    using System.Web.Mvc.Html;
+
     using Mozu.SiteBuilder.Mvc;
     
 
@@ -23,21 +22,21 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     [NDjango.Interfaces.Name("require_script")]
     public class IncludeScriptTag : SimpleTagBase
     {
-
-        protected override string ProcessTag(System.Web.Mvc.HtmlHelper html, ArgumentCollection arguments, ref NDjango.Interfaces.IContext context)
+        protected override void ProcessTag(ArgumentCollection arguments, ref NDjango.Interfaces.IContext context, out string buffer, out string templateName)
         {
-            if ( arguments.Count != 1 )
-                throw new InvalidOperationException ("includescript takes only 1 arg");
+            if (arguments.Count != 1)
+                throw new InvalidOperationException("includescript takes only 1 arg");
 
-            //List<string> scripts = (List<string>);
+            var sbc = context.SiteBuilderContext();
+            var scripts = (List<string>)sbc["scripts"];
+            if (scripts == null)
+            {
+                sbc["scripts"] = scripts = new List<string>();
+            }
+            scripts.Add(arguments[0].Value.ToString());
 
-            //if (scripts == null)
-            //{
-            //    SiteBuilderContext.Current.PageContext.Scripts = scripts = new List<string>();
-            //}
-
-            //scripts.Add("'resources/scripts" + arguments[0].Value.ToString() + "'"); // TODO: get the scripts directory from the template or something
-            return html.Action("Add", "Script", new { area="misc", scriptName = arguments[0].Value.ToString() }).ToHtmlString();
+            buffer = null;
+            templateName = null;
         }
     }
 }

@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using Autofac;
-using Autofac.Integration.Mvc;
+
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
@@ -15,11 +15,13 @@ namespace Mozu.SiteBuilder.Mvc.Localization
     public class LocalizationRepository : ILocalizationRepository
     {
         private readonly MozuVirtualPathProvider _mozuVirtualPathProvider;
+        private readonly ISiteBuilderContext _siteBuilderContext;
         private static readonly ConcurrentDictionary<string, Dictionary<string, Dictionary<string, string>>> _tableCache = new ConcurrentDictionary<string, Dictionary<string, Dictionary<string, string>>>();
         
-        public LocalizationRepository(MozuVirtualPathProvider mozuVirtualPathProvider)
+        public LocalizationRepository(MozuVirtualPathProvider mozuVirtualPathProvider , ISiteBuilderContext siteBuilderContext)
         {
             _mozuVirtualPathProvider = mozuVirtualPathProvider;
+            _siteBuilderContext = siteBuilderContext;
         }
 
         public void ClearCache()
@@ -29,7 +31,7 @@ namespace Mozu.SiteBuilder.Mvc.Localization
 
         public void ClearSiteCache()
         {
-            ISiteBuilderContext siteContext = AutofacDependencyResolver.Current.RequestLifetimeScope.Resolve<ISiteBuilderContext>();
+            ISiteBuilderContext siteContext = _siteBuilderContext;
 
             foreach (var k in from k in _tableCache.Keys let parts = k.Split('|') where int.Parse(parts[0]) == siteContext.SiteId select k)
             {
@@ -40,7 +42,7 @@ namespace Mozu.SiteBuilder.Mvc.Localization
 
         public void ClearSiteCache(string language)
         {
-            ISiteBuilderContext siteContext = AutofacDependencyResolver.Current.RequestLifetimeScope.Resolve<ISiteBuilderContext>();
+            ISiteBuilderContext siteContext = _siteBuilderContext;
 
             var dictKey = siteContext.SiteId + "|" + siteContext.Theme.Id.ToLower() + "|" + language;
             Dictionary<string, Dictionary<string, string>> dic;
@@ -50,7 +52,7 @@ namespace Mozu.SiteBuilder.Mvc.Localization
         public Dictionary<string, Dictionary<string, string>> GetCollections(string[] keys)
         {
             var languages = HttpContext.Current.Request.UserLanguages;
-            ISiteBuilderContext siteContext = AutofacDependencyResolver.Current.RequestLifetimeScope.Resolve<ISiteBuilderContext>();
+            ISiteBuilderContext siteContext = _siteBuilderContext;
 
             if (languages == null || languages.Length == 0)
             {
@@ -93,7 +95,7 @@ namespace Mozu.SiteBuilder.Mvc.Localization
         public string Get(string colKey, string key)
         {
             var languages = HttpContext.Current.Request.UserLanguages;
-            ISiteBuilderContext siteContext = AutofacDependencyResolver.Current.RequestLifetimeScope.Resolve<ISiteBuilderContext>();
+            ISiteBuilderContext siteContext = _siteBuilderContext;
 
             if (languages == null || languages.Length == 0)
             {
@@ -132,7 +134,7 @@ namespace Mozu.SiteBuilder.Mvc.Localization
 
         private void LoadStrings(string language)
         {
-            ISiteBuilderContext siteContext = AutofacDependencyResolver.Current.RequestLifetimeScope.Resolve<ISiteBuilderContext>();
+            ISiteBuilderContext siteContext = _siteBuilderContext;
 
             // Walk the theme hierarchy and merge the localization strings down to the currently applied theme
             foreach (var theme in siteContext.Theme.Stack.Reverse())

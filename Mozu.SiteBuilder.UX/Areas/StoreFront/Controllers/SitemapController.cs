@@ -1,15 +1,18 @@
 ﻿using System;
-using System.Web.Mvc;
+
 using System.Linq;
 using System.Xml.Linq;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Settings;
+using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using System.Xml;
 using System.IO;
 using System.Text;
 using Mozu.SiteBuilder.Mvc;
 using System.Threading.Tasks;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -17,7 +20,7 @@ using Mozu.Core;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    public class SitemapController : Controller
+    public class SitemapController : BaseApiController
     {
         INavigationRepository _nav;
         ISiteBuilderContext _sbctx;

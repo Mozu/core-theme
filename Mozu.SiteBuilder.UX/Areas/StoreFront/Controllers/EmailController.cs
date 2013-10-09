@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using System.Web.Http;
 using Autofac;
 using Mozu.Core.Messaging.Contracts.Notification;
+using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.UX.Controllers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Mozu.Content.Contracts.Clients;
@@ -25,11 +29,11 @@ using AutoMapper;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    [ValidateInput(false)]
+ 
     public class EmailController : CmsPagesController
     {
         private readonly IOrderService _orderService;
-        private readonly IViewEngine _viewEngine;
+       
         private static List<EmailTypeInfo> g_emailTypeInfos;
         public class Topics
         {
@@ -100,12 +104,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ICmsServiceWrapper cmsService,
             IOrderService orderService,
             ICmsTypeHelper cmsTypeHelper,
-            IViewEngine viewEngine,
+      
             ILifetimeScope lifetimeScope)
-            : base(docRepo, docTypeRepo, context, cmsService, cmsTypeHelper, viewEngine, lifetimeScope)
+            : base(docRepo, docTypeRepo, context, cmsService, cmsTypeHelper, lifetimeScope)
         {
             _orderService = orderService;
-            _viewEngine = viewEngine;
         }
 
         //
@@ -151,7 +154,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
         	string topic;
         	string innerPayload;
-        	var request = Request;
+        	var request = HttpRequestBase;
         	request.InputStream.Position = 0;
 
         	using (var reader = new StreamReader(request.InputStream))
@@ -194,51 +197,52 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //                       Body = viewString
             //                   };
 
-            return new EmailRenderActionResult(emailTypeInfo, emailTypeInfo.Template, model, cmdContent,_viewEngine );
+            return new EmailRenderActionResult(emailTypeInfo, emailTypeInfo.Template, model, cmdContent );
 
 
         }
-        class EmailRenderActionResult : JsonResult
+        class EmailRenderActionResult : ActionResult 
         {
             private readonly EmailTypeInfo _emailInfo;
             private readonly string _viewName;
             private readonly object _model;
             private readonly object _cmsDoc;
-            private readonly IViewEngine _viewEngine;
+          
 
-            public EmailRenderActionResult(EmailTypeInfo emailInfo, string viewName, object model, object cmsDoc, IViewEngine viewEngine)
+            public EmailRenderActionResult(EmailTypeInfo emailInfo, string viewName, object model, object cmsDoc)
             {
                 _emailInfo = emailInfo;
                 _viewName = viewName;
                 _model = model;
                 _cmsDoc = cmsDoc;
-                _viewEngine = viewEngine;
             }
 
-            public override void ExecuteResult(ControllerContext context)
+            public override void ExecuteResult(HttpRequestMessage requestMessage)
             {
-                 var viewString = RenderViewToString(_emailInfo.Template , _model, _cmsDoc, context );
-                var response = new EmailResponse
-                               {
-                                   Subject = "TEST SUBJECT " + _emailInfo.Topic ,
-                                   Body = viewString
-                               };
-                this.Data = response;
-                base.ExecuteResult(context);
+               throw new NotImplementedException();
+                //todo:hyper reimplemnt email.
+                // var viewString = RenderViewToString(_emailInfo.Template , _model, _cmsDoc, context );
+                //var response = new EmailResponse
+                //               {
+                //                   Subject = "TEST SUBJECT " + _emailInfo.Topic ,
+                //                   Body = viewString
+                //               };
+                //this.Data = response;
+                //base.ExecuteResult(context);
             }
-            private string RenderViewToString(string viewName, object model, object cmsDoc, ControllerContext context)
-            {
+            //private string RenderViewToString(string viewName, object model, object cmsDoc, ControllerContext context)
+            //{
               
-                using (var sw = new StringWriter())
-                {
-                    var viewResult = _viewEngine.FindView(context, viewName, null, true);
-                    var viewContext = new ViewContext(context, viewResult.View, new ViewDataDictionary(model), new TempDataDictionary(), sw);
-                    viewContext.ViewData["content"] = cmsDoc;
-                    viewResult.View.Render(viewContext, sw);
-                    viewResult.ViewEngine.ReleaseView(context, viewResult.View);
-                    return sw.GetStringBuilder().ToString();
-                }
-            }
+            //    using (var sw = new StringWriter())
+            //    {
+            //        var viewResult = _viewEngine.FindView(context, viewName, null, true);
+            //        var viewContext = new ViewContext(context, viewResult.View, new ViewDataDictionary(model), new TempDataDictionary(), sw);
+            //        viewContext.ViewData["content"] = cmsDoc;
+            //        viewResult.View.Render(viewContext, sw);
+            //        viewResult.ViewEngine.ReleaseView(context, viewResult.View);
+            //        return sw.GetStringBuilder().ToString();
+            //    }
+            //}
         }
 
         private static object Convert(string json, EmailTypeInfo eti)

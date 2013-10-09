@@ -392,6 +392,13 @@
             });
         });
 
+
+        it("should have a getAvailableActionsFor method that returns all actions that can be performed on a provided string type", function () {
+                expect(api).to.respondTo('getAvailableActionsFor');
+                expect(api.getAvailableActionsFor('cart')).to.include("empty");
+        });
+
+
         describe("fulfills its promises with an ApiObject object, that", function () {
 
             beforeEach(function () {

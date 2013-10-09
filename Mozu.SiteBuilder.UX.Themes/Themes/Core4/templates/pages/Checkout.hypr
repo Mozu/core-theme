@@ -1,0 +1,63 @@
+﻿{% extends "layouts\default" %}
+
+{% block Init %}
+    {% setTemplateVariables BodyTagClasses="mz-checkout" %}
+    {% require_script "pages/checkout" %}
+    {{ block.super }}
+{% endblock Init %}
+
+{% block BodyContent %}
+
+{% preload_json Model "checkout" %}
+{% preload_json ViewData.availableShippingMethods "shippingmethods" %}
+{% preload_json ViewData.paymentApiBase "paymentapibase" %}
+
+<form id="mz-checkout-form" class="mz-checkout-form mz-fades-in" method="post" action="" onsubmit="return false;">
+    <h1 class="mz-page-header">
+        Checkout{% if not user.isAuthenticated %}
+        <span class="mz-page-headernote mz-auxiliary-text mz-mini-modal-parent">Registered Customer? <a class="mz-utility-link mz-login" data-mz-action="login" href="javascript:;">Sign in</a>
+            {% include "Modules/Common/LoginModal" %}
+        </span>
+        {% endif %}
+    </h1>
+
+    {% include "Modules/Common/MessageBar" %}
+
+    <div class="mz-column" id="mz-checkout-rightcol">
+        
+        <div class="mz-panel mz-order-summary-panel" id="mz-order-summary-panel">
+            {% include "Modules/Checkout/CheckoutOrderSummaryPanel" %}
+        </div>
+
+        <div id="mz-coupon-code-container" class="mz-coupon-code-container">
+            {% include "Modules/Checkout/CheckoutCouponCodeField" %}
+        </div>
+
+        <div id="mz-order-comments-container" class="mz-order-comments-container">
+            {% include "Modules/Checkout/CheckoutCommentsField" %}
+        </div>
+
+    </div><!-- right .column -->
+    <div class="mz-column">
+
+        <div class="mz-panel" id="mz-shipping-address-panel">
+            {% include "Modules/Checkout/CheckoutShippingAddressPanel" %}
+        </div>
+
+        <div class="mz-panel" id="mz-shipping-method-panel">
+            {% include "Modules/Checkout/CheckoutShippingMethodPanel" %}
+        </div>
+
+        <div class="mz-panel" id="mz-payment-information-panel">
+            {% include "Modules/Checkout/CheckoutPaymentInfoPanel" %}
+        </div>
+
+        <div class="mz-panel mz-checkout-reviewpanel" id="mz-checkout-reviewpanel">
+            {% include "Modules/Checkout/CheckoutReviewPanel" %}
+        </div>
+
+    </div><!-- left .column -->
+
+</form>
+
+{% endblock BodyContent %}

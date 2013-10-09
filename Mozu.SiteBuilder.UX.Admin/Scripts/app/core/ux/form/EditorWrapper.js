@@ -77,7 +77,7 @@
                 scope: this
             }, {
                 xtype: 'dirtybutton',
-                text: this.saveText,
+                text: this.saveText ,
                 itemId: 'save',
                 click: this.save,
                 hidden: this.saveHidden || !this.allowCreate(),

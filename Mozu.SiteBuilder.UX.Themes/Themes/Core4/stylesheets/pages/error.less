@@ -1,0 +1,47 @@
+.mz-error-head {
+	background: transparent url('/resources/images/error-exclamation.png') no-repeat 0 8px;
+	padding-left: 40px;
+	font-size: 36px;
+	margin-bottom: 0;
+    padding-bottom: 30px;
+}
+.mz-error-subhead {
+	font-size: 18px;
+	color: #999;
+	display: block;
+	margin-top: 10px;
+}
+.mz-error-text {
+	font-size: 16px;
+	color: #f33;
+	display: block;
+	margin-top: 10px;
+}
+
+
+.mz-error-detail-expander {
+	display: inline-block;
+    &::before {
+        display: inline-block;
+        font-size: 0.8em;
+        content: "\25BA";
+        margin-right: 5px;
+        .transition(all ease 0.8s);
+    }
+    &.mz-expanded::before {
+        .transform(~"rotate(1170deg)");
+    }
+}
+
+.mz-error-detail {
+    background-color: #eee;
+	padding: 30px 40px;
+	.border-radius(5px);
+	.transition(all ease 0.8s);
+	.opacity(0);
+    font-size: 0.1em;
+	&.mz-expanded {
+		.opacity(100); 
+        font-size: 1em;
+	}
+}

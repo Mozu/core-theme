@@ -1,0 +1,5 @@
+﻿<div class="mz-content-widget-wrap" {% data_attributes Model%} >
+    <div class="mz-content-widget-inner-wrap" {% cms_data_attributes Model.config.body html %}>
+            {{Model.config.body|default_edit:'add content here'}}
+    </div>
+</div>

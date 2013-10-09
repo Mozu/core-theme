@@ -3,16 +3,18 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
+
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Carts;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
-using VMCart = Mozu.SiteBuilder.UX.Models.StoreFront.Cart.Cart;
-using CartItem = Mozu.SiteBuilder.UX.Models.StoreFront.Cart.CartItem;
+//using VMCart = Mozu.SiteBuilder.UX.Models.StoreFront.Cart.Cart;
+//using CartItem = Mozu.SiteBuilder.UX.Models.StoreFront.Cart.CartItem;
 using VM=Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using System.Linq;
 using IOrderWebApiClient = Mozu.CommerceRuntime.Contracts.Clients.IOrderWebApiClient ;
@@ -20,7 +22,7 @@ using Product = Mozu.ProductRuntime.Contracts.Product;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    public class CartController : BaseController
+    public class CartController : BaseApiController
     {
         private readonly ICartWebApiClient _cartClient;
         IOrderWebApiClient _orderWebApiClient;
@@ -40,6 +42,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _cookieProvider = cookieProvider;
         }
 
+        [System.Web.Http.HttpGet]
         public async Task<ActionResult> Index()
         {
             var pc = this.SiteContext.PageContext;
@@ -54,9 +57,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             
             var cart = (await _cartClient.GetOrCreateCart() ).ReadAsAsync().Result;
 
+            var cartVM = Mapper.Map<Mozu.SiteBuilder.UX.Models.StoreFront.Commerce.Cart>(cart);
           
-            await this.AsyncInitData();
-            return View("cart", cart); //Mapper.Map<VMCart>(cart));
+            
+            return View("cart", cartVM); // Mapper.Map<VMCart>(cart));
         }
 
         //public JsonDCResult ApplyCoupon(string couponCode)
@@ -85,61 +89,61 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //    };
         //}
 
-        public JsonDCResult GetCart()
-        {
-            // TODO: Use GetOrCreate here???
-            var cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
+        //public JsonDCResult GetCart()
+        //{
+        //    // TODO: Use GetOrCreate here???
+        //    var cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
 
-            return new JsonDCResult()
-            {
-                Data = Mapper.Map<VMCart>(cart),
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet
-            };
-        }
+        //    return new JsonDCResult()
+        //    {
+        //        Data = Mapper.Map<VMCart>(cart),
+        //        JsonRequestBehavior = JsonRequestBehavior.AllowGet
+        //    };
+        //}
 
-        public JsonDCResult UpdateCart(VMCart cart)
-        {
+        //public JsonDCResult UpdateCart(VMCart cart)
+        //{
             
-            var c = Mapper.Map<Cart>(cart);
-            var ret = _cartClient.UpdateCart(c).Result.ReadAsAsync().Result;
+        //    var c = Mapper.Map<Cart>(cart);
+        //    var ret = _cartClient.UpdateCart(c).Result.ReadAsAsync().Result;
 
-            return new JsonDCResult()
-            {
-                Data = Mapper.Map<VMCart>(ret)
-            };
-        }
+        //    return new JsonDCResult()
+        //    {
+        //        Data = Mapper.Map<VMCart>(ret)
+        //    };
+        //}
 
-        public ActionResult Checkout(VMCart cart)
-        {
-            if (cart == null || cart.Id == null)
-                return RedirectToAction("Index");
+        //public ActionResult Checkout(VMCart cart)
+        //{
+        //    if (cart == null || cart.Id == null)
+        //        return RedirectToAction("Index");
 
-            var response = _orderWebApiClient.CreateOrderFromCart(cart.Id).Result;
-            if (response.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                return RedirectToAction("Index");
+        //    var response = _orderWebApiClient.CreateOrderFromCart(cart.Id).Result;
+        //    if (response.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+        //        return RedirectToAction("Index");
 
-            var order = response.ReadAsAsync().Result;
+        //    var order = response.ReadAsAsync().Result;
 
-            var cookie = new HttpCookie("") { Expires = (order.AuditInfo.CreateDate  ?? DateTime.Now).AddMinutes(20d) };
-            cookie["orderid"] = order.Id;
+        //    var cookie = new HttpCookie("") { Expires = (order.AuditInfo.CreateDate  ?? DateTime.Now).AddMinutes(20d) };
+        //    cookie["orderid"] = order.Id;
 
-            _cookieProvider.SaveResponseCookie("order", cookie);
+        //    _cookieProvider.SaveResponseCookie("order", cookie);
 
-            return RedirectToAction("Index", "Checkout");
-        }
+        //    return RedirectToAction("Index", "Checkout");
+        //}
 
-        [HttpPost]
-        public JsonDCResult AddCartItem(CartItem item)
-        {
-            var cartItem = Mapper.Map<Mozu.CommerceRuntime.Contracts.Carts.CartItem>(item);
-            var ret = _cartClient.AddItemToCart(cartItem).Result.ReadAsAsync().Result;
-            var cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
+        //[HttpPost]
+        //public JsonDCResult AddCartItem(CartItem item)
+        //{
+        //    var cartItem = Mapper.Map<Mozu.CommerceRuntime.Contracts.Carts.CartItem>(item);
+        //    var ret = _cartClient.AddItemToCart(cartItem).Result.ReadAsAsync().Result;
+        //    var cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
 
-            return new JsonDCResult()
-            {
-                Data = Mapper.Map<VMCart>(cart)
-            };
-        }
+        //    return new JsonDCResult()
+        //    {
+        //        Data = Mapper.Map<VMCart>(cart)
+        //    };
+        //}
 
         //[HttpPost]
         //public JsonDCResult AddProduct(VM.ProductConfigurationRequest item)
@@ -183,15 +187,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //    };
         //}
 
-        public ActionResult DeleteCartItem(string id)
-        {
-            if(!string.IsNullOrEmpty(id))
-            {
-                //var ret = _cartClient.DeleteIndividualCartItem(id).Result.ReadAsAsync().Result;
-            }
+        //public ActionResult DeleteCartItem(string id)
+        //{
+        //    if(!string.IsNullOrEmpty(id))
+        //    {
+        //        //var ret = _cartClient.DeleteIndividualCartItem(id).Result.ReadAsAsync().Result;
+        //    }
             
-            var cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
-            return View("Index", Mapper.Map<VMCart>(cart));
-        }   
+        //    var cart = _cartClient.GetOrCreateCart().Result.ReadAsAsync().Result;
+        //    return View("Index", Mapper.Map<VMCart>(cart));
+        //}   
     }
 }

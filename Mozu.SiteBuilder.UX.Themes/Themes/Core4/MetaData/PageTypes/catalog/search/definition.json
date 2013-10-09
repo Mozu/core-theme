@@ -1,0 +1,7 @@
+{
+  "id": "searchResults",
+  "displayName": "Search Results",
+  "entityType": "searchResults",
+  "renderTemplate": "searchResults",
+  "userCreatable": false
+}

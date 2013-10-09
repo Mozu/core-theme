@@ -16,23 +16,27 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
 
         protected override void Configure()
         {
-            Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Carts.Cart, SiteBuilder.UX.Models.StoreFront.Cart.Cart>()
-                ;
-            Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Carts.CartItem, CartItem>();
-           // Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Commerce.CommerceUnitPrice .CommerceItemPrice , CartItemPrice>();
-            Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Carts.Fee, Fee>();
-            Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Products .Product, Product>();
-            Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Products.ProductOption, ProductOption>();
+            Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Carts.Cart, Mozu.SiteBuilder.UX.Models.StoreFront.Commerce.Cart>();
+            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Commerce.Cart, Mozu.CommerceRuntime.Contracts.Carts.Cart>();
+            Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Carts.CartItem, Mozu.SiteBuilder.UX.Models.StoreFront.Commerce.CartItem>();
+            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Commerce.CartItem, Mozu.CommerceRuntime.Contracts.Carts.CartItem>();
+            Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Products.Product, Mozu.SiteBuilder.UX.Models.StoreFront.Commerce.Product>();
+            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Commerce.Product, Mozu.CommerceRuntime.Contracts.Products.Product>();
+         //   Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Carts.CartItem, CartItem>();
+         //  // Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Commerce.CommerceUnitPrice .CommerceItemPrice , CartItemPrice>();
+         //   Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Carts.Fee, Fee>();
+         //   Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Products .Product, Product>();
+         //   Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.Products.ProductOption, ProductOption>();
 
-            Mapper.CreateMap<CartItem, Mozu.CommerceRuntime.Contracts.Carts.CartItem>();
-            Mapper.CreateMap<Product, Mozu.CommerceRuntime.Contracts.Products.Product>()
-                //.ForMember(x => x.Price, op => op.MapFrom(x => new Mozu.CommerceRuntime.Contracts.CartOrder.ProductPrice { Price = x.Price }))
-                ;
-         //   Mapper.CreateMap<CartItemPrice, Mozu.CommerceRuntime.Contracts.Commerce.CommerceItemPrice>();
-            Mapper.CreateMap<Fee, Mozu.CommerceRuntime.Contracts.Carts.Fee>();
-            Mapper.CreateMap<ProductOption, Mozu.CommerceRuntime.Contracts.Products.ProductOption>();
+         //   Mapper.CreateMap<CartItem, Mozu.CommerceRuntime.Contracts.Carts.CartItem>();
+         //   Mapper.CreateMap<Product, Mozu.CommerceRuntime.Contracts.Products.Product>()
+         //       //.ForMember(x => x.Price, op => op.MapFrom(x => new Mozu.CommerceRuntime.Contracts.CartOrder.ProductPrice { Price = x.Price }))
+         //       ;
+         ////   Mapper.CreateMap<CartItemPrice, Mozu.CommerceRuntime.Contracts.Commerce.CommerceItemPrice>();
+         //   Mapper.CreateMap<Fee, Mozu.CommerceRuntime.Contracts.Carts.Fee>();
+         //   Mapper.CreateMap<ProductOption, Mozu.CommerceRuntime.Contracts.Products.ProductOption>();
 
-            //Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductConfigurationRequest, Mozu.CommerceRuntime.Contracts.Carts.CartItem>()
+         //   //Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductConfigurationRequest, Mozu.CommerceRuntime.Contracts.Carts.CartItem>()
             //    .ForMember(x => x.Product, op => op.MapFrom(req =>
             //     new Mozu.CommerceRuntime.Contracts.Products.Product()
             //        {

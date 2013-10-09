@@ -1,4 +1,5 @@
-﻿using Mozu.SiteSettings.General.Contracts;
+﻿using System.Threading.Tasks;
+using Mozu.SiteSettings.General.Contracts;
 using Mozu.SiteSettings.Order.Contracts;
 using Mozu.SiteSettings.Shipping.Contracts;
 
@@ -12,7 +13,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             get;
         }
 
-        UX.Models.Settings.CheckoutSettings Checkout
+        SiteSettings.Order.Contracts.CheckoutSettings Checkout
         {
             get;
         }
@@ -22,6 +23,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             get;
         }
 
+        Task<bool> AsyncInit();
 
     }
 }

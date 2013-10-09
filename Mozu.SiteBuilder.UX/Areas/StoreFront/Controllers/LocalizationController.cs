@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.Mvc;
+
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.UX.Controllers;
 using Newtonsoft.Json.Linq;
@@ -8,7 +8,7 @@ using Mozu.SiteBuilder.Mvc.Localization;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    public class LocalizationController : BaseController
+    public class LocalizationController : BaseApiController
     {
         private ILocalizationRepository _localizationRepository;
 
@@ -22,21 +22,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _localizationRepository = localizationRepository;
         }
 
-        public JsonDCResult Index(string colKey, string key)
+        public JObject Index(string colKey, string key)
         {
             var res = _localizationRepository.Get(colKey, key);
             var o = new JObject();
             
             o.Add("foo", res);
-            
-            return new JsonDCResult
-            {
-                Data = o,
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet
-            };
+
+            return o;
         }
 
-        public JsonDCResult Collections(string keys)
+        public JObject Collections(string keys)
         {
             var j = new JObject();
 
@@ -66,23 +62,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             // TODO: STUFF GOES HERE
-
-            return new JsonDCResult
-            {
-                Data = j,
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet
-            };
+            return j;
         }
 
-        public JsonDCResult Flush()
+        public string  Flush()
         {
             _localizationRepository.ClearCache();
 
-            return new JsonDCResult
-            {
-                Data = "Cache flushed",
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet
-            };
+            return "Cache flushed";
         }
     }
 }

@@ -1,0 +1,46 @@
+﻿    <h3 class="mz-panel-header">
+        Review & Place Order
+    </h3>
+    <div class="mz-panel-wrap">
+        {% if Model.IsReady %}
+        <div class="mz-inner-panel" data-bind="changeHeightOn: createAccount(), visible: orderStatus">
+            <p class="mz-desc">Please review all of the information on this page and, if necessary, make changes before placing your order.</p>
+
+            <label class='inline'>
+                <input type="checkbox" name="terms-and-conditions" id="mz-terms-and-conditions" data-mz-value="AgreeToTerms" {% if Model.AgreeToTerms %} checked="checked"{% endif %}> I agree to the <a href="javascript:;">terms &amp; conditions</a>.
+            </label>
+            <span class="mz-validation-message" data-mz-validation-message-for="AgreeToTerms"></span>
+
+            {% if not User or User.isAnonymous %}
+                <label class='inline'>
+                    <input type="checkbox" name="create-new-account" data-mz-value="CreateAccount" {% if Model.CreateAccount %} checked="checked"{% endif %} > Create an account for easy checkout on future orders
+                </label>
+
+                {% if Model.CreateAccount %}
+                <div id="mz-create-account-fields" class="mz-create-account-fields">
+                    <label>
+                        Email
+                        <input type="text" name="new-account-email" data-mz-value="User.EmailAddress" value="{{ Model.User.EmailAddress }}">
+                        <span class="mz-validation-message" data-mz-validation-message-for="User.EmailAddress"></span>
+                    </label>
+                    <label>
+                        Create password
+                        <input type="password" name="new-account-password" data-mz-value="User.Password" value="{{ Model.User.Password }}">
+                    </label>
+                    <label>
+                        Confirm password
+                        <input type="password" name="new-account-confirm" data-mz-value="User.ConfirmPassword" value="{{ Model.ConfirmPassword }}">
+                    </label>
+                    <span class="mz-validation-message" data-mz-validation-message-for="User.Password"></span>
+                    <span class="mz-validation-message" data-mz-validation-message-for="User.ConfirmPassword"></span>
+                </div>
+                {% endif %}
+            {% endif %}
+
+            <div class="mz-next-step">
+                {% include "Modules/Common/LoadingBar" %}
+                <button type="button" class="mz-submit-button mz-button mz-btn-cta" data-mz-action="submit">Place Order</button>
+            </div>
+        </div><!-- .mz-inner-panel -->
+        {% endif %}
+    </div>

@@ -192,7 +192,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
              
                 {
                     //hack to work around bug in api....sent to roeder.
-                    client.Handler = new MyServiceClientMessageHandler((ServiceClientMessageHandler)client.Handler, streamProvider.FileData.SingleOrDefault().Headers.ContentType );
+                 //   client.Handler = new MyServiceClientMessageHandler((ServiceClientMessageHandler)client.Handler, streamProvider.FileData.SingleOrDefault().Headers.ContentType );
                 }
                 
                 
@@ -204,22 +204,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Message3<string>(result.IsSuccessStatusCode, "File uploaded");
         }
 
-        public class MyServiceClientMessageHandler : ServiceClientMessageHandler, IServiceClientMessageHandler
-        {
-            private readonly MediaTypeHeaderValue _contentType;
+        //public class MyServiceClientMessageHandler : ServiceClientMessageHandler, IServiceClientMessageHandler
+        //{
+        //    private readonly MediaTypeHeaderValue _contentType;
 
-            public MyServiceClientMessageHandler(ServiceClientMessageHandler innerClient, MediaTypeHeaderValue contentType)
-                : base(innerClient.ApiContext, innerClient.Settings, innerClient.CacheFactory)
-            {
-                _contentType = contentType;
-            }
+        //    public MyServiceClientMessageHandler(ServiceClientMessageHandler innerClient, MediaTypeHeaderValue contentType)
+        //        : base(innerClient.ApiContext, innerClient.Settings, innerClient.CacheFactory)
+        //    {
+        //        _contentType = contentType;
+        //    }
 
-            public override void InitRequest(HttpRequestMessage request)
-            {
-                request.Content.Headers.ContentType = _contentType;
-                base.InitRequest(request);
-            }
-        }
+        //    public override void InitRequest(HttpRequestMessage request)
+        //    {
+        //        request.Content.Headers.ContentType = _contentType;
+        //        base.InitRequest(request);
+        //    }
+        //}
 
     
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Web.Mvc;
+
 
 namespace Mozu.SiteBuilder.Mvc.Filters
 {
@@ -17,12 +17,7 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
 
 
-        public object PerformWithParamAndContext(object value, object parameter, NDjango.Interfaces.IContext context)
-        {
-            var ctx = context.tryfind("SiteContext").Value as ISiteBuilderContext;
-
-            return CreateUrl(ctx, value, parameter);
-        }
+        
 
         public string CreateUrl(ISiteBuilderContext ctx , object value, object parameter= null)
         {
@@ -48,28 +43,29 @@ namespace Mozu.SiteBuilder.Mvc.Filters
     
         }
 
-        public object DefaultValue
-        {
-            get { return null; }
-        }
 
-        public object PerformWithParam(object value, object parameter)
+        object NDjango.Interfaces.IFilterWithContext.PerformWithParamAndContext(object value, IEnumerable<object> parameter, NDjango.Interfaces.IContext context)
         {
-            var ctx = DependencyResolver.Current.GetService<ISiteBuilderContext>();
-            
+           
+            var ctx = context.tryfind("SiteContext").Value as ISiteBuilderContext;
 
             return CreateUrl(ctx, value, parameter);
+       
         }
 
-
-
-        public object Perform(object value)
+        object NDjango.Interfaces.IFilter.DefaultValue
         {
-            var ctx = DependencyResolver.Current.GetService<ISiteBuilderContext>();
-            
+            get { throw new NotImplementedException(); }
+        }
 
+        object NDjango.Interfaces.IFilter.PerformWithParam(object value, object parameter)
+        {
+            throw new NotImplementedException();
+        }
 
-            return CreateUrl(ctx, value);
+        object NDjango.Interfaces.ISimpleFilter.Perform(object value)
+        {
+            throw new NotImplementedException();
         }
     }
 }

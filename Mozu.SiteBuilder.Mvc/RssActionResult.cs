@@ -1,6 +1,10 @@
-﻿using System.Web.Mvc;
+﻿using System.Net.Http;
+using System.Web.Http.Controllers;
+
 using System.ServiceModel.Syndication;
 using System.Xml;
+using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc
 {
@@ -8,13 +12,14 @@ namespace Mozu.SiteBuilder.Mvc
     {
         public SyndicationFeed Feed { get; set; }
 
-        public override void ExecuteResult(ControllerContext context)
+        public override void ExecuteResult(HttpRequestMessage requestMessage)
         {
-            context.HttpContext.Response.ContentType = "application/rss+xml";
+            var httpContext = requestMessage.HttpContext();
+            httpContext.Response.ContentType = "application/rss+xml";
 
             Rss20FeedFormatter rssFormatter = new Rss20FeedFormatter(Feed);
 
-            using (XmlWriter writer = XmlWriter.Create(context.HttpContext.Response.Output))
+            using (XmlWriter writer = XmlWriter.Create(httpContext.Response.Output))
             {
                 rssFormatter.WriteTo(writer);
             }

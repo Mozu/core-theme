@@ -11,7 +11,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     using System.Linq;
     using System.Text;
     using NDjango.Interfaces;
-    using System.Web.Mvc;
+   
     using System.Web.Routing;
     using System.Reflection;
     using System.Web;
@@ -29,9 +29,11 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             }
         }
 
-        protected override string ProcessTag(HtmlHelper html, ArgumentCollection arguments, ref IContext context)
+      
+        protected override void ProcessTag( ArgumentCollection arguments, ref IContext context, out string buffer, out string template)
         {
-            Html = html;
+            buffer = template = null;
+       
             Arguments = arguments;
             Context = context;
 
@@ -42,7 +44,8 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             {
                 if (IsParamMatch(arguments, pVals, parms))
                 {
-                    return Invoke(html, arguments, ref context, pVals );
+                    buffer= Invoke( arguments, ref context, pVals );
+                    return;
                 }
                 else
                 {
@@ -55,12 +58,12 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         }
         
 
-        private string Invoke(HtmlHelper html, ArgumentCollection arguemnts, ref IContext context, List<object> pVals)
+        private string Invoke( ArgumentCollection arguemnts, ref IContext context, List<object> pVals)
         {
             var t = this.GetType();
             var tag = (DynamicTagBase)Activator.CreateInstance(t);
             tag.Context = context;
-            tag.Html = html;
+   
             tag.Arguments = arguemnts;
             object ret = null;
             try
@@ -123,7 +126,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
         
 
-        public HtmlHelper Html
+        public Object Html
         {
             get;
             set;
