@@ -1,6 +1,7 @@
 /**
  * @class Taco.view.order.modal.AddPaymentManual
  */
+
 Ext.define('Taco.view.order.modal.AddPaymentManual', {
     extend: 'Taco.core.ux.window.Modal',
     requires: [
@@ -8,12 +9,7 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
         'Taco.core.ux.form.CurrencyField'
     ],
 
-    data: {},
-    field: '',
-
     autoShow: true,
-    overflowX: 'hidden',
-    overflowY: 'auto',
     scale: 'large',
     title: 'Add Manual Payment',
 
@@ -217,6 +213,13 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
         this.items = [this.form];
 
         this.callParent(arguments);
+
+        this.on({
+            save: {
+                scope: this,
+                fn: 'save'
+            }
+        });
     },
 
     save: function () {
@@ -238,9 +241,9 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
 
         me.record.addManualPayment({
             jsonData: {
-                orderId: me.record.getId(),
+                orderId: this.record.getId(),
                 billingInfo: cardInfo,
-                interactionDate: me.formpanel.getValues()['interactionDate'],
+                interactionDate: formValues.interactionDate,
                 amount: amount,
                 gatewayTransactionId: transactionId,
                 gatewayInteractionId: interactionId,
