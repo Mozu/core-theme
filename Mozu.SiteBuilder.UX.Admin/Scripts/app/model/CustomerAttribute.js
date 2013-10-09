@@ -30,7 +30,7 @@ Ext.define('Taco.model.CustomerAttribute', {
         api: {
             read: '/admin/Scripts/app/mocks/CustomerAttributes.json',
             //read: '/admin/app/discount/list',
-            //create: '/admin/app/discount/create',
+            //create: '/admin/app/Customerattribute/create',
             //update: '/admin/app/discount/edit',
             //destroy: '/admin/app/discount/delete'
         },

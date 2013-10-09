@@ -1,11 +1,11 @@
 /**
- * @class Taco.view.attribute.Index
+ * @class Taco.view.customerAttribute.Index
  */
 
 Ext.define('Taco.view.customerAttribute.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     alias: 'widget.attributeindex',
-    requires: ['Taco.model.CustomerAttribute', 'Taco.store.CustomerAttributes'/*, 'Taco.view.attribute.Edit'*/],
+    requires: ['Taco.model.CustomerAttribute', 'Taco.store.CustomerAttributes', 'Taco.view.customerAttribute.Edit'],
 
     requiresContextOfType: ['c', 's'],
 
@@ -13,7 +13,7 @@ Ext.define('Taco.view.customerAttribute.Index', {
     store: {
         type: 'Taco.store.CustomerAttributes'
     },
-    //editorName: 'Taco.view.attribute.Edit',
+    editorName: 'Taco.view.customerAttribute.Edit',
     filterProperty: 'name',
     typeName: 'Customer Attributes',
     initComponent: function () {
@@ -23,7 +23,7 @@ Ext.define('Taco.view.customerAttribute.Index', {
                 xtype: 'primarybutton',
                 text: 'Create New Attribute',
                 click: function () {
-                    Taco.core.StateManager.attemptNavigate('attributes/create');
+                    Taco.core.StateManager.attemptNavigate('customerattribute/create');
                 }
             }]
         };
@@ -69,7 +69,7 @@ Ext.define('Taco.view.customerAttribute.Index', {
     
     launchEditor: function (record) {
         Ext.defer(function () {
-            Taco.core.StateManager.attemptNavigate('attribute/edit/' + record.getId(), { complexMetaData: { record: record } });
+            Taco.core.StateManager.attemptNavigate('customerattribute/edit/' + record.getId(), { complexMetaData: { record: record } });
         }, 1, this);
         return;
     }
