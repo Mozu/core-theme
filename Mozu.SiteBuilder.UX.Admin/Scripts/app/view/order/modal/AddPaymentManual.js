@@ -132,7 +132,7 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
                     },
                     defaults: {
                         margin: '0 20 0 0',
-                        width: 170
+                        width: 360
                     },
                     items: [{
                         xtype: 'textfield',
@@ -141,8 +141,19 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
                     }, {
                         xtype: 'textfield',
                         name: 'address2',
-                        fieldLabel: 'Address 2'
-                    }, {
+                        fieldLabel: 'Address 2',
+                        margin: '0 0 0 0'
+                    }]
+                }, {
+                    xtype: 'container',
+                    layout: {
+                        type: 'hbox'
+                    },
+                    defaults: {
+                        margin: '0 20 0 0',
+                        width: 360
+                    },
+                    items: [{
                         xtype: 'textfield',
                         name: 'address3',
                         fieldLabel: 'Address 3'

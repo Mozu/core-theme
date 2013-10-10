@@ -194,6 +194,8 @@ Ext.define('Taco.core.ux.window.Modal', {
                         text: windowCfg.secondaryText || this.secondaryText,
                         handler: windowCfg.secondaryHandler || this.secondaryHandler
                     });
+                } else {
+                    Ext.apply(action, actionCfg);
                 }
             }
 
@@ -233,8 +235,7 @@ Ext.define('Taco.core.ux.window.Modal', {
             cls: ['taco-window-action-toolbar', toolbar.cls].join(' '),
             layout: {
                 type: 'hbox',
-                pack: 'end',
-                defaultMargins: '0 10 0 0'
+                pack: 'end'
             }
         };
 

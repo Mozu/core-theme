@@ -102,6 +102,22 @@
 
     .#{$prefix}toolbar {
         background-color: $color-neutral-white;
+        padding-left: 19px;
+        padding-right: 19px;
+
+        .#{$prefix}toolbar-item {
+            margin-left: 10px;
+
+            &:first-child {
+                margin-left: 0px;
+            }
+        }
+    }
+}
+.#{$prefix}window-modal {
+    .#{$prefix}toolbar {
+        padding-left: 20px;
+        padding-right: 20px;
     }
 }
 
