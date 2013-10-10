@@ -408,6 +408,10 @@ Ext.define('Taco.view.orderAttribute.Form', {
                 scope: this
             }*/
         }, {
+            xtype: 'checkboxfield',
+            name: 'isRequired',
+            boxLabel: 'This attribute is required'
+        }, {
             xtype: 'selectfield',
             fieldLabel: 'Display Group',
             name: 'displaygroup',
