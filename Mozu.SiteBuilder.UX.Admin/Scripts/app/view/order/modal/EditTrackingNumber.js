@@ -78,7 +78,6 @@ Ext.define('Taco.view.order.modal.EditTrackingNumber', {
                 }
                 
                 this.record.reload();
-                me.hide();
             },
             failure: function (response) {
                 // error handling here

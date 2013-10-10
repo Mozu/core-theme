@@ -35,12 +35,6 @@ Ext.define('Taco.view.order.modal.IssueCredit', {
 
         this.items = [this.form];
 
-        // basic = this.form.getForm();
-
-        // if (basic) {
-        //     basic.findField('amount').setValue(this.record.get('amountCollected'));
-        // }
-
         this.callParent(arguments);
 
         this.on({
@@ -74,27 +68,27 @@ Ext.define('Taco.view.order.modal.IssueCredit', {
         this.order.issueCredit({
             jsonData: data,
             success: function (response) {
-                // success handling here
-                var json = Ext.decode(response.responseText, true);
+                var json = Ext.decode(response.responseText, true),
+                    errorDialog;
+
                 if (!json || !json.success) {
-                    // service didnt' return data properly
                     Ext.message('error saving credit');
                     
-                    var errorDialog = Ext.create('Taco.core.ux.window.Alert', {
+                    errorDialog = Ext.create('Taco.core.ux.window.Alert', {
                         html: 'Error saving credit'
                     });
                     errorDialog.show();
+
                     return;
                 }
                 this.fireEvent('aftersave');
-                me.hide();
             },
             failure: function (response) {
-                // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : 'Error saving credit';
+                    msg = (json && json.Message) ? json.Message : 'Error saving credit',
+                    errorDialog;
                 
-                var errorDialog = Ext.create('Taco.core.ux.window.Alert', {
+                errorDialog = Ext.create('Taco.core.ux.window.Alert', {
                     html: msg
                 });
                 errorDialog.show();
