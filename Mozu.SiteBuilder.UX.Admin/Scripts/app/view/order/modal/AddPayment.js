@@ -1,268 +1,270 @@
 /**
  * @class Taco.view.order.modal.AddPayment
  */
+
 Ext.define('Taco.view.order.modal.AddPayment', {
-    extend: 'Ext.window.Window',
-    requires: ['Taco.core.ux.form.DateTime', 'Taco.core.ux.form.CurrencyField'],
-    cls: Taco.baseCSSPrefix + 'order-modal ' + Taco.baseCSSPrefix + 'window-plain',
-    autoShow: false,
+    extend: 'Taco.core.ux.window.Modal',
+    requires: [
+        'Taco.core.ux.form.DateTime',
+        'Taco.core.ux.form.CurrencyField'
+    ],
+
+    scale: 'large',
+    title: 'Add Payment',
     
-    ghost: false,
-    
-    resizeable: false,
-    modal: true,
-    
-    title: "Add Payment",
-    
-    width: 700,
-    height: 530,
-    //style: 'overflow-y: scroll;overflow-x: hidden;',
-    data: {},
-    field: '',
-    autoScroll:true,
-    
-    initComponent: function (eOpts) {
+    initComponent: function () {
         var me = this;
 
-        me.extraInfoCont = Ext.create('Ext.form.Panel', {
-            xtype: 'formpanel',
-            bodyCls: Taco.baseCSSPrefix + 'flexform',
-            layout: { type: 'hbox' },
-            hidden: true,
+        this.form = Ext.create('Taco.core.ux.form.Form', {
+            layout: {
+                type: 'vbox'
+            },
             items: [{
                 xtype: 'container',
-                style: 'padding-right: 10px;',
-                defaults: {
-                    xtype: 'textfield',
-                    labelSeparator: '',
-                    labelAlign: 'top',
-                    width: 300
+                layout: {
+                    type: 'hbox'
                 },
-                items: [
-                {
+                defaults: {
+                    margin: '0 20 0 0',
+                    width: 180
+                },
+                items: [{
                     xtype: 'textfield',
-                    name: 'firstName',
-                    fieldLabel: 'First Name'
+                    name: 'nameOnCard',
+                    fieldLabel: 'Name on Card',
+                    width: 340
                 }, {
-                    xtype: 'textfield',
-                    name: 'middleName',
-                    fieldLabel: 'Middle Name'
+                    xtype: 'currencyfield',
+                    name: 'amount',
+                    fieldLabel: 'Amount',
+                    emptyText: '0'
                 }, {
-                    xtype: 'textfield',
-                    name: 'lastName',
-                    fieldLabel: 'Last Name'
-                }, {
-                    xtype: 'textfield',
-                    name: 'email',
-                    fieldLabel: 'Email'
-                }, {
-                    xtype: 'textfield',
-                    name: 'address1',
-                    fieldLabel: 'Address 1'
-                }, {
-                    xtype: 'textfield',
-                    name: 'address2',
-                    fieldLabel: 'Address 2'
-                }, {
-                    xtype: 'textfield',
-                    name: 'address3',
-                    fieldLabel: 'Address 3'
-                }, {
-                    xtype: 'textfield',
-                    name: 'address4',
-                    fieldLabel: 'Address 4'
+                    xtype: 'combobox',
+                    name: 'cardType',
+                    itemId: 'cardType',
+                    fieldLabel: 'Card Type',
+                    margin: '0 0 0 0',
+                    allowBlank: false,
+                    editable: false,
+                    forceSelection: true,
+                    store: [
+                        ['Visa', 'Visa'],
+                        ['Mastercard', 'Mastercard']
+                    ]
                 }]
             }, {
                 xtype: 'container',
-                defaults: {
-                    xtype: 'textfield',
-                    labelSeparator: '',
-                    labelAlign: 'top',
-                    width: 300
+                layout: {
+                    type: 'hbox'
                 },
-                items: [
-                 {
-                     xtype: 'textfield',
-                     name: 'cityOrTown',
-                     fieldLabel: 'City'
-                 },
-                {
+                defaults: {
+                    margin: '0 20 0 0',
+                    width: 120
+                },
+                items: [{
                     xtype: 'textfield',
-                    name: 'state',
-                    fieldLabel: 'State'
+                    name: 'cardNumber',
+                    itemId: 'cardNumber',
+                    fieldLabel: 'Card Number',
+                    width: 340
+                }, {
+                    xtype: 'numberfield',
+                    name: 'expireMonth',
+                    hideTrigger: true,
+                    mouseWheelEnabled: false,
+                    fieldLabel: 'Exp Month',
+                    minValue: 1,
+                    maxValue: 12
+                }, {
+                    xtype: 'numberfield',
+                    name: 'expireYear',
+                    hideTrigger: true,
+                    mouseWheelEnabled: false,
+                    fieldLabel: 'Exp Year'
                 }, {
                     xtype: 'textfield',
-                    name: 'zipCode',
-                    fieldLabel: 'ZIP'
-                }, {
-                    xtype: 'textfield',
-                    name: 'countryCode',
-                    fieldLabel: 'Country'
-                }, {
-                    xtype: 'textfield',
-                    name: 'homePhone',
-                    fieldLabel: 'Home Phone'
-                }, {
-                    xtype: 'textfield',
-                    name: 'workPhone',
-                    fieldLabel: 'Work Phone'
-                }, {
-                    xtype: 'textfield',
-                    name: 'mobilePhone',
-                    fieldLabel: 'Mobile Phone'
+                    name: 'cvv',
+                    itemId: 'cvv',
+                    fieldLabel: 'CVV',
+                    margin: '0 0 0 0',
+                    width: 100
                 }]
-            }],
-            listeners: {
-                afterrender: function (panel) {
-                    Ext.destroy(panel.getLayout().clearEl);
-                }
-            }
-        });
-
-        me.formpanel = Ext.create('Ext.form.Panel', {
-            xtype: 'formpanel',
-            bodyCls: Taco.baseCSSPrefix + 'flexform',
-            layout: { type: 'vbox' },
-            items: [{
-                xtype: 'panel',
-                layout: { type: 'hbox' },
+            }, {
+                xtype: 'fieldcontainer',
+                layout: 'fit',
+                fieldLabel: 'Payment Address',
+                items: [{
+                    xtype: 'checkboxfield',
+                    boxLabel: 'Use billing address',
+                    name: 'sameAsBilling',
+                    checked: true,
+                    scope: this,
+                    handler: this.toggleExtraInfo
+                }]
+            }, {
+                xtype: 'container',
+                itemId: 'extraInfo',
+                hidden: true,
+                layout: {
+                    type: 'vbox'
+                },
                 items: [{
                     xtype: 'container',
-                    style: 'padding-right: 10px;',
-                    defaults: {
-                        xtype: 'textfield',
-                        labelSeparator: '',
-                        labelAlign: 'top',
-                        width: 300
+                    layout: {
+                        type: 'hbox'
                     },
-                    items: [
-                    {
-                        name: 'nameOnCard',
-                        fieldLabel: 'Name on Card'
+                    defaults: {
+                        margin: '0 25 0 0',
+                        width: 230
+                    },
+                    items: [{
+                        xtype: 'textfield',
+                        name: 'firstName',
+                        fieldLabel: 'First Name'
                     }, {
-                        xtype: 'currencyfield',
-                        name: 'amount',
-                        fieldLabel: 'Amount',
-                        emptyText: '0'
+                        xtype: 'textfield',
+                        name: 'middleName',
+                        fieldLabel: 'Middle Name'
                     }, {
-                        xtype: 'numberfield',
-                        name: 'expireMonth',
-                        hideTrigger:true,
-                        mouseWheelEnabled:false,
-                        fieldLabel: 'Exp Month',
-                        minValue: 1,
-                        maxValue: 12
-                    }, {
-                        xtype: 'numberfield',
-                        hideTrigger: true,
-                        mouseWheelEnabled: false,
-                        name: 'expireYear',
-                        fieldLabel: 'Exp Year'
+                        xtype: 'textfield',
+                        name: 'lastName',
+                        fieldLabel: 'Last Name',
+                        margin: '0 0 0 0'
                     }]
                 }, {
                     xtype: 'container',
-                    defaults: {
-                        xtype: 'textfield',
-                        labelSeparator: '',
-                        labelAlign: 'top'
+                    layout: {
+                        type: 'hbox'
                     },
-                    items: [
-                    {
-                        xtype: 'combobox',
-                        name: 'cardType',
-                        itemId: 'cardType',
-                        fieldLabel: 'Card Type',
-                        allowBlank: false,
-                        //                    editable: false,
-                        forceSelection: true,
-                        //                    listConfig: { shadow: false },
-                        //                    shrinkWrap: 3,
-                        store: [['Visa', 'Visa'], ['Mastercard', 'Mastercard']]
+                    defaults: {
+                        margin: '0 20 0 0',
+                        width: 360
+                    },
+                    items: [{
+                        xtype: 'textfield',
+                        name: 'address1',
+                        fieldLabel: 'Address 1'
                     }, {
-                        name: 'cardNumber',
-                        itemId: 'cardNumber',
-                        fieldLabel: 'Card Number'
+                        xtype: 'textfield',
+                        name: 'address2',
+                        fieldLabel: 'Address 2',
+                        margin: '0 0 0 0'
+                    }]
+                }, {
+                    xtype: 'container',
+                    layout: {
+                        type: 'hbox'
+                    },
+                    defaults: {
+                        margin: '0 20 0 0',
+                        width: 360
+                    },
+                    items: [{
+                        xtype: 'textfield',
+                        name: 'address3',
+                        fieldLabel: 'Address 3'
                     }, {
-                        name: 'cvv',
-                        itemId: 'cvv',
-                        fieldLabel: 'CVV',
-                        width: 100
+                        xtype: 'textfield',
+                        name: 'address4',
+                        fieldLabel: 'Address 4',
+                        margin: '0 0 0 0'
+                    }]
+                }, {
+                    xtype: 'container',
+                    layout: {
+                        type: 'hbox'
+                    },
+                    defaults: {
+                        margin: '0 20 0 0',
+                        width: 170
+                    },
+                    items: [{
+                        xtype: 'textfield',
+                        name: 'cityOrTown',
+                        fieldLabel: 'City'
                     }, {
-                        xtype: 'checkboxfield',
-                        boxLabel: 'Address Same as billing',
-                        name: 'sameAsBilling',
-                        checked: true,
-                        style: 'margin-top:50px;',
-                        handler: function (it, status) {
-                            console.log(status);
-                            // me.extraInfoCont.show(!status);
-                            if (!status) {
-                                me.extraInfoCont.show();
-                            } else {
-                                me.extraInfoCont.hide();
-                            }
-                        }
+                        xtype: 'textfield',
+                        name: 'state',
+                        fieldLabel: 'State'
+                    }, {
+                        xtype: 'textfield',
+                        name: 'zipCode',
+                        fieldLabel: 'ZIP Code'
+                    }, {
+                        xtype: 'textfield',
+                        name: 'countryCode',
+                        fieldLabel: 'Country',
+                        margin: '0 0 0 0'
+                    }]
+                }, {
+                    xtype: 'container',
+                    layout: {
+                        type: 'hbox'
+                    },
+                    defaults: {
+                        margin: '0 20 0 0',
+                        width: 170
+                    },
+                    items: [{
+                        xtype: 'textfield',
+                        name: 'email',
+                        fieldLabel: 'Email'
+                    }, {
+                        xtype: 'textfield',
+                        name: 'homePhone',
+                        fieldLabel: 'Home Phone'
+                    }, {
+                        xtype: 'textfield',
+                        name: 'workPhone',
+                        fieldLabel: 'Work Phone'
+                    }, {
+                        xtype: 'textfield',
+                        name: 'mobilePhone',
+                        fieldLabel: 'Mobile Phone',
+                        margin: '0 0 0 0'
                     }]
                 }]
-            }],
-            listeners: {
-                afterrender: function (panel) {
-                    Ext.destroy(panel.getLayout().clearEl);
-                }
-            }
+            }]
         });
 
-        me.formpanel.add(me.extraInfoCont);
-
-        
-        this.items = [
-            this.formpanel
-        ];
-
-        this.primaryButton = Ext.widget('primarybutton', {
-            text: 'Save',
-            click: function () {
-                me.setLoading(true, me.body);
-                this.pciProcessor.process();
-            },
-            scope: this
-        });
-
-        this.buttons = [
-            {
-                xtype: 'button',
-                ui: "action",
-                scale: "medium",
-                text: 'Cancel',
-                margin: {
-                    right: 10
-                },
-                handler: function () {
-                    me.hide();
-                },
-                scope: me
-            },
-            this.primaryButton
-        ];
-
-
+        this.items = [this.form];
 
         this.callParent(arguments);
 
-        me.createPciProcessor();
+        this.createPciProcessor();
 
+        this.on({
+            save: {
+                scope: this,
+                fn: 'save'
+            }
+        });
     },
 
-    getPCIaaS: function() {
-        return this.self.PCIaaS;
+    /**
+     * Create a PCIaaS form field.
+     *
+     * @private
+     */
+    createPciFormField: function (field) {
+        return function (val) {
+            if (val) {
+                return field.setValue(val);
+            }
+            return field.getValue();
+        }
     },
 
-    createPciProcessor: function() {
+    /**
+     * Create a PCIaaS processor.
+     *
+     * @private
+     */
+    createPciProcessor: function () {
         var me = this,
             PCI = me.getPCIaaS();
 
-        if (!PCI)
-        {
+        if (!PCI) {
             return me.mon(Taco.app, 'pciloaded', me.createPciProcessor, me);
         }
 
@@ -281,7 +283,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                 success: function () {
                     me.pciProcessor.applyMask();
                     var order = me.record,
-                    formValues = me.formpanel.getValues(),
+                    formValues = me.form.getValues(),
                     billingInfo = {
                         isSameBillingShippingAddress: !!formValues.sameAsBilling,
                         paymentServiceCardId: formValues.paymentServiceCardId,
@@ -329,7 +331,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                                     return;
                                 }
                                 
-                                me.hide();
+                                // me.hide();
                                 order.reload();
                             },
                             failure: function (response) {
@@ -356,7 +358,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                                     return;
                                 }
 
-                                me.hide();
+                                // me.hide();
                                 order.reload();
                             },
                             failure: function (response) {
@@ -379,8 +381,18 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         });
     },
 
-    /*
-     * returns a nice adapter that the PCI-as-a-service lib can use to read all our form fields 
+    /**
+     * @private
+     */
+    getPCIaaS: function() {
+        return this.self.PCIaaS;
+    },
+
+    /**
+     * Return a nice adapter that the PCI-as-a-service lib can use to read all our form fields.
+     *
+     * @private
+     * @return {object} The adapter.
      */
     getPciFieldsAdapter: function() {
         var me = this;
@@ -396,19 +408,21 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         }
     },
 
-    createPciFormField: function(field) {
-        return function(val) {
-            if (val)
-            {
-                return field.setValue(val);
-            }
-            return field.getValue();
-        }
+    save: function () {
+        this.setLoading(true, this.body);
+        this.pciProcessor.process();
+    },
+
+    toggleExtraInfo: function (checkbox, isChecked) {
+        var extraInfo = this.down('#extraInfo');
+
+        extraInfo[isChecked ? 'hide' : 'show']();
     }
 },
 /* class definition-time function */
 function() {
     var me = this;
+
     Ext.Loader.loadScript({
         url: '/admin/scripts/resources/lib/pci-temp.js',
         onLoad: function() {
