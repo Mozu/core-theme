@@ -55,8 +55,18 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 
 
                 var tsc = new TaskCompletionSource<bool>();
-                action.ExecuteResult(this.RequestMessage);
-                tsc.SetResult(false);
+                try
+                {
+                    action.ExecuteResult(this.RequestMessage);
+                    tsc.SetResult(false);
+                }
+                catch (Exception ex)
+                {
+                    tsc.SetException(new HtmlMediaTypeFormattingException(ex));
+                  
+                }
+               
+                
                 return tsc.Task;
             }
         }
@@ -73,5 +83,13 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
         }
 
         public HttpRequestMessage RequestMessage { get; set; }
+    }
+    public class HtmlMediaTypeFormattingException : Exception
+    {
+        public HtmlMediaTypeFormattingException(Exception inner)
+            : base("Bad", inner)
+        {
+        }
+
     }
 }

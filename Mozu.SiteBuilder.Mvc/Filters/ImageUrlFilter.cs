@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Mozu.SiteBuilder.Mvc.Tags;
 
 
 namespace Mozu.SiteBuilder.Mvc.Filters
@@ -19,7 +20,7 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
         
 
-        public string CreateUrl(ISiteBuilderContext ctx , object value, object parameter= null)
+        public string CreateUrl(ISiteBuilderApiContext  ctx , object value, object parameter= null)
         {
             
             var id = value as string;
@@ -46,8 +47,8 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
         object NDjango.Interfaces.IFilterWithContext.PerformWithParamAndContext(object value, IEnumerable<object> parameter, NDjango.Interfaces.IContext context)
         {
-           
-            var ctx = context.tryfind("SiteContext").Value as ISiteBuilderContext;
+
+            var ctx = context.SiteBuilderApiContext();
 
             return CreateUrl(ctx, value, parameter);
        

@@ -60,6 +60,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
                 .WithLibrary(typeof (HyprViewEngine).Assembly)
                 .WithLibrary(typeof (AutofacModule).Assembly)
                 .WithLoader(new TemplateLoader())
+                
                 .WithSetting("settings.DEFAULT_AUTOESCAPE", false);
 
 

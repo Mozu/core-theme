@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Mozu.SiteBuilder.Mvc.Settings;
+using Mozu.SiteBuilder.Mvc.Tags;
 
 namespace Mozu.SiteBuilder.Mvc.Filters
 {
@@ -15,7 +17,7 @@ namespace Mozu.SiteBuilder.Mvc.Filters
            
             var ctx = context.tryfind("SiteContext").Value as ISiteBuilderContext;
             var theme = ctx.Theme.Id;
-            var ts = ctx.ThemeSettingsRepository.GetTimeStamp(theme);
+            var ts = context.Resolve<IThemeSettingsRepository>().GetTimeStamp(theme);
             return string.Format("<link rel=\"stylesheet\" href=\"{0}?t={1}&dt={2}\"  type=\"text/css\">", value, theme, ts.Ticks .ToString( "X2"));
                 
             

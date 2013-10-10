@@ -6,6 +6,7 @@ using Autofac;
 using Mozu.Core.Api.Client;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Settings;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteSettings.General.Contracts.Clients;
 
@@ -22,7 +23,8 @@ namespace Mozu.SiteBuilder.UX.Filters
             
             if (controller != null || controller.SiteContext.PageContext != null)
             {
-                return controller.SiteContext.Settings.AsyncInit().ContinueWith(x => continuation().Result);
+                var settings = actionContext.Request.Resolve<ISettingsRepository>();
+                return settings.GetGeneralSettings().ContinueWith(x => continuation().Result);
 
             }
             else

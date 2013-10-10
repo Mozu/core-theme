@@ -29,8 +29,9 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 return ;
 
 
-            object model = string.Join(",", scriptsArray.Select(x => "'" + x + "'").ToArray());
-            buffer= context.Render("debugscripts", model);
+            string model = string.Join(",", scriptsArray.Select(x => "'" + x + "'"));
+            //buffer= context.Render("debugscripts", model);
+            buffer = model;
         }
     }
 }

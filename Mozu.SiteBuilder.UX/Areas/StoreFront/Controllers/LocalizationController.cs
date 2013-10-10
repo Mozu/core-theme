@@ -65,11 +65,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return j;
         }
 
-        public string  Flush()
-        {
-            _localizationRepository.ClearCache();
-
-            return "Cache flushed";
-        }
+       
     }
 }

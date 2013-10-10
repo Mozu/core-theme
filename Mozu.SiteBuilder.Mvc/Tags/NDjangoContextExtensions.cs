@@ -46,6 +46,10 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             }
             return null;
         }
+        public static ISiteBuilderApiContext SiteBuilderApiContext(this NDjango.Interfaces.IContext context)
+        {
+            return context.ViewContext().LifetimeScope.Resolve<ISiteBuilderApiContext>();
+        }
         public static ISiteBuilderContext SiteBuilderContext(this NDjango.Interfaces.IContext context)
         {
             return context.ViewContext().LifetimeScope.Resolve<ISiteBuilderContext>();

@@ -39,6 +39,14 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
     }
 
     [DataContract]
+    public class SettingsContainer : ModelBase
+    {
+        [DataMember(Name = "general")]
+        public GeneralSettings General { get; set; }
+    }
+
+
+    [DataContract]
     public class GeneralSettings  :ModelBase
     {
         [DataMember(Name = "websiteName")]

@@ -473,9 +473,7 @@
     <Compile Include="Navigation\INavigationRepository.cs" />
     <Compile Include="Navigation\NavigationGandalf.cs" />
     <Compile Include="Navigation\NavigationRepository.cs" />
-    <Compile Include="Orders\IOrderService.cs" />
     <Compile Include="Orders\IPciSettingsProvider.cs" />
-    <Compile Include="Orders\OrderService.cs" />
     <Compile Include="Orders\OrderStatusProvider.cs" />
     <Compile Include="RssActionResult.cs" />
     <Compile Include="SearchContext.cs" />
