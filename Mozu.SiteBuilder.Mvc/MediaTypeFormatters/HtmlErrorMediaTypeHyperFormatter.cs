@@ -33,13 +33,15 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
         }
 
 
-
+        private static string wrapperException = typeof (HtmlMediaTypeFormattingException).FullName;
         public override System.Threading.Tasks.Task WriteToStreamAsync(Type type, object value, Stream writeStream, System.Net.Http.HttpContent content, System.Net.TransportContext transportContext)
         {
 
 
 
-            var model = (System.Web.Http.HttpError)value;
+            var tempModel = (System.Web.Http.HttpError)value;
+            var model = tempModel;
+           
 
             var innerException = model;
             while (true)
@@ -47,7 +49,15 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 object obj;
                 if (model.TryGetValue("InnerException", out obj))
                 {
-                    model = (System.Web.Http.HttpError)obj;
+                    tempModel = (System.Web.Http.HttpError)obj;
+                    if (tempModel["ExceptionType"] as string == wrapperException)
+                    {
+                        model = (System.Web.Http.HttpError) tempModel["InnerException"];
+                        break;
+                        
+                    }
+
+                    
                 }
                 else
                 {
@@ -55,7 +65,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 }
             }
 
-
+                
 
 
 

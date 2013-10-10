@@ -12,30 +12,27 @@ using System.Collections.Generic;
 
 namespace Mozu.SiteBuilder.Mvc
 {
-    public interface ISiteBuilderContext : IEditableContext 
+    public interface ISiteBuilderContext : IEditableContext
     {
-        bool IsDebugMode { get; set; }
-        //SiteConfiguration SiteConfiguration { get;  }
 
-        int TenantId { get; set; }
-        int? SiteId { get; set; }
-        int? SiteGroupId { get; set; }
-
-
-        Mozu.Core.UserProfile UserProfile { get; }
-
-        IApiContext ApiContext { get; }
+     
         PageContext PageContext { get; set; }
         ICatalogContext CatalogContext { get; set; }
-        ISearchContext SearchContext { get; set; }
+     //   ISearchContext SearchContext { get; set; }
         NavigationContext Navigation { get; }
-        object this[string key] { get; set; }
-        RuntimeConfigurationFieldCollection ThemeSettings { get;  }
-        ISettingsRepository Settings { get; }
-        T Resolve<T>();
-        void Save();
 
-        IThemeSettingsRepository ThemeSettingsRepository { get; }
+        object this[string key] { get; set; }
+
+        RuntimeConfigurationFieldCollection ThemeSettings { get;  }
+
+        UX.Models.Settings.SettingsContainer Settings { get; }
+
+
+        Mozu.SiteBuilder.UX.Models.Customers.User User { get; }
+
+       // IThemeSettingsRepository ThemeSettingsRepository { get; }
+
+
         bool IsDisposed { get; }
         /// <summary>
         /// Returns true if the visitor is using a mobile device.
@@ -61,11 +58,29 @@ namespace Mozu.SiteBuilder.Mvc
         /// </summary>
         Theme MobileTheme { get; }
 
+        IAnalyticsContext AnalyticsContext { get; }
+       
+    }
+
+    public interface IAnalyticsContext
+    {
         /// <summary>
         /// Returns the currently set GoogleAnalyticsCode or null if not set.
         /// </summary>
         string GoogleAnalyticsCode { get; }
+
         bool GoogleAnalyticsEnabled { get; }
         bool GoogleAnalyticsEcommerceEnabled { get; }
+    }
+
+    public class AnalyticsContext : IAnalyticsContext
+    {
+        public string GoogleAnalyticsCode { get; set; }
+
+        public bool GoogleAnalyticsEnabled
+        { get; set; }
+
+        public bool GoogleAnalyticsEcommerceEnabled
+        { get; set; }
     }
 }

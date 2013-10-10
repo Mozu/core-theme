@@ -23,17 +23,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     public class SitemapController : BaseApiController
     {
         INavigationRepository _nav;
-        ISiteBuilderContext _sbctx;
+    
         private readonly ISitesWebApiClient _sitesWebApi;
         private NavigationGandalf _gandalf;
 
-        public SitemapController(INavigationRepository navigationRepository, NavigationGandalf gandalf, ISiteBuilderContext sbctx , ISitesWebApiClient sitesWebApi
- 
-            )
+        public SitemapController(INavigationRepository navigationRepository, NavigationGandalf gandalf, ISitesWebApiClient sitesWebApi)
         {
             _nav = navigationRepository;
             _gandalf = gandalf;
-            _sbctx = sbctx;
+           
             _sitesWebApi = sitesWebApi;
         }
 
@@ -77,7 +75,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// </summary>
         private async Task<string> GetSitePrimaryDomain()
         {
-            int siteId = _sbctx.SiteId.GetValueOrDefault(-1);
+            int siteId = SbApiContext.SiteId.GetValueOrDefault(-1);
 
             // we have to use the service client to lookup a Site object by id
             var client = _sitesWebApi;

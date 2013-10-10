@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
  
     public class EmailController : CmsPagesController
     {
-        private readonly IOrderService _orderService;
+      
        
         private static List<EmailTypeInfo> g_emailTypeInfos;
         public class Topics
@@ -102,13 +102,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             IDocumentTypeWebApiClient docTypeRepo,
             ISiteBuilderContext context,
             ICmsServiceWrapper cmsService,
-            IOrderService orderService,
+          
             ICmsTypeHelper cmsTypeHelper,
       
             ILifetimeScope lifetimeScope)
             : base(docRepo, docTypeRepo, context, cmsService, cmsTypeHelper, lifetimeScope)
         {
-            _orderService = orderService;
+            
         }
 
         //

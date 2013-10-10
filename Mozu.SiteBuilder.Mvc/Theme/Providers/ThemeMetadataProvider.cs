@@ -112,6 +112,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Providers
                                                                                  Name = x.Name,
                                                                                  FullPath = x.FullName,
                                                                                  RootPath = themePath,
+                                                                                 IsFile = !x.Attributes.HasFlag(FileAttributes.Directory ),
                                                                                  VirtualPathNoExt = vPathNoExt,
                                                                                  VirtualPath = vPath
                                                                              };

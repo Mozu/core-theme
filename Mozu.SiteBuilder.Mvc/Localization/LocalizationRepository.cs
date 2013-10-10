@@ -16,38 +16,17 @@ namespace Mozu.SiteBuilder.Mvc.Localization
     {
         private readonly MozuVirtualPathProvider _mozuVirtualPathProvider;
         private readonly ISiteBuilderContext _siteBuilderContext;
+        private readonly ISiteBuilderApiContext _builderApiContext;
         private static readonly ConcurrentDictionary<string, Dictionary<string, Dictionary<string, string>>> _tableCache = new ConcurrentDictionary<string, Dictionary<string, Dictionary<string, string>>>();
         
-        public LocalizationRepository(MozuVirtualPathProvider mozuVirtualPathProvider , ISiteBuilderContext siteBuilderContext)
+        public LocalizationRepository(MozuVirtualPathProvider mozuVirtualPathProvider , ISiteBuilderContext siteBuilderContext, ISiteBuilderApiContext builderApiContext)
         {
             _mozuVirtualPathProvider = mozuVirtualPathProvider;
             _siteBuilderContext = siteBuilderContext;
+            _builderApiContext = builderApiContext;
         }
 
-        public void ClearCache()
-        {
-            _tableCache.Clear();
-        }
-
-        public void ClearSiteCache()
-        {
-            ISiteBuilderContext siteContext = _siteBuilderContext;
-
-            foreach (var k in from k in _tableCache.Keys let parts = k.Split('|') where int.Parse(parts[0]) == siteContext.SiteId select k)
-            {
-                Dictionary<string, Dictionary<string, string>> dic;
-                _tableCache.TryRemove(k, out dic);
-            }
-        }
-
-        public void ClearSiteCache(string language)
-        {
-            ISiteBuilderContext siteContext = _siteBuilderContext;
-
-            var dictKey = siteContext.SiteId + "|" + siteContext.Theme.Id.ToLower() + "|" + language;
-            Dictionary<string, Dictionary<string, string>> dic;
-            _tableCache.TryRemove(dictKey, out dic);
-        }
+        
 
         public Dictionary<string, Dictionary<string, string>> GetCollections(string[] keys)
         {
@@ -60,7 +39,7 @@ namespace Mozu.SiteBuilder.Mvc.Localization
             }
 
             var culture = CultureInfo.CreateSpecificCulture(languages[0].ToLowerInvariant().Trim());
-            var dictKey = siteContext.SiteId + "|" + siteContext.Theme.Id.ToLower() + "|" + culture.TwoLetterISOLanguageName;
+            var dictKey = _builderApiContext.SiteId + "|" + siteContext.Theme.Id.ToLower() + "|" + culture.TwoLetterISOLanguageName;
 
             if (!_tableCache.ContainsKey(dictKey))
             {
@@ -103,7 +82,7 @@ namespace Mozu.SiteBuilder.Mvc.Localization
             }
 
             var culture = CultureInfo.CreateSpecificCulture(languages[0].ToLowerInvariant().Trim());
-            var dictKey = siteContext.SiteId + "|" + siteContext.Theme.Id.ToLower() + "|" + culture.TwoLetterISOLanguageName;
+            var dictKey = _builderApiContext.SiteId + "|" + siteContext.Theme.Id.ToLower() + "|" + culture.TwoLetterISOLanguageName;
 
             if (!_tableCache.ContainsKey(dictKey))
             {
@@ -142,7 +121,7 @@ namespace Mozu.SiteBuilder.Mvc.Localization
                 var pp = _mozuVirtualPathProvider;
                 var stem = "~/themes/" + theme + "/resources/strings/lang-" + language + ".csv";
                 var file = pp.GetFile(stem) as MozuVirtualFile;
-                var dictKey = siteContext.SiteId + "|" + siteContext.Theme.Id.ToLower() + "|" + language;
+                var dictKey = _builderApiContext.SiteId + "|" + siteContext.Theme.Id.ToLower() + "|" + language;
 
                 if (file != null && file.Exists)
                 {

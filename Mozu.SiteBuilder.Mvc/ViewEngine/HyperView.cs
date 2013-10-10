@@ -30,22 +30,14 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         Dictionary<string, object> CreateRequestContext(HyprViewContext viewContext, System.IO.TextWriter writer)
         {
 
-
+            var siteBuilderApiContext = viewContext.LifetimeScope.Resolve<ISiteBuilderApiContext >();
             var siteBuilderContext = viewContext.LifetimeScope.Resolve<ISiteBuilderContext>();
             var requestContext = new Dictionary<string, object>(viewContext.ViewData);
             //  var authenticationHelper = new AuthenticationHelper(viewContext.HttpContext, provider: new CookieProvider(viewContext.HttpContext,Core.Settings.MozuConfigurationManager.Settings),  cookieName:null);
             // var gcu = authenticationHelper.GetCurrentUser();
             // var profile = authenticationHelper.GetCurrentProfileToken();
-            
-            var user = new Mozu.SiteBuilder.UX.Models.Customers.User()
-                           {
-                               Email = siteBuilderContext.UserProfile.EmailAddress,//profile != null ? profile.EmailAddress : null,
-                               FirstName = siteBuilderContext.UserProfile.FirstName,// profile != null ? profile.FirstName : null,
-                               LastName = siteBuilderContext.UserProfile.LastName,// profile != null ? profile.LastName : null,
-                               UserId = siteBuilderContext.ApiContext.UserClaims.UserId,// gcu.UserId,
-                               IsAuthenticated = !siteBuilderContext.ApiContext.UserClaims.IsAnonymous && siteBuilderContext.ApiContext.UserClaims.IsAuthenticated,//!gcu.IsAnonymous && gcu.IsAuthenticated,
-                               IsAnonymous = siteBuilderContext.ApiContext.UserClaims.IsAnonymous
-                           };
+
+            var user = siteBuilderContext.User;
 
             requestContext["templateVariables"] = viewContext.HttpContext.Items["templateVariables"] = (System.Collections.Hashtable)viewContext.HttpContext.Items["templateVariables"] ?? new System.Collections.Hashtable(StringComparer.OrdinalIgnoreCase);
          //   requestContext["Html"] = requestContext["html"] = html = new HtmlHelper(new ViewContext() { HttpContext = viewContext .HttpContext }, new ViewDataContainer() { ViewData = viewContext.ViewData });

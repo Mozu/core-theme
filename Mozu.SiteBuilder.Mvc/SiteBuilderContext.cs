@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Runtime.Serialization;
 using System.Web;
-
 using Autofac;
-
 using Mozu.Core;
 using Mozu.Core.Logging;
 using Mozu.Core.Settings;
@@ -19,191 +15,152 @@ using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.Themes.Exceptions;
 using Mozu.SiteBuilder.Mvc.Themes.Repositories;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.Admin.ThemeSettings;
 using Mozu.SiteBuilder.UX.Models.ModelMetaData;
 using Mozu.SiteBuilder.UX.Models.Navigation;
-using Mozu.SiteSettings.General.Contracts;
 using Mozu.SiteSettings.General.Contracts.Clients;
-using Mozu.Tenant.Contracts;
 using Newtonsoft.Json.Linq;
 using APIConstants = Mozu.Core.Api.Contracts.Constants;
-using IApiContext = Mozu.Core.IApiContext;
-using Mozu.Core.Api.Client;
 
 namespace Mozu.SiteBuilder.Mvc
 {
-	/// <summary>
-	/// TODO: Update summary.
-	/// </summary>
-    /// 
-    [DataContract()]
-    public class SiteBuilderContext : ModelBase, ISiteBuilderContext, IModelMetadataContainer , IDisposable
-	{
-        public  const string CONTEXT_KEY = "V:STORECTX";
+    /// <summary>
+    ///     TODO: Update summary.
+    /// </summary>
+    [DataContract]
+    public class SiteBuilderContext : ModelBase, ISiteBuilderContext, IModelMetadataContainer, IDisposable
+    {
+        public const string CONTEXT_KEY = "V:STORECTX";
         public const string FORCE_THEME_COOKIE_NAME = "SBTHEME";
         internal const string COOKIENAME = "SBCONTEXT";
-        private static System.Collections.Concurrent.ConcurrentDictionary<string, Site> g_domainSiteLookup = new ConcurrentDictionary<string, Site>(StringComparer.OrdinalIgnoreCase);
-		//[ThreadStatic] private static ISiteBuilderContext g_sc;
-	    private Lazy<IThemeSettingsRepository> _themeSettingsRepo;
-	    private readonly IApiContext _apiContext;
-	    private readonly IGeneralSettingsWebApiClient _generalSettings;
-	    private readonly ISettings _configSettings;
-	    private readonly ILifetimeScope _lifetimeScope;
-	    private readonly IAuthenticationHelper _authenticationHelper;
 
-	    ISettingsRepository _settings;
-	    private readonly Lazy<ICatalogContext> _catContext;
-        private readonly ICookieProvider _cookieProvider;
-        private readonly IMobileDetectionProvider _mobileProvider;
-        private NavigationContext _navigationContext;
 
-	    private readonly Dictionary<string, Lazy<object>> _stateBag =
-			new Dictionary<string, Lazy<object>>(StringComparer.OrdinalIgnoreCase);
-        Lazy<Theme > _desktopTheme;
-        Lazy<Theme> _mobileTheme;
-        
-        /// <summary>
-        /// Theme according to the cookie 
-        /// </summary>
-        private readonly Theme  _cookieTheme = null;
-        private Lazy<string> _googleAnalyticsCode;
-	    private Lazy<bool> _googleAnalyticsEnabled;
-	    private Lazy<bool> _googleAnalyticsEcommerceEnabled;
-        private Lazy<NavigationGandalf> _gandalf;
+        private ISiteBuilderApiContext _apiContext;
+        private IAuthenticationHelper _authenticationHelper;
+
+        private Lazy<ICatalogContext> _catContext;
         private ICategoryTreeProvider _categoryTreeProvider;
+        private ISettings _configSettings;
+        private ICookieProvider _cookieProvider;
 
-        public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, ISettingsRepository settings, Lazy<ICatalogContext> catContext, ISearchContext searchContext, Lazy<IThemeSettingsRepository> themeRepo, IApiContext apiContext, IThemeRepository themeRepository, IGeneralSettingsWebApiClient generalSettings, ICategoryTreeProvider categoryTreeProvider, Lazy<NavigationGandalf> gandalf, ISettings configSettings = null, HttpContextBase httpContext = null, ILifetimeScope lifetimeScope= null , IAuthenticationHelper authenticationHelper=  null )
-		{
-			PageContext = new PageContext();
-           
-            
+        /// <summary>
+        ///     Theme according to the cookie
+        /// </summary>
+        private Lazy<Theme> _cookieTheme;
+
+        private Lazy<Theme> _desktopTheme;
+
+        private Lazy<NavigationGandalf> _gandalf;
+        private readonly IGeneralSettingsWebApiClient _generalSettings;
+        private readonly ILifetimeScope _lifetimeScope;
+        private IMobileDetectionProvider _mobileProvider;
+        private Lazy<Theme> _mobileTheme;
+        
+        private ISettingsRepository _settings;
+
+        private readonly Dictionary<string, Lazy<object>> _stateBag =
+            new Dictionary<string, Lazy<object>>(StringComparer.OrdinalIgnoreCase);
+
+        private Lazy<IThemeSettingsRepository> _themeSettingsRepo;
+        private NavigationContext _navigationContext;
+        private UX.Models.Customers.User _user;
+        private object _userProfile;
+
+        public SiteBuilderContext(ICookieProvider cookieProvider, IMobileDetectionProvider mobileProvider, ISettingsRepository settings, Lazy<ICatalogContext> catContext,  Lazy<IThemeSettingsRepository> themeRepo, ISiteBuilderApiContext apiContext, IThemeRepository themeRepository, ICategoryTreeProvider categoryTreeProvider, Lazy<NavigationGandalf> gandalf, ISettings configSettings = null, IAuthenticationHelper authenticationHelper = null)
+        {
+            PageContext = new PageContext();
+
+
             _cookieProvider = cookieProvider;
             _mobileProvider = mobileProvider;
-            SearchContext = searchContext;
+           
             _settings = settings;
             _catContext = catContext;
             _themeSettingsRepo = themeRepo;
             _apiContext = apiContext;
-            _generalSettings = generalSettings.CloneWithoutUserClaims();
-	        _configSettings = configSettings;
-            _lifetimeScope = lifetimeScope;
+
+            _configSettings = configSettings;
             _authenticationHelper = authenticationHelper;
             _categoryTreeProvider = categoryTreeProvider;
             _gandalf = gandalf;
 
-	        this.SiteId = _apiContext.SiteId;
-            this.TenantId = _apiContext.TenantId;
-            if (httpContext != null)
-            {
-                httpContext.Items[CONTEXT_KEY] = this;
-                bool isEditModeFlg;
-                if (bool.TryParse(httpContext.Request ["isEditMode"] as string, out isEditModeFlg) && isEditModeFlg)
+
+           InitLazyThemeGetters(themeRepository);
+
+            //_googleAnalyticsCode = new Lazy<string>(() => settings.General.GoogleAnalyticsCode );
+            //_googleAnalyticsEnabled = new Lazy<bool>(() => settings.General.IsGoogleAnalyticsEnabled.GetValueOrDefault(false ));
+            //_googleAnalyticsEcommerceEnabled = new Lazy<bool>(() => settings.General.IsGoogleAnalyticsEcommerceEnabled.GetValueOrDefault(false ));
+        }
+
+        private void InitLazyThemeGetters(IThemeRepository themeRepository)
+        {
+            _cookieTheme = new Lazy<Theme>(() =>
                 {
-                    this.IsEditMode = isEditModeFlg;
-                }
-            }
-            // attempt to look up theme by value of "SBTHEME".
-            HttpCookie themeCookie = _cookieProvider.GetRequestCookie(FORCE_THEME_COOKIE_NAME);
-            if (themeCookie != null && !string.IsNullOrEmpty(themeCookie.Value))
-            {
-                try
-                {
-                    _cookieTheme = themeRepository.GetTheme(themeCookie.Value);
-                }
-                catch (ThemeNotFoundException)
-                { }
-            }
+                    var themeCookie = _cookieProvider.GetRequestCookie(FORCE_THEME_COOKIE_NAME);
+                    if (themeCookie != null && !string.IsNullOrEmpty(themeCookie.Value))
+                    {
+                        return themeRepository.GetThemeOrDefault(themeCookie.Value);
+                    }
+                    return null;
+                });
 
 
             // needs to be lazy because _settings is lazy
-            _desktopTheme = new Lazy<Theme >(() =>
-            {
-                string themeName = _settings.General.DesktopTheme;
-
-                return themeRepository.GetThemeOrDefault(themeName);
-            });
+            _desktopTheme = new Lazy<Theme>(() =>
+                {
+                    string themeName = _settings.GetGeneralSettings().Result.DesktopTheme;
+                    return themeRepository.GetThemeOrDefault(themeName);
+                });
 
             // needs to be lazy because _settings is lazy
             _mobileTheme = new Lazy<Theme>(() =>
-            {
-                string themeName = _settings.General.MobileTheme;
-                if (String.IsNullOrEmpty(_settings.General.MobileTheme))
-                    return null;
-
-                try
                 {
-                    return themeRepository.GetTheme(themeName);
-                }
-                catch (ThemeNotFoundException)
-                {
-                    string errorMessage = String.Format("Mobile theme specified in settings but theme not found. Site: {0}. Theme: {1}", SiteId, themeName);
-                    LoggingService.LoggerFor<SiteBuilderContext>().Warn(errorMessage);
-                    return null;
-                }
-            });
+                    string themeName = _settings.GetGeneralSettings().Result.MobileTheme;
+                    if (String.IsNullOrEmpty(themeName))
+                        return null;
 
-	        _googleAnalyticsCode = new Lazy<string>(() => settings.General.GoogleAnalyticsCode );
-            _googleAnalyticsEnabled = new Lazy<bool>(() => settings.General.IsGoogleAnalyticsEnabled.GetValueOrDefault(false ));
-            _googleAnalyticsEcommerceEnabled = new Lazy<bool>(() => settings.General.IsGoogleAnalyticsEcommerceEnabled.GetValueOrDefault(false ));
-		}
-        
-      
-        public T Resolve<T>()
-        {
-            return _lifetimeScope.Resolve<T>();
+                    try
+                    {
+                        return themeRepository.GetTheme(themeName);
+                    }
+                    catch (ThemeNotFoundException)
+                    {
+                        string errorMessage = String.Format("Mobile theme specified in settings but theme not found. Site: {0}. Theme: {1}", _apiContext.SiteId.Value, themeName);
+                        LoggingService.LoggerFor<SiteBuilderContext>().Warn(errorMessage);
+                        return null;
+                    }
+                });
         }
-		
-        public static ISiteBuilderContext GetFromContext ( HttpContextBase ctx )
+
+        #region ISiteBuilderContext Members
+
+        private readonly Lazy<string> _appId = new Lazy<string>(() => LightweightAppClaims.CreateForPublicStorefront().ToAccessToken());
+        private JObject _apiClientContext;
+        private EditModes? WidgetEditMode { get; set; }
+
+
+        public JObject ApiClientContext
         {
-            return (ISiteBuilderContext) ctx.Items[SiteBuilderContext.CONTEXT_KEY];
-
-         }
-		
-
-		#region ISiteBuilderContext Members
-
-       
-
-		public bool IsEditMode { get; set; }
-        public EditModes? EditMode { get; set; }
-        public bool IsDebugMode { get; set; }
-
-	   
-
-
-        //public SiteConfiguration SiteConfiguration { get; set; }
-
-
-        [DataMember (Name="pageContext")]
-        public PageContext PageContext { get;  set; }
-
-	    private Newtonsoft.Json.Linq.JObject _apiClientContext;
-
-
-	    public Newtonsoft.Json.Linq.JObject ApiClientContext
-	    {
-	        get
-	        {
-
+            get
+            {
                 if (_apiClientContext == null)
-	            {
+                {
                     _apiClientContext = new JObject();
-	                var header = new JObject();
+                    var header = new JObject();
                     header[APIConstants.Headers.APP_CLAIMS] = AppIdToken;
                     header[APIConstants.Headers.CURRENCY] = _apiContext.CurrencyCode;
                     header[APIConstants.Headers.LOCALE] = _apiContext.LocaleCode;
-                    header[APIConstants.Headers.SITE] = this._apiContext.SiteId;
-                    header[APIConstants.Headers.SITE_GROUP] = this._apiContext.SiteGroupId;
-                    header[APIConstants.Headers.TENANT] = this._apiContext.TenantId;
-                    header[APIConstants.Headers.USER_CLAIMS] = this._apiContext.UserClaims.ToAccessToken();
-                    header[APIConstants.Headers.BYPASS_CACHE] = this._apiContext.ShouldBypassCache.ToString();
+                    header[APIConstants.Headers.SITE] = _apiContext.SiteId;
+                    header[APIConstants.Headers.SITE_GROUP] = _apiContext.SiteGroupId;
+                    header[APIConstants.Headers.TENANT] = _apiContext.TenantId;
+                    header[APIConstants.Headers.USER_CLAIMS] = _apiContext.UserClaims.ToAccessToken();
+                    header[APIConstants.Headers.BYPASS_CACHE] = _apiContext.ShouldBypassCache.ToString();
 
-	               
+
                     var urls = new JObject();
-	                urls["ProductService"] = _configSettings.AppSettings("service-url-ProductRuntimeWebApi");
-	                urls["CategoryService"] = _configSettings.AppSettings("service-url-ProductCategoryRuntimeWebApi");
+                    urls["ProductService"] = _configSettings.AppSettings("service-url-ProductRuntimeWebApi");
+                    urls["CategoryService"] = _configSettings.AppSettings("service-url-ProductCategoryRuntimeWebApi");
                     urls["CartService"] = _configSettings.AppSettings("service-url-CartWebApi");
                     urls["UserService"] = _configSettings.AppSettings("service-url-UserWebApi");
                     urls["CustomerService"] = _configSettings.AppSettings("service-url-CustomerAccountWebApi");
@@ -211,37 +168,41 @@ namespace Mozu.SiteBuilder.Mvc
                     urls["SearchService"] = _configSettings.AppSettings("service-url-ProductSearchWebApi");
                     urls["CmsService"] = _configSettings.AppSettings("service-url-DocumentListWebApi");
                     urls["ReferenceService"] = _configSettings.AppSettings("service-url-ReferenceDataWebApi");
-	                _apiClientContext["header"] = header;
-                     
+                    _apiClientContext["header"] = header;
+
                     _apiClientContext["urls"] = urls;
                     if (_configSettings.AppSettings("ReverseProxy") == "true")
                     {
                         foreach (var url in urls)
                         {
-                            
-                            var idx = (((string) url.Value) ?? "").IndexOf("webapi/", StringComparison.OrdinalIgnoreCase);
+                            int idx = (((string) url.Value) ?? "").IndexOf("webapi/", StringComparison.OrdinalIgnoreCase);
                             if (idx > 0)
                             {
-                                urls[url.Key] = "/api" +((string)url.Value).Substring(idx + 6);
+                                urls[url.Key] = "/api" + ((string) url.Value).Substring(idx + 6);
                             }
                         }
                     }
-
-	            }
+                }
                 return _apiClientContext;
-	        }
-	    }
+            }
+        }
 
-	    private  readonly Lazy<string> _appId= new Lazy<string>(()=> LightweightAppClaims.CreateForPublicStorefront().ToAccessToken());
+        private string AppIdToken
+        {
+            get { return _appId.Value; }
+        }
 
-	    private  string AppIdToken
-	    {
-	        get { return _appId.Value; }
-	    }
+        public bool IsEditMode
+        {
+            get { return _apiContext.IsEditMode; }
+            set { _apiContext.IsEditMode = value; }
+        }
+
+        [DataMember(Name = "pageContext")]
+        public PageContext PageContext { get; set; }
 
 
-
-	    object ISiteBuilderContext.this[string key]
+        object ISiteBuilderContext.this[string key]
         {
             get
             {
@@ -263,77 +224,83 @@ namespace Mozu.SiteBuilder.Mvc
             }
         }
 
+        #endregion
 
-		
-
-		public int TenantId { get; set; }
-
-        public int? SiteId { get; set; }
-
-        public int? SiteGroupId { get; set; }
-
-		#endregion
-
-
-        public void Save()
+        /// <summary>
+        ///     TODO: Why is this public?
+        /// </summary>
+        public IThemeSettingsRepository ThemeSettingsRepository
         {
-            var cookie = new HttpCookie("") { Expires = DateTime.MaxValue };
+            get { return _themeSettingsRepo.Value; }
+        }
 
-            cookie["site"] = SiteId.HasValue ? SiteId.ToString() : null;
-            cookie["sitegroup"] = SiteGroupId.HasValue ? SiteGroupId.ToString() : null;
-            cookie["tenant"] = TenantId.ToString();
-            cookie["editmode"] = IsEditMode.ToString();
+        public IApiContext ApiContext
+        {
+            get { return _apiContext; }
+        }
 
-            _cookieProvider.SaveResponseCookie(COOKIENAME,cookie);
+        public UserProfile UserProfile
+        {
+            get
+            {
+                if (_userProfile == null)
+                {
+                    string ptoken = _authenticationHelper.GetProfileToken();
+
+                    _userProfile = new UserProfile
+                                       {
+                                           UserId = _apiContext.UserClaims != null ? _apiContext.UserClaims.UserId : null
+                                       };
+
+                    if (!string.IsNullOrEmpty(ptoken))
+                    {
+                        try
+                        {
+                            UserProfile pt = UserProfile.Parse(ptoken);
+                            ((UserProfile) _userProfile).EmailAddress = pt.EmailAddress;
+                            ((UserProfile) _userProfile).FirstName = pt.FirstName;
+                            ((UserProfile) _userProfile).LastName = pt.LastName;
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+                return _userProfile as UserProfile;
+            }
+        }
+
+        public void Dispose()
+        {
+            IsDisposed = true;
         }
 
         // <add key="default-tenant" value="139"/>
-  //  <add key="default-site" value="9001"/>
+        //  <add key="default-site" value="9001"/>
 
-        public Dictionary<string,object > GetModelMetadata()
+        public Dictionary<string, object> GetModelMetadata()
         {
-            var mmd = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase );
-            mmd ["data-editing"] = this;
+            var mmd = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            mmd["data-editing"] = this;
             mmd["data-attribute-name"] = "data-editing-document";
             return mmd;
         }
 
 
-
-
-
-
-
         [AlternateName("catalog")]
         public ICatalogContext CatalogContext
         {
-            get {
-                var cc = _catContext.Value;
+            get
+            {
+                ICatalogContext cc = _catContext.Value;
                 if (cc.AllCategories == null)
                     cc.AllCategories = _categoryTreeProvider.GetAllCategories().Result;
 
-                return _catContext.Value; 
+                return _catContext.Value;
             }
             set { throw new NotImplementedException(); }
         }
 
-
-
-
-        public ISearchContext SearchContext
-        {
-            get;
-            set;
-        }
-
-
-        // public INavigationRuntimeFactory Navigation
-        // {
-        //     get
-        //     {
-        //         return _nav.Value;
-        //     }
-        // }
 
         public NavigationContext Navigation
         {
@@ -341,7 +308,7 @@ namespace Mozu.SiteBuilder.Mvc
             {
                 if (_navigationContext == null)
                 {
-                    var navigationTree = _gandalf.Value.GetTreeNavigation().Result;
+                    List<NavigationRuntimeNode> navigationTree = _gandalf.Value.GetTreeNavigation().Result;
                     _navigationContext = new NavigationContext(navigationTree);
                 }
 
@@ -349,33 +316,37 @@ namespace Mozu.SiteBuilder.Mvc
             }
         }
 
-        public UX.Models.Admin.ThemeSettings.RuntimeConfigurationFieldCollection ThemeSettings
+        public RuntimeConfigurationFieldCollection ThemeSettings
         {
-            get { return _themeSettingsRepo.Value.GetRuntimeValues( this.Theme.Id ).Result; }
+            get { return _themeSettingsRepo.Value.GetRuntimeValues(Theme.Id).Result; }
+        }
+
+        public UX.Models.Settings.SettingsContainer  Settings
+        {
+            get { return _settings.GetSettings().Result; }
         }
         
 
-        public ISettingsRepository Settings
+        /// <summary>
+        ///     Returns true if the visitor is using a mobile device.
+        /// </summary>
+        public bool IsVisitorMobile
         {
-            get { return _settings; }
+            get { return _mobileProvider.IsCurrentRequestMobile; }
         }
 
         /// <summary>
-        /// Returns true if the visitor is using a mobile device.
+        ///     Returns the current theme.
+        ///     If the visitor is a mobile visitor and there is a mobile theme
+        ///     chosen for the current site, returns the value of <code>MobileTheme</code>.
+        ///     Otherwise, returns the value of <code>DesktopTheme</code>.
         /// </summary>
-        public bool IsVisitorMobile { get { return _mobileProvider.IsCurrentRequestMobile; } }
-
-        /// <summary>
-        /// Returns the current theme.
-        /// If the visitor is a mobile visitor and there is a mobile theme 
-        /// chosen for the current site, returns the value of <code>MobileTheme</code>.
-        /// Otherwise, returns the value of <code>DesktopTheme</code>.
-        /// </summary>
-        public Theme  Theme
+        public Theme Theme
         {
-            get {
-                if (_cookieTheme != null)
-                    return _cookieTheme;
+            get
+            {
+                if (CookieTheme != null)
+                    return CookieTheme;
                 else if (IsVisitorMobile && MobileTheme != null)
                     return MobileTheme;
                 else
@@ -383,93 +354,78 @@ namespace Mozu.SiteBuilder.Mvc
             }
         }
 
+
         /// <summary>
-        /// Returns the site's desktop theme.
+        ///     Returns the preview theme
         /// </summary>
-        public Theme  DesktopTheme
+        Theme CookieTheme
+        {
+            get { return _cookieTheme.Value; }
+        }
+
+
+
+        /// <summary>
+        ///     Returns the site's desktop theme.
+        /// </summary>
+        public Theme DesktopTheme
         {
             get { return _desktopTheme.Value; }
         }
 
         /// <summary>
-        /// Returns the site's mobile theme, if one is set. 
-        /// Otherwise returns null.
+        ///     Returns the site's mobile theme, if one is set.
+        ///     Otherwise returns null.
         /// </summary>
         public Theme MobileTheme
         {
             get { return _mobileTheme.Value; }
         }
 
-	    public string GoogleAnalyticsCode
-	    {
-            get { return _googleAnalyticsCode.Value; }
-	    }
-
-	    public bool GoogleAnalyticsEnabled
-	    {
-            get { return _googleAnalyticsEnabled.Value; }
-	    }
-	    
-	    public bool GoogleAnalyticsEcommerceEnabled
-	    {
-            get { return _googleAnalyticsEcommerceEnabled.Value; }
-	    }
-
-	    /// <summary>
-        /// TODO: Why is this public?
-        /// </summary>
-        public IThemeSettingsRepository ThemeSettingsRepository
-        {
-            get { return _themeSettingsRepo.Value; }
-        }
-
-
-
-        public void Dispose()
-        {
-            this.IsDisposed = true;
-        }
 
         public bool IsDisposed { get; set; }
 
 
-        public IApiContext ApiContext
+        public IAnalyticsContext AnalyticsContext
         {
-            get { return _apiContext; }
+            get { throw new NotImplementedException(); }
         }
 
-	    private object _userProfile;
-        public UserProfile UserProfile
+
+        public EditModes? EditMode
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
+
+        public UX.Models.Customers.User User
         {
             get
             {
-              
-                if (_userProfile == null)
-                {
-                    var ptoken = _authenticationHelper.GetProfileToken();
-                    
-                    _userProfile = new UserProfile()
-                                       {
-                                           UserId = _apiContext.UserClaims != null ? _apiContext.UserClaims.UserId : null
-                                       } ;
+                _user = _user ?? new UX.Models.Customers.User
+                                     {
+                                         Email = UserProfile.EmailAddress, //profile != null ? profile.EmailAddress : null,
+                                         FirstName = UserProfile.FirstName, // profile != null ? profile.FirstName : null,
+                                         LastName = UserProfile.LastName, // profile != null ? profile.LastName : null,
+                                         UserId = ApiContext.UserClaims.UserId, // gcu.UserId,
+                                         IsAuthenticated = !_apiContext.UserClaims.IsAnonymous && _apiContext.UserClaims.IsAuthenticated, //!gcu.IsAnonymous && gcu.IsAuthenticated,
+                                         IsAnonymous = _apiContext.UserClaims.IsAnonymous
+                                     };
 
-                    if (!string.IsNullOrEmpty(ptoken))
-                    {
-                        try
-                        {
-                            var pt = Mozu.Core.UserProfile.Parse(ptoken);
-                            ((UserProfile) _userProfile).EmailAddress = pt.EmailAddress;
-                            ((UserProfile)_userProfile).FirstName = pt.FirstName;
-                            ((UserProfile)_userProfile).LastName = pt.LastName;
-                        }
-                        catch
-                        {
-                            
-                        }
-                    }
-                }
-                return _userProfile as UserProfile;
+                return _user;
             }
+        }
+
+        public static void Save(int? site, int? sitegroup, int tenant, bool isEditMode, ICookieProvider cookieProvider)
+        {
+            var cookie = new HttpCookie("") {Expires = DateTime.MaxValue};
+
+            cookie["site"] = site.HasValue ? site.ToString() : null;
+            cookie["sitegroup"] = sitegroup.HasValue ? sitegroup.ToString() : null;
+            cookie["tenant"] = tenant.ToString();
+            cookie["editmode"] = isEditMode.ToString();
+
+            cookieProvider.SaveResponseCookie(COOKIENAME, cookie);
         }
     }
 }

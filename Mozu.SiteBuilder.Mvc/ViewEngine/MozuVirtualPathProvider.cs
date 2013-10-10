@@ -112,8 +112,8 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             {
                 foreach (var vn in GetViewVariants(virtualPath, theme))
                 {
-                  
-                    var file = theme.FileListing.FirstOrDefault( x => withExt ? x.VirtualPath == vn : x.VirtualPathNoExt == vn);
+
+                    var file = theme.FileListing.FirstOrDefault(x => withExt ? x.VirtualPath == vn :( x.VirtualPathNoExt == vn && x.IsFile));
 
                     if (file != null )
                     {

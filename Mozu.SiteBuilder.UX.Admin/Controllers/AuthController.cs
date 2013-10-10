@@ -41,9 +41,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly IRolesHelper _rolesHelper;
         private readonly ISettings _settings;
         private readonly ISiteBuilderApiContext _apiContext;
+        private readonly ICookieProvider _cookieProvider;
         private ILogger _log;
 
-        public AuthController( IAuthenticationHelper authHelper, ISiteBuilderContext sbc,IUserHelper userHelper, IPasswordHelper passwordHelper, IRolesHelper rolesHelper , ISettings settings , ISiteBuilderApiContext  apiContext)
+        public AuthController( IAuthenticationHelper authHelper, ISiteBuilderContext sbc,IUserHelper userHelper, IPasswordHelper passwordHelper, IRolesHelper rolesHelper , ISettings settings , ISiteBuilderApiContext  apiContext, ICookieProvider cookieProvider)
         {
             _authenticationHelper = authHelper;
             _sbc = sbc;
@@ -54,6 +55,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _rolesHelper = rolesHelper;
             _settings = settings;
             _apiContext = apiContext;
+            _cookieProvider = cookieProvider;
 
             _log = LoggingService.LoggerFor<AuthController>();
         }
@@ -83,8 +85,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             string redirectUrl = form["redirectUrl"];
             //redirectUrl=%2Fadmin&accessToken=4BOtDlSWnUJ%2Fyli1jpWidgFVEkpey96IBLWO8Kve5Ka8un912AIQsvoOqOJEIC8CVoMYv8x2tsDg99NLkK8%2BiH%2BSvXNi0RrfsTTpieIUyps69%2FnXf6wK8yKouea9k1QLSjcgF72Dyzj4mY4YCYLg0DDKycD28XbrdGHnPIUGFp3svwaK5Ca2PAw1qMasMvut525lcNDVYjdTXbA1gIEqLGiONo5InlFfjduQRPaBhoGtCUuDcspYMG9nHVkKxjSFXdVqEX%2FTmvBMEt4Rh9ruXpbyO5zOB9LqwAtEU94tZxMlnvaJ8QgFN0pDAZ4uZGtOAbgo%2BXydVE76NNiOyqI9L5l%2FsU3pq3SbT96q%2F%2Blb%2FC3RRo5kiN%2F8DxpqlD2yl2AN
             var user = LightweightUserClaims.Parse(accessToken);
-            _sbc.TenantId = user.GetUserScope().Id.Value;
-            _sbc.Save();
+
+            SiteBuilderContext.Save(null, null, user.GetUserScope().Id.Value, false, _cookieProvider );
+            
             _apiContext.SetUser(user);
             _authenticationHelper.SaveAccessToken(  accessToken);
             redirectUrl = string.IsNullOrEmpty(redirectUrl) ? "/admin" : redirectUrl;

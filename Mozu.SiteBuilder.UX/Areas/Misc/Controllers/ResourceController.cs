@@ -495,13 +495,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
             public MozuVirtualPathProvider PathProvider { get; set; }
 
-            public Stream Transform(Stream str)
+            public Stream Transform(Stream str, string stem)
             {
                 var sr = new StreamReader(str);
                 string template = sr.ReadToEnd();
 
 
-                template = ProcessSettingsVariables(template);
+
+                template = ProcessSettingsVariables(template, stem);
                 var factory = new EngineFactory();
 
                 factory.Configuration.Logger = typeof (LessLogger);
@@ -531,19 +532,40 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 return ms;
             }
 
-            public string ProcessSettingsVariables(string template)
+            public string ProcessSettingsVariables(string template , string fileName )
             {
                 if (template.IndexOf("{{") > -0)
                 {
-                    return g_regex.Replace(template, Evaluator);
+                    try
+                    {
+                        return g_regex.Replace(template, Evaluator);
+                    }
+                    catch (ParsingException par)
+                    {
+                        par.Location.FileName = fileName;
+                        par.Location.Source = template;
+                        throw;
+                    }
                 }
+            
                 return template;
             }
 
             private string Evaluator(Match match)
             {
                 string varName = match.Groups["var"].Value;
-                return _siteContext.ThemeSettings[varName] as string;
+                var obj = _siteContext.ThemeSettings[varName];
+                if (obj == null)
+                {
+                    throw new ParsingException("missing template setting '" + varName + "'", new NodeLocation(match.Index, "", ""));
+                }
+                var str = obj.ToString();
+                if (string.IsNullOrEmpty(str))
+                {
+                    throw new ParsingException("empty template setting '" + varName + "'", new NodeLocation(match.Index, "", ""));
+                }
+                return str;
+
             }
 
             private class ConfigurationFieldComparer : IEqualityComparer<ConfigurationField>
@@ -604,7 +626,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 _file = file;
             }
 
-            public Func<Stream, Stream> Transform { get; set; }
+            public Func<Stream,string, Stream> Transform { get; set; }
 
             protected override void WriteFile(HttpResponseBase response)
             {
@@ -613,7 +635,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     Stream source = stream;
                     if (Transform != null)
                     {
-                        source = Transform(stream);
+                        source = Transform(stream, _file.VirtualPath );
                     }
                     source.CopyTo(response.OutputStream);
                 }
@@ -639,13 +661,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 // foreach (var theme in SiteContext.ThemeInfo.Stack )
                 {
                     string stem = fileName;
-                    var file = lessTransFormer.PathProvider.GetFile(stem) as MozuVirtualFile;
-                    if (file != null && file.Exists)
+                    var file = lessTransFormer.PathProvider.GetThemeFileInfo(stem);
+                    if (file != null )
                     {
-                        using (Stream stream = file.Open())
+                        using (var sr = file.OpenText())
                         {
-                            string ret = new StreamReader(stream).ReadToEnd();
-                            return lessTransFormer.ProcessSettingsVariables(ret);
+                            string ret = sr.ReadToEnd();
+                            return lessTransFormer.ProcessSettingsVariables(ret, file.VirtualPath );
                         }
                     }
                 }
@@ -679,6 +701,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 }
 
                 return null;
+            }
+
+
+            public bool UseCacheDependencies
+            {
+                get { return false; }
             }
         }
 
