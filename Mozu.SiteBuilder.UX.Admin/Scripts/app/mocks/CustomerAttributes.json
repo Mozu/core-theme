@@ -4,7 +4,7 @@
 			"id": "1",
 			"adminname": "CatDog",
 			"namespace": "House",
-			"attributeCode": "1234",
+			"attributecode": "1234",
 			"inputtype": "String",
 			"datatype": "list",
 			"attributeFQN": "Color",
