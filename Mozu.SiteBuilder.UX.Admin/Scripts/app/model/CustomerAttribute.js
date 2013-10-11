@@ -11,8 +11,8 @@ Ext.define('Taco.model.CustomerAttribute', {
     },
     idProperty: 'code',
     fields: [{
-            name: 'code',
-            type: 'int'
+            name: 'attributecode',
+            type: 'string'
         }, {
             name: 'name',
             type: 'string'
