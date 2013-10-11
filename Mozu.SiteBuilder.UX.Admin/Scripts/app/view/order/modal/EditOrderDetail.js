@@ -1,50 +1,48 @@
 ﻿/**
  * @class Taco.view.order.modal.EditOrderDetail
  */
+
 Ext.define('Taco.view.order.modal.EditOrderDetail', {
-    extend: 'Ext.window.Window',
+    extend: 'Taco.core.ux.window.Modal',
     requires: [
         'Taco.view.order.widget.OrderItemGrid',
         'Taco.view.order.widget.OrderTotalPanel'
     ],
+
+    autoShow: true,
+    // cls: Taco.baseCSSPrefix + 'orderform-editor',
+    scale: 'large',
+    title: 'Edit Order Details',
+
+    actions: [{
+        xtype: 'button',
+        itemId: 'discardAction',
+        ui: 'action',
+        scale: 'medium',
+        text: 'Discard Changes',
+        handler: function () {
+            this.removeDraftOrder();
+        }
+    }, {
+        xtype: 'tbfill'
+    }, {
+        xtype: 'button',
+        itemId: 'secondaryAction'
+    }, {
+        xtype: 'button',
+        itemId: 'primaryAction'
+    }],
+
     config : {
         record: null,
         rowTotalColumnWidth: 100,
         hasDraft: true,
         actionColumnWidth: 60
     },
-    autoShow: true,
-    constrain: true,
-    relativeHeight: 1,
-    relativeWidth: 1,
-    maxHeight:1400,
-    maxWidth: 1200,
-    minWidth: 700,
-    minHeight:500,
-    width: 800,
-    height: 600,
-    border: false,
-    // disabling the default window escape key to close behavior
-    onEsc: function() {
-        return false;
-    },
+
     layout: {
-        type:"vbox",
+        type: 'vbox',
         align: 'stretch'
-    },
-    cls: Taco.baseCSSPrefix + 'orderform-editor',
-    ghost: false,
-    modal: true,
-    /*
-    bodyStyle: {
-        border: '0px',
-        padding: '28px 28px 0px 28px',
-        backgroundColor:"#fff"
-    },
-    */
-    
-    afterRender: function () {
-        this.callParent(arguments);
     },
     
     initComponent: function (eOpts) {
@@ -53,115 +51,68 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         // Todo: Need to listen for a navigation (via backbutton) and cancel the navigation if editor is dirty or prompt user to cancel and navigate.
         // Todo: Create override/mixin/plugin for Ext.Window to add support for relative height and width with min max values.
 
-        me.titleTemplate = new Ext.XTemplate(
-            "Order No. {orderNumber}"
+        this.titleTemplate = new Ext.XTemplate(
+            'Order No. {orderNumber}'
         );
-        
 
-        me.title = me.titleTemplate.apply({
+        this.title = this.titleTemplate.apply({
             orderNumber: me.record ? me.record.get('orderNumber') : '<New>'
         });
-        
 
-        me.header = {
-            xtype: "header"
-            //,
-            //style: "padding:28px;border-bottom: 1px dashed #999691 !important;font-size: 1.25em;font-weight: normal;"
-        };
+        this.callParent(arguments);
 
-        me.dirtyButton = Ext.create('Taco.core.ux.action.DirtyButton', {
-            //xtype: 'primarybutton',
-            text: 'Save & Close',
-            hidden: !me.isDraftMode,
-            onClick: function () {
-                me.saveDraftOrder();
+        this.on({
+            save: {
+                scope: this,
+                fn: 'saveDraftOrder'
             }
         });
-
-        me.dirtyButton.setDirty(true);
-
-        me.dockedItems = [
-            {
-                xtype: 'toolbar',
-                dock: 'bottom',
-                weight: 1,
-                ui: 'footer',
-                defaults: {
-                    minWidth: 100,
-                    margin: "0px 0px 0px 10px"
-                },
-                items: [
-                    {
-                        xtype: "button",
-                        ui: "action",
-                        scale: "medium",
-                        text: 'Discard Changes',
-                        hidden: !me.isDraftMode,
-                        margin: "0px 0px 0px 0px",
-                        onClick: function () {
-                            me.removeDraftOrder();
-                        },
-                        scope: me
-                    },
-                    { 
-                        xtype: 'component', 
-                        flex: 1 
-                    },
-                    {
-                        xtype: "button",
-                        ui: "action",
-                        scale: "medium",
-                        text: 'Close',
-                        onClick: function (button) {
-                            me.close();
-                        }
-                    },
-                    this.dirtyButton
-                ]
-            }
-        ];
-        
-        this.callParent(arguments);
-        
-        
     },
     
-    // onShow show the loading mask while we wait for the service to respond with the draft record;
-    show : function() {
-        var me = this;
-        
-        me.callParent(arguments);
+    /**
+     * Show the loading mask while we wait for the service to respond with the draft record.
+     */
+    show: function() {
+        this.callParent(arguments);
 
-        if (!me.record) {
-            me.loadRecord();}
-        else {
-            me.onLoadRecord();
+        if (!this.record) {
+            this.loadRecord();
+        } else {
+            this.onLoadRecord();
+        }
+
+        if (!this.isDraftMode) {
+            this.down('#discardAction').hide();
+            this.down('#primaryAction').hide();
         }
     },
     
+    /**
+     * Call the service to reload the data.
+     */
     reloadData: function () {
-        var me = this;
-        //call the service to reload the data;
-        me.loadRecord();
+        this.loadRecord();
     },
 
-    // call the service and get an updated record;
+    /**
+     * Call the service and get an updated record.
+     */
     loadRecord: function () {
         var me = this,
             orderId = me.record ? me.record.getId() : me.recordId,
             orderModel = Ext.ModelManager.getModel('Taco.model.Order');
         
-        var mask = me.setLoading({
-            msg: "Loading",
-            // making the initial loading mask white to avoid the screen flash
-            maskCls: "x-mask taco-white-mask"
-        }, me.body);
+        // var mask = me.setLoading({
+        //     msg: "Loading",
+        //     // making the initial loading mask white to avoid the screen flash
+        //     maskCls: "x-mask taco-white-mask"
+        // }, me.body);
         
         orderModel.load(orderId, {
             params: { 'draft': me.isDraftMode },
             failure: function (record, operation) {
                 Taco.app.fireEvent('setmessage', "Error loading order", 'error');
-                me.setLoading(false, this.body);
+                // me.setLoading(false, this.body);
             },
             success: function (record, operation) {
                 me.record = record;
@@ -190,12 +141,13 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             orderNumber: me.record.get('orderNumber') || '<New>'
         }));
 
-        this.setLoading(false, this.body);
+        // this.setLoading(false, this.body);
     },
     
     // reloads the ui using new data
     updateUi: function () {
         var me = this;
+
         me.totalRow.setData(me.record.getData());
         me.detailGrid.getStore().loadRecords(me.record.itemsStore.getRange());
     },
@@ -263,30 +215,30 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             autoHeight: true,
             listeners: {
                 'draftOrderSaved': function (data) {
-                    me.setLoading(false, me.body);
+                    // me.setLoading(false, me.body);
                     me.fireEvent('draftOrderSaved', data);
                     me.setHasDraft(false);
-                    me.hide();
+                    me.close();
                 },
                 'draftOrderRemoved': function (data) {
-                    me.setLoading(false, me.body);
+                    // me.setLoading(false, me.body);
                     me.fireEvent('draftOrderRemoved', data);
                     me.setHasDraft(false);
-                    me.hide();
+                    me.close();
                 },
                 'save': function () {
-                    me.setLoading({
-                        maskCls: "x-mask taco-white-mask"
-                    }, me.body);
+                    // me.setLoading({
+                    //     maskCls: "x-mask taco-white-mask"
+                    // }, me.body);
                     me.setHasDraft(true);
                 },
                 'saveSuccess': function (data) {
-                    me.setLoading(false, me.body);
+                    // me.setLoading(false, me.body);
                     me.fireEvent('saveSuccess', data);
                     me.reloadData();
                 },
                 'saveFailure': function (error) {
-                    me.setLoading(false, me.body);
+                    // me.setLoading(false, me.body);
                     me.fireEvent('saveFailure', error);
                 }
             }
@@ -296,12 +248,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             me.detailGrid,
             me.totalRow
         ]);
-
     },
-
-
-
-
 
     // save the draft order and close the editor;
     removeDraftOrder: function() {
