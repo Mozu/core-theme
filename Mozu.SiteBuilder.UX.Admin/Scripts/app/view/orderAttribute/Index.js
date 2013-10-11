@@ -32,7 +32,7 @@ Ext.define('Taco.view.orderAttribute.Index', {
 
     gridPanelConf: {
         columns: [{
-            dataIndex: 'code',
+            dataIndex: 'attributecode',
             text: 'Code',
             flex: 1,
             minWidth: 120
@@ -42,7 +42,7 @@ Ext.define('Taco.view.orderAttribute.Index', {
             flex: 1,
             minWidth: 120
         }, {
-            dataIndex: 'required',
+            dataIndex: 'isrequired',
             text: 'required',
             flex: 1,
             minWidth: 120
