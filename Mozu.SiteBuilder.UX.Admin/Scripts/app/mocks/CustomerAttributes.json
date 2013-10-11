@@ -1,11 +1,30 @@
 {
     "items": [
       {
-         "code":"123",
-         "name":"Age",
-         "required":"true",
-         "displaygroup":"Admin"
-      }
+			"id": "1",
+			"adminname": "CatDog",
+			"namespace": "House",
+			"attributeCode": "1234",
+			"inputtype": "String",
+			"datatype": "list",
+			"attributeFQN": "Color",
+			"name": "Cat Bug",
+			"vocabularyvalues":  [
+			  {
+          
+				"id": "red",
+				"value": "red"
+          
+			  }
+			],
+			"min": null,
+			"max": null,
+			"isactive": "true",
+			"isrequired":"true",
+			"isreadonly":"false",
+			"ismultivalued":"false",
+			"displaygroup":"Admin Only"
+		}
     ],
     "message": "Some message",
     "success": true,
