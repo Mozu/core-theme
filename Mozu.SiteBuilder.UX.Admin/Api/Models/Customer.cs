@@ -16,8 +16,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         [DataMember(Name="userId")]
         public string UserId { get; set; }
 
-        [DataMember(Name="siteId")]
-        public int SiteId { get; set; }
+     
 
         /// <summary>
         /// List of contacts for this customer account. A customer account can have multiple contacts for billing and shipping addresses.
