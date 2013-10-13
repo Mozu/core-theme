@@ -20,28 +20,14 @@ namespace Mozu.SiteBuilder.UX.Models
     /// </summary>
     
     [DataContract]
-    public abstract class ModelBase : Mozu.SiteBuilder.UX.Models.IAlternateNamingValueContainer
+    public abstract class ModelBase 
     {
 
-        public virtual Object this[string key]
-        {
-            get
-            {
-                return this.GetAlternateNamedValue(key);
-            }
-        }
+       
 
         
     }
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class , AllowMultiple = true)]
-    public class AlternateNameAttribute : Attribute
-    {
-        public AlternateNameAttribute(string name)
-        {
-            Name = name;
-        }
-        public string Name { get; set; }
-    }
+  
 
     
 }

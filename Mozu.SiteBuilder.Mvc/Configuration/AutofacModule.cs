@@ -76,6 +76,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
                    .As<ITemplateManagerProvider>()
                    .SingleInstance();
 
+            NDjango.Interfaces.ResolverConfig.Resolver = new CaseInsensitiveMemberResolver();
             ITemplateManager tm = tmp.GetNewManager();
 
             builder.Register(c => new HyprTemplateManager(tm, c.Resolve<MozuVirtualPathProvider>())).As<ITemplateManager>().InstancePerLifetimeScope();

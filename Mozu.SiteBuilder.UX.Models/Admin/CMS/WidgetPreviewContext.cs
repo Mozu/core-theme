@@ -64,7 +64,7 @@ using System.Runtime.Serialization;
         public string Output { get; set; }
     }
     [DataContract()]
-    public class WidgetRuntimeData : WidgetInstanceData, IModelMetadataParentContainer, IModelMetadataContainer, Mozu.SiteBuilder.UX.Models.IAlternateNamingValueContainer, ICmsMetaDataExtrator
+    public class WidgetRuntimeData : WidgetInstanceData, IModelMetadataParentContainer, IModelMetadataContainer, ICmsMetaDataExtrator
     {
 
         public WidgetDefinition Definition { get; set; }
@@ -101,19 +101,11 @@ using System.Runtime.Serialization;
 
         public bool IsPreview { get; set; }
 
-        private static string[] g_propNames;
+        
         public virtual Object this[string key]
         {
             get
             {
-                if (g_propNames == null)
-                {
-                    g_propNames = this.GetType().GetProperties().Select(x => x.Name).ToArray();
-                }
-                if (g_propNames.Contains(key, StringComparer.OrdinalIgnoreCase))
-                {
-                    return this.GetAlternateNamedValue(key);
-                }
                 return this.Config[key];
             }
         }

@@ -39,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
     }
 
     [DataContract]
-    public class SettingsContainer : ModelBase
+    public class SettingsContainer 
     {
         [DataMember(Name = "general")]
         public GeneralSettings General { get; set; }
@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
 
     [DataContract]
-    public class GeneralSettings  :ModelBase
+    public class GeneralSettings  
     {
         [DataMember(Name = "websiteName")]
         public string WebsiteName { get; set; }

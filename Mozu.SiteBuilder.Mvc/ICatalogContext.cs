@@ -11,7 +11,7 @@ namespace Mozu.SiteBuilder.Mvc
     public interface ICatalogContext
     {
         List<SFCatalog.Category> AllCategories { get; set; }
-        List<SFCatalog.Category> CategoryTree { get; }
+        List<SFCatalog.Category> RootCategories { get; }
         SFCart.CartAbstract CartAbstract { get; }
 
         SFCatalog.Product CurrentProduct { get; set; }

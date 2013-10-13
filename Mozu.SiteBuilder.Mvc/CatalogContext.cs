@@ -24,8 +24,8 @@ namespace Mozu.SiteBuilder.Mvc
 
         public List<SFCatalog.Category> AllCategories { get; set; }
 
-        [AlternateName("RootCategories")]
-        public List<SFCatalog.Category> CategoryTree
+     
+        public List<SFCatalog.Category> RootCategories
         {
             get
             {

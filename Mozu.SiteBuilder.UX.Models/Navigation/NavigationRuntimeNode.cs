@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         [DataMember (Name="url")]
         public string Url { get; set; }
 
-        [AlternateName("caption")]
+      
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
@@ -50,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         [DataMember(Name = "count")]
         public int Count { get ; set; }
         
-        [AlternateName("children")]
+      
         [DataMember(Name = "items")]
         public List<NavigationRuntimeNode> Items { get; set; }
 

@@ -107,17 +107,17 @@ namespace Mozu.SiteBuilder.Mvc.Tags.Data
                                 }
                             }
                             //todo: add support for normal property reflection
-                            if (childObj == null &&  parentObj is IAlternateNamingValueContainer)
-                            {
-                                try
-                                {
-                                    childObj = ((IAlternateNamingValueContainer) parentObj).GetAlternateNamedProperty(dotParts[i]);
-                                }
-                                catch 
-                                {
-                                    break;
-                                }
-                            }
+                            //if (childObj == null &&  parentObj is IAlternateNamingValueContainer)
+                            //{
+                            //    try
+                            //    {
+                            //        childObj = ((IAlternateNamingValueContainer) parentObj).GetAlternateNamedProperty(dotParts[i]);
+                            //    }
+                            //    catch 
+                            //    {
+                            //        break;
+                            //    }
+                            //}
                             if( childObj == null )
                             {
                                 break;
