@@ -19,7 +19,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<DC.CustomerAccount, ApiCustomer>()
             .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
             .ForMember(x => x.UserId, op => op.MapFrom(dc => dc.UserId))
-            .ForMember(x => x.SiteId, op => op.MapFrom(dc => dc.SiteId))
+            
             .ForMember(x => x.Contacts, op => op.MapFrom(dc => dc.Contacts))
             .ForMember(x => x.CompanyOrOrganization, op => op.MapFrom(dc => dc.CompanyOrOrganization))
             .ForMember(x => x.AcceptsMarketing, op => op.MapFrom(dc => dc.AcceptsMarketing))
@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<ApiCustomer, DC.CustomerAccount>()
             .ForMember(dc => dc.Id, op => op.MapFrom(x => x.Id))
-            .ForMember(dc => dc.SiteId, op => op.MapFrom(x => x.SiteId))
+            
             .ForMember(dc => dc.UserId, op => op.MapFrom(x => x.UserId))
             .ForMember(dc => dc.Contacts, op => op.MapFrom(x => x.Contacts))
             .ForMember(dc => dc.CompanyOrOrganization, op => op.MapFrom(x => x.CompanyOrOrganization))

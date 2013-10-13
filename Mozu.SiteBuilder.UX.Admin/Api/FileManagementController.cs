@@ -34,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public FileManagementController(ICmsServiceWrapper cmsService, IDocumentListWebApiClient documentWebApiClient)
         {
-            _documentWebApiClient = documentWebApiClient.CloneWith(x => { x.SiteId = null; });
+            _documentWebApiClient = documentWebApiClient.CloneWithApiContext( x => { x.SiteId = null; });
 
             // _cmsService = tenantCmsServiceWrapper;
         }

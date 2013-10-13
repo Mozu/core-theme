@@ -16,10 +16,14 @@ Ext.define('Taco.model.CustomerAccount', {
         }, {
             name: 'userId',
             type: 'string'
-        }, {
-            name: 'siteId',
-            type: 'int'
-        }, {
+        },
+        //removed with omni-channel
+        //{
+        //    name: 'siteId',
+        //    type: 'int'
+        //},
+
+        {
             name: 'companyName',
             type: 'string'
         }, {

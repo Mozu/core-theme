@@ -21,7 +21,7 @@ using Constants = Mozu.Core.Api.Contracts.Constants;
 
 namespace Mozu.SiteBuilder.Mvc
 {
-    public class SiteBuilderApiContext : MozuServiceApiContext, ISiteBuilderApiContext
+    public class SiteBuilderApiContext : MozuServiceApiContext, ISiteBuilderApiContext, ICloneable
     {
         private readonly ICookieProvider _cookieProvider;
         private readonly ISettings _settings;
@@ -47,8 +47,13 @@ namespace Mozu.SiteBuilder.Mvc
             IsEditMode = false;
 
             Load();
+            if ( !this.MasterCatalogId.HasValue )
+            {
+               this.MasterCatalogId = this.SiteGroupId;
+            }
             LoadUser();
             ValidateUser();
+
         }
 
         private static System.Collections.Concurrent.ConcurrentDictionary<string, Site> g_domainSiteLookup = new ConcurrentDictionary<string, Site>(StringComparer.OrdinalIgnoreCase);
@@ -246,5 +251,10 @@ namespace Mozu.SiteBuilder.Mvc
         public bool IsEditMode { get; set; }
 
         public bool HasInvalidCredentials { get; set; }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

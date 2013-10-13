@@ -26,9 +26,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public CategoryController(ICategoryWebApiClient categoriesClient)
         {
-            
-            _categoriesClient = categoriesClient;
-            ((CategoryWebApiClient)_categoriesClient).Options.MaxSize = int.MaxValue;
+
+            _categoriesClient = categoriesClient.CloneWithApiContext(x => x.SiteId = null);
+
         }
 
         [HttpGetRoute(UriTemplate = "read")]
@@ -46,20 +46,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //if (pagingParams.id == null || 1==1)
             {
                 int start = 0;
-                var ctxLevel = TargetContextLevelType.SiteGroup;
+                //var ctxLevel = TargetContextLevelType.SiteGroup;
                 
-                int siteId = -1;
-                ICategoryWebApiClient catClient = _categoriesClient;
-                if (nodeQuery.HasValue && filterCollection.TryGetValue("SiteId", out siteId))
-                {
-                    ctxLevel = TargetContextLevelType.Site;
-                    catClient = _categoriesClient.CloneWith(x => x.SiteId = siteId);
+                //int siteId = -1;
+                //ICategoryWebApiClient catClient = _categoriesClient;
+                //if (nodeQuery.HasValue && filterCollection.TryGetValue("SiteId", out siteId))
+                //{
+                //    ctxLevel = TargetContextLevelType.Site;
+                //    catClient = _categoriesClient.CloneWith(x => x.SiteId = siteId);
 
-                }
+                //}
                 List<Category> categories = new List<Category>();
                 while (true)
                 {
-                    var cats = (await catClient.GetCategories(startIndex: start, pageSize: 600, targetContextLevel: ctxLevel )).ReadAsSync();
+                    var cats = (await _categoriesClient.GetCategories(startIndex: start, pageSize: 600)).ReadAsSync();
                     categories.AddRange(Mapper.Map<List<Category>>(cats.Items));
                     start = cats.PageSize + cats.StartIndex;
                     if (cats.TotalCount <= start )
