@@ -207,11 +207,11 @@ namespace Mozu.SiteBuilder.Mvc
             get
             {
                 Lazy<object> obj;
-                if (!_stateBag.TryGetValue(key, out obj))
+                if (_stateBag.TryGetValue(key, out obj))
                 {
-                    return base[key];
+                    return obj.Value;
                 }
-                return obj.Value;
+                return null;
             }
             set
             {
@@ -287,7 +287,7 @@ namespace Mozu.SiteBuilder.Mvc
         }
 
 
-        [AlternateName("catalog")]
+      
         public ICatalogContext CatalogContext
         {
             get
