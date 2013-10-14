@@ -78,7 +78,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View(pageType.Template, GetModel(pageType));
         }
 
-        object GetModel(PageTemplateDefinition template)
+        object GetModel(PageTypeDefinition template)
         {
             if (template.EntityType == null)
             {

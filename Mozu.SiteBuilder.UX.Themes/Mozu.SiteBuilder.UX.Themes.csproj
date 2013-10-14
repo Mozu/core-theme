@@ -516,6 +516,8 @@
     <Content Include="Themes\Core3\Resources\Scripts\Modules\login-links.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Modules\tagcloud.js" />
     <Content Include="Themes\Core3\Resources\Scripts\Pages\error.js" />
+    <Content Include="Themes\Core3\theme-ui.json" />
+    <Content Include="Themes\Core3\theme.json" />
     <None Include="Themes\Core4\templates\modules\product\product-listing-faceted.hypr" />
     <Content Include="Themes\Core4\templates\modules\product\ProductOption_Date.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\product\ProductOption_List.hypr.live" />

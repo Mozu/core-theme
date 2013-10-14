@@ -82,8 +82,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var res = await _wsRepo.GetSite(siteId);
             var site = res.ReadAsAsync().Result;
 
-            
-            SiteBuilderContext.Save(siteId, site.TenantId, site.SiteGroupId, false, _cookies);
+
+            SiteBuilderContext.Save(site: site.Id, sitegroup: site.SiteGroupId, tenant: site.TenantId, isEditMode: false, cookieProvider: _cookies);
 
             //string domainPriority = System.Configuration.ConfigurationManager.AppSettings["gositeDomainPriority"];
             IEnumerable<string> domainList;
@@ -170,10 +170,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
             if (site != null)
             {
-               
+                SiteBuilderContext.Save(site: site.Id, sitegroup: site.SiteGroupId, tenant: site.TenantId, isEditMode: false, cookieProvider: _cookies);
 
-                SiteBuilderContext.Save(site.Id, site.TenantId, site.SiteGroupId, false, _cookies);
-               return Redirect("/");
+                return Redirect("/");
             }
             return View(model);
         }

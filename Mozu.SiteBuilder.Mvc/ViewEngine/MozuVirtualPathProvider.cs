@@ -8,8 +8,6 @@ using System.Web;
 using System.IO;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Themes;
-using Mozu.SiteBuilder.Mvc.Themes.Providers;
-using Mozu.SiteBuilder.Mvc.Themes.Repositories;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
@@ -47,28 +45,6 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 return (_siteBuilderContext).Theme.Stack;
             }
         }
-
-
-        IEnumerable<string> GetViewVariants(string view, Theme  theme)
-        {
-            yield return view;
-            if (theme.EnableCoreVaraints .GetValueOrDefault( false ))
-            {
-                var pos = view.LastIndexOf('\\');
-                if (pos > -1 && pos + 1 < view.Length)
-                {
-                    yield return view.Substring(0, pos + 1) + "_" + view.Substring(pos + 1);
-                }
-                else
-                {
-                    yield return "_" + view;
-                }
-            }
-
-
-        }
-
-
        
         public override VirtualDirectory GetDirectory(string virtualDir)
         {
@@ -110,18 +86,12 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             }
             foreach (var theme in this.ThemeStack)
             {
-                foreach (var vn in GetViewVariants(virtualPath, theme))
-                {
-
-                    var file = theme.FileListing.FirstOrDefault(x => withExt ? x.VirtualPath == vn :( x.VirtualPathNoExt == vn && x.IsFile));
+                    var file = theme.FileListing.FirstOrDefault( x => withExt ? x.VirtualPath == virtualPath : x.VirtualPathNoExt == virtualPath);
 
                     if (file != null )
                     {
                         return file;
                     }
-                   
-
-                }
             }
             return null;
 

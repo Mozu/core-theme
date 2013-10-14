@@ -5,7 +5,6 @@ using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.UX.Models;
 using System.Dynamic;
 using Mozu.SiteBuilder.Mvc.Navigation;
-using Mozu.SiteBuilder.UX.Models.Admin.ThemeSettings;
 using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using System.Collections.Generic;
@@ -22,8 +21,7 @@ namespace Mozu.SiteBuilder.Mvc
         NavigationContext Navigation { get; }
 
         object this[string key] { get; set; }
-
-        RuntimeConfigurationFieldCollection ThemeSettings { get;  }
+        ThemeRuntimeSettingsCollection ThemeSettings { get;  }
 
         UX.Models.Settings.SettingsContainer Settings { get; }
 

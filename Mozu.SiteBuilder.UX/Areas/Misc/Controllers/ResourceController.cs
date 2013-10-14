@@ -15,7 +15,6 @@ using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
-using Mozu.SiteBuilder.UX.Models.Admin.ThemeSettings;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using dotless.Core;
@@ -567,53 +566,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 return str;
 
             }
-
-            private class ConfigurationFieldComparer : IEqualityComparer<ConfigurationField>
-            {
-                public bool Equals(ConfigurationField x, ConfigurationField y)
-                {
-                    return x.Id == y.Id;
-                }
-
-                public int GetHashCode(ConfigurationField obj)
-                {
-                    return obj.Id.GetHashCode();
-                }
-            }
-
-            //private Regex RegexFactory(string s)
-            //{
-            //    return new Regex(@"(?=[^(])@(?<var>(" + s + "))[/s]*:(?<val>[^;]+);", 
-            //    RegexOptions.Multiline | 
-            //    RegexOptions.ExplicitCapture | 
-            //    RegexOptions.IgnorePatternWhitespace);
-
-            //}
-
-            //internal string ProcessSettingsVariables(string ret)
-            //{
-            //    if (_regex == null)
-            //    {
-            //        var settings  = _themeSettingsRepository.GetRuntimeValues();
-            //        _variableDictionary  = new  Dictionary<string, string>();
-
-            //        foreach (var item in settings.Items)
-            //        {
-            //            foreach (var field in item.Fields.Where( x=> x.Usage == "style"))
-            //            {
-            //                _variableDictionary[item.Id +"-"+ field.Id] = field.GetValueOrDefault();
-            //            }
-            //        }
-
-            //        var selector = string.Join("|", _variableDictionary.Keys );
-
-            //        _regex = g_regexDic.GetOrAdd(selector, RegexFactory);
-            //    }
-
-
-            //    return _regex.Replace(ret,Evaluator);
-
-            //}
         }
 
         public class MozuVirtualFileResult : FileResult

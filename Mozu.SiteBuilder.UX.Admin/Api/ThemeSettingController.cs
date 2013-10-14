@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Settings;
-using Mozu.SiteBuilder.Mvc.Themes.Repositories;
+using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Mozu.SiteBuilder.UX.Models.Admin.ThemeSettings;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -36,22 +35,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Returns the merged core and theme configurations
         /// </summary>
         /// <returns>List of SettingConfiguration</returns>
-		[HttpGetRoute(UriTemplate = "config/read/{id}")]
-        public Response<List<ThemeConfigurationItem>> ReadConfiguration(string id )
-
+        [HttpGetRoute(UriTemplate = "config/read/{themeId}")]
+        public Response<List<ThemeSetting>> ReadConfiguration(string themeId )
         {
-            var config= _themeRepository.GetThemeOrDefault(id).Configuration.ToList();
-          //  var config = _sbContext.Theme.Configuration.ToList();
+            var config = _themeRepository.GetThemeOrDefault(themeId).MergedSettings;
             return List2(config);
         }
             /// <summary>
         /// Returns the current settings for the core and theme
         /// </summary>
         /// <returns>List of field values</returns>
-		[HttpGetRoute(UriTemplate = "instance/read/{id}")]
-        public async Task<Response<List<FieldValue>>> ReadInstance(string id)
+		[HttpGetRoute(UriTemplate = "instance/read/{themeId}")]
+        public async Task<Response<List<ThemeRuntimeSetting>>> ReadInstance(string themeId)
         {
-            var values = await _themeSettingsRepository.GetInstanceValues(id);
+            var values = await _themeSettingsRepository.GetInstanceValues(themeId);
             return List2(values);
         }
 
@@ -60,10 +57,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         /// <param name="values">Field values to persist</param>
         /// <returns>List of FieldValue></returns>
-		[HttpPostRoute(UriTemplate = "instance/save/{id}")]
-        public async Task<Response<List<FieldValue>>> SaveInstance(string id, List<FieldValue> values)
+        [HttpPostRoute(UriTemplate = "instance/save/{themeId}")]
+        public async Task<Response<List<ThemeRuntimeSetting>>> SaveInstance(string themeId, List<ThemeRuntimeSetting> values)
         {
-            var retval = await _themeSettingsRepository.SaveInstanceValues(values, id);
+            var retval = await _themeSettingsRepository.SaveInstanceValues(values, themeId);
             return List2(retval);
         }
     }

@@ -15,7 +15,6 @@ namespace Mozu.SiteBuilder.IntegrationTests
             AutoMapper.Mapper.AddProfile<ProductMapping>();
             AutoMapper.Mapper.AddProfile<DiscountMapping>();
             AutoMapper.Mapper.AddProfile<CustomerMapping>();
-            AutoMapper.Mapper.AddProfile<SettingsMapping>();
             AutoMapper.Mapper.AddProfile<CategoryMapping>();
             AutoMapper.Mapper.AddProfile<FileManagementModelMapping>();
             AutoMapper.Mapper.AddProfile<GeneralSettingsMapping>();

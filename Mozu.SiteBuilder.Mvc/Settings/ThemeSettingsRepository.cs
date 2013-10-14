@@ -1,136 +1,129 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using Mozu.Content.Contracts;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.Mvc.CMS;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.SiteBuilder.UX.Models.Admin.ThemeSettings;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.Themes;
 using Newtonsoft.Json;
 using Document = Mozu.Content.Contracts.Document;
-using Mozu.SiteBuilder.Mvc.Extensions;
 
 
 namespace Mozu.SiteBuilder.Mvc.Settings
 {
+    public interface IThemeSettingsRepository
+    {
+        Task<ThemeRuntimeSettingsCollection> GetRuntimeValues(string themeId);
+        Task<List<ThemeRuntimeSetting>> SaveInstanceValues(List<ThemeRuntimeSetting> values, string themeId);
+        Task<List<ThemeRuntimeSetting>> GetInstanceValues(string themeId);
+        DateTime GetTimeStamp(string themeId);
+    }
+
     public class ThemeSettingsRepository : IThemeSettingsRepository
     {
         private readonly IDocumentListWebApiClient _docWebApiClient;
         private readonly ICmsServiceWrapper _cmsService;
         private readonly DataContractJsonSerializer _serializer;
-        //private readonly List<SettingConfiguration> _coreConfig = null;
-        //private readonly List<SettingConfiguration> _mergedConfig = null;
         private readonly ISiteBuilderContext _siteContext;
-        //private RuntimeConfigurationFieldCollection _runtimeValues;
         private readonly IStorefrontCache _cache;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public ThemeSettingsRepository(IDocumentListWebApiClient docWebApiClient, ICmsServiceWrapper cmsService, ISiteBuilderContext siteContext, IStorefrontCache cache)
         {
-            if (docWebApiClient == null)
-            {
-                throw new ArgumentNullException("docWebApiClient");
-            }
-
-            if (cmsService == null)
-            {
-                throw new ArgumentNullException("cmsService");
-            }
             _siteContext = siteContext;
-            _serializer = new DataContractJsonSerializer(typeof(List<FieldValue>));
+            _serializer = new DataContractJsonSerializer(typeof(List<ThemeRuntimeSetting>));
             _docWebApiClient = docWebApiClient;
             _cmsService = cmsService;
             _siteContext = siteContext;
             _cache = cache;
         }
-        
-        public async Task<List<FieldValue>> SaveInstanceValues(List<FieldValue> values, string themeId)
-        {
 
+        public async Task<List<ThemeRuntimeSetting>> SaveInstanceValues(List<ThemeRuntimeSetting> values, string themeId)
+        {
             await UpdateSettings(values, themeId);
-            //VersionCmsDocument(id);
             return values;
         }
 
-
-        private async Task<StreamContent> UpdateSettings(List<FieldValue> values, string themeId)
+        private Task<ServiceClientResponse<Document>> UpdateSettings(List<ThemeRuntimeSetting> values, string themeId)
         {
-            Document doc = null;
-            var res = await _cmsService.GetByPath2("settings", this.GetFileName(themeId));
-            if (res.ResponseMessage.IsSuccessStatusCode)
-            {
-                doc = res.ReadAsSync();
-                doc.Set("data", Newtonsoft.Json.JsonConvert.SerializeObject(values, Formatting.None));
-                await _cmsService.Update2(doc);
-                return null;
-            }
-            else
-            {
-                doc = new Document
+            return _cmsService.GetByPath2("settings", this.GetFileName(themeId))
+                .ContinueWith<Task<ServiceClientResponse<Document>>>(t =>
                 {
-                    Name = this.GetFileName(themeId),
-                    DocumentType = "theme_settings",
-                    DocumentListName = "settings",
-                    Properties = new List<PropertyValue>
+                    var res = t.Result;
+                    if (res.ResponseMessage.IsSuccessStatusCode)
                     {
-                        new PropertyValue
-                            {
-                                PropertyType = "theme",
-                                Value = themeId
-                            },
-                        new PropertyValue
-                            {
-                                PropertyType = "tags",
-                                Value = new object[] {"something"}
-                            },
-                        new PropertyValue
-                            {
-                                PropertyType = "data",
-                                Value = Newtonsoft.Json.JsonConvert.SerializeObject(values, Formatting.None)
-                            }
+                        var doc = res.ReadAsSync();
+                        doc.Set("data", Newtonsoft.Json.JsonConvert.SerializeObject(values, Formatting.None));
+                        return _cmsService.Update2(doc);
                     }
-                };
-               
-                await _cmsService.RawCreate2(doc);
-                return null;
-            }
+                    else
+                    {
+                        var doc = new Document
+                        {
+                            Name = this.GetFileName(themeId),
+                            DocumentType = "theme_settings",
+                            DocumentListName = "settings",
+                            Properties = new List<PropertyValue>
+                            {
+                                new PropertyValue
+                                    {
+                                        PropertyType = "theme",
+                                        Value = themeId
+                                    },
+                                new PropertyValue
+                                    {
+                                        PropertyType = "tags",
+                                        Value = new object[] {"something"}
+                                    },
+                                new PropertyValue
+                                    {
+                                        PropertyType = "data",
+                                        Value = Newtonsoft.Json.JsonConvert.SerializeObject(values, Formatting.None)
+                                    }
+                            }
+                        };
 
+                        return _cmsService.RawCreate2(doc);
+                    }
+                })
+                .Unwrap();
         }
 
 
-        public  Task<List<FieldValue>> GetInstanceValues(string themeId)
+        public Task<List<ThemeRuntimeSetting>> GetInstanceValues(string themeId)
         {
 
-            var key = typeof(List<FieldValue>) + themeId;
+            var key = typeof(List<ThemeRuntimeSetting>) + themeId;
 
-            var ret = _cache[key] as List<FieldValue>;
+            var ret = _cache[key] as List<ThemeRuntimeSetting>;
             if (ret != null )
             {
-                
-                var tcs = new TaskCompletionSource<List<FieldValue>>();
+                var tcs = new TaskCompletionSource<List<ThemeRuntimeSetting>>();
                 tcs.SetResult(ret);
                 return tcs.Task;
-
             }
 
-            return _cmsService.GetByPath2("settings", this.GetFileName(themeId)).ContinueWith<List<FieldValue>>(res =>
+            return _cmsService.GetByPath2("settings", this.GetFileName(themeId))
+                .ContinueWith<List<ThemeRuntimeSetting>>(res =>
                 {
-                    List<FieldValue> values = new List<FieldValue>();
+                    List<ThemeRuntimeSetting> values = new List<ThemeRuntimeSetting>();
                     if (res.Result.ResponseMessage.IsSuccessStatusCode)
                     {
                         var doc = res.Result.ReadAsSync();
                         var data = doc.Get<string>("data");
                         if (data != null)
                         {
-                            values = Newtonsoft.Json.JsonConvert.DeserializeObject<List<FieldValue>>(doc.Get<string>("data"));    
+                            values = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ThemeRuntimeSetting>>(doc.Get<string>("data"));    
                         }
                         else
                         {
-                            values = new List<FieldValue>();
+                            values = new List<ThemeRuntimeSetting>();
                         }
                         
                         _cache[key] = values;
@@ -141,43 +134,38 @@ namespace Mozu.SiteBuilder.Mvc.Settings
            
         }
 
-        private RuntimeConfigurationFieldCollection _runtimeValues;
+        private ThemeRuntimeSettingsCollection _runtimeValues;
 
-        public  Task<RuntimeConfigurationFieldCollection> GetRuntimeValues(string themeId)
+        public Task<ThemeRuntimeSettingsCollection> GetRuntimeValues(string themeId)
         {
-            if (_runtimeValues == null)
+            if (_runtimeValues != null)
             {
-                return  this.GetInstanceValues(themeId).ContinueWith<RuntimeConfigurationFieldCollection>(task =>
+                var tcs = new TaskCompletionSource<ThemeRuntimeSettingsCollection>();
+                tcs.SetResult(_runtimeValues);
+                return tcs.Task;
+            }
+            else
+            {
+                return this.GetInstanceValues(themeId).ContinueWith<ThemeRuntimeSettingsCollection>(task =>
                     {
-                        var values = task.Result;
-                        var dic = new Dictionary<string, RuntimeConfigurationField>(StringComparer.OrdinalIgnoreCase);
+                        List<ThemeRuntimeSetting> values = task.Result;
+                        var dic = new Dictionary<string, ThemeRuntimeSetting>(StringComparer.OrdinalIgnoreCase);
 
-                        var configFile = _siteContext.Theme.Configuration;
-                        foreach (var config in configFile.Flatten(x => x.Items).Where(x => x.ItemType == "field" && !dic.ContainsKey(x.Id)))
+                        foreach (var setting in _siteContext.Theme.MergedSettings)
                         {
-                            var val = values.Where(x => x.Id == config.Id).Select(x => x.Value).FirstOrDefault();
-                            var rval = new RuntimeConfigurationField()
-                                           {
-                                               DefaultValue = config.DefaultValue,
-                                               Id = config.Id,
-                                               Type = config.ItemType,
-                                               Value = val
-                                           };
-                            dic.Add(config.Id, rval);
+                            if (dic.ContainsKey(setting.Id))
+                                continue;
+
+                            var val = values.Where(rts => rts.Setting.Id == setting.Id).Select(rts => rts.Value).FirstOrDefault() ?? setting.DefaultValue;
+
+                            dic.Add(setting.Id, new ThemeRuntimeSetting(setting, val));
                         }
 
-                        _runtimeValues = new RuntimeConfigurationFieldCollection() {Dictionary = dic};
+                        _runtimeValues = new ThemeRuntimeSettingsCollection(dic.Values.ToList());
                         return _runtimeValues;
 
                     });
-             
             }
-            var tcs = new TaskCompletionSource<RuntimeConfigurationFieldCollection>();
-            tcs.SetResult(_runtimeValues);
-            return tcs.Task;
-
-           
-           
          }
 
         string GetFileName(string themeId)
