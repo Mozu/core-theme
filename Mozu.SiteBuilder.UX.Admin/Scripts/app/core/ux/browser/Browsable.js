@@ -18,6 +18,9 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         useEditRecordsButton: false,
         launchEditorOnClick: true,
         header: null,
+        
+        enableRowEditing: false,
+        s: {},
 
         cls: 'taco-content-browserpage',
 
@@ -80,6 +83,19 @@ Ext.define('Taco.core.ux.browser.Browsable', {
             this.header = {};
         }
         
+        if (this.enableRowEditing) {
+            this.rowEditor = Ext.create('Ext.grid.plugin.RowEditing', {
+                clicksToMoveEditor: 1,
+                autoCancel: false
+            });
+            
+            if (!this.gridPanelConf.plugins) {
+                this.gridPanelConf.plugins = [];
+            }
+            this.gridPanelConf.plugins.push(this.rowEditor);
+            this.launchEditorOnClick = false;
+        }
+
         
 
         Ext.applyIf(this.header, {
@@ -100,7 +116,10 @@ Ext.define('Taco.core.ux.browser.Browsable', {
                 listeners: {
                     click: function () {
                         var controller = this.getControllerName();
-                        if (controller) {
+                        
+                        if (this.enableRowEditing) {
+                            this.onRowEditorCreate();
+                        } else if (controller) {
                             Taco.app.StateManager.attemptNavigate(controller + '/create');
                         } else {
                             this.launchEditor(Ext.create(this.modelName));
@@ -334,6 +353,20 @@ Ext.define('Taco.core.ux.browser.Browsable', {
                 scope: this
             }
         });
+    },
+    
+
+    onRowEditorCreate : function() {
+        
+        
+        this.rowEditor.cancelEdit();
+
+        // Create a model instance
+        var modelName = this.store.model.getName();
+        var r = Ext.create(modelName, this.defaultRowEditingData);
+        this.store.insert(0, r);
+        this.rowEditor.startEdit(0, 0);
+        
     },
     
     onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {

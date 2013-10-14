@@ -16,28 +16,43 @@ Ext.define('Taco.shared.view.form.Address', {
 
 	title: 'Edit Address',
 
-    addressHasNames: true,
+	addressHasNames: true,
+	
+	showCompanyName: true,
+	showEmail: true,
+	showPhoneNumbers: true,
+
 
 	initComponent: function () {
-		var fields;
-
+	    var me = this,
+	        fields = [];
+        
 		this.cls += ' ' + Taco.baseCSSPrefix + 'address-editor-fields';
 
-		fields = [{
-            xtype: 'textfield',
-            width: 315,
-            name: 'companyName',
-            fieldLabel: 'Company Name',
-            margin: '0 14 5 0',
-            style: { 'display': 'inline-table' }
-        }, {
-            xtype: 'textfield',
-            width: 315,
-            name: 'email',
-            fieldLabel: 'Email',
-            margin: '0 0 5 0',
-            style: { 'display': 'inline-table' }
-        }, {
+
+        if (me.showCompanyName) {
+            fields.push({
+                xtype: 'textfield',
+                width: 315,
+                name: 'companyName',
+                fieldLabel: 'Company Name',
+                margin: '0 14 5 0',
+                style: { 'display': 'inline-table' }
+            })
+        }
+	    
+        if (me.showEmail) {
+            fields.push({
+                xtype: 'textfield',
+                width: 315,
+                name: 'email',
+                fieldLabel: 'Email',
+                margin: '0 0 5 0',
+                style: { 'display': 'inline-table' }
+            })
+        }
+
+		fields.push({
             xtype: 'textfield',
             width: 315,
             name: 'address1',
@@ -103,28 +118,34 @@ Ext.define('Taco.shared.view.form.Address', {
                     { "val": "US", "label": "US" }
                 ]
             })
-        }, {
-            xtype: 'textfield',
-            width: 206,
-            name: 'homePhone',
-            fieldLabel: 'Home Phone',
-            margin: '0 13 5 0',
-            style: { 'display': 'inline-table' }
-        }, {
-            xtype: 'textfield',
-            width: 206,
-            name: 'workPhone',
-            fieldLabel: 'Work Phone',
-            margin: '0 13 5 0',
-            style: { 'display': 'inline-table' }
-        }, {
-            xtype: 'textfield',
-            width: 206,
-            name: 'mobilePhone',
-            fieldLabel: 'Mobile Phone',
-            margin: '0 0 5 0',
-            style: { 'display': 'inline-table' }
-        }];
+        });
+	    
+        if (this.showPhoneNumbers) {
+            this.field.push({
+                    xtype: 'textfield',
+                    width: 206,
+                    name: 'homePhone',
+                    fieldLabel: 'Home Phone',
+                    margin: '0 13 5 0',
+                    style: { 'display': 'inline-table' }
+                }, {
+                    xtype: 'textfield',
+                    width: 206,
+                    name: 'workPhone',
+                    fieldLabel: 'Work Phone',
+                    margin: '0 13 5 0',
+                    style: { 'display': 'inline-table' }
+                }, {
+                    xtype: 'textfield',
+                    width: 206,
+                    name: 'mobilePhone',
+                    fieldLabel: 'Mobile Phone',
+                    margin: '0 0 5 0',
+                    style: { 'display': 'inline-table' }
+                });
+        }
+		
+
 
         if (this.addressHasNames) {
             fields.unshift({

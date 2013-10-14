@@ -55,9 +55,17 @@ Ext.define('Taco.view.order.Form', {
 
         this.updateTitleData();
 
-        this.callParent(arguments);
-
         this.buildForm();
+
+        this.callParent(arguments);
+        
+        this.shippingForm = this.down('taco-ordershippingsimple');
+        this.customerForm = this.down('taco-ordercustomer');
+        this.orderDetail = this.down('taco-orderdetail');
+
+        this.loadNavItems();
+
+        
     },
     
     onBeforeReload : function() {
@@ -126,11 +134,11 @@ Ext.define('Taco.view.order.Form', {
             items.push(Ext.create('Taco.view.order.subform.Return', subformCfg)); 
         }
 
-        this.loadNavItems(items);
+        this.items = items;
 
-        this.shippingForm = this.down('taco-ordershippingsimple');
-        this.customerForm = this.down('taco-ordercustomer');
-        this.orderDetail = this.down('taco-orderdetail');
+        
+
+        
 
     },
 
