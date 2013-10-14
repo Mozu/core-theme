@@ -21,6 +21,7 @@ using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers;
+using Mozu.SiteBuilder.UX.Admin.MessageHandlers;
 using Mozu.Tenant.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Configuration
@@ -35,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             base.AddMessageHandlers(httpConfiguration, messageErrorHandler);
 
             httpConfiguration.MessageHandlers.Insert( 0,new HttpContextInjectingMessageHandler());
-
+            httpConfiguration.MessageHandlers.Add( new AuthRedirectMessageHandler());
             //todo:hypr add filters back
 
             //GlobalFilters.Filters.Add(new AddCorrelationHeaderFilterAttribute());
