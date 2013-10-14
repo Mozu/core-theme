@@ -87,29 +87,40 @@ Ext.define('Taco.model.Location', {
         "name": "hours",
         "type": "object",
         "defaultValue": {
-            timeZone: {
-                
-            },
             sunday: {
-                
+                "openTime": "",
+                "closeTime": "",
+                "isClosed": true
             },
             monday: {
-                
+                "openTime": "",
+                "closeTime": "",
+                "isClosed": true
             },
             tuesday: {
-                
+                "openTime": "",
+                "closeTime": "",
+                "isClosed": true
             },
             wednesday: {
-                
+                "openTime": "",
+                "closeTime": "",
+                "isClosed": true
             },
             thursday: {
-                
+                "openTime": "",
+                "closeTime": "",
+                "isClosed": true
             },
             friday: {
-                
+                "openTime": "",
+                "closeTime": "",
+                "isClosed": true
             },
             saturday: {
-                
+                "openTime": "",
+                "closeTime": "",
+                "isClosed": true
             }
         }
     }

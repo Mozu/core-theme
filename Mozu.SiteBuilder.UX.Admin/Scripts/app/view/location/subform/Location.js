@@ -72,7 +72,7 @@ Ext.define('Taco.view.location.subform.Location', {
         });        
 
         
-        debugger;
+        
 
         // fulfillmentType
         // needs a multiselect;
