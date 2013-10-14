@@ -101,6 +101,7 @@ Ext.define('Taco.Application',{
     controllers: [
             'Analytics',
             'Dashboard',
+        //'Charts',
             'Navigation',
             'Customers',
             'CustomerAttributes',
@@ -129,8 +130,11 @@ Ext.define('Taco.Application',{
             'Roles',
             'ProductTypes',
             'Attributes',
-            'FileManager'
-           ],
+            'FileManager',
+            "Channels",
+            "Locations",
+            "LocationTypes"
+    ],
     stores: ['Taco.store.LocalizedStrings'],
     context: null,
     constructor: function (config) {

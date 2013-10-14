@@ -94,7 +94,7 @@ Ext.define('Taco.view.location.Index', {
             text: 'Name'
            
         }, {
-            dataIndex: 'address',
+            dataIndex: 'addressString',
             text: 'Address',
             flex:1
 

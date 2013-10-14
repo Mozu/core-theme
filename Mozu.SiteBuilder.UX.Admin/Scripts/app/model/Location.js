@@ -54,7 +54,28 @@ Ext.define('Taco.model.Location', {
     {
         "name": "address",   // note this should be and address object (standard hopefully)
         "type": "auto"
-    },{
+    },
+        
+    // note this is a string version of the structured address object used for display in the grid;
+    {
+        "name": "addressString",   
+        "type": "string",
+        "convert": function (val, record) {
+            var str = Ext.create('Ext.XTemplate',
+                '{address1} ',
+                '{address2} ',
+                '{address3} ',
+                '{address4} ',
+                '{cityOrTown}, {state} {zipCode}',
+                '{countryCode}'
+            ).apply(record.get('address'));
+                
+            return str;
+        }
+    },
+
+
+    {
         "name": "latitude",
         "type": "string",
         "useNull": true
