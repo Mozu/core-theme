@@ -33,23 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
     public class HomeController : AdminApiControllerBase 
     {
-        public override Task<System.Net.Http.HttpResponseMessage> ExecuteAsync(System.Web.Http.Controllers.HttpControllerContext controllerContext, CancellationToken cancellationToken)
-        {
-            if (this._apiContext.UserClaims  == null || this._apiContext.UserClaims.IsAnonymous )
-            {
-                System.Web.Security.FormsAuthentication.RedirectToLoginPage();
-                TaskCompletionSource<HttpResponseMessage> tcs = new TaskCompletionSource<HttpResponseMessage>();
-                var message = new System.Net.Http.HttpResponseMessage(HttpStatusCode.Redirect);
-                message.Headers.Location = new Uri(_httpContext.Response.RedirectLocation, UriKind.Relative);
-                tcs.SetResult(message);
-                return tcs.Task;
-            }
-            else
-            {
-                return base.ExecuteAsync(controllerContext, cancellationToken);
-            }
-            
-        }
+       
         private readonly IAuthenticationHelper _authenticationHelper;
         private ISiteBuilderContext _sbc;
         private readonly ITenantsWebApiClient _tenantsWebApi;
@@ -59,9 +43,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly ISettings _settings;
         private readonly HttpContextBase _httpContext;
         private readonly IMultiScopeAdminUserWebApiClient _adminUserWebApiClient;
+        private readonly ITenants2WebApiClient _tenants2WebApiClient;
         private ISiteGroupWebApiClient _siteGroupClient;
 
-        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, ISiteGroupWebApiClient siteGroupClient)
+        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, ISiteGroupWebApiClient siteGroupClient, ITenants2WebApiClient tenants2WebApiClient)
         {
             _usersRepo = usersRepo.CloneWithoutUserClaims();
             _authenticationHelper = authHelper;
@@ -72,33 +57,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _settings = settings;
             _httpContext = httpContext;
             _adminUserWebApiClient = adminUserWebApiClient;
+            _tenants2WebApiClient = tenants2WebApiClient;
             _siteGroupClient = siteGroupClient.CloneWithoutUserClaims();
         }
 
-        public class TemplateBase
-        {
-            
-        }
-        void DoStuff()
-        {
-            var host = new RazorEngineHost(new CSharpRazorCodeLanguage());
-
-            // b. Set the base class
-            //host.DefaultBaseClass = typeof(TemplateBase).FullName;
-
-         
-            // d. Add default imports
-            host.NamespaceImports.Add("System");
-            host.NamespaceImports.Add("System.IO");
-
-            var engine = new RazorTemplateEngine(host);
-            using (TextReader rdr = System.IO.File.OpenText(this.HttpContext.Request.MapPath("~/views/home/index.cshtml")))
-            {
-                var result =  engine.GenerateCode(rdr);
-                
-            }
-
-        }
+        
         // GET: /Home/
 
         [HttpGet()]
@@ -107,13 +70,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var userDcTask = _adminUserWebApiClient.GetUser(_apiContext.UserClaims.UserId, UserScopeType.Tenant.ToString(), _apiContext.TenantId);
             var rolesTask = GetUserSitesRoles(_apiContext.UserClaims.UserId);
             var tenantTask = _tenantsWebApi.GetTenant( _apiContext.TenantId );
+
+            var tenantTask2 = _tenants2WebApiClient.GetTenant(_apiContext.TenantId);
+
             var siteUsersTask = _usersRepo.GetUsers(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, pageSize: 200, startIndex: 0);
             
             // TODO: the siteGroup service is not ready. We mock it.
             Task<ServiceClientResponse<DCproduct.SiteGroupCollection>> siteGroupsTask;
              siteGroupsTask = _siteGroupClient.GetSiteGroups();
+
+             await Task.WhenAll(new Task[] { userDcTask, rolesTask, tenantTask, siteUsersTask, siteGroupsTask, tenantTask2 });
+
+            //var tenants2 = tenantTask2.Result.ReadAsSync();
             
-            await Task.WhenAll(new Task[] { userDcTask, rolesTask, tenantTask, siteUsersTask, siteGroupsTask });
 
             var userDC = userDcTask.Result.ReadAsSync();
             var roles = rolesTask.Result;
