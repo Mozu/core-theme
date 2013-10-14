@@ -1,23 +1,28 @@
 ﻿define(["shim!vendor/underscore>_", "modules/backbone-mozu"], function (_, Backbone) {
 
     var ProductPrice = Backbone.MozuModel.extend({
-        defaults: {
-            Price: 0,
-            SalePrice: 0,
-            OfferPrice: 0
+        dataTypes: {
+            Price: Backbone.MozuModel.DataTypes.Float,
+            SalePrice: Backbone.MozuModel.DataTypes.Float,
+            OfferPrice: Backbone.MozuModel.DataTypes.Float
         },
-        helpers: ['OnSale', 'HasRange'],
-        OnSale: function() {
-            var salePrice = parseFloat(this.get('SalePrice'));
-            return salePrice !== null && !isNaN(salePrice) && salePrice !== parseFloat(this.get("Price"));
-        },
-        HasRange: function() {
-            return !isNaN(parseFloat(this.get("LowerBoundPrice")) + parseFloat(this.get("UpperBoundPrice")));
+        helpers: ['onSale'],
+        onSale: function() {
+            var salePrice = this.get('SalePrice');
+            return salePrice !== null && !isNaN(salePrice) && salePrice !== this.get("Price");
         }
-    });
+    }),
+
+    ProductPriceRange = Backbone.MozuModel.extend({
+        relations: {
+            Lower: ProductPrice,
+            Upper: ProductPrice
+        }
+    })
 
     return {
-        ProductPrice: ProductPrice
+        ProductPrice: ProductPrice,
+        ProductPriceRange: ProductPriceRange
     };
 
 });

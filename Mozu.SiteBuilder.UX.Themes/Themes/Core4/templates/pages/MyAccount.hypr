@@ -1,4 +1,4 @@
-﻿{% extends "layouts\default" %}
+﻿{% extends "page" %}
 
 {% block Init %}
 	{% setTemplateVariables BodyTagClasses="mz-my-account" %}

@@ -407,6 +407,7 @@
     <Compile Include="CMS\WidgetProvider.cs" />
     <Compile Include="Configuration\AutofacModule.cs" />
     <Compile Include="Controllers\ApiControllerBase.cs" />
+    <Compile Include="Filters\Safe.cs" />
     <Compile Include="Filters\StringFormatFilter.cs" />
     <Compile Include="MediaTypeFormatters\GenericActionResultFormatter.cs" />
     <Compile Include="MediaTypeFormatters\HtmlActionResultMediaTypeFormatter.cs" />

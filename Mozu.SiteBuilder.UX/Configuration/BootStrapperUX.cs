@@ -44,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             httpConfiguration.Filters.Add(new ErrorFilterAttribute());
 
 
-            //todo:hyperlive add as webapi filteres
+            //todo:hyprlive add as webapi filteres
             // httpConfiguration.Filters.Add(new NotFoundActionHttpFilter());
             //GlobalFilters.Filters.Add(new AddCorrelationHeaderFilterAttribute());
             //GlobalFilters.Filters.Add(new PreserveApiContextFilterAttribute());

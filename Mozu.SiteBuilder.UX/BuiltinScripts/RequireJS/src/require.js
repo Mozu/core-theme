@@ -166,7 +166,7 @@
 
     var mozuBuiltins = {},
         builtinRoot = window.location.protocol + "//" + window.location.host + "/js/";
-    each(['sdk', 'hyperlive'], function (modName) {
+    each(['sdk', 'hyprlive'], function (modName) {
         mozuBuiltins[modName] = builtinRoot + modName + "-" + storeMode + ".js";
     });
 
@@ -199,7 +199,7 @@
                 //Defaults. Do not set a default for map
                 //config to speed up normalize(), which
                 //will run faster if there is no default.
-                waitSeconds: 7,
+                waitSeconds: timeoutSeconds,
                 baseUrl: './',
                 paths: {},
                 pkgs: {},

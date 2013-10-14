@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             while (true)
             {
                 object obj;
-                if (model.TryGetValue("InnerException", out obj))
+                if (tempModel.TryGetValue("InnerException", out obj))
                 {
                     tempModel = (System.Web.Http.HttpError)obj;
                     if (tempModel["ExceptionType"] as string == wrapperException)

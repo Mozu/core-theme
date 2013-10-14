@@ -1,0 +1,31 @@
+<div data-mz-minimodal="login" class="mz-minimodal mz-minimodal-login">
+    <span class="mz-css-arrow-up"></span>
+    <div class="mz-l-hbox">
+        <div class="mz-l-hbox-wrap">
+            <div class="mz-l-hbox-inner">
+                <section data-mz-role="login-form" class="mz-">
+                    <input name="email" placeholder="Email Address" type="email" />
+                    <input name="password" placeholder="Password" type="password" />
+                    <div class="mz-last-row">
+                        (<a data-mz-action="forgotpassword" href="javascrip
+                        t:;">forgot email or password?</a>) <button data-mz-role="ajaxform-submit">Log In</button>
+                    </div>
+                </section>
+                <section data-mz-role="forgotpassword-form" class="mz-forgot-password">
+                    <label class="mz-large-text">
+                        Reset Password
+                        <input type="email" name="reset-password" placeholder="Email Address" />
+                    </label>
+                    <div class="mz-last-row">
+                        (<a href="javascript:;" data-mz-action="back-login">Cancel</a>) <button data-mz-role="ajaxform-submit">Send Email</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <section data-mz-role="ajaxresponse" class="mz-ajaxresponse"></section>
+</div>
+{% comment %}
+The following script is also required in the UtilityNav template. Multiple require_script calls to the same script do not cause problems and do not require the script more than once.
+{% endcomment %}
+{% require_script "modules/login-links" %}

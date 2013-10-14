@@ -1,0 +1,73 @@
+﻿.mz-sitenav {
+    @navHeight: 37px;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0px;
+    background: #444;
+    height: @navHeight;
+
+    > .mz-sitenav-list > .mz-sitenav-item:first-child {
+        margin-left: @gutter * .75;
+    }
+
+    .mz-sitenav-item {
+        float: left;
+        position: relative;
+
+        &:hover .mz-sitenav-sub {
+            visibility: visible;
+            .transition-delay(0s);
+        }
+    }
+
+    .mz-sitenav-sub {
+        background: #444;
+        top: @navHeight - 1;
+        position: absolute;
+        z-index: 1;
+        visibility: hidden;
+        .transition(visibility 0s ease-out .25s);
+
+        > .mz-sitenav-item {
+            clear: both;
+            width: 100%;
+
+            .mz-sitenav-link {
+                .transition-property(~"height, padding, opacity");
+                .transition-duration(~".25s, .25s, .08s");
+                .transition-delay(~"0s, 0s, .05s");
+                height: 0px;
+                opacity: 0;
+                padding: 0;
+                display: block;
+                white-space: nowrap;
+            }
+        }
+    }
+
+    .mz-sitenav-item:hover > .mz-sitenav-link, .mz-sitenav-link.is-current {
+        background-color: #eee;
+        color: #444;
+        &:visited {
+            color: #444;
+        }
+    }
+
+    .mz-sitenav-item:hover .mz-sitenav-sub .mz-sitenav-link {
+        height: 20px;
+        padding: 10px @gutter*.75;
+        opacity: 1;
+    }
+
+    .mz-sitenav-link {
+        color: #eeeeee;
+        text-decoration: none;
+        display: inline-block;
+        padding: 10px @gutter*.75;//@gutter*.325;
+        position: relative;
+        &:visited {
+            color: #eeeeee;
+        }
+    }
+}

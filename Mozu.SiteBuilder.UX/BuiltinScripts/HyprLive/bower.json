@@ -1,0 +1,25 @@
+{
+  "name": "mozu-hyprlive",
+  "version": "0.1.0",
+  "description": "Client-side template interpreter for Hyper.",
+  "main": ".\\dist\\mozu-hyprlive.min.js",
+  "keywords": [
+    "hyprlive",
+    "mozu"
+  ],
+  "authors": [
+    "Volusion Inc"
+  ],
+  "license": "MIT",
+  "homepage": "http://mozu.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+  }
+}

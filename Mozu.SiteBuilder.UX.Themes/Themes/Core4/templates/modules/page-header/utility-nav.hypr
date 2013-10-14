@@ -1,0 +1,30 @@
+﻿<nav class="mz-utilitynav">
+    <ul class="mz-utilitynav-list">
+        {% if user.isAuthenticated %}
+        <li class="mz-utilitynav-item">
+            <div id="mz-logged-in-notice">
+                Welcome, <a href="/myaccount" class="mz-utilitynav-link">{{user.firstName|default:user.email}}</a>! (<a href="javascript:;" data-mz-action="logout" class="mz-utilitynav-link">Log Out</a>)
+            </div>
+            {% comment %}
+                The below require_script tag does not render anything in the place it's actually inserted; it instead adds the script to a list of scripts  which are then included at the end of the page by RequireJS.
+                Use require_script to load AMD modules that are wrapped in define() or require() function calls.
+            {% endcomment %}
+            {% require_script "modules/login-links" %}
+        </li>
+        {%else%}
+        <li data-mz-minimodal-parent class="mz-utilitynav-item">
+            <a href="javascript:;" data-mz-action="login" class="mz-utilitynav-link">Sign In</a>
+               {% comment %}
+                   TODO: JBZ: HyprLive the login modal. Consider strongly whether to make it a Bootstrap popover.
+                    {% include "modules/common/login-modal" %}
+               {% endcomment %}
+        </li>
+        {% endif %}
+        <li class="mz-utilitynav-item">
+            <a class="mz-utilitynav-link mz-utilitynav-link-cart" href="/cart">
+                View Cart (<span class="mz-cartmonitor">{{SiteContext.CatalogContext.CartAbstract.itemCount|default:0}}</span>)
+                {% require_script "modules/cart-monitor" %}
+            </a>
+        </li>
+    </ul>
+</nav>

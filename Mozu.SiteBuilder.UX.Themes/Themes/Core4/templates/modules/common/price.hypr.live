@@ -1,0 +1,15 @@
+﻿ {% if onSale %}
+ <span class="mz-price is-crossedout">
+     {{Price|currency}}
+ </span>
+ <span class="mz-price is-saleprice">
+     {% if DiscountName %}
+     <span class="mz-price-discountname">{{DiscountName}} &ndash;</span>
+     {% endif %}
+     {{SalePrice|currency}}
+ </span>
+ {% else %}
+ <span class="mz-price">
+     {{Price|currency}}
+ </span>
+ {% endif %}

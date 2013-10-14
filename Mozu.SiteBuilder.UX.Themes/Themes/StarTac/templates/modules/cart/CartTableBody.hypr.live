@@ -1,0 +1,74 @@
+﻿<tbody class="mz-cart-{%if Model.IsEmpty %}isempty{% else %}items{% endif %}">
+    {% if not Model.IsEmpty %}
+  {% for item in Model.Items %}
+  
+  
+  <tr class="mz-cart-product-row">
+  <td class="mz-cart-product-item">
+    <div class="mz-cart-item-info">
+      <span class="mz-cart-item-image-wrap">
+        {% if item.Product.mainImage %}
+        <img class="mz-cart-item-image" src="{{ item.Product.mainImage.imagePath }}?size=50 }}" />
+        {% endif %}
+      </span>
+      <a class="mz-cart-item-title" href="{{item.Product.Url}}">{{ item.Product.Name }}</a>
+      <span class="mz-cart-item-code">
+        Code: <strong>{{ item.Product.ProductCode }}</strong>
+      </span>
+      <dl class="mz-cart-item-options">
+        {% for option in item.Product.Options %}
+        <dt class="mz-option-name">{{ option.Name }}:</dt>&nbsp;
+        <dd class="mz-option-value">{{ option.Value }}</dd>
+        {% endfor %}
+      </dl>
+      <span class="mz-cart-product-remove">
+        <a href="javascript:;" data-mz-action="removeItem" data-mz-cart-item="{{ item.Id }}" class="mz-product-delete mz-icon mz-i-close-sm">X</a>
+      </span>
+    </div>
+    <div class="mz-cart-item-config-wrap">
+      <span class="mz-cart-price-container">
+        {% if item.priceIsModified %}
+        <span class="mz-cart-price mz-strikethrough">{{ item.UnitPrice.BaseAmount|currency }}</span>
+        {% endif %}
+        <span class="mz-cart-price{% if item.priceIsModified %} mz-updated-price{% endif %}">{{ item.UnitPrice.DiscountedAmount|currency }}</span>
+      </span>
+      <span class="mz-cart-item-times">&times;</span>
+      <span class="mz-cart-item-quantity">
+        <input type="tel" {% if Model.isLoading %}disabled="disabled"{% endif %} data-mz-cart-item="{{ item.Id }}" data-mz-value="Quantity" value="{{ item.Quantity }}" >
+      </span>
+      <span class="mz-cart-item-equals">=</span>
+      <span class="mz-cart-item-total">{{ item.Total|currency }}</span>
+    </div>
+  </td>
+</tr>
+{% endfor %}
+{% else %}
+  <tr align="center">
+    <td>
+      You have no items in your cart.
+    </td>
+  </tr>
+  {% endif %}
+</tbody>
+<tfoot>
+  <tr>
+    <td align="right">
+      <em class="mz-auxiliary-text">Tax &amp; Shipping Calculated at Checkout</em>
+    </td>
+  </tr>
+  <tr class="mz-cart-total-row">
+    <td>
+      <span class="mz-cart-total-label">Order Total:</span>
+      <span class="mz-cart-total-wrap">
+        <strong>
+          <span id="mz-cart-total" class="mz-cart-total">{{ Model.DiscountedTotal|currency }}</span>
+        </strong>
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td align="right">
+      <button id="checkout" class="mz-button mz-btn-checkout mz-btn-cta" {% if Model.isEmpty %} disabled="disabled" {% endif %} type="submit" data-mz-action="proceedToCheckout">Proceed to Checkout</button>
+    </td>
+  </tr>
+</tfoot>

@@ -1,0 +1,99 @@
+﻿/* Links -------------------------- */
+.mz-utility-link {
+	font-size: 11px;
+	text-decoration:none;
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+/* Buttons ------------------------ */
+.mz-button {
+	box-sizing: border-box;
+	height: 36px;
+	display: inline-block;
+	padding: 4px 20px 5px;
+	text-decoration: none;
+	.border-radius(8px);
+	border: 0;
+	.gradient(#2656F2, #1B3CAA);
+	color: white;
+	border: 2px solid white;
+	.box-shadow (0 0 5px #333);
+}
+.mz-button[disabled] {
+	.gradient(#999, #777);
+	&:hover {
+		.gradient(#999, #777);
+	}
+}
+.mz-btn-cta {
+	padding: 5px 20px 9px;
+	.gradient(#0C8E29, #064915);
+	&:hover {
+		.gradient(#064915, #0C8E29);
+	}
+}
+
+/* Tables ----------------------- */
+.mz-table {
+	border: 0;
+	width: 100%;
+	th {
+		padding: 7px;
+	}
+	td {
+		padding: 7px;
+	}
+}
+
+.mz-half-size {
+    width: 49%;
+}
+
+.mz-form-group {
+	display: table;
+}
+
+.mz-form-field-row {
+	display: table-row;
+}
+
+.mz-form-field-cell {
+	display: table-cell;
+	text-align: right;
+	vertical-align: baseline;
+	padding-right: 10px;
+
+	input[type="text"], input[type="password"] {
+		line-height: 1.5em;
+	}
+
+	& + .mz-form-field-cell {
+		text-align: left;
+	}
+}
+
+
+.mz-invalid {
+    background: #ffeebb;
+    border-color: #c00;
+}
+
+.mz-validation-message {
+    font-size: 8pt;
+    color: #c00;
+    margin: 0 0 5px;
+    display: block;
+    min-height: 10pt;
+}
+
+.mz-single-setting {
+	margin: 10px 0;
+}
+
+html.js .mz-fades-in {
+    visibility: hidden;
+    opacity: 0;
+    .transition(~"opacity ease 0.3s");
+}

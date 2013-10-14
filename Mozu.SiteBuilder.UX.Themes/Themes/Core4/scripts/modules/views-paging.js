@@ -19,7 +19,7 @@
     });
 
     var PagingControlsView = PagingBaseView.extend({
-        templateName: 'Modules/Common/PagingControls',
+        templateName: 'modules/common/paging-controls',
         autoUpdate: ['PageSize'],
         updatePageSize: function (e) {
             this.model.set('PageSize', $(e.currentTarget).val());
@@ -27,7 +27,7 @@
     });
 
     var PageNumbersView = PagingBaseView.extend({
-        templateName: 'Modules/Common/PageNumbers',
+        templateName: 'modules/common/page-numbers',
         previous: function () {
             this.model.previousPage();
         },

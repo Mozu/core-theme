@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     ///     TODO: Update summary.
     /// </summary>
     [ParserNodes.DescriptionAttribute("tbd")]
-    [Name("debug_all_scripts")]
+    [Name("all_scripts")]
     public class DebugScriptsTag : SimpleTagBase
     {
         protected override void ProcessTag(ArgumentCollection arguments, ref NDjango.Interfaces.IContext context, out string buffer, out string templateName)

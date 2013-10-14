@@ -7,7 +7,7 @@
             i18n: "../../js/requireplugins-i18n",
             shim: "../../js/requireplugins-shim",
             sdk: "../../js/sdk-debug",
-            hyperlive: "../../js/hyperlive-debug",
+            hyprlive: "../../js/hyprlive-debug",
             jquery: "http://code.jquery.com/jquery",
             knockout: "vendor/knockout-latest.debug",
             pciaas: "vendor/pci-temp",

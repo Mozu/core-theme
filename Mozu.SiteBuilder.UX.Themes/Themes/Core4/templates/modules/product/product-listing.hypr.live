@@ -1,0 +1,27 @@
+﻿<div class="mz-productlisting {% block module-classes %}{% endblock module-classes %}">
+    {% if Model.Items %}
+    <ul class="mz-productlisting-list {% block list-classes %}{% endblock list-classes %}">
+        {% for prod in Model.Items %}
+        <li class="mz-productlisting-item">
+            <div class="mz-productlisting-image">
+                <a href="{{prod.Url}}">
+                    <img src="{{prod.Content.MainImage.ImageUrl}}?size=160" />
+                </a>
+            </div>
+            <div class="mz-productlisting-info">
+                <a class="mz-productlisting-title" href="{{prod.Url}}">{{prod.Content.ProductName}}</a>
+                {% if prod.Content.ProductShortDescription %}
+                <p class="mz-productlisting-shortdesc">{{ prod.Content.ProductShortDescription|safe }}</p>
+                {% endif %}
+                {% block product-code %}
+                <div class="mz-productlisting-productcode">{{prod.ProductCode}}</div>
+                {% endblock product-code %}
+                {% include "modules/product/price-stack" with prod %}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+
+
