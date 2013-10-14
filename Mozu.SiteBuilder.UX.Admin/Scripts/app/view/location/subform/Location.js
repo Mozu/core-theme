@@ -69,11 +69,10 @@ Ext.define('Taco.view.location.subform.Location', {
 		            }
                 ]
             })
-        });
-        
+        });        
 
         
-        
+        debugger;
 
         // fulfillmentType
         // needs a multiselect;
@@ -89,26 +88,7 @@ Ext.define('Taco.view.location.subform.Location', {
             store: Ext.create('Ext.data.Store', {
                 autoLoad:true,
                 fields: ['code', 'name', "id", "shippingRequired"],
-                data: [
-                    {
-                        "name": "InStore Pickup",
-                        "code": "inStorePickup",
-                        "shippingRequired": false,
-                        "id": 1
-                    },
-                    {
-                        "name": "Direct Ship",
-                        "code": "directShip",
-                        "shippingRequired": true,
-                        "id": 2
-                    },
-                    {
-                        "name": "Drop Ship",
-                        "code": "dfropShip",
-                        "shippingRequired": true,
-                        "id": 3
-                    }
-                ]
+                data: this.record.getFulfillmentTypes()
             })
         });
         

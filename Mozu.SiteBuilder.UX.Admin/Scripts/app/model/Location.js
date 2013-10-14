@@ -87,13 +87,30 @@ Ext.define('Taco.model.Location', {
         "name": "hours",
         "type": "object",
         "defaultValue": {
-            sunday: "",
-            monday: "",
-            tuesday: "",
-            wednesday: "",
-            thursday: "",
-            friday: "",
-            saturday: ""
+            timeZone: {
+                
+            },
+            sunday: {
+                
+            },
+            monday: {
+                
+            },
+            tuesday: {
+                
+            },
+            wednesday: {
+                
+            },
+            thursday: {
+                
+            },
+            friday: {
+                
+            },
+            saturday: {
+                
+            }
         }
     }
 
@@ -121,5 +138,25 @@ Ext.define('Taco.model.Location', {
             //allowSingle: true,
             type: 'json'
         }
+    },
+    
+
+    // fulfillmentTypes are hard coded in the backend services.
+    getFulfillmentTypes : function() {
+        return [
+            {
+                "name": "InStore Pickup",
+                "code": "inStorePickup",
+                "shippingRequired": false,
+                "id": 1
+            },
+            {
+                "name": "Direct Ship",
+                "code": "directShip",
+                "shippingRequired": true,
+                "id": 2
+            }
+        ];
     }
+
 });
