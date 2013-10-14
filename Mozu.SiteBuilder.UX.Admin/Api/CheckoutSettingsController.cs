@@ -1,21 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.ServiceModel;
-using System.ServiceModel.Web;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using System.Linq;
 using Mozu.Core.Api.Routing;
-using Mozu.PaymentService.Contracts.Clients.Public;
-using Mozu.Provisioning.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout;
-using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteSettings.Order.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
-using Newtonsoft.Json.Linq;
-using CheckoutSettings = Mozu.SiteSettings.Order.Contracts.CheckoutSettings;
 using GatewayCredentialFieldValue = Mozu.PaymentService.Contracts.GatewayCredentialFieldValue;
 using PaymentSettings = Mozu.SiteSettings.Order.Contracts.PaymentSettings;
 
@@ -25,17 +17,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class CheckoutSettingsController : BaseController
     {
         private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
-        //IProvisioningWebApiClient _provisioningWebApiClient;
 
-
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public CheckoutSettingsController(ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient)
         {
-            if(checkoutSettingsWebApiClient == null)
-            {
-                throw new ArgumentNullException("checkoutSettingsWebApiClient");
-            }
-            //_provisioningWebApiClient = provisioningWebApiClient;
-   
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
         }
 
@@ -46,12 +33,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "read")]
         public async Task<Response<Setting>> GetSettings()
         {
-            var res = await _checkoutSettingsWebApiClient.GetCheckoutSettings();
-            var setting = res.ReadAsSync();
-            var ret = ConvertSetting(setting.PaymentSettings );
-            ret.PaymentProcessingFlowType = setting.OrderProcessingSettings  != null ? setting.OrderProcessingSettings.PaymentProcessingFlowType : null;
-            ret.CustomerCheckoutType  = setting.CustomerCheckoutSettings   != null ? setting.CustomerCheckoutSettings.CustomerCheckoutType  : null;
-
+            var settings = (await _checkoutSettingsWebApiClient.GetCheckoutSettings()).ReadAsSync();
+            
+            var ret = Mapper.Map<Setting>(settings);
 
             return Single2(ret);
         } 
@@ -64,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "update")]
         public async Task<Response<Setting>> UpdateSettings(Setting settingReq)
         {
-            var pSetting = ConvertToContract(settingReq);
+            var pSetting = Mapper.Map<PaymentSettings>(settingReq);
             var  tasks = new List<Task>();
             Gateway gateWay = null;
             var currentGatewayRes = (await _checkoutSettingsWebApiClient.GetActiveGatewayForCountry("us"));
@@ -141,89 +125,5 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 });
             return List2(mapped);
         }
-
-
-
-
-
-        #region Private methods
-
-        private static Mozu.SiteSettings.Order.Contracts.PaymentSettings ConvertToContract(Setting setting)
-        {
-
-            var gatewayAccount = new Mozu.PaymentService.Contracts.GatewayAccount
-            {
-                CountryCode = "US",
-                GatewayDefinitionId = setting.GatewayDefinitionId,
-                Id = setting.Id,
-                IsActive = true,
-                CredentialFields = new List<GatewayCredentialFieldValue>()
-            };
-
-
-            if (setting.Credentials != null && setting.Credentials.HasValues)
-            {
-                foreach (var credential in setting.Credentials)
-                {
-                    gatewayAccount.CredentialFields.Add(new GatewayCredentialFieldValue() {Name = credential.Key, Value = (string) credential.Value});
-                }
-            }
-            
-            var pSettings = new Mozu.SiteSettings.Order.Contracts.PaymentSettings
-                                {
-                                    Gateways = new List<Mozu.SiteSettings.Order.Contracts.Gateway>()
-                                                   {
-
-                                                       new Gateway()
-                                                           {
-                                                               GatewayAccount = gatewayAccount,
-                                                               SupportedCards = setting.SupportedCards,
-                                                               
-                                                           }
-
-                                                   },
-                                    PayByMail = setting.PayByMail.GetValueOrDefault(false)
-                                };
-            return pSettings;
-        }
-
-        private static Setting ConvertSetting(PaymentSettings  paymentSettings)
-        {
-            var ret = new Setting();
-            if (paymentSettings == null)
-            {
-                return ret;
-            }
-            
-            ret.PayByMail = paymentSettings.PayByMail;
-            var gateWay = paymentSettings.Gateways != null && paymentSettings.Gateways.Count > 0 ? paymentSettings.Gateways.FirstOrDefault(x=> x.GatewayAccount != null && x.GatewayAccount.IsActive ) : null;
-
-           
-            if (gateWay != null)
-            {
-                
-                ret.SupportedCards = gateWay.SupportedCards;
-                if (gateWay.GatewayAccount != null)
-                {
-                    ret.GatewayDefinitionId = gateWay.GatewayAccount.GatewayDefinitionId;
-                    ret.AreGatewayCredentialFieldsSet = gateWay.AreGatewayCredentialFieldsSet;
-                }
-                //if ( gateWay.GatewayAccount != null && gateWay.GatewayAccount.CredentialFields != null )
-                //{
-                 
-                   
-                //    ret.Credentials = new JObject();
-                //    foreach (var field in gateWay.GatewayAccount.CredentialFields)
-                //    {
-                //        ret.Credentials.Add(field.Name, (JToken )field.Value );
-                //    }
-                    
-                //}
-            }
-
-            return ret;
-        }
-
-        #endregion
     }
 }
