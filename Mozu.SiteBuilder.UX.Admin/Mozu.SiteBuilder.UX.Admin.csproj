@@ -394,7 +394,6 @@
     <Compile Include="Api\Models\Returns\Return.cs" />
     <Compile Include="Api\OrderDiscountController.cs" />
     <Compile Include="Api\PublishingSettingsController.cs" />
-    <Compile Include="Api\ReportingController.cs" />
     <Compile Include="Api\ReturnController.cs" />
     <Compile Include="Api\CustomerController.cs" />
     <Compile Include="Api\FacetController.cs" />
