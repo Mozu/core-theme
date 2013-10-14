@@ -1,0 +1,5 @@
+﻿<div class="mz-breadcrumbs">
+    {% for crumb in SiteContext.Navigation.Breadcrumbs %}
+    <a href="{{crumb.url}}" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}{% if forloop.last %} is-active{% endif %}">{{crumb.name}}</a> {% if not forloop.last %}&gt;{% endif %}
+    {% endfor %}
+</div>

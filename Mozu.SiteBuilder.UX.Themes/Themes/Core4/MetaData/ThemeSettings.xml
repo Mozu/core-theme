@@ -1,7 +1,23 @@
 ﻿<?xml version="1.0"?>
 <settings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\Tools\ThemeSettings.xsd">
   <items>
-    <section id="color" label="Color" visible="true">
+    <section id="all" label="All" visible="true">
+      <items>
+        <setting id="fontFamily" type="textbox" label="Font Family" defaultValue="Rambla, sans-serif" />
+        <setting id="fontSize" type="textbox" label="Font Size" defaultValue="14px" />
+        <setting id="gutterWidth" type="select" label="Gutter Width" defaultValue="25px">
+          <values>
+            <option value="25px">25px</option>
+            <option value="22px">22px</option>
+            <option value="20px">20px</option>
+            <option value="18px">18px</option>
+            <option value="15px">15px</option>
+          </values>
+        </setting>
+        <setting id="bodyBackgroundColor" type="color" label="Body Background Color" defaultValue="#ffffff" />
+      </items>
+    </section>
+    <!--<section id="color" label="Color" visible="true">
       <items>
         <setting id="breadcrumbColor" type="color" label="Breadcrumb Color" defaultValue="#555555"/>
         <setting id="siteBackgroundColor" type="color" label="Site Background" defaultValue="#E5E5E5"/>
@@ -48,6 +64,6 @@
               </values>
           </setting>
       </items>
-  </section>
+  </section>-->
   </items>
 </settings>

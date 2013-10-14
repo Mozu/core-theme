@@ -1,7 +1,7 @@
 {
   /* About: Basic Information about the theme. */
   "about": {
-    "name": "Core3",
+    "name": "Core4",
     "author": "Volusion",
     "extends": null,
     "isDesktop": true,
@@ -10,117 +10,11 @@
 
   /* Settings: User-configurable options for your theme. */
   "settings": [
-    /* colors */
-    { "id": "breadcrumbColor",         "defaultValue": "#555555" },
-    { "id": "siteBackgroundColor",     "defaultValue": "#E5E5E5" },
-    { "id": "wrapBackgroundColor",     "defaultValue": "#FFFFFF" },
-    { "id": "contentBackgroundColor",  "defaultValue": "#FFFFFF" },
-    { "id": "siteNavColor",            "defaultValue": "#C5C5C5" },
-    { "id": "siteNavHoverColor",       "defaultValue": "#C9C9C9" },
-    { "id": "storeNameColor",          "defaultValue": "#FEFEFE" },
-    { "id": "textColor",               "defaultValue": "#333333" },
-    { "id": "linkColor",               "defaultValue": "#4F4F4F" },
-    { "id": "linkVisited",             "defaultValue": "#3F3F3F" },
-    { "id": "linkHover",               "defaultValue": "#666666" },
-    { "id": "headlineColor",           "defaultValue": "#444444" },
 
-    /* general */
-    { "id": "gutterWidth",             "defaultValue": "20px" },
-    { "id": "defaultPageSize",         "defaultValue": 15 },
+    { "id": "fontFamily",              "defaultValue": "Rambla, sans-serif" },
+    { "id": "fontSize",                "defaultValue": "14px" },
+    { "id": "gutterWidth",             "defaultValue": "25px" },
+    { "id": "bodyBackgroundColor",     "defaultValue": "#ffffff" }
 
-    /* fonts */
-    { "id": "siteNavFont",             "defaultValue": "14px Tahoma, sans-serif" },
-    { "id": "storeNameFont",           "defaultValue": "bold 30px Tahoma, sans-serif" },
-    { "id": "globalFont",              "defaultValue": "14px Tahoma, sans-serif" },
-    { "id": "headlineFont",            "defaultValue": "bold 21px Tahoma, sans-serif" },
-
-    /* javascript */
-    { "id": "useOptimizedJs",          "defaultValue": true }
-  ],
-
-  /* Page Types: Users will be allowed to create documents of this type in the CMS */
-  "pageTypes": [
-    /* system pages */
-	{
-	  "id":             "404",
-	  "title":          "404 Not Found",
-	  "entityType":     "webpage",
-	  "documentType":   "web_page",
-	  "template":       "404",
-	  "userCreatable":  false
-	},
-	{
-	  "id":             "blog",
-	  "title":          "Blog",
-	  "entityType":     "blog",
-	  "pageType":       "blog",
-	  "template":       "blog",
-	  "userCreatable":  false,
-	},
-
-	/* user-creatable webpages */
-	{
-	  "id":             "about_us",
-	  "title":          "About Us",
-	  "entityType":     "webpage",
-      "documentType":   "web_page",
-	  "template":       "blankpage",
-	  "userCreatable":  true,
-	  /* list of widgets attached to this type of page by default */
-      "widgets": [
-        {
-          "definitionId": "content",
-          "zoneId": "body",
-          "index": 0,
-          "config": {
-            "body": "<p>About Us</p>"
-          }
-        }
-	  ]
-	},
-	{
-	  "id":             "blank_page",
-	  "title":          "Blank Page",
-	  "entityType":     "webpage",
-	  "documentType":   "web_page",
-	  "template":       "blankpage",
-	  "userCreatable":  true
-	},
-	{
-	  "id":             "landing",
-	  "title":          "Landing Page",
-	  "entityType":     "webpage",
-	  "userCreatable":  true,
-	  "template":       "blankpage"
-	},
-	{
-	  "id":             "home",
-	  "title":          "Home Page",
-	  "entityType":     "webpage",
-	  "userCreatable":  true,
-	  "template":       "blankpage"
-	},
-	/* catalog types */
-	{
-	  "id":             "category",
-	  "title":          "Category",
-	  "entityType":     "category",
-	  "userCreatable":  false,
-	  "template":       "category"
-	},
-	{
-	  "id":             "product",
-	  "title":          "Product",
-	  "entityType":     "product",
-	  "userCreatable":  false,
-	  "template":       "product"
-	},
-	{
-	  "id":             "search",
-	  "title":          "Search Results",
-	  "entityType":     "searchresult",
-	  "template":       "searchResults",
-	  "userCreatable":  false
-	}
-  ]
+  ]    
 }

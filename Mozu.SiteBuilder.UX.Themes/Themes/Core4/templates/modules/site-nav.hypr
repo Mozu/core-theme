@@ -1,0 +1,28 @@
+﻿<nav class="mz-sitenav">
+    <ul class="mz-sitenav-list">
+        {%for link in SiteContext.Navigation %}
+            <li class="mz-sitenav-item">
+                <a class="mz-sitenav-link{% if link.url == SiteContext.Navigation.CurrentNode.url %} is-current {% endif %}" href="{{link.url}}">{{link.name}}</a>
+                {% if link.items %}
+                    <ul class="mz-sitenav-sub">
+                        {% for sublink in link.items %}
+                            <li data-mz-role="sitemenu-item" class="mz-sitenav-item">
+                                <a class="mz-sitenav-link{% if link.url == SiteContext.Navigation.CurrentNode.url %} is-current {% endif %}" href="{{sublink.url}}">{{sublink.name}}</a>
+                                {% if sublink.items %}
+                                       <!-- <ul class="mz-sitenav-sub-sub">
+                                            {% for subsublink in sublink.items %}
+                                                <li class="mz-sitenav-item">
+                                                    <a class="mz-sitenav-link" href="{{subsublink.url}}">{{subsublink.name}}</a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul> -->
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {%endfor%}
+    </ul>
+</nav>
+    

@@ -429,16 +429,16 @@
   <ItemGroup>
     <Content Include="App_Readme\glimpse.readme.txt" />
     <Content Include="Areas\Misc\Views\Testing\SiteList.aspx" />
-    <Content Include="BuiltinScripts\HyperLive\dist\mozu-hyperlive.debug.js" />
-    <Content Include="BuiltinScripts\HyperLive\dist\mozu-hyperlive.js" />
-    <Content Include="BuiltinScripts\HyperLive\dist\mozu-hyperlive.min.js" />
-    <Content Include="BuiltinScripts\HyperLive\Gruntfile.js" />
-    <Content Include="BuiltinScripts\HyperLive\init_debug.js" />
-    <Content Include="BuiltinScripts\HyperLive\src\filters.js" />
-    <Content Include="BuiltinScripts\HyperLive\src\swig.mozu.js" />
-    <Content Include="BuiltinScripts\HyperLive\src\tags.js" />
-    <Content Include="BuiltinScripts\HyperLive\src\loader.js" />
-    <Content Include="BuiltinScripts\HyperLive\src\env.js" />
+    <Content Include="BuiltinScripts\HyprLive\dist\mozu-hyprlive.debug.js" />
+    <Content Include="BuiltinScripts\HyprLive\dist\mozu-hyprlive.js" />
+    <Content Include="BuiltinScripts\HyprLive\dist\mozu-hyprlive.min.js" />
+    <Content Include="BuiltinScripts\HyprLive\Gruntfile.js" />
+    <Content Include="BuiltinScripts\HyprLive\init_debug.js" />
+    <Content Include="BuiltinScripts\HyprLive\src\filters.js" />
+    <Content Include="BuiltinScripts\HyprLive\src\swig.mozu.js" />
+    <Content Include="BuiltinScripts\HyprLive\src\tags.js" />
+    <Content Include="BuiltinScripts\HyprLive\src\loader.js" />
+    <Content Include="BuiltinScripts\HyprLive\src\env.js" />
     <Content Include="BuiltinScripts\RequireJS\dist\mozu-require.debug.js" />
     <Content Include="BuiltinScripts\RequireJS\dist\mozu-require.min.js" />
     <Content Include="BuiltinScripts\RequireJS\Gruntfile.js" />
@@ -454,7 +454,7 @@
     <Content Include="Global.asax">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="BuiltinScripts\HyperLive\package.json" />
+    <Content Include="BuiltinScripts\HyprLive\package.json" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -517,11 +517,11 @@
     <Content Include="BuiltinScripts\SDK\src\wrap_footer.tpl" />
     <Content Include="BuiltinScripts\SDK\src\wrap_header.tpl" />
     <Content Include="BuiltinScripts\SDK\src\banner.tpl" />
-    <Content Include="BuiltinScripts\HyperLive\src\wrap_footer.tpl" />
-    <Content Include="BuiltinScripts\HyperLive\src\wrap_header.tpl" />
-    <Content Include="BuiltinScripts\HyperLive\bower.json" />
-    <Content Include="BuiltinScripts\HyperLive\src\banner.tpl" />
-    <Content Include="BuiltinScripts\HyperLive\README.md" />
+    <Content Include="BuiltinScripts\HyprLive\src\wrap_footer.tpl" />
+    <Content Include="BuiltinScripts\HyprLive\src\wrap_header.tpl" />
+    <Content Include="BuiltinScripts\HyprLive\bower.json" />
+    <Content Include="BuiltinScripts\HyprLive\src\banner.tpl" />
+    <Content Include="BuiltinScripts\HyprLive\README.md" />
     <Content Include="BuiltinScripts\RequireJS\package.json" />
     <Content Include="BuiltinScripts\RequireJS\src\banner.tpl" />
     <Content Include="BuiltinScripts\RequireJS\src\wrap_footer.tpl" />
@@ -536,7 +536,6 @@
     <Folder Include="Areas\Misc\Views\Shared\" />
     <Folder Include="Areas\StoreFront\Models\" />
     <Folder Include="Areas\StoreFront\Views\Shared\" />
-    <Folder Include="NewFolder1\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

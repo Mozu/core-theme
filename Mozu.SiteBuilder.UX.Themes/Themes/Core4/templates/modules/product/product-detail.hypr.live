@@ -1,0 +1,64 @@
+<div class="mz-productdetail-shortdesc mz-l-stack-section">
+  <h4 class="mz-l-stack-sectiontitle">Summary</h4>
+  {{ Model.Content.ProductShortDescription|safe }}
+</div>
+
+{% if Model.Options %}
+<div class="mz-productdetail-options mz-l-stack-section">
+  <h4 class="mz-l-stack-sectiontitle">Options</h4>
+  {% include "modules/product/product-options" %}
+</div>
+{% endif %}
+    
+<div class="mz-productdetail-price mz-l-stack-section">
+  <h4 class="mz-l-stack-sectiontitle">Price</h4>
+{% include "modules/product/price-stack" with Model %}
+</div>
+
+<section class="mz-l-stack-section mz-productdetail-conversion">
+    <span class="mz-qty-label">Qty</span>
+    <input class="mz-productdetail-qty" type="number" value="1" {% if not Model.PurchasableState.IsPurchasable %} disabled="disabled" {% endif %} data-mz-value="Quantity" />
+    <button id="add-to-cart" class="mz-productdetail-addtocart mz-button mz-button-large {% if not Model.PurchasableState.IsPurchasable %}is-disabled{% endif %}" {% if not Model.PurchasableState.IsPurchasable %} disabled="disabled" {% endif %} data-mz-action="addToCart" >
+        Add To Cart
+    </button>
+  <span class="mz-validation-message" data-mz-validation-message-for="Quantity"></span>
+
+  {% if not Model.PurchasableState.IsPurchasable %}
+  <p class="mz-productdetail-notpurchasable">
+    Not Purchasable:
+    {% for message in Model.PurchasableState.Messages %}
+    <span>{{ message.Message }}</span>
+    {% endfor %}
+  </p>
+  {% endif %}
+  {% include "modules/common/loading-bar" %}
+</section>
+
+<div class="mz-productdetail-fulldesc mz-l-stack-section">
+  <h4 class="mz-l-stack-sectiontitle">Description</h4>
+  {{ Model.Content.ProductFullDescription|safe }}
+</div>
+
+{% if Model.Properties %}
+<div class="mz-productdetail-properties mz-l-stack-section">
+  <h4 class="mz-l-stack-sectiontitle">Properties</h4>
+  <dl class="mz-productdetail-properties-list">
+    {% for property in Model.Properties %}
+    {% if property.Values %}
+    <dt>{{property.AttributeDetail.Name}}</dt>
+    {% for v in property.Values %}
+    <dd>{% if v.StringValue %}{{v.StringValue}}{% else %}{{v.Value}}{% endif %}</dd>
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
+  </dl>
+</div>
+{% endif %}
+
+<div class="mz-productdetail-measurements mz-l-stack-section">
+    <h4 class="mz-l-stack-sectiontitle">Measurements</h4>
+    <dl class="mz-productdetail-measurements-list">
+      <dt>Weight</dt>
+      <dd>{{ Model.Measurements.PackageWeight.Value }} {{ Model.Measurements.PackageWeight.Unit }}</dd>
+    </dl>
+</div>

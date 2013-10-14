@@ -1,0 +1,32 @@
+﻿<div class="mz-productoptions">
+    {% for option in Model.Options %}
+    <div class="mz-productoptions-optioncontainer">
+        {% if option.IsRequired %}
+            <strong class="is-required">*</strong>
+        {% endif %}
+        <label class="mz-productoptions-optionlabel">{{ option.AttributeDetail.Name }}</label>
+        <div class="mz-productoptions-valuecontainer">
+            {% if option.AttributeDetail.InputType == "YesNo" %}
+                <input class="mz-productoptions-option" type="checkbox" data-mz-product-option="{{ option.AttributeFQN }}" />
+            {% endif %}
+            {% if option.AttributeDetail.InputType == "TextBox" %}
+                <input class="mz-productoptions-option" type="text" value="{{ option.ShopperEnteredValue }}" data-mz-product-option="{{ option.AttributeFQN }}">
+            {% endif %}
+            {% if option.AttributeDetail.InputType == "TextArea" %}
+                <textarea class="mz-productoptions-option" data-mz-product-option="{{ option.AttributeFQN }}">{{ option.ShopperEnteredValue }}</textarea>
+            {% endif %}
+            {% if option.AttributeDetail.InputType == "List" %}
+                <select {% if option.IsMultiValue %}multiple{% endif %} class="mz-productoptions-option" data-mz-product-option="{{ option.AttributeFQN }}">
+                    {% if not option.IsMultiValue %}<option></option>{% endif %}
+                    {% for value in option.Values %}
+                    <option {% if not value.IsEnabled %} class="is-disabled" {% endif %} {% if value.IsSelected %}selected="true"{% endif %} value="{{value.Value}}">{{value.Value}}</option>
+                    {% endfor %}
+                </select>                
+            {% endif %}
+            {% if option.AttributeDetail.InputType == "Date" %}
+                <input type="text" data-mz-is-datepicker data-mz-product-option="{{ option.AttributeFQN }}" class="mz-productoptions-option" style="color:transparent" value="{{ option.ShopperEnteredValue }}" data-format="mm/dd/yy" data-max="{{option.MaxValue}}" data-min="{{ option.MinValue }}">
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>

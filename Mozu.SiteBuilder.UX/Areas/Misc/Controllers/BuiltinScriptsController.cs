@@ -54,12 +54,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return File(System.IO.Path.Combine(MozuConfigurationManager.AppSettings("require-js-build-dir"), fileName), "text/javascript");
         }
           [System.Web.Http.HttpGet]
-        [ClientCacheHeaders(ConfigKey = "hyperlive")]
-        public ActionResult HyperLive(string mode = "min")
+        [ClientCacheHeaders(ConfigKey = "hyprlive")]
+        public ActionResult HyprLive(string mode = "min")
         {
-            string fileName = mode == "debug" ? "mozu-hyperlive.debug.js" : "mozu-hyperlive.js";
+            string fileName = mode == "debug" ? "mozu-hyprlive.debug.js" : "mozu-hyprlive.js";
 
-            return File(System.IO.Path.Combine(MozuConfigurationManager.AppSettings("hyperlive-build-dir"), fileName), "text/javascript");
+            return File(System.IO.Path.Combine(MozuConfigurationManager.AppSettings("hyprlive-build-dir"), fileName), "text/javascript");
         }
 
     }

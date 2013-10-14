@@ -4,7 +4,7 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'shim!vendor/jquery.hist
         additionalEvents: {
             "change [data-mz-facet-value]": "setFacetValue"
         },
-        templateName: "Modules/Product/FacetingPanel",
+        templateName: "modules/product/faceting-form",
         clearFacets: function () {
             this.model.clearAllFacets();
         },
@@ -32,9 +32,9 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'shim!vendor/jquery.hist
                 facetHierDepth: 'categoryId:2'
             };
 
-            var facetingModel = new FacetingModels.FacetedProductCollection(productListData);            var facetingViews = window.facetingViews = {
+            var facetingModel = new FacetingModels.FacetedProductCollection(productListData);            var facetingViews = {
                 facetPanel: new FacetingView({
-                    el: $('#mz-sidebar'),
+                    el: $('[data-mz-facets]'),
                     model: facetingModel
                 }),
                 pagingControls: new PagingViews.PagingControls({
@@ -46,7 +46,7 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'shim!vendor/jquery.hist
                     model: facetingModel
                 }),
                 productList: new Backbone.MozuView({
-                    templateName: 'Modules/Product/ProductListingTiles',
+                    templateName: 'modules/product/product-listing-tiled',
                     el: $facetingForm.find('[data-mz-productlisting]'),
                     model: facetingModel
                 })
@@ -54,10 +54,13 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'shim!vendor/jquery.hist
             facetingModel.on('facetchange', function () {
                 var newURL, lrClone = JSON.parse(JSON.stringify(facetingModel.lastRequest));
                 $.each(lrClone, function (p) { if (p in productListData.baseRequestParams) delete lrClone[p] });
-                if (lrClone.pageSize === defaultPageSize) delete lrClone.pageSize;
+                if (parseInt(lrClone.pageSize) === defaultPageSize) delete lrClone.pageSize;
                 newURL = $.isEmptyObject(lrClone) ? window.location.href.replace(window.location.search, '') : "?" + $.param(lrClone);
                 History.replaceState(null, null, newURL);
             });
+
+            facetingModel.on('change:PageSize', facetingModel.updateFacets, facetingModel);
+
         }
 
         _.invoke(facetingViews, 'render');
@@ -65,6 +68,7 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'shim!vendor/jquery.hist
         $('#mz-category-loading').remove();
         $facetingForm.noFlickerFadeIn();
 
+        window.facetingViews = facetingViews;
 
     });
     

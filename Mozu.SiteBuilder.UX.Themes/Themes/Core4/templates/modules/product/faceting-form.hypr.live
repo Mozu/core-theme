@@ -1,0 +1,28 @@
+<section class="mz-facetingform">
+    <div class="mz-l-sidebaritem">
+        <button class="mz-button mz-facetingform-clearall" data-mz-action="clearFacets">Clear All Filters</button>
+    </div>
+    {% for facet in Model.Facets %}
+    {% if facet.Values %}
+    <div class="mz-l-sidebaritem">
+        <h4>{{ facet.Label }}</h4>
+        <ul class="mz-facetingform-facet">
+            <li>
+              {% if not facet.isEmpty %}
+              <a href="#" class="mz-facetingform-clear" data-mz-action="clearFacet" data-mz-facet="{{ facet.Field }}">Clear</a>
+              {% endif %}
+            </li>
+            {% for value in facet.Values %}
+            <li>
+                <input type="checkbox" id="{{facet.Field|slugify }}_{{ value.Value|slugify }}" class="mz-facetingform-value" {% if value.IsApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.Field }}" data-mz-facet-value="{{ value.Value }}">
+                <label class="mz-facetingform-valuelabel" for="{{facet.Field|slugify }}_{{ value.Value|slugify }}">{{ value.Label }}</label>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    {% endfor %}
+    <div class="mz-l-sidebaritem">
+        <button class="mz-button mz-facetingform-clearall" data-mz-action="clearFacets">Clear All Filters</button>
+    </div>
+</section>

@@ -290,7 +290,6 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             bool useDefaultId = true;
             var sb = new StringBuilder();
             sb.Append("<div ");
-            sb.Append("\r\n1111111111 ");
             if (htmlAttributes != null)
             {
                 foreach (var att in htmlAttributes)

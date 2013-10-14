@@ -1,9 +1,5 @@
 ﻿define(["modules/jquery-mozu", "shim!vendor/underscore>_", "modules/backbone-mozu", "modules/models-price"], function ($, _, Backbone, PriceModels) {
 
-    function sanitize(str) {
-        return str.replace(/[\s~'"]+/g, '-');
-    }
-
     function zeroPad(str, len) {
         str = str.toString();
         while (str.length < 2) str = '0' + str;
@@ -89,6 +85,7 @@
         mozuType: 'product',
         idAttribute: 'ProductCode',
         handlesMessages: true,
+        helpers: ['hasPriceRange'],
         defaults: {
             PurchasableState: {},
             Quantity: 1
@@ -112,6 +109,9 @@
         initialize: function() {
             this.listenTo(this.get("Options"), "optionchange", this.updateConfiguration, this);
             this.set({ Url: "/product/" + this.get("ProductCode") });
+        },
+        hasPriceRange: function() {
+            return !!this.apiModel.prop('PriceRange');
         },
         getConfiguredOptions: function() {
             return _.invoke(this.get("Options").filter(function(opt) {

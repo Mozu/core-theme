@@ -1,0 +1,12 @@
+﻿<div class="mz-pricestack{% if hasPriceRange %} mz-pricestack-range{% endif %}">		
+    {% if hasPriceRange %}
+    <span class="mz-pricestack-price-lower">
+        {% include "modules/common/price" with PriceRange.Lower %}
+    </span>
+    <span class="mz-pricestack-price-upper">
+        {% include "modules/common/price" with PriceRange.Upper %}
+    </span>
+    {% else %}
+    {% include "modules/common/price" with Price %}
+    {% endif %}
+</div>

@@ -1,4 +1,4 @@
-﻿{% extends "layouts\default" %}
+﻿{% extends "page" %}
 
 {% block Init %}
     {% setTemplateVariables BodyTagClasses="mz-search-results mz-no-results" %}

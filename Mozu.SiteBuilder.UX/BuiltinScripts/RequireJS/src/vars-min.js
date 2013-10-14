@@ -1,1 +1,2 @@
-﻿var storeMode = "min";
+﻿var storeMode = "min",
+    timeoutSeconds = 7;

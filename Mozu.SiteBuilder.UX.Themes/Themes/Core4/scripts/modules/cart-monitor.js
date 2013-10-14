@@ -1,6 +1,6 @@
 ﻿define(['modules/jquery-mozu', 'modules/api'], function ($, api) {
     $(document).ready(function () {
-        var $cartCount = $('#mz-cart-count'), timeout;
+        var $cartCount = $('.mz-cartmonitor'), timeout;
         function waitAndGetCart() {
             return setTimeout(function() {
                 api.get('cart').then(updateCartDetails);

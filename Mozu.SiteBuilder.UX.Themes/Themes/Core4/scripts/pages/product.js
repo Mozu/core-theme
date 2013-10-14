@@ -1,7 +1,7 @@
 ﻿require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/models-product", "modules/product-images", "shim!vendor/jquery.tools.dateinput[jquery=jQuery]"], function ($, Backbone, ProductModels) {
 
     var ProductView = Backbone.MozuView.extend({
-        templateName: 'Modules/Product/ProductDetail',
+        templateName: 'modules/product/product-detail',
         autoUpdate: ['Quantity'],
         additionalEvents: {
             "change [data-mz-product-option]": "onOptionChange",
@@ -39,10 +39,6 @@
 
     $(document).ready(function () {
 
-        // gather view elements
-        var $productEl = $('#mz-product-detail');
-
-        // create the observable view model
         var product = ProductModels.Product.fromCurrent();
         product.on('addedtocart', function (cartitem) {
             if (cartitem && cartitem.prop('Id')) {
@@ -54,12 +50,14 @@
         });
 
         var productView = new ProductView({
-            el: $productEl.find('.mz-detail-info-wrap'),
+            el: $('#product-detail'),
             model: product,
-            messagesEl: $productEl.find('[data-mz-message-bar]')
+            messagesEl: $('[data-mz-message-bar]')
         });
 
         window.productView = productView;
+
+        productView.render();
 
 
     });

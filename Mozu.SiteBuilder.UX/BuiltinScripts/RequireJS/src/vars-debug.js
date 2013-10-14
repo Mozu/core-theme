@@ -1,1 +1,2 @@
-﻿var storeMode = "debug";
+﻿var storeMode = "debug",
+    timeoutSeconds = 25;

@@ -1,0 +1,32 @@
+{% extends "page" %}
+
+{% block body-tag-classes %} mz-product {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+{% require_script "pages/product" %}
+
+{% preload_json Model "product" %}
+
+<div class="mz-l-container">
+
+	<h1 class="mz-pagetitle">{{ Model.Content.ProductName }}
+        <span class="mz-pagetitle-note">Product Code: {{ Model.ProductCode }}</span>
+    </h1>
+	
+    <div data-mz-productimages class="mz-productimages mz-l-sidebar">
+        {% include "modules/product/product-images" %}
+    </div>
+
+    {% include "modules/common/message-bar" %}
+
+	<div id="product-detail" class="mz-productdetail mz-l-stack">
+        {% include "modules/product/product-detail" %}
+	</div>
+
+</div>
+
+{% endblock body-content %}
+
+
+ 
