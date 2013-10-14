@@ -121,13 +121,13 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         }
 
-        public PageTemplateDefinition GetPageTypeDefinition(string id)
+        public PageTypeDefinition GetPageTypeDefinition(string id)
         {
             return _siteBuilderContext.Theme.PageTypes.FirstOrDefault(x => x.Id == id);
 
         }
 
-        public IEnumerable<PageTemplateDefinition> GetPageTypeDefinitions()
+        public IEnumerable<PageTypeDefinition> GetPageTypeDefinitions()
         {
             return _siteBuilderContext.Theme.PageTypes;
         }

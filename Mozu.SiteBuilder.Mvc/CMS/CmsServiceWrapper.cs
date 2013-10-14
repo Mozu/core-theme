@@ -48,11 +48,11 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             doc.Items = doc.Items ?? new List<AVM.DocumentProperty>();
 
             var documentTypeId = doc.Items.Where(x => x.Key == CmsConstants.Widgets.page_type_definition).Select(x => (string)x.Value).FirstOrDefault();
-            PageTemplateDefinition pageTypeDef = null;
+            PageTypeDefinition pageTypeDef = null;
 
             if (documentTypeId == null)
             {
-                pageTypeDef = new PageTemplateDefinition();
+                pageTypeDef = new PageTypeDefinition();
                 //throw new InvalidOperationException("missing documentTypeId");
             }
             else

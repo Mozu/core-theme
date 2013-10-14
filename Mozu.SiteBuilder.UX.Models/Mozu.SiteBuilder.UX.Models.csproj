@@ -375,15 +375,6 @@
     <Compile Include="Admin\CMS\CmsPageContext.cs" />
     <Compile Include="Admin\CMS\DocumentDraft.cs" />
     <Compile Include="Admin\TaContext.cs" />
-    <Compile Include="Admin\ThemeSettings\ConfigurationField.cs" />
-    <Compile Include="Admin\ThemeSettings\ConfigurationFieldValue.cs" />
-    <Compile Include="Admin\ThemeSettings\ThemeConfigurationItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Admin\ThemeSettings\FieldValue.cs" />
-    <Compile Include="Admin\ThemeSettings\RuntimeFieldValue.cs" />
-    <Compile Include="Admin\ThemeSettings\SettingConfiguration.cs" />
-    <Compile Include="Admin\ThemeSettings\SettingValue.cs" />
     <Compile Include="Checkout\AvailableShippingMethods.cs" />
     <Compile Include="Checkout\CheckoutActionInformation.cs" />
     <Compile Include="Checkout\CheckoutInformation.cs" />
@@ -485,7 +476,6 @@
     <Folder Include="StoreFront\Navigation\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Admin\ThemeSettings\mockcorethemesettingsconfig.json" />
     <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>

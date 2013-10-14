@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using System.Web;
 using Autofac;
 using Mozu.Core;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Logging;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Catalog;
@@ -14,9 +15,7 @@ using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.Themes.Exceptions;
-using Mozu.SiteBuilder.Mvc.Themes.Repositories;
 using Mozu.SiteBuilder.UX.Models;
-using Mozu.SiteBuilder.UX.Models.Admin.ThemeSettings;
 using Mozu.SiteBuilder.UX.Models.ModelMetaData;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using Mozu.SiteSettings.General.Contracts.Clients;
@@ -316,7 +315,7 @@ namespace Mozu.SiteBuilder.Mvc
             }
         }
 
-        public RuntimeConfigurationFieldCollection ThemeSettings
+        public ThemeRuntimeSettingsCollection ThemeSettings
         {
             get { return _themeSettingsRepo.Value.GetRuntimeValues(Theme.Id).Result; }
         }

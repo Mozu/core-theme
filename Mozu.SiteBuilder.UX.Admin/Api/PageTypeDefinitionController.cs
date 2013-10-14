@@ -49,11 +49,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpGetRoute(UriTemplate = "list")]
-        public Response<List<PageTemplateDefinition>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public Response<List<PageTypeDefinition>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
 
 
-            IEnumerable<PageTemplateDefinition> pageTypes = this._siteBuilderContext.Theme.PageTypes;
+            IEnumerable<PageTypeDefinition> pageTypes = this._siteBuilderContext.Theme.PageTypes;
             bool userCreatable = false;
             if (extFilter.TryGetValue("userCreatable",out userCreatable ))
             {

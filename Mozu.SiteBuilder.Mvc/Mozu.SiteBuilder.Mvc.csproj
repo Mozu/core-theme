@@ -419,6 +419,10 @@
     <Compile Include="Tags\IncludeTag.cs" />
     <Compile Include="Tags\NDjangoContextExtensions.cs" />
     <Compile Include="Tags\SetTemplateVariablesTag.cs" />
+    <Compile Include="Themes\ThemeSetting.cs" />
+    <Compile Include="Themes\ThemeMetaData.cs" />
+    <Compile Include="Themes\ThemeMetadataProvider.cs" />
+    <Compile Include="Themes\ThemeRepository.cs" />
     <Compile Include="ViewEngine\HyperView.cs" />
     <Compile Include="ViewEngine\HyperViewContext.cs" />
     <Compile Include="ViewEngine\HyperViewEngine.cs" />
@@ -467,7 +471,6 @@
     <Compile Include="Models\Mapping\GeneralSettingsMapping.cs" />
     <Compile Include="Models\Mapping\NavigationMapping.cs" />
     <Compile Include="Models\Mapping\ProductMapping.cs" />
-    <Compile Include="Models\Mapping\SettingsMapping.cs" />
     <Compile Include="NavigationContext.cs" />
     <Compile Include="Navigation\ICategoryNavigationProvider.cs" />
     <Compile Include="Navigation\INavigationRepository.cs" />
@@ -486,9 +489,6 @@
     <Compile Include="Providers\SiteBuilderProfile.cs" />
     <Compile Include="Security\AuthenticationHelper.cs" />
     <Compile Include="Settings\ISettingsRepository.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Settings\IThemeSettingsRepository.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Settings\SettingsRepository.cs">
@@ -524,22 +524,19 @@
     <Compile Include="Tags\SetTag.cs" />
     <Compile Include="Tags\DynamicTagBase.cs" />
     <Compile Include="TempMocks\MockProductCategoryRuntimeWebApiClient.cs" />
-    <Compile Include="Theme\Exceptions\DuplicateThemeNameException.cs" />
-    <Compile Include="Theme\Exceptions\ThemeInfoMetadataDidntSerializeException.cs" />
-    <Compile Include="Theme\Exceptions\ThemeInheritanceRecursionException.cs" />
-    <Compile Include="Theme\Exceptions\ThemeNotFoundException.cs" />
-    <Compile Include="Theme\Exceptions\ThemeSettingsConfigurationDidntSerializeException.cs" />
-    <Compile Include="Theme\Factories\ThemeConfigurationFactory.cs" />
-    <Compile Include="Theme\Factories\ThemeFactory.cs" />
-    <Compile Include="Theme\Factories\ThemeHierarchyProcessor.cs" />
-    <Compile Include="Theme\ITheme.cs" />
-    <Compile Include="Theme\Repositories\IThemeRepository.cs" />
-    <Compile Include="Theme\Providers\IThemeMetaDataProvider.cs" />
-    <Compile Include="Theme\Providers\ThemeMetadataProvider.cs" />
-    <Compile Include="Theme\Theme.cs" />
-    <Compile Include="Theme\Repositories\ThemeRepository.cs" />
-    <Compile Include="Theme\ThemeInformationItemCollection.cs" />
-    <Compile Include="Theme\Thumbnail.cs" />
+    <Compile Include="Themes\ThemeUiConfiguration.cs" />
+    <Compile Include="Themes\ThemeRuntimeSettingsCollection.cs" />
+    <Compile Include="Themes\Exceptions\DuplicateThemeNameException.cs" />
+    <Compile Include="Themes\Exceptions\ThemeInfoMetadataDidntSerializeException.cs" />
+    <Compile Include="Themes\Exceptions\ThemeInheritanceRecursionException.cs" />
+    <Compile Include="Themes\Exceptions\ThemeNotFoundException.cs" />
+    <Compile Include="Themes\Exceptions\ThemeSettingsConfigurationDidntSerializeException.cs" />
+    <Compile Include="Themes\Factories\ThemeFactory.cs" />
+    <Compile Include="Themes\Factories\ThemeHierarchyProcessor.cs" />
+    <Compile Include="Themes\ThemeRuntimeSetting.cs" />
+    <Compile Include="Themes\Theme.cs" />
+    <Compile Include="Themes\ThemeConfiguration.cs" />
+    <Compile Include="Themes\Thumbnail.cs" />
     <Compile Include="TransferResult.cs" />
     <Compile Include="UniversalSiteApiClient.cs" />
     <Compile Include="Users\IPermissionsRepository.cs" />
@@ -558,12 +555,6 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <EmbeddedResource Include="Theme\Theme.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Theme\ThemeSettings.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tags\Data\" />
