@@ -12,7 +12,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
     mixins: {
         browsable: 'Taco.core.ux.browser.Browsable'
     },
-
+    
     constructor: function (conf) {
         //this.mixins.browsable.constructor(conf);
         //this.initBrowsable();

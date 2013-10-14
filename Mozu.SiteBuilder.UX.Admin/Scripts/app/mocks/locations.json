@@ -1,0 +1,107 @@
+﻿{
+	"items": [
+		{
+			"id":1205,
+			"locationTypeName":"Warehouse 1",
+			"locationTypeId":1,
+
+			"fulfillmentTypeName":"Direct Ship",
+			
+			"fulfillmentTypeId":[1,2],
+
+			"isDeleted":false,
+			"name":"Location name here",			
+			"description":"This is the description",
+			
+			"address": {
+				"address1": "Corporate Headquarters",
+				"address2": "5844 WESTSLOPE DR",
+				"address3": "",
+				"address4": "",
+				"cityOrTown": "AUSTIN",
+				"state": "TX",
+				"countryCode": "US",				
+				"zipCode": "78731",
+				"id": 1004
+
+				// these are standard address fields that don't apply in our use case. not sure if we will need to keep them or not
+				//companyName: "",
+				//email: "asdf@asdf.com",
+				//firstName: "thomas",
+				//homePhone: "",
+				//lastName: "phipps",
+				//middleName: "",
+				//mobilePhone: "",				
+				//workPhone: ""
+
+
+				
+
+				
+				
+			},
+
+			
+			"latitude": "",
+			"longitude":"",
+			"phone":"(512) 555-5555",
+			"fax":"(512) 555-4444",
+			"notes":"This is a field with notes",
+			"supportsInventory": true,
+			"supportsInStorePickup":false,
+			
+
+			"hours": {				
+				"timeZone": {
+					"name":"America/Chicago",
+					"description": "Central Time",
+					"cc": "US",
+					"utcOffset":"-06",
+					"utcDstOffset":"-05",
+					"abbr":"CST",
+					"id":""
+				},
+
+				// this is how the mockup is set
+				"sunday": {
+					"openTime": "8:00 AM",
+					"closeTime": "5:00 PM",
+					"isClosed": true
+				},
+				"monday": {
+					"openTime": "8:00 AM",
+					"closeTime": "5:00 PM",
+					"isClosed":true
+				},
+				"tuesday": {
+					"openTime": "8:00 AM",
+					"closeTime": "5:00 PM",
+					"isClosed":true
+				},
+				"wednesday": {
+					"openTime": "8:00 AM",
+					"closeTime": "5:00 PM",
+					"isClosed":true
+				},
+				"thursday": {
+					"openTime": "8:00 AM",
+					"closeTime": "5:00 PM",
+					"isClosed":true
+				},
+				"friday": {
+					"openTime": "8:00 AM",
+					"closeTime": "5:00 PM",
+					"isClosed":true
+				},
+				"saturday": {
+					"openTime": "8:00 AM",
+					"closeTime": "5:00 PM",
+					"isClosed":true
+				}
+			}
+			
+		}
+	],	
+	"success":true,
+	"total":1
+}

@@ -14,7 +14,13 @@ Ext.define('Taco.shared.view.modal.Address', {
     width: 700,
 
     addressHasNames: true,
+    showCompanyName: true,
+    showEmail: true,
+    showPhoneNumbers: true,
+    
     validateAddress: true,
+
+    title:"Edit Address",
 
     formCfg: null,
 
@@ -26,9 +32,16 @@ Ext.define('Taco.shared.view.modal.Address', {
             this.record = Ext.create('Taco.model.Contact', this.record);
         }
 
+        
+
         this.form = Ext.widget(Ext.apply({
             xtype: 'taco-addressform',
+            header:false,
             record: this.record,
+            addressHasNames: this.addressHasNames,
+            showCompanyName: this.showCompanyName,
+            showEmail: this.showEmail,
+            showPhoneNumbers: this.showPhoneNumbers,
             manageHeight: false
         }, this.formCfg));
 

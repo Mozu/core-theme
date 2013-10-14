@@ -10,10 +10,14 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     enableScrollSpy: true,
 
     initComponent: function () {
+        
+        // items from subclass
+        var originalItems = this.items || [];
 
         this.formContainer = Ext.widget({
             xtype: 'container',
-            cls: 'taco-form-nav-container'
+            cls: 'taco-form-nav-container',
+            items: originalItems
         });
 
         this.relayEvents(this.formContainer, ['add']);
@@ -147,10 +151,16 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         if ((Ext.isArray(this.formContainer.items) && this.formContainer.items.length > 0) || this.formContainer.items.getCount()) {
             console.log("formcontainer", this.formContainer.items);
         }
-        this.formContainer.autoDestroy = false;
-        this.formContainer.removeAll();
-        this.formContainer.autoDestroy = true;
-        components = this.formContainer.add(items);
+        
+        if (items) {
+            this.formContainer.autoDestroy = false;
+            this.formContainer.removeAll();
+            this.formContainer.autoDestroy = true;
+            components = this.formContainer.add(items);
+        } else {
+            components = this.formContainer.items.items;
+        }
+        
         this.navStore.loadRawData(components);
     }
 });
