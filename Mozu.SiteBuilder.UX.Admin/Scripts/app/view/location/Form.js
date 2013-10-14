@@ -39,7 +39,6 @@ Ext.define('Taco.view.location.Form', {
         this.callParent(arguments);
         
         this.loadNavItems();
-        
 
         // need to load the record again since the navForm2 clears the items and adds the content after the loadRecord is called
         //this.loadRecord(this.record);
