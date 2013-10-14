@@ -1,0 +1,136 @@
+/*
+ * Directives to display theme configuration settings.
+ * Theme developers will have an option to declare their own theme settings UI or just include a theme-ui.json file.
+ */
+{
+  "groups": [
+    { "id": "general",    "title": "General" },
+    { "id": "fonts",      "title": "Fonts" },
+    { "id": "javascript", "title": "Javascript" }
+  ],
+
+  "settings": {
+    /* Color settings. */
+    "breadcrumbColor": {
+      "title":     "Breadcrumb Color",
+      "group":     "colors",
+      "type":      "color",
+      "visible":   true
+    },
+    "siteBackgroundColor": {
+      "title":     "Site Background",
+      "group":     "colors",
+      "type":      "color",
+      "visible":   true
+    },
+    "wrapBackgroundColor": {
+      "title":     "Container Background",
+      "group":     "colors",
+      "type":      "color",
+      "visible":   true
+    },
+    "contentBackgroundColor": {
+      "title":     "Content Background",
+      "group":     "colors",
+      "type":      "color",
+      "visible":   true
+    },
+    "siteNavColor": {
+      "title":     "Site Navigation Color",
+      "group":     "colors",
+      "type":      "color",
+      "visible":   true
+    },
+    "siteNavHoverColor": {
+      "title":     "Site Navigation Link Hover",
+      "group":     "colors",
+      "type":      "color",
+      "visible":   true
+    },
+    "storeNameColor": {
+      "title":     "Store Name Color",
+      "group":     "colors",
+      "type":      "color",
+      "visible":   true
+    },
+    "textColor": {
+      "title":     "Text Color",
+      "group":     "colors",
+      "type":      "color",
+      "visible":   true
+    },
+    "linkColor": {
+      "title":     "Link Color",
+      "group":     "colors",
+      "type":      "color",
+      "visible":   true
+    },
+    "linkVisited": {
+      "title":     "Link Visited Color",
+      "group":     "colors",
+      "type":      "color",
+      "visible":   true
+    },
+    "linkHover": {
+      "title":     "Link Hover Color",
+      "group":     "colors",
+      "type":      "color",
+      "visible":   true
+    },
+    "headlineColor": {
+      "title":     "Headline Color",
+      "group":     "colors",
+      "type":      "color",
+      "visible":   true
+    },
+
+    /* General settings. */
+    "gutterWidth": {
+      "title":     "Gutter Width",
+      "group":     "general",
+      "type":      "select",
+      "options":   [ "25px", "22px", "20px", "18px", "15px" ],
+      "visible":   true
+    },
+    "defaultPageSize": {
+      "title":     "Default Page Size",
+      "group":     "general",
+      "type":      "textbox",
+      "visible":   true
+    },
+
+    /* Font settings. */
+    "siteNavFont": {
+      "title":     "Site Navigation Font",
+      "group":     "fonts",
+      "type":      "font",
+      "visible":   true
+    },
+    "storeNameFont": {
+      "title":     "Site Navigation Font",
+      "group":     "fonts",
+      "type":      "font",
+      "visible":   true
+    },
+    "globalFont": {
+      "title":     "Site Navigation Font",
+      "group":     "fonts",
+      "type":      "font",
+      "visible":   true
+    },
+    "headlineFont": {
+      "title":     "Headline Font",
+      "group":     "fonts",
+      "type":      "font",
+      "visible":   true
+    },
+
+    /* Javascript settings. */
+    "useOptimizedJs": {
+      "title":     "Use Optimized JS Files",
+      "group":     "javascript",
+      "type":      "boolean",
+      "visible":   true
+    }
+  }
+}

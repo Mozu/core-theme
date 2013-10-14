@@ -1,0 +1,40 @@
+{
+  /* About: Basic Information about the theme. */
+  "about": {
+    "name": "Core3",
+    "author": "Volusion",
+    "extends": null,
+    "isDesktop": true,
+    "isMobile": false
+  },
+
+  /* Settings: User-configurable options for your theme. */
+  "settings": [
+    /* colors */
+    { "id": "breadcrumbColor",         "defaultValue": "#555555" },
+    { "id": "siteBackgroundColor",     "defaultValue": "#E5E5E5" },
+    { "id": "wrapBackgroundColor",     "defaultValue": "#FFFFFF" },
+    { "id": "contentBackgroundColor",  "defaultValue": "#FFFFFF" },
+    { "id": "siteNavColor",            "defaultValue": "#C5C5C5" },
+    { "id": "siteNavHoverColor",       "defaultValue": "#C9C9C9" },
+    { "id": "storeNameColor",          "defaultValue": "#FEFEFE" },
+    { "id": "textColor",               "defaultValue": "#333333" },
+    { "id": "linkColor",               "defaultValue": "#4F4F4F" },
+    { "id": "linkVisited",             "defaultValue": "#3F3F3F" },
+    { "id": "linkHover",               "defaultValue": "#666666" },
+    { "id": "headlineColor",           "defaultValue": "#444444" },
+
+    /* general */
+    { "id": "gutterWidth",             "defaultValue": "20px" },
+    { "id": "defaultPageSize",         "defaultValue": 15 },
+
+    /* fonts */
+    { "id": "siteNavFont",             "defaultValue": "14px Tahoma, sans-serif" },
+    { "id": "storeNameFont",           "defaultValue": "bold 30px Tahoma, sans-serif" },
+    { "id": "globalFont",              "defaultValue": "14px Tahoma, sans-serif" },
+    { "id": "headlineFont",            "defaultValue": "bold 21px Tahoma, sans-serif" },
+
+    /* javascript */
+    { "id": "useOptimizedJs",          "defaultValue": true }
+  ]    
+}

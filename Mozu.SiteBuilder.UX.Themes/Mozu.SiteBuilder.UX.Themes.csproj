@@ -914,11 +914,6 @@
     <Folder Include="Themes\Core4\build\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Tools\ThemeSettings.xsd">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Themes\Core3\Modules\_Archive.vol" />
     <Content Include="Themes\Core3\Modules\_BreadCrumbs.vol" />
     <Content Include="Themes\Core3\Modules\_FeaturedProducts.vol" />
@@ -1098,9 +1093,6 @@
     <Content Include="Themes\MobileCore\Modules\ProductImages.vol" />
     <Content Include="Themes\Core3\Modules\_LoadingBar.vol" />
     <Content Include="Themes\Core3\Modules\_LoginModal.vol" />
-    <None Include="Tools\Theme.xsd">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core3\Widgets\cms\imagesGallery.vol" />
