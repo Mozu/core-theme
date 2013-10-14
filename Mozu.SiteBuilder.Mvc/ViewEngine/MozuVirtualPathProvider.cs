@@ -86,7 +86,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             }
             foreach (var theme in this.ThemeStack)
             {
-                    var file = theme.FileListing.FirstOrDefault( x => withExt ? x.VirtualPath == virtualPath : x.VirtualPathNoExt == virtualPath);
+                    var file = theme.FileListing.FirstOrDefault( x => withExt ? x.VirtualPath == virtualPath : (x.VirtualPathNoExt == virtualPath && x.IsFile));
 
                     if (file != null )
                     {
