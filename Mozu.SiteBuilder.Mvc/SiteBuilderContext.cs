@@ -300,7 +300,7 @@ namespace Mozu.SiteBuilder.Mvc
             set { throw new NotImplementedException(); }
         }
 
-
+        [DataMember(Name = "navigation")]
         public NavigationContext Navigation
         {
             get
@@ -329,6 +329,7 @@ namespace Mozu.SiteBuilder.Mvc
         /// <summary>
         ///     Returns true if the visitor is using a mobile device.
         /// </summary>
+        [DataMember(Name = "isVisitorMobile")]
         public bool IsVisitorMobile
         {
             get { return _mobileProvider.IsCurrentRequestMobile; }
@@ -340,6 +341,7 @@ namespace Mozu.SiteBuilder.Mvc
         ///     chosen for the current site, returns the value of <code>MobileTheme</code>.
         ///     Otherwise, returns the value of <code>DesktopTheme</code>.
         /// </summary>
+        [DataMember(Name="theme")]
         public Theme Theme
         {
             get
