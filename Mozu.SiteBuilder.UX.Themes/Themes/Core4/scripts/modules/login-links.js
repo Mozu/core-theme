@@ -1,4 +1,10 @@
-﻿define(['jquery', 'modules/animatemodals', 'i18n!nls/messages'], function ($, animateModals, Messages) {
+﻿define(['modules/jquery-mozu', 'hyprlive', 'shim!vendor/underscore>_', 'modules/backbone-mozu'], function ($, HyprLive, _, Backbone) {
+    
+    $('[data-mz-login-link]')
+
+});
+
+define(['jquery', 'modules/animatemodals', 'i18n!nls/messages'], function ($, animateModals, Messages) {
     return $(document).ready(function () {
         animateModals({ jqSelector: '[data-mz-action="login"]' });
 

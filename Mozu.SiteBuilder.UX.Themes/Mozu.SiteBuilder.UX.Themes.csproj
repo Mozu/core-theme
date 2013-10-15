@@ -461,7 +461,6 @@
     <Content Include="Themes\Core4\scripts\vendor\modernizr-respond.min.js" />
     <Content Include="Themes\Core4\scripts\vendor\pci-temp.js" />
     <Content Include="Themes\Core4\scripts\vendor\underscore.js" />
-    <Content Include="Themes\Core4\theme.xml" />
     <Content Include="Themes\Core3\MetaData\Widgets\catalog\featuredproducts\_0007_featured-products.png" />
     <Content Include="Themes\Core3\MetaData\Widgets\cms\content\_0004_html.png" />
     <Content Include="Themes\Core3\MetaData\Widgets\cms\horizontalrule\_0005_horizontal-divider.png" />
@@ -616,6 +615,7 @@
     <Content Include="Themes\Core3\Resources\Stylesheets\Modules\mini-modal.less" />
     <Content Include="Themes\Core3\Templates\Email\_OrderStatus.vol" />
     <Content Include="Themes\Core3\Templates\Email\_ResetPassword.vol" />
+    <Content Include="Themes\HasBanner\resources\images\banner.jpg" />
     <Content Include="Themes\MobileCore\MetaData\build.js" />
     <Content Include="Themes\MobileCore\MetaData\mobilecore_thumb.jpg" />
     <Content Include="Themes\MobileCore\MetaData\ThemeSettings.xml" />
@@ -905,6 +905,8 @@
     <Content Include="Themes\Core4\templates\modules\page-header\utility-nav.hypr" />
     <Content Include="Themes\StarTac\templates\modules\cart\CartTableBody.hypr.live" />
     <Content Include="Themes\Core4\theme.json" />
+    <Content Include="Themes\HasBanner\stylesheets\modules\page-header.less" />
+    <Content Include="Themes\HasBanner\theme.json" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -948,6 +950,7 @@
     <Folder Include="Themes\Core3\Templates\Pages\" />
     <Folder Include="Themes\Core4\compiled\" />
     <Folder Include="Themes\Core4\templates\modules\category\" />
+    <Folder Include="Themes\HasBanner\MetaData\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core3\Modules\_Archive.vol" />
