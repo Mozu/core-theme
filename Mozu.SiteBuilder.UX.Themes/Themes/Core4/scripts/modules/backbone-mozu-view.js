@@ -50,7 +50,7 @@
                 return this.additionalEvents ? _.extend(defaults, this.additionalEvents) : defaults;
             },
             handleLoadingChange: function (isLoading) {
-                this.$el[isLoading ? 'addClass' : 'removeClass']('mz-loading');
+                this.$el[isLoading ? 'addClass' : 'removeClass']('is-loading');
             },
             render: function () {
                 var thenFocus = this.el && document.activeElement && $.contains(this.el, document.activeElement) && {

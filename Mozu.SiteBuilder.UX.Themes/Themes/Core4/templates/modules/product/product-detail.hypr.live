@@ -42,7 +42,7 @@
 {% if Model.Properties %}
 <div class="mz-productdetail-properties mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">Properties</h4>
-  <dl class="mz-productdetail-properties-list">
+  <dl class="mz-propertylist mz-propertylist-justified">
     {% for property in Model.Properties %}
     {% if property.Values %}
     <dt>{{property.AttributeDetail.Name}}</dt>

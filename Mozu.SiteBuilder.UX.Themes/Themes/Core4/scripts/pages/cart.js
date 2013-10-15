@@ -1,7 +1,7 @@
 ﻿define(['modules/backbone-mozu', 'shim!vendor/underscore>_', 'modules/jquery-mozu', 'modules/models-cart'], function (Backbone, _, $, CartModels) {
 
     var CartView = Backbone.MozuView.extend({
-        templateName: "Modules/Cart/CartTableBody",
+        templateName: "modules/cart/cart-table",
         updateQuantity: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
                 newQuantity = parseInt($qField.val()),
@@ -29,9 +29,9 @@
 
         var cartModel = CartModels.Cart.fromCurrent(),
             cartView = new CartView({
-                el: $('#mz-cart'),
+                el: $('#cart'),
                 model: cartModel,
-                messagesEl: $('#mz-cart-form [data-mz-message-bar]')
+                messagesEl: $('[data-mz-message-bar]')
             });
 
         cartModel.on('ordercreated', function (order) {
