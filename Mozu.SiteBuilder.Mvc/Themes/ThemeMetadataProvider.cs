@@ -120,11 +120,14 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         private Thumbnail LoadThemeThumbnail(string themePath)
         {
-            var imageFilePath = Directory.GetFiles(themePath + "\\metadata", "*thumb.*").FirstOrDefault();
-            if (imageFilePath != null)
-                return new Thumbnail(Path.GetFileName(imageFilePath), File.ReadAllBytes(imageFilePath));
-            else
-                return null;
+            if (Directory.Exists(themePath + "\\metadata"))
+            {
+                var imageFilePath = Directory.GetFiles(themePath + "\\metadata", "*thumb.*").FirstOrDefault();
+                if (imageFilePath != null)
+                    return new Thumbnail(Path.GetFileName(imageFilePath), File.ReadAllBytes(imageFilePath));
+            }
+
+            return null;
         }
 
         private ThemeConfiguration LoadThemeDescriptor(string themePath)
