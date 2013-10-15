@@ -4,10 +4,12 @@
 Ext.define('Taco.core.ux.form.FontField', {
     extend: 'Ext.form.field.Base',
     alias: 'widget.fontfield',
-    requires: ['Taco.core.ux.form.FontPicker'],
+    requires: [
+        'Taco.core.ux.form.FontPicker',
+        'Taco.core.ux.window.Modal'
+    ],
 
     inputType: 'hidden',
-
     value: '14px/21px Sans-serif',
 
     fontParameters: [
@@ -107,10 +109,10 @@ Ext.define('Taco.core.ux.form.FontField', {
             }
         });
 
-        this.modal = Ext.create('Taco.core.ux.modal.Modal', {
-            content: { items: [this.picker] },
-            width: 700,
-            autoShow: true
+        this.modal = Ext.create('Taco.core.ux.window.Modal', {
+            autoShow: true,
+            scale: 'medium',
+            items: [this.picker]
         });
     },
 

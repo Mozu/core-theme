@@ -349,17 +349,18 @@ Ext.define('Taco.shared.view.field.Image', {
 
 
     onAssociatorClick: function () {
+        if (this.associator) {
+            this.associator.show();
+        } else {
+            this.associator = Ext.create('Taco.view.fileManager.Associator', {});
 
-        this.associator = Ext.create('Taco.view.fileManager.Associator', {
-            selectedItems: [],
-            listeners: {
-                save: this.onAssociatorSave,
-                cancel: function (associator) {
-                    associator.hide();
-                },
-                scope: this
-            }
-        });
+            this.mon(this.associator, {
+                save: {
+                    scope: this,
+                    fn: 'onAssociatorSave'
+                }
+            });
+        }
     },
 
   
@@ -404,6 +405,12 @@ Ext.define('Taco.shared.view.field.Image', {
     },
 
     onAssociatorSave: function (associator, selectedRecords) {
+        console.log(arguments);
         this.selectedImages.add(selectedRecords);
+    },
+
+    onDestroy: function () {
+        Ext.destroy(this.associator);
+        this.callParent(arguments);
     }
 });

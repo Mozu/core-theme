@@ -649,34 +649,46 @@ Ext.define('Taco.view.site.page.Form', {
     },
 
     settings: function () {
-        var form, editors = [], record = this.adapter.get(), modal = null;
+        var editors = [],
+            record = this.adapter.get(),
+            modal = null,
+            form;
+
         Ext.each(this.adapter.editors, function (cls) {
             editors.push(Ext.create(cls, {
                 record: record
             }));
         });
 
-        form = Ext.create('Taco.core.ux.form.Form',
-            {
-                items: editors,
-                record: record,
-                width: 600
-            });
-        form.add({
-            xtype: 'button',
-            handler: function () {
-                form.update();
-                modal.hide();
-            },
-            text: 'DONE'
+        form = Ext.create('Taco.core.ux.form.Form', {
+            items: editors,
+            record: record
+        });
+        // form.add({
+        //     xtype: 'button',
+        //     handler: function () {
+        //         form.update();
+        //         modal.hide();
+        //     },
+        //     text: 'DONE'
+        // });
+
+        modal = Ext.create('Taco.core.ux.window.Modal', {
+            autoShow: true,
+            scale: 'medium',
+            primaryText: 'Done',
+            layout: 'fit',
+            items: [form]
         });
 
-
-        modal = Ext.create('Taco.core.ux.modal.Modal', {
-            items: form,
-            autoShow: true
+        modal.on({
+            save: {
+                scope: this,
+                fn: function () {
+                    form.update();
+                }
+            }
         });
-
     },
 
     navigateIframe: function (config) {

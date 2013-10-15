@@ -5,7 +5,20 @@
 Ext.define('Taco.core.ux.browser.BrowserPage', {
     extend: 'Taco.core.ux.content.Container',
     alias: 'widget.browserpage',
-    requires: ['Taco.core.ux.grid.Panel', 'Taco.core.ux.TilePanel', 'Taco.core.ux.grid.Pager', 'Ext.util.Inflector', 'Ext.form.Panel', 'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter', 'Taco.core.ux.FilterableDataView', 'Taco.core.ux.modal.Confirmation', 'Taco.core.ux.browser.ItemBrowser', 'Ext.selection.CheckboxModel', 'Taco.core.ux.browser.FilterList', 'Taco.core.ux.browser.Modal'],
+    requires: [
+        'Taco.core.ux.grid.Panel',
+        'Taco.core.ux.TilePanel',
+        'Taco.core.ux.grid.Pager',
+        'Ext.util.Inflector',
+        'Ext.form.Panel',
+        'Ext.tip.QuickTipManager',
+        'Taco.core.ux.TextFilter',
+        'Taco.core.ux.FilterableDataView',
+        'Taco.core.ux.modal.Confirmation',
+        'Taco.core.ux.browser.ItemBrowser',
+        'Ext.selection.CheckboxModel',
+        'Taco.core.ux.browser.FilterList'
+    ],
 
     cls: undefined,
 
@@ -26,13 +39,6 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         this.callParent(arguments);
 
         this.initBrowserListeners();
-    },
-
-    launchBulkEditor: function () {
-        Ext.create('Taco.core.ux.browser.Modal', {
-            store: this.store,
-            columns: this.bulkEditorColumns || this.gridPanelConf.columns
-        });
     },
 
     launchEditor: function (record, options) {

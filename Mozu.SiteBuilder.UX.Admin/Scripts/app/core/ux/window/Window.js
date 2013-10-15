@@ -94,7 +94,6 @@ Ext.define('Taco.core.ux.window.Window', {
         if (this.manageOverflow) {
             this.attachBodyListeners();
         }
-        
     },
     
     attachBodyListeners: function () {

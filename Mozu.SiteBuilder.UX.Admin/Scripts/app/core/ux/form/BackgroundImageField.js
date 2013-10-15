@@ -5,7 +5,10 @@
 Ext.define('Taco.core.ux.form.BackgroundImageField', {
     extend: 'Ext.form.field.Base',
     alias: 'widget.backgroundimagefield',
-    requires: ['Taco.core.ux.form.BackgroundImagePicker'],
+    requires: [
+        'Taco.core.ux.form.BackgroundImagePicker',
+        'Taco.core.ux.window.Modal'
+    ],
 
     inputType: 'hidden',
 
@@ -63,10 +66,10 @@ Ext.define('Taco.core.ux.form.BackgroundImageField', {
             }
         });
 
-        this.modal = Ext.create('Taco.core.ux.modal.Modal', {
-            content: { items: [this.picker] },
-            width: 700,
-            autoShow: true
+        this.modal = Ext.create('Taco.core.ux.window.Modal', {
+            autoShow: true,
+            scale: 'medium',
+            items: [this.picker]
         });
     },
 

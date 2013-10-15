@@ -7,7 +7,6 @@
 Ext.define('Taco.view.product.subform.Categories', {
     extend: 'Taco.view.product.subform.Subform',
     requires: [
-        'Taco.view.category.Modal',
         'Taco.core.ux.form.field.MultiSelect'
     ],
     
@@ -40,13 +39,7 @@ Ext.define('Taco.view.product.subform.Categories', {
             valueField: 'id',
             value: this.record.get('categoryIds'),
             queryMode: 'local',
-            //editable: false,
-            //typeAhead: false,
-            //readOnly: true,
-            enableKeyEvents: true/*,
-            onTriggerClick: function () {
-                me.launchModal();
-            }*/
+            enableKeyEvents: true
         });
 
         this.listStore = listStore;
@@ -57,35 +50,6 @@ Ext.define('Taco.view.product.subform.Categories', {
         this.callParent(arguments);
 
         this.mon(listStore, 'load', function () { list.resetOriginalValue(); }, this);
-
-        this.on({
-            beforedestroy: function () {
-                if (this.modal && this.modal.hide) this.modal.hide();
-            },
-            scope: this
-        });
-    },
-
-    /**
-     * Opens a modal with a TreePanel.
-     * @private
-     */
-    launchModal: function () {
-        var list = this.getForm().findField('categoryIds'),
-            listStore = list.getStore(),
-            treeStore = Taco.core.data.StoreManager.getCategoryTreeBySite(this.record.getId());
-
-
-        Ext.destroy(this.modal);
-
-        this.modal = Ext.create('Taco.view.category.Modal', {
-            store: treeStore
-        });
-
-        this.modal.on({
-            save: this.updateList,
-            scope: this
-        });
     },
 
     /**

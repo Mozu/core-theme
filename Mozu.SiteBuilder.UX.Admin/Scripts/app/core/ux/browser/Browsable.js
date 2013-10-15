@@ -119,16 +119,6 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
         Ext.applyIf(this.header, {
             actions: [{
-                xtype: 'secondarybutton',
-                hidden:!this.allowUpdate() || !this.useEditRecordsButton,
-                text: 'Edit Records',
-                listeners: {
-                    click: function () {
-                        this.launchBulkEditor();
-                    },
-                    scope: this
-                }
-            },{
                 xtype: 'primarybutton',
                 itemId: 'newbutton',
                 hidden: ! this.allowCreate(),

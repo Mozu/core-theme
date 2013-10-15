@@ -26,7 +26,6 @@
  * @requires Taco.controller.Categories
  * @requires Taco.controller.Products
  * @requires Taco.controller.PendingChanges
- * @requires Taco.controller.Options
  * @requires Taco.controller.Inventory
  * @requires Taco.controller.Message
  * @requires Taco.controller.Catalog
@@ -66,7 +65,6 @@ Ext.define('Taco.Application',{
     autoCreateViewport: false,
     requires: [
             'Taco.overrides.window.MessageBox',
-            'Taco.overrides.window.Window',
             'Taco.overrides.grid.RowEditor',
             'Ext.data.association.HasOne',
             'Taco.core.data.RemoteException',
@@ -109,7 +107,6 @@ Ext.define('Taco.Application',{
             'Categories',
             'Products',
             'PendingChanges',
-            'Options',
             'Inventory',
             'Message',
             'Catalog',
@@ -117,7 +114,6 @@ Ext.define('Taco.Application',{
             'Testing',
             'Discounts',
             'Settings',
-            'PaymentAndCheckout',
             'PageTemplates',
             'Tbd',
             'Themes',

@@ -1,16 +1,24 @@
 /**
  * @class Taco.view.product.Modal
  */
+
 Ext.define('Taco.view.product.Modal', {
-    extend: 'Ext.window.Window',
-    requires: ['Ext.grid.Panel', 'Ext.selection.CheckboxModel', 'Taco.core.ux.action.SecondaryButton'],
-   height:500,
+    extend: 'Taco.core.ux.window.Modal',
+    requires: [
+        'Ext.grid.Panel',
+        'Ext.selection.CheckboxModel'
+    ],
+
     autoShow: true,
-   width: 700,
+    closeAction: 'destroy',
+    primaryText: 'Apply',
+    scale: 'large',
+    title: 'Select Products',
+
     layout: {
-        type: 'vbox',
-        align:'left'
+        type: 'fit'
     },
+
     initComponent: function () {
         this.selModel = Ext.create('Ext.selection.CheckboxModel', {
             selType: 'checkboxmodel',
@@ -19,10 +27,6 @@ Ext.define('Taco.view.product.Modal', {
         });
 
         this.grid = Ext.create('Ext.grid.Panel', {
-            width: 690,
-            flex:1,
-            //height: 120,
-            margin: '28 0 0 0',
             rootVisible: false,
             store: this.store,
             selModel: this.selModel,
@@ -62,67 +66,16 @@ Ext.define('Taco.view.product.Modal', {
             }]
         });
 
-        this.content = {
-            xtype: 'container',
-            
-            layout: 'fit',
-            flex:1,
-            items: [this.grid]
-        };
-
-        //this.actions = {
-        //    xtype: 'container',
-        //    items: [{
-        //        xtype: 'primarybutton',
-        //        text: 'Apply',
-        //        click: this.save,
-        //        scope: this
-        //    }, {
-        //        xtype: 'action',
-        //        text: 'Cancel',
-        //        click: this.cancel,
-        //        scope: this
-        //    }]
-        //};
-
-        this.items = [this.content];
-        this.dockedItems = [{
-            xtype: 'toolbar',
-            dock: 'bottom',
-            layout: {
-                type:'hbox',
-                align:'right'
-            },
-            items: ['->', {
-                    xtype: 'secondarybutton',
-                    text: 'Cancel',
-                    click: this.cancel,
-                    scope: this
-                }, {
-                    xtype: 'primarybutton',
-                    text: 'Apply',
-                    click: this.save,
-                    scope: this
-                }]
-        }];
+        this.items = [this.grid];
 
         this.callParent(arguments);
 
         this.grid.getView().on({
-            viewready: this.preselect,
-            scope: this
+            viewready: {
+                scope: this,
+                fn: 'preselect'
+            }
         });
-
-        this.selModel.on({
-            selectionchange: function(selModel, selection) {
-                 console.log(selection, selModel.getSelectionMode());
-            },
-            scope: this
-        });
-    },
-
-    cancel: function () {
-        this.hide();
     },
 
     preselect: function (view) {
@@ -135,13 +88,12 @@ Ext.define('Taco.view.product.Modal', {
         }, this);
     },
 
-    save: function (button, e) {
-        var selection = this.selModel.getSelection(),
-            values;
+    primaryHandler: function () {
+        var selection = this.selModel.getSelection();
 
-
-        this.fireEvent('save', this, selection);
-
-        this.hide();
+        if (this.fireEvent('beforesave', this) !== false) {
+            this.fireEvent('save', this, selection);
+            this.close();
+        }
     }
 });
