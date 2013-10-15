@@ -1,17 +1,23 @@
 ﻿/**
  * @class Taco.view.category.Modal
  */
+
 Ext.define('Taco.view.category.Modal', {
-    extend: 'Taco.core.ux.modal.Modal',
+    extend: 'Taco.core.ux.window.Modal',
     requires: [
         'Ext.tree.Panel',
-        'Ext.selection.CheckboxModel',
-        'Taco.core.ux.action.SecondaryButton'
+        'Ext.selection.CheckboxModel'
     ],
 
     autoShow: true,
-    fullHeight: true,
-    width: 700,
+    closeAction: 'destroy',
+    primaryText: 'Apply',
+    scale: 'medium',
+    title: 'Select Categories',
+
+    layout: {
+        type: 'fit'
+    },
 
     initComponent: function () {
         this.selModel = Ext.create('Ext.selection.CheckboxModel', {
@@ -21,12 +27,9 @@ Ext.define('Taco.view.category.Modal', {
         });
 
         this.tree = Ext.create('Ext.tree.Panel', {
-            width: 644,
-            flex: 1,
-            margin: '28 0 0 0',
             rootVisible: false,
-            store: this.store,
             displayField: 'name',
+            store: this.store,
             selModel: this.selModel,
             selectPath: function (path, field, separator, callback, scope) {
                 // override: set keepExisting to true when calling select()
@@ -65,46 +68,16 @@ Ext.define('Taco.view.category.Modal', {
             }
         });
 
-        this.content = {
-            xtype: 'container',
-            layout: 'vbox',
-            items: [{
-                xtype: 'component',
-                cls: Taco.baseCSSPrefix + 'modal-title',
-                html: 'Select Categories'
-            }, this.tree]
-        };
-
-        this.actions = {
-            xtype: 'container',
-            items: [{
-                xtype: 'primarybutton',
-                text: 'Apply',
-                click: this.save,
-                scope: this
-            }, {
-                xtype: 'secondarybutton',
-                text: 'Cancel',
-                click: this.cancel,
-                scope: this
-            }]
-        };
+        this.items = [this.tree];
 
         this.callParent(arguments);
 
         this.tree.getView().on({
-            viewready: this.preselect,
-            scope: this
+            viewready: {
+                scope: this,
+                fn: 'preselect'
+            }
         });
-
-        this.selModel.on({
-            selectionchange: function (selModel, selection) { console.log(selection, selModel.getSelectionMode()); },
-            scope: this
-        });
-    },
-
-    cancel: function () {
-        this.hide();
     },
 
     preselect: function (view) {
@@ -120,18 +93,12 @@ Ext.define('Taco.view.category.Modal', {
         }, this);
     },
 
-    save: function (button, e) {
-        var selection = this.selModel.getSelection(),
-            values;
+    primaryHandler: function () {
+        var selection = this.selModel.getSelection();
 
-        // values = Ext.Array.map(selection, function (record) {
-        //     return { id: record.getId(), name: record.get('name') };
-        // }, this);
-        
-        console.log(selection);
-
-        this.fireEvent('save', this, selection);
-
-        this.hide();
+        if (this.fireEvent('beforesave', this) !== false) {
+            this.fireEvent('save', this, selection);
+            this.close();
+        }
     }
 });

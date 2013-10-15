@@ -5,8 +5,8 @@
 Ext.define('Taco.controller.Sites', {
     extend: 'Taco.core.Controller',
     requires: ['Taco.view.site.page.Edit'],
-    views: ['option.Index'],             //<hack 
-    modelName: 'Taco.model.Option',   //<hack 
+    views: ['attribute.Index'],             //<hack 
+    modelName: 'Taco.model.Attribute',   //<hack 
 
     pages: function (params) {
         

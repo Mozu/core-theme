@@ -585,6 +585,7 @@
     <Content Include="Scripts\app\controller\Reports.js" />
     <Content Include="Scripts\app\controller\Tbd.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
+    <Content Include="Scripts\app\core\ux\form\field\InlinePicker.js" />
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\window\Alert.js" />
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />
@@ -959,7 +960,6 @@
     <Content Include="Scripts\app\core\layout\HFlex.js" />
     <Content Include="Scripts\app\core\util\TextSelection.js" />
     <Content Include="Scripts\app\core\ux\form\CurrencyField.js" />
-    <Content Include="Scripts\app\core\ux\modal\ContentContainer.js" />
     <Content Include="Scripts\app\core\ux\ScrollSpy.js" />
     <Content Include="Scripts\app\core\ux\simplegrid\Body.js" />
     <Content Include="Scripts\app\core\ux\simplegrid\Grid.js" />
@@ -1094,7 +1094,6 @@
     <Content Include="Scripts\app\view\order\widget\Package.js" />
     <Content Include="Scripts\app\view\order\widget\PaymentPanel.js" />
     <Content Include="Scripts\app\view\order\widget\UnpackagedItems.js" />
-    <Content Include="Scripts\app\view\pageTemplate\Edit.js" />
     <Content Include="Scripts\app\view\pageTemplate\Index.js" />
     <Content Include="Scripts\app\view\pendingChange\Cms.js" />
     <Content Include="Scripts\app\view\productType\AttributeForm.js" />

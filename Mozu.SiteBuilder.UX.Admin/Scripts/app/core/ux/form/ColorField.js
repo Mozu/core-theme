@@ -4,13 +4,14 @@
 
 Ext.define('Taco.core.ux.form.ColorField', {
     extend: 'Ext.form.field.Base',
+    requires: [
+        'Taco.core.ux.ColorPicker',
+        'Taco.core.ux.window.Modal'
+    ],
     alias: 'widget.colorfield',
+
     inputType: 'button',
-
-    requires: ['Taco.core.ux.ColorPicker'],
-
     value: 'rgba(0,0,0,1)',
-
     fieldCls: 'x-form-field taco-color-field',
     pickerSize: 50,
 
@@ -37,9 +38,10 @@ Ext.define('Taco.core.ux.form.ColorField', {
                     }
                 });
 
-                this.modal = Ext.create('Taco.core.ux.modal.Modal', {
-                    content: { items: [this.picker] },
-                    autoShow: true
+                this.modal = Ext.create('Taco.core.ux.window.Modal', {
+                    autoShow: true,
+                    scale: 'medium',
+                    items: [this.picker]
                 });
             },
             scope: this

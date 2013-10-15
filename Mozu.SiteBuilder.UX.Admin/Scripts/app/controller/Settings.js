@@ -10,7 +10,7 @@ Ext.define('Taco.controller.Settings', {
         'Taco.view.settings.Publishing'
     ],
     listView: null,
-    models: ['Taco.model.Product'],
+    models: ['Taco.model.PaymentAndCheckout'],
 
     paymentAndCheckout: function () {
         Taco.app.setLoading();

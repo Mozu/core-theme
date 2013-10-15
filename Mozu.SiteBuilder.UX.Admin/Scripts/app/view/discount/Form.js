@@ -2,23 +2,30 @@
  * The discount editor view
  */
 Ext.define('Taco.view.discount.Form', {
-    //extend: 'Taco.core.ux.form.Form',
-    extend: 'Taco.view.product.subform.Subform',
-    requires: ['Taco.store.ConfiguredShippingRates', 'Ext.ux.form.field.BoxSelect', 'Taco.core.ux.form.DateTime', 'Taco.core.ux.form.CurrencyField', 'Taco.core.ux.action.SecondaryButton', 'Taco.view.category.Modal', 'Taco.view.product.Modal'],
-    // requires: ['Taco.model.CouponCode', 'Taco.core.ux.form.DateTime', 'Taco.core.ux.form.BoxSelect', 'Taco.store.ProductComboBox', 'Taco.core.ux.modal.Content', 'Taco.core.ux.modal.ContentWithActions', 'Taco.core.ux.form.UnitField', 'Taco.core.ux.form.CurrencyField'],
+    extend: 'Taco.core.ux.form.Form',
+    requires: [
+        'Taco.store.ConfiguredShippingRates',
+        'Ext.ux.form.field.BoxSelect',
+        'Taco.core.ux.form.DateTime',
+        'Taco.core.ux.form.CurrencyField',
+        'Taco.core.ux.action.SecondaryButton',
+        'Taco.view.category.Modal',
+        'Taco.view.product.Modal'
+    ],
+
     title: 'Discount',
-    // model: 'Taco.model.Discount',
-    // type: 'discount',
+    ui: 'subform',
+
     defaults: {
-        xtype: 'textfield',
-        labelAlign: 'top',
-        labelSeparator: ''
+        xtype: 'textfield'
     },
+
     initComponent: function () {
         this.buildFormComponents();
         this.callParent(arguments);
         this.setFieldVisibility();
     },
+
     buildFormComponents: function () {
         var me = this,
             createHr = function () {
@@ -40,7 +47,7 @@ Ext.define('Taco.view.discount.Form', {
             emptyText: 'Enter a discount name'
         });
 
-        me.scoptTypeInput = Ext.create('Ext.form.field.ComboBox', {
+        me.scopeTypeInput = Ext.create('Ext.form.field.ComboBox', {
             name: 'scope',
             fieldLabel: "Discount Scope",
             labelAlign: 'top',
@@ -437,7 +444,7 @@ Ext.define('Taco.view.discount.Form', {
 
         me.items = [
             me.nameInput,
-            me.scoptTypeInput,
+            me.scopeTypeInput,
             //createHr(),
             {
                 xtype: 'container',
@@ -521,10 +528,9 @@ Ext.define('Taco.view.discount.Form', {
 
     setFieldVisibility: function () {
         var me = this,
-            nonOrderScope = me.scoptTypeInput.getValue() != 'Order';
+            nonOrderScope = me.scopeTypeInput.getValue() != 'Order';
 
         me.includeAllProductsInput.setVisible(me.targetTypeInput.getValue() != 'Shipping' && nonOrderScope);
-//        console.log(me.scoptTypeInput.
         me.shippingList.setVisible(me.targetTypeInput.getValue() == 'Shipping');
         me.categoriesBox.setVisible(!me.includeAllProductsInput.getValue() && nonOrderScope);
         me.productsBox.setVisible(!me.includeAllProductsInput.getValue() && nonOrderScope);
@@ -538,13 +544,13 @@ Ext.define('Taco.view.discount.Form', {
      * @private
      */
     launchCategoryModal: function (list) {
-        //   var list = this.categoryList,
         var listStore = list.getStore(),
             treeStore = Taco.core.data.StoreManager.getCategoryTreeBySite();
-        //Ext.destroy(this.modal);
+
         this.modal = Ext.create('Taco.view.category.Modal', {
             store: treeStore
         });
+
         this.modal.on({
             save: function (modal, values) {
                 list.addValue(values);
@@ -552,12 +558,12 @@ Ext.define('Taco.view.discount.Form', {
             scope: this
         });
     },
+
     /**
      * Opens a modal with a list of products.
      * @private
      */
     launchProductModal: function (list) {
-        //var list = this.productList,
         var listStore = list.getStore(),
             gridStore = Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.Products',
@@ -570,9 +576,6 @@ Ext.define('Taco.view.discount.Form', {
             store: gridStore
         });
 
-        // Simeon: removing this, as its not needed for a Ext.window.
-        //this.add(this.modal);
-
         this.modal.on({
             save: function (modal, values) {
                 list.addValue(values);
@@ -580,14 +583,13 @@ Ext.define('Taco.view.discount.Form', {
             scope: this
         });
 
-        if (this.modal) {
-            this.modal.down('grid').getSelectionModel().deselectAll();
-            this.modal.show();
-            return;
-        }
-
-
+        // if (this.modal) {
+        //     this.modal.down('grid').getSelectionModel().deselectAll();
+        //     this.modal.show();
+        //     return;
+        // }
     },
+
     /**
      * Removes a value from the list if the close icon was clicked.
      * @private

@@ -13,64 +13,91 @@ Ext.define('Taco.core.ux.window.Drawer', {
     extend: 'Taco.core.ux.window.Modal',
     alias: 'widget.taco-drawer',
 
-    /**
-     * @cfg {Ext.util.MixedCollection} selected
-     * The collection of selected records.
-     */
-    selected: null,
-
     constrain: false,
 
+    minHeight: 600,
+    minWidth: 800,
     y: 0,
 
     bodyPadding: '11 20 0',
     scale: 'large',
 
-    constructor: function (config) {
-        config.cls = ['taco-drawer', config.cls].join(' ');
+    layout: {
+        type: 'card'
+    },
 
-        this.callParent([config]);
+    resizable: {
+        dynamic: true,
+        handles: 's',
+        heightIncrement: 1,
+        minHeight: 600,
+        minWidth: 800,
+        preserveRatio: true,
+        widthIncrement: 1
+    },
+
+    constructor: function (config) {
+        cfg = Ext.apply({}, config);
+
+        cfg.cls = ['taco-drawer', cfg.cls].join(' ');
+
+        this.callParent([cfg]);
     },
 
     initComponent: function () {
+        if (!Ext.isEmpty(this.resizable)) {
+            this.constrainResizer();
+        }
+
         this.callParent(arguments);
+
+        this.on({
+            boxready: {
+                scope: this,
+                fn: 'attachResizerListeners'
+            }
+        });
     },
 
-    // onHide: function () {
-    //     var me = this;
+    attachResizerListeners: function () {
+        this.mon(this.resizer, {
+            resize: {
+                scope: this,
+                fn: 'handleResize'
+            },
+            resizedrag: {
+                scope: this,
+                fn: 'handleResize'
+            }
+        });
+    },
 
-    //     this.animate({
-    //         duration: 1000,
-    //         easing: 'ease',
-    //         to: {
-    //             y: -600
-    //         },
-    //         scope: this,
-    //         callback: function () { console.log('anim complete'); }
-    //     });
-    // },
+    constrainResizer: function () {
+        var cfg = {},
+            region = Ext.getBody().getRegion().adjust(0, 0, -100, 0);
 
-    // onShow: function () {
-    //     this.callParent(arguments);
+        Ext.apply(cfg, this.resizable, {
+            constrainTo: region
+        });
 
-    //     this.animate({
-    //         duration: 400,
-    //         easing: 'ease',
-    //         to: {
-    //             y: 0
-    //         }
-    //     });
-    // },
+        this.resizable = cfg;
+    },
 
-    /**
-     * @cfg primaryHandler
-     * The function to execute when the primary action is clicked.
-     */
-    primaryHandler: function () {
-        if (this.fireEvent('beforesave', this) !== false) {
-            this.fireEvent('select', this, this.selected);
-            this.close();
-            this.fireEvent('save', this);
-        }
+    handleResize: function (resizer, width, height, e) {
+        var region = Ext.getBody().getRegion(),
+            nextLeft = Math.floor((region.right - width) * 0.5);
+
+        this.setX(nextLeft, false);
+    },
+
+    onDestroy: function () {
+        this.mun(this.resizer, {
+            resizedrag: {
+                scope: this,
+                fn: 'handleResize'
+            }
+        });
+
+        this.callParent(arguments);
     }
 });
