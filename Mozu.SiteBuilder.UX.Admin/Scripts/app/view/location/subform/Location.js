@@ -203,15 +203,8 @@ Ext.define('Taco.view.location.subform.Location', {
                 fieldLabel: 'Supports Inventory Flag',
                 boxLabel: "Enabled",
                 allowBlank: true
-            },
-            {
-                xtype: "checkbox",
-                name: "supportsInStorePickup",
-                width: 200,
-                fieldLabel: 'Supports InStore Pickup',
-                boxLabel: "Enabled",
-                allowBlank: true
             }
+            
         ];
         
         this.callParent(arguments);

@@ -43,9 +43,13 @@ Ext.define('Taco.view.order.Index', {
                 name: 'billingContactLastName',
                 fieldLabel: 'Last Name',
                 width: 160
-            },  {
+            }, {
                 name: 'billingContactAddress',
                 fieldLabel: 'Address',
+                width: 160
+            }, {
+                name: 'channel',
+                fieldLabel: 'Channel',
                 width: 160
             }]
         }]
@@ -67,6 +71,9 @@ Ext.define('Taco.view.order.Index', {
         }, {
             property: 'billingContactAddress',
             text: 'Address'
+        }, {
+            property: 'channel',
+            text: 'Channel'
         }
     ],
 
@@ -112,6 +119,14 @@ Ext.define('Taco.view.order.Index', {
         }, {
             dataIndex: 'orderStatus',
             text: 'Order Status',
+            width: 100
+        }, {
+            dataIndex: 'channel',
+            text: 'Channel',
+            width: 100
+        }, {
+            dataIndex: 'fulfillmentType',
+            text: 'Fulfillment Type',
             width: 100
         }, {
             dataIndex: 'paymentStatus',
