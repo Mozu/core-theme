@@ -91,7 +91,10 @@
                     me.isLoading(false);
                 });
             }
-        }, 300, true)
+        }, 300, true),
+        initialize: function () {
+            this.lastRequest = this.buildFacetRequest();
+        }
     }, PagingMixin));
 
     return {
