@@ -20,64 +20,70 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected override void Configure()
         {
-            Mapper.CreateMap<DCss.CheckoutSettings, Setting>()
-                .BeforeMap( (dc, x) => Mapper.Map<DCss.PaymentSettings, Setting>(dc.PaymentSettings, x) )
-                .ForMember(x => x.PaymentProcessingFlowType, op => op.MapFrom(dc => (dc.OrderProcessingSettings ?? new DCss.OrderProcessingSettings()).PaymentProcessingFlowType))
-                .ForMember(x => x.CustomerCheckoutType, op => op.MapFrom(dc => (dc.CustomerCheckoutSettings ?? new DCss.CustomerCheckoutSettings()).CustomerCheckoutType))
+            Mapper.CreateMap<DCss.CheckoutSettings, CheckoutSettings>()
+                .ForMember(x => x.Id, op => op.Ignore())
+                .ForMember(x => x.PaymentProcessingFlowType, op => op.MapFrom(dc => dc.OrderProcessingSettings.PaymentProcessingFlowType))
+                .ForMember(x => x.CustomerCheckoutType, op => op.MapFrom(dc => dc.CustomerCheckoutSettings.CustomerCheckoutType))
+                .ForMember(x => x.PayByMail, op => op.MapFrom(dc => dc.PaymentSettings.PayByMail))
+                .ForMember(x => x.Gateway, op => op.ResolveUsing(dc => {
+                    if (dc.PaymentSettings.Gateways != null && dc.PaymentSettings.Gateways.Count > 0)
+                        return Mapper.Map<Gateway>(dc.PaymentSettings.Gateways.First());
+                    else 
+                        return new Gateway();
+                }))
+                .ForMember(x => x.ExternalPaymentWorkflows, op => op.MapFrom(dc => dc.PaymentSettings.ExternalPaymentWorkflowDefinitions))
                 ;
 
 
-            Mapper.CreateMap<DCss.PaymentSettings, Setting>()
-                .ConvertUsing(dc =>
-                {
-                    var ret = new Setting();
-                    if (dc == null)
-                        return ret;
-
-                    ret.PayByMail = dc.PayByMail;
-                    var gateway = dc.Gateways != null && dc.Gateways.Count > 0 ? dc.Gateways.FirstOrDefault(x => x.GatewayAccount != null && x.GatewayAccount.IsActive) : null;
-
-                    if (gateway != null)
-                    {
-                        ret.SupportedCards = gateway.SupportedCards;
-                        if (gateway.GatewayAccount != null)
-                        {
-                            ret.GatewayDefinitionId = gateway.GatewayAccount.GatewayDefinitionId;
-                            ret.AreGatewayCredentialFieldsSet = gateway.AreGatewayCredentialFieldsSet;
-                        }
-                    }
-
-                    return ret;
-                });
+            Mapper.CreateMap<DCss.Gateway, Gateway>()
+                .ForMember(x => x.AreGatewayCredentialFieldsSet, op => op.MapFrom(dc => dc.AreGatewayCredentialFieldsSet))
+                .ForMember(x => x.SupportedCards, op => op.MapFrom(dc => dc.SupportedCards))
+                .ForMember(x => x.CountryCode, op => op.MapFrom(dc => dc.GatewayAccount.CountryCode))
+                .ForMember(x => x.Id, op => op.MapFrom(dc => dc.GatewayAccount.Id))
+                .ForMember(x => x.GatewayDefinitionId, op => op.MapFrom(dc => dc.GatewayAccount.GatewayDefinitionId))
+                .ForMember(x => x.Credentials, op => op.MapFrom(dc => dc.GatewayAccount.CredentialFields))
+                ;
 
 
-            Mapper.CreateMap<Setting, DCss.PaymentSettings>()
-                .ConvertUsing(x =>
-                {
-                    var gatewayAccount = new Mozu.PaymentService.Contracts.GatewayAccount
-                    {
-                        CountryCode = "US",
-                        GatewayDefinitionId = x.GatewayDefinitionId,
+            Mapper.CreateMap<CheckoutSettings, DCss.CheckoutSettings>()
+                .ForMember(dc => dc.CustomerCheckoutSettings, op => op.ResolveUsing(x => new DCss.CustomerCheckoutSettings { CustomerCheckoutType = x.CustomerCheckoutType }))
+                .ForMember(dc => dc.OrderProcessingSettings, op => op.ResolveUsing(x => new DCss.OrderProcessingSettings { PaymentProcessingFlowType = x.PaymentProcessingFlowType }))
+                .ForMember(dc => dc.PaymentSettings, op => op.ResolveUsing(x => {
+                    var ps = new DCss.PaymentSettings {
+                        PayByMail = x.PayByMail,
+                        Gateways = new List<DCss.Gateway>(),
+                        ExternalPaymentWorkflowDefinitions = x.ExternalPaymentWorkflows,
+                    };
+
+                    if (x.Gateway != null)
+                        ps.Gateways.Add(Mapper.Map<DCss.Gateway>(x.Gateway));
+
+                    return ps;
+                }))
+                ;
+
+
+            Mapper.CreateMap<Gateway, DCss.Gateway>()
+                .ForMember(dc => dc.AreGatewayCredentialFieldsSet, op => op.MapFrom(x => x.AreGatewayCredentialFieldsSet))
+                .ForMember(dc => dc.SupportedCards, op => op.MapFrom(x => x.SupportedCards))
+                .ForMember(dc => dc.GatewayDefinition, op => op.Ignore())
+                .ForMember(dc => dc.GatewayAccount, op => op.ResolveUsing(x => {
+                    return new DCp.GatewayAccount {
                         Id = x.Id,
-                        IsActive = true,
-                        CredentialFields = new List<DCp.GatewayCredentialFieldValue>()
+                        IsActive = x.IsActive,
+                        CountryCode = x.CountryCode,
+                        CredentialFields = x.Credentials
                     };
+                }))
+                ;
 
-                    if (x.Credentials != null && x.Credentials.HasValues)
-                    {
-                        foreach (var credential in x.Credentials)
-                        {
-                            gatewayAccount.CredentialFields.Add(new DCp.GatewayCredentialFieldValue() { Name = credential.Key, Value = (string)credential.Value });
-                        }
-                    }
+            // disgusting implicit mappings.
+            Mapper.CreateMap<DCp.GatewayDefinition, GatewayDefinition>();
+            Mapper.CreateMap<DCp.GatewayCredentialFieldDefinition, GatewayCredentialFieldDefinition>();
+            Mapper.CreateMap<DCp.PreAuthorizeDefinition, PreAuthorizeDefinition>();
+            Mapper.CreateMap<DCp.PreAuthorizeTransactionTypeDataContract, PreAuthorizeTransactionTypeDataContract>();
+            //            Mapper.CreateMap< Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.GatewayDefinition,GatewayDefinition>();
 
-                    var pSettings = new Mozu.SiteSettings.Order.Contracts.PaymentSettings
-                    {
-                        Gateways = new List<Mozu.SiteSettings.Order.Contracts.Gateway> { new DCss.Gateway { GatewayAccount = gatewayAccount, SupportedCards = x.SupportedCards } },
-                        PayByMail = x.PayByMail.GetValueOrDefault(false)
-                    };
-                    return pSettings;
-                });
         }
     }
 }

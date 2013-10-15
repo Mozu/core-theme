@@ -6,7 +6,8 @@ using AutoMapper;
 using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout;
-using Mozu.SiteSettings.Order.Contracts;
+using DC = Mozu.SiteSettings.Order.Contracts;
+using DCp = Mozu.PaymentService.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using GatewayCredentialFieldValue = Mozu.PaymentService.Contracts.GatewayCredentialFieldValue;
 using PaymentSettings = Mozu.SiteSettings.Order.Contracts.PaymentSettings;
@@ -31,11 +32,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         /// <returns></returns>
         [HttpGetRoute(UriTemplate = "read")]
-        public async Task<Response<Setting>> GetSettings()
+        public async Task<Response<CheckoutSettings>> GetSettings()
         {
             var settings = (await _checkoutSettingsWebApiClient.GetCheckoutSettings()).ReadAsSync();
-            
-            var ret = Mapper.Map<Setting>(settings);
+            var settings2 = _checkoutSettingsWebApiClient.GetThirdPartyPaymentWorkflows();
+
+            var ret = Mapper.Map<CheckoutSettings>(settings);
 
             return Single2(ret);
         } 
@@ -46,11 +48,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <param name="setting">The checkout settings</param>
         /// <returns>The active checkout settings</returns>
         [HttpPostRoute(UriTemplate = "update")]
-        public async Task<Response<Setting>> UpdateSettings(Setting settingReq)
+        public async Task<Response<CheckoutSettings>> UpdateSettings(CheckoutSettings settingReq)
         {
             var pSetting = Mapper.Map<PaymentSettings>(settingReq);
             var  tasks = new List<Task>();
-            Gateway gateWay = null;
+            DC.Gateway gateWay = null;
             var currentGatewayRes = (await _checkoutSettingsWebApiClient.GetActiveGatewayForCountry("us"));
             if (currentGatewayRes.ResponseMessage.IsSuccessStatusCode)
             {
@@ -96,19 +98,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-
-
+        public class CheckoutSettingsDefinitions 
+        {
+            public List<GatewayDefinition> GatewayDefinitions { get; set; }
+            public List<DC.ExternalPaymentWorkflowDefinition> ExternalPaymentWorkflowDefinitions { get; set; }
+        }
 
         /// <summary>
         /// Returns the PCIaaS gateway definitions
         /// </summary>
         /// <returns>Array of gateway definitions</returns>
         [HttpGetRoute(UriTemplate = "definition/read")]
-        public async Task<Response<List<GatewayDefinition>>> GetDefinitions()
+        public async Task<Response<CheckoutSettingsDefinitions>> GetDefinitions()
         {
-            var def = (await _checkoutSettingsWebApiClient.GetGatewayDefinitions()).ReadAsSync();
+            var gatewaysTask = _checkoutSettingsWebApiClient.GetGatewayDefinitions();
+            var workflowsTask = _checkoutSettingsWebApiClient.GetThirdPartyPaymentWorkflows();
 
-            var mapped = Mapper.Map<List<GatewayDefinition>>(def).OrderBy(x => x.Name).ToList();
+            await Task.WhenAll(new Task[] { gatewaysTask, workflowsTask });
+            var gateways = gatewaysTask.Result.ReadAsSync();
+            var workflows = workflowsTask.Result.ReadAsSync();
+
+            var mapped = Mapper.Map<List<GatewayDefinition>>(gateways).OrderBy(x => x.Name).ToList();
             mapped.ForEach(x =>
                 {
                     
@@ -123,7 +133,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                                };
                     }
                 });
-            return List2(mapped);
+
+            var ret = new CheckoutSettingsDefinitions {
+                GatewayDefinitions = mapped,
+                ExternalPaymentWorkflowDefinitions = workflows
+            };
+
+            return Single2(ret);
         }
     }
 }

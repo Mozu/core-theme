@@ -388,6 +388,11 @@
     <Compile Include="Api\CmsPublishingController.cs" />
     <Compile Include="Api\ModelMapping\ReturnMapping.cs" />
     <Compile Include="Api\ModelMapping\RuntimeProductMapping.cs" />
+    <Compile Include="Api\Models\Checkout\Gateway.cs" />
+    <Compile Include="Api\Models\Checkout\GatewayCredentialFieldDefinition.cs" />
+    <Compile Include="Api\Models\Checkout\GatewayDefinition.cs" />
+    <Compile Include="Api\Models\Checkout\PreAuthorizationDefinition.cs" />
+    <Compile Include="Api\Models\Checkout\PreAuthorizeTransactionTypeDataContract.cs" />
     <Compile Include="Api\Models\Order\OrderDiscount.cs" />
     <Compile Include="Api\Models\Order\OrderItemProductOption.cs" />
     <Compile Include="Api\Models\RuntimeProductOption.cs" />
@@ -472,11 +477,6 @@
     <Compile Include="Api\Models\Account\Invitation.cs" />
     <Compile Include="Api\Models\Account\PasswordInfo.cs" />
     <Compile Include="Api\Models\Account\UserSystemData.cs" />
-    <Compile Include="Api\Models\Checkout\GatewayCredentialFieldDefinition.cs" />
-    <Compile Include="Api\Models\Checkout\GatewayDefinition.cs" />
-    <Compile Include="Api\Models\Checkout\PreAuthorizationDefinition.cs" />
-    <Compile Include="Api\Models\Checkout\PreAuthorizeTransactionTypeDataContract.cs" />
-    <Compile Include="Api\Models\Checkout\Setting.cs" />
     <Compile Include="Api\Models\Cms\Document.cs" />
     <Compile Include="Api\Models\Cms\DocumentProperty.cs" />
     <Compile Include="Api\Models\Discount\CouponCode.cs" />
@@ -499,11 +499,6 @@
     <Compile Include="Api\Models\Options\ProductVariant.cs" />
     <Compile Include="Api\Models\Pages\PageCreateType.cs" />
     <Compile Include="Api\Models\Checkout\CheckoutSettings.cs" />
-    <Compile Include="Api\Models\Checkout\CustomerCheckoutSettings.cs" />
-    <Compile Include="Api\Models\Checkout\GatewayAccount.cs" />
-    <Compile Include="Api\Models\Checkout\GatewayCredentialFieldValue.cs" />
-    <Compile Include="Api\Models\Checkout\OrderProcessingSettings.cs" />
-    <Compile Include="Api\Models\Checkout\PaymentSetting.cs" />
     <Compile Include="Api\Models\ProductModels\Product.cs" />
     <Compile Include="Api\Models\ProductModels\ProductInSiteInfo.cs" />
     <Compile Include="Api\Models\Response.cs" />
@@ -593,6 +588,7 @@
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\model\Channel.js" />
+    <Content Include="Scripts\app\model\CheckoutSettings.js" />
     <Content Include="Scripts\app\model\CustomerAttribute.js" />
     <Content Include="Scripts\app\model\Location.js" />
     <Content Include="Scripts\app\model\LocationType.js" />
@@ -1832,7 +1828,6 @@
     <Content Include="Scripts\app\model\PaymentInteraction.js" />
     <Content Include="Scripts\app\model\Role.js" />
     <Content Include="Scripts\app\model\GatewayDefinitions.js" />
-    <Content Include="Scripts\app\model\PaymentAndCheckout.js" />
     <Content Include="Scripts\app\model\Shipment.js" />
     <Content Include="Scripts\app\model\ShopperNotes.js" />
     <Content Include="Scripts\app\store\AccountUsers.js" />
