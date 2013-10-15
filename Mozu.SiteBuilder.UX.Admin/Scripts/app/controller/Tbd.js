@@ -23,15 +23,11 @@ Ext.define('Taco.controller.Tbd', {
     },
     
     accounts:   function () { this.statics().getTbdView.call(this); },
-    channels:   function () { this.statics().getTbdView.call(this); },
+    //channels:   function () { this.statics().getTbdView.call(this); },
     contacts:   function () { this.statics().getTbdView.call(this); },
     inventory:  function () { this.statics().getTbdView.call(this); },
-    locations:  function () {
-        this.createContentView('Taco.view.location.Index', {});
-
-    },
     orders:     function () { this.statics().getTbdView.call(this); },
     promotions: function () { this.statics().getTbdView.call(this); },
-    reports:    function () { this.statics().getTbdView.call(this); },
+    //reports:    function () { this.statics().getTbdView.call(this); },
     targeting:  function () { this.statics().getTbdView.call(this); }
 });

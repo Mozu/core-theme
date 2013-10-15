@@ -19,8 +19,11 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         launchEditorOnClick: true,
         header: null,
         
+        // turns on the row editor behavior of the grid;  Create button will create new record and show the rowEditor;  click on the row will show the editor
         enableRowEditing: false,
-        s: {},
+        
+        // subclass can specify what the data should be by default when doing a create via the rowEditor
+        defaultRowEditingData: null,
 
         cls: 'taco-content-browserpage',
 
@@ -84,8 +87,24 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         }
         
         if (this.enableRowEditing) {
+            
+            // update the button text to be "Save"
+            Ext.grid.RowEditor.prototype.saveBtnText = "Save";
+            
             this.rowEditor = Ext.create('Ext.grid.plugin.RowEditing', {
                 clicksToMoveEditor: 1,
+                clicksToEdit: 1,
+                listeners: {
+                    'edit': {
+                        fn: this.onRowEditorUpdate,
+                        scope:this
+                    },
+                    'cancelEdit': {
+                        fn: this.onRowEditorCancel,
+                        scope: this
+                    }
+                    
+                },
                 autoCancel: false
             });
             
@@ -355,12 +374,35 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         });
     },
     
+    onRowEditorUpdate: function(editor, context, opts) {
+        var record = context.record
+
+        record.save({
+            success: function (record, operation) {
+                //record is the updated record, except for collections
+                //this collection will have the full records:
+                //operation.resultSet.records
+                //operation.resultSet.records[i] for each one if you are batching
+                
+            },
+            failure: function (record, operation) {
+                //handle failure(s) here
+                Taco.app.fireEvent('setmessage', 'Error saving item', 'error');
+            }
+        });
+    },
+    
+    onRowEditorCancel: function(editor, context, opts) {
+        var record = context.record,
+            isNewRecord = record.phantom;
+        // clear unpersisted new records when the user its the cancel button;
+        if (isNewRecord) {
+            this.store.remove(record);
+        }
+    },
 
     onRowEditorCreate : function() {
-        
-        
         this.rowEditor.cancelEdit();
-
         // Create a model instance
         var modelName = this.store.model.getName();
         var r = Ext.create(modelName, this.defaultRowEditingData);
@@ -385,7 +427,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
     onItemClick: function (view, record, elm, index, e) {
         var metaData = { id: record.getId() };
-       
+        
         if (e.target.className === 'taco-launch-editor') {
             e.preventDefault();
             if (e.target) {

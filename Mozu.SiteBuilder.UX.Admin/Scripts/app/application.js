@@ -67,6 +67,7 @@ Ext.define('Taco.Application',{
     requires: [
             'Taco.overrides.window.MessageBox',
             'Taco.overrides.window.Window',
+            'Taco.overrides.grid.RowEditor',
             'Ext.data.association.HasOne',
             'Taco.core.data.RemoteException',
             'Taco.core.context.TaContext',
@@ -101,7 +102,7 @@ Ext.define('Taco.Application',{
     controllers: [
             'Analytics',
             'Dashboard',
-        //'Charts',
+            'Reports',
             'Navigation',
             'Customers',
             'CustomerAttributes',

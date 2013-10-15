@@ -88,14 +88,18 @@ Ext.define('Taco.view.channel.Index', {
             text: 'Code',
             editor: {
                 // defaults to textfield if no xtype is supplied
-                allowBlank: true
+                emptyText: "Code",
+                selectOnFocus:true,
+                allowBlank: false
             },
             width: 200
         }, {
             dataIndex: 'name',
             editor: {
                 // defaults to textfield if no xtype is supplied
-                allowBlank: true
+                emptyText: "Name",
+                selectOnFocus: true,
+                allowBlank: false
             },
             text: 'Name',
             width: 200
@@ -104,7 +108,9 @@ Ext.define('Taco.view.channel.Index', {
             dataIndex: 'region',
             editor: {
                 // defaults to textfield if no xtype is supplied
-                allowBlank: true
+                emptyText: "Region",
+                selectOnFocus: true,
+                allowBlank: false
             },
             text: 'Region',
             width: 200
