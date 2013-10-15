@@ -420,6 +420,7 @@
     <Compile Include="Tags\IncludeTag.cs" />
     <Compile Include="Tags\NDjangoContextExtensions.cs" />
     <Compile Include="Tags\SetTemplateVariablesTag.cs" />
+    <Compile Include="TemplateContext.cs" />
     <Compile Include="Themes\ThemeSetting.cs" />
     <Compile Include="Themes\ThemeMetaData.cs" />
     <Compile Include="Themes\ThemeMetadataProvider.cs" />

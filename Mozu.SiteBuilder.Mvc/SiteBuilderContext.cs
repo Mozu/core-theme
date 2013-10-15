@@ -34,7 +34,6 @@ namespace Mozu.SiteBuilder.Mvc
         public const string FORCE_THEME_COOKIE_NAME = "SBTHEME";
         internal const string COOKIENAME = "SBCONTEXT";
 
-
         private ISiteBuilderApiContext _apiContext;
         private IAuthenticationHelper _authenticationHelper;
 
