@@ -5,6 +5,11 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'shim!vendor/jquery.hist
             "change [data-mz-facet-value]": "setFacetValue"
         },
         templateName: "modules/product/faceting-form",
+        initialize: function() {
+            this.listenTo(this.model, 'loadingchange', function(isLoading) {
+                this.$el.find('input').prop('disabled', isLoading);
+            });
+        },
         clearFacets: function () {
             this.model.clearAllFacets();
         },
