@@ -107,7 +107,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             if (!String.IsNullOrEmpty(parentName))
             {
                 inheritChain.Push(name);
-                parent = GetThemeInternal(name, inheritChain);
+                parent = GetThemeInternal(parentName, inheritChain);
                 inheritChain.Pop();
             }
 
