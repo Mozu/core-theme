@@ -5,11 +5,7 @@
     }
 
     var FacetValue = Backbone.MozuModel.extend({
-        idAttribute: 'Value',
-        helpers: ['domId'],
-        domId: function () {
-            return sanitize(this.get("Value") + "_" + this.collection.parent.get("Field"));
-        },
+        idAttribute: 'Value'
     }),
 
     Facet = Backbone.MozuModel.extend({

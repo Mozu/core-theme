@@ -56,19 +56,20 @@
   {% endif %}
 </tbody>
 <tfoot>
-  <tr>
-    <td colspan="5" align="right">
+  <tr class="mz-carttable-shipping-row">
+    <td colspan="4">
       <em class="mz-auxiliary-text">Tax &amp; Shipping Calculated at Checkout</em>
     </td>
+    <td></td>
   </tr>
 
   {% for discount in Model.OrderDiscounts %}
     {% if not discount.Excluded %}
   <tr class="mz-carttable-total-row">
-    <td class="mz-carttable-total-label" colspan="3" align="right">
+    <td class="mz-carttable-total-label" colspan="3">
         {{ discount.Discount.Name }}:
     </td>
-    <td class="mz-carttable-total-wrap" align="right">
+    <td class="mz-carttable-total-wrap">
       <span class="mz-carttable-rowtotal">- {{ discount.Impact|currency }}</span>
     </td>
     <td></td>
@@ -78,18 +79,16 @@
 
 
   <tr class="mz-carttable-total-row">
-    <td class="mz-carttable-total-label" colspan="3" align="right">
+    <td class="mz-carttable-total-wrap" colspan="4">
       Order Total:
-    </td>
-    <td class="mz-carttable-total-wrap" align="right">
-      <strong>
-        <span id="mz-carttable-total" class="mz-carttable-total">{{ Model.DiscountedTotal|currency }}</span>
-      </strong>
+        <span id="mz-carttable-total" class="mz-carttable-total">
+          <strong>{{ Model.DiscountedTotal|currency }}</strong>
+        </span>
     </td>
     <td></td>
   </tr>
-  <tr>
-    <td colspan="4" align ="right">
+  <tr class="mz-carttable-checkout-row">
+    <td colspan="4">
       <input type="hidden" name="Id" value="{{ Model.Id }}" />
       <button id="cart-checkout" class="mz-button mz-button-large"  {% if Model.IsEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">Proceed to Checkout</button>
     </td>

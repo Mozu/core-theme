@@ -12,7 +12,9 @@
     }
 
     .mz-carttable-header-price, .mz-carttable-header-total,
-    .mz-carttable-item-price, .mz-carttable-item-total {
+    .mz-carttable-item-price, .mz-carttable-item-total,
+    .mz-carttable-shipping-row td, .mz-carttable-total-row td,
+    .mz-carttable-checkout-row td {
         text-align: right;
     }
 
@@ -51,5 +53,10 @@
 
     .mz-carttable-total-row {
         font-size: @fontSizeLarger;
+    }
+
+    .mz-carttable-total {
+        display: inline-block;
+        margin-left: @gutter/2;
     }
 }

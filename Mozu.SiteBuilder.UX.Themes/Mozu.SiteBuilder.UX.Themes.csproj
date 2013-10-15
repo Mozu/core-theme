@@ -442,7 +442,6 @@
     <Content Include="Themes\Core4\scripts\modules\models-price.js" />
     <Content Include="Themes\Core4\scripts\modules\models-product.js" />
     <Content Include="Themes\Core4\scripts\modules\models-user.js" />
-    <Content Include="Themes\Core4\scripts\modules\product-images.js" />
     <Content Include="Themes\Core4\scripts\nls\fr\messages-checkout.js" />
     <Content Include="Themes\Core4\scripts\nls\fr\messages.js" />
     <Content Include="Themes\Core4\scripts\nls\messages-checkout.js" />
