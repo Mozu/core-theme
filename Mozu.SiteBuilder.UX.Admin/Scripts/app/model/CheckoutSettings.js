@@ -1,12 +1,11 @@
 ﻿/**
- * @class Taco.model.PaymentAndCheckout
+ * @class Taco.model.CheckoutSettings
  */
-Ext.define('Taco.model.PaymentAndCheckout', {
+Ext.define('Taco.model.CheckoutSettings', {
     extend: 'Taco.core.data.Model',
 
     fields: [
         { name: "id", type: "string" },
-        { name: "paymentServiceMerchantId", type: "string" },
         {
             name: "supportedCards",
             type: "auto",

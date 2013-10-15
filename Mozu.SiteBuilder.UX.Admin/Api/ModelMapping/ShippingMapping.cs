@@ -33,19 +33,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected override void Configure()
         {
-            Mapper.CreateMap<GatewayDefinition, Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.GatewayDefinition>();
-
-
-            Mapper.CreateMap<GatewayCredentialFieldDefinition, Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.GatewayCredentialFieldDefinition>();
-
-            Mapper.CreateMap<PreAuthorizeDefinition, Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.PreAuthorizeDefinition>();
-            Mapper.CreateMap<PreAuthorizeTransactionTypeDataContract, Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.PreAuthorizeTransactionTypeDataContract>();
-
-            
-           
-
-            Mapper.CreateMap< Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.GatewayDefinition,GatewayDefinition>();
-
             Mapper.CreateMap<CustomRate, Mozu.ShippingAdmin.Contracts.CarrierConfiguration>()
                   .ForMember(x => x.Id, opt => opt.UseValue(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId))
                   .ForMember(x => x.Settings, opt => opt.MapFrom(x => new List<Mozu.ShippingAdmin.Contracts.Setting>()

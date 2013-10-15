@@ -16,7 +16,7 @@ Ext.define('Taco.controller.Settings', {
         Taco.app.setLoading();
         if (!this.requiresSiteContext()) {
 
-            Taco.model.PaymentAndCheckout.load(123, {
+            Taco.model.CheckoutSettings.load(123, {
                 success: function (record, o) {
                     Taco.app.setLoading(false);
                     this.createContentView('Taco.view.settings.paymentAndCheckout.Edit', {
