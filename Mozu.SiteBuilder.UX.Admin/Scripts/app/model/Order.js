@@ -269,6 +269,18 @@ Ext.define('Taco.model.Order', {
             "type": "date",
             "useNull": true
         },
+        
+
+        {
+            "name": "channel",
+            "type": "auto"
+        },
+        
+        {
+            "name": "fulfillmentType",
+            "type": "auto"
+        },
+
         {
             "name": "payments",
             "type": "auto",

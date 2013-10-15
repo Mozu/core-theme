@@ -102,9 +102,6 @@ Ext.define('Taco.model.Location', {
         "name": "supportsInventory",
         "type": "boolean"
     }, {
-        "name": "supportsInStorePickup",
-        "type": "boolean"
-    }, {
         "name": "hours",
         "type": "object",
         "defaultValue": {
