@@ -16,3 +16,12 @@
                 message: "If no AMD loader is present, there must be a global variable named LiveTemplates for HyprLive to function."
             };
             LiveTemplates = JSON.parse(LiveTemplates);
+
+            try {
+            var TemplateContext = JSON.parse(document.getElementById('data-mz-preload-templatecontext').textContent);
+            } catch(e) {
+                throw {
+                    name: 'Template context not found',
+                    message: 'The page template needs to preload the template context using the preload_json tag.'
+                }
+            }

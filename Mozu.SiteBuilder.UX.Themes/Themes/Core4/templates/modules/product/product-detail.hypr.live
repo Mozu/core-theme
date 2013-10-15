@@ -31,7 +31,6 @@
     {% endfor %}
   </p>
   {% endif %}
-  {% include "modules/common/loading-bar" %}
 </section>
 
 <div class="mz-productdetail-fulldesc mz-l-stack-section">
@@ -57,7 +56,7 @@
 
 <div class="mz-productdetail-measurements mz-l-stack-section">
     <h4 class="mz-l-stack-sectiontitle">Measurements</h4>
-    <dl class="mz-productdetail-measurements-list">
+    <dl class="mz-propertylist mz-propertylist-justified">
       <dt>Weight</dt>
       <dd>{{ Model.Measurements.PackageWeight.Value }} {{ Model.Measurements.PackageWeight.Unit }}</dd>
     </dl>

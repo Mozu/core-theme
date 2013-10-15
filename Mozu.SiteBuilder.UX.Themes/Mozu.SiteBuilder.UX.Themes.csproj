@@ -386,6 +386,7 @@
     <Content Include="SampleThemes\helloWorld\theme.xml" />
     <Content Include="Scripts\backbone.d.ts" />
     <Content Include="Themes\Core4\resources\images\button-loading.gif" />
+    <Content Include="Themes\Core4\scripts\modules\views-productimages.js" />
     <Content Include="Themes\Core4\scripts\modules\views-messages.js" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-container.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-sidebar.less" />
@@ -406,6 +407,7 @@
     <Content Include="Themes\Core4\stylesheets\modules\cart\cart-table.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\property-list.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\icon.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\common\message-bar.less" />
     <None Include="Themes\Core4\stylesheets\modules\page-header\store-branding.less" />
     <Content Include="Themes\Core4\scripts\modules\backbone-mozu-validation.js" />
     <Content Include="Themes\Core4\scripts\modules\backbone-mozu-model.js" />
@@ -430,7 +432,6 @@
     <Content Include="Themes\Core4\scripts\modules\common.js" />
     <Content Include="Themes\Core4\scripts\modules\backbone-mozu.js" />
     <Content Include="Themes\Core4\scripts\modules\jquery-mozu.js" />
-    <Content Include="Themes\Core4\scripts\modules\loading-bars.js" />
     <Content Include="Themes\Core4\scripts\modules\login-links.js" />
     <Content Include="Themes\Core4\scripts\modules\models-address.js" />
     <Content Include="Themes\Core4\scripts\modules\models-cart.js" />
