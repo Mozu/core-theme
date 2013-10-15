@@ -1,5 +1,5 @@
 ﻿/**
- * @class Taco.view.inventory.Index
+ * @class Taco.view.location.Index
  */
 Ext.define('Taco.view.location.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',

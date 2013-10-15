@@ -81,21 +81,24 @@ Ext.define('Taco.view.locationType.Index', {
     */    
 
     gridPanelConf: {
-      
         selModel: {},
+      
         columns: [{
             dataIndex: 'code',
             text: 'Code',
             editor: {
-                // defaults to textfield if no xtype is supplied
-                allowBlank: true
+                emptyText: "Code",
+                selectOnFocus: true,
+                allowBlank: false
             },
+            
             width: 200
         }, {
             dataIndex: 'name',
             editor: {
-                // defaults to textfield if no xtype is supplied
-                allowBlank: true
+                emptyText: "Name",
+                selectOnFocus: true,
+                allowBlank: false
             },
             text: 'Name',
             width:200

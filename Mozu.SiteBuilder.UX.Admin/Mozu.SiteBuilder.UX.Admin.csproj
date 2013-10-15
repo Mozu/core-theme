@@ -582,6 +582,7 @@
     <Content Include="Scripts\app\controller\Channels.js" />
     <Content Include="Scripts\app\controller\Locations.js" />
     <Content Include="Scripts\app\controller\LocationTypes.js" />
+    <Content Include="Scripts\app\controller\Reports.js" />
     <Content Include="Scripts\app\controller\Tbd.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
@@ -592,6 +593,7 @@
     <Content Include="Scripts\app\model\Location.js" />
     <Content Include="Scripts\app\model\LocationType.js" />
     <Content Include="Scripts\app\model\ShippingMethod.js" />
+    <Content Include="Scripts\app\overrides\grid\RowEditor.js" />
     <Content Include="Scripts\app\overrides\menu\Item.js" />
     <Content Include="Scripts\app\overrides\window\MessageBox.js" />
     <Content Include="Scripts\app\overrides\window\Window.js" />
@@ -616,6 +618,7 @@
     <Content Include="Scripts\app\view\location\subform\StoreHours.js" />
     <Content Include="Scripts\app\view\order\widget\DiscountRowBody.js" />
     <Content Include="Scripts\app\view\pendingChange\Product.js" />
+    <Content Include="Scripts\app\view\report\Index.js" />
     <Content Include="Scripts\app\view\settings\Publishing.js" />
     <Content Include="Scripts\app\view\site\navigation\NavHeadings.js" />
     <Content Include="Scripts\app\view\tbd\Index.js" />

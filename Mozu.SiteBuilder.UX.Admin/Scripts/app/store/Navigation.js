@@ -29,15 +29,17 @@ Ext.define('Taco.store.Navigation', {
             "label": "Dashboard",
             "address": "dashboard",
             "icon": "nav-dashboard",
-            "items": [{
-                "id": "channels",
-                "label": "Channels",
-                "address": "tbd/channels"
-            }, {
-                "id": "reports",
-                "label": "Reports",
-                "address": "tbd/reports"
-            }]
+            "items": [
+                {
+                    "id": "channels",
+                    "label": "Channels",
+                    "address": "channels"
+                }, {
+                    "id": "reports",
+                    "label": "Reports",
+                    "address": "reports"
+                }
+            ]
         }, {
             "id": "customers",
             "label": "Customers",
@@ -202,12 +204,16 @@ Ext.define('Taco.store.Navigation', {
         }, {
             "id": "locations",
             "label": "Locations",
-            "address": "tbd/locations",
+            "address": "locations",
             "icon": "nav-locations",
             "items": [{
                 "id": "locations-manage",
-                "label": "Manage",
-                "address": "tbd/locations"
+                "label": "Locations",
+                "address": "locations"
+            }, {
+                "id": "locationTypes",
+                "label": "Location Types",
+                "address": "locationTypes"
             }, {
                 "id": "locations-orders",
                 "label": "Orders",
