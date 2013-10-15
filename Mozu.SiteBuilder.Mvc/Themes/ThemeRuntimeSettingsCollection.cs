@@ -34,5 +34,16 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             Settings = collection;
         }
+
+        public Dictionary<string, object> AsDictionary()
+        {
+            var dict = new Dictionary<string, object>();
+
+            if (Settings == null)
+                return dict;
+
+            Settings.ForEach(s => dict.Add(s.Setting.Id, s.Value));
+            return dict;
+        }
     }
 }
