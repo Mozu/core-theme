@@ -385,6 +385,7 @@
     <Content Include="SampleThemes\helloWorld\Resources\Scripts\Vendor\jquery.colorbox-min.js" />
     <Content Include="SampleThemes\helloWorld\theme.xml" />
     <Content Include="Scripts\backbone.d.ts" />
+    <Content Include="Themes\Core4\resources\images\button-loading.gif" />
     <Content Include="Themes\Core4\scripts\modules\views-messages.js" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-container.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-sidebar.less" />
@@ -556,7 +557,7 @@
     <Content Include="Themes\Core4\templates\modules\common\price.hypr.live" />
     <Content Include="Themes\Core4\stylesheets\state\is-crossedout.less" />
     <Content Include="Themes\Core4\stylesheets\state\is-saleprice.less" />
-    <Content Include="Themes\Core4\stylesheets\state\is-disabled.less" />
+    <Content Include="Themes\Core4\stylesheets\state\is-loading.less" />
     <Content Include="Themes\Core4\stylesheets\modules\product\product-images.less" />
     <Content Include="Themes\Core4\stylesheets\modules\product\product-detail.less" />
     <Content Include="Themes\Core4\stylesheets\pages\product.less" />
@@ -564,6 +565,7 @@
     <Content Include="Themes\Core4\stylesheets\state\is-required.less" />
     <Content Include="Themes\Core3\theme-ui.json" />
     <Content Include="Themes\Core3\theme.json" />
+    <Content Include="Themes\Core4\stylesheets\state\is-disabled.less" />
     <None Include="Themes\Core4\templates\modules\product\faceted-products.hypr" />
     <Content Include="Themes\Core4\templates\modules\product\ProductOption_Date.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\product\ProductOption_List.hypr.live" />
