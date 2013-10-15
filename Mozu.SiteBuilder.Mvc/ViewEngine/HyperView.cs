@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Autofac;
+using Mozu.SiteBuilder.Mvc.Themes;
 using NDjango.Interfaces;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
@@ -53,7 +54,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
          
             //requestContext["Templates"] = new TemplateLocator(html, this.TemplateManager);
             requestContext["SiteContext"] = requestContext["siteContext"] = siteBuilderContext;
-            requestContext["ThemeSettings"] = requestContext["themeSettings"] = siteBuilderContext.ThemeSettings;
+            requestContext["ThemeSettings"] = requestContext["themeSettings"] = ( siteBuilderContext.ThemeSettings ?? new ThemeRuntimeSettingsCollection()).AsDictionary();
             requestContext["PageContext"] = requestContext["pageContext"] = siteBuilderContext.PageContext;
             requestContext["User"] = requestContext["user"] = user;
             requestContext["true"] = true;
