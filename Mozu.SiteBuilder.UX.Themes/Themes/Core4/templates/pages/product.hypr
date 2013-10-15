@@ -18,11 +18,12 @@
         {% include "modules/product/product-images" %}
     </div>
 
-    {% include "modules/common/message-bar" %}
-
-	<div id="product-detail" class="mz-productdetail mz-l-stack">
-        {% include "modules/product/product-detail" %}
-	</div>
+    <div class="mz-productdetail-wrap">
+        {% include "modules/common/message-bar" %}
+        <div id="product-detail" class="mz-productdetail mz-l-stack">
+            {% include "modules/product/product-detail" %}
+        </div>
+    </div>
 
 </div>
 

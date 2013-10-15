@@ -37,13 +37,13 @@
       <span class="mz-carttable-price{% if item.priceIsModified %} is-saleprice{% endif %}">{{ item.UnitPrice.DiscountedAmount|currency }}</span>
     </td>
     <td  class="mz-carttable-item-qty">
-      <input class="mz-carttable-qty-field" type="number" min="1" {% if Model.isLoading %}disabled="disabled"{% endif %} data-mz-carttable-item="{{ item.Id }}" data-mz-value="Quantity" value="{{ item.Quantity }}" />
+      <input class="mz-carttable-qty-field" type="number" min="1" {% if Model.isLoading %}disabled="disabled"{% endif %} data-mz-cart-item="{{ item.Id }}" data-mz-value="Quantity" value="{{ item.Quantity }}" />
     </td>
     <td class="mz-carttable-item-total">
       <span class="mz-carttable-rowtotal">{{ item.Total|currency }}</span>
     </td>
     <td class="mz-carttable-item-remove">
-      <a href="javascript:;" data-mz-action="removeItem" data-mz-carttable-item="{{ item.Id }}" class="mz-icon mz-icon-close">Remove</a>
+      <a href="javascript:;" data-mz-action="removeItem" data-mz-cart-item="{{ item.Id }}" class="mz-icon mz-icon-close">Remove</a>
     </td>
   </tr>
 {% endfor %}
@@ -91,7 +91,6 @@
   <tr>
     <td colspan="4" align ="right">
       <input type="hidden" name="Id" value="{{ Model.Id }}" />
-      {% include "modules/common/loading-bar" %}
       <button id="cart-checkout" class="mz-button mz-button-large"  {% if Model.IsEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">Proceed to Checkout</button>
     </td>
     <td></td>

@@ -1,4 +1,4 @@
-﻿require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/models-product", "modules/product-images", "shim!vendor/jquery.tools.dateinput[jquery=jQuery]"], function ($, Backbone, ProductModels) {
+﻿require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/models-product", "modules/views-productimages", "shim!vendor/jquery.tools.dateinput[jquery=jQuery]"], function ($, Backbone, ProductModels, ProductImageViews) {
 
     var ProductView = Backbone.MozuView.extend({
         templateName: 'modules/product/product-detail',
@@ -14,10 +14,10 @@
                 $(dp).dateinput().css('color', '#333').on('change  blur', _.bind(me.onOptionChange, me));
             });
         },
-        onOptionChange: function(e){
+        onOptionChange: function (e) {
             return this.configure($(e.currentTarget));
         },
-        configure: function($optionEl) {
+        configure: function ($optionEl) {
             var newValue = $optionEl.val(),
                 id = $optionEl.data('mz-product-option');
             this.model.get('Options').get(id).set("Value", newValue);
@@ -27,7 +27,7 @@
         },
 
         initialize: function () {
-        // handle preset selects, etc
+            // handle preset selects, etc
             var me = this;
             this.$('[data-mz-product-option]').each(function () {
                 var $this = $(this);
@@ -35,7 +35,6 @@
             });
         }
     });
-
 
     $(document).ready(function () {
 
@@ -53,6 +52,11 @@
             el: $('#product-detail'),
             model: product,
             messagesEl: $('[data-mz-message-bar]')
+        });
+
+        var productImagesView = new ProductImageViews.ProductPageImagesView({
+            el: $('[data-mz-productimages]'),
+            model: product
         });
 
         window.productView = productView;

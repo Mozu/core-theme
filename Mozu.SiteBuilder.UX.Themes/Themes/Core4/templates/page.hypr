@@ -38,6 +38,7 @@
     <head>
 
         {% preload_json SiteContext.apiClientContext "apiconfig" %}
+        {% preload_json TemplateContext "templatecontext" %}
 
         {% block meta-tags %}
         <meta charset="utf-8">

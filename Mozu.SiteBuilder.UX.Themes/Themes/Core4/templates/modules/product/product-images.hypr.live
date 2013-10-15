@@ -1,10 +1,10 @@
 {% if Model.Content.ProductImages and Model.Content.ProductImages.Count > 0 %}
 <figure class="mz-productimages-main">
-  <img class="mz-productimages-mainimage" src="{{ Model.MainImage.ImageUrl }}?size=220" />
+  <img class="mz-productimages-mainimage" data-mz-productimage-main src="{{ Model.MainImage.ImageUrl }}?size=220" />
 </figure>
 <figure class="mz-productimages-thumbs">
     {% for image in Model.Content.ProductImages %}
-    <a class="mz-productimages-thumb" href="{{ image.ImageUrl }}">
+    <a class="mz-productimages-thumb" data-mz-productimage-thumb="{{ image.Sequence }}" href="{{ image.ImageUrl }}">
         <img class="mz-productimages-thumbimage"  src="{{ image.ImageUrl }}?size=50" />
     </a>
     {% endfor %}
