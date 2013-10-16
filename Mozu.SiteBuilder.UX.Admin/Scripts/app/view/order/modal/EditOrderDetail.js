@@ -3,7 +3,7 @@
  */
 
 Ext.define('Taco.view.order.modal.EditOrderDetail', {
-    extend: 'Taco.core.ux.window.Modal',
+    extend: 'Taco.core.ux.window.Drawer',
     requires: [
         'Taco.view.order.widget.OrderItemGrid',
         'Taco.view.order.widget.OrderTotalPanel'
