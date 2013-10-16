@@ -28,7 +28,7 @@ Ext.define('Taco.core.ux.window.Drawer', {
 
     resizable: {
         dynamic: true,
-        handles: 's',
+        handles: 's sw se',
         heightIncrement: 1,
         minHeight: 600,
         minWidth: 800,
