@@ -11,8 +11,10 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
 
     autoShow: true,
     // cls: Taco.baseCSSPrefix + 'orderform-editor',
+    height: '95%',
     scale: 'large',
     title: 'Edit Order Details',
+    width: '95%',
 
     actions: [{
         xtype: 'button',
@@ -33,7 +35,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         itemId: 'primaryAction'
     }],
 
-    config : {
+    config: {
         record: null,
         rowTotalColumnWidth: 100,
         hasDraft: true,
@@ -43,6 +45,16 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     layout: {
         type: 'vbox',
         align: 'stretch'
+    },
+
+    resizable: {
+        dynamic: true,
+        handles: 'w sw s se e',
+        heightIncrement: 1,
+        minHeight: 600,
+        minWidth: 800,
+        preserveRatio: false,
+        widthIncrement: 1
     },
     
     initComponent: function (eOpts) {
@@ -261,6 +273,18 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         var me = this;
         me.detailGrid.saveDraftOrder();
     },
+
+    constrainResizer: function () {
+        var cfg = {},
+            region = Ext.getBody().getRegion();
+
+        Ext.apply(cfg, this.resizable, {
+            constrainTo: region
+        });
+
+        this.resizable = cfg;
+    },
+
     /**
     * Do any class level cleanup. Destroy and null any scoped refs.     
     */
