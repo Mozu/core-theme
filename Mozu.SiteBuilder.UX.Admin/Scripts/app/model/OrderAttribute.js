@@ -17,7 +17,7 @@ Ext.define('Taco.model.OrderAttribute', {
             name: 'name',
             type: 'string'
         }, {
-            name: 'required',
+            name: 'isrequired',
             type: 'bool'
         },
         {

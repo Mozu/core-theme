@@ -580,8 +580,10 @@
     <Content Include="App_Readme\glimpse.readme.txt" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\Channels.js" />
+    <Content Include="Scripts\app\controller\CustomerAttributes.js" />
     <Content Include="Scripts\app\controller\Locations.js" />
     <Content Include="Scripts\app\controller\LocationTypes.js" />
+    <Content Include="Scripts\app\controller\OrderAttributes.js" />
     <Content Include="Scripts\app\controller\Reports.js" />
     <Content Include="Scripts\app\controller\Tbd.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
@@ -591,8 +593,10 @@
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\model\Channel.js" />
+    <Content Include="Scripts\app\model\CustomerAttribute.js" />
     <Content Include="Scripts\app\model\Location.js" />
     <Content Include="Scripts\app\model\LocationType.js" />
+    <Content Include="Scripts\app\model\OrderAttribute.js" />
     <Content Include="Scripts\app\model\ShippingMethod.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditor.js" />
     <Content Include="Scripts\app\overrides\menu\Item.js" />
@@ -605,6 +609,9 @@
     <Content Include="Scripts\app\store\OrderAttributes.js" />
     <Content Include="Scripts\app\store\PackagingTypes.js" />
     <Content Include="Scripts\app\view\channel\Index.js" />
+    <Content Include="Scripts\app\view\customerAttribute\Edit.js" />
+    <Content Include="Scripts\app\view\customerAttribute\Form.js" />
+    <Content Include="Scripts\app\view\customerAttribute\Index.js" />
     <Content Include="Scripts\app\view\customers\subform\BillingInformation.js" />
     <Content Include="Scripts\app\view\customers\subform\Information.js" />
     <Content Include="Scripts\app\view\customers\subform\Notes.js" />
@@ -617,6 +624,9 @@
     <Content Include="Scripts\app\view\location\Index.js" />
     <Content Include="Scripts\app\view\location\subform\Location.js" />
     <Content Include="Scripts\app\view\location\subform\StoreHours.js" />
+    <Content Include="Scripts\app\view\orderAttribute\Edit.js" />
+    <Content Include="Scripts\app\view\orderAttribute\Form.js" />
+    <Content Include="Scripts\app\view\orderAttribute\Index.js" />
     <Content Include="Scripts\app\view\order\widget\DiscountRowBody.js" />
     <Content Include="Scripts\app\view\pendingChange\Product.js" />
     <Content Include="Scripts\app\view\report\Index.js" />
@@ -888,6 +898,7 @@
     <Content Include="Scripts\app\mocks\channels.json" />
     <Content Include="Scripts\app\mocks\locations.json" />
     <Content Include="Scripts\app\mocks\locationTypes.json" />
+    <Content Include="Scripts\app\mocks\CustomerAttributes.json" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

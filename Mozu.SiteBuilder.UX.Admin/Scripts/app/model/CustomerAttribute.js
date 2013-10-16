@@ -17,7 +17,7 @@ Ext.define('Taco.model.CustomerAttribute', {
             name: 'name',
             type: 'string'
         }, {
-            name: 'required',
+            name: 'isrequired',
             type: 'bool'
         },
         {
