@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
@@ -279,15 +280,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         
 
          [HttpGet]
-        public object Post(string post)
+        public HttpResponseMessage  Post(string post)
         {
 
 
             DC.Document doc = _cmsService.GetByPath2("blogs", post).Result.ReadAsSync();
 
             //pants
-            if (doc == null)
-                return new HttpNotFoundResult();
+             if (doc == null)
+                 return this.Request.CreateErrorResponse( HttpStatusCode.NotFound, "post not found");
 
             var vm = Mapper.Map<DC.Document , VM.Post>(doc);
 
@@ -310,9 +311,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var result = View(template, vm);
 
 
+             return this.Request.CreateResponse(HttpStatusCode.OK, result);
 
 
-            return result;
         }
 
 

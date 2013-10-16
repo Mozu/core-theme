@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web;
 
 using Autofac;
@@ -33,7 +35,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         protected ICmsServiceWrapper _cmsService;
         protected ISiteBuilderContext _context;
         protected ICmsTypeHelper _cmsTypeHelper;
-        private ILifetimeScope _lifetimeScope;
+        private readonly HyprViewEngine _hyprViewEngine;
+      
      
 
         public CmsPagesController(
@@ -42,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ISiteBuilderContext context,
             ICmsServiceWrapper cmsService,
             ICmsTypeHelper cmsTypeHelper,
-            ILifetimeScope lifetimeScope 
+            HyprViewEngine hyprViewEngine
 
             )
         {
@@ -52,8 +55,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _cmsService = cmsService;
             _context = context;
             _cmsTypeHelper= cmsTypeHelper;
-        
-            _lifetimeScope = lifetimeScope;
+            _hyprViewEngine = hyprViewEngine;
+
         }
 
 
@@ -79,7 +82,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         // GET: /StoreFront/Details/5
    
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Page(string collection, string pageName)
+        public async Task<HttpResponseMessage> Page(string collection, string pageName)
         {
             
 
@@ -99,7 +102,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
            
 
             var vm = Mapper.Map<DC.Document, VM.Document>(pc.CmsContext.Page.Document ,
-                                                          opt => opt.ConstructServicesUsing(_lifetimeScope .Resolve ));
+                                                          opt => opt.ConstructServicesUsing(this.LifetimeScope .Resolve ));
 
             SetNavigationContext(vm);
 
@@ -111,20 +114,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             pc.MetaTitle = vm.Properties.GetValue("meta_title") as string;
             pc.PageType = (string)(vm.Properties.GetValue("page_type")) ?? "cmspage";
 
-            var template = ((string)(vm.Properties.GetValue("template")) ?? this.HttpContext.Request["template"] ?? "page");
+            var template = ((string)(vm.Properties.GetValue("template")) ?? this.HttpContext.Request["template"] ?? "blank-page");
 
+
+            template = _hyprViewEngine.FindPageView(template) == null ? "blank-page" : template;
 
             if (!this.SiteContext.IsEditMode   )
             {
                 if (pc.CmsContext.Page.Document.Get<bool>("hidden", false))
                 {
-                    return new HttpNotFoundResult();
-                }
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, " not found");
+}
                 string redir;
 
                 if (pc.CmsContext.Page.Document.TryGet<string>("redirect_url", out redir) && !string.IsNullOrEmpty(redir))
                 {
-                    return this.Redirect(redir);
+                    return this.Request.CreateResponse(HttpStatusCode.OK, this.Redirect(redir));
+                    ;
                 }
             }
 
@@ -138,11 +144,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //}
 
             //todo:lookup view and fall back to blankpage if theme doesnt support it.
-            
 
-            var result = View(template ?? "blankpage", vm);
 
-            return result;
+            var result = View(template ?? "blank-page", vm);
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, result);
+
         }
 
         /// <summary>

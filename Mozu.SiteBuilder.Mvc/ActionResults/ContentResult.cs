@@ -5,7 +5,7 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.ActionResults
 {
-    public class ContentResult : ActionResult
+    public class ContentResult : ActionResult 
     {
         public string Content { get; set; }
         public Encoding ContentEncoding { get; set; }

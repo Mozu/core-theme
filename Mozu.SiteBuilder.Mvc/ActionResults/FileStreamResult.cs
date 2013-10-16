@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace Mozu.SiteBuilder.Mvc.ActionResults
@@ -37,6 +38,26 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
                         return;
                     }
                     outputStream.Write(buffer, 0, count);
+                }
+            }
+        }
+
+        
+
+        protected async override Task WriteFileAsync(HttpResponseBase response)
+        {
+            Stream outputStream = response.OutputStream;
+            using (FileStream)
+            {
+                var buffer = new byte[0x1000];
+                while (true)
+                {
+                    int count = await FileStream.ReadAsync( buffer, 0, 0x1000);
+                    if (count == 0)
+                    {
+                        return;
+                    }
+                    await outputStream.WriteAsync( buffer, 0, count);
                 }
             }
         }

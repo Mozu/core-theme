@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -104,9 +105,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ICmsServiceWrapper cmsService,
           
             ICmsTypeHelper cmsTypeHelper,
-      
-            ILifetimeScope lifetimeScope)
-            : base(docRepo, docTypeRepo, context, cmsService, cmsTypeHelper, lifetimeScope)
+
+            HyprViewEngine hyprViewEngine)
+            : base(docRepo, docTypeRepo, context, cmsService, cmsTypeHelper, hyprViewEngine)
         {
             
         }
@@ -114,11 +115,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //
         // GET: /StoreFront/Email/
 
-        public async  Task<ActionResult> Preview(string id)
+        public async  Task<HttpResponseMessage> Preview(string id)
         {
             string emailTempalte = id;
             var res = await Page("email", emailTempalte);
-            if (res is HttpNotFoundResult)
+            if (res.StatusCode == HttpStatusCode.NotFound  )
             {
                 var reqDoc = new Mvc.Models.CMS.Admin.Document(){
                       DocumentListName = "email",
@@ -142,15 +143,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 res = await Page("email", emailTempalte);
             }
-            ViewResult vr = res as ViewResult;
+
+            ViewResult vr = ((ObjectContent )res.Content).Value   as ViewResult;
             vr.ViewName = "email/" + emailTempalte;
             this.ViewData["content"] = vr.Model;
-            return View("email/" + emailTempalte, new List<int>());
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, View("email/" + emailTempalte, new List<int>()));
 
         }
 
         [HttpPost]
-        public  async Task<ActionResult>  Render()
+        public  async Task<HttpResponseMessage >  Render()
         {
         	string topic;
         	string innerPayload;
@@ -169,13 +172,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         	var emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic, topic, StringComparison.OrdinalIgnoreCase));
         	if (emailTypeInfo == null)
         	{
-        		return new HttpStatusCodeResult(400,"unknown topic " + topic);
+        		return this.Request.CreateErrorResponse( HttpStatusCode.BadRequest ,"unknown topic " + topic);
         	}
 
 
         	var v = await  Page("email", emailTypeInfo.CmsDoc );
             object cmdContent = null;
-        	var vr = v as ViewResult;
+        	var vr = ((ObjectContent) v.Content).Value as ViewResult  ;
 			if (vr !=null)
 			{
 				//ViewData["content"] = vr.Model;
@@ -196,8 +199,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //                       Subject = "TEST SUBJECT " + emailTypeInfo.Topic ,
             //                       Body = viewString
             //                   };
-
-            return new EmailRenderActionResult(emailTypeInfo, emailTypeInfo.Template, model, cmdContent );
+            return this.Request.CreateResponse(HttpStatusCode.OK, new EmailRenderActionResult(emailTypeInfo, emailTypeInfo.Template, model, cmdContent));
 
 
         }

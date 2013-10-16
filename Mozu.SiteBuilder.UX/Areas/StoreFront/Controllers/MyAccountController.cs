@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
@@ -76,13 +78,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         //todo:hyper  remiplement auth att.
        // [SiteBuilderAuthorize()]
-        public async Task<object> Index()
+        public async Task<HttpResponseMessage> Index()
         {
             var account = (await _customerAccountWebApiClient.GetAccounts(null, null, null, null, "UserId eq " + CurrentUser.UserId)).ReadAsSync().Items.FirstOrDefault();
 
             if (account == null)
             {
-                return new HttpNotFoundResult();
+                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
+
             }
 
             var filter = string.Format("OrderStatus ne \"New\" and CustomerAccountId eq \"{0}\" and OrderNumber ne null", account.Id);
@@ -93,7 +96,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             this.ViewData["User"] = _userWebApiClient.GetUser(CurrentUser.UserId).Result.ReadAsSync();
 
-            return View("myaccount", account);
+            return this.Request.CreateResponse(HttpStatusCode.OK,  View("myaccount", account));
         }
 
         public  Task<CustomerAccount  > GetAccount()

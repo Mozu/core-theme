@@ -23,5 +23,10 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
         {
             response.OutputStream.Write(FileContents, 0, FileContents.Length);
         }
+
+        protected override System.Threading.Tasks.Task WriteFileAsync(HttpResponseBase response)
+        {
+            return response.OutputStream.WriteAsync( FileContents, 0, FileContents.Length);
+        }
     }
 }

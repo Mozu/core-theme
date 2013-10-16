@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
+using System.Web.Http;
 using Autofac;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
@@ -29,6 +32,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 var formatter = (HtmlActionResultMediaTypeFormatter)this.MemberwiseClone();
                 formatter.RequestMessage = request;
                 formatter.LifetimeScope = (ILifetimeScope)request.GetDependencyScope().GetService(typeof(ILifetimeScope));
+                formatter.MediaType = mediaType;
                 return formatter;
             }
             return this;
@@ -44,15 +48,23 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 var viewEngine = this.RequestMessage.Resolve<HyprViewEngine>();
                 var view = viewEngine.FindPageView(vrb.ViewName);
                 var hvc = new HyprViewContext(this.RequestMessage, vrb.ViewData, null);
+                var httpContext = this.RequestMessage.HttpContext();
+                httpContext.Response.Buffer = true;
                 var sw = new StreamWriter(writeStream);
-                return view.AsyncRender(hvc, sw).ContinueWith(x => sw.FlushAsync());
-
-
+                //view.Render(hvc, sw );
+                //var tsc2 = new TaskCompletionSource<bool>();
+                //tsc2.SetResult(true);
+                //return tsc2.Task;
+                return view.AsyncRender(hvc, sw);
             }
             else
             {
                 var action = value as ActionResult;
-
+                var iAsyncActoin = value as IActionResultAsync;
+                if (iAsyncActoin != null)
+                {
+                    return iAsyncActoin.ExecuteResultAsync(this.RequestMessage);
+                }
 
                 var tsc = new TaskCompletionSource<bool>();
                 try
@@ -83,6 +95,8 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
         }
 
         public HttpRequestMessage RequestMessage { get; set; }
+
+        public MediaTypeHeaderValue MediaType { get; set; }
     }
     public class HtmlMediaTypeFormattingException : Exception
     {

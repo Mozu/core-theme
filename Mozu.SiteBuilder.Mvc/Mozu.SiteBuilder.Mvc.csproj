@@ -381,8 +381,6 @@
     <Compile Include="ActionResults\FilePathResult.cs" />
     <Compile Include="ActionResults\FileResult.cs" />
     <Compile Include="ActionResults\FileStreamResult.cs" />
-    <Compile Include="ActionResults\HttpNotFoundResult.cs" />
-    <Compile Include="ActionResults\HttpStatusCodeResult.cs" />
     <Compile Include="ActionResults\IgnoreRoute.cs" />
     <Compile Include="ActionResults\RedirectResult.cs" />
     <Compile Include="ActionResults\ViewResultBase.cs" />
