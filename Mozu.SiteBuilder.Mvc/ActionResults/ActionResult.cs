@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.Mvc.ActionResults
 {
@@ -9,5 +10,9 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
 
 
         public abstract void ExecuteResult(HttpRequestMessage requestMessage);
+    }
+    public interface  IActionResultAsync
+    {
+        Task  ExecuteResultAsync(HttpRequestMessage requestMessage);
     }
 }

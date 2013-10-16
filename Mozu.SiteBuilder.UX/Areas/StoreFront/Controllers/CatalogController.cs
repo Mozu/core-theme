@@ -6,6 +6,7 @@ using System.Web.Routing;
 using AutoMapper;
 using Autofac;
 using Mozu.Core;
+using Mozu.Core.Api.Contracts;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionResults;
@@ -47,8 +48,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
       
         }
          [System.Web.Http.HttpGet]
-        public async Task<ActionResult> ProductDetail(string productCode)
-        {
+        public async Task<HttpResponseMessage> ProductDetail(string productCode)
+         {
+             
+
             var res = await _productClient.GetProduct(productCode, null, "Categories,Properties,Options", _ctx.IsEditMode);
         
             if ( !res.ResponseMessage.IsSuccessStatusCode )
@@ -64,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                             throw ex;
                         }
                     }
-                    return new HttpNotFoundResult();
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "Product not found");
                 }
                
             }
@@ -92,9 +95,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //SiteContext.PageContext.WidgetCreationTags.Add ("product-" + productCode);
             //SiteContext.PageContext.WidgetQuery.Add ("product");
 
-
-            return View("product", product);
-        }
+             return this.Request.CreateResponse(HttpStatusCode.OK, View("product", product));
+         }
          [System.Web.Http.HttpGet]
         public ActionResult ProductListing(int? categoryId= null , string sortBy = null, int? startIdx = null, int? itemsPerPage = null,  List<object> productCodes = null , bool? includeFacets=null, bool? useUrlParams=null)
         {
@@ -191,7 +193,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
          [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Category(int? categoryId = null, string sortBy = null, int? page = null, int? itemsPerPage = null )
+        public async Task<HttpResponseMessage > Category(int? categoryId = null, string sortBy = null, int? page = null, int? itemsPerPage = null )
         {
             _ctx.PageContext.PageType = "category";
             _ctx.PageContext.CategoryId = categoryId;
@@ -210,7 +212,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (cat == null)
             {
-               return new HttpNotFoundResult();
+                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "category not found");
+
                  
             }
 
@@ -238,8 +241,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             SetCatalogContext(cat);
 
         
-            return View(cat);
-          
+            var result= View(cat);
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, result);
+
             //.Result.ReadAsSync();
             //AutoMapper.Mapper.Map< Category>( cat );
             //return View();
@@ -247,7 +252,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
          [System.Web.Http.HttpGet]
-        public ActionResult CategoryFeed(int? categoryId = null)
+        public HttpResponseMessage  CategoryFeed(int? categoryId = null)
         {
             var itemsPerPage = 10;
             var startIdx = 0;
@@ -256,7 +261,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var cat = _ctx.CatalogContext.AllCategories.Where(x => x.CategoryId == categoryId.GetValueOrDefault (-1)).FirstOrDefault();
             if (cat == null)
             {
-                return new HttpNotFoundResult();
+                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "category not found");
+
+                
             }
          
             var feedUrl = HttpRequestBase.Url;
@@ -266,8 +273,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var resp = ProductListing(categoryId, sortBy, startIdx, itemsPerPage, null, false, false);
             if (!(resp is PartialViewResult))
-                return resp;
+            {
+                return this.Request.CreateResponse(HttpStatusCode.OK, resp);
 
+            }
+             
             var result = ((PartialViewResult)resp).Model as ProductCollection;
 
              var feed = new SyndicationFeed(cat.Name, cat.Name, new Uri(feedUrl, ""));
@@ -302,7 +312,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 feed.Links.Add(new SyndicationLink(uri) { RelationshipType = "next" });
             }
 
-            return new RssActionResult() { Feed = feed };
+            var res= new RssActionResult() { Feed = feed };
+            return this.Request.CreateResponse(HttpStatusCode.OK, res);
+
         }
 
         /// <summary>

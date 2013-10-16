@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -227,7 +229,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         // GET: /Resource/
         [ClientCacheHeaders(ConfigKey = "stylesheets")]
         [System.Web.Http.HttpGet]
-        public ActionResult Stylesheets(string pathinfo)
+        public HttpResponseMessage  Stylesheets(string pathinfo)
         {
             if (Path.GetExtension(pathinfo) == ".less")
             {
@@ -242,12 +244,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "stylesheets")]
         [System.Web.Http.HttpGet]
-        public ActionResult Less(string pathinfo, bool debug = false)
+        public HttpResponseMessage  Less(string pathinfo, bool debug = false)
         {
-            ActionResult res = Content("stylesheets/" + pathinfo, "text/css");
-            if (res is MozuVirtualFileResult)
+            var res = Content("stylesheets/" + pathinfo, "text/css");
+            var oc = res.Content as ObjectContent<MozuVirtualFileResult>;
+            if (oc!= null)
             {
-                ((MozuVirtualFileResult) res).Transform = new LessTransFormer(pathinfo, debug, _sbContext, _themeSettingsRepository, _pathProvider  ).Transform;
+
+                ((MozuVirtualFileResult)oc.Value).Transform = new LessTransFormer(pathinfo, debug, _sbContext, _themeSettingsRepository, _pathProvider).Transform;
             }
 
             return res;
@@ -278,14 +282,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "scripts")]
         [System.Web.Http.HttpGet]
-        public ActionResult ScriptsBuilt(string pathinfo)
+        public HttpResponseMessage  ScriptsBuilt(string pathinfo)
         {
             return Content("scripts-built/" + pathinfo, "text/javascript");
         }
 
         [ClientCacheHeaders(ConfigKey = "scripts")]
         [System.Web.Http.HttpGet]
-        public ActionResult Scripts(string pathinfo)
+        public HttpResponseMessage  Scripts(string pathinfo)
         {
             return Content("scripts/" + pathinfo, "text/javascript");
         }
@@ -299,7 +303,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "images")]
         [System.Web.Http.HttpGet]
-        public ActionResult Widget(string pathinfo)
+        public HttpResponseMessage Widget(string pathinfo)
         {
             int pos = pathinfo.IndexOf('/');
             if (pos > -1)
@@ -312,16 +316,20 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     var fullPath = new FileInfo(widget.FullPath + path);
                     if (fullPath.Exists)
                     {
-                        return new FilePathResult(fullPath.FullName, GetMimeType(pathinfo));
+                        
+                        return this.Request.CreateResponse( HttpStatusCode.OK , new FilePathResult(fullPath.FullName, GetMimeType(pathinfo)));
                     }
                 }
             }
-            return new HttpNotFoundResult();
+            return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
+
+
+            
         }
 
         [ClientCacheHeaders(ConfigKey = "templates")]
         [System.Web.Http.HttpGet]
-        public ActionResult Templates(string pathinfo)
+        public HttpResponseMessage  Templates(string pathinfo)
         {
             return Content("templates/" + pathinfo, "text/javascript");
         }
@@ -335,7 +343,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "content")]
         [System.Web.Http.HttpGet]
-        public ActionResult Misc(string pathinfo, string contentType = null)
+        public HttpResponseMessage  Misc(string pathinfo, string contentType = null)
         {
             string stem = "/resources/" + pathinfo;
             if (contentType == null)
@@ -348,7 +356,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "content")]
         [System.Web.Http.HttpGet]
-        public new ActionResult Content(string pathinfo, string contentType = null)
+        public new HttpResponseMessage  Content(string pathinfo, string contentType = null)
         {
             if (contentType == null)
             {
@@ -358,20 +366,19 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return GetFileResult(pathinfo, contentType);
         }
 
-        private ActionResult GetFileResult(string pathinfo, string contentType)
+        private HttpResponseMessage  GetFileResult(string pathinfo, string contentType)
         {
             // foreach (var theme in _sbContext.ThemeInfo.Stack)
             {
                 var file = _pathProvider.GetThemeFileInfo( pathinfo) ;
                 if (file != null)
                 {
-                    return new MozuVirtualFileResult(pathinfo, contentType, file);
+                    return this.Request.CreateResponse(HttpStatusCode.OK, new MozuVirtualFileResult(pathinfo, contentType, file));
                 }
             }
 
-
-            return new HttpNotFoundResult();
-        }
+            return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "file not found");
+}
 
         private static string GetMimeType(string path)
         {
@@ -590,6 +597,19 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                         source = Transform(stream, _file.VirtualPath );
                     }
                     source.CopyTo(response.OutputStream);
+                }
+            }
+
+            protected async override  System.Threading.Tasks.Task WriteFileAsync(HttpResponseBase response)
+            {
+                using (Stream stream = _file.OpenRead() )
+                {
+                    Stream source = stream;
+                    if (Transform != null)
+                    {
+                        source = Transform(stream, _file.VirtualPath);
+                    }
+                    await  source.CopyToAsync( response.OutputStream);
                 }
             }
         }

@@ -2,12 +2,13 @@
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.ActionResults
 {
-    public abstract class FileResult : ActionResult
+    public abstract class FileResult : ActionResult, IActionResultAsync 
     {
         // Fields
         private string _fileDownloadName;
@@ -44,8 +45,22 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
             WriteFile(response);
         }
 
+        public new Task ExecuteResultAsync(HttpRequestMessage requestMessage)
+        {
+            HttpResponseBase response = requestMessage.HttpContext().Response;
+            response.ContentType = ContentType;
+            if (!string.IsNullOrEmpty(FileDownloadName))
+            {
+                string headerValue = ContentDispositionUtil.GetHeaderValue(FileDownloadName);
+                response.AddHeader("Content-Disposition", headerValue);
+            }
+            return WriteFileAsync(response);
+        }
+
+
         protected abstract void WriteFile(HttpResponseBase response);
 
+        protected abstract Task WriteFileAsync(HttpResponseBase response);
         // Nested Types
         internal static class ContentDispositionUtil
         {
@@ -129,5 +144,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
                 return false;
             }
         }
+
+       
     }
 }

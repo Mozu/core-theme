@@ -81,6 +81,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             {
                 throw new InvalidOperationException("error in template " + this._virtualPath, ex);
             }
+            await writer.FlushAsync();
             return true;
         }
         public void Render(HyprViewContext viewContext, System.IO.TextWriter writer)

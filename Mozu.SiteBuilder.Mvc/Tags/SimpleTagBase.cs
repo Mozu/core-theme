@@ -4,7 +4,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.IO;
 using Microsoft.FSharp.Core;
+using NDjango;
 using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
@@ -121,7 +123,17 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 }
                 if (!string.IsNullOrEmpty(templateName))
                 {
-                    var template = manager.GetTemplate(templateName);
+                    ITemplate template = null;
+                    try
+                    {
+                       template =  manager.GetTemplate(templateName);
+                    }
+                    catch (Exception  ex )
+                    {
+                        throw new NDjango.Interfaces.RenderingException(ex.Message, this.Token , null);
+                        
+                    }
+                    
                     walker = new Walker(new FSharpOption<Walker>(walker), template.Nodes, walker.buffer, walker.bufferIndex, ctx);
                     walker = TagBase.Walk(arguments, ctx, manager, walker, this);
                     walked = true;

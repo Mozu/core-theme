@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web;
 
 using Autofac;
@@ -56,13 +58,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
-        public async Task<ActionResult> Index(string templateId)
+        public async Task<HttpResponseMessage> Index(string templateId)
         {
             this.SiteContext.EditMode = EditModes.Template ;
             var pageType = _siteBuilderContext.Theme.PageTypes.FirstOrDefault(x => x.Id == templateId);
             if (pageType == null)
             {
-                return new HttpNotFoundResult();
+                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
+                
             }
             var pc = this.SiteContext.PageContext;
 
@@ -74,8 +77,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                     Collection="templates"
                                   }
             };
-            
-            return View(pageType.Template, GetModel(pageType));
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, View(pageType.Template, GetModel(pageType)));
         }
 
         object GetModel(PageTypeDefinition template)
