@@ -348,7 +348,7 @@ Ext.define('Taco.view.attribute.Form', {
 
         this.valuesStore = this.record.getAttributeValues();
         this.valuesStore.rejectChanges();
-        debugger
+        
         this.stores = [this.valuesStore];
 
         this.title = this.record.data.name;
