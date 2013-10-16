@@ -10,6 +10,7 @@ using System.Web.Http;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Api.Client;
 
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionResults;
@@ -48,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _cookieProvider = cookieProvider;
             _pciSettingsProvider = pciSettingsProvider;
             _orderWebApiClient = orderWebApiClient;
-            _shippingSettingsWebApiClient = shippingSettingsWebApiClient;
+            _shippingSettingsWebApiClient = shippingSettingsWebApiClient.CloneWithoutUserClaims();
         }
 
         /*public string MerchantId

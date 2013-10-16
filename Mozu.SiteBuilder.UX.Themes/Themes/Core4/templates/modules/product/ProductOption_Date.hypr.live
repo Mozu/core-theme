@@ -1,1 +1,0 @@
-﻿<input type="text" id="datepicker_{{ Model.Id }}" data-mz-option-for="{{ Model.Id }}" class="mz-textbox mz-option" style="color:transparent" value="{{ Model.ShopperEnteredValue }}">

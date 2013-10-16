@@ -1,1 +1,3 @@
 ﻿{% extends "page" %}
+
+{% block body-tag-classes %} mz-blankpage {% endblock body-tag-classes %}

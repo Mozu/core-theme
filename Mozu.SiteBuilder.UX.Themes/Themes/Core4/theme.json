@@ -16,5 +16,117 @@
     { "id": "gutterWidth",             "defaultValue": "25px" },
     { "id": "bodyBackgroundColor",     "defaultValue": "#ffffff" }
 
-  ]    
+  ],
+  /* Page Types: Users will be allowed to create documents of this type in the CMS */
+  "pageTypes": [
+
+	/* user-creatable webpages */
+	{
+	  "id":             "about_us",
+	  "title":          "About Us",
+	  "entityType":     "webpage",
+      "documentType":   "web_page",
+	  "template":       "about-us",
+	  "userCreatable":  true,
+	  /* list of widgets attached to this type of page by default */
+      "widgets": [
+        {
+          "definitionId": "content",
+          "zoneId": "body",
+          "index": 0,
+          "config": {
+            "body": "<p>About Us</p>"
+          }
+        }
+	  ]
+	},
+	{
+	  "id":             "blank_page",
+	  "title":          "Blank Page",
+	  "entityType":     "webpage",
+	  "documentType":   "web_page",
+	  "template":       "blank-page",
+	  "userCreatable":  true
+	},
+	{
+	  "id":             "landing",
+	  "title":          "Landing Page",
+	  "entityType":     "webpage",
+	  "userCreatable":  true,
+	  "template":       "blank-page"
+	},
+	{
+	  "id":             "home",
+	  "title":          "Home Page",
+	  "entityType":     "webpage",
+	  "userCreatable":  true,
+	  "template":       "home"
+	},
+	/* catalog types */
+	{
+	  "id":             "category",
+	  "title":          "Category",
+	  "entityType":     "category",
+	  "userCreatable":  false,
+	  "template":       "category"
+	},
+	{
+	  "id":             "product",
+	  "title":          "Product",
+	  "entityType":     "product",
+	  "userCreatable":  false,
+	  "template":       "product"
+	},
+	{
+	  "id":             "search",
+	  "title":          "Search Results",
+	  "entityType":     "searchresult",
+	  "template":       "search-results",
+	  "userCreatable":  false
+	},
+    /* system pages */
+	{
+	  "id":             "404",
+	  "title":          "404 Not Found",
+	  "entityType":     "webpage",
+	  "documentType":   "web_page",
+	  "template":       "404",
+	  "userCreatable":  false
+	},
+    {
+      "id":             "cart",
+      "title":          "Cart",
+      "entityType":     "cart",
+      "template":       "cart",
+      "userCreatable":  false
+    },
+    {
+      "id":             "checkout",
+      "title":          "Checkout",
+      "entityType":     "order",
+      "template":       "checkout",
+      "userCreatable":  false
+    },
+    {
+      "id":             "confirmation",
+      "title":          "Confirmation",
+      "entityType":     "order",
+      "template":       "confirmation",
+      "userCreatable":  false
+    },
+    {
+      "id":             "my_account",
+      "title":          "My Account",
+      "entityType":     "customer",
+      "template":       "my-account",
+      "userCreatable":  false
+    },
+    {
+      "id":             "login",
+      "title":          "Login",
+      "entityType":     "login",
+      "template":       "login",
+      "userCreatable":  false
+    }
+  ]
 }

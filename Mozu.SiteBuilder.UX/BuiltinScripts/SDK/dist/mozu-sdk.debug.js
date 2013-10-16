@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-10-09
+ * Mozu JavaScript SDK - v0.1.0 - 2013-10-16
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -31,7 +31,7 @@
  *
  * @author Brian Cavalier
  * @author John Hann
- * @version 2.4.1
+ * @version 2.4.0
  */
 (function(define, global) { 'use strict';
 define(function (require) {
@@ -723,11 +723,12 @@ define(function (require) {
 				function resolveOne(item, i) {
 					when(item, mapFunc, fallback).then(function(mapped) {
 						results[i] = mapped;
+						notify(mapped);
 
 						if(!--toResolve) {
 							resolve(results);
 						}
-					}, reject, notify);
+					}, reject);
 				}
 			}
 		});
@@ -805,7 +806,7 @@ define(function (require) {
 
 	var reduceArray, slice, fcall, nextTick, handlerQueue,
 		setTimeout, funcProto, call, arrayProto, monitorApi,
-		cjsRequire, MutationObserver, undef;
+		cjsRequire, undef;
 
 	cjsRequire = require;
 
@@ -851,21 +852,17 @@ define(function (require) {
 	// Allow attaching the monitor to when() if env has no console
 	monitorApi = typeof console != 'undefined' ? console : when;
 
-	// Sniff "best" async scheduling option
-	// Prefer process.nextTick or MutationObserver, then check for
-	// vertx and finally fall back to setTimeout
-	/*global process*/
-	if (typeof process === 'object' && process.nextTick) {
+	// Prefer setImmediate or MessageChannel, cascade to node,
+	// vertx and finally setTimeout
+	/*global setImmediate,MessageChannel,process*/
+	if (typeof setImmediate === 'function') {
+		nextTick = setImmediate.bind(global);
+	} else if(typeof MessageChannel !== 'undefined') {
+		var channel = new MessageChannel();
+		channel.port1.onmessage = drainQueue;
+		nextTick = function() { channel.port2.postMessage(0); };
+	} else if (typeof process === 'object' && process.nextTick) {
 		nextTick = process.nextTick;
-	} else if(MutationObserver = global.MutationObserver || global.WebKitMutationObserver) {
-		nextTick = (function(document, MutationObserver, drainQueue) {
-			var el = document.createElement('div');
-			new MutationObserver(drainQueue).observe(el, { attributes: true });
-
-			return function() {
-				el.setAttribute('x', 'x');
-			};
-		}(document, MutationObserver, drainQueue));
 	} else {
 		try {
 			// vert.x 1.x || 2.x
@@ -2105,6 +2102,9 @@ var ApiReference = (function () {
 
     var genericQueryTpt = '{?_*}';
     var defaultHost = window.location.protocol + '//' + window.location.host + '/';
+
+    var copyToConf = ['verb', 'returnType', 'noBody', 'includeUserClaims'],
+        copyToConfLength = copyToConf.length;
     var pub = {
 
         basicOps: basicOps,
@@ -2149,11 +2149,11 @@ var ApiReference = (function () {
             if (operation) operation = utils.dashCase(operation);
             if (oType[operation]) oType = oType[operation];
 
-            // the defaults at the root object type should be copied into all operation configs
-            if (objectTypes[typeName].defaults) oType = utils.extend({}, objectTypes[typeName].defaults, oType);
-
             // some oTypes are a simple template as a string
             if (typeof oType === "string") oType = { template: oType };
+
+            // the defaults at the root object type should be copied into all operation configs
+            if (objectTypes[typeName].defaults) oType = utils.extend({}, objectTypes[typeName].defaults, oType);
 
             // a template is required
             if (!oType.template) throw Mozu.Utils.Exceptions.NoRequestConfigFound(typeName, operation);
@@ -2190,9 +2190,15 @@ var ApiReference = (function () {
                 if (utils.getType(tptData[tvar]) == "Array") tptData[tvar] = JSON.stringify(tptData[tvar]);
             }
             returnObj.url = oType.template.expand(utils.extend({ _: tptData }, context.asObject('context-'), tptData, ApiReference.urls));
+            for (var j = 0; j < copyToConfLength; j++) {
+                if (copyToConf[j] in oType) returnObj[copyToConf[j]] = oType[copyToConf[j]];
+            }
+            /*
             if (oType.verb) returnObj.verbOverride = oType.verb;
             if (oType.returnType) returnObj.returnType = oType.returnType;
             if (oType.noBody) returnObj.noBody = oType.noBody;
+            if (oType.includeUserClaims) returnObj.includeUserClaims = oType.includeUserClaims;
+            */
             if (oType.overridePostData) {
                 var overriddenData;
                 if (utils.getType(oType.overridePostData) == "Array") {
@@ -2298,6 +2304,9 @@ var ApiReference = (function () {
             }
         },
         'cart': {
+            defaults: {
+                includeUserClaims: true
+            },
             get: '{+CartService}current',
             'add-product': {
                 verb: 'POST',
@@ -2319,7 +2328,8 @@ var ApiReference = (function () {
         'cartitem': {
             defaults: {
                 template: '{+CartService}current/items/{Id}',
-                shortcutParam: 'Id'
+                shortcutParam: 'Id',
+                includeUserClaims: true
             },
             'update-quantity': {
                 verb: 'PUT',
@@ -2330,6 +2340,9 @@ var ApiReference = (function () {
             }
         },
         'user': {
+            defaults: {
+                includeUserClaims: true
+            },
             create: {
                 verb: 'POST',
                 template: '{+UserService}'
@@ -2355,12 +2368,18 @@ var ApiReference = (function () {
             }
         },
         customer: {
+            defaults: {
+                includeUserClaims: true
+            },
             template: '{+CustomerService}{Id}',
             shortcutParam: 'Id',
             includeSelf: true
         },
         'login': '{+UserService}Login',
         'address': {
+            defaults: {
+                includeUserClaims: true
+            },
             "validate-address": {
                 verb: 'POST',
                 template: '{+AddressValidationService}',
@@ -2372,6 +2391,9 @@ var ApiReference = (function () {
             }
         },
         'order': {
+            defaults: {
+                includeUserClaims: true
+            },
             template: '{+OrderService}{Id}',
             includeSelf: true,
             create: {
@@ -2432,6 +2454,7 @@ var ApiReference = (function () {
         },
         'shipment': {
             defaults: {
+                includeUserClaims: true,
                 template: '{+OrderService}{orderId}/shippinginfo',
                 includeSelf: true
             },
@@ -2441,10 +2464,16 @@ var ApiReference = (function () {
             }
         },
         'payment': {
+            defaults: {
+                includeUserClaims: true
+            },
             template: '{+OrderService}{orderId}/billinginfo',
             includeSelf: true
         },
         'ordernote': {
+            defaults: {
+                includeUserClaims: true
+            },
             template: '{+OrderService}{orderId}/notes/{Id}'
         },
         'document': {
@@ -2659,8 +2688,8 @@ var ApiInterface = (function () {
         request: function (method, requestConf, conf) {
             var me = this,
                 url = typeof requestConf === "string" ? requestConf : requestConf.url;
-            if (requestConf.verbOverride)
-                method = requestConf.verbOverride;
+            if (requestConf.verb)
+                method = requestConf.verb;
 
             var deferred = utils.when.defer();
 
@@ -2671,7 +2700,10 @@ var ApiInterface = (function () {
                 data = conf.data || conf;
             }
 
-            var xhr = utils.ajax(method, url, this.context.asObject("x-vol-"), data, function (rawJSON) {
+            var contextHeaders = this.context.asObject("x-vol-");
+            if (!requestConf.includeUserClaims) delete contextHeaders["x-vol-user-claims"];
+
+            var xhr = utils.ajax(method, url, contextHeaders, data, function (rawJSON) {
                 // update context with response headers
                 me.fire('success', rawJSON, xhr, requestConf);
                 deferred.resolve(rawJSON, xhr);

@@ -1,7 +1,0 @@
-﻿{% extends "page" %}
-
-{% block BodyContent %}
-
-	{% dropzone "body" %}
-
-{% endblock BodyContent%}

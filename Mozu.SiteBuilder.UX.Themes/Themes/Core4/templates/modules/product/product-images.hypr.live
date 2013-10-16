@@ -1,4 +1,4 @@
-{% if Model.Content.ProductImages and Model.Content.ProductImages.length > 0 %}
+{% if Model.Content.ProductImages %}
 <figure class="mz-productimages-main">
   <img class="mz-productimages-mainimage" data-mz-productimage-main src="{{ Model.MainImage.ImageUrl }}?size=220" />
 </figure>
