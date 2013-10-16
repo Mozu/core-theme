@@ -14,8 +14,8 @@ var ApiInterface = (function () {
         request: function (method, requestConf, conf) {
             var me = this,
                 url = typeof requestConf === "string" ? requestConf : requestConf.url;
-            if (requestConf.verbOverride)
-                method = requestConf.verbOverride;
+            if (requestConf.verb)
+                method = requestConf.verb;
 
             var deferred = utils.when.defer();
 
@@ -26,7 +26,10 @@ var ApiInterface = (function () {
                 data = conf.data || conf;
             }
 
-            var xhr = utils.ajax(method, url, this.context.asObject("x-vol-"), data, function (rawJSON) {
+            var contextHeaders = this.context.asObject("x-vol-");
+            if (!requestConf.includeUserClaims) delete contextHeaders["x-vol-user-claims"];
+
+            var xhr = utils.ajax(method, url, contextHeaders, data, function (rawJSON) {
                 // update context with response headers
                 me.fire('success', rawJSON, xhr, requestConf);
                 deferred.resolve(rawJSON, xhr);

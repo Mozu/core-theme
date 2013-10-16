@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-10-09
+ * Mozu JavaScript SDK - v0.1.0 - 2013-10-16
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -333,10 +333,11 @@
                                 function resolveOne(item, i) {
                                     when(item, mapFunc, fallback).then(function(mapped) {
                                         results[i] = mapped;
+                                        notify(mapped);
                                         if (!--toResolve) {
                                             resolve(results);
                                         }
-                                    }, reject, notify);
+                                    }, reject);
                                 }
                             }
                         });
@@ -373,7 +374,7 @@
                             state: "pending"
                         };
                     }
-                    var reduceArray, slice, fcall, nextTick, handlerQueue, setTimeout, funcProto, call, arrayProto, monitorApi, cjsRequire, MutationObserver, undef;
+                    var reduceArray, slice, fcall, nextTick, handlerQueue, setTimeout, funcProto, call, arrayProto, monitorApi, cjsRequire, undef;
                     cjsRequire = require;
                     handlerQueue = [];
                     function enqueue(task) {
@@ -390,18 +391,16 @@
                     }
                     setTimeout = global.setTimeout;
                     monitorApi = typeof console != "undefined" ? console : when;
-                    if (typeof process === "object" && process.nextTick) {
+                    if (typeof setImmediate === "function") {
+                        nextTick = setImmediate.bind(global);
+                    } else if (typeof MessageChannel !== "undefined") {
+                        var channel = new MessageChannel();
+                        channel.port1.onmessage = drainQueue;
+                        nextTick = function() {
+                            channel.port2.postMessage(0);
+                        };
+                    } else if (typeof process === "object" && process.nextTick) {
                         nextTick = process.nextTick;
-                    } else if (MutationObserver = global.MutationObserver || global.WebKitMutationObserver) {
-                        nextTick = function(document, MutationObserver, drainQueue) {
-                            var el = document.createElement("div");
-                            new MutationObserver(drainQueue).observe(el, {
-                                attributes: true
-                            });
-                            return function() {
-                                el.setAttribute("x", "x");
-                            };
-                        }(document, MutationObserver, drainQueue);
                     } else {
                         try {
                             nextTick = cjsRequire("vertx").runOnLoop || cjsRequire("vertx").runOnContext;
@@ -1387,6 +1386,7 @@
                 };
                 var genericQueryTpt = "{?_*}";
                 var defaultHost = window.location.protocol + "//" + window.location.host + "/";
+                var copyToConf = [ "verb", "returnType", "noBody", "includeUserClaims" ], copyToConfLength = copyToConf.length;
                 var pub = {
                     basicOps: basicOps,
                     urls: {
@@ -1417,10 +1417,10 @@
                         if (!oType) throw Mozu.Utils.Exceptions.NoRequestConfigFound(typeName, operation);
                         if (operation) operation = utils.dashCase(operation);
                         if (oType[operation]) oType = oType[operation];
-                        if (objectTypes[typeName].defaults) oType = utils.extend({}, objectTypes[typeName].defaults, oType);
                         if (typeof oType === "string") oType = {
                             template: oType
                         };
+                        if (objectTypes[typeName].defaults) oType = utils.extend({}, objectTypes[typeName].defaults, oType);
                         if (!oType.template) throw Mozu.Utils.Exceptions.NoRequestConfigFound(typeName, operation);
                         returnObj = {};
                         tptData = {};
@@ -1445,9 +1445,9 @@
                         returnObj.url = oType.template.expand(utils.extend({
                             _: tptData
                         }, context.asObject("context-"), tptData, ApiReference.urls));
-                        if (oType.verb) returnObj.verbOverride = oType.verb;
-                        if (oType.returnType) returnObj.returnType = oType.returnType;
-                        if (oType.noBody) returnObj.noBody = oType.noBody;
+                        for (var j = 0; j < copyToConfLength; j++) {
+                            if (copyToConf[j] in oType) returnObj[copyToConf[j]] = oType[copyToConf[j]];
+                        }
                         if (oType.overridePostData) {
                             var overriddenData;
                             if (utils.getType(oType.overridePostData) == "Array") {
@@ -1544,6 +1544,9 @@
                         }
                     },
                     cart: {
+                        defaults: {
+                            includeUserClaims: true
+                        },
                         get: "{+CartService}current",
                         "add-product": {
                             verb: "POST",
@@ -1565,7 +1568,8 @@
                     cartitem: {
                         defaults: {
                             template: "{+CartService}current/items/{Id}",
-                            shortcutParam: "Id"
+                            shortcutParam: "Id",
+                            includeUserClaims: true
                         },
                         "update-quantity": {
                             verb: "PUT",
@@ -1576,6 +1580,9 @@
                         }
                     },
                     user: {
+                        defaults: {
+                            includeUserClaims: true
+                        },
                         create: {
                             verb: "POST",
                             template: "{+UserService}"
@@ -1601,12 +1608,18 @@
                         }
                     },
                     customer: {
+                        defaults: {
+                            includeUserClaims: true
+                        },
                         template: "{+CustomerService}{Id}",
                         shortcutParam: "Id",
                         includeSelf: true
                     },
                     login: "{+UserService}Login",
                     address: {
+                        defaults: {
+                            includeUserClaims: true
+                        },
                         "validate-address": {
                             verb: "POST",
                             template: "{+AddressValidationService}",
@@ -1618,6 +1631,9 @@
                         }
                     },
                     order: {
+                        defaults: {
+                            includeUserClaims: true
+                        },
                         template: "{+OrderService}{Id}",
                         includeSelf: true,
                         create: {
@@ -1678,6 +1694,7 @@
                     },
                     shipment: {
                         defaults: {
+                            includeUserClaims: true,
                             template: "{+OrderService}{orderId}/shippinginfo",
                             includeSelf: true
                         },
@@ -1687,10 +1704,16 @@
                         }
                     },
                     payment: {
+                        defaults: {
+                            includeUserClaims: true
+                        },
                         template: "{+OrderService}{orderId}/billinginfo",
                         includeSelf: true
                     },
                     ordernote: {
+                        defaults: {
+                            includeUserClaims: true
+                        },
                         template: "{+OrderService}{orderId}/notes/{Id}"
                     },
                     document: {
@@ -1871,7 +1894,7 @@
                     constructor: ApiInterfaceConstructor,
                     request: function(method, requestConf, conf) {
                         var me = this, url = typeof requestConf === "string" ? requestConf : requestConf.url;
-                        if (requestConf.verbOverride) method = requestConf.verbOverride;
+                        if (requestConf.verb) method = requestConf.verb;
                         var deferred = utils.when.defer();
                         var data;
                         if (requestConf.overridePostData) {
@@ -1879,7 +1902,9 @@
                         } else if (conf && !requestConf.noBody) {
                             data = conf.data || conf;
                         }
-                        var xhr = utils.ajax(method, url, this.context.asObject("x-vol-"), data, function(rawJSON) {
+                        var contextHeaders = this.context.asObject("x-vol-");
+                        if (!requestConf.includeUserClaims) delete contextHeaders["x-vol-user-claims"];
+                        var xhr = utils.ajax(method, url, contextHeaders, data, function(rawJSON) {
                             me.fire("success", rawJSON, xhr, requestConf);
                             deferred.resolve(rawJSON, xhr);
                         }, function(error) {

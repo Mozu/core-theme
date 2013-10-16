@@ -1,1 +1,0 @@
-﻿<input class="mz-textbox mz-option" type="text" value="{{ option.ShopperEnteredValue }}" data-mz-product-option="{{ option.Id }}">

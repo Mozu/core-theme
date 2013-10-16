@@ -37,6 +37,7 @@
                     }
                 }
                 else {
+                    me.unset('Value');
                     me.unset("ShopperEnteredValue");
                 }
                 if (newValObj && !newValObj.IsEnabled) me.trigger('invalidoptionselected', newValObj, me);
@@ -109,13 +110,14 @@
         initialize: function() {
             this.listenTo(this.get("Options"), "optionchange", this.updateConfiguration, this);
             this.set({ Url: "/product/" + this.get("ProductCode") });
+            this.lastConfiguration = [];
         },
         hasPriceRange: function() {
             return !!this.apiModel.prop('PriceRange');
         },
         getConfiguredOptions: function() {
             return _.invoke(this.get("Options").filter(function(opt) {
-                return opt.has("Value");
+                return opt.has("Value") || opt.has("ShopperEnteredValue");
             }), 'toJSON');
         },
         addToCart: function() {
@@ -127,8 +129,12 @@
                 });
             }
         },
-        updateConfiguration: _.debounce(function() {
-            this.apiConfigure({ Options: this.getConfiguredOptions() });
+        updateConfiguration: _.debounce(function () {
+            var newConfiguration = this.getConfiguredOptions();
+            if (JSON.stringify(this.lastConfiguration) !== JSON.stringify(newConfiguration)) {
+                this.lastConfiguration = newConfiguration;
+                this.apiConfigure({ Options: newConfiguration });
+            }
         },400)
     });
 
