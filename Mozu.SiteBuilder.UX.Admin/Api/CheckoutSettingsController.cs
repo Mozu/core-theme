@@ -95,14 +95,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-
-
-
-        public class CheckoutSettingsDefinitions 
-        {
-            public List<> ExternalPaymentWorkflowDefinitions { get; set; }
-        }
-
         /// <summary>
         /// Returns the PCIaaS gateway definitions
         /// </summary>
