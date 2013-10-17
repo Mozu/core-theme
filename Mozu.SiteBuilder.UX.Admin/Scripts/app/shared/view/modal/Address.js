@@ -49,8 +49,8 @@ Ext.define('Taco.shared.view.modal.Address', {
         
         this.callParent(arguments);
 
-        //ToDo: Fix this. If multiple recs are returned
-        me.on({
+        // ToDo: Fix this. If multiple recs are returned
+        this.on({
             beforesave: {
                 scope: this,
                 fn: 'maybeValidate'
@@ -62,6 +62,13 @@ Ext.define('Taco.shared.view.modal.Address', {
         });
     },
 
+    /**
+     * Request address validation if the current address has not yet been validated. If this dialog
+     * was configured to bypass address validation, this function will always return true.
+     *
+     * @private
+     * @return {Boolean} The validity state of the current address (before validation).
+     */
     maybeValidate: function () {
         var wasValid = this.validateAddress ? !!(this.record.get('addressIsValidated')) : true;
 
@@ -72,10 +79,20 @@ Ext.define('Taco.shared.view.modal.Address', {
         return wasValid;
     },
 
+    /**
+     * Save the form.
+     *
+     * @private
+     */
     save: function () {
         this.form.save();
     },
 
+    /**
+     * Perform an ajax request to validate the current address.
+     *
+     * @private
+     */
     validate: function () {
         var me = this;
 
