@@ -1,5 +1,5 @@
 /*! 
- * Mozu Hypr Live - v0.2.0 - 2013-10-13
+ * Mozu Hypr Live - v0.2.0 - 2013-10-17
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -23,6 +23,21 @@
                 message: "If no AMD loader is present, there must be a global variable named LiveTemplates for HyprLive to function."
             };
             LiveTemplates = JSON.parse(LiveTemplates);
+/*
+            try {
+            var TemplateContext = JSON.parse(document.getElementById('data-mz-preload-templatecontext').textContent);
+            } catch(e) {
+                throw {
+                    name: 'Template context not found',
+                    message: 'The page template needs to preload the template context using the preload_json tag.'
+                }
+            }
+            */
+            try {
+            var ThemeSettings = require.mozuData('themesettings');
+            } catch(e) {
+                throw new ReferenceError('The page template needs to preload the theme settings using {% preload_json themeSettings "themesettings" %},.');
+            }
 /*! Swig v1.0.0-rc3 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
 ; (function e(t, n, r) { function s(o, u) { if (!n[o]) { if (!t[o]) { var a = typeof require == "function" && require; if (!u && a) return a(o, !0); if (i) return i(o, !0); throw new Error("Cannot find module '" + o + "'") } var f = n[o] = { exports: {} }; t[o][0].call(f.exports, function (e) { var n = t[o][1][e]; return s(n ? n : e) }, f, f.exports, e, t, n, r) } return n[o].exports } var i = typeof require == "function" && require; for (var o = 0; o < r.length; o++) s(r[o]); return s })({
@@ -3121,7 +3136,7 @@
                     return;
                 }
                 if (this.prevToken.type === types.ASSIGNMENT) {
-                    addlCtx[addlKey] = token.match;
+                    addlCtx[addlKey] = "'" + token.match.replace(/'/g, '\\\'') + "'";
                     return false;
                 }
                 return true;
@@ -3159,8 +3174,13 @@
                     throw new Error('Expected "' + missing + '" on line ' + line + ' but found "' + token.match + '".');
                 }
 
-                if (this.prevToken.type === types.VAR && this.prevToken.match !== "with") {
+                if (this.prevToken.type === types.VAR && this.prevToken.match === "with") {
                     addlKey = token.match;
+                    return false;
+                }
+
+                if (this.prevToken.type === types.ASSIGNMENT) {
+                    addlCtx[addlKey] = parser.checkMatch(token.match.split('.'));
                     return false;
                 }
 
@@ -3175,6 +3195,7 @@
 
             parser.on('end', function () {
                 if (addl) this.out.push(addlCtx);
+                if (addlKey && !addl) this.out.push(parser.checkMatch(addlKey));
                 this.out.push(opts.filename || null);
             });
 
@@ -3881,7 +3902,10 @@ HyprLiveTemplate.prototype = {
 var HyprLive = {
     engine: new swig.Swig({
         cache: false,
-        cmtControls: ['{% comment %}', '{% endcomment %}']
+        cmtControls: ['{% comment %}', '{% endcomment %}'],
+        locals: {
+            themeSettings: ThemeSettings
+        }
     }),
     getTemplate: getHyprLiveTemplate
 };

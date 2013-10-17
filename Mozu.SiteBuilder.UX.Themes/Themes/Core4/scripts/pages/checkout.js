@@ -1,4 +1,4 @@
-﻿require(["shim!vendor/bootstrap-affix[modules/jquery-mozu=jQuery]>jQuery", "shim!vendor/underscore>_", "modules/backbone-mozu", "modules/models-checkout"], function ($, _, Backbone, CheckoutModels) {
+﻿require(["modules/jquery-mozu", "shim!vendor/underscore>_", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages"], function ($, _, Backbone, CheckoutModels, messageViewFactory) {
 
     var CheckoutStepView = Backbone.MozuView.extend({
         edit: function () {
@@ -43,14 +43,14 @@
     });
 
     var OrderSummaryView = Backbone.MozuView.extend({
-        templateName: 'Modules/Checkout/CheckoutOrderSummaryPanel',
+        templateName: 'modules/checkout/order-summary',
         editCart: function () {
             window.location = "/cart";
         }
     });
 
     var ShippingAddressView = CheckoutStepView.extend({
-        templateName: 'Modules/Checkout/CheckoutShippingAddressPanel',
+        templateName: 'modules/checkout/step-shipping-address',
         autoUpdate: [
             'FirstName',
             'LastNameOrSurname',
@@ -69,7 +69,7 @@
     });
 
     var ShippingInfoView = CheckoutStepView.extend({
-        templateName: 'Modules/Checkout/CheckoutShippingMethodPanel',
+        templateName: 'modules/checkout/step-shipping-method',
         renderOnChange: [
             'AvailableShippingMethods'
         ],
@@ -82,7 +82,7 @@
     });
 
     var BillingInfoView = CheckoutStepView.extend({
-        templateName: 'Modules/Checkout/CheckoutPaymentInfoPanel',
+        templateName: 'modules/checkout/step-payment-info',
         autoUpdate: [
             'PaymentType',
             'Card.PaymentOrCardType',
@@ -116,7 +116,7 @@
     });
 
     var CouponView = Backbone.MozuView.extend({
-        templateName: 'Modules/Checkout/CheckoutCouponCodeField',
+        templateName: 'modules/checkout/coupon-code-field',
         autoUpdate: [
             'CouponCode'
         ],
@@ -132,12 +132,12 @@
     });
 
     var CommentsView = Backbone.MozuView.extend({
-        templateName: 'Modules/Checkout/CheckoutCommentsField',
+        templateName: 'modules/checkout/comments-field',
         autoUpdate: ['Comments']
     });
 
     var ReviewOrderView = Backbone.MozuView.extend({
-        templateName: 'Modules/Checkout/CheckoutReviewPanel',
+        templateName: 'modules/checkout/step-review',
         autoUpdate: [
             'CreateAccount',
             'AgreeToTerms',
@@ -161,10 +161,9 @@
 
     $(document).ready(function () {
 
-        var $checkoutView = $('#mz-checkout-form'),
+        var $checkoutView = $('#checkout-form'),
             checkoutData = require.mozuData('checkout'),
             shippingMethodData = require.mozuData('shippingmethods'),
-            $messageBar = $('[data-mz-message-bar]')
 
 
         // some defaults to overcome backbone not initializing models right
@@ -178,7 +177,7 @@
                 }
             },
             BillingInfo: {
-                paymentApiBase: require.mozuData('paymentapibase'),
+                pciSettings: require.mozuData('pcisettings'),
                 BillingContact: {
                     Address: {},
                     PhoneNumbers: {}
@@ -190,54 +189,40 @@
             checkoutViews = {
                 steps: {
                     shippingAddress: new ShippingAddressView({
-                        el: $('#mz-shipping-address-panel'),
+                        el: $('#step-shipping-address'),
                         model: checkoutModel.get("ShippingInfo").get("ShippingContact")
                     }),
                     shippingInfo: new ShippingInfoView({
-                        el: $('#mz-shipping-method-panel'),
+                        el: $('#step-shipping-method'),
                         model: checkoutModel.get('ShippingInfo')
                     }),
                     paymentInfo: new BillingInfoView({
-                        el: $('#mz-payment-information-panel'),
+                        el: $('#step-payment-info'),
                         model: checkoutModel.get('BillingInfo')
                     })
                 },
                 orderSummary: new OrderSummaryView({
-                    el: $('#mz-order-summary-panel'),
+                    el: $('#order-summary'),
                     model: checkoutModel
                 }),
                 couponCode: new CouponView({
-                    el: $('#mz-coupon-code-container'),
+                    el: $('#coupon-code-field'),
                     model: checkoutModel
                 }),
                 comments: new CommentsView({
-                    el: $('#mz-order-comments-container'),
+                    el: $('#comments-field'),
                     model: checkoutModel
                 }),
                 
                 reviewPanel: new ReviewOrderView({
-                    el: $('#mz-checkout-reviewpanel'),
+                    el: $('step-review'),
                     model: checkoutModel
                 }),
-                messageView: new Backbone.MozuMessageView({
+                messageView: messageViewFactory({
                     el: $checkoutView.find('[data-mz-message-bar]'),
                     model: checkoutModel.messages
                 })
             };
-
-
-        // run jquery affix manually (since the spy attributes don't work with IE in knockout)
-        var $rightcol = $('#mz-checkout-rightcol');
-        var rcOffset = $rightcol.offset();
-        var affixer = $rightcol.css('left', rcOffset.left).affix({ offset: rcOffset }).data('affix');
-
-        $(window).on('resize', function () {
-            if ($rightcol.hasClass('affix')) {
-                $rightcol.css('position', 'static').css('left', $rightcol.offset().left).css('position', '');
-            } else {
-                $rightcol.css('left', $rightcol.offset().left);
-            }
-        });
 
         window.checkoutViews = checkoutViews;
 
@@ -245,7 +230,7 @@
             window.location = "/checkout/" + checkoutModel.apiModel.data.Id + "/confirmation";
         });
 
-        var $reviewPanel = $('#mz-checkout-reviewpanel');
+        var $reviewPanel = $('#step-review');
         checkoutModel.on('change:IsReady',function (isReady) {
             if (isReady) {
                 setTimeout(function () { window.scrollTo(0, $reviewPanel.offset().top); }, 750);

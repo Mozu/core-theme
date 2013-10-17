@@ -1,9 +1,8 @@
-﻿    <h3 class="mz-panel-header">
+﻿    <h3 class="mz-checkoutform-stepheader">
         Review & Place Order
     </h3>
-    <div class="mz-panel-wrap">
+    <div class="mz-checkoutform-stepbody">
         {% if Model.IsReady %}
-        <div class="mz-inner-panel" data-bind="changeHeightOn: createAccount(), visible: orderStatus">
             <p class="mz-desc">Please review all of the information on this page and, if necessary, make changes before placing your order.</p>
 
             <label class='inline'>
@@ -37,10 +36,8 @@
                 {% endif %}
             {% endif %}
 
-            <div class="mz-next-step">
-                {% include "Modules/Common/LoadingBar" %}
-                <button type="button" class="mz-submit-button mz-button mz-btn-cta" data-mz-action="submit">Place Order</button>
+            <div class="mz-checkoutform-nextstep">
+                <button type="button" class="mz-button" data-mz-action="submit">Place Order</button>
             </div>
-        </div><!-- .mz-inner-panel -->
         {% endif %}
     </div>

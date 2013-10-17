@@ -60,6 +60,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             requestContext["true"] = true;
             requestContext["false"] = false;
             requestContext["viewPath"] = _virtualPath;
+            requestContext["ViewData"] = viewContext.ViewData;
             return requestContext;
         }
         public async Task<bool> AsyncRender(HyprViewContext viewContext, System.IO.TextWriter writer)

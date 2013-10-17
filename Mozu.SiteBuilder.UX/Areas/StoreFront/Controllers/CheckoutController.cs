@@ -104,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
 
-            ViewData["paymentApiBase"] = _pciSettingsProvider.GetPaymentApiBase();
+            ViewData["pciSettings"] = new CheckoutPciSettings { apiBase = _pciSettingsProvider.GetPaymentApiBase() };
             ViewData["availableCountries"] = (await GetShippableCountries()).Select(x => new { code = x.Key, name = x.Value } as object).ToList();
 
 
@@ -112,7 +112,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
-
+        public class CheckoutPciSettings
+        {
+            public string apiBase { get; set; }
+        }
      
 
         [System.Web.Http.HttpGet]

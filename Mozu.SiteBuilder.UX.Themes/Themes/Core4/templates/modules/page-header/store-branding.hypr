@@ -1,0 +1,3 @@
+﻿    <h1 class="mz-storebranding" id="store-branding">
+        <a href="/" title="{{ siteContext.settings.general.websiteName }}">{{ siteContext.settings.general.websiteName }}</a>
+    </h1>

@@ -5,10 +5,10 @@
         <div class="mz-form-field-cell">
             <select id="mz-payment-credit-card-type" data-mz-value="Card.PaymentOrCardType">
                 <option></option>
-                <option value="VISA" {% if Card.PaymentOrCardType == "VISA" %}selected="selected"{% endif %}>Visa</option>
-                <option value="MC" {% if Card.PaymentOrCardType == "MC" %}selected="selected"{% endif %}>MasterCard</option>
-                <option value="AMEX" {% if Card.PaymentOrCardType == "AMEX" %}selected="selected"{% endif %}>American Express</option>
-                <option value="DISCOVER" {% if Card.PaymentOrCardType == "DISCOVER" %}selected="selected"{% endif %}>Discover</option>
+                <option value="VISA" {% if Model.Card.PaymentOrCardType == "VISA" %}selected="selected"{% endif %}>Visa</option>
+                <option value="MC" {% if Model.Card.PaymentOrCardType == "MC" %}selected="selected"{% endif %}>MasterCard</option>
+                <option value="AMEX" {% if Model.Card.PaymentOrCardType == "AMEX" %}selected="selected"{% endif %}>American Express</option>
+                <option value="DISCOVER" {% if Model.Card.PaymentOrCardType == "DISCOVER" %}selected="selected"{% endif %}>Discover</option>
             </select>
             <span class="mz-validation-message" data-mz-validation-message-for="Card.PaymentOrCardType"</span>
         </div>
@@ -18,7 +18,7 @@
             <label for="mz-payment-credit-card-number">Card Number<span class="mz-required-field"> *</span>:</label>
         </div>
         <div class="mz-form-field-cell">
-            <input type="text" name="credit-card-number" id="mz-payment-credit-card-number" data-mz-value="Card.CardNumberPartOrMask" value="{{ Card.CardNumberPartOrMask }}">
+            <input type="text" name="credit-card-number" id="mz-payment-credit-card-number" data-mz-value="Card.CardNumberPartOrMask" value="{{ Model.Card.CardNumberPartOrMask }}">
             <span class="mz-validation-message" data-mz-validation-message-for="Card.CardNumberPartOrMask"></span>
         </div>
     </div>
@@ -27,7 +27,7 @@
             <label for="mz-payment-credit-card-name">Name on Card<span class="mz-required-field"> *</span>:</label>
         </div>
         <div class="mz-form-field-cell">
-            <input type="text" name="credit-card-name" id="mz-payment-credit-card-name" data-mz-value="Card.NameOnCard" value="{{ Card.NameOnCard }}">
+            <input type="text" name="credit-card-name" id="mz-payment-credit-card-name" data-mz-value="Card.NameOnCard" value="{{ Model.Card.NameOnCard }}">
             <span class="mz-validation-message" data-mz-validation-message-for="Card.NameOnCard"></span>
         </div>
     </div>
@@ -38,32 +38,32 @@
         <div class="mz-form-field-cell">
             <select class="mz-half-size" id="mz-payment-expiration-month" name="expiration-month" data-mz-value="Card.ExpireMonth">
                 <option></option>
-                <option {% if Card.ExpireMonth == "01" %}selected="selected"{% endif %} value="01">01 - January</option>
-                <option {% if Card.ExpireMonth == "02" %}selected="selected"{% endif %} value="02">02 - February</option>
-                <option {% if Card.ExpireMonth == "03" %}selected="selected"{% endif %} value="03">03 - March</option>
-                <option {% if Card.ExpireMonth == "04" %}selected="selected"{% endif %} value="04">04 - April</option>
-                <option {% if Card.ExpireMonth == "05" %}selected="selected"{% endif %} value="05">05 - May</option>
-                <option {% if Card.ExpireMonth == "06" %}selected="selected"{% endif %} value="06">06 - June</option>
-                <option {% if Card.ExpireMonth == "07" %}selected="selected"{% endif %} value="07">07 - July</option>
-                <option {% if Card.ExpireMonth == "08" %}selected="selected"{% endif %} value="08">08 - August</option>
-                <option {% if Card.ExpireMonth == "09" %}selected="selected"{% endif %} value="09">09 - September</option>
-                <option {% if Card.ExpireMonth == "10" %}selected="selected"{% endif %} value="10">10 - October</option>
-                <option {% if Card.ExpireMonth == "11" %}selected="selected"{% endif %} value="11">11 - November</option>
-                <option {% if Card.ExpireMonth == "12" %}selected="selected"{% endif %} value="12">12 - December</option>
+                <option {% if Model.Card.ExpireMonth == "01" %}selected="selected"{% endif %} value="01">01 - January</option>
+                <option {% if Model.Card.ExpireMonth == "02" %}selected="selected"{% endif %} value="02">02 - February</option>
+                <option {% if Model.Card.ExpireMonth == "03" %}selected="selected"{% endif %} value="03">03 - March</option>
+                <option {% if Model.Card.ExpireMonth == "04" %}selected="selected"{% endif %} value="04">04 - April</option>
+                <option {% if Model.Card.ExpireMonth == "05" %}selected="selected"{% endif %} value="05">05 - May</option>
+                <option {% if Model.Card.ExpireMonth == "06" %}selected="selected"{% endif %} value="06">06 - June</option>
+                <option {% if Model.Card.ExpireMonth == "07" %}selected="selected"{% endif %} value="07">07 - July</option>
+                <option {% if Model.Card.ExpireMonth == "08" %}selected="selected"{% endif %} value="08">08 - August</option>
+                <option {% if Model.Card.ExpireMonth == "09" %}selected="selected"{% endif %} value="09">09 - September</option>
+                <option {% if Model.Card.ExpireMonth == "10" %}selected="selected"{% endif %} value="10">10 - October</option>
+                <option {% if Model.Card.ExpireMonth == "11" %}selected="selected"{% endif %} value="11">11 - November</option>
+                <option {% if Model.Card.ExpireMonth == "12" %}selected="selected"{% endif %} value="12">12 - December</option>
             </select>
             <select class="mz-half-size" name="mz-payment-expiration-year" data-mz-value="Card.ExpireYear">
                 <option></option>
-                <option {% if Card.ExpireYear == "2013" %}selected="selected"{% endif %} value="2013">2013</option>
-                <option {% if Card.ExpireYear == "2014" %}selected="selected"{% endif %} value="2014">2014</option>
-                <option {% if Card.ExpireYear == "2015" %}selected="selected"{% endif %} value="2015">2015</option>
-                <option {% if Card.ExpireYear == "2016" %}selected="selected"{% endif %} value="2016">2016</option>
-                <option {% if Card.ExpireYear == "2017" %}selected="selected"{% endif %} value="2017">2017</option>
-                <option {% if Card.ExpireYear == "2018" %}selected="selected"{% endif %} value="2018">2018</option>
-                <option {% if Card.ExpireYear == "2019" %}selected="selected"{% endif %} value="2019">2019</option>
-                <option {% if Card.ExpireYear == "2020" %}selected="selected"{% endif %} value="2020">2020</option>
-                <option {% if Card.ExpireYear == "2021" %}selected="selected"{% endif %} value="2021">2021</option>
-                <option {% if Card.ExpireYear == "2022" %}selected="selected"{% endif %} value="2022">2022</option>
-                <option {% if Card.ExpireYear == "2023" %}selected="selected"{% endif %} value="2023">2023</option>
+                <option {% if Model.Card.ExpireYear == "2013" %}selected="selected"{% endif %} value="2013">2013</option>
+                <option {% if Model.Card.ExpireYear == "2014" %}selected="selected"{% endif %} value="2014">2014</option>
+                <option {% if Model.Card.ExpireYear == "2015" %}selected="selected"{% endif %} value="2015">2015</option>
+                <option {% if Model.Card.ExpireYear == "2016" %}selected="selected"{% endif %} value="2016">2016</option>
+                <option {% if Model.Card.ExpireYear == "2017" %}selected="selected"{% endif %} value="2017">2017</option>
+                <option {% if Model.Card.ExpireYear == "2018" %}selected="selected"{% endif %} value="2018">2018</option>
+                <option {% if Model.Card.ExpireYear == "2019" %}selected="selected"{% endif %} value="2019">2019</option>
+                <option {% if Model.Card.ExpireYear == "2020" %}selected="selected"{% endif %} value="2020">2020</option>
+                <option {% if Model.Card.ExpireYear == "2021" %}selected="selected"{% endif %} value="2021">2021</option>
+                <option {% if Model.Card.ExpireYear == "2022" %}selected="selected"{% endif %} value="2022">2022</option>
+                <option {% if Model.Card.ExpireYear == "2023" %}selected="selected"{% endif %} value="2023">2023</option>
             </select>
             <span class="mz-validation-message" data-mz-validation-message-for="Card.ExpireYear"></span>
         </div>
@@ -73,13 +73,13 @@
             <label for="mz-payment-security-code">Security Code<span class="mz-required-field"> *</span>:</label>
         </div>
         <div class="mz-form-field-cell">
-            <input type="text" name="security-code" id="mz-payment-security-code" class="mz-half-size" data-mz-value="Card.CVV" value="{{ Card.CVV }}">
+            <input type="text" name="security-code" id="mz-payment-security-code" class="mz-half-size" data-mz-value="Card.CVV" value="{{ Model.Card.CVV }}">
             <span class="mz-validation-message" data-mz-validation-message-for="Card.CVV"></span>
         </div>
     </div>
     <div class="mz-form-field-row">
         <div class="mz-form-field-cell"></div>
         <div class="mz-form-field-cell">
-            <label class="mz-inline"><input type="checkbox" name="save-card-info" data-mz-value="Card.IsCardInfoSaved" value="true" {% if Card.IsCardInfoSaved %}checked="checked"{% endif %}> Save credit card information</label>
+            <label class="mz-inline"><input type="checkbox" name="save-card-info" data-mz-value="Card.IsCardInfoSaved" value="true" {% if Model.Card.IsCardInfoSaved %}checked="checked"{% endif %}> Save credit card information</label>
         </div>
     </div>
