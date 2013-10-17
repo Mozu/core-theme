@@ -46,10 +46,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
 
             Mapper.CreateMap<CheckoutSettings, DCss.CheckoutSettings>()
-                .ForMember(dc => dc.CustomerCheckoutSettings, op => op.ResolveUsing(x => new DCss.CustomerCheckoutSettings { CustomerCheckoutType = x.CustomerCheckoutType }))
-                .ForMember(dc => dc.OrderProcessingSettings, op => op.ResolveUsing(x => new DCss.OrderProcessingSettings { PaymentProcessingFlowType = x.PaymentProcessingFlowType }))
-                .ForMember(dc => dc.PaymentSettings, op => op.ResolveUsing(x => {
-                    var ps = new DCss.PaymentSettings {
+                .ForMember(dc => dc.CustomerCheckoutSettings, op => op.MapFrom(x => x))
+                .ForMember(dc => dc.OrderProcessingSettings, op => op.MapFrom(x => x))
+                .ForMember(dc => dc.PaymentSettings, op => op.MapFrom(x => x))
+                ;
+
+            Mapper.CreateMap<CheckoutSettings, DCss.PaymentSettings>()
+                .ConvertUsing(x => {
+                    var ps = new DCss.PaymentSettings
+                    {
                         PayByMail = x.PayByMail,
                         Gateways = new List<DCss.Gateway>(),
                         ExternalPaymentWorkflowDefinitions = x.ExternalPaymentWorkflows,
@@ -59,10 +64,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         ps.Gateways.Add(Mapper.Map<DCss.Gateway>(x.Gateway));
 
                     return ps;
-                }))
+                });
+
+            Mapper.CreateMap<CheckoutSettings, DCss.CustomerCheckoutSettings>()
+                .ForMember(dc => dc.CustomerCheckoutType, op => op.MapFrom(x => x.CustomerCheckoutType))
+                .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 ;
 
-
+            Mapper.CreateMap<CheckoutSettings, DCss.OrderProcessingSettings>()
+                .ForMember(dc => dc.PaymentProcessingFlowType, op => op.MapFrom(x => x.PaymentProcessingFlowType))
+                .ForMember(dc => dc.UseOverridePriceToCalculateDiscounts, op => op.Ignore())
+                .ForMember(dc => dc.AuditInfo, op => op.Ignore())
+                ;
             Mapper.CreateMap<Gateway, DCss.Gateway>()
                 .ForMember(dc => dc.AreGatewayCredentialFieldsSet, op => op.MapFrom(x => x.AreGatewayCredentialFieldsSet))
                 .ForMember(dc => dc.SupportedCards, op => op.MapFrom(x => x.SupportedCards))
