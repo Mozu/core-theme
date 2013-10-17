@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-10-16
+ * Mozu JavaScript SDK - v0.1.0 - 2013-10-17
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1998,6 +1998,9 @@
                     },
                     setServiceUrls: function(urls) {
                         ApiReference.urls = urls;
+                    },
+                    getServiceUrls: function(urls) {
+                        return utils.extend({}, ApiReference.urls);
                     },
                     currency: "usd",
                     locale: "en-US"
