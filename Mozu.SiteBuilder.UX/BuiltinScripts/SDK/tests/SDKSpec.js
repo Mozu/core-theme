@@ -128,6 +128,19 @@
                 return context.Tenant() === 30001 && context.SiteGroup() === 1 && context.Site() === 30002;
             });
         });
+
+
+        it("should have a getServiceUrls method that returns a collection of the base URLs for the different services", function () {
+            expect(tenant).to.respondTo('getServiceUrls');
+            expect(tenant.getServiceUrls()).to.deep.equal(ServiceUrls);
+
+        });
+
+        it("should have a setServiceUrls method that sets the collection of the base URLs for the different services", function () {
+            expect(tenant).to.respondTo('setServiceUrls');
+            tenant.setServiceUrls(ServiceUrls);
+            expect(Mozu.ApiReference.urls).to.equal(ServiceUrls);
+        });
     });
     
     describe("ApiInterface object", function () {

@@ -46,6 +46,9 @@ var ApiContext = (function () {
         setServiceUrls: function (urls) {
             ApiReference.urls = urls;
         },
+        getServiceUrls: function() {
+            return utils.extend({}, ApiReference.urls);
+        },
         currency: 'usd',
         locale: 'en-US'
     };
