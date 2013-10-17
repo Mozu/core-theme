@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
         /// <summary>
         /// Corresponds to PaymentSettings.ExternalPaymentWorkflowDefinitions[]
         /// </summary>
-        [DataMember(Name = "paypalExpress")]
+        [DataMember(Name = "externalPaymentWorkflows")]
         public List<DC.ExternalPaymentWorkflowDefinition> ExternalPaymentWorkflows { get; set; }
     }
 }
