@@ -602,6 +602,8 @@
     <Content Include="Scripts\app\overrides\window\Window.js" />
     <Content Include="Scripts\app\store\Channel.js" />
     <Content Include="Scripts\app\store\Channels.js" />
+    <Content Include="Scripts\app\store\CustomerAttributes.js" />
+    <Content Include="Scripts\app\store\ExternalGatewayDefinitions.js" />
     <Content Include="Scripts\app\store\Locations.js" />
     <Content Include="Scripts\app\store\LocationTypes.js" />
     <Content Include="Scripts\app\store\OrderAttributes.js" />
@@ -628,6 +630,7 @@
     <Content Include="Scripts\app\view\order\widget\DiscountRowBody.js" />
     <Content Include="Scripts\app\view\pendingChange\Product.js" />
     <Content Include="Scripts\app\view\report\Index.js" />
+    <Content Include="Scripts\app\view\settings\paymentAndCheckout\ExternalGateway.js" />
     <Content Include="Scripts\app\view\settings\Publishing.js" />
     <Content Include="Scripts\app\view\site\navigation\NavHeadings.js" />
     <Content Include="Scripts\app\view\tbd\Index.js" />
