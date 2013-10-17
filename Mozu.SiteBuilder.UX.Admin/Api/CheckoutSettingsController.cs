@@ -100,23 +100,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public class CheckoutSettingsDefinitions 
         {
-            public List<GatewayDefinition> GatewayDefinitions { get; set; }
-            public List<DC.ExternalPaymentWorkflowDefinition> ExternalPaymentWorkflowDefinitions { get; set; }
+            public List<> ExternalPaymentWorkflowDefinitions { get; set; }
         }
 
         /// <summary>
         /// Returns the PCIaaS gateway definitions
         /// </summary>
         /// <returns>Array of gateway definitions</returns>
-        [HttpGetRoute(UriTemplate = "definition/read")]
-        public async Task<Response<CheckoutSettingsDefinitions>> GetDefinitions()
+        [HttpGetRoute(UriTemplate = "gatewaydefinitions/read")]
+        public async Task<Response<List<GatewayDefinition>>> GetGatewayDefinitions()
         {
-            var gatewaysTask = _checkoutSettingsWebApiClient.GetGatewayDefinitions();
-            var workflowsTask = _checkoutSettingsWebApiClient.GetThirdPartyPaymentWorkflows();
-
-            await Task.WhenAll(new Task[] { gatewaysTask, workflowsTask });
-            var gateways = gatewaysTask.Result.ReadAsSync();
-            var workflows = workflowsTask.Result.ReadAsSync();
+            var gateways = (await _checkoutSettingsWebApiClient.GetGatewayDefinitions()).ReadAsSync();
 
             var mapped = Mapper.Map<List<GatewayDefinition>>(gateways).OrderBy(x => x.Name).ToList();
             mapped.ForEach(x =>
@@ -134,12 +128,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     }
                 });
 
-            var ret = new CheckoutSettingsDefinitions {
-                GatewayDefinitions = mapped,
-                ExternalPaymentWorkflowDefinitions = workflows
-            };
-
-            return Single2(ret);
+            return List2(mapped);
         }
-    }
+
+        /// <summary>
+        /// Returns the other definitions
+        /// </summary>
+        /// <returns>Array of gateway definitions</returns>
+        [HttpGetRoute(UriTemplate = "externaldefinitions/read")]
+        public async Task<Response<List<DC.ExternalPaymentWorkflowDefinition>>> GetExternalDefinitions()
+        {
+            var workflows = (await _checkoutSettingsWebApiClient.GetThirdPartyPaymentWorkflows()).ReadAsSync();
+
+            return List2(workflows);
+        }
+}
 }
