@@ -591,6 +591,7 @@
     <Content Include="Scripts\app\model\Channel.js" />
     <Content Include="Scripts\app\model\CheckoutSettings.js" />
     <Content Include="Scripts\app\model\CustomerAttribute.js" />
+    <Content Include="Scripts\app\model\ExternalPaymentDefinition.js" />
     <Content Include="Scripts\app\model\Location.js" />
     <Content Include="Scripts\app\model\LocationType.js" />
     <Content Include="Scripts\app\model\OrderAttribute.js" />

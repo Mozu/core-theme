@@ -39,7 +39,7 @@ Ext.define('Taco.model.GatewayDefinitions', {
         type: 'ajax',
         api: {
             //read: '/admin/Scripts/app/mocks/GatewayDefinitions.json'
-            read: '/admin/app/checkoutsettings/definition/read'
+            read: '/admin/app/checkoutsettings/gatewaydefinitions/read'
         },
         reader: {
             type: 'json',
