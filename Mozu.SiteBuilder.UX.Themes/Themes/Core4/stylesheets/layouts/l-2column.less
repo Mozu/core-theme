@@ -1,9 +1,24 @@
 ﻿.mz-l-2column {
+    .clearfix();
     .mz-l-column {
         float: left;
+        width: 50%;
+        box-sizing: border-box;
 
-        + .mz-column {
-            margin-left: @gutter;
+        + .mz-l-column {
+            padding-left: @gutter;
         }
+    }
+}
+
+.mz-l-2column-right {
+    .mz-l-column {
+        float: right;
+
+        + .mz-l-column {
+            padding-left: 0;
+            padding-right: @gutter;
+        }
+
     }
 }

@@ -1,5 +1,5 @@
-﻿{% extends "Modules/Common/AddressForm" %}
-{% block AddressForm %}
+﻿{% extends "modules/common/address-form" %}
+{% block address-form %}
 {% setTemplateVariables validationcontext="BillingContact." %}
 {% parent %}
-{% endblock AddressForm %}
+{% endblock address-form %}

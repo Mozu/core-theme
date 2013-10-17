@@ -4,6 +4,7 @@ using System.Linq;
 
 using Autofac;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using System.Collections.Generic;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
@@ -15,17 +16,34 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
         protected override void ProcessTag(ArgumentCollection arguments, ref NDjango.Interfaces.IContext context, out string buffer, out string templateName)
         {
-            var model = context.Model();
-            if (arguments.Count > 1)
-            {
-                model = arguments[1].Value;
-            }
             templateName =(string) arguments[0].Value;
+            List<Tuple <string, object>> additionalState = new List<Tuple<string, object>>();
             if (arguments.Count > 1)
             {
-                context = context.remove("Model");
-                context = context.add(new Tuple<string, object>("Model", arguments[1].Value));
+                if (arguments[1].ArgumentType == TagArgument.ArgumentTypes.ValueArgument)
+                {
+                    additionalState.Add(new Tuple<string, object>("model", arguments[0].Value));
+                    
+                }
+
             }
+            for (int i = 0; i < arguments.Count; i++)
+            {
+                if (arguments[i].ArgumentType == TagArgument.ArgumentTypes.NamedArgument)
+                {
+                    additionalState.Add(new Tuple<string, object>(arguments[i].Name , arguments[i].Value));
+                }
+            }
+
+            foreach ( var kvp in additionalState )
+            {
+                if( context.tryfind( kvp.Item1  ) != null )
+                {
+                    context = context.remove( kvp.Item1  );
+                }
+                context = context.add( kvp );
+            }
+           
             buffer = null;
         }
     }

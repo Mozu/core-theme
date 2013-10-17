@@ -1,8 +1,6 @@
 ﻿<header class="mz-pageheader">
     {% block store-branding %}
-    <h1 class="mz-storebranding" id="store-branding">
-        <a href="/" title="{{ siteContext.settings.general.websiteName }}">{{ siteContext.settings.general.websiteName }}</a>
-    </h1>
+        {% include "modules/page-header/store-branding" %}
     {% endblock store-branding %}
     {% include "modules/page-header/utility-nav" %}
     {% include "modules/page-header/search-box" %}

@@ -1,63 +1,69 @@
 ﻿{% extends "page" %}
 
-{% block Init %}
-    {% setTemplateVariables BodyTagClasses="mz-checkout" %}
-    {% require_script "pages/checkout" %}
-    {{ block.super }}
-{% endblock Init %}
+{% block title-tag-content %} Checkout - {{block.super}} {% endblock title-tag-content %}
 
-{% block BodyContent %}
+{% block body-tag-classes %} mz-checkout {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+{% require_script "pages/checkout" %}
 
 {% preload_json Model "checkout" %}
 {% preload_json ViewData.availableShippingMethods "shippingmethods" %}
-{% preload_json ViewData.paymentApiBase "paymentapibase" %}
+{% preload_json ViewData.pciSettings "pcisettings" %}
 
-<form id="mz-checkout-form" class="mz-checkout-form mz-fades-in" method="post" action="" onsubmit="return false;">
-    <h1 class="mz-page-header">
-        Checkout{% if not user.isAuthenticated %}
-        <span class="mz-page-headernote mz-auxiliary-text mz-mini-modal-parent">Registered Customer? <a class="mz-utility-link mz-login" data-mz-action="login" href="javascript:;">Sign in</a>
-            {% include "Modules/Common/LoginModal" %}
+<div class="mz-l-container">
+    <h1 class="mz-pagetitle">
+        Checkout
+        {% if not user.isAuthenticated %}
+        <span class="mz-pagetitle-note">
+            Registered Customer? <a data-mz-action="login" href="javascript;">Login</a>
         </span>
         {% endif %}
     </h1>
 
-    {% include "Modules/Common/MessageBar" %}
+    <form id="checkout-form" class="mz-checkoutform mz-l-2column mz-l-2column-right fades-in" method="post" onsubmit="return false;">
 
-    <div class="mz-column" id="mz-checkout-rightcol">
+    {% include "modules/common/message-bar" %}
+
+    <div class="mz-l-column" id="checkout-rightcol">
         
-        <div class="mz-panel mz-order-summary-panel" id="mz-order-summary-panel">
-            {% include "Modules/Checkout/CheckoutOrderSummaryPanel" %}
+        <div class="mz-checkoutform-step mz-checkoutform-ordersummary" id="order-summary">
+            {% include "modules/checkout/order-summary" %}
         </div>
 
-        <div id="mz-coupon-code-container" class="mz-coupon-code-container">
-            {% include "Modules/Checkout/CheckoutCouponCodeField" %}
+        <div class="mz-checkoutform-couponcode" id="coupon-code-field" >
+            {% include "modules/checkout/coupon-code-field" %}
         </div>
 
-        <div id="mz-order-comments-container" class="mz-order-comments-container">
-            {% include "Modules/Checkout/CheckoutCommentsField" %}
+        <div class="mz-checkoutform-comments" id="comments-field" >
+            {% include "modules/checkout/comments-field" %}
         </div>
 
-    </div><!-- right .column -->
-    <div class="mz-column">
+    </div>
 
-        <div class="mz-panel" id="mz-shipping-address-panel">
-            {% include "Modules/Checkout/CheckoutShippingAddressPanel" %}
+    <div class="mz-l-column">
+
+        <div class="mz-checkoutform-step mz-checkoutform-shippingaddress" id="step-shipping-address">
+            {% include "modules/checkout/step-shipping-address" %}
         </div>
 
-        <div class="mz-panel" id="mz-shipping-method-panel">
-            {% include "Modules/Checkout/CheckoutShippingMethodPanel" %}
+        <div class="mz-checkoutform-step mz-checkoutform-shippingmethod" id="step-shipping-method">
+            {% include "modules/checkout/step-shipping-method" %}
         </div>
 
-        <div class="mz-panel" id="mz-payment-information-panel">
-            {% include "Modules/Checkout/CheckoutPaymentInfoPanel" %}
+        <div class="mz-checkoutform-step mz-checkoutform-paymentinfo" id="step-payment-info">
+            {% include "modules/checkout/step-payment-info" %}
         </div>
 
-        <div class="mz-panel mz-checkout-reviewpanel" id="mz-checkout-reviewpanel">
-            {% include "Modules/Checkout/CheckoutReviewPanel" %}
+        <div class="mz-checkoutform-step mz-checkoutform-review" id="step-review">
+            {% include "modules/checkout/step-review" %}
         </div>
 
     </div><!-- left .column -->
 
 </form>
 
-{% endblock BodyContent %}
+</div>
+
+{% endblock body-content %}

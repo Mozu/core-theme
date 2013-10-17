@@ -408,6 +408,7 @@
     <Content Include="Themes\Core4\stylesheets\modules\common\property-list.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\icon.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\message-bar.less" />
+    <Content Include="Themes\Core4\stylesheets\layouts\l-pagewrapper.less" />
     <None Include="Themes\Core4\stylesheets\modules\page-header\store-branding.less" />
     <Content Include="Themes\Core4\scripts\modules\backbone-mozu-validation.js" />
     <Content Include="Themes\Core4\scripts\modules\backbone-mozu-model.js" />
@@ -415,7 +416,7 @@
     <Content Include="Themes\Core4\scripts\modules\models-messages.js" />
     <Content Include="Themes\Core4\scripts\modules\mixin-paging.js" />
     <Content Include="Themes\Core4\scripts\modules\views-paging.js" />
-    <Content Include="Themes\Core4\MetaData\build.js" />
+    <Content Include="Themes\Core4\build.js" />
     <Content Include="Themes\Core4\MetaData\thumb.jpg" />
     <Content Include="Themes\Core4\MetaData\example.build.js" />
     <Content Include="Themes\Core4\MetaData\ThemeSettings.xml" />
@@ -565,6 +566,7 @@
     <Content Include="Themes\Core3\theme-ui.json" />
     <Content Include="Themes\Core3\theme.json" />
     <Content Include="Themes\Core4\stylesheets\state\is-disabled.less" />
+    <Content Include="Themes\Core4\templates\modules\page-header\store-branding.hypr" />
     <None Include="Themes\Core4\templates\modules\product\faceted-products.hypr" />
     <Content Include="Themes\Core4\templates\modules\product\product-options.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\checkout\billing-address-form.hypr.live">
@@ -873,7 +875,7 @@
     </None>
     <None Include="Themes\Core4\templates\modules\checkout\comments-field.hypr.live" />
     <None Include="Themes\Core4\templates\modules\checkout\coupon-code-field.live" />
-    <None Include="Themes\Core4\templates\modules\checkout\panel-order-summary.hypr.live" />
+    <None Include="Themes\Core4\templates\modules\checkout\order-summary.hypr.live" />
     <None Include="Themes\Core4\templates\modules\checkout\step-payment-info.hypr.live" />
     <None Include="Themes\Core4\templates\modules\checkout\step-review.hypr.live" />
     <None Include="Themes\Core4\templates\modules\checkout\step-shipping-address.hypr.live" />
@@ -881,7 +883,6 @@
     <None Include="Themes\Core4\templates\modules\checkout\credit-card-form.hypr.live" />
     <None Include="Themes\Core4\templates\modules\product\faceting-form.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\google-analytics-tracking-code.hypr" />
-    <None Include="Themes\Core4\templates\modules\common\loading-bar.hypr.live" />
     <None Include="Themes\Core4\templates\modules\common\login-modal.hypr.live" />
     <None Include="Themes\Core4\templates\modules\common\message-bar.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\page-footer.hypr" />

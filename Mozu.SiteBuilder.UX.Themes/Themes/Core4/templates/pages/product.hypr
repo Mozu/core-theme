@@ -2,16 +2,18 @@
 
 {% block body-tag-classes %} mz-product {% endblock body-tag-classes %}
 
+{% block title-tag-content %} {{Model.Content.ProductName}} - {{block.super}} {% endblock title-tag-content %}
+
 {% block body-content %}
 
 {% require_script "pages/product" %}
 
 {% preload_json Model "product" %}
 
-<div class="mz-l-container">
+<div itemscope itemtype="http://schema.org/Product" class="mz-l-container">
 
-	<h1 class="mz-pagetitle">{{ Model.Content.ProductName }}
-        <span class="mz-pagetitle-note">Product Code: {{ Model.ProductCode }}</span>
+	<h1 class="mz-pagetitle"><span itemprop="name">{{ Model.Content.ProductName }}</span>
+        <span class="mz-pagetitle-note">Product Code: <span itemprop="sku">{{ Model.ProductCode }}</span></span>
     </h1>
 	
     <div data-mz-productimages class="mz-productimages mz-l-sidebar">

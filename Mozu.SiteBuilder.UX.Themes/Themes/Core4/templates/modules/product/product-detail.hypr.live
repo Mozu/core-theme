@@ -1,6 +1,6 @@
 <div class="mz-productdetail-shortdesc mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">Summary</h4>
-  {{ Model.Content.ProductShortDescription|safe }}
+  <span itemscope="description">{{ Model.Content.ProductShortDescription|safe }}</span>
 </div>
 
 {% if Model.Options %}
@@ -10,9 +10,9 @@
 </div>
 {% endif %}
     
-<div class="mz-productdetail-price mz-l-stack-section">
+<div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="mz-productdetail-price mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">Price</h4>
-{% include "modules/product/price-stack" with Model %}
+{% include "modules/product/price-stack" %}
 </div>
 
 <section class="mz-l-stack-section mz-productdetail-conversion">
@@ -58,6 +58,7 @@
     <h4 class="mz-l-stack-sectiontitle">Measurements</h4>
     <dl class="mz-propertylist mz-propertylist-justified">
       <dt>Weight</dt>
-      <dd>{{ Model.Measurements.PackageWeight.Value }} {{ Model.Measurements.PackageWeight.Unit }}</dd>
+      <dd itemprop="weight" itemscope itemtype="http://schema.org/QuantitativeValue">
+        <span itemprop="value">{{ Model.Measurements.PackageWeight.Value }}</span> <span itemprop="unitCode">{{ Model.Measurements.PackageWeight.Unit }}</span></dd>
     </dl>
 </div>

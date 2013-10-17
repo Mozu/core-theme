@@ -1,0 +1,84 @@
+﻿<h3 class="mz-checkoutform-stepheader">
+    Order Summary
+    <button type="button" data-mz-action="editCart">Edit</button>
+</h3>
+
+<div class="mz-checkoutform-stepbody">
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Each</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        {% for item in Model.Items %}
+            <tbody>
+                <tr class="mz-line-item {% if item.DiscountedTotal < item.Total %}mz-discounted{% endif %}" data-bind="css: { 'mz-discounted': $data.DiscountTotal }">
+                    <td>{{ item.Product.Name }}</td>
+                    <td>{{ item.Quantity }}</td>
+                    <td><span class="mz-item-price">{{ item.UnitPrice.BaseAmount|currency }}</span></td>
+                    <td><span class="mz-item-price">{{ item.Subtotal|currency }}</span></td>
+                </tr>
+                {% if item.DiscountedTotal < item.Total %}
+                    <tr class="mz-line-item mz-discount">
+                        <td colspan="2">
+                            {% if item.Discount %}
+                                <span class="mz-discount-name">{{ item.Discount.Name }}</span> 
+                                {% if item.Discount.FreeShipping %}
+                                    <span class="mz-discount-amt">Free Shipping</span>
+                                {% endif %}
+                            {% endif %}
+                            <span class="mz-discount-amt" >{{ item.DiscountTotal|currency}} OFF</span>
+                        </td>
+                        <td>{{ item.UnitPrice.DiscountedAmount|currency }}</td>
+                        <td>{{ item.Total }}</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        {% endfor %}
+      
+        <tbody>
+            <tr class="mz-cost-summary">
+                <td class="mz-line-item-summary" colspan="4">
+                    <table>
+                        <tbody>
+                        {% for discount in Model.OrderDiscounts %}
+                            {% if not discount.Excluded %}
+                            <tr>
+                                <td>{{ discount.Discount.Name }}:</td>
+                                <td>-{{ discount.Impact|currency }}</td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                            <tr>
+                                <td>Sub-Total:</td>
+                                <td>{{ Model.DiscountedTotal|currency }}</td>
+                            </tr>
+                            <tr>
+                                <td>Tax:</td>
+                                <td>{{ Model.TaxTotal|currency }}</td>
+                            </tr>
+                            <tr class="mz-shipping-total-row">
+                                <td>Shipping &amp; Handling:</td>
+                                <td>{{ Model.ShippingTotal|currency }}</td>
+                            </tr>
+                        {% if Model.HandlingAmount %}
+                            <tr>
+                                <td>Additional Handling:</td>
+                                <td>{{ Model.HandlingAmount|currency }}</td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+        <tbody>
+            <tr class="mz-total">
+                <td class="mz-line-item-summary" colspan="4">Total: {{ Model.Total|currency }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div><!-- #order-summary -->

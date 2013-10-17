@@ -242,11 +242,14 @@
             constructor: function (conf) {
                 var me = this;
                 CheckoutStep.apply(this, arguments),
-                paymentApiBase = conf.paymentApiBase;
-                if (!paymentApiBase) throw {
-                    name: "PaymentApiError",
-                    message: "Payment API Base needs to be set to complete checkout."
-                };
+                pciSettings = conf.pciSettings;
+                //if (!pciSettings) throw new ReferenceError('PCI Settings need to be set to complete checkout.');
+
+                pciSettings = $.extend({
+                    framePath: "/../../Assets/pci_receiver.html",
+                    siteId: api.context.Site(),
+                    tenantId: api.context.Tenant()
+                }, pciSettings);
 
                 var fields = {};
                 // create jQuery-style accessor functions for PCIaaS
@@ -276,12 +279,7 @@
                             me.stepStatus("invalid");
                         }
                     },
-                    settings: {
-                        apiBase: paymentApiBase,
-                        framePath: "/../../Assets/pci_receiver.html",
-                        siteId: api.context.Site(),
-                        tenantId: api.context.Tenant()
-                    }
+                    settings: pciSettings
                 });
                 this.on('change:PaymentType', function (model, newPaymentType) {
                     me.selectPaymentType(newPaymentType);

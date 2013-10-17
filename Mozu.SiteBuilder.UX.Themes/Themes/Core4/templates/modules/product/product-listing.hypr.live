@@ -16,7 +16,7 @@
                 {% block product-code %}
                 <div class="mz-productlisting-productcode">{{prod.ProductCode}}</div>
                 {% endblock product-code %}
-                {% include "modules/product/price-stack" with prod %}
+                {% include "modules/product/price-stack" with Model=prod %}
             </div>
         </li>
         {% endfor %}

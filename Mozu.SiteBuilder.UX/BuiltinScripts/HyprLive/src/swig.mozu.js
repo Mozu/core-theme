@@ -3096,7 +3096,7 @@
                     return;
                 }
                 if (this.prevToken.type === types.ASSIGNMENT) {
-                    addlCtx[addlKey] = token.match;
+                    addlCtx[addlKey] = "'" + token.match.replace(/'/g, '\\\'') + "'";
                     return false;
                 }
                 return true;
@@ -3134,8 +3134,13 @@
                     throw new Error('Expected "' + missing + '" on line ' + line + ' but found "' + token.match + '".');
                 }
 
-                if (this.prevToken.type === types.VAR && this.prevToken.match !== "with") {
+                if (this.prevToken.type === types.VAR && this.prevToken.match === "with") {
                     addlKey = token.match;
+                    return false;
+                }
+
+                if (this.prevToken.type === types.ASSIGNMENT) {
+                    addlCtx[addlKey] = parser.checkMatch(token.match.split('.'));
                     return false;
                 }
 
@@ -3150,6 +3155,7 @@
 
             parser.on('end', function () {
                 if (addl) this.out.push(addlCtx);
+                if (addlKey && !addl) this.out.push(parser.checkMatch(addlKey));
                 this.out.push(opts.filename || null);
             });
 

@@ -38,7 +38,7 @@
     <head>
 
         {% preload_json SiteContext.apiClientContext "apiconfig" %}
-        {% preload_json TemplateContext "templatecontext" %}
+        {% preload_json themeSettings "themesettings" %}
 
         {% block meta-tags %}
         <meta charset="utf-8">
@@ -46,7 +46,7 @@
         <meta name="description" content="{{ PageContext.MetaDescription }}">
         {% endblock meta-tags %}
 
-        <title>{% block title-tag-content %}{{ PageContext.MetaTitle }} {{templateVariables.MetaTitle}}{% endblock title-tag-content %}</title>
+        <title>{% block title-tag-content %}{{ siteContext.settings.general.websiteName }} {% endblock title-tag-content %}</title>
 
         {% if PageContext.FeedUrl  %}
         <link rel="alternate" type="application/rss+xml" title="{{ PageContext.Title }}" href="{{ PageContext.FeedUrl }}" />
@@ -69,7 +69,7 @@
     <body class="{% block body-tag-classes %}{% endblock body-tag-classes %}" {% data_attributes SiteContext %} >
     {% endblock open-body-tag %}
     
-        <div id="page-wrapper" class="mz-page-wrapper">
+        <div id="page-wrapper" class="mz-l-pagewrapper">
     
             {% block page-header %}
             {% include "modules/page-header" %}

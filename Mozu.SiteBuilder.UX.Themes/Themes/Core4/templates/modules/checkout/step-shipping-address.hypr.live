@@ -1,19 +1,16 @@
-﻿    <h3 class="mz-panel-header">
+﻿    <h3 class="mz-checkoutform-stepheader">
         Shipping Information
-        <button class="mz-edit-button" data-mz-action="edit">Edit</button>
+        <button class="mz-button" data-mz-action="edit">Edit</button>
     </h3>
-    <div class="mz-panel-wrap">
-        <div class="mz-inner-panel">
-            <p class="mz-desc">Where to?</p>
-            <div class="mz-completed-summary">
-                {% include "Modules/Common/AddressSummary" with Model %}
-            </div>
-            <div class="mz-form-fieldgroup mz-form-fields">
-                {% include "Modules/Common/AddressForm" with Model %}
-            </div>
-            <div class="mz-next-step">
-                {% include "Modules/Common/LoadingBar" %}
-                <button type="button" class="mz-submit-button" data-mz-action="next">Next</button>
-            </div>
-        </div><!-- .mz-inner-panel -->
+    <div class="mz-checkoutform-stepbody">
+        <p class="mz-desc">Where to?</p>
+        <div class="mz-completed-summary mz-addresssummary">
+            {% include "modules/common/address-summary" %}
+        </div>
+        <div class="mz-formfieldgroup mz-formfieldgroup-address">
+            {% include "modules/common/address-form" %}
+        </div>
+        <div class="mz-checkoutform-nextstep">
+            <button class="mz-button" data-mz-action="next">Next</button>
+        </div>
     </div>
