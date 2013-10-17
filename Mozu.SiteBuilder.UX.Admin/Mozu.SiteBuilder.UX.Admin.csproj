@@ -587,6 +587,7 @@
     <Content Include="Scripts\app\core\ux\window\Alert.js" />
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
+    <Content Include="Scripts\app\core\ux\window\Modal.js" />
     <Content Include="Scripts\app\model\Channel.js" />
     <Content Include="Scripts\app\model\CheckoutSettings.js" />
     <Content Include="Scripts\app\model\CustomerAttribute.js" />
