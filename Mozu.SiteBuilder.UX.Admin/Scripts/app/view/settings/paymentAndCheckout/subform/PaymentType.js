@@ -24,7 +24,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
             width: 400,
             forceSelection:true,
             name: 'gatewayDefinitionId',
-            value: this.record.get('gatewayDefinitionId'),
+            value: this.record.get('gateway')['gatewayDefinitionId'],
             displayField: 'name',
             triggerOnClick:true,
             valueField: 'id'
@@ -66,7 +66,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
                 scope: this
             });
         
-        if (this.record.get('gatewayDefinitionId')) {
+        if (this.record.get('gateway')['gatewayDefinitionId']) {
             this.on('boxready', this.onPaymentTypesChange, this);
         }
         this.on('boxready', this.initExternalGateway, this);
@@ -91,12 +91,12 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
         });
     },
     onPaymentTypesChange: function () {
-        
         if (this.gateWayDefinitionsStore.isLoading()) {
             this.mon(this.gateWayDefinitionsStore, 'load', this.onPaymentTypesChange, this);
             return;
         }
         var gateWayDef = this.gateWayDefinitionsCombo.findRecordByValue(this.gateWayDefinitionsCombo.getValue());
+        console.log(gateWayDef);
         if (!gateWayDef) {
             return;
         }

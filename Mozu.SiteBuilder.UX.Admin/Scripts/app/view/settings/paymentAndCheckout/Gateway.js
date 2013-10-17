@@ -14,15 +14,16 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
     //margin: '10,0,10,10',
 
     header: null,
-
+    //.get('gateway')['gatewayDefinitionId']
     initComponent: function () {
         this.header = null;
         var credFieldDefs = this.gatewayDefinition.get('credentialDefinitions'),
-            credentials = this.record.get('credentials') || {},
-            supportedCards = this.record.get('supportedCards') || [],
+            credentials = this.record.get('gateway')['credentials'] || {},
+            supportedCards = this.record.get('gateway')['supportedCards'] || [],
             supportedCardsDef = this.gatewayDefinition.get('supportedCards') || [],
             supportedCardsCbs = [],
-            credentialsSet = this.record.get('credentialsSet');
+            credentialsSet = this.record.get('gateway')['credentialsSet'];
+
         this.items = [];
         this.credFields = [];
         Ext.Array.each(credFieldDefs, function (fieldDef) {
@@ -32,7 +33,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
                     fieldLabel: fieldDef.displayName,
                     name: fieldDef.name,
                     inputType: 'password',
-                    value: credentialsSet && this.gatewayDefinition.getId() === this.record.get('gatewayDefinitionId') ? '        ' : ''
+                    value: credentialsSet && this.gatewayDefinition.getId() === this.record.get('gateway')['gatewayDefinitionId'] ? '        ' : ''
                 });
             this.credFields.push(credField);
             this.items.push(credField);
@@ -84,8 +85,15 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
             }
             val[field.name] = field.getValue();
         });
+        
+        //debugger
         if (isDirty) {
-            me.record.set('credentials', val);
+            //me.record.set('credentials', val);
+            for (var index in val) {
+                console.log(index);
+                console.log(val[index]);
+                me.record.get('gateway')['credentials'][index] = val[index];
+            }
         }
         me.record.set('supportedCards', me.supportedCardsCbg.getValue().cards);
 
