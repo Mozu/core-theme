@@ -89,10 +89,14 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
         //debugger
         if (isDirty) {
             //me.record.set('credentials', val);
+            var gateway = me.record.get('gateway');
+            if (!gateway.credentials)
+                gateway.credentials  = {};
+
             for (var index in val) {
                 console.log(index);
                 console.log(val[index]);
-                me.record.get('gateway')['credentials'][index] = val[index];
+                gateway.credentials[index] = val[index];
             }
         }
         me.record.set('supportedCards', me.supportedCardsCbg.getValue().cards);

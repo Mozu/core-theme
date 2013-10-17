@@ -34,10 +34,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "read")]
         public async Task<Response<CheckoutSettings>> GetSettings()
         {
-            var settings = (await _checkoutSettingsWebApiClient.GetCheckoutSettings()).ReadAsSync();
-            var settings2 = _checkoutSettingsWebApiClient.GetThirdPartyPaymentWorkflows();
+            var dcSettings = (await _checkoutSettingsWebApiClient.GetCheckoutSettings()).ReadAsSync();
 
-            var ret = Mapper.Map<CheckoutSettings>(settings);
+            var ret = Mapper.Map<CheckoutSettings>(dcSettings);
+
+            // mock data
+            if (ret.ExternalPaymentWorkflows == null || ret.ExternalPaymentWorkflows.Count == 0)
+            {
+                ret.ExternalPaymentWorkflows = new List<DC.ExternalPaymentWorkflowDefinition> {
+                    new DC.ExternalPaymentWorkflowDefinition {
+                         Name = "Paypal Express",
+                         IsEnabled = true,
+                         Credentials = new List<DC.ThirdPartyCredentialField> {
+                             new DC.ThirdPartyCredentialField { APIName="bradley", DisplayName="login or something", Value="foo" },
+                             new DC.ThirdPartyCredentialField { APIName="foster", DisplayName="secret key", Value="illuminati" }
+                         }
+                    }
+                };
+            }
 
             return Single2(ret);
         } 
@@ -50,47 +64,37 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "update")]
         public async Task<Response<CheckoutSettings>> UpdateSettings(CheckoutSettings settingReq)
         {
-            var pSetting = Mapper.Map<PaymentSettings>(settingReq);
-            var  tasks = new List<Task>();
-            DC.Gateway gateWay = null;
+            var dcPaymentSettings = Mapper.Map<DC.PaymentSettings>(settingReq);
+            var dcCheckoutSettings = Mapper.Map<DC.CustomerCheckoutSettings>(settingReq);
+            var dcOrderProcessingSettings = Mapper.Map<DC.OrderProcessingSettings>(settingReq);
+
+            DC.Gateway gateway = null;
             var currentGatewayRes = (await _checkoutSettingsWebApiClient.GetActiveGatewayForCountry("us"));
             if (currentGatewayRes.ResponseMessage.IsSuccessStatusCode)
             {
-                gateWay = currentGatewayRes.ReadAsSync();
+                gateway = currentGatewayRes.ReadAsSync();
             }
-            if (gateWay != null)
+
+            var posted = dcPaymentSettings.Gateways.First();
+            if (gateway != null && gateway.GatewayAccount.GatewayDefinitionId == posted.GatewayAccount.GatewayDefinitionId)
             {
-                var posted = pSetting.Gateways.First();
-                if (gateWay.GatewayAccount.GatewayDefinitionId == posted.GatewayAccount.GatewayDefinitionId)
-                {
-                    var res0 = (await _checkoutSettingsWebApiClient.UpdateGateway(gateWay.GatewayAccount.Id, posted));
-                }
-                else
-                {
-                    var res0 = (await _checkoutSettingsWebApiClient.CreateGateway(  posted));
-                }
+                await _checkoutSettingsWebApiClient.UpdateGateway(gateway.GatewayAccount.Id, posted);
             }
             else
             {
-                var posted = pSetting.Gateways.First();
-                var res0 = (await _checkoutSettingsWebApiClient.CreateGateway(posted));
+                await _checkoutSettingsWebApiClient.CreateGateway(posted);
             }
 
-            var ret = (await _checkoutSettingsWebApiClient.UpdatePaymentSettings(pSetting)).ReadAsSync();
-            var ret1 = (await _checkoutSettingsWebApiClient.UpdateCustomerCheckoutSettings( new Mozu.SiteSettings.Order.Contracts.CustomerCheckoutSettings()
-                                                                                                {
-                                                                                                   CustomerCheckoutType = settingReq.CustomerCheckoutType  
-                                                                                                })).ReadAsSync();
+            var tasks = new Task[] {
+                _checkoutSettingsWebApiClient.UpdatePaymentSettings(dcPaymentSettings),
+                _checkoutSettingsWebApiClient.UpdateCustomerCheckoutSettings(dcCheckoutSettings),
+                _checkoutSettingsWebApiClient.UpdateOrderProcessingSettings(dcOrderProcessingSettings)
+            };
 
+            await Task.WhenAll(tasks);
+            var newSettings = await GetSettings();
 
-
-            var ret2 = (await _checkoutSettingsWebApiClient.UpdateOrderProcessingSettings( new Mozu.SiteSettings.Order.Contracts.OrderProcessingSettings()  
-            {
-                 PaymentProcessingFlowType = settingReq.PaymentProcessingFlowType 
-            })).ReadAsSync();
-
-            var getRes = await GetSettings();
-            return getRes;
+            return newSettings;
         }
 
 
