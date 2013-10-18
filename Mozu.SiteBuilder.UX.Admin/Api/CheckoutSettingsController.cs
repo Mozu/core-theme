@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout;
-using DC = Mozu.SiteSettings.Order.Contracts;
-using DCp = Mozu.PaymentService.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
-using GatewayCredentialFieldValue = Mozu.PaymentService.Contracts.GatewayCredentialFieldValue;
-using PaymentSettings = Mozu.SiteSettings.Order.Contracts.PaymentSettings;
+using DC = Mozu.SiteSettings.Order.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
