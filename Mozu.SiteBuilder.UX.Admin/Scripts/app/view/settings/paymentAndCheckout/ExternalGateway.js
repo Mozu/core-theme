@@ -67,26 +67,32 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
     },
     beforeSave: function () {
         var me = this;
-        var isDirty = false, val = {};
+        var isDirty = false, val = {}, creds = [];
         var gatewayType = this.typeCheck.fieldLabel.toUpperCase();
         var gatewayEnabled = this.typeCheck.getRawValue();
         var externalGateway = Ext.clone(me.record.get('externalPaymentWorkflows'));
         
         Ext.each(me.credFields, function (field) {
+            val = {};
             if (field.isDirty()) {
                 isDirty = true;
             }
-            val[field.name] = field.getValue();
+
+            val['DisplayName'] = field.getFieldLabel();
+            val['APIName'] = field.getName();
+            val['Value'] = field.getValue();
+            creds.push(val);
         });
 
         if (this.typeCheck.isDirty()) {
             isDirty = true;
         }
-        
+
         if (isDirty) {
             Ext.each(externalGateway, function (item) {
                 if (gatewayType == item['Name'].toUpperCase()) {
-                    item['Credentials'] = val;
+                    
+                    item['Credentials'] = creds;
                     item['IsEnabled'] = gatewayEnabled;
                 }
             });
