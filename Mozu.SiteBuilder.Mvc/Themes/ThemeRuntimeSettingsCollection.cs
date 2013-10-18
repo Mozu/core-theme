@@ -1,11 +1,40 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
 {
+     [JsonConverter(typeof(ThemeRuntimeSettingsCollection.ThemeJsonConverter))]
     public class ThemeRuntimeSettingsCollection
     {
+         public class ThemeJsonConverter : JsonConverter
+         {
+
+             public override bool CanConvert(Type objectType)
+             {
+                 return true;
+             }
+
+             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+             {
+                 throw new NotImplementedException();
+             }
+
+             public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+             {
+                 var themeSettings = (ThemeRuntimeSettingsCollection) value;
+                 writer.WriteStartObject();
+                 foreach (var item in themeSettings.Settings)
+                 {
+                     writer.WritePropertyName(item.Setting.Id);
+                     serializer.Serialize(writer, item.Value);
+                 }
+                 writer.WriteEndObject();
+
+             }
+         }
+
         public List<ThemeRuntimeSetting> Settings { get; set; }
 
         public object this[string id]
@@ -35,15 +64,6 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             Settings = collection;
         }
 
-        public Dictionary<string, object> AsDictionary()
-        {
-            var dict = new Dictionary<string, object>();
-
-            if (Settings == null)
-                return dict;
-
-            Settings.ForEach(s => dict.Add(s.Setting.Id, s.Value));
-            return dict;
-        }
+      
     }
 }

@@ -63,20 +63,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             //    .ForMember(x => x.ParentCategoryId, op => op.MapFrom(x => x.ParentCategoryId))
             //    .ForMember(x => x.Description, op => op.MapFrom(x => x.Content.Description));
 
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ConfiguredProduct, ConfiguredProduct>()
-                .ForMember(x => x.Price, op => op.ResolveUsing(_ =>
-                    new ProductPrice()
-                    {
-                        Price = _.Price != null ? _.Price.Price : null,
-                        SalePrice = _.Price != null ? _.Price.SalePrice : null,
-                        DiscountId = _.Price != null && _.Price.Discount != null && _.Price.Discount.Discount != null ? _.Price.Discount.Discount.DiscountId : (int?)null,
-                        DiscountName = _.Price != null && _.Price.Discount != null && _.Price.Discount.Discount != null ? _.Price.Discount.Discount.Name : null,
-                        LowerBoundPrice = _.PriceRange != null ? _.PriceRange.Lower.Price : (decimal?)null,
-                        UpperBoundPrice = _.PriceRange != null ? _.PriceRange.Upper.Price : (decimal?)null,
-                        LowerBoundSalePrice = _.PriceRange != null && _.PriceRange != null ? _.PriceRange.Lower.SalePrice : null
-
-                    }
-                ));
+            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ConfiguredProduct, ConfiguredProduct>();
+                
 
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductPrice, ProductPrice>();
                 //.ForMember(x => x.SalePrice, op => op.MapFrom(x => x.SalePrice))
@@ -84,7 +72,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 
 
 
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductPriceRange, ProductPrice>();
+            //Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductPriceRange, ProductPrice>();
                 //.ForMember(x => x.LowerBoundPrice, op => op.MapFrom(x => x.Lower.Price))
                 //.ForMember(x => x.LowerBoundSalePrice, op => op.MapFrom(x => x.Lower.SalePrice))
                 //.ForMember(x => x.UpperBoundPrice, op => op.MapFrom(x => x.Upper.Price))
@@ -98,7 +86,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 //.ForMember(x => x.UpperBoundPrice, op => op.MapFrom(x => x.PriceRange == null ? 0 : x.PriceRange.Upper.Price));
 
 
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Product, Product>()
+            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Product, Product>();
                 //.ForMember(x => x.ProductName, op => op.MapFrom(x => x.Content.ProductName))
                 //.ForMember(x => x.ProductFullDescription, op => op.MapFrom(x => x.Content.ProductFullDescription))
                 //.ForMember(x => x.ProductShortDescription, op => op.MapFrom(x => x.Content.ProductShortDescription))
@@ -109,18 +97,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 //.ForMember(x => x.ProductImages, op => op.MapFrom(x => x.Content.ProductImages))
                 //.ForMember(x => x.IsPurchasable, op => op.MapFrom(x => x.PurchasableState.IsPurchasable))
                 //.ForMember(x => x.PurchasableMessage, op => op.MapFrom(x => x.PurchasableState.Messages))
-                 .ForMember(x => x.Price, op => op.MapFrom(_ =>
-                                                            new ProductPrice()
-                                                                {
-                                                                    Price = _.Price != null ? _.Price.Price : null,
-                                                                    SalePrice = _.Price != null ? _.Price.SalePrice : null,
-                                                                    DiscountId = _.Price != null && _.Price.Discount != null && _.Price.Discount.Discount != null ? _.Price.Discount.Discount.DiscountId : (int?) null,
-                                                                    DiscountName = _.Price != null && _.Price.Discount != null && _.Price.Discount.Discount != null ? _.Price.Discount.Discount.Name : null,
-                                                                    LowerBoundPrice = _.PriceRange != null ? _.PriceRange.Lower.Price : (decimal?) null,
-                                                                    UpperBoundPrice = _.PriceRange != null ? _.PriceRange.Upper.Price : (decimal?) null,
-                                                                    LowerBoundSalePrice = _.PriceRange != null && _.PriceRange != null ? _.PriceRange.Lower.SalePrice : null
+                 //.ForMember(x => x.Price, op => op.MapFrom(_ =>
+                 //                                           new ProductPrice()
+                 //                                               {
+                 //                                                   Price = _.Price != null ? _.Price.Price : null,
+                 //                                                   SalePrice = _.Price != null ? _.Price.SalePrice : null,
+                 //                                                   DiscountId = _.Price != null && _.Price.Discount != null && _.Price.Discount.Discount != null ? _.Price.Discount.Discount.DiscountId : (int?) null,
+                 //                                                   DiscountName = _.Price != null && _.Price.Discount != null && _.Price.Discount.Discount != null ? _.Price.Discount.Discount.Name : null,
+                 //                                                   LowerBoundPrice = _.PriceRange != null ? _.PriceRange.Lower.Price : (decimal?) null,
+                 //                                                   UpperBoundPrice = _.PriceRange != null ? _.PriceRange.Upper.Price : (decimal?) null,
+                 //                                                   LowerBoundSalePrice = _.PriceRange != null && _.PriceRange != null ? _.PriceRange.Lower.SalePrice : null
 
-                                                                }));
+                 //                                               }));
                 //)).AfterMap((dc, vm) =>
                 //{
                 //    vm.ProductImages.Product = vm;
