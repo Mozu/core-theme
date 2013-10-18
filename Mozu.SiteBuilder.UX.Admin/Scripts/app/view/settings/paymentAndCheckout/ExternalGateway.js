@@ -2,27 +2,29 @@
  * The discount editor view
  */
 Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
-    //extend: 'Taco.core.ux.form.Form',
     extend: 'Taco.core.ux.form.Form',
     requires: [],
-    //layout: {
-    //    type: 'vbox'
-      
-    //},
     cascadeChildTasks: true,
     padding: '0 0 20 0',
-    //margin: '10,0,10,10',
-
     header: null,
 
     initComponent: function () {
         this.header = null;
-
+        var externalGateway = Ext.clone(this.record.get('externalPaymentWorkflows'));
         var credFieldDefs = this.externalPayment.get('Credentials');
-            //credentialsSet = this.record.get('credentialsSet');
+        var gatewayType = this.externalPayment.get('Name').toUpperCase();
+        var credOriginalValues = [];
         
         this.items = [];
         this.credFields = [];
+        this.credValues = [];
+        
+        Ext.each(externalGateway, function (item) {
+            if (gatewayType == item['Name'].toUpperCase()) {
+                credOriginalValues = item['Credentials'];
+            }
+        });
+
         this.typeCheck = Ext.widget({
             xtype: 'checkbox',
             fieldLabel: this.externalPayment.get('Name'),
@@ -31,22 +33,27 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
             scope: this
         });
         
+        
         this.credPanel = Ext.widget({
             xtype: 'panel',
             hidden: !this.externalPayment.get('IsEnabled')
         });
 
-        
-        
         Ext.Array.each(credFieldDefs, function (fieldDef) {
-            var gateway = this.record.get('gateway'),
+            var value = '';
+            Ext.each(credOriginalValues, function (item) {
+                if (item.APIName == fieldDef.APIName) {
+                    value = item['Value'];
+                }
+            });
+            
                 credField = Ext.widget(
                 {
                     xtype: 'textfield',
                     fieldLabel: fieldDef.DisplayName,
                     name: fieldDef.APIName,
                     inputType: 'password',
-                    //value: gateway.credentialsSet && this.gatewayDefinition.getId() === gateway.gatewayDefinitionId ? '        ' : ''
+                    value: value
                 });
             this.credFields.push(credField);
             this.credPanel.add(credField);
