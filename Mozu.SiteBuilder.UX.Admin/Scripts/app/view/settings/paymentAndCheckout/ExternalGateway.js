@@ -46,7 +46,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
                     fieldLabel: fieldDef.DisplayName,
                     name: fieldDef.APIName,
                     inputType: 'password',
-                    value: gateway.credentialsSet && this.gatewayDefinition.getId() === gateway.gatewayDefinitionId ? '        ' : ''
+                    //value: gateway.credentialsSet && this.gatewayDefinition.getId() === gateway.gatewayDefinitionId ? '        ' : ''
                 });
             this.credFields.push(credField);
             this.credPanel.add(credField);
@@ -67,7 +67,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
     },
     beforeSave: function () {
         var me = this;
-        /*
+        
         var isDirty = false, val = {};
         Ext.each(me.credFields, function (field) {
             if (field.isDirty()) {
@@ -76,10 +76,8 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
             val[field.name] = field.getValue();
         });
         if (isDirty) {
-            me.record.set('credentials', val);
+            //debugger
+            //me.record.set('credentials', val);
         }
-        me.record.set('supportedCards', me.supportedCardsCbg.getValue().cards);
-        */
-
     }
 });

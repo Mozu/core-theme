@@ -36,6 +36,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
                     value: credentialsSet && this.gatewayDefinition.getId() === this.record.get('gateway')['gatewayDefinitionId'] ? '        ' : ''
                 });
             this.credFields.push(credField);
+            //this.credFields.add(credField);
             this.items.push(credField);
         }, this);
 
@@ -70,14 +71,14 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
                 ]
             });
         ;
-        this.items.push(this.supportedCardsCbg, this.paymentProcessingFlowTypeRg);
+        this.items.push(this.credFields, this.supportedCardsCbg, this.paymentProcessingFlowTypeRg);
 
         this.callParent(arguments);
     },
     initTitle: Ext.emptyFn,
     beforeSave: function () {
         var me = this;
-
+        
         var isDirty = false, val = {};
         Ext.each(me.credFields, function (field) {
             if (field.isDirty()) {
@@ -85,22 +86,14 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
             }
             val[field.name] = field.getValue();
         });
+
+        var gateway = Ext.clone(me.record.get('gateway'));
+       if (isDirty) {
+           gateway['credentials'] = val;
+       }
+
+        gateway['supportedCards'] = me.supportedCardsCbg.getValue().cards;
         
-        //debugger
-        if (isDirty) {
-            //me.record.set('credentials', val);
-            var gateway = me.record.get('gateway');
-            if (!gateway.credentials)
-                gateway.credentials  = {};
-
-            for (var index in val) {
-                console.log(index);
-                console.log(val[index]);
-                gateway.credentials[index] = val[index];
-            }
-        }
-        me.record.set('supportedCards', me.supportedCardsCbg.getValue().cards);
-
-
+        me.record.set('gateway', gateway);
     }
 });
