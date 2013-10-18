@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public AddressController(IAccountContactRepository accountContactRepository, IAddressValidationWebApiClient addressValidationWebApiClient)
         {
             _accountContactRepository = accountContactRepository;
-            _addressValidationWebApiClient = addressValidationWebApiClient;
+            _addressValidationWebApiClient = addressValidationWebApiClient.CloneWithApiContext(ctx => { ctx.SiteGroupId = null; ctx.SiteId = null; }).CloneWithoutUserClaims();
         }
 
 		[HttpGetRoute(UriTemplate = "read/accountcontact/?id={id}")]
@@ -86,7 +86,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Address = Mapper.Map<Core.Api.Contracts.Address>(contact)
             };
 
-            var list = (await _addressValidationWebApiClient.CloneWithoutUserClaims().ValidateAddress(req))
+            var list = (await _addressValidationWebApiClient.ValidateAddress(req))
                 .ReadAsSync()
                 .AddressCandidates.Select(x => Mapper.Map<Models.Contact>(x))
                 .ToList();
