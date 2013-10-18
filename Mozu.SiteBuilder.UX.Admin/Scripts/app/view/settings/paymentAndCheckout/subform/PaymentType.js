@@ -96,7 +96,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
             return;
         }
         var gateWayDef = this.gateWayDefinitionsCombo.findRecordByValue(this.gateWayDefinitionsCombo.getValue());
-        console.log(gateWayDef);
+        
         if (!gateWayDef) {
             return;
         }
