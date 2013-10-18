@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
         public Gateway Gateway { get; set; }
 
         /// <summary>
-        /// Corresponds to PaymentSettings.ExternalPaymentWorkflowDefinitions[]
+        /// Corresponds to PaymentSettings.ExternalPaymentWorkflowDefinitions
         /// </summary>
         [DataMember(Name = "externalPaymentWorkflows")]
         public List<DC.ExternalPaymentWorkflowDefinition> ExternalPaymentWorkflows { get; set; }

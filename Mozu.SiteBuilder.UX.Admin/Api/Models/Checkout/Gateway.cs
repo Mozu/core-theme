@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Newtonsoft.Json.Linq;
 using DC = Mozu.PaymentService.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
@@ -52,6 +53,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
         /// Corresponds to GatewayAccount.Credentials
         /// </summary>
         [DataMember(Name = "credentials")]
-        public List<DC.GatewayCredentialFieldValue> Credentials { get; set; }
+        public JObject Credentials { get; set; }
     }
 }

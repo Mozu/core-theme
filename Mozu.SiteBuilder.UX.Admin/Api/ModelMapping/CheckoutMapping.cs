@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout;
 using DCss = Mozu.SiteSettings.Order.Contracts;
 using DCp = Mozu.PaymentService.Contracts;
+using System;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -41,7 +43,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CountryCode, op => op.MapFrom(dc => dc.GatewayAccount.CountryCode))
                 .ForMember(x => x.Id, op => op.MapFrom(dc => dc.GatewayAccount.Id))
                 .ForMember(x => x.GatewayDefinitionId, op => op.MapFrom(dc => dc.GatewayAccount.GatewayDefinitionId))
-                .ForMember(x => x.Credentials, op => op.MapFrom(dc => dc.GatewayAccount.CredentialFields))
+                .ForMember(x => x.Credentials, op => op.ResolveUsing(dc => {
+                    var creds = new JObject();
+                    foreach (var field in dc.GatewayAccount.CredentialFields)
+                        creds.Add(field.Name, (JToken)field.Value);
+                    return creds;
+                }))
                 ;
 
 
@@ -76,17 +83,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.UseOverridePriceToCalculateDiscounts, op => op.Ignore())
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 ;
+
             Mapper.CreateMap<Gateway, DCss.Gateway>()
                 .ForMember(dc => dc.AreGatewayCredentialFieldsSet, op => op.MapFrom(x => x.AreGatewayCredentialFieldsSet))
                 .ForMember(dc => dc.SupportedCards, op => op.MapFrom(x => x.SupportedCards))
                 .ForMember(dc => dc.GatewayDefinition, op => op.Ignore())
                 .ForMember(dc => dc.GatewayAccount, op => op.ResolveUsing(x => {
-                    return new DCp.GatewayAccount {
+                    var account = new DCp.GatewayAccount {
                         Id = x.Id,
                         IsActive = x.IsActive,
-                        CountryCode = x.CountryCode,
-                        CredentialFields = x.Credentials
+                        CountryCode = x.CountryCode ?? "us",
+                        CredentialFields = new List<DCp.GatewayCredentialFieldValue>()
                     };
+
+                    Action<KeyValuePair<string, Newtonsoft.Json.Linq.JToken>> foo = cred => account.CredentialFields.Add(new DCp.GatewayCredentialFieldValue { Name = cred.Key, Value = (string)cred.Value });
+                    if (x.Credentials != null && x.Credentials.HasValues)
+                    {
+                        foreach (var cred in x.Credentials)
+                            account.CredentialFields.Add(new DCp.GatewayCredentialFieldValue { Name = cred.Key, Value = (string)cred.Value });
+                    }
+
+                    return account;
                 }))
                 ;
 
