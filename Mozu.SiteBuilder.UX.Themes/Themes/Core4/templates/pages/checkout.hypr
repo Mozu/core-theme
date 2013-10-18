@@ -28,7 +28,7 @@
 
     <div class="mz-l-column" id="checkout-rightcol">
         
-        <div class="mz-checkoutform-step mz-checkoutform-ordersummary" id="order-summary">
+        <div class="mz-formstep mz-checkoutform-ordersummary" id="order-summary">
             {% include "modules/checkout/order-summary" %}
         </div>
 
@@ -44,19 +44,19 @@
 
     <div class="mz-l-column">
 
-        <div class="mz-checkoutform-step mz-checkoutform-shippingaddress" id="step-shipping-address">
+        <div class="mz-formstep mz-checkoutform-shippingaddress" id="step-shipping-address">
             {% include "modules/checkout/step-shipping-address" %}
         </div>
 
-        <div class="mz-checkoutform-step mz-checkoutform-shippingmethod" id="step-shipping-method">
+        <div class="mz-formstep mz-checkoutform-shippingmethod" id="step-shipping-method">
             {% include "modules/checkout/step-shipping-method" %}
         </div>
 
-        <div class="mz-checkoutform-step mz-checkoutform-paymentinfo" id="step-payment-info">
+        <div class="mz-formstep mz-checkoutform-paymentinfo" id="step-payment-info">
             {% include "modules/checkout/step-payment-info" %}
         </div>
 
-        <div class="mz-checkoutform-step mz-checkoutform-review" id="step-review">
+        <div class="mz-formstep mz-checkoutform-review" id="step-review">
             {% include "modules/checkout/step-review" %}
         </div>
 

@@ -194,6 +194,7 @@ var ApiReference = (function () {
             },
             configure: {
                 verb: 'POST',
+                includeUserClaims: true,
                 template: '{+ProductService}{ProductCode}/configure{?includeOptionDetails}',
                 defaultParams: {
                     includeOptionDetails: true
@@ -202,6 +203,7 @@ var ApiReference = (function () {
             },
             'add-to-cart': {
                 verb: 'POST',
+                includeUserClaims: true,
                 includeSelf: {
                     asProperty: 'Product'
                 },

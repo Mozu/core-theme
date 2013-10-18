@@ -3155,7 +3155,7 @@
 
             parser.on('end', function () {
                 if (addl) this.out.push(addlCtx);
-                if (addlKey && !addl) this.out.push(parser.checkMatch(addlKey));
+                if (addlKey && !addl) this.out.push(parser.checkMatch(addlKey.split('.')));
                 this.out.push(opts.filename || null);
             });
 

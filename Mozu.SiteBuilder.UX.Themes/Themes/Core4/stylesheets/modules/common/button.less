@@ -2,6 +2,7 @@
     .border-radius(4px);
     background: #eee;
     padding: @gutter/4 @gutter/2;
+    min-width: 64px;
     &:hover {
         background: #e3e3e3;
     }
@@ -18,4 +19,9 @@
 .mz-button-large {
     font-size: @fontSizeLarge;
     padding: @gutter/2 @gutter;
+}
+.is-loading .mz-button {
+    background: #eee url('/resources/images/button-loading.gif') no-repeat 50% 50%;
+    border-color: #eee;
+    color: transparent;
 }

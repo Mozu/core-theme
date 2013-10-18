@@ -390,6 +390,7 @@
     <Content Include="Themes\Core4\scripts\modules\views-messages.js" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-container.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-sidebar.less" />
+    <None Include="Themes\Core4\stylesheets\modules\common\address-summary.less" />
     <Content Include="Themes\Core4\stylesheets\modules\faceting-form.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-tiles.less" />
     <Content Include="Themes\Core4\stylesheets\base\normalize.less" />
@@ -409,6 +410,8 @@
     <Content Include="Themes\Core4\stylesheets\modules\common\icon.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\message-bar.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-pagewrapper.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\common\form-step.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\common\form-field-group.less" />
     <None Include="Themes\Core4\stylesheets\modules\page-header\store-branding.less" />
     <Content Include="Themes\Core4\scripts\modules\backbone-mozu-validation.js" />
     <Content Include="Themes\Core4\scripts\modules\backbone-mozu-model.js" />
@@ -567,6 +570,7 @@
     <Content Include="Themes\Core3\theme.json" />
     <Content Include="Themes\Core4\stylesheets\state\is-disabled.less" />
     <Content Include="Themes\Core4\templates\modules\page-header\store-branding.hypr" />
+    <Content Include="Themes\Core4\stylesheets\state\fades-in.less" />
     <None Include="Themes\Core4\templates\modules\product\faceted-products.hypr" />
     <Content Include="Themes\Core4\templates\modules\product\product-options.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\checkout\billing-address-form.hypr.live">
