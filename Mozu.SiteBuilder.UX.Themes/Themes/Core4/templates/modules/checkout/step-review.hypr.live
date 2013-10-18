@@ -1,7 +1,7 @@
-﻿    <h3 class="mz-checkoutform-stepheader">
+﻿    <h3 class="mz-formstep-header">
         Review & Place Order
     </h3>
-    <div class="mz-checkoutform-stepbody">
+    <div class="mz-formstep-body">
         {% if Model.IsReady %}
             <p class="mz-desc">Please review all of the information on this page and, if necessary, make changes before placing your order.</p>
 
@@ -36,7 +36,7 @@
                 {% endif %}
             {% endif %}
 
-            <div class="mz-checkoutform-nextstep">
+            <div class="mz-formstep-next">
                 <button type="button" class="mz-button" data-mz-action="submit">Place Order</button>
             </div>
         {% endif %}

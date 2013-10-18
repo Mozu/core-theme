@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-10-17
+ * Mozu JavaScript SDK - v0.1.0 - 2013-10-18
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1526,6 +1526,7 @@
                         },
                         configure: {
                             verb: "POST",
+                            includeUserClaims: true,
                             template: "{+ProductService}{ProductCode}/configure{?includeOptionDetails}",
                             defaultParams: {
                                 includeOptionDetails: true
@@ -1534,6 +1535,7 @@
                         },
                         "add-to-cart": {
                             verb: "POST",
+                            includeUserClaims: true,
                             includeSelf: {
                                 asProperty: "Product"
                             },
@@ -1999,7 +2001,7 @@
                     setServiceUrls: function(urls) {
                         ApiReference.urls = urls;
                     },
-                    getServiceUrls: function(urls) {
+                    getServiceUrls: function() {
                         return utils.extend({}, ApiReference.urls);
                     },
                     currency: "usd",

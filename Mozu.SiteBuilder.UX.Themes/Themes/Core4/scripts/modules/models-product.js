@@ -73,20 +73,13 @@
         }
     }),
 
-    ProductContent = Backbone.MozuModel.extend({
-        helpers: ['MainImage'],
-        MainImage: function () {
-            var imgs = this.get("ProductImages"),
-                img = imgs && imgs[0];
-            return img || { ImageUrl: 'http://placehold.it/160&text=Missing+Photo' }
-        }
-    }),
+    ProductContent = Backbone.MozuModel.extend({}),
 
     Product = Backbone.MozuModel.extend({
         mozuType: 'product',
         idAttribute: 'ProductCode',
         handlesMessages: true,
-        helpers: ['hasPriceRange'],
+        helpers: ['MainImage'],
         defaults: {
             PurchasableState: {},
             Quantity: 1
@@ -112,8 +105,10 @@
             this.set({ Url: "/product/" + this.get("ProductCode") });
             this.lastConfiguration = [];
         },
-        hasPriceRange: function() {
-            return !!this.apiModel.prop('PriceRange');
+        MainImage: function () {
+            var imgs = this.get('Content').get("ProductImages"),
+                img = imgs && imgs[0];
+            return img || { ImageUrl: 'http://placehold.it/160&text=Missing+Photo' }
         },
         getConfiguredOptions: function() {
             return _.invoke(this.get("Options").filter(function(opt) {

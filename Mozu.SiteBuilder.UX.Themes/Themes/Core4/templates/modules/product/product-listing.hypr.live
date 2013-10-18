@@ -5,7 +5,7 @@
         <li class="mz-productlisting-item">
             <div class="mz-productlisting-image">
                 <a href="{{prod.Url}}">
-                    <img src="{{prod.Content.MainImage.ImageUrl}}?size=160" />
+                    <img src="{{prod.MainImage.ImageUrl}}?size=160" />
                 </a>
             </div>
             <div class="mz-productlisting-info">

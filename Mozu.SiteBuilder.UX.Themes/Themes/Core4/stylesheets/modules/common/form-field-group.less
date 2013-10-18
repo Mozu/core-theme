@@ -1,0 +1,44 @@
+﻿.mz-formfieldgroup {
+    display: table;
+    .mz-formfieldgroup-row {
+        display: table-row;
+    }
+    .mz-formfieldgroup-cell {
+        display: table-cell;
+        padding-right: @gutter/2;
+        padding-bottom: @gutter/2;
+        label {
+            text-align: right;
+            display: block;
+        }
+    }
+    label {
+        input[type="radio"],
+        input[type="checkbox"] {
+            display: inline-block;
+            margin-right: @gutter/4;
+        }
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="tel"],
+    input[type="email"],
+    select {
+        width: 220px;
+        box-sizing: border-box;
+        &.is-invalid {
+            background-color: @errorBackground;
+        }
+        &.mz-formfieldgroup-halfsize {
+            width: 100px;
+            margin-right: 10px;
+        }
+    }
+    .mz-validation-message {
+        color: @errorText;
+        font-size: @fontSizeSmall;
+    }
+    &.mz-formfieldgroup-singlefield {
+        margin-bottom: @gutter/2;
+    }
+}

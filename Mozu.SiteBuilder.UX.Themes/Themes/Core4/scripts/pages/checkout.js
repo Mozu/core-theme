@@ -33,7 +33,7 @@
             this.model.next();
         },
         render: function () {
-            this.$el.removeClass('mz-stepstatus-new mz-stepstatus-incomplete mz-stepstatus-complete mz-stepstatus-invalid').addClass('mz-stepstatus-' + this.model.stepStatus());
+            this.$el.removeClass('is-new is-incomplete is-complete is-invalid').addClass('is-' + this.model.stepStatus());
             Backbone.MozuView.prototype.render.apply(this, arguments);
             this.resize();
         },
@@ -215,7 +215,7 @@
                 }),
                 
                 reviewPanel: new ReviewOrderView({
-                    el: $('step-review'),
+                    el: $('#step-review'),
                     model: checkoutModel
                 }),
                 messageView: messageViewFactory({

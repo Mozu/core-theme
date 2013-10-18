@@ -1,13 +1,12 @@
-    <h3 class="mz-checkoutform-stepheader">
+    <h3 class="mz-formstep-header">
         Shipping Method
-        <button class="mz-button" data-mz-action="edit">Edit</button>
+        <button class="mz-button mz-formstep-edit" data-mz-action="edit">Edit</button>
     </h3>
-    <div class="mz-checkoutform-stepbody">
-        <p class="mz-desc">How to send it?</p>
-        <div class="mz-completed-summary">
+    <div class="mz-formstep-body">
+        <div class="mz-formstep-summary">
             <strong>{{ Model.ShippingMethodName }}</strong> ({{ Model.Price|currency }})
         </div>
-        <div class="mz-formfieldgroup">
+        <div class="mz-formstep-fields mz-formfieldgroup">
             {% if Model.AvailableShippingMethods %}
                 {% for method in Model.AvailableShippingMethods %}
                     <div>
@@ -21,7 +20,7 @@
             {% else %}
                 <p>Sorry, no shipping methods are available.</p>
             {% endif %}
-            <div class="mz-checkoutform-nextstep">
+            <div class="mz-formstep-next">
                 <button type="button" class="mz-button" data-mz-action="next">Next</button>
             </div>
         </div>

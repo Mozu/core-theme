@@ -17,9 +17,14 @@
                     }
                 });
                 me.set("orderId", order.id);
+                if (me.apiModel) me.apiModel.on('action', function (name, data) {
+                    data.orderId = order.id;
+                });
             },
             calculateStepStatus: function () {
                 // override this!
+                var herp = this.validate();
+                if (herp) console.log(herp);
                 var newStepStatus = this.isValid() ? 'complete' : 'invalid';
                 this.stepStatus(newStepStatus);
             },
@@ -40,16 +45,6 @@
                 if (this.submit()) this.isLoading(true);
             }
         }),
-
-        //ShippingPhone = AddressModels.PhoneNumbers.extend({
-        //    initialize: function () {
-        //        if (!this.validation) this.validation = {};
-        //        this.validation.Home = {
-        //            required: true,
-        //            msg: genericMessages.PhoneNumbers
-        //        };
-        //    }
-        //}),
 
         ShippingContact = CheckoutStep.extend({
             relations: {
@@ -82,6 +77,7 @@
                     });
                 }).ensure(function () {
                     me.isLoading(false);
+                    parent.isLoading(false);
                     me.calculateStepStatus();
                     parent.calculateStepStatus();
                 });
@@ -243,7 +239,7 @@
                 var me = this;
                 CheckoutStep.apply(this, arguments),
                 pciSettings = conf.pciSettings;
-                //if (!pciSettings) throw new ReferenceError('PCI Settings need to be set to complete checkout.');
+                if (!pciSettings) throw new ReferenceError('PCI Settings need to be set to complete checkout.');
 
                 pciSettings = $.extend({
                     framePath: "/../../Assets/pci_receiver.html",

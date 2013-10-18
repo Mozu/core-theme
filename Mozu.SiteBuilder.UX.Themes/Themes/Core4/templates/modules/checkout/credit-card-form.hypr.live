@@ -1,8 +1,8 @@
-﻿    <div class="mz-form-field-row">
-        <div class="mz-form-field-cell">
+﻿    <div class="mz-formfieldgroup-row">
+        <div class="mz-formfieldgroup-cell">
             <label for="mz-payment-credit-card-type">Card Type<span class="mz-required-field"> *</span>:</label>
         </div>
-        <div class="mz-form-field-cell">
+        <div class="mz-formfieldgroup-cell">
             <select id="mz-payment-credit-card-type" data-mz-value="Card.PaymentOrCardType">
                 <option></option>
                 <option value="VISA" {% if Model.Card.PaymentOrCardType == "VISA" %}selected="selected"{% endif %}>Visa</option>
@@ -13,30 +13,30 @@
             <span class="mz-validation-message" data-mz-validation-message-for="Card.PaymentOrCardType"</span>
         </div>
     </div>
-    <div class="mz-form-field-row">
-        <div class="mz-form-field-cell">
+    <div class="mz-formfieldgroup-row">
+        <div class="mz-formfieldgroup-cell">
             <label for="mz-payment-credit-card-number">Card Number<span class="mz-required-field"> *</span>:</label>
         </div>
-        <div class="mz-form-field-cell">
+        <div class="mz-formfieldgroup-cell">
             <input type="text" name="credit-card-number" id="mz-payment-credit-card-number" data-mz-value="Card.CardNumberPartOrMask" value="{{ Model.Card.CardNumberPartOrMask }}">
             <span class="mz-validation-message" data-mz-validation-message-for="Card.CardNumberPartOrMask"></span>
         </div>
     </div>
-    <div class="mz-form-field-row">
-        <div class="mz-form-field-cell">
+    <div class="mz-formfieldgroup-row">
+        <div class="mz-formfieldgroup-cell">
             <label for="mz-payment-credit-card-name">Name on Card<span class="mz-required-field"> *</span>:</label>
         </div>
-        <div class="mz-form-field-cell">
+        <div class="mz-formfieldgroup-cell">
             <input type="text" name="credit-card-name" id="mz-payment-credit-card-name" data-mz-value="Card.NameOnCard" value="{{ Model.Card.NameOnCard }}">
             <span class="mz-validation-message" data-mz-validation-message-for="Card.NameOnCard"></span>
         </div>
     </div>
-    <div class="mz-form-field-row">
-        <div class="mz-form-field-cell">
+    <div class="mz-formfieldgroup-row">
+        <div class="mz-formfieldgroup-cell">
             <label for="mz-payment-expiration-month">Expires<span class="mz-required-field"> *</span>:</label>
         </div>
-        <div class="mz-form-field-cell">
-            <select class="mz-half-size" id="mz-payment-expiration-month" name="expiration-month" data-mz-value="Card.ExpireMonth">
+        <div class="mz-formfieldgroup-cell">
+            <select class="mz-formfieldgroup-halfsize" id="mz-payment-expiration-month" name="expiration-month" data-mz-value="Card.ExpireMonth">
                 <option></option>
                 <option {% if Model.Card.ExpireMonth == "01" %}selected="selected"{% endif %} value="01">01 - January</option>
                 <option {% if Model.Card.ExpireMonth == "02" %}selected="selected"{% endif %} value="02">02 - February</option>
@@ -51,7 +51,7 @@
                 <option {% if Model.Card.ExpireMonth == "11" %}selected="selected"{% endif %} value="11">11 - November</option>
                 <option {% if Model.Card.ExpireMonth == "12" %}selected="selected"{% endif %} value="12">12 - December</option>
             </select>
-            <select class="mz-half-size" name="mz-payment-expiration-year" data-mz-value="Card.ExpireYear">
+            <select class="mz-formfieldgroup-halfsize" name="mz-payment-expiration-year" data-mz-value="Card.ExpireYear">
                 <option></option>
                 <option {% if Model.Card.ExpireYear == "2013" %}selected="selected"{% endif %} value="2013">2013</option>
                 <option {% if Model.Card.ExpireYear == "2014" %}selected="selected"{% endif %} value="2014">2014</option>
@@ -68,18 +68,18 @@
             <span class="mz-validation-message" data-mz-validation-message-for="Card.ExpireYear"></span>
         </div>
     </div>
-    <div class="mz-form-field-row">
-        <div class="mz-form-field-cell">
+    <div class="mz-formfieldgroup-row">
+        <div class="mz-formfieldgroup-cell">
             <label for="mz-payment-security-code">Security Code<span class="mz-required-field"> *</span>:</label>
         </div>
-        <div class="mz-form-field-cell">
-            <input type="text" name="security-code" id="mz-payment-security-code" class="mz-half-size" data-mz-value="Card.CVV" value="{{ Model.Card.CVV }}">
+        <div class="mz-formfieldgroup-cell">
+            <input type="text" name="security-code" id="mz-payment-security-code" class="mz-formfieldgroup-halfsize" data-mz-value="Card.CVV" value="{{ Model.Card.CVV }}">
             <span class="mz-validation-message" data-mz-validation-message-for="Card.CVV"></span>
         </div>
     </div>
-    <div class="mz-form-field-row">
-        <div class="mz-form-field-cell"></div>
-        <div class="mz-form-field-cell">
+    <div class="mz-formfieldgroup-row">
+        <div class="mz-formfieldgroup-cell"></div>
+        <div class="mz-formfieldgroup-cell">
             <label class="mz-inline"><input type="checkbox" name="save-card-info" data-mz-value="Card.IsCardInfoSaved" value="true" {% if Model.Card.IsCardInfoSaved %}checked="checked"{% endif %}> Save credit card information</label>
         </div>
     </div>
