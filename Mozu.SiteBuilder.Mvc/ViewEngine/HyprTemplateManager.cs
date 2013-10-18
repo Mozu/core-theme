@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 var vFile = _virtualPathProvider.GetThemeFileInfo(vpath, false);
                 if (vFile == null)
                 {
-                    throw new FileNotFoundException(string.Format( "invalid path",  vpath));
+                    throw new FileNotFoundException(string.Format( "invalid path [{0}]",  vpath),vpath );
                 }
                 path = vFile.FullPath;
             }
@@ -68,7 +68,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 var vFile = _virtualPathProvider.GetThemeFileInfo(vpath, false);
                 if (vFile == null)
                 {
-                    throw new InvalidOperationException(string.Format("invalid virtual path [{0}]", vpath));
+                    throw new InvalidOperationException(string.Format("template not found [{0}]", vpath));
                 }
                 path = vFile.FullPath;
             }

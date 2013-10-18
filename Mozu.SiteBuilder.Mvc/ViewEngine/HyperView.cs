@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Autofac;
+using Microsoft.FSharp.Core;
+using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.Mvc.Themes;
 using NDjango.Interfaces;
 
@@ -34,27 +36,21 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             var siteBuilderApiContext = viewContext.LifetimeScope.Resolve<ISiteBuilderApiContext >();
             var siteBuilderContext = viewContext.LifetimeScope.Resolve<ISiteBuilderContext>();
             var requestContext = new Dictionary<string, object>(viewContext.ViewData);
-            //  var authenticationHelper = new AuthenticationHelper(viewContext.HttpContext, provider: new CookieProvider(viewContext.HttpContext,Core.Settings.MozuConfigurationManager.Settings),  cookieName:null);
-            // var gcu = authenticationHelper.GetCurrentUser();
-            // var profile = authenticationHelper.GetCurrentProfileToken();
-
             var user = siteBuilderContext.User;
-
             requestContext["templateVariables"] = viewContext.HttpContext.Items["templateVariables"] = (System.Collections.Hashtable)viewContext.HttpContext.Items["templateVariables"] ?? new System.Collections.Hashtable(StringComparer.OrdinalIgnoreCase);
-         //   requestContext["Html"] = requestContext["html"] = html = new HtmlHelper(new ViewContext() { HttpContext = viewContext .HttpContext }, new ViewDataContainer() { ViewData = viewContext.ViewData });
             requestContext["_vc"] = viewContext;
             requestContext["_tw"] = writer;
-
-           
             requestContext["Model"] = requestContext["model"] = viewContext.ViewData.Model;
             if (viewContext.ParentActionViewContext != null)
             {
                 requestContext["PageModel"] = requestContext["pageModel"] = viewContext.ParentActionViewContext.ViewData.Model;
             }
-         
-            //requestContext["Templates"] = new TemplateLocator(html, this.TemplateManager);
+            else
+            {
+                requestContext["PageModel"] = viewContext.ViewData.Model;
+            }
             requestContext["SiteContext"] = requestContext["siteContext"] = siteBuilderContext;
-            requestContext["ThemeSettings"] = requestContext["themeSettings"] = ( siteBuilderContext.ThemeSettings ?? new ThemeRuntimeSettingsCollection()).AsDictionary();
+            requestContext["ThemeSettings"] = requestContext["themeSettings"] = siteBuilderContext.ThemeSettings;
             requestContext["PageContext"] = requestContext["pageContext"] = siteBuilderContext.PageContext;
             requestContext["User"] = requestContext["user"] = user;
             requestContext["true"] = true;
@@ -72,7 +68,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 var reader = templateManager.RenderTemplate(_mappedPath, requestContext);
                 var buffer = new char[4096];
                 int count = 0;
-               
+
                 while ((count = (await reader.ReadAsync(buffer, 0, buffer.Length))) > 0)
                 {
                     writer.Write(buffer, 0, count);
@@ -80,7 +76,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException("error in template " + this._virtualPath, ex);
+                throw new NDjango.Interfaces.RenderingError(  string.Format( "error in template [{0}]" ,this._virtualPath) , new FSharpOption<Exception>(ex));
             }
             await writer.FlushAsync();
             return true;

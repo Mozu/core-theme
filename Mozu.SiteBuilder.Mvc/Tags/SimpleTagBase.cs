@@ -130,8 +130,8 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     }
                     catch (Exception  ex )
                     {
-                        throw new NDjango.Interfaces.RenderingException(ex.Message, this.Token , null);
-                        
+                        throw new NDjango.Interfaces.RenderingException(ex.Message, this.Token, null);
+
                     }
                     
                     walker = new Walker(new FSharpOption<Walker>(walker), template.Nodes, walker.buffer, walker.bufferIndex, ctx);

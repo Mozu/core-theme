@@ -34,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
        
         private readonly IAuthenticationHelper _authHelper;
         private readonly ICookieProvider _cookieProvider;
-        private readonly IPciSettingsProvider _pciSettingsProvider;
+   
         private readonly IOrderWebApiClient _orderWebApiClient;
         private readonly IShippingSettingsWebApiClient _shippingSettingsWebApiClient;
         private readonly OrderStatusProvider _orderStatusProvider = new OrderStatusProvider();
@@ -42,12 +42,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //private static string _merchantId;
         private const string CookieName = "order";
 
-        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider, IPciSettingsProvider pciSettingsProvider, IOrderWebApiClient orderWebApiClient, IShippingSettingsWebApiClient shippingSettingsWebApiClient)
+        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider,  IOrderWebApiClient orderWebApiClient, IShippingSettingsWebApiClient shippingSettingsWebApiClient)
         {
           
             _authHelper = authHelper;
             _cookieProvider = cookieProvider;
-            _pciSettingsProvider = pciSettingsProvider;
+            
             _orderWebApiClient = orderWebApiClient;
             _shippingSettingsWebApiClient = shippingSettingsWebApiClient.CloneWithoutUserClaims();
         }
@@ -96,19 +96,27 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
 
+            var jOrder = Newtonsoft.Json.Linq.JObject.FromObject(model);
+
+            dynamic dOrder = jOrder;
 
             if (model.ShippingInfo != null && model.ShippingInfo.ShippingContact != null && model.ShippingInfo.ShippingContact.Address != null)
             {
-                ViewData["availableShippingMethods"] = _orderWebApiClient.GetAvailableShipmentMethods(id).Result.ReadAsSync();
+                dOrder.AvailableShippingMethods = (await _orderWebApiClient.GetAvailableShipmentMethods(id)).ReadAsSync(); 
+                //ViewData["availableShippingMethods"] = _orderWebApiClient.GetAvailableShipmentMethods(id).Result.ReadAsSync();
+            }
+            else
+            {
+                dOrder.AvailableCountries =  (await GetShippableCountries()).Select(x => new { code = x.Key, name = x.Value } as object).ToList();
             }
 
 
 
-            ViewData["pciSettings"] = new CheckoutPciSettings { apiBase = _pciSettingsProvider.GetPaymentApiBase() };
-            ViewData["availableCountries"] = (await GetShippableCountries()).Select(x => new { code = x.Key, name = x.Value } as object).ToList();
 
 
-            return View("checkout", model);
+
+
+            return View("checkout", jOrder);
         }
 
 

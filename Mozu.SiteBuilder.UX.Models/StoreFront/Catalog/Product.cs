@@ -39,8 +39,21 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         [DataMember(EmitDefaultValue = false, IsRequired = false)]
         public new List<Category> Categories { get; set; }
 
-    }
 
+        [DataMember(EmitDefaultValue = false)]
+        public new ProductPrice Price { get; set; }
+
+        [DataMember(EmitDefaultValue = false)]
+        public new ProductPriceRange PriceRange { get; set; }
+
+
+
+    }
+    //public class ProductPrice: Mozu.ProductRuntime.Contracts.ProductPrice
+    //{
+        
+    //}
+   
 
 
 
@@ -531,262 +544,26 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         [IgnoreDataMember()]
         public new  Category ParentCategory { get; set; }
     }
-    public class ProductPrice2 : Mozu.ProductRuntime.Contracts.ProductPrice
+  
+
+    public class ProductPriceRange : Mozu.ProductRuntime.Contracts.ProductPriceRange
     {
-        //public bool HasRange
-        //{
-        //    get
-        //    {
-        //        return this.LowerBoundPrice.GetValueOrDefault(-1) > 0 || this.LowerBoundSalePrice.GetValueOrDefault(-1) > 0 || this.UpperBoundPrice.GetValueOrDefault(-1) > 0;
-        //    }
-        //}
-        //[DataMember(EmitDefaultValue = false, Name = "hasSalePrice")]
-        //public bool HasSalePrice
-        //{
-        //    get
-        //    {
-        //        return this.LowerBoundSalePrice.GetValueOrDefault(-1) > 0 || this.SalePrice.GetValueOrDefault(-1) > 0;
-        //    }
-        //}
+      
 
-        //[DataMember(EmitDefaultValue = false, Name = "hasDiscount")]
-        //public bool HasDiscount
-        //{
-        //    get
-        //    {
-        //        return this.DiscountId.GetValueOrDefault(-1) > 0;
-        //    }
-        //}
+        [DataMember]
+        public virtual new ProductPrice Lower { get; set; }
 
-
-        //[DataMember(EmitDefaultValue = false, Name = "offerPrice")]
-        //public decimal? OfferPrice
-        //{
-        //    get
-        //    {
-        //        if (this.HasRange)
-        //        {
-        //            if (this.HasSalePrice)
-        //            {
-        //                return this.LowerBoundSalePrice;
-        //            }
-        //            else
-        //            {
-        //                return this.LowerBoundPrice;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if (this.HasSalePrice)
-        //            {
-        //                return this.SalePrice;
-        //            }
-        //            else
-        //            {
-        //                return this.Price;
-        //            }
-        //        }
-        //    }
-        //}
+        [DataMember]
+        public virtual new ProductPrice Upper { get; set; }
     }
+
 
     [DataContract()]
     public class ProductPrice : Mozu.ProductRuntime.Contracts.ProductPrice
     {
-        //[DataMember(EmitDefaultValue = false, Name = "price")]
-        //public decimal? Price { get; set; }
-        //[DataMember(EmitDefaultValue = false, Name = "salePrice")]
-        //public decimal? SalePrice { get; set; }
-        [DataMember(EmitDefaultValue = false)]
-        public int? DiscountId { get; set; }
-        [DataMember(EmitDefaultValue = false)]
-        public string DiscountName { get; set; }
-        [DataMember(EmitDefaultValue = false)]
-        public DateTime? DiscountEndDate { get; set; }
-        [DataMember(EmitDefaultValue = false)]
-        public decimal? LowerBoundPrice { get; set; }
-        [DataMember(EmitDefaultValue = false)]
-        public decimal? LowerBoundSalePrice { get; set; }
-        [DataMember(EmitDefaultValue = false)]
-        public decimal? UpperBoundPrice { get; set; }
-        [DataMember(EmitDefaultValue = false)]
-        public bool HasRange
+        public bool OnSale
         {
-            get
-            {
-                return this.LowerBoundPrice.GetValueOrDefault(-1) > 0 || this.LowerBoundSalePrice.GetValueOrDefault(-1) > 0 || this.UpperBoundPrice.GetValueOrDefault(-1) > 0;
-            }
-        }
-        [DataMember(EmitDefaultValue = false)]
-        public bool HasSalePrice
-        {
-            get
-            {
-                return this.LowerBoundSalePrice.GetValueOrDefault(-1) > 0 || this.SalePrice.GetValueOrDefault(-1) > 0;
-            }
-        }
-
-        [DataMember(EmitDefaultValue = false)]
-        public bool HasDiscount
-        {
-            get
-            {
-                return this.DiscountId.GetValueOrDefault(-1) > 0;
-            }
-        }
-
-
-        [DataMember(EmitDefaultValue = false)]
-        public decimal? OfferPrice
-        {
-            get
-            {
-                if (this.HasRange)
-                {
-                    if (this.HasSalePrice)
-                    {
-                        return this.LowerBoundSalePrice;
-                    }
-                    else
-                    {
-                        return this.LowerBoundPrice;
-                    }
-                }
-                else
-                {
-                    if (this.HasSalePrice)
-                    {
-                        return this.SalePrice;
-                    }
-                    else
-                    {
-                        return this.Price;
-                    }
-                }
-            }
+            get { return this.SalePrice.HasValue && this.Price.HasValue && this.SalePrice.Value != this.Price.Value; }
         }
     }
-
-    //public class Product2 : ModelBase, IModelMetadataParentContainer
-    //{
-    //    [AlternateName("detailsUrl")]
-    //    public string Url
-    //    {
-    //        get
-    //        {
-    //            return "/product/" + this.ProductCode;
-
-    //        }
-    //    }
-
-    //    [AlternateName("code")]
-    //    [AdditionalMetadata("fieldName", "productCode")]
-    //    [AdditionalMetadata("showLabel", false)]
-    //    public string ProductCode { get; set; }
-
-    //    public string BaseProductCode { get; set; }
-
-    //    [AlternateName("name")]
-    //    [AdditionalMetadata("fieldName", "productName")]
-    //    [AdditionalMetadata("showLabel", true)]
-    //    [AdditionalMetadata("fieldLabel", "Product Name Edit")]
-    //    [AdditionalMetadata("fieldType", "text")]
-    //    public string ProductName { get; set; }
-
-    //    [AlternateName("fullDescription")]
-    //    [AdditionalMetadata("fieldName", "productFullDescription")]
-    //    [AdditionalMetadata("showLabel", false)]
-    //    [AdditionalMetadata("fieldType", "html")]
-    //    public string ProductFullDescription { get; set; }
-
-        
-        
-    //    [AdditionalMetadata("fieldName", "productShortDescription")]
-    //    [AdditionalMetadata("showLabel", false)]
-    //    [AdditionalMetadata("fieldType", "html")]
-    //    public string ProductShortDescription { get; set; }
-
-    //    public string MetaTagTitle { get; set; }
-    //    public string MetaTagDescription { get; set; }
-    //    public string MetaTagKeywords { get; set; }
-
-    //    [AdditionalMetadata("fieldName", "seoFriendlyUrl")]
-    //    public string SEOFriendlyUrl { get; set; }
-
-    //    [AlternateName("images")]
-    //    [AdditionalMetadata("fieldType", "productImage")]
-    //    [AdditionalMetadata("fieldName", "productImages")]
-    //    public ProductImageCollection ProductImages { get; set; }
-    //    [AlternateName("isPurchasable")]
-    //    public bool IsPurchasable { get; set; }
-    //    public string PurchasableMessage { get; set; }
-    //    public bool? IsActive { get; set; }
-
-
-    //    public ProductPrice Price { get; set; }
-
-    //    public string ProductType { get; set; }
-    //    public bool IsTaxable { get; set; }
-    //    public int? AttributeSetId { get; set; }
-    //    public bool IsRecurring { get; set; }
-    //    public bool ManageStock { get; set; }
-    //    public bool IsBackOrderAllowed { get; set; } 
-    //    public int? StockOnHand { get; set; }
-    //    public bool IsHiddenWhenOutOfStock { get; set; }
-    //    public DateTime CreateDate { get; set; }
-    //    public long? UPC { get; set; }
-    //    public List<Category> Categories { get; set; }
-    //    public bool FreeShipping { get; set; }
-    //    public UnitOfMeasure PackageHeight { get; set; }
-    //    public UnitOfMeasure PackageWidth { get; set; }
-    //    public UnitOfMeasure PackageLength { get; set; }
-    //    public UnitOfMeasure PackageWeight { get; set; }
-    //    public List<ProductAttribute> Attributes { get; set; }
-    //    public List<ProductOption> Options { get; set; }
-       
-    //    private Dictionary<string, ModelMetadata> _metaDataDictionary;
-
-    //    public ModelMetadata GetModelMetadata(string propertyName)
-    //    {
-    //        if (_metaDataDictionary == null)
-    //        {
-    //            _metaDataDictionary = new Dictionary<string, ModelMetadata>();
-    //        }
-
-    //        ModelMetadata metaData;
-
-    //        if (_metaDataDictionary.TryGetValue(propertyName, out metaData))
-    //        {
-    //            return metaData;
-    //        }
-
-    //        var prop = this.GetAlternateNamedProperty(propertyName);
-    //        if (prop == null)
-    //        {
-    //            _metaDataDictionary[propertyName] = null;
-    //            return null;
-    //        }
-
-    //        metaData = ModelMetadataProviders.Current.GetMetadataForProperty(() => prop.GetValue(this, null), this.GetType(), prop.Name );
-
-    //        if ( !metaData.AdditionalValues.ContainsKey ("fieldType") )
-    //        {
-    //            metaData.AdditionalValues["fieldType"] = "text";
-    //        }
-    //        if (!metaData.AdditionalValues.ContainsKey("fieldName"))
-    //        {
-    //            //todo: turn off editing.
-    //        }
-
-    //        //mmd.AdditionalValues["productId"] = this.ProductId;
-    //        metaData.AdditionalValues["productCode"] = this.ProductCode;
-    //        metaData.AdditionalValues["entityType"] = "product";
-
-    //        _metaDataDictionary[propertyName] = metaData;
-    //        return metaData;
-    //    }
-
-
-       
-    //}
 }

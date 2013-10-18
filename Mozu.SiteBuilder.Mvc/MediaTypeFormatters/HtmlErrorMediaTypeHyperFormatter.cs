@@ -50,11 +50,16 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 if (tempModel.TryGetValue("InnerException", out obj))
                 {
                     tempModel = (System.Web.Http.HttpError)obj;
-                    if (tempModel["ExceptionType"] as string == wrapperException)
+                    var exType = tempModel["ExceptionType"] as string;
+                    if (exType == wrapperException)
                     {
                         model = (System.Web.Http.HttpError) tempModel["InnerException"];
                         break;
                         
+                    }else if (exType != null && exType.StartsWith("NDjango"))
+                    {
+                        model = tempModel;
+                        break;
                     }
 
                     

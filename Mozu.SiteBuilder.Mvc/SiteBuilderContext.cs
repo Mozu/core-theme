@@ -133,7 +133,12 @@ namespace Mozu.SiteBuilder.Mvc
 
         #region ISiteBuilderContext Members
 
-        private readonly Lazy<string> _appId = new Lazy<string>(() => LightweightAppClaims.CreateForPublicStorefront().ToAccessToken());
+        private readonly Lazy<string> _appId = new Lazy<string>(() =>
+            {
+                var appClaim = LightweightAppClaims.CreateForPublicStorefront();
+                appClaim.RequiresUserClaims = false;
+                return appClaim.ToAccessToken();
+            });
         private JObject _apiClientContext;
         private EditModes? WidgetEditMode { get; set; }
 
@@ -166,6 +171,7 @@ namespace Mozu.SiteBuilder.Mvc
                     urls["SearchService"] = _configSettings.AppSettings("service-url-ProductSearchWebApi");
                     urls["CmsService"] = _configSettings.AppSettings("service-url-DocumentListWebApi");
                     urls["ReferenceService"] = _configSettings.AppSettings("service-url-ReferenceDataWebApi");
+                    urls["PaymentService"] = _configSettings.AppSettings("service-url-StorefrontCardsWebApi");
                     _apiClientContext["header"] = header;
 
                     _apiClientContext["urls"] = urls;
