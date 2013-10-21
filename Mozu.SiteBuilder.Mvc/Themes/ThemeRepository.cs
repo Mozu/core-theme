@@ -91,8 +91,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
         private Theme CreateTheme(string name, Stack<string> inheritChain)
         {
-            //if (_watchers == null)
-            //    InitializeFilesystemWatcher();
+            if (_watchers == null)
+                InitializeFilesystemWatcher();
             
             // make sure that a theme isn't somehow trying to inherit from itself.
             if (inheritChain.Contains(name, StringComparer.OrdinalIgnoreCase))
