@@ -23,6 +23,7 @@ using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.Checkout;
 using Mozu.SiteSettings.Shipping.Contracts.Clients;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -107,7 +108,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             else
             {
-                dOrder.AvailableCountries =  (await GetShippableCountries()).Select(x => new { code = x.Key, name = x.Value } as object).ToList();
+                dOrder.AvailableCountries = (await GetShippableCountries()).Select(x => new JObject { new JProperty("code", x.Key), new JProperty("name", x.Value) }).ToList();
             }
 
 
