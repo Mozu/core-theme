@@ -99,11 +99,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var jOrder = Newtonsoft.Json.Linq.JObject.FromObject(model);
 
-            dynamic dOrder = jOrder;
+           // dynamic dOrder = jOrder;
 
             if (model.ShippingInfo != null && model.ShippingInfo.ShippingContact != null && model.ShippingInfo.ShippingContact.Address != null)
             {
-                dOrder.AvailableShippingMethods = (await _orderWebApiClient.GetAvailableShipmentMethods(id)).ReadAsSync(); 
+                var methods = (await _orderWebApiClient.GetAvailableShipmentMethods(id)).ReadAsSync();
+                var asm = JArray.FromObject(methods);
+                jOrder.Add("AvailableShippingMethods", asm);
                 //ViewData["availableShippingMethods"] = _orderWebApiClient.GetAvailableShipmentMethods(id).Result.ReadAsSync();
             }
             else
@@ -111,11 +113,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var countries = (await GetShippableCountries());
                 if (countries.Count > 0)
                 {
-                    dOrder.AvailableCountries = countries.Select(x => new JObject {new JProperty("code", x.Key), new JProperty("name", x.Value)}).ToList();
+                    var ac = new JArray(countries.Select(x => new JObject {new JProperty("code", x.Key), new JProperty("name", x.Value)}).ToArray());
+
+                    jOrder.Add("AvailableCountries", ac);
                 }
                 else
                 {
-                    dOrder.AvailableShippingMethods = new JArray(new int[0]);
+                    jOrder.Add("AvailableShippingMethods", new JArray(new int[0]));
                 }
             }
                 
