@@ -412,6 +412,7 @@
     <Content Include="Themes\Core4\stylesheets\layouts\l-pagewrapper.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\form-step.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\form-field-group.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\common\order-summary.less" />
     <None Include="Themes\Core4\stylesheets\modules\page-header\store-branding.less" />
     <Content Include="Themes\Core4\scripts\modules\backbone-mozu-validation.js" />
     <Content Include="Themes\Core4\scripts\modules\backbone-mozu-model.js" />
@@ -571,6 +572,8 @@
     <Content Include="Themes\Core4\stylesheets\state\is-disabled.less" />
     <Content Include="Themes\Core4\templates\modules\page-header\store-branding.hypr" />
     <Content Include="Themes\Core4\stylesheets\state\fades-in.less" />
+    <Content Include="Themes\Core4\templates\modules\common\order-summary.hypr.live" />
+    <Content Include="Themes\Core4\stylesheets\pages\checkout.less" />
     <None Include="Themes\Core4\templates\modules\product\faceted-products.hypr" />
     <Content Include="Themes\Core4\templates\modules\product\product-options.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\checkout\billing-address-form.hypr.live">
@@ -879,7 +882,7 @@
     </None>
     <None Include="Themes\Core4\templates\modules\checkout\comments-field.hypr.live" />
     <None Include="Themes\Core4\templates\modules\checkout\coupon-code-field.live" />
-    <None Include="Themes\Core4\templates\modules\checkout\order-summary.hypr.live" />
+    <None Include="Themes\Core4\templates\modules\checkout\checkout-order-summary.hypr.live" />
     <None Include="Themes\Core4\templates\modules\checkout\step-payment-info.hypr.live" />
     <None Include="Themes\Core4\templates\modules\checkout\step-review.hypr.live" />
     <None Include="Themes\Core4\templates\modules\checkout\step-shipping-address.hypr.live" />

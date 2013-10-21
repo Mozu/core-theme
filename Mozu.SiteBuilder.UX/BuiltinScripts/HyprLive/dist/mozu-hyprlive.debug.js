@@ -1,5 +1,5 @@
 /*! 
- * Mozu Hypr Live - v0.2.0 - 2013-10-18
+ * Mozu Hypr Live - v0.2.0 - 2013-10-21
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -3882,7 +3882,9 @@ var HyprLiveTemplate = function (precompiledTpl, swigTpl, path) {
 
     compiled = {},
     getHyprLiveTemplate = function (path) {
-        var lpath = path.toLowerCase();
+        var lpath = path.toLowerCase(),
+            tptText = LiveTemplates[lpath];
+        if (!tptText) throw new ReferenceError("HyprLive template \"" + lpath + "\" not found!");
         if (!(lpath in compiled)) {
             compiled[lpath] = new HyprLiveTemplate(HyprLive.engine.precompile(LiveTemplates[lpath], {
                 filename: path

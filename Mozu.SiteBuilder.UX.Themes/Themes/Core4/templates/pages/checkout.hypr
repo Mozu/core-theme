@@ -9,8 +9,6 @@
 {% require_script "pages/checkout" %}
 
 {% preload_json Model "checkout" %}
-{% preload_json ViewData.availableShippingMethods "shippingmethods" %}
-{% preload_json ViewData.pciSettings "pcisettings" %}
 
 <div class="mz-l-container">
     <h1 class="mz-pagetitle">
@@ -29,7 +27,7 @@
     <div class="mz-l-column" id="checkout-rightcol">
         
         <div class="mz-formstep mz-checkoutform-ordersummary" id="order-summary">
-            {% include "modules/checkout/order-summary" %}
+            {% include "modules/checkout/checkout-order-summary" %}
         </div>
 
         <div class="mz-checkoutform-couponcode" id="coupon-code-field" >

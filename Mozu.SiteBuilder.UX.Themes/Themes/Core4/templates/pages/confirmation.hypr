@@ -1,18 +1,16 @@
 ﻿{% extends "page" %}
 
-{% block Init %}
-	{% setTemplateVariables BodyTagClasses="mz-checkout-confirmation" %}
-	{% setTemplateVariables IsConfirmationPage="true" %}
-	{{ block.super }}
-{% endblock Init%}
+{% block title-tag-content %} Order Confirmation - {{block.super}} {% endblock title-tag-content %}
 
-{% block BodyContent %}
+{% block body-content %}
 
 
-<div id="mz-order-confirmation" class="mz-order-confirmation">
-	<h2>Order Confirmation</h2>
+<div class="mz-l-container">
+    <h1 class="mz-pagetitle">
+        Order Confirmation
+    </h1>
 
-	<p class="mz-desc">Thank you for your order!  You will receive email confirmation&hellip;</p>
+	<h4>Thank you for your order!  You will receive email confirmation.</h4>
 
 	<table id="mz-purchase-details" class="mz-purchase-details">
 		<thead>
@@ -221,9 +219,9 @@
 	</table>
 </div><!-- #order-confirmation -->
 
-{% endblock BodyContent %}
+{% endblock body-content %}
 
-{% block TrailingScripts %}
+{% block trailing-scripts %}
 	{{ block.super }}
 	{% if SiteContext.GoogleAnalyticsEnabled and SiteContext.GoogleAnalyticsEcommerceEnabled %}
 	<script>
@@ -238,7 +236,7 @@
 		'USA'
 	]);
 
-	{% for item in Model.items %}
+	{% for item in Model.Items %}
 	_gaq.push(['_addItem',
 		'{{ Model.OrderNumber }}',	
 		'{{ item.Product.ProductCode }}',
@@ -254,7 +252,7 @@
 	</script>
 	{% endif %}
 
-{% endblock TrailingScripts %}
+{% endblock trailing-scripts %}
 
 		
 		

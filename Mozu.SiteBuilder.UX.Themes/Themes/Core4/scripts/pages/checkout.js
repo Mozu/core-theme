@@ -43,10 +43,12 @@
     });
 
     var OrderSummaryView = Backbone.MozuView.extend({
-        templateName: 'modules/checkout/order-summary',
+        templateName: 'modules/checkout/checkout-order-summary',
         editCart: function () {
             window.location = "/cart";
-        }
+        },
+        // override loading button changing at inappropriate times
+        handleLoadingChange: function () { }
     });
 
     var ShippingAddressView = CheckoutStepView.extend({
@@ -117,6 +119,10 @@
 
     var CouponView = Backbone.MozuView.extend({
         templateName: 'modules/checkout/coupon-code-field',
+        handleLoadingChange: function (isLoading) {
+            // override adding the isLoading class so the apply button 
+            // doesn't go loading whenever other parts of the order change
+        },
         autoUpdate: [
             'CouponCode'
         ],
@@ -124,7 +130,13 @@
             'CouponCode'
         ],
         addCoupon: function (e) {
-            this.model.addCoupon();
+            // add the default behavior for loadingchanges
+            // but scoped to this button alone
+            var self = this;
+            this.$el.addClass('is-loading');
+            this.model.addCoupon().ensure(function() {
+                self.$el.removeClass('is-loading');
+            });
         },
         handleEnterKey: function () {
             this.addCoupon();
@@ -162,28 +174,25 @@
     $(document).ready(function () {
 
         var $checkoutView = $('#checkout-form'),
-            checkoutData = require.mozuData('checkout'),
-            shippingMethodData = require.mozuData('shippingmethods'),
+            checkoutData = require.mozuData('checkout');
 
 
         // some defaults to overcome backbone not initializing models right
         // when there isn't an object for them. TODO: make unnecessary
-        checkoutData = $.extend(true, {
-            ShippingInfo: {
-                AvailableShippingMethods: $.isArray(shippingMethodData) ? shippingMethodData : [],
-                ShippingContact: {
-                    Address: {},
-                    PhoneNumbers: {}
-                }
-            },
-            BillingInfo: {
-                pciSettings: require.mozuData('pcisettings'),
-                BillingContact: {
-                    Address: {},
-                    PhoneNumbers: {}
-                }
-            }
-        }, checkoutData);
+        //checkoutData = $.extend(true, {
+        //    ShippingInfo: {
+        //        ShippingContact: {
+        //            Address: {},
+        //            PhoneNumbers: {}
+        //        }
+        //    },
+        //    BillingInfo: {
+        //        BillingContact: {
+        //            Address: {},
+        //            PhoneNumbers: {}
+        //        }
+        //    }
+        //}, checkoutData);
 
         var checkoutModel = new CheckoutModels.CheckoutPage(checkoutData),
             checkoutViews = {

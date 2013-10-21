@@ -6,7 +6,9 @@
 
     compiled = {},
     getHyprLiveTemplate = function (path) {
-        var lpath = path.toLowerCase();
+        var lpath = path.toLowerCase(),
+            tptText = LiveTemplates[lpath];
+        if (!tptText) throw new ReferenceError("HyprLive template \"" + lpath + "\" not found!");
         if (!(lpath in compiled)) {
             compiled[lpath] = new HyprLiveTemplate(HyprLive.engine.precompile(LiveTemplates[lpath], {
                 filename: path

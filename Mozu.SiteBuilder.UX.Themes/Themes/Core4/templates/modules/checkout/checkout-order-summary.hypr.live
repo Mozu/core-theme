@@ -1,0 +1,8 @@
+﻿<h3 class="mz-formstep-header">
+    Order Summary
+    <button class="mz-button" data-mz-action="editCart">Edit</button>
+</h3>
+
+<div class="mz-formstep-body">
+    {% include "modules/common/order-summary" %}
+</div><!-- #order-summary -->

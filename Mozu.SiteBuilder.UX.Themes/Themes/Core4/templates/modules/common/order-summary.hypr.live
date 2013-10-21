@@ -1,36 +1,30 @@
-﻿<h3 class="mz-formstep-header">
-    Order Summary
-    <button type="button" data-mz-action="editCart">Edit</button>
-</h3>
-
-<div class="mz-formstep-body">
-    <table>
+﻿    <table class="mz-ordersummary">
         <thead>
             <tr>
-                <th>Product</th>
-                <th>Qty</th>
-                <th>Each</th>
-                <th>Total</th>
+                <th class="mz-ordersummary-header-product">Product</th>
+                <th class="mz-ordersummary-header-qty">Qty</th>
+                <th class="mz-ordersummary-header-each">Each</th>
+                <th class="mz-ordersummary-header-total">Total</th>
             </tr>
         </thead>
         {% for item in Model.Items %}
             <tbody>
-                <tr class="mz-line-item {% if item.DiscountedTotal < item.Total %}mz-discounted{% endif %}" data-bind="css: { 'mz-discounted': $data.DiscountTotal }">
-                    <td>{{ item.Product.Name }}</td>
+                <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.DiscountedTotal < item.Total %}is-discounted{% endif %}">
+                    <td class="mz-ordersummary-item-product">{{ item.Product.Name }}</td>
                     <td>{{ item.Quantity }}</td>
-                    <td><span class="mz-item-price">{{ item.UnitPrice.BaseAmount|currency }}</span></td>
-                    <td><span class="mz-item-price">{{ item.Subtotal|currency }}</span></td>
+                    <td><span class="mz-ordersummary-price">{{ item.UnitPrice.BaseAmount|currency }}</span></td>
+                    <td><span class="mz-ordersummary-price">{{ item.Subtotal|currency }}</span></td>
                 </tr>
                 {% if item.DiscountedTotal < item.Total %}
-                    <tr class="mz-line-item mz-discount">
+                    <tr class="mz-ordersummary-line mz-ordersummary-line-discount">
                         <td colspan="2">
                             {% if item.Discount %}
-                                <span class="mz-discount-name">{{ item.Discount.Name }}</span> 
+                                <span class="mz-ordersummary-discountname">{{ item.Discount.Name }}</span> 
                                 {% if item.Discount.FreeShipping %}
-                                    <span class="mz-discount-amt">Free Shipping</span>
+                                    <span class="mz-ordersummary-discountamt">Free Shipping</span>
                                 {% endif %}
                             {% endif %}
-                            <span class="mz-discount-amt" >{{ item.DiscountTotal|currency}} OFF</span>
+                            <span class="mz-ordersummary-discountamt" >{{ item.DiscountTotal|currency}} OFF</span>
                         </td>
                         <td>{{ item.UnitPrice.DiscountedAmount|currency }}</td>
                         <td>{{ item.Total }}</td>
@@ -40,9 +34,9 @@
         {% endfor %}
       
         <tbody>
-            <tr class="mz-cost-summary">
-                <td class="mz-line-item-summary" colspan="4">
-                    <table>
+            <tr class="mz-ordersummary-totals-row">
+                <td colspan="4">
+                    <table class="mz-ordersummary-totals">
                         <tbody>
                         {% for discount in Model.OrderDiscounts %}
                             {% if not discount.Excluded %}
@@ -60,7 +54,7 @@
                                 <td>Tax:</td>
                                 <td>{{ Model.TaxTotal|currency }}</td>
                             </tr>
-                            <tr class="mz-shipping-total-row">
+                            <tr class="mz-ordersummary-shippingtotal">
                                 <td>Shipping &amp; Handling:</td>
                                 <td>{{ Model.ShippingTotal|currency }}</td>
                             </tr>
@@ -76,9 +70,8 @@
             </tr>
         </tbody>
         <tbody>
-            <tr class="mz-total">
-                <td class="mz-line-item-summary" colspan="4">Total: {{ Model.Total|currency }}</td>
+            <tr class="mz-ordersummary-grandtotal">
+                <td colspan="4">Total: {{ Model.Total|currency }}</td>
             </tr>
         </tbody>
     </table>
-</div><!-- #order-summary -->

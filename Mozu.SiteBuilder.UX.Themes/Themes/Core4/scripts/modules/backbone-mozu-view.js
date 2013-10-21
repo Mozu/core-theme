@@ -29,7 +29,7 @@
                             }
                             prop = hier[0];
                         }
-                        this.listenTo(model, 'change:' + prop, this.render, this);
+                        this.listenTo(model, 'change:' + prop, _.debounce(this.render,100), this);
                     }, this);
                 }
                 Backbone.Validation.bind(this);
@@ -38,7 +38,7 @@
             events: function () {
                 var defaults = _.object(_.flatten(_.map(this.$('[data-mz-value]'), function (el) {
                     var val = el.getAttribute('data-mz-value');
-                    return _.map(['change', 'blur'], function (ev) {
+                    return _.map(['change', 'blur', 'keyup'], function (ev) {
                         return [ev + ' [data-mz-value="' + val + '"]', "update" + val];
                     });
                 }).concat(_.map(this.$('[data-mz-action]'), function (el) {
@@ -84,8 +84,8 @@
                             value = e.currentTarget.type === "checkbox" ? $target.prop('checked') : $target.val();
                         attrs[prop] = value;
                         this.model.set(attrs);
-                        this.model.validate(attrs);
-                    }, 300);
+                        //this.model.validate(attrs);
+                    }, 150);
                 });
             }
             return Backbone.View.extend.call(this, conf, statics)

@@ -18,13 +18,16 @@
                 });
                 me.set("orderId", order.id);
                 if (me.apiModel) me.apiModel.on('action', function (name, data) {
-                    data.orderId = order.id;
+                    if (data) {
+                        data.orderId = order.id;
+                    } else {
+                        me.apiModel.prop('orderId', order.id);
+                    }
                 });
             },
             calculateStepStatus: function () {
                 // override this!
                 var herp = this.validate();
-                if (herp) console.log(herp);
                 var newStepStatus = this.isValid() ? 'complete' : 'invalid';
                 this.stepStatus(newStepStatus);
             },
@@ -238,16 +241,15 @@
             constructor: function (conf) {
                 var me = this;
                 CheckoutStep.apply(this, arguments),
-                pciSettings = conf.pciSettings;
-                if (!pciSettings) throw new ReferenceError('PCI Settings need to be set to complete checkout.');
 
-                pciSettings = $.extend({
+                pciSettings = {
                     framePath: "/../../Assets/pci_receiver.html",
                     siteId: api.context.Site(),
-                    tenantId: api.context.Tenant()
-                }, pciSettings);
+                    tenantId: api.context.Tenant(),
+                    apiBase: api.context.getServiceUrls().PaymentService
+                },
 
-                var fields = {};
+                fields = {};
                 // create jQuery-style accessor functions for PCIaaS
                 _.each(['PaymentOrCardType', 'CardNumberPartOrMask', 'CVV', 'IsCardInfoSaved', 'PaymentServiceCardId'], function (prop) {
                     fields[prop] = function (val) {
@@ -374,7 +376,7 @@
             addCoupon: function () {
                 var me = this;
                 this.isLoading(true);
-                this.apiApplyCoupon(this.get('CouponCode')).then(function () {
+                return this.apiApplyCoupon(this.get('CouponCode')).then(function () {
                     return me.apiModel.get();
                 }).then(function () {
                     me.set('CouponCode', '');
