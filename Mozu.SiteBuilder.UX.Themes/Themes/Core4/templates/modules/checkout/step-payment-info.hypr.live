@@ -25,7 +25,7 @@
             <div class="mz-formstep-fields mz-formfieldgroup">
                     <div class="mz-formfieldgroup-row">
                         <div class="mz-formfieldgroup-cell">
-                            <label for="paymenttype">Payment Type<span class="mz-required-field"> *</span>:</label>
+                            <label for="paymenttype">Payment Type<span class="is-required"> *</span>:</label>
                         </div>
                         <div class="mz-formfieldgroup-cell">
                     <select data-mz-value="PaymentType">
@@ -36,11 +36,13 @@
                     <span class="mz-validation-message" data-mz-validation-message-for="PaymentType"></span>
                         </div>
                      </div>
+              </div>
+      <div class="mz-formstep-fields mz-formfieldgroup">
 
                 {% if Model.PaymentType == "CreditCard" %}
                     <div class="mz-formfieldgroup">
                         {% include "modules/checkout/credit-card-form" %}
-                </div>
+                    </div>
                 {% endif %}
 
                 {% if Model.PaymentType == "Check" %}
@@ -64,7 +66,7 @@
                 <div class="mz-formfieldgroup">
                     <div class="mz-formfieldgroup-row">
                         <div class="mz-formfieldgroup-cell">
-                            <label for="billing-email">Email<span class="mz-required-field"> *</span>:</label>
+                            <label for="billing-email">Email<span class="is-required"> *</span>:</label>
                         </div>
                         <div class="mz-formfieldgroup-cell">
                             <input type="text" id="billing-email" name="billing-email" data-mz-value="BillingContact.Email" value="{{ Model.BillingContact.Email }}">

@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-10-18
+ * Mozu JavaScript SDK - v0.1.0 - 2013-10-21
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2509,7 +2509,7 @@ var ApiReference = (function () {
 var ApiObject = (function () {
 
     var ApiObjectConstructor = function (type, data, iapi) {
-        this.data = data;
+        this.data = data || {};
         this.api = iapi;
         this.type = type;
         if (ApiPostProcessors[this.type]) {
@@ -2522,9 +2522,9 @@ var ApiObject = (function () {
         constructor: ApiObjectConstructor,
         action: function (actionName, data) {
             var me = this;
+            me.fire('action', actionName, data);
+            me.api.fire('action', me, actionName, data);
             var requestConf = ApiReference.getRequestConfig(actionName, this.type, data || this.data, this.api.context, this);
-            me.fire('action', actionName, data, requestConf);
-            me.api.fire('action', me, actionName, data, requestConf);
             return this.api.request(ApiReference.basicOps[actionName], requestConf, data).then(function (rawJSON) {
                 if (requestConf.returnType) {
                     var returnObj = ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);

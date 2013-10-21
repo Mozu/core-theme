@@ -1,6 +1,6 @@
 ﻿    <div class="mz-formfieldgroup-row">
         <div class="mz-formfieldgroup-cell">
-            <label for="mz-payment-credit-card-type">Card Type<span class="mz-required-field"> *</span>:</label>
+            <label for="mz-payment-credit-card-type">Card Type<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-formfieldgroup-cell">
             <select id="mz-payment-credit-card-type" data-mz-value="Card.PaymentOrCardType">
@@ -15,7 +15,7 @@
     </div>
     <div class="mz-formfieldgroup-row">
         <div class="mz-formfieldgroup-cell">
-            <label for="mz-payment-credit-card-number">Card Number<span class="mz-required-field"> *</span>:</label>
+            <label for="mz-payment-credit-card-number">Card Number<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-formfieldgroup-cell">
             <input type="text" name="credit-card-number" id="mz-payment-credit-card-number" data-mz-value="Card.CardNumberPartOrMask" value="{{ Model.Card.CardNumberPartOrMask }}">
@@ -24,7 +24,7 @@
     </div>
     <div class="mz-formfieldgroup-row">
         <div class="mz-formfieldgroup-cell">
-            <label for="mz-payment-credit-card-name">Name on Card<span class="mz-required-field"> *</span>:</label>
+            <label for="mz-payment-credit-card-name">Name on Card<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-formfieldgroup-cell">
             <input type="text" name="credit-card-name" id="mz-payment-credit-card-name" data-mz-value="Card.NameOnCard" value="{{ Model.Card.NameOnCard }}">
@@ -33,7 +33,7 @@
     </div>
     <div class="mz-formfieldgroup-row">
         <div class="mz-formfieldgroup-cell">
-            <label for="mz-payment-expiration-month">Expires<span class="mz-required-field"> *</span>:</label>
+            <label for="mz-payment-expiration-month">Expires<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-formfieldgroup-cell">
             <select class="mz-formfieldgroup-halfsize" id="mz-payment-expiration-month" name="expiration-month" data-mz-value="Card.ExpireMonth">
@@ -70,7 +70,7 @@
     </div>
     <div class="mz-formfieldgroup-row">
         <div class="mz-formfieldgroup-cell">
-            <label for="mz-payment-security-code">Security Code<span class="mz-required-field"> *</span>:</label>
+            <label for="mz-payment-security-code">Security Code<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-formfieldgroup-cell">
             <input type="text" name="security-code" id="mz-payment-security-code" class="mz-formfieldgroup-halfsize" data-mz-value="Card.CVV" value="{{ Model.Card.CVV }}">

@@ -1,4 +1,15 @@
-﻿.mz-button {
+﻿@keyframes loadingthrob {
+    from { background-color: #eee; }
+     to { background-color: #e3e3e3; }
+}
+
+@-webkit-keyframes loadingthrob {
+    from { background-color: #eee; }
+     to { background-color: #e3e3e3; }
+}
+
+
+.mz-button {
     .border-radius(4px);
     background: #eee;
     padding: @gutter/4 @gutter/2;
@@ -20,8 +31,10 @@
     font-size: @fontSizeLarge;
     padding: @gutter/2 @gutter;
 }
-.is-loading .mz-button {
+.is-loading .mz-button, .mz-button.is-loading {
     background: #eee url('/resources/images/button-loading.gif') no-repeat 50% 50%;
     border-color: #eee;
     color: transparent;
+    animation: loadingthrob 1s linear 0s alternate infinite;
+    -webkit-animation: loadingthrob 1s linear 0s alternate infinite;
 }
