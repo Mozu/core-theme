@@ -107,7 +107,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 //ViewData["availableShippingMethods"] = _orderWebApiClient.GetAvailableShipmentMethods(id).Result.ReadAsSync();
             }
             else
-            {
+            { 
                 dOrder.AvailableCountries = (await GetShippableCountries()).Select(x => new JObject { new JProperty("code", x.Key), new JProperty("name", x.Value) }).ToList();
             }
 
