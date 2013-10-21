@@ -24,9 +24,25 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             }
             return dic;
         }
+       
+        public object CleanJson(object val)
+        {
+            var jVal = val as Newtonsoft.Json.Linq.JValue;
+            if (jVal != null)
+            {
+                return jVal.Value;
+            }
 
+            return val;
+        }
         public FSharpOption<object> ResolveMember(object container, string memberName)
         {
+            var jobject = container as Newtonsoft.Json.Linq.JObject;
+            if (jobject != null)
+            {
+                return new FSharpOption<object>(CleanJson(jobject.GetValue(memberName, StringComparison.OrdinalIgnoreCase)));
+            }
+
 
             var dic = _lookupDic.GetOrAdd(container.GetType(), Doit);
 
@@ -38,14 +54,15 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                     var pi = infos[i] as PropertyInfo;
                     if (pi != null)
                     {
-                        return new FSharpOption<object>(pi.GetValue(container, null));
+
+                        return new FSharpOption<object>(CleanJson(pi.GetValue(container, null)));
                     }
                     //todo: review if method calls  are needed
                     //todo: review if field calls are needed
                     var mi = infos[i] as MethodInfo;
                     if (mi != null)
                     {
-                        return new FSharpOption<object>(mi.Invoke(container, null));
+                        return new FSharpOption<object>(CleanJson(mi.Invoke(container, null)));
                     }
 
                     //if (infos[i] is PropertyInfo)
