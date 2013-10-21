@@ -14,6 +14,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
         var credFieldDefs = this.externalPayment.get('Credentials');
         var gatewayType = this.externalPayment.get('Name').toUpperCase();
         var credOriginalValues = [];
+        var isEnabled = true;
         
         this.items = [];
         this.credFields = [];
@@ -22,13 +23,14 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
         Ext.each(externalGateway, function (item) {
             if (gatewayType == item['Name'].toUpperCase()) {
                 credOriginalValues = item['Credentials'];
+                isEnabled = item['IsEnabled'];
             }
         });
 
         this.typeCheck = Ext.widget({
             xtype: 'checkbox',
             fieldLabel: this.externalPayment.get('Name'),
-            checked: this.externalPayment.get('IsEnabled'),
+            checked: isEnabled,
             handler: this.onEnableChange,
             scope: this
         });
@@ -36,7 +38,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
         
         this.credPanel = Ext.widget({
             xtype: 'panel',
-            hidden: !this.externalPayment.get('IsEnabled')
+            hidden: !isEnabled
         });
 
         Ext.Array.each(credFieldDefs, function (fieldDef) {
