@@ -1,3 +1,7 @@
-﻿    <label for="coupon-code">Coupon Code</label>
-    <input type="text" id="coupon-code" name="coupon-code" value="{{ Model.CouponCode }}" data-mz-value="CouponCode">
-    <button class="mz-button" data-mz-action="addCoupon" {% if not Model.CouponCode %} disabled="disabled" {% endif %}>Apply</button>
+﻿        <div class="mz-formfieldgroup-cell">
+            <label for="coupon-code">Coupon Code: </label>
+        </div>
+        <div class="mz-formfieldgroup-cell">
+            <input type="text" id="coupon-code" name="coupon-code" value="{{ Model.CouponCode }}" data-mz-value="CouponCode">
+            <button class="mz-button" data-mz-action="addCoupon" {% if not Model.CouponCode %} disabled="disabled" {% endif %}>Apply</button>
+        </div>

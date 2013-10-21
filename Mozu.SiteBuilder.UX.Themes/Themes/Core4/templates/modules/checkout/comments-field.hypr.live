@@ -1,4 +1,6 @@
-﻿<label>
-    Comments
-    <textarea id="order-comments" class="mz-checkoutform-comments-field" name="comments" data-mz-value="Comments">{{ Model.Comments }}</textarea>
-</label>
+﻿    <div class="mz-formfieldgroup-cell">
+      <label for="order-comments">Comments:</label>
+    </div>
+    <div class="mz-formfieldgroup-cell">
+      <textarea id="order-comments" class="mz-checkoutform-comments-field" name="comments" data-mz-value="Comments">{{ Model.Comments }}</textarea>
+    </div>
