@@ -8,7 +8,7 @@
             </tr>
         </thead>
         {% for item in Model.Items %}
-            <tbody>
+            <tbody class="mz-ordersummary-lineitems">
                 <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.DiscountedTotal < item.Total %}is-discounted{% endif %}">
                     <td class="mz-ordersummary-item-product">{{ item.Product.Name }}</td>
                     <td>{{ item.Quantity }}</td>
@@ -34,42 +34,48 @@
         {% endfor %}
       
         <tbody>
-            <tr class="mz-ordersummary-totals-row">
+            {% for discount in Model.OrderDiscounts %}
+            {% if not discount.Excluded %}
+            <tr class="mz-ordersummary-discount">
+              <td colspan="4">
+                <span class="mz-ordersummary-discountname">{{ discount.Discount.Name }}:</span>
+                <span class="mz-ordersummary-discountamt">-{{ discount.Impact|currency }}</span
+              </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            <tr class="mz-ordersummary-subtotal">
+              <td colspan="4">
+                <span class="mz-ordersummary-totalname">Sub-Total:</span>
+                <span class="mz-ordersummary-totalvalue">{{ Model.DiscountedTotal|currency }}</span>
+              </td>
+            </tr>
+            {% if Model.TaxTotal %}
+            <tr class="mz-ordersummary-tax">
                 <td colspan="4">
-                    <table class="mz-ordersummary-totals">
-                        <tbody>
-                        {% for discount in Model.OrderDiscounts %}
-                            {% if not discount.Excluded %}
-                            <tr>
-                                <td class="mz-ordersummary-discountname">{{ discount.Discount.Name }}:</td>
-                                <td class="mz-ordersummary-discountamt">-{{ discount.Impact|currency }}</td>
-                            </tr>
-                            {% endif %}
-                        {% endfor %}
-                            <tr class="mz-ordersummary-subtotal">
-                                <td class="mz-ordersummary-totalname">Sub-Total:</td>
-                                <td class="mz-ordersummary-totalvalue">{{ Model.DiscountedTotal|currency }}</td>
-                            </tr>
-                            <tr class="mz-ordersummary-tax">
-                                <td class="mz-ordersummary-totalname">Tax:</td>
-                                <td class="mz-ordersummary-totalvalue">{{ Model.TaxTotal|currency }}</td>
-                            </tr>
-                            <tr class="mz-ordersummary-shippingtotal">
-                                <td class="mz-ordersummary-totalname">Shipping &amp; Handling:</td>
-                                <td class="mz-ordersummary-totalvalue">{{ Model.ShippingTotal|currency }}</td>
-                            </tr>
-                        {% if Model.HandlingAmount %}
-                            <tr class="mz-ordersummary-additionalhandling">
-                                <td class="mz-ordersummary-totalname">Additional Handling:</td>
-                                <td class="mz-ordersummary-totalvalue">{{ Model.HandlingAmount|currency }}</td>
-                            </tr>
-                        {% endif %}
-                            <tr class="mz-ordersummary-grandtotal">
-                                <td class="mz-ordersummary-totalname">Total:</td>
-                                <td class="mz-ordersummary-totalvalue">{{ Model.Total|currency }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <span class="mz-ordersummary-totalname">Tax:</span>
+                    <span class="mz-ordersummary-totalvalue">{{ Model.TaxTotal|currency }}</span>
+                </td>
+            </tr>
+            {% endif %}
+            <tr class="mz-ordersummary-shippingtotal">
+              <td colspan="4">
+                <span class="mz-ordersummary-totalname">Shipping &amp; Handling:</span>
+                <span class="mz-ordersummary-totalvalue">{{ Model.ShippingTotal|currency }}</span>
+              </td>
+            </tr>
+            {% if Model.HandlingAmount %}
+            <tr class="mz-ordersummary-additionalhandling">
+                <td colspan="4">
+                    <span class="mz-ordersummary-totalname">Additional Handling:</span>
+                    <span class="mz-ordersummary-totalvalue">{{ Model.HandlingAmount|currency }}</span>
+                </td>
+            </tr>
+            {% endif %}
+            <tr class="mz-ordersummary-grandtotal">
+                <td colspan="4">
+                    <span class="mz-ordersummary-totalname">Total:</span>
+                    <span class="mz-ordersummary-totalvalue">{{ Model.Total|currency }}</span>
                 </td>
             </tr>
         </tbody>

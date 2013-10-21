@@ -52,7 +52,7 @@
                 {% endif %}
 
                 <h4>Billing Address</h4>
-                <div class="mz-formfieldgroup mz-formfieldgroup-singlefield"><label><input type="checkbox" data-mz-value="IsSameBillingShippingAddress" value="true" {% if Model.IsSameBillingShippingAddress %}checked="checked"{% endif %}> Use my shipping address</label></div>
+                <div class="mz-formfieldgroup mz-formfieldgroup-norows"><label><input type="checkbox" data-mz-value="IsSameBillingShippingAddress" value="true" {% if Model.IsSameBillingShippingAddress %}checked="checked"{% endif %}> Use my shipping address</label></div>
                 {% if Model.IsSameBillingShippingAddress %}
                     <div class="mz-addresssummary mz-same-as-shipping-summary" id="mz-same-as-shipping-summary">
                         {% include "modules/common/address-summary" with Model=Model.BillingContact %}

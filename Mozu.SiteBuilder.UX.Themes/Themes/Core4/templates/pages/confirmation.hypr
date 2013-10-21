@@ -127,96 +127,20 @@
 		</tbody>
 	</table><!-- #purchase-details-->
 
-	<h3>Order Summary</h3>
-	<table id="mz-order-summary" class="mz-order-summary">
-	    <thead>
-	        <tr>
-	            <th>Description</th>
-	            <th>Qty</th>
-	            <th>Unit Price</th>
-	            <th>Total Price</th>
-	        </tr>
-	    </thead>
-	    <tbody>
-            {% for item in Model.Items %}
-	        <tr class="mz-item-row">
-	            <td>{{ item.Product.Name }}</td>
-	            <td>{{ item.Quantity }}</td>
-	            <td>
-					{% if item.UnitPrice.BaseAmount != item.UnitPrice.DiscountedAmount %}
-					<div class="mz-price-amt mz-strikethrough">
-					{{ item.UnitPrice.BaseAmount|currency }}
-					</div>
-					{% endif %}
-					{{ item.UnitPrice.DiscountedAmount|currency }}
-				</td>
-	            <td>
-					{% if item.Subtotal != item.Total %}
-					<div class="mz-price-amt mz-strikethrough">
-					{{ item.Subtotal|currency }}
-					</div>
-					{% endif %}
-					{{ item.Total|currency }}
-				</td>
-	        </tr>
-            {% endfor %}
-	    </tbody>
-	    <tfoot>
-	        <tr>
-	            <td colspan="3">
-                {% if Model.ShopperNotes.Comments %}
-	                Comments:<br>
-                        <p>{{ Model.ShopperNotes.Comments }}</p>
-                {% endif %}
-                {% if Model.ShopperNotes.GiftMessage %}
-                    Gift Message:<br>
-                        <p>{{ Model.ShopperNotes.GiftMessage }}</p>
-                {% endif %}
-                </td>
-	            <td colspan="2">
-	                <table>
-						{% for discount in Model.OrderDiscounts %}
-						{% if not discount.Excluded %}
-                        <tr>
-                            <td>{{ discount.Discount.Name }}:</td>
-	                        <td>-{{ discount.Impact|currency }}</td>
-                        </tr>
-						{% endif %}
-						{% endfor %}
-	                    <tr>
-	                        <td>Sub-Total:</td>
-	                        <td>{{ Model.DiscountedTotal|currency }}</td>
-	                    </tr>
-	                    <tr>
-	                        <td>Tax:</td>
-	                        <td>{{ Model.TaxTotal|currency }}</td>
-	                    </tr>
-						{% for discount in Model.ShippingDiscounts %}
-						{% if not discount.Excluded %}
-	                    <tr>
-							<td>{{ discount.Discount.Discount.Name }} (Save {{ discount.Discount.Impact|currency }})</td>
-						</tr>
-						{% endif %}
-						{% endfor %}
-	                    <tr>
-	                        <td>Shipping & Handling:</td>
-	                        <td>{{ Model.ShippingTotal|currency }}</td>
-	                    </tr>
-						{% if Model.HandlingAmount != 0 %}
-	                    <tr>
-	                        <td>Additional Handling:</td>
-	                        <td>{{ Model.HandlingAmount|currency }}</td>
-	                    </tr>
-						{% endif %}
-	                    <tr>
-	                        <td>Total:</td>
-	                        <td>{{ Model.Total|currency }}</td>
-	                    </tr>
-	                </table>
-	            </td>
-	        </tr>
-	    </tfoot>
-	</table>
+	<h2>Order Summary</h2>
+    {% include "modules/common/order-summary" %}
+    {% if Model.ShopperNotes.Comments %}
+    <div class="mz-ordercomments">
+        <h5 class="mz-ordercomments-header">Comments</h5>
+        <p class="mz-ordercomments-body">{{ Model.ShopperNotes.Comments }}</p>
+    </div>
+    {% endif %}
+    {% if Model.ShopperNotes.GiftMessage %}
+    <div class="mz-ordercomments">
+        <h5 class="mz-ordercomments-header">Gift Message</h5>
+        <p class="mz-ordercomments-body">{{ Model.ShopperNotes.GiftMessage }}</p>
+    </div>
+    {% endif %}
 </div><!-- #order-confirmation -->
 
 {% endblock body-content %}
