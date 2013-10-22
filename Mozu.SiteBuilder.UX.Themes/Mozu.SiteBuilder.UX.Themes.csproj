@@ -582,6 +582,7 @@
     <Content Include="Themes\Core4\templates\modules\common\paging-controls.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\common\page-numbers.hypr.live" />
     <Content Include="Themes\Core4\templates\pages\blank-page.hypr" />
+    <Content Include="Themes\Core4\theme-ui.json" />
     <None Include="Tools\Documentation\Tags.vol" />
     <Content Include="Themes\Core3\theme.xml" />
     <Content Include="Themes\Core3\MetaData\ThemeSettings.xml" />
