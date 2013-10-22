@@ -1,6 +1,6 @@
 ﻿    <h3 class="mz-formstep-header">
-        Payment Information
-        <button type="button" class="mz-button mz-formstep-edit" data-mz-action="edit">Edit</button>
+        {{ themeSettings.labelPaymentInformation }}
+        <button type="button" class="mz-button mz-formstep-edit" data-mz-action="edit">{{ themeSettings.labelEdit }}</button>
     </h3>
     <div class="mz-formstep-body">
             <div class="mz-formstep-summary">
@@ -12,26 +12,26 @@
                     <span>{{ Model.Card.CardNumberPartOrMask }}</span>
                 {% endif %}
 
-                <h4>Billing Address</h4>
+                <h4>{{ themeSettings.labelBillingAddress }}</h4>
               <div class="mz-addresssummary">
                 {% include "modules/common/address-summary" with Model=Model.BillingContact %}
               </div>
 
-                <h4>Billing Contact Information</h4>
-                <p>Phone: <strong>{{ Model.BillingContact.PhoneNumbers.Home }}</strong></p>
-                <p>Email: <strong>{{ Model.BillingContact.Email }}</strong></p>
+                <h4>{{ themeSettings.labelBillingContact }}</h4>
+                <p>{{ themeSettings.labelPhone }}: <strong>{{ Model.BillingContact.PhoneNumbers.Home }}</strong></p>
+                <p>{{ themeSettings.labelEmail }}: <strong>{{ Model.BillingContact.Email }}</strong></p>
             </div>
 
             <div class="mz-formstep-fields mz-formfieldgroup">
                     <div class="mz-formfieldgroup-row">
                         <div class="mz-formfieldgroup-cell">
-                            <label for="paymenttype">Payment Type<span class="is-required"> *</span>:</label>
+                            <label for="paymenttype">{{ themeSettings.labelPaymentType }}<span class="is-required"> *</span>:</label>
                         </div>
                         <div class="mz-formfieldgroup-cell">
                     <select data-mz-value="PaymentType">
                         <option>Select payment method</option>
-                        <option {% if Model.PaymentType == "CreditCard" %}selected="selected"{% endif %} value="CreditCard">Credit Card</option>
-                        <option {% if Model.PaymentType == "Check" %}selected="selected"{% endif %} value="Check">Check by Mail</option>
+                        <option {% if Model.PaymentType == "CreditCard" %}selected="selected"{% endif %} value="CreditCard">{{ themeSettings.labelCreditCard }}</option>
+                        <option {% if Model.PaymentType == "Check" %}selected="selected"{% endif %} value="Check">{{ themeSettings.labelCheckByMail }}</option>
                     </select>
                     <span class="mz-validation-message" data-mz-validation-message-for="PaymentType"></span>
                         </div>
@@ -41,7 +41,7 @@
 
                 {% if Model.PaymentType == "CreditCard" %}
                     <div class="mz-formfieldgroup">
-                        {% include "modules/checkout/credit-card-form" %}
+                        {% include "modules/checkout/credit-card-form" with Model=Model.Card %}
                     </div>
                 {% endif %}
 
@@ -52,7 +52,7 @@
                 {% endif %}
 
                 <h4>Billing Address</h4>
-                <div class="mz-formfieldgroup mz-formfieldgroup-norows"><label><input type="checkbox" data-mz-value="IsSameBillingShippingAddress" value="true" {% if Model.IsSameBillingShippingAddress %}checked="checked"{% endif %}> Use my shipping address</label></div>
+                <div class="mz-formfieldgroup mz-formfieldgroup-norows"><label><input type="checkbox" data-mz-value="IsSameBillingShippingAddress" value="true" {% if Model.IsSameBillingShippingAddress %}checked="checked"{% endif %}> {{ themeSettings.labelUseShippingAddress }}</label></div>
                 {% if Model.IsSameBillingShippingAddress %}
                     <div class="mz-addresssummary mz-same-as-shipping-summary" id="mz-same-as-shipping-summary">
                         {% include "modules/common/address-summary" with Model=Model.BillingContact %}
@@ -62,11 +62,11 @@
                     {% include "modules/checkout/billing-address-form" with Model=Model.BillingContact %}
                 </div>
                 {% endif %}
-                <h4>Billing Contact Info</h4>
+                <h4>{{ themeSettings.labelBillingContact }}</h4>
                 <div class="mz-formfieldgroup">
                     <div class="mz-formfieldgroup-row">
                         <div class="mz-formfieldgroup-cell">
-                            <label for="billing-email">Email<span class="is-required"> *</span>:</label>
+                            <label for="billing-email">{{ themeSettings.labelEmail }}<span class="is-required"> *</span>:</label>
                         </div>
                         <div class="mz-formfieldgroup-cell">
                             <input type="text" id="billing-email" name="billing-email" data-mz-value="BillingContact.Email" value="{{ Model.BillingContact.Email }}">
@@ -76,13 +76,13 @@
                     <div class="mz-formfieldgroup-row">
                         <div class="mz-formfieldgroup-cell"></div>
                         <div class="mz-formfieldgroup-cell">
-                            <label class="mz-inline"><input type="checkbox" name="special-offers" checked style="float: left; margin-right: 8px;"> Yes! I want to receive news<br>and special offers from {{ siteContext.settings.general.websiteName|default("you") }}!</label>
+                            <label class="mz-inline"><input type="checkbox" name="special-offers" checked style="float: left; margin-right: 8px;"> {{ themeSettings.labelOptIn }} {{ siteContext.settings.general.websiteName|default(themeSettings.labelYou) }}!</label>
                         </div>
                     </div>
                 </div>
 
                 <div class="mz-formstep-next">
-                    <button class="mz-button" data-mz-action="next">Next</button>
+                    <button class="mz-button" data-mz-action="next">{{ themeSettings.labelNext }}</button>
                 </div>
             </div>
     </div><!-- .mz-panel-wrap -->

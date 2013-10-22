@@ -1,39 +1,37 @@
 ﻿{% extends "page" %}
 
-{% block Init %}
-	{% setTemplateVariables BodyTagClasses="mz-login-page" %}
-    {{ block.super }}
-{% endblock Init%}
+{% block title-tag-content %} {{ themeSettings.labelLogIn }} - {{block.super }} {% endblock title-tag-content %}
 
-{% block BodyContent %}
-<div id="mz-layout-container" class="mz-layout-container mz-login-page mz-content-inner-wrap">
-	<h1 class="mz-page-header">Sign In</h1>
-	<form method="post" id="mz-login-page-form" class="mz-login-page-form">
-       {% html_validation_summary null "lerp nerp"%}
-       <div class="mz-form-fieldgroup">
-            <div class="mz-form-field-row">
-                <div class="mz-form-field-cell">
-                    <label for="email">Email</label>
-                </div>
-                <div class="mz-form-field-cell">
-                    <input name="email" value="{{model.email|default:user.email}}" type="email"/>
-                </div>
-            </div>
-            <div class="mz-form-field-row">
-                <div class="mz-form-field-cell">
-                    <label for="password">Password</label>
-                </div>
-                <div class="mz-form-field-cell">
-                    <input name="password"  type="password"/>
-                </div>
-            </div>
-            <div class="mz-form-field-row">
-                <div class="mz-form-field-cell">
-                    <button type="submit" class="mz-button mz-btn-cta">Sign In</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
+{% block body-tag-classes %} mz-loginpage {% endblock body-tag-classes %}
 
-{% endblock BodyContent %}
+{% block body-content %}
+    <div class="mz-l-container">
+        <h1 class="mz-pagetitle">{{ themeSettings.labelLogIn }}</h1>
+        <form method="post" class="mz-loginform mz-loginform-page">
+           {% html_validation_summary null "lerp nerp"%}
+           <div class="mz-form-ieldgroup">
+                <div class="mz-formfieldgroup-row">
+                    <div class="mz-formfieldgroup-cell">
+                        <label for="email">{{ themeSettings.labelEmail }}</label>
+                    </div>
+                    <div class="mz-formfieldgroup-cell">
+                        <input name="email" value="{{Model.email|default:user.email}}" type="email"/>
+                    </div>
+                </div>
+                <div class="mz-formfieldgroup-row">
+                    <div class="mz-formfieldgroup-cell">
+                        <label for="password">{{ themeSettings.labelPassword }}</label>
+                    </div>
+                    <div class="mz-formfieldgroup-cell">
+                        <input name="password"  type="password"/>
+                    </div>
+                </div>
+                <div class="mz-formfieldgroup-row">
+                    <div class="mz-formfieldgroup-cell">
+                        <button class="mz-button mz-button-large">{{ themeSettings.labelLogIn }}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock body-content %}

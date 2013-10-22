@@ -1,8 +1,10 @@
 ﻿{% preload_json Model "facetedproducts" %}
 
+{% if Model.Facets %}
 <div data-mz-facets class="mz-l-sidebar">
     {% include "modules/product/faceting-form" %}
 </div>
+{% endif %}
 
 <div class="mz-productlisting-faceted mz-l-paginatedlist">
     <div data-mz-pagingcontrols class="mz-pagingcontrols">

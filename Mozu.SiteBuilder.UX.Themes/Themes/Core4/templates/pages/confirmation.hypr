@@ -1,146 +1,66 @@
 ﻿{% extends "page" %}
 
-{% block title-tag-content %} Order Confirmation - {{block.super}} {% endblock title-tag-content %}
+{% block body-tag-classes %} mz-confirmation {% endblock body-tag-classes %}
+
+{% block title-tag-content %} {{ themeSettings.labelOrderConfirmation }} - {{block.super}} {% endblock title-tag-content %}
 
 {% block body-content %}
 
 
-<div class="mz-l-container">
+<div class="mz-l-stack">
     <h1 class="mz-pagetitle">
-        Order Confirmation
+        {{ themeSettings.labelOrderConfirmation }}
     </h1>
 
-	<h4>Thank you for your order!  You will receive email confirmation.</h4>
+	<h4>{{ themeSettings.labelConfirmationText }}</h4>
 
-	<table id="mz-purchase-details" class="mz-purchase-details">
-		<thead>
-			<tr>
-				<td class="mz-field-interstitial" colspan="2">Order#: <strong>{{ Model.OrderNumber }}</strong></td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td class="mz-field-interstitial" colspan="2"><hr></td>
-			</tr>
-			{% if Model.BillingInfo.PaymentType == PaymentTypes.CreditCard %}
-			<tr>
-				<td class="mz-field-label">Billing Name:</td>
-				<td>{{ Model.BillingInfo.BillingContact.FirstName }} {{ Model.BillingInfo.BillingContact.LastNameOrSurname }}</td>
-			</tr>
-			<tr>
-				<td class="mz-field-label">Billing Address:</td>
-				<td>{{ Model.BillingInfo.BillingContact.Address.Address1 }}</td>
-			</tr>
-				{% if Model.BillingInfo.BillingContact.Address.Address2 %}
-			<tr>
-				<td></td>
-				<td>{{ Model.BillingInfo.BillingContact.Address.Address2 }}</td>
-			</tr>
-				{% endif %}
-			<tr>
-				<td></td>
-				<td>{{ Model.BillingInfo.BillingContact.Address.CityOrTown }}, {{ Model.BillingInfo.BillingContact.Address.StateOrProvince }} {{ Model.BillingInfo.BillingContact.Address.PostalOrZipCode }}</td>
-			</tr>
-			<tr>
-				<td class="mz-field-label">Phone:</td>
-				<td>{{ Model.BillingInfo.BillingContact.PhoneNumbers.Home }}</td>
-			</tr>
-			<tr>
-				<td class="mz-field-label">Email:</td>
-				<td>{{ Model.BillingInfo.BillingContact.Email }}</td>
-			</tr>
-			<tr>
-				<td class="mz-field-interstitial" colspan="2"><hr></td>
-			</tr>
-			<tr>
-				<td class="mz-field-label">Card Type:</td>
-				<td>{{ Model.BillingInfo.Card.PaymentOrCardType }}</td>
-			</tr>
-			<tr>
-				<td class="mz-field-label">Credit Card #:</td>
-				<td>{{ Model.BillingInfo.Card.CardNumberPartOrMask }}</td>
-			</tr>
-			{% comment %} {# this isn't returned by the services #}
-			<tr>
-				<td class="mz-field-label">Expiration:</td>
-				<td>{{ Model.BillingInfo.Card.ExpireMonth }}.{{ Model.BillingInfo.Card.ExpireYear }}</td>
-			</tr>
-			{% endcomment %}
-			{% else %} {# "Pay by Check" #}
-			<tr>
-				<td class="mz-field-label">Payment Type:</td>
-				<td>{{ Model.BillingInfo.PaymentType }}</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>&nbsp;</td>
-			</tr>
-			<tr>
-				<td class="mz-field-label"><strong>Mail check to:</strong></td>
-				<td>
-					{% if ViewData.MailCheckTo.CompanyOrOrganization %}
-					{{ ViewData.MailCheckTo.CompanyOrOrganization }}
-					{% else %}
-					{{ ViewData.MailCheckTo.FirstName }} {{ ViewData.MailCheckTo.LastNameOrSurname }}
-					{% endif %}
-				</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>{{ ViewData.MailCheckTo.Address.Address1 }}</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>{{ ViewData.MailCheckTo.Address.CityOrTown }}, {{ ViewData.MailCheckTo.Address.StateOrProvince }} {{ ViewData.MailCheckTo.Address.PostalOrZipCode }} </td>
-			</tr>
-			{% endif %}
-			<tr>
-				<td></td>
-				<td>&nbsp;</td>
-			</tr>
-			<tr>
-				<td class="mz-field-label">Ship to:</td>
-				<td>{{ Model.ShippingInfo.ShippingContact.FirstName }} {{ Model.ShippingInfo.ShippingContact.LastNameOrSurname }}</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>{{ Model.ShippingInfo.ShippingContact.Address.Address1 }}</td>
-			</tr>
-			{% if Model.ShippingInfo.ShippingContact.Address.Address2  %}
-			<tr>
-				<td></td>
-				<td>{{ Model.ShippingInfo.ShippingContact.Address.Address2 }}</td>
-			</tr>
-			{% endif %}
-			<tr>
-				<td></td>
-				<td>{{ Model.ShippingInfo.ShippingContact.Address.CityOrTown }}, {{ Model.ShippingInfo.ShippingContact.Address.StateOrProvince }} {{ Model.ShippingInfo.ShippingContact.Address.PostalOrZipCode }}</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>&nbsp;</td>
-			</tr>
-			<tr>
-				<td class="mz-field-label">Shipping Method:</td>
-				<td><strong>{{ Model.ShippingInfo.ShippingMethodName }}</strong></td>
-			</tr>
-		</tbody>
-	</table><!-- #purchase-details-->
+    <div class="mz-l-stack-section">
+    <h2>{{ themeSettings.labelOrderDetails }}</h2>
+    <dl class="mz-propertylist">
+        <dt>{{ themeSettings.labelOrderNumber }}</dt>
+        <dd>{{ Model.OrderNumber }}</dd>
+        <dt>{{ themeSettings.labelBillingName }}</dt>
+        <dd>{{ Model.BillingInfo.BillingContact.FirstName }} {{ Model.BillingInfo.BillingContact.LastNameOrSurname }}</dd>
+        <dt>{{ themeSettings.labelBillingAddress }}</dt>
+        <dd class="mz-addresssummary">{% include "modules/common/address-summary" with Model=Model.BillingInfo.BillingContact %}</dd>
+        <dt>{{ themeSettings.labelBillingPhone }}</dt>
+        <dd>{{ Model.BillingInfo.BillingContact.PhoneNumbers.Home }}</dd>
+        <dt>{{ themeSettings.labelBillingEmail }}</dt>
+        <dd>{{ Model.BillingInfo.BillingContact.Email }}</dd>
+        {% if Model.BillingInfo.PaymentType == "CreditCard" %}
+        <dt>{{ themeSettings.labelCardType }}</dt>
+        <dd>{{ Model.BillingInfo.Card.PaymentOrCardType }}</dd>
+        <dt>{{ themeSettings.labelCardNumber }}</dt>
+        <dd>{{ Model.BillingInfo.Card.CardNumberPartOrMask }}</dd>
+        {% else %}
+        <dt>{{ themeSettings.labelCheckNumber }}</dt>
+        <dd>{{ Model.BillingInfo.Check.CheckNumber</dd>
+        <dt><strong>{{ themeSettings.labelMailCheckTo }}:</strong></dt>
+        <dd class="mz-addresssummary">{% include "modules/common/address-summary" with Model=ViewData.MailCheckTo %}</dd>
+        {% endif %}
+        <dt>{{ themeSettings.labelShipTo }}</dt>
+        <dd class="mz-addresssummary">{% include "modules/common/address-summary" with Model=Model.ShippingInfo.ShippingContact %}</dd>
+        <dt>{{ themeSettings.labelShippingMethod }}</dt>
+        <dd>{{ Model.ShippingInfo.ShippingMethodName }}</dd>
+    </dl>
+    </div>
 
-	<h2>Order Summary</h2>
+    <div class="mz-l-stack-section">
+	<h2>{{ themeSettings.labelOrderSummary }} </h2>
     {% include "modules/common/order-summary" %}
     {% if Model.ShopperNotes.Comments %}
     <div class="mz-ordercomments">
-        <h5 class="mz-ordercomments-header">Comments</h5>
+        <h5 class="mz-ordercomments-header">{{ themeSettings.labelComments }}</h5>
         <p class="mz-ordercomments-body">{{ Model.ShopperNotes.Comments }}</p>
     </div>
     {% endif %}
     {% if Model.ShopperNotes.GiftMessage %}
     <div class="mz-ordercomments">
-        <h5 class="mz-ordercomments-header">Gift Message</h5>
+        <h5 class="mz-ordercomments-header">{{ themeSettings.labelGiftMessage }}</h5>
         <p class="mz-ordercomments-body">{{ Model.ShopperNotes.GiftMessage }}</p>
     </div>
     {% endif %}
+    </div>
 </div><!-- #order-confirmation -->
 
 {% endblock body-content %}

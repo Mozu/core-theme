@@ -74,6 +74,10 @@
             {% block page-header %}
             {% include "modules/page-header" %}
             {% endblock page-header %}
+
+            {% block site-nav %}
+            {% include "modules/site-nav" %}
+            {% endblock site-nav %}
     
             <div role="main" id="page-content" class="mz-l-pagecontent">
                 

@@ -3,12 +3,14 @@
 {% block body-tag-classes %} mz-errorpage {% endblock body-tag-classes %}
 
 {% block body-content %}
-<div id="errorpage">
-	<h2 class="mz-error-head">Sorry, an error occurred. <span class="mz-error-subhead">Mozu encountered an error it couldn't resolve.</span><span class="mz-error-text">{{Model.Message}}</span></h2>
-	<a href="javascript:;" id="mz-error-detail-link" class="mz-error-detail-expander">stack trace</a>
-	<blockquote id="mz-error-detail" class="mz-error-detail">
-	<pre><code>{% dump Model %}</code></pre>
-	</blockquote>
+<div class="mz-l-container">
+    <h1 class="mz-pagetitle">{{ themeSettings.labelErrorApology }} <span class="mz-pagetitle-note">{{ themeSettings.labelErrorDetail }}</span><span class="mz-error-text">{{Model.Message}}</span></h1>
+    <div class="mz-errordetail">
+        <a href="javascript:;" id="stacktrace-link" class="mz-errordetail-expander">stack trace</a>
+        <blockquote class="mz-errordetail-body">
+            <pre><code>{% dump Model %}</code></pre>
+        </blockquote>
+    </div>
 </div>
 {% require_script "pages/error" %}
 {% endblock body-content %}

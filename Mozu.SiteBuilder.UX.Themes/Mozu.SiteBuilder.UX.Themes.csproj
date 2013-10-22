@@ -549,7 +549,7 @@
     <Content Include="Themes\Core4\stylesheets\modules\page-header\utility-nav.less" />
     <Content Include="Themes\Core4\stylesheets\modules\page-header\cart-monitor.less" />
     <Content Include="Themes\Core4\stylesheets\modules\page-header\search-box.less" />
-    <Content Include="Themes\Core4\stylesheets\modules\page-header\site-nav.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\site-nav.less" />
     <Content Include="Themes\Core4\stylesheets\modules\breadcrumbs.less" />
     <Content Include="Themes\Core4\stylesheets\modules\page-header.less" />
     <Content Include="Themes\Core4\stylesheets\modules\page-footer.less" />
@@ -885,7 +885,9 @@
     <None Include="Themes\Core4\templates\modules\checkout\coupon-code-field.live" />
     <None Include="Themes\Core4\templates\modules\checkout\checkout-order-summary.hypr.live" />
     <None Include="Themes\Core4\templates\modules\checkout\step-payment-info.hypr.live" />
-    <None Include="Themes\Core4\templates\modules\checkout\step-review.hypr.live" />
+    <None Include="Themes\Core4\templates\modules\checkout\step-review.hypr.live">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Themes\Core4\templates\modules\checkout\step-shipping-address.hypr.live" />
     <None Include="Themes\Core4\templates\modules\checkout\step-shipping-method.hypr.live" />
     <None Include="Themes\Core4\templates\modules\checkout\credit-card-form.hypr.live" />

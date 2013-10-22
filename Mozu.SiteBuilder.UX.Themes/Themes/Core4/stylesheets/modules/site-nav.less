@@ -1,11 +1,10 @@
 ﻿.mz-sitenav {
     @navHeight: 37px;
     width: 100%;
-    position: absolute;
-    left: 0;
-    bottom: 0px;
     background: #666;
     height: @navHeight;
+    overflow: visible;
+    .clearfix();
 
     > .mz-sitenav-list > .mz-sitenav-item:first-child {
         margin-left: @gutter * .75;
