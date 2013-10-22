@@ -20,7 +20,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
             style: 'line-height: 2.5rem;background-color: #f9f9f9;border: 1px solid #bfbfbf',
             data: this.addressRecord.data,
             tpl: [
-                '<div class="name">{firstName} {lastName}</div>',
+                '<div class="name">{companyName}</div>',
                 '<div class="address-line-1">{address1}</div>',
                 '<div class="address-line-2">{address2}</div>',
                 '<div class="address-line-3">{address3}</div>',
