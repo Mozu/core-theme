@@ -9,6 +9,20 @@ Ext.define('Taco.core.ux.form.field.EditableDisplayField', {
     initComponent: function () {
         this.callParent(arguments);
     },
+    
+    onRender: function () {
+        var me = this;
+        me.callParent(arguments);
+        
+        me.mon(me.el, {
+            click: me.onClick,
+            scope: me
+        });
+    },
+    
+    // override this method to handle click on the field;
+    onClick : Ext.emptyFn,
+    
     // fix to make the isEqual do a deep compare
     isEqual: function (value1, value2) {
         if (Ext.isObject(value1)) {

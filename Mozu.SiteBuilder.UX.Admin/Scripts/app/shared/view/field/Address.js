@@ -39,6 +39,8 @@ Ext.define('Taco.shared.view.field.Address', {
         // the scoped reference to the display field showing the address information
         addressField : null,
 
+        editOnFieldClick: true,
+
         defaultValue : {
             "address1": "",
             "address2": "",
@@ -56,24 +58,27 @@ Ext.define('Taco.shared.view.field.Address', {
     },
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            addressDisplayTpl = me.getAddressDisplayTemplate();
 
-        if (!this.items) {
-            this.items = [];
+        if (!me.items) {
+            me.items = [];
         }
-        
 
-        var addressDisplayTpl = me.getAddressDisplayTemplate();
-
-        this.addressField = Ext.create('Taco.core.ux.form.field.EditableDisplayField', {
-            name: this.name,
+        me.addressField = Ext.create('Taco.core.ux.form.field.EditableDisplayField', {
+            name: me.name,
             width: "100%",
-            allowBlank: this.allowBlank,
+            allowBlank: me.allowBlank,
+            onClick: function() {
+                if (me.editOnFieldClick) {
+                    me.editAddress();
+                }
+            },
             validator: function () {
                 var errors = [],
-                    value = this.getValue();
+                    value = me.addressField.getValue();
                 
-                if (this.allowBlank) {
+                if (me.allowBlank) {
                     return true;
                 } else if (value && value.addressIsValidated) {
                     return true;
@@ -86,65 +91,44 @@ Ext.define('Taco.shared.view.field.Address', {
             }
         });
 
-        this.items.push(this.addressField);
+        me.items.push(me.addressField);
         
-        this.initButtons();
+        me.initButtons();
         
-        this.callParent(arguments);
+        me.callParent(arguments);
     },
     initButtons: function () {
         var me = this;
-        if (this.readOnly || this.disabled) {
-            this.showEditButton = false;
+        
+        if (me.readOnly || me.disabled) {
+            me.showEditButton = false;
         }
 
-        if (this.showEditButton) {
+        if (me.showEditButton) {
             
             // if button was not provided, create one.
-            if (!this.editAddressButton) {
-                this.editAddressButton = Ext.create('Ext.button.Button', {
+            if (!me.editAddressButton) {
+                me.editAddressButton = Ext.create('Ext.button.Button', {
                     ui: "action",
                     scale: "medium",
                     text: 'Edit Address',
-                    handler: function () {
-                        var addressData = Ext.clone(me.addressField.getValue());
-                        var modal = Ext.create('Taco.shared.view.modal.Address', {
-                            record: addressData,
-                            scale: null,
-                            addressHasNames: false,
-                            showCompanyName: false,
-                            showEmail: false,
-                            showPhoneNumbers: false,
-                            validateAddress: true,
-                            listeners: {
-                                savesuccess: function (win, record) {
-                                    
-                                    var updatedAddressData = record.data;
-                                    var address = Ext.clone(me.addressField.originalValue);
-                                    var addressFields = Ext.Object.getKeys(address);
-                                    address = Ext.copyTo(address, updatedAddressData, addressFields);
-                                    me.addressField.setValue(address);
-                                }
-                            }
-                        });
-                    },
-                    scope: this
-
+                    handler: me.editAddress,
+                    scope: me
                 });
             }
             
-            me.buttonItems.unshift(this.editAddressButton);
+            me.buttonItems.unshift(me.editAddressButton);
         }
 
         // button container under the displayField. Can include additional components;
-        this.buttonContainer = Ext.create('Ext.Container', {
+        me.buttonContainer = Ext.create('Ext.Container', {
             width: 400,
-            hidden:!this.showButtons,
+            hidden: !me.showButtons,
             layout: 'hbox',
             items: me.buttonItems
         });
         
-        this.items.push(this.buttonContainer);
+        me.items.push(me.buttonContainer);
     },
     
     getAddressDisplayTemplate: function () {
@@ -161,5 +145,30 @@ Ext.define('Taco.shared.view.field.Address', {
             '<div class="country">{countryCode}</div>',
             '</tpl>'
         ]);
-    } 
+    },
+    
+    editAddress: function() {
+        var me = this,
+        addressData = Ext.clone(me.addressField.getValue()),
+        modal = Ext.create('Taco.shared.view.modal.Address', {
+            record: addressData,
+            scale: null,
+            addressHasNames: false,
+            showCompanyName: false,
+            showEmail: false,
+            showPhoneNumbers: false,
+            validateAddress: true,
+            listeners: {
+                savesuccess: function (win, record) {
+                    var updatedAddressData = record.data,
+                        address = Ext.clone(me.addressField.originalValue),
+                        addressFields = Ext.Object.getKeys(address);
+                    
+                    address = Ext.copyTo(address, updatedAddressData, addressFields);
+                    me.addressField.setValue(address);
+                }
+            }
+        });
+        
+    }
 })
