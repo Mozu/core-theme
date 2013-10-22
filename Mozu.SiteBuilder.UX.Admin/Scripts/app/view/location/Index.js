@@ -34,19 +34,15 @@ Ext.define('Taco.view.location.Index', {
                 width: 560
             },
             items: [{
-                name: 'orderNumber',
-                fieldLabel: 'Order Number',
+                name: 'name',
+                fieldLabel: 'Name',
                 width: 160
             }, {
-                name: 'billingContactFirstName',
-                fieldLabel: 'First Name',
+                name: 'code',
+                fieldLabel: 'Code',
                 width: 160
             }, {
-                name: 'billingContactLastName',
-                fieldLabel: 'Last Name',
-                width: 160
-            }, {
-                name: 'billingContactAddress',
+                name: 'address',
                 fieldLabel: 'Address',
                 width: 160
             }]
@@ -58,16 +54,13 @@ Ext.define('Taco.view.location.Index', {
         text: 'All',
         isDefault: true
     }, {
-        property: 'orderNumber',
-        text: 'Order Number'
+        property: 'name',
+        text: 'Name'
     }, {
-        property: 'billingContactFirstName',
-        text: 'First Name'
+        property: 'code',
+        text: 'Code'
     }, {
-        property: 'billingContactLastName',
-        text: 'Last Name'
-    }, {
-        property: 'billingContactAddress',
+        property: 'address',
         text: 'Address'
     }
     ],
@@ -86,7 +79,7 @@ Ext.define('Taco.view.location.Index', {
             text: 'Code',
             width: 100
         }, {
-            dataIndex: 'locationTypeName',
+            dataIndex: 'locationTypes',
             text: 'Type'
             
         }, {

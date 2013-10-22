@@ -9,6 +9,10 @@ Ext.define('Taco.model.Location', {
             "type": "auto",
             "default": []
         }, {
+            "name": "locationTypeNames",
+            "type": "auto",
+            "default": []
+        }, {
             "name": "fulfillmentTypes",
             "type": "auto",
             "default": []
