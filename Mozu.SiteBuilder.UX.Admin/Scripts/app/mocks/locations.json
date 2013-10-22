@@ -1,18 +1,12 @@
 ﻿{
 	"items": [
 		{
-			"id":1205,
-			"locationTypeName":"Warehouse 1",
-			"locationTypeId":1,
-
-			"fulfillmentTypeName":"Direct Ship",
-			
-			"fulfillmentTypeId":[1,2],
-
-			"isDeleted":false,
+			"id":1205,		// tbd. roeder is considering this	
+			"locationTypes":["1"],
+			"fulfillmentTypes":[1,2],
+			"isDeleted":false, // tbd. roeder is considering this
 			"name":"Location name here",			
-			"description":"This is the description",
-			
+			"description":"This is the description",			
 			"address": {
 				"address1": "Corporate Headquarters",
 				"address2": "5844 WESTSLOPE DR",
@@ -21,85 +15,42 @@
 				"cityOrTown": "AUSTIN",
 				"state": "TX",
 				"countryCode": "US",				
-				"zipCode": "78731",
-				"id": 1004
-
-				// these are standard address fields that don't apply in our use case. not sure if we will need to keep them or not
-				//companyName: "",
-				//email: "asdf@asdf.com",
-				//firstName: "thomas",
-				//homePhone: "",
-				//lastName: "phipps",
-				//middleName: "",
-				//mobilePhone: "",				
-				//workPhone: ""
-
-
-				
-
-				
-				
+				"zipCode": "78731",				
+				"addressType": {}, // tbd. not sure what this is. Roeder said he would back to me on this.				
+				"addressIsValidated": true
 			},
-
-			
-			"latitude": "",
-			"longitude":"",
+		    geo:{
+				"latitude": 30.279230,
+				"longitude": -97.727509
+			},
 			"phone":"(512) 555-5555",
 			"fax":"(512) 555-4444",
 			"notes":"This is a field with notes",
-			"supportsInventory": true,
-			"supportsInStorePickup":false,
-			
-
-			"hours": {				
-				"timeZone": {
-					"name":"America/Chicago",
-					"description": "Central Time",
-					"cc": "US",
-					"utcOffset":"-06",
-					"utcDstOffset":"-05",
-					"abbr":"CST",
-					"id":""
-				},
-
-				// this is how the mockup is set
+			"supportsInventory": true,			
+			"tags": [],  // tbd
+			"hours": {
 				"sunday": {
-					"openTime": "8:00 AM",
-					"closeTime": "5:00 PM",
-					"isClosed": true
+					"label": "8:00 AM - 5:00 PM"
 				},
 				"monday": {
-					"openTime": "8:00 AM",
-					"closeTime": "5:00 PM",
-					"isClosed":true
+					"label": "8:00 AM - 5:00 PM"
 				},
 				"tuesday": {
-					"openTime": "8:00 AM",
-					"closeTime": "5:00 PM",
-					"isClosed":true
+					"label": "8:00 AM - 5:00 PM"
 				},
 				"wednesday": {
-					"openTime": "8:00 AM",
-					"closeTime": "5:00 PM",
-					"isClosed":true
+					"label": "8:00 AM - 5:00 PM"
 				},
 				"thursday": {
-					"openTime": "8:00 AM",
-					"closeTime": "5:00 PM",
-					"isClosed":true
+					"label": "8:00 AM - 5:00 PM"
 				},
 				"friday": {
-					"openTime": "8:00 AM",
-					"closeTime": "5:00 PM",
-					"isClosed":true
+					"label": "8:00 AM - 5:00 PM"
 				},
 				"saturday": {
-					"openTime": "8:00 AM",
-					"closeTime": "5:00 PM",
-					"isClosed":true
+					"label": "8:00 AM - 5:00 PM"
 				}
-			}
-			
+			}			
 		}
 	],	
 	"success":true,

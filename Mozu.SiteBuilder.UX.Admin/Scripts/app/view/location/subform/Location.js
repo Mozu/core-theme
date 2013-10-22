@@ -2,110 +2,134 @@
  * @class Taco.view.location.subform.Location
  */
 Ext.define('Taco.view.location.subform.Location', {    
-    extend: 'Taco.core.ux.EditContainer',
-    //extend: 'Taco.core.ux.form.Form',
+    // this is the secret sauce. Your subform panel must extend Taco.core.ux.form.Form in order to participate in the automated saveTasks behavior of the parent form
+    extend: 'Taco.core.ux.form.Form',
+    // gives the form the correct ux
+    ui: 'subform',
+    
     requires: [
         'Taco.core.ux.form.BoxSelect',
-        'Taco.shared.view.modal.Address'
+        'Taco.shared.view.modal.Address',
+        'Taco.shared.view.field.Address',
+        'Taco.core.ux.form.field.EditableDisplayField'
     ],
-    
     title: 'Location',
-
     margin: "0 0 20 0",
-    
-    width: '100%',
-
     tools: null,    
-
     config: {    
         record: null,
         itemId:"location"
     },
-    
-    initComponent: function (eOpts) {
+    initComponent: function () {
         var me = this;
 
-        this.cls = [this.cls, Taco.baseCSSPrefix + 'locationform-location'].join(' ');
+        me.cls = [me.cls, Taco.baseCSSPrefix + 'locationform-location'].join(' ');
 
-        this.locationType = Ext.widget({
-            xtype: 'combo',
+        var locationTypesStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.LocationTypes',
+            listeners: {
+                load: {
+                    fn: function () {
+                        
+                    },
+                    single:true,
+                    scope:me
+                }
+            }
+        });
+        
+        // note there are two different boxSelects. Dont' use the other one. your welcome.
+        me.locationTypes = Ext.create('Ext.ux.form.field.BoxSelect', {
             width: 300,
-            fieldLabel: 'Location Type',            
-            name: 'locationTypeId',
-            forceSelection: true,
-            editable: false,
-            emptyText: 'Select',
+            fieldLabel: 'Location Types',
+            name: 'locationTypes',
             queryMode: 'local',
             displayField: 'name',
             valueField: 'id',
-            allowBlank: false,            
-            store: Ext.create('Ext.data.Store', {
-                fields: ['code', 'name'],
-                data: [
-                    {			
-                        "name":"Warehouse 123",
-                        "code": "W123",
-                        "id":1
-                    },
-		            {			
-		                "name":"Warehouse 224",
-		                "code": "W224",
-		                "id":2
-		            },
-		            {			
-		                "name":"Retail Store 1",
-		                "code": "RS1",
-		                "id":3
-		            },
-		            {			
-		                "name":"Kiosk",
-		                "code": "K1",
-		                "id":4
-		            },
-		            {			
-		                "name":"Merge Center",
-		                "code": "MC1",
-		                "id":5
-		            }
-                ]
-            })
-        });        
+            emptyText: 'Select',
+            allowBlank: false,
+            store: locationTypesStore
+        });
 
         
-        
 
-        // fulfillmentType
-        // needs a multiselect;
-        this.fulfillmentType = Ext.create('Taco.core.ux.form.BoxSelect', {
+        // note there are two different boxSelects. Dont' use the other one. your welcome.
+        me.fulfillmentTypes = Ext.create('Ext.ux.form.field.BoxSelect', {
             width: 300,
-            fieldLabel: 'Fulfillment Type',
-            name: 'fulfillmentTypeId',
+            fieldLabel: 'Fulfillment Types',
+            name: 'fulfillmentTypes',
             queryMode: 'local',
             //multiSelect: true,
             displayField: 'name',
             valueField: 'id',
             emptyText: 'Select',
+            allowBlank: true,
             store: Ext.create('Ext.data.Store', {
                 autoLoad:true,
                 fields: ['code', 'name', "id", "shippingRequired"],
-                data: this.record.getFulfillmentTypes()
+                data: me.record.getFulfillmentTypes()
             })
+        });
+      
+
+
+        me.addressView = Ext.create('Taco.shared.view.field.Address', {
+            name: "address",
+            allowBlank: false,
+            // extra components to be inserted after the edit button
+            buttonItems: [
+                {
+                    xtype: "splitter"
+                }, {
+                    xtype: 'button',
+                    ui: "action",
+                    scale: "medium",
+                    text: "Get Latitude/Longitude",
+                    handler: function () {
+                        me.record.getGeo({
+                            jsonData: {
+                                address: me.addressView.addressField.getValue()
+                            },
+                            success: function (response) {
+                                // update the lat long fields
+                                var json = Ext.decode(response.responseText, true);
+                                if (json && json.success) {
+                                    me.getForm().findField("latitude").setValue(json.geo.latitude);
+                                    me.getForm().findField("longitude").setValue(json.geo.longitude);
+                                }
+                            },
+                            scope: this
+                        });
+                    },
+                    scope: this
+                }
+            ]
         });
         
 
+
+        /*
         this.addressView = Ext.create('Ext.form.field.Display',{
             fieldLabel: 'Address',
             name:"address",
             fieldStyle : "color: #333333;padding: 5px 10px 3px 10px;background: white repeat-x 0 0;border-width: 1px;border-style: solid;border-color: #bfbfbf;",
-            width:400,
-            //Note: this is required to get a display field to accept a value thats an object; otherwise the value gets auto converted to a string;
-            valueToRaw: function (value) {
-                return value;
+            width: 400,
+            allowBlank: false,
+            
+            isValid: function () {
+                var value = this.getValue();
+                return (value && value.addressIsValidated);
             },
-            renderer: function(value, field) {
+            
+            validate: function () {
+                return this.isValid();
+            },
+            
+            renderer: function (value, field) {
                 return Ext.create('Ext.XTemplate', [
                     '<tpl if="!address1 && !address2 && !address3 && !address4">',
-                        '<div class="address-none">none</div>',
+                        //'<div class="address-none" style="color:#ccc;"><br></div>',
+                    '<br>',
                     '<tpl else>',
                         '<div class="address-line-1">{address1}</div>',
                         '<div class="address-line-2">{address2}</div>',
@@ -118,18 +142,13 @@ Ext.define('Taco.view.location.subform.Location', {
             }
         });
 
-
-        var addressData = this.record.get("address");
-
         this.editAddressButton = Ext.create('Ext.button.Button',{
             ui: "action",
             scale:"medium",
             text: 'Edit Address',
             handler: function () {
-                var me = this
-                
-                var modal = Ext.create('Taco.shared.view.modal.Address', {
-                    record: addressData,
+                    var modal = Ext.create('Taco.shared.view.modal.Address', {
+                    record: me.addressView.getValue(),
                     scale: null,
                     addressHasNames: false,
                     showCompanyName: false,
@@ -138,9 +157,11 @@ Ext.define('Taco.view.location.subform.Location', {
                     validateAddress: true,
                     listeners: {
                         savesuccess: function (win, record) {
-                            //debugger;
-                            //me.record.set('siteShippingOriginAddress', Ext.apply({}, me.addressRecord.data));
-                            //me.addressView.update(me.addressRecord.data);
+                            var updatedAddressData = record.data;
+                            var address = Ext.clone(me.addressView.originalValue);
+                            var addressFields = Ext.Object.getKeys(address);
+                            address = Ext.copyTo(address, updatedAddressData, addressFields);
+                            me.addressView.setValue(address);
                         }
                     }
                 });
@@ -149,54 +170,115 @@ Ext.define('Taco.view.location.subform.Location', {
 
         });
 
-        
-
-        
-
-               
-        
+        */
                 
-        this.items = [            
-            this.locationType,
-            this.fulfillmentType,
+        this.items = [
+            this.locationTypes,
+            this.fulfillmentTypes,
             {
                 xtype: "textfield",
                 name: "name",
                 width: '100%',
                 fieldLabel: 'Name',
                 allowBlank: false
-            },
-            {
+            }, {
                 xtype: "textfield",
                 name: "description",
                 width: '100%',
                 fieldLabel: 'Description',                
                 allowBlank: true
+            }, {
+                xtype:"displayfield",
+                name:"isDeleted",
+                fieldLabel: "Location Status",
+                tpl:[
+                    //    '<tpl if= "">'
+                    "Location was deleted"
+                ]
             },
             this.addressView,
-            this.editAddressButton,
+            
+            /*
+            this.addressView,
+            {
+                xtype: 'fieldcontainer',
+                width: 400,
+                layout: 'hbox',
+                items: [
+                    this.editAddressButton,
+                    {
+                        xtype: "splitter"
+                    },{
+                        xtype: 'button',
+                        ui: "action",
+                        scale: "medium",
+                        text: "Get Latitude/Longitude",
+                        handler: function () {
+                            this.record.getGeo({
+                                jsonData: {
+                                    address: this.addressView.getValue()
+                                },
+                                success: function (response) {
+                                    // update the lat long fields
+                                    this.getForm().findField("latitude").setValue(json.geolocation.latitude);
+                                    this.getForm().findField("longitude").setValue(json.geolocation.longitude);
+                                },
+                                failure: function(response) {
+                                    
+                                },
+                                scope:this
+                            });
+                        },
+                        scope: this
+                    }
+                ]
+            }, 
+            
+            
+            */
+            
+            {
+                xtype: 'fieldcontainer',
+                width:"100%",
+                layout: 'hbox',
+                items: [{
+                    xtype: 'textfield',
+                    fieldLabel:"Latitude",
+                    name: "latitude",
+                    allowBlank: false,
+                    value: this.record.get("geo").latitude,
+                    flex: 1
+                }, {
+                    xtype:"splitter"
+                }, {
+                    xtype: 'textfield',
+                    fieldLabel: "Longitude",
+                    allowBlank: false,
+                    name: "longitude",
+                    value: this.record.get("geo").longitude,
+                    flex: 1
+                }]
+            },
+            
             {
                 xtype: "textfield",
-                name: "Phone",
+                name: "phone",
                 width: 200,
                 fieldLabel: 'Phone',
                 allowBlank: true
-            },
-            {
+            }, {
                 xtype: "textfield",
                 name: "fax",
                 width: 200,
                 fieldLabel: 'Fax',
                 allowBlank: true
-            },
-            {
+            }, {
                 xtype: "textarea",
                 name: "notes",
                 width: '100%',
                 fieldLabel: 'Notes',
                 allowBlank: true
-            },
-            {
+            }, {
                 xtype: "checkbox",
                 name: "supportsInventory",
                 width: 200,
@@ -204,9 +286,31 @@ Ext.define('Taco.view.location.subform.Location', {
                 boxLabel: "Enabled",
                 allowBlank: true
             }
-            
         ];
         
         this.callParent(arguments);
+    },
+
+    // this is optional. Do some additional save tasks after the automatic update-record task executes. This allows you to extract complext data from the form and write it to the record
+    addSaveTasks: function (tasks) {
+        var me = this;
+        console.log("subForm level save task ");
+
+        tasks.add({
+            // the name of your task
+            key: 'update-location',
+            // the name of the task you want to follow
+            dependencies: this.tasksKeyPrefix + "update-record",
+            // executes when the task exectutes
+            fn: function () {
+                // manually update the record
+                var form = me.getForm();
+                me.record.set("geo", {
+                    latitude: form.findField("latitude").getValue(),
+                    longitude: form.findField("longitude").getValue()
+                });
+            }
+        });
+        return tasks;
     }
 });

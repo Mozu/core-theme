@@ -3,27 +3,27 @@
 		{			
 			"name":"Warehouse 123",			 
 			"code": "W123",
-			"id":1
+			"id":"1"
 		},
 		{			
 			"name":"Warehouse 224",
 			"code": "W224",
-			"id":2
+			"id":"2"
 		},
 		{			
 			"name":"Retail Store 1",
 			"code": "RS1",
-			"id":3
+			"id":"3"
 		},
 		{			
 			"name":"Kiosk",
 			"code": "K1",
-			"id":4
+			"id":"4"
 		},
 		{			
 			"name" : "Merge Center",
 			"code": "MC1",
-			"id":5
+			"id":"5"
 		}
 	],	
 	"success":true,

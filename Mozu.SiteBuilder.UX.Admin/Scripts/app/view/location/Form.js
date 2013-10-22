@@ -17,18 +17,9 @@ Ext.define('Taco.view.location.Form', {
         customer: null
     },
 
+    // XTemplate config that will automatically get applied with {record:this.record};
     editTitle: [
-        'Order No. {number}',
-        '<span class="taco-order-status {status}">',
-            '{status}',
-        '</span>'
-    ],
-
-    createTitle: [
-        'Create Order No. {number}',
-        '<span class="taco-order-status">',
-            '{status}',
-        '</span>'
+        '{record.data.name}'
     ],
 
     initComponent: function () {
@@ -39,12 +30,7 @@ Ext.define('Taco.view.location.Form', {
         this.callParent(arguments);
         
         this.loadNavItems();
-
-        // need to load the record again since the navForm2 clears the items and adds the content after the loadRecord is called
-        //this.loadRecord(this.record);
     },
-    
-    
 
     buildForm: function () {
         
@@ -56,39 +42,24 @@ Ext.define('Taco.view.location.Form', {
         
         items.push(Ext.create('Taco.view.location.subform.Location', subformCfg));
         items.push(Ext.create('Taco.view.location.subform.StoreHours', subformCfg));
-        // this loads the subform panels and hooks up the link nav on the left;
-
         this.items = items;
-
-        
     },
-    
-    addSaveTasks: function(tasks) {
+
+    // this is optional. Do some additional save tasks after the automatic update-record task executes. This allows you to extract complext data from the form and write it to the record
+    addSaveTasks: function (tasks) {
         var me = this;
-
-        tasks.add({ 
-            key: 'submitorder',
+        console.log("class level save task ")
+        tasks.add({
+            // the name of your task
+            key: 'update-mainForm',
+            // the name of the task you want to follow
+            dependencies: this.tasksKeyPrefix + "update-record",
+            // executes when the task exectutes
             fn: function () {
-                
-                return
-                Ext.Ajax.request({
-                    url: '/admin/app/location/edit',
-                    method: 'POST',
-                    jsonData: {
-
-                    },
-                    success: function() {
-                        //alert("Your location was created! Yay! You should probably close this window now.");
-                       // debugger
-                        // tasks.callback();
-                    },
-                    failure: function () {
-                      //  debugger
-                        tasks.callback(true);
-                    }
-                });
+                // manually update the record
+                //me.record.set("name", "test");
             }
         });
-        return tasks;
+        this.callParent(arguments);
     }
 })
