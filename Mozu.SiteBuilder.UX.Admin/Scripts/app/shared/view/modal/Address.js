@@ -31,7 +31,10 @@ Ext.define('Taco.shared.view.modal.Address', {
         scale: 'medium',
         text: 'Validate',
         handler: function () {
-            this.validateOnly();
+            //this.validateOnly();
+            this.validateAndPrompt(function () {
+                //me.form.save();
+            });
         },
         itemId: 'otherAction'
     }, {
@@ -43,7 +46,11 @@ Ext.define('Taco.shared.view.modal.Address', {
         xtype: 'button',
         itemId: 'primaryAction',
         handler: function () {
-            this.validateAndSave();
+            var me = this;
+            this.validateAndPrompt(function () {
+                me.form.save();
+                me.close();
+            });
         },
         formBind: true
     }],
@@ -132,11 +139,11 @@ Ext.define('Taco.shared.view.modal.Address', {
     },
 
     /**
-     * Validate the address, if validated address differs from record, ask if should use validated address instead, save and close
+     * Validate the address, if validated address differs from record, ask if should use validated address instead, then invoke callback
      *
      * @private
      */
-    validateAndSave: function () {
+    validateAndPrompt: function (callback) {
         var me = this;
         this.validateForm(function (response) {
             if (response.error) {
@@ -144,37 +151,46 @@ Ext.define('Taco.shared.view.modal.Address', {
                     title: 'Address',
                     msg: 'Unable to validate address'
                 });
-                me.form.save();
-                me.close();
+                callback();
             } else if (response.changed) {
                 var message = '';
-                message += response.validatedAddr['address1'] + ', ';
+                message += response.validatedAddr['address1'] + '<br />';
                 if (response.validatedAddr['address2'] != '') {
-                    message += response.validatedAddr['address2'] + ', ';
+                    message += response.validatedAddr['address2'] + '<br />';
                 }
-                message += response.validatedAddr['cityOrTown'] + ' ';
-                message += response.validatedAddr['state'] + ', ';
-                message += response.validatedAddr['countryCode'] + ', ';
-                message += response.validatedAddr['zipCode'];
+                message += response.validatedAddr['cityOrTown'] + ', ';
+                message += response.validatedAddr['state'] + ' ';
+                message += response.validatedAddr['zipCode'] + '<br />';
+                message += response.validatedAddr['countryCode'];
                 Ext.Msg.show({
-                    title: 'Address',
-                    msg: 'Did you mean: ' + message,
+                    title: 'Validated Address',
+                    msg: 'Valid address is:<p>' + message + '</p>',
                     buttons: Ext.Msg.YESNO,
+                    buttonText: {yes: "Use This", no: "Keep Original"},
+                    xbuttons: { 
+                        ok: "Use This", 
+                        handler: function(){ 
+                            Ext.MessageBox.hide(); 
+
+                        },
+                        cancel: "Keep Original",
+                        handler: function(){
+                            Ext.MessageBox.hide();
+                        }
+                    },
+
                     closable: false,
                     rightJustifyButtons: true,
                     scope: this,
                     fn: function (rec) {
                         if (rec === "yes") {
                             response.applyToRecord();
-                            //me.applyValidatedAddress(response.validatedAddr);
                         }
-                        me.form.save();
-                        me.close();
+                        callback();
                     }
                 });
             } else {
-                me.form.save();
-                me.close();
+                callback();
             }
         });
     },
