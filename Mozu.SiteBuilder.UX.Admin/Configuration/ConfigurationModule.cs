@@ -1,12 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.ServiceModel;
 //
 using System.Web.Http;
 using Autofac;
 //using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
-using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
@@ -15,17 +13,10 @@ using Mozu.Core.Configuration;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Catalog;
-using Mozu.SiteBuilder.Mvc.Configuration;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.SiteBuilder.UX.Admin.MockServices;
 using Mozu.SiteBuilder.UX.Admin.Navigation;
-using Mozu.User.Contracts.Clients;
-using NDjango;
-using NDjango.Interfaces;
-using Api = Mozu.SiteBuilder.UX.Admin.Api;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.UX.Admin.Configuration
 {
@@ -77,7 +68,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.General.Contracts.Clients.GeneralSettingsWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Customer.Contracts.Clients.CustomerAccountWebApiClient).Assembly);
 
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Location.Contracts.Clients.ILocationAdminWebApiClient).Assembly);
+           // builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Location.Contracts.Clients.ILocationAdminWebApiClient).Assembly);
 
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.CommerceRuntime.Contracts.Products.Product ).Assembly);
 
@@ -128,10 +119,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             {
                 var apiContext = request.LifetimeScope().Resolve<IApiContext>();
                 var sbApiContext = apiContext as SiteBuilderApiContext ;
-                if (sbApiContext != null)
+
+               
+                // if user can view pending mode, default to pending mode.
+                if (sbApiContext != null && sbApiContext.UserClaims != null && sbApiContext.UserClaims.BehaviorIds != null && sbApiContext.UserClaims.BehaviorIds.Contains(165))
                 {
                     sbApiContext.DataViewMode = DataViewModeType.Pending;
-                    
                 }
                 return apiContext;
 
