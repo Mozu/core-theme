@@ -188,13 +188,19 @@ Ext.define('Taco.view.location.subform.Location', {
                 fieldLabel: 'Description',                
                 allowBlank: true
             }, {
+                // note: may need to convert this to a checkbox of on/off toggle if the service supports undelete. TBD
                 xtype:"displayfield",
-                name:"isDeleted",
+                name: "isDeleted",
+                hidden: (!me.record.get("isDeleted")),
+                width:200,
                 fieldLabel: "Location Status",
-                tpl:[
-                    //    '<tpl if= "">'
-                    "Location was deleted"
-                ]
+                renderer: function (value, field) {
+                    if (value==="true") {
+                        return "Location has been deleted";
+                    } else {
+                        return "Active";
+                    }
+                }
             },
             this.addressView,
             
