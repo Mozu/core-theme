@@ -121,14 +121,6 @@ Ext.define('Taco.view.order.Index', {
             text: 'Order Status',
             width: 100
         }, {
-            dataIndex: 'channel',
-            text: 'Channel',
-            width: 100
-        }, {
-            dataIndex: 'fulfillmentType',
-            text: 'Fulfillment Type',
-            width: 100
-        }, {
             dataIndex: 'paymentStatus',
             text: 'Payment Status',
             width: 120
@@ -136,6 +128,14 @@ Ext.define('Taco.view.order.Index', {
             dataIndex: 'shippingStatus',
             text: 'Shipping Status',
             width: 120
+        }, {
+            dataIndex: 'channel',
+            text: 'Channel',
+            width: 100
+        }, {
+            dataIndex: 'fulfillmentType',
+            text: 'Fulfillment Type',
+            width: 100
         }, {
             xtype: 'taco.menucolumn',
             text: 'Actions',

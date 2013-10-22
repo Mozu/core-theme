@@ -34,6 +34,25 @@ Ext.define('Taco.view.order.Header', {
                 '<tpl if="ipAddress">',
                     ' | IP address: {ipAddress}',
                 '</tpl>',
+        
+            '<tpl if="channel">',
+                '<span class="origin-data-item"> Channel: {channel}</span>',
+                ' | ',
+            '</tpl>',
+        
+            '<tpl if="site">',
+                '<span class="origin-data-item"> Site: {site}</span>',
+                ' | ',
+            '</tpl>',
+            
+            '<tpl if="fulfillmentType">',
+                '<span class="origin-data-item">FulfillmentType: ',
+                    '<tpl for="fulfillmentType">',
+                        '<tpl if="xindex &gt; 1">, </tpl>',
+                        '{name}',
+                    '</tpl>',
+                '</span>',
+            '</tpl>',
         '</div>', {
             convertDate: function(date) {
                 return Ext.Date.format(date, 'F j, Y, g:i a');

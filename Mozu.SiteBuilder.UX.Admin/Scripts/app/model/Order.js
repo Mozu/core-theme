@@ -273,12 +273,18 @@ Ext.define('Taco.model.Order', {
 
         {
             "name": "channel",
-            "type": "auto"
+            "type": "string"
         },
         
         {
             "name": "fulfillmentType",
-            "type": "auto"
+            "type": "array",
+            "default":[]
+        },
+        
+        {
+            "name": "site",
+            "type": "string"
         },
 
         {
