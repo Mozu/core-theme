@@ -48,7 +48,7 @@ Ext.define('Taco.view.locationType.Index', {
                     width: 160
                 }, {
                     name: 'code',
-                    fieldLabel: 'code',
+                    fieldLabel: 'Code',
                     width: 160
                 }
             ]
@@ -101,7 +101,7 @@ Ext.define('Taco.view.locationType.Index', {
                 allowBlank: false
             },
             text: 'Name',
-            width:200
+            flex:1
             
         }]
     }
