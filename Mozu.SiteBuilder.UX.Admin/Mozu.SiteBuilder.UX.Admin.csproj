@@ -581,7 +581,9 @@
     <Content Include="Scripts\app\controller\OrderAttributes.js" />
     <Content Include="Scripts\app\controller\Reports.js" />
     <Content Include="Scripts\app\controller\Tbd.js" />
+    <Content Include="Scripts\app\core\util\Common.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
+    <Content Include="Scripts\app\core\ux\form\field\EditableDisplayField.js" />
     <Content Include="Scripts\app\core\ux\form\field\InlinePicker.js" />
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\window\Alert.js" />
@@ -600,6 +602,7 @@
     <Content Include="Scripts\app\overrides\menu\Item.js" />
     <Content Include="Scripts\app\overrides\window\MessageBox.js" />
     <Content Include="Scripts\app\overrides\window\Window.js" />
+    <Content Include="Scripts\app\shared\view\field\Address.js" />
     <Content Include="Scripts\app\store\Channel.js" />
     <Content Include="Scripts\app\store\Channels.js" />
     <Content Include="Scripts\app\store\CustomerAttributes.js" />
@@ -900,6 +903,7 @@
     <Content Include="Scripts\app\mocks\locations.json" />
     <Content Include="Scripts\app\mocks\locationTypes.json" />
     <Content Include="Scripts\app\mocks\CustomerAttributes.json" />
+    <Content Include="Scripts\sass\src\core\ux\form\field\EditableDisplayField.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -3249,6 +3253,7 @@
     <Folder Include="Models\" />
     <Folder Include="Modules\" />
     <Folder Include="Scripts\app\model\Context\" />
+    <Folder Include="Scripts\app\overrides\form\field\" />
     <Folder Include="Scripts\app\view\address\" />
     <Folder Include="Scripts\app\view\settings\publishing\" />
     <Folder Include="Scripts\resources\scss\taco\widgets\" />

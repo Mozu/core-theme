@@ -4,148 +4,110 @@
 Ext.define('Taco.model.Location', {
     extend: 'Taco.core.data.Model',
     fields: [
-
-    
-        //LocationType - only one - association
-    {
-        "name": "locationTypeName",
-        "type": "string"
-    },
-        
-    {
-        "name": "locationTypeId",
-        "type": "int"
-    },
-        
-        //FulfillmentType - one or more - association
-    {
-        "name": "fulfillmentTypeName",
-        "type": "string"
-    },
-        
-    {
-        "name": "fulfillmentTypeId",
-        "type": "auto"
-    },
-        
-
-    {
-        "name": "id",
-        "type": "string",
-        "useNull": true
-    }, {
-        "name": "isDeleted",
-        "type": "boolean"
-    },
-
-
-    {
-        "name": "name",
-        "type": "string",
-        "useNull": true
-    }, {
-        "name": "description",
-        "type": "string",
-        "useNull": true
-    },
-
-
-    // GEO fields
-    {
-        "name": "address",   // note this should be and address object (standard hopefully)
-        "type": "auto"
-    },
-        
-    // note this is a string version of the structured address object used for display in the grid;
-    {
-        "name": "addressString",   
-        "type": "string",
-        "convert": function (val, record) {
-            var str = Ext.create('Ext.XTemplate',
-                '{address1} ',
-                '{address2} ',
-                '{address3} ',
-                '{address4} ',
-                '{cityOrTown}, {state} {zipCode}',
-                '{countryCode}'
-            ).apply(record.get('address'));
-                
-            return str;
-        }
-    },
-
-
-    {
-        "name": "latitude",
-        "type": "string",
-        "useNull": true
-    },{
-        "name": "longitude",
-        "type": "string",
-        "useNull": true
-    },
-
-    // really should be an array of phone numbers. We need to standardize this (types: phone, fax, toll free, etc)
-    {
-        "name": "phone",
-        "type": "string"
-    }, {
-        "name": "fax",
-        "type": "string"
-    },
-
-    
-    {
-        "name": "notes",
-        "type": "string"
-    }, {
-        "name": "supportsInventory",
-        "type": "boolean"
-    }, {
-        "name": "hours",
-        "type": "object",
-        "defaultValue": {
-            sunday: {
-                "openTime": "",
-                "closeTime": "",
-                "isClosed": true
-            },
-            monday: {
-                "openTime": "",
-                "closeTime": "",
-                "isClosed": true
-            },
-            tuesday: {
-                "openTime": "",
-                "closeTime": "",
-                "isClosed": true
-            },
-            wednesday: {
-                "openTime": "",
-                "closeTime": "",
-                "isClosed": true
-            },
-            thursday: {
-                "openTime": "",
-                "closeTime": "",
-                "isClosed": true
-            },
-            friday: {
-                "openTime": "",
-                "closeTime": "",
-                "isClosed": true
-            },
-            saturday: {
-                "openTime": "",
-                "closeTime": "",
-                "isClosed": true
+        {
+            "name": "locationTypes",
+            "type": "auto",
+            "default": []
+        }, {
+            "name": "fulfillmentTypes",
+            "type": "auto",
+            "default": []
+        }, {
+            "name": "id",  // this is tbd
+            "type": "string",
+            "useNull": true
+        }, {
+            "name": "isDeleted", // this is tbd
+            "type": "boolean"
+        }, {
+            "name": "name",
+            "type": "string",
+            "useNull": true
+        }, {
+            "name": "description",
+            "type": "string",
+            "useNull": true
+        }, {
+            "name": "address",
+            "type": "auto",
+            "defaultValue": {
+                "address1": "",
+				"address2": "",
+				"address3": "",
+				"address4": "",
+				"cityOrTown": "",
+				"state": "",
+				"countryCode": "",
+				"zipCode": "",				
+				"addressType": {}, // tbd. not sure what this is. Roeder said he would back to me on this.				
+				"addressIsValidated": false
             }
+        },
+        // note this is a string version of the structured address object used for display in the grid;
+        {
+            "name": "addressToString",   
+            "type": "string",
+            "convert": function (val, record) {
+                var str = Ext.create('Ext.XTemplate',
+                    '{address1} ',
+                    '{address2} ',
+                    '{address3} ',
+                    '{address4} ',
+                    '{cityOrTown}, {state} {zipCode}',
+                    '{countryCode}'
+                ).apply(record.get('address'));
+                return str;
+            }
+        }, {
+            "name": "geo",
+            "type": "auto",
+            "defaultValue": {
+                latitude: null,
+                longitude:null
+            }
+        }, {
+            "name": "phone",
+            "type": "string"
+        }, {
+            "name": "fax",
+            "type": "string"
+        }, {
+            "name": "notes",
+            "type": "string"
+        }, {
+            "name": "supportsInventory",
+            "type": "boolean"
+        }, {
+            "name": "hours",
+            "type": "object",
+            "defaultValue": {
+                sunday: {
+                    "label": ""
+                },
+                monday: {
+                    "label": ""
+                },
+                tuesday: {
+                    "label": ""
+                },
+                wednesday: {
+                    "label": ""
+                },
+                thursday: {
+                    "label": ""
+                },
+                friday: {
+                    "label": ""
+                },
+                saturday: {
+                    "label": ""
+                }
+            }
+        }, {
+            name: "tags",
+            type: "auto",
+            defaultValue: []
         }
-    }
-
-
-
-
     ],
     proxy: {
         type: 'ajaxproxy',
@@ -168,8 +130,40 @@ Ext.define('Taco.model.Location', {
             type: 'json'
         }
     },
-    
+    /**
+    * service call to get geo location information for an address
+    * @param {Object} config  A configuration object
+    * config object:
+    * 
+            {
+                jsonData: {
+                    address: {
+                        see address object defined above
+                    }
+                },
+                success: function (response) {
+                    // success handling here                    
+                },
+                failure: function (response) {
+                    // error handling here
+                },
+                scope: this
+            }
 
+    *
+    */
+    getGeo: function(config) {
+        Ext.apply(config, {
+            url: '/admin/app/location/getGeo',
+            method: "POST",
+            errorMsg: "Error getting geo locations"
+        });
+        
+        this.addErrorHandling(config);
+        
+        Ext.Ajax.request(config);
+    },
+    
     // fulfillmentTypes are hard coded in the backend services.
     getFulfillmentTypes : function() {
         return [
@@ -178,8 +172,7 @@ Ext.define('Taco.model.Location', {
                 "code": "inStorePickup",
                 "shippingRequired": false,
                 "id": 1
-            },
-            {
+            }, {
                 "name": "Direct Ship",
                 "code": "directShip",
                 "shippingRequired": true,
@@ -187,5 +180,4 @@ Ext.define('Taco.model.Location', {
             }
         ];
     }
-
 });

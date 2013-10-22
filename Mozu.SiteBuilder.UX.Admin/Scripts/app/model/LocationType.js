@@ -6,7 +6,7 @@ Ext.define('Taco.model.LocationType', {
     fields: [
         {
             "name": "id",
-            "type": "int"
+            "type": "string"
         }, {
             "name": "code",
             "type": "string"
@@ -29,10 +29,6 @@ Ext.define('Taco.model.LocationType', {
             root: 'items',
             successProperty: 'success',
             messageProperty: "message"
-        },
-        writer: {
-            allowSingle: true,
-            type: 'json'
         }
     }
 });

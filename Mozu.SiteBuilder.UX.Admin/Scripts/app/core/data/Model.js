@@ -377,5 +377,52 @@ Ext.define('Taco.core.data.Model', {
         };
 
         this.proxy.duplicate(operation, callback, this);
+    },
+    
+    // adds default error handling to the success function of the ajax call;
+    // just pass your ajax config to this method to adapt it to contain the boilerplate error handling on successFn and failureFn;
+    // optional config paramters:
+    //      success : function (response){}
+    //      failure : function (response){}
+    //      errorMsg : "Your error here"
+    addErrorHandling: function (config) {
+        
+        // store the passed in success method for use after the the error check runs;
+        if (config.success) {
+            config.success2 = config.success;
+            config.scope2 = config.scope;
+        }
+        
+        // store the passed in failure method for use after the the error check runs;
+        if (config.failure) {
+            config.failure2 = config.failure;
+            config.scope2 = config.scope;
+        }
+        
+        // add the error check to the success fn.
+        config.success = function (response) {
+            var json = Ext.decode(response.responseText, true);
+            if (!json || !json.success) {
+                var msg = (config.errorMsg) ? config.errorMsg : "Error";
+                Taco.app.fireEvent('setmessage', msg, 'error');
+                return;
+            }
+            
+            // call the passed in success method after having passed the error validation messaging
+            if (config.success2) {
+                config.success2.apply(config.scope2 || me, arguments);
+            }
+        };
+        
+        // add the error check to the failure fn.
+        config.failure = function(response) {
+            var json = Ext.decode(response.responseText, true),
+                msg = (json && json.Message) ? json.Message : (config.errorMsg) ? config.errorMsg : "Error";
+            Taco.app.fireEvent('setmessage', msg, 'error');
+            // call the passed in failure method after having passed the error validation messaging
+            if (config.failure2) {
+                config.failure2.apply(config.scope2 || me, arguments);
+            }
+        };
     }
 });

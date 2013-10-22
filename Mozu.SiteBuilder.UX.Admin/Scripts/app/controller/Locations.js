@@ -7,6 +7,7 @@
 Ext.define('Taco.controller.Locations', {
     extend: 'Taco.core.Controller',
     requires: [
+        'Taco.view.location.Index',
         'Taco.view.location.Edit'
     ],
     editorView: 'Taco.view.location.Edit',

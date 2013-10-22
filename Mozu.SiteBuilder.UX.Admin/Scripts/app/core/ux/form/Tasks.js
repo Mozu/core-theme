@@ -16,7 +16,7 @@
     },
 
     add: function (task) {
-
+     
         if (task.length) {
             Ext.each(task, function (t) {
                 this.add(t);
@@ -54,12 +54,10 @@
                 }
                 task.saveRecord.save({
                     failure: function (record,operation ) {
-
                         var msg = operation.error ;
                         if (msg && msg.remoteException) {
                             msg = msg.remoteException.getMessage();
                         }
-                        
 
                         if (msg) {
                             Taco.app.fireEvent('setmessage', msg, 'error');
