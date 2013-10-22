@@ -1,6 +1,6 @@
 ﻿{% extends "page" %}
 
-{% block title-tag-content %} Cart - {{block.super}} {% endblock title-tag-content %}
+{% block title-tag-content %} {{ themeSettings.labelCart }} - {{block.super}} {% endblock title-tag-content %}
 
 {% block body-tag-classes %} mz-cart {% endblock body-tag-classes %}
 
@@ -11,7 +11,7 @@
 {% preload_json Model "cart" %}
 
 <div class="mz-l-container">
-	<h1 class="mz-pagetitle">Cart</h1>
+	<h1 class="mz-pagetitle">{{ themeSettings.labelCart }}</h1>
 	<form method="post" action="/cart/checkout" id="cartform">
         {% include "modules/common/message-bar" %}
         <table class="mz-carttable" id="cart">

@@ -10,7 +10,7 @@
 
     Facet = Backbone.MozuModel.extend({
         idAttribute: 'Field',
-        helpers: ['isEmpty'],
+        helpers: ['isFaceted'],
         defaults: {
             FacetType: '',
             Field: '',
@@ -28,8 +28,8 @@
             }
             return raw;
         },
-        isEmpty: function () {
-            return !this.get("Values").findWhere({ "IsApplied": true });
+        isFaceted: function () {
+            return !!this.get("Values").findWhere({ "IsApplied": true });
         },
         empty: function () {
             this.set("Values", { IsApplied: false });

@@ -2,9 +2,10 @@
     {% block store-branding %}
         {% include "modules/page-header/store-branding" %}
     {% endblock store-branding %}
-    {% include "modules/page-header/utility-nav" %}
-    {% include "modules/page-header/search-box" %}
-    {% block site-nav %}
-    {% include "modules/site-nav" %}
-    {% endblock site-nav %}
+    {% block utility-nav %}
+        {% include "modules/page-header/utility-nav" %}
+    {% endblock utility-nav %}
+    {% block search-box %}
+        {% include "modules/page-header/search-box" %}
+    {% endblock search-box %}
 </header>

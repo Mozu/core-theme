@@ -1,6 +1,6 @@
     <h3 class="mz-formstep-header">
-        Shipping Method
-        <button class="mz-button mz-formstep-edit" data-mz-action="edit">Edit</button>
+        {{ themeSettings.labelShippingMethod }}
+        <button class="mz-button mz-formstep-edit" data-mz-action="edit">{{ themeSettings.labelEdit }}</button>
     </h3>
     <div class="mz-formstep-body">
         <div class="mz-formstep-summary">
@@ -18,10 +18,10 @@
                 {% endfor %}
                 <span class="mz-validation-message" data-mz-validation-message-for="ShippingMethodCode"></span>
             {% else %}
-                <p>Sorry, no shipping methods are available.</p>
+                <p>{{ themeSettings.labelNoShippingMethods }}</p>
             {% endif %}
             <div class="mz-formstep-next">
-                <button type="button" class="mz-button" data-mz-action="next">Next</button>
+                <button type="button" class="mz-button" data-mz-action="next">{{ themeSettings.labelNext }}</button>
             </div>
         </div>
     </div>

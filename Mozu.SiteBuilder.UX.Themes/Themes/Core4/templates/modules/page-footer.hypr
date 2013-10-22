@@ -2,7 +2,7 @@
     {% dropzone "footer" scope="site" %}
     <div class="mz-pagefooter-copyright" id="copyright">
         <span class="mz-pagefooter-copyrighttext">
-            &copy; {% now "Y" %} {{ siteContext.settings.general.websiteName }}. All Rights Reserved.
+            &copy; {% now "Y" %} {{ siteContext.settings.general.websiteName }}. {{ themeSettings.allRightsReserved }}
         </span> 
         <span class="mz-pagefooter-poweredby">
              Powered by Mozu Shopping Cart

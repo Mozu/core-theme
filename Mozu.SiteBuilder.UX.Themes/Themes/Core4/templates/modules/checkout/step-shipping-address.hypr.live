@@ -1,6 +1,6 @@
 ﻿    <h3 class="mz-formstep-header">
-        Shipping Information
-        <button class="mz-button mz-formstep-edit" data-mz-action="edit">Edit</button>
+        {{ themeSettings.labelShippingInformation }}
+        <button class="mz-button mz-formstep-edit" data-mz-action="edit">{{ themeSettings.labelEdit }}</button>
     </h3>
     <div class="mz-formstep-body">
         <div class="mz-formstep-summary mz-addresssummary">
@@ -10,6 +10,6 @@
             {% include "modules/common/address-form" %}
         </div>
         <div class="mz-formstep-next">
-            <button class="mz-button" data-mz-action="next">Next</button>
+            <button class="mz-button" data-mz-action="next">{{ themeSettings.labelNext }}</button>
         </div>
     </div>

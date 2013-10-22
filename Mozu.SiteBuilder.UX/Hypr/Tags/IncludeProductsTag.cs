@@ -127,7 +127,7 @@ The include_products tag is a special kind of include tag, that includes a named
             }
             string sortBy = null;
              
-            var res = searchWebApiClient.Search(query:qurey,   filter: searchQuery.ToString(),  facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, startIndex: startIndex, sortBy: sortBy, pageSize: pageSize).Result;
+            var res = searchWebApiClient.Search(query:qurey,   filter: searchQuery.ToString(),  facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: facetValueFilter, startIndex: startIndex, sortBy: sortBy, pageSize: pageSize).Result;
 
 
             var pcDC = res.ReadAsSync();

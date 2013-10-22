@@ -10,7 +10,7 @@
 
 <div data-mz-category="{{Model.CategoryId}}" class="mz-l-container">
     <h1 class="mz-pagetitle">{{ Model.Name }}</h1>
-    {% include_products "modules/product/faceted-products" with includeFacets=true and pageWithUrl=true as_parameter %}
+    {% include_products "modules/product/faceted-products" with includeFacets=themeSettings.facetCategoryPages and pageWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
 </div>
 
 {% endblock body-content %}

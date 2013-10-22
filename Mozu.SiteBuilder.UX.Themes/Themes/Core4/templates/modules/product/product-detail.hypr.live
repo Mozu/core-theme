@@ -1,25 +1,25 @@
 <div class="mz-productdetail-shortdesc mz-l-stack-section">
-  <h4 class="mz-l-stack-sectiontitle">Summary</h4>
+  <h4 class="mz-l-stack-sectiontitle">{{ themeSettings.labelShortDesc }}</h4>
   <span itemscope="description">{{ Model.Content.ProductShortDescription|safe }}</span>
 </div>
 
 {% if Model.Options %}
 <div class="mz-productdetail-options mz-l-stack-section">
-  <h4 class="mz-l-stack-sectiontitle">Options</h4>
+  <h4 class="mz-l-stack-sectiontitle">{{ themeSettings.labelOptions }}</h4>
   {% include "modules/product/product-options" %}
 </div>
 {% endif %}
     
 <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="mz-productdetail-price mz-l-stack-section">
-  <h4 class="mz-l-stack-sectiontitle">Price</h4>
+  <h4 class="mz-l-stack-sectiontitle">{{ themeSettings.labelPrice }}</h4>
 {% include "modules/product/price-stack" %}
 </div>
 
 <section class="mz-l-stack-section mz-productdetail-conversion">
-    <span class="mz-qty-label">Qty</span>
+    <span class="mz-qty-label">{{ themeSettings.labelQty }}</span>
     <input class="mz-productdetail-qty" type="number" value="1" {% if not Model.PurchasableState.IsPurchasable %} disabled="disabled" {% endif %} data-mz-value="Quantity" />
     <button id="add-to-cart" class="mz-productdetail-addtocart mz-button mz-button-large {% if not Model.PurchasableState.IsPurchasable %}is-disabled{% endif %}" {% if not Model.PurchasableState.IsPurchasable %} disabled="disabled" {% endif %} data-mz-action="addToCart" >
-        Add To Cart
+        {{ themeSettings.labelAddToCart }}
     </button>
   <span class="mz-validation-message" data-mz-validation-message-for="Quantity"></span>
 
@@ -34,13 +34,13 @@
 </section>
 
 <div class="mz-productdetail-fulldesc mz-l-stack-section">
-  <h4 class="mz-l-stack-sectiontitle">Description</h4>
+  <h4 class="mz-l-stack-sectiontitle">{{ themeSettings.labelFullDesc }}</h4>
   {{ Model.Content.ProductFullDescription|safe }}
 </div>
 
 {% if Model.Properties %}
 <div class="mz-productdetail-properties mz-l-stack-section">
-  <h4 class="mz-l-stack-sectiontitle">Properties</h4>
+  <h4 class="mz-l-stack-sectiontitle">{{ themeSettings.labelProperties }}</h4>
   <dl class="mz-propertylist mz-propertylist-justified">
     {% for property in Model.Properties %}
     {% if property.Values %}
@@ -55,7 +55,7 @@
 {% endif %}
 
 <div class="mz-productdetail-measurements mz-l-stack-section">
-    <h4 class="mz-l-stack-sectiontitle">Measurements</h4>
+    <h4 class="mz-l-stack-sectiontitle">{{ themeSettings.labelMeasurements }}</h4>
     <dl class="mz-propertylist mz-propertylist-justified">
       <dt>Weight</dt>
       <dd itemprop="weight" itemscope itemtype="http://schema.org/QuantitativeValue">

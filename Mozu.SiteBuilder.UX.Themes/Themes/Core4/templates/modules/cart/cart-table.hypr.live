@@ -1,9 +1,9 @@
 ﻿<thead>
   <tr>
-    <th class="mz-carttable-header-product">Product</th>
-    <th class="mz-carttable-header-price">Price</th>
-    <th class="mz-carttable-header-qty">Qty</th>
-    <th class="mz-carttable-header-total">Item Total</th>
+    <th class="mz-carttable-header-product">{{ themeSettings.labelProduct }}</th>
+    <th class="mz-carttable-header-price">{{ themeSettings.labelPrice }}</th>
+    <th class="mz-carttable-header-qty">{{ themeSettings.labelQty }}</th>
+    <th class="mz-carttable-header-total">{{ themeSettings.labelItemTotal }}</th>
     <th>&nbsp;</th>
   </tr>
 </thead>
@@ -26,7 +26,7 @@
         </dl>
         {% endif %}
         <span class="mz-carttable-item-code">
-          Product Code: <em>{{ item.Product.ProductCode }}</em>
+          {{ themeSettings.labelProductCode }}: <em>{{ item.Product.ProductCode }}</em>
         </span>
       </div>
     </td>
@@ -43,14 +43,14 @@
       <span class="mz-carttable-rowtotal">{{ item.Total|currency }}</span>
     </td>
     <td class="mz-carttable-item-remove">
-      <a href="javascript:;" data-mz-action="removeItem" data-mz-cart-item="{{ item.Id }}" class="mz-icon mz-icon-close">Remove</a>
+      <a href="javascript:;" data-mz-action="removeItem" data-mz-cart-item="{{ item.Id }}" class="mz-icon mz-icon-close">{{ themeSettings.labelRemove }}</a>
     </td>
   </tr>
 {% endfor %}
 {% else %}
   <tr class="mz-carttable-noitems">
     <td colspan="5">
-      You have no items in your cart.
+        {{ themeSettings.labelCartEmpty }}
     </td>
   </tr>
   {% endif %}
@@ -58,7 +58,7 @@
 <tfoot>
   <tr class="mz-carttable-shipping-row">
     <td colspan="4">
-      <em class="mz-auxiliary-text">Tax &amp; Shipping Calculated at Checkout</em>
+      <em class="mz-auxiliary-text">{{ themeSettings.labelTaxAtCheckout }}</em>
     </td>
     <td></td>
   </tr>
@@ -80,7 +80,7 @@
 
   <tr class="mz-carttable-total-row">
     <td class="mz-carttable-total-wrap" colspan="4">
-      Order Total:
+      {{ themeSettings.labelOrderTotal }}:
         <span id="mz-carttable-total" class="mz-carttable-total">
           <strong>{{ Model.DiscountedTotal|currency }}</strong>
         </span>
@@ -90,7 +90,7 @@
   <tr class="mz-carttable-checkout-row">
     <td colspan="4">
       <input type="hidden" name="Id" value="{{ Model.Id }}" />
-      <button id="cart-checkout" class="mz-button mz-button-large"  {% if Model.IsEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">Proceed to Checkout</button>
+      <button id="cart-checkout" class="mz-button mz-button-large"  {% if Model.IsEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">{{ themeSettings.labelProceedToCheckout }}</button>
     </td>
     <td></td>
   </tr>

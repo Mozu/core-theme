@@ -28,8 +28,9 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'shim!vendor/jquery.hist
 
     $(document).ready(function () {
         
-        var $facetingForm = $('[data-mz-category]'),
-            categoryId = $facetingForm.data('mz-category'),
+        var $categoryPageBody = $('[data-mz-category]'),
+            $facetPanel = $('[data-mz-facets]'),
+            categoryId = $categoryPageBody.data('mz-category'),
             productListData = require.mozuData('facetedproducts'),
             defaultPageSize = 15;
 
@@ -42,21 +43,21 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'shim!vendor/jquery.hist
             };
 
             var facetingModel = new FacetingModels.FacetedProductCollection(productListData);            var facetingViews = {
-                facetPanel: new FacetingView({
-                    el: $('[data-mz-facets]'),
+                facetPanel: $facetPanel.length > 0 && new FacetingView({
+                    el: $facetPanel,
                     model: facetingModel
                 }),
                 pagingControls: new PagingViews.PagingControls({
-                    el: $facetingForm.find('[data-mz-pagingcontrols]'),
+                    el: $categoryPageBody.find('[data-mz-pagingcontrols]'),
                     model: facetingModel
                 }),
                 pageNumbers: new PagingViews.PageNumbers({
-                    el: $facetingForm.find('[data-mz-pagenumbers]'),
+                    el: $categoryPageBody.find('[data-mz-pagenumbers]'),
                     model: facetingModel
                 }),
                 productList: new Backbone.MozuView({
                     templateName: 'modules/product/product-listing-tiled',
-                    el: $facetingForm.find('[data-mz-productlisting]'),
+                    el: $categoryPageBody.find('[data-mz-productlisting]'),
                     model: facetingModel
                 })
             };
@@ -75,7 +76,7 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'shim!vendor/jquery.hist
         _.invoke(facetingViews, 'render');
 
         $('#mz-category-loading').remove();
-        $facetingForm.noFlickerFadeIn();
+        $categoryPageBody.noFlickerFadeIn();
 
         window.facetingViews = facetingViews;
 

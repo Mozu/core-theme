@@ -1,8 +1,8 @@
 ﻿<form id="searchbox" class="mz-searchbox" action="/search">
-	<input placeholder="Search" type="search" class="mz-searchbox-field"  value="{{SiteContext.SearchContext.Query}}" name="query" />
-	<button class="mz-searchbox-button" type="submit">Go</button>
+	<input placeholder="{{ themeSettings.labelSearch }}" type="search" class="mz-searchbox-field"  value="{{SiteContext.SearchContext.Query}}" name="query" />
+	<button class="mz-searchbox-button" type="submit">{{ themeSettings.labelSearch }}</button>
 	<select class="mz-searchbox-categories" name="categoryId">
-		<option value="">All</option>
+		<option value="">{{ themeSettings.labelAll }}</option>
 		{% for cat in SiteContext.CatalogContext.CategoryTree %}
 		<option value="{{cat.Id}}" {% if cat.Id == SiteContext.SearchContext.CategoryId  %} selected="selected" {%endif%}>{{cat.Name}}</option>
 		{% endfor %}

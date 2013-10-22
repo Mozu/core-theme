@@ -10,6 +10,6 @@
     {% endfor %}
 </figure>
 {% else %}
-<span class="mz-productimages-noimage">[no image]</span>
+<span class="mz-productimages-noimage">[{{ themeSettings.labelNoImages}}]</span>
 {% endif %}
 

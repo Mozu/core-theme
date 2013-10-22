@@ -11,10 +11,146 @@
   /* Settings: User-configurable options for your theme. */
   "settings": [
 
+    /* Common settings used in templates */
+    { "id": "defaultPageSize",         "defaultValue": "15" },
+
+    /* Common apperance settings used in the stylesheet */
     { "id": "fontFamily",              "defaultValue": "Rambla, sans-serif" },
     { "id": "fontSize",                "defaultValue": "14px" },
     { "id": "gutterWidth",             "defaultValue": "25px" },
-    { "id": "bodyBackgroundColor",     "defaultValue": "#ffffff" }
+    { "id": "bodyBackgroundColor",     "defaultValue": "#ffffff" },
+
+    /* Settings specific to category page display */
+    { "id": "facetCategoryPages",      "defaultValue": true },
+
+    /* Labels, soon to be moved to their own labels section */
+    /* Global default labels */
+    { "id": "labelJanuary",             "defaultValue": "January" },
+    { "id": "labelFebruary",            "defaultValue": "February" },
+    { "id": "labelMarch",               "defaultValue": "March" },
+    { "id": "labelApril",               "defaultValue": "April" },
+    { "id": "labelMay",                 "defaultValue": "May" },
+    { "id": "labelJune",                "defaultValue": "June" },
+    { "id": "labelJuly",                "defaultValue": "July" },
+    { "id": "labelAugust",              "defaultValue": "August" },
+    { "id": "labelSeptember",           "defaultValue": "September" },
+    { "id": "labelOctober",             "defaultValue": "October" },
+    { "id": "labelNovember",            "defaultValue": "November" },
+    { "id": "labelDecember",            "defaultValue": "December" },
+    { "id": "labelLogOut",              "defaultValue": "Log Out" },
+    { "id": "labelLogIn",               "defaultValue": "Log In" },
+    { "id": "labelViewCart",            "defaultValue": "View Cart" },
+    { "id": "labelSearch",              "defaultValue": "Search" },
+    { "id": "labelAll",                 "defaultValue": "All" },
+    { "id": "labelAllRightsReserved",   "defaultValue": "All rights reserved." },
+    { "id": "labelPoweredBy",           "defaultValue": "Powered by Mozu Shopping Cart" },
+    { "id": "labelProduct",             "defaultValue": "Product" },
+    { "id": "labelPrice",               "defaultValue": "Price" },
+    { "id": "labelQty",                 "defaultValue": "Qty" },
+    { "id": "labelEach",                "defaultValue": "Each" },
+    { "id": "labelTotal",               "defaultValue": "Total" },
+    { "id": "labelSubtotal",            "defaultValue": "Subtotal" },
+    { "id": "labelTax",                 "defaultValue": "Tax" },
+    { "id": "labelShippingHandling",    "defaultValue": "Shipping & Handling" },
+    { "id": "labelAdditionalHandling",  "defaultValue": "Additional Handling" },
+    { "id": "labelClear",               "defaultValue": "Clear", },
+    { "id": "labelProductCode",         "defaultValue": "Product Code" },
+    { "id": "labelRemove",              "defaultValue": "Remove" },
+    { "id": "labelEdit",                "defaultValue": "Edit" },
+    { "id": "labelNext",                "defaultValue": "Next" },
+    { "id": "labelComments",            "defaultValue": "Comments" },
+    { "id": "labelCouponCode",          "defaultValue": "Coupon Code" },
+    { "id": "labelApply",               "defaultValue": "Apply" },
+    { "id": "labelNameOnCheck",         "defaultValue": "Name On Check" },
+    { "id": "labelRoutingNumber",       "defaultValue": "Routing Number" },
+    { "id": "labelCheckNumber",         "defaultValue": "Check Number" },
+    { "id": "labelCardType",            "defaultValue": "Card Type" },
+    { "id": "labelCardNumber",          "defaultValue": "Card Number" },
+    { "id": "labelNameOnCard",          "defaultValue": "Name On Card" },
+    { "id": "labelExpires",             "defaultValue": "Expires" },
+    { "id": "labelSecurityCode",        "defaultValue": "Security Code" },
+    { "id": "labelPhone",               "defaultValue": "Phone" },
+    { "id": "labelEmail",               "defaultValue": "Email" },
+    { "id": "labelCreditCard",          "defaultValue": "Credit Card" },
+    { "id": "labelYou",                 "defaultValue": "you" },
+    { "id": "labelPassword",            "defaultValue": "Password" },
+    { "id": "labelConfirmPassword",     "defaultValue": "Confirm Password" },
+    { "id": "labelFirstName",           "defaultValue": "First Name" },
+    { "id": "labelLastName",            "defaultValue": "Last Name" },
+    { "id": "labelAddress",             "defaultValue": "Address" },
+    { "id": "labelCity",                "defaultValue": "City" },
+    { "id": "labelCountry",             "defaultValue": "Country" },
+    { "id": "labelState",               "defaultValue": "State" },
+    { "id": "labelPostalCode",          "defaultValue": "Zip/Postal Code" },
+    { "id": "labelPostalTown",          "defaultValue": "Postal Town" },
+    { "id": "labelFreeShipping",        "defaultValue": "Free Shipping" },
+    { "id": "labelPreviousPage",        "defaultValue": "Previous Page" },
+    { "id": "labelNextPage",            "defaultValue": "Next Page" },
+    { "id": "labelShowing",             "defaultValue": "Showing" },
+    { "id": "labelOf",                  "defaultValue": "of" },
+    { "id": "labelResult",              "defaultValue": "result" },
+    { "id": "labelResults",             "defaultValue": "results" },
+    { "id": "labelShow",                "defaultValue": "Show" },
+    { "id": "labelResultsPerPage",      "defaultValue": "results per page" },
+    { "id": "labelRegisteredCustomer",  "defaultValue": "Registered customer?" },
+
+    /* Faceting labels */
+    { "id": "labelClearAllFilters",     "defaultValue": "Clear All Filters" },
+
+    /* Product Detail labels */
+    { "id": "labelShortDesc",           "defaultValue": "Summary" },
+    { "id": "labelOptions",             "defaultValue": "Options" },
+    { "id": "labelAddToCart",           "defaultValue": "Add To Cart" },
+    { "id": "labelFullDesc",            "defaultValue": "Description" },
+    { "id": "labelProperties",          "defaultValue": "Properties" },
+    { "id": "labelMeasurements",        "defaultValue": "Measurements" },
+    { "id": "labelNoImages",            "defaultValue": "no image" },
+
+    /* Cart labels */
+    { "id": "labelCart",                "defaultValue": "Cart" },
+    { "id": "labelItemTotal",           "defaultValue": "Item Total" }, 
+    { "id": "labelCartEmpty",           "defaultValue": "You have no items in your cart." }, 
+    { "id": "labelTaxAtCheckout",       "defaultValue": "Tax & Shipping Calculated at Checkout" }, 
+    { "id": "labelOrderTotal",          "defaultValue": "Order Total" }, 
+    { "id": "labelProceedToCheckout",   "defaultValue": "Proceed to Checkout" }, 
+
+    /* Checkout labels */
+    { "id": "labelCheckout",            "defaultValue": "Checkout" },
+    { "id": "labelOrderSummary",        "defaultValue": "Order Summary" },
+    { "id": "labelShippingInformation", "defaultValue": "Shipping Information" },
+    { "id": "labelShippingMethod",      "defaultValue": "Shipping Method" },
+    { "id": "labelNoShippingMethods",   "defaultValue": "Sorry, no shipping methods are available." },
+    { "id": "labelPaymentInformation",  "defaultValue": "Payment Information" },
+    { "id": "labelSaveCard",            "defaultValue": "Save credit card information" },
+    { "id": "labelBillingAddress",      "defaultValue": "Billing Address" },
+    { "id": "labelBillingContact",      "defaultValue": "Billing Contact" },
+    { "id": "labelPaymentType",         "defaultValue": "Payment Type" },
+    { "id": "labelCheckByMail",         "defaultValue": "Check by Mail" },
+    { "id": "labelUseShippingAddress",  "defaultValue": "Use my shipping address" },
+    { "id": "labelOptIn",               "defaultValue": "Yes! I want to receive news and special offers from" },
+    { "id": "labelReviewOrder",         "defaultValue": "Review & Place Order" },
+    { "id": "labelReviewOrderText",     "defaultValue": "Please review all of the information on this page and, if necessary, make changes before placing your order." },
+    { "id": "labelAgreeToTerms",        "defaultValue": "I agree to the terms &amp; conditions." },
+    { "id": "labelCreateAccount",       "defaultValue": "Create an account for easy checkout on future orders" },
+    { "id": "labelPlaceOrder",          "defaultValue": "Place Order" },
+    { "id": "labelOrderConfirmation",   "defaultValue": "Order Confirmation" },
+    { "id": "labelConfirmationText",    "defaultValue": "Thank you for your order!  You will receive email confirmation." },
+    { "id": "labelOrderDetails",        "defaultValue": "Order Details" },
+    { "id": "labelOrderNumber",         "defaultValue": "Order Number" },
+    { "id": "labelBillingName",         "defaultValue": "Billing Name" },
+    { "id": "labelBillingPhone",        "defaultValue": "Billing Phone" },
+    { "id": "labelBillingEmail",        "defaultValue": "Billing Email" },
+    { "id": "labelMailCheckTo",         "defaultValue": "Mail check to" },
+    { "id": "labelShipTo",              "defaultValue": "Ship to" },
+    { "id": "labelGiftMessage",         "defaultValue": "Gift Message" },
+
+
+    /* Not Found labels */
+    { "id": "labelPageNotFound",        "defaultValue": "Page Not Found" },
+
+    /* Error page labels */
+    { "id": "labelErrorApology",        "defaultValue": "Sorry, an error occurred." },
+    { "id": "labelErrorDetail",         "defaultValue": "Our software encountered an error it couldn't resolve." }
 
   ],
   /* Page Types: Users will be allowed to create documents of this type in the CMS */
