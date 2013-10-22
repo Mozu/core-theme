@@ -50,7 +50,11 @@ Ext.define('Taco.view.channel.Index', {
                     width: 160
                 }, {
                     name: 'code',
-                    fieldLabel: 'code',
+                    fieldLabel: 'Code',
+                    width: 160
+                }, {
+                    name: 'region',
+                    fieldLabel: 'Region',
                     width: 160
                 }
             ]
@@ -102,7 +106,7 @@ Ext.define('Taco.view.channel.Index', {
                 allowBlank: false
             },
             text: 'Name',
-            width: 200
+            flex:1
             
         }, {
             dataIndex: 'region',

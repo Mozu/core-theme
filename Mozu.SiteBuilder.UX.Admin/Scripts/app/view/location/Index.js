@@ -38,8 +38,8 @@ Ext.define('Taco.view.location.Index', {
                 fieldLabel: 'Name',
                 width: 160
             }, {
-                name: 'code',
-                fieldLabel: 'Code',
+                name: 'description',
+                fieldLabel: 'Description',
                 width: 160
             }, {
                 name: 'address',
@@ -57,11 +57,8 @@ Ext.define('Taco.view.location.Index', {
         property: 'name',
         text: 'Name'
     }, {
-        property: 'code',
-        text: 'Code'
-    }, {
-        property: 'address',
-        text: 'Address'
+        property: 'description',
+        text: 'Description'
     }
     ],
 
@@ -75,17 +72,15 @@ Ext.define('Taco.view.location.Index', {
       
         selModel: {},
         columns: [{
-            dataIndex: 'id',
-            text: 'Code',
-            width: 100
-        }, {
-            dataIndex: 'locationTypes',
-            text: 'Type'
-            
-        }, {
             dataIndex: 'name',
+            width:200,
             text: 'Name'
            
+        }, {
+            dataIndex: 'locationTypes',
+            width: 200,
+            text: 'Type'
+
         }, {
             dataIndex: 'addressToString',
             text: 'Address',
