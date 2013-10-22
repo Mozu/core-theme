@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Autofac;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 {
@@ -85,13 +86,45 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             var viewEngine = LifetimeScope.Resolve<HyprViewEngine>();
 
 
-
-
-            var view = viewEngine.FindPageView("error");
-
             var sw = new StreamWriter(writeStream);
+            try
+            {
+                var view = viewEngine.FindPageView("error");
 
-            return view.AsyncRender(new HyprViewContext(this.RequestMessage, viewDataDictionary, null), sw).ContinueWith(x => sw.FlushAsync());
+
+
+                return view.AsyncRender(new HyprViewContext(this.RequestMessage, viewDataDictionary, null), sw).ContinueWith(_ =>
+                {
+                    if (_.IsFaulted)
+                    {
+                        var jtw = new JsonTextWriter(new StreamWriter(writeStream));
+                        jtw.Formatting = Formatting.Indented;
+                        var ser = new JsonSerializer();
+                        ser.Serialize(jtw, model);
+                        jtw.Flush();
+                        var tcs = new TaskCompletionSource<bool>();
+                        tcs.SetResult(true);
+                        return tcs.Task;
+                    }
+                    else
+                    {
+                        return _;
+                    }
+                });
+            }
+            catch (Exception)
+            {
+                var jtw = new JsonTextWriter(new StreamWriter(writeStream));
+                jtw.Formatting = Formatting.Indented;
+                content.Headers.ContentType = new MediaTypeHeaderValue("text/json");
+                var ser = new JsonSerializer();
+                ser.Serialize(jtw, model);
+                jtw.Flush();
+                var tcs = new TaskCompletionSource<bool>();
+                tcs.SetResult(true);
+                return tcs.Task;
+            }
+            
 
         }
 
