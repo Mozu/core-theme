@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _searchClient = searchClient;
             _productClient = productClient;
             _apiCtx = apiCtx;
-      
+
         }
          [System.Web.Http.HttpGet]
         public async Task<HttpResponseMessage> ProductDetail(string productCode)
@@ -85,12 +85,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 Template = new DocumentRequest()
                 {
                     Path = "product"
+                },
+                Page = new DocumentRequest()
+                {
+                    Path = "product-" + productCode,
+                    Collection = "catalog_pages"
                 }
+
 
             };
 
 
-        
+
 
             //SiteContext.PageContext.WidgetCreationTags.Add ("product-" + productCode);
             //SiteContext.PageContext.WidgetQuery.Add ("product");
