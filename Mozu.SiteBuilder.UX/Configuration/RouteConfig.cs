@@ -188,12 +188,17 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
             routes.MapHttpRoute(
+                "Login",
+                "login",
+                new { controller = "Auth", action = "Login" });
+
+
+
+            routes.MapHttpRoute(
                 "Error",
                 "{*url}",
                 new {controller = "Home", action = "NotFound"}
                 );
-
-
 
             //routes.MapHttpRoute(
             //    "Storefront_SignIn",
