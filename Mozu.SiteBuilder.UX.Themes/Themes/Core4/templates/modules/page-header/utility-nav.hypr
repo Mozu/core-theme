@@ -13,7 +13,7 @@
         </li>
         {%else%}
         <li data-mz-minimodal-parent class="mz-utilitynav-item">
-            <a href="javascript:;" data-mz-action="login" class="mz-utilitynav-link">{{ themeSettings.labelLogIn }}</a>
+            <a href="/login" data-mz-action="login" class="mz-utilitynav-link">{{ themeSettings.labelLogIn }}</a>
                {% comment %}
                    TODO: JBZ: HyprLive the login modal. Consider strongly whether to make it a Bootstrap popover.
                     {% include "modules/common/login-modal" %}

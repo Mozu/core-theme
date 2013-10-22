@@ -8,8 +8,9 @@
     <div class="mz-l-container">
         <h1 class="mz-pagetitle">{{ themeSettings.labelLogIn }}</h1>
         <form method="post" class="mz-loginform mz-loginform-page">
-           {% html_validation_summary null "lerp nerp"%}
-           <div class="mz-form-ieldgroup">
+           {% include "modules/common/message-bar" %}
+           <input type="hidden" name="returnUrl" value="{{ Model.ReturnUrl }}" />
+           <div class="mz-formfieldgroup">
                 <div class="mz-formfieldgroup-row">
                     <div class="mz-formfieldgroup-cell">
                         <label for="email">{{ themeSettings.labelEmail }}</label>
@@ -27,6 +28,7 @@
                     </div>
                 </div>
                 <div class="mz-formfieldgroup-row">
+                    <div class="mz-formfieldgroup-cell"></div>
                     <div class="mz-formfieldgroup-cell">
                         <button class="mz-button mz-button-large">{{ themeSettings.labelLogIn }}</button>
                     </div>

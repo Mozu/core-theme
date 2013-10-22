@@ -14,6 +14,7 @@ using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.User.Contracts;
 using VMUser = Mozu.SiteBuilder.UX.Models.Customers.User;
+using System.Net.Http;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -57,13 +58,24 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         }
         [System.Web.Http.HttpGet]
-        public ActionResult SignIn(string returnUrl)
+        public ActionResult Login(string returnUrl = null)
         {
-            return View("SignIn");
+            return View("Login", new { ReturnUrl = returnUrl });
         }
-        [System.Web.Http.HttpPost]
-        public object  SignIn(string email, string password, string returnUrl, HttpRequest  collection)
+
+        public class LoginDetails
         {
+            public string email { get; set; }
+            public string password { get; set; }
+            public string returnUrl { get; set; }
+        }
+
+        [System.Web.Http.HttpPost]
+        public object  Login(LoginDetails details)
+        {
+            string email = details.email;
+            string password = details.password;
+            string returnUrl = details.returnUrl;
 
             var res = _userWebApiClient.CloneWithoutUserClaims().Login(new Mozu.Core.Api.Contracts.UserAuthInfo()
             {
@@ -93,17 +105,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 {
                     returnUrl = "/";
                 }
-                return Redirect(returnUrl);
+                var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
+                redir.Headers.Location = new Uri(returnUrl, UriKind.Relative);
+                return redir;
+                
             }
             else
             {
                 ModelState.AddModelError("email", "There was an error with your E-Mail/Password combination. Please try again.");
                 
-                return View("SignIn" , new { email = email });
+                return View("Login" , new { email = email });
             }
         }
          [System.Web.Http.HttpPost]
-        public object  SignIn(string email, string password)
+        public object AjaxLogin(string email, string password)
         {
             var res = _userWebApiClient.CloneWithoutUserClaims().Login(new Mozu.Core.Api.Contracts.UserAuthInfo()
             {
