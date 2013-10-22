@@ -340,5 +340,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 //, _apiContext.CmsDraftState)
                 .ContinueWith(t => new Tuple<bool, ServiceClientResponse<StreamContent>>(t.Result.ResponseMessage.IsSuccessStatusCode, t.Result));
         }
+
+
+        public IDocumentListWebApiClient DocumentListWebApiClient
+        {
+            get { return _docRepo; }
+            set { _docRepo = value; }
+        }
     }
 }
