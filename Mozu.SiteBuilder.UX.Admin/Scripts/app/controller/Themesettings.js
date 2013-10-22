@@ -17,14 +17,12 @@ Ext.define('Taco.controller.Themesettings', {
      
         
         Ext.Ajax.request({
-            url: '/admin/app/themesetting/config/read/' + id,
+            url: '/admin/app/themesetting/ui/read/' + id,
             method: "GET",
             success: function (response) {
 
-                var res = Ext.JSON.decode(response.responseText);
-                var cfg = {};
-                cfg = res.items;
-
+                var fieldContainerCfg = Ext.JSON.decode(response.responseText);
+               
                 Ext.Ajax.request({
                     url: '/admin/app/themesetting/instance/read/' + id,
                     method: "GET",
@@ -32,10 +30,10 @@ Ext.define('Taco.controller.Themesettings', {
                         var values = Ext.JSON.decode(r.responseText);
 
                         me.createContentView('Taco.view.themesettings.Index', {
-                            settingsConfig: cfg,
+                            formConfig: fieldContainerCfg,
                             themeId: id,
                             theme: theme,
-                            settingsValues: values.items
+                            settingsValues: values
                         });
                     },
                     failure: function (r) {

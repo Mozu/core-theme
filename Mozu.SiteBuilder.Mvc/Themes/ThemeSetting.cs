@@ -7,7 +7,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
     public class ThemeSetting
     {
         [DataMember(Name = "id")]
-        public string Id { get; private set; }
+        public string Id { get;  set; }
 
         [DataMember(Name = "defaultValue")]
         public object DefaultValue { get; private set; }

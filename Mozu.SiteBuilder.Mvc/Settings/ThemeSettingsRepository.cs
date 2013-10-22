@@ -10,6 +10,7 @@ using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Newtonsoft.Json;
+using Mozu.Core.Api.Client;
 using Document = Mozu.Content.Contracts.Document;
 
 
@@ -52,6 +53,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 
         private Task<ServiceClientResponse<Document>> UpdateSettings(List<ThemeRuntimeSetting> values, string themeId)
         {
+           
             return _cmsService.GetByPath2("settings", this.GetFileName(themeId))
                 .ContinueWith<Task<ServiceClientResponse<Document>>>(t =>
                 {

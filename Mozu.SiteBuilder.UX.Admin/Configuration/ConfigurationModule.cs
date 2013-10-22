@@ -124,9 +124,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
         class SbApiContextBuilder : IApiContextBuilder
         {
 
-            public IApiContext BuildApiContext(IApiContext apiContext, System.Net.Http.HttpRequestMessage request)
+            public IApiContext BuildApiContext(IApiContext apiContext_, System.Net.Http.HttpRequestMessage request)
             {
-                return request.LifetimeScope().Resolve<IApiContext>();
+                var apiContext = request.LifetimeScope().Resolve<IApiContext>();
+                var sbApiContext = apiContext as SiteBuilderApiContext ;
+                if (sbApiContext != null)
+                {
+                    sbApiContext.DataViewMode = DataViewModeType.Pending;
+                    
+                }
+                return apiContext;
 
             }
         }
