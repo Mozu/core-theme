@@ -12,6 +12,7 @@ Ext.define('Taco.shared.view.modal.Address', {
     autoShow: true,
 
     width: 700,
+    title: 'Edit Address',
 
     addressHasNames: true,
     showCompanyName: true,
@@ -23,6 +24,29 @@ Ext.define('Taco.shared.view.modal.Address', {
     title:"Edit Address",
 
     formCfg: null,
+
+    actions: [{
+        xtype: 'button',
+        ui: 'action',
+        scale: 'medium',
+        text: 'Validate',
+        handler: function () {
+            this.validateOnly();
+        },
+        itemId: 'otherAction'
+    }, {
+        xtype: 'tbfill'
+    }, {
+        xtype: 'button',
+        itemId: 'secondaryAction'
+    }, {
+        xtype: 'button',
+        itemId: 'primaryAction',
+        handler: function () {
+            this.validateAndSave();
+        },
+        formBind: true
+    }],
 
     initComponent: function () {
         var me = this;
@@ -49,17 +73,16 @@ Ext.define('Taco.shared.view.modal.Address', {
         
         this.callParent(arguments);
 
-        // ToDo: Fix this. If multiple recs are returned
-        this.on({
-            beforesave: {
-                scope: this,
-                fn: 'maybeValidate'
-            },
-            save: {
-                scope: this,
-                fn: 'save'
-            }
-        });
+        //this.on({
+        //    beforesave: {
+        //        scope: this,
+        //        fn: 'maybeValidate'
+        //    },
+        //    save: {
+        //        scope: this,
+        //        fn: 'save'
+        //    }
+        //});
     },
 
     /**
@@ -83,15 +106,137 @@ Ext.define('Taco.shared.view.modal.Address', {
      * Save the form.
      *
      * @private
+     * @deprecated
      */
     save: function () {
         this.form.save();
     },
 
     /**
+     * Validate the address and update the record
+     *
+     * @private
+     */
+    validateOnly: function () {
+        var me = this;
+        this.validateForm(function (response) {
+            if (response.error) {
+                Ext.Msg.show({
+                    title: 'Address',
+                    msg: 'Unable to validate address'
+                });
+            } else {
+                response.applyToRecord();
+            }
+        });
+    },
+
+    /**
+     * Validate the address, if validated address differs from record, ask if should use validated address instead, save and close
+     *
+     * @private
+     */
+    validateAndSave: function () {
+        var me = this;
+        this.validateForm(function (response) {
+            if (response.error) {
+                Ext.Msg.show({
+                    title: 'Address',
+                    msg: 'Unable to validate address'
+                });
+                me.form.save();
+                me.close();
+            } else if (response.changed) {
+                var message = '';
+                message += response.validatedAddr['address1'] + ', ';
+                if (response.validatedAddr['address2'] != '') {
+                    message += response.validatedAddr['address2'] + ', ';
+                }
+                message += response.validatedAddr['cityOrTown'] + ' ';
+                message += response.validatedAddr['state'] + ', ';
+                message += response.validatedAddr['countryCode'] + ', ';
+                message += response.validatedAddr['zipCode'];
+                Ext.Msg.show({
+                    title: 'Address',
+                    msg: 'Did you mean: ' + message,
+                    buttons: Ext.Msg.YESNO,
+                    closable: false,
+                    rightJustifyButtons: true,
+                    scope: this,
+                    fn: function (rec) {
+                        if (rec === "yes") {
+                            response.applyToRecord();
+                            //me.applyValidatedAddress(response.validatedAddr);
+                        }
+                        me.form.save();
+                        me.close();
+                    }
+                });
+            } else {
+                me.form.save();
+                me.close();
+            }
+        });
+    },
+
+    /**
+     * Validate the form and invoke callback with summarized response
+     *
+     * @private
+     */
+    validateForm: function (callback) {
+        var me = this;
+        me.record.set('addressIsValidated', false);
+        this.setLoading(true);
+        var response = {
+            error: true,
+            changed: null,
+            validatedAddr: {},
+            applyToRecord: function () {
+                this.validatedAddr.addressIsValidated = true;
+                for (item in this.validatedAddr) {
+                    me.record.set(item, this.validatedAddr[item]);
+                }
+                me.form.loadRecord(me.record);
+            }
+        };
+        Ext.Ajax.request({
+            url: '/admin/app/address/validate',
+            method: 'POST',
+            jsonData: this.form.getValues(),
+            scope: this,
+            success: function (resp) {
+                this.setLoading(false);
+                this.json = JSON.parse(resp.responseText);
+                if (this.json.total > 0) {
+                    var validatedAddr = this.json.items[0];
+                    var rawAddr = this.form.getValues();
+                    response.error = false;
+                    response.changed = false;
+                    response.validatedAddr = validatedAddr;
+                    for (item in validatedAddr) {
+                        if (item == 'addressIsValidated')
+                            continue;
+                        if (rawAddr[item] != validatedAddr[item]) {
+                            response.changed = true;
+                            break;
+                        }
+                    }
+                }
+                callback(response);
+            },
+            failure: function () {
+                this.setLoading(false);
+                callback(response);
+            }
+        });
+    },
+
+    /**
      * Perform an ajax request to validate the current address.
      *
      * @private
+     * @deprecated
      */
     validate: function () {
         var me = this;

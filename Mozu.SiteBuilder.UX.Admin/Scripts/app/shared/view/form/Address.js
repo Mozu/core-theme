@@ -121,7 +121,7 @@ Ext.define('Taco.shared.view.form.Address', {
         });
 	    
         if (this.showPhoneNumbers) {
-            this.field.push({
+            fields.push({
                     xtype: 'textfield',
                     width: 206,
                     name: 'homePhone',
