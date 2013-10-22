@@ -186,7 +186,6 @@ Ext.define('Taco.shared.view.modal.Address', {
      */
     validateForm: function (callback) {
         var me = this;
-        me.record.set('addressIsValidated', false);
         this.setLoading(true);
         var response = {
             error: true,
@@ -223,10 +222,14 @@ Ext.define('Taco.shared.view.modal.Address', {
                         }
                     }
                 }
+                if (response.changed) {
+                    me.record.set('addressIsValidated', false);
+                }
                 callback(response);
             },
             failure: function () {
                 this.setLoading(false);
+                me.record.set('addressIsValidated', false);
                 callback(response);
             }
         });
