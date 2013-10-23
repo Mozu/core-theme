@@ -13,10 +13,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         [DataMember(Name = "id")]
         public string Id { get; set; }
 
+        /// <summary>
+        /// Unique identifier of the storefront user account associated with this customer.
+        /// </summary>
         [DataMember(Name="userId")]
         public string UserId { get; set; }
-
-     
 
         /// <summary>
         /// List of contacts for this customer account. A customer account can have multiple contacts for billing and shipping addresses.
@@ -44,11 +45,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         public List<int> Groups { get; set; }
 
         /// <summary>
+        /// List of attributes assigned to the customer.
+        /// </summary>
+        [DataMember(Name = "attributes")]
+        public List<int> Attributes { get; set; }
+
+        /// <summary>
         /// List of notes for the customer account. Merchants use these internal notes, for example, to make a note of a customer's interests or complaints. 
         /// Notes are available only from the merchant's view, customers cannot view these notes.
         /// </summary>
         // TODO: make this a datamember
         public List<Object> Notes { get; set; }
+
+        /// <summary>
+        /// Whether or not this customer is tax exempt.
+        /// </summary>
+        [DataMember(Name = "taxExempt")]
+        public bool TaxExempt { get; set; }
+
+        /// <summary>
+        /// For tax exempt customers, their tax id.
+        /// </summary>
+        [DataMember(Name="taxId")]
+        public string TaxId { get; set; }
 
         #region Order Summary
         /// <summary>
@@ -68,6 +87,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         /// </summary>
         [DataMember(Name="lastOrderDate")]
         public DateTime? LastOrderDate { get; set; }
+
+        /// <summary>
+        /// Number of wishlists listed in the wishlist count of a customer account
+        /// </summary>
+        [DataMember(Name="wishlistCount")]
+        public int WishlistCount { get; set; }
 
         /// <summary>
         /// Create date
