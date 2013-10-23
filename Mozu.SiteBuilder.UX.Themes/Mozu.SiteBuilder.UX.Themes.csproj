@@ -413,6 +413,7 @@
     <Content Include="Themes\Core4\stylesheets\modules\common\form-step.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\form-field-group.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\order-summary.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\error-detail.less" />
     <None Include="Themes\Core4\stylesheets\modules\page-header\store-branding.less" />
     <Content Include="Themes\Core4\scripts\modules\backbone-mozu-validation.js" />
     <Content Include="Themes\Core4\scripts\modules\backbone-mozu-model.js" />

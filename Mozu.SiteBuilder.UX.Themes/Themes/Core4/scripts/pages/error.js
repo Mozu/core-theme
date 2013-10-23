@@ -1,6 +1,6 @@
 ﻿require(["jquery"], function ($) {
-    $('#mz-error-detail-link').click(function() {
-        $('#mz-error-detail-link').toggleClass('mz-expanded');
-        $('#mz-error-detail').toggleClass('mz-expanded');
+    $('.mz-errordetail-expander').click(function() {
+        $(this).toggleClass('is-expanded')
+        .next().toggleClass('is-expanded');
     })
 });

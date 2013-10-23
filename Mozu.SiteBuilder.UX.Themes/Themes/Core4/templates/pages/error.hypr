@@ -4,10 +4,11 @@
 
 {% block body-content %}
 <div class="mz-l-container">
-    <h1 class="mz-pagetitle">{{ themeSettings.labelErrorApology }} <span class="mz-pagetitle-note">{{ themeSettings.labelErrorDetail }}</span><span class="mz-error-text">{{Model.Message}}</span></h1>
     <div class="mz-errordetail">
-        <a href="javascript:;" id="stacktrace-link" class="mz-errordetail-expander">stack trace</a>
-        <blockquote class="mz-errordetail-body">
+        <h2 class="mz-errordetail-header">{{ themeSettings.labelErrorDetail }}</h2>
+        <p class="mz-errordetail-text">{{Model.Message}}</p>
+        <a href="javascript:;" id="stacktrace-link" class="mz-errordetail-expander">{{ themeSettings.labelStackTrace }}</a>
+        <blockquote class="mz-errordetail-stacktrace">
             <pre><code>{% dump Model %}</code></pre>
         </blockquote>
     </div>
