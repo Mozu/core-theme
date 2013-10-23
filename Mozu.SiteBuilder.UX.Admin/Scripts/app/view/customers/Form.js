@@ -54,7 +54,8 @@ Ext.define('Taco.view.customers.Form', {
             me.billingInformation,
             me.shippingInformation,
             me.orderHistory,
-            me.notes];
+            me.notes
+        ];
 
         this.callParent(arguments);
 

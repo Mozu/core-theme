@@ -57,16 +57,27 @@ Ext.define('Taco.view.customers.Index', {
     },
     initComponent: function () {
         var me = this;
+        
+        
+        
         me.header = {
             title: 'Customers',
-            actions: [{
-                xtype: 'primarybutton',
-                text: 'Create New Customer',
-                click: function () {
-                    me.launchEditor(Ext.create('Taco.model.CustomerAccount'));
+            actions: [
+            /*
+                // simeon: commenting this out.  feature not implemented yet. Button throws error and editor doesn't appear to be editable.
+                {
+                    xtype: 'primarybutton',
+                    text: 'Create New Customer',
+                    click: function () {
+                        me.launchEditor(Ext.create('Taco.model.CustomerAccount'));
+                    }
                 }
-            }]
+            */
+            ]
+            
         };
+        
+
         this.tagStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerTags');
         this.gridPanelConf = {
             columns: [{

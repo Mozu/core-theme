@@ -4,26 +4,57 @@ Ext.define('Taco.view.customers.subform.Information', {
     cls: Taco.baseCSSPrefix + 'customer-profile',
     initComponent: function () {
         
-        var data = this.record;
+        var me= this,
+            data = this.record;
 
+        me.taxExemptIdField = Ext.create('Ext.form.field.Text', {
+            name: 'taxExemptId',
+            hidden: !this.record.taxExempt,
+            width: 300,
+            fieldLabel: 'Tax Exempt Code'
+        });
+
+        me.taxExamptField = Ext.create('Ext.form.FieldContainer', {
+            items: [
+                {
+                    xtype: 'checkboxfield',
+                    name: 'taxExempt',
+                    boxLabel: 'Tax Exempt',
+                    listeners: {
+                        'change': {
+                            fn: function(field, newValue, oldValue, eOpts) {
+                                me.taxExemptIdField.setVisible(newValue);
+                            },
+                            scope:me
+                        }
+                    }
+                }, 
+                me.taxExemptIdField
+            ]
+        });
+        
         this.items = [{
             xtype: 'container',
             width: 340,
             bodyPadding: '19 0',
             cls: 'customer-info',
-            items: [{
-                xtype: 'component',
-                width: 320,
-                renderData: data,
-                renderTpl: [
-                    '<div class="info-name">{[values.primaryFirstName]} {[values.primaryLastName]}</div>',
-                    '<div class="info-email"><span><a href="">{[values.primaryEmail]}</a></span></div>'
-                ]
-            }, {
-                xtype: 'checkboxfield',
-                name: 'acceptsMarketing',
-                boxLabel: 'Yes, keep me up to date on store news and specials'
-            }]
+            items: [
+                {
+                    xtype: 'component',
+                    width: 320,
+                    renderData: data,
+                    renderTpl: [
+                        '<div class="info-name">{[values.primaryFirstName]} {[values.primaryLastName]}</div>',
+                        '<div class="info-email"><span><a href="">{[values.primaryEmail]}</a></span></div>'  
+                    ]
+                }, {
+                    xtype: 'checkboxfield',
+                    name: 'acceptsMarketing',
+                    boxLabel: 'Yes, keep me up to date on store news and specials'
+                },
+                me.taxExamptField
+
+            ]
         }, {
             xtype: 'container',
             width: 320,
