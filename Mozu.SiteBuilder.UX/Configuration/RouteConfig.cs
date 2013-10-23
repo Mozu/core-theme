@@ -1,4 +1,7 @@
-﻿using System.Web.Http;
+﻿using System.Net.Http.Headers;
+using System.Web.Http;
+using System.Web.Http.Routing;
+using System.Web.Routing;
 
 
 namespace Mozu.SiteBuilder.UX.Configuration
@@ -207,6 +210,27 @@ namespace Mozu.SiteBuilder.UX.Configuration
             //    "Storefront_SignIn",
             //    "user/{action}",
             //    new { controller = "Auth", action = "SignIn" });
+        }
+
+        class ContentTypeConstraint : IHttpRouteConstraint 
+        {
+            private readonly bool _include;
+
+            private MediaTypeWithQualityHeaderValue _conetntTypeValue;
+            public ContentTypeConstraint(string contentType, bool include = true  )
+            {
+                _include = include;
+                _conetntTypeValue= new MediaTypeWithQualityHeaderValue(contentType );
+            }
+
+
+            public bool Match(System.Net.Http.HttpRequestMessage request, IHttpRoute route, string parameterName, System.Collections.Generic.IDictionary<string, object> values, HttpRouteDirection routeDirection)
+            {
+                var ret = request.Headers.Accept.Contains(_conetntTypeValue);
+                return (_include == ret);
+                
+                
+            }
         }
     }
 }
