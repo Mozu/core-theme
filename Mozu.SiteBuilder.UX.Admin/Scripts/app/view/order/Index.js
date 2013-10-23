@@ -129,12 +129,9 @@ Ext.define('Taco.view.order.Index', {
             text: 'Shipping Status',
             width: 120
         }, {
-            dataIndex: 'channel',
             text: 'Channel',
-            width: 100
-        }, {
-            dataIndex: 'fulfillmentType',
-            text: 'Fulfillment Type',
+            xtype:"templatecolumn",
+            tpl: ["{channel.name}"],
             width: 100
         }, {
             xtype: 'taco.menucolumn',
