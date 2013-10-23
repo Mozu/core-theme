@@ -286,10 +286,12 @@ Ext.define('Taco.model.Order', {
         
 
         {
-            // id of the channel. will need to look up the name.
-            "name": "channelCode",
-            "type": "string",
-            "defaultValue": "1"
+            "name": "channel",
+            "type": "auto",
+            "defaultValue": {
+                code: "1",
+                name: "Channel Name Here"
+            }
         },
         {
             "name": "payments",

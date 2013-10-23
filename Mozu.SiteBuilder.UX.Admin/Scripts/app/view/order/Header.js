@@ -36,8 +36,8 @@ Ext.define('Taco.view.order.Header', {
                 ' | IP address: {ipAddress}',
             '</tpl>',
         
-            '<tpl if="channelName">',
-                ' | <span class="origin-data-item"> Channel: {channelName}</span>',
+            '<tpl if="channel">',
+                ' | <span class="origin-data-item"> Channel: {channel.name}</span>',
             '</tpl>',
         
             '<tpl if="siteName">',
@@ -90,10 +90,7 @@ Ext.define('Taco.view.order.Header', {
         Taco.model.CustomerAccount.load(me.record.get('customerId'), {
             success: function (record) {
                 me.customerData = record.getData();
-                
                 var data = Ext.apply({}, me.customerData, me.record.getData());
-                
-                data.channelName = "channel here";
                 this.update(data);
             },
             scope: me
