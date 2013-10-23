@@ -19,10 +19,6 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'shim!vendor/jquery.hist
         setFacetValue: function (e) {
             var $box = $(e.currentTarget);
             this.model.setFacetValue($box.data('mz-facet'), $box.data('mz-facet-value'), $box.is(':checked'));
-        },
-        render: function () {
-            console.log('facetingview render', this.model.toJSON());
-            Backbone.MozuView.prototype.render.apply(this, arguments);
         }
     });
 

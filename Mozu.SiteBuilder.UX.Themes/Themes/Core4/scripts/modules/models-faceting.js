@@ -91,7 +91,7 @@
                     me.isLoading(false);
                 });
             }
-        }, 300, true),
+        }, 300),
         initialize: function () {
             this.lastRequest = this.buildFacetRequest();
         }

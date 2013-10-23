@@ -388,8 +388,10 @@
     <Content Include="Themes\Core4\resources\images\button-loading.gif" />
     <Content Include="Themes\Core4\scripts\modules\views-productimages.js" />
     <Content Include="Themes\Core4\scripts\modules\views-messages.js" />
+    <Content Include="Themes\Core4\scripts\vendor\bootstrap-popover.js" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-container.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-sidebar.less" />
+    <Content Include="Themes\Core4\stylesheets\layouts\l-slidebox.less" />
     <None Include="Themes\Core4\stylesheets\modules\common\address-summary.less" />
     <Content Include="Themes\Core4\stylesheets\modules\faceting-form.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-tiles.less" />
@@ -414,6 +416,8 @@
     <Content Include="Themes\Core4\stylesheets\modules\common\form-field-group.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\order-summary.less" />
     <Content Include="Themes\Core4\stylesheets\modules\error-detail.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\common\bootstrap-popover.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\common\login-popover.less" />
     <None Include="Themes\Core4\stylesheets\modules\page-header\store-branding.less" />
     <Content Include="Themes\Core4\scripts\modules\backbone-mozu-validation.js" />
     <Content Include="Themes\Core4\scripts\modules\backbone-mozu-model.js" />
@@ -459,8 +463,6 @@
     <Content Include="Themes\Core4\scripts\pages\myaccount.js" />
     <Content Include="Themes\Core4\scripts\pages\product.js" />
     <Content Include="Themes\Core4\scripts\vendor\backbone.js" />
-    <Content Include="Themes\Core4\scripts\vendor\bootstrap-affix.js" />
-    <Content Include="Themes\Core4\scripts\vendor\jquery-colorbox.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery-cookie.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery.history.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery.tools.dateinput.js" />
@@ -894,7 +896,7 @@
     <None Include="Themes\Core4\templates\modules\checkout\credit-card-form.hypr.live" />
     <None Include="Themes\Core4\templates\modules\product\faceting-form.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\google-analytics-tracking-code.hypr" />
-    <None Include="Themes\Core4\templates\modules\common\login-modal.hypr.live" />
+    <None Include="Themes\Core4\templates\modules\common\login-popover.hypr.live" />
     <None Include="Themes\Core4\templates\modules\common\message-bar.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\page-footer.hypr" />
     <Content Include="Themes\Core4\templates\modules\page-header.hypr" />

@@ -17,6 +17,8 @@
                 <div class="mz-productlisting-productcode">{{prod.ProductCode}}</div>
                 {% endblock product-code %}
                 {% include "modules/product/price-stack" with Model=prod %}
+                {% block product-extrainfo %}
+                {% endblock product-extrainfo %}
             </div>
         </li>
         {% endfor %}

@@ -387,7 +387,7 @@
                 var order = this,
                     user = order.get('User');
                 if (user) {
-                    $.post('/auth/AjaxSignIn', {
+                    $.post('/login', {
                         email: user.get('EmailAddress'),
                         password: user.get("Password")
                     }).then(function () {

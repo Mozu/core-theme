@@ -162,7 +162,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             
         }
           [System.Web.Http.HttpPost]
-         public object  AjaxResetPassword(string email)
+         public object ResetPassword(string email)
         {
             var res = _userWebApiClient.ResetPassword( new ResetPasswordInfo(){
                 EmailAddress = email

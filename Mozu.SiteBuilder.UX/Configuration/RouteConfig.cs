@@ -192,7 +192,10 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "login",
                 new { controller = "Auth", action = "Login" });
 
-
+            routes.MapHttpRoute(
+                "Reset Password",
+                "resetpassword",
+                new { controller = "Auth", action = "ResetPassword" });
 
             routes.MapHttpRoute(
                 "Error",

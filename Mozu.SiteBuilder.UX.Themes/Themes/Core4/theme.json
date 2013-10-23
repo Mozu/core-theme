@@ -54,6 +54,8 @@
     { "id": "labelShippingHandling",    "defaultValue": "Shipping & Handling" },
     { "id": "labelAdditionalHandling",  "defaultValue": "Additional Handling" },
     { "id": "labelClear",               "defaultValue": "Clear", },
+    { "id": "labelCancel",              "defaultValue": "Cancel", },
+    { "id": "labelSendEmail",           "defaultValue": "Send Email", },
     { "id": "labelProductCode",         "defaultValue": "Product Code" },
     { "id": "labelRemove",              "defaultValue": "Remove" },
     { "id": "labelEdit",                "defaultValue": "Edit" },
@@ -71,6 +73,7 @@
     { "id": "labelSecurityCode",        "defaultValue": "Security Code" },
     { "id": "labelPhone",               "defaultValue": "Phone" },
     { "id": "labelEmail",               "defaultValue": "Email" },
+    { "id": "labelEmailAddress",        "defaultValue": "Email Address" },
     { "id": "labelCreditCard",          "defaultValue": "Credit Card" },
     { "id": "labelYou",                 "defaultValue": "you" },
     { "id": "labelPassword",            "defaultValue": "Password" },
@@ -94,6 +97,8 @@
     { "id": "labelResultsPerPage",      "defaultValue": "results per page" },
     { "id": "labelRegisteredCustomer",  "defaultValue": "Registered customer?" },
     { "id": "labelStackTrace",          "defaultValue": "Details" },
+    { "id": "labelForgotPasswordLink",  "defaultValue": "forgot email or password?" },
+    { "id": "labelResetPassword",       "defaultValue": "Reset Password" },
 
     /* Faceting labels */
     { "id": "labelClearAllFilters",     "defaultValue": "Clear All Filters" },

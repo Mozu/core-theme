@@ -1,0 +1,21 @@
+<div class="mz-loginpopover mz-l-slidebox">
+    <div class="mz-l-slidebox-outer">
+    <div class="mz-l-slidebox-inner">
+        <section data-mz-role="login-form" class="mz-login-form mz-l-slidebox-panel">
+            <input name="email" data-mz-login-email placeholder="{{ themeSettings.labelEmailAddress }}" type="email" />
+            <input name="password" data-mz-login-password placeholder="{{ themeSettings.labelPassword }}" type="password" />
+            <div class="mz-loginpopover-action">
+                (<a data-mz-action="forgotpasswordform" href="javascript:;">{{ themeSettings.labelForgotPasswordLink }}</a>) <button class="mz-button" data-mz-action="submitlogin">{{ themeSettings.labelLogIn }}</button>
+            </div>
+        </section>
+        <section data-mz-role="forgotpassword-form" class="mz-forgot-password mz-l-slidebox-panel">
+            <label>{{ themeSettings.labelResetPassword }}</label>
+            <input type="email" data-mz-forgotpassword-email name="reset-password" placeholder="{{ themeSettings.labelEmailAddress }}" />
+            <div class="mz-loginpopover-action">
+                (<a href="javascript:;" data-mz-action="loginform">{{ themeSettings.labelCancel }}</a>) <button class="mz-button" data-mz-action="submitforgotpassword">{{ themeSettings.labelSendEmail }}</button>
+            </div>
+        </section>
+    </div>
+      </div>
+    <section data-mz-role="loginpopover-message" class="mz-loginpopover-message"></section>
+</div>
