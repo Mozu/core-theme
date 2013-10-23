@@ -39,13 +39,13 @@ Ext.define('Taco.view.location.subform.Location', {
         });
         
         // note there are two different boxSelects. Dont' use the other one. your welcome.
-        me.locationTypes = Ext.create('Ext.ux.form.field.BoxSelect', {
+        me.locationTypeIds = Ext.create('Ext.ux.form.field.BoxSelect', {
             width: 300,
             fieldLabel: 'Location Types',
-            name: 'locationTypes',
+            name: 'locationTypeIds',
             queryMode: 'local',
             displayField: 'name',
-            valueField: 'id',
+            valueField: 'code',
             emptyText: 'Select',
             allowBlank: false,
             store: locationTypesStore
@@ -54,19 +54,19 @@ Ext.define('Taco.view.location.subform.Location', {
         
 
         // note there are two different boxSelects. Dont' use the other one. your welcome.
-        me.fulfillmentTypes = Ext.create('Ext.ux.form.field.BoxSelect', {
+        me.fulfillmentTypeIds = Ext.create('Ext.ux.form.field.BoxSelect', {
             width: 300,
             fieldLabel: 'Fulfillment Types',
-            name: 'fulfillmentTypes',
+            name: 'fulfillmentTypeIds',
             queryMode: 'local',
             //multiSelect: true,
             displayField: 'name',
-            valueField: 'id',
+            valueField: 'code',
             emptyText: 'Select',
             allowBlank: true,
             store: Ext.create('Ext.data.Store', {
                 autoLoad:true,
-                fields: ['code', 'name', "id", "shippingRequired"],
+                fields: ['code', 'name', "shippingRequired"],
                 data: me.record.getFulfillmentTypes()
             })
         });
@@ -94,8 +94,8 @@ Ext.define('Taco.view.location.subform.Location', {
                                 // update the lat long fields
                                 var json = Ext.decode(response.responseText, true);
                                 if (json && json.success) {
-                                    me.getForm().findField("latitude").setValue(json.geo.latitude);
-                                    me.getForm().findField("longitude").setValue(json.geo.longitude);
+                                    me.getForm().findField("lat").setValue(json.geo.lat);
+                                    me.getForm().findField("lng").setValue(json.geo.lng);
                                 }
                             },
                             scope: this
@@ -173,8 +173,8 @@ Ext.define('Taco.view.location.subform.Location', {
         */
                 
         this.items = [
-            this.locationTypes,
-            this.fulfillmentTypes,
+            this.locationTypeIds,
+            this.fulfillmentTypeIds,
             {
                 xtype: "textfield",
                 name: "name",
@@ -187,6 +187,12 @@ Ext.define('Taco.view.location.subform.Location', {
                 width: '100%',
                 fieldLabel: 'Description',                
                 allowBlank: true
+            }, {
+                xtype: "textfield",
+                name: "code",
+                width: 300,
+                fieldLabel: 'Code',
+                allowBlank: false
             }, {
                 // note: may need to convert this to a checkbox of on/off toggle if the service supports undelete. TBD
                 xtype:"displayfield",
@@ -250,9 +256,9 @@ Ext.define('Taco.view.location.subform.Location', {
                 items: [{
                     xtype: 'textfield',
                     fieldLabel:"Latitude",
-                    name: "latitude",
+                    name: "lat",
                     allowBlank: false,
-                    value: this.record.get("geo").latitude,
+                    value: this.record.get("geo").lat,
                     flex: 1
                 }, {
                     xtype:"splitter"
@@ -260,8 +266,8 @@ Ext.define('Taco.view.location.subform.Location', {
                     xtype: 'textfield',
                     fieldLabel: "Longitude",
                     allowBlank: false,
-                    name: "longitude",
-                    value: this.record.get("geo").longitude,
+                    name: "lng",
+                    value: this.record.get("geo").lng,
                     flex: 1
                 }]
             },
@@ -311,9 +317,22 @@ Ext.define('Taco.view.location.subform.Location', {
             fn: function () {
                 // manually update the record
                 var form = me.getForm();
+                
+                // this data member wants the record data instead of the array of values that is return by combo. need to translate to record.data objects
+                var locationTypes = form.findField("locationTypeIds");
+                me.record.set('locationTypes', locationTypes.getValueRecordsData());
+                // updating the non persisted field just to be consistant
+                me.record.set('locationTypeIds', locationTypes.getValueRecordsData());
+
+                // this data member wants the record data instead of the array of values that is return by combo. need to translate to record.data objects
+                var fulfillmentTypes = form.findField("fulfillmentTypeIds");
+                me.record.set('fulfillmentTypes', fulfillmentTypes.getValueRecordsData());
+                // updating the non persisted field just to be consistant
+                me.record.set('fulfillmentTypeIds', fulfillmentTypes.getValueRecordsData());
+                
                 me.record.set("geo", {
-                    latitude: form.findField("latitude").getValue(),
-                    longitude: form.findField("longitude").getValue()
+                    lat: form.findField("lat").getValue(),
+                    lng: form.findField("lng").getValue()
                 });
             }
         });

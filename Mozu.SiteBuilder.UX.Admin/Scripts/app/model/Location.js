@@ -3,23 +3,49 @@
  */
 Ext.define('Taco.model.Location', {
     extend: 'Taco.core.data.Model',
+    idProperty: "code",
     fields: [
         {
+            "name": "code", 
+            "type": "string",
+            "useNull": true
+        }, {
             "name": "locationTypes",
             "type": "auto",
             "default": []
-        }, {
-            "name": "locationTypeNames",
+        },
+
+        // helper field that converts the persisted value to array of strings for use in combobox
+        {
+            "name": "locationTypeIds",
             "type": "auto",
-            "default": []
+            "convert": function (value, record) {
+                var types = record.get("locationTypes");
+                var data = [];
+                Ext.Array.each(types, function(rec) {
+                    data.push(rec.code);
+                });
+                return data;
+            }
         }, {
             "name": "fulfillmentTypes",
             "type": "auto",
             "default": []
-        }, {
-            "name": "id",  // this is tbd
-            "type": "string",
-            "useNull": true
+        },
+        
+        // helper field that converts the persisted value to array of strings for use in combobox
+        {
+            "name": "fulfillmentTypeIds",
+            "type": "auto",
+            "convert": function (value, record) {
+                
+                var type = record.get("fulfillmentTypes");
+                var data = [];
+                Ext.Array.each(type, function(rec) {
+                    data.push(rec.code);
+                });
+                return data;
+            }
         }, {
             "name": "isDeleted", // this is tbd
             "type": "boolean"
@@ -66,8 +92,8 @@ Ext.define('Taco.model.Location', {
             "name": "geo",
             "type": "auto",
             "defaultValue": {
-                latitude: null,
-                longitude:null
+                lat: null,
+                lng:null
             }
         }, {
             "name": "phone",
@@ -174,13 +200,11 @@ Ext.define('Taco.model.Location', {
             {
                 "name": "InStore Pickup",
                 "code": "inStorePickup",
-                "shippingRequired": false,
-                "id": 1
+                "shippingRequired": false
             }, {
                 "name": "Direct Ship",
                 "code": "directShip",
-                "shippingRequired": true,
-                "id": 2
+                "shippingRequired": true
             }
         ];
     }

@@ -3,11 +3,9 @@
  */
 Ext.define('Taco.model.LocationType', {
     extend: 'Taco.core.data.Model',
+    idProperty:"code",
     fields: [
         {
-            "name": "id",
-            "type": "string"
-        }, {
             "name": "code",
             "type": "string"
         }, {
