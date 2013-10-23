@@ -190,16 +190,18 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
 
-            routes.MapHttpRoute(
+var r1=            routes.MapHttpRoute(
                 "AJAX Login",
                 "login",
-                new { controller = "Auth", action = "AjaxLogin" }, new ContentTypeConstraint("text/html", false));
+                new { controller = "Auth", action = "AjaxLogin" },
+                new { acceptConstraint = new AcceptConstraint("text/html", false) });
 
 
-            routes.MapHttpRoute(
+            var r2 = routes.MapHttpRoute(
                 "Login",
                 "login",
-                new { controller = "Auth", action = "Login" }, new ContentTypeConstraint("text/html", true));
+                new {controller = "Auth", action = "Login"},
+                new { acceptConstraint = new AcceptConstraint("text/html", true) });
 
             routes.MapHttpRoute(
                 "Reset Password",
@@ -218,22 +220,24 @@ namespace Mozu.SiteBuilder.UX.Configuration
             //    new { controller = "Auth", action = "SignIn" });
         }
 
-        class ContentTypeConstraint : IHttpRouteConstraint 
+        class AcceptConstraint : IHttpRouteConstraint 
         {
-            private readonly bool _include;
+            private readonly bool _match;
+           
 
-            private MediaTypeWithQualityHeaderValue _conetntTypeValue;
-            public ContentTypeConstraint(string contentType, bool include = true  )
+            private MediaTypeWithQualityHeaderValue _mediaType ;
+            public AcceptConstraint(string contentType, bool match = true)
             {
-                _include = include;
-                _conetntTypeValue= new MediaTypeWithQualityHeaderValue(contentType );
+                _match = match;
+
+                _mediaType = new MediaTypeWithQualityHeaderValue(contentType);
             }
 
 
             public bool Match(System.Net.Http.HttpRequestMessage request, IHttpRoute route, string parameterName, System.Collections.Generic.IDictionary<string, object> values, HttpRouteDirection routeDirection)
             {
-                var ret = request.Headers.Accept.Contains(_conetntTypeValue);
-                return (_include == ret);
+                var ret = request.Headers.Accept.Contains(_mediaType);
+                return (_match == ret);
                 
                 
             }
