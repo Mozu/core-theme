@@ -38,9 +38,9 @@
                 },                login = function () {
                     $parent.addClass('is-loading');
                     $.post('/login', {
-                        EmailAddress: $parent.find('[data-mz-login-email]').val(),
-                        Password: $parent.find('[data-mz-login-password]').val()
-                    }).then(function () {
+                        email: $parent.find('[data-mz-login-email]').val(),
+                        password: $parent.find('[data-mz-login-password]').val()
+                    }).then(function (res) {
                         window.location.reload();
                     }, displayMessage);
                 },                retrievePassword = function () {

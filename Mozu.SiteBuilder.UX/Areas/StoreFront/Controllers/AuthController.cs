@@ -118,8 +118,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
         }
          [System.Web.Http.HttpPost]
-        public object AjaxLogin(string email, string password)
+        public object AjaxLogin(LoginDetails details)
         {
+            string email = details.email;
+            string password = details.password;
+            string returnUrl = details.returnUrl;
             var res = _userWebApiClient.CloneWithoutUserClaims().Login(new Mozu.Core.Api.Contracts.UserAuthInfo()
             {
 
@@ -154,15 +157,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             else
             {
-                return  new
+                return Request.CreateResponse(System.Net.HttpStatusCode.Unauthorized, new
                 {
                     Message = String.Format("There was an error logging in as {0}. Please check your username and password.", email)
-                };
+                });
             }
             
         }
           [System.Web.Http.HttpPost]
-         public object ResetPassword(string email)
+         public object  AjaxResetPassword(string email)
         {
             var res = _userWebApiClient.ResetPassword( new ResetPasswordInfo(){
                 EmailAddress = email

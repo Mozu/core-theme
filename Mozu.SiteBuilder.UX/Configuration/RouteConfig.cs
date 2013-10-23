@@ -191,9 +191,15 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
             routes.MapHttpRoute(
+                "AJAX Login",
+                "login",
+                new { controller = "Auth", action = "AjaxLogin" }, new ContentTypeConstraint("text/html", false));
+
+
+            routes.MapHttpRoute(
                 "Login",
                 "login",
-                new { controller = "Auth", action = "Login" });
+                new { controller = "Auth", action = "Login" }, new ContentTypeConstraint("text/html", true));
 
             routes.MapHttpRoute(
                 "Reset Password",
