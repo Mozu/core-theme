@@ -44,10 +44,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(dc => dc.OrderSummary, op => op.MapFrom(x => new DC.OrderSummary { OrderCount = x.OrderCount, LastOrderDate = x.LastOrderDate, TotalOrderAmount = new DC.CurrencyAmount { CurrencyCode = "USD", Amount = x.TotalOrderAmount.HasValue ? x.TotalOrderAmount.Value : 0 } }))
 
             .ForMember(dc => dc.Groups, op => op.MapFrom(x=> (x.Groups ?? Enumerable.Empty<int>() ).Select( _=> new DC.CustomerGroup() {Id=_ }) ))
-            .ForMember(dc => dc.Attributes, op => op.Ignore())
+            .ForMember(x => x.Attributes, op => op.MapFrom(x => (x.Attributes ?? Enumerable.Empty<int>()).Select(_ => new DC.CustomerAttribute {Id=_})))
             .ForMember(dc => dc.Notes, op => op.Ignore())
-                // add AccountId to all the contacts
-            .AfterMap((x, dc) => dc.Contacts.ForEach(dcc => dcc.AccountId = dc.Id))
+            .ForMember(x => x.TaxExempt, op => op.MapFrom(x => x.TaxExempt))
+            .ForMember(x => x.TaxId, op => op.MapFrom(x => x.TaxId))
+
+            // add AccountId to all the contacts
+            .AfterMap((x, dc) => dc.Contacts.ForEach(con => con.AccountId = dc.Id))
             ;
 
 
