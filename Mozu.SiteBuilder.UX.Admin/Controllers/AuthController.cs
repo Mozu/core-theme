@@ -107,10 +107,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
           [HttpGet]
         public HttpResponseMessage  Launchpad()
           {
-              var redir = _settings.LoginPath + "/to?scopeType=Tenant";
+              var redir = _settings.LoginPath;
             if (_settings.AppSettings("useTenantDomainNames") != "true")
             {
-                redir += "&postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
+                redir += "?postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
             }
             
 
