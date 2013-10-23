@@ -524,7 +524,17 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                                          new Importer(reader)
                                  };
 
-                Ruleset tree = parser.Parse(template, _path);
+                Ruleset tree = null;
+                try
+                {
+                    tree = parser.Parse(template, _path);
+                }
+                catch (System.IO.FileNotFoundException exception)
+                {
+                    throw new FileNotFoundException(exception.Message + "[" + exception.FileName + "]", exception.InnerException);
+                
+                }
+               
 
                 var env = new Env {Compress = !_debug};
                 //env.AddPlugin(new MyLessPlugin() { Env = env });
@@ -649,9 +659,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             public bool DoesFileExist(string fileName)
             {
-                //todo: implement
-                return true;
-                //throw new NotImplementedException();
+                string stem = fileName;
+                var file = lessTransFormer.PathProvider.GetThemeFileInfo(stem);
+                return file != null;
             }
 
 
