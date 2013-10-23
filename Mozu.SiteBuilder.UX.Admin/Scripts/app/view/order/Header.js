@@ -30,29 +30,20 @@ Ext.define('Taco.view.order.Header', {
             '<div>Total spent: <strong>{[Ext.util.Format.usMoney(values.totalSpent || 0)]}</strong></div>',
         '</div>',
         '<div class="taco-order-detail-header-section origin-data">',
-            '{createDate:date("F j, Y | g:i a")}',
-                '<tpl if="ipAddress">',
-                    ' | IP address: {ipAddress}',
-                '</tpl>',
-        
-            '<tpl if="channel">',
-                '<span class="origin-data-item"> Channel: {channel}</span>',
-                ' | ',
+            '{createDate:date("F j, Y  g:i a")}',
+
+            '<tpl if="ipAddress">',
+                ' | IP address: {ipAddress}',
             '</tpl>',
         
-            '<tpl if="site">',
-                '<span class="origin-data-item"> Site: {site}</span>',
-                ' | ',
+            '<tpl if="channelName">',
+                ' | <span class="origin-data-item"> Channel: {channelName}</span>',
+            '</tpl>',
+        
+            '<tpl if="siteName">',
+                ' | <span class="origin-data-item"> Site: {siteName}</span>',
             '</tpl>',
             
-            '<tpl if="fulfillmentType">',
-                '<span class="origin-data-item">FulfillmentType: ',
-                    '<tpl for="fulfillmentType">',
-                        '<tpl if="xindex &gt; 1">, </tpl>',
-                        '{name}',
-                    '</tpl>',
-                '</span>',
-            '</tpl>',
         '</div>', {
             convertDate: function(date) {
                 return Ext.Date.format(date, 'F j, Y, g:i a');
@@ -99,7 +90,10 @@ Ext.define('Taco.view.order.Header', {
         Taco.model.CustomerAccount.load(me.record.get('customerId'), {
             success: function (record) {
                 me.customerData = record.getData();
+                
                 var data = Ext.apply({}, me.customerData, me.record.getData());
+                
+                data.channelName = "channel here";
                 this.update(data);
             },
             scope: me

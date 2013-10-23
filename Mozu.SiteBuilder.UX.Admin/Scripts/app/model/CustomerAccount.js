@@ -137,6 +137,14 @@ Ext.define('Taco.model.CustomerAccount', {
                }, {
                    name: 'createDate',
                    type: 'date'
+               }, {
+                   name: 'taxExempt',
+                   type: 'boolean',
+                   defaultValue:false
+               }, {
+                   name: 'taxExemptId',
+                   type: 'string',
+                   defaultValue:""
                }];
                 if (!Taco.model.CustomerAccount.contactFieldsAdded) {
                     Taco.model.CustomerAccount.contactFieldsAdded = true;
@@ -147,7 +155,7 @@ Ext.define('Taco.model.CustomerAccount', {
                             type: contactField.type.type,
                             convert: function location(v, record) {
 
-                                if (record.raw.contacts && record.raw.contacts.length) {
+                                if (record.raw && record.raw.contacts && record.raw.contacts.length) {
                                     return contactField.convert(record.raw.contacts[0][contactField.name]);
                                 }
                                 return contactField.convert(null);
