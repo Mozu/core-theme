@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 
 using Mozu.Core;
@@ -71,7 +72,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [System.Web.Http.HttpPost]
-        public object  Login(LoginDetails details)
+        public HttpResponseMessage   Login(LoginDetails details)
         {
             string email = details.email;
             string password = details.password;
@@ -113,8 +114,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             else
             {
                 ModelState.AddModelError("email", "There was an error with your E-Mail/Password combination. Please try again.");
-                
-                return View("Login" , new { email = email });
+
+                return this.Request.CreateResponse(HttpStatusCode.OK, View("Login", new {email = email}));
             }
         }
          [System.Web.Http.HttpPost]
