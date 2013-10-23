@@ -47,7 +47,21 @@ Ext.define('Taco.model.Order', {
             name: 'siteId',
             type: 'int',
             "useNull": true
+        }, {
+            name:"siteName",
+            type:"string",
+            convert: function (value, record) {
+                var siteId = record.get('siteId'),
+                    siteName = "";
+                
+                if (siteId) {
+                    var site = Taco.app.context.findSite(siteId);
+                    siteName = site.name;
+                } 
+                return siteName;
+            }
         },
+
         {
             "name": "authorizationInfo",
             "type": "auto"
@@ -272,21 +286,11 @@ Ext.define('Taco.model.Order', {
         
 
         {
-            "name": "channel",
-            "type": "string"
+            // id of the channel. will need to look up the name.
+            "name": "channelCode",
+            "type": "string",
+            "defaultValue": "1"
         },
-        
-        {
-            "name": "fulfillmentType",
-            "type": "array",
-            "default":[]
-        },
-        
-        {
-            "name": "site",
-            "type": "string"
-        },
-
         {
             "name": "payments",
             "type": "auto",

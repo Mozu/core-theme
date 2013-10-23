@@ -55,23 +55,18 @@ Ext.define('Taco.view.locationType.Index', {
         }]
     },
 
-    filterProperties: [{
-        property: 'all',
-        text: 'All',
-        isDefault: true
-    }, {
-        property: 'orderNumber',
-        text: 'Order Number'
-    }, {
-        property: 'billingContactFirstName',
-        text: 'First Name'
-    }, {
-        property: 'billingContactLastName',
-        text: 'Last Name'
-    }, {
-        property: 'billingContactAddress',
-        text: 'Address'
-    }
+    filterProperties: [
+        {
+            property: 'all',
+            text: 'All',
+            isDefault: true
+        }, {
+            property: 'name',
+            text: 'Name'
+        }, {
+            property: 'code',
+            text: 'Code'
+        }
     ],
 
     /*

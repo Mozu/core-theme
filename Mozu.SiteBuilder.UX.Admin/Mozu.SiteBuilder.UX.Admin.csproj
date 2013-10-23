@@ -598,6 +598,7 @@
     <Content Include="Scripts\app\model\LocationType.js" />
     <Content Include="Scripts\app\model\OrderAttribute.js" />
     <Content Include="Scripts\app\model\ShippingMethod.js" />
+    <Content Include="Scripts\app\overrides\form\field\ComboBox.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditor.js" />
     <Content Include="Scripts\app\overrides\menu\Item.js" />
     <Content Include="Scripts\app\overrides\window\MessageBox.js" />
@@ -3253,7 +3254,6 @@
     <Folder Include="Models\" />
     <Folder Include="Modules\" />
     <Folder Include="Scripts\app\model\Context\" />
-    <Folder Include="Scripts\app\overrides\form\field\" />
     <Folder Include="Scripts\app\view\address\" />
     <Folder Include="Scripts\app\view\settings\publishing\" />
     <Folder Include="Scripts\resources\scss\taco\widgets\" />

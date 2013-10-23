@@ -67,6 +67,7 @@ Ext.define('Taco.Application',{
             'Taco.core.util.Common',
             'Taco.overrides.window.MessageBox',
             'Taco.overrides.grid.RowEditor',
+            'Taco.overrides.form.field.ComboBox',
             'Ext.data.association.HasOne',
             'Taco.core.data.RemoteException',
             'Taco.core.context.TaContext',

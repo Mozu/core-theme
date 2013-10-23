@@ -132,6 +132,10 @@ Ext.define('Taco.model.OrderItem', {
             convert: function (v, record) {
                 return (record.get("options").length || record.get("extras").length);
             }
+        }, {
+            "name": "fulfillmentMethod",
+            "type": "string",
+            "defaultValue": "ship"
         }
         
         

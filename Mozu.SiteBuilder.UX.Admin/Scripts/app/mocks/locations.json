@@ -1,9 +1,22 @@
 ﻿{
 	"items": [
 		{
-			"id":1205,		// tbd. roeder is considering this	
-			"locationTypes":["1"],
-			"fulfillmentTypes":[1,2],
+			"code":"asdf",
+			"locationTypes":[{
+				"name":"Warehouse 123",			 
+				"code": "W123"
+			}],
+			"fulfillmentTypes":[
+				{
+					"name": "InStore Pickup",
+					"code": "inStorePickup",
+					"shippingRequired": false
+				}, {
+					"name": "Direct Ship",
+					"code": "directShip",
+					"shippingRequired": true
+				}
+			],
 			"isDeleted":false, // tbd. roeder is considering this
 			"name":"Location name here",			
 			"description":"This is the description",			
@@ -20,8 +33,8 @@
 				"addressIsValidated": true
 			},
 		    geo:{
-				"latitude": 30.279230,
-				"longitude": -97.727509
+				"lat": 30.279230,
+				"lng": -97.727509
 			},
 			"phone":"(512) 555-5555",
 			"fax":"(512) 555-4444",
