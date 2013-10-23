@@ -13,7 +13,7 @@
             "xtype": "combo",
             "name": "bodyBackgroundColor",
             "allowBlank": false,
-            "store": ["#556B2F", "#5F9EA0", "#6495ED", "#66CDAA", "#696969", "#6A5ACD", "#6B8E23", "#708090", "#778899", "#7B68EE", "#7CFC00", "#7FFF00", "#7FFFD4", "#800000", "#800080", "#808000", "#808080"],
+            "store": ["#FFFFFF", "#556B2F", "#5F9EA0", "#6495ED", "#66CDAA", "#696969", "#6A5ACD", "#6B8E23", "#708090", "#778899", "#7B68EE", "#7CFC00", "#7FFF00", "#7FFFD4", "#800000", "#800080", "#808000", "#808080"],
             "queryMode": "local"
         }, {
             "fieldLabel": "Default Items Per Page",

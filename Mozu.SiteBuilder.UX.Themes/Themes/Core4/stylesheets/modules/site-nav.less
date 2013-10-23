@@ -6,12 +6,17 @@
     overflow: visible;
     .clearfix();
 
-    > .mz-sitenav-list > .mz-sitenav-item:first-child {
-        margin-left: @gutter * .75;
-    }
+    > .mz-sitenav-list {
+        white-space: nowrap;
+        > .mz-sitenav-item:first-child {
+            margin-left: @gutter * .75;
+        }
+    } 
 
     .mz-sitenav-item {
-        float: left;
+        display: inline-block;
+        // to remove space gap
+        font-size: 0.1px;
         position: relative;
 
         &:hover .mz-sitenav-sub {
@@ -29,7 +34,7 @@
         .transition(visibility 0s ease-out .25s);
 
         > .mz-sitenav-item {
-            clear: both;
+            display: block;
             width: 100%;
 
             .mz-sitenav-link {
@@ -64,9 +69,22 @@
         text-decoration: none;
         display: inline-block;
         padding: 10px @gutter*.75;//@gutter*.325;
+        font-size: @fontSize;
         position: relative;
         &:visited {
             color: #eeeeee;
+        }
+    }
+
+    @media only screen {
+        @media (max-width: 800px) {
+            height: auto;
+            > .mz-sitenav-list {
+                white-space: normal;
+            }
+            .mz-sitenav-sub {
+                display: none;
+            }
         }
     }
 }
