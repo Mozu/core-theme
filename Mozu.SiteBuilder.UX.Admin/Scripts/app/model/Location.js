@@ -20,7 +20,8 @@ Ext.define('Taco.model.Location', {
             "name": "locationTypeIds",
             "type": "auto",
             "convert": function (value, record) {
-                var types = record.get("locationTypes");
+                
+                var types = record.get("locationTypes") || [];
                 var data = [];
                 Ext.Array.each(types, function(rec) {
                     data.push(rec.code);
@@ -39,7 +40,7 @@ Ext.define('Taco.model.Location', {
             "type": "auto",
             "convert": function (value, record) {
                 
-                var type = record.get("fulfillmentTypes");
+                var type = record.get("fulfillmentTypes") || [];
                 var data = [];
                 Ext.Array.each(type, function(rec) {
                     data.push(rec.code);
