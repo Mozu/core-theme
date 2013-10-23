@@ -392,7 +392,7 @@
     <Content Include="Themes\Core4\stylesheets\layouts\l-container.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-sidebar.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-slidebox.less" />
-    <None Include="Themes\Core4\stylesheets\modules\common\address-summary.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\common\address-summary.less" />
     <Content Include="Themes\Core4\stylesheets\modules\faceting-form.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-tiles.less" />
     <Content Include="Themes\Core4\stylesheets\base\normalize.less" />
@@ -418,7 +418,7 @@
     <Content Include="Themes\Core4\stylesheets\modules\error-detail.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\bootstrap-popover.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\login-popover.less" />
-    <None Include="Themes\Core4\stylesheets\modules\page-header\store-branding.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\page-header\store-branding.less" />
     <Content Include="Themes\Core4\scripts\modules\backbone-mozu-validation.js" />
     <Content Include="Themes\Core4\scripts\modules\backbone-mozu-model.js" />
     <Content Include="Themes\Core4\scripts\modules\backbone-mozu-view.js" />
