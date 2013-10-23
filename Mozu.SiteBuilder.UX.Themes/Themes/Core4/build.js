@@ -16,7 +16,6 @@
         {
             name: "modules/common",
             include: [
-                'modules/animatemodals',
                 'modules/api',
                 'modules/backbone-mozu-model',
                 'modules/backbone-mozu-validation',

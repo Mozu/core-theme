@@ -1,5 +1,93 @@
-﻿define(['modules/jquery-mozu', 'hyprlive', 'shim!vendor/underscore>_', 'modules/backbone-mozu'], function ($, HyprLive, _, Backbone) {
-    
-    $('[data-mz-login-link]');
+﻿define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'hyprlive', 'shim!vendor/underscore>_'], function ($, HyprLive, _, Backbone) {
+
+    $(document).ready(function () {
+        var loginTemplate = HyprLive.getTemplate('modules/common/login-popover').render(),
+            $docBody = $(document.body),
+
+            useLoginPage = function () {
+                return Modernizr.mq('(max-width: 480px)');
+            },
+
+            returnFalse = function () {
+                return false;
+            }
+
+        $('[data-mz-action="login"]').each(function () {
+            var $this = $(this),
+                $parent = $this.parent(),
+                popoverInstance,
+                dismisser = function (e) {
+                    // clicking away from a popped popover should dismiss it
+                    if (!$.contains(popoverInstance.$tip[0], e.target)) {
+                        $this.popover('destroy');
+                        $this.on('click', createPopover);
+                        $this.off('click', returnFalse);
+                        $parent.off('click', '[data-mz-action="forgotpasswordform"]', slideRight);
+                        $parent.off('click', '[data-mz-action="loginform"]', slideLeft);
+                        $parent.off('click', '[data-mz-action="submitlogin"]', login);
+                        $parent.off('click', '[data-mz-action="submitforgotpassword"]', retrievePassword);
+                        $docBody.off('click', dismisser);
+                    }
+                },                slideRight = function () {
+                    $slideboxOuter.css('left', -panelWidth);
+                },                slideLeft = function () {
+                    $slideboxOuter.css('left', 0);
+                },                displayMessage = function(msg) {
+                    $parent.removeClass('is-loading');
+                    $parent.find('[data-mz-role="loginpopover-message"]').text(msg.Message);
+                },                login = function () {
+                    $parent.addClass('is-loading');
+                    $.post('/login', {
+                        EmailAddress: $parent.find('[data-mz-login-email]').val(),
+                        Password: $parent.find('[data-mz-login-password]').val()
+                    }).then(function () {
+                        window.location.reload();
+                    }, displayMessage);
+                },                retrievePassword = function () {
+                    $parent.addClass('is-loading');
+                    $.post('/resetpassword', {
+                        EmailAddress: $parent.find('[data-mz-forgotpassword-email]').val()
+                    }).always(displayMessage);
+                },                $slideboxOuter,                panelWidth,                createPopover = function (e) {
+                    // in the absence of JS or in a small viewport, these links go to the login page.
+                    // Prevent them from going there!
+                    if (!useLoginPage()) {
+                        e.preventDefault();
+                        // If the parent element's not positioned at least relative,
+                        // the popover won't move with a window resize
+                        var pos = $parent.css('position');
+                        if (!pos || pos === "static") $parent.css('position', 'relative');
+                        $this.popover({
+                            placement: "auto",
+                            animation: true,
+                            html: true,
+                            trigger: 'manual',
+                            content: loginTemplate,
+                            container: $parent
+                        }).on('shown.bs.popover', function () {
+
+                            _.defer(function () {
+                                $(document.body).on('click', dismisser);
+                                $this.on('click', returnFalse);
+                            });
+
+                            popoverInstance = $this.data('bs.popover');
+
+                            panelWidth = $parent.find('.mz-l-slidebox-panel').first().outerWidth(),
+                            $slideboxOuter = $parent.find('.mz-l-slidebox-outer');
+
+                            $parent.on('click', '[data-mz-action="forgotpasswordform"]', slideRight);
+                            $parent.on('click', '[data-mz-action="loginform"]', slideLeft);
+                            $parent.on('click', '[data-mz-action="submitlogin"]', login);
+                            $parent.on('click', '[data-mz-action="submitforgotpassword"]', retrievePassword);
+                            $this.off('click', createPopover);
+                        })
+                        .popover('show');
+
+                    }
+                };            $this.on('click', createPopover);
+        });
+
+    });
 
 });

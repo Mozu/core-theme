@@ -23,8 +23,6 @@
         <dd>{{ Model.BillingInfo.BillingContact.FirstName }} {{ Model.BillingInfo.BillingContact.LastNameOrSurname }}</dd>
         <dt>{{ themeSettings.labelBillingAddress }}</dt>
         <dd class="mz-addresssummary">{% include "modules/common/address-summary" with Model=Model.BillingInfo.BillingContact %}</dd>
-        <dt>{{ themeSettings.labelBillingPhone }}</dt>
-        <dd>{{ Model.BillingInfo.BillingContact.PhoneNumbers.Home }}</dd>
         <dt>{{ themeSettings.labelBillingEmail }}</dt>
         <dd>{{ Model.BillingInfo.BillingContact.Email }}</dd>
         {% if Model.BillingInfo.PaymentType == "CreditCard" %}
@@ -34,8 +32,8 @@
         <dd>{{ Model.BillingInfo.Card.CardNumberPartOrMask }}</dd>
         {% else %}
         <dt>{{ themeSettings.labelCheckNumber }}</dt>
-        <dd>{{ Model.BillingInfo.Check.CheckNumber</dd>
-        <dt><strong>{{ themeSettings.labelMailCheckTo }}:</strong></dt>
+        <dd>{{ Model.BillingInfo.Check.CheckNumber }}</dd>
+        <dt><strong>{{ themeSettings.labelMailCheckTo }}</strong></dt>
         <dd class="mz-addresssummary">{% include "modules/common/address-summary" with Model=ViewData.MailCheckTo %}</dd>
         {% endif %}
         <dt>{{ themeSettings.labelShipTo }}</dt>
