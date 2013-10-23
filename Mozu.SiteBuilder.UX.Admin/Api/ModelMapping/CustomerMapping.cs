@@ -24,11 +24,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.CompanyOrOrganization, op => op.MapFrom(dc => dc.CompanyOrOrganization))
             .ForMember(x => x.AcceptsMarketing, op => op.MapFrom(dc => dc.AcceptsMarketing))
             .ForMember(x => x.Groups, op => op.MapFrom(dc => (dc.Groups ?? Enumerable.Empty<DC.CustomerGroup>()).Select(g => g.Id )))
+            .ForMember(x => x.Attributes, op => op.MapFrom(dc => (dc.Attributes ?? Enumerable.Empty<DC.CustomerAttribute>()).Select(a => a.Id)))
             .ForMember(x => x.Notes, op => op.MapFrom(dc => dc.Notes))
             .ForMember(x => x.TotalOrderAmount, op => op.MapFrom(dc => dc.OrderSummary != null && dc.OrderSummary.TotalOrderAmount != null ? (decimal?)dc.OrderSummary.TotalOrderAmount.Amount : null))
             .ForMember(x => x.OrderCount, op => op.MapFrom(dc => dc.OrderSummary != null ? dc.OrderSummary.OrderCount : 0))
             .ForMember(x => x.LastOrderDate, op => op.MapFrom(dc => dc.OrderSummary != null ? dc.OrderSummary.LastOrderDate : null))
             .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
+            .ForMember(x => x.TaxExempt, op => op.MapFrom(dc => dc.TaxExempt))
+            .ForMember(x => x.TaxId, op => op.MapFrom(dc => dc.TaxId))
             ;
 
             Mapper.CreateMap<ApiCustomer, DC.CustomerAccount>()
