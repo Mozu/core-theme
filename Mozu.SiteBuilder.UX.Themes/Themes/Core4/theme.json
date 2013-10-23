@@ -18,7 +18,7 @@
     { "id": "fontFamily",              "defaultValue": "Rambla, sans-serif" },
     { "id": "fontSize",                "defaultValue": "14px" },
     { "id": "gutterWidth",             "defaultValue": "25px" },
-    { "id": "bodyBackgroundColor",     "defaultValue": "#ffffff" },
+    { "id": "bodyBackgroundColor",     "defaultValue": "#FFFFFF" },
 
     /* Settings specific to category page display */
     { "id": "facetCategoryPages",      "defaultValue": true },
