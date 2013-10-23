@@ -93,6 +93,7 @@
     { "id": "labelShow",                "defaultValue": "Show" },
     { "id": "labelResultsPerPage",      "defaultValue": "results per page" },
     { "id": "labelRegisteredCustomer",  "defaultValue": "Registered customer?" },
+    { "id": "labelStackTrace",          "defaultValue": "Details" },
 
     /* Faceting labels */
     { "id": "labelClearAllFilters",     "defaultValue": "Clear All Filters" },
