@@ -39,10 +39,6 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'shim!vendor/jquery.hist
             };
 
             var facetingModel = new FacetingModels.FacetedProductCollection(productListData);            var facetingViews = {
-                facetPanel: $facetPanel.length > 0 && new FacetingView({
-                    el: $facetPanel,
-                    model: facetingModel
-                }),
                 pagingControls: new PagingViews.PagingControls({
                     el: $categoryPageBody.find('[data-mz-pagingcontrols]'),
                     model: facetingModel
@@ -56,7 +52,9 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'shim!vendor/jquery.hist
                     el: $categoryPageBody.find('[data-mz-productlisting]'),
                     model: facetingModel
                 })
-            };
+            };            if ($facetPanel.length > 0) {                facetingViews.facetPanel = new FacetingView({
+                    el: $facetPanel,                    model: facetingModel
+                });            }
             facetingModel.on('facetchange', function () {
                 var newURL, lrClone = JSON.parse(JSON.stringify(facetingModel.lastRequest));
                 $.each(lrClone, function (p) { if (p in productListData.baseRequestParams) delete lrClone[p] });
