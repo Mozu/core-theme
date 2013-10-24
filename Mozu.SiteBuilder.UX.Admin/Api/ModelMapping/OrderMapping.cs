@@ -52,7 +52,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<OrdersDC.Order, Order>()
                 .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
                 .ForMember(x => x.SiteId, op => op.MapFrom(dc => dc.SiteId))
-                
+                .ForMember(x => x.ChannelCode, op => op.MapFrom(dc => dc.ChannelCode))
                 .ForMember(x => x.TenantId, op => op.MapFrom(dc => dc.TenantId))
 
                 .ForMember(x => x.OrderNumber, op => op.MapFrom(dc => dc.OrderNumber))
@@ -93,7 +93,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.IsDraft, op => op.MapFrom(dc => dc.IsDraft.HasValue ? dc.IsDraft.Value : false))
                 .ForMember(x => x.HasDraft, op => op.MapFrom(dc => dc.HasDraft.HasValue ? dc.HasDraft.Value : false))
 
-                // .ForMember(x => x.DiscountTotal, op => op.MapFrom(dc => dc.ShippingInfo.
                 .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
                 .AfterMap((dc, order) =>
                 {
@@ -170,6 +169,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.Subtotal, op => op.MapFrom(dc => dc.Subtotal))
                   .ForMember(x => x.DisplaySubtotal, op => op.MapFrom(dc => dc.ExtendedTotal))
                   .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Total))
+                  .ForMember(x => x.FulfillmentLocationCode, op => op.MapFrom(dc => dc.FulfillmentLocationCode))
+                  .ForMember(x => x.FulfillmentMethod, op => op.MapFrom(dc => dc.FulfillmentMethod))
                   .AfterMap((dc, orderItem) =>
                   {
                       if (orderItem.Discounts != null)
@@ -372,6 +373,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(dc => dc.Quantity, op => op.MapFrom(x => x.Quantity))
                   .ForMember(dc => dc.ProductDiscounts, op => op.MapFrom(x => x.Discounts))
                   .ForMember(dc => dc.ShippingDiscounts, op => op.MapFrom(x => x.ShippingDiscounts))
+                  .ForMember(dc => dc.FulfillmentLocationCode, op => op.MapFrom(x => x.FulfillmentLocationCode))
+                  .ForMember(dc => dc.FulfillmentMethod, op => op.MapFrom(x => x.FulfillmentMethod))
                   ;
         }
 

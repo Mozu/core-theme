@@ -15,7 +15,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(EmitDefaultValue = false, Name = "tenantId")]
         public int? TenantId { get; set; }
 
-      
+        [DataMember(Name="channelCode")]
+        public string ChannelCode { get; set; }
 
         [DataMember(EmitDefaultValue = false, Name = "siteId")]
         public int? SiteId { get; set; }
@@ -37,8 +38,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         [DataMember(Name="billingContact")]
         public Contact BillingContact { get; set; }
-        
-        [DataMember(Name = "shippingContact")]
+
+        [DataMember(Name = "fulfillmentContact")]
         public Contact FulfillmentContact { get; set; }
 
         [DataMember(Name = "ipAddress")]

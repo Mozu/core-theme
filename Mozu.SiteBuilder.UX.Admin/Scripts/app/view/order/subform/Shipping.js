@@ -107,7 +107,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
 
                 // order info
                 title: "Unshipped Items",
-                shipmentStatus: me.record.get("shippingStatus"),
+                fulfillmentStatus: me.record.get("fulfillmentStatus"),
                 orderTotal: me.record.get("itemsOrdered"),
                 shippedItemTotal: me.record.get("itemsShipped"),
                 pendingItemTotal: me.record.get("itemsNotShipped"),
@@ -155,7 +155,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
                         
                         // order info
                         title: "Package " + i,
-                        shipmentStatus: dataItem.status,
+                        fulfillmentStatus: dataItem.status,
                         itemTotal: dataItem.totalQuantity,
                         packagingType: packagingTypeText,
                         weight: dataItem.weight,
@@ -235,7 +235,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
                         
                     // order info
                     title: "Package",
-                    shipmentStatus: dataItem.status,
+                    fulfillmentStatus: dataItem.status,
                     itemTotal: dataItem.totalQuantity,
                     weight: dataItem.weight,
                     shippingMethod: dataItem.shippingMethod,

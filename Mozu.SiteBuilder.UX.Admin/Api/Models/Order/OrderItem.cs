@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using DC = Mozu.CommerceRuntime.Contracts.Products;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
@@ -17,7 +18,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         // public string OriginalCartItemId { get; set; }
 
         [DataMember(Name="options", EmitDefaultValue=true)]
-        public List<Mozu.CommerceRuntime.Contracts.Products.ProductOption> Options { get; set; }
+        public List<DC.ProductOption> Options { get; set; }
 
         [DataMember(Name = "productName")]
         public string ProductName { get; set; }
@@ -67,5 +68,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         [DataMember(Name = "total")]
         public decimal Total { get; set; }
+
+        #region Fulfillment shizzle
+        [DataMember(Name="fulfillmentLocationCode")]
+        public string FulfillmentLocationCode { get; set; }
+        
+        [DataMember(Name = "fulfillmentMethod")]
+        public string FulfillmentMethod { get; set; }
+
+        [DataMember(Name = "fulfillmentStatus")]
+        public string FulfillmentStatus { get; set; }
+        #endregion
     }
 }

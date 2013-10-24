@@ -40,8 +40,8 @@ Ext.define('Taco.model.Order', {
             type: 'int'
         },
         {
-            name: 'siteGroupId',
-            type: 'int'
+            name: 'channelCode',
+            type: 'string'
         },
         {
             name: 'siteId',
@@ -87,7 +87,7 @@ Ext.define('Taco.model.Order', {
             "default": {}
         },
         {
-            "name": "shippingContact",
+            "name": "fulfillmentContact",
             "type": "auto",
             "default": {}
         },
@@ -112,17 +112,12 @@ Ext.define('Taco.model.Order', {
             "useNull": true
         },
         {
-            "name": "shippingMethodCode",
+            "name": "fulfillmentMethodCode",
             "type": "string",
             "useNull": true
         },
         {
-            "name": "shippingMethodName",
-            "type": "string",
-            "useNull": true
-        },
-        {
-            "name": "shippingDescription",
+            "name": "fulfillmentMethodName",
             "type": "string",
             "useNull": true
         },
@@ -284,15 +279,6 @@ Ext.define('Taco.model.Order', {
             "useNull": true
         },
         
-
-        {
-            "name": "channel",
-            "type": "auto",
-            "defaultValue": {
-                code: "1",
-                name: "Channel Name Here"
-            }
-        },
         {
             "name": "payments",
             "type": "auto",
@@ -387,7 +373,7 @@ Ext.define('Taco.model.Order', {
         {
             type: 'hasOne',
             model: 'Taco.model.Contact',
-            name: 'shippingContact',
+            name: 'fulfillmentContact',
             reader: 'json'
         },
         {
