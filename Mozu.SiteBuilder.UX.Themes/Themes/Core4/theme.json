@@ -12,18 +12,32 @@
   "settings": [
 
     /* Common settings used in templates */
-    { "id": "defaultPageSize",         "defaultValue": "15" },
-    { "id": "maxProductSummaryWords",  "defaultValue": 40 },
+    { "id": "defaultPageSize",              "defaultValue": "15" },
+    { "id": "maxProductSummaryWords",       "defaultValue": 40 },
 
     /* Common apperance settings used in the stylesheet */
-    { "id": "googleWebFonts",           "defaultValue": "Source Sans Pro:regular,italic,bold,bolditalic" },
-    { "id": "fontFamily",              "defaultValue": "\"Source Sans Pro\", sans-serif" },
-    { "id": "fontSize",                "defaultValue": "14px" },
-    { "id": "gutterWidth",             "defaultValue": "25px" },
-    { "id": "bodyBackgroundColor",     "defaultValue": "#FFFFFF" },
+    { "id": "googleWebFonts",               "defaultValue": "Source Sans Pro:regular,italic,bold,bolditalic" },
+    { "id": "fontFamily",                   "defaultValue": "\"Source Sans Pro\", sans-serif" },
+    { "id": "fontSize",                     "defaultValue": "14px" },
+    { "id": "gutterWidth",                  "defaultValue": "25px" },
+    { "id": "bodyBackgroundColor",          "defaultValue": "#FFFFFF" },
 
     /* Settings specific to category page display */
-    { "id": "facetCategoryPages",      "defaultValue": true },
+    { "id": "showCategoryFacets",               "defaultValue": true },
+
+    /* Settings specific to product listing modules */
+    { "id": "listProductShortDesc",         "defaultValue": true },
+    { "id": "listProductCode",              "defaultValue": true },
+
+    /* Settings specific to product pages */
+    { "id": "showProductDetailShortDesc",       "defaultValue": true },
+    { "id": "showProductDetailProperties",      "defaultValue": true },
+    { "id": "showProductDetailMeasurements",    "defaultValue": true },
+
+    /* Settings specific to the cart */
+    { "id": "showCartItemOptions",              "defaultValue": true },
+    { "id": "showCartItemImage",                "defaultValue": true },
+
 
     /* Labels, soon to be moved to their own labels section */
     /* Global default labels */

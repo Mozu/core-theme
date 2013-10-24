@@ -12,12 +12,12 @@
   {% for item in Model.Items %}
   <tr class="mz-carttable-item">
     <td class="mz-carttable-item-product">
-      {% if item.Product.mainImage %}
+      {% if item.Product.mainImage and themeSettings.showCartItemImage %}
           <img class="mz-carttable-item-image" src="{{ item.Product.mainImage.ImagePath }}?size=50" />
       {% endif %}
       <div class="mz-carttable-item-info-wrap{% if not item.Product.mainImage %} mz-no-image{% endif %}">
         <a class="mz-carttable-item-title" href="{{item.Product.Url}}">{{ item.Product.Name }}</a>
-        {% if item.Product.Options %}
+        {% if item.Product.Options and themeSettings.showCartItemOptions %}
         <dl class="mz-propertylist">
           {% for option in item.Product.Options %}
           <dt>{{ option.Name }}</dt>&nbsp;
