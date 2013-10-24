@@ -60,24 +60,24 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             
             requestContext["templateVariables"] = viewContext.HttpContext.Items["templateVariables"];
             requestContext["_vc"] = viewContext;
-         
-            requestContext["Model"] =  viewContext.ViewData.Model;
+
+            requestContext["Model"] = requestContext["model"] = viewContext.ViewData.Model;
             if (viewContext.ParentActionViewContext != null)
             {
-                requestContext["PageModel"] = viewContext.ParentActionViewContext.ViewData.Model;
+                requestContext["PageModel"] = requestContext["pageModel"] = viewContext.ParentActionViewContext.ViewData.Model;
             }
             else
             {
-                requestContext["PageModel"] = viewContext.ViewData.Model;
+                requestContext["PageModel"] = requestContext["pageModel"] = viewContext.ViewData.Model;
             }
 
 
-            requestContext["SiteContext"] = siteContext;
-            requestContext["ThemeSettings"] =  siteContext.ThemeSettings;
-            requestContext["PageContext"] =  pageContext;
-            requestContext["navigationContext"] = navigationContext;
-            requestContext["clientApiContext"] = clientApiContext;
-            requestContext["User"] =  user;
+            requestContext["SiteContext"] = requestContext["siteContext"] = siteContext;
+            requestContext["ThemeSettings"] = requestContext["themeSettings"] = siteContext.ThemeSettings;
+            requestContext["PageContext"] = requestContext["pageContext"] = pageContext;
+            requestContext["Navigation"] = requestContext["navigation"] = navigationContext;
+            requestContext["ApiContext"] = requestContext["apiContext"] = clientApiContext;
+            requestContext["User"] = requestContext["user"] = user;
             requestContext["true"] = true;
             requestContext["false"] = false;
             requestContext["viewPath"] = _virtualPath;
