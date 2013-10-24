@@ -5,6 +5,14 @@ using System.Runtime.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Models.Navigation
 {
+
+    [DataContract]
+    public class NavigationNodeCollection
+    {
+        public List<NavigationNode> Nodes { get; set; }
+
+    }
+
     /// <summary>
     /// A serializable representation of an element in a navigation tree.
     /// This type is used internally and is converted to a

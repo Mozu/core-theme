@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         private INavigationRepository _navRepo;
         private ICategoryNavigationProvider _catClient;
         private ICmsServiceWrapper _cmsService;
-
+        private Task<List<NavigationNode>> _getCategoriesTask;
         /// <summary>
         /// Public constructor.
         /// </summary>
@@ -41,6 +41,15 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             _navRepo = navRepo;
             _catClient = catClient;
             _cmsService = cmsService;
+        }
+
+        public Task<List<NavigationNode>> GetCategories()
+        {
+            if (_getCategoriesTask == null)
+            {
+                _getCategoriesTask = _catClient.GetCategories();
+            }
+            return _getCategoriesTask;
         }
 
         /// <summary>
@@ -68,7 +77,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             });
 
             // get the list of categories
-            var catTask = _catClient.GetCategories();
+            var catTask = GetCategories();
 
             // get the list of pages
             var pageTask = _cmsService.GetList2(contentCollection: "pages", pageSize: 100);

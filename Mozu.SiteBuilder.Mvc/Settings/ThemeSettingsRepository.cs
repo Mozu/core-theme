@@ -22,7 +22,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         Task<ThemeRuntimeSettingsCollection> GetRuntimeValues(string themeId);
         Task<List<ThemeRuntimeSetting>> SaveInstanceValues(List<ThemeRuntimeSetting> values, string themeId);
         Task<List<ThemeRuntimeSetting>> GetInstanceValues(string themeId);
-        DateTime GetTimeStamp(string themeId);
+        Task<DateTime> GetTimeStamp(string themeId);
     }
 
     public class ThemeSettingsRepository : IThemeSettingsRepository
@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         private readonly DataContractJsonSerializer _serializer;
    
         private readonly IStorefrontCache _cache;
-
+      
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -99,7 +99,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                 .Unwrap();
         }
 
-
+        private Task<List<ThemeRuntimeSetting>> _getInstanceValues;
         public Task<List<ThemeRuntimeSetting>> GetInstanceValues(string themeId)
         {
 
@@ -113,29 +113,41 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                 return tcs.Task;
             }
 
-            return _cmsService.GetByPath2("settings", this.GetFileName(themeId))
-                .ContinueWith<List<ThemeRuntimeSetting>>(res =>
-                {
-                    List<ThemeRuntimeSetting> values = new List<ThemeRuntimeSetting>();
-                    if (res.Result.ResponseMessage.IsSuccessStatusCode)
-                    {
-                        var doc = res.Result.ReadAsSync();
-                        var data = doc.Get<string>("data");
-                        if (data != null)
-                        {
-                            values = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ThemeRuntimeSetting>>(doc.Get<string>("data"));    
-                        }
-                        else
-                        {
-                            values = new List<ThemeRuntimeSetting>();
-                        }
-                        
-                        _cache[key] = values;
-                    }
-                    
-                    return values;
-                });
-           
+            if (_getInstanceValues == null)
+            {
+
+
+
+                _getInstanceValues = _cmsService.GetByPath2("settings", this.GetFileName(themeId))
+                                                .ContinueWith<List<ThemeRuntimeSetting>>(res =>
+                                                    {
+                                                        List<ThemeRuntimeSetting> values = new List<ThemeRuntimeSetting>();
+                                                        if (res.Result.ResponseMessage.IsSuccessStatusCode)
+                                                        {
+                                                            var doc = res.Result.ReadAsSync();
+
+                                                            _ts = doc.UpdateDate.GetValueOrDefault(DateTime.Today);
+                                                            var data = doc.Get<string>("data");
+                                                            if (data != null)
+                                                            {
+                                                                values = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ThemeRuntimeSetting>>(doc.Get<string>("data"));
+                                                            }
+                                                            else
+                                                            {
+                                                                values = new List<ThemeRuntimeSetting>();
+                                                            }
+
+                                                            _cache[key] = values;
+                                                        }
+                                                        else
+                                                        {
+                                                            _ts = DateTime.Today;
+                                                        }
+                                                        return values;
+                                                    });
+            }
+            return _getInstanceValues;
+
         }
 
         private ThemeRuntimeSettingsCollection _runtimeValues;
@@ -152,6 +164,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             {
                 return this.GetInstanceValues(themeId).ContinueWith<ThemeRuntimeSettingsCollection>(task =>
                     {
+
                         List<ThemeRuntimeSetting> values = task.Result;
                         var dic = new Dictionary<string, ThemeRuntimeSetting>(StringComparer.OrdinalIgnoreCase);
 
@@ -178,25 +191,33 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         }
 
         private DateTime? _ts;
-        public DateTime GetTimeStamp(string themeId)
+        private Task<DateTime> _getTimeStamp;
+
+        public Task<DateTime> GetTimeStamp(string themeId)
         {
-            if (!_ts.HasValue )
+            if (_getTimeStamp == null)
             {
-                var res = _cmsService.GetByPath2("settings", GetFileName(themeId)).Result;
-                if ( res.ResponseMessage.IsSuccessStatusCode)
-                {
-                    _ts= res.ReadAsSync().UpdateDate.GetValueOrDefault(DateTime.Today);
+
+                _getTimeStamp = GetInstanceValues(themeId).ContinueWith(x => _ts.Value );
+            }
+            return _getTimeStamp;
+            //if (!_ts.HasValue )
+            //{
+            //    var res = _cmsService.GetByPath2("settings", GetFileName(themeId)).Result;
+            //    if ( res.ResponseMessage.IsSuccessStatusCode)
+            //    {
+            //        _ts= res.ReadAsSync().UpdateDate.GetValueOrDefault(DateTime.Today);
 
 
-                }
-                if ( !_ts.HasValue)
-                {
-                    _ts = DateTime.Today;
-                }
+            //    }
+            //    if ( !_ts.HasValue)
+            //    {
+            //        _ts = DateTime.Today;
+            //    }
                 
 
-            }
-            return _ts.Value;
+            //}
+            //return _ts.Value;
         }
 
 

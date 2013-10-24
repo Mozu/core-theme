@@ -17,7 +17,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
     {
         private readonly NavigationGandalf _navigationGandalf;
 
-        public NavigationContext(NavigationGandalf navigationGandalf)
+        public NavigationContext(NavigationGandalf navigationGandalf, ICategoryNavigationProvider categoryNavigationProvider)
         {
             _navigationGandalf = navigationGandalf;
         }
@@ -50,6 +50,17 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 
             }
             return _initTask; 
+        }
+
+
+        public Task<List<NavigationNode>> GetCategories()
+        {
+            return _navigationGandalf.GetCategories();
+        }
+
+        public List<NavigationNode> RootCategories
+        {
+            get { return GetCategories().Result; }
         }
 
 

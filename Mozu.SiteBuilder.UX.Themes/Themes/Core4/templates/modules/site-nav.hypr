@@ -1,7 +1,7 @@
 ﻿<nav class="mz-sitenav">
     <ul class="mz-sitenav-list">
-      {%for link in navigation.tree %}
-      <li class="mz-sitenav-item">
+        {%for link in navigation.tree %}
+            <li class="mz-sitenav-item">
                 <a class="mz-sitenav-link{% if link.url == SiteContext.Navigation.CurrentNode.url %} is-current {% endif %}" href="{{link.url}}">{{link.name}}</a>
                 {% if link.items %}
                     <ul class="mz-sitenav-sub">
@@ -26,4 +26,3 @@
     </ul>
 </nav>
     
-

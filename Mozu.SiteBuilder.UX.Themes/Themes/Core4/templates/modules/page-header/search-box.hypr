@@ -3,8 +3,8 @@
 	<button class="mz-searchbox-button" type="submit">{{ themeSettings.labelSearch }}</button>
 	<select class="mz-searchbox-categories" name="categoryId">
 		<option value="">{{ themeSettings.labelAll }}</option>
-		{% for cat in SiteContext.CatalogContext.CategoryTree %}
-		<option value="{{cat.Id}}" {% if cat.Id == SiteContext.SearchContext.CategoryId  %} selected="selected" {%endif%}>{{cat.Name}}</option>
+    {% for cat in navigation.rootCategories %}
+    <option value="{{cat.Id}}" {% if cat.Id == pageContext.CategoryId  %} selected="selected" {%endif%}>{{cat.Name}}</option>
 		{% endfor %}
 	</select>
 </form>
