@@ -19,7 +19,7 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
 
             // order info
             title: "Unshipped Items",
-            shipmentStatus: "Partially Shipped",
+            fulfillmentStatus: "Partially Shipped",
             orderTotal: 65,
             shippedItemTotal: 45,
             pendingItemTotal: 20,
@@ -106,7 +106,7 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
                     '<div class="titleRow">',
                         ' {title} ',
                         '<span class="seperator">|</span>',
-                        ' {shipmentStatus} ',
+                        ' {fulfillmentStatus} ',
                     '</div>',
 
                     '<div class="orderCountRow">',

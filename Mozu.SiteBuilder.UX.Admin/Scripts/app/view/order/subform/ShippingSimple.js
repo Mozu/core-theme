@@ -170,10 +170,10 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
     },
 
     isValid: function () {
-        return this.hasShippingContact();
+        return this.hasFulfillmentContact();
     },
 
-    hasShippingContact: function () {
+    hasFulfillmentContact: function () {
         return !!this.contact.get('firstName');
     }
 });

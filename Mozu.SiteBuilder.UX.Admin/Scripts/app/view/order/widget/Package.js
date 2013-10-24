@@ -57,7 +57,7 @@ Ext.define('Taco.view.order.widget.Package', {
 
             // order info
             title: "Package #",
-            shipmentStatus: "Not Shipped",
+            fulfillmentStatus: "Not Shipped",
             itemTotal: 0,
             weight: 0,
             shippingMethod: "",
@@ -141,8 +141,8 @@ Ext.define('Taco.view.order.widget.Package', {
                     '<div class="titleRow">',
                         ' {title} ',
                         '<span class="seperator">|</span>',
-                        ' {shipmentStatus} ',
-                        '<tpl if="values.shipmentStatus==\'Shipped\'">',
+                        ' {fulfillmentStatus} ',
+                        '<tpl if="values.fulfillmentStatus==\'Shipped\'">',
                             '<span class="seperator">|</span>',
                             'Shipped Date: {shipDate:date("F d Y g:ia")}',
                         '<tpl else>',
@@ -158,7 +158,7 @@ Ext.define('Taco.view.order.widget.Package', {
                     '<div class="trackingNumberRow">',
                         ' Tracking Number: ',
                 
-                        '<tpl if="values.shipmentStatus==\'Shipped\'">',
+                        '<tpl if="values.fulfillmentStatus==\'Shipped\'">',
                             '<tpl if="values.trackingNumber">',
                                 '<span>{trackingNumber}</span>',
                             '<tpl else>',
@@ -207,7 +207,7 @@ Ext.define('Taco.view.order.widget.Package', {
                         '<span class="seperator">|</span>',
                         'Packaging Type: ',
                 
-                        '<tpl if="values.shipmentStatus==\'Shipped\'">',
+                        '<tpl if="values.fulfillmentStatus==\'Shipped\'">',
                             '{packagingType}',
                         '<tpl else>',
                             '<a class="shipmentAction" shipmentAction="packagingType">{packagingType}</a>',
