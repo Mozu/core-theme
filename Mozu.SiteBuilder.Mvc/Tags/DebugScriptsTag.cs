@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             ISiteBuilderContext siteContext = context.SiteBuilderContext();
 
 
-            var scriptsArray = (List<string>) siteContext["scripts"];
+            var scriptsArray = (List<string>) context.HttpContext().Items ["scripts"];
             if (scriptsArray == null)
                 return ;
 

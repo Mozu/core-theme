@@ -8,6 +8,7 @@ using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteSettings.General.Contracts;
 using Mozu.SiteSettings.General.Contracts.Clients;
+using Mozu.Core.Api.Client;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
@@ -18,7 +19,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private readonly IGeneralSettingsWebApiClient _generalSettingsWebApiClient;
         private readonly IMobileDetectionProvider _mobileDetectionProvider;
         private readonly IThemeRepository _themeRepository;
-        private readonly IThemeSettingsRepository _themeSettingsRepository;
+        private readonly Lazy<IThemeSettingsRepository> _themeSettingsRepository;
         private GeneralSettings _generalSettings;
 
 
@@ -28,9 +29,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private string _themeId;
         private ThemeRuntimeSettingsCollection _themeRuntimeSettingsCollection;
 
-        public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, IThemeSettingsRepository themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider)
+        public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider)
         {
-            _generalSettingsWebApiClient = generalSettingsWebApiClient;
+            _generalSettingsWebApiClient = generalSettingsWebApiClient.CloneWithoutUserClaims();
             _themeSettingsRepository = themeSettingsRepository;
             _themeRepository = themeRepository;
             _mobileDetectionProvider = mobileDetectionProvider;
@@ -41,7 +42,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get
             {
-                Init().Wait();
+                if (_themeId == null)
+                {
+                    Init().Wait();    
+                }
+                
                 return _themeId;
             }
             set { _themeId = value; }
@@ -51,7 +56,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get
             {
-                Init().Wait();
+                if (_generalSettings == null)
+                {
+                    Init().Wait();    
+                }
+                
                 return _generalSettings;
             }
             set { _generalSettings = value; }
@@ -61,17 +70,27 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get
             {
-                Init().Wait();
+                if (_themeRuntimeSettingsCollection == null)
+                {
+                    Init().Wait();
+                }
                 return _themeRuntimeSettingsCollection;
             }
-            set { _themeRuntimeSettingsCollection = value; }
+            set
+            {
+                _themeRuntimeSettingsCollection = value;
+            }
         }
 
         public Theme Theme
         {
             get
             {
-                Init().Wait();
+                if (_theme == null)
+                {
+                    Init().Wait();    
+                }
+                
                 return _theme;
             }
             set { _theme = value; }
@@ -82,7 +101,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             if (_initTask == null)
             {
                 Task<ServiceClientResponse<GeneralSettings>> genSettingsTask = _generalSettingsWebApiClient.GetGeneralSettings();
-                Task initTask = genSettingsTask.ContinueWith(task =>
+                var initTask = genSettingsTask.ContinueWith(task =>
                     {
                         GeneralSettings = Mapper.Map<GeneralSettings>(task.Result.ReadAsSync());
                         HttpCookie cookie = _cookieProvider.GetRequestCookie(FORCE_THEME_COOKIE_NAME);
@@ -101,24 +120,24 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         }
 
                         Theme = _themeRepository.GetThemeOrDefault(ThemeId);
-                        return _themeSettingsRepository.GetRuntimeValues(Theme.Id);
-                    }, TaskContinuationOptions.NotOnFaulted).ContinueWith(task =>
-                        {
-                            if (!task.IsCompleted)
+                        
+                        return _themeSettingsRepository.Value.GetRuntimeValues(Theme.Id).ContinueWith(task2 =>
                             {
-                                throw new Exception("fack");
-                            }
-                            if (!task.Result.IsCompleted)
-                            {
-                                throw new Exception("fack fack");
-                            }
-
-                            ThemeSettings = task.Result.Result;
-                        });
+                                if (!task2.IsCompleted)
+                                {
+                                    throw new Exception("fack");
+                                }
 
 
-                _initTask = initTask;
+                                ThemeSettings = task2.Result;
+                            });
+                    });
+
+
+                _initTask = initTask.Unwrap();
             }
+
+           
             return _initTask;
         }
 

@@ -28,10 +28,10 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 throw new InvalidOperationException("includescript takes only 1 arg");
 
             var sbc = context.SiteBuilderContext();
-            var scripts = (List<string>)sbc["scripts"];
+            var scripts = (List<string>)context.HttpContext().Items ["scripts"];
             if (scripts == null)
             {
-                sbc["scripts"] = scripts = new List<string>();
+                context.HttpContext().Items["scripts"] = scripts = new List<string>();
             }
             scripts.Add(arguments[0].Value.ToString());
 

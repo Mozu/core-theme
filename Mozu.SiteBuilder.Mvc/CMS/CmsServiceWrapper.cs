@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Autofac;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
@@ -16,24 +17,23 @@ using DC = Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
-    public class CmsServiceWrapper : ICmsServiceWrapper
+    public class CmsServiceWrapper2 : ICmsServiceWrapper
     {
         ISiteBuilderApiContext _apiContext;
         IDocumentListWebApiClient _docRepo;
         ICmsTypeHelper _cmsTypeHelper;
-      
-        private readonly IThemeEntityDefinitionProvider _themeEntityDefinitionProvider;
+        private readonly ILifetimeScope _lifetimescope;
 
-        public CmsServiceWrapper(IDocumentListWebApiClient docRepo,
+
+        public CmsServiceWrapper2(IDocumentListWebApiClient docRepo,
             ISiteBuilderApiContext apiContext,
             ICmsTypeHelper cmsTypeHelper,
-          
-            IThemeEntityDefinitionProvider themeEntityDefinitionProvider
+            ILifetimeScope lifetimescope
             )
         {
             _apiContext = apiContext;
      
-            _themeEntityDefinitionProvider = themeEntityDefinitionProvider;
+       
             _docRepo = docRepo;
             if (_apiContext.UserClaims != null && _apiContext.UserClaims.ScopeType != Mozu.Core.ContextLevelType.Tenant.ToString())
             {
@@ -41,6 +41,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             }
             
             _cmsTypeHelper = cmsTypeHelper;
+            _lifetimescope = lifetimescope;
         }
 
         private Task<ServiceClientResponse<DC.Document>> CreateInternal(AVM.Document doc)
@@ -49,7 +50,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
             var documentTypeId = doc.Items.Where(x => x.Key == CmsConstants.Widgets.page_type_definition).Select(x => (string)x.Value).FirstOrDefault();
             PageTypeDefinition pageTypeDef = null;
-
+            var themeEntityDefinitionProvider = _lifetimescope.Resolve<IThemeEntityDefinitionProvider>();
             if (documentTypeId == null)
             {
                 pageTypeDef = new PageTypeDefinition();
@@ -57,7 +58,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             }
             else
             {
-                pageTypeDef = _themeEntityDefinitionProvider.GetPageTypeDefinition(documentTypeId);
+                pageTypeDef = themeEntityDefinitionProvider.GetPageTypeDefinition(documentTypeId);
             }
             if (pageTypeDef == null)
             {

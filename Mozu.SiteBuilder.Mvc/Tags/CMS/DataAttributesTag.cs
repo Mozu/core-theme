@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags.Data
         protected override void ProcessTag(ArgumentCollection arguments, ref NDjango.Interfaces.IContext context, out string buffer, out string templateName)
         {
             buffer = templateName = null;
-            var isEditmode = context.SiteBuilderContext().IsEditMode;
+            var isEditmode = context.PageContext().IsEditMode;
             
             if (!isEditmode)
                 return ;

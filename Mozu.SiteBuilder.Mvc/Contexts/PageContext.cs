@@ -11,7 +11,7 @@ using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
-    public class PageContext
+    public class PageContext : Mozu.SiteBuilder.UX.Models.IEditableContext
     {
         private readonly IApiContext _apiContext;
         private readonly IAuthenticationHelper _authenticationHelper;

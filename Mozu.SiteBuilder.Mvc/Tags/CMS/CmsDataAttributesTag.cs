@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags.Data
         {
             buffer = null;
             templateName = null;
-            var isEditmode = context.SiteBuilderContext().IsEditMode;
+            var isEditmode = context.PageContext().IsEditMode;
 
             if (!isEditmode)
                 return ;

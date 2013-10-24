@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
          {
              
 
-            var res = await _productClient.GetProduct(productCode, null, "Categories,Properties,Options", _ctx.IsEditMode);
+            var res = await _productClient.GetProduct(productCode, null, "Categories,Properties,Options", PageContext.IsEditMode);
         
             if ( !res.ResponseMessage.IsSuccessStatusCode )
             {

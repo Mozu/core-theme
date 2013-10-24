@@ -18,7 +18,7 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
         object NDjango.Interfaces.IFilterWithContext.PerformWithParamAndContext(object value, IEnumerable<object> parameter, NDjango.Interfaces.IContext context)
         {
-            var isEditmode = context.SiteBuilderContext().IsEditMode;
+            var isEditmode = context.PageContext().IsEditMode;
             if (!isEditmode)
             {
                 return value;

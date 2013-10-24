@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 //
-
+using Autofac;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
@@ -18,11 +18,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     public class HomeController : BaseApiController
     {
         // private INavigationRuntimeFactory _navigationRuntimeFactory;
-        private readonly IWebToolsRepository _webToolsRepository;
+    
 
-        public HomeController(IWebToolsRepository webToolsRepository)
+        public HomeController()
         {
-            _webToolsRepository = webToolsRepository;
+            
         }
 
         //
@@ -76,14 +76,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         public async Task<ActionResult> GoogleSiteVerification(string hash)
         {
-            var fileStream = await _webToolsRepository.GetWebMasterToolsFile(string.Format("google{0}.html", hash));
+            var webToolsRepository = LifetimeScope.Resolve<IWebToolsRepository>();
+            var fileStream = await webToolsRepository.GetWebMasterToolsFile(string.Format("google{0}.html", hash));
 
             return File(fileStream, "text/html");
         }
 
         public async Task<ActionResult> RobotsTxt()
         {
-            var content = await _webToolsRepository.GetRobotsContent();
+            var webToolsRepository = LifetimeScope.Resolve<IWebToolsRepository>();
+            var content = await webToolsRepository.GetRobotsContent();
 
             return Content(content, "text/plain");
         }

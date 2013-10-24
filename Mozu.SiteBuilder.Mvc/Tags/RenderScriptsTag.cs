@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         {
             buffer = templateName = null;
             var sbc = context.SiteBuilderContext();
-            var scriptsArray = (List<string>)sbc["scripts"];
+            var scriptsArray = (List<string>)context.HttpContext().Items["scripts"];
             if (scriptsArray == null)
                 return ;
 
