@@ -1,7 +1,9 @@
+{% if Model.Content.ProductShortDescription and themeSettings.showProductDetailShortDesc %}
 <div class="mz-productdetail-shortdesc mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">{{ themeSettings.labelShortDesc }}</h4>
   <span itemscope="description">{{ Model.Content.ProductShortDescription|safe }}</span>
 </div>
+{% endif %}
 
 {% if Model.Options %}
 <div class="mz-productdetail-options mz-l-stack-section">
@@ -38,7 +40,7 @@
   {{ Model.Content.ProductFullDescription|safe }}
 </div>
 
-{% if Model.Properties %}
+{% if Model.Properties and themeSettings.showProductDetailProperties %}
 <div class="mz-productdetail-properties mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">{{ themeSettings.labelProperties }}</h4>
   <dl class="mz-propertylist mz-propertylist-justified">
@@ -54,6 +56,7 @@
 </div>
 {% endif %}
 
+{% if Model.Measurements and themeSettings.showProductDetailMeasurements %}
 <div class="mz-productdetail-measurements mz-l-stack-section">
     <h4 class="mz-l-stack-sectiontitle">{{ themeSettings.labelMeasurements }}</h4>
     <dl class="mz-propertylist mz-propertylist-justified">
@@ -62,3 +65,4 @@
         <span itemprop="value">{{ Model.Measurements.PackageWeight.Value }}</span> <span itemprop="unitCode">{{ Model.Measurements.PackageWeight.Unit }}</span></dd>
     </dl>
 </div>
+{% endif %}

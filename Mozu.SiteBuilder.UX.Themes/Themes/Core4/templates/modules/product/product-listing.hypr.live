@@ -10,11 +10,13 @@
             </div>
             <div class="mz-productlisting-info">
                 <a class="mz-productlisting-title" href="{{prod.Url}}">{{prod.Content.ProductName}}</a>
-                {% if prod.Content.ProductShortDescription %}
+                {% if prod.Content.ProductShortDescription and themeSettings.listProductShortDesc %}
                 <p class="mz-productlisting-shortdesc">{{ prod.Content.ProductShortDescription|striptags|truncatewords(themeSettings.maxProductSummaryWords) }}</p>
                 {% endif %}
                 {% block product-code %}
+                {% if themeSettings.listProductCode %}
                 <div class="mz-productlisting-productcode">{{prod.ProductCode}}</div>
+                {% endif %}
                 {% endblock product-code %}
                 {% include "modules/product/price-stack" with Model=prod %}
                 {% block product-extrainfo %}
