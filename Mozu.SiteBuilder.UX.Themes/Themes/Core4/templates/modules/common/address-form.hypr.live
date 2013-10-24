@@ -5,7 +5,7 @@
         </div>
         <div class="mz-formfieldgroup-cell">
             <input type="text" id="mz-shipping-address-firstname" name="firstname" data-mz-value="{{ validationcontext }}FirstName" value="{{ Model.FirstName }}">
-            <span class="mz-validation-message" data-mz-validation-message-for="{{ validationcontext }}FirstName"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ validationcontext }}FirstName"></span>
         </div>
     </div>
     <div class="mz-formfieldgroup-row">
@@ -14,7 +14,7 @@
         </div>
         <div class="mz-formfieldgroup-cell">
             <input type="text" id="mz-shipping-address-lastname" name="lastname" data-mz-value="{{ validationcontext }}LastNameOrSurname" value="{{ Model.LastNameOrSurname }}">
-            <span class="mz-validation-message" data-mz-validation-message-for="{{ validationcontext }}LastNameOrSurname"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ validationcontext }}LastNameOrSurname"></span>
         </div>
     </div>
     <div class="mz-formfieldgroup-row">
@@ -23,14 +23,14 @@
         </div>
         <div class="mz-formfieldgroup-cell">
             <input type="text" id="mz-shipping-address-line-1" name="address-line-1" data-mz-value="{{ validationcontext }}Address.Address1" value="{{ Model.Address.Address1 }}">
-            <span class="mz-validation-message" data-mz-validation-message-for="{{ validationcontext }}Address.Address1"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ validationcontext }}Address.Address1"></span>
         </div>
     </div>
     <div class="mz-formfieldgroup-row">
         <div class="mz-formfieldgroup-cell"></div>
         <div class="mz-formfieldgroup-cell">
             <input type="text" id="mz-shipping-address-line-2" name="address-line-2" data-mz-value="{{ validationcontext }}Address.Address2" value="{{ Model.Address.Address2 }}">
-            <span class="mz-validation-message">&nbsp;</span>
+            <span class="mz-validationmessage">&nbsp;</span>
         </div>
     </div>
     <div class="mz-formfieldgroup-row">
@@ -39,7 +39,7 @@
         </div>
         <div class="mz-formfieldgroup-cell">
             <input type="text" id="mz-shipping-address-city" name="city" data-mz-value="{{ validationcontext }}Address.CityOrTown" value="{{ Model.Address.CityOrTown }}">
-            <span class="mz-validation-message" data-mz-validation-message-for="{{ validationcontext }}Address.CityOrTown"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ validationcontext }}Address.CityOrTown"></span>
         </div>
     </div>
     <div class="mz-formfieldgroup-row">
@@ -52,7 +52,7 @@
                     <option {% if Model.Address.CountryCode == "US" %}selected="selected"{% endif %} value="US">United States</option>
                     <option {% if Model.Address.CountryCode == "UK" %}selected="selected"{% endif %} value="UK">United Kingdom</option>
             </select>
-            <span class="mz-validation-message" data-mz-validation-message-for="{{ validationcontext }}Address.CountryCode"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ validationcontext }}Address.CountryCode"></span>
         </div>
     </div>
     <div class="mz-formfieldgroup-row" {% if Model.Address.CountryCode != "US" %}style="display: none"{% endif %}>
@@ -215,7 +215,7 @@
                     Wyoming
                 </option>
             </select>
-            <span class="mz-validation-message" data-mz-validation-message-for="{{ validationcontext }}Address.StateOrProvince"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ validationcontext }}Address.StateOrProvince"></span>
         </div>
     </div>
     <div {% if Model.Address.CountryCode != "US" %}style="display: none"{% endif %} class="mz-formfieldgroup-row">
@@ -224,7 +224,7 @@
         </div>
         <div class="mz-formfieldgroup-cell">
             <input type="text" id="mz-shipping-address-postal-code" name="postal-code" data-mz-value="{{ validationcontext }}Address.PostalOrZipCode" value="{{ Model.Address.PostalOrZipCode }}">
-            <span class="mz-validation-message" data-mz-validation-message-for="{{ validationcontext }}Address.PostalOrZipCode"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ validationcontext }}Address.PostalOrZipCode"></span>
         </div>
     </div>
     <div {% if Model.Address.CountryCode != "UK" %}style="display: none"{% endif %} class="mz-formfieldgroup-row">
@@ -233,7 +233,7 @@
         </div>
         <div class="mz-formfieldgroup-cell">
             <input type="text" id="mz-shipping-address-postal-town" name="postal-town" data-mz-value="{{ validationcontext }}Address.PostalOrZipCode" value="{{ Model.Address.PostalOrZipCode }}">
-            <span class="mz-validation-message" data-mz-validation-message-for="{{ validationcontext }}Address.PostalOrZipCode"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ validationcontext }}Address.PostalOrZipCode"></span>
         </div>
     </div>
     <div class="mz-formfieldgroup-row">
@@ -242,7 +242,7 @@
         </div>
         <div class="mz-formfieldgroup-cell">
             <input type="text" id="mz-shipping-address-phone" name="shippingphone" data-mz-value="{{ validationcontext }}PhoneNumbers.Home" value="{{ Model.PhoneNumbers.Home }}">
-            <span class="mz-validation-message" data-mz-validation-message-for="{{ validationcontext }}PhoneNumbers.Home"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ validationcontext }}PhoneNumbers.Home"></span>
         </div>
     </div>
 {% endblock address-form %}

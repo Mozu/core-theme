@@ -362,14 +362,14 @@ define(["shim!vendor/underscore>_", "shim!vendor/backbone[shim!vendor/underscore
             // view becomes valid. Removes any error message.
             valid: function (view, attr) {
                 view.$('[data-mz-value="' + attr + '"]').removeClass('is-invalid');
-                view.$('[data-mz-validation-message-for="' + attr + '"]').text('');
+                view.$('[data-mz-validationmessage-for="' + attr + '"]').text('');
             },
 
             // Gets called when a field in the view becomes invalid.
             // Adds a error message.
             invalid: function (view, attr, error) {
                 view.$('[data-mz-value="' + attr + '"]').addClass('is-invalid');
-                view.$('[data-mz-validation-message-for="' + attr + '"]').text(error);
+                view.$('[data-mz-validationmessage-for="' + attr + '"]').text(error);
             }
         };
 

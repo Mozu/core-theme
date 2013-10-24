@@ -4,7 +4,7 @@
         </div>
         <div class="mz-formfieldgroup-cell">
             <input type="text" name="nameOnCheck" id="nameOnCheck" data-mz-value="Check.NameOnCheck" value="{{ Model.Check.NameOnCheck }}">
-            <span class="mz-validation-message" data-mz-validation-message-for="Check.NameOnCheck"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="Check.NameOnCheck"></span>
         </div>
     </div>
     <div class="mz-formfieldgroup-row">
@@ -13,7 +13,7 @@
         </div>
         <div class="mz-formfieldgroup-cell">
             <input type="text" name="checkNumber" id="checkNumber" data-mz-value="Check.RoutingNumber" value="{{ Model.Check.RoutingNumber }}">
-            <span class="mz-validation-message" data-mz-validation-message-for="Check.RoutingNumber"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="Check.RoutingNumber"></span>
         </div>
     </div>                    
     <div class="mz-formfieldgroup-row">
@@ -22,6 +22,6 @@
         </div>
         <div class="mz-formfieldgroup-cell">
             <input type="text" name="checkNumber" id="checkNumber" data-mz-value="Check.CheckNumber" value="{{ Model.Check.CheckNumber }}">
-            <span class="mz-validation-message" data-mz-validation-message-for="Check.CheckNumber"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="Check.CheckNumber"></span>
         </div>
     </div>

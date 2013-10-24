@@ -10,7 +10,7 @@
                 <option value="AMEX" {% if Model.PaymentOrCardType == "AMEX" %}selected="selected"{% endif %}>American Express</option>
                 <option value="DISCOVER" {% if Model.PaymentOrCardType == "DISCOVER" %}selected="selected"{% endif %}>Discover</option>
             </select>
-            <span class="mz-validation-message" data-mz-validation-message-for="Card.PaymentOrCardType"</span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="Card.PaymentOrCardType"</span>
         </div>
     </div>
     <div class="mz-formfieldgroup-row">
@@ -19,7 +19,7 @@
         </div>
         <div class="mz-formfieldgroup-cell">
             <input type="text" name="credit-card-number" id="mz-payment-credit-card-number" data-mz-value="Card.CardNumberPartOrMask" value="{{ Model.CardNumberPartOrMask }}">
-            <span class="mz-validation-message" data-mz-validation-message-for="Card.CardNumberPartOrMask"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="Card.CardNumberPartOrMask"></span>
         </div>
     </div>
     <div class="mz-formfieldgroup-row">
@@ -28,7 +28,7 @@
         </div>
         <div class="mz-formfieldgroup-cell">
             <input type="text" name="credit-card-name" id="mz-payment-credit-card-name" data-mz-value="Card.NameOnCard" value="{{ Model.NameOnCard }}">
-            <span class="mz-validation-message" data-mz-validation-message-for="Card.NameOnCard"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="Card.NameOnCard"></span>
         </div>
     </div>
     <div class="mz-formfieldgroup-row">
@@ -65,7 +65,7 @@
                 <option {% if Model.ExpireYear == "2022" %}selected="selected"{% endif %} value="2022">2022</option>
                 <option {% if Model.ExpireYear == "2023" %}selected="selected"{% endif %} value="2023">2023</option>
             </select>
-            <span class="mz-validation-message" data-mz-validation-message-for="Card.ExpireYear"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="Card.ExpireYear"></span>
         </div>
     </div>
     <div class="mz-formfieldgroup-row">
@@ -74,7 +74,7 @@
         </div>
         <div class="mz-formfieldgroup-cell">
             <input type="text" name="security-code" id="mz-payment-security-code" class="mz-formfieldgroup-halfsize" data-mz-value="Card.CVV" value="{{ Model.CVV }}">
-            <span class="mz-validation-message" data-mz-validation-message-for="Card.CVV"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="Card.CVV"></span>
         </div>
     </div>
     <div class="mz-formfieldgroup-row">

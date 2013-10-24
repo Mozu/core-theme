@@ -23,7 +23,7 @@
     <button id="add-to-cart" class="mz-productdetail-addtocart mz-button mz-button-large {% if not Model.PurchasableState.IsPurchasable %}is-disabled{% endif %}" {% if not Model.PurchasableState.IsPurchasable %} disabled="disabled" {% endif %} data-mz-action="addToCart" >
         {{ themeSettings.labelAddToCart }}
     </button>
-  <span class="mz-validation-message" data-mz-validation-message-for="Quantity"></span>
+  <span class="mz-validationmessage" data-mz-validationmessage-for="Quantity"></span>
 
   {% if not Model.PurchasableState.IsPurchasable %}
   <p class="mz-productdetail-notpurchasable">

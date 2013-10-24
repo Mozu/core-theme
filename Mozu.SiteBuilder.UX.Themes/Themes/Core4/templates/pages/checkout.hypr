@@ -34,9 +34,11 @@
             <div class="mz-checkoutform-couponcode mz-formfieldgroup-row" id="coupon-code-field" >
                 {% include "modules/checkout/coupon-code-field" %}
             </div>
+            {% if themeSettings.showCheckoutCommentsField %}
             <div class="mz-checkoutform-comments mz-formfieldgroup-row" id="comments-field" >
                 {% include "modules/checkout/comments-field" %}
             </div>
+            {% endif %}
         </div>
 
     </div>

@@ -37,7 +37,12 @@
     /* Settings specific to the cart */
     { "id": "showCartItemOptions",              "defaultValue": true },
     { "id": "showCartItemImage",                "defaultValue": true },
+    { "id": "showCartItemDimensions",           "defaultValue": true },
+    { "id": "showCartItemWeight",               "defaultValue": true },
 
+    /* Settings specific to checkout pages */
+    { "id": "showCheckoutCommentsField",        "defaultValue": false },
+    { "id": "requireCheckoutAgreeToTerms",      "defaultValue": false },
 
     /* Labels, soon to be moved to their own labels section */
     /* Global default labels */
