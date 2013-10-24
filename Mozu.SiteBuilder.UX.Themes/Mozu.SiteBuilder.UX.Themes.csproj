@@ -581,16 +581,14 @@
     <Content Include="Themes\Core4\templates\modules\web-fonts-loader.hypr" />
     <Content Include="Themes\Core4\stylesheets\pages\confirmation.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\validation-message.less" />
-    <None Include="Themes\Core4\templates\modules\product\faceted-products.hypr" />
+    <Content Include="Themes\Core4\templates\modules\product\faceted-products.hypr" />
     <Content Include="Themes\Core4\templates\modules\product\product-options.hypr.live" />
-    <Content Include="Themes\Core4\templates\modules\checkout\billing-address-form.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Themes\Core4\templates\modules\checkout\billing-address-form.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\common\paging-controls.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\common\page-numbers.hypr.live" />
     <Content Include="Themes\Core4\templates\pages\blank-page.hypr" />
     <Content Include="Themes\Core4\theme-ui.json" />
-    <None Include="Tools\Documentation\Tags.vol" />
+    <Content Include="Tools\Documentation\Tags.vol" />
     <Content Include="Themes\Core3\theme.xml" />
     <Content Include="Themes\Core3\MetaData\ThemeSettings.xml" />
     <Content Include="Themes\Core3\Resources\Images\Bootstrap\glyphicons-halflings-white.png" />
@@ -882,33 +880,29 @@
     <Content Include="Themes\Core4\templates\Widgets\blog\tagcollection.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\blog\tags.hypr" />
     <Content Include="Themes\Core4\templates\page.hypr" />
-    <None Include="Themes\Core4\templates\modules\common\address-form.hypr.live" />
-    <None Include="Themes\Core4\templates\modules\common\address-summary.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\common\address-form.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\common\address-summary.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\breadcrumbs.hypr" />
-    <None Include="Themes\Core4\templates\modules\checkout\checking-account-form.hypr.live">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Themes\Core4\templates\modules\checkout\comments-field.hypr.live" />
-    <None Include="Themes\Core4\templates\modules\checkout\coupon-code-field.live" />
-    <None Include="Themes\Core4\templates\modules\checkout\checkout-order-summary.hypr.live" />
-    <None Include="Themes\Core4\templates\modules\checkout\step-payment-info.hypr.live" />
-    <None Include="Themes\Core4\templates\modules\checkout\step-review.hypr.live">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Themes\Core4\templates\modules\checkout\step-shipping-address.hypr.live" />
-    <None Include="Themes\Core4\templates\modules\checkout\step-shipping-method.hypr.live" />
-    <None Include="Themes\Core4\templates\modules\checkout\credit-card-form.hypr.live" />
-    <None Include="Themes\Core4\templates\modules\product\faceting-form.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\checkout\checking-account-form.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\checkout\comments-field.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\checkout\coupon-code-field.live" />
+    <Content Include="Themes\Core4\templates\modules\checkout\checkout-order-summary.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\checkout\step-payment-info.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\checkout\step-review.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\checkout\step-shipping-address.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\checkout\step-shipping-method.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\checkout\credit-card-form.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\product\faceting-form.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\google-analytics-tracking-code.hypr" />
-    <None Include="Themes\Core4\templates\modules\common\login-popover.hypr.live" />
-    <None Include="Themes\Core4\templates\modules\common\message-bar.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\common\login-popover.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\common\message-bar.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\page-footer.hypr" />
     <Content Include="Themes\Core4\templates\modules\page-header.hypr" />
     <Content Include="Themes\Core4\templates\modules\cart\cart-table.hypr.live" />
-    <None Include="Themes\Core4\templates\modules\product\price-stack.hypr.live" />
-    <None Include="Themes\Core4\templates\modules\product\product-detail.hypr.live" />
-    <None Include="Themes\Core4\templates\modules\product\product-images.hypr.live" />
-    <None Include="Themes\Core4\templates\modules\product\product-listing.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\product\price-stack.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\product\product-detail.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\product\product-images.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\product\product-listing.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\page-header\search-box.hypr" />
     <Content Include="Themes\Core4\templates\modules\site-nav.hypr" />
     <Content Include="Themes\Core4\templates\modules\trailing-scripts.hypr" />
