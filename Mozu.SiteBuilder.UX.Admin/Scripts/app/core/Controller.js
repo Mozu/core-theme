@@ -16,6 +16,61 @@ Ext.define('Taco.core.Controller', {
     contextPlaceholders: {},
 
 
+    ensureRequiredStores: function (options) {
+        var me = this,
+            model = Taco.model[this.modelName],
+            requiredStoresLoading = false;
+        options.loadingStores = options.loadingStores || [];
+
+        if (model) {
+            Ext.each(model.prototype.requiredStores, function (storeCfg) {
+
+                var store = Taco.core.data.StoreManager.getOrCreate(storeCfg);
+                if (store.storeManagerConfig && store.storeManagerConfig.createOnly) {
+                    Ext.global.console.warn('cant use store ' + store.$className + ' ad requiredStore');
+
+                } else if (!store.hasCompletedLoading()) {
+
+                    requiredStoresLoading = true;
+
+                    if (options.loadingStores.indexOf(storeCfg) == -1) {
+
+                        options.loadingStores.push(storeCfg);
+
+                        if (!store.isLoading()) {
+                            store.load({
+                                callback: function () {
+                                    me.ensureRequiredStores(options);
+                                }
+                            });
+                        } else {
+                            store.on({
+                                load: {
+                                    fn: function () {
+                                        me.ensureRequiredStores(options);
+                                    },
+                                    single: true,
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+
+        }
+        if (requiredStoresLoading) {
+            Taco.app.setLoading();
+            return;
+        }
+        Taco.app.setLoading(false);
+        if (Ext.isFunction(options)) {
+            options.apply(this);
+        } else {
+            options.fn.apply(options.scope || this);
+        }
+    },
+
+
     /**
      * Autogenerate a view based on a naming convention `Taco.view.[controllername].Index` where controllername,
      * singularized with Ext.util.Inflector, is the name of this controller.
@@ -24,10 +79,15 @@ Ext.define('Taco.core.Controller', {
      * @return {undefined}
      */
     index: function (params, appState) {
-        var record = appState ? appState.record : null,
+        var me = this,
+            record = appState ? appState.record : null,
             options = appState ? appState.options : null;
+
+        this.ensureRequiredStores(function () {
+            this.buildIndex(record, options);
+        });
+   
         
-        this.buildIndex(record, options);
     },
 
     getIndexView: function () {
@@ -57,18 +117,23 @@ Ext.define('Taco.core.Controller', {
         var record = appState ? appState.record : null,
             options = appState ? appState.options : null;
         if (record) {
-            this.createContentView(this.getEditorView(), {
-                record: record,
-                options: options
+            this.ensureRequiredStores(function () {
+                this.createContentView(this.getEditorView(), {
+                    record: record,
+                    options: options
+                });
             });
         } else {
             Taco.app.setLoading();
             Taco.model[this.modelName].load(id, {
                 success: function (record) {
                     Taco.app.setLoading(false);
-                    this.createContentView(this.getEditorView(), {
-                        record: record,
-                        options: options
+
+                    this.ensureRequiredStores(function () {
+                        this.createContentView(this.getEditorView(), {
+                            record: record,
+                            options: options
+                        });
                     });
                 },
                 failure: function () {

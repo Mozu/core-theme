@@ -242,6 +242,7 @@ Ext.define('Taco.Application',{
 
                 this.on({
                     load: function (store) {
+                        this.storeHasLoaded = true;
                         this.dirtyStateCheck();
                     },
                     update: function () {
@@ -260,6 +261,7 @@ Ext.define('Taco.Application',{
             },
 
             dirtyStateCheck: function () {
+              
                 var currentState = this.isDirty();
 
                 if (currentState === this.dirtyState) {
@@ -275,6 +277,9 @@ Ext.define('Taco.Application',{
 
             hasLoaded: function () {
                 return !!this.lastOptions;
+            },
+            hasCompletedLoading: function () {
+                return !this.isLoading() && this.storeHasLoaded;
             },
 
             removeOwnedListener: function (owner) {
