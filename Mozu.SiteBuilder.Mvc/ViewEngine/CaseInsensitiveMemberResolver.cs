@@ -41,6 +41,8 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             if (jobject != null)
             {
                 return new FSharpOption<object>(CleanJson(jobject.GetValue(memberName, StringComparison.OrdinalIgnoreCase)));
+
+
             }
 
 
