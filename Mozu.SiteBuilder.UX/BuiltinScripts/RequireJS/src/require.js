@@ -132,6 +132,17 @@
         if (script) return script.textContent && JSON.parse(script.textContent);
     }
 
+    var themeSettings;
+    function getMozuThemeSetting(settingName) {
+        if (!themeSettings) themeSettings = getMozuData("themesettings");
+        if (!themeSettings) throw new ReferenceError('This page template fails to preload the theme settings using {% preload_json themeSettings "themesettings" %}.');
+        return themeSettings[settingName];
+    }
+
+    function getMozuLabel(labelName) {
+        return getMozuThemeSetting("label" + labelName.charAt(0).toLowerCase() + labelName.substring(1));
+    }
+
     //Allow getting a global that expressed in
     //dot notation, like 'a.b.c'.
     function getGlobal(value) {
@@ -2074,6 +2085,8 @@
     //Set up with config info.
     req(cfg);
     req.mozuData = getMozuData;
+    req.mozuThemeSetting = getMozuThemeSetting;
+    req.mozuLabel = getMozuLabel;
 
 req.mixin = mixin;
 

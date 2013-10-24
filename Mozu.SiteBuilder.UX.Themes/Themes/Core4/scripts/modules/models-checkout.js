@@ -334,7 +334,32 @@
 
         var ShopperNotes = Backbone.MozuModel.extend(),
 
-        CheckoutPage = Backbone.MozuModel.extend({
+        checkoutPageValidation = {
+            'User.EmailAddress': {
+                fn: function(value) {
+                    if (this.validateUser && (!value || !value.match(Backbone.Validation.patterns.email))) return messages.EmailMissing;
+                }
+            },
+            'User.Password': {
+                fn: function(value) {
+                    if (this.validateUser && !value) return messages.PasswordMissing;
+                }
+            },
+            'User.ConfirmPassword': {
+                fn: function(value) {
+                    if (this.validateUser && value !== this.get('User.Password')) return messages.PasswordsDoNotMatch;
+                }
+            },
+        };
+
+        if (require.mozuThemeSetting('requireCheckoutAgreeToTerms')) {
+            checkoutPageValidation.AgreeToTerms = {
+                acceptance: true,
+                msg: messages.DidNotAgreeToTerms
+            }
+        }
+
+        var CheckoutPage = Backbone.MozuModel.extend({
             mozuType: 'order',
             handlesMessages: true,
             relations: {
@@ -343,27 +368,7 @@
                 ShopperNotes: ShopperNotes,
                 User: UserModels.User
             },
-            validation: {
-                AgreeToTerms: {
-                    acceptance: true,
-                    msg: messages.DidNotAgreeToTerms
-                },
-                'User.EmailAddress': {
-                    fn: function(value) {
-                        if (this.validateUser && (!value || !value.match(Backbone.Validation.patterns.email))) return messages.EmailMissing;
-                    }
-                },
-                'User.Password': {
-                    fn: function(value) {
-                        if (this.validateUser && !value) return messages.PasswordMissing;
-                    }
-                },
-                'User.ConfirmPassword': {
-                    fn: function(value) {
-                        if (this.validateUser && value !== this.get('User.Password')) return messages.PasswordsDoNotMatch;
-                    }
-                },
-            },
+            validation: ,
             dataTypes: {
                 CreateAccount: Backbone.MozuModel.DataTypes.Boolean
             },

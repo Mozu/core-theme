@@ -16,7 +16,7 @@
                         </label>
                     </div>
                 {% endfor %}
-                <span class="mz-validation-message" data-mz-validation-message-for="ShippingMethodCode"></span>
+                <span class="mz-validationmessage" data-mz-validationmessage-for="ShippingMethodCode"></span>
             {% else %}
                 <p>{{ themeSettings.labelNoShippingMethods }}</p>
             {% endif %}

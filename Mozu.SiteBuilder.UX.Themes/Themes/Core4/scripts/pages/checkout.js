@@ -163,7 +163,7 @@
         ],
         initialize: function() {
             this.model.on('passwordinvalid', function(e, message) {
-                this.$('[data-mz-validation-message-for="Password"]').text(message);
+                this.$('[data-mz-validationmessage-for="Password"]').text(message);
             });
         },
         submit: function () {
@@ -175,24 +175,6 @@
 
         var $checkoutView = $('#checkout-form'),
             checkoutData = require.mozuData('checkout');
-
-
-        // some defaults to overcome backbone not initializing models right
-        // when there isn't an object for them. TODO: make unnecessary
-        //checkoutData = $.extend(true, {
-        //    ShippingInfo: {
-        //        ShippingContact: {
-        //            Address: {},
-        //            PhoneNumbers: {}
-        //        }
-        //    },
-        //    BillingInfo: {
-        //        BillingContact: {
-        //            Address: {},
-        //            PhoneNumbers: {}
-        //        }
-        //    }
-        //}, checkoutData);
 
         var checkoutModel = new CheckoutModels.CheckoutPage(checkoutData),
             checkoutViews = {
@@ -218,7 +200,7 @@
                     el: $('#coupon-code-field'),
                     model: checkoutModel
                 }),
-                comments: new CommentsView({
+                comments: require.mozuThemeSetting('showCheckoutCommentsField') && new CommentsView({
                     el: $('#comments-field'),
                     model: checkoutModel
                 }),

@@ -33,7 +33,7 @@
                         <option {% if Model.PaymentType == "CreditCard" %}selected="selected"{% endif %} value="CreditCard">{{ themeSettings.labelCreditCard }}</option>
                         <option {% if Model.PaymentType == "Check" %}selected="selected"{% endif %} value="Check">{{ themeSettings.labelCheckByMail }}</option>
                     </select>
-                    <span class="mz-validation-message" data-mz-validation-message-for="PaymentType"></span>
+                    <span class="mz-validationmessage" data-mz-validationmessage-for="PaymentType"></span>
                         </div>
                      </div>
               </div>
@@ -70,7 +70,7 @@
                         </div>
                         <div class="mz-formfieldgroup-cell">
                             <input type="text" id="billing-email" name="billing-email" data-mz-value="BillingContact.Email" value="{{ Model.BillingContact.Email }}">
-                            <span class="mz-validation-message" data-mz-validation-message-for="BillingContact.Email"></span>
+                            <span class="mz-validationmessage" data-mz-validationmessage-for="BillingContact.Email"></span>
                         </div>
                     </div>
                     <div class="mz-formfieldgroup-row">
