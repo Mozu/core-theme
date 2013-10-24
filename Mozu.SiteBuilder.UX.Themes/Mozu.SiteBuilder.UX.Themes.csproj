@@ -579,6 +579,8 @@
     <Content Include="Themes\Core4\templates\modules\common\order-summary.hypr.live" />
     <Content Include="Themes\Core4\stylesheets\pages\checkout.less" />
     <Content Include="Themes\Core4\templates\modules\web-fonts-loader.hypr" />
+    <Content Include="Themes\Core4\stylesheets\pages\confirmation.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\common\validation-message.less" />
     <None Include="Themes\Core4\templates\modules\product\faceted-products.hypr" />
     <Content Include="Themes\Core4\templates\modules\product\product-options.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\checkout\billing-address-form.hypr.live">

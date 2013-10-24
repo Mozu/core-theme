@@ -1,5 +1,5 @@
 /*! 
- * Mozu Hypr Live - v0.2.0 - 2013-10-21
+ * Mozu Hypr Live - v0.2.0 - 2013-10-24
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -3984,6 +3984,14 @@ for (var t = 0; t < nullTags.length; t++) {
         }
         return string_to_slug;
     })());
+
+
+    HyprLive.engine.setFilter('truncatewords', function (str, num) {
+        var words = str.split(' ');
+        str = words.slice(0, num).join(' ');
+        if (words.length > num) str += " ...";
+        return str;
+    });
 
 }());
 			return HyprLive;

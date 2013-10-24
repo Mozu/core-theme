@@ -7,6 +7,7 @@ using System.Web;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
+using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Security;
@@ -16,6 +17,7 @@ using Mozu.SiteBuilder.UX.Models;
 using Mozu.User.Contracts;
 using VMUser = Mozu.SiteBuilder.UX.Models.Customers.User;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -38,8 +40,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
         //
         // GET: /StoreFront/Auth/
-          [System.Web.Http.HttpGet]
-        public Response<string> LogOut()
+
+        protected void DoLogout() 
         {
             var user = LightweightUserClaims.CreateForAnonymousShopper(_apiContext.TenantId, _apiContext.SiteId.Value);
             _authenticationHelper.SaveAuthTicket(new UserAuthTicket()
@@ -49,13 +51,74 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                          RefreshToken = null
                                                      });
             _apiContext.SetUser(user);
-            //_authenticationHelper.LogOut(_apiContext);
-            //_cookieProvider.SaveResponseCookie("order", new HttpCookie("")); // uggh, but it works
+        }
+
+        protected async Task<ServiceClientResponse<UserLoginResult>> DoLogin(string email, string password)
+        {
+            var res = (await _userWebApiClient.CloneWithoutUserClaims().Login(new Mozu.Core.Api.Contracts.UserAuthInfo()
+            {
+
+                EmailAddress = email,
+                Password = password
+
+            }));
+
+            if (res.ResponseMessage.IsSuccessStatusCode)
+            {
+                var user = _userWebApiClient.CloneWithoutUserClaims().GetUserByEmail(email).Result.ReadAsSync();
+                //if (user.IsAdminUser)
+                //{
+                //    return Redirect("/admin");
+                //}
+                var ticket = res.ReadAsSync().AuthTicket;
+
+                _authenticationHelper.SaveAuthTicket(ticket);
+
+                _apiContext.SetUser(LightweightUserClaims.Parse(ticket.AccessToken));
+
+            }
+            return res;
+        }
+
+        private Uri MakeRedirectUri(string returnUrl = null)
+        {
+            if (string.IsNullOrEmpty(returnUrl))
+            {
+                returnUrl = Request.Headers.Referrer.ToString();
+                if (string.IsNullOrEmpty(returnUrl))
+                {
+                    return new Uri("/", UriKind.Relative);
+                }
+                else
+                {
+                    return new Uri(returnUrl, UriKind.Absolute);
+                }
+            }
+            else
+            {
+                return new Uri(returnUrl, UriKind.Relative);
+            }
+        }
+
+        [System.Web.Http.HttpGet]
+        public HttpResponseMessage LogOut(string returnUrl = null)
+        {
+            DoLogout();
+
+            var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
+            redir.Headers.Location = MakeRedirectUri(returnUrl);
+            return redir;
+
+        }
+          [System.Web.Http.HttpGet]
+        public Response<string> AjaxLogOut()
+        {
+            DoLogout();
+
            return    new Response<string>()
                   {
                       Success = true
                   };
-
 
         }
         [System.Web.Http.HttpGet]
@@ -72,95 +135,46 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [System.Web.Http.HttpPost]
-        public HttpResponseMessage   Login(LoginDetails details)
+        public async Task<HttpResponseMessage>   Login(LoginDetails details)
         {
             string email = details.email;
             string password = details.password;
             string returnUrl = details.returnUrl;
 
-            var res = _userWebApiClient.CloneWithoutUserClaims().Login(new Mozu.Core.Api.Contracts.UserAuthInfo()
-            {
-                
-                EmailAddress = email,
-                Password = password
+            var res = await DoLogin(email, password);
 
-            }).Result;
-           
-
-            
-            
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
-                var user = _userWebApiClient.CloneWithoutUserClaims().GetUserByEmail(email).Result.ReadAsSync();
-                //if (user.IsAdminUser)
-                //{
-                //    return Redirect("/admin");
-                //}
-                var ticket = res.ReadAsSync().AuthTicket;
-
-                _authenticationHelper.SaveAuthTicket(ticket);
-
-                _apiContext.SetUser(LightweightUserClaims.Parse(ticket.AccessToken));
-
-                if ( string.IsNullOrEmpty(returnUrl))
-                {
-                    returnUrl = "/";
-                }
                 var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
-                redir.Headers.Location = new Uri(returnUrl, UriKind.Relative);
+                redir.Headers.Location = MakeRedirectUri(returnUrl);
                 return redir;
                 
             }
             else
             {
-                ModelState.AddModelError("email", "There was an error with your E-Mail/Password combination. Please try again.");
 
-                return this.Request.CreateResponse(HttpStatusCode.OK, View("Login", new {email = email}));
+                return this.Request.CreateResponse(HttpStatusCode.OK, View("Login", new { email = email, Messages = new { Message = String.Format("Login as {0} failed. Please try again.", email) } }));
             }
         }
          [System.Web.Http.HttpPost]
-        public object AjaxLogin(LoginDetails details)
+        public async Task<object> AjaxLogin(LoginDetails details)
         {
             string email = details.email;
             string password = details.password;
             string returnUrl = details.returnUrl;
-            var res = _userWebApiClient.CloneWithoutUserClaims().Login(new Mozu.Core.Api.Contracts.UserAuthInfo()
-            {
-
-                EmailAddress = email,
-                Password = password
-
-            }).Result;
-        
-            if (res.ResponseMessage.IsSuccessStatusCode)
-            {
-                var user = _userWebApiClient.CloneWithoutUserClaims().GetUserByEmail(email).Result.ReadAsSync();
-                //if (user.IsAdminUser)
-                //{
-                //    answer.Data = new
-                //        {
-                //            ErrorCode = "IS_ADMIN_USER",
-                //            Message = String.Format("The user {0} is an administrator.", email)
-                //        };
-                //}
-                //else
-                {
-                    var ticket = res.ReadAsSync().AuthTicket;
-
-                    _authenticationHelper.SaveAuthTicket(ticket); 
-                    _apiContext.SetUser(LightweightUserClaims.Parse(ticket.AccessToken));
+            var res = await DoLogin(email, password);
                     
+            if (res.ResponseMessage.IsSuccessStatusCode) {
                     return  new
                     {
                         Message = String.Format("Logged in as {0}.", email)
                     };
                 }
-            }
             else
             {
                 return Request.CreateResponse(System.Net.HttpStatusCode.Unauthorized, new
                 {
-                    Message = String.Format("There was an error logging in as {0}. Please check your username and password.", email)
+                    Message = String.Format("Login as {0} failed. Please try again.", email)
                 });
             }
             
@@ -196,47 +210,47 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                              };
               }
         }
-          [System.Web.Http.HttpPost]
-        public object  AjaxSignIn(string email, string password)
-        {
-            var info = new Core.Api.Contracts.UserAuthInfo { EmailAddress = email, Password = password };
+        //  [System.Web.Http.HttpPost]
+        //public object  AjaxSignIn(string email, string password)
+        //{
+        //    var info = new Core.Api.Contracts.UserAuthInfo { EmailAddress = email, Password = password };
 
-            var res = _authTicketWebApiClient.CloneWithoutUserClaims().CreateUserAuthTicket(info).Result;
-            if (res.ResponseMessage.IsSuccessStatusCode)
-            {
+        //    var res = _authTicketWebApiClient.CloneWithoutUserClaims().CreateUserAuthTicket(info).Result;
+        //    if (res.ResponseMessage.IsSuccessStatusCode)
+        //    {
 
-                var user = res.ReadAsSync();
-
-
-
-                _authenticationHelper.SaveAuthTicket(user);
-                _apiContext.SetUser(LightweightUserClaims.Parse(user.AccessToken));
+        //        var user = res.ReadAsSync();
 
 
 
-                return new Response<VMUser>
-                           {
-                               Data = new VMUser
-                                          {
-                                              FirstName = user.User.FirstName,
-                                              LastName = user.User.LastName,
-                                              Email = user.User.EmailAddress,
-                                              UserId = user.User.UserId,
-                                              IsAuthenticated = true
-                                          },
-                               Success = true
-                           };
-            }
+        //        _authenticationHelper.SaveAuthTicket(user);
+        //        _apiContext.SetUser(LightweightUserClaims.Parse(user.AccessToken));
 
-            var ex = res.ReadException();
-            var errorCollection = ex.Data["DataContract"] as ErrorCollection;
 
-              return new Response<string>()
-                         {
-                             Message = ex.Message,
-                             ServiceErrorCollection = errorCollection,
-                             Success = false
-                         };
-        }
+
+        //        return new Response<VMUser>
+        //                   {
+        //                       Data = new VMUser
+        //                                  {
+        //                                      FirstName = user.User.FirstName,
+        //                                      LastName = user.User.LastName,
+        //                                      Email = user.User.EmailAddress,
+        //                                      UserId = user.User.UserId,
+        //                                      IsAuthenticated = true
+        //                                  },
+        //                       Success = true
+        //                   };
+        //    }
+
+        //    var ex = res.ReadException();
+        //    var errorCollection = ex.Data["DataContract"] as ErrorCollection;
+
+        //      return new Response<string>()
+        //                 {
+        //                     Message = ex.Message,
+        //                     ServiceErrorCollection = errorCollection,
+        //                     Success = false
+        //                 };
+        //}
     }
 }

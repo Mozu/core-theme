@@ -15,7 +15,7 @@
         {{ themeSettings.labelCheckout }}
         {% if not user.isAuthenticated %}
         <span class="mz-pagetitle-note">
-            {{ themeSettings.labelRegisteredCustomer }} <a data-mz-action="login" href="javascript;">{{ themeSettings.labelLogIn }}</a>
+            {{ themeSettings.labelRegisteredCustomer }} <a data-mz-action="login" data-placement="left" href="javascript;">{{ themeSettings.labelLogIn }}</a>
         </span>
         {% endif %}
     </h1>

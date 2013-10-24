@@ -105,7 +105,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 var methods = (await _orderWebApiClient.GetAvailableShipmentMethods(id)).ReadAsSync();
                 var asm = JArray.FromObject(methods);
-                jOrder.Add("AvailableShippingMethods", asm);
+                JObject si = (JObject)jOrder["ShippingInfo"];
+                si.Add("AvailableShippingMethods", asm);
+                //jOrder.Add("AvailableShippingMethods", asm);
                 //ViewData["availableShippingMethods"] = _orderWebApiClient.GetAvailableShipmentMethods(id).Result.ReadAsSync();
             }
             else
@@ -117,10 +119,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                     jOrder.Add("AvailableCountries", ac);
                 }
-                else
-                {
-                    jOrder.Add("AvailableShippingMethods", new JArray(new int[0]));
-                }
+                //else
+                //{
+                //    jOrder.Add("AvailableShippingMethods", new JArray(new int[0]));
+                //}
             }
                 
             

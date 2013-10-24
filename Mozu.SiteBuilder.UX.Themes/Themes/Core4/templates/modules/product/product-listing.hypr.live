@@ -11,7 +11,7 @@
             <div class="mz-productlisting-info">
                 <a class="mz-productlisting-title" href="{{prod.Url}}">{{prod.Content.ProductName}}</a>
                 {% if prod.Content.ProductShortDescription %}
-                <p class="mz-productlisting-shortdesc">{{ prod.Content.ProductShortDescription|safe }}</p>
+                <p class="mz-productlisting-shortdesc">{{ prod.Content.ProductShortDescription|striptags|truncatewords(themeSettings.maxProductSummaryWords) }}</p>
                 {% endif %}
                 {% block product-code %}
                 <div class="mz-productlisting-productcode">{{prod.ProductCode}}</div>
