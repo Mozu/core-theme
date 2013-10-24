@@ -22,11 +22,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 		[HttpGetRoute(UriTemplate = "read")]
-        public Task<Response<List<GeneralSettings>>> GetSettings()
+        public async Task<Response<List<GeneralSettings>>> GetSettings()
         {
-            var settings = _wrapper.ReadSettings();
+            var settings = await _wrapper.ReadSettings();
 
-            return List(settings);
+            return List2(settings);
         }
 
 		[HttpPostRoute(UriTemplate = "save")]

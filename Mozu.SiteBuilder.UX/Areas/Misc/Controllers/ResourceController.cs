@@ -251,7 +251,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             if (oc!= null)
             {
 
-                ((MozuVirtualFileResult)oc.Value).Transform = new LessTransFormer(pathinfo, debug, _sbContext, _themeSettingsRepository, _pathProvider).Transform;
+                ((MozuVirtualFileResult)oc.Value).Transform = new LessTransFormer(pathinfo, debug, this, _themeSettingsRepository, _pathProvider).Transform;
             }
 
             return res;
@@ -481,12 +481,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             private readonly string _path;
 
      
-            private ISiteBuilderContext _siteContext;
+         
             private IThemeSettingsRepository _themeSettingsRepository;
 
-            public LessTransFormer(string path, bool debug, ISiteBuilderContext siteContext, IThemeSettingsRepository themeSettingsRepository, MozuVirtualPathProvider virtualPathProvider)
+            public LessTransFormer(string path, bool debug, ResourceController resourceController , IThemeSettingsRepository themeSettingsRepository, MozuVirtualPathProvider virtualPathProvider)
             {
-                _siteContext = siteContext;
+                Controller = resourceController;
                 _debug = debug;
                 _path = path;
                 _themeSettingsRepository = themeSettingsRepository;
@@ -494,11 +494,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
 
 
-            public ISiteBuilderContext SiteContext
-            {
-                get { return _siteContext; }
-                set { _siteContext = value; }
-            }
+            public ResourceController Controller { get; set; }
             public MozuVirtualPathProvider PathProvider { get; set; }
 
             public Stream Transform(Stream str, string stem)
@@ -570,7 +566,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             private string Evaluator(Match match)
             {
                 string varName = match.Groups["var"].Value;
-                var obj = _siteContext.ThemeSettings[varName];
+                var obj = Controller.SiteContext.ThemeSettings[varName];
                 if (obj == null)
                 {
                     throw new ParsingException("missing template setting '" + varName + "'", new NodeLocation(match.Index, "", ""));
@@ -631,12 +627,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             public MyLessFileReader(LessTransFormer lessTransFormer)
             {
-                SiteContext = lessTransFormer.SiteContext;
+                Controller = lessTransFormer.Controller;
                 this.lessTransFormer = lessTransFormer;
                 
             }
 
-            private ISiteBuilderContext SiteContext { get; set; }
+            private ResourceController  Controller { get; set; }
             // public ResourceController Controller { get; set; }
             public string GetFileContents(string fileName)
             {

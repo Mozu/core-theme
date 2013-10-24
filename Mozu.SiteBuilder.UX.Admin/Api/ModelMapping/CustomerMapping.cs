@@ -26,9 +26,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.Groups, op => op.MapFrom(dc => (dc.Groups ?? Enumerable.Empty<DC.CustomerGroup>()).Select(g => g.Id )))
             .ForMember(x => x.Attributes, op => op.MapFrom(dc => (dc.Attributes ?? Enumerable.Empty<DC.CustomerAttribute>()).Select(a => a.Id)))
             .ForMember(x => x.Notes, op => op.MapFrom(dc => dc.Notes))
-            .ForMember(x => x.TotalOrderAmount, op => op.MapFrom(dc => dc.OrderSummary != null && dc.OrderSummary.TotalOrderAmount != null ? (decimal?)dc.OrderSummary.TotalOrderAmount.Amount : null))
-            .ForMember(x => x.OrderCount, op => op.MapFrom(dc => dc.OrderSummary != null ? dc.OrderSummary.OrderCount : 0))
-            .ForMember(x => x.LastOrderDate, op => op.MapFrom(dc => dc.OrderSummary != null ? dc.OrderSummary.LastOrderDate : null))
+            .ForMember(x => x.TotalOrderAmount, op => op.MapFrom(dc => dc.CommerceSummary != null && dc.CommerceSummary.TotalOrderAmount != null ? (decimal?)dc.CommerceSummary.TotalOrderAmount.Amount : null))
+            .ForMember(x => x.OrderCount, op => op.MapFrom(dc => dc.CommerceSummary != null ? dc.CommerceSummary.OrderCount : 0))
+            .ForMember(x => x.LastOrderDate, op => op.MapFrom(dc => dc.CommerceSummary != null ? dc.CommerceSummary.LastOrderDate : null))
             .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
             .ForMember(x => x.TaxExempt, op => op.MapFrom(dc => dc.TaxExempt))
             .ForMember(x => x.TaxId, op => op.MapFrom(dc => dc.TaxId))
@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(dc => dc.Contacts, op => op.MapFrom(x => x.Contacts))
             .ForMember(dc => dc.CompanyOrOrganization, op => op.MapFrom(x => x.CompanyOrOrganization))
             .ForMember(dc => dc.AcceptsMarketing, op => op.MapFrom(x => x.AcceptsMarketing))
-            .ForMember(dc => dc.OrderSummary, op => op.MapFrom(x => new DC.OrderSummary { OrderCount = x.OrderCount, LastOrderDate = x.LastOrderDate, TotalOrderAmount = new DC.CurrencyAmount { CurrencyCode = "USD", Amount = x.TotalOrderAmount.HasValue ? x.TotalOrderAmount.Value : 0 } }))
+            .ForMember(dc => dc.CommerceSummary, op => op.MapFrom(x => new DC.CommerceSummary { OrderCount = x.OrderCount, LastOrderDate = x.LastOrderDate, TotalOrderAmount = new DC.CurrencyAmount { CurrencyCode = "USD", Amount = x.TotalOrderAmount.HasValue ? x.TotalOrderAmount.Value : 0 } }))
 
             .ForMember(dc => dc.Groups, op => op.MapFrom(x=> (x.Groups ?? Enumerable.Empty<int>() ).Select( _=> new DC.CustomerGroup() {Id=_ }) ))
             .ForMember(x => x.Attributes, op => op.MapFrom(x => (x.Attributes ?? Enumerable.Empty<int>()).Select(_ => new DC.CustomerAttribute {Id=_})))
@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(dc => dc.TaxExempt, op => op.MapFrom(x => x.TaxExempt))
             .ForMember(dc => dc.TaxId, op => op.MapFrom(x => x.TaxId))
 
-            // add AccountId to all the contacts
+                // add AccountId to all the contacts
             .AfterMap((x, dc) => dc.Contacts.ForEach(con => con.AccountId = dc.Id))
             ;
 

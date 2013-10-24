@@ -16,7 +16,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private ISiteBuilderApiContext _ctx;
         private IGeneralSettingsWebApiClient _siteSettingsClient;
-        private ISiteGroupWebApiClient _siteGroupClient;
+        private ICatalogWebApiClient  _siteGroupClient;
         private ICookieProvider _cookieMonster;
         private IPublishingWebApiClient _publishingClient;
         private ILogger _log;
@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public PublishingSettingsController(ISiteBuilderApiContext ctx, IGeneralSettingsWebApiClient siteSettingsClient, ISiteGroupWebApiClient siteGroupClient, IPublishingWebApiClient publishingClient, ILogger log)
+        public PublishingSettingsController(ISiteBuilderApiContext ctx, IGeneralSettingsWebApiClient siteSettingsClient, ICatalogWebApiClient siteGroupClient, IPublishingWebApiClient publishingClient, ILogger log)
         {
             _ctx = ctx;
             _siteSettingsClient = siteSettingsClient;
@@ -38,11 +38,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string ProductPublishingMode { get; set; }
         }
         [HttpPutRoute(UriTemplate = "product")]
-        public async Task<Response<DC.SiteGroup>> UpdateProductPublishingPreferences(PublishingPreferencesArgs args)
+        public async Task<Response<DC.MasterCatalog >> UpdateProductPublishingPreferences(PublishingPreferencesArgs args)
         {
-            var dcSettings = (await _siteGroupClient.GetSiteGroup(args.SiteGroupId)).ReadAsSync();
+            var dcSettings = (await _siteGroupClient.GetMasterCatalog( args.SiteGroupId)).ReadAsSync();
             dcSettings.ProductPublishingMode = args.ProductPublishingMode;
-            var svcResponse = await _siteGroupClient.UpdateSiteGroup(dcSettings, args.SiteGroupId);
+            var svcResponse = await _siteGroupClient.UpdateMasterCatalog(dcSettings, args.SiteGroupId);
 
             // handle "you cannot change modes because there is unpublished content by publishing all content."
             if (svcResponse.HasException && svcResponse.ResponseMessage.StatusCode == System.Net.HttpStatusCode.Conflict)
@@ -54,10 +54,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 else
                     publishResponse.ReadAsSync(); // read will throw an exception which will bubble.
 
-                svcResponse = await _siteGroupClient.UpdateSiteGroup(dcSettings, args.SiteGroupId);
+                svcResponse = await _siteGroupClient.UpdateMasterCatalog(dcSettings, args.SiteGroupId);
             }
 
-            DC.SiteGroup res = svcResponse.ReadAsSync();
+            DC.MasterCatalog res = svcResponse.ReadAsSync();
             return Single2(res);
         }
 

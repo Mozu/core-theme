@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Filters
            
       
             
-            if (controller != null || controller.SiteContext.PageContext != null)
+            if (controller != null && controller.PageContext != null)
             {
                 var settings = actionContext.Request.Resolve<ISettingsRepository>();
                 return settings.GetGeneralSettings().ContinueWith(x => continuation().Result);

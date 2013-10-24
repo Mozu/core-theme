@@ -38,13 +38,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly IUserHelper _userHelper;
         private readonly IPasswordHelper _passwordHelper;
         
-        private readonly IRolesHelper _rolesHelper;
+    
         private readonly ISettings _settings;
         private readonly ISiteBuilderApiContext _apiContext;
         private readonly ICookieProvider _cookieProvider;
         private ILogger _log;
 
-        public AuthController( IAuthenticationHelper authHelper, ISiteBuilderContext sbc,IUserHelper userHelper, IPasswordHelper passwordHelper, IRolesHelper rolesHelper , ISettings settings , ISiteBuilderApiContext  apiContext, ICookieProvider cookieProvider)
+        public AuthController( IAuthenticationHelper authHelper, ISiteBuilderContext sbc,IUserHelper userHelper, IPasswordHelper passwordHelper,ISettings settings , ISiteBuilderApiContext  apiContext, ICookieProvider cookieProvider)
         {
             _authenticationHelper = authHelper;
             _sbc = sbc;
@@ -52,7 +52,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _userHelper = userHelper;
             _passwordHelper = passwordHelper;
             
-            _rolesHelper = rolesHelper;
+          
             _settings = settings;
             _apiContext = apiContext;
             _cookieProvider = cookieProvider;
@@ -121,10 +121,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
 
 
-            //var userId = _apiContext.UserClaims.UserId;
-            //var res = _rolesHelper.SiteRolesList(userId);
-            //var contexts = Mapper.Map<List<TaContext>>(res);
-            //return View("Roles", contexts);
+            
         }
 
 

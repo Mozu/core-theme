@@ -9,7 +9,7 @@ using DiscountDC = Mozu.CommerceRuntime.Contracts.Discounts;
 using OrdersDC = Mozu.CommerceRuntime.Contracts.Orders;
 using PaymentsDC = Mozu.CommerceRuntime.Contracts.Payments;
 using ProductsDC = Mozu.CommerceRuntime.Contracts.Products;
-using ShippingDC = Mozu.CommerceRuntime.Contracts.Shipping;
+using ShippingDC = Mozu.CommerceRuntime.Contracts.Fulfillment;
 using CommerceDC = Mozu.CommerceRuntime.Contracts.Commerce;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
@@ -52,16 +52,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<OrdersDC.Order, Order>()
                 .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
                 .ForMember(x => x.SiteId, op => op.MapFrom(dc => dc.SiteId))
-                .ForMember(x => x.SiteGroupId, op => op.MapFrom(dc => dc.SiteGroupId))
+                
                 .ForMember(x => x.TenantId, op => op.MapFrom(dc => dc.TenantId))
 
                 .ForMember(x => x.OrderNumber, op => op.MapFrom(dc => dc.OrderNumber))
                 .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
                 .ForMember(x => x.CustomerId, op => op.MapFrom(dc => dc.CustomerAccountId))
                 .ForMember(x => x.BillingContact, op => op.MapFrom(dc => dc.BillingInfo.BillingContact))
-                .ForMember(x => x.ShippingContact, op => op.MapFrom(dc => dc.ShippingInfo.ShippingContact))
-                .ForMember(x => x.ShippingMethodCode, op => op.MapFrom(dc => dc.ShippingInfo.ShippingMethodCode))
-                .ForMember(x => x.ShippingMethodName, op => op.MapFrom(dc => dc.ShippingInfo.ShippingMethodName))
+                .ForMember(x => x.FulfillmentContact, op => op.MapFrom(dc => dc.FulfillmentInfo .FulfillmentContact ))
+                .ForMember(x => x.ShippingMethodCode, op => op.MapFrom(dc => dc.FulfillmentInfo.ShippingMethodCode))
+                .ForMember(x => x.ShippingMethodName, op => op.MapFrom(dc => dc.FulfillmentInfo.ShippingMethodName))
                 .ForMember(x => x.IpAddress, op => op.MapFrom(dc => dc.IPAddress))
                 .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
                 .ForMember(x => x.ActiveOrderDiscount, op => op.MapFrom(dc => dc.OrderDiscounts != null ? dc.OrderDiscounts.FirstOrDefault(d => d.Excluded.HasValue && !d.Excluded.Value) : null))
@@ -71,7 +71,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ShippingDiscounts, op => op.MapFrom(dc => dc.ShippingDiscounts))
                 .ForMember(x => x.CustomerNote, op => op.MapFrom(dc => dc.ShopperNotes != null ? dc.ShopperNotes.Comments : null))
                 .ForMember(x => x.OrderStatus, op => op.MapFrom(dc => dc.Status))
-                .ForMember(x => x.ShippingStatus, op => op.MapFrom(dc => dc.ShipmentStatus))
+                .ForMember(x => x.FulfillmentStatus, op => op.MapFrom(dc => dc.FulfillmentStatus ))
                 .ForMember(x => x.PaymentStatus, op => op.MapFrom(dc => dc.PaymentStatus))
                 .ForMember(x => x.Payments, op => op.MapFrom(dc => dc.Payments.OrderByDescending(p => p.AuditInfo.CreateDate)))
                 .ForMember(x => x.Packages, op => op.MapFrom(dc => dc.Packages))

@@ -30,7 +30,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [System.Web.Http.HttpGet  ]
         public async Task<ActionResult> Index()
         {
-            var nav = SiteContext.Navigation;
+            var nav = NavigationContext.Tree  ;
             if ( nav != null && nav.Count() > 0)
             {
                 var item = nav.FirstOrDefault(x => x.IsHomePage);
@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
 
-            SiteContext.PageContext.CmsContext= new CmsPageContext()
+            PageContext.CmsContext= new CmsPageContext()
                                                     {
                                                         Initialized=false,
                                                         Template = new DocumentRequest()
@@ -61,7 +61,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<ActionResult> NotFound()
         {
 
-            SiteContext.PageContext.CmsContext = new CmsPageContext()
+            PageContext.CmsContext = new CmsPageContext()
             {
                 Initialized = false,
                 Template = new DocumentRequest()

@@ -1,38 +1,27 @@
 /**
- * @class Taco.model.CustomerAttribute
+ * @class Taco.model.OrderAttribute
  */
 Ext.define('Taco.model.OrderAttribute', {
-    extend: 'Taco.core.data.Model',
+    extend: 'Taco.model.Attribute',
     behaviors: {
         read: 24,
         create: 25,
         update: 26,
         destroy: 27
     },
-    idProperty: 'code',
-    fields: [{
-            name: 'attributecode',
-            type: 'string'
-        }, {
-            name: 'name',
-            type: 'string'
-        }, {
-            name: 'isrequired',
-            type: 'bool'
-        },
-        {
-            name: 'displaygroup',
-            type: 'string'
-        }],
-
+    supportsAttributeType: function () {
+        return false;
+    },
+    supportsDisplayGroup: function () {
+        return true;
+    },
     proxy: {
         type: 'ajaxproxy',
         api: {
-            read: '/admin/Scripts/app/mocks/CustomerAttributes.json',
-            //read: '/admin/app/discount/list',
-            //create: '/admin/app/discount/create',
-            //update: '/admin/app/discount/edit',
-            //destroy: '/admin/app/discount/delete'
+            read: '/admin/app/OrderAttributes/read',
+            create: '/admin/app/OrderAttributes/create',
+            update: '/admin/app/OrderAttributes/edit',
+            destroy: '/admin/app/OrderAttributes/delete'
         },
         reader: {
             type: 'json',

@@ -86,7 +86,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             
 
-            var pc = this.SiteContext.PageContext;
+            var pc = this.PageContext;
 
             pc.CmsContext = new CmsPageContext()
             {
@@ -98,7 +98,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
 
             var helper = new CmsHelper(CmsService);
-            await helper.InitCmsPageContext(SiteContext.PageContext.CmsContext);
+            await helper.InitCmsPageContext(PageContext.CmsContext);
            
 
             var vm = Mapper.Map<DC.Document, VM.Document>(pc.CmsContext.Page.Document ,
@@ -119,7 +119,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             template = _hyprViewEngine.FindPageView(template) == null ? "blank-page" : template;
 
-            if (!this.SiteContext.IsEditMode   )
+            if (!this.PageContext.IsEditMode   )
             {
                 if (pc.CmsContext.Page.Document.Get<bool>("hidden", false))
                 {
@@ -157,7 +157,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// </summary>
         private void SetNavigationContext(VM.Document doc)
         {
-            _context.Navigation.SetContext(doc);
+            NavigationContext.SetContext(doc);
         }
 
         //

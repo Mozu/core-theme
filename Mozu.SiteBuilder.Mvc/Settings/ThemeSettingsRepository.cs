@@ -7,6 +7,7 @@ using Mozu.Content.Contracts;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.Mvc.CMS;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Newtonsoft.Json;
@@ -28,16 +29,17 @@ namespace Mozu.SiteBuilder.Mvc.Settings
     {
         private readonly IDocumentListWebApiClient _docWebApiClient;
         private readonly ICmsServiceWrapper _cmsService;
+        private readonly SiteContext _siteContext;
         private readonly DataContractJsonSerializer _serializer;
-        private readonly ISiteBuilderContext _siteContext;
+   
         private readonly IStorefrontCache _cache;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public ThemeSettingsRepository(IDocumentListWebApiClient docWebApiClient, ICmsServiceWrapper cmsService, ISiteBuilderContext siteContext, IStorefrontCache cache)
+        public ThemeSettingsRepository(IDocumentListWebApiClient docWebApiClient, ICmsServiceWrapper cmsService, SiteContext  siteContext, IStorefrontCache cache)
         {
-            _siteContext = siteContext;
+            
             _serializer = new DataContractJsonSerializer(typeof(List<ThemeRuntimeSetting>));
             _docWebApiClient = docWebApiClient;
             _cmsService = cmsService;

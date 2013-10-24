@@ -177,7 +177,7 @@ namespace Mozu.SiteBuilder.Mvc
                 if (site != null)
                 {
                     this.SiteId = site.Id;
-                    this.SiteGroupId = site.SiteGroupId;
+                    this.SiteGroupId = site.MasterCatalogId ;
                     this.TenantId = site.TenantId;
                     return;
                 }
@@ -232,9 +232,16 @@ namespace Mozu.SiteBuilder.Mvc
 
         Site LookupSiteByDomain(string host)
         {
-            var client = new SitesWebApiClient(new ServiceClientMessageHandler(new ApiContext(), _settings));
-            var sites = client.GetSites(filter: "domainname eq " + host).Result.ReadAsSync();
-            return sites.Items.FirstOrDefault();
+            try
+            {
+                var client = new SitesWebApiClient(new ServiceClientMessageHandler(new ApiContext(), _settings));
+                var sites = client.GetSites(filter: "domainname eq " + host).Result.ReadAsSync();
+                return sites.Items.FirstOrDefault();
+            }
+            catch
+            {
+                return null;
+            }
 
         }
 

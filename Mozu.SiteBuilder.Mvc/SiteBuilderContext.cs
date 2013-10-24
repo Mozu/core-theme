@@ -392,10 +392,7 @@ namespace Mozu.SiteBuilder.Mvc
         public bool IsDisposed { get; set; }
 
 
-        public IAnalyticsContext AnalyticsContext
-        {
-            get { throw new NotImplementedException(); }
-        }
+     
 
 
         public EditModes? EditMode

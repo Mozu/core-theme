@@ -10,7 +10,7 @@ using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
-using DCs = Mozu.CommerceRuntime.Contracts.Shipping;
+using DCs = Mozu.CommerceRuntime.Contracts.Fulfillment;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -218,7 +218,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "shipping/package/markshipped")]
         public async Task<Response<Order>> MarkPackagesShipped(MarkPackagesShippedArgs args)
         {
-            var dcOrder = (await _orderWebApiClient.PerformShipmentAction(args.OrderId, new DCs.ShipmentAction { ActionName = "Ship", PackageIds = args.PackageIds })).ReadAsSync();
+            var dcOrder = (await _orderWebApiClient.PerformFulfillmentAction( args.OrderId, new DCs.FulfillmentAction()  { ActionName = "Ship", PackageIds = args.PackageIds })).ReadAsSync();
 
             return Single2( dcOrder.Map<Order>() );
         }

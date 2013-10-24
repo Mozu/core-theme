@@ -73,8 +73,8 @@ Ext.define('Taco.view.channel.Index', {
             property: 'code',
             text: 'Code'
         }, {
-            property: 'region',
-            text: 'region'
+            property: 'countryCode',
+            text: 'country'
         }
     ],
 
@@ -109,14 +109,14 @@ Ext.define('Taco.view.channel.Index', {
             flex:1
             
         }, {
-            dataIndex: 'region',
+            dataIndex: 'countryCode',
             editor: {
                 // defaults to textfield if no xtype is supplied
-                emptyText: "Region",
+                emptyText: "Country",
                 selectOnFocus: true,
                 allowBlank: false
             },
-            text: 'Region',
+            text: 'Country Code',
             width: 200
         }]
     }

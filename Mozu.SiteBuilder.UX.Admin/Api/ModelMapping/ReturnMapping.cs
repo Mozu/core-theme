@@ -11,7 +11,7 @@ using OrdersDC = Mozu.CommerceRuntime.Contracts.Orders;
 using ReturnsDC = Mozu.CommerceRuntime.Contracts.Returns;
 using PaymentsDC = Mozu.CommerceRuntime.Contracts.Payments;
 using ProductsDC = Mozu.CommerceRuntime.Contracts.Products;
-using ShippingDC = Mozu.CommerceRuntime.Contracts.Shipping;
+using ShippingDC = Mozu.CommerceRuntime.Contracts.Fulfillment;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {

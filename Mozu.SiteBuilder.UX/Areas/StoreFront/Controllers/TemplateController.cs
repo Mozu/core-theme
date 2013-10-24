@@ -60,14 +60,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         public async Task<HttpResponseMessage> Index(string templateId)
         {
-            this.SiteContext.EditMode = EditModes.Template ;
-            var pageType = _siteBuilderContext.Theme.PageTypes.FirstOrDefault(x => x.Id == templateId);
+            this.PageContext.EditMode = EditModes.Template ;
+            var pageType = SiteContext.Theme.PageTypes.FirstOrDefault(x => x.Id == templateId);
             if (pageType == null)
             {
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
                 
             }
-            var pc = this.SiteContext.PageContext;
+            var pc = PageContext;
 
             pc.CmsContext = new CmsPageContext()
             {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.FSharp.Core;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.Mvc.Themes;
 using NDjango.Interfaces;
@@ -33,30 +34,56 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         Dictionary<string, object> CreateRequestContext(HyprViewContext viewContext, System.IO.TextWriter writer)
         {
 
-            var siteBuilderApiContext = viewContext.LifetimeScope.Resolve<ISiteBuilderApiContext >();
+            var clientApiContext = viewContext.LifetimeScope.Resolve<ClientApiContext>();
+
+
+            var navigationContext = viewContext.LifetimeScope.Resolve<NavigationContext>();
+
+            var pageContext = viewContext.LifetimeScope.Resolve<PageContext>();
+            var siteContext = viewContext.LifetimeScope.Resolve<SiteContext>();
+            
+
+
+
+
+
             var siteBuilderContext = viewContext.LifetimeScope.Resolve<ISiteBuilderContext>();
-            var requestContext = new Dictionary<string, object>(viewContext.ViewData);
-            var user = siteBuilderContext.User;
-            requestContext["templateVariables"] = viewContext.HttpContext.Items["templateVariables"] = (System.Collections.Hashtable)viewContext.HttpContext.Items["templateVariables"] ?? new System.Collections.Hashtable(StringComparer.OrdinalIgnoreCase);
+            var requestContext = new Dictionary<string, object>(viewContext.ViewData, StringComparer.OrdinalIgnoreCase );
+
+
+            var user = pageContext.User;
+            if (viewContext.HttpContext.Items["templateVariables"] == null)
+            {
+                viewContext.HttpContext.Items["templateVariables"] = new System.Collections.Hashtable(StringComparer.OrdinalIgnoreCase);
+            }
+
+            
+            requestContext["templateVariables"] = viewContext.HttpContext.Items["templateVariables"];
             requestContext["_vc"] = viewContext;
-            requestContext["_tw"] = writer;
-            requestContext["Model"] = requestContext["model"] = viewContext.ViewData.Model;
+         
+            requestContext["Model"] =  viewContext.ViewData.Model;
             if (viewContext.ParentActionViewContext != null)
             {
-                requestContext["PageModel"] = requestContext["pageModel"] = viewContext.ParentActionViewContext.ViewData.Model;
+                requestContext["PageModel"] = viewContext.ParentActionViewContext.ViewData.Model;
             }
             else
             {
                 requestContext["PageModel"] = viewContext.ViewData.Model;
             }
-            requestContext["SiteContext"] = requestContext["siteContext"] = siteBuilderContext;
-            requestContext["ThemeSettings"] = requestContext["themeSettings"] = siteBuilderContext.ThemeSettings;
-            requestContext["PageContext"] = requestContext["pageContext"] = siteBuilderContext.PageContext;
-            requestContext["User"] = requestContext["user"] = user;
+
+
+            requestContext["SiteContext"] = siteContext;
+            requestContext["ThemeSettings"] =  siteContext.ThemeSettings;
+            requestContext["PageContext"] =  pageContext;
+            requestContext["navigationContext"] = navigationContext;
+            requestContext["clientApiContext"] = clientApiContext;
+            requestContext["User"] =  user;
             requestContext["true"] = true;
             requestContext["false"] = false;
             requestContext["viewPath"] = _virtualPath;
             requestContext["ViewData"] = viewContext.ViewData;
+
+         
             return requestContext;
         }
         public async Task<bool> AsyncRender(HyprViewContext viewContext, System.IO.TextWriter writer)

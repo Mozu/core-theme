@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Mozu.SiteBuilder.UX.Models.Customers
 {
     [DataContract]
-    public class OrderSummary
+    public class CommerceSummary
     {
         private CurrencyAmount _totalOrderAmount;
 

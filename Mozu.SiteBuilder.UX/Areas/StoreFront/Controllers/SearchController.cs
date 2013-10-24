@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _productClient = productClient;
             _searchClient = searchClient;
 
-            SiteContext = SiteContext ?? _ctx;
+         
 
             if (searchClient is ServiceClientBase)
             {

@@ -53,9 +53,9 @@ The include_products tag is a special kind of include tag, that includes a named
             var query = arguments.GetValueOrDefault<string>("query");
             var sort = arguments.GetValueOrDefault<string>("sort");
             var productCodes = arguments.GetValueOrDefault<IEnumerable>("productCodes");
-            var siteContext = context.SiteBuilderContext();
-      
-
+            
+            var pageContext = context.PageContext();
+            var siteContext = context.SiteContext() ;
             var searchWebApiClient = context.Resolve<IProductSearchWebApiClient>();
             var request = context.HttpContext().Request;
             var searchQuery = new StringBuilder();
@@ -64,7 +64,7 @@ The include_products tag is a special kind of include tag, that includes a named
             string facetValueFilter = null;
             string facetHierValue = null;
             string facetHierDepth = null;
-            var categoryId = siteContext.PageContext.CategoryId;
+            var categoryId = pageContext.CategoryId;
             var qurey = "*:*";
 
             if (query != null)

@@ -15,8 +15,10 @@ Ext.define('Taco.model.Product', {
         'Taco.model.ProductInSiteInfo',
         'Taco.model.ProductVariation'
     ],
-
+    requiredStores: ['Taco.store.Discounts', 'Taco.store.Attributes'],
     statics: {
+        
+        
         publishBulk: function (cfg) {
             this.doPublish(Ext.apply({}, {
                 url: '/admin/app/catalogpublishing/publish',

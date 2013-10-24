@@ -17,11 +17,11 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
         public string Name { get; set; }
 
         [DataMember(Name = "siteCollections")]
-        public List<TaContextSiteCollection> SiteCollections { get; set; }
+        public List<MasterCatalog> MasterCatalogs { get; set; }
     }
 
     [DataContract]
-    public class TaContextSiteCollection
+    public class MasterCatalog
     {
         [DataMember(Name = "id")]
         public int Id { get; set; }
@@ -34,8 +34,23 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
 
         [DataMember(Name = "sites")]
         public List<TaContextSite> Sites { get; set; }
+
+        [DataMember(Name = "catalogs")]
+        public List<TaContextCatalog> Catalogs { get; set; }
     }
-    
+
+
+    [DataContract]
+    public class TaContextCatalog
+    {
+        [DataMember(Name = "id")]
+        public int Id { get; set; }
+
+        [DataMember(Name = "name")]
+        public string Name { get; set; }
+
+
+    }
     [DataContract]
     public class TaContextSite
     {
@@ -53,5 +68,6 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
 
         [DataMember(Name = "contentPublishingMode")]
         public string ContentPublishingMode { get; set; }
+        
     }
 }

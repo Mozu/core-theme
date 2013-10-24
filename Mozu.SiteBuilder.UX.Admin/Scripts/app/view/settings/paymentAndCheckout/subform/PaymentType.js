@@ -5,7 +5,10 @@
 
 Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
     extend: 'Taco.view.product.subform.Subform',
-    requires: ['Taco.view.settings.paymentAndCheckout.Gateway'],
+    requires: ['Taco.view.settings.paymentAndCheckout.Gateway',
+        'Taco.view.settings.paymentAndCheckout.ExternalGateway',
+        'Taco.store.ExternalGatewayDefinitions',
+        'Taco.store.GatewayDefinitions'],
     title: 'Payment Types',
     initComponent: function () {
         var me = this;
@@ -14,9 +17,9 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
             labelAlign: 'top',
             labelSeparator: ''
         };
-        
-        this.externalGateWayDefinitionsStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ExternalGatewayDefinitions');
         this.gateWayDefinitionsStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.GatewayDefinitions');
+        this.externalGateWayDefinitionsStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ExternalGatewayDefinitions');
+        
         this.gateWayDefinitionsCombo = Ext.create('Ext.form.ComboBox', {
             fieldLabel: 'Select a payment gateway',
             store: this.gateWayDefinitionsStore,

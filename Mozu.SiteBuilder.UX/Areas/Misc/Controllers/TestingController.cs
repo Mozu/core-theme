@@ -65,8 +65,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
             else
             {
-                if (mode == ThemeMode.Desktop) themeName = SiteContext.DesktopTheme.Name;
-                if (mode == ThemeMode.Mobile) themeName = SiteContext.MobileTheme.Name;
+                if (mode == ThemeMode.Desktop) themeName = SiteContext.GeneralSettings.Theme;
+                if (mode == ThemeMode.Mobile) themeName = SiteContext.GeneralSettings.MobileTheme ;
                 _cookies.SaveResponseCookie(FORCE_THEME_COOKIE_NAME, new HttpCookie(FORCE_THEME_COOKIE_NAME, themeName));
             }
             return new RedirectResult(redir ?? "/");
@@ -83,7 +83,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var site = res.ReadAsAsync().Result;
 
 
-            SiteBuilderContext.Save(site: site.Id, sitegroup: site.SiteGroupId, tenant: site.TenantId, isEditMode: false, cookieProvider: _cookies);
+            SiteBuilderContext.Save(site: site.Id, sitegroup: site.MasterCatalogId , tenant: site.TenantId, isEditMode: false, cookieProvider: _cookies);
 
             //string domainPriority = System.Configuration.ConfigurationManager.AppSettings["gositeDomainPriority"];
             IEnumerable<string> domainList;
@@ -170,7 +170,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
             if (site != null)
             {
-                SiteBuilderContext.Save(site: site.Id, sitegroup: site.SiteGroupId, tenant: site.TenantId, isEditMode: false, cookieProvider: _cookies);
+                SiteBuilderContext.Save(site: site.Id, sitegroup: site.MasterCatalogId, tenant: site.TenantId, isEditMode: false, cookieProvider: _cookies);
 
                 return Redirect("/");
             }

@@ -10,6 +10,7 @@ using Mozu.Core.Api.Contracts;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
@@ -31,17 +32,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     public class CatalogController : BaseApiController
     {
         IProductWebApiClient   _productClient;
+        private readonly ICategoryTreeProvider _categoryTreeProvider;
         IProductSearchWebApiClient _searchClient;
         ISiteBuilderContext _ctx;
         ISiteBuilderApiContext _apiCtx;
 
-        public CatalogController(ISiteBuilderContext ctx, ISiteBuilderApiContext apiCtx, IProductWebApiClient productClient, IProductSearchWebApiClient searchClient, Autofac.ILifetimeScope lifetimeScope)
+        public CatalogController(ICategoryTreeProvider categoryTreeProvider, ISiteBuilderApiContext apiCtx, IProductWebApiClient productClient, IProductSearchWebApiClient searchClient, Autofac.ILifetimeScope lifetimeScope)
         {
             
             
-            _ctx = ctx;
-            
-           
+     
+
+
+            _categoryTreeProvider = categoryTreeProvider;
             _searchClient = searchClient;
             _productClient = productClient;
             _apiCtx = apiCtx;
@@ -76,11 +79,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             SetCatalogContext(product);
 
-            SiteContext.PageContext.PageType = "product";
-            SiteContext.PageContext.ProductCode = productCode;
+            PageContext.PageType = "product";
+            PageContext.ProductCode = productCode;
 
 
-            SiteContext.PageContext.CmsContext = new CmsPageContext()
+            PageContext.CmsContext = new CmsPageContext()
             {
                 Template = new DocumentRequest()
                 {
@@ -178,16 +181,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
         }
          [System.Web.Http.HttpGet]
-        public ActionResult Store ()
-        {
-            var catList = _ctx.CatalogContext.AllCategories;
+        public async Task<ActionResult> Store ()
+         {
+             var catList = await _categoryTreeProvider.GetAllCategories();
             var cat = new Category()
             {
                 Content = new CategoryContent (){Name = "Store"}
                
             };
-            this.SiteContext.PageContext.PageType = "category";
-            SiteContext.PageContext.CategoryId = -1;
+            this.PageContext.PageType = "category";
+            PageContext.CategoryId = -1;
             cat.ChildrenCategories = catList.Where(x => x.ParentCategory == null).ToList();
             return View("Category", cat);
         }
@@ -201,14 +204,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
          [System.Web.Http.HttpGet]
         public async Task<HttpResponseMessage > Category(int? categoryId = null, string sortBy = null, int? page = null, int? itemsPerPage = null )
         {
-            _ctx.PageContext.PageType = "category";
-            _ctx.PageContext.CategoryId = categoryId;
+            PageContext.PageType = "category";
+            PageContext.CategoryId = categoryId;
 
           
             var feedUrl = HttpRequestBase.Url;
 
-             _ctx.PageContext.FeedUrl = "/feeds/category/" + categoryId;
-            var catList = _ctx.CatalogContext.AllCategories;
+             PageContext.FeedUrl = "/feeds/category/" + categoryId;
+
+             var catList = await _categoryTreeProvider.GetAllCategories();
+            
 
 
 
@@ -226,9 +231,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
              var lts = (ILifetimeScope) this.ControllerContext.Request.GetDependencyScope().GetService(typeof (ILifetimeScope));
 
              var sbccc = lts.Resolve<ISiteBuilderContext>();
-            _ctx.PageContext.Title = cat.Name;
+            PageContext.Title = cat.Name;
 
-            SiteContext.PageContext.CmsContext = new CmsPageContext()
+            PageContext.CmsContext = new CmsPageContext()
             {
                 Template = new DocumentRequest()
                 {
@@ -258,13 +263,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
          [System.Web.Http.HttpGet]
-        public HttpResponseMessage  CategoryFeed(int? categoryId = null)
+        public async Task< HttpResponseMessage>  CategoryFeed(int? categoryId = null)
         {
             var itemsPerPage = 10;
             var startIdx = 0;
             // TODO: Sort by Date Last Modified DESC
             string sortBy = null;// "CreateDate DESC";
-            var cat = _ctx.CatalogContext.AllCategories.Where(x => x.CategoryId == categoryId.GetValueOrDefault (-1)).FirstOrDefault();
+
+            var catList = await _categoryTreeProvider.GetAllCategories();
+            var cat = catList.Where(x => x.CategoryId == categoryId.GetValueOrDefault(-1)).FirstOrDefault();
             if (cat == null)
             {
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "category not found");
@@ -328,13 +335,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// </summary>
         private void SetCatalogContext(Product product)
         {
-            _ctx.CatalogContext.CurrentProduct = product;
-            _ctx.Navigation.SetContext(product);
+           // _ctx.CatalogContext.CurrentProduct = product;
+            NavigationContext.SetContext(product);
         }
 
         private void SetCatalogContext(Category category)
         {
-            _ctx.Navigation.SetContext(category);
+            NavigationContext.SetContext(category);
         }
        
     }

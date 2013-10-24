@@ -44,11 +44,11 @@ namespace Mozu.SiteBuilder.UX.Controllers
 
             //SetCatalogContext(product);
 
-            SiteContext.PageContext.PageType = "product";
-            SiteContext.PageContext.ProductCode = productcode;
+            PageContext.PageType = "product";
+            PageContext.ProductCode = productcode;
 
 
-            SiteContext.PageContext.CmsContext = new CmsPageContext()
+            PageContext.CmsContext = new CmsPageContext()
             {
                 Template = new DocumentRequest()
                 {

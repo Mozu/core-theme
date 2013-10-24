@@ -5,7 +5,9 @@ using System.Web.Http;
 using Autofac;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 
 namespace Mozu.SiteBuilder.Mvc.Controllers
 {
@@ -69,14 +71,66 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
 
 
 
-        ISiteBuilderContext _sc;
-        public ISiteBuilderContext SiteContext
+        PageContext _pc;
+        public PageContext PageContext
+        {
+            get
+            {
+                if (_pc == null)
+                {
+                    _pc = LifetimeScope.Resolve<PageContext>();
+                }
+                return _pc;
+            }
+            set
+            {
+                _pc = value;
+            }
+        }
+
+        private NavigationContext _navigationContext;
+        public  NavigationContext NavigationContext
+        {
+            get
+            {
+                if (_navigationContext == null)
+                {
+                    _navigationContext = LifetimeScope.Resolve<NavigationContext>();
+                }
+                return _navigationContext;
+            }
+            set
+            {
+                _navigationContext = value;
+            }
+        }
+
+        CmsPageContext  _cmsPageContext ;
+        public CmsPageContext CmsPageContext
+        {
+            get
+            {
+                if (_cmsPageContext == null)
+                {
+                    _cmsPageContext = LifetimeScope.Resolve<CmsPageContext>();
+                }
+                return _cmsPageContext;
+            }
+            set
+            {
+                _cmsPageContext = value;
+            }
+        }
+
+
+        SiteContext _sc;
+        public SiteContext SiteContext
         {
             get
             {
                 if (_sc == null)
                 {
-                    _sc = LifetimeScope.Resolve<ISiteBuilderContext>();
+                    _sc = LifetimeScope.Resolve<SiteContext>();
                 }
                 return _sc;
             }

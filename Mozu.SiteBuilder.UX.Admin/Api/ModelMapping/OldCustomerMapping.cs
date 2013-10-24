@@ -38,8 +38,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<SB.Phone, AP.Phone>();
             Mapper.CreateMap<AP.Phone, SB.Phone>();
 
-            Mapper.CreateMap<SB.OrderSummary, CS.OrderSummary>();
-            Mapper.CreateMap<CS.OrderSummary, SB.OrderSummary>();
+            Mapper.CreateMap<SB.CommerceSummary, CS.CommerceSummary>();
+            Mapper.CreateMap<CS.CommerceSummary, SB.CommerceSummary>();
 
             Mapper.CreateMap<SB.Address, AP.Address>();
             Mapper.CreateMap<AP.Address, SB.Address>();
