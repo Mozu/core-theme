@@ -42,13 +42,6 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         [IgnoreDataMember()]
         public bool Initialized { get; set; }
 
-        //[IgnoreDataMember()]
-        //public Mozu.Content.Contracts.Document Page { get; set; }
-
-        //[IgnoreDataMember()]
-        //public Mozu.Content.Contracts.Document Template { get; set; }
-
-        //[IgnoreDataMember()]
-        //public Mozu.Content.Contracts.Document SiteTemplate { get; set; }
+   
     }
 }

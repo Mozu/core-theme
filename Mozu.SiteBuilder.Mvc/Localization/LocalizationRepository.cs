@@ -8,6 +8,7 @@ using System.Web;
 using Autofac;
 
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.Localization
@@ -15,14 +16,16 @@ namespace Mozu.SiteBuilder.Mvc.Localization
     public class LocalizationRepository : ILocalizationRepository
     {
         private readonly MozuVirtualPathProvider _mozuVirtualPathProvider;
+        private readonly SiteContext _siteContext;
         private readonly ISiteBuilderContext _siteBuilderContext;
         private readonly ISiteBuilderApiContext _builderApiContext;
         private static readonly ConcurrentDictionary<string, Dictionary<string, Dictionary<string, string>>> _tableCache = new ConcurrentDictionary<string, Dictionary<string, Dictionary<string, string>>>();
         
-        public LocalizationRepository(MozuVirtualPathProvider mozuVirtualPathProvider , ISiteBuilderContext siteBuilderContext, ISiteBuilderApiContext builderApiContext)
+        public LocalizationRepository(MozuVirtualPathProvider mozuVirtualPathProvider , SiteContext siteContext, ISiteBuilderApiContext builderApiContext)
         {
             _mozuVirtualPathProvider = mozuVirtualPathProvider;
-            _siteBuilderContext = siteBuilderContext;
+            _siteContext = siteContext;
+
             _builderApiContext = builderApiContext;
         }
 
@@ -39,7 +42,7 @@ namespace Mozu.SiteBuilder.Mvc.Localization
             }
 
             var culture = CultureInfo.CreateSpecificCulture(languages[0].ToLowerInvariant().Trim());
-            var dictKey = _builderApiContext.SiteId + "|" + siteContext.Theme.Id.ToLower() + "|" + culture.TwoLetterISOLanguageName;
+            var dictKey = _builderApiContext.SiteId + "|" + _siteContext.Theme.Id.ToLower() + "|" + culture.TwoLetterISOLanguageName;
 
             if (!_tableCache.ContainsKey(dictKey))
             {
@@ -82,7 +85,7 @@ namespace Mozu.SiteBuilder.Mvc.Localization
             }
 
             var culture = CultureInfo.CreateSpecificCulture(languages[0].ToLowerInvariant().Trim());
-            var dictKey = _builderApiContext.SiteId + "|" + siteContext.Theme.Id.ToLower() + "|" + culture.TwoLetterISOLanguageName;
+            var dictKey = _builderApiContext.SiteId + "|" + _siteContext.Theme.Id.ToLower() + "|" + culture.TwoLetterISOLanguageName;
 
             if (!_tableCache.ContainsKey(dictKey))
             {
@@ -116,12 +119,12 @@ namespace Mozu.SiteBuilder.Mvc.Localization
             ISiteBuilderContext siteContext = _siteBuilderContext;
 
             // Walk the theme hierarchy and merge the localization strings down to the currently applied theme
-            foreach (var theme in siteContext.Theme.Stack.Reverse())
+            foreach (var theme in _siteContext.Theme.Stack.Reverse())
             {
                 var pp = _mozuVirtualPathProvider;
                 var stem = "~/themes/" + theme + "/resources/strings/lang-" + language + ".csv";
                 var file = pp.GetFile(stem) as MozuVirtualFile;
-                var dictKey = _builderApiContext.SiteId + "|" + siteContext.Theme.Id.ToLower() + "|" + language;
+                var dictKey = _builderApiContext.SiteId + "|" + _siteContext.Theme.Id.ToLower() + "|" + language;
 
                 if (file != null && file.Exists)
                 {

@@ -14,7 +14,7 @@ namespace Mozu.SiteBuilder.UX.Models.Customers
         public string UserId { get; set; }
 
         [DataMember(Name = "orders")]
-        public List<OrderSummary> Orders { get; set; }
+        public List<CommerceSummary> Orders { get; set; }
 
         [DataMember(Name = "createdOn")]
         public DateTime CreatedOn { get; set; }

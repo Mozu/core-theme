@@ -5,6 +5,9 @@ using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.Location.Contracts.Clients;
 using DC = Mozu.Location.Contracts;
+using System.Net.Http;
+using System.Net;
+using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -21,19 +24,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _locationTypeWebApiClient = locationTypeWebApiClient;
         }
 
-        [HttpPostRoute(UriTemplate = "list")]
-        public async Task<Response<List<DC.LocationType>>> GetLocationTypes()
+        [HttpGetRoute(UriTemplate = "list")]
+        public async Task<HttpResponseMessage> GetLocationTypes()
         {
             var resp = (await _locationTypeWebApiClient.GetLocationTypes()).ReadAsSync();
-            return List2(resp);
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(resp), LowerCaseJsonMediaTypeFormatter.Default);
         }
 
-
         [HttpPostRoute(UriTemplate = "create")]
-        public async Task<Response<DC.LocationType>> AddLocationType(DC.LocationType lt)
+        public async Task<HttpResponseMessage> AddLocationType(DC.LocationType lt)
         {
             var resp = (await _locationTypeWebApiClient.AddLocationType(lt)).ReadAsSync();
-            return Single2(resp);
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp), LowerCaseJsonMediaTypeFormatter.Default);
+        }
+
+        [HttpPostRoute(UriTemplate = "edit")]
+        public async Task<HttpResponseMessage> EditLocationType(DC.LocationType lt)
+        {
+            var resp = (await _locationTypeWebApiClient.UpdateLocationType(lt.Code, lt)).ReadAsSync();
+            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp), LowerCaseJsonMediaTypeFormatter.Default);
         }
     }
 }

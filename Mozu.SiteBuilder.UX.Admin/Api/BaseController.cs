@@ -1,13 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
+using Autofac;
 using Mozu.Core.Api;
 using Mozu.Core.Api.Authorization;
 using Mozu.Core.Api.Controllers;
 using Mozu.Core.ErrorHandling;
 using Mozu.ProductAdmin.Contracts;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
+using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Filters;
@@ -19,6 +24,103 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [SiteBuilderAdminAuthorizeAttribute]
     public abstract class BaseController : WebApiController
     {
+
+
+        private ILifetimeScope _lifetimeScope;
+        public ILifetimeScope LifetimeScope
+        {
+            get
+            {
+                if (_lifetimeScope == null)
+                {
+                    _lifetimeScope = (ILifetimeScope)this.ControllerContext.Request.GetDependencyScope().GetService(typeof(ILifetimeScope));
+
+
+                }
+                return _lifetimeScope;
+            }
+            set { _lifetimeScope = value; }
+        }
+
+        private ISiteBuilderApiContext _siteBuilderApiContext;
+        private HttpContextBase _httpContextBase;
+        public ISiteBuilderApiContext SbApiContext
+        {
+            get
+            {
+                if (_siteBuilderApiContext == null)
+                {
+                    _siteBuilderApiContext = LifetimeScope.Resolve<ISiteBuilderApiContext>();
+
+                }
+
+                return _siteBuilderApiContext;
+            }
+            set { _siteBuilderApiContext = value; }
+        }
+
+
+
+        private ICmsServiceWrapper _cmsService;
+        public ICmsServiceWrapper CmsService
+        {
+            get
+            {
+                if (_cmsService == null)
+                {
+                    _cmsService = LifetimeScope.Resolve<ICmsServiceWrapper>();
+                }
+                return _cmsService;
+            }
+            set
+            {
+                _cmsService = value;
+            }
+        }
+
+
+
+        ISiteBuilderContext _sc;
+        public ISiteBuilderContext SiteContext
+        {
+            get
+            {
+                if (_sc == null)
+                {
+                    _sc = LifetimeScope.Resolve<ISiteBuilderContext>();
+                }
+                return _sc;
+            }
+            set
+            {
+                _sc = value;
+            }
+        }
+
+        public HttpContextBase HttpContext
+        {
+            get
+            {
+                if (_httpContextBase == null)
+                {
+                    _httpContextBase = LifetimeScope.Resolve<HttpContextBase>();
+                }
+                return _httpContextBase;
+            }
+            set { _httpContextBase = value; }
+        }
+
+        public HttpRequestBase HttpRequestBase
+        {
+            get { return HttpContext.Request; }
+        }
+        public HttpResponseBase Response
+        {
+            get { return HttpContext.Response; }
+        }
+
+
+
         [Obsolete]
         public Task<Response<T>> EmptySingle<T>(bool success = true)
         {
@@ -79,6 +181,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     Total = total ?? items.Count,
                 };
         }
+
 
         [Obsolete]
         public Task<Response<List<T>>> List<T>(List<T> list, int? total = null)

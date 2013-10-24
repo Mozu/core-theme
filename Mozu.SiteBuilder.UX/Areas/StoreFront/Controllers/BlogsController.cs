@@ -145,9 +145,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
              blog.posts = _cmsService.GetList2(contentCollection: "blogs", filter: String.Format("DocumentType eq post and Properties.tags eq '{0}'", id), pageSize: 20)
                  .Result.ReadAsSync().Items.Select(x => Mapper.Map<Post>(x)).ToList();
-             var pc = this.SiteContext.PageContext;
-             pc.CollectionId = "blogs";
-             pc.DocumentId = blog.Id;
+             var pc = this.PageContext;
+             //pc.CollectionId = "blogs";
+             //pc.DocumentId = blog.Id;
 
              pc.Title = blog.Properties.GetValue("title") as string;
              pc.MetaTitle  = blog.Properties.GetValue("meta_title") as string;
@@ -189,9 +189,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
              var blog = _cache.Blog;
              blog.posts  = _cache.Posts.Where (x => x.date.Value.Month == dt.Month).ToList();
 
-             var pc = this.SiteContext.PageContext;
-             pc.CollectionId = "blogs";
-             pc.DocumentId = blog.Id;
+             var pc = this.PageContext;
+             //pc.CollectionId = "blogs";
+             //pc.DocumentId = blog.Id;
 
              pc.Title = blog.Properties.GetValue("title") as string;
              pc.MetaTitle = blog.Properties.GetValue("meta_title") as string;
@@ -208,9 +208,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var blog = _cache.Blog;
             blog.posts = _cache.Posts;
-            var pc = this.SiteContext.PageContext;
-            pc.CollectionId = "blogs";
-            pc.DocumentId = blog.Id;
+            var pc = this.PageContext;
+            //pc.CollectionId = "blogs";
+            //pc.DocumentId = blog.Id;
 
             pc.Title = blog.Properties.GetValue("title") as string;
             pc.MetaTitle = blog.Properties.GetValue("meta_title") as string;
@@ -293,10 +293,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var vm = Mapper.Map<DC.Document , VM.Post>(doc);
 
             vm.author = (string)_cache.Blog.config.author;
-            var pc = this.SiteContext.PageContext;
+            var pc = this.PageContext;
             
-            pc.CollectionId = "blogs";
-            pc.DocumentId = doc.Id;
+            //pc.CollectionId = "blogs";
+            //pc.DocumentId = doc.Id;
            
             pc.Title = vm.Properties.GetValue("title") as string;
             pc.MetaTitle = vm.Properties.GetValue("meta_title") as string;

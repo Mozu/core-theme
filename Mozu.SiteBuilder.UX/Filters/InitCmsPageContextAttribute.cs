@@ -14,13 +14,13 @@ namespace Mozu.SiteBuilder.UX.Filters
         public System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage> ExecuteActionFilterAsync(System.Web.Http.Controllers.HttpActionContext actionContext, System.Threading.CancellationToken cancellationToken, Func<System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage>> continuation)
         {
             var controller = (BaseApiController)actionContext.ControllerContext.Controller;
-            if (controller != null || controller.SiteContext.PageContext != null)
+            if (controller != null || controller.PageContext != null)
             {
 
                 return continuation().ContinueWith(x =>
                     {
                         var helper = new CmsHelper(controller.CmsService);
-                        return helper.InitCmsPageContext(controller.SiteContext.PageContext.CmsContext).ContinueWith(y => x.Result).Result;
+                        return helper.InitCmsPageContext(controller.PageContext.CmsContext).ContinueWith(y => x.Result).Result;
 
                     });
 

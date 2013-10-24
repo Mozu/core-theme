@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.UX.Models.Customers
         public int Id { get; set; }
 
         [DataMember(Name = "orderSummary")]
-        public OrderSummary OrderSummary { get; set; }
+        public CommerceSummary CommerceSummary { get; set; }
 
         [DataMember(Name = "groups")]
         public List<CustomerGroup> Groups

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 
 using Autofac;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
@@ -53,6 +54,14 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         public static ISiteBuilderContext SiteBuilderContext(this NDjango.Interfaces.IContext context)
         {
             return context.ViewContext().LifetimeScope.Resolve<ISiteBuilderContext>();
+        }
+        public static PageContext PageContext(this NDjango.Interfaces.IContext context)
+        {
+            return context.ViewContext().LifetimeScope.Resolve<PageContext>();
+        }
+        public static SiteContext SiteContext(this NDjango.Interfaces.IContext context)
+        {
+            return context.ViewContext().LifetimeScope.Resolve<SiteContext>();
         }
         public static T Resolve<T>(this NDjango.Interfaces.IContext context)
         {

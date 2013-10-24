@@ -2,37 +2,27 @@
  * @class Taco.model.CustomerAttribute
  */
 Ext.define('Taco.model.CustomerAttribute', {
-    extend: 'Taco.core.data.Model',
+    extend: 'Taco.model.Attribute',
     behaviors: {
         read: 24,
         create: 25,
         update: 26,
         destroy: 27
     },
-    idProperty: 'code',
-    fields: [{
-            name: 'attributecode',
-            type: 'string'
-        }, {
-            name: 'name',
-            type: 'string'
-        }, {
-            name: 'isrequired',
-            type: 'bool'
-        },
-        {
-            name: 'displaygroup',
-            type: 'string'
-        }],
-
+    supportsAttributeType: function () {
+        return false;
+    },
+    supportsDisplayGroup: function () {
+        return true;
+    },
     proxy: {
         type: 'ajaxproxy',
         api: {
-            read: '/admin/Scripts/app/mocks/CustomerAttributes.json',
-            //read: '/admin/app/discount/list',
-            //create: '/admin/app/Customerattribute/create',
-            //update: '/admin/app/discount/edit',
-            //destroy: '/admin/app/discount/delete'
+            read: '/admin/app/customerattributes/read',
+           
+            create: '/admin/app/customerattributes/create',
+            update: '/admin/app/customerattributes/edit',
+            destroy: '/admin/app/customerattributes/delete'
         },
         reader: {
             type: 'json',

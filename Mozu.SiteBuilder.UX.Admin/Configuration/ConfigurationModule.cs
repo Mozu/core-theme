@@ -9,6 +9,7 @@ using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Handlers.Message;
+using Mozu.Core.Behaviors;
 using Mozu.Core.Configuration;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
@@ -68,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.General.Contracts.Clients.GeneralSettingsWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Customer.Contracts.Clients.CustomerAccountWebApiClient).Assembly);
 
-           // builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Location.Contracts.Clients.ILocationAdminWebApiClient).Assembly);
+            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Location.Contracts.Clients.ILocationAdminWebApiClient).Assembly);
 
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.CommerceRuntime.Contracts.Products.Product ).Assembly);
 
@@ -114,6 +115,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
         class SbApiContextBuilder : IApiContextBuilder
         {
+            private static int PublishBehavorID = new PublishPreviewBehavior().Id;
 
             public IApiContext BuildApiContext(IApiContext apiContext_, System.Net.Http.HttpRequestMessage request)
             {
@@ -122,7 +124,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
                
                 // if user can view pending mode, default to pending mode.
-                if (sbApiContext != null && sbApiContext.UserClaims != null && sbApiContext.UserClaims.BehaviorIds != null && sbApiContext.UserClaims.BehaviorIds.Contains(165))
+               
+                if (sbApiContext != null && sbApiContext.UserClaims != null && sbApiContext.UserClaims.BehaviorIds != null && sbApiContext.UserClaims.BehaviorIds.Contains(PublishBehavorID))
                 {
                     sbApiContext.DataViewMode = DataViewModeType.Pending;
                 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using Mozu.Core.Api.Routing;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using System.ServiceModel.Web;
@@ -27,6 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         ICmsTypeHelper _cmsTypeHelper;
         IDocumentListWebApiClient _docRepo;
         ICmsServiceWrapper _cmsService;
+        private readonly SiteContext _siteContext;
         private readonly ISiteBuilderContext _siteBuilderContext;
         //ISessionDocumentStore _sessionDocStore;
        // private IPageTypeProvider _pageTypeProvider;
@@ -36,11 +38,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             IApiContext apiContext,
             ICmsTypeHelper cmsTypeHelper,
             ICmsServiceWrapper cmsService ,
-            ISiteBuilderContext siteBuilderContext)//, IPageTypeProvider pageTypeProvider)
+            SiteContext siteContext)//, IPageTypeProvider pageTypeProvider)
         {
             _docRepo = docRepo;
             _cmsService = cmsService;
-            _siteBuilderContext = siteBuilderContext;
+            _siteContext = siteContext;
+
             //   _pageTypeProvider = pageTypeProvider;
             _cmsTypeHelper = cmsTypeHelper;
         
@@ -53,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
 
 
-            IEnumerable<PageTypeDefinition> pageTypes = this._siteBuilderContext.Theme.PageTypes;
+            IEnumerable<PageTypeDefinition> pageTypes = _siteContext.Theme.PageTypes;
             bool userCreatable = false;
             if (extFilter.TryGetValue("userCreatable",out userCreatable ))
             {

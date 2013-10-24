@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Autofac;
+using Autofac.Integration.WebApi;
 using Mozu.Core;
 using Mozu.Reference.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Catalog;
@@ -24,7 +25,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<MozuVirtualPathProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<MozuVirtualPathProvider>().InstancePerApiRequest();
             //   builder.RegisterType<WidgetProvider>().As<IWidgetProvider>();
             builder.RegisterType<Document>();
             // builder.RegisterType<WidgetInstanceData >();
@@ -32,26 +33,26 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<Blog>();
             builder.RegisterType<Post>();
             // builder.RegisterType<AuthenticationHelper>().InstancePerLifetimeScope();
-            builder.RegisterType<CatalogContext>().As<ICatalogContext>().InstancePerLifetimeScope();
+            builder.RegisterType<CatalogContext>().As<ICatalogContext>().InstancePerApiRequest();
 
-            builder.RegisterType<ThemeMetadataProvider>().As<IThemeMetaDataProvider>().InstancePerLifetimeScope();
-            builder.RegisterType<ThemeRepository>().As<IThemeRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<ThemeMetadataProvider>().As<IThemeMetaDataProvider>().InstancePerApiRequest();
+            builder.RegisterType<ThemeRepository>().As<IThemeRepository>().InstancePerApiRequest();
 
-            builder.RegisterType<HyprViewEngine>().InstancePerLifetimeScope();
+            builder.RegisterType<HyprViewEngine>().InstancePerApiRequest();
 
             //  builder.RegisterType<RoleWebApiClient>().As<IMultiScopeRoleWebApiClient>();
             //   builder.RegisterType<BehaviorWebApiClient>().As<IBehaviorWebApiClient>();
-            builder.RegisterType<PermissionsRepository>().As<IPermissionsRepository>();
+            builder.RegisterType<PermissionsRepository>().As<IPermissionsRepository>().InstancePerApiRequest();
 
-            builder.RegisterType<ReferenceDataWebApiClient>().As<IReferenceDataWebApiClient>();
+            builder.RegisterType<ReferenceDataWebApiClient>().As<IReferenceDataWebApiClient>().InstancePerApiRequest();
 
             //     builder.RegisterType<RoutableShippingWebApiClient>().As<IShippingWebApiClient>();
 
             // builder.RegisterType<ShippingRateWebApiClient>().As<IShippingRateWebApiClient>();
-            builder.RegisterType<ShippingSettingsWebApiClient>().As<IShippingSettingsWebApiClient>();
-            builder.RegisterType<UspsShippingSharedWebApiClient>().As<IUspsShippingSharedWebApiClient>();
-            builder.RegisterType<UspsShippingInstanceWebApiClient>().As<IUspsShippingInstanceWebApiClient>();
-            builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>();
+            builder.RegisterType<ShippingSettingsWebApiClient>().As<IShippingSettingsWebApiClient>().InstancePerApiRequest();
+            builder.RegisterType<UspsShippingSharedWebApiClient>().As<IUspsShippingSharedWebApiClient>().InstancePerApiRequest();
+            builder.RegisterType<UspsShippingInstanceWebApiClient>().As<IUspsShippingInstanceWebApiClient>().InstancePerApiRequest();
+            builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>().InstancePerApiRequest();
 
 
             TemplateManagerProvider tmp = new TemplateManagerProvider()
@@ -84,11 +85,11 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<ThemeFactory>().InstancePerLifetimeScope();
 
 
-            builder.RegisterType<NavigationRepository>().As<INavigationRepository>();
+            builder.RegisterType<NavigationRepository>().As<INavigationRepository>().InstancePerApiRequest();
 
-            builder.RegisterType<NavigationGandalf>().InstancePerLifetimeScope();
+            builder.RegisterType<NavigationGandalf>().InstancePerLifetimeScope().InstancePerApiRequest();
 
-            builder.RegisterType<RuntimeCategoryTreeProvider>().As<ICategoryTreeProvider>();
+            builder.RegisterType<RuntimeCategoryTreeProvider>().As<ICategoryTreeProvider>().InstancePerApiRequest();
         }
     }
 }

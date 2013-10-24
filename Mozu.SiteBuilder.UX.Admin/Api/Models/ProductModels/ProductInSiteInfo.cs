@@ -8,7 +8,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
     /// Represents the site-specific overrides configurable for a product.
     /// </summary>
     [DataContract]
-    public class ProductInSiteInfo
+    public class ProductInCatalogInfo
     {
         /// <summary>
         /// The product these overrides belong to.
@@ -20,7 +20,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// The site identifier these overrides belong to.
         /// </summary>
         [DataMember(EmitDefaultValue = false, Name = "siteId")]
-        public int SiteId { get; set; }
+        public int CatalogId { get; set; }
 
         /// <summary>
         /// Represents whether the product is active in this site.

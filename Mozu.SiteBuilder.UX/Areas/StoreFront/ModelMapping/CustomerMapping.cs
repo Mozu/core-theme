@@ -1,4 +1,5 @@
 using AutoMapper;
+using Mozu.SiteBuilder.UX.Models.Customers;
 using Address = Mozu.SiteBuilder.UX.Models.Customers.Address;
 using Contact = Mozu.Core.Api.Contracts.Contact;
 using CurrencyAmount = Mozu.SiteBuilder.UX.Models.Customers.CurrencyAmount;
@@ -7,7 +8,6 @@ using CustomerAccountGroup = Mozu.Customer.Contracts.CustomerGroup;
 using CustomerAccountContact = Mozu.Customer.Contracts.CustomerContact;
 using CustomerAccountNote = Mozu.Customer.Contracts.CustomerNote;
 using CustomerGroup = Mozu.Customer.Contracts.CustomerGroup;
-using OrderSummary = Mozu.SiteBuilder.UX.Models.Customers.OrderSummary;
 using Phone = Mozu.SiteBuilder.UX.Models.Customers.Phone;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
@@ -42,8 +42,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             Mapper.CreateMap<Phone, Mozu.Core.Api.Contracts.Phone>();
             Mapper.CreateMap<Mozu.Core.Api.Contracts.Phone, Phone>();
 
-            Mapper.CreateMap<OrderSummary, Mozu.Customer.Contracts.OrderSummary>();
-            Mapper.CreateMap<Mozu.Customer.Contracts.OrderSummary, OrderSummary>();
+            Mapper.CreateMap<CommerceSummary, Mozu.Customer.Contracts.CommerceSummary >();
+            Mapper.CreateMap<Mozu.Customer.Contracts.CommerceSummary, CommerceSummary>();
 
             Mapper.CreateMap<Address, Mozu.Core.Api.Contracts.Address>();
             Mapper.CreateMap<Mozu.Core.Api.Contracts.Address, Address>();

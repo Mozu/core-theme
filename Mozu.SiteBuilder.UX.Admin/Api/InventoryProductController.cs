@@ -64,7 +64,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             foreach (var prod in products)
             {
                 var dcProd = (await _productClient.GetProduct(prod.ProductCode)).ReadAsSync();
-                dcProd.StockOnHandAdjustment = Mapper.Map<DC.StockOnHandAdjustment>(prod.StockOnHandAdjustment);
+                
+            //    dcProd.StockOnHandAdjustment = Mapper.Map<DC.StockOnHandAdjustment>(prod.StockOnHandAdjustment);
                 var retProd = (await _productClient.UpdateProduct(dcProd, dcProd.ProductCode)).ReadAsSync();
                 retProds.Add(Mapper.Map<Product>(retProd));
 

@@ -51,41 +51,7 @@ namespace Mozu.SiteBuilder.Mvc.Cms
        [DataMember(Name = "feedUrl")]
        public string FeedUrl { get; set; }
 
-       //List<string> _widgetCreationTags;
-       //List<string> _widgetQuery;
-       //[DataMember(Name = "widgetQuery")]
-       //public List<string> WidgetQuery
-       //{
-       //    get
-       //    {
-       //        if (_widgetQuery == null)
-       //        {
-       //            _widgetQuery = new List<string>();
-       //        }
-       //        return _widgetQuery;
-       //    }
-       //    set
-       //    {
-       //        _widgetQuery = value;
-       //    }
-       //}
-
-       //[DataMember(Name = "widgetCreationTags")]
-       //public List<string> WidgetCreationTags
-       //{
-       //    get
-       //    {
-       //        if (_widgetCreationTags == null)
-       //        {
-       //            _widgetCreationTags = new List<string>();
-       //        }
-       //        return _widgetCreationTags;
-       //    }
-       //    set
-       //    {
-       //        _widgetCreationTags = value;
-       //    }
-       //}
+       
 
        string _canonicalUrl;
        [DataMember(Name = "canonicalUrl")]

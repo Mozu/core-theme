@@ -16,8 +16,8 @@ Ext.define('Taco.model.LocationType', {
     proxy: {
         type: 'ajaxproxy',
         api: {
-            //read: '/admin/app/locationType/list',
-            read: '/admin/Scripts/app/mocks/locationTypes.json',
+            read: '/admin/app/locationType/list',
+            //read: '/admin/Scripts/app/mocks/locationTypes.json',
             create: '/admin/app/locationType/create',
             update: '/admin/app/locationType/edit',
             destroy: '/admin/app/locationType/delete'

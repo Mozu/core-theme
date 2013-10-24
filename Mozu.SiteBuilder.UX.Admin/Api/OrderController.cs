@@ -15,7 +15,7 @@ using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
 using DCcore = Mozu.Core.Api.Contracts;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
 using DCp = Mozu.CommerceRuntime.Contracts.Payments;
-using DCs = Mozu.CommerceRuntime.Contracts.Shipping;
+using DCs = Mozu.CommerceRuntime.Contracts.Fulfillment ;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -175,23 +175,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "setshippinginfo")]
         public async Task<Response<Order>> SetShippingInfo(SetShippingContactArgs args)
         {
-            DCs.ShippingInfo shippingInfo;
-            
-            var shippingInfoResult = await _orderWebApiClient.GetShippingInfo(args.OrderId);
+            DCs.FulfillmentInfo  shippingInfo;
+
+            var shippingInfoResult = await _orderWebApiClient.GetFulfillmentInfo(args.OrderId);
             if (shippingInfoResult.HasException && shippingInfoResult.ResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                shippingInfo = new DCs.ShippingInfo();
+                shippingInfo = new DCs.FulfillmentInfo();
             }
             else
             {
                 shippingInfo = shippingInfoResult.ReadAsSync();
             }
 
-            shippingInfo.ShippingContact = args.Contact.Map<DCcore.Contact>();
+            shippingInfo.FulfillmentContact = args.Contact.Map<DCcore.Contact>();
             shippingInfo.ShippingMethodName = args.ShippingMethodName;
             shippingInfo.ShippingMethodCode = args.ShippingMethodCode;
 
-            await _orderWebApiClient.SetShippingInfo(args.OrderId, shippingInfo);
+            await _orderWebApiClient.SetFulFillmentInfo( args.OrderId, shippingInfo);
 
             DCo.Order dcOrder = (await _orderWebApiClient.GetOrder(args.OrderId)).ReadAsSync();
 

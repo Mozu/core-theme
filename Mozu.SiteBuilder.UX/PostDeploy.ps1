@@ -1,6 +1,6 @@
 
 
-function Update-ScaleUnit-In-AppSettings ([string]$ConfigFilePath, [string] $scaleUnitId )
+function Update-ScaleUnit-In-AppSettings ([string]$ConfigFilePath, [String] $scaleUnitId )
 {
 	$xml = New-Object XML
 	$xml.Load($ConfigFilePath)
@@ -39,6 +39,3 @@ if($ScaleUnitId)
 		}
 	}
 }
-
-
-

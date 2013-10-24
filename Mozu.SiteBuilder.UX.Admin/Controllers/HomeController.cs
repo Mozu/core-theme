@@ -43,10 +43,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly ISettings _settings;
         private readonly HttpContextBase _httpContext;
         private readonly IMultiScopeAdminUserWebApiClient _adminUserWebApiClient;
-        private readonly ITenants2WebApiClient _tenants2WebApiClient;
-        private ISiteGroupWebApiClient _siteGroupClient;
+ 
+        private ICatalogWebApiClient  _masterCatalogClient;
 
-        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, ISiteGroupWebApiClient siteGroupClient, ITenants2WebApiClient tenants2WebApiClient)
+        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, ICatalogWebApiClient  masterCatalogClient)
         {
             _usersRepo = usersRepo.CloneWithoutUserClaims();
             _authenticationHelper = authHelper;
@@ -57,8 +57,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _settings = settings;
             _httpContext = httpContext;
             _adminUserWebApiClient = adminUserWebApiClient;
-            _tenants2WebApiClient = tenants2WebApiClient;
-            _siteGroupClient = siteGroupClient.CloneWithoutUserClaims();
+            
+            _masterCatalogClient = masterCatalogClient.CloneWithoutUserClaims();
         }
 
         
@@ -69,17 +69,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         {
             var userDcTask = _adminUserWebApiClient.GetUser(_apiContext.UserClaims.UserId, UserScopeType.Tenant.ToString(), _apiContext.TenantId);
             var rolesTask = GetUserSitesRoles(_apiContext.UserClaims.UserId);
-            var tenantTask = _tenantsWebApi.GetTenant( _apiContext.TenantId );
+            var tenantTask = _tenantsWebApi.GetTenantInternal(  _apiContext.TenantId , false );
 
-            var tenantTask2 = _tenants2WebApiClient.GetTenant(_apiContext.TenantId);
-
+            
             var siteUsersTask = _usersRepo.GetUsers(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, pageSize: 200, startIndex: 0);
             
-            // TODO: the siteGroup service is not ready. We mock it.
-            Task<ServiceClientResponse<DCproduct.SiteGroupCollection>> siteGroupsTask;
-             siteGroupsTask = _siteGroupClient.GetSiteGroups();
+            // TODO: the masterCatalog service is not ready. We mock it.
+            Task<ServiceClientResponse<DCproduct.MasterCatalogCollection >> masterCatalogsTask;
+             masterCatalogsTask = _masterCatalogClient.GetMasterCatalogs( );
 
-             await Task.WhenAll(new Task[] { userDcTask, rolesTask, tenantTask, siteUsersTask, siteGroupsTask, tenantTask2 });
+             await Task.WhenAll(new Task[] { userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask });
 
             //var tenants2 = tenantTask2.Result.ReadAsSync();
             
@@ -88,7 +87,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var roles = rolesTask.Result;
             var tenant = tenantTask.Result.ReadAsSync();
             var siteUsers = siteUsersTask.Result.ReadAsSync();
-            var siteGroups = siteGroupsTask.Result.ReadAsSync();
+            DCproduct.MasterCatalogCollection masterCatalogs = null;
+            try
+            {
+                masterCatalogs = masterCatalogsTask.Result.ReadAsSync();
+            }
+            catch
+            {
+                masterCatalogs = new DCproduct.MasterCatalogCollection() {Items = new List<DCproduct.MasterCatalog>()};
+            }
 
             var user = new Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User()
             {
@@ -100,7 +107,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             };
 
             var taContext = AutoMapper.Mapper.Map<TaContext>(tenant);
-            AutoMapper.Mapper.Map(siteGroups, taContext);
+            AutoMapper.Mapper.Map(masterCatalogs, taContext);
 
             this.ViewData["localizationValues"] = new LocalizationController(_httpContext).GetStrings();
             this.ViewData["taContext"] = taContext;

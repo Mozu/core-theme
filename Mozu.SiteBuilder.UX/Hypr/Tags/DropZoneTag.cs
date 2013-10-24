@@ -268,8 +268,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var scope = arguments.GetValueOrDefault<string>("scope", "page");
             var zoneId = arguments.GetValueOrDefault<string>("zoneId") ?? (string)arguments.First().Value;
             var htmlAttributes = arguments.GetValueOrDefault<IDictionary<string, object>>("htmlAttributes");
-            var siteBuilderContext = context.SiteBuilderContext();
-            var isEditmode = siteBuilderContext.IsEditMode;
+            var siteContext = context.SiteContext();
+            var pageContext = context.PageContext();
+            var isEditmode = pageContext.IsEditMode;
             var viewContext = context.ViewContext();
             
             if (HasVisited(zoneId, httpContext))
@@ -312,7 +313,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
 
             StringWriter sw;
-            if (isEditmode && string.Equals(scope, siteBuilderContext.EditMode.GetValueOrDefault(EditModes.Page).ToString(), StringComparison.InvariantCultureIgnoreCase))
+            if (isEditmode && string.Equals(scope, pageContext.EditMode.GetValueOrDefault(EditModes.Page).ToString(), StringComparison.InvariantCultureIgnoreCase))
             {
                 var jobj = new JsonObject();
                 var dJ = jobj.AsDynamic();
@@ -342,13 +343,13 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
 
 
-            if (siteBuilderContext.PageContext != null &&
-                siteBuilderContext.PageContext.CmsContext != null &&
-                siteBuilderContext.PageContext.CmsContext.RuntimeData != null)
+            if (
+                pageContext.CmsContext != null &&
+                pageContext.CmsContext.RuntimeData != null)
             {
 
 
-                var zoneWidgets = siteBuilderContext.PageContext.CmsContext.RuntimeData.Where(_ => string.Equals(_.ZoneId, zoneId, StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.Index).ToList();
+                var zoneWidgets = pageContext.CmsContext.RuntimeData.Where(_ => string.Equals(_.ZoneId, zoneId, StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.Index).ToList();
 
                 //StringBuilder sb = new StringBuilder();
                 // var tw = new StringWriter();

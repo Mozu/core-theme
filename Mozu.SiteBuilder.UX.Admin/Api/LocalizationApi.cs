@@ -39,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var path = _httpContext.Server.MapPath(@"/admin/scripts/app/locale/lang-" + lang + ".csv");
 
             // TODO: async-y reading magic
-            using (var reader = new StreamReader(File.OpenRead(path)))
+            using (var reader = new StreamReader(System.IO.File.OpenRead(path)))
             {
                 while (!reader.EndOfStream)
                 {

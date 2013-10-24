@@ -19,7 +19,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
         public string Slug { get; set; }
 
         [DataMember(Name = "siteId")]
-        public int? SiteId { get; set; }
+        public int? CatalogId { get; set; }
 
         //[DataMember(Name = "categoryPath")]
         //public string CategoryPath { get; set; }

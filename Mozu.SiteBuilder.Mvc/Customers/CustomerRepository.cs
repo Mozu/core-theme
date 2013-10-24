@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.Mvc.Customers
         {
             var result = await _customerAccountWebApiClient.GetAccounts( startIndex, pageSize, sortyBy, responseGroups, filter).Result.ReadAsAsync();
 
-            return result.Items.Where(i => i.Contacts.Any() && i.OrderSummary != null).Select(Mapper.Map<SB.CustomerAccount>);
+            return result.Items.Where(i => i.Contacts.Any() && i.CommerceSummary != null).Select(Mapper.Map<SB.CustomerAccount>);
         }
 
         public async Task<CustomerAccount> Get(int? customerId)

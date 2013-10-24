@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Tags;
 
@@ -14,8 +15,8 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
         object NDjango.Interfaces.IFilterWithContext.PerformWithParamAndContext(object value, IEnumerable<object> parameters, NDjango.Interfaces.IContext context)
         {
-           
-            var ctx = context.tryfind("SiteContext").Value as ISiteBuilderContext;
+
+            var ctx = context.SiteContext()  ;
             var theme = ctx.Theme.Id;
             var ts = context.Resolve<IThemeSettingsRepository>().GetTimeStamp(theme);
             return string.Format("<link rel=\"stylesheet\" href=\"{0}?t={1}&dt={2}\"  type=\"text/css\">", value, theme, ts.Ticks .ToString( "X2"));

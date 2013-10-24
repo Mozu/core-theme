@@ -33,6 +33,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
         [DataMember(Name = "isProperty")]
         public bool? IsProperty { get; set; }
 
+        [DataMember(Name = "isActive")]
+        public bool? IsActive { get; set; }
+        [DataMember(Name = "isRequired")]
+        public bool IsRequired { get; set; }
+        [DataMember(Name = "isVisible")]
+        public bool IsVisible { get; set; }
+
+        
+
+         [DataMember(Name = "displayGroup")]
+        public string DisplayGroup { get; set; }
 
         [DataMember(Name = "valueType")]
         [JsonConverter(typeof(StringEnumConverter))]

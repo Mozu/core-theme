@@ -5,10 +5,6 @@ Ext.define('Taco.model.Channel', {
     extend: 'Taco.core.data.Model',
     
     fields: [{
-        "name": "id",
-        "type": "string",
-        "useNull": true
-    }, {
         "name": "code",
         "type": "string",
         "useNull": true
@@ -17,16 +13,17 @@ Ext.define('Taco.model.Channel', {
         "type": "string",
         "useNull": true
     }, {
-        "name": "region",
+        "name": "countryCode",
         "type": "string",
         "useNull": true
     }],
+    idProperty: 'code',
     proxy: {
         type: 'ajaxproxy',
         api: {
 
-            read: '/admin/Scripts/app/mocks/channels.json',
-            //read: '/admin/app/channel/list',
+            //read: '/admin/Scripts/app/mocks/channels.json',
+            read: '/admin/app/channel/read',
             create: '/admin/app/channel/create',
             update: '/admin/app/channel/edit',
             destroy: '/admin/app/channel/delete'

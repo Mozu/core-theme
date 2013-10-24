@@ -58,6 +58,7 @@ Ext.define('Taco.core.Controller', {
             });
 
         }
+        
         if (requiredStoresLoading) {
             Taco.app.setLoading();
             return;
@@ -72,7 +73,14 @@ Ext.define('Taco.core.Controller', {
 
 
     /**
-     * Autogenerate a view based on a naming convention `Taco.view.[controllername].Index` where controllername,
+     * Autogenerate a view based on a naming convention `Taco.view.
+     
+     
+     
+     
+     
+     
+     [controllername].Index` where controllername,
      * singularized with Ext.util.Inflector, is the name of this controller.
      * If there are any Context Placeholders based on the current Context Type, it will execute those views instead
      * of the default index view.

@@ -9,8 +9,6 @@ using System.Linq;
 using DC = Mozu.ProductAdmin.Contracts;
 using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
 using ProductProperty = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductProperty ;
-
-using ProductInSiteInfo = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductInSiteInfo;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
@@ -42,14 +40,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductName, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductName))
                 .ForMember(x => x.ProductShortDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductShortDescription))
                 .ForMember(x => x.ProductFullDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductFullDescription))
-                //.ForMember(x => x.ListPrice, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).ListPrice))
+           
                 .ForMember(x => x.Price, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).Price))
                 .ForMember(x => x.SalePrice, op => op.MapFrom(dc => (dc.Price ?? NULLPRICE).SalePrice))
-                .ForMember(x => x.StockOnHand, op => op.MapFrom(dc => dc.StockOnHand))
-                .ForMember(x => x.IsHiddenWhenOutOfStock, op => op.MapFrom(dc => dc.IsHiddenWhenOutOfStock))
+                //todo:what?
+               // .ForMember(x => x.IsHiddenWhenOutOfStock, op => op.MapFrom(dc => dc.i))
                 .ForMember(x => x.ProductTypeId, op => op.MapFrom(dc => dc.ProductTypeId))
-                .ForMember(x => x.SiteGroupId, op => op.MapFrom(x => x.SiteGroupId))
-                .ForMember(x => x.IsBackOrderAllowed, op => op.MapFrom(dc => dc.IsBackOrderAllowed))
+                .ForMember(x => x.MasterCatalogId, op => op.MapFrom(x => x.MasterCatalogId))
+                //todo:what?
+              //  .ForMember(x => x.IsBackOrderAllowed, op => op.MapFrom(dc => dc.IsBackOrderAllowed))
                 .ForMember(x => x.PackageWeight, op => op.MapFrom(dc => dc.PackageWeight == null ? null : dc.PackageWeight.Value))
                 .ForMember(x => x.PackageHeight, op => op.MapFrom(dc => dc.PackageHeight == null ? null : dc.PackageHeight.Value))
                 .ForMember(x => x.PackageLength, op => op.MapFrom(dc => dc.PackageLength == null ? null : dc.PackageLength.Value))
@@ -58,15 +57,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.MetaTagDescription, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagDescription))
                 .ForMember(x => x.MetaTagKeywords, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagKeywords))
                 .ForMember(x => x.SEOFriendlyUrl, op => op.MapFrom(dc => dc.SEOContent == null ? null : dc.SEOContent.SEOFriendlyUrl))
-                .ForMember(x => x.ProductInSites, op => op.MapFrom(dc => dc.ProductInSites))
+                .ForMember(x => x.ProductInCatalogs, op => op.MapFrom(dc => dc.ProductInCatalogs ))
                 .ForMember( x=> x.Properties , op=> op.MapFrom(dc=> dc.Properties ))
                 .ForMember(x => x.Options, op => op.MapFrom(dc => dc.Options))
                 .ForMember(x => x.ProductImages, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductImages))
                 .AfterMap((x, y) =>
                     {
-                        if (y.ProductInSites != null)
+                        if (y.ProductInCatalogs != null)
                         {
-                            y.ProductInSites.Each(p => p.ProductCode = y.ProductCode);
+                            y.ProductInCatalogs.Each(p => p.ProductCode = y.ProductCode);
                         }
                     })
                 ;
@@ -214,8 +213,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   }));
 
 
-            Mapper.CreateMap<ProductVariation, DC.ProductVariation>()
-                  .ForMember(x => x.StockOnHandAdjustment, opt => opt.MapFrom(x => x.StockOnHand.HasValue ? new DC.StockOnHandAdjustment() {Type = "Absolute", Value = x.StockOnHand.Value} : null));
+            Mapper.CreateMap<ProductVariation, DC.ProductVariation>();
             Mapper.CreateMap<DC.ProductVariation, ProductVariation>();
 
 
@@ -252,8 +250,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             
 
 
-            Mapper.CreateMap<DC.ProductInSiteInfo, ProductInSiteInfo>()
-                .ForMember(x => x.SiteId, op => op.MapFrom(dc => dc.SiteId))
+            Mapper.CreateMap<DC.ProductInCatalogInfo , ProductInCatalogInfo>()
+                .ForMember(x => x.CatalogId, op => op.MapFrom(dc => dc.CatalogId ))
                 .ForMember( x=> x.ProductCategories, op=> op.MapFrom( dc=> dc.ProductCategories != null ? dc.ProductCategories.Select( x=> x.CategoryId ).ToList() : null))
                 .ForMember(x => x.IsPriceOverridden , op => op.MapFrom(dc => dc.IsContentOverridden))
                 .ForMember(x => x.ProductName, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductName))
@@ -270,8 +268,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductImages, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductImages))
                 ;
 
-            Mapper.CreateMap<ProductInSiteInfo, DC.ProductInSiteInfo>()
-                .ForMember(dc => dc.SiteId, op => op.MapFrom(pisi => pisi.SiteId))
+            Mapper.CreateMap<ProductInCatalogInfo, DC.ProductInCatalogInfo>()
+                .ForMember(dc => dc.CatalogId, op => op.MapFrom(pisi => pisi.CatalogId))
                 .ForMember(x => x.ProductCategories, op => op.MapFrom(pisi => pisi.ProductCategories != null ? pisi.ProductCategories.Select(catid => new DC.ProductCategory() { CategoryId = catid }).ToArray()  : null))
                 .ForMember(dc => dc.IsContentOverridden, op => op.MapFrom(pisi => pisi.IsContentOverridden))
                 .ForMember(dc => dc.IsPriceOverridden, op => op.MapFrom(pisi => pisi.IsPriceOverridden))
@@ -357,23 +355,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         }
         object InventoryHandlingResolver(DC.Product p)
         {
-            
-            if (p.ManageStock.GetValueOrDefault(false) == false)
-            {
-                return 0;
-            }
-            if (p.IsBackOrderAllowed.GetValueOrDefault(false))
-            {
-                return 1;
-            }
-            if (p.IsHiddenWhenOutOfStock.GetValueOrDefault(false))
-            {
-                return 2;
-            }
-            else
-            {
-                return 3;
-            }
+            return 0;
+            //todo:wtf;
+            //if (p.ManageStock.GetValueOrDefault(false) == false)
+            //{
+            //    return 0;
+            //}
+            //if (p.IsBackOrderAllowed.GetValueOrDefault(false))
+            //{
+            //    return 1;
+            //}
+            //if (p.IsHiddenWhenOutOfStock.GetValueOrDefault(false))
+            //{
+            //    return 2;
+            //}
+            //else
+            //{
+            //    return 3;
+            //}
         }
     }
 }

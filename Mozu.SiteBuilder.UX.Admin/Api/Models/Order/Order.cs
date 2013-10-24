@@ -15,8 +15,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(EmitDefaultValue = false, Name = "tenantId")]
         public int? TenantId { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "siteGroupId")]
-        public int? SiteGroupId { get; set; }
+      
 
         [DataMember(EmitDefaultValue = false, Name = "siteId")]
         public int? SiteId { get; set; }
@@ -40,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public Contact BillingContact { get; set; }
         
         [DataMember(Name = "shippingContact")]
-        public Contact ShippingContact { get; set; }
+        public Contact FulfillmentContact { get; set; }
 
         [DataMember(Name = "ipAddress")]
         public string IpAddress { get; set; }
@@ -82,7 +81,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string OrderStatus { get; set; }
 
         [DataMember(Name = "shippingStatus")]
-        public string ShippingStatus { get; set; }
+        public string FulfillmentStatus { get; set; }
 
         [DataMember(Name = "paymentStatus")]
         public string PaymentStatus { get; set; }

@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [System.Web.Http.HttpGet]
         public async Task<ActionResult> Index(string orderId)
         {
-            var pc = this.SiteContext.PageContext;
+            var pc = this.PageContext;
             pc.CmsContext = new CmsPageContext()
             {
                 Template = new DocumentRequest()
@@ -101,7 +101,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
            // dynamic dOrder = jOrder;
 
-            if (model.ShippingInfo != null && model.ShippingInfo.ShippingContact != null && model.ShippingInfo.ShippingContact.Address != null)
+            if (model.FulfillmentInfo != null && model.FulfillmentInfo.FulfillmentContact != null && model.FulfillmentInfo.FulfillmentContact.Address != null)
             {
                 var methods = (await _orderWebApiClient.GetAvailableShipmentMethods(id)).ReadAsSync();
                 var asm = JArray.FromObject(methods);

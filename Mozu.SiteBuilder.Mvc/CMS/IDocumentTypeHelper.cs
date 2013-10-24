@@ -7,6 +7,7 @@
 using System.Threading.Tasks;
 using Mozu.Content.Contracts;
 using Mozu.Core;
+using Mozu.SiteBuilder.Mvc.Contexts;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
@@ -109,9 +110,9 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
     public class ThemeEntityDefinitionProvider:IThemeEntityDefinitionProvider
     {
-        private readonly ISiteBuilderContext _siteBuilderContext;
+        private readonly SiteContext _siteBuilderContext;
 
-        public ThemeEntityDefinitionProvider (ISiteBuilderContext siteBuilderContext)
+        public ThemeEntityDefinitionProvider (SiteContext siteBuilderContext)
         {
             _siteBuilderContext = siteBuilderContext;
         }

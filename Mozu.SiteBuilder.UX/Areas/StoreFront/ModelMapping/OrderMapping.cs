@@ -9,16 +9,11 @@ using Order = Mozu.CommerceRuntime.Contracts.Orders   ;
 using OrderItem = Mozu.CommerceRuntime.Contracts.Orders.OrderItem ;
 using OrderNote = Mozu.CommerceRuntime.Contracts.Orders.OrderNote;
 using PackageMeasurements = Mozu.CommerceRuntime.Contracts.Commerce.PackageMeasurements ;
-//using PaymentCardReference = Mozu.CommerceRuntime.Contracts.Orders.PaymentCardReference;
-//using PaymentReference = Mozu.CommerceRuntime.Contracts.Orders.PaymentReference;
-//using PaymentTransaction = Mozu.CommerceRuntime.Contracts.Orders.PaymentTransaction;
-//using PaymentTransactionInteraction = Mozu.CommerceRuntime.Contracts.Orders.PaymentTransactionInteraction;
 using Product = Mozu.CommerceRuntime.Contracts.Products.Product ;
 using ProductOption = Mozu.CommerceRuntime.Contracts.Products.ProductOption;
 using ProductPrice = Mozu.CommerceRuntime.Contracts.Products.ProductPrice;
-using ProductStock = Mozu.CommerceRuntime.Contracts.Products.ProductStock;
-//using Shipment = Mozu.CommerceRuntime.Contracts.Orders.Shipment;
-//using ShippingPrice = Mozu.CommerceRuntime.Contracts.Orders.ShippingPrice;
+
+
 using ShopperNotes = Mozu.CommerceRuntime.Contracts.Orders.ShopperNotes;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
@@ -43,98 +38,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             Mapper.CreateMap<Models.Customers.Address, Address>();
             Mapper.CreateMap<Address, Models.Customers.Address>();
 
-            //          Mapper.CreateMap<Models.Orders.Order, Mozu.Order.Contracts.Order>();
-            //          Mapper.CreateMap<Mozu.Order.Contracts.Order, Models.Orders.Order>();
-
-            //          Mapper.CreateMap<Models.Orders.AppliedDiscount, Mozu.Order.Contracts.AppliedDiscount>();
-            //          Mapper.CreateMap<Mozu.Order.Contracts.AppliedDiscount, AppliedDiscount>();
-
-            //Mapper.CreateMap<Models.Orders.Discount, Mozu.Order.Contracts.Discount>();
-            //Mapper.CreateMap<Mozu.Order.Contracts.Discount, Models.Orders.Discount>();
-
-            ////          Mapper.CreateMap<Models.Orders.OrderItem, Mozu.Order.Contracts.OrderItem>();
-            ////          Mapper.CreateMap<Mozu.Order.Contracts.OrderItem, Models.Orders.OrderItem>();
-
-            //Mapper.CreateMap<Models.Orders.OrderNote, Mozu.Order.Contracts.OrderNote>();
-            //Mapper.CreateMap<Mozu.Order.Contracts.OrderNote, Models.Orders.OrderNote>();
-
-            //Mapper.CreateMap<Measurement, Mozu.Core.Api.Contracts.Measurement>();
-            //Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, Measurement>();
-
-            //Mapper.CreateMap<Models.Orders.PackageMeasurements, Mozu.Order.Contracts.PackageMeasurements>();
-            //Mapper.CreateMap<Mozu.Order.Contracts.PackageMeasurements, Models.Orders.PackageMeasurements>();
-
-            //Mapper.CreateMap<Models.Orders.PaymentCardReference, Mozu.Order.Contracts.PaymentCardReference>();
-            //Mapper.CreateMap<Mozu.Order.Contracts.PaymentCardReference, Models.Orders.PaymentCardReference>();
-
-            //Mapper.CreateMap<Models.Orders.PaymentReference, Mozu.Order.Contracts.PaymentReference>();
-            //Mapper.CreateMap<Mozu.Order.Contracts.PaymentReference, Models.Orders.PaymentReference>();
-
-            //Mapper.CreateMap<Models.Orders.PaymentTransaction, Mozu.Order.Contracts.PaymentTransaction>();
-            //Mapper.CreateMap<Mozu.Order.Contracts.PaymentTransaction, Models.Orders.PaymentTransaction>();
-
-            //Mapper.CreateMap<Models.Orders.PaymentTransactionInteraction, Mozu.Order.Contracts.PaymentTransactionInteraction>();
-            //Mapper.CreateMap<Mozu.Order.Contracts.PaymentTransactionInteraction, Models.Orders.PaymentTransactionInteraction>();
-
-            ////          Mapper.CreateMap<Models.Orders.Product, Mozu.Order.Contracts.Product>();
-            ////          Mapper.CreateMap<Mozu.Order.Contracts.Product, Models.Orders.Product>();
-
-            //Mapper.CreateMap<Models.StoreFront.Cart.ProductPrice, Mozu.CommerceRuntime.Contracts.CartOrder.ProductPrice>();
-            //Mapper.CreateMap<Mozu.CommerceRuntime.Contracts.CartOrder.ProductPrice, Models.StoreFront.Cart.ProductPrice>();
-
-            //Mapper.CreateMap<Models.Orders.Category, Mozu.Order.Contracts.Category>();
-            //Mapper.CreateMap<Mozu.Order.Contracts.Category, Category>();
-
-            //Mapper.CreateMap<Models.Orders.ProductOption, Mozu.Order.Contracts.ProductOption>();
-            //Mapper.CreateMap<Mozu.Order.Contracts.ProductOption, Models.Orders.ProductOption>();
-
-            ////          Mapper.CreateMap<Models.Orders.ProductPrice, Mozu.Order.Contracts.ProductPrice>();
-            ////          Mapper.CreateMap<Mozu.Order.Contracts.ProductPrice, Models.Orders.ProductPrice>();
-
-            //Mapper.CreateMap<Models.Orders.ProductStock, Mozu.Order.Contracts.ProductStock>();
-            //Mapper.CreateMap<Mozu.Order.Contracts.ProductStock, Models.Orders.ProductStock>();
-
-            //Mapper.CreateMap<Models.Orders.Shipment, Mozu.Order.Contracts.Shipment>();
-            //Mapper.CreateMap<Mozu.Order.Contracts.Shipment, Models.Orders.Shipment>();
-
-            //Mapper.CreateMap<Models.Orders.ShippingPrice, Mozu.Order.Contracts.ShippingPrice>();
-            //Mapper.CreateMap<Mozu.Order.Contracts.ShippingPrice, Models.Orders.ShippingPrice>();
-
-            //Mapper.CreateMap<Models.Orders.ShopperNotes, Mozu.Order.Contracts.ShopperNotes>();
-            //Mapper.CreateMap<Mozu.Order.Contracts.ShopperNotes, Models.Orders.ShopperNotes>();
-
-            //// checkout
-
-            //Mapper.CreateMap<Mozu.Order.Contracts.Order, Models.Checkout.OrderInformation>()
-            //    .ForMember(x => x.Comments, m => m.ResolveUsing(x => (x.Notes != null && x.Notes.Any()) ? x.Notes.FirstOrDefault().Text : null))
-            //    .ForMember(x => x.CouponCode, m => m.ResolveUsing(x => (x.OrderDiscount != null) ? x.OrderDiscount.CouponCode : null))
-            //    .ForMember(x => x.ShippingMethod, m => m.ResolveUsing(x => (x.Shipment != null) ? x.Shipment.ShippingMethodCode : null))
-            //    .ForMember(x => x.Discount, m => m.ResolveUsing(x => x.OrderDiscount != null
-            //        ? new Models.Checkout.OrderDiscountInformation
-            //            {
-            //                Amount = x.DiscountTotal,
-            //                FreeShipping = (x.ShippingTotal == 0m && !string.IsNullOrWhiteSpace(x.Shipment.ShippingMethodCode)),
-            //                Name = x.OrderDiscount.Discount.Name,
-            //            }
-            //        : null))
-            //    ;
-
-            //Mapper.CreateMap<OrderItem, Models.Checkout.OrderItemInformation>()
-            //    .ForMember(x => x.ProductName, m => m.ResolveUsing(x => x.Product.Name))
-            //    .ForMember(x => x.ProductCode, m => m.ResolveUsing(x => x.Product.ProductCode))
-            //    .ForMember(x => x.Quantity, m => m.ResolveUsing(x => x.Quantity ?? 0))
-            //    .ForMember(x => x.SubTotal, m => m.ResolveUsing(x => x.SubTotal ?? 0m))
-            //    .ForMember(x => x.Total, m => m.ResolveUsing(x => x.Total ?? 0m))
-            //    .ForMember(x => x.UnitPrice, m => m.ResolveUsing(x => x.Product.Price.Price ?? 0m))
-            //    .ForMember(x => x.Discount, m => m.ResolveUsing(x => x.Product.Price.Discount != null
-            //        ? new Models.Checkout.ItemDiscountInformation
-            //            {
-            //                SalePrice = x.Product.Price.SalePrice ?? 0m,
-            //                FreeShipping = false, // todo: fill this in with real stuff
-            //                Name = x.Product.Price.Discount.Discount.Name,
-            //            }
-            //        : null))
-            //    ;
 
             Mapper.CreateMap<PaymentReference, Models.Checkout.PaymentInformation>()
                 .ForMember(x => x.FirstName, m => m.ResolveUsing(x => x.Card != null ? x.Card.BillingAddress.FirstName : null))
@@ -163,9 +66,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 
             Mapper.CreateMap<Shipment, Models.Checkout.ShipmentInformation>()
                 .ForMember(x => x.Price, m => m.ResolveUsing(x => x.Price == null ? 0m : (x.Price.Price ?? 0m)))
-                //.ForMember(x => x.ShippingMethod, m => m.ResolveUsing(x => x.ShippingMethodCode))
-                //.ForMember(x => x.Carrier, m => m.ResolveUsing(x => x.Carrier))
-                //.ForMember(x => x.Status, m => m.ResolveUsing(x => x.Status))
                 .AfterMap((s, si) => {
 
                     var contact = s.ShippingAddress;
@@ -200,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 ;
 
             
-            //Mapper.AssertConfigurationIsValid(ProfileName);
+      
         }
     }
 }

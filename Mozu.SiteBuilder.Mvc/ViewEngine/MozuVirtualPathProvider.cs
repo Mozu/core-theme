@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web.Hosting;
 using System.Web;
 using System.IO;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Themes;
 
@@ -13,16 +14,18 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
      public class MozuVirtualPathProvider : VirtualPathProvider
     {
+         private readonly SiteContext _siteContext;
          private readonly ISiteBuilderContext _siteBuilderContext;
          //private readonly IThemeRepository _themeRepository;
  
 
-        public MozuVirtualPathProvider(ISiteBuilderContext siteBuilderContext)
+        public MozuVirtualPathProvider(SiteContext  siteContext)
         {
-            _siteBuilderContext = siteBuilderContext;
+            _siteContext = siteContext;
+        
         }
 
-        //todo:refactor to use themefileinfos
+         //todo:refactor to use themefileinfos
         public string MapLocalPath(string virtualPath, Theme  theme)
         {
             var t = theme;
@@ -36,13 +39,9 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             get
             {
-                
-                if (_siteBuilderContext.IsDisposed)
-                {
-                    throw new InvalidOperationException("irk");
-                }
 
-                return (_siteBuilderContext).Theme.Stack;
+
+                return (_siteContext).Theme.Stack;
             }
         }
        

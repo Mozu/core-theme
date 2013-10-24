@@ -46,7 +46,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [System.Web.Http.HttpGet]
         public async Task<ActionResult> Index()
         {
-            var pc = this.SiteContext.PageContext;
+            var pc = this.PageContext;
             pc.CmsContext = new CmsPageContext()
             {
                 Template = new DocumentRequest()

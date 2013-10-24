@@ -7,14 +7,10 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping;
 using Newtonsoft.Json.Linq;
 using CarrierConfiguration = Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping.CarrierConfiguration;
 using CustomAttribute = Mozu.ShippingRuntime.Contracts.CustomAttribute;
-//using FlatPerCartShippingRate = Mozu.ProductAdmin.Contracts.FlatPerCartShippingRate;
-//using FlatPerItemShippingRate = Mozu.ProductAdmin.Contracts.FlatPerItemShippingRate;
+
 using ShippingClass = Mozu.ProductAdmin.Contracts.ShippingClass;
 using ShippingRate = Mozu.ShippingRuntime.Contracts.ShippingRate;
-//using ShippingRateLocalizedContent = Mozu.ProductAdmin.Contracts.ShippingRateLocalizedContent;
-//using ShippingRatePrice = Mozu.ProductAdmin.Contracts.ShippingRatePrice;
-//using SiteShippingMethod = Mozu.SiteSettings.Shipping.Contracts.SiteShippingMethod;
-//using SiteShippingMethodLocalizedContent = Mozu.SiteSettings.Shipping.Contracts.SiteShippingMethodLocalizedContent;
+
 using SiteShippingRegion = Mozu.SiteSettings.Shipping.Contracts.SiteShippingRegion;
 using SiteShippingSettings = Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings;
 using Contact = Mozu.SiteBuilder.UX.Admin.Api.Models.Contact;

@@ -18,7 +18,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<Category, Models.Category.Category>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(c => c.Id))
                 .ForMember(dest => dest.IsHidden, opt => opt.MapFrom(c => !c.IsDisplayed))
-                .ForMember(dest => dest.SiteId, opt => opt.MapFrom(c => c.SiteId))
+                .ForMember(dest => dest.CatalogId, opt => opt.MapFrom(c => c.CatalogId))
                 
                 .ForMember(dest => dest.ParentId, opt => opt.MapFrom(c => c.ParentCategoryId.HasValue ? c.ParentCategoryId : -1 ))
                 .ForMember(dest => dest.Index, opt => opt.MapFrom(c => c.Sequence))
@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             // TODO: Ignore these for now  
             Mapper.CreateMap<Models.Category.Category, Category>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(c => c.Id))
-                .ForMember(dest => dest.SiteId, opt => opt.MapFrom(c => c.SiteId))
+                .ForMember(dest => dest.CatalogId, opt => opt.MapFrom(c => c.CatalogId))
                 .ForMember(dest => dest.ParentCategoryId, opt => opt.MapFrom(c => c.ParentId.GetValueOrDefault(-1) == -1 ? null : c.ParentId))
                 .ForMember(dest => dest.Sequence, opt => opt.MapFrom(c => c.Index))
 

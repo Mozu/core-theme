@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using AutoMapper;
 using Mozu.Reference.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Models.Settings;
@@ -12,7 +13,7 @@ namespace Mozu.SiteBuilder.UX.Admin
 {
     public interface IGeneralSettingWrapper
     {
-        GeneralSettings ReadSettings();
+        Task<GeneralSettings> ReadSettings();
 
         IEnumerable<IPBlock> GetIPBlocks();
 
@@ -38,23 +39,10 @@ namespace Mozu.SiteBuilder.UX.Admin
             _provisioningWebApiClient = provisioningWebApiClient;
         }
 
-        public GeneralSettings ReadSettings()
+        public Task<GeneralSettings> ReadSettings()
         {
             Mozu.SiteSettings.General.Contracts.GeneralSettings generalSettings = null;
-            var res = _generalSettingsWebApiClient.GetGeneralSettings().Result;
-            if (res.HasException && res.ResponseMessage != null && res.ResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
-            {
-                generalSettings = new Mozu.SiteSettings.General.Contracts.GeneralSettings();
-         
-                
-            }
-            else
-            {
-                generalSettings = res.ReadAsAsync().Result;
-            }
-            
-
-            return Mapper.Map<GeneralSettings>(generalSettings);
+            return  _generalSettingsWebApiClient.GetGeneralSettings().ContinueWith(x => Mapper.Map<GeneralSettings>(x.Result));
         }
 
         public IEnumerable<IPBlock> GetIPBlocks()
