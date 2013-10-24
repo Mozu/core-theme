@@ -49,4 +49,12 @@
         return string_to_slug;
     })());
 
+
+    HyprLive.engine.setFilter('truncatewords', function (str, num) {
+        var words = str.split(' ');
+        str = words.slice(0, num).join(' ');
+        if (words.length > num) str += " ...";
+        return str;
+    });
+
 }());

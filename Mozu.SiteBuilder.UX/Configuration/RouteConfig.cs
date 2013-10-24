@@ -190,6 +190,13 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
 
+                routes.MapHttpRoute(
+                "Logout",
+                "logout",
+                new { controller = "Auth", action = "LogOut" },
+                new { acceptConstraint = new AcceptConstraint("text/html", true) });
+
+
 var r1=            routes.MapHttpRoute(
                 "AJAX Login",
                 "login",

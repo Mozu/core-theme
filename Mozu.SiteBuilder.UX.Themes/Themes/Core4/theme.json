@@ -13,6 +13,7 @@
 
     /* Common settings used in templates */
     { "id": "defaultPageSize",         "defaultValue": "15" },
+    { "id": "maxProductSummaryWords",  "defaultValue": 40 },
 
     /* Common apperance settings used in the stylesheet */
     { "id": "googleWebFonts",           "defaultValue": "Source Sans Pro:regular,italic,bold,bolditalic" },
