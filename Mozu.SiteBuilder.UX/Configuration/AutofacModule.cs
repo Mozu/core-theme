@@ -63,9 +63,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             builder.RegisterHttpRequestMessage(GlobalConfiguration.Configuration);
 
-            builder.RegisterType<SiteBuilderApiContext>().As<Mozu.Core.IApiContext>().As<ISiteBuilderApiContext>().InstancePerLifetimeScope();
+            builder.RegisterType<SiteBuilderApiContext>().As<Mozu.Core.IApiContext>().As<ISiteBuilderApiContext>().InstancePerApiRequest();
            // builder.RegisterType<Mozu.SiteBuilder.Mvc.Security.AuthenticationHelper>().InstancePerHttpRequest();
-            builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>().InstancePerLifetimeScope();
+            builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>().InstancePerApiRequest();
             builder.RegisterType<SbApiContextBuilder>().As<IApiContextBuilder>();
 		    builder.RegisterClassesMatchingInterfaceName(typeof (Mozu.SiteBuilder.Mvc.CatalogContext).Assembly);
 		    builder.RegisterClassesMatchingInterfaceName(typeof (Mozu.SiteBuilder.Mvc.Customers.CustomerRepository).Assembly);
@@ -82,21 +82,21 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.User.Contracts.Clients.IUserWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Shipping.Contracts.Clients.ShippingSettingsWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Order.Contracts.CheckoutSettings ).Assembly);
-            builder.RegisterType<SiteBuilderContext>().As<ISiteBuilderContext>().InstancePerLifetimeScope().As<IEditableContext>().InstancePerLifetimeScope();
+		    builder.RegisterType<SiteBuilderContext>().As<ISiteBuilderContext>().InstancePerApiRequest();
 
-            builder.RegisterType<ThemeSettingsRepository>().As<IThemeSettingsRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<ThemeSettingsRepository>().As<IThemeSettingsRepository>().InstancePerApiRequest();
 
-            builder.RegisterType<FiftyOneDegreesMobileDetectionProvider>().As<IMobileDetectionProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<FiftyOneDegreesMobileDetectionProvider>().As<IMobileDetectionProvider>().InstancePerApiRequest();
 
           
           //  builder.RegisterType<BehaviorWebApiClient>().As<IBehaviorWebApiClient>();
-            builder.RegisterType<PermissionsRepository>().As<IPermissionsRepository>();
-
-       
+		    builder.RegisterType<PermissionsRepository>().As<IPermissionsRepository>().InstancePerApiRequest();
 
 
-            builder.RegisterType<DefaultStorefrontCache>().As<IStorefrontCache>().InstancePerLifetimeScope();
-		    builder.RegisterType<ServiceClientMessageHandler>().InstancePerLifetimeScope();
+
+
+            builder.RegisterType<DefaultStorefrontCache>().As<IStorefrontCache>().InstancePerApiRequest();
+            builder.RegisterType<ServiceClientMessageHandler>().InstancePerApiRequest();
 
             //builder.Register(c => new GeneralSettingsWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IGeneralSettingsWebApiClient>().InstancePerLifetimeScope();
             //builder.Register(c => new DocumentWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IDocumentListWebApiClient>().InstancePerLifetimeScope();
@@ -106,9 +106,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
 		  //  builder.RegisterType<MockProductCategoryRuntimeWebApiClient>().As<IProductCategoryRuntimeWebApiClient>();
             //builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>().As<IViewEngine>().InstancePerLifetimeScope();
 
-            builder.RegisterType<RuntimeCategoryTreeProvider>().As<ICategoryTreeProvider>().InstancePerLifetimeScope();
-            builder.RegisterType<CategoryNavigationProvider>().As<ICategoryNavigationProvider>();
-		    
+            builder.RegisterType<RuntimeCategoryTreeProvider>().As<ICategoryTreeProvider>().InstancePerApiRequest();
+		    builder.RegisterType<CategoryNavigationProvider>().As<ICategoryNavigationProvider>().InstancePerApiRequest();
+
 		    // builder.RegisterType<MozuServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
 		}
 

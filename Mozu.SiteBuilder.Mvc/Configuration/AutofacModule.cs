@@ -5,6 +5,7 @@ using Autofac;
 using Autofac.Integration.WebApi;
 using Mozu.Core;
 using Mozu.Reference.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Navigation;
@@ -12,6 +13,8 @@ using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.Themes.Factories;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.UX.Models;
+using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 using Mozu.SiteSettings.Shipping.Contracts.Clients;
 using Mozu.UspsShippingAdmin.Contracts.Clients;
 using NDjango;
@@ -32,6 +35,15 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<CmsProperty>();
             builder.RegisterType<Blog>();
             builder.RegisterType<Post>();
+
+
+            builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.ClientApiContext>().InstancePerApiRequest();
+            builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.NavigationContext>().InstancePerApiRequest();
+            builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.PageContext>().InstancePerApiRequest();
+            builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.SiteContext>().InstancePerApiRequest();
+            builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.PageContext>().As<IEditableContext>().InstancePerApiRequest();
+
+
             // builder.RegisterType<AuthenticationHelper>().InstancePerLifetimeScope();
             builder.RegisterType<CatalogContext>().As<ICatalogContext>().InstancePerApiRequest();
 
@@ -60,7 +72,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
                 .WithLibrary(typeof (HyprViewEngine).Assembly)
                 .WithLibrary(typeof (AutofacModule).Assembly)
                 .WithLoader(new TemplateLoader())
-                
+
                 .WithSetting("settings.DEFAULT_AUTOESCAPE", false);
 
 
@@ -90,6 +102,11 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<NavigationGandalf>().InstancePerLifetimeScope().InstancePerApiRequest();
 
             builder.RegisterType<RuntimeCategoryTreeProvider>().As<ICategoryTreeProvider>().InstancePerApiRequest();
+
+            builder.RegisterType<CmsServiceWrapper2>().As<ICmsServiceWrapper>().InstancePerDependency();
+            builder.RegisterType<CmsTypeHelper>().As<ICmsTypeHelper>().InstancePerDependency();
+            builder.RegisterType<ThemeEntityDefinitionProvider>().As<IThemeEntityDefinitionProvider>().InstancePerDependency();
+
         }
     }
 }
