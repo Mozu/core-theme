@@ -49,7 +49,7 @@ Ext.define('Taco.core.Controller', {
                                     fn: function () {
                                         me.ensureRequiredStores(options);
                                     },
-                                    single: true,
+                                    single: true
                                 }
                             });
                         }
