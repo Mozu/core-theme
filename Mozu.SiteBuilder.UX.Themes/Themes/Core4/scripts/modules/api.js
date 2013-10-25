@@ -5,10 +5,10 @@
 
 define(['sdk', 'jquery'], function (Mozu, $) {
     var apiConfig = require.mozuData('apiconfig');
-    Mozu.setServiceUrls(apiConfig.urls);
-    var headers = apiConfig.header,
+    Mozu.setServiceUrls(apiConfig.Urls);
+    var headers = apiConfig.Headers,
         api = Mozu.Tenant(headers['x-vol-tenant'])
-           .MasterCatalog(headers['x-vol-site-group'])
+           .MasterCatalog(headers['x-vol-master-catalog'])
            .Site(headers['x-vol-site'])
            .AppClaims(headers['x-vol-app-claims'])
            .UserClaims(headers['x-vol-user-claims'])

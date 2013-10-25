@@ -3,7 +3,7 @@
         var Message = Backbone.Model.extend({
             toJSON: function () {
                 var j = Backbone.Model.prototype.toJSON.apply(this);
-                if (!j.Message) j.Message = j.message || "Unknown error!";
+                if (!j.Message) j.Message = j.message || require.mozuLabel('unexpectedError');
                 return j;
             }
         }),

@@ -26,11 +26,11 @@ module.exports = function (grunt) {
                 banner: '<%= banner %>',
             },
             min: {
-                src: ['src/wrap_header.tpl', 'lib/json2.js', 'src/vars-min.js', 'src/require.js', 'src/plugins/text.js', 'src/plugins/shim.js', 'src/plugins/i18n.js', 'src/wrap_footer.tpl'],
+                src: ['src/wrap_header.tpl', 'lib/json2.js', 'src/vars-min.js', 'src/require.js', 'src/plugins/text.js', 'src/plugins/shim.js', 'src/wrap_footer.tpl'],
                 dest: "<%= releasetemp %>"
             },
             debug: {
-                src: ['src/wrap_header.tpl', 'lib/json2.js', 'src/vars-debug.js', 'src/require.js', 'src/plugins/text.js', 'src/plugins/shim.js', 'src/plugins/i18n.js', 'src/wrap_footer.tpl'],
+                src: ['src/wrap_header.tpl', 'lib/json2.js', 'src/vars-debug.js', 'src/require.js', 'src/plugins/text.js', 'src/plugins/shim.js', 'src/wrap_footer.tpl'],
                 dest: '<%= pkg.main %>.debug.js'
             }
         },

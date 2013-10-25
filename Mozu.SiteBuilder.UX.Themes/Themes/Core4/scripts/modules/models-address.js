@@ -1,12 +1,12 @@
 ﻿define(
-    ["modules/backbone-mozu", "i18n!nls/messages"],
-    function (Backbone, messages) {
+    ["modules/backbone-mozu"],
+    function (Backbone) {
 
         var PhoneNumbers = Backbone.MozuModel.extend({
             validation: {
                 Home: {
                     required: true,
-                    msg: messages.PhoneMissing
+                    msg: require.mozuLabel("phoneMissing")
                 }
             }
         }),
@@ -15,19 +15,19 @@
             validation: {
                 Address1: {
                     required: true,
-                    msg: messages.StreetMissing
+                    msg: require.mozuLabel("streetMissing")
                 },
                 CityOrTown: {
                     required: true,
-                    msg: messages.CityMissing
+                    msg: require.mozuLabel("cityMissing")
                 },
                 CountryCode: {
                     required: true,
-                    msg: messages.CountryMissing
+                    msg: require.mozuLabel("countryMissing")
                 },
                 PostalOrZipCode: {
                     required: true,
-                    msg: messages.PostalCodeMissing
+                    msg: require.mozuLabel("postalCodeMissing")
                 }
             }
         });

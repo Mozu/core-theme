@@ -4,7 +4,7 @@
 	<select class="mz-searchbox-categories" name="categoryId">
 		<option value="">{{ themeSettings.labelAll }}</option>
     {% for cat in navigation.rootCategories %}
-    <option value="{{cat.Id}}" {% if cat.Id == pageContext.CategoryId  %} selected="selected" {%endif%}>{{cat.Name}}</option>
+    <option value="{{cat.originalId}}" {% if cat.originalId == pageContext.categoryId  %}selected="selected"{%endif%}>{{cat.Name}}</option>
 		{% endfor %}
 	</select>
 </form>

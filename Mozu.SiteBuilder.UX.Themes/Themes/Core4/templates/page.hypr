@@ -37,7 +37,7 @@
     {% block head-tag %}
     <head>
 
-        {% preload_json SiteContext.apiClientContext "apiconfig" %}
+        {% preload_json apiContext "apiconfig" %}
         {% preload_json themeSettings "themesettings" %}
 
         {% block meta-tags %}
@@ -46,7 +46,7 @@
         <meta name="description" content="{{ PageContext.MetaDescription }}">
         {% endblock meta-tags %}
 
-        <title>{% block title-tag-content %}{{ siteContext.settings.general.websiteName }} {% endblock title-tag-content %}</title>
+        <title>{% block title-tag-content %}{{ siteContext.generalSettings.websiteName }} {% endblock title-tag-content %}</title>
 
         {% if PageContext.FeedUrl  %}
         <link rel="alternate" type="application/rss+xml" title="{{ PageContext.Title }}" href="{{ PageContext.FeedUrl }}" />

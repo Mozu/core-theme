@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-10-21
+ * Mozu JavaScript SDK - v0.1.0 - 2013-10-25
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1966,7 +1966,7 @@
             var ApiContext = function() {
                 var ApiContextConstructor = function(conf) {
                     utils.extend(this, conf);
-                }, mutableAccessors = [ "app-claims", "user-claims", "callchain", "currency", "locale" ], immutableAccessors = [ "tenant", "site", "site-group" ], immutableAccessorLength = immutableAccessors.length, allAccessors = mutableAccessors.concat(immutableAccessors), allAccessorsLength = allAccessors.length, j;
+                }, mutableAccessors = [ "app-claims", "user-claims", "callchain", "currency", "locale" ], immutableAccessors = [ "tenant", "site", "master-catalog" ], immutableAccessorLength = immutableAccessors.length, allAccessors = mutableAccessors.concat(immutableAccessors), allAccessorsLength = allAccessors.length, j;
                 var setImmutableAccessor = function(propName) {
                     ApiContextConstructor.prototype[utils.camelCase(propName, true)] = function(val) {
                         if (val === undefined) return this[propName];
