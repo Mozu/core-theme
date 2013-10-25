@@ -65,7 +65,7 @@
 
 {% block trailing-scripts %}
 	{{ block.super }}
-	{% if SiteContext.GoogleAnalyticsEnabled and SiteContext.GoogleAnalyticsEcommerceEnabled %}
+	{% if siteContext.generalSettings.isGoogleAnalyticsEnabled and siteContext.generalSettings.isGoogleAnalyticsEcommerceEnabled %}
 	<script>
 	_gaq.push(['_addTrans',
 		'{{ Model.OrderNumber }}',						

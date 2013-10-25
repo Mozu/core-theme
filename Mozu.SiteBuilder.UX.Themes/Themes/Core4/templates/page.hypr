@@ -67,7 +67,7 @@
     {% block body-tag %}
 
     {% block open-body-tag %}
-    <body class="{% block body-tag-classes %}{% endblock body-tag-classes %}" {% data_attributes SiteContext %} >
+    <body class="{% block body-tag-classes %}{% endblock body-tag-classes %}">
     {% endblock open-body-tag %}
     
         <div id="page-wrapper" class="mz-l-pagewrapper">

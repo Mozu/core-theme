@@ -1,5 +1,5 @@
 ﻿<form id="searchbox" class="mz-searchbox" action="/search">
-	<input placeholder="{{ themeSettings.labelSearch }}" type="search" class="mz-searchbox-field"  value="{{SiteContext.SearchContext.Query}}" name="query" />
+	<input placeholder="{{ themeSettings.labelSearch }}" type="search" class="mz-searchbox-field"  value="{{searchContext.query}}" name="query" />
 	<button class="mz-searchbox-button" type="submit">{{ themeSettings.labelSearch }}</button>
 	<select class="mz-searchbox-categories" name="categoryId">
 		<option value="">{{ themeSettings.labelAll }}</option>
