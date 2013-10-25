@@ -144,8 +144,8 @@ Ext.define('Taco.model.Location', {
         type: 'ajaxproxy',
         
         api: {
-            //read: '/admin/app/location/list',
-            read: '/admin/Scripts/app/mocks/locations.json',
+            read: '/admin/app/location/list',
+            // read: '/admin/Scripts/app/mocks/locations.json',
             create: '/admin/app/location/create',
             update: '/admin/app/location/edit',
             destroy: '/admin/location/delete'
