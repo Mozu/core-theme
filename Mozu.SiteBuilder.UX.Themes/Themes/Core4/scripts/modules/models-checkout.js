@@ -1,5 +1,5 @@
-﻿define(["modules/jquery-mozu", "shim!vendor/underscore>_", "modules/backbone-mozu", "pciaas", "i18n!nls/messages-checkout", "i18n!nls/messages", "modules/api", "modules/models-user", "modules/models-address"],
-    function ($, _, Backbone, PCIaaS, messages, genericMessages, api, UserModels, AddressModels) {
+﻿define(["modules/jquery-mozu", "shim!vendor/underscore>_", "modules/backbone-mozu", "pciaas", "modules/api", "modules/models-user", "modules/models-address"],
+    function ($, _, Backbone, PCIaaS, api, UserModels, AddressModels) {
 
         var CheckoutStep = Backbone.MozuModel.extend({
             helpers: ['stepStatus'],
@@ -27,7 +27,6 @@
             },
             calculateStepStatus: function () {
                 // override this!
-                var herp = this.validate();
                 var newStepStatus = this.isValid() ? 'complete' : 'invalid';
                 this.stepStatus(newStepStatus);
             },
@@ -61,11 +60,11 @@
             validation: {
                 FirstName: {
                     required: true,
-                    msg: messages.FirstNameMissing
+                    msg: require.mozuLabel('firstNameMissing')
                 },
                 LastNameOrSurname: {
                     required: true,
-                    msg: messages.LastNameMissing
+                    msg: require.mozuLabel('lastNameMissing')
                 }
             },
             next: function () {
@@ -99,7 +98,7 @@
             validation: {
                 ShippingMethodCode: {
                     required: true,
-                    msg: messages.ShippingMethodMissing
+                    msg: require.mozuLabel('chooseShippingMethod')
                 }
             },
             calculateStepStatus: function () {
@@ -144,11 +143,11 @@
             validation: {
                 PaymentOrCardType: {
                     fn: "present",
-                    msg: messages.CardTypeMissing
+                    msg: require.mozuLabel('cardTypeMissing')
                 },
                 CardNumberPartOrMask: {
                     fn: "present",
-                    msg: messages.CardNumberMissing
+                    msg: require.mozuLabel('cardNumberMissing')
                 },
                 ExpireMonth: {
                     fn: 'expirationDateInPast'
@@ -158,11 +157,11 @@
                 },
                 NameOnCard: {
                     fn: "present",
-                    msg: messages.CardNameMissing
+                    msg: require.mozuLabel('cardNameMissing')
                 },
                 CVV: {
                     fn: "present",
-                    msg: messages.CardCVVMissing
+                    msg: require.mozuLabel('securityCodeMissing')
                 }
             },
             dataTypes: {
@@ -186,7 +185,7 @@
                 thisMonth.setHours(0, 0, 0, 0);
 
                 isValid = exp >= thisMonth;
-                if (!isValid) return messages.CardExpInvalid;
+                if (!isValid) return require.mozuLabel('cardExpInvalid');
             }
         }),
 
@@ -212,11 +211,11 @@
             validation: {
                 FirstName: {
                     required: true,
-                    msg: messages.FirstNameMissing
+                    msg: require.mozuLabel('firstNameMissing')
                 },
                 LastNameOrSurname: {
                     required: true,
-                    msg: messages.LastNameMissing
+                    msg: require.mozuLabel('lastNameMissing')
                 }
             }
         }),
@@ -226,7 +225,7 @@
             validation: {
                 PaymentType: {
                     required: true,
-                    msg: messages.PaymentMethodMissing
+                    msg: require.mozuLabel('paymentTypeMissing')
                 },
 
             },
@@ -337,17 +336,17 @@
         checkoutPageValidation = {
             'User.EmailAddress': {
                 fn: function(value) {
-                    if (this.validateUser && (!value || !value.match(Backbone.Validation.patterns.email))) return messages.EmailMissing;
+                    if (this.validateUser && (!value || !value.match(Backbone.Validation.patterns.email))) return require.mozuLabel('emailMissing')
                 }
             },
             'User.Password': {
                 fn: function(value) {
-                    if (this.validateUser && !value) return messages.PasswordMissing;
+                    if (this.validateUser && !value) return require.mozuLabel('passwordMissing')
                 }
             },
             'User.ConfirmPassword': {
                 fn: function(value) {
-                    if (this.validateUser && value !== this.get('User.Password')) return messages.PasswordsDoNotMatch;
+                    if (this.validateUser && value !== this.get('User.Password')) return require.mozuLabel('passwordsDoNotMatch')
                 }
             },
         };
@@ -355,7 +354,7 @@
         if (require.mozuThemeSetting('requireCheckoutAgreeToTerms')) {
             checkoutPageValidation.AgreeToTerms = {
                 acceptance: true,
-                msg: messages.DidNotAgreeToTerms
+                msg: require.mozuLabel('didNotAgreeToTerms')
             }
         }
 
@@ -368,7 +367,7 @@
                 ShopperNotes: ShopperNotes,
                 User: UserModels.User
             },
-            validation: ,
+            validation: checkoutPageValidation,
             dataTypes: {
                 CreateAccount: Backbone.MozuModel.DataTypes.Boolean
             },

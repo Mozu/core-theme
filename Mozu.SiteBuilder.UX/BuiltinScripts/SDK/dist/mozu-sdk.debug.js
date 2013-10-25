@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-10-21
+ * Mozu JavaScript SDK - v0.1.0 - 2013-10-25
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2784,7 +2784,7 @@ var ApiContext = (function () {
         utils.extend(this, conf);
     },
     mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale'], //, 'bypass-cache'],
-    immutableAccessors = ['tenant', 'site', 'site-group'],
+    immutableAccessors = ['tenant', 'site', 'master-catalog'],
     immutableAccessorLength = immutableAccessors.length,
     allAccessors = mutableAccessors.concat(immutableAccessors),
     allAccessorsLength = allAccessors.length,

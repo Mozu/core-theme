@@ -4,7 +4,7 @@ var ApiContext = (function () {
         utils.extend(this, conf);
     },
     mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale'], //, 'bypass-cache'],
-    immutableAccessors = ['tenant', 'site', 'site-group'],
+    immutableAccessors = ['tenant', 'site', 'master-catalog'],
     immutableAccessorLength = immutableAccessors.length,
     allAccessors = mutableAccessors.concat(immutableAccessors),
     allAccessorsLength = allAccessors.length,

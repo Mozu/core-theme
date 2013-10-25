@@ -385,6 +385,7 @@
     <Content Include="SampleThemes\helloWorld\theme.xml" />
     <Content Include="Scripts\backbone.d.ts" />
     <Content Include="Themes\Core4\resources\images\button-loading.gif" />
+    <Content Include="Themes\Core4\scripts\modules\jquery-dateinput-localized.js" />
     <Content Include="Themes\Core4\scripts\modules\views-productimages.js" />
     <Content Include="Themes\Core4\scripts\modules\views-messages.js" />
     <Content Include="Themes\Core4\scripts\vendor\bootstrap-popover.js" />
@@ -427,7 +428,6 @@
     <Content Include="Themes\Core4\scripts\modules\views-paging.js" />
     <Content Include="Themes\Core4\build.js" />
     <Content Include="Themes\Core4\MetaData\thumb.jpg" />
-    <Content Include="Themes\Core4\MetaData\example.build.js" />
     <Content Include="Themes\Core4\MetaData\ThemeSettings.xml" />
     <Content Include="Themes\Core4\MetaData\Widgets\catalog\featuredproducts\_0007_featured-products.png" />
     <Content Include="Themes\Core4\MetaData\Widgets\cms\content\_0004_html.png" />
@@ -436,7 +436,6 @@
     <Content Include="Themes\Core4\MetaData\Widgets\social\addthis\_0008_share.png" />
     <Content Include="Themes\Core4\MetaData\Widgets\social\facebookComments\_0008_share.png" />
     <Content Include="Themes\Core4\resources\images\error-exclamation.png" />
-    <Content Include="Themes\Core4\scripts\modules\animatemodals.js" />
     <Content Include="Themes\Core4\scripts\modules\api.js" />
     <Content Include="Themes\Core4\scripts\modules\cart-monitor.js" />
     <Content Include="Themes\Core4\scripts\modules\common.js" />

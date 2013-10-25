@@ -1,4 +1,4 @@
-﻿require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/models-product", "modules/views-productimages", "shim!vendor/jquery.tools.dateinput[jquery=jQuery]"], function ($, Backbone, ProductModels, ProductImageViews) {
+﻿require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/models-product", "modules/views-productimages", "modules/jquery-dateinput-localized"], function ($, Backbone, ProductModels, ProductImageViews) {
 
     var ProductView = Backbone.MozuView.extend({
         templateName: 'modules/product/product-detail',

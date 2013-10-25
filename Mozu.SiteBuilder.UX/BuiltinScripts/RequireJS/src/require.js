@@ -140,7 +140,7 @@
     }
 
     function getMozuLabel(labelName) {
-        return getMozuThemeSetting("label" + labelName.charAt(0).toLowerCase() + labelName.substring(1));
+        return getMozuThemeSetting("label" + labelName.charAt(0).toUpperCase() + labelName.substring(1));
     }
 
     //Allow getting a global that expressed in

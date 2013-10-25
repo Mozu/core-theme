@@ -108,7 +108,7 @@
         MainImage: function () {
             var imgs = this.get('Content').get("ProductImages"),
                 img = imgs && imgs[0];
-            return img || { ImageUrl: 'http://placehold.it/160&text=Missing+Photo' }
+            return img || { ImageUrl: 'http://placehold.it/160&text=' + require.mozuLabel('noImages') }
         },
         getConfiguredOptions: function() {
             return _.invoke(this.get("Options").filter(function(opt) {

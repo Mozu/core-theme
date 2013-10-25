@@ -27,6 +27,6 @@ define(["shim!vendor/jquery-cookie[jquery=jQuery]>jQuery"], function ($) {
         }
     };
 
-    return $;
+    return $.noConflict();
 
 });

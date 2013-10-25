@@ -398,18 +398,18 @@ define(["shim!vendor/underscore>_", "shim!vendor/backbone[shim!vendor/underscore
         // Error message for the build in validators.
         // {x} gets swapped out with arguments form the validator.
         var defaultMessages = Validation.messages = {
-            required: '{0} is required',
-            acceptance: '{0} must be accepted',
-            min: '{0} must be greater than or equal to {1}',
-            max: '{0} must be less than or equal to {1}',
-            range: '{0} must be between {1} and {2}',
-            length: '{0} must be {1} characters',
-            minLength: '{0} must be at least {1} characters',
-            maxLength: '{0} must be at most {1} characters',
-            rangeLength: '{0} must be between {1} and {2} characters',
-            oneOf: '{0} must be one of: {1}',
-            equalTo: '{0} must be the same as {1}',
-            pattern: '{0} must be a valid {1}'
+            required: require.mozuLabel('genericRequired'),
+            acceptance: require.mozuLabel('genericAcceptance'),
+            min: require.mozuLabel('genericMin'),
+            max: require.mozuLabel('genericMax'),
+            range: require.mozuLabel('genericRange'),
+            length: require.mozuLabel('genericLength'),
+            minLength: require.mozuLabel('genericMinLength'),
+            maxLength: require.mozuLabel('genericMaxLength'),
+            rangeLength: require.mozuLabel('genericRangeLength'),
+            oneOf: require.mozuLabel('genericOneOf'),
+            equalTo: require.mozuLabel('genericEqualTo'),
+            pattern: require.mozuLabel('genericPattern')
         };
 
         // Label formatters

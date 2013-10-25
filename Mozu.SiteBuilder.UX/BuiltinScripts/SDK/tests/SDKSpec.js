@@ -101,7 +101,7 @@
             expect(Mozu.Store({
                 tenant: 1,
                 site: 22,
-                'site-group': 23
+                'master-catalog': 23
             })).to.be.an.instanceof(Mozu.ApiContext);
         });
     });
@@ -124,7 +124,7 @@
         });
 
         it("should be able to initialize from a conf object as well", function () {
-            expect(Mozu.Store({ 'tenant': 30001, 'site-group': 1, 'site': 30002 })).to.satisfy(function (context) {
+            expect(Mozu.Store({ 'tenant': 30001, 'master-catalog': 1, 'site': 30002 })).to.satisfy(function (context) {
                 return context.Tenant() === 30001 && context.MasterCatalog() === 1 && context.Site() === 30002;
             });
         });
@@ -154,7 +154,7 @@
             expect(completeContext.api()).to.be.an.instanceof(Mozu.ApiInterface);
         });
 
-        it("should error when any of tenant, site, or sitegroup are not supplied", function () {
+        it("should error when any of tenant, site, or master catalog are not supplied", function () {
             expect(function () { return noTenantContext.api(); }).to.throw(/no tenant/i);
             expect(function () { return noSiteContext.api(); }).to.throw(/no site/i);
             expect(function () { return noMasterCatalogContext.api(); }).to.throw(/no site group/i);
