@@ -11,37 +11,37 @@ $panel-header-padding: 0px;
 
 /* GRIDS */
 
-$grid-header-background-color: $color-neutral-20;
-$grid-header-background-gradient: null;
-$grid-header-color: $color-neutral-white;
-$grid-header-over-background-color: $color-neutral-30;
-$grid-header-over-background-gradient: null;
+// $grid-header-background-color: $color-neutral-20;
+// $grid-header-background-gradient: null;
+// $grid-header-color: $color-neutral-white;
+// $grid-header-over-background-color: $color-neutral-30;
+// $grid-header-over-background-gradient: null;
 
-$grid-row-cell-selected-background-color: $color-selected;
-$grid-row-cell-font-size: px-to-rem(14);
-$grid-row-cell-line-height: px-to-rem(19);
-$grid-row-cell-font: normal #{$grid-row-cell-font-size}/#{$grid-row-cell-line-height} $font-family;
+// $grid-row-cell-selected-background-color: $color-selected;
+// $grid-row-cell-font-size: px-to-rem(14);
+// $grid-row-cell-line-height: px-to-rem(19);
+// $grid-row-cell-font: normal #{$grid-row-cell-font-size}/#{$grid-row-cell-line-height} $font-family;
 
-$grid-row-wrap-border-color: border-for($color-neutral-white);
-$grid-row-wrap-border-style: solid none;
-$grid-row-wrap-border-width: 1px 0px;
+// $grid-row-wrap-border-color: border-for($color-neutral-white);
+// $grid-row-wrap-border-style: solid none;
+// $grid-row-wrap-border-width: 1px 0px;
 
-$grid-row-cell-background: $color-neutral-white;
-$grid-row-cell-alt-background: darken($grid-row-cell-background, 4%);
-$grid-row-cell-border-style: solid;
-$grid-row-cell-border-width: 1px 0px;
+// $grid-row-cell-background: $color-neutral-white;
+// $grid-row-cell-alt-background: darken($grid-row-cell-background, 4%);
+// $grid-row-cell-border-style: solid;
+// $grid-row-cell-border-width: 1px 0px;
 
-$grid-row-cell-over-background-color: $color-neutral-95;
-$grid-row-cell-over-border-color: border-for($grid-row-cell-over-background-color);
+// $grid-row-cell-over-background-color: $color-neutral-95;
+// $grid-row-cell-over-border-color: border-for($grid-row-cell-over-background-color);
 
-$grid-cell-inner-padding-top: 7px;
-$grid-cell-inner-padding-horizontal: 5px;
-$grid-cell-inner-padding-bottom: 5px;
+// $grid-cell-inner-padding-top: 7px;
+// $grid-cell-inner-padding-horizontal: 5px;
+// $grid-cell-inner-padding-bottom: 5px;
 
-$grid-header-font-size: px-to-rem(14);
-$grid-header-line-height: $grid-header-font-size;
-$grid-header-padding: 15px 5px 11px;
-$grid-header-trigger-width: 40px;
+// $grid-header-font-size: px-to-rem(14);
+// $grid-header-line-height: $grid-header-font-size;
+// $grid-header-padding: 15px 5px 11px;
+// $grid-header-trigger-width: 40px;
 
 /* TOOLBARS */
 

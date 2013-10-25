@@ -165,7 +165,9 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
 
         if (this.isCollectionContext && this.gridPanel && this.useGridPanel && this.gridPanel.useMultiGrid) {
             conf.items.push({
-                xtype: 'taco.button',
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
                 disabled: true,
                 text: 'Bulk Actions',
                 handler: function () { console.log('do bulk actions'); }

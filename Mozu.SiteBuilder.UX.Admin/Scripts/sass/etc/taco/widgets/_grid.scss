@@ -2,119 +2,119 @@
 
   /* CORE GRID STYLES */
 
-  .#{$prefix}panel {
-    .#{$prefix}grid-body {
-      border-top-color: $panel-body-border-color; // defaults to header background-color
+  // .#{$prefix}panel {
+  //   .#{$prefix}grid-body {
+  //     border-top-color: $panel-body-border-color; // defaults to header background-color
 
-      &~ .#{$prefix}docked-bottom {
-        border-top-color: $color-neutral-white;
-      }
-    }
-  }
+  //     &~ .#{$prefix}docked-bottom {
+  //       border-top-color: $color-neutral-white;
+  //     }
+  //   }
+  // }
 
   // grid cells
-  .#{$prefix}grid-with-row-lines {
-    .#{$prefix}grid-cell-inner {
-      line-height: $grid-row-cell-line-height;
-      padding: $grid-cell-inner-padding;
-    }
-  }
+  // .#{$prefix}grid-with-row-lines {
+  //   .#{$prefix}grid-cell-inner {
+  //     line-height: $grid-row-cell-line-height;
+  //     padding: $grid-cell-inner-padding;
+  //   }
+  // }
 
-  .#{$prefix}grid-cell-selected {
-    background-color: $color-selected !important;
-  }
+  // .#{$prefix}grid-cell-selected {
+  //   background-color: $color-selected !important;
+  // }
 
   // grid rows
-  .#{$prefix}grid-row {
-    vertical-align: middle;
+  // .#{$prefix}grid-row {
+  //   vertical-align: middle;
 
-    .#{$prefix}grid-cell {
-      border-top-color: transparentize($color-neutral-white, 0.9) !important;
-    }
+  //   .#{$prefix}grid-cell {
+  //     border-top-color: transparentize($color-neutral-white, 0.9) !important;
+  //   }
 
-    .#{$prefix}grid-cell-special { 
-      background-color: $grid-row-cell-background;
-      background-image: none;
-      border-right: 0px none;
-    }
-  }
+  //   .#{$prefix}grid-cell-special { 
+  //     // background-color: $grid-row-cell-background;
+  //     // background-image: none;
+  //     // border-right: 0px none;
+  //   }
+  // }
 
-  .#{$prefix}grid-rowwrap-div {
-    border-top-color: transparentize($color-neutral-white, 0.9) !important;
-  }
+  // .#{$prefix}grid-rowwrap-div {
+  //   border-top-color: transparentize($color-neutral-white, 0.9) !important;
+  // }
 
-  .#{$prefix}grid-row-selected {
-    .#{$prefix}grid-rowwrap-div {
-      border-color: $color-theme-support-dark;
-    }
-  }
+  // .#{$prefix}grid-row-selected {
+  //   .#{$prefix}grid-rowwrap-div {
+  //     border-color: $color-theme-support-dark;
+  //   }
+  // }
 
   // even-numbered grid rows
-  .#{$prefix}grid-row-alt {
-    .#{$prefix}grid-cell-special {
-      background-color: $grid-row-cell-alt-background;
-    }
-  }
+  // .#{$prefix}grid-row-alt {
+  //   .#{$prefix}grid-cell-special {
+  //     background-color: $grid-row-cell-alt-background;
+  //   }
+  // }
 
   // grid row hover state
-  .#{$prefix}grid-row-over {
-    .#{$prefix}grid-cell-special {
-      background-color: $grid-row-cell-over-background-color;
-      border-color: $grid-row-cell-over-border-color;
-    }
-  }
+  // .#{$prefix}grid-row-over {
+  //   .#{$prefix}grid-cell-special {
+  //     background-color: $grid-row-cell-over-background-color;
+  //     border-color: $grid-row-cell-over-border-color;
+  //   }
+  // }
 
   // grid row focus state
-  .#{$prefix}grid-row-focused {
-    .#{$prefix}grid-cell-special {
-      background-color: $grid-row-cell-focus-background-color;
-      border-color: $grid-row-cell-focus-border-color;
-    }
-  }
+  // .#{$prefix}grid-row-focused {
+  //   .#{$prefix}grid-cell-special {
+  //     background-color: $grid-row-cell-focus-background-color;
+  //     border-color: $grid-row-cell-focus-border-color;
+  //   }
+  // }
 
-  .#{$prefix}grid-rowwrap-div {
-    .#{$prefix}grid-cell-special {
-      background-color: transparent;
-    }
-  }
+  // .#{$prefix}grid-rowwrap-div {
+  //   .#{$prefix}grid-cell-special {
+  //     background-color: transparent;
+  //   }
+  // }
 
   // column headers
-  .#{$prefix}column-header {
-    border: 0px none;
-    font-size: $grid-column-header-font-size;
-    font-weight: bold;
-    line-height: $grid-column-header-line-height;
-    text-shadow: none;
+  // .#{$prefix}column-header {
+  //   border: 0px none;
+  //   font-size: $grid-column-header-font-size;
+  //   font-weight: bold;
+  //   line-height: $grid-column-header-line-height;
+  //   text-shadow: none;
 
-    &.#{$prefix}column-header-last {
-      .#{$prefix}column-header-inner {
-        padding-right: 40px;
-      }
-      .#{$prefix}column-header-text {
-        display: block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .#{$prefix}column-header-trigger {
-        background: none transparent;
-        display: block !important;
-        right: 12px;
-        top: 12px;
-        @include icon-font($glyph-plus, 16px, $color-neutral-white);
-        position: absolute;
-      }
-    }
-  }
+  //   &.#{$prefix}column-header-last {
+  //     .#{$prefix}column-header-inner {
+  //       padding-right: 40px;
+  //     }
+  //     .#{$prefix}column-header-text {
+  //       display: block;
+  //       overflow: hidden;
+  //       text-overflow: ellipsis;
+  //     }
+  //     .#{$prefix}column-header-trigger {
+  //       background: none transparent;
+  //       display: block !important;
+  //       right: 12px;
+  //       top: 12px;
+  //       @include icon-font($glyph-plus, 16px, $color-neutral-white);
+  //       position: absolute;
+  //     }
+  //   }
+  // }
 
-  .#{$prefix}column-header-inner {
-    padding-top: 15px !important;
-  }
+  // .#{$prefix}column-header-inner {
+  //   padding-top: 15px !important;
+  // }
 
-  .#{$prefix}column-header-over {
-    .#{$prefix}column-header-trigger {
-      display: none; // column menu trigger is not is not easily removed from cell template, so hide it
-    }
-  }
+  // .#{$prefix}column-header-over {
+  //   .#{$prefix}column-header-trigger {
+  //     display: none; // column menu trigger is not is not easily removed from cell template, so hide it
+  //   }
+  // }
 
   /* PLUGINS, MIXINS, COLUMNS, ETC. */
 
@@ -135,11 +135,11 @@
   }
 
   // checkbox overrides
-  .#{$prefix}column-header-checkbox {
-    .#{$prefix}column-header-inner {
-      padding-top: 11px !important;
-    }
-  }
+  // .#{$prefix}column-header-checkbox {
+  //   .#{$prefix}column-header-inner {
+  //     padding-top: 11px !important;
+  //   }
+  // }
 
   // expandercollapser
   .#{$vprefix}expandercollapser {
@@ -158,45 +158,35 @@
   }
 
   // rowexpander overrides
-  .#{$prefix}grid-row-expander {
-    background-image: none;
-    border-bottom: 5px solid transparent;
-    border-left: 10px solid $color-neutral-dark;
-    border-right: 0px none;
-    border-top: 5px solid transparent;
-    height: 0px;
-    margin: 0px;
-    width: 0px;
-    @include transform(rotate(90deg));
-    @include single-transition(transform, 0.1s);
+  // .#{$prefix}grid-row-expander {
+  //   @include icon-font($glyph-arrowdown);
 
-    &.empty {
-      visibility: hidden;
-    }
-  }
+  //   &.empty {
+  //     visibility: hidden;
+  //   }
+  // }
 
-  .#{$prefix}grid-row-collapsed {
-    .#{$prefix}grid-row-expander {
-      background-image: none;
-      @include transform(rotate(0deg));
-    }
-    .#{$prefix}grid-row-body {
-      display: none;
-    }
-  }
+  // .#{$prefix}grid-row-collapsed {
+  //   .#{$prefix}grid-row-expander {
+  //     @include icon-font($glyph-arrowright);
+  //   }
+  //   .#{$prefix}grid-row-body {
+  //     display: none;
+  //   }
+  // }
 
   // cellediting overrides
-  .#{$prefix}border-box {
-    .#{$prefix}grid-editor {
-      .#{$prefix}form-item-body {
-        padding: 2px;
-      }
-      .#{$prefix}form-text {
-        height: 30px;
-        padding-bottom: 5px;
-      }
-    }
-  }
+  // .#{$prefix}border-box {
+  //   .#{$prefix}grid-editor {
+  //     .#{$prefix}form-item-body {
+  //       padding: 2px;
+  //     }
+  //     .#{$prefix}form-text {
+  //       height: 30px;
+  //       padding-bottom: 5px;
+  //     }
+  //   }
+  // }
 
   // pseudo-actioncolumn styles
   .#{$vprefix}actioncolumn {
@@ -212,8 +202,8 @@
   .#{$vprefix}menu-col-cell {
     .#{$prefix}grid-cell-inner {
       line-height: 0px;
-      padding-bottom: 1px;
-      padding-top: 1px;
+      padding-bottom: 4px;
+      padding-top: 4px;
     }
   }
 
@@ -250,61 +240,61 @@
   /* CONTAINERS, TOOLBARS, ETC. */
 
   // togglegroup styles
-  .#{$vprefix}togglegroup {
-    margin: 0px !important;
+  // .#{$vprefix}togglegroup {
+  //   margin: 0px !important;
 
-    $card-map: sprite-map('card/*.png') /* syntax highlighting bug */;
-    $gradient-selected: linear-gradient(top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 20%);
+  //   $card-map: sprite-map('card/*.png') /* syntax highlighting bug */;
+  //   $gradient-selected: linear-gradient(top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 20%);
 
-    .#{$prefix}form-radio-group {
-      .#{$prefix}form-radio {
-        background-image: none;
-        border: 1px solid border-for($color-neutral-95);
-        height: 30px;
-        width: 40px;
-        top: 0px;
-      }
+  //   .#{$prefix}form-radio-group {
+  //     .#{$prefix}form-radio {
+  //       background-image: none;
+  //       border: 1px solid border-for($color-neutral-95);
+  //       height: 30px;
+  //       width: 40px;
+  //       top: 0px;
+  //     }
 
-      &:nth-of-type(1) {
-        .#{$prefix}form-radio {
-          @include background(sprite($card-map, card-gridview));
-          background-color: $color-neutral-95;
-        }
-        .#{$prefix}form-cb-checked {
-          .#{$prefix}form-radio {
-            @include background(sprite($card-map, card-gridview-selected), $gradient-selected);
-            background-color: border-for($color-neutral-95);
-          }
-        }
-      }
-      &:nth-of-type(2) {
-        .#{$prefix}form-radio {
-          @include background(sprite($card-map, card-tileview));
-          background-color: $color-neutral-95;
-        }
-        .#{$prefix}form-cb-checked {
-          .#{$prefix}form-radio {
-            @include background(sprite($card-map, card-tileview-selected), $gradient-selected);
-            background-color: border-for($color-neutral-95);
-          }
-        }
-      }
-    }
+  //     &:nth-of-type(1) {
+  //       .#{$prefix}form-radio {
+  //         @include background(sprite($card-map, card-gridview));
+  //         background-color: $color-neutral-95;
+  //       }
+  //       .#{$prefix}form-cb-checked {
+  //         .#{$prefix}form-radio {
+  //           @include background(sprite($card-map, card-gridview-selected), $gradient-selected);
+  //           background-color: border-for($color-neutral-95);
+  //         }
+  //       }
+  //     }
+  //     &:nth-of-type(2) {
+  //       .#{$prefix}form-radio {
+  //         @include background(sprite($card-map, card-tileview));
+  //         background-color: $color-neutral-95;
+  //       }
+  //       .#{$prefix}form-cb-checked {
+  //         .#{$prefix}form-radio {
+  //           @include background(sprite($card-map, card-tileview-selected), $gradient-selected);
+  //           background-color: border-for($color-neutral-95);
+  //         }
+  //       }
+  //     }
+  //   }
 
-    .#{$prefix}form-item {
-      margin: 0px;
-    }
-    .#{$prefix}form-checkboxgroup-body,
-    .#{$prefix}form-cb-wrap,
-    .#{$prefix}form-item-label {
-      padding: 0px;
-    }
-  }
+  //   .#{$prefix}form-item {
+  //     margin: 0px;
+  //   }
+  //   .#{$prefix}form-checkboxgroup-body,
+  //   .#{$prefix}form-cb-wrap,
+  //   .#{$prefix}form-item-label {
+  //     padding: 0px;
+  //   }
+  // }
 
   // pager styles
   .#{$vprefix}pager {
-    background: none $color-neutral-95;
-    border: 1px solid border-for($color-neutral-95);
+    background: none transparent;
+    border-width: 0px;
     padding: 7px;
 
     .#{$vprefix}action {

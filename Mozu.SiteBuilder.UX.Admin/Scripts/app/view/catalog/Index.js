@@ -19,16 +19,53 @@ Ext.define('Taco.view.catalog.Index', {
     },
 
     initComponent: function () {
-        var items = [];
+        var items = [],
+            store,
+            editor;
+
+        store = Ext.create('Ext.data.Store', {
+            fields: ['model', 'color'],
+            data: [
+                { color: 'red', model: 'Mustang' },
+                { color: 'yellow', model: 'Corvette' },
+                { color: 'blue', model: 'Camaro' }
+            ]
+        });
+
+        editor = Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToEdit: 2
+        });
 
         items.push({
-            xtype: 'button',
-            ui: 'action',
-            scale: 'medium',
-            text: 'Launch Alert',
-            margin: '0 0 20',
-            scope: this,
-            handler: this.launchModal
+            xtype: 'grid',
+            store: store,
+            // enableColumnResize: false,
+            selType: 'checkboxmodel',
+            selModel: {
+                checkOnly: true,
+                ignoreRightMouseSelection: true,
+                headerWidth: 37
+            },
+            plugins: [
+                editor
+            ],
+            columns: [{
+                dataIndex: 'model',
+                text: 'Model',
+                flex: 3,
+                editor: {
+                    xtype: 'textfield',
+                    allowOnlyWhitespace: false
+                }
+            }, {
+                dataIndex: 'color',
+                text: 'Color',
+                width: 200,
+                editor: {
+                    xtype: 'textfield',
+                    allowOnlyWhitespace: false
+                }
+            }]
         });
 
         Ext.apply(this.body, {

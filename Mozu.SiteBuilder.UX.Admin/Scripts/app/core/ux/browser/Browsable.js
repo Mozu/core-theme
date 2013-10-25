@@ -34,7 +34,8 @@ Ext.define('Taco.core.ux.browser.Browsable', {
                 selType: 'checkboxmodel',
                 checkOnly: true,
                 showHeaderCheckbox: true,
-                ignoreRightMouseSelection: true
+                ignoreRightMouseSelection: true,
+                headerWidth: 37
             }
         },
 
