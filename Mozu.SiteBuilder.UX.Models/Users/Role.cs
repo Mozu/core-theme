@@ -76,12 +76,27 @@ namespace Mozu.SiteBuilder.UX.Models.Users
         private const string BehaviorCategoryCls = "behavior-category";
         private const string BehaviorCls = "behavior";
 
+
         public BehaviorTree(IEnumerable<BehaviorCategory> categories, IEnumerable<Behavior> behaviors)
         {
 
             Nodes = (from c in categories
                      let node = BuildNode(c, categories, behaviors)
                      select node).ToList();
+        }
+
+        public BehaviorTree(System.Threading.Tasks.Task<List<BehaviorCategory>> categories, System.Threading.Tasks.Task<List<Behavior>> behaviors)
+        {
+            // TODO: Complete member initialization
+            var allCats = categories.Result;
+            var allBehaviors = behaviors.Result;
+            var cats = allCats.Where(x => allBehaviors.Any(_ => _.CategoryId == x.Id));
+
+            Nodes = (from c in cats
+                     let node = BuildNode(c, cats, allBehaviors)
+                     select node).ToList();
+
+
         }
 
         private static BehaviorTreeNode BuildNode(BehaviorCategory category, IEnumerable<BehaviorCategory> categories, IEnumerable<Behavior> behaviors)

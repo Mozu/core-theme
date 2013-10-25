@@ -123,6 +123,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
                 var sbApiContext = apiContext as SiteBuilderApiContext ;
 
                
+                
                 // if user can view pending mode, default to pending mode.
                
                 if (sbApiContext != null && sbApiContext.UserClaims != null && sbApiContext.UserClaims.BehaviorIds != null && sbApiContext.UserClaims.BehaviorIds.Contains(PublishBehavorID))
