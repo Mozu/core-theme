@@ -41,8 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin
 
         public Task<GeneralSettings> ReadSettings()
         {
-            Mozu.SiteSettings.General.Contracts.GeneralSettings generalSettings = null;
-            return  _generalSettingsWebApiClient.GetGeneralSettings().ContinueWith(x => Mapper.Map<GeneralSettings>(x.Result));
+            return  _generalSettingsWebApiClient.GetGeneralSettings().ContinueWith(x => Mapper.Map<GeneralSettings>(x.Result.ReadAsSync()));
         }
 
         public IEnumerable<IPBlock> GetIPBlocks()
