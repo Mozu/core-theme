@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        [HttpPostRoute(UriTemplate = "list")]
+        [HttpGetRoute(UriTemplate = "list")]
         public async Task<HttpResponseMessage> GetLocations()
         {
             var locations = (await _locationWebApiClient.GetLocations()).ReadAsSync();
