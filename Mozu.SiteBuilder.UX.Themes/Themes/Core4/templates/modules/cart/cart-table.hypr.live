@@ -13,7 +13,7 @@
   <tr class="mz-carttable-item">
     <td class="mz-carttable-item-product">
       {% if item.Product.mainImage and themeSettings.showCartItemImage %}
-          <img class="mz-carttable-item-image" src="{{ item.Product.mainImage.ImagePath }}?size=50" />
+          <img class="mz-carttable-item-image" src="{{ item.Product.mainImage.ImageUrl }}?size=50" />
       {% endif %}
       <div class="mz-carttable-item-info-wrap{% if not item.Product.mainImage %} mz-no-image{% endif %}">
         <a class="mz-carttable-item-title" href="{{item.Product.Url}}">{{ item.Product.Name }}</a>

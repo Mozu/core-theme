@@ -1,6 +1,12 @@
 ﻿define(['shim!vendor/underscore>_', 'modules/backbone-mozu'], function(_, Backbone) {
 
     var CartItemProduct = Backbone.MozuModel.extend({
+        helpers: ['mainImage'],
+        mainImage: function() {
+            var imgs = this.get("ProductImages"),
+                img = imgs && imgs[0];
+            return img || { ImageUrl: 'http://placehold.it/160&text=' + require.mozuLabel('noImages') }
+        },
         initialize: function() {
             this.set({Url: "/product/" + this.get("ProductCode")})
         }

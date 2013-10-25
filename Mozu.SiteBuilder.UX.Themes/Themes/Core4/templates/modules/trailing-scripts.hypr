@@ -1,4 +1,4 @@
-﻿{% if SiteContext.CompiledMode %}
+﻿{% if siteContext.compiledMode %}
 <script src="js/require-min.js"></script>
 <script>
     require.config({
@@ -16,7 +16,7 @@
 {% else %}
 <script>
     var require = {
-        urlArgs: "theme={{SiteContext.Theme.Id}}",
+        urlArgs: "theme={{siteContext.themeId}}",
         baseUrl: "/scripts",
         paths: {
             jquery: "http://code.jquery.com/jquery",
@@ -32,6 +32,6 @@
 {% endif %}
 
 
-{% if SiteContext.GoogleAnalyticsEnabled %}
+{% if siteContext.generalSettings.isGoogleAnalyticsEnabled %}
 {% include "Modules/google-analytics-tracking-code" %}
 {% endif %}
