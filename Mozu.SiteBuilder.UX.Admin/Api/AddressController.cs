@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public AddressController(IAccountContactRepository accountContactRepository, IAddressValidationWebApiClient addressValidationWebApiClient)
         {
             _accountContactRepository = accountContactRepository;
-            _addressValidationWebApiClient = addressValidationWebApiClient.CloneWithApiContext(ctx => { ctx.SiteGroupId = null; ctx.SiteId = null; }).CloneWithoutUserClaims();
+            _addressValidationWebApiClient = addressValidationWebApiClient.CloneWithApiContext(ctx => { ctx.MasterCatalogId = null; ctx.SiteId = null; }).CloneWithoutUserClaims();
         }
 
 		[HttpGetRoute(UriTemplate = "read/accountcontact/?id={id}")]

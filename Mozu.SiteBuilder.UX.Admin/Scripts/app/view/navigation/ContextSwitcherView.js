@@ -36,10 +36,10 @@ Ext.define('Taco.view.navigation.ContextSwitcherView', {
                '</tpl>'
         ];
         
-        if (!Taco.app.context.isMultiSiteCollection()) {
+        if (!Taco.app.context.isMultiMasterCatalog()) {
        
        
-            //remove tenant level if single siteCollection
+            //remove tenant level if single masterCatalog
             this.store = Taco.app.context.getStore(true);
             this.store.filterBy(function (record) {
                 return record.get('contextType') != 't' ;

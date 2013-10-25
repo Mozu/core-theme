@@ -29,21 +29,21 @@ Ext.define('Taco.view.settings.Publishing', {
 
         this.suspendSetValue = false;
 
-        Ext.each(Taco.app.context.siteCollections, function (siteCollection) {
+        Ext.each(Taco.app.context.masterCatalogs, function (masterCatalog) {
 
             var subitems = [],
-                isLiveProduct = siteCollection.productPublishingMode === 'Live',
+                isLiveProduct = masterCatalog.productPublishingMode === 'Live',
                 liveProductRadio,
                 stagedProductRadio;
 
             liveProductRadio = Ext.widget({
                 xtype: 'radio',
                 checked: isLiveProduct,
-                name: 'product-publishing-' + siteCollection.id,
+                name: 'product-publishing-' + masterCatalog.id,
                 cellCls: 'product radio',
                 listeners: {
                     change: function (field) {
-                        siteCollection.updateProductPublishingMode(field.getValue() ? 'Live' : 'Pending');
+                        masterCatalog.updateProductPublishingMode(field.getValue() ? 'Live' : 'Pending');
                     },
                     click: {
                         fn: function (e) {
@@ -64,7 +64,7 @@ Ext.define('Taco.view.settings.Publishing', {
             stagedProductRadio = Ext.widget({
                 xtype: 'radio',
                 checked: !isLiveProduct,
-                name: 'product-publishing-' + siteCollection.id,
+                name: 'product-publishing-' + masterCatalog.id,
                 cellCls: 'product radio'
             });
 
@@ -92,14 +92,14 @@ Ext.define('Taco.view.settings.Publishing', {
 
 
             // Get out of there are no sites, bitch!!!
-            if (!siteCollection.sites.length) return;
+            if (!masterCatalog.sites.length) return;
 
             Ext.Array.push(subitems, {
                 html: 'Content Publishing',
                 cellCls: 'content'
             }, {}, {});
 
-            Ext.each(siteCollection.sites, function (site) {
+            Ext.each(masterCatalog.sites, function (site) {
                 var liveContentRadio,
                     stagedContentRadio;
 
@@ -154,7 +154,7 @@ Ext.define('Taco.view.settings.Publishing', {
 
             items.push({
                 ui: 'subform',
-                title: siteCollection.name,
+                title: masterCatalog.name,
                 layout: {
                     type: 'table',
                     columns: 3

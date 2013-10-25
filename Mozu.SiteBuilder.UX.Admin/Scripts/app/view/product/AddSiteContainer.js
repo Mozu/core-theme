@@ -18,7 +18,7 @@ Ext.define('Taco.view.product.AddSiteContainer', {
 
     initComponent: function () {
         var me = this,
-            sites = Taco.app.context.getCurrentSiteCollection().sites,
+            sites = Taco.app.context.getCurrentMasterCatalog().sites,
             checkboxes = [];
 
         Ext.each(sites, function ( site ) {

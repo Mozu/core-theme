@@ -30,7 +30,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             header[APIConstants.Headers.CURRENCY] = apiContext.CurrencyCode;
             header[APIConstants.Headers.LOCALE] = apiContext.LocaleCode;
             header[APIConstants.Headers.SITE] = apiContext.SiteId.HasValue ? apiContext.SiteId.Value.ToString() : "";
-            header[APIConstants.Headers.SITE_GROUP] = apiContext.SiteGroupId.HasValue ? apiContext.SiteGroupId.Value.ToString() : "";
+            header[APIConstants.Headers.SITE_GROUP] = apiContext.MasterCatalogId.HasValue ? apiContext.MasterCatalogId.Value.ToString() : "";
             header[APIConstants.Headers.MASTER_CATALOG] = apiContext.MasterCatalogId.HasValue ? apiContext.MasterCatalogId.Value.ToString() : "";
             header[APIConstants.Headers.TENANT] = apiContext.TenantId.ToString();
             header[APIConstants.Headers.USER_CLAIMS] = apiContext.UserClaims.ToAccessToken();

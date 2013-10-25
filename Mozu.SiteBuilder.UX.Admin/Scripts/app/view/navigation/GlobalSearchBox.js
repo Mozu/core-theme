@@ -111,7 +111,7 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
                     tmpStore.load(options);
                 } else {
                    
-                    Ext.each(ctx.siteCollections, function (sc) {
+                    Ext.each(ctx.masterCatalogs, function (sc) {
                         var optCopy = Ext.apply({
                             headers: {
                                 'x-vol-site-group': sc.id
@@ -150,7 +150,7 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
         if (operation && operation.headers && operation.headers['x-vol-site-group']) {
 
             siteGroup = operation.headers['x-vol-site-group'];
-            siteGroupName = Taco.app.context.findSiteCollection(siteGroup).name;
+            siteGroupName = Taco.app.context.findMasterCatalog(siteGroup).name;
         }
         
         me.store.loading = false;

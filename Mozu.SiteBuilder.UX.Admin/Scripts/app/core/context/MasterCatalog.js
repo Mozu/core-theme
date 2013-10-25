@@ -1,4 +1,4 @@
-﻿Ext.define('Taco.core.context.SiteCollection', {
+﻿Ext.define('Taco.core.context.MasterCatalog', {
     //extend: 'Ext.util.Observable',
     urlToken: null,
     contextType: 'c',
@@ -27,7 +27,7 @@
         me.urlToken = me.contextType +'-'+ me.id;
         
         Ext.each(me.sites, function (site, idx) {
-            site.siteCollection = me;
+            site.masterCatalog = me;
             me.sites[idx]= Ext.create('Taco.core.context.Site', site);
         });
         
@@ -73,7 +73,7 @@
         return site;
     },
 
-    getSiteGroupId: function () { 
+    getMasterCatalogId: function () { 
 
         return this.id;
     },

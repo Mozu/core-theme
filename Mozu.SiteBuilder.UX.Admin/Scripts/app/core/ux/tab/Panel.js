@@ -326,7 +326,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
      * @param {Number?} removeSiteAtId [Optional] An id number to remove from the list of associated sites
      */
     tabCountChange: function ( removeSiteAtId ) {
-        // *** Get all sites in SiteCollection, reduce set to object of id:site pairs.
+        // *** Get all sites in MasterCatalog, reduce set to object of id:site pairs.
         var selectedSites = this.availableSiteList.getSelectedSites();
 
         if( removeSiteAtId ) {

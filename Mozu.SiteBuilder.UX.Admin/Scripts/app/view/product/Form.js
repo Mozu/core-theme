@@ -31,7 +31,7 @@ Ext.define('Taco.view.product.Form', {
 
         this.isSingleSite = this.singleSiteCheck();
 
-        this.siteCollection = Taco.app.context.getCurrentSiteCollection();
+        this.masterCatalog = Taco.app.context.getCurrentMasterCatalog();
 
         this.globalForm = Ext.create('Taco.view.product.GlobalForm', {
             record: this.record,
@@ -49,7 +49,7 @@ Ext.define('Taco.view.product.Form', {
             items: tabItems,
             activeItem: this.getInitialTab(tabItems),
             pickerCfg: {
-                data: this.siteCollection.sites
+                data: this.masterCatalog.catalogs
             }
         });
 
@@ -88,8 +88,11 @@ Ext.define('Taco.view.product.Form', {
         
     },
     
+    //todo fix for omni
     getInitialTab: function (tabItems) {
-        var selectedTabIndex = 0, initSiteId = (this.options && this.options.siteId) ? this.options.siteId : Taco.app.context.getSiteId();
+        var selectedTabIndex = 0,
+            initSiteId = (this.options && this.options.siteId) ? this.options.siteId : Taco.app.context.getSiteId();
+            
         if (initSiteId) {
             Ext.each(tabItems, function(x, index) {
                 if (x.siteId == initSiteId) {
@@ -140,7 +143,7 @@ Ext.define('Taco.view.product.Form', {
 
     buildSiteForm: function (productInSiteInfo) {
         var siteId = productInSiteInfo.get('siteId'),
-            site = this.siteCollection.findSite(siteId);
+            site = this.masterCatalog.findSite(siteId);
 
         return Ext.create('Taco.view.product.SiteForm', {
             isSingleSite: this.isSingleSite,

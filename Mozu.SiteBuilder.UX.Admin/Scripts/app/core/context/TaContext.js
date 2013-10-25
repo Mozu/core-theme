@@ -5,21 +5,21 @@
 
 Ext.define('Taco.core.context.TaContext', {
     extend: 'Ext.util.Observable',
-    requires: ['Taco.core.context.SiteCollection', 'Taco.core.context.Site', 'Taco.core.context.Catalog', 'Taco.core.context.StoreItem'],
+    requires: ['Taco.core.context.MasterCatalog', 'Taco.core.context.Site', 'Taco.core.context.Catalog', 'Taco.core.context.StoreItem'],
     urlToken: null,
     contextType: 't',
     name: 'All',
-    siteCollections: null,
+    masterCatalogs: null,
     
     currentCtx: null,
     constructor: function (config) {
         var me = this;
-        var siteCollections = [];
-        if (me.siteCollections) {
-            siteCollections = Ext.Array.clone(me.siteCollections)
+        var masterCatalogs = [];
+        if (me.masterCatalogs) {
+            masterCatalogs = Ext.Array.clone(me.masterCatalogs);
         }
         
-        me.siteCollections = siteCollections;
+        me.masterCatalogs = masterCatalogs;
         config = Ext.apply({}, config);
         Ext.apply(me, config);
 
@@ -32,21 +32,21 @@ Ext.define('Taco.core.context.TaContext', {
     },
     isMultiSite:function() {
         var ret = false;
-        Ext.each(this.siteCollections, function (sc) {
+        Ext.each(this.masterCatalogs, function (sc) {
             if (sc.sites.length > 1) {
                 ret = true;
             }
         });
         return ret;
     },
-    isMultiSiteCollection:function() {
-        return this.siteCollections.length > 1;
+    isMultiMasterCatalog:function() {
+        return this.masterCatalogs.length > 1;
     },
     isSingleSite:function() {
-        return this.siteCollections.length == 1 && this.siteCollections[0].sites.length == 1;
+        return this.masterCatalogs.length == 1 && this.masterCatalogs[0].sites.length == 1;
     },
     toCookieString:function() {
-        var ret = '',  sc = this.getCurrentSiteCollection(), site = this.getCurrentSite();
+        var ret = '',  sc = this.getCurrentMasterCatalog(), site = this.getCurrentSite();
         ret = 'tenant=' + this.id;
         if (sc) {
             ret += '&sitegroup=' + sc.id;
@@ -58,7 +58,7 @@ Ext.define('Taco.core.context.TaContext', {
     },
     onBeforeAjaxRequest:function(conn, options, eOpts) {
 
-        var headers = options.headers = options.headers || {}, sc = this.getCurrentSiteCollection(), site = this.getCurrentSite();
+        var headers = options.headers = options.headers || {}, sc = this.getCurrentMasterCatalog(), site = this.getCurrentSite();
 
         headers['x-vol-tenant'] = this.id || this.id;
         if (sc) {
@@ -68,7 +68,7 @@ Ext.define('Taco.core.context.TaContext', {
         if (site) {
             headers['x-vol-site'] = site.id;
             headers['x-vol-catalog'] = site.getCatalogId();
-            headers['x-vol-site-group'] = sc.getSiteGroupId();
+            headers['x-vol-site-group'] = sc.getMasterCatalogId();
             headers['x-vol-master-catalog'] = site.getMasterCatalogId();
         }
         if (options && options.operation && options.operation.headers) {
@@ -140,22 +140,22 @@ Ext.define('Taco.core.context.TaContext', {
 
     getSiteId: function () {
         if (this == this.getCurrentContext()) {
-            if (this.siteCollections.length == 1) {
-                return this.siteCollections[0].getSiteId();
+            if (this.masterCatalogs.length == 1) {
+                return this.masterCatalogs[0].getSiteId();
             }
             return null;
         }
         return this.getCurrentContext().getSiteId();
     },
    
-    getSiteGroupId: function () {
+    getMasterCatalogId: function () {
         if (this == this.getCurrentContext()) {
-            if (this.siteCollections.length == 1) {
-                return this.siteCollections[0].getSiteGroupId();
+            if (this.masterCatalogs.length == 1) {
+                return this.masterCatalogs[0].getMasterCatalogId();
             }
             return null;
         }
-        return this.getCurrentContext().getSiteGroupId();
+        return this.getCurrentContext().getMasterCatalogId();
     },
 
     getStore: function(copy) {
@@ -168,7 +168,7 @@ Ext.define('Taco.core.context.TaContext', {
         }
         data.push(me);
 
-        Ext.each(me.siteCollections, function(sc) {
+        Ext.each(me.masterCatalogs, function(sc) {
             data.push(sc);
 
             Ext.each(sc.sites, function(site) {
@@ -194,14 +194,14 @@ Ext.define('Taco.core.context.TaContext', {
         me.urlToken = me.contextType +'-'+ data.id;
         me.currentCtx = me;
         
-        Ext.each(data.siteCollections, function(sc,idx) {
-            me.siteCollections[idx] = Ext.create('Taco.core.context.SiteCollection', sc);
+        Ext.each(data.masterCatalogs, function(sc,idx) {
+            me.masterCatalogs[idx] = Ext.create('Taco.core.context.MasterCatalog', sc);
 
         });
         if (this.isSingleSite()) {
-            me.currentCtx = this.siteCollections[0].sites[0];
-        }else if (!this.isMultiSiteCollection()) {
-            me.currentCtx = this.siteCollections[0];
+            me.currentCtx = this.masterCatalogs[0].sites[0];
+        }else if (!this.isMultiMasterCatalog()) {
+            me.currentCtx = this.masterCatalogs[0];
         }
         this.setCookie();
     },
@@ -212,28 +212,28 @@ Ext.define('Taco.core.context.TaContext', {
         return me.setCurrentContext(newSite);
     },
 
-    setCurrentSiteCollection: function (id) {
-        var me = this, newCol = this.findSiteCollection(id);
+    setCurrentMasterCatalog: function (id) {
+        var me = this, newCol = this.findMasterCatalog(id);
         return me.setCurrentContext(newCol);
        
     },
 
-    getCurrentSiteCollection: function () {
+    getCurrentMasterCatalog: function () {
         var cc = this.getCurrentContext();
         if (cc.contextType == 'c') {
             return cc;
         }
         if (cc.contextType == 's') {
-            return cc.getSiteGroup();
+            return cc.getMasterCatalog();
         }
-        if (this.siteCollections.length == 1) {
-            return this.siteCollections[0];
+        if (this.masterCatalogs.length == 1) {
+            return this.masterCatalogs[0];
         }
         return null;
     },
 
     getCurrentSite: function () {
-        var cc = this.getCurrentContext(), sc = this.getCurrentSiteCollection();
+        var cc = this.getCurrentContext(), sc = this.getCurrentMasterCatalog();
         if (cc.contextType == 's') {
             return cc;
         }
@@ -245,10 +245,10 @@ Ext.define('Taco.core.context.TaContext', {
         
         return null;
     },
-    findSiteCollection: function (id) {
+    findMasterCatalog: function (id) {
         var me = this,
             foundCol;
-        Ext.each(me.siteCollections, function (sc) {
+        Ext.each(me.masterCatalogs, function (sc) {
             if (sc.id === id) {
                 foundCol = sc;
             }
@@ -259,7 +259,7 @@ Ext.define('Taco.core.context.TaContext', {
     findSite: function (id) {
         var me = this,
             foundSite;
-        Ext.each(me.siteCollections, function (sc) {
+        Ext.each(me.masterCatalogs, function (sc) {
             Ext.each(sc.sites, function (site) {
                 if (id === site.id) {
                     foundSite = site;
@@ -272,7 +272,7 @@ Ext.define('Taco.core.context.TaContext', {
     findCatalog: function (id) {
         var me = this,
             foundCatalog;
-        Ext.each(me.siteCollections, function (sc) {
+        Ext.each(me.masterCatalogs, function (sc) {
             Ext.each(sc.catalogs, function (catalog) {
                 if (id === catalog.id) {
                     foundCatalog = catalog;

@@ -46,7 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //if (pagingParams.id == null || 1==1)
             {
                 int start = 0;
-                //var ctxLevel = TargetContextLevelType.SiteGroup;
+                //var ctxLevel = TargetContextLevelType.MasterCatalog;
                 
                 //int siteId = -1;
                 //ICategoryWebApiClient catClient = _categoriesClient;

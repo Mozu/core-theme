@@ -34,7 +34,7 @@ Ext.define('Taco.view.site.page.inlineeditors.InlineImage', {
         }
         fmf = me.getSelectedRecords().getAt(0);
         args = {
-            src: '/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getSiteGroupId() + '/' +  fmf.getId(),
+            src: '/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getMasterCatalogId() + '/' +  fmf.getId(),
             alt: fmf.get('alt'),
             height: fmf.get('height'),
             width: fmf.get('width')

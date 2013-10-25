@@ -68,7 +68,7 @@
 //            _authenticationHelper.SaveAuthTicket( userAuthTicketForTenant);
 //            _context.SetUser(claim);
 //            _siteBuilderContext.SiteId = null;
-//            _siteBuilderContext.SiteGroupId = null;
+//            _siteBuilderContext.MasterCatalogId = null;
 //            _siteBuilderContext.TenantId = tenantId;
 //            _siteBuilderContext.Save();
 

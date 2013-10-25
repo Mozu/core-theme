@@ -81,7 +81,7 @@ Ext.define('Taco.core.ux.form.BackgroundImageField', {
             url = value['background-image'];
             
             if (url.indexOf('url(') < 0) {
-                url = 'url(\'/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getSiteGroupId() + '/' + url + '\')';
+                url = 'url(\'/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getMasterCatalogId() + '/' + url + '\')';
             }
             this.displayEl.setStyle({
                 'background-image': url,
@@ -156,7 +156,7 @@ Ext.define('Taco.core.ux.form.BackgroundImageField', {
         Ext.each(this.backgroundProperties, function (property) {
             var value = background[property];
             if (property === 'background-image' && value.indexOf('url(') < 0) {
-                value = 'url(\  /files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getSiteGroupId() + '/' +  value + '\')';
+                value = 'url(\  /files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getMasterCatalogId() + '/' +  value + '\')';
             }
             style += property + ':' + value + ';';
         }, this);

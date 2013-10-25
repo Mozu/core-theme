@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.Mvc
             Load();
             if ( !this.MasterCatalogId.HasValue )
             {
-               this.MasterCatalogId = this.SiteGroupId;
+               this.MasterCatalogId = this.MasterCatalogId;
             }
             LoadUser();
             ValidateUser();
@@ -177,7 +177,7 @@ namespace Mozu.SiteBuilder.Mvc
                 if (site != null)
                 {
                     this.SiteId = site.Id;
-                    this.SiteGroupId = site.MasterCatalogId ;
+                    this.MasterCatalogId = site.MasterCatalogId ;
                     this.TenantId = site.TenantId;
                     return;
                 }
@@ -219,7 +219,7 @@ namespace Mozu.SiteBuilder.Mvc
                 }
                 if (int.TryParse(cookie["sitegroup"], out tmpInt))
                 {
-                    this.SiteGroupId = tmpInt;
+                    this.MasterCatalogId = tmpInt;
                 }
             }
         }

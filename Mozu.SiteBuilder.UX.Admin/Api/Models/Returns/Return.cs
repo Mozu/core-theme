@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         public int TenantId { get; set; }
 
         [DataMember(EmitDefaultValue = false, Name = "siteGroupId")]
-        public int? SiteGroupId { get; set; }
+        public int? MasterCatalogId { get; set; }
 
         [DataMember(EmitDefaultValue = false, Name = "siteId")]
         public int SiteId { get; set; }
