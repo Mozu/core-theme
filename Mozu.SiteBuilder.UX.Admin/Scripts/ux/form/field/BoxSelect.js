@@ -272,7 +272,7 @@ Ext.define('Ext.ux.form.field.BoxSelect', {
     initComponent: function() {
         var me = this,
         typeAhead = me.typeAhead;
-
+        
         if (typeAhead && !me.editable) {
             Ext.Error.raise('If typeAhead is enabled the combo must be editable: true -- please change one of those settings.');
         }
@@ -1516,11 +1516,18 @@ Ext.define('Ext.ux.form.field.BoxSelect', {
    * Intercept calls to renderActiveError to add invalidCls, because the base
      * field classes assume this should be applied to inputEl
    */
-    renderActiveError: function() {
+    renderActiveError: function () {
+    
         var me = this,
         invalidCls = me.invalidCls,
         itemList = me.itemList,
+        listWrapper = me.listWrapper,
         hasError = me.hasActiveError();
+        
+        // add invalid cls to the listWrapper as well since it is what has a border;
+        if (invalidCls && listWrapper) {
+            listWrapper[hasError ? 'addCls' : 'removeCls'](me.invalidCls + '-field');
+        }
 
         if (invalidCls && itemList) {
             itemList[hasError ? 'addCls' : 'removeCls'](me.invalidCls + '-field');
