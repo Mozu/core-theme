@@ -6,9 +6,13 @@
  */
 
 Ext.define('Taco.view.generalSettings.subform.Maintenance', {
-    extend: 'Taco.view.product.subform.Subform',
+    //extend: 'Taco.view.product.subform.Subform',
+    extend: 'Taco.core.ux.form.Form',
     requires: ['Taco.core.ux.form.OnOffSliderButton'],
     title: 'Maintenance',
+    margin: "0 0 20 0",
+    ui: "subform",
+    
     initComponent: function () {
         var me = this;
 
@@ -21,7 +25,9 @@ Ext.define('Taco.view.generalSettings.subform.Maintenance', {
         this.items = [
             {
                 xtype: 'onoffsliderbutton',
+                margin:"10 0 10 0",
                 name: 'maintenance',
+                fieldLabel:'Your maintenance page is currently',
                 text: 'Your maintenance page is currently'
             },
             {

@@ -4,23 +4,39 @@
 Ext.define('Taco.model.GeneralSettings', {
     extend: 'Taco.core.data.Model',
     fields: [
-        { "name": "websiteName", "type": "string", "useNull": true },
-        { "name": "timeZone", "type": "string", "useNull": true },
-        { "name": "timeFormat", "type": "string", "useNull": true },
-        { "name": "daylightSaving", "type": "boolean", "useNull": true },
+
         { "name": "allowAllIps", "type": "boolean", "useNull": true },
-        { "name": "ipRanges", "type": "auto", "useNull": true },
-        { "name": "senderEmail", "type": "string", "useNull": true },
-        { "name": "senderEmailName", "type": "string", "useNull": true },
-        { "name": "replyToEmail", "type": "string", "useNull": true },
-        { "name": "theme", "type": "string", "useNull": true },
-        { "name": "logoPath", "type": "string", "useNull": true },
-        { "name": "logoText", "type": "string", "useNull": true },
+        { "name": "daylightSaving", "type": "boolean", "useNull": true },
         { "name": "favIconMobilePath", "type": "string", "useNull": true },
         { "name": "favIconPath", "type": "string", "useNull": true },
-        { "name": "googleAnalyticsId", "type": "string", "useNull": true },
+        { "name": "googleAnalyticsEcomEnabled", "type": "boolean", "useNull": true },
         { "name": "googleAnalyticsEnabled", "type": "boolean", "useNull": true },
-        { "name": "googleAnalyticsEcomEnabled", "type": "boolean", "useNull": true }
+        { "name": "googleAnalyticsId", "type": "string", "useNull": true },
+        { "name": "logoPath", "type": "string", "useNull": true },
+        { "name": "logoText", "type": "string", "useNull": true },
+        { "name": "replyToEmail", "type": "string", "useNull": true },
+        { "name": "senderEmail", "type": "string", "useNull": true },
+        { "name": "senderEmailName", "type": "string", "useNull": true },
+        { "name": "theme", "type": "string", "useNull": true },
+        { "name": "timeFormat", "type": "string", "useNull": true },
+        { "name": "timeZone", "type": "string", "useNull": true },
+        { "name": "websiteName", "type": "string", "useNull": true },
+        
+        // new fields not in Json
+        { "name": "channelId", "type": "string", defaultValue:"K1"},
+        { "name": "catalogId", "type": "string", defaultValue:"1"},
+        { "name": "isWebSite", "type": "boolean", defaultValue: true },
+        // customer experience template
+        { "name": "templateSiteId", "type": "string", defaultValue: "Core3" },
+
+        // not in json
+        { "name": "ipRanges", "type": "auto", "useNull": true },
+        
+        // not in json robots.js
+        // todo: need to get this implemnted in the service or remove from the client pending service implementation;
+        { "name": "robotsOverride", "type": "text"},
+        { "name": "robotsOverrideEnabled", "type": "boolean"}
+        
     ],
     proxy: {
         type: 'ajaxproxy',

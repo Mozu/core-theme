@@ -4,6 +4,7 @@
  */
 Ext.define('Taco.core.ux.form.field.EditableDisplayField', {
     extend: 'Ext.form.field.Display',
+    alias: 'widget.editabledisplayfield',
     validateOnChange: true,
     readOnly: false,
     initComponent: function () {
