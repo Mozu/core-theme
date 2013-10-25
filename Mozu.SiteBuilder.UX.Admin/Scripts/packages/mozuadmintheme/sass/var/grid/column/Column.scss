@@ -1,4 +1,14 @@
+/* GRID COLUMN HEADER */
+
+$grid-column-header-border-width: 0px;
+
 $grid-column-header-color: $color-neutral-white;
-$grid-column-header-font-size: px-to-rem(14);
-$grid-column-header-line-height: 14px;
-$grid-header-padding: 15px 5px 11px;
+$grid-column-header-font-size: 14px;
+$grid-column-header-font-weight: normal;
+$grid-column-header-line-height: 16px;
+$grid-column-text-overflow: ellipsis;
+
+
+/* UNUSED VARIABLES */
+// $grid-column-header-border-style
+// $grid-column-header-font-family

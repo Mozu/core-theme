@@ -1,16 +1,17 @@
-/*
- // Temporary bug fix in extjs 4.2.1;
- // see: http://www.sencha.com/forum/showthread.php?264529-4.2.1-Ext.grid.RowEditor-onFieldChanged()-No-Longer-Called
- // check for fix in when we upgrade to next version of extjs
-*/
+/**
+ * Temporary bug fix in extjs 4.2.1;
+ * see: http://www.sencha.com/forum/showthread.php?264529-4.2.1-Ext.grid.RowEditor-onFieldChanged()-No-Longer-Called
+ * check for fix in when we upgrade to next version of extjs
+ */
+
 Ext.define('Taco.overrides.grid.RowEditor', {
     override: 'Ext.grid.RowEditor',
-    addFieldsForColumn: function(column, initial) {
 
+    addFieldsForColumn: function(column, initial) {
         var me = this,
             i,
-            length, field;
-
+            length,
+            field;
 
         if (Ext.isArray(column)) {
             for (i = 0, length = column.length; i < length; i++) {
@@ -19,25 +20,21 @@ Ext.define('Taco.overrides.grid.RowEditor', {
             return;
         }
 
-
         if (column.getEditor) {
-
-
             field = column.getEditor(null, {
                 xtype: 'displayfield',
                 getModelData: function() {
                     return null;
                 }
             });
+
             if (column.align === 'right') {
                 field.fieldStyle = 'text-align:right';
             }
 
-
             if (column.xtype === 'actioncolumn') {
                 field.fieldCls += ' ' + Ext.baseCSSPrefix + 'form-action-col-field';
             }
-
 
             if (me.isVisible() && me.context) {
                 if (field.is('displayfield')) {
@@ -48,16 +45,22 @@ Ext.define('Taco.overrides.grid.RowEditor', {
                     field.resumeEvents();
                 }
             }
+
             if (column.hidden) {
                 me.onColumnHide(column);
             } else if (column.rendered && !initial) {
                 me.onColumnShow(column);
             }
 
-            // -- start edit
+            // start edit
             this.mon(field, 'change', this.onFieldChange, this);
-            // -- end edit
+            // end edit
         }
+    },
+
+    onRender: function () {
+        this.callParent(arguments);
+
+        this.setMargin('5 0 0 0');
     }
-}
-);
+});

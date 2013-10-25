@@ -1,0 +1,20 @@
+.#{$prefix}column-header-over {
+    .#{$prefix}column-header-trigger {
+        display: none;
+    }
+}
+
+.#{$prefix}column-header-last {
+    .#{$prefix}column-header-inner {
+        padding-right: 32px !important;
+    }
+
+    .#{$prefix}column-header-trigger {
+        background: none transparent;
+        display: block !important;
+        right: 11px;
+        top: 11px;
+        @include icon-font($glyph-plus, 16px, $color-neutral-white);
+        position: absolute;
+    }
+}

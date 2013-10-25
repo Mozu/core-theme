@@ -1,0 +1,6 @@
+.#{$prefix}grid-row {
+    .#{$prefix}grid-dirty-cell {
+        background-color: $color-theme-yellow-light;
+        background-image: none;
+    }
+}

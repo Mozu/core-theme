@@ -604,6 +604,7 @@
     <Content Include="Scripts\app\model\OrderAttribute.js" />
     <Content Include="Scripts\app\model\ShippingMethod.js" />
     <Content Include="Scripts\app\overrides\form\field\ComboBox.js" />
+    <Content Include="Scripts\app\overrides\grid\RowEditorButtons.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditor.js" />
     <Content Include="Scripts\app\overrides\menu\Item.js" />
     <Content Include="Scripts\app\overrides\window\MessageBox.js" />
@@ -909,6 +910,16 @@
     <Content Include="Scripts\app\mocks\locationTypes.json" />
     <Content Include="Scripts\app\mocks\CustomerAttributes.json" />
     <Content Include="Scripts\sass\src\core\ux\form\field\EditableDisplayField.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\grid\plugin\RowExpander.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\src\grid\plugin\RowExpander.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\src\grid\header\Container.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\selection\CheckboxModel.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\src\selection\CheckboxModel.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\src\grid\column\Column.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\grid\plugin\RowEditing.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\src\form\field\Display.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\src\grid\plugin\RowEditing.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\src\panel\Table.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
