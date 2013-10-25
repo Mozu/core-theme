@@ -23,11 +23,11 @@ Ext.define('Taco.model.GeneralSettings', {
         { "name": "websiteName", "type": "string", "useNull": true },
         
         // new fields not in Json
-        { "name": "channelId", "type": "string", defaultValue:"K1"},
-        { "name": "catalogId", "type": "string", defaultValue:"1"},
-        { "name": "isWebSite", "type": "boolean", defaultValue: true },
+        { "name": "channelId", "type": "string"},
+        { "name": "catalogId", "type": "string"},
+        { "name": "isMozuWebSite", "type": "boolean", defaultValue:true},
         // customer experience template
-        { "name": "templateSiteId", "type": "string", defaultValue: "Core3" },
+        { "name": "templateSiteId", "type": "string"},
 
         // not in json
         { "name": "ipRanges", "type": "auto", "useNull": true },

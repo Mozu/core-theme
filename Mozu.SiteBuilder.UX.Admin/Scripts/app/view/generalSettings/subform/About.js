@@ -78,7 +78,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             listeners: {
                 load: {
                     fn: function () {
-
+                        me.channelCombo.setValue(me.record.get("channelId"));
                     },
                     single: true,
                     scope: me
@@ -90,6 +90,8 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             name: 'channelId',
             flex:1,
             fieldLabel: 'Channel',
+            editable: false,
+            forceSelection: true,
             queryMode: 'local',
             displayField: 'name',
             valueField: 'code',
@@ -98,13 +100,15 @@ Ext.define('Taco.view.generalSettings.subform.About', {
         });
         
 
+
         //Taco.model.ThemeListing
         var themeStore = Ext.create('Ext.data.Store',{
             model: 'Taco.model.ThemeListing',
+            autoLoad:true,
             listeners: {
                 load: {
-                    fn: function () {
-                      
+                    fn: function (data) {
+                        me.customerExperienceTemplate.setValue(me.record.get("templateSiteId"));
                     },
                     single: true,
                     scope: me
@@ -117,13 +121,15 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             flex: 1,
             fieldLabel: 'Customer Experience Template',
             queryMode: 'local',
+            editable: false,
+            forceSelection: true,
             displayField: 'name',
             valueField: 'id',
             allowBlank: false,
             hidden:this.record.get("isWebSite"),
             store: themeStore
         });
-
+        
         this.items = [
             {
                 xtype: 'textfield',
@@ -147,10 +153,10 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                     },
                     {
                         xtype: "editabledisplayfield",
+                        name:"catalogName",
                         fieldLabel: "Catalog",
                         tpl: ["."],
-                        flex: 1,
-                        value: "test"
+                        flex: 1
                     }
                 ]
             },
@@ -174,7 +180,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                         },
                         columns:1,
                         defaults: {
-                            name: "isWebSite"
+                            name: "isMozuWebSite"
                         },
                         items: [
                             { boxLabel: "Yes", inputValue: true },
