@@ -31,9 +31,7 @@ Ext.define('Taco.shared.view.modal.Address', {
         scale: 'medium',
         text: 'Validate',
         handler: function () {
-            //this.validateOnly();
-            this.validateAndPrompt(function () {
-                //me.form.save();
+            this.validateAndPrompt(true, function () {
             });
         },
         itemId: 'otherAction'
@@ -47,7 +45,7 @@ Ext.define('Taco.shared.view.modal.Address', {
         itemId: 'primaryAction',
         handler: function () {
             var me = this;
-            this.validateAndPrompt(function () {
+            this.validateAndPrompt(false, function () {
                 me.form.save();
                 me.close();
             });
@@ -143,13 +141,14 @@ Ext.define('Taco.shared.view.modal.Address', {
      *
      * @private
      */
-    validateAndPrompt: function (callback) {
+    validateAndPrompt: function (onDemandMode, callback) {
         var me = this;
         this.validateForm(function (response) {
             if (response.error) {
                 Ext.Msg.show({
                     title: 'Address',
-                    msg: 'Unable to validate address'
+                    msg: 'Unable to validate address',
+                    buttons: Ext.Msg.OK
                 });
                 callback();
             } else if (response.changed) {
@@ -190,6 +189,13 @@ Ext.define('Taco.shared.view.modal.Address', {
                     }
                 });
             } else {
+                if (onDemandMode) {
+                    Ext.Msg.show({
+                        title: 'Address',
+                        msg: 'Address is valid',
+                        buttons: Ext.Msg.OK
+                    });
+                }
                 callback();
             }
         });
