@@ -27,7 +27,6 @@ var ApiInterface = (function () {
             }
 
             var contextHeaders = this.context.asObject("x-vol-");
-            if (!requestConf.includeUserClaims) delete contextHeaders["x-vol-user-claims"];
 
             var xhr = utils.ajax(method, url, contextHeaders, data, function (rawJSON) {
                 // update context with response headers

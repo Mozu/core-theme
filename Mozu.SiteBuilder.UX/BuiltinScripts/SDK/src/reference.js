@@ -11,7 +11,7 @@ var ApiReference = (function () {
     var genericQueryTpt = '{?_*}';
     var defaultHost = window.location.protocol + '//' + window.location.host + '/';
 
-    var copyToConf = ['verb', 'returnType', 'noBody', 'includeUserClaims'],
+    var copyToConf = ['verb', 'returnType', 'noBody'],
         copyToConfLength = copyToConf.length;
     var pub = {
 
@@ -101,12 +101,6 @@ var ApiReference = (function () {
             for (var j = 0; j < copyToConfLength; j++) {
                 if (copyToConf[j] in oType) returnObj[copyToConf[j]] = oType[copyToConf[j]];
             }
-            /*
-            if (oType.verb) returnObj.verbOverride = oType.verb;
-            if (oType.returnType) returnObj.returnType = oType.returnType;
-            if (oType.noBody) returnObj.noBody = oType.noBody;
-            if (oType.includeUserClaims) returnObj.includeUserClaims = oType.includeUserClaims;
-            */
             if (oType.overridePostData) {
                 var overriddenData;
                 if (utils.getType(oType.overridePostData) == "Array") {
@@ -194,7 +188,6 @@ var ApiReference = (function () {
             },
             configure: {
                 verb: 'POST',
-                includeUserClaims: true,
                 template: '{+ProductService}{ProductCode}/configure{?includeOptionDetails}',
                 defaultParams: {
                     includeOptionDetails: true
@@ -203,7 +196,6 @@ var ApiReference = (function () {
             },
             'add-to-cart': {
                 verb: 'POST',
-                includeUserClaims: true,
                 includeSelf: {
                     asProperty: 'Product'
                 },
@@ -214,9 +206,6 @@ var ApiReference = (function () {
             }
         },
         'cart': {
-            defaults: {
-                includeUserClaims: true
-            },
             get: '{+CartService}current',
             'add-product': {
                 verb: 'POST',
@@ -238,8 +227,7 @@ var ApiReference = (function () {
         'cartitem': {
             defaults: {
                 template: '{+CartService}current/items/{Id}',
-                shortcutParam: 'Id',
-                includeUserClaims: true
+                shortcutParam: 'Id'
             },
             'update-quantity': {
                 verb: 'PUT',
@@ -250,9 +238,6 @@ var ApiReference = (function () {
             }
         },
         'user': {
-            defaults: {
-                includeUserClaims: true
-            },
             create: {
                 verb: 'POST',
                 template: '{+UserService}'
@@ -278,18 +263,12 @@ var ApiReference = (function () {
             }
         },
         customer: {
-            defaults: {
-                includeUserClaims: true
-            },
             template: '{+CustomerService}{Id}',
             shortcutParam: 'Id',
             includeSelf: true
         },
         'login': '{+UserService}Login',
         'address': {
-            defaults: {
-                includeUserClaims: true
-            },
             "validate-address": {
                 verb: 'POST',
                 template: '{+AddressValidationService}',
@@ -301,9 +280,6 @@ var ApiReference = (function () {
             }
         },
         'order': {
-            defaults: {
-                includeUserClaims: true
-            },
             template: '{+OrderService}{Id}',
             includeSelf: true,
             create: {
@@ -364,7 +340,6 @@ var ApiReference = (function () {
         },
         'shipment': {
             defaults: {
-                includeUserClaims: true,
                 template: '{+OrderService}{orderId}/shippinginfo',
                 includeSelf: true
             },
@@ -374,16 +349,10 @@ var ApiReference = (function () {
             }
         },
         'payment': {
-            defaults: {
-                includeUserClaims: true
-            },
             template: '{+OrderService}{orderId}/billinginfo',
             includeSelf: true
         },
         'ordernote': {
-            defaults: {
-                includeUserClaims: true
-            },
             template: '{+OrderService}{orderId}/notes/{Id}'
         },
         'document': {
