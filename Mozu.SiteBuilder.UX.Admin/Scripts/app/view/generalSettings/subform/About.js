@@ -75,6 +75,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
 
         var channelStore = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.Channels',
+            autoLoad:true,
             listeners: {
                 load: {
                     fn: function () {
