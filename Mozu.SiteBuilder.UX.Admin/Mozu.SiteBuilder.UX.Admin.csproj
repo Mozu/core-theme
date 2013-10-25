@@ -585,6 +585,7 @@
     <Content Include="Scripts\app\controller\OrderAttributes.js" />
     <Content Include="Scripts\app\controller\Reports.js" />
     <Content Include="Scripts\app\controller\Tbd.js" />
+    <Content Include="Scripts\app\core\context\Catalog.js" />
     <Content Include="Scripts\app\core\util\Common.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
     <Content Include="Scripts\app\core\ux\form\field\EditableDisplayField.js" />

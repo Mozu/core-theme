@@ -15,7 +15,7 @@ Ext.define('Taco.model.Product', {
         'Taco.model.ProductInSiteInfo',
         'Taco.model.ProductVariation'
     ],
-    requiredStores: ['Taco.store.Discounts', 'Taco.store.Attributes'],
+    requiredStores: ['Taco.store.ProductTypes'],
     statics: {
         
         
@@ -376,9 +376,10 @@ Ext.define('Taco.model.Product', {
     getContextualValue: function (fieldName) {
         var level = this, ctx = Taco.app.context.getCurrent();
         if (ctx.contextType == 's') {
-            level = this.getProductInSites().getById(ctx.id);
+           
+            level = this.getProductInSites().getById(ctx.getCatalogId());
             if (level == null) {
-                Ext.Error.raise('missing site info for ctx ' + ctx.id + ' in product ' + this.getId());
+                Ext.Error.raise('missing cat info for ctx ' + ctx.getCatalogId() + ' in product ' + this.getId());
                 level = this;
             }
         }

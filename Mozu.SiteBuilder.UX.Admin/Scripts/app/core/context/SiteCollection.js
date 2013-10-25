@@ -13,7 +13,7 @@
     constructor: function (config) {
         var me = this;
         var sites = [];
-        //debugger;
+       
         if (me.sites) {
             sites = Ext.Array.clone(me.sites);
         }
@@ -29,6 +29,26 @@
         Ext.each(me.sites, function (site, idx) {
             site.siteCollection = me;
             me.sites[idx]= Ext.create('Taco.core.context.Site', site);
+        });
+        
+
+        var catalogs = [];
+
+        if (me.catalogs) {
+            catalogs = Ext.Array.clone(me.catalogs);
+        }
+
+        me.catalogs = catalogs;
+        config = Ext.apply({}, config);
+        Ext.apply(me, config);
+
+        me.callParent([config]);
+
+        me.urlToken = me.contextType + '-' + me.id;
+
+        Ext.each(me.catalogs, function (catalog, idx) {
+            catalog.catalogCollection = me;
+            me.catalogs[idx] = Ext.create('Taco.core.context.Catalog', catalog);
         });
     },
 
