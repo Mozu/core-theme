@@ -1,36 +1,38 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Core.Api.Routing;
-using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using AttributeDC = Mozu.Core.Extensible.Contracts.Attribute;
 using AttributeModel = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
 
+
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [WebApi("app/customerattributes", SuppressDescriptorGeneration = true)]
-    public class CustomerAttributeController : BaseController
+    [WebApi("app/orderattributes", SuppressDescriptorGeneration = true)]
+    public class OrderAttributeController : BaseController
     {
-        private readonly ICustomerAttributeDefinitionWebApiClient _customerAttributeDefinitionWebApiClient;
+        private readonly IOrderAttributeWebApiClient _customerAttributeDefinitionWebApiClient;
 
-        public CustomerAttributeController(ICustomerAttributeDefinitionWebApiClient  customerAttributeDefinitionWebApiClient)
+        public OrderAttributeController(IOrderAttributeWebApiClient  customerAttributeDefinitionWebApiClient)
         {
             _customerAttributeDefinitionWebApiClient = customerAttributeDefinitionWebApiClient;
-            
+
         }
 
         [HttpGetRoute(UriTemplate = "read")]
         public async Task<Response<List<AttributeModel>>> Read([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
         {
-           
 
-             if (!String.IsNullOrEmpty(pagingParams.id))
+
+            if (!String.IsNullOrEmpty(pagingParams.id))
             {
-                var dcitem = (await _customerAttributeDefinitionWebApiClient.GetAttribute(pagingParams.id)).ReadAsSync();
+                var dcitem = (await _customerAttributeDefinitionWebApiClient.GetAttribute(  pagingParams.id )).ReadAsSync();
                 var vmitem = Mapper.Map<AttributeModel>(dcitem);
                 return this.List2(vmitem);
             }
@@ -38,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var results = (await _customerAttributeDefinitionWebApiClient.GetAttributes(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize)).ReadAsSync();
                 var vmItems = Mapper.Map<List<AttributeModel>>(results.Items);
-                return this.List2(vmItems, (int) results.TotalCount);
+                return this.List2(vmItems, (int)results.TotalCount);
 
 
             }
@@ -58,7 +60,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "edit")]
         public async Task<Response<List<AttributeModel>>> EditAttribute(List<AttributeModel> attributes)
         {
-            var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ => _customerAttributeDefinitionWebApiClient.UpdateAttribute( _.AttributeFQN , _)).ToList();
+            //Dictionary<string, string> lookup = new Dictionary<string, string>();
+           
+        
+            var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ => _customerAttributeDefinitionWebApiClient.UpdateAttribute(_.AttributeFQN , _)).ToList();
             await Task.WhenAll(tasks);
 
             var newAttributes = tasks.Select(x => x.Result.ReadAsSync()).Select(Mapper.Map<AttributeModel>).ToList();
@@ -69,10 +74,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "destroy")]
         public async Task<Response<List<AttributeModel>>> DeleteAttribute(List<AttributeModel> attributes)
         {
-            var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ => _customerAttributeDefinitionWebApiClient.DeleteAttribute(_.AttributeFQN)).ToList();
+            var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ => _customerAttributeDefinitionWebApiClient.DeleteAttribute( _.AttributeFQN)).ToList();
             await Task.WhenAll(tasks);
 
-            var newAttributes = tasks.Select(x => x.Result.ResponseMessage.IsSuccessStatusCode ).ToList();
+            var newAttributes = tasks.Select(x => x.Result.ResponseMessage.IsSuccessStatusCode).ToList();
             return this.List2<AttributeModel>(attributes);
         }
     }
