@@ -401,6 +401,7 @@
     <Compile Include="Api\Models\Order\OrderItemProductOption.cs" />
     <Compile Include="Api\Models\RuntimeProductOption.cs" />
     <Compile Include="Api\Models\Returns\Return.cs" />
+    <Compile Include="Api\OrderAttributeController.cs" />
     <Compile Include="Api\OrderDiscountController.cs" />
     <Compile Include="Api\PublishingSettingsController.cs" />
     <Compile Include="Api\ReturnController.cs" />
