@@ -5,7 +5,7 @@
  *
  */
 Ext.define('Taco.view.generalsettings.Form', {
-    extend: 'Taco.core.ux.form.NavForm',
+    extend: 'Taco.core.ux.form.NavForm2',
     alias: 'widget.generalsettingseditor',
     requires: [
         'Taco.view.generalSettings.subform.About',
@@ -21,25 +21,22 @@ Ext.define('Taco.view.generalsettings.Form', {
     editTitle: 'General Settings',
     initComponent: function () {
         var me = this;
+        var subFormConfig = {
+            record: me.record
+        };
 
         me.items = [
-                Ext.create('Taco.view.generalSettings.subform.About', me),
-                Ext.create('Taco.view.generalSettings.subform.Rules', me),
-                Ext.create('Taco.view.generalSettings.subform.Maintenance', me),
-                Ext.create('Taco.view.generalSettings.subform.Notifications', me), 
-                Ext.create('Taco.view.generalSettings.subform.Analytics', me),  
-                Ext.create('Taco.view.generalSettings.subform.Robots'), 
-                Ext.create('Taco.view.generalSettings.subform.Tools')
+            Ext.create('Taco.view.generalSettings.subform.About', subFormConfig),
+            Ext.create('Taco.view.generalSettings.subform.Rules', subFormConfig),
+            Ext.create('Taco.view.generalSettings.subform.Maintenance', subFormConfig),
+            Ext.create('Taco.view.generalSettings.subform.Notifications', subFormConfig),
+            Ext.create('Taco.view.generalSettings.subform.Analytics', subFormConfig),
+            Ext.create('Taco.view.generalSettings.subform.Robots', subFormConfig),
+            Ext.create('Taco.view.generalSettings.subform.Tools', subFormConfig)
         ];
 
-        me.navStore = Ext.create('Ext.data.Store', {
-            fields: ['title'],
-            data: me.items
-        });
-
-
-
-
         me.callParent(arguments);
+        
+        this.loadNavItems();
     }
 });

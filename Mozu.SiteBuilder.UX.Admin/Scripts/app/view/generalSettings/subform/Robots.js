@@ -6,8 +6,12 @@
  */
 
 Ext.define('Taco.view.generalSettings.subform.Robots', {
-    extend: 'Taco.view.product.subform.Subform',
+    extend: 'Taco.core.ux.form.Form',
     requires: [],
+    margin: "0 0 20 0",
+    ui: "subform",
+    width: "100%",
+    
     title: 'Robots',
     initComponent: function () {
         var me = this;
@@ -17,16 +21,21 @@ Ext.define('Taco.view.generalSettings.subform.Robots', {
             labelSeparator: ''
         };
 
-
-        this.items = [
-            {
-                xtype: 'textarea',
-                name: 'robotsOverride',
-                itemId: 'robotsOverride',
-                fieldLabel: "ROBOTS.TXT Contents"/*,
+        me.robotsOverride = Ext.create('Ext.form.field.TextArea', {
+            xtype: 'textarea',
+            name: 'robotsOverride',
+            itemId: 'robotsOverride',
+            width: "100%",
+            disabled:!this.record.get("robotsOverrideEnabled"),
+            fieldLabel: "ROBOTS.TXT Contents"
+            /*,
                 value: me.settings.robotsOverrideEnabled ? me.settings.robotsOverride : 'User-agent: *',
                 disabled: !me.settings.robotsOverrideEnabled*/
-            },
+        });
+
+
+        this.items = [
+            me.robotsOverride,
             {
                 xtype: 'checkbox',
                 name: 'robotsOverrideEnabled',
@@ -36,8 +45,8 @@ Ext.define('Taco.view.generalSettings.subform.Robots', {
                 //checked: me.settings.robotsOverrideEnabled,                inputValue: true,
                 uncheckedValue: false,
                 listeners: {
-                        change: function (cmp, isChecked) {
-                        me.robots.getComponent('robotsOverride').setDisabled(!isChecked);
+                    change: function (cmp, isChecked) {
+                        me.robotsOverride.setDisabled(!isChecked);
                     }
                 }
             }];

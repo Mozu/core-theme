@@ -7,10 +7,18 @@
 
 Ext.define('Taco.view.generalSettings.subform.About', {
     extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.core.ux.form.SelectField', 'Taco.store.TimeZones'],
+    requires: [
+        'Taco.core.ux.form.SelectField',
+        'Ext.form.field.ComboBox',
+        'Taco.store.TimeZones',
+        'Taco.model.ThemeListing'
+    ],
     title: 'General',
-    bodyCls: Taco.baseCSSPrefix + 'product-admin-subform',
-    cls: Taco.baseCSSPrefix + 'form-section',
+    margin: "0 0 20 0",
+    ui: "subform",
+    width:"100%",
+    //bodyCls: Taco.baseCSSPrefix + 'product-admin-subform',
+    //cls: Taco.baseCSSPrefix + 'form-section',
     initComponent: function () {
         var me = this;
 
@@ -53,30 +61,141 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             width: 350,
             store: Ext.create('Taco.store.TimeZones', { autoLoad: true })
         };
-        me.timeSettings = Ext.widget('panel', {
+        
+        me.timeSettings = Ext.widget('fieldcontainer', {
             layout: 'hbox',
-            width: 960,
-            defaults: {
-                labelAlign: 'top',
-                margin: '0 20 0 0'
-            },
-            items: [me.timeZoneSelect, me.timeFormatSelect]
+            width: "100%",
+            items: [
+                me.timeZoneSelect,
+                {xtype:"splitter"},
+                me.timeFormatSelect
+            ]
         });
 
+
+        var channelStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.Channels',
+            listeners: {
+                load: {
+                    fn: function () {
+
+                    },
+                    single: true,
+                    scope: me
+                }
+            }
+        });
+
+        me.channelCombo = Ext.create('Ext.form.field.ComboBox', {
+            name: 'channelId',
+            flex:1,
+            fieldLabel: 'Channel',
+            queryMode: 'local',
+            displayField: 'name',
+            valueField: 'code',
+            allowBlank: false,
+            store: channelStore
+        });
+        
+
+        //Taco.model.ThemeListing
+        var themeStore = Ext.create('Ext.data.Store',{
+            model: 'Taco.model.ThemeListing',
+            listeners: {
+                load: {
+                    fn: function () {
+                      
+                    },
+                    single: true,
+                    scope: me
+                }
+            }
+        });
+
+        me.customerExperienceTemplate = Ext.create('Ext.form.field.ComboBox', {
+            name: "templateSiteId",
+            flex: 1,
+            fieldLabel: 'Customer Experience Template',
+            queryMode: 'local',
+            displayField: 'name',
+            valueField: 'id',
+            allowBlank: false,
+            hidden:this.record.get("isWebSite"),
+            store: themeStore
+        });
 
         this.items = [
             {
                 xtype: 'textfield',
                 name: 'websiteName',
                 fieldLabel: 'Web Site Name',
-                width:960
+                width:"100%"
             },
-            me.timeSettings, {
-            xtype: 'checkbox',
-            name: 'daylightSaving',
-            boxLabel: 'Automatically adjust clock for daylight savings',
-            boxLabelAlign: 'after'
-        }];
+            me.timeSettings,
+            {
+                xtype: 'checkbox',
+                name: 'daylightSaving',
+                boxLabel: 'Automatically adjust clock for daylight savings'
+            },
+            {
+                xtype: 'fieldcontainer',
+                layout: "hbox",
+                items: [
+                    me.channelCombo,
+                    {
+                        xtype: "splitter"
+                    },
+                    {
+                        xtype: "editabledisplayfield",
+                        fieldLabel: "Catalog",
+                        tpl: ["."],
+                        flex: 1,
+                        value: "test"
+                    }
+                ]
+            },
+            {
+                xtype: 'fieldcontainer',
+                layout: {
+                    type: "hbox",
+                    aligh:"stretchmax"
+                },
+                items: [
+                    {
+                        xtype: "radiogroup",
+                        //name:"isWebSite",
+                        fieldLabel: "Mozu Hosted Store Front",
+                        flex: 1,
+                        //height:100,
+                        //layout:"anchor",
+                        //vertical: true,
+                        layout: {
+                            type: "vbox"
+                        },
+                        columns:1,
+                        defaults: {
+                            name: "isWebSite"
+                        },
+                        items: [
+                            { boxLabel: "Yes", inputValue: true },
+                            { boxLabel: "No", inputValue: false }
+                        ],
+                        listeners: {
+                            change: {
+                                fn: function (cmp, newValue, oldValue, eOpts) {
+                                    me.customerExperienceTemplate.setVisible(!newValue.isWebSite);
+                                },
+                                scope:me
+                            }
+                        }
+                    },
+                    {
+                        xtype: "splitter"
+                    },
+                    me.customerExperienceTemplate
+                ]
+            }
+        ];
 
         this.callParent(arguments);
     }

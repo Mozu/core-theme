@@ -6,9 +6,14 @@
  */
 
 Ext.define('Taco.view.generalSettings.subform.Tools', {
-    extend: 'Taco.view.product.subform.Subform',
+    //extend: 'Taco.view.product.subform.Subform',
+    extend: 'Taco.core.ux.form.Form',
     requires: [],
     title: 'Tools',
+    margin: "0 0 20 0",
+    ui: "subform",
+    width: "100%",
+    
     initComponent: function () {
         var me = this;
 
@@ -17,49 +22,66 @@ Ext.define('Taco.view.generalSettings.subform.Tools', {
             labelSeparator: ''
         };
 
-        this.items = [{
-            // TODO: Need instructions
-            xtype: "container",
-            items: [{
-                xtype: "component",
-                html: "<h2 style='padding: 10px 0'>Upload your file for Google Webmaster Tools</h2>" +
-                    "<p>If you're trying to connect your site to Google Webmaster Tools, you've come to the right place.  Upload a copy of the page you want to connect in the space provided below.</p>"
-            }, {
-                xtype: 'button',
-                text: 'Upload file',
-                margin: "12 0 0 0",
-                handler: function () {
-                    var form = me.googleWebmasterTools.getForm();
-                    if (form.isValid()) {
-                        //console.log("Attempting to upload your file", form.getFields());
-                        //window.top.fff = form.getFields();
-                        form.submit({
-                            url: "/admin/app/webtools/webmasterTools",
-                            headers: [
-                                { "Accept": "application/json" }
-                            ],
-                            waitMsg: "Uploading your file...",
-                            success: function (form, action) {
-                                console.log("form/action", form, action);
-                            },
-                            failure: function () {
-                                console.error(arguments);
+        this.items = [
+            {
+                xtype: "fieldcontainer",
+                fieldLabel: "Upload your file for Google Webmaster Tools",
+                items: [
+                    {
+                        xtype:"component",
+                        margin: "0 0 10 0",
+                        style:"font-size:1.4rem",
+                        html: "If you're trying to connect your site to Google Webmaster Tools, you've come to the right place.  <br/>Upload a copy of the page you want to connect."
+                            
+                    },
+                    {
+                        xtype: "filefield",
+                        buttonOnly: true,
+                        buttonConfig: {
+                            ui: 'action',
+                            text: 'Upload file',
+                            scale: 'medium'
+                        },
+                        width: 300,
+                        name: "gwtFile",
+                        validate: function() { return true; },
+                        labelAlign: "top",
+                        allowBlank: false,
+                        listeners: {
+                            change: {
+                                fn: function() {
+                                    this.onFileUpload();
+                                },
+                                scope: me
                             }
-                        })
+                        }
                     }
-                }
-            }]
-        }, {
-            xtype: "filefield",
-            name: "gwtFile",
-            validate:function() { return true; },
-            fieldLabel: "Upload your file for Google Webmaster Tools",
-            labelAlign: "top",
-            allowBlank: false,
-            buttonText: "Select file...",
-            margin: "0 0 0 75"
-        }];
+                ]
+            }
+        ];
 
         this.callParent(arguments);
+    },
+    
+    onFileUpload: function () {
+        var me = this;
+        var form = me.getForm();
+        if (form.isValid()) {
+            form.submit(
+                {
+                    url: "/admin/app/webtools/webmasterTools",
+                    headers: [
+                        { "Accept": "application/json" }
+                    ],
+                    waitMsg: "Uploading your file...",
+                    success: function (form, action) {
+                        console.log("form/action", form, action);
+                    },
+                    failure: function () {
+                        console.error(arguments);
+                    }
+                }
+            );
+        }
     }
 });

@@ -6,9 +6,13 @@
  */
 
 Ext.define('Taco.view.generalSettings.subform.Analytics', {
-    extend: 'Taco.view.product.subform.Subform',
+    //extend: 'Taco.view.product.subform.Subform',
+    extend: 'Taco.core.ux.form.Form',
     requires: [],
     title: 'Analytics',
+    margin: "0 0 20 0",
+    ui: "subform",
+    
     initComponent: function () {
         var me = this;
         

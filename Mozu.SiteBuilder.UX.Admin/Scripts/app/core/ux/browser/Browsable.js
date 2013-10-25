@@ -369,11 +369,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
         record.save({
             success: function (record, operation) {
-                //record is the updated record, except for collections
-                //this collection will have the full records:
-                //operation.resultSet.records
-                //operation.resultSet.records[i] for each one if you are batching
-                
+                record.commit();
             },
             failure: function (record, operation) {
                 //handle failure(s) here
