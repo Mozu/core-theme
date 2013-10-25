@@ -75,7 +75,7 @@ Ext.define('Taco.view.location.subform.Location', {
 
         me.addressView = Ext.create('Taco.shared.view.field.Address', {
             name: "address",
-            allowBlank: true,
+            allowBlank: false,
             // extra components to be inserted after the edit button
             buttonItems: [
                 {
