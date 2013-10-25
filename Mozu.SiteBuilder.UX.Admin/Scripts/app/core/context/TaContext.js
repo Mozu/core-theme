@@ -5,7 +5,7 @@
 
 Ext.define('Taco.core.context.TaContext', {
     extend: 'Ext.util.Observable',
-    requires: ['Taco.core.context.SiteCollection', 'Taco.core.context.Site', 'Taco.core.context.StoreItem'],
+    requires: ['Taco.core.context.SiteCollection', 'Taco.core.context.Site', 'Taco.core.context.Catalog', 'Taco.core.context.StoreItem'],
     urlToken: null,
     contextType: 't',
     name: 'All',
@@ -63,10 +63,13 @@ Ext.define('Taco.core.context.TaContext', {
         headers['x-vol-tenant'] = this.id || this.id;
         if (sc) {
             headers['x-vol-site-group'] = sc.id;
+            headers['x-vol-master-catalog'] = sc.id;
         }
         if (site) {
             headers['x-vol-site'] = site.id;
+            headers['x-vol-catalog'] = site.getCatalogId();
             headers['x-vol-site-group'] = sc.getSiteGroupId();
+            headers['x-vol-master-catalog'] = site.getMasterCatalogId();
         }
         if (options && options.operation && options.operation.headers) {
             Ext.apply(headers, options.operation.headers);
@@ -264,6 +267,19 @@ Ext.define('Taco.core.context.TaContext', {
             });
         });
         return foundSite;
+    },
+    
+    findCatalog: function (id) {
+        var me = this,
+            foundCatalog;
+        Ext.each(me.siteCollections, function (sc) {
+            Ext.each(sc.catalogs, function (catalog) {
+                if (id === catalog.id) {
+                    foundCatalog = catalog;
+                }
+            });
+        });
+        return foundCatalog;
     },
 
     /**

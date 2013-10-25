@@ -1,48 +1,46 @@
-﻿Ext.define('Taco.core.context.Site', {
+﻿Ext.define('Taco.core.context.Catalog', {
     //extend: 'Ext.util.Observable',
     id: -1,
-    name:'',
+    name: '',
     stagingHost: '',
     defaultHost: '',
     urlToken: null,
-    contextType: 's',
-    
+    contextType: 'a',
+
     siteCollection: null,
-    
+
     constructor: function (config) {
         var me = this;
         config = Ext.apply({}, config);
-       
+
         Ext.apply(me, config);
         me.callParent([config]);
-        me.urlToken = me.contextType +'-'+ me.id;
+        me.urlToken = me.contextType + '-' + me.id;
     },
-    
-    getSiteId: function () {    
+
+    getSiteId: function () {
         return this.id;
     },
-    
-    getCatalogId:function () {
+
+    getCatalogId: function () {
         return this.catalogId;
     },
-    
+
     getMasterCatalogId: function () {
         return this.masterCatalogId;
     },
-    getIsMozuRendered: function () {
-        return this.isMozuRendered;
-    },
+  
 
     getSiteGroupId: function () {
         return this.siteCollection.getSiteGroupId();
     },
-    
-    getSiteGroup: function() {
+
+    getSiteGroup: function () {
         return this.siteCollection;
     },
 
-    updateContentPublishingMode: function(value) {
-        console.log('updateContentPublishingMode for Site ID', this.id, ' -> ', value);
+    updateContentPublishingMode: function (value) {
+        console.log('updateContentPublishingMode for Catalog ID', this.id, ' -> ', value);
     }
 
 });

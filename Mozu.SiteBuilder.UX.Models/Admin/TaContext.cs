@@ -68,6 +68,19 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
 
         [DataMember(Name = "contentPublishingMode")]
         public string ContentPublishingMode { get; set; }
+
+
+
+
+
+        [DataMember(Name = "masterCatalogId")]
+        public int? MasterCatalogId { get; set; }
+         [DataMember(Name = "catalogId")]
+        public int? CatalogId { get; set; }
+
+         [DataMember(Name = "isMozuRendered")]
+         public bool IsMozuRendered { get; set; }
+
         
     }
 }

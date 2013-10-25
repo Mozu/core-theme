@@ -101,7 +101,7 @@ Ext.define('Taco.view.product.Index', {
             }
         }, {
             dataIndex: 'productInSites',
-            text: 'Sites',
+            text: 'Catalogs',
             sortable:false,
             width: 120,
             renderer: function (value) {
@@ -208,8 +208,8 @@ Ext.define('Taco.view.product.Index', {
                             return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
                         },
                         toSiteName: function (value) {
-                            var site = Taco.app.context.findSite(value);
-                            return site ? site.name : 'n/a';
+                            var catalog = Taco.app.context.findCatalog(value);
+                            return catalog ? catalog.name : 'n/a';
                         }
                     })
                 }]
