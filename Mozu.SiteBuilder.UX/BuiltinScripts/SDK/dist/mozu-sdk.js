@@ -1386,7 +1386,7 @@
                 };
                 var genericQueryTpt = "{?_*}";
                 var defaultHost = window.location.protocol + "//" + window.location.host + "/";
-                var copyToConf = [ "verb", "returnType", "noBody", "includeUserClaims" ], copyToConfLength = copyToConf.length;
+                var copyToConf = [ "verb", "returnType", "noBody" ], copyToConfLength = copyToConf.length;
                 var pub = {
                     basicOps: basicOps,
                     urls: {
@@ -1526,7 +1526,6 @@
                         },
                         configure: {
                             verb: "POST",
-                            includeUserClaims: true,
                             template: "{+ProductService}{ProductCode}/configure{?includeOptionDetails}",
                             defaultParams: {
                                 includeOptionDetails: true
@@ -1535,7 +1534,6 @@
                         },
                         "add-to-cart": {
                             verb: "POST",
-                            includeUserClaims: true,
                             includeSelf: {
                                 asProperty: "Product"
                             },
@@ -1546,9 +1544,6 @@
                         }
                     },
                     cart: {
-                        defaults: {
-                            includeUserClaims: true
-                        },
                         get: "{+CartService}current",
                         "add-product": {
                             verb: "POST",
@@ -1570,8 +1565,7 @@
                     cartitem: {
                         defaults: {
                             template: "{+CartService}current/items/{Id}",
-                            shortcutParam: "Id",
-                            includeUserClaims: true
+                            shortcutParam: "Id"
                         },
                         "update-quantity": {
                             verb: "PUT",
@@ -1582,9 +1576,6 @@
                         }
                     },
                     user: {
-                        defaults: {
-                            includeUserClaims: true
-                        },
                         create: {
                             verb: "POST",
                             template: "{+UserService}"
@@ -1610,18 +1601,12 @@
                         }
                     },
                     customer: {
-                        defaults: {
-                            includeUserClaims: true
-                        },
                         template: "{+CustomerService}{Id}",
                         shortcutParam: "Id",
                         includeSelf: true
                     },
                     login: "{+UserService}Login",
                     address: {
-                        defaults: {
-                            includeUserClaims: true
-                        },
                         "validate-address": {
                             verb: "POST",
                             template: "{+AddressValidationService}",
@@ -1633,9 +1618,6 @@
                         }
                     },
                     order: {
-                        defaults: {
-                            includeUserClaims: true
-                        },
                         template: "{+OrderService}{Id}",
                         includeSelf: true,
                         create: {
@@ -1696,7 +1678,6 @@
                     },
                     shipment: {
                         defaults: {
-                            includeUserClaims: true,
                             template: "{+OrderService}{orderId}/shippinginfo",
                             includeSelf: true
                         },
@@ -1706,16 +1687,10 @@
                         }
                     },
                     payment: {
-                        defaults: {
-                            includeUserClaims: true
-                        },
                         template: "{+OrderService}{orderId}/billinginfo",
                         includeSelf: true
                     },
                     ordernote: {
-                        defaults: {
-                            includeUserClaims: true
-                        },
                         template: "{+OrderService}{orderId}/notes/{Id}"
                     },
                     document: {
@@ -1905,7 +1880,6 @@
                             data = conf.data || conf;
                         }
                         var contextHeaders = this.context.asObject("x-vol-");
-                        if (!requestConf.includeUserClaims) delete contextHeaders["x-vol-user-claims"];
                         var xhr = utils.ajax(method, url, contextHeaders, data, function(rawJSON) {
                             me.fire("success", rawJSON, xhr, requestConf);
                             deferred.resolve(rawJSON, xhr);
