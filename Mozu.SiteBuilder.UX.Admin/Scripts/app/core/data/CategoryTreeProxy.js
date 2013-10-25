@@ -65,8 +65,10 @@ Ext.define('Taco.core.data.CategoryTreeProxy', {
                 var response = undefined,
                     hasSiteIdFilter = false,
                     jsonData,
-                    siteId = operation.siteId;
+                    siteId = operation.siteId,
+                    catalogId = operation.catalogId;
                 if (data) {
+                    
                     response = {
                         responseText: data
                     };
@@ -74,13 +76,21 @@ Ext.define('Taco.core.data.CategoryTreeProxy', {
                         if (filter.property == 'siteId') {
                             siteId = filter.value;
                         }
+                        if (filter.property == 'catalogId') {
+                            catalogId = filter.value;
+                        }
                     });
                     if (!siteId) {
                         siteId = Taco.app.context.getSiteId();
                     }
-                    if (siteId) {
+                    if (!catalogId) {
+                        if (siteId) {
+                            catalogId = Taco.app.context.findSite(siteId).getCatalogId();
+                        } 
+                    }
+                    if (catalogId) {
                         jsonData = Ext.JSON.decode(data);
-                        jsonData.items = Ext.Array.filter(jsonData.items, function (item) { return item.siteId == siteId; });
+                        jsonData.items = Ext.Array.filter(jsonData.items, function (item) { return item.siteId == catalogId; });
                         jsonData.items.sort(function (a, b) { return (a.sequence || 99) - (b.sequence || 99); });
                         response.responseText = Ext.JSON.encode(jsonData);
 
