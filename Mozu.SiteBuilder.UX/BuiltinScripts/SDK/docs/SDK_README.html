@@ -397,7 +397,7 @@ pre {
 <p>And turns it into this:</p>
 
 <div class="highlight"><pre><span class="nx">Mozu</span><span class="p">.</span><span class="nx">Tenant</span><span class="p">(</span><span class="mi">30001</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">SiteGroup</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">MasterCatalog</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">Site</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">api</span><span class="p">()</span>
     <span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'product'</span><span class="p">,</span><span class="nx">productid</span><span class="p">)</span>
@@ -441,7 +441,7 @@ pre {
 
 <p>You can create a context by chaining individual functions:</p>
 
-<div class="highlight"><pre><span class="kd">var</span> <span class="nx">context</span> <span class="o">=</span> <span class="nx">Mozu</span><span class="p">.</span><span class="nx">Tenant</span><span class="p">(</span><span class="mi">30001</span><span class="p">).</span><span class="nx">SiteGroup</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">Site</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">context</span> <span class="o">=</span> <span class="nx">Mozu</span><span class="p">.</span><span class="nx">Tenant</span><span class="p">(</span><span class="mi">30001</span><span class="p">).</span><span class="nx">MasterCatalog</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">Site</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
 </pre></div>
 
 <p>Or you can call the single <code>Store()</code> method with an object literal of these IDs:</p>
@@ -457,14 +457,14 @@ pre {
 
 <p>Contexts can be used to create new contexts:</p>
 
-<div class="highlight"><pre><span class="kd">var</span> <span class="nx">context</span> <span class="o">=</span> <span class="nx">Mozu</span><span class="p">.</span><span class="nx">Tenant</span><span class="p">(</span><span class="mi">30001</span><span class="p">).</span><span class="nx">SiteGroup</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">Site</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">context</span> <span class="o">=</span> <span class="nx">Mozu</span><span class="p">.</span><span class="nx">Tenant</span><span class="p">(</span><span class="mi">30001</span><span class="p">).</span><span class="nx">MasterCatalog</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">Site</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
 <span class="kd">var</span> <span class="nx">site3Context</span> <span class="o">=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Site</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
 <span class="c1">// the new site3Context is still in tenant 30001 and sitegroup 1</span>
 </pre></div>
 
 <p>But the <em>big</em> deal about a context is that once it has a tenant, sitegroup, and site, it can produce an <strong>interface object</strong> through its <code>.api()</code> method.</p>
 
-<div class="highlight"><pre><span class="kd">var</span> <span class="nx">myStoreApi</span> <span class="o">=</span> <span class="nx">Mozu</span><span class="p">.</span><span class="nx">Tenant</span><span class="p">(</span><span class="mi">30001</span><span class="p">).</span><span class="nx">SiteGroup</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">Site</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="nx">api</span><span class="p">();</span>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">myStoreApi</span> <span class="o">=</span> <span class="nx">Mozu</span><span class="p">.</span><span class="nx">Tenant</span><span class="p">(</span><span class="mi">30001</span><span class="p">).</span><span class="nx">MasterCatalog</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">Site</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="nx">api</span><span class="p">();</span>
 </pre></div>
 
 <p>This interface is what you'll use to work with API objects.</p>

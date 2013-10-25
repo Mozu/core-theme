@@ -18,7 +18,7 @@
 //        private readonly IDocumentListWebApiClient _docRepo;
 //        private readonly IFolderWebApiClient _folderWebApiClient;
 //        private readonly ISiteBuilderContext _siteBuilderContext;
-//        private const TargetContextLevelType _targetContextLevelType = TargetContextLevelType.SiteGroup;
+//        private const TargetContextLevelType _targetContextLevelType = TargetContextLevelType.MasterCatalog;
 
 //        public TenantCmsServiceWrapper(IDocumentListWebApiClient docRepo, IFolderWebApiClient folderWebApiClient, ISiteBuilderContext siteBuilderContext)
 //        {

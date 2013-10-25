@@ -282,13 +282,13 @@
                                     record = store.getAt(0);
 
                                     args = {
-                                        src: '/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getSiteGroupId() + '/' + record.getId(),
+                                        src: '/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getMasterCatalogId() + '/' + record.getId(),
                                         height: record.get('height'),
                                         width: record.get('width'),
                                         alt: record.get('alt')
                                     };
 
-                                    url = '/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getSiteGroupId() + '/' +  record.getId();
+                                    url = '/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getMasterCatalogId() + '/' +  record.getId();
 
 
                                     if (el && el.nodeName == 'IMG') {

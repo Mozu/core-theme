@@ -63,7 +63,7 @@ Ext.define('Chalupa.Core', {
                 if (typeof cfg === 'string') {
                     switch (cfg) {
                         case 'collection':
-                            temp = Taco.app.context.siteCollections;
+                            temp = Taco.app.context.masterCatalogs;
 
                             test.ok(temp.length, 'One or more site collections exist');
 

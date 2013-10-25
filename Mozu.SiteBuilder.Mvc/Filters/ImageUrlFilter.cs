@@ -35,7 +35,7 @@ namespace Mozu.SiteBuilder.Mvc.Filters
                 {
                 }
             }
-            var ret = "/files/" + ctx.TenantId + "/" + ctx.SiteGroupId + "/" + ctx.SiteId + "/" + id;
+            var ret = "/files/" + ctx.TenantId + "/" + ctx.MasterCatalogId + "/" + ctx.SiteId + "/" + id;
             if (parameter != null)
             {
                 ret +="?size=" + parameter;

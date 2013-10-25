@@ -88,15 +88,15 @@
         it("should have functions to establish context", function () {
             expect(Mozu.Tenant).to.be.a('function');
             expect(Mozu.Site).to.be.a('function');
-            expect(Mozu.SiteGroup).to.be.a('function');
+            expect(Mozu.MasterCatalog).to.be.a('function');
             expect(Mozu.Store).to.be.a('function');
             expect(Mozu.UserClaims).to.be.a('function');
         });
 
-        it("should return an ApiContext from the Tenant, SiteGroup, and Site functions", function () {
+        it("should return an ApiContext from the Tenant, MasterCatalog, and Site functions", function () {
             expect(Mozu.Tenant(1)).to.be.an.instanceof(Mozu.ApiContext);
             expect(Mozu.Site(22)).to.be.an.instanceof(Mozu.ApiContext);
-            expect(Mozu.SiteGroup(22)).to.be.an.instanceof(Mozu.ApiContext);
+            expect(Mozu.MasterCatalog(22)).to.be.an.instanceof(Mozu.ApiContext);
         });        it("should expose a Store function that can set all these properties in an object-initializer style", function () {
             expect(Mozu.Store({
                 tenant: 1,
@@ -125,7 +125,7 @@
 
         it("should be able to initialize from a conf object as well", function () {
             expect(Mozu.Store({ 'tenant': 30001, 'site-group': 1, 'site': 30002 })).to.satisfy(function (context) {
-                return context.Tenant() === 30001 && context.SiteGroup() === 1 && context.Site() === 30002;
+                return context.Tenant() === 30001 && context.MasterCatalog() === 1 && context.Site() === 30002;
             });
         });
 
@@ -144,11 +144,11 @@
     });
     
     describe("ApiInterface object", function () {
-        var completeContext = Mozu.Tenant(30001).SiteGroup(1).Site(30002);
-        var noTenantContext = Mozu.SiteGroup(1).Site(40000);
-        var noSiteContext = Mozu.Tenant(30000).SiteGroup(1);
-        var noSiteGroupContext = Mozu.Tenant(30000).Site(1);
-        //var noHostContext = Mozu.Tenant(4000).SiteGroup(1).Site(2);
+        var completeContext = Mozu.Tenant(30001).MasterCatalog(1).Site(30002);
+        var noTenantContext = Mozu.MasterCatalog(1).Site(40000);
+        var noSiteContext = Mozu.Tenant(30000).MasterCatalog(1);
+        var noMasterCatalogContext = Mozu.Tenant(30000).Site(1);
+        //var noHostContext = Mozu.Tenant(4000).MasterCatalog(1).Site(2);
 
         it("should be returned by the 'api' method of a complete ApiContext", function () {
             expect(completeContext.api()).to.be.an.instanceof(Mozu.ApiInterface);
@@ -157,7 +157,7 @@
         it("should error when any of tenant, site, or sitegroup are not supplied", function () {
             expect(function () { return noTenantContext.api(); }).to.throw(/no tenant/i);
             expect(function () { return noSiteContext.api(); }).to.throw(/no site/i);
-            expect(function () { return noSiteGroupContext.api(); }).to.throw(/no site group/i);
+            expect(function () { return noMasterCatalogContext.api(); }).to.throw(/no site group/i);
         });
 
         var api = completeContext.api();

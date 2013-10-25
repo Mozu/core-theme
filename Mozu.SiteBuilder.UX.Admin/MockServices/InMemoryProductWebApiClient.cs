@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
     //    /// <summary>
     //    /// Cache key for the repository. Tied to current tenant/site group.
     //    /// </summary>
-    //    protected override string CacheKey { get { return String.Format(PRODUCTS_CACHE_FORMAT_STRING, _ctx.TenantId, _ctx.SiteGroupId); } }
+    //    protected override string CacheKey { get { return String.Format(PRODUCTS_CACHE_FORMAT_STRING, _ctx.TenantId, _ctx.MasterCatalogId); } }
 
     //    /// <summary>
     //    /// Implements IMoreAwesomeProductWebApiClient

@@ -2,10 +2,10 @@
 var ApiInterface = (function () {
 
     var ApiInterfaceConstructor = function (context) {
-        if (context.Tenant() === undefined) throw "No tenant was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
-        if (context.Site() === undefined) throw "No site was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
-        if (context.SiteGroup() === undefined) throw "No site group was specified. Run Mozu.Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
-        //if (context.Host() === undefined) throw "API Base URL was not specified. Run Mozu.Host(host).Tenant(tenantId).SiteGroup(siteGroupId).Site(siteId).";
+        if (context.Tenant() === undefined) throw "No tenant was specified. Run Mozu.Tenant(tenantId).MasterCatalog(siteGroupId).Site(siteId).";
+        if (context.Site() === undefined) throw "No site was specified. Run Mozu.Tenant(tenantId).MasterCatalog(siteGroupId).Site(siteId).";
+        if (context.MasterCatalog() === undefined) throw "No site group was specified. Run Mozu.Tenant(tenantId).MasterCatalog(siteGroupId).Site(siteId).";
+        //if (context.Host() === undefined) throw "API Base URL was not specified. Run Mozu.Host(host).Tenant(tenantId).MasterCatalog(siteGroupId).Site(siteId).";
         this.context = context;
     };
 

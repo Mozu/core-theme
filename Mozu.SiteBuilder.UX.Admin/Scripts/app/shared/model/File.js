@@ -27,7 +27,7 @@ Ext.define('Taco.shared.model.File', {
             useNull: true,
             persist: false,
             convert: function fullName(v, record) {
-                return v || record.get('localthumbnail') || '/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getSiteGroupId() + '/' + record.getId();
+                return v || record.get('localthumbnail') || '/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getMasterCatalogId() + '/' + record.getId();
             }
         }, {
             name: 'alt',
@@ -71,7 +71,7 @@ Ext.define('Taco.shared.model.File', {
             useNull: true,
             persist: false,
             convert: function fullName(v, record) {
-                return record.raw.url || '/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getSiteGroupId() + '/' + record.getId();
+                return record.raw.url || '/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getMasterCatalogId() + '/' + record.getId();
             }
         }
     ],

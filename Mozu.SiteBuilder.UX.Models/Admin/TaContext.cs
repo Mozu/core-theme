@@ -16,7 +16,7 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
-        [DataMember(Name = "siteCollections")]
+        [DataMember(Name = "masterCatalogs")]
         public List<MasterCatalog> MasterCatalogs { get; set; }
     }
 

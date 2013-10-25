@@ -7,7 +7,7 @@
     urlToken: null,
     contextType: 'a',
 
-    siteCollection: null,
+    masterCatalog: null,
 
     constructor: function (config) {
         var me = this;
@@ -31,12 +31,12 @@
     },
   
 
-    getSiteGroupId: function () {
-        return this.siteCollection.getSiteGroupId();
+    getMasterCatalogId: function () {
+        return this.masterCatalog.getMasterCatalogId();
     },
 
-    getSiteGroup: function () {
-        return this.siteCollection;
+    getMasterCatalog: function () {
+        return this.masterCatalog;
     },
 
     updateContentPublishingMode: function (value) {

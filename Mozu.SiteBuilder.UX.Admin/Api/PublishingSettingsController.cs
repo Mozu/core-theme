@@ -34,15 +34,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         public class PublishingPreferencesArgs {
-            public int SiteGroupId { get; set; }
+            public int MasterCatalogId { get; set; }
             public string ProductPublishingMode { get; set; }
         }
         [HttpPutRoute(UriTemplate = "product")]
         public async Task<Response<DC.MasterCatalog >> UpdateProductPublishingPreferences(PublishingPreferencesArgs args)
         {
-            var dcSettings = (await _siteGroupClient.GetMasterCatalog( args.SiteGroupId)).ReadAsSync();
+            var dcSettings = (await _siteGroupClient.GetMasterCatalog( args.MasterCatalogId)).ReadAsSync();
             dcSettings.ProductPublishingMode = args.ProductPublishingMode;
-            var svcResponse = await _siteGroupClient.UpdateMasterCatalog(dcSettings, args.SiteGroupId);
+            var svcResponse = await _siteGroupClient.UpdateMasterCatalog(dcSettings, args.MasterCatalogId);
 
             // handle "you cannot change modes because there is unpublished content by publishing all content."
             if (svcResponse.HasException && svcResponse.ResponseMessage.StatusCode == System.Net.HttpStatusCode.Conflict)
@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 else
                     publishResponse.ReadAsSync(); // read will throw an exception which will bubble.
 
-                svcResponse = await _siteGroupClient.UpdateMasterCatalog(dcSettings, args.SiteGroupId);
+                svcResponse = await _siteGroupClient.UpdateMasterCatalog(dcSettings, args.MasterCatalogId);
             }
 
             DC.MasterCatalog res = svcResponse.ReadAsSync();

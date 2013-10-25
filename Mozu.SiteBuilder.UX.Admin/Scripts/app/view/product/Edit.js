@@ -111,7 +111,7 @@
     checkProductPublishing: function () {
         var ctx = Taco.app.context.currentCtx;
 
-        if (ctx.siteCollection) ctx = ctx.siteCollection;
+        if (ctx.masterCatalog) ctx = ctx.masterCatalog;
 
         return ctx.productPublishingMode == 'Pending';
     },

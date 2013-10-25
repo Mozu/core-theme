@@ -29,7 +29,7 @@ And turns it into this:
 
 ```js
 Mozu.Tenant(30001)
-    .SiteGroup(1)
+    .MasterCatalog(1)
     .Site(2)
     .api()
     .get('product',productid)
@@ -72,7 +72,7 @@ The SDK tries to be as simple as possible, but since Mozu is a multi-tenant syst
 You can create a context by chaining individual functions:
 
 ```js
-var context = Mozu.Tenant(30001).SiteGroup(1).Site(2);
+var context = Mozu.Tenant(30001).MasterCatalog(1).Site(2);
 ```
 
 Or you can call the single `Store()` method with an object literal of these IDs:
@@ -90,7 +90,7 @@ These two script blocks are equivalent. They both produce the same context objec
 Contexts can be used to create new contexts:
 
 ```js
-var context = Mozu.Tenant(30001).SiteGroup(1).Site(2);
+var context = Mozu.Tenant(30001).MasterCatalog(1).Site(2);
 var site3Context = context.Site(3);
 // the new site3Context is still in tenant 30001 and sitegroup 1
 ```
@@ -98,7 +98,7 @@ var site3Context = context.Site(3);
 But the *big* deal about a context is that once it has a tenant, sitegroup, and site, it can produce an **interface object** through its `.api()` method.
 
 ```js
-var myStoreApi = Mozu.Tenant(30001).SiteGroup(1).Site(2).api();
+var myStoreApi = Mozu.Tenant(30001).MasterCatalog(1).Site(2).api();
 ```
 
 This interface is what you'll use to work with API objects.

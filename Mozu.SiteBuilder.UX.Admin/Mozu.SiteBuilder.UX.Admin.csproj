@@ -929,7 +929,7 @@
     <Content Include="Scripts\app\core\AjaxProxy.js" />
     <Content Include="Scripts\app\core\context\StoreItem.js" />
     <Content Include="Scripts\app\core\context\Site.js" />
-    <Content Include="Scripts\app\core\context\SiteCollection.js" />
+    <Content Include="Scripts\app\core\context\MasterCatalog.js" />
     <Content Include="Scripts\app\core\data\CategoryTreeProxy.js" />
     <Content Include="Scripts\app\core\data\RemoteException.js" />
     <Content Include="Scripts\app\core\layout\Flex.js" />
@@ -3193,7 +3193,6 @@
     <Content Include="Scripts\app\view\option\valueEditor\MultiValue.js" />
     <Content Include="Scripts\app\view\option\valueEditor\TextField.js" />
     <Content Include="Scripts\app\view\productOption\edit.js" />
-    <Content Include="Scripts\app\view\product\Edit-DEPRECATED.js" />
     <Content Include="Scripts\app\view\product\Index.js" />
     <Content Include="Scripts\app\view\site\CreateModal.js" />
     <Content Include="Scripts\app\view\site\navigation\Tree.js" />

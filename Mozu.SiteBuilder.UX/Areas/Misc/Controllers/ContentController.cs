@@ -133,7 +133,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         string GetDirectoryString (ApiContext ctx, string collection)
         {
-            return  System.IO.Path.GetTempPath() + "\\" + ctx.TenantId + "-" + ctx.SiteGroupId.Value + "-" + ctx.SiteId.GetValueOrDefault(0) + "\\" + collection;
+            return  System.IO.Path.GetTempPath() + "\\" + ctx.TenantId + "-" + ctx.MasterCatalogId.Value + "-" + ctx.SiteId.GetValueOrDefault(0) + "\\" + collection;
         }
         //todo: change as task
         Tuple<string, Stream> GetFromFSCache(ApiContext ctx, string collection, string documentId)
@@ -184,7 +184,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
            var context = new ApiContext()
                                      {
                                          TenantId = tenant,
-                                         SiteGroupId = sitegroup
+                                         MasterCatalogId = sitegroup
                                      };
             int tmp;
             if (int.TryParse(site, out tmp))
@@ -200,7 +200,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     tpl = GetFromFSCache(context,collection, documentId);
                     if (tpl == null)
                     {
-                        var mutexName = (context.TenantId + ";" + context.SiteGroupId.Value + ";" + context.SiteId.GetValueOrDefault(0) + ";" + collection + ";" + documentId).ToLowerInvariant();
+                        var mutexName = (context.TenantId + ";" + context.MasterCatalogId.Value + ";" + context.SiteId.GetValueOrDefault(0) + ";" + collection + ";" + documentId).ToLowerInvariant();
 
                         mutex = new Semaphore(1,1,mutexName);
                         if (!mutex.WaitOne(10000))
@@ -213,7 +213,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                             var docContextRes = _docRepo.CloneWithApiContext(c =>
                                 {
                                     c.SiteId = context.SiteId;
-                                    c.SiteGroupId = context.SiteGroupId;
+                                    c.MasterCatalogId = context.MasterCatalogId;
                                     c.TenantId = context.TenantId;
                                     c.UserClaims = null;
                                 }).GetDocumentContent(collection, documentId).Result;
