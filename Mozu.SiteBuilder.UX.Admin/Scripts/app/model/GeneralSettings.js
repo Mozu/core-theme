@@ -4,7 +4,6 @@
 Ext.define('Taco.model.GeneralSettings', {
     extend: 'Taco.core.data.Model',
     fields: [
-
         { "name": "allowAllIps", "type": "boolean", "useNull": true },
         { "name": "daylightSaving", "type": "boolean", "useNull": true },
         { "name": "favIconMobilePath", "type": "string", "useNull": true },
@@ -20,11 +19,19 @@ Ext.define('Taco.model.GeneralSettings', {
         { "name": "theme", "type": "string", "useNull": true },
         { "name": "timeFormat", "type": "string", "useNull": true },
         { "name": "timeZone", "type": "string", "useNull": true },
-        { "name": "websiteName", "type": "string", "useNull": true },
-        
+        { "name": "websiteName", "type": "string", "useNull": true },        
+
+
         // new fields not in Json
-        { "name": "channelId", "type": "string"},
-        { "name": "catalogId", "type": "string"},
+        { "name": "channelId", "type": "string" },
+        { "name": "catalogId", "type": "string" },
+        {
+            "name": "catalogName",
+            "type": "string",
+            convert: function (value,record) {
+                return Taco.app.context.findCatalog(record.get("catalogId"));
+            }
+        },
         { "name": "isMozuWebSite", "type": "boolean", defaultValue:true},
         // customer experience template
         { "name": "templateSiteId", "type": "string"},

@@ -126,7 +126,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             displayField: 'name',
             valueField: 'id',
             allowBlank: false,
-            hidden:this.record.get("isWebSite"),
+            hidden:this.record.get("isMozuWebSite"),
             store: themeStore
         });
         
@@ -153,7 +153,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                     },
                     {
                         xtype: "editabledisplayfield",
-                        name:"catalogName",
+                        name: "catalogName",
                         fieldLabel: "Catalog",
                         tpl: ["."],
                         flex: 1
