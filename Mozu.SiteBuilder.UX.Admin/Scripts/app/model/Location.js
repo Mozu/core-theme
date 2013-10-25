@@ -199,12 +199,12 @@ Ext.define('Taco.model.Location', {
     getFulfillmentTypes : function() {
         return [
             {
-                "name": "InStore Pickup",
-                "code": "inStorePickup",
+                "name": "In Store Pickup",
+                "code": "SP",
                 "shippingRequired": false
             }, {
                 "name": "Direct Ship",
-                "code": "directShip",
+                "code": "DS",
                 "shippingRequired": true
             }
         ];
