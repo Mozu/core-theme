@@ -2,7 +2,7 @@
 
 {% block Init %}
 	{% setTemplateVariables BodyTagClasses="mz-my-account" %}
-    {{ block.super }}
+    {% parent %}
 {% endblock Init%}
 
 {% block BodyContent %}

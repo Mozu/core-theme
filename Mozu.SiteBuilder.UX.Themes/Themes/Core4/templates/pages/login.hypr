@@ -1,6 +1,6 @@
 ﻿{% extends "page" %}
 
-{% block title-tag-content %} {{ themeSettings.labelLogIn }} - {{block.super }} {% endblock title-tag-content %}
+{% block title-tag-content %} {{ themeSettings.labelLogIn }} - {% parent %} {% endblock title-tag-content %}
 
 {% block body-tag-classes %} mz-loginpage {% endblock body-tag-classes %}
 

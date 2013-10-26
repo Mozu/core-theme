@@ -3,7 +3,7 @@
 
 {% block Init %}
     {% setTemplateVariables BodyTagClasses="mz-search-results" %}
-    {{ block.super }}
+    {% parent %}
 {% endblock Init %}
 
 {% block BodyContent %}
