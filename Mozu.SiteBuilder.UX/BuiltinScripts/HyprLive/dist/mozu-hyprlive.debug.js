@@ -3984,7 +3984,7 @@ for (var t = 0; t < nullTags.length; t++) {
     HyprLive.engine.setFilter('string_format', function (tpt) {
         var otherArgs = Array.prototype.slice.call(arguments, 1);
         for (var i = 0, len = otherArgs.length; i < len; i++) {
-            tpt.split('{' + i + '}').join(otherArgs[i]);
+            tpt = tpt.split('{' + i + '}').join(otherArgs[i]);
         }
         return tpt;
     });
