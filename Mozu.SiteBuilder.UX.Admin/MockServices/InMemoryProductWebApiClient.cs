@@ -129,8 +129,8 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
     //                ISOCurrencyCode = "USD",
     //                Price = 12m
     //            },
-    //            ProductInSites = new List<DC.ProductInSiteInfo> {
-    //                new DC.ProductInSiteInfo {
+    //            ProductInCatalogs = new List<DC.ProductInCatalogInfo> {
+    //                new DC.ProductInCatalogInfo {
     //                    SiteId = siteIdToOverride,
     //                    IsContentOverridden = true,
     //                    Content = new DC.ProductLocalizedContent {
@@ -156,7 +156,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
     //                ISOCurrencyCode = "USD",
     //                Price = 4.5m
     //            },
-    //            ProductInSites = null
+    //            ProductInCatalogs = null
     //        };
 
     //        repo.AddRange(new[] { p1, p2 });
@@ -255,7 +255,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
     //        throw new NotImplementedException();
     //    }
 
-    //    public Task<ServiceClientResponse<DC.ProductInSiteInfo>> AddProductInSite(DC.ProductInSiteInfo productInSiteInfoIn, string productCode)
+    //    public Task<ServiceClientResponse<DC.ProductInCatalogInfo>> AddProductInSite(DC.ProductInCatalogInfo productInCatalogInfoIn, string productCode)
     //    {
     //        throw new NotImplementedException();
     //    }
@@ -270,22 +270,22 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
     //        return this.GetProductByProductCode(productCode, responseGroups);
     //    }
 
-    //    public Task<ServiceClientResponse<DC.ProductInSiteInfo>> GetProductInSite(string productCode, int? siteId)
+    //    public Task<ServiceClientResponse<DC.ProductInCatalogInfo>> GetProductInSite(string productCode, int? siteId)
     //    {
     //        throw new NotImplementedException();
     //    }
 
-    //    public Task<ServiceClientResponse<List<DC.ProductInSiteInfo>>> GetProductInSites(string productCode)
+    //    public Task<ServiceClientResponse<List<DC.ProductInCatalogInfo>>> GetProductInCatalogs(string productCode)
     //    {
     //        throw new NotImplementedException();
     //    }
 
-    //    public Task<ServiceClientResponse<DC.ProductInSiteInfo>> UpdateProductInSite(DC.ProductInSiteInfo productInSiteInfoIn, string productCode, int? siteId)
+    //    public Task<ServiceClientResponse<DC.ProductInCatalogInfo>> UpdateProductInSite(DC.ProductInCatalogInfo productInCatalogInfoIn, string productCode, int? siteId)
     //    {
     //        throw new NotImplementedException();
     //    }
 
-    //    public Task<ServiceClientResponse<List<DC.ProductInSiteInfo>>> UpdateProductInSites(List<DC.ProductInSiteInfo> productInSitesIn, string productCode)
+    //    public Task<ServiceClientResponse<List<DC.ProductInCatalogInfo>>> UpdateProductInCatalogs(List<DC.ProductInCatalogInfo> productInCatalogsIn, string productCode)
     //    {
     //        throw new NotImplementedException();
     //    }

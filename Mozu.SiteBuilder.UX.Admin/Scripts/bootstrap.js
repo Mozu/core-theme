@@ -620,7 +620,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.model.ThemeFont": [],
   "Ext.ux.RowExpander": [],
   "Taco.model.OptionComboBox": [],
-  "Taco.model.ProductInSiteInfo": [],
+  "Taco.model.ProductInCatalogInfo": [],
   "Taco.store.Orders": [],
   "Taco.view.site.page.PageSettingsPanel": [],
   "Taco.view.order.Index": [],
@@ -1602,7 +1602,7 @@ Ext.ClassManager.addNameAliasMappings({
     "plugin.rowexpander"
   ],
   "Taco.model.OptionComboBox": [],
-  "Taco.model.ProductInSiteInfo": [],
+  "Taco.model.ProductInCatalogInfo": [],
   "Taco.store.Orders": [],
   "Taco.view.site.page.PageSettingsPanel": [
     "widget.widget.pagesettingspanel"

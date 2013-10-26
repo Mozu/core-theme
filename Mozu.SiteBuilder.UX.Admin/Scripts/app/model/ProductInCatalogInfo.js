@@ -1,10 +1,10 @@
 /**
-* @class Taco.model.ProductInSiteInfo
+* @class Taco.model.ProductInCatalogInfo
 * @author James Zetlen
 * This model indicates a Product membership in a Site, and contains any overrides to the Product defaults.
 */
 
-Ext.define('Taco.model.ProductInSiteInfo', {
+Ext.define('Taco.model.ProductInCatalogInfo', {
     extend: 'Taco.core.data.Model',
     //requires:['Taco.model.Product'],
     fields:
@@ -83,22 +83,37 @@ Ext.define('Taco.model.ProductInSiteInfo', {
             "useNull": true
         },
         {
-            "name": "siteId",
+            "name": "catalogId",
             "type": "int"
         },
         {
-            "name": "site",
+            "name": "catalog",
             "type": "auto",
             persist: false,
             convert: function (value, record) {
                 if (record.site == null) {
-                    var siteId = record.get('siteId');
-                    record.site = Taco.app.context.findSite(siteId);
+                    var catalogId = record.get('catalogId');
+                    record.catalog = Taco.app.context.findCatalog(catalogId);
                 }
-                return record.site;
+                return record.catalog;
 
             }
         },
+    {
+        name: "sites",
+        "type": "auto",
+        persist: false,
+        convert: function (value, record) {
+            if (record.site == null) {
+                var catalogId = record.get('catalogId');
+                
+                record.sites = Taco.app.context.findSitesByCatalog(catalogId);
+            }
+            return record.sites;
+
+        }
+       
+    },
         {
             "name": "categoryIds",
             "type": "auto",
@@ -126,7 +141,7 @@ Ext.define('Taco.model.ProductInSiteInfo', {
 
     ],
     
-    idProperty: "siteId",
+    idProperty: "catalogId",
     getCategoryStore: function () {
         var me = this;
         if (me.categoryStore == null) {
@@ -196,11 +211,11 @@ Ext.define('Taco.model.ProductInSiteInfo', {
     proxy: {
         type: 'ajax',
         api: {
-            read: '/admin/app/ProductInSiteInfo/list',
-            create: '/admin/app/ProductInSiteInfo/create',
-            update: '/admin/app/ProductInSiteInfo/edit',
-            destroy: '/admin/app/ProductInSiteInfo/delete',
-            duplicate: '/admin/app/ProductInSiteInfo/duplicate'
+            read: '/admin/app/ProductInCatalogInfo/list',
+            create: '/admin/app/ProductInCatalogInfo/create',
+            update: '/admin/app/ProductInCatalogInfo/edit',
+            destroy: '/admin/app/ProductInCatalogInfo/delete',
+            duplicate: '/admin/app/ProductInCatalogInfo/duplicate'
         },
         reader: {
             type: 'json',

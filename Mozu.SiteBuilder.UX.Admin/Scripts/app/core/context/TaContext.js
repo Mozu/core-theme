@@ -129,7 +129,12 @@ Ext.define('Taco.core.context.TaContext', {
     getCurrent: function () {
         return this.getCurrentContext();
     },
-
+    getCatalogId: function () {
+        if (this.masterCatalogs.length == 1) {
+            return this.masterCatalogs[0].getCatalogId();
+        }
+        return null;
+    },
     getCurrentContext: function () {
         return this.currentCtx;
     },
@@ -267,6 +272,19 @@ Ext.define('Taco.core.context.TaContext', {
             });
         });
         return foundSite;
+    },
+    
+    findSitesByCatalog:function (id) {
+        var me = this,
+           foundSites=[];
+        Ext.each(me.masterCatalogs, function (sc) {
+            Ext.each(sc.sites, function (site) {
+                if (id === site.getCatalogId()) {
+                    foundSites.push(site);
+                }
+            });
+        });
+        return foundSites;
     },
     
     findCatalog: function (id) {

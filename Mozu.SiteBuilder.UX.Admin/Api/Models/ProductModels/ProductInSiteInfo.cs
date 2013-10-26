@@ -19,7 +19,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// The site identifier these overrides belong to.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "siteId")]
+        [DataMember(EmitDefaultValue = false, Name = "catalogId")]
         public int CatalogId { get; set; }
 
         /// <summary>

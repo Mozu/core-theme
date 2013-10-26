@@ -23,8 +23,8 @@ Ext.define('Taco.view.product.subform.Categories', {
             list,
             listStore;
 
-        // categories are not global, we're only operating on the productInSiteInfo
-        this.record = this.productInSiteInfo;
+        // categories are not global, we're only operating on the productInCatalogInfo
+        this.record = this.productInCatalogInfo;
 
 
         listStore = this.record.getUnfilteredCategoryStore();

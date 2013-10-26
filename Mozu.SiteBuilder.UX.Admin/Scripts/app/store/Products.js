@@ -19,10 +19,10 @@
 
         listeners: {
             update: function(store, record, operation, eOpts) {
-                // when the product is updated, the ProductInSites store needs to be reloaded.
+                // when the product is updated, the ProductInCatalogs store needs to be reloaded.
                 if (record != null && operation === Ext.data.Model.COMMIT)
                 {
-                    record.reloadProductInSitesStore();
+                    record.reloadProductInCatalogsStore();
                 }
             }
         }

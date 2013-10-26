@@ -20,7 +20,7 @@ Ext.define('Taco.view.product.subform.General', {
         this.defaults = {
             width: 200,
             product: this.product,
-            productInSiteInfo: this.productInSiteInfo,
+            productInCatalogInfo: this.productInCatalogInfo,
             labelAlign: 'top',
             labelSeparator: '',
             persistChangesToModel: true
@@ -61,7 +61,7 @@ Ext.define('Taco.view.product.subform.General', {
         }, {
             xtype:'formform',
             persistChangesToModel: true,
-            record: this.productInSiteInfo,
+            record: this.productInCatalogInfo,
             hidden: this.isGlobal,
             width: '100%',
             header:false,
@@ -78,7 +78,7 @@ Ext.define('Taco.view.product.subform.General', {
                     listConfig: { shadow: false },
                     shrinkWrap: 3,
                     store: [[false, 'Hide in website'], [true, 'Show on website']],
-                    value: this.productInSiteInfo ? this.productInSiteInfo .get('isActive') : false
+                    value: this.productInCatalogInfo ? this.productInCatalogInfo .get('isActive') : false
                 }
             ]
 

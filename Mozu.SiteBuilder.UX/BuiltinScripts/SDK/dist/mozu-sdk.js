@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-10-25
+ * Mozu JavaScript SDK - v0.1.0 - 2013-10-26
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -333,11 +333,10 @@
                                 function resolveOne(item, i) {
                                     when(item, mapFunc, fallback).then(function(mapped) {
                                         results[i] = mapped;
-                                        notify(mapped);
                                         if (!--toResolve) {
                                             resolve(results);
                                         }
-                                    }, reject);
+                                    }, reject, notify);
                                 }
                             }
                         });
@@ -374,7 +373,7 @@
                             state: "pending"
                         };
                     }
-                    var reduceArray, slice, fcall, nextTick, handlerQueue, setTimeout, funcProto, call, arrayProto, monitorApi, cjsRequire, undef;
+                    var reduceArray, slice, fcall, nextTick, handlerQueue, setTimeout, funcProto, call, arrayProto, monitorApi, cjsRequire, MutationObserver, undef;
                     cjsRequire = require;
                     handlerQueue = [];
                     function enqueue(task) {
@@ -391,16 +390,18 @@
                     }
                     setTimeout = global.setTimeout;
                     monitorApi = typeof console != "undefined" ? console : when;
-                    if (typeof setImmediate === "function") {
-                        nextTick = setImmediate.bind(global);
-                    } else if (typeof MessageChannel !== "undefined") {
-                        var channel = new MessageChannel();
-                        channel.port1.onmessage = drainQueue;
-                        nextTick = function() {
-                            channel.port2.postMessage(0);
-                        };
-                    } else if (typeof process === "object" && process.nextTick) {
+                    if (typeof process === "object" && process.nextTick) {
                         nextTick = process.nextTick;
+                    } else if (MutationObserver = global.MutationObserver || global.WebKitMutationObserver) {
+                        nextTick = function(document, MutationObserver, drainQueue) {
+                            var el = document.createElement("div");
+                            new MutationObserver(drainQueue).observe(el, {
+                                attributes: true
+                            });
+                            return function() {
+                                el.setAttribute("x", "x");
+                            };
+                        }(document, MutationObserver, drainQueue);
                     } else {
                         try {
                             nextTick = cjsRequire("vertx").runOnLoop || cjsRequire("vertx").runOnContext;

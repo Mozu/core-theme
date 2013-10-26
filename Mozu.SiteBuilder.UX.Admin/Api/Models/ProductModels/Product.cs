@@ -208,10 +208,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// A collection of site-specific overrides for this product.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "productInSites")]
+        [DataMember(EmitDefaultValue = false, Name = "productInCatalogs")]
         public List<ProductInCatalogInfo> ProductInCatalogs { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "siteGroupId")]
+        [DataMember(EmitDefaultValue = false, Name = "masterCatalogId")]
         public int? MasterCatalogId { get; set; }
     }
 }

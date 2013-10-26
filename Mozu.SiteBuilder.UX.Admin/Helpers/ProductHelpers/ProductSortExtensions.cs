@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         /// </summary>
         /// <param name="useSiteContext">
         /// By default, sort occurs on global-level content or price parameters.
-        /// Pass true to force sort on content and price fields nested inside ProductInSites.
+        /// Pass true to force sort on content and price fields nested inside ProductInCatalogs.
         /// </param>
         public static string ToSortString(this SortingCollection sortCollection, bool useSiteContext = false)
         {

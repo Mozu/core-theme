@@ -12,7 +12,7 @@ Ext.define('Taco.view.product.subform.SEO', {
     initComponent: function () {
         this.defaults.width = '100%';
         this.defaults.product = this.product;
-        this.defaults.productInSiteInfo = this.productInSiteInfo;
+        this.defaults.productInCatalogInfo = this.productInCatalogInfo;
         this.defaults.persistChangesToModel = true;
 
         this.items = [{

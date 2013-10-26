@@ -43,7 +43,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
         // *** 'subitems' are items of child Containerthis.product.on
         this.subitems = this.items;
 
-        this.isOverridden = this.productInSiteInfo && this.productInSiteInfo.get(this.overrideFieldName);
+        this.isOverridden = this.productInCatalogInfo && this.productInCatalogInfo.get(this.overrideFieldName);
 
         this.formContainer = Ext.widget({
             xtype: 'container',
@@ -93,7 +93,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
 
         this.callParent(arguments);
 
-        if (this.productInSiteInfo && !this.hideOverride) {
+        if (this.productInCatalogInfo && !this.hideOverride) {
             // *** SiteForm Multisite Mode
             this.addCls('active');
             this.setOverride(this.isOverridden, false );
@@ -139,14 +139,14 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
 
     setOverride: function (val, shouldCopy, overrideCheckbox) {
         var overrideCountDelta;
-        this.productInSiteInfo.set( this.overrideFieldName, val );
+        this.productInCatalogInfo.set( this.overrideFieldName, val );
         
         if (val) {
-            this.record = this.productInSiteInfo;
+            this.record = this.productInCatalogInfo;
             if (shouldCopy) {
                 this.getForm().getFields().each(
                     function (field) {
-                        this.productInSiteInfo.set( field.name, this.product.get(field.name) );
+                        this.productInCatalogInfo.set( field.name, this.product.get(field.name) );
                     },
                     this
                 );
