@@ -1390,17 +1390,7 @@
                 var copyToConf = [ "verb", "returnType", "noBody" ], copyToConfLength = copyToConf.length;
                 var pub = {
                     basicOps: basicOps,
-                    urls: {
-                        ProductService: defaultHost + "mozu.ProductRuntime.WebApi/commerce/catalog/storefront/products/",
-                        CategoryService: defaultHost + "mozu.ProductRuntime.WebApi/commerce/catalog/storefront/categories/",
-                        CartService: defaultHost + "mozu.Cart.WebApi/commerce/carts/",
-                        UserService: defaultHost + "mozu.User.WebApi/platform/user/accounts/",
-                        CustomerService: defaultHost + "mozu.Customer.WebApi/commerce/customer/accounts",
-                        OrderService: defaultHost + "mozu.CommerceRuntime.WebApi/commerce/orders",
-                        SearchService: defaultHost + "mozu.ProductRuntime.WebApi/commerce/catalog/storefront/productsearch",
-                        CmsService: defaultHost + "mozu.Content.WebApi/documentLists/",
-                        ReferenceService: defaultHost + "mozu.reference.WebApi/platform/reference/"
-                    },
+                    urls: {},
                     getActionsFor: function(typeName) {
                         if (!objectTypes[typeName]) return false;
                         var actions = [];
@@ -1483,7 +1473,7 @@
                 };
                 var objectTypes = {
                     products: {
-                        template: "{+ProductService}" + genericQueryTpt,
+                        template: "{+productService}" + genericQueryTpt,
                         shortcutParam: "filter",
                         defaultParams: {
                             startIndex: 0,
@@ -1492,7 +1482,7 @@
                         collectionOf: "product"
                     },
                     categories: {
-                        template: "{+CategoryService}" + genericQueryTpt,
+                        template: "{+categoryService}" + genericQueryTpt,
                         shortcutParam: "filter",
                         defaultParams: {
                             startIndex: 0,
@@ -1501,14 +1491,14 @@
                         collectionOf: "category"
                     },
                     category: {
-                        template: "{+CategoryService}{Id}(?allowInactive}",
+                        template: "{+categoryService}{Id}(?allowInactive}",
                         shortcutParam: "Id",
                         defaultParams: {
                             allowInactive: false
                         }
                     },
                     search: {
-                        template: "{+SearchService}searchz{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,sortBy,pageSize,PageSize,startIndex,StartIndex}",
+                        template: "{+searchService}searchz{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,sortBy,pageSize,PageSize,startIndex,StartIndex}",
                         shortcutParam: "query",
                         defaultParams: {
                             startIndex: 0,
@@ -1519,7 +1509,7 @@
                     },
                     product: {
                         get: {
-                            template: "{+ProductService}{ProductCode}?{&allowInactive*}",
+                            template: "{+productService}{ProductCode}?{&allowInactive*}",
                             shortcutParam: "ProductCode",
                             defaultParams: {
                                 allowInactive: false
@@ -1527,7 +1517,7 @@
                         },
                         configure: {
                             verb: "POST",
-                            template: "{+ProductService}{ProductCode}/configure{?includeOptionDetails}",
+                            template: "{+productService}{ProductCode}/configure{?includeOptionDetails}",
                             defaultParams: {
                                 includeOptionDetails: true
                             },
@@ -1541,23 +1531,23 @@
                             overridePostData: true,
                             shortcutParam: "Quantity",
                             returnType: "cartitem",
-                            template: "{+CartService}current/items/"
+                            template: "{+cartService}current/items/"
                         }
                     },
                     cart: {
-                        get: "{+CartService}current",
+                        get: "{+cartService}current",
                         "add-product": {
                             verb: "POST",
                             returnType: "cartitem",
-                            template: "{+CartService}current/items/"
+                            template: "{+cartService}current/items/"
                         },
                         empty: {
                             verb: "DELETE",
-                            template: "{+CartService}current/items/"
+                            template: "{+cartService}current/items/"
                         },
                         checkout: {
                             verb: "POST",
-                            template: "{+OrderService}?cartId={Id}",
+                            template: "{+orderService}?cartId={Id}",
                             returnType: "order",
                             noBody: true,
                             includeSelf: true
@@ -1565,12 +1555,12 @@
                     },
                     cartitem: {
                         defaults: {
-                            template: "{+CartService}current/items/{Id}",
+                            template: "{+cartService}current/items/{Id}",
                             shortcutParam: "Id"
                         },
                         "update-quantity": {
                             verb: "PUT",
-                            template: "{+CartService}current/items{/Id,quantity}",
+                            template: "{+cartService}current/items{/Id,quantity}",
                             shortcutParam: "quantity",
                             includeSelf: true,
                             noBody: true
@@ -1579,38 +1569,38 @@
                     user: {
                         create: {
                             verb: "POST",
-                            template: "{+UserService}"
+                            template: "{+userService}"
                         },
                         get: {
-                            template: "{+UserService}{Id}",
+                            template: "{+userService}{Id}",
                             shortcutParam: "id"
                         },
                         "get-by-email": {
-                            template: "{+UserService}{?emailAddress*}",
+                            template: "{+userService}{?emailAddress*}",
                             shortcutParam: "emailAddress"
                         },
                         login: {
                             verb: "POST",
-                            template: "{+UserService}Login",
+                            template: "{+userService}Login",
                             includeSelf: true,
                             returnType: "login"
                         },
                         "change-password": {
                             verb: "POST",
                             includeSelf: true,
-                            template: "{+UserService}{Id}/changepassword"
+                            template: "{+userService}{Id}/changepassword"
                         }
                     },
                     customer: {
-                        template: "{+CustomerService}{Id}",
+                        template: "{+customerService}{Id}",
                         shortcutParam: "Id",
                         includeSelf: true
                     },
-                    login: "{+UserService}Login",
+                    login: "{+userService}Login",
                     address: {
                         "validate-address": {
                             verb: "POST",
-                            template: "{+AddressValidationService}",
+                            template: "{+addressValidationService}",
                             includeSelf: {
                                 asProperty: "Address"
                             },
@@ -1619,29 +1609,29 @@
                         }
                     },
                     order: {
-                        template: "{+OrderService}{Id}",
+                        template: "{+orderService}{Id}",
                         includeSelf: true,
                         create: {
-                            template: "{+OrderService}{?cartId*}",
+                            template: "{+orderService}{?cartId*}",
                             shortcutParam: "cartId",
                             noBody: true
                         },
                         "update-shipping-info": {
-                            template: "{+OrderService}{Id}/shippinginfo",
+                            template: "{+orderService}{Id}/fulfillmentinfo",
                             verb: "PUT",
                             returnType: "shipment",
                             includeSelf: true
                         },
                         "set-user-id": {
                             verb: "PUT",
-                            template: "{+OrderService}{Id}/users",
+                            template: "{+orderService}{Id}/users",
                             noBody: true,
                             includeSelf: true,
                             returnType: "user"
                         },
                         "apply-coupon": {
                             verb: "PUT",
-                            template: "{+OrderService}{Id}/coupons/{couponCode}",
+                            template: "{+orderService}{Id}/coupons/{couponCode}",
                             shortcutParam: "couponCode",
                             includeSelf: true,
                             noBody: true,
@@ -1649,54 +1639,54 @@
                         },
                         "remove-coupon": {
                             verb: "DELETE",
-                            template: "{+OrderService}{Id}/coupons/{couponCode}",
+                            template: "{+orderService}{Id}/coupons/{couponCode}",
                             shortcutParam: "couponCode",
                             includeSelf: true
                         },
                         "remove-all-coupons": {
                             verb: "DELETE",
-                            template: "{+OrderService}{Id}/coupons",
+                            template: "{+orderService}{Id}/coupons",
                             includeSelf: true
                         },
                         "get-available-actions": {
-                            template: "{+OrderService}{Id}/actions",
+                            template: "{+orderService}{Id}/actions",
                             includeSelf: true,
                             returnType: "orderactions"
                         },
                         "perform-order-action": {
                             verb: "POST",
-                            template: "{+OrderService}{Id}/actions",
+                            template: "{+orderService}{Id}/actions",
                             shortcutParam: "ActionName",
                             overridePostData: [ "ActionName" ],
                             includeSelf: true
                         },
                         "add-order-note": {
                             verb: "POST",
-                            template: "{+OrderService}{Id}/notes",
+                            template: "{+orderService}{Id}/notes",
                             includeSelf: true,
                             returnType: "ordernote"
                         }
                     },
                     shipment: {
                         defaults: {
-                            template: "{+OrderService}{orderId}/shippinginfo",
+                            template: "{+orderService}{orderId}/fulfillmentinfo",
                             includeSelf: true
                         },
                         "get-shipping-methods": {
-                            template: "{+OrderService}{orderId}/shipments/methods",
+                            template: "{+orderService}{orderId}/shipments/methods",
                             returnType: "shippingmethods"
                         }
                     },
                     payment: {
-                        template: "{+OrderService}{orderId}/billinginfo",
+                        template: "{+orderService}{orderId}/billinginfo",
                         includeSelf: true
                     },
                     ordernote: {
-                        template: "{+OrderService}{orderId}/notes/{Id}"
+                        template: "{+orderService}{orderId}/notes/{Id}"
                     },
                     document: {
                         get: {
-                            template: "{+CmsService}{/documentListName,documentId}/{?version,status}",
+                            template: "{+cmsService}{/documentListName,documentId}/{?version,status}",
                             shortcutParam: "documentId",
                             defaultParams: {
                                 documentListName: "default"
@@ -1705,14 +1695,14 @@
                     },
                     documentbyname: {
                         get: {
-                            template: "{+CmsService}{documentListName}/named/{documentName}/{?folderPath,version,status}",
+                            template: "{+cmsService}{documentListName}/named/{documentName}/{?folderPath,version,status}",
                             shortcutParam: "documentName",
                             defaultParams: {
                                 documentListName: "default"
                             }
                         }
                     },
-                    addressschemas: "{+ReferenceService}addressschemas"
+                    addressschemas: "{+referenceService}addressschemas"
                 };
                 return pub;
             }();

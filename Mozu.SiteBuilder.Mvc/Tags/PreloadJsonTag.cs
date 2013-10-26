@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             var model = arguments[0].Value;
             var name = arguments[1].Value;
             string json = null;
-            if (model != null && model.GetType().FullName.Contains("SiteBuilder"))
+            if (model != null && model.GetType().FullName.Contains("SiteBuilder") && !model.GetType().FullName.Contains("StoreFront"))
             {
                 json = JsonConvert.SerializeObject(model, Formatting.None, caseInsenstiveJsonSerializerSettings);
             }

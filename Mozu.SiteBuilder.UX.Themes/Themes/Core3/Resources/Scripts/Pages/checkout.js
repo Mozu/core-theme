@@ -12,11 +12,11 @@
         var checkoutViewModel = new CheckoutModels.CheckoutPage(checkoutData);
 
         // add some view-only helpers
-        checkoutViewModel.ShippingInfo.ShippingContact.nextButtonText = ko.computed(function () {
-            return checkoutViewModel.ShippingInfo.stepStatus() == 'new' ? 'Next' : 'Update'
+        checkoutViewModel.FulfillmentInfo.FulfillmentContact.nextButtonText = ko.computed(function () {
+            return checkoutViewModel.FulfillmentInfo.stepStatus() == 'new' ? 'Next' : 'Update'
         });
 
-        checkoutViewModel.ShippingInfo.nextButtonText = ko.computed(function () {
+        checkoutViewModel.FulfillmentInfo.nextButtonText = ko.computed(function () {
             return checkoutViewModel.BillingInfo.stepStatus() == 'new' ? 'Next' : 'Update'
         });
 
@@ -78,13 +78,13 @@
         $checkoutView
             .on('keypress', '#mz-shipping-address-panel input', function (e) {
                 if (e.which === 13) {
-                    checkoutViewModel.ShippingInfo.ShippingContact.nextStep();
+                    checkoutViewModel.FulfillmentInfo.FulfillmentContact.nextStep();
                     return false;
                 }
             })
             .on('keypress', '#mz-shipping-method-panel input', function (e) {
                 if (e.which === 13) {
-                    checkoutViewModel.ShippingInfo.nextStep();
+                    checkoutViewModel.FulfillmentInfo.nextStep();
                     return false;
                 }
             })

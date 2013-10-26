@@ -98,21 +98,21 @@
                     </tr>
                     <tr>
                         <td class="mz-field-label">Ship to:</td>
-                        <td>{{ Model.ShippingInfo.ShippingContact.FirstName }} {{ Model.ShippingInfo.ShippingContact.LastNameOrSurname }}</td>
+                        <td>{{ Model.FulfillmentInfo.FulfillmentContact.FirstName }} {{ Model.FulfillmentInfo.FulfillmentContact.LastNameOrSurname }}</td>
                     </tr>
                     <tr>
                         <td></td>
-                        <td>{{ Model.ShippingInfo.ShippingContact.Address.Address1 }}</td>
+                        <td>{{ Model.FulfillmentInfo.FulfillmentContact.Address.Address1 }}</td>
                     </tr>
-                    {% if Model.ShippingInfo.ShippingContact.Address.Address2  %}
+                    {% if Model.FulfillmentInfo.FulfillmentContact.Address.Address2  %}
                     <tr>
                         <td></td>
-                        <td>{{ Model.ShippingInfo.ShippingContact.Address.Address2 }}</td>
+                        <td>{{ Model.FulfillmentInfo.FulfillmentContact.Address.Address2 }}</td>
                     </tr>
                     {% endif %}
                     <tr>
                         <td></td>
-                        <td>{{ Model.ShippingInfo.ShippingContact.Address.CityOrTown }}, {{ Model.ShippingInfo.ShippingContact.Address.StateOrProvince }} {{ Model.ShippingInfo.ShippingContact.Address.PostalOrZipCode }}</td>
+                        <td>{{ Model.FulfillmentInfo.FulfillmentContact.Address.CityOrTown }}, {{ Model.FulfillmentInfo.FulfillmentContact.Address.StateOrProvince }} {{ Model.FulfillmentInfo.FulfillmentContact.Address.PostalOrZipCode }}</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -120,7 +120,7 @@
                     </tr>
                     <tr>
                         <td class="mz-field-label">Shipping Method:</td>
-                        <td><strong>{{ Model.ShippingInfo.ShippingMethodName }}</strong></td>
+                        <td><strong>{{ Model.FulfillmentInfo.ShippingMethodName }}</strong></td>
                     </tr>
                 </tbody>
             </table><!-- #purchase-details-->

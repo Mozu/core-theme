@@ -47,8 +47,11 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             // builder.RegisterType<AuthenticationHelper>().InstancePerLifetimeScope();
             builder.RegisterType<CatalogContext>().As<ICatalogContext>().InstancePerApiRequest();
 
-            builder.RegisterType<ThemeMetadataProvider>().As<IThemeMetaDataProvider>().InstancePerApiRequest();
-            builder.RegisterType<ThemeRepository>().As<IThemeRepository>().InstancePerApiRequest();
+            builder.RegisterType<ThemeMetadataProvider>().As<IThemeMetaDataProvider>().SingleInstance();
+            builder.RegisterType<ThemeRepository>().As<IThemeRepository>().SingleInstance();
+            builder.RegisterType<ThemeFactory>().SingleInstance();
+
+
 
             builder.RegisterType<HyprViewEngine>().InstancePerApiRequest();
 
@@ -94,7 +97,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.Register(c => new HyprTemplateManager(tm, c.Resolve<MozuVirtualPathProvider>())).As<ITemplateManager>().InstancePerLifetimeScope();
 
 
-            builder.RegisterType<ThemeFactory>().InstancePerLifetimeScope();
+            
 
 
             builder.RegisterType<NavigationRepository>().As<INavigationRepository>().InstancePerApiRequest();
