@@ -134,7 +134,7 @@ Ext.define('Taco.view.customers.ItemBrowser', {
 
         if (data.zipCode) {
             me.addFilter('ZipCode', 'Zip code is ' + data.zipCode, Ext.create('Ext.util.Filter', {
-                property: 'zipCode',
+                property: 'postalOrZipCode',
                 value: data.zipCode,
                 root: 'data'
             }));

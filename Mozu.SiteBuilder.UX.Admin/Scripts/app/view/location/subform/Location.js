@@ -135,7 +135,7 @@ Ext.define('Taco.view.location.subform.Location', {
                         '<div class="address-line-2">{address2}</div>',
                         '<div class="address-line-3">{address3}</div>',
                         '<div class="address-line-4">{address4}</div>',
-                        '<div class="city-state-zip">{cityOrTown}, {state} {zipCode}</div>',
+                        '<div class="city-state-zip">{cityOrTown}, {stateOrProvince} {postalOrZipCode}</div>',
                         '<div class="country">{countryCode}</div>',
                     '</tpl>'
                 ]).apply(value);

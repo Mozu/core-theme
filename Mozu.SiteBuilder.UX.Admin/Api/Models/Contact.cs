@@ -39,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 		/// <summary>
 		/// CompanyOrOrganization
 		/// </summary>
-		[DataMember(Name="companyName")]
+        [DataMember(Name = "companyOrOrganization")]
 		public string CompanyOrOrganization { get; set; }
 
         #region Address
@@ -61,10 +61,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         [DataMember(Name="countryCode")]
         public string CountryCode { get; set; }
 
-        [DataMember(Name="zipCode")]
+        [DataMember(Name = "postalOrZipCode")]
         public string PostalOrZipCode { get; set; }
 
-        [DataMember(Name="state")]
+        [DataMember(Name="stateOrProvince")]
         public string StateOrProvince { get; set; }
 
         [DataMember(Name="addressIsValidated")]

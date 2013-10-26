@@ -158,8 +158,8 @@ Ext.define('Taco.shared.view.modal.Address', {
                     message += response.validatedAddr['address2'] + '<br />';
                 }
                 message += response.validatedAddr['cityOrTown'] + ', ';
-                message += response.validatedAddr['state'] + ' ';
-                message += response.validatedAddr['zipCode'] + '<br />';
+                message += response.validatedAddr['stateOrProvince'] + ' ';
+                message += response.validatedAddr['postalOrZipCode'] + '<br />';
                 message += response.validatedAddr['countryCode'];
                 Ext.Msg.show({
                     title: 'Validated Address',
@@ -296,9 +296,9 @@ Ext.define('Taco.shared.view.modal.Address', {
                             message += validatedAddr['address2'] + ', ';
                         }
                         message += validatedAddr['cityOrTown'] + ' ';
-                        message += validatedAddr['state'] + ', ';
+                        message += validatedAddr['stateOrProvince'] + ', ';
                         message += validatedAddr['countryCode'] + ', ';
-                        message += validatedAddr['zipCode'];
+                        message += validatedAddr['postalOrZipCode'];
                         Ext.Msg.show({
                             title: 'Address',
                             msg: 'Did you mean: ' + message,

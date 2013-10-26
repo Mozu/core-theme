@@ -77,7 +77,7 @@ Ext.define('Taco.view.customers.SearchForm', {
 			}, {
 				xtype: 'textfield',
 		        fieldLabel: 'Zip code',
-				name: 'zipCode'
+				name: 'postalOrZipCode'
 			}]
 		});
 

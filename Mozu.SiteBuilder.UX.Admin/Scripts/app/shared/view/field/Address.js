@@ -141,7 +141,7 @@ Ext.define('Taco.shared.view.field.Address', {
             '<div class="address-line-2">{address2}</div>',
             '<div class="address-line-3">{address3}</div>',
             '<div class="address-line-4">{address4}</div>',
-            '<div class="city-state-zip">{cityOrTown}, {state} {zipCode}</div>',
+            '<div class="city-state-zip">{cityOrTown}, {stateOrProvince} {postalOrZipCode}</div>',
             '<div class="country">{countryCode}</div>',
             '</tpl>'
         ]);

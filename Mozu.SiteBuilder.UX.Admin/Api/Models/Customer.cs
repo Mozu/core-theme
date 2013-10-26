@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         /// <summary>
         /// The company or organization name for a customer account
         /// </summary>
-        [DataMember(Name="companyName")]
+        [DataMember(Name="companyOrOrganization")]
         public string CompanyOrOrganization { get; set; }
 
         /// <summary>

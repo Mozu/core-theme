@@ -67,7 +67,7 @@ Ext.define('Taco.model.Location', {
 				"address3": "",
 				"address4": "",
 				"cityOrTown": "",
-				"state": "",
+				"stateOrProvince": "",
 				"countryCode": "",
 				"zipCode": "",				
 				"addressType": {}, // tbd. not sure what this is. Roeder said he would back to me on this.				
@@ -84,7 +84,7 @@ Ext.define('Taco.model.Location', {
                     '{address2} ',
                     '{address3} ',
                     '{address4} ',
-                    '{cityOrTown}, {state} {zipCode}',
+                    '{cityOrTown}, {stateOrProvince} {postalOrZipCode}',
                     '{countryCode}'
                 ).apply(record.get('address'));
                 return str;

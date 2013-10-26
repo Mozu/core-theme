@@ -34,7 +34,7 @@ Ext.define('Taco.shared.view.form.Address', {
             fields.push({
                 xtype: 'textfield',
                 width: 315,
-                name: 'companyName',
+                name: 'companyOrOrganization',
                 fieldLabel: 'Company Name',
                 margin: '0 14 5 0',
                 style: { 'display': 'inline-table' }
@@ -90,14 +90,14 @@ Ext.define('Taco.shared.view.form.Address', {
             style: { 'display': 'inline-table' }
         }, {
             xtype: 'textfield',
-            name: 'state',
+            name: 'stateOrProvince',
             fieldLabel: 'State',
             margin: '0 14 5 0',
             allowBlank: false,
             style: { 'display': 'inline-table' }
         }, {
             xtype: 'textfield',
-            name: 'zipCode',
+            name: 'postalOrZipCode',
             fieldLabel: 'ZIP',
             margin: '0 15 5 0',
             allowBlank: false,
