@@ -37,9 +37,9 @@
         <dd class="mz-addresssummary">{% include "modules/common/address-summary" with Model=ViewData.MailCheckTo %}</dd>
         {% endif %}
         <dt>{{ themeSettings.labelShipTo }}</dt>
-        <dd class="mz-addresssummary">{% include "modules/common/address-summary" with Model=Model.ShippingInfo.ShippingContact %}</dd>
+        <dd class="mz-addresssummary">{% include "modules/common/address-summary" with Model=Model.FulfillmentInfo.FulfillmentContact %}</dd>
         <dt>{{ themeSettings.labelShippingMethod }}</dt>
-        <dd>{{ Model.ShippingInfo.ShippingMethodName }}</dd>
+        <dd>{{ Model.FulfillmentInfo.ShippingMethodName }}</dd>
     </dl>
     </div>
 
@@ -69,12 +69,12 @@
 	<script>
 	_gaq.push(['_addTrans',
 		'{{ Model.OrderNumber }}',						
-		'{{ siteContext.settings.general.websiteName }}',
+		'{{ siteContext.generalSettings.websiteName }}',
 		'{{ Model.Total }}',							
 		'{{ Model.TaxTotal }}',					
 		'{{ Model.ShippingTotal }}',		
-		'{{ Model.ShippingInfo.ShippingContact.Address.CityOrTown }}',
-		'{{ Model.ShippingInfo.ShippingContact.Address.StateOrProvince }}',			
+		'{{ Model.FulfillmentInfo.FulfillmentContact.Address.CityOrTown }}',
+		'{{ Model.FulfillmentInfo.FulfillmentContact.Address.StateOrProvince }}',			
 		'USA'
 	]);
 

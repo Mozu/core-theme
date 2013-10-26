@@ -48,7 +48,7 @@
             }
         }),
 
-        ShippingContact = CheckoutStep.extend({
+        FulfillmentContact = CheckoutStep.extend({
             relations: {
                 Address: AddressModels.StreetAddress,
                 PhoneNumbers: AddressModels.PhoneNumbers
@@ -71,7 +71,7 @@
                 if (this.validate()) return false;
                 var parent = this.parent, me = this;
                 this.isLoading(true);
-                parent.apiModel.update({ ShippingContact: this.toJSON() }).then(function () {
+                parent.apiModel.update({ FulfillmentContact: this.toJSON() }).then(function () {
                     return parent.apiGetShippingMethods();
                 }).then(function (methods) {
                     return parent.set({
@@ -86,14 +86,14 @@
             }
         }),
 
-        ShippingInfo = CheckoutStep.extend({
+        FulfillmentInfo = CheckoutStep.extend({
             mozuType: 'shipment',
             initialize: function () {
                 // this adds the price and other metadata off the chosen method to the info object itself
                 this.updateShippingMethod(this.get('ShippingMethodCode'));
             },
             relations: {
-                ShippingContact: ShippingContact
+                FulfillmentContact: FulfillmentContact
             },
             validation: {
                 ShippingMethodCode: {
@@ -103,7 +103,7 @@
             },
             calculateStepStatus: function () {
                 var st = "new", available;
-                if (this.get("ShippingContact").stepStatus() !== "complete") {
+                if (this.get("FulfillmentContact").stepStatus() !== "complete") {
                     return this.stepStatus("new");
                 }
                 available = this.get("AvailableShippingMethods");
@@ -123,7 +123,7 @@
                 if (this.validate()) return false;
                 var me = this;
                 this.isLoading(true);
-                this.getOrder().apiModel.update({ ShippingInfo: me.toJSON() }).ensure(function () {
+                this.getOrder().apiModel.update({ FulfillmentInfo: me.toJSON() }).ensure(function () {
                     me.isLoading(false);
                     me.calculateStepStatus();
                     me.parent.get("BillingInfo").calculateStepStatus();
@@ -284,7 +284,7 @@
                 this.selectPaymentType(this.get('PaymentType'));
                 this.on('change:IsSameBillingShippingAddress', function (model, wellIsIt) {
                     if (wellIsIt) {
-                        this.get('BillingContact').set(this.parent.get('ShippingInfo').get('ShippingContact').toJSON(), { silent: true });
+                        this.get('BillingContact').set(this.parent.get('FulfillmentInfo').get('FulfillmentContact').toJSON(), { silent: true });
                     }
                 });
             },
@@ -306,7 +306,7 @@
                 return j;
             },
             calculateStepStatus: function() {
-                this.stepStatus(!!this.parent.get('ShippingInfo').get('ShippingMethodCode') ? (
+                this.stepStatus(!!this.parent.get('FulfillmentInfo').get('ShippingMethodCode') ? (
                     this.isValid(true) ? 'complete' : 'invalid')
                     : 'new');
             },
@@ -362,7 +362,7 @@
             mozuType: 'order',
             handlesMessages: true,
             relations: {
-                ShippingInfo: ShippingInfo,
+                FulfillmentInfo: FulfillmentInfo,
                 BillingInfo: BillingInfo,
                 ShopperNotes: ShopperNotes,
                 User: UserModels.User

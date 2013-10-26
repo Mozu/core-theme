@@ -3,13 +3,13 @@
     // current service URLs
     var ServiceUrls = {
         BadUrl: 'A_BAD_URL',
-        "ProductService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/commerce/catalog/storefront/products/",
-        "CartService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.CommerceRuntime.WebApi/commerce/carts/",
-        "UserService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.User.WebApi/platform/user/accounts/",
-        "OrderService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.CommerceRuntime.WebApi/commerce/orders/",
-        "SearchService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/commerce/catalog/storefront/productsearch/",
-        "CmsService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Content.WebApi/content/documents/",
-        "ReferenceService": "http://aus01pdweb001.ads.volusion.com:9090/Mozu.reference.WebApi/platform/reference",
+        "productService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/commerce/catalog/storefront/products/",
+        "cartService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.CommerceRuntime.WebApi/commerce/carts/",
+        "userService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.User.WebApi/platform/user/accounts/",
+        "orderService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.CommerceRuntime.WebApi/commerce/orders/",
+        "searchService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.ProductRuntime.WebApi/commerce/catalog/storefront/productsearch/",
+        "cmsService": "http://aus01pdweb001.ads.volusion.com:9090/mozu.Content.WebApi/content/documents/",
+        "referenceService": "http://aus01pdweb001.ads.volusion.com:9090/Mozu.reference.WebApi/platform/reference",
     };
 
     Mozu.setServiceUrls(ServiceUrls);
@@ -23,7 +23,7 @@
             ]
         },
         SampleProductCode: "Sample",
-        SampleProductUrl: ServiceUrls.ProductService + 'Sample',
+        SampleProductUrl: ServiceUrls.productService + 'Sample',
         SampleProduct: {
             ProductCode: "Sample",
             ProductName: "Sample Name"
@@ -59,12 +59,12 @@
     before(function () {
         server = sinon.fakeServer.create();
 
-        server.respondWith('GET', ServiceUrls.ProductService, JSON.stringify(Fixtures.SampleProductCollection));
-        server.respondWith('GET', new RegExp(ServiceUrls.ProductService + "\\?.*"), JSON.stringify(Fixtures.SampleProductCollection));
+        server.respondWith('GET', ServiceUrls.productService, JSON.stringify(Fixtures.SampleProductCollection));
+        server.respondWith('GET', new RegExp(ServiceUrls.productService + "\\?.*"), JSON.stringify(Fixtures.SampleProductCollection));
         server.respondWith('GET', new RegExp(Fixtures.SampleProductUrl + "\\?.*"), JSON.stringify(Fixtures.SampleProduct));
-        server.respondWith('GET', ServiceUrls.CartService + "current", JSON.stringify(Fixtures.SampleCart));
-        server.respondWith('DELETE', ServiceUrls.CartService + "current/items/", JSON.stringify(Fixtures.EmptyCart));
-        server.respondWith('POST', ServiceUrls.CartService + "current/items/", JSON.stringify(Fixtures.SampleCartItem));
+        server.respondWith('GET', ServiceUrls.cartService + "current", JSON.stringify(Fixtures.SampleCart));
+        server.respondWith('DELETE', ServiceUrls.cartService + "current/items/", JSON.stringify(Fixtures.EmptyCart));
+        server.respondWith('POST', ServiceUrls.cartService + "current/items/", JSON.stringify(Fixtures.SampleCartItem));
         server.respondWith('GET', new RegExp(ServiceUrls.BadUrl), [404, {}, ""]);
 
         server.autoRespond = true; 
@@ -192,7 +192,7 @@
             });
 
             it("should run an ajax request", function () {
-                req = api.request('GET', ServiceUrls.ProductService);
+                req = api.request('GET', ServiceUrls.productService);
                 expect(Mozu.Utils.ajax).to.have.been.calledOnce;
             });
 
@@ -201,13 +201,13 @@
             });
 
             it("should fulfill the promise with the JSON returned from the service", function () {
-                return expect(api.request("GET", ServiceUrls.ProductService)).to.become(Fixtures.SampleProductCollection);
+                return expect(api.request("GET", ServiceUrls.productService)).to.become(Fixtures.SampleProductCollection);
             });
 
 
             it("should cause a 'request' event from the api object when it is called, supplying an XHR, a cancelling function, a promise, and the original configuration of the request", function (done) {
                 var requestConf = {
-                    url: ServiceUrls.ProductService
+                    url: ServiceUrls.productService
                 };
                 function onRequest(xhr, canceller, promise, reqConf) {
                     api.off('request',onRequest);
@@ -232,7 +232,7 @@
                         done();
                     }
                     api.on('request', onRequest);
-                    api.request("GET", ServiceUrls.ProductService);
+                    api.request("GET", ServiceUrls.productService);
                     api.off('request', onRequest);
                 });
             });
@@ -289,7 +289,7 @@
                 var promise = api.get("product", Fixtures.SampleProductCode);
 
                 expect(Mozu.ApiReference.getRequestConfig).to.have.been.calledWith("get", "product", Fixtures.SampleProductCode, api.context);
-                expect(Mozu.Utils.ajax).to.have.been.calledWithMatch(/GET/, new RegExp(ServiceUrls.ProductService + Fixtures.SampleProductCode + ".*"));
+                expect(Mozu.Utils.ajax).to.have.been.calledWithMatch(/GET/, new RegExp(ServiceUrls.productService + Fixtures.SampleProductCode + ".*"));
 
                 return Mozu.Utils.when.all([
                       expect(promise).to.be.fulfilled,
@@ -306,7 +306,7 @@
                 var promise = api.get("cart");
 
                 expect(Mozu.ApiReference.getRequestConfig).to.have.been.calledWith("get", "cart", undefined, api.context);
-                expect(Mozu.Utils.ajax).to.have.been.calledWithMatch(/GET/, new RegExp(ServiceUrls.CartService + "current"));
+                expect(Mozu.Utils.ajax).to.have.been.calledWithMatch(/GET/, new RegExp(ServiceUrls.cartService + "current"));
 
                 return Mozu.Utils.when.all([
                       expect(promise).to.be.fulfilled,

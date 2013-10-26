@@ -181,11 +181,11 @@
                 steps: {
                     shippingAddress: new ShippingAddressView({
                         el: $('#step-shipping-address'),
-                        model: checkoutModel.get("ShippingInfo").get("ShippingContact")
+                        model: checkoutModel.get("FulfillmentInfo").get("FulfillmentContact")
                     }),
                     shippingInfo: new ShippingInfoView({
                         el: $('#step-shipping-method'),
-                        model: checkoutModel.get('ShippingInfo')
+                        model: checkoutModel.get('FulfillmentInfo')
                     }),
                     paymentInfo: new BillingInfoView({
                         el: $('#step-payment-info'),

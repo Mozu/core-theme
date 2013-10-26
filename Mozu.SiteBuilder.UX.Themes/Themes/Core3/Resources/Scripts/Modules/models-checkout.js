@@ -78,7 +78,7 @@
             }
         }),
 
-        ShippingInfo = Step.extend({
+        FulfillmentInfo = Step.extend({
             mozuType: 'shipment',
             statics: {
                 "OrderId": ""
@@ -91,7 +91,7 @@
                 "availableShippingMethods": {}
             },
             submodels: {
-                ShippingContact: ShippingAddress,
+                FulfillmentContact: ShippingAddress,
                 Price: Price
             },
             nextStep: function () {
@@ -101,7 +101,7 @@
                 var self = this;
                 var parent = this.getParentModel();
                 // have to manually create the payload here because a full order contains a blank BillingInfo, and a blank BillingInfo throws too-early validation errors
-                parent.update({ ShippingInfo: this.toJS() }).then(function () {
+                parent.update({ FulfillmentInfo: this.toJS() }).then(function () {
                     self.apiModel.prop('orderId', self.orderId); // dirty hack to maintain order IDs
                     self.checkStepStatus();
                 });
@@ -344,7 +344,7 @@
             var self = this,
                 parent = this.getParentModel();
             this.superInit();
-            var shipmentStatus = parent.ShippingInfo.stepStatus,
+            var shipmentStatus = parent.FulfillmentInfo.stepStatus,
                 checkStatus = function (newValue) {
                     self.stepStatus(newValue === "complete" ? "incomplete" : "new");
                 };
@@ -427,7 +427,7 @@
                 ISOCurrencyCode: "usd"
             },
             submodels: {
-                ShippingInfo: ShippingInfo,
+                FulfillmentInfo: FulfillmentInfo,
                 BillingInfo: BillingInfo,
                 ShopperNotes: ShopperNotes,
                 User: UserModels.User
@@ -587,8 +587,8 @@
             this.User.EmailAddress = this.email;
             this.User.Password = this.password;
 
-            this.ShippingInfo.availableShippingMethods(this.availableShippingMethods);
-            this.ShippingInfo.checkStepStatus();
+            this.FulfillmentInfo.availableShippingMethods(this.availableShippingMethods);
+            this.FulfillmentInfo.checkStepStatus();
 
             var ALLCOMPLETE = "completecompletecomplete",
                 SUBMITTING = "submitting",
@@ -596,7 +596,7 @@
                 backstop = $.proxy(this.unknownError,this);
 
             this.orderStatus = ko.computed(function () {
-                var statuses = [self.ShippingInfo.ShippingContact.stepStatus(), self.ShippingInfo.stepStatus(), self.BillingInfo.stepStatus()].join("");
+                var statuses = [self.FulfillmentInfo.FulfillmentContact.stepStatus(), self.FulfillmentInfo.stepStatus(), self.BillingInfo.stepStatus()].join("");
 
                 clearTimeout(errorTimer);
                 if (statuses.indexOf(SUBMITTING) !== -1) {
