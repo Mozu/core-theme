@@ -1,6 +1,6 @@
 ﻿{% extends "page" %}
 
-{% block title-tag-content %} {{ themeSettings.labelCart }} - {{block.super}} {% endblock title-tag-content %}
+{% block title-tag-content %} {{ themeSettings.labelCart }} - {% parent %} {% endblock title-tag-content %}
 
 {% block body-tag-classes %} mz-cart {% endblock body-tag-classes %}
 

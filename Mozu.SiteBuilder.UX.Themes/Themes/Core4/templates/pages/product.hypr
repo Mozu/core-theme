@@ -2,7 +2,7 @@
 
 {% block body-tag-classes %} mz-product {% endblock body-tag-classes %}
 
-{% block title-tag-content %} {{Model.Content.ProductName}} - {{block.super}} {% endblock title-tag-content %}
+{% block title-tag-content %} {{Model.Content.ProductName}} - {% parent %} {% endblock title-tag-content %}
 
 {% block body-content %}
 

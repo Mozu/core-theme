@@ -2,7 +2,7 @@
 
 {% block body-tag-classes %} mz-confirmation {% endblock body-tag-classes %}
 
-{% block title-tag-content %} {{ themeSettings.labelOrderConfirmation }} - {{block.super}} {% endblock title-tag-content %}
+{% block title-tag-content %} {{ themeSettings.labelOrderConfirmation }} - {% parent %} {% endblock title-tag-content %}
 
 {% block body-content %}
 
@@ -64,7 +64,7 @@
 {% endblock body-content %}
 
 {% block trailing-scripts %}
-	{{ block.super }}
+	{% parent %}
 	{% if siteContext.generalSettings.isGoogleAnalyticsEnabled and siteContext.generalSettings.isGoogleAnalyticsEcommerceEnabled %}
 	<script>
 	_gaq.push(['_addTrans',
