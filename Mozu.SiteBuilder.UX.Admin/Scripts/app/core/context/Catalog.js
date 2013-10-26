@@ -26,10 +26,7 @@
         return this.catalogId;
     },
 
-    getMasterCatalogId: function () {
-        return this.masterCatalogId;
-    },
-  
+
 
     getMasterCatalogId: function () {
         return this.masterCatalog.getMasterCatalogId();

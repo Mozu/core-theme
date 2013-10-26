@@ -72,10 +72,29 @@
 
         return site;
     },
+    
+    findCatalog: function (id) {
+        var catalog;
+
+        Ext.each(this.catalogs, function (s) {
+            if (s.id === id) {
+                catalog = s;
+                return false;
+            }
+        });
+
+        return catalog;
+    },
 
     getMasterCatalogId: function () { 
 
         return this.id;
+    },
+    getCatalogId: function () {
+        if (this.catalogs.length == 1) {
+            return this.catalogs[0].getCatalogId();
+        }
+        return null;
     },
 
     updateProductPublishingMode: function (mode) {

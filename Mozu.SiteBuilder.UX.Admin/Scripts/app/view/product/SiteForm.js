@@ -60,7 +60,7 @@ Ext.define('Taco.view.product.SiteForm', {
             subFormCfg = {
                 record: this.record,
                 product: this.product,
-                productInSiteInfo: this.productInSiteInfo,
+                productInCatalogInfo: this.productInCatalogInfo,
                 isSingleSite: this.isSingleSite,
                 isGlobal: false,
                 persistChangesToModel: true
@@ -105,7 +105,7 @@ Ext.define('Taco.view.product.SiteForm', {
      */
     handleOverrideChange: function (  ) {
         var tab = this.getTabComponent(),
-            isOverridden = this.productInSiteInfo.get('isContentOverridden') || this.productInSiteInfo.get('isPriceOverridden') || this.productInSiteInfo.get('isSEOContentOverridden');
+            isOverridden = this.productInCatalogInfo.get('isContentOverridden') || this.productInCatalogInfo.get('isPriceOverridden') || this.productInCatalogInfo.get('isSEOContentOverridden');
         if (tab) {
             if (isOverridden) {
                 tab.addCls(Taco.baseCSSPrefix + 'has-overrides');

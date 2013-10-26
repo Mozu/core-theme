@@ -17,7 +17,7 @@ Ext.define('Taco.view.product.Form', {
     initComponent: function() {
         var tabItems;
 
-        this.inSitesStore = this.record.productInSitesStore();
+        this.inSitesStore = this.record.productInCatalogsStore();
         
         this.title = this.record.data.productName;
       
@@ -91,11 +91,11 @@ Ext.define('Taco.view.product.Form', {
     //todo fix for omni
     getInitialTab: function (tabItems) {
         var selectedTabIndex = 0,
-            initSiteId = (this.options && this.options.siteId) ? this.options.siteId : Taco.app.context.getSiteId();
+            initCatalogId = (this.options && this.options.catalogId) ? this.options.catalogId : Taco.app.context.getCatalogId();
             
-        if (initSiteId) {
+        if (initCatalogId) {
             Ext.each(tabItems, function(x, index) {
-                if (x.siteId == initSiteId) {
+                if (x.catalogId == initCatalogId) {
                     selectedTabIndex = index;
                 }
             });
@@ -141,21 +141,21 @@ Ext.define('Taco.view.product.Form', {
         }, this);
     },
 
-    buildSiteForm: function (productInSiteInfo) {
-        var siteId = productInSiteInfo.get('siteId'),
-            site = this.masterCatalog.findSite(siteId);
+    buildSiteForm: function (productInCatalogInfo) {
+        var catalogId = productInCatalogInfo.get('catalogId'),
+            catalog = this.masterCatalog.findCatalog(catalogId);
 
         return Ext.create('Taco.view.product.SiteForm', {
             isSingleSite: this.isSingleSite,
-            record: productInSiteInfo,
+            record: productInCatalogInfo,
             product: this.record,
-            productInSiteInfo: productInSiteInfo,
-            tasksKeyPrefix: 'site-' + siteId,
+            productInCatalogInfo: productInCatalogInfo,
+            tasksKeyPrefix: 'site-' + catalogId,
             formCfg: {
                 isSingleSite: this.isSingleSite
             },
-            tabPickerId: '' + siteId,
-            title: site ? site.name : siteId
+            tabPickerId: '' + catalogId,
+            title: catalog ? catalog.name : catalogId
         });
     },
 
@@ -170,7 +170,7 @@ Ext.define('Taco.view.product.Form', {
         }
         this.globalForm.isSingleSite = true;
         this.globalForm.buildForm();
-
+        
 
          if (!me.globalForm.validityOverride) {
              me.globalForm.validityOverride = true;
@@ -232,7 +232,7 @@ Ext.define('Taco.view.product.Form', {
         this.fireEvent('savablestatechange', this, newState);
     },
 
-    goGoSiteSwitch: function () {
+    goGoCatalogSwitch: function () {
         var wasSingleSite = this.isSingleSite;
 
         this.isSingleSite = this.singleSiteCheck();
@@ -257,9 +257,9 @@ Ext.define('Taco.view.product.Form', {
         if (!this.record.phantom) {
             return;
         }
-        var site = Taco.app.context.getCurrentSite();
-        if (site != null) {
-            this.addSite(site.id);
+        var catalogId  = Taco.app.context.getCurrent().getCatalogId();
+        if (catalogId != null) {
+            this.addCatalog(catalogId);
         }
     },
 
@@ -300,12 +300,12 @@ Ext.define('Taco.view.product.Form', {
      * Adds the product to a site
      * @param {String} siteId The ID of the site that will have the product
      */
-    addSite: function (siteId, suspendSwitch) {
-        if (this.inSitesStore.getById(siteId)) {
+    addCatalog: function (catalogId, suspendSwitch) {
+        if (this.inSitesStore.getById(catalogId)) {
             return;
         }
-        var siteInfo = Ext.create('Taco.model.ProductInSiteInfo', {
-            siteId: siteId,
+        var siteInfo = Ext.create('Taco.model.ProductInCatalogInfo', {
+            catalogId: catalogId,
             productCode:this.record.getId()
         }), siteForm, wasSingleSite;
         
@@ -323,7 +323,7 @@ Ext.define('Taco.view.product.Form', {
             if (suspendSwitch) {
                 return;
             }
-            this.goGoSiteSwitch();
+            this.goGoCatalogSwitch();
         }
     },
 
@@ -331,8 +331,8 @@ Ext.define('Taco.view.product.Form', {
      * Removes the product from a site
      * @param  {String} siteId The ID of the site to remove the product from
      */
-    removeSite: function (siteId, suspendSwitch) {
-        var record = this.inSitesStore.findRecord('siteId', siteId),
+    removeCatalog: function (catalogId, suspendSwitch) {
+        var record = this.inSitesStore.findRecord('catalogId', catalogId),
             wasSingleSite, form;
 
         if (!record) {
@@ -340,7 +340,7 @@ Ext.define('Taco.view.product.Form', {
         }
 
         Ext.each(this.siteForms, function (f) {
-            if (record !== f.productInSiteInfo) {
+            if (record !== f.productInCatalogInfo) {
                 return;
             }
             form = f;
@@ -359,27 +359,27 @@ Ext.define('Taco.view.product.Form', {
             return;
         }
 
-        this.goGoSiteSwitch();
+        this.goGoCatalogSwitch();
     },
 
-    onTabClose: function (tab, siteId) {
-        this.removeSite(siteId);
+    onTabClose: function (tab, catalogId) {
+        this.removeCatalog(catalogId);
     },
 
     onTabSelectionChange: function (tabPanel, values, oldValues) {
         //console.log('tab selection changed')
-        var addSites = Ext.Array.difference(values, oldValues),
-            removeSites = Ext.Array.difference(oldValues, values);
+        var addCatalogs= Ext.Array.difference(values, oldValues),
+            removeCatalogs = Ext.Array.difference(oldValues, values);
 
-        Ext.each(addSites, function (siteId) {
-            this.addSite(siteId, true);
+        Ext.each(addCatalogs, function (catalogId) {
+            this.addCatalog(catalogId, true);
         }, this);
 
-        Ext.each(removeSites, function (siteId) {
-            this.removeSite(siteId, true);
+        Ext.each(removeCatalogs, function (catalogId) {
+            this.removeCatalog(catalogId, true);
         }, this);
 
-        this.goGoSiteSwitch();
+        this.goGoCatalogSwitch();
     },
 
     /**

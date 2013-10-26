@@ -54,7 +54,7 @@ Ext.define('Taco.view.inventory.Index', {
                     return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
                 }
             }, {
-                dataIndex: 'productInSites',
+                dataIndex: 'productInCatalogs',
                 text: 'Sites',
                 sortable: false,
                 width: 120,

@@ -12,7 +12,7 @@ Ext.define('Taco.model.Product', {
         'Taco.model.ProductExtra',
         'Taco.model.ProductVariation',
         'Ext.data.association.HasMany',
-        'Taco.model.ProductInSiteInfo',
+        'Taco.model.ProductInCatalogInfo',
         'Taco.model.ProductVariation'
     ],
     requiredStores: ['Taco.store.ProductTypes'],
@@ -268,7 +268,7 @@ Ext.define('Taco.model.Product', {
             "useNull": true
         },
         {
-            "name": "productInSites",
+            "name": "productInCatalogs",
             "type": "auto",
             defaultValue: []
         },
@@ -377,7 +377,7 @@ Ext.define('Taco.model.Product', {
         var level = this, ctx = Taco.app.context.getCurrent();
         if (ctx.contextType == 's') {
            
-            level = this.getProductInSites().getById(ctx.getCatalogId());
+            level = this.getProductInCatalogs().getById(ctx.getCatalogId());
             if (level == null) {
                 Ext.Error.raise('missing cat info for ctx ' + ctx.getCatalogId() + ' in product ' + this.getId());
                 level = this;
@@ -388,7 +388,7 @@ Ext.define('Taco.model.Product', {
     getProductInSite: function () {
         var siteId = Taco.app.context.getSiteId();
         if (siteId) {
-            return this.getProductInSites().getById(siteId);
+            return this.getProductInCatalogs().getById(siteId);
 
         }
         return null;
@@ -414,19 +414,19 @@ Ext.define('Taco.model.Product', {
             foreignProperty: 'product'
         });
     },
-    getProductInSites: function () {
+    getProductInCatalogs: function () {
         return this.getOrCreateHasManyStore({
-            model: 'Taco.model.ProductInSiteInfo',
-            associationKey: 'productInSites',
+            model: 'Taco.model.ProductInCatalogInfo',
+            associationKey: 'productInCatalogs',
             foreignKey: 'productCode',
             foreignProperty: 'product'
         });
     },
-    productInSitesStore: function () {
-        return this.getProductInSites();
+    productInCatalogsStore: function () {
+        return this.getProductInCatalogs();
     },
-    reloadProductInSitesStore: function () {
-        this.getProductInSites().loadData(this.get('productInSites'));
+    reloadProductInCatalogsStore: function () {
+        this.getProductInCatalogs().loadData(this.get('productInCatalogs'));
     },
 
     getVariations: function () {
@@ -489,10 +489,10 @@ Ext.define('Taco.model.Product', {
     idProperty: 'productCode',
     //hasMany: [
     //    {
-    //        "model":'Taco.model.ProductInSiteInfo',
-    //        "name": "productInSitesStore",
-    //        "type": "Taco.model.ProductInSiteInfo",
-    //        associationKey: 'productInSites'
+    //        "model":'Taco.model.ProductInCatalogInfo',
+    //        "name": "productInCatalogsStore",
+    //        "type": "Taco.model.ProductInCatalogInfo",
+    //        associationKey: 'productInCatalogs'
     //        //,
     //        //"foreignKey": "productCode"
     //    }

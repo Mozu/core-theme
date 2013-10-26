@@ -19,7 +19,7 @@ Ext.define('Taco.view.generalSettings.subform.Notifications', {
         this.defaults = {
             width: 200,
             product: this.product,
-            productInSiteInfo: this.productInSiteInfo,
+            productInCatalogInfo: this.productInCatalogInfo,
             labelAlign: 'top',
             labelSeparator: '',
             persistChangesToModel: true

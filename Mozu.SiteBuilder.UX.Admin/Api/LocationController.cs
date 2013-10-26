@@ -52,6 +52,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "edit")]
         public async Task<HttpResponseMessage> EditLocationType(DC.Location l)
         {
+            
             var resp = (await _locationWebApiClient.UpdateLocation(l.Code, l)).ReadAsSync();
             return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp), LowerCaseJsonMediaTypeFormatter.Default);
         }

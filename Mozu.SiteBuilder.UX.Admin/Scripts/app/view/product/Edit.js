@@ -54,13 +54,16 @@
                         if (previewItem && previewItem.menu) {
                             previewMenu = previewItem.menu;
 
-                            Ext.each(me.record.getProductInSites().data.items,function (pis) {
-                                var site = pis.get('site');
-
-                                previewSites.push({
-                                    itemId: site.id,
-                                    text: site.name,
-                                    handler: Ext.bind(me.preview, me, [pis])
+                            Ext.each(me.record.getProductInCatalogs().data.items,function (pis) {
+                                var sites = pis.get('sites');
+                                Ext.each(sites, function (site) {
+                                    if (site.isMozuRendered) {
+                                        previewSites.push({
+                                            itemId: site.id,
+                                            text: site.name,
+                                            handler: Ext.bind(me.preview, me, [site])
+                                        });
+                                    }
                                 });
                             });
 
@@ -80,8 +83,8 @@
         this.callParent(arguments);
     },
 
-    preview: function (pis) {
-        window.open('/_gosite/' + pis.getId() + '?environment=preview&redir=' + encodeURIComponent('/product/' + this.record.getId()), 'taco-preview');
+    preview: function (site) {
+        window.open('/_gosite/' + site.id + '?environment=preview&redir=' + encodeURIComponent('/product/' + this.record.getId()), 'taco-preview');
     },
 
     onBeforeRender: function () {

@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-10-25
+ * Mozu JavaScript SDK - v0.1.0 - 2013-10-26
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -31,7 +31,7 @@
  *
  * @author Brian Cavalier
  * @author John Hann
- * @version 2.4.0
+ * @version 2.4.1
  */
 (function(define, global) { 'use strict';
 define(function (require) {
@@ -723,12 +723,11 @@ define(function (require) {
 				function resolveOne(item, i) {
 					when(item, mapFunc, fallback).then(function(mapped) {
 						results[i] = mapped;
-						notify(mapped);
 
 						if(!--toResolve) {
 							resolve(results);
 						}
-					}, reject);
+					}, reject, notify);
 				}
 			}
 		});
@@ -806,7 +805,7 @@ define(function (require) {
 
 	var reduceArray, slice, fcall, nextTick, handlerQueue,
 		setTimeout, funcProto, call, arrayProto, monitorApi,
-		cjsRequire, undef;
+		cjsRequire, MutationObserver, undef;
 
 	cjsRequire = require;
 
@@ -852,17 +851,21 @@ define(function (require) {
 	// Allow attaching the monitor to when() if env has no console
 	monitorApi = typeof console != 'undefined' ? console : when;
 
-	// Prefer setImmediate or MessageChannel, cascade to node,
-	// vertx and finally setTimeout
-	/*global setImmediate,MessageChannel,process*/
-	if (typeof setImmediate === 'function') {
-		nextTick = setImmediate.bind(global);
-	} else if(typeof MessageChannel !== 'undefined') {
-		var channel = new MessageChannel();
-		channel.port1.onmessage = drainQueue;
-		nextTick = function() { channel.port2.postMessage(0); };
-	} else if (typeof process === 'object' && process.nextTick) {
+	// Sniff "best" async scheduling option
+	// Prefer process.nextTick or MutationObserver, then check for
+	// vertx and finally fall back to setTimeout
+	/*global process*/
+	if (typeof process === 'object' && process.nextTick) {
 		nextTick = process.nextTick;
+	} else if(MutationObserver = global.MutationObserver || global.WebKitMutationObserver) {
+		nextTick = (function(document, MutationObserver, drainQueue) {
+			var el = document.createElement('div');
+			new MutationObserver(drainQueue).observe(el, { attributes: true });
+
+			return function() {
+				el.setAttribute('x', 'x');
+			};
+		}(document, MutationObserver, drainQueue));
 	} else {
 		try {
 			// vert.x 1.x || 2.x

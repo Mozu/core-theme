@@ -100,7 +100,7 @@ Ext.define('Taco.view.product.Index', {
                 return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
             }
         }, {
-            dataIndex: 'productInSites',
+            dataIndex: 'productInCatalogs',
             text: 'Catalogs',
             sortable:false,
             width: 120,
@@ -108,7 +108,7 @@ Ext.define('Taco.view.product.Index', {
                 return !Ext.isEmpty(value) ? value.length : '--';
             }
         }, {
-            dataIndex: 'productInSites',
+            dataIndex: 'productInCatalogs',
             text: 'Overridden',
             sortable: false,
             width: 100,
@@ -170,18 +170,20 @@ Ext.define('Taco.view.product.Index', {
                     defaults = eventData.header.menuItemDefaults;
 
                 previewAction.menu.removeAll();
-                eventData.record.productInSitesStore().each(function (record) {
-                    var site = record.get('site');
-                    previewAction.menu.add(Ext.applyIf({
-                        text: (site ? site.name : 'n/a'),
-                        menuColumnHandler: function (item, eventData) {
-                            window.open('/_gosite/' + record.getId() + '?environment=preview&redir=' + encodeURIComponent('/product/' + eventData.record.getId()), 'taco-preview');
-                           
-                            console.log(arguments);
-                        }
-                    }, defaults));
+                eventData.record.productInCatalogsStore().each(function (record) {
+                    var sites = record.get('sites');
+                    Ext.each(sites, function (site) {
+                        previewAction.menu.add(Ext.applyIf({
+                            text: site.name ,
+                            menuColumnHandler: function (item, eventData) {
+                                window.open('/_gosite/' + site.id  + '?environment=preview&redir=' + encodeURIComponent('/product/' + eventData.record.getId()), 'taco-preview');
+
+                                console.log(arguments);
+                            }
+                        }, defaults));
+                    });
                 });
-                previewAction.setVisible(eventData.record.productInSitesStore().count());
+                previewAction.setVisible(eventData.record.productInCatalogsStore().count());
             }
         }],
         contextConf: {
@@ -191,7 +193,7 @@ Ext.define('Taco.view.product.Index', {
                     ptype: 'rowexpander',
                     pluginId: 'expander',
                     rowBodyTpl: new Ext.XTemplate(
-                        '<tpl for="productInSites"><tr class="x-grid-row-body">',
+                        '<tpl for="productInCatalogs"><tr class="x-grid-row-body">',
                             '<td colspan="3" class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
                             '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><a href="#" class="taco-launch-editor" data-site-id="{siteId}">{productName}</a></div></td>',
                             '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{price:this.formatPrice}</div></td>',

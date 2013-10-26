@@ -129,7 +129,7 @@ Ext.define('Taco.controller.Testing', {
                                 alert("successfully created " + record.getId());
                                 var siteId = prompt('Site id?');
 
-                                var pisi = Ext.create('Taco.model.ProductInSiteInfo', {
+                                var pisi = Ext.create('Taco.model.ProductInCatalogInfo', {
                                     productCode: p.get('productCode'),
                                     siteId: siteId
                                 });
@@ -230,8 +230,8 @@ Ext.define('Taco.controller.Testing', {
                         },
                         {
                             xtype: 'gridcolumn',
-                            dataIndex: 'productInSites',
-                            text: 'Sites',
+                            dataIndex: 'productInCatalogs',
+                            text: 'Catalogs',
                             renderer: function (pisis) {
                                 var mapped = Ext.Array.map(pisis, function (pisi) {
                                     return pisi.siteId;
