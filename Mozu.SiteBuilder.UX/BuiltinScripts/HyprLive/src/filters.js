@@ -58,11 +58,11 @@
     });
 
     HyprLive.engine.setFilter('string_format', function (tpt) {
-        var otherArgs = Array.prototype.slice.call(arguments, 1);
+        var formatted = tpt, otherArgs = Array.prototype.slice.call(arguments, 1);
         for (var i = 0, len = otherArgs.length; i < len; i++) {
-            tpt = tpt.split('{' + i + '}').join(otherArgs[i]);
+            formatted = formatted.split('{' + i + '}').join(otherArgs[i]);
         }
-        return tpt;
+        return formatted;
     });
 
 }());

@@ -37,8 +37,7 @@
     {% block head-tag %}
     <head>
 
-        {% preload_json apiContext "apiconfig" %}
-        {% preload_json themeSettings "themesettings" %}
+        {% include "modules/json-required-for-hyprlive" %}
 
         {% block meta-tags %}
         <meta charset="utf-8">

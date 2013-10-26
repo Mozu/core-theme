@@ -910,6 +910,7 @@
     <Content Include="Themes\HasBanner\stylesheets\modules\page-header.less" />
     <Content Include="Themes\HasBanner\theme.json" />
     <Content Include="Themes\HasBanner\templates\modules\page-header.hypr" />
+    <Content Include="Themes\Core4\templates\modules\json-required-for-hyprlive.hypr" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
