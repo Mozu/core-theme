@@ -51,7 +51,7 @@ Ext.define('Taco.model.Contact', {
             "useNull": true
         },
         {
-            "name": "companyName",
+            "name": "companyOrOrganization",
             "type": "string",
             "useNull": true
         },
@@ -66,12 +66,12 @@ Ext.define('Taco.model.Contact', {
             "useNull": true
         },
         {
-            "name": "zipCode",
+            "name": "postalOrZipCode",
             "type": "string",
             "useNull": true
         },
         {
-            "name": "state",
+            "name": "stateOrProvince",
             "type": "string",
             "useNull": true
         },

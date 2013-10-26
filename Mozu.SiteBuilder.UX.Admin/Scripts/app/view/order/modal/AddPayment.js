@@ -184,11 +184,11 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                         fieldLabel: 'City'
                     }, {
                         xtype: 'textfield',
-                        name: 'state',
+                        name: 'stateOrProvince',
                         fieldLabel: 'State'
                     }, {
                         xtype: 'textfield',
-                        name: 'zipCode',
+                        name: 'postalOrZipCode',
                         fieldLabel: 'ZIP Code'
                     }, {
                         xtype: 'textfield',

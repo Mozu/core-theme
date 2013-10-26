@@ -242,7 +242,7 @@ Ext.define('Taco.view.product.Form', {
             return;
         }
 
-        //  Must rebuild tabs now since state switched
+        //  Must rebuild tabs now since stateOrProvince switched
         if (this.isSingleSite) {
             this.goGoSingleSite();
         } else {

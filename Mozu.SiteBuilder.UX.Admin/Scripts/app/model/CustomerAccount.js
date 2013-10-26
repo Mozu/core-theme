@@ -29,7 +29,7 @@ Ext.define('Taco.model.CustomerAccount', {
         //},
 
         {
-            name: 'companyName',
+            name: 'companyOrOrganization',
             type: 'string'
         }, {
             name: 'acceptsMarketing',
@@ -116,7 +116,7 @@ Ext.define('Taco.model.CustomerAccount', {
                             name: 'siteId',
                             type: 'int'
                         }, {
-                            name: 'companyName',
+                            name: 'companyOrOrganization',
                             type: 'string'
                         }, {
                             name: 'acceptsMarketing',

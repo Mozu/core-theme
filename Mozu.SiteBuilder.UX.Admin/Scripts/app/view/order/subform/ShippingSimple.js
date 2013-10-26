@@ -57,7 +57,7 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
                         '<div class="address-line-1">{address1}</div>',
                         '<div class="address-line-2">{address2}</div>',
                         '<div class="address-line-3">{address3}</div>',
-                        '<div class="city-state-zip">{cityOrTown}, {state} {zipCode}</div>',
+                        '<div class="city-state-zip">{cityOrTown}, {stateOrProvince} {postalOrZipCode}</div>',
                         '<div class="country">{email}</div>',
                         '<div class="phone">{homePhone}</div>',
                     '<tplelse>',

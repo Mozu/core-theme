@@ -75,7 +75,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
                                     overrideForm.setOverride(isChecked, true, checkbox);
                                 },
 
-                                // *** If cancelled, restore checkbox to previous state
+                                // *** If cancelled, restore checkbox to previous stateOrProvince
                                 cancel: function () {
                                     checkbox.allowModal = false;
                                     checkbox.setValue( !isChecked );

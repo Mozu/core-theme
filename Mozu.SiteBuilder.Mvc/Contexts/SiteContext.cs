@@ -65,7 +65,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             set { _generalSettings = value; }
         }
-
+        
         public ThemeRuntimeSettingsCollection ThemeSettings
         {
             get
@@ -81,7 +81,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 _themeRuntimeSettingsCollection = value;
             }
         }
-
+        [System.Runtime.Serialization.IgnoreDataMember()]
         public Theme Theme
         {
             get
