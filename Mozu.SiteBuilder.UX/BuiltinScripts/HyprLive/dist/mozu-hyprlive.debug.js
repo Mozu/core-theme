@@ -18,14 +18,7 @@
     var define = root.define = swigDefine;
 	(function (exportFn) {
 		exportFn(['text!../livetemplates'], function (LiveTemplates) {
-            if (!LiveTemplates) throw new ReferenceError("If no AMD loader is present, there must be a global variable named LiveTemplates for HyprLive to function.");
-            LiveTemplates = JSON.parse(LiveTemplates);
-
-            try {
-            var ThemeSettings = require.mozuData('themesettings');
-            } catch(e) {
-                throw new ReferenceError('This page template fails to preload the theme settings using {% preload_json themeSettings "themesettings" %}.');
-            }
+            
 /*! Swig v1.0.0-rc3 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
 ; (function e(t, n, r) { function s(o, u) { if (!n[o]) { if (!t[o]) { var a = typeof require == "function" && require; if (!u && a) return a(o, !0); if (i) return i(o, !0); throw new Error("Cannot find module '" + o + "'") } var f = n[o] = { exports: {} }; t[o][0].call(f.exports, function (e) { var n = t[o][1][e]; return s(n ? n : e) }, f, f.exports, e, t, n, r) } return n[o].exports } var i = typeof require == "function" && require; for (var o = 0; o < r.length; o++) s(r[o]); return s })({
@@ -3889,13 +3882,23 @@ HyprLiveTemplate.prototype = {
     }
 }
 // BEGIN INIT
+
+if (!LiveTemplates) throw new ReferenceError("If no AMD loader is present, there must be a global variable named LiveTemplates for HyprLive to function.");
+LiveTemplates = JSON.parse(LiveTemplates);
+
+var locals = {},
+    localNames = ['themeSettings', 'siteContext']; //, 'user', 'pageContext', 'navigation'];
+
+for (var lni = 0, llen = localNames.length; lni < llen; lni++) {
+    locals[localNames[lni]] = require.mozuData(localNames[lni].toLowerCase());
+    if (!locals[localNames[lni]]) throw new ReferenceError('This page template fails to preload the ' + localNames[lni] + ' global using {% preload_json ' + localNames[lni] + ' "' + localNames[lni].toLowerCase() + '" %}');
+}
+
 var HyprLive = {
     engine: new swig.Swig({
         cache: false,
         cmtControls: ['{% comment %}', '{% endcomment %}'],
-        locals: {
-            themeSettings: ThemeSettings
-        }
+        locals: locals
     }),
     getTemplate: getHyprLiveTemplate
 };
@@ -3982,11 +3985,11 @@ for (var t = 0; t < nullTags.length; t++) {
     });
 
     HyprLive.engine.setFilter('string_format', function (tpt) {
-        var otherArgs = Array.prototype.slice.call(arguments, 1);
+        var formatted = tpt, otherArgs = Array.prototype.slice.call(arguments, 1);
         for (var i = 0, len = otherArgs.length; i < len; i++) {
-            tpt = tpt.split('{' + i + '}').join(otherArgs[i]);
+            formatted = formatted.split('{' + i + '}').join(otherArgs[i]);
         }
-        return tpt;
+        return formatted;
     });
 
 }());

@@ -11,11 +11,4 @@
     var define = root.define = swigDefine;
 	(function (exportFn) {
 		exportFn(['text!../livetemplates'], function (LiveTemplates) {
-            if (!LiveTemplates) throw new ReferenceError("If no AMD loader is present, there must be a global variable named LiveTemplates for HyprLive to function.");
-            LiveTemplates = JSON.parse(LiveTemplates);
-
-            try {
-            var ThemeSettings = require.mozuData('themesettings');
-            } catch(e) {
-                throw new ReferenceError('This page template fails to preload the theme settings using {% preload_json themeSettings "themesettings" %}.');
-            }
+            
