@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         [DataMember(Name = "pageTypes")]
         public List<PageTypeDefinition> PageTypes { get; set; }
 
-        [DataMember(Name = "widgetes")]
+        [DataMember(Name = "widgets")]
         public List<WidgetDefinition> Widgets { get; set; }
 
         [DataContract]
