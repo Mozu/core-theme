@@ -13,23 +13,21 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
     public class CaseInsensitiveMemberResolver : IMemberResolver
     {
-        private static ConcurrentDictionary<Type, Tuple<PropertyInfo[], Dictionary<string, MethodInfo>>> _lookupDic = new ConcurrentDictionary<Type, Tuple<PropertyInfo[], Dictionary<string, MethodInfo>>>();
+        private static ConcurrentDictionary<Type, Tuple<PropertyInfo[], Dictionary<string, MethodInfo[]>>> _lookupDic = new ConcurrentDictionary<Type, Tuple<PropertyInfo[], Dictionary<string, MethodInfo[]>>>();
 
 
-        private static Tuple<PropertyInfo[], Dictionary<string, MethodInfo >> Doit(Type t)
+        private static Tuple<PropertyInfo[], Dictionary<string, MethodInfo[] >> Doit(Type t)
         {
-            var dic = new Dictionary<string, MethodInfo>(StringComparer.OrdinalIgnoreCase);
+            var dic = new Dictionary<string, MethodInfo[]>(StringComparer.OrdinalIgnoreCase);
             var props = t.GetProperties(BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Instance).Where(x => x.CanRead );
             
-            foreach (var p in props.Where(x => x.GetIndexParameters().Length == 0))
+            foreach (var g in props.Where(x => x.GetIndexParameters().Length == 0).GroupBy(x=> x.Name ))
             {
-                if (p.GetIndexParameters().Length == 0)
-                {
-                    dic[p.Name] = p.GetMethod ;
-                }
+                dic[g.Key] = g.Select(x=> x.GetMethod ).ToArray();
+
             }
 
-            return new Tuple<PropertyInfo[], Dictionary<string, MethodInfo>>(props.Where(x => x.GetIndexParameters().Length > 0).ToArray(), dic);
+            return new Tuple<PropertyInfo[], Dictionary<string, MethodInfo[]>>(props.Where(x => x.GetIndexParameters().Length > 0).ToArray(), dic);
             
         }
        
@@ -144,16 +142,25 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         public FSharpOption<object> ResolveMember(object container, string memberName)
         {
             var lookup = _lookupDic.GetOrAdd(container.GetType(), Doit);
-            MethodInfo mi;
-            if (lookup.Item2.TryGetValue(memberName, out mi))
+            MethodInfo[] mis;
+            if (lookup.Item2.TryGetValue(memberName, out mis))
             {
-                try
+                for (int i = 0; i < mis.Length; i++)
                 {
-                    return new FSharpOption<object>(CleanJson(mi.Invoke(container, null)));
-                }
-                catch 
-                {
-                   
+                    try
+                    {
+                        object obj = mis[i].Invoke(container, null);
+                        if (obj != null)
+                        {
+                            return new FSharpOption<object>(CleanJson(obj));
+                        }
+
+
+                    }
+                    catch
+                    {
+
+                    }
                 }
                 
             }
