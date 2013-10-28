@@ -19,6 +19,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
         public Theme Build(ThemeMetaData tmd, Theme parent)
         {
             var theme = new Theme {
+                Source = tmd,
                 Id = tmd.Id,
                 Name = tmd.Configuration.About.Name,
                 Author = tmd.Configuration.About.Author,

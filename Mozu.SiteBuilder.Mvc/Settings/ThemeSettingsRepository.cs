@@ -113,11 +113,12 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 
             var key = typeof(List<ThemeRuntimeSetting>) + themeId;
 
-            var ret = _cache[key] as List<ThemeRuntimeSetting>;
+            var ret = _cache[key] as Tuple<DateTime, List<ThemeRuntimeSetting>>;
             if (ret != null )
             {
                 var tcs = new TaskCompletionSource<List<ThemeRuntimeSetting>>();
-                tcs.SetResult(ret);
+                tcs.SetResult(ret.Item2 );
+                _ts = ret.Item1;
                 return tcs.Task;
             }
 
@@ -145,11 +146,13 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                                                                 values = new List<ThemeRuntimeSetting>();
                                                             }
 
-                                                            _cache[key] = values;
+                                                            _cache[key] = new Tuple<DateTime, List<ThemeRuntimeSetting>>(_ts.Value , values);
                                                         }
                                                         else
                                                         {
                                                             _ts = DateTime.Today;
+                                                            _cache[key] = new Tuple<DateTime, List<ThemeRuntimeSetting>>(_ts.Value, values);
+                                                            
                                                         }
                                                         return values;
                                                     });

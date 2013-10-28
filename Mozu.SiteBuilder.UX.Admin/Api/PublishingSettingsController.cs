@@ -16,7 +16,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private ISiteBuilderApiContext _ctx;
         private IGeneralSettingsWebApiClient _siteSettingsClient;
-        private ICatalogWebApiClient  _siteGroupClient;
+        private IMasterCatalogWebApiClient _siteGroupClient;
         private ICookieProvider _cookieMonster;
         private IPublishingWebApiClient _publishingClient;
         private ILogger _log;
@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public PublishingSettingsController(ISiteBuilderApiContext ctx, IGeneralSettingsWebApiClient siteSettingsClient, ICatalogWebApiClient siteGroupClient, IPublishingWebApiClient publishingClient, ILogger log)
+        public PublishingSettingsController(ISiteBuilderApiContext ctx, IGeneralSettingsWebApiClient siteSettingsClient, Mozu.ProductAdmin.Contracts.Clients.IMasterCatalogWebApiClient  siteGroupClient, IPublishingWebApiClient publishingClient, ILogger log)
         {
             _ctx = ctx;
             _siteSettingsClient = siteSettingsClient;

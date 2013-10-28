@@ -38,6 +38,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         string GetLocalThemePath();
 
         string GetLocalAddonPath();
+
+        Theme ApplyAddons(Theme Theme, string[] addonsIds);
     }
 
     /// <summary>
@@ -81,6 +83,25 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public Theme GetAddon(string name)
         {
             return _addons.GetOrAdd(name, _themeFactory.Build(_themeMetaDataProvider.GetAddon(name), null));
+           
+        }
+
+
+
+        public Theme ApplyAddons(Theme theme, string[] addonsIds)
+        {
+            Theme outTheme = theme;
+            for (int i = addonsIds.Length - 1; i > 0; i--)
+            {
+                var addon = GetAddon(addonsIds[i]);
+                if (addon != null)
+                {
+                    outTheme = _themeFactory.Build(addon.Source , outTheme);
+                }
+                 
+                
+            }
+            return outTheme;
            
         }
 
@@ -207,9 +228,12 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             return _themeMetaDataProvider.LocalAddonPath;
         }
+
+
+
+
+
+
         
-
-
-       
     }
 }

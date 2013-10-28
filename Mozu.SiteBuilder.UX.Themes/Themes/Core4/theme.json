@@ -12,6 +12,7 @@
   "settings": [
 
     /* Common settings used in templates */
+      { "id":"internal-themeAddons" , "defaultValue":[]},
     { "id": "defaultPageSize",              "defaultValue": "15" },
     { "id": "maxProductSummaryWords",       "defaultValue": 40 },
 

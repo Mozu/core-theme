@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web;
@@ -130,28 +131,17 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         
                         return _themeSettingsRepository.Value.GetRuntimeValues(Theme.Id).ContinueWith(task2 =>
                             {
-                                if (!task2.IsCompleted)
-                                {
-                                    throw new Exception("fack");
-                                }
-
-
+                                
                                 ThemeSettings = task2.Result;
-                                var tmp = ThemeSettings[ThemeSettingsRepository.ADDONKEY];
+                                var tmp = ThemeSettings[ThemeSettingsRepository.ADDONKEY] as IEnumerable;
                                 if (tmp != null)
                                 {
-                                    //Theme themeWithAddons = Theme.Clone();
-
-
-
-                                    //var themeStack = new Stack<Theme>();
-                                    //foreach (string s in (System.Collections.IEnumerable) themeStack)
-                                    //{
-                                    //    themeStack.Push(_themeRepository.GetAddon(s));
-                                    //}
-                                    
-                                    
+                                    var ot = Theme;
+                                    var addonsIds = tmp.Cast<object>().Select(x => x.ToString()).ToArray();
+                                    Theme = _themeRepository.ApplyAddons(Theme, addonsIds);
+                                    Theme.Name = ot.Name;
                                 }
+                                return this;
                             });
                     });
 

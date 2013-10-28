@@ -43,10 +43,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly ISettings _settings;
         private readonly HttpContextBase _httpContext;
         private readonly IMultiScopeAdminUserWebApiClient _adminUserWebApiClient;
- 
-        private ICatalogWebApiClient  _masterCatalogClient;
 
-        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, ICatalogWebApiClient  masterCatalogClient)
+        private IMasterCatalogWebApiClient _masterCatalogClient;
+
+        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient)
         {
             _usersRepo = usersRepo.CloneWithoutUserClaims();
             _authenticationHelper = authHelper;
