@@ -14,7 +14,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public ThemeConfiguration Configuration { get; set; }
         public Thumbnail Thumbnail { get; set; }
         
-        public List<Models.CMS.WidgetDefinition> Widgets { get; set; }
+     
 
         public ThemeFileSystemInfo[] FileListing { get; set; }
     }

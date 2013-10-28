@@ -35,70 +35,22 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin
             _provisioningWebApiClient = Substitute.For<IProvisioningWebApiClient>();
         }
 
-        [Test]
-        public void DeleteAllIPBlocks_should_be_passesd_to_GeneralSettingsWebApiClient()
-        {
-            var wrapper = GetWrapper();
+        //[Test]
+        //public void DeleteAllIPBlocks_should_be_passesd_to_GeneralSettingsWebApiClient()
+        //{
+        //    var wrapper = GetWrapper();
 
-            _generalSettingsWebApiClient.WithAny(x => x.DeleteIPBlock(0), TestResponse.Void);
+        //    _generalSettingsWebApiClient.WithAny(x => x.DeleteIPBlock(0), TestResponse.Void);
 
-            wrapper.DeleteAllIPBlocks(new int?[] { 111, 222 });
+        //    wrapper.DeleteAllIPBlocks(new int?[] { 111, 222 });
 
-            _generalSettingsWebApiClient.Received().DeleteIPBlock(111);
-            _generalSettingsWebApiClient.Received().DeleteIPBlock(222);
-            _generalSettingsWebApiClient.DidNotReceive().DeleteIPBlock(default(int?));
-        }
+        //    _generalSettingsWebApiClient.Received().DeleteIPBlock(111);
+        //    _generalSettingsWebApiClient.Received().DeleteIPBlock(222);
+        //    _generalSettingsWebApiClient.DidNotReceive().DeleteIPBlock(default(int?));
+        //}
 
-        [Test]
-        public void UpdateIPBlockCollection_should_create_blocks_that_do_not_have_Ids()
-        {
-            var wrapper = GetWrapper();
-            var block = new UX.Models.Settings.IPBlock { RangeStart = "101.101.101.204", RangeEnd = "101.101.101.255" };
+       
 
-            _generalSettingsWebApiClient.With(x => x.CreateIPBlock(Arg.Any<IPBlock>()), new IPBlock());
-
-            var settings = new GeneralSettings { IPBlocks = new List<UX.Models.Settings.IPBlock>(new[] { block }) };
-
-            wrapper.UpdateIPBlockCollection(settings, Enumerable.Empty<int?>());
-
-            _generalSettingsWebApiClient.Received().CreateIPBlock(
-                Arg.Is<IPBlock>(x => x.RangeStart == block.RangeStart && x.RangeEnd == block.RangeEnd));
-        }
-
-        [Test]
-        public void UpdateIPBlockCollection_should_update_blocks_that_do_have_Ids()
-        {
-            var wrapper = GetWrapper();
-            var block = new UX.Models.Settings.IPBlock { Id = 1337, RangeStart = "101.101.101.204", RangeEnd = "101.101.101.255" };
-
-            _generalSettingsWebApiClient.With(x => x.UpdateIPBlock(Arg.Any<IPBlock>(), Arg.Any<int?>()), new IPBlock());
-
-            var settings = new GeneralSettings { IPBlocks = new List<UX.Models.Settings.IPBlock>(new[] { block }) };
-
-            wrapper.UpdateIPBlockCollection(settings, Enumerable.Empty<int?>());
-
-            _generalSettingsWebApiClient.Received().UpdateIPBlock(
-                Arg.Is<IPBlock>(x => x.RangeStart == block.RangeStart && x.RangeEnd == block.RangeEnd), Arg.Is<int?>(x => x == block.Id));
-        }
-
-        [Test]
-        public void UpdateIPBlockCollection_should_delete_blocks_that_exit_in_Existing_but_not_in_settings_to_save()
-        {
-            var wrapper = GetWrapper();
-            var existingIds = Enumerable.Range(100, 20).Cast<int?>();
-            var blocks = existingIds.Skip(2).Select(x => new UX.Models.Settings.IPBlock { RangeStart = "100.100.100" + x, RangeEnd = "101.101.101" + x, Id = x });
-
-            _generalSettingsWebApiClient.With(x => x.UpdateIPBlock(Arg.Any<IPBlock>(), Arg.Any<int?>()), new IPBlock());
-            _generalSettingsWebApiClient.With(x => x.DeleteIPBlock(Arg.Any<int?>()), TestResponse.Void);
-
-            var settings = new GeneralSettings { IPBlocks = blocks.ToList() };
-
-            wrapper.UpdateIPBlockCollection(settings, existingIds);
-
-            _generalSettingsWebApiClient.Received().DeleteIPBlock(100);
-            _generalSettingsWebApiClient.Received().DeleteIPBlock(101);
-            _generalSettingsWebApiClient.DidNotReceive().DeleteIPBlock(102);
-        }
 
         
         //[Test]

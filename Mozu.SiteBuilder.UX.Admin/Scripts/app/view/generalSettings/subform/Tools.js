@@ -44,7 +44,8 @@ Ext.define('Taco.view.generalSettings.subform.Tools', {
                         },
                         width: 300,
                         name: "gwtFile",
-                        validate: function() { return true; },
+                        validate: function () { return true; },
+                        isValid:function() { return true; },
                         labelAlign: "top",
                         allowBlank: false,
                         listeners: {

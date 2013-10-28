@@ -1,0 +1,62 @@
+{
+    /* About: Basic Information about the theme. */
+    "about": {
+        "name": "orange",
+        "author": "Volusion",
+        "isDesktop": true,
+        "isMobile": false
+    },
+
+    /* Settings: options for your theme. */
+    "settings": [
+
+        /* Common settings used in templates and CSS */
+        {
+            "id": "defaultPageSize",
+            "defaultValue": 20
+        }, {
+            "id": "orangeSetting",
+            "defaultValue": "orange"
+        },
+
+
+    ],
+    /* Page Types: Users will be allowed to create documents of this type in the CMS */
+    "pageTypes": [
+
+        /* user-creatable webpages */
+        {
+            "id": "orange_page",
+            "title": "Orange Page",
+            "entityType": "webpage",
+            "documentType": "web_page",
+            "template": "orange-page",
+            "userCreatable": true,
+            /* list of widgets attached to this type of page by default */
+            "widgets": [{
+                "definitionId": "content",
+                "zoneId": "body",
+                "index": 0,
+                "config": {
+                    "body": "<p>This is orange text/p>"
+                }
+            }]
+        }
+
+    ],
+    /* widgets */
+    "widgets": [{
+            "id": "orange_widget",
+            "displayName": "Orange Widget",
+            "displayTemplate": "orange/orange",
+            "icon": "orange.png",
+            "editViewFields": [{
+                "name": "color"
+            }],
+            "defaultConfig": {
+                "color": "#0000FF"
+            }
+        }
+
+    ]
+}

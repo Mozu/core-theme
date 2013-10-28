@@ -456,6 +456,7 @@
     <Compile Include="Api\ProductRuntimeController.cs" />
     <Compile Include="Api\ProductTypeController.cs" />
     <Compile Include="Api\RefrenceController.cs" />
+    <Compile Include="Api\ThemeController.cs" />
     <Compile Include="Api\WidgetInstanceDataController.cs" />
     <Compile Include="Api\IVolusionLoginHelper.cs" />
     <Compile Include="Api\IUserHelper.cs" />
@@ -644,6 +645,7 @@
     <Content Include="Scripts\app\view\settings\Publishing.js" />
     <Content Include="Scripts\app\view\site\navigation\NavHeadings.js" />
     <Content Include="Scripts\app\view\tbd\Index.js" />
+    <Content Include="Scripts\app\view\themeSettings\Addons.js" />
     <Content Include="Scripts\build\all-classes.js" />
     <Content Include="Scripts\build\fonts\journal-webfont.eot" />
     <Content Include="Scripts\build\fonts\journal-webfont.ttf" />

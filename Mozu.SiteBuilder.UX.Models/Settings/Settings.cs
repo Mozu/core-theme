@@ -49,6 +49,14 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
     [DataContract]
     public class GeneralSettings  
     {
+         
+       
+   [DataMember(Name = "isMozuWebSite")]
+         public bool IsMozuWebSite { get; set; }
+
+   [DataMember(Name = "templateSiteId")]
+   public int? TemplateSiteId { get; set; }
+        
         [DataMember(Name = "websiteName")]
         public string WebsiteName { get; set; }
 
@@ -65,8 +73,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public bool AllowAllIPs { get; set; }
 
 
-        [DataMember(Name = "ipRanges")]
-        public List<IPBlock> IPBlocks { get; set; }
+     
 
         [DataMember(Name = "senderEmail")]
         public string SenderEmailAddress { get; set; }
@@ -77,6 +84,13 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
             get { return "Mr. Not Inservicesyet"; }
             set { }
         }
+
+
+     
+
+        [DataMember(Name = "channelId")]
+        public string ChannelId { get; set; }
+
 
         [DataMember(Name = "replyToEmail")]
         public string ReplyToEmailAddress { get; set; }

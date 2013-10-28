@@ -50,8 +50,8 @@ Ext.define('Taco.model.ThemeListing', {
     proxy: {
         type: 'ajaxproxy',
         api: {
-            read: '/admin/app/testing/theme/list',
-            update: '/admin/app/testing/theme/update'
+            read: '/admin/app/themes/list',
+            update: '/admin/app/themes/update'
         },
         reader: {
             type: 'json',

@@ -143,20 +143,6 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         }
         public FSharpOption<object> ResolveMember(object container, string memberName)
         {
-            var jobject = container as Newtonsoft.Json.Linq.JObject;
-            if (jobject != null)
-            {
-                return new FSharpOption<object>(CleanJson(jobject.GetValue(memberName, StringComparison.OrdinalIgnoreCase)));
-
-
-            }
-            var jArray = container as Newtonsoft.Json.Linq.JArray;
-            if (jArray != null)
-            {
-                int f = 0;
-            }
-
-
             var lookup = _lookupDic.GetOrAdd(container.GetType(), Doit);
             MethodInfo mi;
             if (lookup.Item2.TryGetValue(memberName, out mi))
