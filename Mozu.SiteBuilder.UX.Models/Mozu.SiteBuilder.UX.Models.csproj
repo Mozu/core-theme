@@ -443,6 +443,7 @@
     <Compile Include="Response.cs" />
     <Compile Include="Settings\IPBlock.cs" />
     <Compile Include="Settings\Settings.cs" />
+    <Compile Include="Settings\SiteBuilderWeb.cs" />
     <Compile Include="Settings\TimeZone.cs" />
     <Compile Include="StartUpTask.cs" />
     <Compile Include="StoreFront\Cart\Cart.cs" />

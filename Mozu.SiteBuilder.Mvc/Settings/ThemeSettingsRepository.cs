@@ -22,15 +22,18 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         Task<ThemeRuntimeSettingsCollection> GetRuntimeValues(string themeId);
         Task<List<ThemeRuntimeSetting>> SaveInstanceValues(List<ThemeRuntimeSetting> values, string themeId);
         Task<List<ThemeRuntimeSetting>> GetInstanceValues(string themeId);
+
+
         Task<DateTime> GetTimeStamp(string themeId);
     }
 
     public class ThemeSettingsRepository : IThemeSettingsRepository
     {
+        public const string ADDONKEY = "internal-themeAddons";
         private readonly IDocumentListWebApiClient _docWebApiClient;
         private readonly ICmsServiceWrapper _cmsService;
         private readonly SiteContext _siteContext;
-        private readonly DataContractJsonSerializer _serializer;
+        private readonly JsonSerializer  _serializer;
    
         private readonly IStorefrontCache _cache;
       
@@ -39,8 +42,13 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         /// </summary>
         public ThemeSettingsRepository(IDocumentListWebApiClient docWebApiClient, ICmsServiceWrapper cmsService, SiteContext  siteContext, IStorefrontCache cache)
         {
+
+            _serializer = new JsonSerializer()
+                              {
+                                  Formatting = Formatting.None,
+                                  NullValueHandling = NullValueHandling.Ignore
+                              };
             
-            _serializer = new DataContractJsonSerializer(typeof(List<ThemeRuntimeSetting>));
             _docWebApiClient = docWebApiClient;
             _cmsService = cmsService;
             _siteContext = siteContext;

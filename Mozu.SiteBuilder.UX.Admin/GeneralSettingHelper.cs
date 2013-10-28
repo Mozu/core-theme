@@ -15,13 +15,13 @@ namespace Mozu.SiteBuilder.UX.Admin
     {
         Task<GeneralSettings> ReadSettings();
 
-        IEnumerable<IPBlock> GetIPBlocks();
+        //IEnumerable<IPBlock> GetIPBlocks();
 
         IEnumerable<TimeZone> GetTimeZones();
 
-        void UpdateIPBlockCollection(GeneralSettings settingsToSave, IEnumerable<int?> existingBlockIds);
+      //  void UpdateIPBlockCollection(GeneralSettings settingsToSave, IEnumerable<int?> existingBlockIds);
 
-        void DeleteAllIPBlocks(IEnumerable<int?> existingBlockIds);
+      //  void DeleteAllIPBlocks(IEnumerable<int?> existingBlockIds);
 
         GeneralSettings UpdateGeneralSettings(GeneralSettings settingsToSave);
     }
@@ -44,20 +44,20 @@ namespace Mozu.SiteBuilder.UX.Admin
             return  _generalSettingsWebApiClient.GetGeneralSettings().ContinueWith(x => Mapper.Map<GeneralSettings>(x.Result.ReadAsSync()));
         }
 
-        public IEnumerable<IPBlock> GetIPBlocks()
-        {
-            var none = Enumerable.Empty<IPBlock>();
-            var task = _generalSettingsWebApiClient.GetIPBlocks();
-            if (task.IsFaulted)
-                return none;
+        //public IEnumerable<IPBlock> GetIPBlocks()
+        //{
+        //    var none = Enumerable.Empty<IPBlock>();
+        //    var task = _generalSettingsWebApiClient.GetIPBlocks();
+        //    if (task.IsFaulted)
+        //        return none;
 
-            var result = task.Result;
-            if (result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                return none;
+        //    var result = task.Result;
+        //    if (result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+        //        return none;
 
-            var ipBlocks = result.ReadAsAsync().Result;
-            return ipBlocks.Items.Select(Mapper.Map<IPBlock>);
-        }
+        //    var ipBlocks = result.ReadAsAsync().Result;
+        //    return ipBlocks.Items.Select(Mapper.Map<IPBlock>);
+        //}
 
         public IEnumerable<TimeZone> GetTimeZones()
         {
@@ -66,33 +66,33 @@ namespace Mozu.SiteBuilder.UX.Admin
             return timeZones.Items.Select(Mapper.Map<TimeZone>);
         }
 
-        public void UpdateIPBlockCollection(GeneralSettings settingsToSave, IEnumerable<int?> existingBlockIds)
-        {
-            //var settings = Mapper.Map<DC.GeneralSettings>(settingsToSave);
-            //var ipBlocks = settings.IPBlocks.Items;
-            //foreach (var block in ipBlocks)
-            //{
-            //    if (block.Id > 0)
-            //        _generalSettingsWebApiClient.UpdateIPBlock(block, block.Id).Result.ReadAsAsync();
-            //    else
-            //        _generalSettingsWebApiClient.CreateIPBlock(block).Result.ReadAsAsync();
-            //}
+        //public void UpdateIPBlockCollection(GeneralSettings settingsToSave, IEnumerable<int?> existingBlockIds)
+        //{
+        //    //var settings = Mapper.Map<DC.GeneralSettings>(settingsToSave);
+        //    //var ipBlocks = settings.IPBlocks.Items;
+        //    //foreach (var block in ipBlocks)
+        //    //{
+        //    //    if (block.Id > 0)
+        //    //        _generalSettingsWebApiClient.UpdateIPBlock(block, block.Id).Result.ReadAsAsync();
+        //    //    else
+        //    //        _generalSettingsWebApiClient.CreateIPBlock(block).Result.ReadAsAsync();
+        //    //}
 
-            //var deletableBlocks = settingsToSave.IPBlocks.Select(x => x.Id).Where(x => x != 0).ToArray();
-            //foreach (var ipBlockId in existingBlockIds)
-            //{
-            //    if (!deletableBlocks.Contains(ipBlockId))
-            //        _generalSettingsWebApiClient.DeleteIPBlock(ipBlockId).Result.ReadAsAsync();
-            //}
-        }
+        //    //var deletableBlocks = settingsToSave.IPBlocks.Select(x => x.Id).Where(x => x != 0).ToArray();
+        //    //foreach (var ipBlockId in existingBlockIds)
+        //    //{
+        //    //    if (!deletableBlocks.Contains(ipBlockId))
+        //    //        _generalSettingsWebApiClient.DeleteIPBlock(ipBlockId).Result.ReadAsAsync();
+        //    //}
+        //}
 
-        public void DeleteAllIPBlocks(IEnumerable<int?> existingBlockIds)
-        {
-            foreach (var ipBlockId in existingBlockIds)
-            {
-                _generalSettingsWebApiClient.DeleteIPBlock(ipBlockId).Result.ReadAsAsync();
-            }
-        }
+        //public void DeleteAllIPBlocks(IEnumerable<int?> existingBlockIds)
+        //{
+        //    foreach (var ipBlockId in existingBlockIds)
+        //    {
+        //        _generalSettingsWebApiClient.DeleteIPBlock(ipBlockId).Result.ReadAsAsync();
+        //    }
+        //}
 
         public GeneralSettings UpdateGeneralSettings(GeneralSettings settingsToSave)
         {

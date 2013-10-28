@@ -1,9 +1,0 @@
-{
-  "id": "blog",
-  "displayName": "Blog",
-  "documentType": "blog",
-  "entityType": "blog",
-  "pageType": "blog",
-  "renderTemplate": "blog",
-  "userCreatable": false
-}

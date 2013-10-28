@@ -27,8 +27,12 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         ThemeMetaData GetTheme(string theme);
 
+        ThemeMetaData GetAddon(string id);
+
         IEnumerable<string> ThemePaths { get; }
+        IEnumerable<string> AddonPaths { get; }
         string LocalThemePath { get; }
+        string LocalAddonPath { get; }
     }
 
 
@@ -39,9 +43,9 @@ namespace Mozu.SiteBuilder.Mvc.Themes
     {
         private readonly ISettings _settings;
         private readonly JsonSerializer _jsonSerializer;
-        private const string METADATA_FILE_NAME = "theme.json";
-        private const string WIDGET_METADATA_DIR = "metadata\\widgets";
-      
+        private const string METADATA_THEME_FILE_NAME = "theme.json";
+        private const string METADATA_ADDON_FILE_NAME = "addon.json";
+       
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -73,10 +77,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             if (!Directory.Exists(tmd.ThemePath))
                 return null;
 
-            tmd.Configuration = LoadThemeDescriptor(tmd.ThemePath);
+            tmd.Configuration = LoadThemeDescriptor(tmd.ThemePath, METADATA_THEME_FILE_NAME);
             tmd.FileListing = LoadThemeFileListing(tmd.ThemePath);
             tmd.Thumbnail = LoadThemeThumbnail(tmd.ThemePath);
-            tmd.Widgets = LoadThemeWidgets(tmd.FileListing);
+           
 
             if (tmd.Configuration == null)
                 return null;
@@ -86,37 +90,41 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         }
 
         /// <summary>
-        /// Iterate over all of the "widgets" definiton.json files and create a WidgetDefinition for them.
+        /// Gets a addon by name or id.
         /// </summary>
-        private List<WidgetDefinition> LoadThemeWidgets(ThemeFileSystemInfo[] fileListing)
+        public ThemeMetaData GetAddon(string id)
         {
-            IEnumerable<WidgetDefinition> widgets =
-                from file in fileListing
-                where file.VirtualPath.StartsWith(WIDGET_METADATA_DIR, StringComparison.OrdinalIgnoreCase) 
-                where file.Name.Equals("definition.json", StringComparison.OrdinalIgnoreCase)
-                select new Func<WidgetDefinition>(() => {
-                    using (var stream = File.OpenText(file.FullPath))
-                    {
-                        try
-                        {
-                            var ret = _jsonSerializer.Deserialize<WidgetDefinition>(new JsonTextReader(stream));
-                            if (ret != null)
-                            {
-                                ret.FullPath = Path.GetDirectoryName(file.FullPath);
-                            }
-                    
-                            return ret;
-                        }
-                        catch (Exception ex)
-                        {
-                            Mozu.Core.Logging.LoggingService.LoggerFor<ThemeMetadataProvider>().Error("error parsing  " + file.FullPath, ex);
-                            return null;
-                        }
-                    }
-                }).Invoke();
-            
-            return widgets.Where(w => w != null && w.Enabled.GetValueOrDefault(true)).ToList();
+            if (String.IsNullOrWhiteSpace(id))
+                return null;
+
+            var tmd = new ThemeMetaData { Id = id };
+
+            int intId;
+
+            // if the id is an integer, try to get it from the network file share. otherwise, try to find it locally.
+            if (int.TryParse(id, out intId))
+                tmd.ThemePath = Path.GetFullPath(DevAddonPath + id);
+            else
+                tmd.ThemePath = Path.GetFullPath(LocalAddonPath + "//" + id);
+
+            if (!Directory.Exists(tmd.ThemePath))
+                return null;
+
+            tmd.Configuration = LoadThemeDescriptor(tmd.ThemePath, METADATA_ADDON_FILE_NAME);
+            tmd.FileListing = LoadThemeFileListing(tmd.ThemePath);
+            tmd.Thumbnail = LoadThemeThumbnail(tmd.ThemePath);
+
+
+            if (tmd.Configuration == null)
+                return null;
+
+            return tmd;
+
         }
+
+
+
+       
 
         private Thumbnail LoadThemeThumbnail(string themePath)
         {
@@ -130,10 +138,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             return null;
         }
 
-        private ThemeConfiguration LoadThemeDescriptor(string themePath)
+        private ThemeConfiguration LoadThemeDescriptor(string themePath, string fileType )
         {
             // theme2 is the latest standard for theme files. it combines theme.xml and metada\themesettings.xml
-            string fileName = Path.Combine(themePath, METADATA_FILE_NAME);
+            string fileName = Path.Combine(themePath, fileType);
 
             ThemeConfiguration themecfg = null;
             if (File.Exists(fileName))
@@ -177,7 +185,16 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             get
             {
                 var devPrefix = _settings.AppSettings("AppDevFileShare");
-                return Path.GetFullPath(devPrefix +"\\" );
+                return Path.GetFullPath(devPrefix +"\\themes\\" );
+            }
+        }
+
+        public string DevAddonPath
+        {
+            get
+            {
+                var devPrefix = _settings.AppSettings("AppDevFileShare");
+                return Path.GetFullPath(devPrefix + "\\widgets\\");
             }
         }
 
@@ -202,12 +219,39 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             }
         }
 
+        public string LocalAddonPath
+        {
+            get
+            {
+                var coreThemeDir = _settings.AppSettings("coretheme_directory");
+                if (string.IsNullOrWhiteSpace(coreThemeDir))
+                {
+                    return  Path.GetFullPath(new DirectoryInfo(HttpRuntime.AppDomainAppPath).Parent.FullName + "/Mozu.SiteBuilder.UX.Themes/addons/");
+                }
+                else
+                {
+                    return Path.GetFullPath(HostingEnvironment.MapPath(coreThemeDir) + "../addons/");
+                    
+                }
+             
+            }
+        }
+
         public IEnumerable<string> ThemePaths
         {
             get
             {
                 yield return DevThemePath;
                 yield return LocalThemePath;
+            }
+        }
+
+        public IEnumerable<string> AddonPaths
+        {
+            get
+            {
+                yield return DevAddonPath;
+                yield return LocalAddonPath;
             }
         }
     }

@@ -355,5 +355,54 @@
       "template":       "login",
       "userCreatable":  false
     }
-  ]
+  ],
+    /* widgets */
+  "widgets": [{
+         "id": "featured_product",
+         "displayName": "Featured Products",
+         "displayTemplate": "catalog/featuredproducts",
+         "icon": "_0007_featured-products.png",
+         "editView": "Taco.view.site.widget.FeaturedProducts",
+         "editViewConfig": "{listeners:{afterRender:function() {console.log('test of the editviewConfig system');}}}",
+         "properties": []
+     }, {
+         "id": "content",
+         "displayName": "Content",
+         "displayTemplate": "cms/content",
+         "icon": "_0004_html.png"
+     }, {
+         "id": "horizontal_rule",
+         "displayName": "Horizontal Rule",
+         "displayTemplate": "cms/horizontalrule",
+         "icon": "_0005_horizontal-divider.png",
+         "editView": "Taco.view.site.widget.HorizontalRule",
+         "defaultConfig": {
+             "hrBorderWidth": "1px",
+             "hrBorderColor": "#000",
+             "hrBorderStyle": "solid",
+             "hrMarginTop": "None",
+             "hrMarginBottom": "None"
+         }
+     }, {
+         "id": "addthis",
+         "displayName": "AddThis",
+         "displayTemplate": "social/addthis",
+         "editView": "Taco.view.site.widget.AddThis",
+         "properties": [],
+         "category": "social",
+         "icon": "_0008_share.png"
+
+     }, {
+         "id": "facebook_comments",
+         "displayName": "Facebook Comments",
+         "displayTemplate": "social/facebookComments",
+         "icon": "_0008_share.png",
+         "editView": "Taco.view.site.widget.FacebookComments",
+         "minWidth": 400,
+         "properties": [],
+         "category": "social"
+     }
+
+
+ ]
 }

@@ -126,7 +126,8 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             forceSelection: true,
             displayField: 'name',
             valueField: 'id',
-            allowBlank: false,
+            //check if needed before setting allowBlank
+            allowBlank: true,
             hidden:this.record.get("isMozuWebSite"),
             store: themeStore
         });
@@ -156,7 +157,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                         xtype: "editabledisplayfield",
                         name: "catalogName",
                         fieldLabel: "Catalog",
-                        tpl: ["."],
+                        value: Taco.app.context.findCatalog(Taco.app.context.getCurrentSite().catalogId).name,
                         flex: 1
                     }
                 ]

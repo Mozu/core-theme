@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
@@ -9,6 +10,7 @@ using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteSettings.General.Contracts;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.Core.Api.Client;
+using System.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
@@ -96,11 +98,16 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             set { _theme = value; }
         }
 
+
+
+
+
         private Task Init()
         {
             if (_initTask == null)
             {
                 Task<ServiceClientResponse<GeneralSettings>> genSettingsTask = _generalSettingsWebApiClient.GetGeneralSettings();
+                
                 var initTask = genSettingsTask.ContinueWith(task =>
                     {
                         GeneralSettings = Mapper.Map<GeneralSettings>(task.Result.ReadAsSync());
@@ -130,6 +137,21 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
 
                                 ThemeSettings = task2.Result;
+                                var tmp = ThemeSettings[ThemeSettingsRepository.ADDONKEY];
+                                if (tmp != null)
+                                {
+                                    //Theme themeWithAddons = Theme.Clone();
+
+
+
+                                    //var themeStack = new Stack<Theme>();
+                                    //foreach (string s in (System.Collections.IEnumerable) themeStack)
+                                    //{
+                                    //    themeStack.Push(_themeRepository.GetAddon(s));
+                                    //}
+                                    
+                                    
+                                }
                             });
                     });
 

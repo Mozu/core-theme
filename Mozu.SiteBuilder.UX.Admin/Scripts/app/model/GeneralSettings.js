@@ -24,12 +24,17 @@ Ext.define('Taco.model.GeneralSettings', {
 
         // new fields not in Json
         { "name": "channelId", "type": "string" },
-        { "name": "catalogId", "type": "string" },
+        {   "name": "catalogId", 
+            "type": "string" ,
+            convert: function (value, record) {
+                return Taco.app.context.getCurrentSite().catalogId;
+            }
+        },
         {
             "name": "catalogName",
             "type": "string",
             convert: function (value,record) {
-                return Taco.app.context.findCatalog(record.get("catalogId"));
+                return Taco.app.context.findCatalog(Taco.app.context.getCurrentSite().catalogId).name;
             }
         },
         { "name": "isMozuWebSite", "type": "boolean", defaultValue:true},

@@ -18,6 +18,12 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
         Theme GetTheme(string name);
 
+
+        /// <summary>
+        /// Finds an addon by name.
+        /// </summary>
+        Theme GetAddon(string name);
+
         /// <summary>
         /// Finds a theme by name.
         /// If the theme is not found, returns the system default theme.
@@ -30,6 +36,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         Theme GetDefaultTheme();
 
         string GetLocalThemePath();
+
+        string GetLocalAddonPath();
     }
 
     /// <summary>
@@ -46,6 +54,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         private readonly IThemeMetaDataProvider _themeMetaDataProvider;
         private const string DEFAULT_THEME = "Core4";
         private static System.Collections.Concurrent.ConcurrentDictionary<string, Theme> _themes = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
+        private static System.Collections.Concurrent.ConcurrentDictionary<string, Theme> _addons = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
         private static List<System.IO.FileSystemWatcher> _watchers = null;
         public bool IsInitialized { get; private set; }
 
@@ -68,6 +77,13 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             return GetThemeInternal(name, new Stack<string>());
         }
+
+        public Theme GetAddon(string name)
+        {
+            return _addons.GetOrAdd(name, _themeFactory.Build(_themeMetaDataProvider.GetAddon(name), null));
+           
+        }
+
 
 
         /// <summary>
@@ -128,6 +144,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                     {
                         _watchers.Add(CreateWatcher(dir));
                     }
+                    foreach (var dir in _themeMetaDataProvider.AddonPaths)
+                    {
+                        _watchers.Add(CreateWatcher(dir));      
+                    }
                 }
             }
         }
@@ -136,6 +156,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             // replace _themes object instead of .Clear() to prevent the case of another thread Add()ing to the stale object right after clear.
             _themes = new ConcurrentDictionary<string, Theme>();
+            _addons = new ConcurrentDictionary<string, Theme>();
         }
 
         private FileSystemWatcher CreateWatcher(string path)
@@ -181,5 +202,14 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             return _themeMetaDataProvider.LocalThemePath;
         }
+
+        public string GetLocalAddonPath()
+        {
+            return _themeMetaDataProvider.LocalAddonPath;
+        }
+        
+
+
+       
     }
 }

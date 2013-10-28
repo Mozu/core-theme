@@ -102,6 +102,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
         internal Theme() {}
 
+        public Theme Clone()
+        {
+            return (Theme)this.MemberwiseClone();
+        }
         [IgnoreDataMember]
         public string ThemePath { get; set; }
     }

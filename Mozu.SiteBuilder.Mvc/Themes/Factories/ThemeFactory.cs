@@ -31,13 +31,13 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
             {
                 theme.MergedSettings = tmd.Configuration.Settings;
                 theme.PageTypes = tmd.Configuration.PageTypes;
-                theme.Widgets = tmd.Widgets;
+                theme.Widgets = tmd.Configuration.Widgets;
             }
             else
             {
                 theme.MergedSettings = Merge<ThemeSetting>(tmd.Configuration.Settings, parent.MergedSettings, setting => setting.Id);
                 theme.PageTypes = Merge<PageTypeDefinition>(tmd.Configuration.PageTypes, parent.PageTypes, pt => pt.Id);
-                theme.Widgets = Merge<WidgetDefinition>(tmd.Widgets, parent.Widgets, widget => widget.Id);
+                theme.Widgets = Merge<WidgetDefinition>(tmd.Configuration.Widgets, parent.Widgets, widget => widget.Id);
             }
 
             theme.FileListing = tmd.FileListing;

@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.ComponentModel;
+using Mozu.SiteBuilder.UX.Models.Navigation;
 
 namespace Mozu.SiteBuilder.Mvc.Extensions
 {
@@ -79,6 +80,15 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
         {
            
             return Get<T>(doc, key, default(T));
+        }
+        public static T Deserialize<T>(this Document doc, string key)
+        {
+            var jsonString = doc.Get<string>("data");
+            if (!string.IsNullOrEmpty(jsonString))
+            {
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonString);
+            }
+            return default(T);
         }
         public static T Get<T>(this Document doc, string key, T defaulltValue)
         {
