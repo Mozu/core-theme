@@ -115,7 +115,7 @@ Ext.define('Taco.model.Category', {
             "useNull": true
         },
         {
-            name: 'siteId',
+            name: 'categoryId',
             type: 'int'
         }
     ],

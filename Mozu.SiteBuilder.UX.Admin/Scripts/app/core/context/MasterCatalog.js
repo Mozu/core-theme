@@ -100,9 +100,9 @@
     updateProductPublishingMode: function (mode) {
         Ext.Ajax.request({
             url: '/admin/app/settings/publishing/product',
-            method: 'PUT',
+            method: 'POST',
             jsonData: {
-                siteGroupId: this.id,
+                masterCatalogId: this.id,
                 productPublishingMode: mode
             },
             success: function () {

@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public PublishingSettingsController(ISiteBuilderApiContext ctx, IGeneralSettingsWebApiClient siteSettingsClient, Mozu.ProductAdmin.Contracts.Clients.IMasterCatalogWebApiClient  siteGroupClient, IPublishingWebApiClient publishingClient, ILogger log)
+        public PublishingSettingsController(ISiteBuilderApiContext ctx, IGeneralSettingsWebApiClient siteSettingsClient, IMasterCatalogWebApiClient  siteGroupClient, IPublishingWebApiClient publishingClient, ILogger log)
         {
             _ctx = ctx;
             _siteSettingsClient = siteSettingsClient;
@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public int MasterCatalogId { get; set; }
             public string ProductPublishingMode { get; set; }
         }
-        [HttpPutRoute(UriTemplate = "product")]
+        [HttpPostRoute (UriTemplate = "product")]
         public async Task<Response<DC.MasterCatalog >> UpdateProductPublishingPreferences(PublishingPreferencesArgs args)
         {
             var dcSettings = (await _siteGroupClient.GetMasterCatalog( args.MasterCatalogId)).ReadAsSync();
