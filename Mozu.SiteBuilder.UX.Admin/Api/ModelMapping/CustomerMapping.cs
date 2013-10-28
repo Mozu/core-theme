@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.CompanyOrOrganization, op => op.MapFrom(dc => dc.CompanyOrOrganization))
             .ForMember(x => x.AcceptsMarketing, op => op.MapFrom(dc => dc.AcceptsMarketing))
             .ForMember(x => x.Groups, op => op.MapFrom(dc => (dc.Groups ?? Enumerable.Empty<DC.CustomerGroup>()).Select(g => g.Id )))
-            .ForMember(x => x.Attributes, op => op.MapFrom(dc => (dc.Attributes ?? Enumerable.Empty<DC.CustomerAttribute>()).Select(a => a.Id)))
+            .ForMember(x => x.Attributes, op => op.MapFrom(dc => (dc.Attributes ?? Enumerable.Empty<DC.CustomerAttribute>()).Select(a => a.FullyQualifiedName )))
             .ForMember(x => x.Notes, op => op.MapFrom(dc => dc.Notes))
             .ForMember(x => x.TotalOrderAmount, op => op.MapFrom(dc => dc.CommerceSummary != null && dc.CommerceSummary.TotalOrderAmount != null ? (decimal?)dc.CommerceSummary.TotalOrderAmount.Amount : null))
             .ForMember(x => x.OrderCount, op => op.MapFrom(dc => dc.CommerceSummary != null ? dc.CommerceSummary.OrderCount : 0))
@@ -44,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(dc => dc.CommerceSummary, op => op.MapFrom(x => new DC.CommerceSummary { OrderCount = x.OrderCount, LastOrderDate = x.LastOrderDate, TotalOrderAmount = new DC.CurrencyAmount { CurrencyCode = "USD", Amount = x.TotalOrderAmount.HasValue ? x.TotalOrderAmount.Value : 0 } }))
 
             .ForMember(dc => dc.Groups, op => op.MapFrom(x=> (x.Groups ?? Enumerable.Empty<int>() ).Select( _=> new DC.CustomerGroup() {Id=_ }) ))
-            .ForMember(x => x.Attributes, op => op.MapFrom(x => (x.Attributes ?? Enumerable.Empty<int>()).Select(_ => new DC.CustomerAttribute {Id=_})))
+            .ForMember(x => x.Attributes, op => op.MapFrom(x => (x.Attributes ?? Enumerable.Empty<string>()).Select(_ => new DC.CustomerAttribute {FullyQualifiedName =_})))
             .ForMember(dc => dc.Notes, op => op.Ignore())
             .ForMember(dc => dc.TaxExempt, op => op.MapFrom(x => x.TaxExempt))
             .ForMember(dc => dc.TaxId, op => op.MapFrom(x => x.TaxId))

@@ -108,6 +108,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         }
         [IgnoreDataMember]
         public string ThemePath { get; set; }
+
+        internal ThemeMetaData Source { get; set; }
     }
 
     public class ThemeFileSystemInfo

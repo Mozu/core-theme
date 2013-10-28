@@ -57,8 +57,10 @@ Ext.define('Taco.view.themesettings.Addons', {
             imagePath: '../ux/images/',
             valueField: 'id',
             listeners: {
-                dirtyChange: function () {
-                    me.dirtyButton.setDirty(me.itemSelect.isDirty());
+                dirtyChange: function (field, isDirty) {
+                    if (me.dirtyButton) {
+                        me.dirtyButton.setDirty(isDirty);
+                    }
                 }
             }            
         });

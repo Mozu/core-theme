@@ -68,7 +68,11 @@
     {% block open-body-tag %}
     <body class="{% block body-tag-classes %}{% endblock body-tag-classes %}">
     {% endblock open-body-tag %}
-    
+    <h1>bs={{ themeSettings.blueSetting}}</h1>
+	   <h1>bs={{ themeSettings.orangeSetting}}</h1>
+	   <h1>maxProductSummaryWords={{ themeSettings.maxProductSummaryWords}}</h1>
+
+	   
         <div id="page-wrapper" class="mz-l-pagewrapper">
     
             {% block page-header %}

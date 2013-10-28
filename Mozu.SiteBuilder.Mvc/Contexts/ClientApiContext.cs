@@ -60,11 +60,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 urls["CmsService"] = settings.AppSettings("service-url-DocumentListWebApi");
                 urls["ReferenceService"] = settings.AppSettings("service-url-ReferenceDataWebApi");
                 urls["PaymentService"] = settings.AppSettings("service-url-StorefrontCardsWebApi");
-
+                
 
                 if (settings.AppSettings("ReverseProxy") == "true")
                 {
-                    foreach (var url in urls)
+                    
+                    foreach (var url in urls.ToArray())
                     {
                         int idx = (((string) url.Value) ?? "").IndexOf("webapi/", StringComparison.OrdinalIgnoreCase);
                         if (idx > 0)
