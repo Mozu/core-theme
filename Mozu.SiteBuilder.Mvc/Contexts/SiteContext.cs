@@ -133,14 +133,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                             {
                                 
                                 ThemeSettings = task2.Result;
-                                var tmp = ThemeSettings[ThemeSettingsRepository.ADDONKEY] as IEnumerable;
-                                if (tmp != null)
-                                {
-                                    var ot = Theme;
-                                    var addonsIds = tmp.Cast<object>().Select(x => x.ToString()).ToArray();
-                                    Theme = _themeRepository.ApplyAddons(Theme, addonsIds);
-                                    Theme.Name = ot.Name;
-                                }
+                                //not ready for prime time
+                                //var tmp = ThemeSettings[ThemeSettingsRepository.ADDONKEY] as IEnumerable;
+                                //if (tmp != null)
+                                //{
+                                //    var ot = Theme;
+                                //    var addonsIds = tmp.Cast<object>().Select(x => x.ToString()).ToArray();
+                                //    Theme = _themeRepository.ApplyAddons(Theme, addonsIds);
+                                //    Theme.Name = ot.Name;
+                                //}
                                 return this;
                             });
                     });
