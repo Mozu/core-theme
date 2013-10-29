@@ -13,6 +13,7 @@ using AutoMapper;
 using System.Net.Http;
 using System.Net;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
+using System.Web.Http;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -33,28 +34,63 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpGetRoute(UriTemplate = "list")]
-        public async Task<HttpResponseMessage> GetLocations()
+        public async Task<HttpResponseMessage> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-            var locations = (await _locationWebApiClient.GetLocations()).ReadAsSync();
+            DC.LocationCollection locations;
+            if (!String.IsNullOrEmpty(pagingParams.id))
+            {
+                var loc = (await _locationWebApiClient.GetLocation(pagingParams.id)).ReadAsSync();
+
+                locations = new DC.LocationCollection { Items = new List<DC.Location> { loc }, TotalCount = 1 };
+            }
+            else
+            {
+                locations = (await _locationWebApiClient.GetLocations()).ReadAsSync();
+            }
+
+            // default RegularHours to an object for pass through.
+            locations.Items.ForEach(loc => EnsureLocationContract(loc));
 
             return this.Request.CreateResponse(HttpStatusCode.OK, List2(locations.Items, (int)locations.TotalCount), LowerCaseJsonMediaTypeFormatter.Default);
         }
 
 
         [HttpPostRoute(UriTemplate = "create")]
-        public async Task<HttpResponseMessage> AddLocationType(DC.Location l)
+        public async Task<HttpResponseMessage> Create(DC.Location l)
         {
             var resp = (await _locationWebApiClient.AddLocation(l)).ReadAsSync();
+            EnsureLocationContract(resp);
             return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp), LowerCaseJsonMediaTypeFormatter.Default);
         }
 
 
         [HttpPostRoute(UriTemplate = "edit")]
-        public async Task<HttpResponseMessage> EditLocationType(DC.Location l)
+        public async Task<HttpResponseMessage> Edit(DC.Location l)
         {
             
             var resp = (await _locationWebApiClient.UpdateLocation(l.Code, l)).ReadAsSync();
+            EnsureLocationContract(resp);
             return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp), LowerCaseJsonMediaTypeFormatter.Default);
+        }
+
+        /// <summary>
+        /// Ensures that RegularHours is initialized with a default value on the location.
+        /// This allows the json serializer to output the right json structure.
+        /// </summary>
+        /// <param name="loc"></param>
+        private void EnsureLocationContract(DC.Location loc) {
+            if (loc.RegularHours == null)
+            {
+                loc.RegularHours = new DC.RegularHours {
+                    Monday = new DC.Hours(),
+                    Tuesday = new DC.Hours(),
+                    Wednesday = new DC.Hours(),
+                    Thursday = new DC.Hours(),
+                    Friday = new DC.Hours(),
+                    Saturday = new DC.Hours(),
+                    Sunday = new DC.Hours()
+                };
+            }
         }
     }
 }
