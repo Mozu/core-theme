@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-
+    [StoreFrontAuthorizeAttribute]
     public class MyAccountController : BaseApiController
     {
         private readonly ICustomerRepository _customerRepository;

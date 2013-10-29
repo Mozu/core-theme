@@ -9,6 +9,7 @@ using Mozu.Core;
 using Mozu.Core.Api.Contracts;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
@@ -28,7 +29,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
 
 
-
+    [RefreshUserAuthTicketFilter]
     public class CatalogController : BaseApiController
     {
         IProductWebApiClient   _productClient;
