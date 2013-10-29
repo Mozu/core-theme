@@ -18,7 +18,7 @@ Ext.define('Taco.model.CustomerAttribute', {
     proxy: {
         type: 'ajaxproxy',
         api: {
-            read: '/admin/app/customerattributes/read',
+            read: '/admin/app/customerattributes/list',
            
             create: '/admin/app/customerattributes/create',
             update: '/admin/app/customerattributes/edit',

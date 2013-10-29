@@ -54,7 +54,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return this.Request.CreateResponse(HttpStatusCode.OK, List2(locations.Items, (int)locations.TotalCount), LowerCaseJsonMediaTypeFormatter.Default);
         }
 
-
         [HttpPostRoute(UriTemplate = "create")]
         public async Task<HttpResponseMessage> Create(DC.Location l)
         {

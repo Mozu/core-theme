@@ -25,8 +25,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
-        [HttpGetRoute(UriTemplate = "read")]
-        public async Task<Response<List<AttributeModel>>> Read([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
+        [HttpGetRoute(UriTemplate = "list")]
+        public async Task<Response<List<AttributeModel>>> List([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
         {
 
 
