@@ -49,17 +49,18 @@ Ext.define('Taco.view.location.Index', {
         }]
     },
 
-    filterProperties: [{
-        property: 'all',
-        text: 'All',
-        isDefault: true
-    }, {
-        property: 'name',
-        text: 'Name'
-    }, {
-        property: 'description',
-        text: 'Description'
-    }
+    filterProperties: [
+        {
+            property: 'all',
+            text: 'All',
+            isDefault: true
+        }, {
+            property: 'name',
+            text: 'Name'
+        }, {
+            property: 'description',
+            text: 'Description'
+        }
     ],
 
     /*

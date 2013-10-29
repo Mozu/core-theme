@@ -4,27 +4,11 @@
 
 Ext.define('Taco.store.Locations', {
     extend: 'Ext.data.Store',
-    
     model: 'Taco.model.Location',
-    
-
-
-    /*
-    fields: [
-        { name: 'code', type: 'string' },
-        { name: 'type', type: 'string' },
-        { name: 'name', type: 'string' },
-        { name: 'address', type: 'string' }
-    ],
-    
-    "data": [],
-    */
-    remoteFilter: false,
+    remoteSort: true,
+    remoteFilter: true,
     pageSize: 25,
     storeManagerConfig: {
-        clearFilters: true,
-        contextLevel: 's',
-        clearSort: true,
         autoLoad: true
     }
 });
