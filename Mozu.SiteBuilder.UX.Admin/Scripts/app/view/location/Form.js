@@ -43,23 +43,5 @@ Ext.define('Taco.view.location.Form', {
         items.push(Ext.create('Taco.view.location.subform.Location', subformCfg));
         items.push(Ext.create('Taco.view.location.subform.StoreHours', subformCfg));
         this.items = items;
-    },
-
-    // this is optional. Do some additional save tasks after the automatic update-record task executes. This allows you to extract complext data from the form and write it to the record
-    addSaveTasks: function (tasks) {
-        var me = this;
-        console.log("class level save task ")
-        tasks.add({
-            // the name of your task
-            key: 'update-mainForm',
-            // the name of the task you want to follow
-            dependencies: this.tasksKeyPrefix + "update-record",
-            // executes when the task exectutes
-            fn: function () {
-                // manually update the record
-                //me.record.set("name", "test");
-            }
-        });
-        this.callParent(arguments);
     }
 })
