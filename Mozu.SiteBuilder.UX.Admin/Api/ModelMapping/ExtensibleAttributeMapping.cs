@@ -17,73 +17,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class ExtensibleAttributeMapping : Profile
     {
-        public override string ProfileName
-        {
-            get
-            {
-                return GetType().FullName;
-            }
-        }
-
-        //private List<ProductTypeAttribute> MapDCAttributeToAttribute(List<DC.AttributeInProductType> dcAttributes, int? productTypeId)
-        //{
-        //    List<ProductTypeAttribute> ret = Mapper.Map<List<ProductTypeAttribute>>(dcAttributes);
-            
-        //    // add the index.
-        //    ret.Each(r => r.Index = dcAttributes.FindIndex(dc => dc.AttributeFQN == r.AttributeFQN));
-            
-        //    // add the product type id
-        //    ret.Each(r => r.ProductTypeId = productTypeId);
-
-        //    return ret;
-        //}
-
-        //private List<DC.AttributeInProductType> MapAttributeToDCAttribute(List<ProductTypeAttribute> attributes)
-        //{
-        //    List<DC.AttributeInProductType> ret;
-
-        //    if (attributes == null)
-        //        ret = new List<DC.AttributeInProductType>();
-        //    else
-        //        ret = Mapper.Map<List<DC.AttributeInProductType>>(attributes.OrderBy(x => x.Index));
-
-        //    return ret;
-        //}
-
-        //private List<DC.AttributeVocabularyValueInProductType> MapSelectedValuesToVocabularyValueInProductTypeList(List<AttributeValue> selectedValues)
-        //{
-        //    if (selectedValues == null)
-        //        return new List<DC.AttributeVocabularyValueInProductType>();
-
-        //    return selectedValues.Select((val, idx) => 
-        //        new DC.AttributeVocabularyValueInProductType
-        //            {
-        //                Value = val.Id ,
-        //                Order = idx
-        //            }).ToList();
-        //}
+        public override string ProfileName { get { return GetType().FullName; } }
 
         protected override void Configure()
         {
-           
 
             Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValue>()
                 .ForMember(dc => dc.Content, opt => opt.MapFrom(x =>  x.Value  is string ? new DC.AttributeValueLocalizedContent { LocaleCode = "en-US", Value = x.Value as string  } : null))
                 .ForMember(dc => dc.Value, opt => opt.MapFrom(x => x.Id ))
                 // TODO: do not hard code this.
                 .ForMember(dc => dc.Sequence, opt => opt.MapFrom(x => 0))
-            ;
+                ;
+
             Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeValue>()
                 .ForMember(dc => dc.Value, opt => opt.MapFrom(x => x.Content != null &&!string.IsNullOrEmpty( x.Content.Value)? x.Content.Value :  x.Value))
-                  .ForMember(x => x.Id, op => op.MapFrom(x => (x.Value.ToString())));
+                .ForMember(x => x.Id, op => op.MapFrom(x => (x.Value.ToString())))
+                ;
 
-           
-
-           
-         
-
-            #region Attributes
-            Mapper.CreateMap<Attribute, DC.Attribute>().ConvertUsing(new AttributeToContractConverter2());
+            Mapper.CreateMap<Attribute, DC.Attribute>()
+                .ConvertUsing(new AttributeToContractConverter2())
+                ;
 
             Mapper.CreateMap<DC.Attribute, Attribute>()
                 .ForMember(x => x.AdminName, op => op.MapFrom(x => x.AdminName))
@@ -110,8 +63,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<AttributeVocabularyValueLocalizedContent, DC.AttributeValueLocalizedContent>();
             Mapper.CreateMap<DC.AttributeValueLocalizedContent, AttributeVocabularyValueLocalizedContent>();
-
-            #endregion
         }
 
         public class AttributeToContractConverter2 : ITypeConverter<Attribute, DC.Attribute>

@@ -18,7 +18,7 @@ Ext.define('Taco.model.OrderAttribute', {
     proxy: {
         type: 'ajaxproxy',
         api: {
-            read: '/admin/app/OrderAttributes/read',
+            read: '/admin/app/OrderAttributes/list',
             create: '/admin/app/OrderAttributes/create',
             update: '/admin/app/OrderAttributes/edit',
             destroy: '/admin/app/OrderAttributes/delete'
