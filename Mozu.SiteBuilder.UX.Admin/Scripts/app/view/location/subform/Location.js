@@ -259,6 +259,7 @@ Ext.define('Taco.view.location.subform.Location', {
                     xtype: 'numberfield',
                     fieldLabel:"Latitude",
                     name: "lat",
+                    emptyText:"Example: 87.728056",
                     allowBlank: true,
                     hideTrigger: true,
                     mouseWheelEnabled: false,
@@ -269,6 +270,7 @@ Ext.define('Taco.view.location.subform.Location', {
                 }, {
                     xtype: 'numberfield',
                     fieldLabel: "Longitude",
+                    emptyText: "Example: 87.728056",
                     allowBlank: true,
                     hideTrigger: true,
                     mouseWheelEnabled: false,
