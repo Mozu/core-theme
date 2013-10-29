@@ -18,6 +18,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
         public LowerCaseJsonMediaTypeFormatter()
         {
             this.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            this.SerializerSettings.DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Include;
         }
     }
 }
