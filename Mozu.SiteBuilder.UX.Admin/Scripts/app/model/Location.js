@@ -103,14 +103,23 @@ Ext.define('Taco.model.Location', {
             "name": "fax",
             "type": "string"
         }, {
-            "name": "notes",
+            "name": "note",
             "type": "string"
         }, {
             "name": "supportsInventory",
             "type": "boolean"
         }, {
-            "name": "hours",
+            "name": "regularHours",
             "type": "object",
+            convert: function (val, record) {
+                // if value is null;
+                // check for null of malfomred data structures; this is temporary fix until the service returns correct data
+                if (val && val.monday) {
+                    return val;
+                } else {
+                    return this.defaultValue;
+                }
+            },
             "defaultValue": {
                 sunday: {
                     "label": ""

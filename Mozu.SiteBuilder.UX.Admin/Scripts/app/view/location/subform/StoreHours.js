@@ -19,7 +19,7 @@ Ext.define('Taco.view.location.subform.StoreHours', {
     },
     initComponent: function () {
         var me = this,
-            hoursData = me.record.get("hours");
+            hoursData = me.record.get("regularHours");
         
         me.cls = [me.cls, Taco.baseCSSPrefix + 'locationform-storehours'].join(' ');
 
@@ -31,13 +31,14 @@ Ext.define('Taco.view.location.subform.StoreHours', {
             allowBlank: true
         };
         
+        
         me.items = [
             {
                 name: "sunday",
                 fieldLabel: 'Sunday',
                 value: hoursData.sunday.label
             }, {
-                name: "moneday",
+                name: "monday",
                 fieldLabel: 'Monday',
                 value: hoursData.monday.label
             }, {
@@ -66,26 +67,27 @@ Ext.define('Taco.view.location.subform.StoreHours', {
         me.callParent(arguments);
     },
 
-    getHours : function() {
-        return this.getForm().getFieldValues();
+    getHours: function () {
+        var me=this,
+            hours = me.record.get("regularHours");
+        
+        for (var i = 0; i < me.items.items.length; i++) {
+            var field = me.items.items[i];
+            hours[field.name].label = field.getValue();
+        }
+        return hours
     },
-
-    // this is optional. Do some additional save tasks after the automatic update-record task executes. This allows you to extract complext data from the form and write it to the record
-    addSaveTasks: function (tasks) {
+    
+    beforeSave: function () {
         var me = this;
-        console.log("subForm level save task ")
-        tasks.add({
-            // the name of your task
-            key: 'update-storeHours',
-            // the name of the task you want to follow
-            dependencies: this.tasksKeyPrefix + "update-record",
-            // executes when the task exectutes
-            fn: function () {
-                // manually update the record
-                var hours = me.getHours();
-                me.record.set("hours", hours);
-            }
-        });
-        return tasks;
+        // do any form validation. return false if the form is not valid for save;
+        
+        // do any manual record updates from the form;
+        var hours = me.getHours();
+        
+        me.record.set("regularHours", hours);
+        
+        // return true to allow the save to proceed
+        return true;
     }
 });

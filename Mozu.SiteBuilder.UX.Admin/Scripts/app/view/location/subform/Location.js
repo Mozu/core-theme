@@ -75,7 +75,7 @@ Ext.define('Taco.view.location.subform.Location', {
 
         me.addressView = Ext.create('Taco.shared.view.field.Address', {
             name: "address",
-            allowBlank: false,
+            allowBlank: true,
             // extra components to be inserted after the edit button
             buttonItems: [
                 {
@@ -190,6 +190,8 @@ Ext.define('Taco.view.location.subform.Location', {
             }, {
                 xtype: "textfield",
                 name: "code",
+                // don't allow the code to be changed once its persisted;
+                readOnly : me.record.get("code"),
                 width: 300,
                 fieldLabel: 'Code',
                 allowBlank: false
@@ -254,18 +256,22 @@ Ext.define('Taco.view.location.subform.Location', {
                 width:"100%",
                 layout: 'hbox',
                 items: [{
-                    xtype: 'textfield',
+                    xtype: 'numberfield',
                     fieldLabel:"Latitude",
                     name: "lat",
-                    allowBlank: false,
+                    allowBlank: true,
+                    hideTrigger: true,
+                    mouseWheelEnabled: false,
                     value: this.record.get("geo").lat,
                     flex: 1
                 }, {
                     xtype:"splitter"
                 }, {
-                    xtype: 'textfield',
+                    xtype: 'numberfield',
                     fieldLabel: "Longitude",
-                    allowBlank: false,
+                    allowBlank: true,
+                    hideTrigger: true,
+                    mouseWheelEnabled: false,
                     name: "lng",
                     value: this.record.get("geo").lng,
                     flex: 1
@@ -286,7 +292,7 @@ Ext.define('Taco.view.location.subform.Location', {
                 allowBlank: true
             }, {
                 xtype: "textarea",
-                name: "notes",
+                name: "note",
                 width: '100%',
                 fieldLabel: 'Notes',
                 allowBlank: true
@@ -303,8 +309,36 @@ Ext.define('Taco.view.location.subform.Location', {
         this.callParent(arguments);
     },
 
+    beforeSave: function () {
+        var me = this;
+        // do any form validation. return false if the form is not valid for save;
+
+        // do any manual record updates from the form;
+        var form = me.getForm();
+        // this data member wants the record data instead of the array of values that is return by combo. need to translate to record.data objects
+        var locationTypes = form.findField("locationTypeIds");
+        me.record.set('locationTypes', locationTypes.getValueRecordsData());
+        // updating the non persisted field just to be consistant
+        me.record.set('locationTypeIds', locationTypes.getValueRecordsData());
+
+        // this data member wants the record data instead of the array of values that is return by combo. need to translate to record.data objects
+        var fulfillmentTypes = form.findField("fulfillmentTypeIds");
+        me.record.set('fulfillmentTypes', fulfillmentTypes.getValueRecordsData());
+        // updating the non persisted field just to be consistant
+        me.record.set('fulfillmentTypeIds', fulfillmentTypes.getValueRecordsData());
+
+        me.record.set("geo", {
+            lat: form.findField("lat").getValue(),
+            lng: form.findField("lng").getValue()
+        });
+      
+        // return true to allow the save to proceed
+        return true;
+    },
+
+
     // this is optional. Do some additional save tasks after the automatic update-record task executes. This allows you to extract complext data from the form and write it to the record
-    addSaveTasks: function (tasks) {
+    addSaveTasks2: function (tasks) {
         var me = this;
         console.log("subForm level save task ");
 

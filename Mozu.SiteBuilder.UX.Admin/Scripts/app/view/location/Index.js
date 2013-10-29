@@ -79,6 +79,7 @@ Ext.define('Taco.view.location.Index', {
         }, {
             width: 200,
             text: "Location Types",
+            dataIndex: 'locationTypes',
             xtype: "templatecolumn",
             tpl: [
                 '<tpl for="locationTypes">',
