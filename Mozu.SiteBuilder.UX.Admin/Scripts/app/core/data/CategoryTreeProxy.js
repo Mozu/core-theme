@@ -90,7 +90,7 @@ Ext.define('Taco.core.data.CategoryTreeProxy', {
                     }
                     if (catalogId) {
                         jsonData = Ext.JSON.decode(data);
-                        jsonData.items = Ext.Array.filter(jsonData.items, function (item) { return item.siteId == catalogId; });
+                        jsonData.items = Ext.Array.filter(jsonData.items, function (item) { return item.catalogId == catalogId; });
                         jsonData.items.sort(function (a, b) { return (a.sequence || 99) - (b.sequence || 99); });
                         response.responseText = Ext.JSON.encode(jsonData);
 

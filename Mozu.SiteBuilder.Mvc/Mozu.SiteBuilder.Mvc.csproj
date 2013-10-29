@@ -372,6 +372,7 @@
     <Compile Include="ActionFilters\AnonymousShopperFilter.cs" />
     <Compile Include="ActionFilters\ClientCacheHeadersAttribute.cs" />
     <Compile Include="ActionFilters\HandleAllTheMvcErrorsFilter.cs" />
+    <Compile Include="ActionFilters\RefreshUserAuthTicketFilter.cs" />
     <Compile Include="ActionFilters\SiteBuilderAuthorizeAttribute.cs" />
     <Compile Include="ActionFilters\TenantSiteHeadersResolverActionFilter.cs" />
     <Compile Include="ActionResults\ActionResult.cs" />
