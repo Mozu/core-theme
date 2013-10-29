@@ -2,29 +2,29 @@
 
   /* TACO UI */
   
-  @include extjs-panel-ui(
-    $ui-label: 'taco',
+  // @include extjs-panel-ui(
+  //   $ui-label: 'taco',
 
-    //$ui-base-color: $color,
-    $ui-border-color: border-for($color-neutral-white),
-    $ui-border-radius: null,
-    $ui-border-width: 1px,
+  //   //$ui-base-color: $color,
+  //   $ui-border-color: border-for($color-neutral-white),
+  //   $ui-border-radius: null,
+  //   $ui-border-width: 1px,
 
-    $ui-header-background-color: transparentize($color-neutral-white, 1),
-    $ui-header-background-gradient: null,
-    $ui-header-border-color: border-for($color-neutral-white),
-    $ui-header-color: $color,
-    $ui-header-font-size: px-to-rem(24),
-    $ui-header-font-weight: bold,
-    $ui-header-line-height: px-to-rem(30),
-    $ui-header-inner-border-color: null,
+  //   $ui-header-background-color: transparentize($color-neutral-white, 1),
+  //   $ui-header-background-gradient: null,
+  //   $ui-header-border-color: border-for($color-neutral-white),
+  //   $ui-header-color: $color,
+  //   $ui-header-font-size: px-to-rem(24),
+  //   $ui-header-font-weight: bold,
+  //   $ui-header-line-height: px-to-rem(30),
+  //   $ui-header-inner-border-color: null,
 
-    $ui-body-background-color: null,
-    $ui-body-border-color: border-for($color-neutral-white),
-    $ui-body-border-width: null,
-    $ui-body-color: $color,
-    $ui-body-font-size: null
-  );
+  //   $ui-body-background-color: null,
+  //   $ui-body-border-color: border-for($color-neutral-white),
+  //   $ui-body-border-width: null,
+  //   $ui-body-color: $color,
+  //   $ui-body-font-size: null
+  // );
 
   /* MENUS */
 

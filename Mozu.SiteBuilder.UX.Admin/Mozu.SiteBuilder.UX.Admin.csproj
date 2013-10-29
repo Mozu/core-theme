@@ -610,6 +610,7 @@
     <Content Include="Scripts\app\overrides\grid\RowEditorButtons.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditor.js" />
     <Content Include="Scripts\app\overrides\menu\Item.js" />
+    <Content Include="Scripts\app\overrides\panel\Header.js" />
     <Content Include="Scripts\app\overrides\window\MessageBox.js" />
     <Content Include="Scripts\app\overrides\window\Window.js" />
     <Content Include="Scripts\app\shared\view\field\Address.js" />
