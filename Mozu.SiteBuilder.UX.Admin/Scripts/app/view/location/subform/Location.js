@@ -334,44 +334,9 @@ Ext.define('Taco.view.location.subform.Location', {
             lng: form.findField("lng").getValue()
         });
       
-        // return true to allow the save to proceed
+        // need to manually mark dirty since the setValue with complex data doesn't trigger the dirty state on the model
+        me.record.markDirty();
+        
         return true;
-    },
-
-
-    // this is optional. Do some additional save tasks after the automatic update-record task executes. This allows you to extract complext data from the form and write it to the record
-    addSaveTasks2: function (tasks) {
-        var me = this;
-        console.log("subForm level save task ");
-
-        tasks.add({
-            // the name of your task
-            key: 'update-location',
-            // the name of the task you want to follow
-            dependencies: this.tasksKeyPrefix + "update-record",
-            // executes when the task exectutes
-            fn: function () {
-                // manually update the record
-                var form = me.getForm();
-                
-                // this data member wants the record data instead of the array of values that is return by combo. need to translate to record.data objects
-                var locationTypes = form.findField("locationTypeIds");
-                me.record.set('locationTypes', locationTypes.getValueRecordsData());
-                // updating the non persisted field just to be consistant
-                me.record.set('locationTypeIds', locationTypes.getValueRecordsData());
-
-                // this data member wants the record data instead of the array of values that is return by combo. need to translate to record.data objects
-                var fulfillmentTypes = form.findField("fulfillmentTypeIds");
-                me.record.set('fulfillmentTypes', fulfillmentTypes.getValueRecordsData());
-                // updating the non persisted field just to be consistant
-                me.record.set('fulfillmentTypeIds', fulfillmentTypes.getValueRecordsData());
-                
-                me.record.set("geo", {
-                    lat: form.findField("lat").getValue(),
-                    lng: form.findField("lng").getValue()
-                });
-            }
-        });
-        return tasks;
     }
 });

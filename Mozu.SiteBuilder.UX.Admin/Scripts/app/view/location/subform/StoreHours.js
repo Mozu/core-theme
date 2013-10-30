@@ -75,7 +75,11 @@ Ext.define('Taco.view.location.subform.StoreHours', {
             var field = me.items.items[i];
             hours[field.name].label = field.getValue();
         }
-        return hours
+        
+        // need to manually mark dirty since the setValue with complex data doesn't trigger the dirty state on the model
+        me.record.markDirty();
+
+        return hours;
     },
     
     beforeSave: function () {
