@@ -9,6 +9,7 @@
         <p class="mz-errordetail-text">{{Model.Message}}</p>
         <a href="javascript:;" id="stacktrace-link" class="mz-errordetail-expander">{{ themeSettings.labelStackTrace }}</a>
         <blockquote class="mz-errordetail-stacktrace">
+            <h3>The following is a stacktrace, intended to be cut and pasted into a support ticket.</h3>
             <pre><code>{% dump Model %}</code></pre>
         </blockquote>
     </div>

@@ -1,5 +1,5 @@
-﻿<header class="mz-pageheader">
-    {% block store-branding %}
+﻿<header class="mz-pageheader{% if themeSettings.bannerImageEnabled %} mz-pageheader-hasbanner {% endif %}">
+   {% block store-branding %}
         {% include "modules/page-header/store-branding" %}
     {% endblock store-branding %}
     {% block utility-nav %}

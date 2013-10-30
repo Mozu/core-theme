@@ -29,12 +29,22 @@
                             }
                             prop = hier[0];
                         }
-                        this.listenTo(model, 'change:' + prop, _.debounce(this.render,100), this);
+                        this.listenTo(model, 'change', this.dequeueRender, this);
+                        this.listenTo(model, 'change:' + prop, this.enqueueRender, this);
                     }, this);
                 }
                 Backbone.Validation.bind(this);
 
             },
+            enqueueRender: function() {
+                this.renderQueued = true;
+            },
+            dequeueRender: _.debounce(function () {
+                if (this.renderQueued) {
+                    this.render();
+                    this.renderQueued = false;
+                }
+            }, 150),
             events: function () {
                 var defaults = _.object(_.flatten(_.map(this.$('[data-mz-value]'), function (el) {
                     var val = el.getAttribute('data-mz-value');
@@ -85,7 +95,7 @@
                         attrs[prop] = value;
                         this.model.set(attrs);
                         //this.model.validate(attrs);
-                    }, 150);
+                    }, 50);
                 });
             }
             return Backbone.View.extend.call(this, conf, statics)

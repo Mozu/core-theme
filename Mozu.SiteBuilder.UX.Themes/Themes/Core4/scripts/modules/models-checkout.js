@@ -71,9 +71,11 @@
                 if (this.validate()) return false;
                 var parent = this.parent, me = this;
                 this.isLoading(true);
-                parent.apiModel.update({ FulfillmentContact: this.toJSON() }).then(function () {
-                    return parent.apiGetShippingMethods();
-                }).then(function (methods) {
+                //parent.apiModel.update({ FulfillmentContact: this.toJSON() }).then(function () {
+                //    return parent.apiGetShippingMethods();
+                //}).then(function (methods) {
+                parent.syncApiModel();
+                parent.apiModel.getShippingMethodsFromContact().then(function(methods) {
                     return parent.set({
                         AvailableShippingMethods: methods
                     });
@@ -230,7 +232,8 @@
 
             },
             dataTypes: {
-                "IsSameBillingShippingAddress": Backbone.MozuModel.DataTypes.Boolean
+                "IsSameBillingShippingAddress": Backbone.MozuModel.DataTypes.Boolean,
+                "IsCardInfoSaved": Backbone.MozuModel.DataTypes.Boolean
             },
             relations: {
                 BillingContact: BillingContact,
@@ -245,7 +248,7 @@
                     framePath: "/../../Assets/pci_receiver.html",
                     siteId: api.context.Site(),
                     tenantId: api.context.Tenant(),
-                    apiBase: api.context.getServiceUrls().PaymentService
+                    apiBase: api.context.getServiceUrls().paymentService
                 },
 
                 fields = {};

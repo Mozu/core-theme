@@ -199,7 +199,7 @@
                 if (!silent) {
                     while (this._pending) {
                         this._pending = false;
-                        this.trigger('change', this, options);
+                        this.trigger('change', this, options, attrs);
                     }
                 }
                 this._pending = false;
@@ -228,6 +228,9 @@
                 this.on('change', function () {
                     me.apiModel.prop(me.changedAttributes());
                 });
+            },
+            syncApiModel: function() {
+                this.apiModel.prop(this.toJSON());
             },
             initMessages: function () {
                 var me = this;
