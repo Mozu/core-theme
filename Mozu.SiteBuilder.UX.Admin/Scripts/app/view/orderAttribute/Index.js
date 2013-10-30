@@ -4,7 +4,7 @@
 
 Ext.define('Taco.view.orderAttribute.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
-    alias: 'widget.attributeindex',
+   
     requires: ['Taco.model.OrderAttribute', 'Taco.store.OrderAttributes'/*, 'Taco.view.attribute.Edit'*/],
 
     requiresContextOfType: [],

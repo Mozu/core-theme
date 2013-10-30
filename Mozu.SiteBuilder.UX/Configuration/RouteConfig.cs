@@ -138,7 +138,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "resources",
                 "resources/{*pathinfo}",
                 new { controller = "Resource", action = "Misc" });
-
+            routes.MapHttpRoute(
+                "resources-Site-Thumbnail",
+                "SiteThumbnail",
+                new { controller = "Resource", action = "SiteThumbnail" });
+            
             routes.MapHttpRoute(
                 "StoreFront_Prefixed_default",
                 "storefront/{controller}/{action}/{id}",

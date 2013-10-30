@@ -354,6 +354,18 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return GetFileResult(stem, contentType);
         }
 
+
+        [ClientCacheHeaders(ConfigKey = "content")]
+        [System.Web.Http.HttpGet]
+        public HttpResponseMessage SiteThumbnail()
+        {
+            var stem  = "/"+ this.SiteContext.Theme.Thumbnail.Name;
+            var contentType = GetMimeType(stem);
+            
+
+            return GetFileResult(stem, contentType);
+        }
+
         [ClientCacheHeaders(ConfigKey = "content")]
         [System.Web.Http.HttpGet]
         public new HttpResponseMessage  Content(string pathinfo, string contentType = null)
