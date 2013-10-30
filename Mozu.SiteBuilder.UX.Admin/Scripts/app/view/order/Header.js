@@ -36,8 +36,8 @@ Ext.define('Taco.view.order.Header', {
                 ' | IP address: {ipAddress}',
             '</tpl>',
         
-            '<tpl if="channel">',
-                ' | <span class="origin-data-item"> Channel: {channel.name}</span>',
+            '<tpl if="channelName">',
+                ' | <span class="origin-data-item"> Channel: {channelName}</span>',
             '</tpl>',
         
             '<tpl if="siteName">',

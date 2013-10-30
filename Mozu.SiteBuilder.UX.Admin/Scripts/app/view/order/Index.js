@@ -48,7 +48,7 @@ Ext.define('Taco.view.order.Index', {
                 fieldLabel: 'Address',
                 width: 160
             }, {
-                name: 'channel',
+                name: 'channelName',
                 fieldLabel: 'Channel',
                 width: 160
             }]
@@ -130,13 +130,11 @@ Ext.define('Taco.view.order.Index', {
             width: 120
         }, {
             text: 'Channel',
-            xtype:"templatecolumn",
-            tpl: ["{channel.name}"],
+            dataIndex:"channelName",
             width: 100
         }, {
             xtype: 'taco.menucolumn',
             text: 'Actions',
-            flex:1,
             menuItems: [
             {
                 text: 'Edit',
@@ -151,18 +149,6 @@ Ext.define('Taco.view.order.Index', {
 
                     page.launchEditor(record, metaData);
 
-                }
-            }, {
-                text: 'Mark as shipped',
-                menuColumnHandler: function (item, eventData) {
-                    // Either open ui for mark as shipped or call the service method if one exists for this action.
-                }
-            }, {
-                text: 'Capture Payment',
-                menuColumnHandler: function (item, eventData) {
-                    //open ui for capture payment. 
-                    // note: this option may or may not apply depending on the status of the order.
-                    // need to determine if this is an appropriate menu option.
                 }
             }, {
                 text: 'Cancel Order',
