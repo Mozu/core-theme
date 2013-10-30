@@ -105,7 +105,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 var methods = (await _orderWebApiClient.GetAvailableShipmentMethods(id)).ReadAsSync();
                 var asm = JArray.FromObject(methods);
-                JObject si = (JObject)jOrder["Fulfillmentinfo"];
+                JObject si = (JObject)jOrder["FulfillmentInfo"];
                 si.Add("AvailableShippingMethods", asm);
                 //jOrder.Add("AvailableShippingMethods", asm);
                 //ViewData["availableShippingMethods"] = _orderWebApiClient.GetAvailableShipmentMethods(id).Result.ReadAsSync();

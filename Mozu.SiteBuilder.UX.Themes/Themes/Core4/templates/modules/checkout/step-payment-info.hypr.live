@@ -29,9 +29,10 @@
                         </div>
                         <div class="mz-formfieldgroup-cell">
                     <select data-mz-value="PaymentType">
-                        <option>Select payment method</option>
-                        <option {% if Model.PaymentType == "CreditCard" %}selected="selected"{% endif %} value="CreditCard">{{ themeSettings.labelCreditCard }}</option>
-                        <option {% if Model.PaymentType == "Check" %}selected="selected"{% endif %} value="Check">{{ themeSettings.labelCheckByMail }}</option>
+                        <option>{{ themeSettings.labelSelectPaymentType }}</option>
+                        {% for paymentType in siteContext.paymentSettings.paymentMethods %}
+                        <option class="mz-paymenttype-{{ paymentType.Id|slugify }}" {% if Model.PaymentType == paymentType.Id %}selected="selected" {% endif %} value="{{paymentType.Id}}">{{paymentType.Name}}</option>
+                      {% endfor %}
                     </select>
                     <span class="mz-validationmessage" data-mz-validationmessage-for="PaymentType"></span>
                         </div>

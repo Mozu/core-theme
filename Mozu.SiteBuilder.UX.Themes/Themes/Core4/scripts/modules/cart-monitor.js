@@ -9,8 +9,10 @@
         function checkForCartUpdates(apiObject) {
             switch (apiObject.type) {
                 case "cart":
-                    clearTimeout(timeout);
-                    updateCartDetails(apiObject);
+                    if (!apiObject.unsynced) {
+                        clearTimeout(timeout);
+                        updateCartDetails(apiObject);
+                    }
                     break;
                 case "cartitem":
                     if (!apiObject.unsynced) timeout = waitAndGetCart();

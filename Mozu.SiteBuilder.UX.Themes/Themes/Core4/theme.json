@@ -14,6 +14,7 @@
     /* Common settings used in templates */
       { "id":"internal-themeAddons" , "defaultValue":[]},
     { "id": "defaultPageSize",              "defaultValue": "15" },
+    { "id": "pageSizeOptions",              "defaultValue": [15,25,50,100] },
     { "id": "maxProductSummaryWords",       "defaultValue": 40 },
 
     /* Common apperance settings used in the stylesheet */
@@ -22,9 +23,12 @@
     { "id": "fontSize",                     "defaultValue": "14px" },
     { "id": "gutterWidth",                  "defaultValue": "25px" },
     { "id": "bodyBackgroundColor",          "defaultValue": "#FFFFFF" },
+    { "id": "bannerImageEnabled",           "defaultValue": false },
+    { "id": "bannerImage",                  "defaultValue": "/resources/images/banner.jpg" },
+    { "id": "bannerImageRepeat",            "defaultValue": "repeat-x" },
 
     /* Settings specific to category page display */
-    { "id": "showCategoryFacets",               "defaultValue": true },
+    { "id": "showCategoryFacets",           "defaultValue": true },
 
     /* Settings specific to product listing modules */
     { "id": "listProductShortDesc",         "defaultValue": true },
@@ -42,8 +46,8 @@
     { "id": "showCartItemWeight",               "defaultValue": true },
 
     /* Settings specific to checkout pages */
-    { "id": "showCheckoutCommentsField",        "defaultValue": false },
-    { "id": "requireCheckoutAgreeToTerms",      "defaultValue": false },
+    { "id": "showCheckoutCommentsField",        "defaultValue": true },
+    { "id": "requireCheckoutAgreeToTerms",      "defaultValue": true },
 
 
 
@@ -139,6 +143,8 @@
     { "id": "labelFreeShipping",        "defaultValue": "Free Shipping" },
     { "id": "labelPreviousPage",        "defaultValue": "Previous Page" },
     { "id": "labelNextPage",            "defaultValue": "Next Page" },
+    { "id": "labelPageStatePlural",     "defaultValue": "Showing {0} - {1} of {2} results" },
+    { "id": "labelPageStateSingular",   "defaultValue": "Showing 1 result" },
     { "id": "labelShowing",             "defaultValue": "Showing" },
     { "id": "labelOf",                  "defaultValue": "of" },
     { "id": "labelResult",              "defaultValue": "result" },
@@ -217,6 +223,7 @@
     { "id": "labelBillingAddress",      "defaultValue": "Billing Address" },
     { "id": "labelBillingContact",      "defaultValue": "Billing Contact" },
     { "id": "labelPaymentType",         "defaultValue": "Payment Type" },
+    { "id": "labelSelectPaymentType",   "defaultValue": "Select a Payment Type" },
     { "id": "labelCheckByMail",         "defaultValue": "Check by Mail" },
     { "id": "labelUseShippingAddress",  "defaultValue": "Use my shipping address" },
     { "id": "labelOptIn",               "defaultValue": "Yes! I want to receive news and special offers from {0}!" },

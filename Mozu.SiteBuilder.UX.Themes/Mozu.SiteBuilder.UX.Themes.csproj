@@ -456,10 +456,6 @@
     <Content Include="Themes\Core4\scripts\modules\models-price.js" />
     <Content Include="Themes\Core4\scripts\modules\models-product.js" />
     <Content Include="Themes\Core4\scripts\modules\models-user.js" />
-    <Content Include="Themes\Core4\scripts\nls\fr\messages-checkout.js" />
-    <Content Include="Themes\Core4\scripts\nls\fr\messages.js" />
-    <Content Include="Themes\Core4\scripts\nls\messages-checkout.js" />
-    <Content Include="Themes\Core4\scripts\nls\messages.js" />
     <Content Include="Themes\Core4\scripts\pages\cart.js" />
     <Content Include="Themes\Core4\scripts\pages\category.js" />
     <Content Include="Themes\Core4\scripts\pages\checkout.js" />
@@ -628,7 +624,6 @@
     <Content Include="Themes\Core3\Templates\Email\_OrderStatus.vol" />
     <Content Include="Themes\Core3\Templates\Email\_ResetPassword.vol" />
     <Content Include="Themes\Core4\thumb.jpg" />
-    <Content Include="Themes\HasBanner\resources\images\banner.jpg" />
     <Content Include="Themes\MobileCore\MetaData\build.js" />
     <Content Include="Themes\MobileCore\MetaData\mobilecore_thumb.jpg" />
     <Content Include="Themes\MobileCore\MetaData\ThemeSettings.xml" />
@@ -895,9 +890,6 @@
     <Content Include="Themes\Core4\templates\modules\page-header\utility-nav.hypr" />
     <Content Include="Themes\StarTac\templates\modules\cart\CartTableBody.hypr.live" />
     <Content Include="Themes\Core4\theme.json" />
-    <Content Include="Themes\HasBanner\stylesheets\modules\page-header.less" />
-    <Content Include="Themes\HasBanner\theme.json" />
-    <Content Include="Themes\HasBanner\templates\modules\page-header.hypr" />
     <Content Include="Themes\Core4\templates\modules\json-required-for-hyprlive.hypr" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>

@@ -1,13 +1,16 @@
 ﻿{% if Model.TotalCount %}
-{{ themeSettings.labelShowing }} <span>{{ Model.firstIndex }}</span> - <span>{{ Model.lastIndex }}</span> {{ themeSettings.labelOf }} <span>{{ Model.TotalCount }}</span> {% if Model.TotalCount != 1 %}{{ themeSettings.labelResults }}{% else %}{{ themeSettings.labelResult }}{% endif %}
+{% if Model.TotalCount != 1 %}
+{{ themeSettings.labelPageStatePlural|string_format(Model.firstIndex,Model.lastIndex,Model.TotalCount) }}
+{% else %}
+{{ themeSettings.labelPageStateSingular }}
+{% endif %}
 {% endif %}
 <label class="mz-pagingcontrols-pagesize-label">
     {{ themeSettings.labelShow }}
     <select data-mz-value="PageSize" class="mz-pagingcontrols-pagesize-dropdown">
-        <option {% if Model.PageSize == 15 %}selected="selected"{% endif %} value="15">15</option>
-        <option {% if Model.PageSize == 25 %}selected="selected"{% endif %} value="25">25</option>
-        <option {% if Model.PageSize == 50 %}selected="selected"{% endif %} value="50">50</option>
-        <option {% if Model.PageSize == 100 %}selected="selected"{% endif %} value="100">100</option>
+        {% for pageSize in themeSettings.pageSizeOptions %}
+        <option {% if Model.PageSize == pageSize %}selected="selected"{% endif %} value="{{ pageSize }}">{{ pageSize }}</option>
+        {% endfor %}
     </select>
     {{ themeSettings.labelResultsPerPage }}
 </label>

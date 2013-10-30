@@ -48,6 +48,12 @@
             PageCount: { min: 1 },
             StartIndex: { min: 0 }
         },
+        dataTypes: {
+            PageSize: Backbone.MozuModel.DataTypes.Int,
+            PageCount: Backbone.MozuModel.DataTypes.Int,
+            StartIndex: Backbone.MozuModel.DataTypes.Int,
+            TotalCount: Backbone.MozuModel.DataTypes.Int,
+        },
         relations: {
             Facets: Backbone.Collection.extend({
                 model: Facet

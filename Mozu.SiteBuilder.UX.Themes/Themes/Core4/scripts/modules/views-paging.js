@@ -22,7 +22,10 @@
         templateName: 'modules/common/paging-controls',
         autoUpdate: ['PageSize'],
         updatePageSize: function (e) {
-            this.model.set('PageSize', $(e.currentTarget).val());
+            var newSize = parseInt($(e.currentTarget).val()),
+            currentSize = this.model.get('PageSize');
+            if (isNaN(newSize)) throw new SyntaxError("Cannot set page size to a non-number!");
+            if (newSize !== currentSize) this.model.set('PageSize', newSize);
         }
     });
 
