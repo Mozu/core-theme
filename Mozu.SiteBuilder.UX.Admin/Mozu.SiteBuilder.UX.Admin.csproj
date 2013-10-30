@@ -614,6 +614,7 @@
     <Content Include="Scripts\app\overrides\window\MessageBox.js" />
     <Content Include="Scripts\app\overrides\window\Window.js" />
     <Content Include="Scripts\app\shared\view\field\Address.js" />
+    <Content Include="Scripts\app\shared\view\modal\WishList.js" />
     <Content Include="Scripts\app\store\Channels.js" />
     <Content Include="Scripts\app\store\CustomerAttributes.js" />
     <Content Include="Scripts\app\store\ExternalGatewayDefinitions.js" />
