@@ -19,6 +19,7 @@ Ext.define('Taco.model.Location', {
         {
             "name": "locationTypeIds",
             "type": "auto",
+            persist: false,
             "convert": function (value, record) {
                 
                 var types = record.get("locationTypes") || [];
@@ -38,6 +39,7 @@ Ext.define('Taco.model.Location', {
         {
             "name": "fulfillmentTypeIds",
             "type": "auto",
+            persist: false,
             "convert": function (value, record) {
                 
                 var type = record.get("fulfillmentTypes") || [];
@@ -78,6 +80,7 @@ Ext.define('Taco.model.Location', {
         {
             "name": "addressToString",   
             "type": "string",
+            persist: false,
             "convert": function (val, record) {
                 var str = Ext.create('Ext.XTemplate',
                     '{address1} ',
