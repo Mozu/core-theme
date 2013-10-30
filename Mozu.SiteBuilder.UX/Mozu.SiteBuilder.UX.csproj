@@ -448,7 +448,11 @@
     <Content Include="BuiltinScripts\RequireJS\src\plugins\shim.js" />
     <Content Include="BuiltinScripts\RequireJS\src\plugins\text.js" />
     <Content Include="BuiltinScripts\RequireJS\src\vars-debug.js" />
-    <Content Include="BuiltinScripts\SDK\src\postprocessors.js" />
+    <Content Include="BuiltinScripts\SDK\src\types\login.js" />
+    <Content Include="BuiltinScripts\SDK\src\types\order.js" />
+    <Content Include="BuiltinScripts\SDK\src\types\payment.js" />
+    <Content Include="BuiltinScripts\SDK\src\types\shipment.js" />
+    <Content Include="BuiltinScripts\SDK\src\types\user.js" />
     <Content Include="BuiltinScripts\SDK\tests\SpecRunner.html" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax">
