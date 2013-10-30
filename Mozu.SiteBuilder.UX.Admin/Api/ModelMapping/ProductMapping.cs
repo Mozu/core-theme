@@ -37,6 +37,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.LastPublishedDate, op => op.MapFrom(dc => (dc.PublishingInfo ?? NULLPUB).LastPublishedDate))
                 .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.ProductCode))
                 .ForMember(x => x.BaseProductCode, op => op.MapFrom(dc => dc.BaseProductCode))
+                .ForMember(x => x.Extras , op => op.MapFrom(dc => dc.Extras == null ? null : dc.Extras.Where( x=> x.Values != null && x.Values.Count >  0).ToList()))
+
                 .ForMember(x => x.ProductName, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductName))
                 .ForMember(x => x.ProductShortDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductShortDescription))
                 .ForMember(x => x.ProductFullDescription, op => op.MapFrom(dc => (dc.Content ?? NULLCONTENT).ProductFullDescription))
@@ -74,6 +76,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ProductCode, op => op.MapFrom(p => p.ProductCode))
                 .ForMember(dc => dc.Properties, op => op.MapFrom(p => p.Properties))
                 .ForMember(dc => dc.Options, op => op.MapFrom(p => p.Options))
+                .ForMember(x => x.Extras, op => op.MapFrom(dc => dc.Extras == null ? null : dc.Extras.Where(x => x.Values != null && x.Values.Count > 0).ToList()))
                 .ForMember(dc => dc.BaseProductCode, op => op.MapFrom(p => p.BaseProductCode))
                 .ForMember(dc => dc.ProductTypeId, op => op.MapFrom(dc => dc.ProductTypeId))
                 .ForMember(dc => dc.Content, op => op.ResolveUsing(p =>
