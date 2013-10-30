@@ -49,11 +49,23 @@ Ext.define('Taco.view.customers.Form', {
             record: orders
         });
 
+        me.storeCredit = Ext.create('Taco.view.customers.subform.StoreCredit', {
+            record: data,
+            tagStore: this.tagStore
+        });
+
+        me.customerAttribute = Ext.create('Taco.view.customers.subform.CustomerAttribute', {
+            record: data,
+            tagStore: this.tagStore
+        });
+
         this.items = [
             me.profile,
             me.billingInformation,
             me.shippingInformation,
+            me.storeCredit,
             me.orderHistory,
+            me.customerAttribute,
             me.notes
         ];
 

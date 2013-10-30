@@ -626,10 +626,12 @@
     <Content Include="Scripts\app\view\customerAttribute\Form.js" />
     <Content Include="Scripts\app\view\customerAttribute\Index.js" />
     <Content Include="Scripts\app\view\customers\subform\BillingInformation.js" />
+    <Content Include="Scripts\app\view\customers\subform\CustomerAttribute.js" />
     <Content Include="Scripts\app\view\customers\subform\Information.js" />
     <Content Include="Scripts\app\view\customers\subform\Notes.js" />
     <Content Include="Scripts\app\view\customers\subform\OrderHistory.js" />
     <Content Include="Scripts\app\view\customers\subform\ShippingInformation.js" />
+    <Content Include="Scripts\app\view\customers\subform\StoreCredit.js" />
     <Content Include="Scripts\app\view\customers\subform\Subform.js" />
     <Content Include="Scripts\app\view\locationType\Index.js" />
     <Content Include="Scripts\app\view\location\Edit.js" />
