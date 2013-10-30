@@ -50,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (categoryId.HasValue)
             {
-                throw new NotImplementedException("categoryid not implemented in search yet.  Call the poll lice");
+                throw new NotImplementedException("categoryid not implemented in search yet.");
             }
 
             var ret = _searchClient.Search(query: query, sortBy: sortBy, startIndex: startIdx, pageSize: itemsPerPage).Result.ReadAsAsync().Result;
