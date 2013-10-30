@@ -53,8 +53,8 @@ Ext.define('Taco.view.channel.Index', {
                     fieldLabel: 'Code',
                     width: 160
                 }, {
-                    name: 'region',
-                    fieldLabel: 'Region',
+                    name: 'countryCode',
+                    fieldLabel: 'Country',
                     width: 160
                 }
             ]
@@ -74,7 +74,7 @@ Ext.define('Taco.view.channel.Index', {
             text: 'Code'
         }, {
             property: 'countryCode',
-            text: 'country'
+            text: 'Country'
         }
     ],
 
@@ -93,7 +93,9 @@ Ext.define('Taco.view.channel.Index', {
             editor: {
                 // defaults to textfield if no xtype is supplied
                 emptyText: "Code",
-                selectOnFocus:true,
+                // optional enhancement to rowEditor. Makes the field only editable during a create;
+                editableOnCreateOnly: true,
+                selectOnFocus: true,
                 allowBlank: false
             },
             width: 200
@@ -116,7 +118,7 @@ Ext.define('Taco.view.channel.Index', {
                 selectOnFocus: true,
                 allowBlank: false
             },
-            text: 'Country Code',
+            text: 'Country',
             width: 200
         }]
     }
