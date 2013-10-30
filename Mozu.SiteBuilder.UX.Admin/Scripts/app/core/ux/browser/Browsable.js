@@ -364,7 +364,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
             }
         });
     },
-    
+
     onRowEditorUpdate: function(editor, context, opts) {
         var record = context.record
 
@@ -390,6 +390,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
     onRowEditorCreate : function() {
         this.rowEditor.cancelEdit();
+
         // Create a model instance
         var modelName = this.store.model.getName();
         var r = Ext.create(modelName, this.defaultRowEditingData);
