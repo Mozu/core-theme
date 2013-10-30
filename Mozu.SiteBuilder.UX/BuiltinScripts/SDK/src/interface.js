@@ -1,11 +1,11 @@
 ﻿// BEGIN INTERFACE
 var ApiInterface = (function () {
-
+    var errorMessage = "No {0} was specified. Run Mozu.Tenant(tenantId).MasterCatalog(masterCatalogId).Site(siteId).",
+        requiredContextValues = ['Tenant', 'MasterCatalog', 'Site'];
     var ApiInterfaceConstructor = function (context) {
-        if (context.Tenant() === undefined) throw "No tenant was specified. Run Mozu.Tenant(tenantId).MasterCatalog(siteGroupId).Site(siteId).";
-        if (context.Site() === undefined) throw "No site was specified. Run Mozu.Tenant(tenantId).MasterCatalog(siteGroupId).Site(siteId).";
-        if (context.MasterCatalog() === undefined) throw "No site group was specified. Run Mozu.Tenant(tenantId).MasterCatalog(siteGroupId).Site(siteId).";
-        //if (context.Host() === undefined) throw "API Base URL was not specified. Run Mozu.Host(host).Tenant(tenantId).MasterCatalog(siteGroupId).Site(siteId).";
+        for (var i = 0, len = requiredContextValues.length; i < len; i++) {
+            if (context[requiredContextValues[i]]() === undefined) throw new ReferenceError(errorMessage.split('{0}').join(requiredContextValues[i]));
+        }
         this.context = context;
     };
 
@@ -56,14 +56,37 @@ var ApiInterface = (function () {
             
             return deferred.promise;
         },
-        action: function (type, actionName, conf) {
+        action: function (instanceOrType, actionName, data) {
             var me = this,
-                requestConf = ApiReference.getRequestConfig(actionName, type, conf, this.context);
-            return this.request(ApiReference.basicOps[actionName], requestConf, conf).then(function (rawJSON) {
-                var newObj = me.createSync(requestConf.returnType || type, rawJSON);
-                delete newObj.unsynced;
-                return newObj;
-            });
+                obj = instanceOrType instanceof ApiObject ? instanceOrType : me.createSync(instanceOrType),
+                type = obj.type;
+                
+                obj.fire('action', actionName, data);
+                me.fire('action', obj, actionName, data);
+                var requestConf = ApiReference.getRequestConfig(actionName, type, data || obj.data, me.context, obj);
+
+                if ((actionName == "update" || actionName == "create") && !data) {
+                    data = obj.data;
+                }
+
+                return me.request(ApiReference.basicOps[actionName], requestConf, data).then(function (rawJSON) {
+                    if (requestConf.returnType) {
+                        var returnObj = ApiObject.create(requestConf.returnType, rawJSON, me);
+                        obj.fire('spawn', returnObj);
+                        me.fire('spawn', returnObj, obj);
+                        return returnObj;
+                    } else {
+                        obj.data = JSON.parse(JSON.stringify(rawJSON)); // cheap copy :)
+                        delete obj.unsynced;
+                        obj.fire('sync', rawJSON, obj.data);
+                        me.fire('sync', obj, rawJSON, obj.data);
+                        return obj;
+                    }
+                }, function (errorJSON) {
+                    obj.fire('error', errorJSON);
+                    me.fire('error', errorJSON, obj);
+                    throw errorJSON;
+                });
         },
         all: function () {
             return utils.when.join.apply(utils.when, arguments);
@@ -87,7 +110,7 @@ var ApiInterface = (function () {
 
     // add createSync method for a different style of development
     ApiInterfaceConstructor.prototype.createSync = function (type, conf) {
-        var newApiObject = ApiReference.tryCreateApiObject(type, conf, this);
+        var newApiObject = ApiObject.create(type, conf, this);
         newApiObject.unsynced = true;
         this.fire('spawn', newApiObject);
         return newApiObject;

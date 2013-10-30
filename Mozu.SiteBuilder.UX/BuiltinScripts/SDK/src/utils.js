@@ -27,6 +27,15 @@ var utils = (function () {
             }
             return target;
         },
+        inherit: function (parent, more) {
+            var ApiInheritedObject = function () {
+                if (this.construct) this.construct.apply(this, arguments);
+                parent.apply(this, arguments);
+                if (this.postconstruct) this.postconstruct.apply(this, arguments);
+            }
+            ApiInheritedObject.prototype = utils.extend(new parent(), more);
+            return ApiInheritedObject;
+        },
         map: function (arr, fn, scope) {
             var newArr = [], len = arr.length;
             scope = scope || window;

@@ -2,17 +2,21 @@
 var ApiCollection = (function () {
 
     function convertItem(raw) {
-        return new ApiReference.tryCreateApiObject(this.itemType, raw, this.api);
+        return ApiObject.create(this.itemType, raw, this.api);
     }
 
     var ApiCollectionConstructor = function (type, data, api, itemType) {
         var self = this;
         ApiObject.apply(this, arguments);
         this.itemType = itemType;
+        if (!data) data = {};
+        if (!data.Items) this.prop("Items", data.Items = []);
         if (data.Items.length > 0) this.add(data.Items, true);
         this.on('sync', function (raw) {
-            self.removeAll();
-            self.add(raw.Items);
+            if (raw && raw.Items) {
+                self.removeAll();
+                self.add(raw.Items);
+            }
         });
     }
 
@@ -83,6 +87,12 @@ var ApiCollection = (function () {
             return this.setIndex(newIndex, req);
         }
     });
+
+    ApiCollectionConstructor.types = {};
+
+    ApiCollectionConstructor.create = function (type, data, api, itemType) {
+        return new (type in this.types ? this.types[type] : this)(type, data, api, itemType);
+    }
 
     return ApiCollectionConstructor;
 

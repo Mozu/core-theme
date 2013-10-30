@@ -157,7 +157,7 @@
         it("should error when any of tenant, site, or master catalog are not supplied", function () {
             expect(function () { return noTenantContext.api(); }).to.throw(/no tenant/i);
             expect(function () { return noSiteContext.api(); }).to.throw(/no site/i);
-            expect(function () { return noMasterCatalogContext.api(); }).to.throw(/no site group/i);
+            expect(function () { return noMasterCatalogContext.api(); }).to.throw(/no mastercatalog/i);
         });
 
         var api = completeContext.api();
@@ -253,7 +253,9 @@
             });
 
             it("should work with shortcuts like 'products'", function () {
-                var promise = api.get('products');
+                var promise = api.get('products').otherwise(function (reason) {
+                    console.log(reason);
+                });
 
                 return Mozu.Utils.when.all([
                     expect(promise).to.be.fulfilled,
@@ -305,7 +307,7 @@
             it("should work with carts", function () {
                 var promise = api.get("cart");
 
-                expect(Mozu.ApiReference.getRequestConfig).to.have.been.calledWith("get", "cart", undefined, api.context);
+                expect(Mozu.ApiReference.getRequestConfig).to.have.been.calledWith("get", "cart");
                 expect(Mozu.Utils.ajax).to.have.been.calledWithMatch(/GET/, new RegExp(ServiceUrls.cartService + "current"));
 
                 return Mozu.Utils.when.all([

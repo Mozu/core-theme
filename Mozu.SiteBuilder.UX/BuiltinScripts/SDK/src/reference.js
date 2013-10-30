@@ -106,16 +106,8 @@ var ApiReference = (function () {
             return returnObj;
         },
 
-        tryCreateApiObject: function (type, rawJSON, api) {
-            return type in objectTypes ? (
-                objectTypes[type].collectionOf ? 
-                this.createApiCollection(type, rawJSON, api, objectTypes[type].collectionOf)
-                : new ApiObject(type, rawJSON, api)
-            ) : rawJSON;
-        },
-
-        createApiCollection: function (type, rawJSON, api, memberType) {
-            return new ApiCollection(type, rawJSON, api, memberType)
+        getType: function(typeName) {
+            return objectTypes[typeName];
         }
     };
     var reservedWords = {
