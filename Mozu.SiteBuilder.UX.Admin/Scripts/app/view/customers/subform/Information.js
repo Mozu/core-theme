@@ -6,7 +6,7 @@ Ext.define('Taco.view.customers.subform.Information', {
         
         var me= this,
             data = this.record;
-
+        console.log(this.tagStore);
         me.taxExemptIdField = Ext.create('Ext.form.field.Text', {
             name: 'taxExemptId',
             hidden: !this.record.taxExempt,
@@ -67,8 +67,23 @@ Ext.define('Taco.view.customers.subform.Information', {
                 renderTpl: [
                     '<div class="total-spent"><label>Total Spent</label><h2>{[Ext.util.Format.usMoney(values.totalSpent || 0)]}</h2></div>',
                     '<div class="total-orders"><label>Total Orders</label><h2>{[values.orderCount || 0]}</h2></div>',
-                    '<div class="customer-since"><span>Customer Since: </span><span>{[Ext.util.Format.date(values.createDate, "m/d/Y")]}</span></div>'
+                    '<div class="total-orders"><label>Total Visits</label><h2>{[values.orderCount || 0]}</h2></div>',
+                  //  '<div class="customer-since"><span>Customer Since: </span><span>{[Ext.util.Format.date(values.createDate, "m/d/Y")]}</span></div>',
+                    
+                '<div class="wishList"><label>View Wishlist</label></div>',
+                '<div class="total-orders"><span>Customer Since: </span><span>{[Ext.util.Format.date(values.createDate, "m/d/Y")]}</span></div>'
                 ]
+            }, {
+                xtype: 'button',
+                text: 'View Wish List',
+                cls: 'customer-history',
+                handler: function () {
+                    //console.log(this.record);
+                    var model = Ext.create('Taco.shared.view.modal.Wishlist', {
+                        record: this.record
+                    });
+                },
+                scope: this
             }, {
                 store: this.tagStore,
                 xtype: 'boxselect',
