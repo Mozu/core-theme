@@ -588,6 +588,7 @@
     <Content Include="Scripts\app\controller\OrderAttributes.js" />
     <Content Include="Scripts\app\controller\Reports.js" />
     <Content Include="Scripts\app\controller\Tbd.js" />
+    <Content Include="Scripts\app\controller\WishLists.js" />
     <Content Include="Scripts\app\core\context\Catalog.js" />
     <Content Include="Scripts\app\core\util\Common.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
@@ -606,6 +607,7 @@
     <Content Include="Scripts\app\model\LocationType.js" />
     <Content Include="Scripts\app\model\OrderAttribute.js" />
     <Content Include="Scripts\app\model\ShippingMethod.js" />
+    <Content Include="Scripts\app\model\WishList.js" />
     <Content Include="Scripts\app\overrides\form\field\ComboBox.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditorButtons.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditor.js" />
@@ -622,6 +624,7 @@
     <Content Include="Scripts\app\store\LocationTypes.js" />
     <Content Include="Scripts\app\store\OrderAttributes.js" />
     <Content Include="Scripts\app\store\PackagingTypes.js" />
+    <Content Include="Scripts\app\store\WishList.js" />
     <Content Include="Scripts\app\view\channel\Index.js" />
     <Content Include="Scripts\app\view\customerAttribute\Edit.js" />
     <Content Include="Scripts\app\view\customerAttribute\Form.js" />
@@ -928,6 +931,7 @@
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\form\field\Display.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\grid\plugin\RowEditing.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\panel\Table.scss" />
+    <Content Include="Scripts\app\mocks\wishlist.json" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

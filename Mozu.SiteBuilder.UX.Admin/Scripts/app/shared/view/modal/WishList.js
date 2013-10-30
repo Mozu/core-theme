@@ -4,25 +4,13 @@
 Ext.define('Taco.shared.view.modal.Wishlist', {
     extend: 'Taco.core.ux.window.Modal',
     requires: [
-        'Taco.model.Contact',
-        'Taco.shared.view.form.Address',
-        'Ext.window.MessageBox'
+        'Taco.store.WishList'
     ],
-
     autoShow: true,
-
     width: 900,
     title: 'Wishlist',
-
-    addressHasNames: true,
-    showCompanyName: true,
-    showEmail: true,
-    showPhoneNumbers: true,
-
-    validateAddress: true,
-
     formCfg: null,
-
+    closable: true,
     actions: [{
         xtype: 'button',
         itemId: 'primaryAction',
@@ -38,29 +26,10 @@ Ext.define('Taco.shared.view.modal.Wishlist', {
         var me = this;
         this.cls += ' ' + Taco.baseCSSPrefix + 'address-editor';
 
-        if (!this.record || !this.record.isModel) {
-            this.record = Ext.create('Taco.model.Contact', this.record);
-        }
-
-        Ext.create('Ext.data.Store', {
-            storeId: 'creditStore',
-            fields: ['code', 'name', 'price', 'saleprice', 'stock', 'dateadded', 'datepurchased'],
-            data: {
-                'items': [
-                    { 'code': 'Cartoon', "name": "CatBug", "price": "5.00", "saleprice": "2.00", 'stock': '1', "dateadded": "11/1/2013", "datepurchased": "12/1/2013" }
-                ]
-            },
-            proxy: {
-                type: 'memory',
-                reader: {
-                    type: 'json',
-                    root: 'items'
-                }
-            }
-        });
+        this.wishListStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.WishList');
 
         me.wishlistGrid = Ext.create('Ext.grid.Panel', {
-            store: Ext.data.StoreManager.lookup('creditStore'),
+            store: this.wishListStore,
             columns: [
                 { text: 'Product Code', dataIndex: 'code' },
                 { text: 'Name', dataIndex: 'name' },
@@ -69,7 +38,8 @@ Ext.define('Taco.shared.view.modal.Wishlist', {
                 { text: 'In Stock', dataIndex: 'stock' },
                 { text: 'Date Added', dataIndex: 'dateadded' },
                 { text: 'Date Purchased', dataIndex: 'datepurchased', flex: 1 }
-            ]
+            ],
+            scope: this
         });
 
         this.items = [me.wishlistGrid];
