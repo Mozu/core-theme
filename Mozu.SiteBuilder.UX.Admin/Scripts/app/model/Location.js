@@ -84,7 +84,8 @@ Ext.define('Taco.model.Location', {
                     '{address2} ',
                     '{address3} ',
                     '{address4} ',
-                    '{cityOrTown}, {stateOrProvince} {postalOrZipCode}',
+                    '<tpl if="cityOrTown">{cityOrTown}, </tpl>',
+                    '{stateOrProvince} {postalOrZipCode}',
                     '{countryCode}'
                 ).apply(record.get('address'));
                 return str;
