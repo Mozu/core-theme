@@ -7,10 +7,8 @@
 Ext.define('Taco.controller.Channels', {
     extend: 'Taco.core.Controller',
     requires: [
-        //'Taco.view.locationType.Edit'
+        'Taco.view.channel.Index'
     ],
-    //editorView: 'Taco.view.locationType.Edit',
-    //listView: null,
     models: ['Taco.model.Channel'],
     stores: ['Taco.store.Channels'],
     views: ['channel.Index'],

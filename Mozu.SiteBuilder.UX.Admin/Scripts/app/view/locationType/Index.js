@@ -3,12 +3,10 @@
  */
 Ext.define('Taco.view.locationType.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
-  
     requires: [
-        'Taco.store.LocationTypes',
-        'Taco.model.LocationType'
+        'Taco.model.LocationType',
+        'Taco.store.LocationTypes'
     ],
-
     typeName: 'Location Types',
     gridHeaderLabel: 'Location Types',
     
