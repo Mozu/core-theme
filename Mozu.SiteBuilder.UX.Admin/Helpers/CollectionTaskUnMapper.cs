@@ -30,7 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
                              let res = action(item)
                              select res.Result.ReadAsAsync();
 
-            return from attr in await Task.WhenAll(tasks)
+             return from attr in await Task.WhenAll(tasks)
                    select Mapper.Map<TClient>(attr);
         }
 

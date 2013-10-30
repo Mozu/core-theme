@@ -25,6 +25,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                 Author = tmd.Configuration.About.Author,
                 IsDesktop = tmd.Configuration.About.IsDesktop,
                 IsMobile = tmd.Configuration.About.IsMobile,
+                Thumbnail = tmd.Thumbnail,
+                ThemePath = tmd.ThemePath ,
                 Parent = parent
             };
 
