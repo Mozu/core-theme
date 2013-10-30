@@ -12,13 +12,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "id")]
         public string Id { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "tenantId")]
+        [DataMember(Name = "tenantId")]
         public int? TenantId { get; set; }
 
         [DataMember(Name="channelCode")]
         public string ChannelCode { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "siteId")]
+        [DataMember(Name = "siteId")]
         public int? SiteId { get; set; }
 
         /// <summary>
