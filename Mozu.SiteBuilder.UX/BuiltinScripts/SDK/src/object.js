@@ -5,38 +5,12 @@ var ApiObject = (function () {
         this.data = data || {};
         this.api = iapi;
         this.type = type;
-        if (ApiPostProcessors[this.type]) {
-            this.postProcessor = ApiPostProcessors[this.type];
-            this.postProcessor(this);
-        }
     }
 
     ApiObjectConstructor.prototype = {
         constructor: ApiObjectConstructor,
         action: function (actionName, data) {
-            var me = this;
-            me.fire('action', actionName, data);
-            me.api.fire('action', me, actionName, data);
-            var requestConf = ApiReference.getRequestConfig(actionName, this.type, data || this.data, this.api.context, this);
-            return this.api.request(ApiReference.basicOps[actionName], requestConf, data).then(function (rawJSON) {
-                if (requestConf.returnType) {
-                    var returnObj = ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
-                    me.fire('spawn', returnObj);
-                    me.api.fire('spawn', returnObj, me);
-                    return returnObj;
-                } else {
-                    me.data = JSON.parse(JSON.stringify(rawJSON)); // cheap copy :)
-                    if (me.postProcessor) me.postProcessor(me);
-                    delete me.unsynced;
-                    me.fire('sync', rawJSON, me.data);
-                    me.api.fire('sync', me, rawJSON, me.data);
-                    return me;
-                }
-            }, function (errorJSON) {
-                me.fire('error', errorJSON);
-                me.api.fire('error', errorJSON, me);
-                throw errorJSON;
-            });
+            return this.api.action(this, actionName, data);
         },
         getAvailableActions: function () {
             return ApiReference.getActionsFor(this.type);
@@ -68,6 +42,22 @@ var ApiObject = (function () {
     }
 
     utils.addEvents(ApiObjectConstructor);
+
+    ApiObjectConstructor.types = {};
+
+    ApiObjectConstructor.create = function (typeName, rawJSON, api) {
+        var type = ApiReference.getType(typeName);
+        if (!type) {
+            console.log("No Mozu SDK object type for " + typeName);
+            // for forward compatibility the API should return a response,
+            // even one that it doesn't understand
+            return rawJSON;
+        }
+        if (type.collectionOf) {
+            return ApiCollection.create(typeName, rawJSON, api, type.collectionOf)
+        }
+        return new (typeName in this.types ? this.types[typeName] : this)(typeName, rawJSON, api);
+    };
 
     return ApiObjectConstructor;
 

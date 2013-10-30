@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-10-26
+ * Mozu JavaScript SDK - v0.1.0 - 2013-10-29
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -333,10 +333,11 @@
                                 function resolveOne(item, i) {
                                     when(item, mapFunc, fallback).then(function(mapped) {
                                         results[i] = mapped;
+                                        notify(mapped);
                                         if (!--toResolve) {
                                             resolve(results);
                                         }
-                                    }, reject, notify);
+                                    }, reject);
                                 }
                             }
                         });
@@ -373,7 +374,7 @@
                             state: "pending"
                         };
                     }
-                    var reduceArray, slice, fcall, nextTick, handlerQueue, setTimeout, funcProto, call, arrayProto, monitorApi, cjsRequire, MutationObserver, undef;
+                    var reduceArray, slice, fcall, nextTick, handlerQueue, setTimeout, funcProto, call, arrayProto, monitorApi, cjsRequire, undef;
                     cjsRequire = require;
                     handlerQueue = [];
                     function enqueue(task) {
@@ -390,18 +391,16 @@
                     }
                     setTimeout = global.setTimeout;
                     monitorApi = typeof console != "undefined" ? console : when;
-                    if (typeof process === "object" && process.nextTick) {
+                    if (typeof setImmediate === "function") {
+                        nextTick = setImmediate.bind(global);
+                    } else if (typeof MessageChannel !== "undefined") {
+                        var channel = new MessageChannel();
+                        channel.port1.onmessage = drainQueue;
+                        nextTick = function() {
+                            channel.port2.postMessage(0);
+                        };
+                    } else if (typeof process === "object" && process.nextTick) {
                         nextTick = process.nextTick;
-                    } else if (MutationObserver = global.MutationObserver || global.WebKitMutationObserver) {
-                        nextTick = function(document, MutationObserver, drainQueue) {
-                            var el = document.createElement("div");
-                            new MutationObserver(drainQueue).observe(el, {
-                                attributes: true
-                            });
-                            return function() {
-                                el.setAttribute("x", "x");
-                            };
-                        }(document, MutationObserver, drainQueue);
                     } else {
                         try {
                             nextTick = cjsRequire("vertx").runOnLoop || cjsRequire("vertx").runOnContext;
@@ -1240,6 +1239,15 @@
                         }
                         return target;
                     },
+                    inherit: function(parent, more) {
+                        var ApiInheritedObject = function() {
+                            if (this.construct) this.construct.apply(this, arguments);
+                            parent.apply(this, arguments);
+                            if (this.postconstruct) this.postconstruct.apply(this, arguments);
+                        };
+                        ApiInheritedObject.prototype = utils.extend(new parent(), more);
+                        return ApiInheritedObject;
+                    },
                     map: function(arr, fn, scope) {
                         var newArr = [], len = arr.length;
                         scope = scope || window;
@@ -1369,15 +1377,6 @@
                     return this.name + ": " + this.message;
                 }
             }();
-            var ApiPostProcessors = {
-                login: function(obj) {
-                    var newClaims = obj.prop("AuthTicket");
-                    if (newClaims && newClaims.AccessToken) {
-                        obj.api.context.UserClaims(newClaims.AccessToken);
-                        obj.api.fire("login", newClaims);
-                    }
-                }
-            };
             var ApiReference = function() {
                 var basicOps = {
                     get: "GET",
@@ -1453,11 +1452,8 @@
                         }
                         return returnObj;
                     },
-                    tryCreateApiObject: function(type, rawJSON, api) {
-                        return type in objectTypes ? objectTypes[type].collectionOf ? this.createApiCollection(type, rawJSON, api, objectTypes[type].collectionOf) : new ApiObject(type, rawJSON, api) : rawJSON;
-                    },
-                    createApiCollection: function(type, rawJSON, api, memberType) {
-                        return new ApiCollection(type, rawJSON, api, memberType);
+                    getType: function(typeName) {
+                        return objectTypes[typeName];
                     }
                 };
                 var reservedWords = {
@@ -1711,37 +1707,11 @@
                     this.data = data || {};
                     this.api = iapi;
                     this.type = type;
-                    if (ApiPostProcessors[this.type]) {
-                        this.postProcessor = ApiPostProcessors[this.type];
-                        this.postProcessor(this);
-                    }
                 };
                 ApiObjectConstructor.prototype = {
                     constructor: ApiObjectConstructor,
                     action: function(actionName, data) {
-                        var me = this;
-                        me.fire("action", actionName, data);
-                        me.api.fire("action", me, actionName, data);
-                        var requestConf = ApiReference.getRequestConfig(actionName, this.type, data || this.data, this.api.context, this);
-                        return this.api.request(ApiReference.basicOps[actionName], requestConf, data).then(function(rawJSON) {
-                            if (requestConf.returnType) {
-                                var returnObj = ApiReference.tryCreateApiObject(requestConf.returnType, rawJSON, me.api);
-                                me.fire("spawn", returnObj);
-                                me.api.fire("spawn", returnObj, me);
-                                return returnObj;
-                            } else {
-                                me.data = JSON.parse(JSON.stringify(rawJSON));
-                                if (me.postProcessor) me.postProcessor(me);
-                                delete me.unsynced;
-                                me.fire("sync", rawJSON, me.data);
-                                me.api.fire("sync", me, rawJSON, me.data);
-                                return me;
-                            }
-                        }, function(errorJSON) {
-                            me.fire("error", errorJSON);
-                            me.api.fire("error", errorJSON, me);
-                            throw errorJSON;
-                        });
+                        return this.api.action(this, actionName, data);
                     },
                     getAvailableActions: function() {
                         return ApiReference.getActionsFor(this.type);
@@ -1772,20 +1742,36 @@
                     if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
                 }
                 utils.addEvents(ApiObjectConstructor);
+                ApiObjectConstructor.types = {};
+                ApiObjectConstructor.create = function(typeName, rawJSON, api) {
+                    var type = ApiReference.getType(typeName);
+                    if (!type) {
+                        console.log("No Mozu SDK object type for " + typeName);
+                        return rawJSON;
+                    }
+                    if (type.collectionOf) {
+                        return ApiCollection.create(typeName, rawJSON, api, type.collectionOf);
+                    }
+                    return new (typeName in this.types ? this.types[typeName] : this)(typeName, rawJSON, api);
+                };
                 return ApiObjectConstructor;
             }();
             var ApiCollection = function() {
                 function convertItem(raw) {
-                    return new ApiReference.tryCreateApiObject(this.itemType, raw, this.api);
+                    return ApiObject.create(this.itemType, raw, this.api);
                 }
                 var ApiCollectionConstructor = function(type, data, api, itemType) {
                     var self = this;
                     ApiObject.apply(this, arguments);
                     this.itemType = itemType;
+                    if (!data) data = {};
+                    if (!data.Items) this.prop("Items", data.Items = []);
                     if (data.Items.length > 0) this.add(data.Items, true);
                     this.on("sync", function(raw) {
-                        self.removeAll();
-                        self.add(raw.Items);
+                        if (raw && raw.Items) {
+                            self.removeAll();
+                            self.add(raw.Items);
+                        }
                     });
                 };
                 ApiCollectionConstructor.prototype = utils.extend(new ApiObject(), {
@@ -1849,13 +1835,57 @@
                         return this.setIndex(newIndex, req);
                     }
                 });
+                ApiCollectionConstructor.types = {};
+                ApiCollectionConstructor.create = function(type, data, api, itemType) {
+                    return new (type in this.types ? this.types[type] : this)(type, data, api, itemType);
+                };
                 return ApiCollectionConstructor;
             }();
+            ApiObject.types.login = utils.inherit(ApiObject, {
+                postconstruct: function(type, json) {
+                    if (json.AuthTicket && json.AuthTicket.AccessToken) {
+                        self.api.context.UserClaims(json.AuthTicket.AccessToken);
+                        self.api.fire("login", json.AuthTicket);
+                    }
+                }
+            });
+            ApiObject.types.order = utils.inherit(ApiObject, {
+                addNewUser: function(login) {
+                    var self = this;
+                    return self.api.create("user", login).then(function(user) {
+                        return user.login();
+                    }).then(function() {
+                        return self.action("setUserId");
+                    });
+                }
+            });
+            ApiObject.types.shipment = utils.inherit(ApiObject, {
+                getShippingMethodsFromContact: function(contact) {
+                    var self = this;
+                    return self.update({
+                        FulfillmentContact: self.prop("FulfillmentContact")
+                    }).then(function() {
+                        return self.action("getShippingMethods");
+                    });
+                }
+            });
+            ApiObject.types.user = utils.inherit(ApiObject, {
+                postconstruct: function() {
+                    var self = this;
+                    this.on("sync", function(json) {
+                        if (json.AuthTicket && json.AuthTicket.AccessToken) {
+                            self.api.context.UserClaims(json.AuthTicket.AccessToken);
+                            self.api.fire("login", json.AuthTicket);
+                        }
+                    });
+                }
+            });
             var ApiInterface = function() {
+                var errorMessage = "No {0} was specified. Run Mozu.Tenant(tenantId).MasterCatalog(masterCatalogId).Site(siteId).", requiredContextValues = [ "Tenant", "MasterCatalog", "Site" ];
                 var ApiInterfaceConstructor = function(context) {
-                    if (context.Tenant() === undefined) throw "No tenant was specified. Run Mozu.Tenant(tenantId).MasterCatalog(siteGroupId).Site(siteId).";
-                    if (context.Site() === undefined) throw "No site was specified. Run Mozu.Tenant(tenantId).MasterCatalog(siteGroupId).Site(siteId).";
-                    if (context.MasterCatalog() === undefined) throw "No site group was specified. Run Mozu.Tenant(tenantId).MasterCatalog(siteGroupId).Site(siteId).";
+                    for (var i = 0, len = requiredContextValues.length; i < len; i++) {
+                        if (context[requiredContextValues[i]]() === undefined) throw new ReferenceError(errorMessage.split("{0}").join(requiredContextValues[i]));
+                    }
                     this.context = context;
                 };
                 ApiInterfaceConstructor.prototype = {
@@ -1892,12 +1922,31 @@
                         });
                         return deferred.promise;
                     },
-                    action: function(type, actionName, conf) {
-                        var me = this, requestConf = ApiReference.getRequestConfig(actionName, type, conf, this.context);
-                        return this.request(ApiReference.basicOps[actionName], requestConf, conf).then(function(rawJSON) {
-                            var newObj = me.createSync(requestConf.returnType || type, rawJSON);
-                            delete newObj.unsynced;
-                            return newObj;
+                    action: function(instanceOrType, actionName, data) {
+                        var me = this, obj = instanceOrType instanceof ApiObject ? instanceOrType : me.createSync(instanceOrType), type = obj.type;
+                        obj.fire("action", actionName, data);
+                        me.fire("action", obj, actionName, data);
+                        var requestConf = ApiReference.getRequestConfig(actionName, type, data || obj.data, me.context, obj);
+                        if ((actionName == "update" || actionName == "create") && !data) {
+                            data = obj.data;
+                        }
+                        return me.request(ApiReference.basicOps[actionName], requestConf, data).then(function(rawJSON) {
+                            if (requestConf.returnType) {
+                                var returnObj = ApiObject.create(requestConf.returnType, rawJSON, me);
+                                obj.fire("spawn", returnObj);
+                                me.fire("spawn", returnObj, obj);
+                                return returnObj;
+                            } else {
+                                obj.data = JSON.parse(JSON.stringify(rawJSON));
+                                delete obj.unsynced;
+                                obj.fire("sync", rawJSON, obj.data);
+                                me.fire("sync", obj, rawJSON, obj.data);
+                                return obj;
+                            }
+                        }, function(errorJSON) {
+                            obj.fire("error", errorJSON);
+                            me.fire("error", errorJSON, obj);
+                            throw errorJSON;
                         });
                     },
                     all: function() {
@@ -1920,7 +1969,7 @@
                     if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
                 }
                 ApiInterfaceConstructor.prototype.createSync = function(type, conf) {
-                    var newApiObject = ApiReference.tryCreateApiObject(type, conf, this);
+                    var newApiObject = ApiObject.create(type, conf, this);
                     newApiObject.unsynced = true;
                     this.fire("spawn", newApiObject);
                     return newApiObject;
