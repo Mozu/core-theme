@@ -2,7 +2,7 @@
 
     var ProductView = Backbone.MozuView.extend({
         templateName: 'modules/product/product-detail',
-        autoUpdate: ['Quantity'],
+        autoUpdate: ['quantity'],
         additionalEvents: {
             "change [data-mz-product-option]": "onOptionChange",
             "blur [data-mz-product-option]": "onOptionChange"
@@ -11,7 +11,7 @@
             var me = this;
             Backbone.MozuView.prototype.render.apply(this);
             this.$('[data-mz-is-datepicker]').each(function (ix, dp) {
-                $(dp).dateinput().css('color', '#333').on('change  blur', _.bind(me.onOptionChange, me));
+                $(dp).dateinput().css('color', require.mozuThemeSetting('textColor')).on('change  blur', _.bind(me.onOptionChange, me));
             });
         },
         onOptionChange: function (e) {
@@ -20,7 +20,7 @@
         configure: function ($optionEl) {
             var newValue = $optionEl.val(),
                 id = $optionEl.data('mz-product-option');
-            this.model.get('Options').get(id).set("Value", newValue);
+            this.model.get('options').get(id).set("value", newValue);
         },
         addToCart: function () {
             this.model.addToCart();
@@ -40,11 +40,11 @@
 
         var product = ProductModels.Product.fromCurrent();
         product.on('addedtocart', function (cartitem) {
-            if (cartitem && cartitem.prop('Id')) {
+            if (cartitem && cartitem.prop('id')) {
                 product.isLoading(true);
                 window.location.href = "/cart";
             } else {
-                product.trigger("error", { Message: "Unknown error!" });
+                product.trigger("error", { message: require.mozuLabel('unexpectedError') });
             }
         });
 

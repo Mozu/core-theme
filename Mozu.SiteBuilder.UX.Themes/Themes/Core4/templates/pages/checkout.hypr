@@ -8,7 +8,7 @@
 
 {% require_script "pages/checkout" %}
 
-{% preload_json Model "checkout" %}
+{% preload_json model "checkout" %}
 
 <div class="mz-l-container">
     <h1 class="mz-pagetitle">

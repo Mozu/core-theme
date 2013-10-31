@@ -49,7 +49,7 @@
                 var defaults = _.object(_.flatten(_.map(this.$('[data-mz-value]'), function (el) {
                     var val = el.getAttribute('data-mz-value');
                     return _.map(['change', 'blur', 'keyup'], function (ev) {
-                        return [ev + ' [data-mz-value="' + val + '"]', "update" + val];
+                        return [ev + ' [data-mz-value="' + val + '"]', "update" + val.charAt(0).toUpperCase() + val.substring(1)];
                     });
                 }).concat(_.map(this.$('[data-mz-action]'), function (el) {
                     var action = el.getAttribute('data-mz-action');
@@ -71,7 +71,8 @@
                 this.undelegateEvents();
                 var model = this.model.toJSON({ helpers: true });
                 this.$el.html(this.template.render({
-                    Model: model
+                    Model: model,
+                    model: model
                 }));
                 this.delegateEvents();
                 Backbone.Validation.bind(this);
@@ -88,7 +89,7 @@
         Backbone.MozuView.extend = function (conf, statics) {
             if (conf.autoUpdate) {
                 _.each(conf.autoUpdate, function (prop) {
-                    conf['update' + prop] = _.debounce(function (e) {
+                    conf['update' + prop.charAt(0).toUpperCase() + prop.substring(1)] = _.debounce(function (e) {
                         var attrs = {},
                             $target = $(e.currentTarget),
                             value = e.currentTarget.type === "checkbox" ? $target.prop('checked') : $target.val();

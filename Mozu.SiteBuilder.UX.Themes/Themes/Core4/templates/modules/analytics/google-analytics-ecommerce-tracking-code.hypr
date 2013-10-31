@@ -1,0 +1,26 @@
+﻿<script>
+  _gaq.push(['_addTrans',
+  '{{ model.orderNumber }}',
+  '{{ siteContext.generalSettings.websiteName }}',
+  '{{ model.total }}',
+  '{{ model.taxTotal }}',
+  '{{ model.shippingTotal }}',
+  '{{ model.fulfillmentInfo.fulfillmentContact.address.cityOrTown }}',
+  '{{ model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince }}',
+  'USA'
+  ]);
+
+  {% for item in model.items %}
+  _gaq.push(['_addItem',
+  '{{ model.orderNumber }}',
+  '{{ item.product.productCode }}',
+  '{{ item.product.name }}',
+  '',
+  '{{ item.price.price }}',
+  '{{ item.quantity }}'
+
+  ]);
+  {% endfor %}
+
+  _gaq.push(['_trackTrans']);
+</script>

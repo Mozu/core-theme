@@ -1,6 +1,6 @@
-﻿{% if Model.TotalCount %}
-{% if Model.TotalCount != 1 %}
-{{ themeSettings.labelPageStatePlural|string_format(Model.firstIndex,Model.lastIndex,Model.TotalCount) }}
+﻿{% if model.totalCount %}
+{% if model.totalCount != 1 %}
+{{ themeSettings.labelPageStatePlural|string_format(model.firstIndex,model.lastIndex,model.totalCount) }}
 {% else %}
 {{ themeSettings.labelPageStateSingular }}
 {% endif %}
@@ -9,7 +9,7 @@
     {{ themeSettings.labelShow }}
     <select data-mz-value="PageSize" class="mz-pagingcontrols-pagesize-dropdown">
         {% for pageSize in themeSettings.pageSizeOptions %}
-        <option {% if Model.PageSize == pageSize %}selected="selected"{% endif %} value="{{ pageSize }}">{{ pageSize }}</option>
+        <option {% if model.pageSize == pageSize %}selected="selected"{% endif %} value="{{ pageSize }}">{{ pageSize }}</option>
         {% endfor %}
     </select>
     {{ themeSettings.labelResultsPerPage }}

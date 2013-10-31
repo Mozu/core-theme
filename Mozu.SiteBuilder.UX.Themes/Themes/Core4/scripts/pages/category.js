@@ -14,7 +14,7 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'shim!vendor/jquery.hist
             this.model.clearAllFacets();
         },
         clearFacet: function (e) {
-            this.model.get("Facets").findWhere({ Field: $(e.currentTarget).data('mz-facet') }).empty();
+            this.model.get("facets").findWhere({ field: $(e.currentTarget).data('mz-facet') }).empty();
         },
         setFacetValue: function (e) {
             var $box = $(e.currentTarget);
@@ -28,7 +28,7 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'shim!vendor/jquery.hist
             $facetPanel = $('[data-mz-facets]'),
             categoryId = $categoryPageBody.data('mz-category'),
             productListData = require.mozuData('facetedproducts'),
-            defaultPageSize = 15;
+            defaultPageSize = require.mozuThemeSetting('defaultPageSize');
 
         if (productListData) {
             productListData.baseRequestParams = {
@@ -63,13 +63,12 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'shim!vendor/jquery.hist
                 History.replaceState(null, null, newURL);
             });
 
-            facetingModel.on('change:PageSize', facetingModel.updateFacets, facetingModel);
+            facetingModel.on('change:pageSize', facetingModel.updateFacets, facetingModel);
 
         }
 
         _.invoke(facetingViews, 'render');
 
-        $('#mz-category-loading').remove();
         $categoryPageBody.noFlickerFadeIn();
 
         window.facetingViews = facetingViews;

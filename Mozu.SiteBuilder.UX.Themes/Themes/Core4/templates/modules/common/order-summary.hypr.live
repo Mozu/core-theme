@@ -7,39 +7,39 @@
                 <th class="mz-ordersummary-header-total">{{ themeSettings.labelTotal }}</th>
             </tr>
         </thead>
-        {% for item in Model.Items %}
+        {% for item in model.items %}
             <tbody class="mz-ordersummary-lineitems">
-                <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.DiscountedTotal < item.Total %}is-discounted{% endif %}">
-                    <td class="mz-ordersummary-item-product">{{ item.Product.Name }}</td>
-                    <td>{{ item.Quantity }}</td>
-                    <td><span class="mz-ordersummary-price">{{ item.UnitPrice.BaseAmount|currency }}</span></td>
-                    <td><span class="mz-ordersummary-price mz-ordersummary-itemtotal">{{ item.Subtotal|currency }}</span></td>
+                <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountedTotal < item.total %}is-discounted{% endif %}">
+                    <td class="mz-ordersummary-item-product">{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td><span class="mz-ordersummary-price">{{ item.unitPrice.baseAmount|currency }}</span></td>
+                    <td><span class="mz-ordersummary-price mz-ordersummary-itemtotal">{{ item.subtotal|currency }}</span></td>
                 </tr>
-                {% if item.DiscountedTotal < item.Total %}
+                {% if item.discountedTotal < item.total %}
                     <tr class="mz-ordersummary-line mz-ordersummary-line-discount">
                         <td colspan="2">
-                            {% if item.Discount %}
-                                <span class="mz-ordersummary-discountname">{{ item.Discount.Name }}</span> 
-                                {% if item.Discount.FreeShipping %}
+                            {% if item.discount %}
+                                <span class="mz-ordersummary-discountname">{{ item.discount.name }}</span> 
+                                {% if item.discount.freeShipping %}
                                     <span class="mz-ordersummary-discountamt">{{ themeSettings.labelFreeShipping }}</span>
                                 {% endif %}
                             {% endif %}
-                            <span class="mz-ordersummary-price mz-ordersummary-discountamt" >{{ item.DiscountTotal|currency}} OFF</span>
+                            <span class="mz-ordersummary-price mz-ordersummary-discountamt" >{{ item.discountTotal|currency}} OFF</span>
                         </td>
-                        <td>{{ item.UnitPrice.DiscountedAmount|currency }}</td>
-                        <td class="mz-ordersummary-price mz-ordersummary-itemtotal">{{ item.Total }}</td>
+                        <td>{{ item.unitPrice.discountedAmount|currency }}</td>
+                        <td class="mz-ordersummary-price mz-ordersummary-itemtotal">{{ item.total }}</td>
                     </tr>
                 {% endif %}
             </tbody>
         {% endfor %}
       
         <tbody>
-            {% for discount in Model.OrderDiscounts %}
-            {% if not discount.Excluded %}
+            {% for discount in model.orderDiscounts %}
+            {% if not discount.excluded %}
             <tr class="mz-ordersummary-discount">
               <td colspan="4">
-                <span class="mz-ordersummary-discountname">{{ discount.Discount.Name }}:</span>
-                <span class="mz-ordersummary-discountamt">-{{ discount.Impact|currency }}</span
+                <span class="mz-ordersummary-discountname">{{ discount.discount.name }}:</span>
+                <span class="mz-ordersummary-discountamt">-{{ discount.impact|currency }}</span
               </td>
             </tr>
             {% endif %}
@@ -47,35 +47,35 @@
             <tr class="mz-ordersummary-subtotal">
               <td colspan="4">
                 <span class="mz-ordersummary-totalname">{{ themeSettings.labelSubtotal }}:</span>
-                <span class="mz-ordersummary-totalvalue">{{ Model.DiscountedTotal|currency }}</span>
+                <span class="mz-ordersummary-totalvalue">{{ model.discountedTotal|currency }}</span>
               </td>
             </tr>
-            {% if Model.TaxTotal %}
+            {% if model.taxTotal %}
             <tr class="mz-ordersummary-tax">
                 <td colspan="4">
                     <span class="mz-ordersummary-totalname">{{ themeSettings.labelTax }}:</span>
-                    <span class="mz-ordersummary-totalvalue">{{ Model.TaxTotal|currency }}</span>
+                    <span class="mz-ordersummary-totalvalue">{{ model.taxTotal|currency }}</span>
                 </td>
             </tr>
             {% endif %}
             <tr class="mz-ordersummary-shippingtotal">
               <td colspan="4">
                 <span class="mz-ordersummary-totalname">{{ themeSettings.labelShippingHandling }}:</span>
-                <span class="mz-ordersummary-totalvalue">{{ Model.ShippingTotal|currency }}</span>
+                <span class="mz-ordersummary-totalvalue">{{ model.shippingTotal|currency }}</span>
               </td>
             </tr>
-            {% if Model.HandlingAmount %}
+            {% if model.handlingAmount %}
             <tr class="mz-ordersummary-additionalhandling">
                 <td colspan="4">
                     <span class="mz-ordersummary-totalname">{{ themeSettings.labelAdditionalHandling }}</span>
-                    <span class="mz-ordersummary-totalvalue">{{ Model.HandlingAmount|currency }}</span>
+                    <span class="mz-ordersummary-totalvalue">{{ model.handlingAmount|currency }}</span>
                 </td>
             </tr>
             {% endif %}
             <tr class="mz-ordersummary-grandtotal">
                 <td colspan="4">
                     <span class="mz-ordersummary-totalname">{{ themeSettings.labelTotal }}:</span>
-                    <span class="mz-ordersummary-totalvalue">{{ Model.Total|currency }}</span>
+                    <span class="mz-ordersummary-totalvalue">{{ model.total|currency }}</span>
                 </td>
             </tr>
         </tbody>

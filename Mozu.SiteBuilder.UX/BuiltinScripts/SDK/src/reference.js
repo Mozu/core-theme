@@ -143,7 +143,7 @@ var ApiReference = (function () {
         },
 
         'category': {
-            template: '{+categoryService}{Id}(?allowInactive}',
+            template: '{+categoryService}{id}(?allowInactive}',
             shortcutParam: 'Id',
             defaultParams: {
                 allowInactive: false
@@ -162,15 +162,15 @@ var ApiReference = (function () {
         },
         'product': {
             get: {
-                template: '{+productService}{ProductCode}?{&allowInactive*}',
-                shortcutParam: 'ProductCode',
+                template: '{+productService}{productCode}?{&allowInactive*}',
+                shortcutParam: 'productCode',
                 defaultParams: {
                     allowInactive: false
                 }
             },
             configure: {
                 verb: 'POST',
-                template: '{+productService}{ProductCode}/configure{?includeOptionDetails}',
+                template: '{+productService}{productCode}/configure{?includeOptionDetails}',
                 defaultParams: {
                     includeOptionDetails: true
                 },
@@ -179,10 +179,10 @@ var ApiReference = (function () {
             'add-to-cart': {
                 verb: 'POST',
                 includeSelf: {
-                    asProperty: 'Product'
+                    asProperty: 'product'
                 },
                 overridePostData: true,
-                shortcutParam: 'Quantity',
+                shortcutParam: 'quantity',
                 returnType: 'cartitem',
                 template: '{+cartService}current/items/'
             }
@@ -200,7 +200,7 @@ var ApiReference = (function () {
             },
             checkout: {
                 verb: 'POST',
-                template: '{+orderService}?cartId={Id}',
+                template: '{+orderService}?cartId={id}',
                 returnType: 'order',
                 noBody: true,
                 includeSelf: true
@@ -208,12 +208,12 @@ var ApiReference = (function () {
         },
         'cartitem': {
             defaults: {
-                template: '{+cartService}current/items/{Id}',
-                shortcutParam: 'Id'
+                template: '{+cartService}current/items/{id}',
+                shortcutParam: 'id'
             },
             'update-quantity': {
                 verb: 'PUT',
-                template: '{+cartService}current/items{/Id,quantity}',
+                template: '{+cartService}current/items{/id,quantity}',
                 shortcutParam: "quantity",
                 includeSelf: true,
                 noBody: true
@@ -225,7 +225,7 @@ var ApiReference = (function () {
                 template: '{+userService}'
             },
             get: {
-                template: '{+userService}{Id}',
+                template: '{+userService}{id}',
                 shortcutParam: 'id'
             },
             'get-by-email': {
@@ -234,35 +234,35 @@ var ApiReference = (function () {
             },
             login: {
                 verb: 'POST',
-                template: '{+userService}Login',
+                template: '{+userService}login',
                 includeSelf: true,
                 returnType: 'login'
             },
             'change-password': {
                 verb: 'POST',
                 includeSelf: true,
-                template: '{+userService}{Id}/changepassword'
+                template: '{+userService}{id}/changepassword'
             }
         },
         customer: {
-            template: '{+customerService}{Id}',
+            template: '{+customerService}{id}',
             shortcutParam: 'Id',
             includeSelf: true
         },
-        'login': '{+userService}Login',
+        'login': '{+userService}login',
         'address': {
             "validate-address": {
                 verb: 'POST',
                 template: '{+addressValidationService}',
                 includeSelf: {
-                    asProperty: 'Address'
+                    asProperty: 'address'
                 },
                 overridePostData: true,
                 returnType: 'address'
             }
         },
         'order': {
-            template: '{+orderService}{Id}',
+            template: '{+orderService}{id}',
             includeSelf: true,
             create: {
                 template: '{+orderService}{?cartId*}',
@@ -270,21 +270,21 @@ var ApiReference = (function () {
                 noBody: true
             },
             "update-shipping-info": {
-                template: '{+orderService}{Id}/fulfillmentinfo',
+                template: '{+orderService}{id}/fulfillmentinfo',
                 verb: 'PUT',
                 returnType: 'shipment',
                 includeSelf: true
             },
             "set-user-id": {
                 verb: 'PUT',
-                template: '{+orderService}{Id}/users',
+                template: '{+orderService}{id}/users',
                 noBody: true,
                 includeSelf: true,
                 returnType: 'user'
             },
             'apply-coupon': {
                 verb: 'PUT',
-                template: '{+orderService}{Id}/coupons/{couponCode}',
+                template: '{+orderService}{id}/coupons/{couponCode}',
                 shortcutParam: 'couponCode',
                 includeSelf: true,
                 noBody: true,
@@ -292,30 +292,30 @@ var ApiReference = (function () {
             },
             'remove-coupon': {
                 verb: 'DELETE',
-                template: '{+orderService}{Id}/coupons/{couponCode}',
+                template: '{+orderService}{id}/coupons/{couponCode}',
                 shortcutParam: 'couponCode',
                 includeSelf: true
             },
             'remove-all-coupons': {
                 verb: 'DELETE',
-                template: '{+orderService}{Id}/coupons',
+                template: '{+orderService}{id}/coupons',
                 includeSelf: true
             },
             'get-available-actions': {
-                template: '{+orderService}{Id}/actions',
+                template: '{+orderService}{id}/actions',
                 includeSelf: true,
                 returnType: 'orderactions'
             },
             'perform-order-action': {
                 verb: 'POST',
-                template: '{+orderService}{Id}/actions',
-                shortcutParam: 'ActionName',
-                overridePostData: ['ActionName'],
+                template: '{+orderService}{id}/actions',
+                shortcutParam: 'actionName',
+                overridePostData: ['actionName'],
                 includeSelf: true
             },
             'add-order-note': {
                 verb: 'POST',
-                template: '{+orderService}{Id}/notes',
+                template: '{+orderService}{id}/notes',
                 includeSelf: true,
                 returnType: 'ordernote'
             }
@@ -335,7 +335,7 @@ var ApiReference = (function () {
             includeSelf: true
         },
         'ordernote': {
-            template: '{+orderService}{orderId}/notes/{Id}'
+            template: '{+orderService}{orderId}/notes/{id}'
         },
         'document': {
             get: {

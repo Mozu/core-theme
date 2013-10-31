@@ -16,37 +16,37 @@
 
     var Fixtures = {
         SampleProductCollection: {
-            Items: [
+            items: [
                 {
-                    ProductCode: 'hi!'
+                    productCode: 'hi!'
                 }
             ]
         },
         SampleProductCode: "Sample",
         SampleProductUrl: ServiceUrls.productService + 'Sample',
         SampleProduct: {
-            ProductCode: "Sample",
-            ProductName: "Sample Name"
+            productCode: "Sample",
+            productName: "Sample Name"
         },
         SampleCart: {
-            Items: [
+            items: [
                 {
-                    Id: 'kashgdakjshdgakjdhgaksjdgh',
-                    Product: {
-                        ProductCode: 'hai'
+                    id: 'kashgdakjshdgakjdhgaksjdgh',
+                    product: {
+                        productCode: 'hai'
                     }
                 } 
             ],
-            Total: 200
+            total: 200
         },
         EmptyCart: {
-            Items: [],
-            Total: 0
+            items: [],
+            total: 0
         },
         SampleCartItem: {
-            Id: 'kjagsdkjhagsdkjahg',
-            Product: {
-                ProductCode: 'hai'
+            id: 'kjagsdkjhagsdkjahg',
+            product: {
+                productCode: 'hai'
             }
         },
         SampleUnknownType: {
@@ -270,9 +270,9 @@
           
             it("should work with simple url templates, like 'product'", function () {
 
-                var promise = api.get('product', { ProductCode: Fixtures.SampleProductCode });
+                var promise = api.get('product', { productCode: Fixtures.SampleProductCode });
 
-                expect(Mozu.ApiReference.getRequestConfig).to.have.been.calledWith("get", "product", { ProductCode: Fixtures.SampleProductCode }, api.context);
+                expect(Mozu.ApiReference.getRequestConfig).to.have.been.calledWith("get", "product", { productCode: Fixtures.SampleProductCode }, api.context);
                 expect(Mozu.Utils.ajax).to.have.been.calledWithMatch(/GET/, new RegExp(Fixtures.SampleProductUrl + ".*"));
 
                 return Mozu.Utils.when.all([
@@ -327,7 +327,7 @@
             it("should fire when an XHR errors", function (done) {
                 var onError = function (error, xhr, conf) {
                     api.off('error', onError);
-                    expect(error).to.have.deep.property("Items[0]");
+                    expect(error).to.have.deep.property("items[0]");
                     expect(xhr).to.have.property("status");
                     expect(conf).to.be.ok;
                     done();
@@ -441,15 +441,15 @@
                 it("gets underlying properties from the raw JSON", function () {
                     return api.get('product', Fixtures.SampleProduct).then(function (product) {
                         expect(product).to.respondTo("prop");
-                        expect(product.prop("ProductCode")).to.equal(Fixtures.SampleProduct.ProductCode);
+                        expect(product.prop("productCode")).to.equal(Fixtures.SampleProduct.productCode);
                     });
                 });
 
                 it("sets single underlying properties from the raw JSON", function () {
                     return api.get('product', Fixtures.SampleProduct).then(function (product) {
-                        var newName = product.prop("ProductName") + "_MODIFIED";
-                        product.prop("ProductName", newName);
-                        expect(product.data.ProductName).to.equal(newName)
+                        var newName = product.prop("productName") + "_MODIFIED";
+                        product.prop("productName", newName);
+                        expect(product.data.productName).to.equal(newName)
                     });
 
                 });
@@ -457,12 +457,12 @@
                 it("sets multiple underlying properties from the raw JSON", function () {
                     return api.get('product', Fixtures.SampleProduct).then(function (product) {
                         var newStuff = {
-                            ProductName: product.prop("ProductName") + "_MODIFIED",
-                            ProductCode: product.prop("ProductCode") + "_MODIFIED"
+                            productName: product.prop("productName") + "_MODIFIED",
+                            productCode: product.prop("productCode") + "_MODIFIED"
                         };
                         product.prop(newStuff);
-                        expect(product.data.ProductName).to.equal(newStuff.ProductName);
-                        expect(product.data.ProductCode).to.equal(newStuff.ProductCode);
+                        expect(product.data.productName).to.equal(newStuff.productName);
+                        expect(product.data.productCode).to.equal(newStuff.productCode);
                     });
                 });
 
@@ -502,7 +502,7 @@
             });
 
             it("should fire a 'sync' event when it syncs its own data from the server", function () {
-                var product = api.createSync('product', { ProductCode: Fixtures.SampleProductCode }),
+                var product = api.createSync('product', { productCode: Fixtures.SampleProductCode }),
                     onSync = sinon.spy();
                 product.on('sync', onSync);
                 return product.get().then(function () {
@@ -511,7 +511,7 @@
             });
 
             it("should, instead of updating itself, create new ApiObjects of a different type for some actions, and throw a 'spawn' event", function () {
-                var product = api.createSync('product', { ProductCode: Fixtures.SampleProductCode }),
+                var product = api.createSync('product', { productCode: Fixtures.SampleProductCode }),
                     onSpawn = sinon.spy();
                 product.on('spawn', onSpawn);
                 return product.action('addToCart').then(function (cartItem) {
@@ -532,7 +532,7 @@
 
 
         it("should fire a 'sync' event when any product that belongs to it syncs its own data from the server", function () {
-            var product = api.createSync('product', { ProductCode: Fixtures.SampleProductCode }),
+            var product = api.createSync('product', { productCode: Fixtures.SampleProductCode }),
                 onSync = sinon.spy();
             product.api.on('sync', onSync);
             return product.get().then(function () {
@@ -574,9 +574,9 @@
                 expect(productsCollection[0]).to.be.an.instanceof(Mozu.ApiObject).and.to.have.a.property("type").that.is.to.equal(productsCollection.itemType);
             });
             it("should increment its underlying data.Items property to stay in sync when items are added", function () {
-                expect(productsCollection.length).to.equal(productsCollection.prop("Items").length);
+                expect(productsCollection.length).to.equal(productsCollection.prop("items").length);
                 productsCollection.add(newItems);
-                expect(productsCollection.length).to.equal(productsCollection.prop("Items").length);
+                expect(productsCollection.length).to.equal(productsCollection.prop("items").length);
             });
         });
             

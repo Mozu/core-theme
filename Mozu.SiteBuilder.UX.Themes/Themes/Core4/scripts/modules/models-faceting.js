@@ -5,38 +5,38 @@
     }
 
     var FacetValue = Backbone.MozuModel.extend({
-        idAttribute: 'Value'
+        idAttribute: 'value'
     }),
 
     Facet = Backbone.MozuModel.extend({
-        idAttribute: 'Field',
+        idAttribute: 'field',
         helpers: ['isFaceted'],
         defaults: {
-            FacetType: '',
-            Field: '',
-            Label: ''
+            facetType: '',
+            field: '',
+            label: ''
         },
         relations: {
-            Values: Backbone.Collection.extend({
+            values: Backbone.Collection.extend({
                 model: FacetValue
             })
         },
         parse: function (raw) {
             // trying to accommodate the shape of the Hierarchical Facet
-            if (raw.FacetType === "Hierarchy") {
-                raw.Values = raw.Values[0] ? raw.Values[0].ChildrenFacetValues : [];
+            if (raw.facetType === "Hierarchy") {
+                raw.values = raw.values[0] ? raw.values[0].childrenFacetValues : [];
             }
             return raw;
         },
         isFaceted: function () {
-            return !!this.get("Values").findWhere({ "IsApplied": true });
+            return !!this.get("values").findWhere({ "isApplied": true });
         },
         empty: function () {
-            this.set("Values", { IsApplied: false });
+            this.set("values", { isApplied: false });
             this.collection.parent.updateFacets();
         },
         getAppliedValues: function () {
-            return _.invoke(this.get("Values").where({ IsApplied: true }), 'get', 'FilterValue').join(',');
+            return _.invoke(this.get("values").where({ isApplied: true }), 'get', 'filterValue').join(',');
         }
 
     }),
@@ -44,38 +44,38 @@
     FacetedProductCollection = Backbone.MozuModel.extend(_.extend({
         mozuType: 'search',
         validation: {
-            PageSize: { min: 1 },
-            PageCount: { min: 1 },
-            StartIndex: { min: 0 }
+            pageSize: { min: 1 },
+            pageCount: { min: 1 },
+            startIndex: { min: 0 }
         },
         dataTypes: {
-            PageSize: Backbone.MozuModel.DataTypes.Int,
-            PageCount: Backbone.MozuModel.DataTypes.Int,
-            StartIndex: Backbone.MozuModel.DataTypes.Int,
-            TotalCount: Backbone.MozuModel.DataTypes.Int,
+            pageSize: Backbone.MozuModel.DataTypes.Int,
+            pageCount: Backbone.MozuModel.DataTypes.Int,
+            startIndex: Backbone.MozuModel.DataTypes.Int,
+            totalCount: Backbone.MozuModel.DataTypes.Int,
         },
         relations: {
-            Facets: Backbone.Collection.extend({
+            facets: Backbone.Collection.extend({
                 model: Facet
             }),
-            Items: Backbone.Collection.extend({
+            items: Backbone.Collection.extend({
                 model: ProductModels.Product
             })
         },
         clearAllFacets: function () {
-            this.get("Facets").invoke("empty");
+            this.get("facets").invoke("empty");
         },
         getFacetValueFilter: function () {
-            return _.compact(this.get("Facets").invoke("getAppliedValues")).join(',');
+            return _.compact(this.get("facets").invoke("getAppliedValues")).join(',');
         },
         setFacetValue: function(field, value, yes) {
-            this.get("Facets").findWhere({ Field: field }).get("Values").findWhere({ Value: value }).set("IsApplied", yes);
+            this.get("facets").findWhere({ field: field }).get("values").findWhere({ value: value }).set("isApplied", yes);
             this.updateFacets();
         },
         buildFacetRequest: function () {
             var conf = _.clone(this.get('baseRequestParams')),
-                pageSize = this.get("PageSize"),
-                startIndex = this.get("StartIndex"),
+                pageSize = this.get("pageSize"),
+                startIndex = this.get("startIndex"),
                 filterValue = this.getFacetValueFilter();
             conf.pageSize = pageSize;
             if (startIndex) conf.startIndex = startIndex;
@@ -89,8 +89,8 @@
                 this.lastRequest = conf;
                 this.isLoading(true);
                 // wipe current data set, since the server will give us our entire state
-                this.unset('Facets',{ silent: true });
-                this.unset('Items',{ silent: true });
+                this.unset('facets',{ silent: true });
+                this.unset('items',{ silent: true });
                 this.apiModel.get(conf).then(function() {
                     me.trigger("facetchange");
                 }).ensure(function () {

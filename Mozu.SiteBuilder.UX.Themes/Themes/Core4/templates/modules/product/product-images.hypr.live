@@ -1,11 +1,11 @@
-{% if Model.Content.ProductImages %}
+{% if model.content.productImages %}
 <figure class="mz-productimages-main">
-  <img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main src="{{ Model.MainImage.ImageUrl }}?size=220" />
+  <img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main src="{{ model.mainImage.imageUrl }}?size=220" />
 </figure>
 <figure class="mz-productimages-thumbs">
-    {% for image in Model.Content.ProductImages %}
-    <a class="mz-productimages-thumb" data-mz-productimage-thumb="{{ image.Sequence }}" href="{{ image.ImageUrl }}">
-        <img class="mz-productimages-thumbimage"  src="{{ image.ImageUrl }}?size=50" />
+    {% for image in model.content.productImages %}
+    <a class="mz-productimages-thumb" data-mz-productimage-thumb="{{ image.sequence }}" href="{{ image.imageUrl }}">
+        <img class="mz-productimages-thumbimage"  src="{{ image.imageUrl }}?size=50" />
     </a>
     {% endfor %}
 </figure>

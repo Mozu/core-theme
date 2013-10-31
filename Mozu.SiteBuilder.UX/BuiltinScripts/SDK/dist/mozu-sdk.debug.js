@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-10-29
+ * Mozu JavaScript SDK - v0.1.0 - 2013-10-31
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1897,6 +1897,7 @@ if( typeof define !== "undefined"){
 }
 
 // BEGIN UTILS
+// Many of these poached from lodash
 var utils = (function () {
     return {
         extend: function () {
@@ -1942,6 +1943,14 @@ var utils = (function () {
             }
             return newArr;
         },
+        reduce: function(collection, callback, accumulator) {
+            var index = -1,
+                length = collection.length;
+            while (++index < length) {
+                accumulator = callback(accumulator, collection[index], index, collection);
+            }
+            return accumulator;
+        },
         getType: (function () {
             var reType = /\[object (\w+)\]/;
             return function (thing) {
@@ -1973,10 +1982,10 @@ var utils = (function () {
             var timeout = setTimeout(function () {
                 clearTimeout(timeout);
                 failure({
-                    Items: [
+                    items: [
                         {
-                            Message: 'Request timed out.',
-                            ErrorCode: 'TIMEOUT'
+                            message: 'Request timed out.',
+                            errorCode: 'TIMEOUT'
                         }
                     ]
                 }, xhr);
@@ -1990,10 +1999,10 @@ var utils = (function () {
                             json = JSON.parse(xhr.responseText);
                         } catch (e) {
                             failure({
-                                Items: [
+                                items: [
                                     {
-                                        Message: "Unable to parse response: " + xhr.responseText,
-                                        ErrorCode: 'UNKNOWN'
+                                        message: "Unable to parse response: " + xhr.responseText,
+                                        errorCode: 'UNKNOWN'
                                     }
                                 ]
                             }, xhr, e);
@@ -2003,10 +2012,10 @@ var utils = (function () {
                         success(json, xhr);
                     } else {
                         failure(json || {
-                            Items: [
+                            items: [
                                 {
-                                    Message: 'Request failed, no response given.',
-                                    ErrorCode: xhr.status
+                                    message: 'Request failed, no response given.',
+                                    errorCode: xhr.status
                                 }
                             ]
                         }, xhr);
@@ -2233,7 +2242,7 @@ var ApiReference = (function () {
         },
 
         'category': {
-            template: '{+categoryService}{Id}(?allowInactive}',
+            template: '{+categoryService}{id}(?allowInactive}',
             shortcutParam: 'Id',
             defaultParams: {
                 allowInactive: false
@@ -2252,15 +2261,15 @@ var ApiReference = (function () {
         },
         'product': {
             get: {
-                template: '{+productService}{ProductCode}?{&allowInactive*}',
-                shortcutParam: 'ProductCode',
+                template: '{+productService}{productCode}?{&allowInactive*}',
+                shortcutParam: 'productCode',
                 defaultParams: {
                     allowInactive: false
                 }
             },
             configure: {
                 verb: 'POST',
-                template: '{+productService}{ProductCode}/configure{?includeOptionDetails}',
+                template: '{+productService}{productCode}/configure{?includeOptionDetails}',
                 defaultParams: {
                     includeOptionDetails: true
                 },
@@ -2269,10 +2278,10 @@ var ApiReference = (function () {
             'add-to-cart': {
                 verb: 'POST',
                 includeSelf: {
-                    asProperty: 'Product'
+                    asProperty: 'product'
                 },
                 overridePostData: true,
-                shortcutParam: 'Quantity',
+                shortcutParam: 'quantity',
                 returnType: 'cartitem',
                 template: '{+cartService}current/items/'
             }
@@ -2290,7 +2299,7 @@ var ApiReference = (function () {
             },
             checkout: {
                 verb: 'POST',
-                template: '{+orderService}?cartId={Id}',
+                template: '{+orderService}?cartId={id}',
                 returnType: 'order',
                 noBody: true,
                 includeSelf: true
@@ -2298,12 +2307,12 @@ var ApiReference = (function () {
         },
         'cartitem': {
             defaults: {
-                template: '{+cartService}current/items/{Id}',
-                shortcutParam: 'Id'
+                template: '{+cartService}current/items/{id}',
+                shortcutParam: 'id'
             },
             'update-quantity': {
                 verb: 'PUT',
-                template: '{+cartService}current/items{/Id,quantity}',
+                template: '{+cartService}current/items{/id,quantity}',
                 shortcutParam: "quantity",
                 includeSelf: true,
                 noBody: true
@@ -2315,7 +2324,7 @@ var ApiReference = (function () {
                 template: '{+userService}'
             },
             get: {
-                template: '{+userService}{Id}',
+                template: '{+userService}{id}',
                 shortcutParam: 'id'
             },
             'get-by-email': {
@@ -2324,35 +2333,35 @@ var ApiReference = (function () {
             },
             login: {
                 verb: 'POST',
-                template: '{+userService}Login',
+                template: '{+userService}login',
                 includeSelf: true,
                 returnType: 'login'
             },
             'change-password': {
                 verb: 'POST',
                 includeSelf: true,
-                template: '{+userService}{Id}/changepassword'
+                template: '{+userService}{id}/changepassword'
             }
         },
         customer: {
-            template: '{+customerService}{Id}',
+            template: '{+customerService}{id}',
             shortcutParam: 'Id',
             includeSelf: true
         },
-        'login': '{+userService}Login',
+        'login': '{+userService}login',
         'address': {
             "validate-address": {
                 verb: 'POST',
                 template: '{+addressValidationService}',
                 includeSelf: {
-                    asProperty: 'Address'
+                    asProperty: 'address'
                 },
                 overridePostData: true,
                 returnType: 'address'
             }
         },
         'order': {
-            template: '{+orderService}{Id}',
+            template: '{+orderService}{id}',
             includeSelf: true,
             create: {
                 template: '{+orderService}{?cartId*}',
@@ -2360,21 +2369,21 @@ var ApiReference = (function () {
                 noBody: true
             },
             "update-shipping-info": {
-                template: '{+orderService}{Id}/fulfillmentinfo',
+                template: '{+orderService}{id}/fulfillmentinfo',
                 verb: 'PUT',
                 returnType: 'shipment',
                 includeSelf: true
             },
             "set-user-id": {
                 verb: 'PUT',
-                template: '{+orderService}{Id}/users',
+                template: '{+orderService}{id}/users',
                 noBody: true,
                 includeSelf: true,
                 returnType: 'user'
             },
             'apply-coupon': {
                 verb: 'PUT',
-                template: '{+orderService}{Id}/coupons/{couponCode}',
+                template: '{+orderService}{id}/coupons/{couponCode}',
                 shortcutParam: 'couponCode',
                 includeSelf: true,
                 noBody: true,
@@ -2382,30 +2391,30 @@ var ApiReference = (function () {
             },
             'remove-coupon': {
                 verb: 'DELETE',
-                template: '{+orderService}{Id}/coupons/{couponCode}',
+                template: '{+orderService}{id}/coupons/{couponCode}',
                 shortcutParam: 'couponCode',
                 includeSelf: true
             },
             'remove-all-coupons': {
                 verb: 'DELETE',
-                template: '{+orderService}{Id}/coupons',
+                template: '{+orderService}{id}/coupons',
                 includeSelf: true
             },
             'get-available-actions': {
-                template: '{+orderService}{Id}/actions',
+                template: '{+orderService}{id}/actions',
                 includeSelf: true,
                 returnType: 'orderactions'
             },
             'perform-order-action': {
                 verb: 'POST',
-                template: '{+orderService}{Id}/actions',
-                shortcutParam: 'ActionName',
-                overridePostData: ['ActionName'],
+                template: '{+orderService}{id}/actions',
+                shortcutParam: 'actionName',
+                overridePostData: ['actionName'],
                 includeSelf: true
             },
             'add-order-note': {
                 verb: 'POST',
-                template: '{+orderService}{Id}/notes',
+                template: '{+orderService}{id}/notes',
                 includeSelf: true,
                 returnType: 'ordernote'
             }
@@ -2425,7 +2434,7 @@ var ApiReference = (function () {
             includeSelf: true
         },
         'ordernote': {
-            template: '{+orderService}{orderId}/notes/{Id}'
+            template: '{+orderService}{orderId}/notes/{id}'
         },
         'document': {
             get: {
@@ -2533,12 +2542,12 @@ var ApiCollection = (function () {
         ApiObject.apply(this, arguments);
         this.itemType = itemType;
         if (!data) data = {};
-        if (!data.Items) this.prop("Items", data.Items = []);
-        if (data.Items.length > 0) this.add(data.Items, true);
+        if (!data.items) this.prop("items", data.items = []);
+        if (data.items.length > 0) this.add(data.items, true);
         this.on('sync', function (raw) {
-            if (raw && raw.Items) {
+            if (raw && raw.items) {
                 self.removeAll();
-                self.add(raw.Items);
+                self.add(raw.items);
             }
         });
     }
@@ -2550,8 +2559,8 @@ var ApiCollection = (function () {
             if (utils.getType(newItems) !== "Array") newItems = [newItems];
             Array.prototype.push.apply(this, utils.map(newItems, convertItem, this));
             if (!noUpdate) {
-                var rawItems = this.prop("Items");
-                this.prop("Items", rawItems.concat(newItems));
+                var rawItems = this.prop("items");
+                this.prop("items", rawItems.concat(newItems));
             }
         },
         remove: function(indexOrItem) {
@@ -2560,18 +2569,18 @@ var ApiCollection = (function () {
         replace: function(newItems, noUpdate) {
             Array.prototype.splice.call(this, 0, this.length, utils.map(newItems, convertItem, this));
             if (!noUpdate) {
-                this.prop("Items", rawItems);
+                this.prop("items", rawItems);
             }
         },
         removeAll: function(noUpdate) {
             Array.prototype.splice.call(this, 0, this.length);
             if (!noUpdate) {
-                this.prop("Items", []);
+                this.prop("items", []);
             }
         },
         getIndex: function (newIndex) {
             var index = this.currentIndex;
-            if (!index && index !== 0) index = this.prop("StartIndex");
+            if (!index && index !== 0) index = this.prop("startIndex");
             if (!index && index !== 0) index = 0;
             return index;
         },
@@ -2590,21 +2599,21 @@ var ApiCollection = (function () {
         },
         prevPage: function (req) {
             var currentIndex = this.getIndex(),
-                pageSize = this.prop("PageSize"),
+                pageSize = this.prop("pageSize"),
                 newIndex = Math.max(currentIndex - pageSize, 0);
             if (currentIndex === 0) throw "This " + this.type + " collection is already at record 0 and has no previous page.";
             return this.setIndex(newIndex, req);
         },
         nextPage: function (req) {
             var currentIndex = this.getIndex(),
-                pageSize = this.prop("PageSize"),
+                pageSize = this.prop("pageSize"),
                 newIndex = currentIndex + pageSize;
-            if (!(newIndex < this.prop("TotalCount"))) throw "This " + this.type + " collection is already at its last page and has no next page.";
+            if (!(newIndex < this.prop("totalCount"))) throw "This " + this.type + " collection is already at its last page and has no next page.";
             return this.setIndex(newIndex, req);
         },
         lastPage: function (req) {
-            var totalCount = this.prop("TotalCount"),
-                pageSize = this.prop("PageSize"),
+            var totalCount = this.prop("totalCount"),
+                pageSize = this.prop("pageSize"),
                 newIndex = totalCount - pageSize;
             if (newIndex <= 0) throw "This " + this.type + " collection has only one page.";
             return this.setIndex(newIndex, req);
@@ -2623,11 +2632,18 @@ var ApiCollection = (function () {
 // END OBJECT
 
 /***********/
+ApiObject.types.cart = utils.inherit(ApiObject, {
+    count: function () {
+        var items = this.prop('items');
+        if (!items || !items.length) return 0;
+        return utils.reduce(items, function (total, item) { return item.quantity; }, 0);
+    }
+});
 ApiObject.types.login = utils.inherit(ApiObject, {
     postconstruct: function (type, json) {
-        if (json.AuthTicket && json.AuthTicket.AccessToken) {
-            self.api.context.UserClaims(json.AuthTicket.AccessToken);
-            self.api.fire('login', json.AuthTicket);
+        if (json.authTicket && json.authTicket.accessToken) {
+            self.api.context.UserClaims(json.authTicket.accessToken);
+            self.api.fire('login', json.authTicket);
         }
     }
 });
@@ -2635,7 +2651,7 @@ ApiObject.types.order = utils.inherit(ApiObject, {
     addNewUser: function (login) {
         var self = this;
         return self.api.create('user', login).then(function (user) {
-            return user.login();
+            return user.action('login', { emailAddress: user.prop('emailAddress'), password: user.prop('password') });
         }).then(function () {
             return self.action('setUserId');
         });
@@ -2650,7 +2666,7 @@ ApiObject.types.order = utils.inherit(ApiObject, {
 ApiObject.types.shipment = utils.inherit(ApiObject, {
     getShippingMethodsFromContact: function (contact) {
         var self = this;
-        return self.update({ FulfillmentContact: self.prop('FulfillmentContact') }).then(function () {
+        return self.update({ fulfillmentContact: self.prop('fulfillmentContact') }).then(function () {
             return self.action('getShippingMethods');
         });
     }
@@ -2659,9 +2675,9 @@ ApiObject.types.user = utils.inherit(ApiObject, {
     postconstruct: function () {
         var self = this;
         this.on('sync', function (json) {
-            if (json.AuthTicket && json.AuthTicket.AccessToken) {
-                self.api.context.UserClaims(json.AuthTicket.AccessToken);
-                self.api.fire('login', json.AuthTicket);
+            if (json.authTicket && json.authTicket.accessToken) {
+                self.api.context.UserClaims(json.authTicket.accessToken);
+                self.api.fire('login', json.authTicket);
             }
         });
     }

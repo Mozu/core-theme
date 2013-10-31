@@ -30,7 +30,6 @@
         };
 
         Backbone.MozuModel = Backbone.Model.extend({
-            idAttribute: "Id",
             constructor: function (conf) {
                 this.helpers = (this.helpers || []).concat(['isLoading', 'isValid']);
                 Backbone.Model.apply(this, arguments);
@@ -254,6 +253,12 @@
                     if (relInstance) me.listenTo(relInstance, 'error', function (err) {
                         me.trigger('error', err);
                     });
+                });
+            },
+            fetch: function() {
+                var self = this;
+                return this.apiModel.get().then(function() {
+                    return self;
                 });
             },
             sync: function (method, model, options) {

@@ -13,7 +13,7 @@
 
     /* Common settings used in templates */
       { "id":"internal-themeAddons" , "defaultValue":[]},
-    { "id": "defaultPageSize",              "defaultValue": "15" },
+    { "id": "defaultPageSize",              "defaultValue": 15 },
     { "id": "pageSizeOptions",              "defaultValue": [15,25,50,100] },
     { "id": "maxProductSummaryWords",       "defaultValue": 40 },
 
@@ -22,6 +22,7 @@
     { "id": "fontFamily",                   "defaultValue": "\"Source Sans Pro\", sans-serif" },
     { "id": "fontSize",                     "defaultValue": "14px" },
     { "id": "gutterWidth",                  "defaultValue": "25px" },
+    { "id": "textColor",                    "defaultValue": "#444444" },
     { "id": "bodyBackgroundColor",          "defaultValue": "#FFFFFF" },
     { "id": "bannerImageEnabled",           "defaultValue": false },
     { "id": "bannerImage",                  "defaultValue": "/resources/images/banner.jpg" },
@@ -191,6 +192,7 @@
     { "id": "labelPasswordsDoNotMatch", "defaultValue": "Passwords did not match, please reenter" },
     { "id": "labelChooseShippingMethod","defaultValue": "Please select a shipping method." },
     { "id": "labelDidNotAgreeToTerms",  "defaultValue": "You must agree to the terms and conditions" },
+    { "id": "labelEnterProductQuantity","defaultValue": "Please enter a product quantity above 0" },
 
     /* Faceting labels */
     { "id": "labelClearAllFilters",     "defaultValue": "Clear All Filters" },
