@@ -1,0 +1,86 @@
+﻿{
+    "items": [
+
+		{
+			"appId": "System.String",
+            "uIConfigurationUrl": "System.String",
+            "capabilities": [{
+                "capabilityType": "System.String",
+                "capabilityMode": "System.String",
+                "scopeType": "System.String",
+                "scopeId": "System.Int32",
+                "initialized": "System.Boolean",
+                "enabled": "System.Boolean",
+                "operationUrls": [{
+                    "name": "System.String",
+                    "url": "System.String"
+                }],
+                "supportedShoppingCountries": [{
+                    "value": "System.String",
+                    "initialized": "System.Boolean"
+                }],
+                "activeShoppingCountries": [{
+
+                }],
+                "supportedShippingCountries": [{
+                    "child": [{
+                        "value": "System.String",
+                        "initialized": "System.Boolean"
+                    }],
+                    "value": "System.String",
+                    "initialized": "System.Boolean"
+                }],
+                "activeShippingCountries": [{
+                    "countryCode": "System.String",
+                    "activeCarriers": [{
+
+                     }]
+                }],
+                "supportedCreditTypes": [{
+                    "value": "System.String",
+                    "initialized": "System.Boolean"
+                }],
+                "activeCreditTypes": [{
+
+                }],
+                "auditInfo": {
+                    "updateDate": "/Date(-62135575200000-0600)/",
+                    "createDate": "/Date(-62135575200000-0600)/",
+                    "updateBy": "System.String",
+                    "createBy": "System.String"
+                }
+			}],
+            "entitlement": {
+				"id": "System.Int32",
+                "tenantId": "System.Int32",
+                "siteId": "System.Int32",
+                "applicationVersionId": "System.Int32",
+                "applicationType": "System.String",
+                "applicationName": "System.String",
+                "applicationVersion": "System.String",
+                "appId": "System.String",
+                "appConfigUrl": "System.String",
+                "status": "System.String",
+                "heroImage": "System.String",
+                "applicationAssetPath": "System.String",
+                "developerAccountName": "System.String",
+                "publishedDate": "/Date(-62135575200000-0600)/",
+                "licenseType": "System.String",
+                "eEffectiveStartDate": "/Date(-62135575200000-0600)/",
+                "effectiveEndDate": "/Date(-62135575200000-0600)/",
+                "createDate": "/Date(-62135575200000-0600)/",
+                "updateDate": "/Date(-62135575200000-0600)/"
+			},
+            "initialized": "System.Boolean",
+            "enabled": "System.Boolean",
+            "auditInfo": {
+                "updateDate": "/Date(-62135575200000-0600)/",
+                "createDate": "/Date(-62135575200000-0600)/",
+                "updateBy": "System.String",
+                "createBy": "System.String"
+			}
+		}
+    ],	
+    "success":true,
+    "total":1
+}
