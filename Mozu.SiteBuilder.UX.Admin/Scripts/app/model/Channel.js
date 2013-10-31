@@ -23,7 +23,7 @@ Ext.define('Taco.model.Channel', {
         api: {
 
             //read: '/admin/Scripts/app/mocks/channels.json',
-            read: '/admin/app/channel/read',
+            read: '/admin/app/channel/list',
             create: '/admin/app/channel/create',
             update: '/admin/app/channel/edit',
             destroy: '/admin/app/channel/delete'

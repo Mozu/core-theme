@@ -45,16 +45,13 @@ Ext.define('Taco.view.channel.Index', {
             },
             items: [
                 {
-                    name: 'name',
-                    fieldLabel: 'Name',
-                    width: 160
-                }, {
                     name: 'code',
                     fieldLabel: 'Code',
                     width: 160
-                }, {
-                    name: 'countryCode',
-                    fieldLabel: 'Country',
+                },
+                {
+                    name: 'name',
+                    fieldLabel: 'Name',
                     width: 160
                 }
             ]
@@ -66,15 +63,18 @@ Ext.define('Taco.view.channel.Index', {
             property: 'all',
             text: 'All',
             isDefault: true
-        }, {
-            property: 'name',
-            text: 'Name'
-        }, {
+        },
+        {
             property: 'code',
             text: 'Code'
-        }, {
-            property: 'countryCode',
-            text: 'Country'
+        },
+        {
+            property: 'groupCode',
+            text: 'Group Code'
+        },
+        {
+            property: 'name',
+            text: 'Name'
         }
     ],
 
