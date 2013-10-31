@@ -2,7 +2,7 @@
  * @class Taco.view.generalSettings.subform.Maintenance
  * @author Bradley Friemel
  * @date 6/10/2013
- *
+ * Note: (Simeon) it is not clear if this class was ever completed.  There appears to be no backend for this component;
  */
 
 Ext.define('Taco.view.generalSettings.subform.Maintenance', {

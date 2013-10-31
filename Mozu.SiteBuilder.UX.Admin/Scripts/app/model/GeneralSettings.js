@@ -50,6 +50,7 @@ Ext.define('Taco.model.GeneralSettings', {
         
         // not in json robots.js
         // todo: need to get this implemnted in the service or remove from the client pending service implementation;
+        
         { "name": "robotsOverride", "type": "text"},
         { "name": "robotsOverrideEnabled", "type": "boolean"}
         

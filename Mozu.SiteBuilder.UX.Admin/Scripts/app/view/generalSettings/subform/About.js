@@ -158,6 +158,8 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                 xtype: 'checkbox',
                 name: 'daylightSaving',
                 checked: this.record.get('daylightSaving'),
+                uncheckedValue: false,
+                inputValue:true,
                 boxLabel: 'Automatically adjust clock for daylight savings'
             },
             {
