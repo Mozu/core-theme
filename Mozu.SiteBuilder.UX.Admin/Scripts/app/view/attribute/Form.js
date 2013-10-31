@@ -460,7 +460,7 @@ Ext.define('Taco.view.attribute.Form', {
                 store: [
                     ['ShopperEntered', 'Storefront & Admin'],
                     ['AdminEntered', 'Admin Only']
-                ],	
+                ]	
                 //listeners: {
                 //    change: this.onInputTypeChange,
                 //    scope: this

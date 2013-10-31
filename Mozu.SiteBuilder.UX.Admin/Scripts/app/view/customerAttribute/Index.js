@@ -45,7 +45,7 @@ Ext.define('Taco.view.customerAttribute.Index', {
                 menuColumnHandler: 'destroyMenuColumnHandler'
             }]
         }]
-    },
+    }
     
    
 })
