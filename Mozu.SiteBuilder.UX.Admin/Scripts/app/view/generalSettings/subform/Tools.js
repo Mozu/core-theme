@@ -78,8 +78,11 @@ Ext.define('Taco.view.generalSettings.subform.Tools', {
                     success: function (form, action) {
                         console.log("form/action", form, action);
                     },
-                    failure: function () {
-                        console.error(arguments);
+                    failure: function (field, operation) {
+                        var json = Ext.decode(operation.response.responseText, true),
+                            msg = (json && json.message) ? json.message : "Error uploading file";
+                            
+                        Taco.app.fireEvent('setmessage', msg, 'error');
                     }
                 }
             );
