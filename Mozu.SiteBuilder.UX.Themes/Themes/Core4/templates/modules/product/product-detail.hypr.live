@@ -1,11 +1,11 @@
-{% if Model.Content.ProductShortDescription and themeSettings.showProductDetailShortDesc %}
+{% if model.content.productShortDescription and themeSettings.showProductDetailShortDesc %}
 <div class="mz-productdetail-shortdesc mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">{{ themeSettings.labelShortDesc }}</h4>
-  <span itemscope="description">{{ Model.Content.ProductShortDescription|safe }}</span>
+  <span itemscope="description">{{ model.content.productShortDescription|safe }}</span>
 </div>
 {% endif %}
 
-{% if Model.Options %}
+{% if model.options %}
 <div class="mz-productdetail-options mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">{{ themeSettings.labelOptions }}</h4>
   {% include "modules/product/product-options" %}
@@ -19,17 +19,17 @@
 
 <section class="mz-l-stack-section mz-productdetail-conversion">
     <span class="mz-qty-label">{{ themeSettings.labelQty }}</span>
-    <input class="mz-productdetail-qty" type="number" value="1" {% if not Model.PurchasableState.IsPurchasable %} disabled="disabled" {% endif %} data-mz-value="Quantity" />
-    <button id="add-to-cart" class="mz-productdetail-addtocart mz-button mz-button-large {% if not Model.PurchasableState.IsPurchasable %}is-disabled{% endif %}" {% if not Model.PurchasableState.IsPurchasable %} disabled="disabled" {% endif %} data-mz-action="addToCart" >
+    <input class="mz-productdetail-qty" type="number" value="1" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} data-mz-value="Quantity" />
+    <button id="add-to-cart" class="mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} data-mz-action="addToCart" >
         {{ themeSettings.labelAddToCart }}
     </button>
   <span class="mz-validationmessage" data-mz-validationmessage-for="Quantity"></span>
 
-  {% if not Model.PurchasableState.IsPurchasable %}
+  {% if not model.purchasableState.isPurchasable %}
   <p class="mz-productdetail-notpurchasable">
     Not Purchasable:
-    {% for message in Model.PurchasableState.Messages %}
-    <span>{{ message.Message }}</span>
+    {% for message in model.purchasableState.messages %}
+    <span>{{ message.message }}</span>
     {% endfor %}
   </p>
   {% endif %}
@@ -37,18 +37,18 @@
 
 <div class="mz-productdetail-fulldesc mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">{{ themeSettings.labelFullDesc }}</h4>
-  {{ Model.Content.ProductFullDescription|safe }}
+  {{ model.content.productFullDescription|safe }}
 </div>
 
-{% if Model.Properties and themeSettings.showProductDetailProperties %}
+{% if model.properties and themeSettings.showProductDetailProperties %}
 <div class="mz-productdetail-properties mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">{{ themeSettings.labelProperties }}</h4>
   <dl class="mz-propertylist mz-propertylist-justified">
-    {% for property in Model.Properties %}
-    {% if property.Values %}
-    <dt>{{property.AttributeDetail.Name}}</dt>
-    {% for v in property.Values %}
-    <dd>{% if v.StringValue %}{{v.StringValue}}{% else %}{{v.Value}}{% endif %}</dd>
+    {% for property in model.properties %}
+    {% if property.values %}
+    <dt>{{property.attributeDetail.name}}</dt>
+    {% for v in property.values %}
+    <dd>{% if v.stringValue %}{{v.stringValue}}{% else %}{{v.value}}{% endif %}</dd>
     {% endfor %}
     {% endif %}
     {% endfor %}
@@ -56,13 +56,13 @@
 </div>
 {% endif %}
 
-{% if Model.Measurements and themeSettings.showProductDetailMeasurements %}
+{% if model.measurements and themeSettings.showProductDetailMeasurements %}
 <div class="mz-productdetail-measurements mz-l-stack-section">
     <h4 class="mz-l-stack-sectiontitle">{{ themeSettings.labelMeasurements }}</h4>
     <dl class="mz-propertylist mz-propertylist-justified">
       <dt>Weight</dt>
       <dd itemprop="weight" itemscope itemtype="http://schema.org/QuantitativeValue">
-        <span itemprop="value">{{ Model.Measurements.PackageWeight.Value }}</span> <span itemprop="unitCode">{{ Model.Measurements.PackageWeight.Unit }}</span></dd>
+        <span itemprop="value">{{ model.measurements.packageWeight.value }}</span> <span itemprop="unitCode">{{ model.measurements.packageWeight.unit }}</span></dd>
     </dl>
 </div>
 {% endif %}

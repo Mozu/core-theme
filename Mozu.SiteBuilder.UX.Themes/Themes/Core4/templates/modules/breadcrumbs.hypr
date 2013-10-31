@@ -1,5 +1,5 @@
 ﻿<div class="mz-breadcrumbs">
-    {% for crumb in navigation.Breadcrumbs %}
+    {% for crumb in navigation.breadcrumbs %}
     {% if not forloop.last %}
     <a href="{{crumb.url}}" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">{{crumb.name}}</a> <span class="mz-breadcrumb-separator">&gt;</span>
     {% else %}

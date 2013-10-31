@@ -385,6 +385,7 @@
     <Compile Include="ActionResults\IgnoreRoute.cs" />
     <Compile Include="ActionResults\RedirectResult.cs" />
     <Compile Include="ActionResults\ViewResultBase.cs" />
+    <Compile Include="CaseInsensitiveJsonSerializerSettings.cs" />
     <Compile Include="CatalogContext.cs" />
     <Compile Include="Catalog\AdminCategoryTreeProvider.cs" />
     <Compile Include="Catalog\ICategoryTreeProvider.cs" />

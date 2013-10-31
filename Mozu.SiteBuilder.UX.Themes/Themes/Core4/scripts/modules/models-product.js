@@ -12,62 +12,62 @@
 
 
     var ProductOption = Backbone.MozuModel.extend({
-        idAttribute: "AttributeFQN",
+        idAttribute: "attributeFQN",
         initialize: function () {
             var me = this;
             _.defer(function () {
                 me.listenTo(me.collection, 'invalidoptionselected', this.handleInvalid, this);
             });
-            me.on("change:Value", _.debounce(function (model, newVal) {
-                var newValObj, values = me.get("Values");
+            me.on("change:value", _.debounce(function (model, newVal) {
+                var newValObj, values = me.get("values");
                 newVal = $.trim(newVal);
                 if (newVal) {
-                    _.each(values, function (value) {
-                        if (value.Value.toString() === newVal.toString()) {
-                            newValObj = value;
-                            value.IsSelected = true;
-                            me.set("Value", newVal);
+                    _.each(values, function (fvalue) {
+                        if (fvalue.value.toString() === newVal.toString()) {
+                            newValObj = fvalue;
+                            fvalue.isSelected = true;
+                            me.set("value", newVal);
                         } else {
-                            value.IsSelected = false;
+                            fvalue.isSelected = false;
                         }
                     });
-                    me.set("Values", values);
-                    if (me.get("AttributeDetail").InputType !== "List") {
-                        me.set("ShopperEnteredValue", newVal);
+                    me.set("values", values);
+                    if (me.get("attributeDetail").inputType !== "List") {
+                        me.set("shopperEnteredValue", newVal);
                     }
                 }
                 else {
-                    me.unset('Value');
-                    me.unset("ShopperEnteredValue");
+                    me.unset('value');
+                    me.unset("shopperEnteredValue");
                 }
-                if (newValObj && !newValObj.IsEnabled) me.trigger('invalidoptionselected', newValObj, me);
+                if (newValObj && !newValObj.isEnabled) me.trigger('invalidoptionselected', newValObj, me);
                 me.trigger('optionchange', newVal, me);
             }, 300));
         },
         handleInvalid: function(newValObj, opt) {
             if (!(this === opt)) {
-                this.unset("Value");
-                _.each(this.get("Values"), function(value) {
-                    value.IsSelected = false;
+                this.unset("value");
+                _.each(this.get("values"), function(value) {
+                    value.isSelected = false;
                 });
             }
         },
         parse: function (raw) {
             var selectedValue, storedShopperValue;
-            if (!raw.IsMultiValue) {
-                selectedValue = _.findWhere(raw.Values, { IsSelected: true });
-                if (selectedValue) raw.Value = selectedValue.Value;
+            if (!raw.isMultiValue) {
+                selectedValue = _.findWhere(raw.values, { isSelected: true });
+                if (selectedValue) raw.value = selectedValue.value;
             }
-            if (raw.AttributeDetail.InputType !== "List") {
-                storedShopperValue = raw.Values[0] && raw.Values[0].ShopperEnteredValue;
+            if (raw.attributeDetail.inputType !== "List") {
+                storedShopperValue = raw.values[0] && raw.values[0].shopperEnteredValue;
                 if (storedShopperValue || storedShopperValue === 0) this.set({
-                    ShopperEnteredValue: storedShopperValue,
-                    Value: storedShopperValue
+                    shopperEnteredValue: storedShopperValue,
+                    value: storedShopperValue
                 });
             }
-            if (raw.AttributeDetail.InputType === "Date" && raw.AttributeDetail.Validation) {
-                raw.MinDate = formatDate(this.AttributeDetail.Validation.MinDateValue);
-                raw.MaxDate = formatDate(this.AttributeDetail.Validation.MaxDateValue);
+            if (raw.attributeDetail.inputType === "Date" && raw.attributeDetail.validation) {
+                raw.minDate = formatDate(this.attributeDetail.validation.minDateValue);
+                raw.maxDate = formatDate(this.attributeDetail.validation.maxDateValue);
             }
             return raw;
         }
@@ -77,49 +77,49 @@
 
     Product = Backbone.MozuModel.extend({
         mozuType: 'product',
-        idAttribute: 'ProductCode',
+        idAttribute: 'productCode',
         handlesMessages: true,
-        helpers: ['MainImage'],
+        helpers: ['mainImage'],
         defaults: {
-            PurchasableState: {},
-            Quantity: 1
+            purchasableState: {},
+            quantity: 1
         },
         dataTypes: {
-            Quantity: Backbone.MozuModel.DataTypes.Int
+            quantity: Backbone.MozuModel.DataTypes.Int
         },
         validation: {
-            Quantity: {
+            quantity: {
                 min: 1,
-                msg: 'Please enter a product quantity above 0'
+                msg: require.mozuLabel('enterProductQuantity')
             }
         },
         relations: {
-            Content: ProductContent,
-            Price: PriceModels.ProductPrice,
-            Options: Backbone.Collection.extend({
+            content: ProductContent,
+            price: PriceModels.ProductPrice,
+            options: Backbone.Collection.extend({
                 model: ProductOption
             })
         },
         initialize: function() {
-            this.listenTo(this.get("Options"), "optionchange", this.updateConfiguration, this);
-            this.set({ Url: "/product/" + this.get("ProductCode") });
+            this.listenTo(this.get("options"), "optionchange", this.updateConfiguration, this);
+            this.set({ url: "/product/" + this.get("productCode") });
             this.lastConfiguration = [];
         },
-        MainImage: function () {
-            var imgs = this.get('Content').get("ProductImages"),
+        mainImage: function () {
+            var imgs = this.get('content').get("productImages"),
                 img = imgs && imgs[0];
-            return img || { ImageUrl: 'http://placehold.it/160&text=' + require.mozuLabel('noImages') }
+            return img || { imageUrl: 'http://placehold.it/160&text=' + require.mozuLabel('noImages') }
         },
         getConfiguredOptions: function() {
-            return _.invoke(this.get("Options").filter(function(opt) {
-                return opt.has("Value") || opt.has("ShopperEnteredValue");
+            return _.invoke(this.get("options").filter(function(opt) {
+                return opt.has("value") || opt.has("shopperEnteredValue");
             }), 'toJSON');
         },
         addToCart: function() {
             var me = this;
             if (!this.validate()) {
-                this.apiModel.prop("Options", this.getConfiguredOptions());
-                this.apiAddToCart(this.get("Quantity")).then(function(item) {
+                this.apiModel.prop("options", this.getConfiguredOptions());
+                this.apiAddToCart(this.get("quantity")).then(function(item) {
                     me.trigger('addedtocart', item);
                 });
             }
@@ -128,7 +128,7 @@
             var newConfiguration = this.getConfiguredOptions();
             if (JSON.stringify(this.lastConfiguration) !== JSON.stringify(newConfiguration)) {
                 this.lastConfiguration = newConfiguration;
-                this.apiConfigure({ Options: newConfiguration });
+                this.apiConfigure({ options: newConfiguration });
             }
         },400)
     });

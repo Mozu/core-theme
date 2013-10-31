@@ -444,10 +444,10 @@
     <Content Include="BuiltinScripts\RequireJS\Gruntfile.js" />
     <Content Include="BuiltinScripts\RequireJS\lib\json2.js" />
     <Content Include="BuiltinScripts\RequireJS\src\vars-min.js" />
-    <Content Include="BuiltinScripts\RequireJS\src\plugins\i18n.js" />
     <Content Include="BuiltinScripts\RequireJS\src\plugins\shim.js" />
     <Content Include="BuiltinScripts\RequireJS\src\plugins\text.js" />
     <Content Include="BuiltinScripts\RequireJS\src\vars-debug.js" />
+    <Content Include="BuiltinScripts\SDK\src\types\cart.js" />
     <Content Include="BuiltinScripts\SDK\src\types\login.js" />
     <Content Include="BuiltinScripts\SDK\src\types\order.js" />
     <Content Include="BuiltinScripts\SDK\src\types\payment.js" />

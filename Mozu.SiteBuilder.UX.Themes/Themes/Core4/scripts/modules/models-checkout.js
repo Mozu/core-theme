@@ -50,19 +50,19 @@
 
         FulfillmentContact = CheckoutStep.extend({
             relations: {
-                Address: AddressModels.StreetAddress,
-                PhoneNumbers: AddressModels.PhoneNumbers
+                address: AddressModels.StreetAddress,
+                phoneNumbers: AddressModels.PhoneNumbers
             },
             getOrder: function () {
                 // since this is one step further away from the order, it has to be accessed differently
                 return this.parent.parent;
             },
             validation: {
-                FirstName: {
+                firstName: {
                     required: true,
                     msg: require.mozuLabel('firstNameMissing')
                 },
-                LastNameOrSurname: {
+                lastNameOrSurname: {
                     required: true,
                     msg: require.mozuLabel('lastNameMissing')
                 }
@@ -77,7 +77,7 @@
                 parent.syncApiModel();
                 parent.apiModel.getShippingMethodsFromContact().then(function(methods) {
                     return parent.set({
-                        AvailableShippingMethods: methods
+                        availableShippingMethods: methods
                     });
                 }).ensure(function () {
                     me.isLoading(false);
@@ -92,31 +92,31 @@
             mozuType: 'shipment',
             initialize: function () {
                 // this adds the price and other metadata off the chosen method to the info object itself
-                this.updateShippingMethod(this.get('ShippingMethodCode'));
+                this.updateShippingMethod(this.get('shippingMethodCode'));
             },
             relations: {
-                FulfillmentContact: FulfillmentContact
+                fulfillmentContact: FulfillmentContact
             },
             validation: {
-                ShippingMethodCode: {
+                shippingMethodCode: {
                     required: true,
                     msg: require.mozuLabel('chooseShippingMethod')
                 }
             },
             calculateStepStatus: function () {
                 var st = "new", available;
-                if (this.get("FulfillmentContact").stepStatus() !== "complete") {
+                if (this.get("fulfillmentContact").stepStatus() !== "complete") {
                     return this.stepStatus("new");
                 }
-                available = this.get("AvailableShippingMethods");
-                if (available && available.length && _.findWhere(available, { ShippingMethodCode: this.get("ShippingMethodCode") })) {
+                available = this.get("availableShippingMethods");
+                if (available && available.length && _.findWhere(available, { shippingMethodCode: this.get("shippingMethodCode") })) {
                     return this.stepStatus("complete");
                 }
                 return this.stepStatus("incomplete");
             },
             updateShippingMethod: function (code) {
                 var newMethod;
-                if (code) newMethod = _.findWhere(this.get("AvailableShippingMethods"), { ShippingMethodCode: code });
+                if (code) newMethod = _.findWhere(this.get("availableShippingMethods"), { shippingMethodCode: code });
                 if (newMethod) {
                     this.set(newMethod);
                 }
@@ -125,10 +125,10 @@
                 if (this.validate()) return false;
                 var me = this;
                 this.isLoading(true);
-                this.getOrder().apiModel.update({ FulfillmentInfo: me.toJSON() }).ensure(function () {
+                this.getOrder().apiModel.update({ fulfillmentInfo: me.toJSON() }).ensure(function () {
                     me.isLoading(false);
                     me.calculateStepStatus();
-                    me.parent.get("BillingInfo").calculateStepStatus();
+                    me.parent.get("billingInfo").calculateStepStatus();
                 });
             }
         }),
@@ -137,44 +137,44 @@
         PaymentMethod = Backbone.MozuModel.extend({
             present: function (value, attr) {
                 if (!this.selected) return undefined;
-                if (!value) return this.validation[attr.split('.').pop()].msg || "Required";
+                if (!value) return this.validation[attr.split('.').pop()].msg || require.mozuLabel('genericRequired');
             }
         });
 
         CreditCard = PaymentMethod.extend({
             validation: {
-                PaymentOrCardType: {
+                paymentOrCardType: {
                     fn: "present",
                     msg: require.mozuLabel('cardTypeMissing')
                 },
-                CardNumberPartOrMask: {
+                cardNumberPartOrMask: {
                     fn: "present",
                     msg: require.mozuLabel('cardNumberMissing')
                 },
-                ExpireMonth: {
+                expireMonth: {
                     fn: 'expirationDateInPast'
                 },
-                ExpireYear: {
+                expireYear: {
                     fn: 'expirationDateInPast'
                 },
-                NameOnCard: {
+                nameOnCard: {
                     fn: "present",
                     msg: require.mozuLabel('cardNameMissing')
                 },
-                CVV: {
+                cvv: {
                     fn: "present",
                     msg: require.mozuLabel('securityCodeMissing')
                 }
             },
             dataTypes: {
-                ExpireMonth: Backbone.MozuModel.DataTypes.Int,
-                ExpireYear: Backbone.MozuModel.DataTypes.Int,
-                IsCardInfoSaved: Backbone.MozuModel.DataTypes.Boolean
+                expireMonth: Backbone.MozuModel.DataTypes.Int,
+                expireYear: Backbone.MozuModel.DataTypes.Int,
+                isCardInfoSaved: Backbone.MozuModel.DataTypes.Boolean
             },
             expirationDateInPast: function (value, attr, computedState) {
                 if (!this.selected) return undefined;
-                var expMonth = this.get('ExpireMonth'),
-                    expYear = this.get('ExpireYear'),
+                var expMonth = this.get('expireMonth'),
+                    expYear = this.get('expireYear'),
                     exp,
                     thisMonth,
                     isValid;
@@ -193,13 +193,13 @@
 
         Check = PaymentMethod.extend({
             validation: {
-                NameOnCheck: {
+                nameOnCheck: {
                     fn: "present"
                 },
-                RoutingNumber: {
+                routingNumber: {
                     fn: "present"
                 },
-                CheckNumber: {
+                checkNumber: {
                     fn: "present"
                 }
             }
@@ -207,15 +207,15 @@
 
         BillingContact = Backbone.MozuModel.extend({
             relations: {
-                Address: AddressModels.StreetAddress,
-                PhoneNumbers: AddressModels.PhoneNumbers
+                address: AddressModels.StreetAddress,
+                phoneNumbers: AddressModels.PhoneNumbers
             },
             validation: {
-                FirstName: {
+                firstName: {
                     required: true,
                     msg: require.mozuLabel('firstNameMissing')
                 },
-                LastNameOrSurname: {
+                lastNameOrSurname: {
                     required: true,
                     msg: require.mozuLabel('lastNameMissing')
                 }
@@ -225,20 +225,20 @@
         BillingInfo = CheckoutStep.extend({
             mozuType: 'payment',
             validation: {
-                PaymentType: {
+                paymentType: {
                     required: true,
                     msg: require.mozuLabel('paymentTypeMissing')
                 },
 
             },
             dataTypes: {
-                "IsSameBillingShippingAddress": Backbone.MozuModel.DataTypes.Boolean,
-                "IsCardInfoSaved": Backbone.MozuModel.DataTypes.Boolean
+                "isSameBillingShippingAddress": Backbone.MozuModel.DataTypes.Boolean,
+                "isCardInfoSaved": Backbone.MozuModel.DataTypes.Boolean
             },
             relations: {
-                BillingContact: BillingContact,
-                Card: CreditCard,
-                Check: Check
+                billingContact: BillingContact,
+                card: CreditCard,
+                check: Check
             },
             constructor: function (conf) {
                 var me = this;
@@ -253,7 +253,7 @@
 
                 fields = {};
                 // create jQuery-style accessor functions for PCIaaS
-                _.each(['PaymentOrCardType', 'CardNumberPartOrMask', 'CVV', 'IsCardInfoSaved', 'PaymentServiceCardId'], function (prop) {
+                _.each(['paymentOrCardType', 'cardNumberPartOrMask', 'cvv', 'isCardInfoSaved', 'paymentServiceCardId'], function (prop) {
                     fields[prop] = function (val) {
                         var card = me.get("Card");
                         if (!card) return undefined;
@@ -263,11 +263,11 @@
                 });
                 this.pciProcessor = PCIaaS({
                     fields: {
-                        CardType: fields.PaymentOrCardType,
-                        CardNumber: fields.CardNumberPartOrMask,
-                        CVV: fields.CVV,
-                        PersistCard: fields.IsCardInfoSaved,
-                        HiddenCardID: fields.PaymentServiceCardId
+                        CardType: fields.paymentOrCardType,
+                        CardNumber: fields.cardNumberPartOrMask,
+                        CVV: fields.cvv,
+                        PersistCard: fields.isCardInfoSaved,
+                        HiddenCardID: fields.paymentServiceCardId
                     },
                     events: {
                         success: function () {
@@ -281,35 +281,29 @@
                     },
                     settings: pciSettings
                 });
-                this.on('change:PaymentType', function (model, newPaymentType) {
+                this.on('change:paymentType', function (model, newPaymentType) {
                     me.selectPaymentType(newPaymentType);
                 });
-                this.selectPaymentType(this.get('PaymentType'));
-                this.on('change:IsSameBillingShippingAddress', function (model, wellIsIt) {
+                this.selectPaymentType(this.get('paymentType'));
+                this.on('change:isSameBillingShippingAddress', function (model, wellIsIt) {
                     if (wellIsIt) {
-                        this.get('BillingContact').set(this.parent.get('FulfillmentInfo').get('FulfillmentContact').toJSON(), { silent: true });
+                        this.get('billingContact').set(this.parent.get('fulfillmentInfo').get('fulfillmentContact').toJSON(), { silent: true });
                     }
                 });
             },
             selectPaymentType: function(newPaymentType) {
-                this.get('Check').selected = newPaymentType == "Check";
-                this.get('Card').selected = newPaymentType == "CreditCard";
+                this.get('check').selected = newPaymentType == "Check";
+                this.get('card').selected = newPaymentType == "CreditCard";
                 this.trigger('paymentchange');
             },
             // the toJSON method should omit the CVV so it is not sent to the wrong API
-            toJSON: function () {
+            toJSON: function (options) {
                 var j = PaymentMethod.prototype.toJSON.apply(this);
-                if (j.Card) delete j.Card.CVV;
-                return j;
-            },
-            // but since the toJS method relies on toJSON, we need to add it back for templates
-            toJS: function () {
-                var j = PaymentMethod.prototype.toJS.apply(this);
-                if (j.Card) j.Card.CVV = this.get('Card.CVV');
+                if (j.card && (!options || !options.helpers)) delete j.card.cvv;
                 return j;
             },
             calculateStepStatus: function() {
-                this.stepStatus(!!this.parent.get('FulfillmentInfo').get('ShippingMethodCode') ? (
+                this.stepStatus(!!this.parent.get('fulfillmentInfo').get('shippingMethodCode') ? (
                     this.isValid(true) ? 'complete' : 'invalid')
                     : 'new');
             },
@@ -327,7 +321,7 @@
             },
             submit: function () {
                 if (this.validate()) return false;
-                if (this.get('PaymentType') === "CreditCard") return this.pciProcessor.process();
+                if (this.get('paymentType') === "CreditCard") return this.pciProcessor.process();
                 return this.updateOrder();
             }
         });
@@ -337,25 +331,25 @@
         var ShopperNotes = Backbone.MozuModel.extend(),
 
         checkoutPageValidation = {
-            'User.EmailAddress': {
+            'user.emailAddress': {
                 fn: function(value) {
                     if (this.validateUser && (!value || !value.match(Backbone.Validation.patterns.email))) return require.mozuLabel('emailMissing')
                 }
             },
-            'User.Password': {
+            'user.password': {
                 fn: function(value) {
                     if (this.validateUser && !value) return require.mozuLabel('passwordMissing')
                 }
             },
-            'User.ConfirmPassword': {
+            'user.confirmPassword': {
                 fn: function(value) {
-                    if (this.validateUser && value !== this.get('User.Password')) return require.mozuLabel('passwordsDoNotMatch')
+                    if (this.validateUser && value !== this.get('User.password')) return require.mozuLabel('passwordsDoNotMatch')
                 }
             },
         };
 
         if (require.mozuThemeSetting('requireCheckoutAgreeToTerms')) {
-            checkoutPageValidation.AgreeToTerms = {
+            checkoutPageValidation.agreeToTerms = {
                 acceptance: true,
                 msg: require.mozuLabel('didNotAgreeToTerms')
             }
@@ -365,17 +359,17 @@
             mozuType: 'order',
             handlesMessages: true,
             relations: {
-                FulfillmentInfo: FulfillmentInfo,
-                BillingInfo: BillingInfo,
-                ShopperNotes: ShopperNotes,
-                User: UserModels.User
+                fulfillmentInfo: FulfillmentInfo,
+                billingInfo: BillingInfo,
+                shopperNotes: ShopperNotes,
+                user: UserModels.User
             },
             validation: checkoutPageValidation,
             dataTypes: {
-                CreateAccount: Backbone.MozuModel.DataTypes.Boolean
+                createAccount: Backbone.MozuModel.DataTypes.Boolean
             },
             initialize: function() {
-                this.on('change:CreateAccount', function (me, yes) {
+                this.on('change:createAccount', function (me, yes) {
                     me.validateUser = yes;
                     if (!yes) me.unset("User");
                 });
@@ -383,20 +377,20 @@
             addCoupon: function () {
                 var me = this;
                 this.isLoading(true);
-                return this.apiApplyCoupon(this.get('CouponCode')).then(function () {
+                return this.apiApplyCoupon(this.get('couponCode')).then(function () {
                     return me.apiModel.get();
                 }).then(function () {
-                    me.set('CouponCode', '');
+                    me.set('couponCode', '');
                     me.isLoading(false);
                 });
             },
             onCheckoutSuccess: function (completedOrder) {
                 var order = this,
-                    user = order.get('User');
+                    user = order.get('user');
                 if (user) {
                     $.post('/login', {
-                        email: user.get('EmailAddress'),
-                        password: user.get("Password")
+                        email: user.get('emailAddress'),
+                        password: user.get("password")
                     }).then(function () {
                         return order.trigger('complete');
                     });
@@ -407,11 +401,11 @@
             onCheckoutError: function (error) {
                 var order = this;
                 order.isLoading(false);
-                $.each(error.Items, function (ix, errorItem) {
-                    if (errorItem.ErrorCode === "MISSING_OR_INVALID_PARAMETER" && errorItem.AdditionalErrorData && errorItem.AdditionalErrorData[0] && errorItem.AdditionalErrorData[0].Value === "password" && errorItem.AdditionalErrorData[0].Name === "ParameterName") {
-                        order.trigger('passwordinvalid', errorItem.Message.substring(errorItem.Message.indexOf('Password')));
+                $.each(error.items, function (ix, errorItem) {
+                    if (errorItem.errorCode === "MISSING_OR_INVALID_PARAMETER" && errorItem.additionalErrorData && errorItem.additionalErrorData[0] && errorItem.additionalErrorData[0].value === "password" && errorItem.additionalErrorData[0].name === "ParameterName") {
+                        order.trigger('passwordinvalid', errorItem.message.substring(errorItem.message.indexOf('Password')));
                     } else {
-                        order.messages.add({ Message: errorItem.Message });
+                        order.messages.add(errorItem);
                     }
                 });
             },
@@ -419,24 +413,24 @@
                 var order = this, process = [];
                 if (this.validate()) return false;
                 this.isLoading(true);
-                if (this.get("CreateAccount")) {
-                    var user = this.get("User");
+                if (this.get("createAccount")) {
+                    var user = this.get("user");
                     process.push(function () {
                         return user.apiCreate();
                     }, function() {
                         return user.apiLogin({
-                            EmailAddress: user.get('EmailAddress'),
-                            Password: user.get('Password')
+                            emailAddress: user.get('emailAddress'),
+                            password: user.get('password')
                         });
                     },function(login) {
                         return order.apiSetUserId();
                     });
                 } 
-                if (order.get('ShopperNotes').has('Comments')) process.push(function() {
+                if (order.get('shopperNotes').has('comments')) process.push(function() {
                     return order.update();
                 });
                 process.push(function() {
-                    var availableActions = order.get("AvailableActions");
+                    var availableActions = order.get("availableActions");
                     if (_.indexOf(availableActions, 'SubmitOrder') !== -1)
                         return order.apiPerformOrderAction('SubmitOrder');
                     if (_.indexOf(availableActions, 'CancelOrder') !== -1)
@@ -446,7 +440,7 @@
 
                 api.steps(process).then(function (completedOrder) {
                     order.isLoading(false);
-                    if (completedOrder.prop("Status") === "Submitted") {
+                    if (completedOrder.prop("status") === "Submitted") {
                         order.onCheckoutSuccess(completedOrder.data);
                     } else {
                         order.onCheckoutError(completedOrder);
@@ -459,7 +453,7 @@
                 return this.apiModel.update(this.toJSON());
             },
             isReady: function (val) {
-                this.set("IsReady", val);
+                this.set("isReady", val);
             }
         });
 

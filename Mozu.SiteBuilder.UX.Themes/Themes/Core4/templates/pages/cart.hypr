@@ -8,7 +8,7 @@
 
 {% require_script "pages/cart" %}
 
-{% preload_json Model "cart" %}
+{% preload_json model "cart" %}
 
 <div class="mz-l-container">
 	<h1 class="mz-pagetitle">{{ themeSettings.labelCart }}</h1>

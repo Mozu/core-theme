@@ -9,10 +9,8 @@
         function checkForCartUpdates(apiObject) {
             switch (apiObject.type) {
                 case "cart":
-                    if (!apiObject.unsynced) {
                         clearTimeout(timeout);
                         updateCartDetails(apiObject);
-                    }
                     break;
                 case "cartitem":
                     if (!apiObject.unsynced) timeout = waitAndGetCart();
@@ -20,20 +18,10 @@
             }
         }
         function updateCartDetails(cartObject) {
-            var sum = 0;
-            $.each(cartObject.data.Items, function (ix, item) {
-                sum += item.Quantity;
-            });
-            if (!isNaN(sum)) $cartCount.text(sum);
-
+            $cartCount.text(cartObject.count() || 0);
         }
         api.on('sync', checkForCartUpdates);
         api.on('spawn', checkForCartUpdates);
-        var initial = require.mozuData('cart');
-        if (initial) {
-            checkForCartUpdates({ data: initial });
-        } else {
-            timeout = waitAndGetCart();
-        }
+        if (!require.mozuData('cart')) timeout = waitAndGetCart();
     });
 });

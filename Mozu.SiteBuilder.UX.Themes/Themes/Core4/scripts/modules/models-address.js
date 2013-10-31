@@ -4,7 +4,7 @@
 
         var PhoneNumbers = Backbone.MozuModel.extend({
             validation: {
-                Home: {
+                home: {
                     required: true,
                     msg: require.mozuLabel("phoneMissing")
                 }
@@ -13,19 +13,19 @@
 
         StreetAddress = Backbone.MozuModel.extend({
             validation: {
-                Address1: {
+                address1: {
                     required: true,
                     msg: require.mozuLabel("streetMissing")
                 },
-                CityOrTown: {
+                cityOrTown: {
                     required: true,
                     msg: require.mozuLabel("cityMissing")
                 },
-                CountryCode: {
+                countryCode: {
                     required: true,
                     msg: require.mozuLabel("countryMissing")
                 },
-                PostalOrZipCode: {
+                postalOrZipCode: {
                     required: true,
                     msg: require.mozuLabel("postalCodeMissing")
                 }

@@ -1,4 +1,5 @@
 ﻿// BEGIN UTILS
+// Many of these poached from lodash
 var utils = (function () {
     return {
         extend: function () {
@@ -44,6 +45,14 @@ var utils = (function () {
             }
             return newArr;
         },
+        reduce: function(collection, callback, accumulator) {
+            var index = -1,
+                length = collection.length;
+            while (++index < length) {
+                accumulator = callback(accumulator, collection[index], index, collection);
+            }
+            return accumulator;
+        },
         getType: (function () {
             var reType = /\[object (\w+)\]/;
             return function (thing) {
@@ -75,10 +84,10 @@ var utils = (function () {
             var timeout = setTimeout(function () {
                 clearTimeout(timeout);
                 failure({
-                    Items: [
+                    items: [
                         {
-                            Message: 'Request timed out.',
-                            ErrorCode: 'TIMEOUT'
+                            message: 'Request timed out.',
+                            errorCode: 'TIMEOUT'
                         }
                     ]
                 }, xhr);
@@ -92,10 +101,10 @@ var utils = (function () {
                             json = JSON.parse(xhr.responseText);
                         } catch (e) {
                             failure({
-                                Items: [
+                                items: [
                                     {
-                                        Message: "Unable to parse response: " + xhr.responseText,
-                                        ErrorCode: 'UNKNOWN'
+                                        message: "Unable to parse response: " + xhr.responseText,
+                                        errorCode: 'UNKNOWN'
                                     }
                                 ]
                             }, xhr, e);
@@ -105,10 +114,10 @@ var utils = (function () {
                         success(json, xhr);
                     } else {
                         failure(json || {
-                            Items: [
+                            items: [
                                 {
-                                    Message: 'Request failed, no response given.',
-                                    ErrorCode: xhr.status
+                                    message: 'Request failed, no response given.',
+                                    errorCode: xhr.status
                                 }
                             ]
                         }, xhr);

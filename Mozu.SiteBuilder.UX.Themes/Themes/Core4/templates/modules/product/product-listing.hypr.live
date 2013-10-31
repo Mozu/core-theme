@@ -1,24 +1,24 @@
 ﻿<div class="mz-productlisting {% block module-classes %}{% endblock module-classes %}">
-    {% if Model.Items %}
+    {% if model.items %}
     <ul class="mz-productlisting-list {% block list-classes %}{% endblock list-classes %}">
-        {% for prod in Model.Items %}
+        {% for prod in model.items %}
         <li class="mz-productlisting-item">
             <div class="mz-productlisting-image">
-                <a href="{{prod.Url}}">
-                    <img src="{{prod.MainImage.ImageUrl}}?size=160" />
+                <a href="{{prod.url}}">
+                    <img src="{{prod.mainImage.imageUrl}}?size=160" />
                 </a>
             </div>
             <div class="mz-productlisting-info">
-                <a class="mz-productlisting-title" href="{{prod.Url}}">{{prod.Content.ProductName}}</a>
-                {% if prod.Content.ProductShortDescription and themeSettings.listProductShortDesc %}
-                <p class="mz-productlisting-shortdesc">{{ prod.Content.ProductShortDescription|striptags|truncatewords(themeSettings.maxProductSummaryWords) }}</p>
+                <a class="mz-productlisting-title" href="{{prod.url}}">{{prod.content.productName}}</a>
+                {% if prod.content.productShortDescription and themeSettings.listProductShortDesc %}
+                <p class="mz-productlisting-shortdesc">{{ prod.content.productShortDescription|striptags|truncatewords(themeSettings.maxProductSummaryWords) }}</p>
                 {% endif %}
                 {% block product-code %}
                 {% if themeSettings.listProductCode %}
-                <div class="mz-productlisting-productcode">{{prod.ProductCode}}</div>
+                <div class="mz-productlisting-productcode">{{prod.productCode}}</div>
                 {% endif %}
                 {% endblock product-code %}
-                {% include "modules/product/price-stack" with Model=prod %}
+                {% include "modules/product/price-stack" with model=prod %}
                 {% block product-extrainfo %}
                 {% endblock product-extrainfo %}
             </div>

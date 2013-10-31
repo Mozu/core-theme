@@ -8,42 +8,42 @@
   </tr>
 </thead>
 <tbody class="mz-carttable-{%if Model.IsEmpty %}isempty{% else %}items{% endif %}">
-  {% if not Model.IsEmpty %}
-  {% for item in Model.Items %}
+  {% if not model.isEmpty %}
+  {% for item in model.items %}
   <tr class="mz-carttable-item">
     <td class="mz-carttable-item-product">
-      {% if item.Product.mainImage and themeSettings.showCartItemImage %}
-          <img class="mz-carttable-item-image" src="{{ item.Product.mainImage.ImageUrl }}?size=50" />
+      {% if item.product.mainImage and themeSettings.showCartItemImage %}
+          <img class="mz-carttable-item-image" src="{{ item.product.mainImage.imageUrl }}?size=50" />
       {% endif %}
-      <div class="mz-carttable-item-info-wrap{% if not item.Product.mainImage %} mz-no-image{% endif %}">
-        <a class="mz-carttable-item-title" href="{{item.Product.Url}}">{{ item.Product.Name }}</a>
-        {% if item.Product.Options and themeSettings.showCartItemOptions %}
+      <div class="mz-carttable-item-info-wrap{% if not item.product.mainImage %} mz-no-image{% endif %}">
+        <a class="mz-carttable-item-title" href="{{item.product.url}}">{{ item.product.name }}</a>
+        {% if item.product.options and themeSettings.showCartItemOptions %}
         <dl class="mz-propertylist">
-          {% for option in item.Product.Options %}
-          <dt>{{ option.Name }}</dt>&nbsp;
-          <dd>{{ option.Value }}</dd>
+          {% for option in item.product.options %}
+          <dt>{{ option.name }}</dt>&nbsp;
+          <dd>{{ option.value }}</dd>
           {% endfor %}
         </dl>
         {% endif %}
         <span class="mz-carttable-item-code">
-          {{ themeSettings.labelProductCode }}: <em>{{ item.Product.ProductCode }}</em>
+          {{ themeSettings.labelProductCode }}: <em>{{ item.product.productCode }}</em>
         </span>
       </div>
     </td>
     <td class="mz-carttable-item-price">
       {% if item.priceIsModified %}
-      <span class="mz-carttable-price is-crossedout">{{ item.UnitPrice.BaseAmount|currency }}</span>
+      <span class="mz-carttable-price is-crossedout">{{ item.unitPrice.baseAmount|currency }}</span>
       {% endif %}
-      <span class="mz-carttable-price{% if item.priceIsModified %} is-saleprice{% endif %}">{{ item.UnitPrice.DiscountedAmount|currency }}</span>
+      <span class="mz-carttable-price{% if item.priceIsModified %} is-saleprice{% endif %}">{{ item.unitPrice.discountedAmount|currency }}</span>
     </td>
-    <td  class="mz-carttable-item-qty">
-      <input class="mz-carttable-qty-field" type="number" min="1" {% if Model.isLoading %}disabled="disabled"{% endif %} data-mz-cart-item="{{ item.Id }}" data-mz-value="Quantity" value="{{ item.Quantity }}" />
+    <td class="mz-carttable-item-qty">
+      <input class="mz-carttable-qty-field" type="number" min="1" {% if model.isLoading %}disabled="disabled"{% endif %} data-mz-cart-item="{{ item.id }}" data-mz-value="quantity" value="{{ item.quantity }}" />
     </td>
     <td class="mz-carttable-item-total">
-      <span class="mz-carttable-rowtotal">{{ item.Total|currency }}</span>
+      <span class="mz-carttable-rowtotal">{{ item.total|currency }}</span>
     </td>
     <td class="mz-carttable-item-remove">
-      <a href="javascript:;" data-mz-action="removeItem" data-mz-cart-item="{{ item.Id }}" class="mz-icon mz-icon-close">{{ themeSettings.labelRemove }}</a>
+      <a href="javascript:;" data-mz-action="removeItem" data-mz-cart-item="{{ item.id }}" class="mz-icon mz-icon-close">{{ themeSettings.labelRemove }}</a>
     </td>
   </tr>
 {% endfor %}
@@ -63,14 +63,14 @@
     <td></td>
   </tr>
 
-  {% for discount in Model.OrderDiscounts %}
-    {% if not discount.Excluded %}
+  {% for discount in model.orderDiscounts %}
+    {% if not discount.excluded %}
   <tr class="mz-carttable-total-row">
     <td class="mz-carttable-total-label" colspan="3">
-        {{ discount.Discount.Name }}:
+        {{ discount.discount.name }}:
     </td>
     <td class="mz-carttable-total-wrap">
-      <span class="mz-carttable-rowtotal">- {{ discount.Impact|currency }}</span>
+      <span class="mz-carttable-rowtotal">- {{ discount.impact|currency }}</span>
     </td>
     <td></td>
   </tr>
@@ -82,15 +82,14 @@
     <td class="mz-carttable-total-wrap" colspan="4">
       {{ themeSettings.labelOrderTotal }}:
         <span id="mz-carttable-total" class="mz-carttable-total">
-          <strong>{{ Model.DiscountedTotal|currency }}</strong>
+          <strong>{{ model.discountedTotal|currency }}</strong>
         </span>
     </td>
     <td></td>
   </tr>
   <tr class="mz-carttable-checkout-row">
     <td colspan="4">
-      <input type="hidden" name="Id" value="{{ Model.Id }}" />
-      <button id="cart-checkout" class="mz-button mz-button-large"  {% if Model.IsEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">{{ themeSettings.labelProceedToCheckout }}</button>
+      <button id="cart-checkout" class="mz-button mz-button-large"  {% if model.isEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">{{ themeSettings.labelProceedToCheckout }}</button>
     </td>
     <td></td>
   </tr>

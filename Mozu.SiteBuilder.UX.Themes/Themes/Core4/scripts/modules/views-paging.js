@@ -20,12 +20,12 @@
 
     var PagingControlsView = PagingBaseView.extend({
         templateName: 'modules/common/paging-controls',
-        autoUpdate: ['PageSize'],
+        autoUpdate: ['pageSize'],
         updatePageSize: function (e) {
             var newSize = parseInt($(e.currentTarget).val()),
-            currentSize = this.model.get('PageSize');
+            currentSize = this.model.get('pageSize');
             if (isNaN(newSize)) throw new SyntaxError("Cannot set page size to a non-number!");
-            if (newSize !== currentSize) this.model.set('PageSize', newSize);
+            if (newSize !== currentSize) this.model.set('pageSize', newSize);
         }
     });
 

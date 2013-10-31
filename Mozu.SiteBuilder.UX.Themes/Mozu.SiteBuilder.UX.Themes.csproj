@@ -874,7 +874,7 @@
     <Content Include="Themes\Core4\templates\modules\checkout\step-shipping-method.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\checkout\credit-card-form.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\product\faceting-form.hypr.live" />
-    <Content Include="Themes\Core4\templates\modules\google-analytics-tracking-code.hypr" />
+    <Content Include="Themes\Core4\templates\modules\analytics\google-analytics-tracking-code.hypr" />
     <Content Include="Themes\Core4\templates\modules\common\login-popover.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\common\message-bar.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\page-footer.hypr" />
@@ -891,6 +891,7 @@
     <Content Include="Themes\StarTac\templates\modules\cart\CartTableBody.hypr.live" />
     <Content Include="Themes\Core4\theme.json" />
     <Content Include="Themes\Core4\templates\modules\json-required-for-hyprlive.hypr" />
+    <Content Include="Themes\Core4\templates\modules\analytics\google-analytics-ecommerce-tracking-code.hypr" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

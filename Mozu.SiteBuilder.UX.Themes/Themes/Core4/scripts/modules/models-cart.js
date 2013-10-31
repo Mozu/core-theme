@@ -3,66 +3,69 @@
     var CartItemProduct = Backbone.MozuModel.extend({
         helpers: ['mainImage'],
         mainImage: function() {
-            var imgs = this.get("ProductImages"),
+            var imgs = this.get("productImages"),
                 img = imgs && imgs[0];
             return img || { ImageUrl: 'http://placehold.it/160&text=' + require.mozuLabel('noImages') }
         },
         initialize: function() {
-            this.set({Url: "/product/" + this.get("ProductCode")})
+            this.set({Url: "/product/" + this.get("productCode")})
         }
     }),
 
     CartItem = Backbone.MozuModel.extend({
         relations: {
-            Product: CartItemProduct
+            product: CartItemProduct
         },
         validation: {
-            Quantity: {
+            quantity: {
                 min: 1
             }
         },
         dataTypes: {
-            Quantity: Backbone.MozuModel.DataTypes.Int
+            quantity: Backbone.MozuModel.DataTypes.Int
         },
         mozuType: 'cartitem',
         handlesMessages: true,
         priceIsModified: function() {
-            var price = this.get('UnitPrice');
-            return price.BaseAmount != price.DiscountedAmount;
+            var price = this.get('unitPrice');
+            return price.baseAmount != price.discountedAmount;
         },
         saveQuantity: function() {
-            if (this.hasChanged("Quantity")) this.apiUpdateQuantity(this.get("Quantity"));
-        },
-        removeFromCart: function() {
-            //this.apiModel.del();
-            this.destroy({ wait: true });
+            if (this.hasChanged("quantity")) this.apiUpdateQuantity(this.get("quantity"));
         }
     }),
 
     Cart = Backbone.MozuModel.extend({
         mozuType: 'cart',
         handlesMessages: true,
-        helpers: ['IsEmpty','Count'],
+        helpers: ['isEmpty','count'],
         relations: {
-            Items: Backbone.Collection.extend({
+            items: Backbone.Collection.extend({
                 model: CartItem
             })
         },
         
         initialize: function() {
-            this.get("Items").on('sync remove', this.fetch, this)
+            this.get("items").on('sync remove', this.fetch, this)
                              .on('loadingchange', this.isLoading, this);
         },
-        IsEmpty: function() {
-            return this.get("Items").length < 1;
+        isEmpty: function() {
+            return this.get("items").length < 1;
         },
-        Count: function() {
-            return this.get("Items").reduce(function(total, item) { return item.get('Quantity') + total; },0);
+        count: function() {
+            return this.apiModel.count();
+            //return this.get("Items").reduce(function(total, item) { return item.get('Quantity') + total; },0);
         },
         toOrder: function() {
             var me = this;
             me.apiCheckout().then(function(order) {
                 me.trigger('ordercreated', order);
+            });
+        },
+        removeItem: function (id) {
+            var self = this;
+            this.get('items').get(id).apiModel.del().then(function() {
+                return self.fetch();
             });
         }
     });

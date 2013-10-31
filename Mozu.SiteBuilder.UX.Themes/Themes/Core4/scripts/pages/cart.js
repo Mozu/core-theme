@@ -6,17 +6,17 @@
             var $qField = $(e.currentTarget),
                 newQuantity = parseInt($qField.val()),
                 id = $qField.data('mz-cart-item'),
-                item = this.model.get("Items").get(id);
+                item = this.model.get("items").get(id);
 
             if (item && !isNaN(newQuantity)) {
-                item.set('Quantity', newQuantity);
+                item.set('quantity', newQuantity);
                 item.saveQuantity();
             }
         },400),
         removeItem: function(e) {
             var $removeButton = $(e.currentTarget),
                 id = $removeButton.data('mz-cart-item');
-            this.model.get("Items").get(id).removeFromCart();
+            this.model.removeItem(id);
             return false;
         },
         proceedToCheckout: function () {
@@ -36,7 +36,7 @@
 
         cartModel.on('ordercreated', function (order) {
             cartModel.isLoading(true);
-            window.location = "/checkout/" + order.data.Id;
+            window.location = "/checkout/" + order.prop('id');
         });
 
         window.cartView = cartView;

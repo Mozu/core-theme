@@ -23,12 +23,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         {
             model = model ?? "null";
 
-            var serialModel = JsonConvert.SerializeObject(model ?? "null", Formatting.None, new JsonSerializerSettings
-            {
-                DefaultValueHandling = DefaultValueHandling.Ignore,
-                NullValueHandling = NullValueHandling.Ignore,
-                TypeNameHandling = TypeNameHandling.None
-            });
+            var serialModel = JsonConvert.SerializeObject(model ?? "null", Formatting.None, new CaseInsensitiveJsonSerializerSettings());
             return  (HttpUtility.HtmlAttributeEncode(serialModel));
         }
     }

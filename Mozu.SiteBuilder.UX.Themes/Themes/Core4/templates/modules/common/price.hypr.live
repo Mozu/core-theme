@@ -1,15 +1,15 @@
-﻿ {% if Model.onSale %}
+﻿ {% if model.onSale %}
  <span class="mz-price is-crossedout">
-     {{Model.Price|currency}}
+     {{model.price|currency}}
  </span>
  <span itemprop="price" class="mz-price is-saleprice">
-     {% if Model.DiscountName %}
-     <span class="mz-price-discountname">{{Model.DiscountName}} &ndash;</span>
+     {% if model.discountName %}
+     <span class="mz-price-discountname">{{model.discountName}} &ndash;</span>
      {% endif %}
-     {{Model.SalePrice|currency}}
+     {{model.salePrice|currency}}
  </span>
  {% else %}
  <span itemprop="price" class="mz-price">
-     {{Model.Price|currency}}
+     {{model.price|currency}}
  </span>
  {% endif %}

@@ -1,30 +1,30 @@
 ﻿<div class="mz-productoptions">
-    {% for option in Model.Options %}
+    {% for option in model.options %}
     <div class="mz-productoptions-optioncontainer">
-        {% if option.IsRequired %}
+        {% if option.isRequired %}
             <strong class="is-required">*</strong>
         {% endif %}
-        <label class="mz-productoptions-optionlabel">{{ option.AttributeDetail.Name }}</label>
+        <label class="mz-productoptions-optionlabel">{{ option.attributeDetail.name }}</label>
         <div class="mz-productoptions-valuecontainer">
-            {% if option.AttributeDetail.InputType == "YesNo" %}
-                <input class="mz-productoptions-option" type="checkbox" data-mz-product-option="{{ option.AttributeFQN }}" />
+            {% if option.attributeDetail.inputType == "YesNo" %}
+                <input class="mz-productoptions-option" type="checkbox" data-mz-product-option="{{ option.attributeFQN }}" />
             {% endif %}
-            {% if option.AttributeDetail.InputType == "TextBox" %}
-                <input class="mz-productoptions-option" type="text" value="{{ option.ShopperEnteredValue }}" data-mz-product-option="{{ option.AttributeFQN }}">
+            {% if option.attributeDetail.inputType == "TextBox" %}
+                <input class="mz-productoptions-option" type="text" value="{{ option.shopperEnteredValue }}" data-mz-product-option="{{ option.attributeFQN }}">
             {% endif %}
-            {% if option.AttributeDetail.InputType == "TextArea" %}
-                <textarea class="mz-productoptions-option" data-mz-product-option="{{ option.AttributeFQN }}">{{ option.ShopperEnteredValue }}</textarea>
+            {% if option.attributeDetail.inputType == "TextArea" %}
+                <textarea class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}">{{ option.shopperEnteredValue }}</textarea>
             {% endif %}
-            {% if option.AttributeDetail.InputType == "List" %}
-                <select {% if option.IsMultiValue %}multiple{% endif %} class="mz-productoptions-option" data-mz-product-option="{{ option.AttributeFQN }}">
-                    {% if not option.IsMultiValue %}<option></option>{% endif %}
-                    {% for value in option.Values %}
-                    <option {% if not value.IsEnabled %} class="is-disabled" {% endif %} {% if value.IsSelected %}selected="true"{% endif %} value="{{value.Value}}">{{value.Value}}</option>
+            {% if option.attributeDetail.inputType == "List" %}
+                <select {% if option.isMultiValue %}multiple{% endif %} class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}">
+                    {% if not option.isMultiValue %}<option></option>{% endif %}
+                    {% for value in option.values %}
+                    <option {% if not value.isEnabled %} class="is-disabled" {% endif %} {% if value.isSelected %}selected="true"{% endif %} value="{{value.value}}">{{value.value}}</option>
                     {% endfor %}
                 </select>                
             {% endif %}
-            {% if option.AttributeDetail.InputType == "Date" %}
-                <input type="text" data-mz-is-datepicker data-mz-product-option="{{ option.AttributeFQN }}" class="mz-productoptions-option" style="color:transparent" value="{{ option.ShopperEnteredValue }}" data-format="mm/dd/yy" data-max="{{option.MaxValue}}" data-min="{{ option.MinValue }}">
+            {% if option.attributeDetail.inputType == "Date" %}
+                <input type="text" data-mz-is-datepicker data-mz-product-option="{{ option.attributeFQN }}" class="mz-productoptions-option" style="color:transparent" value="{{ option.shopperEnteredValue }}" data-format="mm/dd/yy" data-max="{{option.maxValue}}" data-min="{{ option.minValue }}">
             {% endif %}
         </div>
     </div>

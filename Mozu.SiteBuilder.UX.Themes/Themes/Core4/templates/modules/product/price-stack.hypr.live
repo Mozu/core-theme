@@ -1,12 +1,12 @@
-﻿<div itemprop="priceSpecification" itemscope itemtype="http://schema.org/PriceSpecification" class="mz-pricestack{% if Model.PriceRange %} mz-pricestack-range{% endif %}">
-    {% if Model.PriceRange %}
+﻿<div itemprop="priceSpecification" itemscope itemtype="http://schema.org/PriceSpecification" class="mz-pricestack{% if model.priceRange %} mz-pricestack-range{% endif %}">
+    {% if model.priceRange %}
     <span itemprop="minPrice" class="mz-pricestack-price-lower">
-        {% include "modules/common/price" with Model=Model.PriceRange.Lower %}
+        {% include "modules/common/price" with model=model.priceRange.lower %}
     </span>
     <span itemprop="maxPrice" class="mz-pricestack-price-upper">
-        {% include "modules/common/price" with Model=Model.PriceRange.Upper %}
+        {% include "modules/common/price" with model=model.priceRange.upper %}
     </span>
     {% else %}
-    {% include "modules/common/price" with Model=Model.Price %}
+    {% include "modules/common/price" with model=model.price %}
     {% endif %}
 </div>

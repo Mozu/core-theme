@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
 
             var siteBuilderContext = viewContext.LifetimeScope.Resolve<ISiteBuilderContext>();
-            var requestContext = new Dictionary<string, object>(viewContext.ViewData, StringComparer.OrdinalIgnoreCase );
+            var requestContext = new Dictionary<string, object>(viewContext.ViewData);
 
 
             var user = pageContext.User;
@@ -61,7 +61,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             requestContext["templateVariables"] = viewContext.HttpContext.Items["templateVariables"];
             requestContext["_vc"] = viewContext;
 
-            requestContext["Model"] = requestContext["model"] = viewContext.ViewData.Model;
+            requestContext["model"] = viewContext.ViewData.Model;
             if (viewContext.ParentActionViewContext != null)
             {
                 requestContext["PageModel"] = requestContext["pageModel"] = viewContext.ParentActionViewContext.ViewData.Model;

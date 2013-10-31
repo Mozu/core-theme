@@ -9,10 +9,10 @@
             // preload images
             var imageCache = this.imageCache = {};
             this.$mainImage = this.$('[data-mz-productimage-main]');
-            _.each(this.model.get('Content').get('ProductImages'), function (img) {
+            _.each(this.model.get('content').get('productImages'), function (img) {
                 var i = new Image();
-                i.src = img.ImageUrl + "?size=220";
-                imageCache[img.Sequence.toString()] = i;
+                i.src = img.imageUrl + "?size=220";
+                imageCache[img.sequence.toString()] = i;
             });
         },
         switchImage: function (e) {

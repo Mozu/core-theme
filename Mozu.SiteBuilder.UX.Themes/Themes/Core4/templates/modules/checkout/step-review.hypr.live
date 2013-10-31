@@ -2,34 +2,34 @@
         {{ themeSettings.labelReviewOrder }}
     </h3>
     <div class="mz-formstep-body">
-        {% if Model.IsReady %}
+        {% if model.isReady %}
             <p class="mz-formstep-desc">{{ themeSettings.labelReviewOrderText }}</p>
 
             {% if themeSettings.requireCheckoutAgreeToTerms %}
             <div class="mz-formfieldgroup mz-formfieldgroup-norows">
             <label class='inline'>
-                <input type="checkbox" name="terms-and-conditions" id="mz-terms-and-conditions" data-mz-value="AgreeToTerms" {% if Model.AgreeToTerms %} checked="checked"{% endif %}> {{ themeSettings.labelAgreeToTerms }}
+                <input type="checkbox" name="terms-and-conditions" id="mz-terms-and-conditions" data-mz-value="agreeToTerms" {% if model.agreeToTerms %} checked="checked"{% endif %}> {{ themeSettings.labelAgreeToTerms }}
             </label>
-            <span class="mz-validationmessage" data-mz-validationmessage-for="AgreeToTerms"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="agreeToTerms"></span>
             </div>
             {% endif %}
 
-            {% if not User or User.isAnonymous %}
+            {% if not user or user.isAnonymous %}
             <div class="mz-formfieldgroup mz-formfieldgroup-norows">
                 <label class='inline'>
-                    <input type="checkbox" name="create-new-account" data-mz-value="CreateAccount" {% if Model.CreateAccount %} checked="checked"{% endif %} > {{ themeSettings.labelCreateAccount }}
+                    <input type="checkbox" name="create-new-account" data-mz-value="createAccount" {% if model.createAccount %} checked="checked"{% endif %} > {{ themeSettings.labelCreateAccount }}
                 </label>
             </div>
 
-                {% if Model.CreateAccount %}
+                {% if model.createAccount %}
                 <div class="mz-formfieldgroup mz-create-account-fields">
                     <div class="mz-formfieldgroup-row">
                       <div class="mz-formfieldgroup-cell">
                     <label for="new-account-email"> {{ themeSettings.labelEmail }}<span class="is-required"> *</span> </label>
                       </div>
                       <div class="mz-formfieldgroup-cell">
-                        <input type="text" name="new-account-email" data-mz-value="User.EmailAddress" value="{{ Model.User.EmailAddress }}">
-                        <span class="mz-validationmessage" data-mz-validationmessage-for="User.EmailAddress"></span>
+                        <input type="text" name="new-account-email" data-mz-value="User.EmailAddress" value="{{ model.user.emailAddress }}">
+                        <span class="mz-validationmessage" data-mz-validationmessage-for="user.emailAddress"></span>
                        </div>
                     </div>
                   <div class="mz-formfieldgroup-row">
@@ -37,8 +37,8 @@
                     <label for="new-account-password"> {{ themeSettings.labelPassword }}<span class="is-required"> *</span> </label>
                       </div>
                       <div class="mz-formfieldgroup-cell">
-                        <input type="password" name="new-account-password" data-mz-value="User.Password" value="{{ Model.User.Password }}">
-                        <span class="mz-validationmessage" data-mz-validationmessage-for="User.Password"></span>
+                        <input type="password" name="new-account-password" data-mz-value="user.password" value="{{ model.user.password }}">
+                        <span class="mz-validationmessage" data-mz-validationmessage-for="user.password"></span>
                        </div>
                     </div>
                   <div class="mz-formfieldgroup-row">
@@ -46,8 +46,8 @@
                     <label for="new-account-password"> {{ themeSettings.labelConfirmPassword }}<span class="is-required"> *</span> </label>
                       </div>
                       <div class="mz-formfieldgroup-cell">
-                        <input type="password" name="new-account-confirm" data-mz-value="User.ConfirmPassword" value="{{ Model.ConfirmPassword }}">
-                        <span class="mz-validationmessage" data-mz-validationmessage-for="User.ConfirmPassword"></span>
+                        <input type="password" name="new-account-confirm" data-mz-value="user.confirmPassword" value="{{ model.confirmPassword }}">
+                        <span class="mz-validationmessage" data-mz-validationmessage-for="user.confirmPassword"></span>
                        </div>
                     </div>
                 </div>

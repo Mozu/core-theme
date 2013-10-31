@@ -9,14 +9,14 @@
         <h1 class="mz-pagetitle">{{ themeSettings.labelLogIn }}</h1>
         <form method="post" class="mz-loginform mz-loginform-page">
            {% include "modules/common/message-bar" %}
-           <input type="hidden" name="returnUrl" value="{{ Model.ReturnUrl }}" />
+           <input type="hidden" name="returnUrl" value="{{ model.ReturnUrl }}" />
            <div class="mz-formfieldgroup">
                 <div class="mz-formfieldgroup-row">
                     <div class="mz-formfieldgroup-cell">
                         <label for="email">{{ themeSettings.labelEmail }}</label>
                     </div>
                     <div class="mz-formfieldgroup-cell">
-                        <input name="email" value="{{Model.email|default:user.email}}" type="email"/>
+                        <input name="email" value="{{model.email|default:user.email}}" type="email"/>
                     </div>
                 </div>
                 <div class="mz-formfieldgroup-row">

@@ -96,8 +96,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (model.Status == "Submitted") return Redirect("/checkout/" + model.Id + "/confirmation");
 
 
-
-            var jOrder = Newtonsoft.Json.Linq.JObject.FromObject(model);
+            var jOrder = Newtonsoft.Json.Linq.JObject.FromObject(model, new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() });
 
            // dynamic dOrder = jOrder;
 
@@ -105,8 +104,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 var methods = (await _orderWebApiClient.GetAvailableShipmentMethods(id)).ReadAsSync();
                 var asm = JArray.FromObject(methods);
-                JObject si = (JObject)jOrder["FulfillmentInfo"];
-                si.Add("AvailableShippingMethods", asm);
+                JObject si = (JObject)jOrder["fulfillmentInfo"];
+                si.Add("availableShippingMethods", asm);
                 //jOrder.Add("AvailableShippingMethods", asm);
                 //ViewData["availableShippingMethods"] = _orderWebApiClient.GetAvailableShipmentMethods(id).Result.ReadAsSync();
             }
@@ -117,7 +116,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 {
                     var ac = new JArray(countries.Select(x => new JObject {new JProperty("code", x.Key), new JProperty("name", x.Value)}).ToArray());
 
-                    jOrder.Add("AvailableCountries", ac);
+                    jOrder.Add("availableCountries", ac);
                 }
                 //else
                 //{

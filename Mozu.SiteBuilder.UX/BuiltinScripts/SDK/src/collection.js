@@ -10,12 +10,12 @@ var ApiCollection = (function () {
         ApiObject.apply(this, arguments);
         this.itemType = itemType;
         if (!data) data = {};
-        if (!data.Items) this.prop("Items", data.Items = []);
-        if (data.Items.length > 0) this.add(data.Items, true);
+        if (!data.items) this.prop("items", data.items = []);
+        if (data.items.length > 0) this.add(data.items, true);
         this.on('sync', function (raw) {
-            if (raw && raw.Items) {
+            if (raw && raw.items) {
                 self.removeAll();
-                self.add(raw.Items);
+                self.add(raw.items);
             }
         });
     }
@@ -27,8 +27,8 @@ var ApiCollection = (function () {
             if (utils.getType(newItems) !== "Array") newItems = [newItems];
             Array.prototype.push.apply(this, utils.map(newItems, convertItem, this));
             if (!noUpdate) {
-                var rawItems = this.prop("Items");
-                this.prop("Items", rawItems.concat(newItems));
+                var rawItems = this.prop("items");
+                this.prop("items", rawItems.concat(newItems));
             }
         },
         remove: function(indexOrItem) {
@@ -37,18 +37,18 @@ var ApiCollection = (function () {
         replace: function(newItems, noUpdate) {
             Array.prototype.splice.call(this, 0, this.length, utils.map(newItems, convertItem, this));
             if (!noUpdate) {
-                this.prop("Items", rawItems);
+                this.prop("items", rawItems);
             }
         },
         removeAll: function(noUpdate) {
             Array.prototype.splice.call(this, 0, this.length);
             if (!noUpdate) {
-                this.prop("Items", []);
+                this.prop("items", []);
             }
         },
         getIndex: function (newIndex) {
             var index = this.currentIndex;
-            if (!index && index !== 0) index = this.prop("StartIndex");
+            if (!index && index !== 0) index = this.prop("startIndex");
             if (!index && index !== 0) index = 0;
             return index;
         },
@@ -67,21 +67,21 @@ var ApiCollection = (function () {
         },
         prevPage: function (req) {
             var currentIndex = this.getIndex(),
-                pageSize = this.prop("PageSize"),
+                pageSize = this.prop("pageSize"),
                 newIndex = Math.max(currentIndex - pageSize, 0);
             if (currentIndex === 0) throw "This " + this.type + " collection is already at record 0 and has no previous page.";
             return this.setIndex(newIndex, req);
         },
         nextPage: function (req) {
             var currentIndex = this.getIndex(),
-                pageSize = this.prop("PageSize"),
+                pageSize = this.prop("pageSize"),
                 newIndex = currentIndex + pageSize;
-            if (!(newIndex < this.prop("TotalCount"))) throw "This " + this.type + " collection is already at its last page and has no next page.";
+            if (!(newIndex < this.prop("totalCount"))) throw "This " + this.type + " collection is already at its last page and has no next page.";
             return this.setIndex(newIndex, req);
         },
         lastPage: function (req) {
-            var totalCount = this.prop("TotalCount"),
-                pageSize = this.prop("PageSize"),
+            var totalCount = this.prop("totalCount"),
+                pageSize = this.prop("pageSize"),
                 newIndex = totalCount - pageSize;
             if (newIndex <= 0) throw "This " + this.type + " collection has only one page.";
             return this.setIndex(newIndex, req);

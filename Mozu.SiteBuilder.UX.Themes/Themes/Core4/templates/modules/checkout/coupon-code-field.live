@@ -2,6 +2,6 @@
             <label for="coupon-code">{{ themeSettings.labelCouponCode }}: </label>
         </div>
         <div class="mz-formfieldgroup-cell">
-            <input type="text" id="coupon-code" name="coupon-code" value="{{ Model.CouponCode }}" data-mz-value="CouponCode">
-            <button class="mz-button" data-mz-action="addCoupon" {% if not Model.CouponCode %} disabled="disabled" {% endif %}>{{ themeSettings.labelApply }}</button>
+            <input type="text" id="coupon-code" name="coupon-code" value="{{ model.couponCode }}" data-mz-value="couponCode">
+            <button class="mz-button" data-mz-action="addCoupon" {% if not model.couponCode %} disabled="disabled" {% endif %}>{{ themeSettings.labelApply }}</button>
         </div>

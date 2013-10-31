@@ -2,20 +2,20 @@
     <div class="mz-l-sidebaritem">
         <button class="mz-button mz-facetingform-clearall" data-mz-action="clearFacets">{{ themeSettings.labelClearAllFilters }}</button>
     </div>
-    {% for facet in Model.Facets %}
-    {% if facet.Values %}
+    {% for facet in model.facets %}
+    {% if facet.values %}
     <div class="mz-l-sidebaritem">
-        <h4>{{ facet.Label }}</h4>
+        <h4>{{ facet.label }}</h4>
         <ul class="mz-facetingform-facet">
             <li>
               {% if facet.isFaceted %}
-              <a href="#" class="mz-facetingform-clear" data-mz-action="clearFacet" data-mz-facet="{{ facet.Field }}">{{ themeSettings.labelClear }}</a>
+              <a href="#" class="mz-facetingform-clear" data-mz-action="clearFacet" data-mz-facet="{{ facet.field }}">{{ themeSettings.labelClear }}</a>
               {% endif %}
             </li>
-            {% for value in facet.Values %}
+            {% for fval in facet.values %}
             <li>
-                <input type="checkbox" id="{{facet.Field|slugify }}_{{ value.Value|slugify }}" class="mz-facetingform-value" {% if value.IsApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.Field }}" data-mz-facet-value="{{ value.Value }}">
-                <label class="mz-facetingform-valuelabel" for="{{facet.Field|slugify }}_{{ value.Value|slugify }}">{{ value.Label }}</label>
+                <input type="checkbox" id="{{facet.field|slugify }}_{{ fval.value|slugify }}" class="mz-facetingform-value" {% if value.isApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}">
+                <label class="mz-facetingform-valuelabel" for="{{facet.field|slugify }}_{{ fval.value|slugify }}">{{ fval.label }}</label>
             </li>
             {% endfor %}
         </ul>

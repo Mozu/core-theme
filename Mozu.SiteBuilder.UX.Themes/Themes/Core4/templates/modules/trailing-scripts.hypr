@@ -11,7 +11,7 @@
     });
 </script>
 <script type="text/javascript">
-    require(['modules/common'], function() { require([{{Model}}]) } );
+    require(['modules/common'], function() { require([{{model}}]) } );
 </script>
 {% else %}
 <script>
@@ -33,5 +33,5 @@
 
 
 {% if siteContext.generalSettings.isGoogleAnalyticsEnabled %}
-{% include "Modules/google-analytics-tracking-code" %}
+{% include "modules/analytics/google-analytics-tracking-code" %}
 {% endif %}

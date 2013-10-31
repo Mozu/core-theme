@@ -54,26 +54,26 @@
     var ShippingAddressView = CheckoutStepView.extend({
         templateName: 'modules/checkout/step-shipping-address',
         autoUpdate: [
-            'FirstName',
-            'LastNameOrSurname',
-            'Address.Address1',
-            'Address.Address2',
-            'Address.Address3',
-            'Address.CityOrTown',
-            'Address.CountryCode',
-            'Address.StateOrProvince',
-            'Address.PostalOrZipCode',
-            'PhoneNumbers.Home'
+            'firstName',
+            'lastNameOrSurname',
+            'address.address1',
+            'address.address2',
+            'address.address3',
+            'address.cityOrTown',
+            'address.countryCode',
+            'address.stateOrProvince',
+            'address.postalOrZipCode',
+            'phoneNumbers.home'
         ],
         renderOnChange: [
-            'Address.CountryCode'
+            'address.countryCode'
         ]
     });
 
     var ShippingInfoView = CheckoutStepView.extend({
         templateName: 'modules/checkout/step-shipping-method',
         renderOnChange: [
-            'AvailableShippingMethods'
+            'availableShippingMethods'
         ],
         additionalEvents: {
             "change [data-mz-shipping-method]": "updateShippingMethod"
@@ -86,34 +86,34 @@
     var BillingInfoView = CheckoutStepView.extend({
         templateName: 'modules/checkout/step-payment-info',
         autoUpdate: [
-            'PaymentType',
-            'Card.PaymentOrCardType',
-            'Card.CardNumberPartOrMask',
-            'Card.NameOnCard',
-            'Card.ExpireMonth',
-            'Card.ExpireYear',
-            'Card.CVV',
-            'Card.IsCardInfoSaved',
-            'Check.NameOnCheck',
-            'Check.RoutingNumber',
-            'Check.CheckNumber',
-            'IsSameBillingShippingAddress',
-            'BillingContact.FirstName',
-            'BillingContact.LastNameOrSurname',
-            'BillingContact.Address.Address1',
-            'BillingContact.Address.Address2',
-            'BillingContact.Address.Address3',
-            'BillingContact.Address.CityOrTown',
-            'BillingContact.Address.CountryCode',
-            'BillingContact.Address.StateOrProvince',
-            'BillingContact.Address.PostalOrZipCode',
-            'BillingContact.PhoneNumbers.Home',
-            'BillingContact.Email'
+            'paymentType',
+            'card.paymentOrCardType',
+            'card.cardNumberPartOrMask',
+            'card.nameOnCard',
+            'card.expireMonth',
+            'card.expireYear',
+            'card.cvv',
+            'card.isCardInfoSaved',
+            'check.nameOnCheck',
+            'check.routingNumber',
+            'check.checkNumber',
+            'isSameBillingShippingAddress',
+            'billingContact.firstName',
+            'billingContact.lastNameOrSurname',
+            'billingContact.address.address1',
+            'billingContact.address.address2',
+            'billingContact.address.address3',
+            'billingContact.address.cityOrTown',
+            'billingContact.address.countryCode',
+            'billingContact.address.stateOrProvince',
+            'billingContact.address.postalOrZipCode',
+            'billingContact.phoneNumbers.home',
+            'billingContact.email'
         ],
         renderOnChange: [
-            'BillingContact.Address.CountryCode',
-            'PaymentType',
-            'IsSameBillingShippingAddress',
+            'billingContact.address.countryCode',
+            'paymentType',
+            'isSameBillingShippingAddress',
         ]
     });
 
@@ -124,10 +124,10 @@
             // doesn't go loading whenever other parts of the order change
         },
         autoUpdate: [
-            'CouponCode'
+            'couponCode'
         ],
         renderOnChange: [
-            'CouponCode'
+            'couponCode'
         ],
         addCoupon: function (e) {
             // add the default behavior for loadingchanges
@@ -145,25 +145,25 @@
 
     var CommentsView = Backbone.MozuView.extend({
         templateName: 'modules/checkout/comments-field',
-        autoUpdate: ['Comments']
+        autoUpdate: ['comments']
     });
 
     var ReviewOrderView = Backbone.MozuView.extend({
         templateName: 'modules/checkout/step-review',
         autoUpdate: [
-            'CreateAccount',
-            'AgreeToTerms',
-            'User.EmailAddress',
-            'User.Password',
-            'User.ConfirmPassword'
+            'createAccount',
+            'agreeToTerms',
+            'user.emailAddress',
+            'user.password',
+            'user.confirmPassword'
         ],
         renderOnChange: [
-            'CreateAccount',
-            'IsReady'
+            'createAccount',
+            'isReady'
         ],
         initialize: function() {
             this.model.on('passwordinvalid', function(e, message) {
-                this.$('[data-mz-validationmessage-for="Password"]').text(message);
+                this.$('[data-mz-validationmessage-for="password"]').text(message);
             });
         },
         submit: function () {
@@ -181,15 +181,15 @@
                 steps: {
                     shippingAddress: new ShippingAddressView({
                         el: $('#step-shipping-address'),
-                        model: checkoutModel.get("FulfillmentInfo").get("FulfillmentContact")
+                        model: checkoutModel.get("fulfillmentInfo").get("fulfillmentContact")
                     }),
                     shippingInfo: new ShippingInfoView({
                         el: $('#step-shipping-method'),
-                        model: checkoutModel.get('FulfillmentInfo')
+                        model: checkoutModel.get('fulfillmentInfo')
                     }),
                     paymentInfo: new BillingInfoView({
                         el: $('#step-payment-info'),
-                        model: checkoutModel.get('BillingInfo')
+                        model: checkoutModel.get('billingInfo')
                     })
                 },
                 orderSummary: new OrderSummaryView({
@@ -218,11 +218,11 @@
         window.checkoutViews = checkoutViews;
 
         checkoutModel.on('complete', function () {
-            window.location = "/checkout/" + checkoutModel.apiModel.data.Id + "/confirmation";
+            window.location = "/checkout/" + checkoutModel.get('id') + "/confirmation";
         });
 
         var $reviewPanel = $('#step-review');
-        checkoutModel.on('change:IsReady',function (isReady) {
+        checkoutModel.on('change:isReady',function (isReady) {
             if (isReady) {
                 setTimeout(function () { window.scrollTo(0, $reviewPanel.offset().top); }, 750);
             }

@@ -133,7 +133,7 @@ The include_products tag is a special kind of include tag, that includes a named
             var pcDC = res.ReadAsSync();
             var pc = Mapper.Map<ProductSearchResult>(pcDC);
             templateName = template;
-            context=context.remove("Model").add(new Tuple<string, object>("Model", pc));
+            context=context.remove("Model").remove("model").add(new Tuple<string, object>("Model", pc)).add(new Tuple<string, object>("model", pc));
            
 
 
