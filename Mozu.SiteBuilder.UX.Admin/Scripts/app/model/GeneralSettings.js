@@ -3,6 +3,11 @@
  */
 Ext.define('Taco.model.GeneralSettings', {
     extend: 'Taco.core.data.Model',
+    requiredStores: [
+        'Taco.store.TimeZones',
+        'Taco.store.ThemeListing',
+        'Taco.store.Channels'
+    ],
     fields: [
         { "name": "allowAllIps", "type": "boolean", "useNull": true },
         { "name": "daylightSaving", "type": "boolean", "useNull": true },
@@ -16,6 +21,7 @@ Ext.define('Taco.model.GeneralSettings', {
         { "name": "replyToEmail", "type": "string", "useNull": true },
         { "name": "senderEmail", "type": "string", "useNull": true },
         { "name": "senderEmailName", "type": "string", "useNull": true },
+        // customer experience template
         { "name": "theme", "type": "string", "useNull": true },
         { "name": "timeFormat", "type": "string", "useNull": true },
         { "name": "timeZone", "type": "string", "useNull": true },
@@ -38,8 +44,6 @@ Ext.define('Taco.model.GeneralSettings', {
             }
         },
         { "name": "isMozuWebSite", "type": "boolean", defaultValue:true},
-        // customer experience template
-        { "name": "templateSiteId", "type": "string"},
 
         // not in json
         { "name": "ipRanges", "type": "auto", "useNull": true },

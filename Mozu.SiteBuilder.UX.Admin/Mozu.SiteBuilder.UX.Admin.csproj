@@ -932,6 +932,7 @@
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\grid\plugin\RowEditing.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\panel\Table.scss" />
     <Content Include="Scripts\app\mocks\wishlist.json" />
+    <Content Include="Scripts\app\mocks\applications.json" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
