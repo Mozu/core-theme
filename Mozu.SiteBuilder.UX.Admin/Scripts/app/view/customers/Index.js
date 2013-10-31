@@ -40,6 +40,10 @@ Ext.define('Taco.view.customers.Index', {
             text: 'Total Orders',
             width: 100
         }, {
+            dataIndex: 'visitCount',
+            text: 'Total Visits',
+            width: 100
+        }, {
             dataIndex: 'totalSpent',
             text: 'Spent',
             width: 100
@@ -106,6 +110,10 @@ Ext.define('Taco.view.customers.Index', {
             }, {
                 dataIndex: 'totalSpent',
                 text: 'Spent',
+                width: 100
+            }, {
+                dataIndex: 'visitCount',
+                text: 'Total Visits',
                 width: 100
             }, {
                 dataIndex: 'groups',

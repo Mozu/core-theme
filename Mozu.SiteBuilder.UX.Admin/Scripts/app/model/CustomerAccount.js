@@ -47,6 +47,10 @@ Ext.define('Taco.model.CustomerAccount', {
             type: 'float',
             defaultValue: 0
         }, {
+            name: 'visitCount',
+            type: 'int',
+            defaultValue: 0
+        }, {
             name: 'orderCount',
             type: 'int',
             defaultValue: 0
@@ -135,6 +139,10 @@ Ext.define('Taco.model.CustomerAccount', {
                             defaultValue: 0
                         }, {
                             name: 'orderCount',
+                            type: 'int',
+                            defaultValue: 0
+                        }, {
+                            name: 'visitCount',
                             type: 'int',
                             defaultValue: 0
                         }, {
