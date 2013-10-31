@@ -552,6 +552,7 @@
     <Compile Include="Helpers\AttributeHelpers\AttributeHelper.cs" />
     <Compile Include="Helpers\AttributeHelpers\IAttributeHelper.cs" />
     <Compile Include="Helpers\AttributeHelpers\AttributeFilterExtensions.cs" />
+    <Compile Include="Helpers\ChannelHelpers\ChannelFilterExtensions.cs" />
     <Compile Include="Helpers\CollectionTaskUnMapper.cs" />
     <Compile Include="Helpers\ContextSwitcher.cs" />
     <Compile Include="Helpers\CustomerHelpers\CustomerFilterExtensions.cs" />
