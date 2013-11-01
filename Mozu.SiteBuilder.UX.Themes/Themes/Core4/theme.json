@@ -19,8 +19,8 @@
     { "id": "maxProductSummaryWords",       "defaultValue": 40 },
 
     /* Common apperance settings used in the stylesheet */
-    { "id": "googleWebFonts",               "defaultValue": "Source Sans Pro:regular,italic,bold,bolditalic" },
-    { "id": "fontFamily",                   "defaultValue": "\"Source Sans Pro\", sans-serif" },
+    { "id": "font",                         "defaultValue": "Source Sans Pro" },
+    { "id": "fallbackFontFamily",          "defaultValue": "sans-serif" },
     { "id": "fontSize",                     "defaultValue": "14px" },
     { "id": "gutterWidth",                  "defaultValue": "25px" },
     { "id": "textColor",                    "defaultValue": "#444444" },
