@@ -58,18 +58,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var jobj = new Newtonsoft.Json.Linq.JObject();
             foreach (var themeRuntimeSetting in values)
             {
-        
+
                 if (themeRuntimeSetting.Value == null || themeRuntimeSetting.Value is string || themeRuntimeSetting.Value.GetType().IsByRef)
                 {
                     jobj.Add(themeRuntimeSetting.Setting.Id, new JValue(themeRuntimeSetting.Value));
-                   
-                }else if (themeRuntimeSetting.Value.GetType().IsArray)
+                }
+                else if (themeRuntimeSetting.Value is JContainer)
+                {
+                    jobj.Add(themeRuntimeSetting.Setting.Id, (JContainer)themeRuntimeSetting.Value);
+                }
+                else if (themeRuntimeSetting.Value.GetType().IsArray)
                 {
                     jobj.Add(themeRuntimeSetting.Setting.Id, new JArray(themeRuntimeSetting.Value));
                 }
                 else
                 {
-                    jobj.Add(themeRuntimeSetting.Setting.Id, new JObject( themeRuntimeSetting.Value));
+                    jobj.Add(themeRuntimeSetting.Setting.Id, new JObject(themeRuntimeSetting.Value));
                 }
                
             }

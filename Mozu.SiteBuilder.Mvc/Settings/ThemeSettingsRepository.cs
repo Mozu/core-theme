@@ -63,7 +63,6 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 
         private Task<ServiceClientResponse<Document>> UpdateSettings(List<ThemeRuntimeSetting> values, string themeId)
         {
-           
             return _cmsService.GetByPath2("settings", this.GetFileName(themeId))
                 .ContinueWith<Task<ServiceClientResponse<Document>>>(t =>
                 {
@@ -124,38 +123,31 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 
             if (_getInstanceValues == null)
             {
+                _getInstanceValues = _cmsService.GetByPath2("settings", this.GetFileName(themeId)).ContinueWith<List<ThemeRuntimeSetting>>(
+                    res =>
+                    {
+                        List<ThemeRuntimeSetting> values = new List<ThemeRuntimeSetting>();
+                        if (res.Result.ResponseMessage.IsSuccessStatusCode)
+                        {
+                            var doc = res.Result.ReadAsSync();
 
+                            _ts = doc.UpdateDate.GetValueOrDefault(DateTime.Today);
+                            var data = doc.Get<string>("data");
+                            if (data != null)
+                            {
+                                values = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ThemeRuntimeSetting>>(doc.Get<string>("data"));
+                            }
 
+                            _cache[key] = new Tuple<DateTime, List<ThemeRuntimeSetting>>(_ts.Value, values);
+                        }
+                        else
+                        {
+                            _ts = DateTime.Today;
+                            _cache[key] = new Tuple<DateTime, List<ThemeRuntimeSetting>>(_ts.Value, values);
 
-                _getInstanceValues = _cmsService.GetByPath2("settings", this.GetFileName(themeId))
-                                                .ContinueWith<List<ThemeRuntimeSetting>>(res =>
-                                                    {
-                                                        List<ThemeRuntimeSetting> values = new List<ThemeRuntimeSetting>();
-                                                        if (res.Result.ResponseMessage.IsSuccessStatusCode)
-                                                        {
-                                                            var doc = res.Result.ReadAsSync();
-
-                                                            _ts = doc.UpdateDate.GetValueOrDefault(DateTime.Today);
-                                                            var data = doc.Get<string>("data");
-                                                            if (data != null)
-                                                            {
-                                                                values = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ThemeRuntimeSetting>>(doc.Get<string>("data"));
-                                                            }
-                                                            else
-                                                            {
-                                                                values = new List<ThemeRuntimeSetting>();
-                                                            }
-
-                                                            _cache[key] = new Tuple<DateTime, List<ThemeRuntimeSetting>>(_ts.Value , values);
-                                                        }
-                                                        else
-                                                        {
-                                                            _ts = DateTime.Today;
-                                                            _cache[key] = new Tuple<DateTime, List<ThemeRuntimeSetting>>(_ts.Value, values);
-                                                            
-                                                        }
-                                                        return values;
-                                                    });
+                        }
+                        return values;
+                    });
             }
             return _getInstanceValues;
 
@@ -212,23 +204,6 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                 _getTimeStamp = GetInstanceValues(themeId).ContinueWith(x => _ts.Value );
             }
             return _getTimeStamp;
-            //if (!_ts.HasValue )
-            //{
-            //    var res = _cmsService.GetByPath2("settings", GetFileName(themeId)).Result;
-            //    if ( res.ResponseMessage.IsSuccessStatusCode)
-            //    {
-            //        _ts= res.ReadAsSync().UpdateDate.GetValueOrDefault(DateTime.Today);
-
-
-            //    }
-            //    if ( !_ts.HasValue)
-            //    {
-            //        _ts = DateTime.Today;
-            //    }
-                
-
-            //}
-            //return _ts.Value;
         }
 
 
