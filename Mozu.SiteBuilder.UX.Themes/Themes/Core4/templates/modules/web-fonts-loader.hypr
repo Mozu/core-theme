@@ -1,7 +1,7 @@
 ﻿<script>
     WebFontConfig = {
         google: {
-            families: ['{{ themeSettings.googleWebFonts }}']
+            families: ['{{ themeSettings.font }}:regular,italic,bold,bolditalic']
         }
     };
     (function() {

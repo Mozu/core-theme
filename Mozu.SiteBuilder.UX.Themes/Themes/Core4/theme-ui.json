@@ -1,41 +1,139 @@
 {
-    "items": [{
-        "xtype": "fieldset",
-        "title": "Some Stuff",
-        "defaultType": "textfield",
-        "collapsed": false,
-        "layout": "anchor",
-        "defaults": {
-            "anchor": "100%"
+  "items": [
+    {
+      "xtype": "panel",
+      "title": "Layout",
+      "collapsed": false,
+      "layout": "anchor",
+      "defaults": {
+        "anchor": "100%"
+      },
+      "items": [
+        {
+          "xtype": "combo",
+          "name": "gutterWidth",
+          "fieldLabel": "Base Margin Width",
+          "allowBlank": false,
+          "store": [
+            "15px",
+            "20px",
+            "25px",
+            "30px",
+            "35px"
+          ],
+          "queryMode": "local"
+        }
+      ]
+    },
+    {
+      "xtype": "panel",
+      "title": "Text",
+      "collapsed": false,
+      "layout": "anchor",
+      "defaults": {
+        "anchor": "100%"
+      },
+      "items": [
+        {
+          "xtype": "combo",
+          "name": "font",
+          "fieldLabel": "Font",
+          "allowBlank": false,
+          "store": [
+            "Source Sans Pro",
+            "Open Sans",
+            "Raleway",
+            "Lora",
+            "Rokkitt"
+          ],
+          "queryMode": "local"
         },
-        "items": [{
-            "fieldLabel": "Body Background Color",
-            "xtype": "combo",
-            "name": "bodyBackgroundColor",
-            "allowBlank": false,
-            "store": ["#FFFFFF", "#556B2F", "#5F9EA0", "#6495ED", "#66CDAA", "#696969", "#6A5ACD", "#6B8E23", "#708090", "#778899", "#7B68EE", "#7CFC00", "#7FFF00", "#7FFFD4", "#800000", "#800080", "#808000", "#808080"],
-            "queryMode": "local"
-        }, {
-            "fieldLabel": "Default Items Per Page",
-            "xtype": "combo",
-            "name": "itemsPerPage",
-            "allowBlank": false,
-            "store": [15, 25, 50],
-            "queryMode": "local"
-        }]
-    }, {
-        "xtype": "fieldset",
-        "title": "More Stuff",
-        "collapsible": false,
-        "defaultType": "textfield",
-        "layout": "anchor",
-        "defaults": {
-            "anchor": "100%"
+        {
+          "xtype": "combo",
+          "name": "fallbackFontFamily",
+          "fieldLabel": "Fallback Font Family",
+          "allowBlank": false,
+          "store": [
+            "sans-serif",
+            "serif"
+          ],
+          "queryMode": "local"
         },
-        "items": [{
-            "fieldLabel": "Slash Thru Price",
-            "name": "slashThruPrice",
-            "xtype": "checkbox"
-        }]
-    }]
+        {
+          "xtype": "colorfield",
+          "name": "textColor",
+          "fieldLabel": "Text Color"
+        }
+      ]
+    },
+    {
+      "xtype": "panel",
+      "title": "Paging",
+      "defaultType": "textfield",
+      "collapsed": false,
+      "layout": "anchor",
+      "defaults": {
+        "anchor": "100%"
+      },
+      "items": [
+        {
+          "fieldLabel": "Default Items Per Page",
+          "xtype": "combo",
+          "name": "defaultPageSize",
+          "allowBlank": false,
+          "store": [
+            15,
+            25,
+            50
+          ],
+          "queryMode": "local"
+        }
+      ]
+    },
+    {
+      "xtype": "panel",
+      "title": "Banner",
+      "collapsible": false,
+      "layout": "anchor",
+      "defaults": {
+        "anchor": "100%"
+      },
+      "items": [
+        {
+          "xtype": "checkbox",
+          "name": "bannerImageEnabled",
+          "fieldLabel": "Enable Banner Image"
+        },
+        {
+          "xtype": "textfield",
+          "name": "bannerImage",
+          "fieldLabel": "Banner Image"
+        },
+        {
+          "xtype": "combo",
+          "name": "bannerImageRepeat",
+          "fieldLabel": "Repeat Banner Image",
+          "valueField": "value",
+          "store": [
+            {
+              "text": "No",
+              "value": "no-repeat"
+            },
+            {
+              "text": "Horizontally",
+              "value": "repeat-x"
+            },
+            {
+              "text": "Vertically",
+              "value": "repeat-y"
+            },
+            {
+              "text": "Tile",
+              "value": "repeat"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
