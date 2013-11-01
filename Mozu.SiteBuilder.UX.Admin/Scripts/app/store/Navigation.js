@@ -113,7 +113,8 @@ Ext.define('Taco.store.Navigation', {
             "icon": "nav-marketing",
             "items": [{
                 "id": "discounts",
-                "behaviorIds":[24],
+                "behaviorIds": [24],
+                
                 "label": "Discounts",
                 "address": "discounts"
             }, {
@@ -128,15 +129,16 @@ Ext.define('Taco.store.Navigation', {
         }, {
             "id": "sitebuilder",
             "label": "Site Builder",
-            "address": "sites/pages",
+            "address": "siteSelection",
+            //"address": "sites/pages",
             "icon": "nav-sites",
-            "items": [{
+            "items": [/*{
                 "id": "website",
                 "label": "Website",
                 "address": "sites/pages"
-            }, {
+            }, */{
                 "id": "siteselection",
-                "label": "Selection",
+                "label": "Website",
                 "address": "siteSelection"
             }, {
                 "id": "themes",
