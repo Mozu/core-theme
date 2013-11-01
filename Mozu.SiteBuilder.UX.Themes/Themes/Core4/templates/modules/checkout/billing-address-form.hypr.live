@@ -1,5 +1,5 @@
 ﻿{% extends "modules/common/address-form" %}
-{% block address-form %}
-{% setTemplateVariables validationcontext="billingContact." %}
+{% block local-variables %}
+{% set modelcontext="billingContact." %}
 {% parent %}
-{% endblock address-form %}
+{% endblock local-variables %}

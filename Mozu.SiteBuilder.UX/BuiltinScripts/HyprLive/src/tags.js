@@ -16,3 +16,11 @@ var nullTags = ['require_script', 'json_attribute', 'data_attributes', 'dump'];
 for (var t = 0; t < nullTags.length; t++) {
     HyprLive.engine.setTag(nullTags[t], nullParse, nullCompile, false, true);
 }
+
+HyprLive.engine.setTag("comment", function (str, line, parser, types) {
+    parser.on('*', function (token) {
+        throw new Error('Unexpected token "' + token.match + '" on line ' + line + '.');
+    });
+
+    return true;
+}, function () { return '' }, true);

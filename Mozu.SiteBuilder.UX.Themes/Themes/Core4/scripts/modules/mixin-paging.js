@@ -1,4 +1,8 @@
-﻿define(['jquery'], function($) {
+﻿/**
+ * A "mixin" object that can add sorting and paging functionality (page size,
+ * start index, total count, nextPage, etc) to Backbone.MozuModels.
+ */
+define(['jquery'], function($) {
     return {
 
         _isPaged: true,

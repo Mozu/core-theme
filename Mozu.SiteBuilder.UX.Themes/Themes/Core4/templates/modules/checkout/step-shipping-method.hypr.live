@@ -6,7 +6,7 @@
         <div class="mz-formstep-summary">
             <strong>{{ model.shippingMethodName }}</strong> ({{ model.price|currency }})
         </div>
-        <div class="mz-formstep-fields mz-formfieldgroup">
+        <div class="mz-formstep-fields mz-l-formfieldgroup">
             {% if model.availableShippingMethods %}
                 {% for method in model.availableShippingMethods %}
                     <div>

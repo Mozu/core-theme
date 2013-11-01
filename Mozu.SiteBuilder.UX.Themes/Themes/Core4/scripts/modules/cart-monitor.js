@@ -1,4 +1,8 @@
-﻿define(['modules/jquery-mozu', 'modules/api'], function ($, api) {
+﻿/**
+ * Watches for changes to the quantity of items in the shopping cart, to update
+ * cart count indicators on the storefront.
+ */
+define(['modules/jquery-mozu', 'modules/api'], function ($, api) {
     $(document).ready(function () {
         var $cartCount = $('.mz-cartmonitor'), timeout;
         function waitAndGetCart() {

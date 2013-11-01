@@ -1,7 +1,10 @@
-﻿
+﻿/**
+ * Adds builtin validation features to BackboneJS Models, customized to connect
+ * to display internationalized Mozu text labels.
+ */
 define(["shim!vendor/underscore>_", "shim!vendor/backbone[shim!vendor/underscore>_=_,jquery=jQuery]>Backbone"], function (_, Backbone) {
 
-    // Backbone.Validation v0.8.1
+    // Adapted from Backbone.Validation v0.8.1
     //
     // Copyright (c) 2011-2013 Thomas Pedersen
     // Modified by Volusion for Mozu, not officially forked (yet)

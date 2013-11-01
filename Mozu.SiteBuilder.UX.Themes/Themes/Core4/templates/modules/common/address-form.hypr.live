@@ -1,66 +1,76 @@
-﻿{% block address-form %}
-    <div class="mz-formfieldgroup-row">
-        <div class="mz-formfieldgroup-cell">
+﻿{% block local-variables %}
+    {% comment %}
+    The local-variables block is present in a number of module templates. It
+    exists because this module uses a local variable, in this case
+    "modelcontext" to adjust where in the model the JavaScript should expect to
+    find an address. In the base template, this local variable is unset, which
+    is why this block is empty. In templates that extend this template, they can
+    override this block and insert a {% set modelcontext="something" %} to set
+    this local variable, and the template will then include that value.
+    {% endcomment %}
+{% endblock local-variables %}
+    <div class="mz-l-formfieldgroup-row">
+        <div class="mz-l-formfieldgroup-cell">
             <label for="firstname">{{ themeSettings.labelFirstName }}<span class="is-required"> *</span>:</label>
         </div>
-        <div class="mz-formfieldgroup-cell">
-            <input type="text" id="mz-shipping-address-firstname" name="firstname" data-mz-value="{{ validationcontext }}firstName" value="{{ model.firstName }}">
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ validationcontext }}firstName"></span>
+        <div class="mz-l-formfieldgroup-cell">
+            <input type="text" id="mz-shipping-address-firstname" name="firstname" data-mz-value="{{ modelcontext }}firstName" value="{{ model.firstName }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}firstName"></span>
         </div>
     </div>
-    <div class="mz-formfieldgroup-row">
-        <div class="mz-formfieldgroup-cell">
+    <div class="mz-l-formfieldgroup-row">
+        <div class="mz-l-formfieldgroup-cell">
             <label for="lastname">{{ themeSettings.labelLastName }}<span class="is-required"> *</span>:</label>
         </div>
-        <div class="mz-formfieldgroup-cell">
-            <input type="text" id="mz-shipping-address-lastname" name="lastname" data-mz-value="{{ validationcontext }}lastNameOrSurname" value="{{ model.lastNameOrSurname }}">
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ validationcontext }}lastNameOrSurname"></span>
+        <div class="mz-l-formfieldgroup-cell">
+            <input type="text" id="mz-shipping-address-lastname" name="lastname" data-mz-value="{{ modelcontext }}lastNameOrSurname" value="{{ model.lastNameOrSurname }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}lastNameOrSurname"></span>
         </div>
     </div>
-    <div class="mz-formfieldgroup-row">
-        <div class="mz-formfieldgroup-cell">
+    <div class="mz-l-formfieldgroup-row">
+        <div class="mz-l-formfieldgroup-cell">
             <label for="address-line-1">{{ themeSettings.labelAddress }}<span class="is-required"> *</span>:</label>
         </div>
-        <div class="mz-formfieldgroup-cell">
-            <input type="text" id="mz-shipping-address-line-1" name="address-line-1" data-mz-value="{{ validationcontext }}address.address1" value="{{ model.address.address1 }}">
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ validationcontext }}address.address1"></span>
+        <div class="mz-l-formfieldgroup-cell">
+            <input type="text" id="mz-shipping-address-line-1" name="address-line-1" data-mz-value="{{ modelcontext }}address.address1" value="{{ model.address.address1 }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}address.address1"></span>
         </div>
     </div>
-    <div class="mz-formfieldgroup-row">
-        <div class="mz-formfieldgroup-cell"></div>
-        <div class="mz-formfieldgroup-cell">
-            <input type="text" id="mz-shipping-address-line-2" name="address-line-2" data-mz-value="{{ validationcontext }}address.address2" value="{{ model.address.address2 }}">
+    <div class="mz-l-formfieldgroup-row">
+        <div class="mz-l-formfieldgroup-cell"></div>
+        <div class="mz-l-formfieldgroup-cell">
+            <input type="text" id="mz-shipping-address-line-2" name="address-line-2" data-mz-value="{{ modelcontext }}address.address2" value="{{ model.address.address2 }}">
             <span class="mz-validationmessage">&nbsp;</span>
         </div>
     </div>
-    <div class="mz-formfieldgroup-row">
-        <div class="mz-formfieldgroup-cell">
+    <div class="mz-l-formfieldgroup-row">
+        <div class="mz-l-formfieldgroup-cell">
             <label for="city">{{ themeSettings.labelCity }}<span class="is-required"> *</span>:</label>
         </div>
-        <div class="mz-formfieldgroup-cell">
-            <input type="text" id="mz-shipping-address-city" name="city" data-mz-value="{{ validationcontext }}address.cityOrTown" value="{{ model.address.cityOrTown }}">
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ validationcontext }}address.cityOrTown"></span>
+        <div class="mz-l-formfieldgroup-cell">
+            <input type="text" id="mz-shipping-address-city" name="city" data-mz-value="{{ modelcontext }}address.cityOrTown" value="{{ model.address.cityOrTown }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}address.cityOrTown"></span>
         </div>
     </div>
-    <div class="mz-formfieldgroup-row">
-        <div class="mz-formfieldgroup-cell">
+    <div class="mz-l-formfieldgroup-row">
+        <div class="mz-l-formfieldgroup-cell">
             <label for="country">{{ themeSettings.labelCountry }}<span class="is-required"> *</span>:</label>
         </div>
-        <div class="mz-formfieldgroup-cell">
-            <select id="mz-shipping-address-country" data-mz-value="{{ validationcontext }}address.countryCode">
+        <div class="mz-l-formfieldgroup-cell">
+            <select id="mz-shipping-address-country" data-mz-value="{{ modelcontext }}address.countryCode">
                 <option></option>
                     <option {% if model.address.countryCode == "US" %}selected="selected"{% endif %} value="US">United States</option>
                     <option {% if model.address.countryCode == "UK" %}selected="selected"{% endif %} value="UK">United Kingdom</option>
             </select>
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ validationcontext }}address.countryCode"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}address.countryCode"></span>
         </div>
     </div>
-    <div class="mz-formfieldgroup-row" {% if model.address.countryCode != "US" %}style="display: none"{% endif %}>
-        <div class="mz-formfieldgroup-cell">
+    <div class="mz-l-formfieldgroup-row" {% if model.address.countryCode != "US" %}style="display: none"{% endif %}>
+        <div class="mz-l-formfieldgroup-cell">
             <label for="stateprov">{{ themeSettings.labelState }}<span class="is-required"> *</span>:</label>
         </div>
-        <div class="mz-formfieldgroup-cell">
-            <select data-mz-value="{{ validationcontext }}address.stateOrProvince">
+        <div class="mz-l-formfieldgroup-cell">
+            <select data-mz-value="{{ modelcontext }}address.stateOrProvince">
                 <option></option>
                 <option {% if model.address.stateOrProvince == "AK" %}selected="selected"{% endif %} value="AK">
                     Alaska
@@ -213,34 +223,33 @@
                     Wyoming
                 </option>
             </select>
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ validationcontext }}address.stateOrProvince"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}address.stateOrProvince"></span>
         </div>
     </div>
-    <div {% if model.address.countryCode != "US" %}style="display: none"{% endif %} class="mz-formfieldgroup-row">
-        <div class="mz-formfieldgroup-cell">
+    <div {% if model.address.countryCode != "US" %}style="display: none"{% endif %} class="mz-l-formfieldgroup-row">
+        <div class="mz-l-formfieldgroup-cell">
             <label for="postal-code">{{ themeSettings.labelPostalCode }}<span class="is-required"> *</span>:</label>
         </div>
-        <div class="mz-formfieldgroup-cell">
-            <input type="text" id="mz-shipping-address-postal-code" name="postal-code" data-mz-value="{{ validationcontext }}address.postalOrZipCode" value="{{ model.address.postalOrZipCode }}">
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ validationcontext }}address.postalOrZipCode"></span>
+        <div class="mz-l-formfieldgroup-cell">
+            <input type="text" id="mz-shipping-address-postal-code" name="postal-code" data-mz-value="{{ modelcontext }}address.postalOrZipCode" value="{{ model.address.postalOrZipCode }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}address.postalOrZipCode"></span>
         </div>
     </div>
-    <div {% if model.address.CountryCode != "UK" %}style="display: none"{% endif %} class="mz-formfieldgroup-row">
-        <div class="mz-formfieldgroup-cell">
+    <div {% if model.address.CountryCode != "UK" %}style="display: none"{% endif %} class="mz-l-formfieldgroup-row">
+        <div class="mz-l-formfieldgroup-cell">
             <label for="postal-town">{{ themeSettings.labelPostalTown }}</label>
         </div>
-        <div class="mz-formfieldgroup-cell">
-            <input type="text" id="mz-shipping-address-postal-town" name="postal-town" data-mz-value="{{ validationcontext }}address.postalOrZipCode" value="{{ model.address.postalOrZipCode }}">
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ validationcontext }}address.postalOrZipCode"></span>
+        <div class="mz-l-formfieldgroup-cell">
+            <input type="text" id="mz-shipping-address-postal-town" name="postal-town" data-mz-value="{{ modelcontext }}address.postalOrZipCode" value="{{ model.address.postalOrZipCode }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}address.postalOrZipCode"></span>
         </div>
     </div>
-    <div class="mz-formfieldgroup-row">
-        <div class="mz-formfieldgroup-cell">
+    <div class="mz-l-formfieldgroup-row">
+        <div class="mz-l-formfieldgroup-cell">
             <label for="shippingphone">{{ themeSettings.labelPhone }}<span class="is-required"> *</span>:</label>
         </div>
-        <div class="mz-formfieldgroup-cell">
-            <input type="text" id="mz-shipping-address-phone" name="shippingphone" data-mz-value="{{ validationcontext }}phoneNumbers.home" value="{{ model.phoneNumbers.home }}">
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ validationcontext }}phoneNumbers.home"></span>
+        <div class="mz-l-formfieldgroup-cell">
+            <input type="text" id="mz-shipping-address-phone" name="shippingphone" data-mz-value="{{ modelcontext }}phoneNumbers.home" value="{{ model.phoneNumbers.home }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}phoneNumbers.home"></span>
         </div>
     </div>
-{% endblock address-form %}

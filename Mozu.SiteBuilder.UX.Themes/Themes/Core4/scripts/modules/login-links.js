@@ -1,4 +1,7 @@
-﻿define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'hyprlive', 'shim!vendor/underscore>_'], function ($, HyprLive, _, Backbone) {
+﻿/**
+ * Adds a login popover to all login links on a page.
+ */
+define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'hyprlive', 'shim!vendor/underscore>_'], function ($, HyprLive, _, Backbone) {
 
     $(document).ready(function () {
         var loginTemplate = HyprLive.getTemplate('modules/common/login-popover').render(),

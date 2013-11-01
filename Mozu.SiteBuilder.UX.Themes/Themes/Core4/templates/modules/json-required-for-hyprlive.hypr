@@ -1,6 +1,4 @@
 ﻿{% preload_json apiContext "apiconfig" %}
 {% preload_json themeSettings "themesettings" %}
 {% preload_json siteContext "sitecontext" %}
-{% if not user.isAnonymous %}
 {% preload_json user "user" %}
-{% endif %}
