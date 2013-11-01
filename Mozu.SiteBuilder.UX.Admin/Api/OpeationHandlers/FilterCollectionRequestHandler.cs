@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers
             }
             col.SearchType = qs["searchType"];
             col.query = qs["query"];
-
+            col.QueryString = qs;
             bindingContext.Model = col;
 
             return true;

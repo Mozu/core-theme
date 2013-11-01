@@ -90,6 +90,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.SelectedValues, opt => opt.ResolveUsing(dc => MapVocabularyValueInProductTypeListToSelectedValues(dc.VocabularyValues, dc.AttributeFQN)))
                 .ForMember(x => x.DataType, opt => opt.ResolveUsing(dc => dc.AttributeDetail.DataType))
                 .ForMember(x => x.InputType, opt => opt.ResolveUsing(dc => dc.AttributeDetail.InputType))
+                .ForMember(x => x.AttributeMetadata, opt => opt.ResolveUsing(dc => dc.AttributeDetail.AttributeMetadata ))
                 .ForMember(x => x.AttributeName, opt => opt.ResolveUsing(dc => dc.AttributeDetail.Content != null ? dc.AttributeDetail.Content.Name : dc.AttributeDetail.AttributeCode))
                 ;
 
