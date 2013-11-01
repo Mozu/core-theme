@@ -29,6 +29,12 @@
       padding: 8px 0 0 20px;
     }
 
+	.title-large {
+      height: 30px;
+      font-size: 20px;
+      padding: 8px 0 0 20px;
+    }
+
     .group {
       margin: 10px 0 20px;
     }
@@ -99,9 +105,23 @@
       padding: 0px !important;
       
       a {
-        //display: inline-block;
+        display: inline-block;
         font-size: 10px;
         padding: 8px 20px;
+        vertical-align: baseline;
+      }
+    }
+
+	.content {
+      padding: 0px !important;
+	  padding-bottom: 15px !important;
+      div {
+		margin-top: 15px;
+	  }
+      a {
+        //display: inline-block;
+        font-size: 15px;
+        padding: 8px 10px 10px 20px;
         vertical-align: baseline;
       }
     }
