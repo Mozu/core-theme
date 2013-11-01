@@ -135,6 +135,10 @@ Ext.define('Taco.store.Navigation', {
                 "label": "Website",
                 "address": "sites/pages"
             }, {
+                "id": "siteselection",
+                "label": "Selection",
+                "address": "siteSelection"
+            }, {
                 "id": "themes",
                 "label": "Themes",
                 "address": "themes"
