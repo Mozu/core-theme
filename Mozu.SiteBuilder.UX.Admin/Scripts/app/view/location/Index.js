@@ -33,17 +33,30 @@ Ext.define('Taco.view.location.Index', {
                 xtype: 'textfield',
                 width: 560
             },
-            items: [{
+            items: [
+            {
                 name: 'name',
                 fieldLabel: 'Name',
                 width: 160
-            }, {
-                name: 'description',
-                fieldLabel: 'Description',
+            },
+            {
+                name: 'code',
+                fieldLabel: 'Code',
                 width: 160
-            }, {
-                name: 'address',
-                fieldLabel: 'Address',
+            },
+            {
+                name: 'state',
+                fieldLabel: 'State',
+                width: 80
+            },
+            {
+                name: 'zipcode',
+                fieldLabel: 'Zip Code',
+                width: 80
+            },
+            {
+                name: 'locationtypecode',
+                fieldLabel: 'Location Type Code',
                 width: 160
             }]
         }]
@@ -54,12 +67,26 @@ Ext.define('Taco.view.location.Index', {
             property: 'all',
             text: 'All',
             isDefault: true
-        }, {
-            property: 'name',
+        },
+        {
+            name: 'name',
             text: 'Name'
-        }, {
-            property: 'description',
-            text: 'Description'
+        },
+        {
+            name: 'code',
+            text: 'Code'
+        },
+        {
+            name: 'state',
+            text: 'State'
+        },
+        {
+            name: 'zipcode',
+            text: 'Zip Code'
+        },
+        {
+            name: 'locationtypecode',
+            text: 'Location Type Code'
         }
     ],
 

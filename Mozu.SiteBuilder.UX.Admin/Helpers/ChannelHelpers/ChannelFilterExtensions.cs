@@ -35,9 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ChannelHelpers
                 case "name":
                     return string.Format("({1} cont {0})", filter.value, NAME);
                 default:
-                    {
-                        throw new NotImplementedException("unable to filter on property " + filter.property);
-                    }
+                    throw new NotImplementedException("unable to filter on property " + filter.property);
             }
         }
     }

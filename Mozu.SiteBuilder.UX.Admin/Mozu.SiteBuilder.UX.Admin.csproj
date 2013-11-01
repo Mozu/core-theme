@@ -562,6 +562,7 @@
     <Compile Include="Helpers\CustomerHelpers\CustomerFilterExtensions.cs" />
     <Compile Include="Helpers\CustomerHelpers\CustomerSortExtensions.cs" />
     <Compile Include="Helpers\DiscountHelpers\DiscountFilterExtensions.cs" />
+    <Compile Include="Helpers\LocationHelpers\LocationFilterExtensions.cs" />
     <Compile Include="Helpers\OrderHelpers\OrderFilterExtensions.cs" />
     <Compile Include="Helpers\OrderHelpers\OrderSortExtensions.cs" />
     <Compile Include="Helpers\CurrentUserHelper.cs" />
