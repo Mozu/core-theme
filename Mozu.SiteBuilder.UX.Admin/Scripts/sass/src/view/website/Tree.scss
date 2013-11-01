@@ -1,0 +1,32 @@
+.#{$vprefix}website-tree {
+    .#{$prefix}grid-body {
+        background-color: transparent;
+    }
+
+    .#{$prefix}grid-cell {
+        background-color: rgb(238, 238, 238);
+    }
+
+    .#{$prefix}grid-cell-treecolumn {
+        font-size: 13px;
+    }
+
+    .#{$prefix}grid-cell-inner-treecolumn {
+        padding: 1px 5px 0px 0px;
+    }
+
+    .#{$prefix}tree-node-text {
+        font-size: 13px;
+    }
+
+    .#{$prefix}grid-row-alt {
+        .#{$prefix}grid-td {
+            background-color: $color-neutral-90;
+        }
+    }
+    .#{$prefix}grid-row-selected {
+        .#{$prefix}grid-td {
+            background-color: $grid-cell-selected-background-color;
+        }
+    }
+}

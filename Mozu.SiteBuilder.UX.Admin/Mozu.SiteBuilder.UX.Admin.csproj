@@ -583,6 +583,7 @@
     <Content Include="App_Readme\glimpse.readme.txt" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\Channels.js" />
+    <Content Include="Scripts\app\controller\Websites.js" />
     <Content Include="Scripts\app\controller\CustomerAttributes.js" />
     <Content Include="Scripts\app\controller\Locations.js" />
     <Content Include="Scripts\app\controller\LocationTypes.js" />
@@ -658,6 +659,8 @@
     <Content Include="Scripts\app\view\site\navigation\NavHeadings.js" />
     <Content Include="Scripts\app\view\tbd\Index.js" />
     <Content Include="Scripts\app\view\themeSettings\Addons.js" />
+    <Content Include="Scripts\app\view\website\Tree.js" />
+    <Content Include="Scripts\app\view\website\Index.js" />
     <Content Include="Scripts\build\all-classes.js" />
     <Content Include="Scripts\build\fonts\journal-webfont.eot" />
     <Content Include="Scripts\build\fonts\journal-webfont.ttf" />
@@ -937,6 +940,8 @@
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\panel\Table.scss" />
     <Content Include="Scripts\app\mocks\wishlist.json" />
     <Content Include="Scripts\app\mocks\applications.json" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\tree\Panel.scss" />
+    <Content Include="Scripts\sass\src\view\website\Tree.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
