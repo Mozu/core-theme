@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Mozu.Core.Api.Routing;
-using Mozu.SiteBuilder.Mvc.Extensions;
-using DC = Mozu.Location.Contracts;
-using Mozu.Location.Contracts.Clients;
-using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using System.Threading.Tasks;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
-using AutoMapper;
-using System.Net.Http;
 using System.Net;
-using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
+using Mozu.Core.Api.Routing;
+using Mozu.Location.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
+using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Helpers.LocationHelpers;
+using DC = Mozu.Location.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -45,7 +41,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
-                locations = (await _locationWebApiClient.GetLocations()).ReadAsSync();
+                string filter = extFilter.ToFilterString();
+                locations = (await _locationWebApiClient.GetLocations(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filter)).ReadAsSync();
             }
 
             // default RegularHours to an object for pass through.
