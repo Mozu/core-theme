@@ -602,6 +602,7 @@
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
     <Content Include="Scripts\app\core\ux\form\field\EditableDisplayField.js" />
     <Content Include="Scripts\app\core\ux\form\field\InlinePicker.js" />
+    <Content Include="Scripts\app\core\ux\form\field\Product.js" />
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\window\Alert.js" />
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />

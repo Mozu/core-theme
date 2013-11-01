@@ -15,8 +15,18 @@ Ext.define('Taco.model.ProductTypeAttribute', {
         { name: 'allValues', type: 'auto', persist: false, defaultValue: [] },
         { name: 'selectedValues', type: 'auto', defaultValue: [] },
         { name: 'dataType', type: 'string' },
-        { name: 'inputType', type: 'string' }
+        { name: 'inputType', type: 'string' },
+        { name: 'attributeMetadata', type: 'auto', persist: false, defaultValue: [] }
     ],
+    getAttributeMetaDataValue:function (key) {
+        var val;
+        Ext.each(this.get('attributeMetadata'), function (kvp) {
+            if (kvp.key == key) {
+                val = kvp.value;
+            }
+        });
+        return val;
+    },
     idProperty: 'attributeFQN',
     proxy: {
         type: 'ajaxproxy',

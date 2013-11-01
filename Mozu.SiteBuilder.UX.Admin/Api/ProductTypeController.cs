@@ -25,15 +25,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class ProductTypeController : BaseController
     {
         private readonly IProductTypeWebApiClient _productTypeClient;
+        private readonly IAttributeWebApiClient _attributeWebApiClient;
 
         private readonly CollectionTaskUnMapper<ProductType, DC.ProductType> _productTypeMapper = new CollectionTaskUnMapper<ProductType, DC.ProductType>();
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public ProductTypeController(IProductTypeWebApiClient productTypeClient)
+        public ProductTypeController(IProductTypeWebApiClient productTypeClient , Mozu.ProductAdmin.Contracts.Clients.IAttributeWebApiClient attributeWebApiClient)
         {
             _productTypeClient = productTypeClient;
+            _attributeWebApiClient = attributeWebApiClient;
         }
 
         /// <summary>
@@ -62,15 +64,41 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             string filter = extFilter.ToFilterString();
             string sort = null; // pagingParams.sort.ToSortString();
 
-            DC.ProductTypeCollection res;
-            var result = await _productTypeClient.GetProductTypes(
+
+            var gpttask = _productTypeClient.GetProductTypes(
                 /* startIndex:     */ pagingParams.startIndex,
-                /* pageSize:       */ pagingParams.pageSize,
-                /* sortBy:         */ sort,
-                /* filter:         */ filter,
-                /* responseGroups: */ null
-            );
-            res = result.ReadAsAsync().Result;
+                                      /* pageSize:       */ pagingParams.pageSize,
+                                      /* sortBy:         */ sort,
+                                      /* filter:         */ filter,
+                                      /* responseGroups: */ null
+                );
+
+
+            //todo after service adds in attributemetadata
+            var attTask = _attributeWebApiClient.GetAttributes(0, 600, responseGroups: "LocalizedContent,Values");
+            await Task.WhenAll(gpttask, attTask);
+            var res = gpttask.Result.ReadAsSync();
+            var atts = attTask.Result.ReadAsSync().Items.ToDictionary(x => x.AttributeFQN);
+            Mozu.ProductAdmin.Contracts.Attribute att;
+            foreach (var pt in res.Items)
+            {
+                if (pt.Properties == null)
+                {
+                    continue;
+                }
+                foreach (var prop in pt.Properties)
+                {
+                    if (atts.TryGetValue(prop.AttributeFQN, out att))
+                    {
+                        prop.AttributeDetail = att;
+                    }
+                }
+            }
+
+
+
+             
+
 
             return List2(Mapper.Map<List<ProductType>>(res.Items), (int)res.TotalCount);
         }

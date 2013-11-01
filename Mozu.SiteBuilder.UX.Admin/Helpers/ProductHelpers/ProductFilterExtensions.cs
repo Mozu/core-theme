@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
@@ -21,8 +22,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         /// </summary>
         public static string ToFilterString(this FilterCollection extFilter, bool? withVariations = null)
         {
-            if (extFilter == null || extFilter.Count == 0)
-                return null;
+           
 
             // TODO: If the filter needs to include products with variations, do something with 'withVariations'
             // Note: this could change, we're waiting on changes to be applied from the services team and/or Britt G.
@@ -30,10 +30,66 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
             // TODO: commenting out this next part. I can't find any way from EXT to make "query" happen.
             // if (!string.IsNullOrEmpty(extFilter.query))
             //     extFilter.Add(new FilterCollectionItem { comparison = "cont", field = PropertyGuy.Convert(x => x.Content.ProductName), value = extFilter.query });
+            
+            if (!string.IsNullOrWhiteSpace(extFilter.QueryString["productCode"]))
+            {
+                extFilter.Add(new FilterCollectionItem()
+                                  {
+                                      comparison ="eq", 
+                                      property  ="productCode", 
+                                      value = extFilter.QueryString["productCode"]
+                                  });
+            }
+            ;
 
-            var stateMents = extFilter.Where(x => x.value != null && x.property != "all").Where(x => !String.IsNullOrEmpty(x.value.ToString())).SelectMany(x => x.value.ToString().Split(' ').Select(_ => GetFilter(_, x)));
+            if ( extFilter.Count == 0)
+                return null;
 
-            return string.Join(" and ", stateMents);
+
+
+            StringBuilder sb = new StringBuilder();
+            foreach (var filter in extFilter.Where(x => x.value != null && x.property != "all" && !string.IsNullOrEmpty(x.value.ToString())))
+            {
+                var values = filter.value.ToString().Trim().Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+                if (values.Length > 1)
+                {
+                    if (sb.Length > 1)
+                    {
+                        sb.Append(" and ");
+                    }
+                    sb.Append("( ");
+                    for ( int  i = 0; i < values.Length ;i++)
+                    {
+                        var filterString = GetFilter(values[i], filter);
+                        if (!string.IsNullOrWhiteSpace(filterString))
+                        {
+                            if (i > 0)
+                            {
+                                sb.Append(" or ");
+                            }
+                            sb.Append(filterString);
+                        }
+
+                    }
+                    sb.Append(" ) ");
+                }
+                else
+                {
+                    var filterString = GetFilter(filter.value, filter);
+                    if (!string.IsNullOrWhiteSpace(filterString))
+                    {
+                        if (sb.Length > 1)
+                        {
+                            sb.Append(" and ");
+                        }
+                        sb.Append(filterString);
+                        
+                    }
+                    
+                }
+            }
+
+            return sb.ToString().Trim();
         }
 
 
@@ -44,23 +100,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
              {
                  return string.Join(" ", allString.Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(x=> x+"*")).Trim();
              }
+             if (!string.IsNullOrEmpty( extFilter.query) )
+             {
+                 return string.Join(" ", extFilter.query.Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x + "*")).Trim();
+             }
              return null;
          }
-        private static string GetFilter(string value, FilterCollectionItem filter)
+        private static string GetFilter(object value , FilterCollectionItem filter)
         {
             switch (filter.property.ToLowerInvariant())
             {
                 case "categoryids":
                     return string.Format("productinsites.productcategories.categoryid eq {0}", filter.value);
                 case "isactive":
-                    return string.Format("{1} eq {0}", value, IS_ACTIVE_PROPERTY);
+                    return string.Format("{1} eq {0}", filter.value , IS_ACTIVE_PROPERTY);
                 case "productname":
                 case "name":
-                    return string.Format("{1} cont \"{0}\"", value, PRODUCT_NAME_PROPERTY);
+                    return string.Format("{1} cont \"{0}\"", filter.value, PRODUCT_NAME_PROPERTY);
                 case "productfulldescription":
-                    return string.Format("{1} cont \"{0}\"", value, PRODUCT_FULL_DESCRIPTION);
+                    return string.Format("{1} cont \"{0}\"", filter.value, PRODUCT_FULL_DESCRIPTION);
                 case "productcode" :
-                    return string.Format("ProductCode eq {0}", value);
+                    {
+                       return string.Format("ProductCode eq \"{0}\"", value);    
+                    }
+                    
                 case "producttypeid":
                     return string.Format("productTypeId eq {0}", value);
                

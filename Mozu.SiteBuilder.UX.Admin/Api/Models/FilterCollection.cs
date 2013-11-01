@@ -110,6 +110,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 
             return value == null ? default(TVal) : (TVal) value;
         }
+
+        public System.Collections.Specialized.NameValueCollection QueryString { get; set; }
     }
 
     public class SortingCollectionItem

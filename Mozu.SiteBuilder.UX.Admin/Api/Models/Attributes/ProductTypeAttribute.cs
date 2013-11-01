@@ -43,5 +43,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
 
         [DataMember(Name = "attributeName")]
         public string AttributeName { get; set; }
+
+
+        [DataMember(Name = "attributeMetadata")]
+        public List<AttributeMetadataItem> AttributeMetadata { get; set; }
     }
 }       

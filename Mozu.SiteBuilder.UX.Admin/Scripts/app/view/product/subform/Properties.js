@@ -7,9 +7,12 @@
 Ext.define('Taco.view.product.subform.Properties', {
     extend: 'Taco.view.product.subform.Subform',
     alias: 'widget.productpropertiesform',
-
+    requires:['Taco.core.ux.form.field.Product'],
     title: 'Properties',
-
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
     statics: {
         editors: {
             'Date': function (ptAttribute, values) {
@@ -63,7 +66,18 @@ Ext.define('Taco.view.product.subform.Properties', {
                     value: (values && values.length) ? values[0] : null,
                     width: '100%'
                 }];
-            }
+            },
+            'productPicker': function (ptAttribute, values) {
+                return [
+                    {
+                        xtype: 'taco.field.product',
+                        name: this.getFieldName(ptAttribute),
+                        width: '100%',
+                        value: values,
+                    }
+                ];
+            },
+            
         }
     },
     
@@ -193,11 +207,14 @@ Ext.define('Taco.view.product.subform.Properties', {
     },
 
     buildEditor: function (ptAttribute) {
-        var editor = ptAttribute.get('inputType'),
+        var editor = ptAttribute.getAttributeMetaDataValue('uicontrol') ||  ptAttribute.get('inputType'),
             attributeFQN = ptAttribute.get('attributeFQN'),
             prop = this.product.getProperties().getById(attributeFQN),
             values = prop ? prop.get('values') : null;
         
+        
+
+
         if (typeof this.statics().editors[editor] !== 'function') {
             return [{
                 xtype: 'component',
