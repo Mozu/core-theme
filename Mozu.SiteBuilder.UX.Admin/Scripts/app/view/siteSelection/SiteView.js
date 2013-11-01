@@ -1,38 +1,24 @@
 Ext.define('Taco.view.siteSelection.SiteView', {
-    extend: 'Taco.core.ux.GroupedView',
-    xtype: 'widget.taco.themeview',
+    extend: 'Ext.view.View',
+    baseCls: Taco.baseCSSPrefix + 'grouped-view',
+    xtype: 'widget.taco.siteView',
     disableSelection: true,
     itemSelector: '.theme-swatch',
     cls: 'taco-theme-selector',
-
     tpl: [
-        '<tpl for="groups">',
-            '<h2>',
-                '<tpl if="name == true">',
-                    'Applied Theme',
-                '<tpl else>',
-                    'Purchased Themes',
-                '</tpl>',
-            '</h2>',
-
-            '<ul class="group group-<tpl if="name == true">applied<tpl else>purchased</tpl>">',
-                '<tpl for="children">',
+        '<tpl for=.>',
+        '{[console.log(values)]}',
+          /*  '<ul class="group">',
+                //'<tpl for="children">',
                     '<li class="theme-swatch">',
                         '<ul class="menu">',
                             '<li class="title">',
                                 '<span>{[values.data.name]}</span>',
-                                '<tpl if="!values.data.isSelected">',
-                                    '<a href="#"></a>',
-                                '</tpl>',
                             '</li>',
                             '<li class="modes">',
                                 '<tpl if="values.data.isDesktop">',
                                     '<div class="icon icon-desktop <tpl if="!values.data.isSelectedDesktop">inactive</tpl>"></div>',
                                     '<div class="text <tpl if="!values.data.isSelectedDesktop">inactive</tpl>">Desktop</div>',
-                                '</tpl>',
-                                '<tpl if="values.data.isMobile">',
-                                    '<div class="icon icon-mobile <tpl if="!values.data.isSelectedMobile">inactive</tpl>"></div>',
-                                    '<div class="text <tpl if="!values.data.isSelectedMobile">inactive</tpl>">Mobile</div>',
                                 '</tpl>',
                             '</li>',
                             '<li class="actions">',
@@ -47,12 +33,13 @@ Ext.define('Taco.view.siteSelection.SiteView', {
                         '<div class="title">{[values.data.name]}</div>',
                         '<img class="thumbnail" src="{[values.data.thumbnail]}">',
                     '</li>',
-                '</tpl>',
-            '</ul>',
+               // '</tpl>',
+            '</ul>',*/
         '</tpl>'
     ],
 
-    initComponent: function() {
+    initComponent: function () {
+        this.data = this.store;
         this.listeners = {
             itemclick: function(view, model, element, idx, eventObj) {
                 var targetEl = Ext.get(eventObj.target),
