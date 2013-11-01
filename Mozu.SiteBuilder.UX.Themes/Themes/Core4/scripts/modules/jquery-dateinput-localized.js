@@ -1,6 +1,9 @@
-﻿define(['shim!vendor/jquery.tools.dateinput[jquery=jQuery]>jQuery', 'shim!vendor/underscore>_'], function ($, _) {
-    // localize using mozu labels
+﻿/**
+ * Extends the third-party jQuery Tools DatePicker widget to be internationalized
+ * with Mozu text labels.
+ */
 
+define(['shim!vendor/jquery.tools.dateinput[jquery=jQuery]>jQuery', 'shim!vendor/underscore>_'], function ($, _) {
     var months = 'January,February,March,April,May,June,July,August,September,October,November,December'.split(','),
         days = 'Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday'.split(',');
 

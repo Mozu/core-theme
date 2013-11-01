@@ -4,7 +4,7 @@ if (!LiveTemplates) throw new ReferenceError("If no AMD loader is present, there
 LiveTemplates = JSON.parse(LiveTemplates);
 
 var locals = {},
-    localNames = ['themeSettings', 'siteContext']; //, 'user', 'pageContext', 'navigation'];
+    localNames = ['themeSettings', 'siteContext', 'user']; // 'pageContext', 'navigation'];
 
 for (var lni = 0, llen = localNames.length; lni < llen; lni++) {
     locals[localNames[lni]] = require.mozuData(localNames[lni].toLowerCase());

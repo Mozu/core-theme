@@ -4,7 +4,7 @@
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
     [NDjango.ParserNodes.Description("tbd")]
-    [NDjango.Interfaces.Name("setTemplateVariables")]
+    [NDjango.Interfaces.Name("set")]
     public class SetTemplateVariablesTag : SimpleTagBase
     {
         public override bool is_header_tag

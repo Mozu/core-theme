@@ -1,4 +1,9 @@
-﻿define([
+﻿/**
+ * Extends the BackboneJS Model object to create a Backbone.MozuModel with extra
+ * features for model nesting, error handling, validation, and connection to the
+ * JavaScript SDK.
+ */
+define([
     "modules/jquery-mozu",
     "shim!vendor/underscore>_",
     "modules/api",

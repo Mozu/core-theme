@@ -22,12 +22,12 @@
                 <p>{{ themeSettings.labelEmail }}: <strong>{{ model.billingContact.email }}</strong></p>
             </div>
 
-            <div class="mz-formstep-fields mz-formfieldgroup">
-                    <div class="mz-formfieldgroup-row">
-                        <div class="mz-formfieldgroup-cell">
+            <div class="mz-formstep-fields mz-l-formfieldgroup">
+                    <div class="mz-l-formfieldgroup-row">
+                        <div class="mz-l-formfieldgroup-cell">
                             <label for="paymentType">{{ themeSettings.labelpaymentType }}<span class="is-required"> *</span>:</label>
                         </div>
-                        <div class="mz-formfieldgroup-cell">
+                        <div class="mz-l-formfieldgroup-cell">
                     <select data-mz-value="paymentType">
                         <option>{{ themeSettings.labelSelectpaymentType }}</option>
                         {% for paymentType in siteContext.paymentSettings.paymentMethods %}
@@ -38,45 +38,45 @@
                         </div>
                      </div>
               </div>
-      <div class="mz-formstep-fields mz-formfieldgroup">
+      <div class="mz-formstep-fields mz-l-formfieldgroup">
 
                 {% if model.paymentType == "CreditCard" %}
-                    <div class="mz-formfieldgroup">
+                    <div class="mz-l-formfieldgroup">
                         {% include "modules/checkout/credit-card-form" with model=model.card %}
                     </div>
                 {% endif %}
 
                 {% if model.paymentType == "Check" %}
-                    <div class="mz-formfieldgroup">
+                    <div class="mz-l-formfieldgroup">
                         {% include "modules/checkout/checking-account-form" %}
                     </div>
                 {% endif %}
 
                 <h4>{{ themeSettings.labelBillingAddress }}</h4>
-                <div class="mz-formfieldgroup mz-formfieldgroup-norows"><label><input type="checkbox" data-mz-value="IsSameBillingShippingAddress" value="true" {% if model.isSameBillingShippingAddress %}checked="checked"{% endif %}> {{ themeSettings.labelUseShippingAddress }}</label></div>
+                <div class="mz-l-formfieldgroup mz-l-formfieldgroup-norows"><label><input type="checkbox" data-mz-value="IsSameBillingShippingAddress" value="true" {% if model.isSameBillingShippingAddress %}checked="checked"{% endif %}> {{ themeSettings.labelUseShippingAddress }}</label></div>
                 {% if model.isSameBillingShippingAddress %}
                     <div class="mz-addresssummary mz-same-as-shipping-summary" id="mz-same-as-shipping-summary">
                         {% include "modules/common/address-summary" with model=model.billingContact %}
                     </div>
                 {% else %}
-                <div class="mz-formfieldgroup mz-formfieldgroup-address">
+                <div class="mz-l-formfieldgroup mz-l-formfieldgroup-address">
                     {% include "modules/checkout/billing-address-form" with model=model.billingContact %}
                 </div>
                 {% endif %}
                 <h4>{{ themeSettings.labelbillingContact }}</h4>
-                <div class="mz-formfieldgroup">
-                    <div class="mz-formfieldgroup-row">
-                        <div class="mz-formfieldgroup-cell">
+                <div class="mz-l-formfieldgroup">
+                    <div class="mz-l-formfieldgroup-row">
+                        <div class="mz-l-formfieldgroup-cell">
                             <label for="billing-email">{{ themeSettings.labelEmail }}<span class="is-required"> *</span>:</label>
                         </div>
-                        <div class="mz-formfieldgroup-cell">
+                        <div class="mz-l-formfieldgroup-cell">
                             <input type="text" id="billing-email" name="billing-email" data-mz-value="billingContact.email" value="{{ model.billingContact.email }}">
                             <span class="mz-validationmessage" data-mz-validationmessage-for="billingContact.email"></span>
                         </div>
                     </div>
-                    <div class="mz-formfieldgroup-row">
-                        <div class="mz-formfieldgroup-cell"></div>
-                        <div class="mz-formfieldgroup-cell">
+                    <div class="mz-l-formfieldgroup-row">
+                        <div class="mz-l-formfieldgroup-cell"></div>
+                        <div class="mz-l-formfieldgroup-cell">
                             <label class="mz-inline"><input type="checkbox" name="special-offers" checked="checked" class="mz-checkout-optin" > {{ themeSettings.labelOptIn|string_format(siteContext.generalSettings.websiteName) }}</label>
                         </div>
                     </div>

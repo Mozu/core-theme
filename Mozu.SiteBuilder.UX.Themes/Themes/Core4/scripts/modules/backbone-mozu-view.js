@@ -1,4 +1,9 @@
-﻿define([
+﻿/**
+ * Extends the BackboneJS View object to create a Backbone.MozuView with extra
+ * features for connecting to Backbone.MozuModels, and re-rendering HTML elements
+ * using HyprLive templates.
+ */
+define([
     "modules/jquery-mozu",
     "shim!vendor/underscore>_",
     "hyprlive",

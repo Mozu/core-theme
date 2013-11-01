@@ -10,26 +10,26 @@
         <form method="post" class="mz-loginform mz-loginform-page">
            {% include "modules/common/message-bar" %}
            <input type="hidden" name="returnUrl" value="{{ model.ReturnUrl }}" />
-           <div class="mz-formfieldgroup">
-                <div class="mz-formfieldgroup-row">
-                    <div class="mz-formfieldgroup-cell">
+           <div class="mz-l-formfieldgroup">
+                <div class="mz-l-formfieldgroup-row">
+                    <div class="mz-l-formfieldgroup-cell">
                         <label for="email">{{ themeSettings.labelEmail }}</label>
                     </div>
-                    <div class="mz-formfieldgroup-cell">
+                    <div class="mz-l-formfieldgroup-cell">
                         <input name="email" value="{{model.email|default:user.email}}" type="email"/>
                     </div>
                 </div>
-                <div class="mz-formfieldgroup-row">
-                    <div class="mz-formfieldgroup-cell">
+                <div class="mz-l-formfieldgroup-row">
+                    <div class="mz-l-formfieldgroup-cell">
                         <label for="password">{{ themeSettings.labelPassword }}</label>
                     </div>
-                    <div class="mz-formfieldgroup-cell">
+                    <div class="mz-l-formfieldgroup-cell">
                         <input name="password"  type="password"/>
                     </div>
                 </div>
-                <div class="mz-formfieldgroup-row">
-                    <div class="mz-formfieldgroup-cell"></div>
-                    <div class="mz-formfieldgroup-cell">
+                <div class="mz-l-formfieldgroup-row">
+                    <div class="mz-l-formfieldgroup-cell"></div>
+                    <div class="mz-l-formfieldgroup-cell">
                         <button class="mz-button mz-button-large">{{ themeSettings.labelLogIn }}</button>
                     </div>
                 </div>

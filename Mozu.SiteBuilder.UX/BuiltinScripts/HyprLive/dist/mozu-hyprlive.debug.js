@@ -1,5 +1,5 @@
 /*! 
- * Mozu Hypr Live - v0.2.0 - 2013-10-26
+ * Mozu Hypr Live - v0.2.0 - 2013-11-01
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2528,7 +2528,7 @@
         exports.macro = require('./tags/macro');
         exports.parent = require('./tags/parent');
         exports.raw = require('./tags/raw');
-        exports.setTemplateVariables = require('./tags/set');
+        exports.set = require('./tags/set');
         exports.spaceless = require('./tags/spaceless');
 
     }, { "./tags/autoescape": 8, "./tags/block": 9, "./tags/else": 10, "./tags/elseif": 11, "./tags/extends": 12, "./tags/filter": 13, "./tags/for": 14, "./tags/if": 15, "./tags/import": 16, "./tags/include": 17, "./tags/macro": 18, "./tags/parent": 19, "./tags/raw": 20, "./tags/set": 21, "./tags/spaceless": 22 }], 8: [function (require, module, exports) {
@@ -3887,7 +3887,7 @@ if (!LiveTemplates) throw new ReferenceError("If no AMD loader is present, there
 LiveTemplates = JSON.parse(LiveTemplates);
 
 var locals = {},
-    localNames = ['themeSettings', 'siteContext']; //, 'user', 'pageContext', 'navigation'];
+    localNames = ['themeSettings', 'siteContext', 'user']; // 'pageContext', 'navigation'];
 
 for (var lni = 0, llen = localNames.length; lni < llen; lni++) {
     locals[localNames[lni]] = require.mozuData(localNames[lni].toLowerCase());
@@ -3925,6 +3925,14 @@ var nullTags = ['require_script', 'json_attribute', 'data_attributes', 'dump'];
 for (var t = 0; t < nullTags.length; t++) {
     HyprLive.engine.setTag(nullTags[t], nullParse, nullCompile, false, true);
 }
+
+HyprLive.engine.setTag("comment", function (str, line, parser, types) {
+    parser.on('*', function (token) {
+        throw new Error('Unexpected token "' + token.match + '" on line ' + line + '.');
+    });
+
+    return true;
+}, function () { return '' }, true);
 (function () {
     function formatMoney(n, decPlaces, thouSeparator, decSeparator, symbol, symbolIsSuffix) {
         var decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,

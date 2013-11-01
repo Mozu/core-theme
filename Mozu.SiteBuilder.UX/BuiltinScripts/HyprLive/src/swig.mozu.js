@@ -2507,7 +2507,7 @@
         exports.macro = require('./tags/macro');
         exports.parent = require('./tags/parent');
         exports.raw = require('./tags/raw');
-        exports.setTemplateVariables = require('./tags/set');
+        exports.set = require('./tags/set');
         exports.spaceless = require('./tags/spaceless');
 
     }, { "./tags/autoescape": 8, "./tags/block": 9, "./tags/else": 10, "./tags/elseif": 11, "./tags/extends": 12, "./tags/filter": 13, "./tags/for": 14, "./tags/if": 15, "./tags/import": 16, "./tags/include": 17, "./tags/macro": 18, "./tags/parent": 19, "./tags/raw": 20, "./tags/set": 21, "./tags/spaceless": 22 }], 8: [function (require, module, exports) {

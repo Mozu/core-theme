@@ -11,8 +11,9 @@
   /* Settings: User-configurable options for your theme. */
   "settings": [
 
+    { "id":"internal-themeAddons" , "defaultValue":[]},
+
     /* Common settings used in templates */
-      { "id":"internal-themeAddons" , "defaultValue":[]},
     { "id": "defaultPageSize",              "defaultValue": 15 },
     { "id": "pageSizeOptions",              "defaultValue": [15,25,50,100] },
     { "id": "maxProductSummaryWords",       "defaultValue": 40 },
