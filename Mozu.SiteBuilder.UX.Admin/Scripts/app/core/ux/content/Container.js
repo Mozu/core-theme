@@ -35,11 +35,19 @@ Ext.define('Taco.core.ux.content.Container', {
 
     setActionHandlerScope: function (scope) {
         var me = this;
-        if (scope === true) scope = me;
+
         if (me.header && me.header.actions) {
-            for (var i = 0; i < me.header.actions.length; i++) {
-                if (me.header.actions[i].listeners) me.header.actions[i].listeners.scope = scope;
-            }
+            Ext.Array.forEach(me.header.actions, function (action) {
+                if (action) {
+                    action.scope = me;
+
+                    // TODO: remove this block when all buttons are ext buttons with handlers
+                    // for now, this keeps our deprecated buttons functioning
+                    if (action.listeners) {
+                        action.listeners.scope = me;
+                    }
+                }
+            }, me);
         }
     },
 

@@ -21,21 +21,9 @@ Ext.define('Taco.core.ux.content.Header', {
     hideActions: false,
 
     initComponent: function () {
-
         this.initTitle();
 
-        this.items = [{
-            xtype: 'container',
-            flex: 1,
-            itemId:'titleContainer',
-            layout: 'auto',
-            items: [this.title, {
-                xtype: 'component',
-                autoEl: 'p',
-                html: this.instructionText,
-                itemId: 'instruction'
-            }]
-        }, {
+        this.items = [this.title || undefined, {
             xtype: 'container',
             cls: Taco.baseCSSPrefix + 'actions',
             itemId: 'actionsContainer',
@@ -44,16 +32,33 @@ Ext.define('Taco.core.ux.content.Header', {
             layout: {
                 type: 'hbox',
                 align: 'middle'
+            },
+            listeners: {
+                add: {
+                    scope: this,
+                    fn: function (ct, cmp, index) {
+                        if (index === this.actions.length - 1) {
+                            cmp.on({
+                                scope: this,
+                                boxready: function () {
+                                    this.updateLayout();
+                                }
+                            });
+                        }
+                    }
+                }
             }
         }];
+
+        if (this.title === false) {
+            Ext.apply(this.items[1], {
+                flex: 1
+            });
+        }
 
         this.callParent(arguments);
 
         this.title = this.down('#title');
-
-        this.instruction = this.down('#instruction');
-
-        this.titleContainer = this.down('#titleContainer');
 
         this.actionsContainer = this.down('#actionsContainer');
     },
@@ -82,7 +87,9 @@ Ext.define('Taco.core.ux.content.Header', {
      * @private
      */
     initTitle: function () {
-        if (typeof this.title !== 'object' || this.title === null) {
+        if (this.title === false) {
+            return;
+        } else if (typeof this.title !== 'object' || this.title === null) {
             this.title = {
                 html: this.title || 'Title'
             };
@@ -91,7 +98,8 @@ Ext.define('Taco.core.ux.content.Header', {
         Ext.apply(this.title, {
             xtype: 'component',
             autoEl: 'h1',
-            itemId: 'title'
+            itemId: 'title',
+            flex: 1
         });
     },
 
@@ -105,11 +113,18 @@ Ext.define('Taco.core.ux.content.Header', {
             return;
         }
 
-        if (typeof this.title !== 'object' || this.title === null) this.title = { html: title };
-        else this.title.html = title;        
+        if (typeof this.title !== 'object' || this.title === null) {
+            this.title = {
+                html: title
+            };
+        } else {
+            this.title.html = title;
+        }
     },
 
     updateTitle: function (data) {
-        this.title.update(data);
+        if (this.title && this.title.isComponent) {
+            this.title.update(data);
+        }
     }
 });

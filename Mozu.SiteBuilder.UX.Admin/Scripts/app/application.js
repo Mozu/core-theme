@@ -65,10 +65,14 @@ Ext.define('Taco.Application',{
     autoCreateViewport: false,
     requires: [
             'Taco.core.util.Common',
-            'Taco.overrides.window.MessageBox',
+            'Taco.overrides.form.Basic',
+            'Taco.overrides.form.field.ComboBox',
             'Taco.overrides.grid.RowEditor',
             'Taco.overrides.grid.RowEditorButtons',
-            'Taco.overrides.form.field.ComboBox',
+            'Taco.overrides.menu.Item',
+            'Taco.overrides.panel.Header',
+            'Taco.overrides.panel.Tool',
+            'Taco.overrides.window.MessageBox',
             'Ext.data.association.HasOne',
             'Taco.core.data.RemoteException',
             'Taco.core.context.TaContext',
@@ -98,8 +102,7 @@ Ext.define('Taco.Application',{
             'Ext.layout.container.Column',
             'Ext.layout.container.Accordion',
             'Ext.layout.container.Absolute',
-            'Ext.form.field.Radio',
-            'Taco.overrides.menu.Item'
+            'Ext.form.field.Radio'
     ],
     controllers: [
             'Analytics',
@@ -132,9 +135,10 @@ Ext.define('Taco.Application',{
             'ProductTypes',
             'Attributes',
             'FileManager',
-            "Channels",
-            "Locations",
-            "LocationTypes"
+            'Channels',
+            'Locations',
+            'LocationTypes',
+            'Websites'
     ],
     stores: ['Taco.store.LocalizedStrings'],
     context: null,
