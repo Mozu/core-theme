@@ -111,28 +111,28 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 
                 var initTask = genSettingsTask.ContinueWith(task =>
                     {
-                        GeneralSettings = Mapper.Map<GeneralSettings>(task.Result.ReadAsSync());
+                        _generalSettings = Mapper.Map<GeneralSettings>(task.Result.ReadAsSync());
                         HttpCookie cookie = _cookieProvider.GetRequestCookie(FORCE_THEME_COOKIE_NAME);
 
                         if (cookie != null && !string.IsNullOrEmpty(cookie.Value))
                         {
-                            ThemeId = cookie.Value;
+                            _themeId = cookie.Value;
                         }
-                        else if (_mobileDetectionProvider.IsCurrentRequestMobile && !string.IsNullOrEmpty(GeneralSettings.MobileTheme))
+                        else if (_mobileDetectionProvider.IsCurrentRequestMobile && !string.IsNullOrEmpty(_generalSettings.MobileTheme))
                         {
-                            ThemeId = GeneralSettings.MobileTheme;
+                            _themeId = _generalSettings.MobileTheme;
                         }
                         else
                         {
-                            ThemeId = GeneralSettings.Theme;
+                            _themeId = _generalSettings.Theme;
                         }
 
-                        Theme = _themeRepository.GetThemeOrDefault(ThemeId);
-                        
-                        return _themeSettingsRepository.Value.GetRuntimeValues(Theme.Id).ContinueWith(task2 =>
+                        _theme = _themeRepository.GetThemeOrDefault(_themeId);
+
+                        return _themeSettingsRepository.Value.GetRuntimeValues(_theme.Id).ContinueWith(task2 =>
                             {
-                                
-                                ThemeSettings = task2.Result;
+
+                                _themeRuntimeSettingsCollection = task2.Result;
                                 //not ready for prime time
                                 //var tmp = ThemeSettings[ThemeSettingsRepository.ADDONKEY] as IEnumerable;
                                 //if (tmp != null)
