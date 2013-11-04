@@ -59,13 +59,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             foreach (var themeRuntimeSetting in values)
             {
 
-                if (themeRuntimeSetting.Value == null || themeRuntimeSetting.Value is string || themeRuntimeSetting.Value.GetType().IsByRef)
+                if (themeRuntimeSetting.Value == null || themeRuntimeSetting.Value is string || themeRuntimeSetting.Value.GetType().IsValueType)
                 {
                     jobj.Add(themeRuntimeSetting.Setting.Id, new JValue(themeRuntimeSetting.Value));
                 }
                 else if (themeRuntimeSetting.Value is JContainer)
                 {
                     jobj.Add(themeRuntimeSetting.Setting.Id, (JContainer)themeRuntimeSetting.Value);
+                }
+                else if (themeRuntimeSetting.Value is JValue)
+                {
+                    jobj.Add(themeRuntimeSetting.Setting.Id, (JValue)themeRuntimeSetting.Value);
                 }
                 else if (themeRuntimeSetting.Value.GetType().IsArray)
                 {
