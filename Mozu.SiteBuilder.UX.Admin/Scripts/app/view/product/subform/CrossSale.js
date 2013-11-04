@@ -15,11 +15,12 @@ Ext.define('Taco.view.product.subform.CrossSale', {
 
         this.ProductStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Products');
 
-
         this.ProductInput = Ext.create('Taco.core.ux.form.BoxSelect', {
+            name: 'crossSale',
             forceSelection: false,
             fieldLabel: 'Choose Product',
             store: this.ProductStore,
+            value: this.product.get('crossSale'),
             queryMode: 'local',
             displayField: 'productName',
             valueField: 'productCode'
@@ -29,5 +30,21 @@ Ext.define('Taco.view.product.subform.CrossSale', {
         this.items = [this.ProductInput];
 
         this.callParent( arguments );
+    },
+
+    beforeSave: function () {
+        var me = this;
+        // do any form validation. return false if the form is not valid for save;
+
+        // do any manual record updates from the form;
+        var form = me.getForm();
+        // this data member wants the record data instead of the array of values that is return by combo. need to translate to record.data objects
+        var locationTypes = form.findField("crossSale");
+        me.product.set('crossSale', locationTypes.getValueRecordsData());
+
+        // need to manually mark dirty since the setValue with complex data doesn't trigger the dirty state on the model
+        me.product.setDirty();
+
+        return true;
     }
 });

@@ -288,6 +288,11 @@ Ext.define('Taco.model.Product', {
             defaultValue: []
         },
         {
+            name: "crossSale",
+            type: "auto",
+            defaultValue: []
+        },
+        {
             name: "isConfigurable",
             type: 'boolean',
             convert: function (v, record) {
