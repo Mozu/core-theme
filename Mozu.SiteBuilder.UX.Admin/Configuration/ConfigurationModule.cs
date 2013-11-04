@@ -18,6 +18,7 @@ using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Navigation;
+using Mozu.SiteSettings.Application.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Configuration
 {
@@ -56,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Content.Contracts.Clients.DocumentListWebApiClient  ).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ShippingAdmin.Contracts.CarrierConfiguration).Assembly);
 
-          
+            builder.RegisterClassesMatchingInterfaceName(typeof(IApplicationsWebApiClient).Assembly);
             //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductAdmin.Contracts.Clients.ShippingRateWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Reporting.Contracts.Clients.ReportWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Shipping.Contracts.Clients.ShippingSettingsWebApiClient).Assembly);
@@ -81,9 +82,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
            // builder.Register<System.Web.HttpContextBase>((c, p) => new System.Web.HttpContextWrapper(System.Web.HttpContext.Current)).InstancePerDependency();
 
             builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
-            
 
-           
+
+            
 
 
             builder.RegisterType<NoOpMobileDetectionProvider>().As<IMobileDetectionProvider>().InstancePerLifetimeScope();

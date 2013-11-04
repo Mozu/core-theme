@@ -229,6 +229,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Core.ThirdParty.1.1.0-dev005\lib\Mozu.Core.ThirdParty.dll</HintPath>
     </Reference>
+    <Reference Include="Mozu.Core.ThirdParty.Contracts">
+      <HintPath>..\packages\Mozu.Core.ThirdParty.Contracts.1.2.0-dev001\lib\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
+    </Reference>
     <Reference Include="Mozu.Customer.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Customer.Contracts.1.1.0-dev003\lib\Mozu.Customer.Contracts.dll</HintPath>
@@ -279,6 +282,9 @@
     <Reference Include="Mozu.ShippingRuntime.Contracts.Constants, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.1.0-dev004\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.SiteSettings.Application.Contracts">
+      <HintPath>..\packages\Mozu.SiteSettings.App.Contracts.1.2.0-dev001\lib\Mozu.SiteSettings.Application.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
