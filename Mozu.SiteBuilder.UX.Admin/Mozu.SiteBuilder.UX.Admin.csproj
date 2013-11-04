@@ -672,7 +672,7 @@
     <Content Include="Scripts\app\view\orderAttribute\Index.js" />
     <Content Include="Scripts\app\view\order\widget\DiscountRowBody.js" />
     <Content Include="Scripts\app\view\pendingChange\Product.js" />
-    <Content Include="Scripts\app\view\product\subform\RelatedProduct.js" />
+    <Content Include="Scripts\app\view\product\subform\CrossSale.js" />
     <Content Include="Scripts\app\view\report\Index.js" />
     <Content Include="Scripts\app\view\settings\paymentAndCheckout\ExternalGateway.js" />
     <Content Include="Scripts\app\view\settings\Publishing.js" />
