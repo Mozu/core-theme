@@ -17,6 +17,10 @@
 
     .#{$prefix}tree-node-text {
         font-size: 13px;
+
+        span {
+            vertical-align: top;
+        }
     }
 
     .#{$prefix}grid-row-alt {
@@ -28,5 +32,24 @@
         .#{$prefix}grid-td {
             background-color: $grid-cell-selected-background-color;
         }
+    }
+
+    .#{$vprefix}website-tree-icon {
+        display: inline-block;
+        margin-right: 4px;
+        overflow: hidden;
+        @include icon-font($glyph-pagecategory);
+        height: 12px;
+        width: 10px;
+
+        &::after {
+            color: $color-neutral-40;
+            left: auto;
+            right: 0px;
+        }
+    }
+
+    .#{$vprefix}website-tree-sublink {
+        float: right;
     }
 }
