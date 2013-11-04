@@ -9,7 +9,9 @@ Ext.define('Taco.view.location.Index', {
         'Taco.model.Location'
     ],
 
-    typeName: 'Locations',
+    // used by create button
+    typeName: 'Location',
+    
     gridHeaderLabel: 'Locations',
     
     editorName: 'Taco.view.location.Edit',
