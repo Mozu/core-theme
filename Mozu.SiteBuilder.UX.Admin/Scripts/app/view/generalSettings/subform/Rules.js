@@ -4,6 +4,8 @@
  * @date 6/10/2013
  *
  */
+/*
+******** Note: (Simeon 10/30/2013) this class was deprecated and is no longer in use.*******
 
 Ext.define('Taco.view.generalSettings.subform.Rules', {
     //extend: 'Taco.view.product.subform.Subform',
@@ -27,18 +29,7 @@ Ext.define('Taco.view.generalSettings.subform.Rules', {
 
         me.ipRangeStore = Ext.create('Taco.store.IpRanges', {
             autoLoad: true,
-            listeners: {/*
-                add: me.onStoreStateChange,
-                remove: me.onStoreStateChange,
-                load: function (store, records, successful) {
-                    var form = me.ipAddresses.getForm();
-                    if (successful && records.length) {
-                        form.setValues({ ipaddress: 'block' });
-                    } else {
-                        form.setValues({ ipaddress: 'allow' });
-                    }
-                },
-                scope: me*/
+            listeners: {
             }
         });
         
@@ -154,3 +145,5 @@ Ext.define('Taco.view.generalSettings.subform.Rules', {
         this.callParent(arguments);
     }
 });
+
+*/

@@ -233,6 +233,16 @@ Ext.define('Taco.store.Navigation', {
                 "label": "Inventory",
                 "address": "tbd/inventory"
             }]
+        }, {
+            "id": "applications",
+            "label": "Applications",
+            "address": "applications",
+            "icon": "nav-locations",
+            "items": [{
+                "id": "applications-manage",
+                "label": "Applications",
+                "address": "applications"
+            }]
         }],
         reader: {
             type: 'json',

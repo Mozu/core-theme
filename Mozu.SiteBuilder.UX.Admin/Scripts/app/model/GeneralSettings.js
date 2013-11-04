@@ -44,9 +44,6 @@ Ext.define('Taco.model.GeneralSettings', {
             }
         },
         { "name": "isMozuWebSite", "type": "boolean", defaultValue:true},
-
-        // not in json
-        { "name": "ipRanges", "type": "auto", "useNull": true },
         
         // not in json robots.js
         // todo: need to get this implemnted in the service or remove from the client pending service implementation;

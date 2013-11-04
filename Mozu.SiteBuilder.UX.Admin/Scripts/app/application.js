@@ -105,6 +105,7 @@ Ext.define('Taco.Application',{
             'Ext.form.field.Radio'
     ],
     controllers: [
+            'Applications',
             'Analytics',
             'Dashboard',
             'Reports',
