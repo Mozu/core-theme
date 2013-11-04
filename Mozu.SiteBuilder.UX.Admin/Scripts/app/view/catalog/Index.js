@@ -17,21 +17,58 @@ Ext.define('Taco.view.catalog.Index', {
         var items;
 
         items = [{
-            xtype: 'tabpanel',
-            tabBar: {
-                tools: [{
-                    xtype: 'button',
-                    ui: 'action-primary',
-                    scale: 'medium',
-                    text: 'click'
-                }]
-            },
+            xtype: 'form',
             items: [{
-                title: 'Editor',
-                html: 'editor'
+                xtype: 'textfield',
+                name: 'name',
+                fieldLabel: 'Name',
+                msgTarget: 'under',
+                allowOnlyWhitespace: false
             }, {
-                title: 'Settings',
-                html: 'settings'
+                xtype: 'textfield',
+                name: 'email',
+                fieldLabel: 'Email Address',
+                msgTarget: 'under',
+                regexText: 'Please enter a valid email address',
+                regex: /^\S+@\S+$/,
+                allowOnlyWhitespace: false
+            }, {
+                xtype: 'combobox',
+                name: 'customerType',
+                fieldLabel: 'Type',
+                msgTarget: 'under',
+                store: [
+                    'Personal',
+                    'Professional'
+                ],
+                validator: function (value) {
+                    return value === 'Personal' ? true : 'Please select "Personal"';
+                }
+            }, {
+                xtype: 'radiogroup',
+                name: 'subscribe',
+                fieldLabel: 'Special Offers',
+                msgTarget: 'under',
+                columns: 1,
+                vertical: true,
+                items: [{
+                    name: 'subscribe',
+                    boxLabel: 'Yes, I would like to receive special offers',
+                    inputValue: 'true'
+                }, {
+                    name: 'subscribe',
+                    boxLabel: 'No, thank you',
+                    inputValue: 'false'
+                }]
+            }, {
+                xtype: 'button',
+                ui: 'action-primary',
+                scale: 'medium',
+                text: 'Save',
+                margin: '20 0 0',
+                formBind: true,
+                scope: this,
+                handler: this.handleSave
             }]
         }];
 
