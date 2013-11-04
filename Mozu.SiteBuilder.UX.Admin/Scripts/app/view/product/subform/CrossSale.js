@@ -1,8 +1,11 @@
-Ext.define('Taco.view.product.subform.RelatedProduct', {
+Ext.define('Taco.view.product.subform.CrossSale', {
     extend: 'Taco.view.product.subform.Subform',
-
-    title: 'Related Product',
-    
+    requires: ['Taco.store.Products'],
+    title: 'Cross Sale',
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
     initComponent: function () {
         this.defaults.width = '100%';
         this.defaults.product = this.product;
