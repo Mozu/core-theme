@@ -16,6 +16,9 @@ Ext.define('Taco.model.Order', {
         update: 75,
         destroy: 76
     },
+    requiredStores: [
+        'Taco.store.Channels'
+    ],
     fields: [
         {
             "name": "id",
@@ -39,9 +42,27 @@ Ext.define('Taco.model.Order', {
             name: 'tenantId',
             type: 'int'
         },
+        
         {
             name: 'channelCode',
             type: 'string'
+        },
+        
+        {
+            name: 'channelName',
+            type: 'string',
+            persist:false,
+            convert: function (val, record) {
+                var channelCode = record.get("channelCode"),
+                    store = Taco.core.data.StoreManager.getOrCreate('Taco.store.Channels'),
+                    channelRecord = store.getById(channelCode),
+                    name = "";
+                
+                if (channelRecord) {
+                    name = channelRecord.get("name");
+                }
+                return name;
+            }
         },
         {
             name: 'siteId',
@@ -111,16 +132,7 @@ Ext.define('Taco.model.Order', {
             "type": "string",
             "useNull": true
         },
-        {
-            "name": "fulfillmentMethodCode",
-            "type": "string",
-            "useNull": true
-        },
-        {
-            "name": "fulfillmentMethodName",
-            "type": "string",
-            "useNull": true
-        },
+        
         {
             "name": "activeShippingDiscount",
             "type": "float",
