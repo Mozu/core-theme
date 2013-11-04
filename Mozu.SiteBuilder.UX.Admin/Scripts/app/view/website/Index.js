@@ -45,7 +45,9 @@ Ext.define('Taco.view.website.Index', {
                 cardpanel.getLayout().setActiveItem(1);
             }
         }, {
-            xtype: 'component',
+            xtype: 'checkboxfield',
+            boxLabel: 'View dropzones',
+            margin: '0 0 0 25',
             flex: 1
         }, {
             xtype: 'button',
@@ -178,18 +180,17 @@ Ext.define('Taco.view.website.Index', {
         this.down('#primaryAction').setHandler(function () {
             console.log('handler updated');
         });
-    },
-
-    onRender: function () {
-        this.callParent(arguments);
-
-        // TODO: remove this when hbox layouts position their items correctly
-        Ext.defer(function () {
-            var header = this.getHeader();
-
-            if (header && header.isComponent) {
-                header.updateLayout();
-            }
-        }, 600, this);
     }
+
+    // onRender: function () {
+    //     this.callParent(arguments);
+
+    //     Ext.defer(function () {
+    //         var header = this.getHeader();
+
+    //         if (header && header.isComponent) {
+    //             header.updateLayout();
+    //         }
+    //     }, 600, this);
+    // }
 });

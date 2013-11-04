@@ -24,10 +24,12 @@ Ext.define('Taco.view.website.Tree', {
             dataIndex: 'name',
             renderer: function (value, metaData, record) {
                 var id = record.getId(),
-                    output = '<span>' + value + '</span>' // '<a href="#" class="taco-action-navigate">' + value + '</a>';
+                    isRoot = record.parentNode && record.parentNode.isRoot(),
+                    output = '<span class="taco-website-tree-icon"></span><span>' + value + '</span>';
+                    // output = '<a href="#" class="taco-action-navigate">' + value + '</a>';
 
-                if (record.parentNode && record.parentNode.isRoot()) {
-                    output = '<span>' + value + '</span><a href="#" data-page-creator="true" data-parent-id="' + id + '" >+ Add Page</a>';
+                if (isRoot) {
+                    output += ('<span class="taco-website-tree-sublink" data-page-creator="true" data-parent-id="' + id + '" >+ Add Page</span>');
                 }
 
                 return output;

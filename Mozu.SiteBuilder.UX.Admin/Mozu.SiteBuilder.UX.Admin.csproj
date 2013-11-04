@@ -948,6 +948,8 @@
     <Content Include="Scripts\app\mocks\applications.json" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\var\tree\Panel.scss" />
     <Content Include="Scripts\sass\src\view\website\Tree.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\form\field\Checkbox.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\src\form\field\Checkbox.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
