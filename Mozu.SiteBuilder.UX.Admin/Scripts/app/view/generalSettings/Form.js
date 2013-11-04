@@ -9,7 +9,6 @@ Ext.define('Taco.view.generalsettings.Form', {
     alias: 'widget.generalsettingseditor',
     requires: [
         'Taco.view.generalSettings.subform.About',
-        'Taco.view.generalSettings.subform.Rules',
         'Taco.view.generalSettings.subform.Notifications',
         'Taco.view.generalSettings.subform.Analytics',
         'Taco.view.generalSettings.subform.Robots',
@@ -27,7 +26,6 @@ Ext.define('Taco.view.generalsettings.Form', {
 
         me.items = [
             Ext.create('Taco.view.generalSettings.subform.About', subFormConfig),
-          //  Ext.create('Taco.view.generalSettings.subform.Rules', subFormConfig),
             Ext.create('Taco.view.generalSettings.subform.Maintenance', subFormConfig),
             Ext.create('Taco.view.generalSettings.subform.Notifications', subFormConfig),
             Ext.create('Taco.view.generalSettings.subform.Analytics', subFormConfig),

@@ -1,6 +1,10 @@
 ﻿/**
  * @class Taco.model.IpRange
  */
+
+/*
+// deprecated: (simeon k. 10/31/2013)
+
 Ext.define('Taco.model.IpRange', {
     extend: 'Taco.core.data.Model',
     idProperty: 'id',
@@ -33,3 +37,5 @@ Ext.define('Taco.model.IpRange', {
         }
     }
 });
+
+*/
