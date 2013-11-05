@@ -15,7 +15,7 @@ Ext.define('Taco.view.product.subform.CrossSale', {
 
         this.ProductStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Products');
 
-        this.ProductInput = Ext.create('Taco.core.ux.form.BoxSelect', {
+        this.ProductInput = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'crossSale',
             forceSelection: false,
             fieldLabel: 'Choose Product',

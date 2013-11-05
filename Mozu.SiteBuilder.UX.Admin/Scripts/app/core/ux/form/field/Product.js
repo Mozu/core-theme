@@ -11,6 +11,7 @@ Ext.define('Taco.core.ux.form.field.Product', {
     forceSelection: true,
     minChars: 3,
     typeAhead: true,
+    queryMode:'remote',
     displayField: 'productName',
     fieldLabel: 'Select Products',
     valueField: 'productCode',

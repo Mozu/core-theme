@@ -8,7 +8,7 @@ Ext.define('Taco.view.location.subform.Location', {
     ui: 'subform',
     
     requires: [
-        'Taco.core.ux.form.BoxSelect',
+        'Ext.ux.form.field.BoxSelect',
         'Taco.shared.view.modal.Address',
         'Taco.shared.view.field.Address',
         'Taco.core.ux.form.field.EditableDisplayField'

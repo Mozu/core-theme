@@ -72,7 +72,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                     {
                         xtype: 'taco.field.product',
                         name: this.getFieldName(ptAttribute),
-                        width: '100%',
+                        width:600,
                         value: values,
                     }
                 ];

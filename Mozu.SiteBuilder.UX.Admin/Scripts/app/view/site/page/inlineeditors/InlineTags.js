@@ -2,7 +2,7 @@
  * @class Taco.view.site.page.inlineeditors.InlineTags
  */
     Ext.define('Taco.view.site.page.inlineeditors.InlineTags', {
-        extend: 'Taco.core.ux.form.BoxSelect',
+        extend: 'Ext.ux.form.field.BoxSelect',
         requires:['Ext.data.ArrayStore'],
         config: { editableElement: null, metaData: null, editSurfaceParent: null },
 

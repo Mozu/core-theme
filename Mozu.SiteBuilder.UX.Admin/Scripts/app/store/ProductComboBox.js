@@ -7,7 +7,7 @@
 Ext.define('Taco.store.ProductComboBox', {
     extend: 'Ext.data.Store',
     model: 'Taco.model.Product',
-    pageSize: 25,
+    pageSize: 10,
     remoteSort: true,
     remoteFilter: true,
 

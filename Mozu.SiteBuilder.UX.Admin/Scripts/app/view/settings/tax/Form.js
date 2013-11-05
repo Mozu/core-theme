@@ -26,7 +26,7 @@ Ext.define('Taco.view.settings.tax.Form', {
         });
         
 
-        this.statesInput = Ext.create('Taco.core.ux.form.BoxSelect', {
+        this.statesInput = Ext.create('Ext.ux.form.field.BoxSelect', {
             forceSelection:true,
             fieldLabel: 'Choose State' ,
             store: this.statesStore,
