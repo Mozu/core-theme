@@ -439,14 +439,10 @@
     <Content Include="Themes\Core4\scripts\modules\mixin-paging.js" />
     <Content Include="Themes\Core4\scripts\modules\views-paging.js" />
     <Content Include="Themes\Core4\build.js" />
-    <Content Include="Themes\Core4\MetaData\thumb.jpg" />
-    <Content Include="Themes\Core4\MetaData\ThemeSettings.xml" />
     <Content Include="Themes\Core4\resources\admin\widgets\_0007_featured-products.png" />
     <Content Include="Themes\Core4\resources\admin\widgets\_0004_html.png" />
     <Content Include="Themes\Core4\resources\admin\widgets\_0005_horizontal-divider.png" />
-    <Content Include="Themes\Core4\MetaData\Widgets\cms\paragraphWithHeader\_0003_text.png" />
     <Content Include="Themes\Core4\resources\admin\widgets\_0008_share.png" />
-    <Content Include="Themes\Core4\MetaData\Widgets\social\facebookComments\_0008_share.png" />
     <Content Include="Themes\Core4\resources\images\error-exclamation.png" />
     <Content Include="Themes\Core4\scripts\modules\api.js" />
     <Content Include="Themes\Core4\scripts\modules\cart-monitor.js" />
@@ -789,15 +785,6 @@
     <Content Include="Themes\MobileCore\Modules\CartTableFooter.vol">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Themes\Core4\MetaData\Widgets\cms\columndivider\definition.json" />
-    <Content Include="Themes\Core4\MetaData\Widgets\cms\content\definition.json" />
-    <Content Include="Themes\Core4\MetaData\Widgets\cms\horizontalrule\definition.json" />
-    <Content Include="Themes\Core4\MetaData\Widgets\cms\image\definition.json" />
-    <Content Include="Themes\Core4\MetaData\Widgets\cms\imagesGallery\definition.json" />
-    <Content Include="Themes\Core4\MetaData\Widgets\cms\paragraphWithHeader\definition.json" />
-    <Content Include="Themes\Core4\MetaData\Widgets\misc\pickles\definition.json" />
-    <Content Include="Themes\Core4\MetaData\Widgets\social\addthis\definition.json" />
-    <Content Include="Themes\Core4\MetaData\Widgets\social\facebookComments\definition.json" />
     <Content Include="Themes\Core3\Resources\old_stylesheets\modules\admin-injections.less" />
     <Content Include="Themes\Core3\Resources\old_stylesheets\modules\breadcrumbs.less" />
     <Content Include="Themes\Core3\Resources\old_stylesheets\modules\colorbox.less" />
@@ -977,7 +964,6 @@
     <Folder Include="Themes\Core3\Templates\Documentation\" />
     <Folder Include="Themes\Core3\Templates\Pages\" />
     <Folder Include="Themes\Core4\compiled\" />
-    <Folder Include="Themes\Core4\MetaData\Widgets\catalog\featuredproducts\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core3\Modules\_Archive.vol" />
