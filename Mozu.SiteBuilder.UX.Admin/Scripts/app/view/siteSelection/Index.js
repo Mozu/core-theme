@@ -40,7 +40,7 @@ Ext.define('Taco.view.siteSelection.Index', {
                                             '<div><a class="action-preview" href="/admin/{[values.urlToken]}/generalsettings">Site Settings</a></div>',
                                             '<div><a class="action-settings" href="/admin/{[values.urlToken]}/themes">Theme</a></div>',
                                             '<div><a class="action-addons" href="/admin/{[values.urlToken]}/sites/pages">Edit</a></div>',
-                                            '<div><a class="action-addons" target="_blank" href="/_gosite/{[values.urlToken]}">View Live Site</a></div>',
+                                            '<div><a class="action-addons" target="_blank" href="/_gosite/{[values.id]}">View Live Site</a></div>',
                                         '</li>',
                                     '</ul>',
                                     '<div class="title-large">{[values.name]}</div>',
