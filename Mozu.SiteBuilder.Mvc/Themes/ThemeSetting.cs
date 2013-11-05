@@ -10,11 +10,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public string Id { get;  set; }
 
         [DataMember(Name = "defaultValue")]
-        public object DefaultValue { get; private set; }
+        public object DefaultValue { get; set; }
 
         /// <summary>
-        /// Id of the theme that declared this setting.
+        /// File that declared this setting.
         /// </summary>
-        public string DeclaredBy { get; private set; }
+        public string DeclaredInFile { get; set; }
     }
 }

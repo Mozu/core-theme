@@ -13,7 +13,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public string ThemePath { get; set; }
         public ThemeConfiguration Configuration { get; set; }
         public Thumbnail Thumbnail { get; set; }
-        
+        public Dictionary<string, ThemeLabelCollection> Labels { get; set; }
      
 
         public ThemeFileSystemInfo[] FileListing { get; set; }

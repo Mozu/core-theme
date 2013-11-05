@@ -4,14 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Hosting;
-using System.Xml.Serialization;
 using AutoMapper;
-using Mozu.Core;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Extensions;
-using Mozu.SiteBuilder.Mvc.Models.CMS;
-using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
 {
@@ -80,6 +77,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             tmd.Configuration = LoadThemeDescriptor(tmd.ThemePath, METADATA_THEME_FILE_NAME);
             tmd.FileListing = LoadThemeFileListing(tmd.ThemePath);
             tmd.Thumbnail = LoadThemeThumbnail(tmd.ThemePath);
+            tmd.Labels = LoadThemeLabels(tmd.ThemePath);
            
 
             if (tmd.Configuration == null)
@@ -143,16 +141,52 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             // theme2 is the latest standard for theme files. it combines theme.xml and metada\themesettings.xml
             string fileName = Path.Combine(themePath, fileType);
 
-            ThemeConfiguration themecfg = null;
-            if (File.Exists(fileName))
-            {
-                using (var stream = File.OpenText(fileName))
-                {
-                    themecfg = _jsonSerializer.Deserialize<ThemeConfiguration>(new JsonTextReader(stream));
-                }
-            }
+            if (!File.Exists(fileName))
+                return null;
+
+            ThemeConfiguration themecfg = new ThemeConfiguration();
+            var themecfgJsonText = File.ReadAllText(fileName);
+            var themecfgJson = JObject.Parse(themecfgJsonText);
+
+            themecfg.About = themecfgJson["about"].ToObject<ThemeConfiguration.ThemeAbout>();
+            themecfg.PageTypes = themecfgJson["pageTypes"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>>();
+            themecfg.Widgets = themecfgJson["widgets"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.WidgetDefinition>>();
+            themecfg.Settings =
+                (
+                    from setting in themecfgJson["settings"].Children<JProperty>()
+                    select new ThemeSetting { Id = setting.Name, DefaultValue = setting.Value, DeclaredInFile = fileName }
+                ).ToList();
 
             return themecfg;
+        }
+
+        private Dictionary<string, ThemeLabelCollection> LoadThemeLabels(string themePath)
+        {
+            Dictionary<string, ThemeLabelCollection> returnValues = new Dictionary<string, ThemeLabelCollection>(StringComparer.OrdinalIgnoreCase);
+            string labelsPath = Path.Combine(themePath, "labels");
+
+            if (!Directory.Exists(labelsPath))
+                return null;
+
+            // inside of labels\ there are a bunch of json files named <locale>.json. For instance: "en-US.json"
+            foreach (string labelJsonFile in Directory.GetFiles(labelsPath, "*.json"))
+            {
+                string localeCode = Path.GetFileNameWithoutExtension(labelJsonFile);
+                ThemeLabelCollection labelCollection = new ThemeLabelCollection();
+
+                var labelJsonFileText = File.ReadAllText(labelJsonFile);
+                var labelsJson = JObject.Parse(labelJsonFileText);
+
+                var labels =
+                    from j in labelsJson.Children<JProperty>()
+                    select new ThemeLabel { Id = j.Name, Value = (string)j.Value, DeclaredInFile = labelJsonFile };
+
+                labelCollection.AddRange(labels);
+
+                returnValues[localeCode] = labelCollection;
+            }
+
+            return returnValues;
         }
 
         /// <summary>
