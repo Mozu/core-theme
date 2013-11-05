@@ -66,6 +66,7 @@ Ext.define('Taco.Application',{
     requires: [
             'Taco.core.util.Common',
             'Taco.overrides.form.Basic',
+            'Taco.overrides.form.field.Base',
             'Taco.overrides.form.field.ComboBox',
             'Taco.overrides.grid.RowEditor',
             'Taco.overrides.grid.RowEditorButtons',
