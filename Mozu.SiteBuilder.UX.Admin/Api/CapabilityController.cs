@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<HttpResponseMessage> CapList([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
 	    {
 	        var apps = (await _applicationsWebApiClient.GetApplications(startIndex: 0, pageSize: 600)).ReadAsSync().Items;
-
+             
 
 	        var vmApps = Mapper.Map<List<VM.Application>>(apps);
 
@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 	        var ret = this.List2<VM.Capability>(list);
 
 
-	        return this.Request.CreateResponse(HttpStatusCode.Found, ret,  LowerCaseJsonMediaTypeFormatter.Default );
+	        return this.Request.CreateResponse(HttpStatusCode.OK , ret,  LowerCaseJsonMediaTypeFormatter.Default );
 
 
 	    }

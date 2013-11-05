@@ -597,6 +597,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="App_Readme\glimpse.readme.txt" />
     <Content Include="Scripts\app\app.js" />
+    <Content Include="Scripts\app\controller\Capability.js" />
     <Content Include="Scripts\app\controller\Channels.js" />
     <Content Include="Scripts\app\controller\Applications.js" />
     <Content Include="Scripts\app\controller\SiteBuilder.js" />
@@ -640,6 +641,7 @@
     <Content Include="Scripts\app\overrides\window\Window.js" />
     <Content Include="Scripts\app\shared\view\field\Address.js" />
     <Content Include="Scripts\app\shared\view\modal\WishList.js" />
+    <Content Include="Scripts\app\store\Capability.js" />
     <Content Include="Scripts\app\store\Channels.js" />
     <Content Include="Scripts\app\store\Applications.js" />
     <Content Include="Scripts\app\store\CustomerAttributes.js" />
