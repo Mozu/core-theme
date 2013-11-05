@@ -84,7 +84,6 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ext.ux.IFrame": [],
   "Taco.core.ux.OptionComboBox": [],
   "Taco.view.navigation.PrimaryMenu": [],
-  "Taco.core.ux.form.BoxSelect": [],
   "Taco.view.error.Http404": [],
   "Taco.model.ProductProperty": [],
   "Taco.model.StateComboBox": [],
@@ -742,9 +741,7 @@ Ext.ClassManager.addNameAliasMappings({
     "widget.optioncombobox"
   ],
   "Taco.view.navigation.PrimaryMenu": [],
-  "Taco.core.ux.form.BoxSelect": [
-    "widget.taco.boxselect"
-  ],
+
   "Taco.view.error.Http404": [],
   "Taco.model.ProductProperty": [],
   "Taco.model.StateComboBox": [],

@@ -1,1 +1,1 @@
-/* removed used standard Ext.ux.form.field.BoxSelect 
+/*removed used standard Ext.ux.form.field.BoxSelect */
