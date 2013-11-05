@@ -61,7 +61,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var app = (await _applicationsWebApiClient.GetApplication(cap.AppId)).ReadAsSync();
 
-                var index = app.Capabilities.FindIndex(_ => _.CapabilityType == cap.CapabilityType);
+                var index = app.Capabilities.FindIndex(_ => _.Id == cap.Id);
 
                // var newDmCap = Mapper.Map<Mozu.Core.ThirdParty.Contracts.Capability>(cap);
 
