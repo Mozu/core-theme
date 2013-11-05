@@ -25,8 +25,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
         {
             base.AddMessageHandlers(httpConfiguration, messageErrorHandler);
             httpConfiguration.MessageHandlers.Insert(0, new HttpContextInjectingMessageHandler());
-           
-           
+            httpConfiguration.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
+
         }
         protected override void ApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)
         {

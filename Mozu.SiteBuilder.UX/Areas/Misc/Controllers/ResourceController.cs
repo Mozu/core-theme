@@ -12,6 +12,8 @@ using Microsoft.Win32;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Themes;
@@ -287,6 +289,18 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return Content("scripts-built/" + pathinfo, "text/javascript");
         }
 
+
+        [ClientCacheHeaders(ConfigKey = "siteContext")]
+        [System.Web.Http.HttpGet]
+        public SiteContext SiteContextAction()
+        {
+            return this.SiteContext;
+
+        }
+
+
+
+
         [ClientCacheHeaders(ConfigKey = "scripts")]
         [System.Web.Http.HttpGet]
         public HttpResponseMessage  Scripts(string pathinfo)
@@ -377,6 +391,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             return GetFileResult(pathinfo, contentType);
         }
+
+        
 
         private HttpResponseMessage  GetFileResult(string pathinfo, string contentType)
         {
