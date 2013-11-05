@@ -49,11 +49,14 @@ effectiveEndDate: "2015-11-04T13:54:24.2807086-06:00"
             "type": "string",
             convert: function(val, record) {
                 var id = record.get('capabilityType').match(/[A-Z][a-z]+/g);
-                var name = id[0];
-                for (var x = 1; x < id.length; x++) {
-                    name = name + ' ' + id[x];
+                if (id) {
+                    var name = id[0];
+                    for (var x = 1; x < id.length; x++) {
+                        name = name + ' ' + id[x];
+                    }
+                    return name;
                 }
-                return name;
+                return id;
             }
         },
         {
