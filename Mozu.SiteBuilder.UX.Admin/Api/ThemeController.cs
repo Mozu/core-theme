@@ -176,16 +176,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             
             var theme = _themeRepository.GetTheme(themeId);
 
-            var themeSettings = (await _themeSettingsRepository.GetInstanceValues(themeId)) ?? new List<ThemeRuntimeSetting>();
+            var themeSettings = (await _themeSettingsRepository.GetInstanceValues(themeId)) ?? new JObject();
 
-            
-            var selectedAddons = (themeSettings.Where(x => x.Setting.Id == ThemeSettingsRepository.ADDONKEY ).Select(x => x.Value != null ? ((JArray )x.Value).Select(y=>(string)y).ToArray() : null ).FirstOrDefault()) ?? new string[0];
 
+            var selectedAddonsProperty = (JProperty)themeSettings[ThemeSettingsRepository.ADDONKEY];
+            var selectedAddons = selectedAddonsProperty != null ? selectedAddonsProperty.Value.ToObject<string[]>() : new string[0];
 
             var entitlements = (await _tenantClient.GetSiteEntitlements(this.SbApiContext.TenantId, this.SbApiContext.SiteId)).ReadAsSync();
 
-            SiteBuilderWeb webSettings = null;
-            
             var addonLocations = entitlements.Items.Where(x => x.ApplicationType == "Widget")
                 .Select(x => x.ApplicationVersionId.ToString())
                 .Union(Directory.GetDirectories(localAddonDir)
@@ -222,26 +220,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute (UriTemplate = "addons/update/{themeId}")]
         public async Task<Response<List<ThemeDTO>>> UpdateAddons(string themeId, string[] addons )
         {
+            var retval = await _themeSettingsRepository.SaveSingleValue(ThemeSettingsRepository.ADDONKEY, addons, themeId);
 
-
-            var themeSettings = (await _themeSettingsRepository.GetInstanceValues(themeId)) ?? new List<ThemeRuntimeSetting>();
-            var setting = themeSettings.FirstOrDefault(x => x.Setting.Id == ThemeSettingsRepository.ADDONKEY);
-            if (setting == null)
-            {
-                setting = new ThemeRuntimeSetting(new ThemeSetting() { Id = ThemeSettingsRepository.ADDONKEY }, addons);
-                themeSettings.Add(setting);
-            }
-            else
-            {
-                setting.Value = addons;
-            }
-
-
-            var retval = await _themeSettingsRepository.SaveInstanceValues(themeSettings, themeId);
-
-
-            return List2(new List<ThemeDTO>());
-
+            return SuccessWithTotal2<List<ThemeDTO>>(0);
         }
 
         [HttpPostRoute(UriTemplate = "update")]

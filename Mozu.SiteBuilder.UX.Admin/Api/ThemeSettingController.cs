@@ -55,33 +55,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<HttpResponseMessage> ReadInstance(string themeId)
         {
             var values = await _themeSettingsRepository.GetInstanceValues(themeId);
-            var jobj = new Newtonsoft.Json.Linq.JObject();
-            foreach (var themeRuntimeSetting in values)
-            {
 
-                if (themeRuntimeSetting.Value == null || themeRuntimeSetting.Value is string || themeRuntimeSetting.Value.GetType().IsValueType)
-                {
-                    jobj.Add(themeRuntimeSetting.Setting.Id, new JValue(themeRuntimeSetting.Value));
-                }
-                else if (themeRuntimeSetting.Value is JContainer)
-                {
-                    jobj.Add(themeRuntimeSetting.Setting.Id, (JContainer)themeRuntimeSetting.Value);
-                }
-                else if (themeRuntimeSetting.Value is JValue)
-                {
-                    jobj.Add(themeRuntimeSetting.Setting.Id, (JValue)themeRuntimeSetting.Value);
-                }
-                else if (themeRuntimeSetting.Value.GetType().IsArray)
-                {
-                    jobj.Add(themeRuntimeSetting.Setting.Id, new JArray(themeRuntimeSetting.Value));
-                }
-                else
-                {
-                    jobj.Add(themeRuntimeSetting.Setting.Id, new JObject(themeRuntimeSetting.Value));
-                }
-               
-            }
-            return this.Request.CreateResponse(HttpStatusCode.OK, jobj);
+            return this.Request.CreateResponse(HttpStatusCode.OK, values);
         }
 
         [HttpGetRoute(UriTemplate = "ui/read/{themeId}")]
@@ -110,19 +85,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <param name="values">Field values to persist</param>
         /// <returns>List of FieldValue></returns>
         [HttpPostRoute(UriTemplate = "instance/save/{themeId}")]
-        public async Task<Response<List<ThemeRuntimeSetting>>> SaveInstance(string themeId, Newtonsoft.Json.Linq.JObject values)
+        public async Task<Response<JObject>> SaveInstance(string themeId, Newtonsoft.Json.Linq.JObject values)
         {
-           var newSettings = new List<ThemeRuntimeSetting>();
-            var origional = await _themeSettingsRepository.GetInstanceValues(themeId);
-            foreach (var kvp in values)
-            {
-                newSettings.Add(new ThemeRuntimeSetting(new ThemeSetting() { Id = kvp.Key }, kvp.Value));
-                
-            }
-            
-
-            var retval = await _themeSettingsRepository.SaveInstanceValues(newSettings, themeId);
-            return List2(retval);
+            var retval = await _themeSettingsRepository.SaveInstanceValues(values, themeId);
+            return Single2(retval);
         }
     }
 }

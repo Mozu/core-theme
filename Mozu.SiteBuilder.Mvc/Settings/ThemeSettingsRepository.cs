@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Document = Mozu.Content.Contracts.Document;
 
 
@@ -18,8 +20,9 @@ namespace Mozu.SiteBuilder.Mvc.Settings
     public interface IThemeSettingsRepository
     {
         Task<ThemeRuntimeSettingsCollection> GetRuntimeValues(string themeId);
-        Task<List<ThemeRuntimeSetting>> SaveInstanceValues(List<ThemeRuntimeSetting> values, string themeId);
-        Task<List<ThemeRuntimeSetting>> GetInstanceValues(string themeId);
+        Task<JObject> SaveSingleValue(string key, object value, string themeId);
+        Task<JObject> SaveInstanceValues(JObject values, string themeId);
+        Task<JObject> GetInstanceValues(string themeId);
 
 
         Task<DateTime> GetTimeStamp(string themeId);
@@ -53,13 +56,42 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             _cache = cache;
         }
 
-        public async Task<List<ThemeRuntimeSetting>> SaveInstanceValues(List<ThemeRuntimeSetting> values, string themeId)
+
+        public Task<JObject> SaveSingleValue(string key, object value, string themeId)
         {
-            await UpdateSettings(values, themeId);
-            return values;
+            return GetInstanceValues(themeId)
+                .ContinueWith(t =>
+                {
+                    var values = t.Result ?? new JObject();
+
+                    JToken jValue;
+                    if (value is JToken)
+                        jValue = (JToken)value;
+                    else if (value == null || value is string || value.GetType().IsValueType)
+                        jValue = JValue.FromObject(value);
+                    else if (value is IList)
+                        jValue = JArray.FromObject(value);
+                    else
+                        jValue = JObject.FromObject(value);
+
+                    var existingValue = values[key] as JProperty;
+                    if (existingValue != null)
+                        existingValue.Value = jValue;
+                    else
+                        values.Add(key, jValue);
+
+                    return UpdateSettings(values, themeId)
+                        .ContinueWith(_ => values);
+                }).Unwrap();
         }
 
-        private Task<ServiceClientResponse<Document>> UpdateSettings(List<ThemeRuntimeSetting> values, string themeId)
+        public Task<JObject> SaveInstanceValues(JObject values, string themeId)
+        {
+            return UpdateSettings(values, themeId)
+                .ContinueWith(_ => values);
+        }
+
+        private Task<ServiceClientResponse<Document>> UpdateSettings(JObject values, string themeId)
         {
             return _cmsService.GetByPath2("settings", this.GetFileName(themeId))
                 .ContinueWith<Task<ServiceClientResponse<Document>>>(t =>
@@ -68,7 +100,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                     if (res.ResponseMessage.IsSuccessStatusCode)
                     {
                         var doc = res.ReadAsSync();
-                        doc.Set("data", Newtonsoft.Json.JsonConvert.SerializeObject(values, Formatting.None));
+                        doc.Set("data", values.ToString(Formatting.None));
                         return _cmsService.Update2(doc);
                     }
                     else
@@ -93,7 +125,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                                 new PropertyValue
                                     {
                                         PropertyType = "data",
-                                        Value = Newtonsoft.Json.JsonConvert.SerializeObject(values, Formatting.None)
+                                        Value = values.ToString(Formatting.None)
                                     }
                             }
                         };
@@ -104,27 +136,27 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                 .Unwrap();
         }
 
-        private Task<List<ThemeRuntimeSetting>> _getInstanceValues;
-        public Task<List<ThemeRuntimeSetting>> GetInstanceValues(string themeId)
+        private Task<JObject> _getInstanceValues;
+        public Task<JObject> GetInstanceValues(string themeId)
         {
 
             var key = typeof(List<ThemeRuntimeSetting>) + themeId;
 
-            var ret = _cache[key] as Tuple<DateTime, List<ThemeRuntimeSetting>>;
-            if (ret != null )
+            var cachedResult = _cache[key] as Tuple<DateTime, JObject>;
+            if (cachedResult != null )
             {
-                var tcs = new TaskCompletionSource<List<ThemeRuntimeSetting>>();
-                tcs.SetResult(ret.Item2 );
-                _ts = ret.Item1;
+                var tcs = new TaskCompletionSource<JObject>();
+                tcs.SetResult(cachedResult.Item2 );
+                _ts = cachedResult.Item1;
                 return tcs.Task;
             }
 
             if (_getInstanceValues == null)
             {
-                _getInstanceValues = _cmsService.GetByPath2("settings", this.GetFileName(themeId)).ContinueWith<List<ThemeRuntimeSetting>>(
+                _getInstanceValues = _cmsService.GetByPath2("settings", this.GetFileName(themeId)).ContinueWith<JObject>(
                     res =>
                     {
-                        List<ThemeRuntimeSetting> values = new List<ThemeRuntimeSetting>();
+                        JObject value = null;
                         if (res.Result.ResponseMessage.IsSuccessStatusCode)
                         {
                             var doc = res.Result.ReadAsSync();
@@ -133,18 +165,25 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                             var data = doc.Get<string>("data");
                             if (data != null)
                             {
-                                values = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ThemeRuntimeSetting>>(doc.Get<string>("data"));
+                                try
+                                {
+                                    value = JObject.Parse(data);
+                                }
+                                catch (JsonReaderException)
+                                {
+                                    value = null;
+                                }
                             }
 
-                            _cache[key] = new Tuple<DateTime, List<ThemeRuntimeSetting>>(_ts.Value, values);
+                            _cache[key] = new Tuple<DateTime, JObject>(_ts.Value, value);
                         }
                         else
                         {
                             _ts = DateTime.Today;
-                            _cache[key] = new Tuple<DateTime, List<ThemeRuntimeSetting>>(_ts.Value, values);
+                            _cache[key] = new Tuple<DateTime, JObject>(_ts.Value, value);
 
                         }
-                        return values;
+                        return value;
                     });
             }
             return _getInstanceValues;
@@ -152,7 +191,6 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         }
 
         private ThemeRuntimeSettingsCollection _runtimeValues;
-
         public Task<ThemeRuntimeSettingsCollection> GetRuntimeValues(string themeId)
         {
             if (_runtimeValues != null)
@@ -166,7 +204,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                 return this.GetInstanceValues(themeId).ContinueWith<ThemeRuntimeSettingsCollection>(task =>
                     {
 
-                        List<ThemeRuntimeSetting> values = task.Result;
+                        JObject values = task.Result;
                         var dic = new Dictionary<string, ThemeRuntimeSetting>(StringComparer.OrdinalIgnoreCase);
 
                         foreach (var setting in _siteContext.Theme.MergedSettings)
@@ -174,7 +212,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                             if (dic.ContainsKey(setting.Id))
                                 continue;
 
-                            var val = values.Where(rts => rts.Setting.Id == setting.Id).Select(rts => rts.Value).FirstOrDefault() ?? setting.DefaultValue;
+                            var val = values[setting.Id] ?? setting.DefaultValue;
 
                             dic.Add(setting.Id, new ThemeRuntimeSetting(setting, val));
                         }
@@ -203,8 +241,5 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             }
             return _getTimeStamp;
         }
-
-
-       
     }
 }
