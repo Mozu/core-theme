@@ -74,6 +74,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
             requestContext["SiteContext"] = requestContext["siteContext"] = siteContext;
             requestContext["ThemeSettings"] = requestContext["themeSettings"] = siteContext.ThemeSettings;
+            requestContext["Labels"] = requestContext["labels"] = siteContext.Labels;
             requestContext["PageContext"] = requestContext["pageContext"] = pageContext;
             requestContext["Navigation"] = requestContext["navigation"] = navigationContext;
             requestContext["ApiContext"] = requestContext["apiContext"] = clientApiContext;

@@ -2,59 +2,59 @@
 
 {% block body-tag-classes %} mz-confirmation {% endblock body-tag-classes %}
 
-{% block title-tag-content %} {{ themeSettings.labelOrderConfirmation }} - {% parent %} {% endblock title-tag-content %}
+{% block title-tag-content %} {{ labels.orderConfirmation }} - {% parent %} {% endblock title-tag-content %}
 
 {% block body-content %}
 
 
 <div class="mz-l-stack">
     <h1 class="mz-pagetitle">
-        {{ themeSettings.labelOrderConfirmation }}
+        {{ labels.orderConfirmation }}
     </h1>
 
-	<h4>{{ themeSettings.labelConfirmationText }}</h4>
+	<h4>{{ labels.confirmationText }}</h4>
 
     <div class="mz-l-stack-section">
-    <h2>{{ themeSettings.labelOrderDetails }}</h2>
+    <h2>{{ labels.orderDetails }}</h2>
     <dl class="mz-propertylist">
-        <dt>{{ themeSettings.labelOrderNumber }}</dt>
+        <dt>{{ labels.orderNumber }}</dt>
         <dd>{{ model.orderNumber }}</dd>
-        <dt>{{ themeSettings.labelBillingName }}</dt>
+        <dt>{{ labels.billingName }}</dt>
         <dd>{{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}</dd>
-        <dt>{{ themeSettings.labelBillingAddress }}</dt>
+        <dt>{{ labels.billingAddress }}</dt>
         <dd class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.billingInfo.billingContact %}</dd>
-        <dt>{{ themeSettings.labelBillingEmail }}</dt>
+        <dt>{{ labels.billingEmail }}</dt>
         <dd>{{ model.billingInfo.billingContact.email }}</dd>
         {% if model.billingInfo.paymentType == "CreditCard" %}
-        <dt>{{ themeSettings.labelCardType }}</dt>
+        <dt>{{ labels.cardType }}</dt>
         <dd>{{ model.billingInfo.card.paymentOrCardType }}</dd>
-        <dt>{{ themeSettings.labelCardNumber }}</dt>
+        <dt>{{ labels.cardNumber }}</dt>
         <dd>{{ model.billingInfo.card.cardNumberPartOrMask }}</dd>
         {% else %}
-        <dt>{{ themeSettings.labelCheckNumber }}</dt>
+        <dt>{{ labels.checkNumber }}</dt>
         <dd>{{ model.billingInfo.check.checkNumber }}</dd>
-        <dt><strong>{{ themeSettings.labelMailCheckTo }}</strong></dt>
+        <dt><strong>{{ labels.mailCheckTo }}</strong></dt>
         <dd class="mz-addresssummary">{% include "modules/common/address-summary" with model=ViewData.mailCheckTo %}</dd>
         {% endif %}
-        <dt>{{ themeSettings.labelShipTo }}</dt>
+        <dt>{{ labels.shipTo }}</dt>
         <dd class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}</dd>
-        <dt>{{ themeSettings.labelShippingMethod }}</dt>
+        <dt>{{ labels.shippingMethod }}</dt>
         <dd>{{ model.fulfillmentInfo.shippingMethodName }}</dd>
     </dl>
     </div>
 
     <div class="mz-l-stack-section">
-	<h2>{{ themeSettings.labelOrderSummary }} </h2>
+	<h2>{{ labels.orderSummary }} </h2>
     {% include "modules/common/order-summary" %}
     {% if model.shopperNotes.comments %}
     <div class="mz-ordercomments">
-        <h5 class="mz-ordercomments-header">{{ themeSettings.labelComments }}</h5>
+        <h5 class="mz-ordercomments-header">{{ labels.comments }}</h5>
         <p class="mz-ordercomments-body">{{ model.shopperNotes.comments }}</p>
     </div>
     {% endif %}
     {% if model.shopperNotes.giftMessage %}
     <div class="mz-ordercomments">
-        <h5 class="mz-ordercomments-header">{{ themeSettings.labelGiftMessage }}</h5>
+        <h5 class="mz-ordercomments-header">{{ labels.giftMessage }}</h5>
         <p class="mz-ordercomments-body">{{ model.shopperNotes.giftMessage }}</p>
     </div>
     {% endif %}

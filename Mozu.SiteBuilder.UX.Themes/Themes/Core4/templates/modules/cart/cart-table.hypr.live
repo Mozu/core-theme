@@ -1,9 +1,9 @@
 ﻿<thead>
   <tr>
-    <th class="mz-carttable-header-product">{{ themeSettings.labelProduct }}</th>
-    <th class="mz-carttable-header-price">{{ themeSettings.labelPrice }}</th>
-    <th class="mz-carttable-header-qty">{{ themeSettings.labelQty }}</th>
-    <th class="mz-carttable-header-total">{{ themeSettings.labelItemTotal }}</th>
+    <th class="mz-carttable-header-product">{{ labels.product }}</th>
+    <th class="mz-carttable-header-price">{{ labels.price }}</th>
+    <th class="mz-carttable-header-qty">{{ labels.qty }}</th>
+    <th class="mz-carttable-header-total">{{ labels.itemTotal }}</th>
     <th>&nbsp;</th>
   </tr>
 </thead>
@@ -26,7 +26,7 @@
         </dl>
         {% endif %}
         <span class="mz-carttable-item-code">
-          {{ themeSettings.labelProductCode }}: <em>{{ item.product.productCode }}</em>
+          {{ labels.productCode }}: <em>{{ item.product.productCode }}</em>
         </span>
       </div>
     </td>
@@ -43,14 +43,14 @@
       <span class="mz-carttable-rowtotal">{{ item.total|currency }}</span>
     </td>
     <td class="mz-carttable-item-remove">
-      <a href="javascript:;" data-mz-action="removeItem" data-mz-cart-item="{{ item.id }}" class="mz-icon mz-icon-close">{{ themeSettings.labelRemove }}</a>
+      <a href="javascript:;" data-mz-action="removeItem" data-mz-cart-item="{{ item.id }}" class="mz-icon mz-icon-close">{{ labels.remove }}</a>
     </td>
   </tr>
 {% endfor %}
 {% else %}
   <tr class="mz-carttable-noitems">
     <td colspan="5">
-        {{ themeSettings.labelCartEmpty }}
+        {{ labels.cartEmpty }}
     </td>
   </tr>
   {% endif %}
@@ -58,7 +58,7 @@
 <tfoot>
   <tr class="mz-carttable-shipping-row">
     <td colspan="4">
-      <em class="mz-auxiliary-text">{{ themeSettings.labelTaxAtCheckout }}</em>
+      <em class="mz-auxiliary-text">{{ labels.taxAtCheckout }}</em>
     </td>
     <td></td>
   </tr>
@@ -80,7 +80,7 @@
 
   <tr class="mz-carttable-total-row">
     <td class="mz-carttable-total-wrap" colspan="4">
-      {{ themeSettings.labelOrderTotal }}:
+      {{ labels.orderTotal }}:
         <span id="mz-carttable-total" class="mz-carttable-total">
           <strong>{{ model.discountedTotal|currency }}</strong>
         </span>
@@ -89,7 +89,7 @@
   </tr>
   <tr class="mz-carttable-checkout-row">
     <td colspan="4">
-      <button id="cart-checkout" class="mz-button mz-button-large"  {% if model.isEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">{{ themeSettings.labelProceedToCheckout }}</button>
+      <button id="cart-checkout" class="mz-button mz-button-large"  {% if model.isEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">{{ labels.proceedToCheckout }}</button>
     </td>
     <td></td>
   </tr>

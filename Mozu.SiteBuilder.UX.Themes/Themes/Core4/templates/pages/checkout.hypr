@@ -1,6 +1,6 @@
 ﻿{% extends "page" %}
 
-{% block title-tag-content %} {{ themeSettings.labelCheckout }} - {% parent %} {% endblock title-tag-content %}
+{% block title-tag-content %} {{ labels.checkout }} - {% parent %} {% endblock title-tag-content %}
 
 {% block body-tag-classes %} mz-checkout {% endblock body-tag-classes %}
 
@@ -12,10 +12,10 @@
 
 <div class="mz-l-container">
     <h1 class="mz-pagetitle">
-        {{ themeSettings.labelCheckout }}
+        {{ labels.checkout }}
         {% if not user.isAuthenticated %}
         <span class="mz-pagetitle-note">
-            {{ themeSettings.labelRegisteredCustomer }} <a data-mz-action="login" data-placement="left" href="javascript;">{{ themeSettings.labelLogIn }}</a>
+            {{ labels.registeredCustomer }} <a data-mz-action="login" data-placement="left" href="javascript;">{{ labels.logIn }}</a>
         </span>
         {% endif %}
     </h1>

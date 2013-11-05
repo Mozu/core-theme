@@ -4,10 +4,6 @@
       "xtype": "panel",
       "title": "Layout",
       "collapsed": false,
-      "layout": "anchor",
-      "defaults": {
-        "anchor": "100%"
-      },
       "items": [
         {
           "xtype": "combo",
@@ -29,10 +25,6 @@
       "xtype": "panel",
       "title": "Text",
       "collapsed": false,
-      "layout": "anchor",
-      "defaults": {
-        "anchor": "100%"
-      },
       "items": [
         {
           "xtype": "combo",
@@ -71,10 +63,6 @@
       "title": "Paging",
       "defaultType": "textfield",
       "collapsed": false,
-      "layout": "anchor",
-      "defaults": {
-        "anchor": "100%"
-      },
       "items": [
         {
           "fieldLabel": "Default Items Per Page",
@@ -94,10 +82,6 @@
       "xtype": "panel",
       "title": "Banner",
       "collapsible": false,
-      "layout": "anchor",
-      "defaults": {
-        "anchor": "100%"
-      },
       "items": [
         {
           "xtype": "checkbox",
@@ -114,23 +98,12 @@
           "name": "bannerImageRepeat",
           "fieldLabel": "Repeat Banner Image",
           "valueField": "value",
+          "displayField": "text",
           "store": [
-            {
-              "text": "No",
-              "value": "no-repeat"
-            },
-            {
-              "text": "Horizontally",
-              "value": "repeat-x"
-            },
-            {
-              "text": "Vertically",
-              "value": "repeat-y"
-            },
-            {
-              "text": "Tile",
-              "value": "repeat"
-            }
+            ["no-repeat","No"],
+            ["repeat-x","Horizontally"],
+            ["repeat-y","Vertically"],
+            ["repeat","Tile"]
           ]
         }
       ]

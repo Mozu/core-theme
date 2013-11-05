@@ -35,6 +35,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private string _themeId;
         private ThemeRuntimeSettingsCollection _themeRuntimeSettingsCollection;
 
+        private Dictionary<string, string> _labels;
+
         public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient)
         {
             _generalSettingsWebApiClient = generalSettingsWebApiClient.CloneWithoutUserClaims();
@@ -43,6 +45,23 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _mobileDetectionProvider = mobileDetectionProvider;
             _cookieProvider = cookieProvider;
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient.CloneWithoutUserClaims();
+        }
+
+        public Dictionary<string, string> Labels
+        {
+            get
+            {
+                if (_labels == null)
+                {
+                    _labels = Theme.MergedLabels["en-US"].ToDictionary();
+                }
+                return _labels;
+
+            }
+            set
+            {
+                _labels = value;
+            }
         }
 
         public string ThemeId

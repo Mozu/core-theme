@@ -1,6 +1,6 @@
 <section class="mz-facetingform">
     <div class="mz-l-sidebaritem">
-        <button class="mz-button mz-facetingform-clearall" data-mz-action="clearFacets">{{ themeSettings.labelClearAllFilters }}</button>
+        <button class="mz-button mz-facetingform-clearall" data-mz-action="clearFacets">{{ labels.clearAllFilters }}</button>
     </div>
     {% for facet in model.facets %}
     {% if facet.values %}
@@ -9,7 +9,7 @@
         <ul class="mz-facetingform-facet">
             <li>
               {% if facet.isFaceted %}
-              <a href="#" class="mz-facetingform-clear" data-mz-action="clearFacet" data-mz-facet="{{ facet.field }}">{{ themeSettings.labelClear }}</a>
+              <a href="#" class="mz-facetingform-clear" data-mz-action="clearFacet" data-mz-facet="{{ facet.field }}">{{ labels.clear }}</a>
               {% endif %}
             </li>
             {% for fval in facet.values %}
@@ -23,6 +23,6 @@
     {% endif %}
     {% endfor %}
     <div class="mz-l-sidebaritem">
-        <button class="mz-button mz-facetingform-clearall" data-mz-action="clearFacets">{{ themeSettings.labelClearAllFilters }}</button>
+        <button class="mz-button mz-facetingform-clearall" data-mz-action="clearFacets">{{ labels.clearAllFilters }}</button>
     </div>
 </section>

@@ -4,8 +4,7 @@
     require.config({
         baseUrl: "/compiled/scripts",
         paths: {
-            pciaas: "vendor/pci-temp",
-            jquery: "http://code.jquery.com/jquery.min"
+            jquery: "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min"
         },
         priority: ['jquery']
     });
@@ -19,8 +18,7 @@
         urlArgs: "theme={{siteContext.themeId}}",
         baseUrl: "/scripts",
         paths: {
-            jquery: "http://code.jquery.com/jquery",
-            pciaas: "vendor/pci-temp"
+            jquery: "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery"
         },
         priority: ['jquery']
     };

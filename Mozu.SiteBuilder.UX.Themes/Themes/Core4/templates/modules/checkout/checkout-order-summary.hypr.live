@@ -1,6 +1,6 @@
 ﻿<h3 class="mz-formstep-header">
-    {{ themeSettings.labelOrderSummary }}
-    <button class="mz-button" data-mz-action="editCart">{{ themeSettings.labelEdit }}</button>
+    {{ labels.orderSummary }}
+    <button class="mz-button" data-mz-action="editCart">{{ labels.edit }}</button>
 </h3>
 
 <div class="mz-formstep-body">
