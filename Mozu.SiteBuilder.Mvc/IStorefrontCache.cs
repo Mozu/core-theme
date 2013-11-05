@@ -67,15 +67,11 @@ namespace Mozu.SiteBuilder.Mvc
                 _inner = new Hashtable();
                 cache.Add(new CacheItem(key, _inner), new CacheItemPolicy()
                                                           {
-                                                              AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10)
+                                                              AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(10)
                                                           });
             }
 
-            if ( httpContext.Request["iseditmode"] == "true")
-            {
-              //  this.ClearAll();
-
-            }
+           
         }
 
         public object this[string key]
