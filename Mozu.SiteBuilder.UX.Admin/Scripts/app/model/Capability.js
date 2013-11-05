@@ -45,7 +45,19 @@ effectiveEndDate: "2015-11-04T13:54:24.2807086-06:00"
             "type": "string"
         },
         {
-            "name": "capabilityMode",
+            "name": "capabilityName",
+            "type": "string",
+            convert: function(val, record) {
+                var id = record.get('capabilityType').match(/[A-Z][a-z]+/g);
+                var name = id[0];
+                for (var x = 1; x < id.length; x++) {
+                    name = name + ' ' + id[x];
+                }
+                return name;
+            }
+        },
+        {
+            "name": "capabilityMode", 
             "type": "string"
         },
         { name: "scopeType", type: "string" },
@@ -55,7 +67,7 @@ effectiveEndDate: "2015-11-04T13:54:24.2807086-06:00"
         { name: "licenseType", type: "string" },
         { name: "developerAccountName", type: "string" },
         { name: "effectivesStartDate", type: "date" },
-        { name: "effectiveEndDate", type: "date" },
+        { name: "effectiveEndDate", type: "date" }
     ],
     proxy: {
         type: 'ajaxproxy',
@@ -70,6 +82,8 @@ effectiveEndDate: "2015-11-04T13:54:24.2807086-06:00"
             root: 'items',
             successProperty: 'success',
             messageProperty: "message"
+            
+
         }
     }    
 });

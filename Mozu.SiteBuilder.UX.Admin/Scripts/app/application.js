@@ -107,6 +107,7 @@ Ext.define('Taco.Application',{
     controllers: [
             'Applications',
             'Analytics',
+            'Capability',
             'Dashboard',
             'Reports',
             'Navigation',
@@ -378,7 +379,6 @@ Ext.define('Taco.Application',{
 
             },
             setException: function (operation, response) {
-                
                 operation.setException({
                     status: response.status,
                     responseText: response.responseText,

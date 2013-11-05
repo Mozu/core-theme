@@ -4,8 +4,8 @@
 Ext.define('Taco.view.application.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     requires: [
-        'Taco.model.Application',
-        'Taco.store.Applications'
+        'Taco.model.Capability',
+        'Taco.store.Capability'
     ],
     typeName: 'Applications',
     gridHeaderLabel: 'Applications',
@@ -13,9 +13,9 @@ Ext.define('Taco.view.application.Index', {
     //editorName: 'Taco.view.locationType.Edit',
     
     //plural: false,
-    modelName: 'Taco.model.Application',
+    modelName: 'Taco.model.Capability',
     
-    store: { type: 'Taco.store.Applications' },
+    store: { type: 'Taco.store.Capability' },
    
     useTilePanel: false,
     //launchEditorOnClick: false,
@@ -32,7 +32,7 @@ Ext.define('Taco.view.application.Index', {
             },
             items: [
                 {
-                    name: 'name',
+                    name: 'applicationName',
                     fieldLabel: 'Name',
                     width: 160
                 }, {
@@ -50,7 +50,7 @@ Ext.define('Taco.view.application.Index', {
             text: 'All',
             isDefault: true
         }, {
-            property: 'name',
+            property: 'applicationName',
             text: 'Name'
         }, {
             property: 'code',
@@ -62,14 +62,14 @@ Ext.define('Taco.view.application.Index', {
     header: {
         actions:[]
     },
-    
+     
 
     gridPanelConf: {
         selModel: {},
         features: [
             {
                 ftype: 'grouping',
-                groupHeaderTpl: '{name}'
+                groupHeaderTpl: '{groupValue}'
 
             }
         ],
@@ -81,7 +81,7 @@ Ext.define('Taco.view.application.Index', {
             }, {
                 text: 'Publisher',
                 width: 200,
-                dataIndex: "publisherName"
+                dataIndex: "developerAccountName"
             }, {
                 text: 'Enabled',
                 width: 80,
@@ -96,11 +96,11 @@ Ext.define('Taco.view.application.Index', {
             }, {
                 text: 'Site',
                 width: 200,
-                dataIndex: "siteName"
+                dataIndex: "uiConfigurationUrl"
             }, {
                 text: 'Coverage Area',
                 width: 200,
-                dataIndex: "coverageArea"
+                dataIndex: "scopeType"
             }, {
                 text: 'Expiration',
                 width: 200,
