@@ -4,22 +4,20 @@
  */
 
 Ext.define('Taco.view.settings.shipping.subform.ShippingPreferences', {
-    extend: 'Taco.view.product.subform.Subform',
+    extend: 'Taco.core.ux.form.Form',
     requires: [],
     title: 'Shipping Preferences',
+    margin: "0 0 20 0",
+    ui: "subform",
+    width: "100%",
     initComponent: function () {
         var me = this;
-
-        //this.dummyContent = Ext.create('Ext.panel.Panel', {
-        //    items: [
-        //       { html: '<h2>Not yet implemented</h2>' }
-        //    ]
-        //});
+        
         me.additinalHandling = Ext.create('Taco.core.ux.form.UnitField' /*'Taco.core.ux.form.CurrencyField'*/, {
             name: 'orderHandlingFee',
             fieldLabel: "Additional Handling Fee",
             labelAlign: 'top',
-            width: 600,
+            width: 200,
             unitString: '$',
             emptyText: '0',
             value:this.record.get('orderHandlingFee'),

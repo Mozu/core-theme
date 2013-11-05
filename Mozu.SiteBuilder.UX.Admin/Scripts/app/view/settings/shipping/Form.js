@@ -2,7 +2,7 @@
  * The discount editor view
  */
 Ext.define('Taco.view.settings.shipping.Form', {
-    extend: 'Taco.core.ux.form.NavForm',
+    extend: 'Taco.core.ux.form.NavForm2',
     requires: [
         'Taco.view.settings.shipping.subform.ShippingFrom',
         'Taco.view.settings.shipping.subform.MethodsAndRates',
@@ -29,11 +29,14 @@ Ext.define('Taco.view.settings.shipping.Form', {
 
         me.record.on('afteredit', me.savableStateCheck, me);
 
-        me.items = [me.shippingFrom,
-                      me.methodsAndRates,
-                      me.shippingPreferences];
+        me.items = [
+            me.shippingFrom,
+            me.methodsAndRates,
+            me.shippingPreferences
+        ];
 
         this.callParent(arguments);
+        this.loadNavItems();
     },
     isDirty: function () {
 

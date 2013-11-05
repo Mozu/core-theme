@@ -7,7 +7,6 @@ Ext.define('Taco.view.settings.shipping.subform.Custom', {
     extend: 'Taco.core.ux.form.Form',
     requires: [],
     title: 'Custom Rate',
-    layout: 'hbox',
     padding: '10 10 10 10',
     initComponent: function() {
         var me = this;
@@ -24,6 +23,7 @@ Ext.define('Taco.view.settings.shipping.subform.Custom', {
                 name: 'name',
                 value: customRate.name
             },
+            
             {
                 xtype: 'selectfield',
                 displayField: 'text',
@@ -31,7 +31,7 @@ Ext.define('Taco.view.settings.shipping.subform.Custom', {
                 labelAlign: 'top',
                 fieldLabel: 'Rate Type',
                 value: customRate.type || 'Flat rate per item',
-                //width: 600,
+                width: 200,
                 name: 'type',
                 store: Ext.create('Ext.data.ArrayStore', {
                     fields: ['text', 'value'],
@@ -41,22 +41,25 @@ Ext.define('Taco.view.settings.shipping.subform.Custom', {
                     ]
                 })
             },
+            
             Ext.create('Taco.core.ux.form.UnitField' /*'Taco.core.ux.form.CurrencyField'*/, {
                 name: 'amount',
                 fieldLabel: 'Rate',
                 labelAlign: 'top',
-
+                width: 200,
                 unitString: '$',
                 emptyText: '0',
                 unitAtEnd: false,
                 value: customRate.amount
             }),
+            
             {
                 xtype: 'checkbox',
-                //  width: 200,
-                fieldLabel: 'Is Enabled',
+                fieldLabel: 'Status',
                 labelAlign: 'top',
                 name: 'isEnabled',
+                boxLabel:"Enabled",
+                
                 checked: customRate.isEnabled,
                 value: customRate.isEnabled
             }
