@@ -79,6 +79,7 @@
   "email"                : "Email",
   "emailAddress"         : "Email Address",
   "creditCard"           : "Credit Card",
+  "payPal"               : "PayPal",
   "password"             : "Password",
   "confirmPassword"      : "Confirm Password",
   "firstName"            : "First Name",
