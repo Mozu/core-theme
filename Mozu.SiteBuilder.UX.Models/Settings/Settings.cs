@@ -1,8 +1,6 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text.RegularExpressions;
 
 namespace Mozu.SiteBuilder.UX.Models.Settings
 {
@@ -31,32 +29,53 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public List<KeyValuePair<string, string>> SupportedCards { get; set; }
     }
 
-    [DataContract]
+   
     public class CheckoutSettings
     {
-        [DataMember(Name = "paymentSettings")]
-        public PaymentSettings PaymentSettings { get; set; }
+
+        public string CustomerCheckoutType { get; set; }
+
+
+        public string PaymentProcessingFlowType { get; set; }
+
+
+        public bool PayByMail { get; set; }
+
+
+        public bool UseOverridePriceToCalculateDiscounts { get; set; }
+
+       
+    
+        public bool IsPayPalEnabled { get; set; }
+
+
+
+
     }
 
     [DataContract]
-    public class SettingsContainer 
+    public class SettingsContainer
     {
         [DataMember(Name = "general")]
         public GeneralSettings General { get; set; }
     }
 
+   
 
     [DataContract]
-    public class GeneralSettings  
+    public class GeneralSettings
     {
-         
-       
-   [DataMember(Name = "isMozuWebSite")]
-         public bool IsMozuWebSite { get; set; }
+        /// <summary>
+        ///     "Theme" has been overridden in the UI to contain both the desktop and possibly mobile theme concatenated in one string.
+        /// </summary>
+        private string _theme;
 
-   [DataMember(Name = "templateSiteId")]
-   public int? TemplateSiteId { get; set; }
-        
+        [DataMember(Name = "isMozuWebSite")]
+        public bool IsMozuWebSite { get; set; }
+
+        [DataMember(Name = "templateSiteId")]
+        public int? TemplateSiteId { get; set; }
+
         [DataMember(Name = "websiteName")]
         public string WebsiteName { get; set; }
 
@@ -73,8 +92,6 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public bool AllowAllIPs { get; set; }
 
 
-     
-
         [DataMember(Name = "senderEmail")]
         public string SenderEmailAddress { get; set; }
 
@@ -86,8 +103,6 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         }
 
 
-     
-
         [DataMember(Name = "channelId")]
         public string ChannelId { get; set; }
 
@@ -98,31 +113,34 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         [DataMember(EmitDefaultValue = false, Name = "logoPath")]
         public string LogoPath { get; set; }
+
         [DataMember(EmitDefaultValue = false, Name = "logoText")]
         public string LogoText { get; set; }
+
         [DataMember(EmitDefaultValue = false, Name = "favIconMobilePath")]
         public string FavIconMobilePath { get; set; }
+
         [DataMember(EmitDefaultValue = false, Name = "favIconPath")]
         public string FavIconPath { get; set; }
 
-        /// <summary>
-        /// "Theme" has been overridden in the UI to contain both the desktop and possibly mobile theme concatenated in one string.
-        /// </summary>
-        private string _theme;
         [DataMember(Name = "theme")]
         [Obsolete("Theme doesn't mean what it used to mean. You probably want DesktopTheme.")]
-        public string Theme { get { return _theme; } set { _theme = value; } }
+        public string Theme
+        {
+            get { return _theme; }
+            set { _theme = value; }
+        }
 
 
-         [DataMember(Name = "mobileTheme")]
+        [DataMember(Name = "mobileTheme")]
         public string MobileTheme { get; set; }
 
 
-         [DataMember(Name = "googleAnalyticsId")]
-         public string GoogleAnalyticsCode { get; set; }
+        [DataMember(Name = "googleAnalyticsId")]
+        public string GoogleAnalyticsCode { get; set; }
 
         [DataMember(Name = "googleAnalyticsEnabled")]
-         public bool? IsGoogleAnalyticsEnabled { get; set; }
+        public bool? IsGoogleAnalyticsEnabled { get; set; }
 
         [DataMember(Name = "googleAnalyticsEcomEnabled")]
         public bool? IsGoogleAnalyticsEcommerceEnabled { get; set; }
@@ -132,7 +150,5 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
             get { return _theme; }
             set { _theme = value; }
         }
-
-       
     }
 }
