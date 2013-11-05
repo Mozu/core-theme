@@ -4,18 +4,23 @@
  */
 
 Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
-    extend: 'Taco.view.product.subform.Subform',
+    extend: 'Taco.core.ux.form.Form',
     requires: [],
     title: 'Shipping From',
-
+    margin: "0 0 20 0",
+    ui: "subform",
+    width: "100%",
+    
     initComponent: function () {
         var me = this, isAddressEmpty = true;
 
         this.addressRecord = Ext.create('Taco.model.Contact', this.record.get('siteShippingOriginAddress') || {});
-
-
+        
         this.addressView = Ext.widget({
             xtype: 'component',
+            width: 300,
+            margin: '19px 0px 0px 0px',
+            padding: '5px',
             cls: 'address',
             style: 'line-height: 2.5rem;background-color: #f9f9f9;border: 1px solid #bfbfbf',
             data: this.addressRecord.data,
@@ -34,6 +39,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
 
         this.editButton = Ext.widget({
             xtype: 'secondarybutton',
+            margin: '2px 0px 0px 0px',
             text: 'Edit',
             click: function () {
                 me.editAddress();
@@ -53,7 +59,10 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
         }
 
 
-        this.items = [this.addressView, this.editButton];
+        this.items = [
+            this.addressView,
+            this.editButton
+        ];
 
         this.callParent(arguments);
 

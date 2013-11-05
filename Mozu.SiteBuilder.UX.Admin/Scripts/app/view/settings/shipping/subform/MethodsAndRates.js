@@ -4,13 +4,16 @@
  */
 
 Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
-    extend: 'Taco.view.product.subform.Subform',
+    extend: 'Taco.core.ux.form.Form',
     requires: [
         'Taco.store.ShippingCarrierSettings',
         'Taco.view.settings.shipping.subform.Custom',
         'Taco.view.settings.shipping.subform.ShippingProvider'
     ],
     title: 'Shipping Methods and Rates',
+    margin: "0 0 20 0",
+    ui: "subform",
+    width: "100%",
     enableStoreSyncTasks: true,
     initComponent: function () {
         var me = this;
@@ -24,13 +27,17 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
 
 
         this.tabs = Ext.create('Ext.tab.Panel', {
-            width: 800,
+            width: "100%",
             height: 500,
-            border: '1px',
+            
+            //border: '1px',
             style: {
                 borderColor: '#cccccc',
+                borderWidth: '1px',
                 borderStyle: 'solid'
             },
+            
+            
             items: [
                 this.custom
             ]
