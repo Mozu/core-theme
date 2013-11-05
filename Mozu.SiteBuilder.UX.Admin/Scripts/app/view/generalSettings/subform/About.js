@@ -96,7 +96,8 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             allowBlank: false,
             store: Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.Channels',
-                autoLoad:true,
+                autoLoad: true,
+                remoteFilter:false,
                 listeners: {
                     load: {
                         fn: function () {

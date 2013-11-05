@@ -240,7 +240,7 @@
       <HintPath>..\packages\Mozu.Core.ThirdParty.1.1.0-dev005\lib\Mozu.Core.ThirdParty.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.ThirdParty.Contracts">
-      <HintPath>..\packages\Mozu.Core.ThirdParty.Contracts.1.2.0-dev001\lib\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.ThirdParty.Contracts.1.2.0-dev003\lib\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Mozu.Customer.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

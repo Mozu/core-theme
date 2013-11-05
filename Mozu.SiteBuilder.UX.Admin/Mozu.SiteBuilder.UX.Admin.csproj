@@ -234,7 +234,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Mozu.Core.ThirdParty.Contracts">
-      <HintPath>..\packages\Mozu.Core.ThirdParty.Contracts.1.2.0-dev001\lib\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.ThirdParty.Contracts.1.2.0-dev003\lib\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Mozu.Customer.Contracts">
@@ -599,6 +599,7 @@
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\Channels.js" />
     <Content Include="Scripts\app\controller\Applications.js" />
+    <Content Include="Scripts\app\controller\SiteBuilder.js" />
     <Content Include="Scripts\app\controller\Websites.js" />
     <Content Include="Scripts\app\controller\CustomerAttributes.js" />
     <Content Include="Scripts\app\controller\Locations.js" />

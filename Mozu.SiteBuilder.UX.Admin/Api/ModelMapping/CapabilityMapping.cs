@@ -39,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         Crapabilities = app.Capabilities.Select( cap => new Capability()
                                                                            {
                                                                                AppId = app.AppId ,
-                                                                               Id = app.AppId +"*"+ cap.CapabilityType,
+                                                                               Id = cap.Id,
                                                                                UIConfigurationUrl = app.UIConfigurationUrl,
                                                                                CapabilityType = cap.CapabilityType ,
                                                                                CapabilityMode = cap.CapabilityMode ,
