@@ -1,0 +1,28 @@
+
+
+
+.mz-cms-widget-modal {
+    border: 1px solid black;
+    position: fixed;
+    right: 0;
+    top: 0;
+
+    .mz-cms-widget {
+        border: 1px solid black;
+        background: white;
+        display: block;
+        height: 50px;
+        margin: 10px;
+        text-align: center;
+        width: 50px;
+
+        &.mz-cms-draggable {
+            border-style: dashed;
+        }
+    }
+
+    &:after {
+        content: "";
+        clear: both;
+    }
+}
