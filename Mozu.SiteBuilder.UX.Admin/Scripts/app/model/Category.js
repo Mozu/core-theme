@@ -117,6 +117,12 @@ Ext.define('Taco.model.Category', {
         {
             name: 'categoryId',
             type: 'int'
+        },
+        {
+            "name": "categoryImages",
+            "type": "array",
+            "defaultValue":[],
+            "useNull": true
         }
     ],
 

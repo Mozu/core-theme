@@ -1,6 +1,46 @@
 ﻿/**
  * @class Taco.shared.view.field.Image
  * @author Travis Johnson
+ *
+ *  Note: This field does not automatically update the record when the Taco.core.ux.form.Form class executes the updateTask
+ *
+ *  Example Data Structure:
+        var testData = [
+            {"url":"/files/89/1/52ad0543-723c-4e7b-bb7a-2323a55fa97d"},
+            {"url":"/files/89/1/f2f83916-3548-4a13-aade-0c9258d56c31"}
+        ]        
+ 
+    To update the record before saving add use the beforeSave method of the form to manually update the record.
+    Example:       
+
+        Ext.define('Taco.view.category.Form', {    
+            extend: 'Taco.core.ux.form.Form',
+            editTitle: 'Edit Category',
+            createTitle: 'Create New Category',
+            requires: [
+                'Taco.shared.view.field.Image'
+            ],
+            ui: 'subform',    
+            items: [
+                {
+                    //Note: need to update the record manually in the beforeSave class method. form.Form does not extract the value from the imageField automatically.
+                    fieldLabel: 'Category Image',
+                    name: 'categoryImages',
+                    xtype: 'taco.imagefield',
+                    width: '100%'
+                } 
+            ],
+            beforeSave: function () {
+                var me = this,
+                    form = me.getForm(),
+                    categoryImagesField = form.findField("categoryImages");
+        
+                // need to update the record manually. form.Form does not extract the value from the imageField automatically.
+                me.record.set("categroryImages", categoryImagesField.getValue());
+                return true;
+            }
+        });
+ *
  */
 
 Ext.define('Taco.shared.view.field.Image', {
@@ -23,7 +63,7 @@ Ext.define('Taco.shared.view.field.Image', {
     
     initComponent: function () {
         this.store = Taco.core.data.StoreManager.getOrCreate('Taco.shared.store.Files');
-
+        
         this.selectedImages = Ext.create('Taco.shared.store.Files', {
             listeners: {
                 datachanged: this.onSelectedImagesDataChanged,

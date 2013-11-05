@@ -193,7 +193,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                         columnWidth: .5,
                         name: "isMozuWebSiteGroup",
                         layout: {
-                            layout : "hbox",
+                            layout : "hbox"
                         },
                         columns:1,
                         defaults: {
@@ -221,11 +221,13 @@ Ext.define('Taco.view.generalSettings.subform.About', {
 
         this.callParent(arguments);
     },
+    
     loadForm: function (record, noCascade) {
-        var me = this;
-        var form = me.getForm()
-        var value = me.record.get("isMozuWebSite");
-        var fieldGroup = form.findField("isMozuWebSiteGroup");
+        var me = this,
+            form = me.getForm(),
+            value = me.record.get("isMozuWebSite"),
+            fieldGroup = form.findField("isMozuWebSiteGroup");
+        
         // need to manualy set radio buttons. Auto setvalues in form.Form doesn't work.
         // radioButton.setValue() only works for a set of radio buttons when the value is a string instead of boolean. boolean values only set the first field with that field name.6 years later and extjs still screws radio buttons up.
         fieldGroup.setValue({
