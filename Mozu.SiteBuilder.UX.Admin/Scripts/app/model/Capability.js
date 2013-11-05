@@ -40,6 +40,10 @@ effectiveEndDate: "2015-11-04T13:54:24.2807086-06:00"
             "name": "uiConfigurationUrl",
             "type": "string"
         },
+    {
+        name: 'uiSupportUrl',
+        defaultValue:'http://google.com/?k=thoms a jar of pickles'
+    },
         {
             "name": "capabilityType",
             "type": "string"
@@ -76,7 +80,6 @@ effectiveEndDate: "2015-11-04T13:54:24.2807086-06:00"
         type: 'ajaxproxy',
         api: {
             read: '/admin/app/capabilities/list',
-            //read: '/admin/Scripts/app/mocks/applications.json',
             update: '/admin/app/capabilities/edit',
             
         },
@@ -85,8 +88,10 @@ effectiveEndDate: "2015-11-04T13:54:24.2807086-06:00"
             root: 'items',
             successProperty: 'success',
             messageProperty: "message"
-            
-
+        },
+        writer: {
+            type: 'json',
+            allowSingle: false
         }
     }    
 });

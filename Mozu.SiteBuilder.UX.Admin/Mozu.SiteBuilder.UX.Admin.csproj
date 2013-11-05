@@ -652,6 +652,8 @@
     <Content Include="Scripts\app\store\OrderAttributes.js" />
     <Content Include="Scripts\app\store\PackagingTypes.js" />
     <Content Include="Scripts\app\store\WishList.js" />
+    <Content Include="Scripts\app\view\application\Edit.js" />
+    <Content Include="Scripts\app\view\application\Form.js" />
     <Content Include="Scripts\app\view\application\Index.js" />
     <Content Include="Scripts\app\view\channel\Index.js" />
     <Content Include="Scripts\app\view\customerAttribute\Edit.js" />

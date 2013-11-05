@@ -10,7 +10,7 @@ Ext.define('Taco.view.application.Index', {
     typeName: 'Applications',
     gridHeaderLabel: 'Applications',
     
-    //editorName: 'Taco.view.locationType.Edit',
+    editorName: 'Taco.view.application.Edit',
     
     //plural: false,
     modelName: 'Taco.model.Capability',
