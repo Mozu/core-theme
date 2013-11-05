@@ -75,35 +75,40 @@ Ext.define('Taco.view.location.subform.Location', {
 
         me.addressView = Ext.create('Taco.shared.view.field.Address', {
             name: "address",
-            allowBlank: true,
+            allowBlank: true
             // extra components to be inserted after the edit button
-            buttonItems: [
-                {
-                    xtype: "splitter"
-                }, {
-                    xtype: 'button',
-                    ui: "action",
-                    scale: "medium",
-                    text: "Get Latitude/Longitude",
-                    handler: function () {
-                        me.record.getGeo({
-                            jsonData: {
-                                address: me.addressView.addressField.getValue()
-                            },
-                            success: function (response) {
-                                // update the lat long fields
-                                var json = Ext.decode(response.responseText, true);
-                                if (json && json.success) {
-                                    me.getForm().findField("lat").setValue(json.geo.lat);
-                                    me.getForm().findField("lng").setValue(json.geo.lng);
-                                }
-                            },
-                            scope: this
-                        });
-                    },
-                    scope: this
-                }
-            ]
+            /*
+                //(Simeon) commented this out pending acquisition of services to do this address to geo location conversion;
+                //http://tfs.ads.volusion.com:8080/tfs/VNext/Mozu/_workitems/edit/19745
+
+                buttonItems: [
+                    {
+                        xtype: "splitter"
+                    }, {
+                        xtype: 'button',
+                        ui: "action",
+                        scale: "medium",
+                        text: "Get Latitude/Longitude",
+                        handler: function () {
+                            me.record.getGeo({
+                                jsonData: {
+                                    address: me.addressView.addressField.getValue()
+                                },
+                                success: function (response) {
+                                    // update the lat long fields
+                                    var json = Ext.decode(response.responseText, true);
+                                    if (json && json.success) {
+                                        me.getForm().findField("lat").setValue(json.geo.lat);
+                                        me.getForm().findField("lng").setValue(json.geo.lng);
+                                    }
+                                },
+                                scope: this
+                            });
+                        },
+                        scope: this
+                    }
+                ]
+            */
         });
         
 
