@@ -86,6 +86,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         }
 
         public List<ThemeSetting> MergedSettings { get; set; }
+        public Dictionary<string, ThemeLabelCollection> MergedLabels { get; set; }
 
         [DataMember(Name="pageTypes")]
         public List<Models.CMS.PageTypeDefinition> PageTypes { get; set; }

@@ -351,6 +351,7 @@ Ext.define('Taco.core.ux.ComboFilter', {
      * @private
      */
     onValueChange: function (field, newValue, oldValue) {
+        debugger;
         var records, filters;
         if (!newValue && !oldValue) return;
 

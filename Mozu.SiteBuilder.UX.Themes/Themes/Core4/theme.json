@@ -5,268 +5,65 @@
     "author": "Volusion",
     "extends": null,
     "isDesktop": true,
-    "isMobile": false
+    "isMobile": false,
+    "defaultLanguage": "en-US"
   },
 
   /* Settings: User-configurable options for your theme. */
-  "settings": [
+  "settings": {
 
-    { "id":"internal-themeAddons" , "defaultValue":[]},
+    "internal-themeAddons"              : [],
 
     /* Common settings used in templates */
-    { "id": "defaultPageSize",              "defaultValue": 15 },
-    { "id": "pageSizeOptions",              "defaultValue": [15,25,50,100] },
-    { "id": "maxProductSummaryWords",       "defaultValue": 40 },
+    "defaultPageSize"                   : 15,
+    "pageSizeOptions"                   : [15,25,50,100],
+    "maxProductSummaryWords"            : 40,
 
     /* Common apperance settings used in the stylesheet */
-    { "id": "font",                         "defaultValue": "Source Sans Pro" },
-    { "id": "fallbackFontFamily",          "defaultValue": "sans-serif" },
-    { "id": "fontSize",                     "defaultValue": "14px" },
-    { "id": "gutterWidth",                  "defaultValue": "25px" },
-    { "id": "textColor",                    "defaultValue": "#444444" },
-    { "id": "bodyBackgroundColor",          "defaultValue": "#FFFFFF" },
-    { "id": "bannerImageEnabled",           "defaultValue": false },
-    { "id": "bannerImage",                  "defaultValue": "/resources/images/banner.jpg" },
-    { "id": "bannerImageRepeat",            "defaultValue": "repeat-x" },
+    "font"                              : "Source Sans Pro",
+    "fallbackFontFamily"                : "sans-serif",
+    "fontSize"                          : "14px",
+    "gutterWidth"                       : "25px",
+    "textColor"                         : "#444444",
+    "bodyBackgroundColor"               : "#FFFFFF",
+    "bannerImageEnabled"                : false,
+    "bannerImage"                       : "/resources/images/banner.jpg",
+    "bannerImageRepeat"                 : "repeat-x",
 
     /* Settings specific to category page display */
-    { "id": "showCategoryFacets",           "defaultValue": true },
+    "showCategoryFacets"                : true,
 
     /* Settings specific to product listing modules */
-    { "id": "listProductShortDesc",         "defaultValue": true },
-    { "id": "listProductCode",              "defaultValue": true },
+    "listProductShortDesc"              : true,
+    "listProductCode"                   : true,
 
     /* Settings specific to product pages */
-    { "id": "showProductDetailShortDesc",       "defaultValue": true },
-    { "id": "showProductDetailProperties",      "defaultValue": true },
-    { "id": "showProductDetailMeasurements",    "defaultValue": true },
+    "showProductDetailShortDesc"        : true,
+    "showProductDetailProperties"       : true,
+    "showProductDetailMeasurements"     : true,
 
     /* Settings specific to the cart */
-    { "id": "showCartItemOptions",              "defaultValue": true },
-    { "id": "showCartItemImage",                "defaultValue": true },
-    { "id": "showCartItemDimensions",           "defaultValue": true },
-    { "id": "showCartItemWeight",               "defaultValue": true },
+    "showCartItemOptions"               : true,
+    "showCartItemImage"                 : true,
+    "showCartItemDimensions"            : true,
+    "showCartItemWeight"                : true,
 
     /* Settings specific to checkout pages */
-    { "id": "showCheckoutCommentsField",        "defaultValue": true },
-    { "id": "requireCheckoutAgreeToTerms",      "defaultValue": true },
-
-
-
-
-    /* Labels, soon to be moved to their own labels section */
-    /* Global default labels */
-    { "id": "labelJanuary",             "defaultValue": "January" },
-    { "id": "labelFebruary",            "defaultValue": "February" },
-    { "id": "labelMarch",               "defaultValue": "March" },
-    { "id": "labelApril",               "defaultValue": "April" },
-    { "id": "labelMay",                 "defaultValue": "May" },
-    { "id": "labelJune",                "defaultValue": "June" },
-    { "id": "labelJuly",                "defaultValue": "July" },
-    { "id": "labelAugust",              "defaultValue": "August" },
-    { "id": "labelSeptember",           "defaultValue": "September" },
-    { "id": "labelOctober",             "defaultValue": "October" },
-    { "id": "labelNovember",            "defaultValue": "November" },
-    { "id": "labelDecember",            "defaultValue": "December" },
-    { "id": "labelShortJanuary",        "defaultValue": "Jan" },
-    { "id": "labelShortFebruary",       "defaultValue": "Feb" },
-    { "id": "labelShortMarch",          "defaultValue": "Mar" },
-    { "id": "labelShortApril",          "defaultValue": "Apr" },
-    { "id": "labelShortMay",            "defaultValue": "May" },
-    { "id": "labelShortJune",           "defaultValue": "Jun" },
-    { "id": "labelShortJuly",           "defaultValue": "Jul" },
-    { "id": "labelShortAugust",         "defaultValue": "Aug" },
-    { "id": "labelShortSeptember",      "defaultValue": "Sep" },
-    { "id": "labelShortOctober",        "defaultValue": "Oct" },
-    { "id": "labelShortNovember",       "defaultValue": "Nov" },
-    { "id": "labelShortDecember",       "defaultValue": "Dec" },
-    { "id": "labelSunday",              "defaultValue": "Sunday" },
-    { "id": "labelMonday",              "defaultValue": "Monday" },
-    { "id": "labelTuesday",             "defaultValue": "Tuesday" },
-    { "id": "labelWednesday",           "defaultValue": "Wednesday" },
-    { "id": "labelThursday",            "defaultValue": "Thursday" },
-    { "id": "labelFriday",              "defaultValue": "Friday" },
-    { "id": "labelSaturday",            "defaultValue": "Saturday" },
-    { "id": "labelShortSunday",         "defaultValue": "Sun" },
-    { "id": "labelShortMonday",         "defaultValue": "Mon" },
-    { "id": "labelShortTuesday",        "defaultValue": "Tue" },
-    { "id": "labelShortWednesday",      "defaultValue": "Wed" },
-    { "id": "labelShortThursday",       "defaultValue": "Thu" },
-    { "id": "labelShortFriday",         "defaultValue": "Fri" },
-    { "id": "labelShortSaturday",       "defaultValue": "Sat" },
-    { "id": "labelLogOut",              "defaultValue": "Log Out" },
-    { "id": "labelLogIn",               "defaultValue": "Log In" },
-    { "id": "labelViewCart",            "defaultValue": "View Cart" },
-    { "id": "labelSearch",              "defaultValue": "Search" },
-    { "id": "labelAll",                 "defaultValue": "All" },
-    { "id": "labelAllRightsReserved",   "defaultValue": "All rights reserved." },
-    { "id": "labelPoweredBy",           "defaultValue": "Powered by Mozu Shopping Cart" },
-    { "id": "labelProduct",             "defaultValue": "Product" },
-    { "id": "labelPrice",               "defaultValue": "Price" },
-    { "id": "labelQty",                 "defaultValue": "Qty" },
-    { "id": "labelEach",                "defaultValue": "Each" },
-    { "id": "labelTotal",               "defaultValue": "Total" },
-    { "id": "labelSubtotal",            "defaultValue": "Subtotal" },
-    { "id": "labelTax",                 "defaultValue": "Tax" },
-    { "id": "labelShippingHandling",    "defaultValue": "Shipping & Handling" },
-    { "id": "labelAdditionalHandling",  "defaultValue": "Additional Handling" },
-    { "id": "labelClear",               "defaultValue": "Clear", },
-    { "id": "labelCancel",              "defaultValue": "Cancel", },
-    { "id": "labelSendEmail",           "defaultValue": "Send Email", },
-    { "id": "labelProductCode",         "defaultValue": "Product Code" },
-    { "id": "labelRemove",              "defaultValue": "Remove" },
-    { "id": "labelEdit",                "defaultValue": "Edit" },
-    { "id": "labelNext",                "defaultValue": "Next" },
-    { "id": "labelComments",            "defaultValue": "Comments" },
-    { "id": "labelCouponCode",          "defaultValue": "Coupon Code" },
-    { "id": "labelApply",               "defaultValue": "Apply" },
-    { "id": "labelNameOnCheck",         "defaultValue": "Name On Check" },
-    { "id": "labelRoutingNumber",       "defaultValue": "Routing Number" },
-    { "id": "labelCheckNumber",         "defaultValue": "Check Number" },
-    { "id": "labelCardType",            "defaultValue": "Card Type" },
-    { "id": "labelCardNumber",          "defaultValue": "Card Number" },
-    { "id": "labelNameOnCard",          "defaultValue": "Name On Card" },
-    { "id": "labelExpires",             "defaultValue": "Expires" },
-    { "id": "labelSecurityCode",        "defaultValue": "Security Code" },
-    { "id": "labelPhone",               "defaultValue": "Phone" },
-    { "id": "labelEmail",               "defaultValue": "Email" },
-    { "id": "labelEmailAddress",        "defaultValue": "Email Address" },
-    { "id": "labelCreditCard",          "defaultValue": "Credit Card" },
-    { "id": "labelPassword",            "defaultValue": "Password" },
-    { "id": "labelConfirmPassword",     "defaultValue": "Confirm Password" },
-    { "id": "labelFirstName",           "defaultValue": "First Name" },
-    { "id": "labelLastName",            "defaultValue": "Last Name" },
-    { "id": "labelAddress",             "defaultValue": "Address" },
-    { "id": "labelCity",                "defaultValue": "City" },
-    { "id": "labelCountry",             "defaultValue": "Country" },
-    { "id": "labelState",               "defaultValue": "State" },
-    { "id": "labelPostalCode",          "defaultValue": "Zip/Postal Code" },
-    { "id": "labelPostalTown",          "defaultValue": "Postal Town" },
-    { "id": "labelFreeShipping",        "defaultValue": "Free Shipping" },
-    { "id": "labelPreviousPage",        "defaultValue": "Previous Page" },
-    { "id": "labelNextPage",            "defaultValue": "Next Page" },
-    { "id": "labelPageStatePlural",     "defaultValue": "Showing {0} - {1} of {2} results" },
-    { "id": "labelPageStateSingular",   "defaultValue": "Showing 1 result" },
-    { "id": "labelShowing",             "defaultValue": "Showing" },
-    { "id": "labelOf",                  "defaultValue": "of" },
-    { "id": "labelResult",              "defaultValue": "result" },
-    { "id": "labelResults",             "defaultValue": "results" },
-    { "id": "labelShow",                "defaultValue": "Show" },
-    { "id": "labelResultsPerPage",      "defaultValue": "results per page" },
-    { "id": "labelRegisteredCustomer",  "defaultValue": "Registered customer?" },
-    { "id": "labelStackTrace",          "defaultValue": "Details" },
-    { "id": "labelForgotPasswordLink",  "defaultValue": "forgot email or password?" },
-    { "id": "labelResetPassword",       "defaultValue": "Reset Password" },
-    { "id": "labelResetEmailSent",      "defaultValue": "You should receive an email with instructions to reset your password shortly." },
-    { "id": "labelUnexpectedError",     "defaultValue": "Sorry, an unexpected error occurred. Please refresh the page and try again, or contact Support." },
-
-    /* Validation labels */
-    { "id": "labelGenericRequired",     "defaultValue": "This field is required" },
-    { "id": "labelGenericAcceptance",   "defaultValue": "{0} must be accepted" },
-    { "id": "labelGenericMin",          "defaultValue": "{0} must be greater than or equal to {1}" },
-    { "id": "labelGenericMax",          "defaultValue": "{0} must be less than or equal to {1}" },
-    { "id": "labelGenericRange",        "defaultValue": "{0} must be between {1} and {2}" },
-    { "id": "labelGenericLength",       "defaultValue": "{0} must be {1} characters" },
-    { "id": "labelGenericMinLength",    "defaultValue": "{0} must be at least {1} characters" },
-    { "id": "labelGenericMaxLength",    "defaultValue": "{0} must be at most {1} characters" },
-    { "id": "labelGenericRangeLength",  "defaultValue": "{0} must be between {1} and {2} characters" },
-    { "id": "labelGenericOneOf",        "defaultValue": "{0} must be one of: {1}" },
-    { "id": "labelGenericEqualTo",      "defaultValue": "{0} must be the same as {1}" },
-    { "id": "labelGenericPattern",      "defaultValue": "{0} must be a valid {1}" },
-    { "id": "labelPhoneMissing",        "defaultValue": "Phone number required" },
-    { "id": "labelStreetMissing",       "defaultValue": "Street address required" },
-    { "id": "labelCityMissing",         "defaultValue": "City or town required" },
-    { "id": "labelStateProvMissing",    "defaultValue": "State or province required" },
-    { "id": "labelPostalCodeMissing",   "defaultValue": "Postal code required" },
-    { "id": "labelCountryMissing",      "defaultValue": "Please make a country selection" },
-    { "id": "labelFirstNameMissing",    "defaultValue": "First name required" },
-    { "id": "labelLastNameMissing",     "defaultValue": "Last name required" },
-    { "id": "labelPaymentTypeMissing",  "defaultValue": "Please select a payment type" },
-    { "id": "labelCardTypeMissing",     "defaultValue": "Please select your card type" },
-    { "id": "labelCardNameMissing",     "defaultValue": "Please enter the name printed on your card" },
-    { "id": "labelCardNumberMissing",   "defaultValue": "Please enter your card number" },
-    { "id": "labelCardExpInvalid",      "defaultValue": "Please enter an expiration date in the future" },
-    { "id": "labelSecurityCodeMissing", "defaultValue": "Please enter your card's security code" },
-    { "id": "labelReenterCVV",          "defaultValue": "Please verify your card's security code" },
-    { "id": "labelEmailMissing",        "defaultValue": "Please enter a valid email address" },
-    { "id": "labelPasswordMissing",     "defaultValue": "Please enter a password" },
-    { "id": "labelPasswordsDoNotMatch", "defaultValue": "Passwords did not match, please reenter" },
-    { "id": "labelChooseShippingMethod","defaultValue": "Please select a shipping method." },
-    { "id": "labelDidNotAgreeToTerms",  "defaultValue": "You must agree to the terms and conditions" },
-    { "id": "labelEnterProductQuantity","defaultValue": "Please enter a product quantity above 0" },
-
-    /* Faceting labels */
-    { "id": "labelClearAllFilters",     "defaultValue": "Clear All Filters" },
-
-    /* Product Detail labels */
-    { "id": "labelShortDesc",           "defaultValue": "Summary" },
-    { "id": "labelOptions",             "defaultValue": "Options" },
-    { "id": "labelAddToCart",           "defaultValue": "Add To Cart" },
-    { "id": "labelFullDesc",            "defaultValue": "Description" },
-    { "id": "labelProperties",          "defaultValue": "Properties" },
-    { "id": "labelMeasurements",        "defaultValue": "Measurements" },
-    { "id": "labelNoImages",            "defaultValue": "no image" },
-
-    /* Cart labels */
-    { "id": "labelCart",                "defaultValue": "Cart" },
-    { "id": "labelItemTotal",           "defaultValue": "Item Total" }, 
-    { "id": "labelCartEmpty",           "defaultValue": "You have no items in your cart." }, 
-    { "id": "labelTaxAtCheckout",       "defaultValue": "Tax & Shipping Calculated at Checkout" }, 
-    { "id": "labelOrderTotal",          "defaultValue": "Order Total" }, 
-    { "id": "labelProceedToCheckout",   "defaultValue": "Proceed to Checkout" }, 
-
-    /* Checkout labels */
-    { "id": "labelCheckout",            "defaultValue": "Checkout" },
-    { "id": "labelOrderSummary",        "defaultValue": "Order Summary" },
-    { "id": "labelShippingInformation", "defaultValue": "Shipping Information" },
-    { "id": "labelShippingMethod",      "defaultValue": "Shipping Method" },
-    { "id": "labelNoShippingMethods",   "defaultValue": "Sorry, no shipping methods are available." },
-    { "id": "labelPaymentInformation",  "defaultValue": "Payment Information" },
-    { "id": "labelSaveCard",            "defaultValue": "Save credit card information" },
-    { "id": "labelBillingAddress",      "defaultValue": "Billing Address" },
-    { "id": "labelBillingContact",      "defaultValue": "Billing Contact" },
-    { "id": "labelPaymentType",         "defaultValue": "Payment Type" },
-    { "id": "labelSelectPaymentType",   "defaultValue": "Select a Payment Type" },
-    { "id": "labelCheckByMail",         "defaultValue": "Check by Mail" },
-    { "id": "labelUseShippingAddress",  "defaultValue": "Use my shipping address" },
-    { "id": "labelOptIn",               "defaultValue": "Yes! I want to receive news and special offers from {0}!" },
-    { "id": "labelReviewOrder",         "defaultValue": "Review & Place Order" },
-    { "id": "labelReviewOrderText",     "defaultValue": "Please review all of the information on this page and, if necessary, make changes before placing your order." },
-    { "id": "labelAgreeToTerms",        "defaultValue": "I agree to the terms &amp; conditions." },
-    { "id": "labelCreateAccount",       "defaultValue": "Create an account for easy checkout on future orders" },
-    { "id": "labelPlaceOrder",          "defaultValue": "Place Order" },
-    { "id": "labelOrderConfirmation",   "defaultValue": "Order Confirmation" },
-    { "id": "labelConfirmationText",    "defaultValue": "Thank you for your order!  You will receive email confirmation." },
-    { "id": "labelOrderDetails",        "defaultValue": "Order Details" },
-    { "id": "labelOrderNumber",         "defaultValue": "Order Number" },
-    { "id": "labelBillingName",         "defaultValue": "Billing Name" },
-    { "id": "labelBillingPhone",        "defaultValue": "Billing Phone" },
-    { "id": "labelBillingEmail",        "defaultValue": "Billing Email" },
-    { "id": "labelMailCheckTo",         "defaultValue": "Mail check to" },
-    { "id": "labelShipTo",              "defaultValue": "Ship to" },
-    { "id": "labelGiftMessage",         "defaultValue": "Gift Message" },
-
-
-    /* Not Found labels */
-    { "id": "labelPageNotFound",        "defaultValue": "Page Not Found" },
-
-    /* Error page labels */
-    { "id": "labelErrorApology",        "defaultValue": "Sorry, an error occurred." },
-    { "id": "labelErrorDetail",         "defaultValue": "Our software encountered an error it couldn't resolve." }
-
-  ],
+    "showCheckoutCommentsField"         : true,
+    "requireCheckoutAgreeToTerms"       : true
+  },
   /* Page Types: Users will be allowed to create documents of this type in the CMS */
   "pageTypes": [
 
-	/* user-creatable webpages */
-	{
-	  "id":             "about_us",
-	  "title":          "About Us",
-	  "entityType":     "webpage",
+    /* user-creatable webpages */
+    {
+      "id":             "about_us",
+      "title":          "About Us",
+      "entityType":     "webpage",
       "documentType":   "web_page",
-	  "template":       "about-us",
-	  "userCreatable":  true,
-	  /* list of widgets attached to this type of page by default */
+      "template":       "about-us",
+      "userCreatable":  true,
+      /* list of widgets attached to this type of page by default */
       "widgets": [
         {
           "definitionId": "content",
@@ -276,61 +73,61 @@
             "body": "<p>About Us</p>"
           }
         }
-	  ]
-	},
-	{
-	  "id":             "blank_page",
-	  "title":          "Blank Page",
-	  "entityType":     "webpage",
-	  "documentType":   "web_page",
-	  "template":       "blank-page",
-	  "userCreatable":  true
-	},
-	{
-	  "id":             "landing",
-	  "title":          "Landing Page",
-	  "entityType":     "webpage",
-	  "userCreatable":  true,
-	  "template":       "blank-page"
-	},
-	{
-	  "id":             "home",
-	  "title":          "Home Page",
-	  "entityType":     "webpage",
-	  "userCreatable":  true,
-	  "template":       "home"
-	},
-	/* catalog types */
-	{
-	  "id":             "category",
-	  "title":          "Category",
-	  "entityType":     "category",
-	  "userCreatable":  false,
-	  "template":       "category"
-	},
-	{
-	  "id":             "product",
-	  "title":          "Product",
-	  "entityType":     "product",
-	  "userCreatable":  false,
-	  "template":       "product"
-	},
-	{
-	  "id":             "search",
-	  "title":          "Search Results",
-	  "entityType":     "searchresult",
-	  "template":       "search-results",
-	  "userCreatable":  false
-	},
+      ]
+    },
+    {
+      "id":             "blank_page",
+      "title":          "Blank Page",
+      "entityType":     "webpage",
+      "documentType":   "web_page",
+      "template":       "blank-page",
+      "userCreatable":  true
+    },
+    {
+      "id":             "landing",
+      "title":          "Landing Page",
+      "entityType":     "webpage",
+      "userCreatable":  true,
+      "template":       "blank-page"
+    },
+    {
+      "id":             "home",
+      "title":          "Home Page",
+      "entityType":     "webpage",
+      "userCreatable":  true,
+      "template":       "home"
+    },
+    /* catalog types */
+    {
+      "id":             "category",
+      "title":          "Category",
+      "entityType":     "category",
+      "userCreatable":  false,
+      "template":       "category"
+    },
+    {
+      "id":             "product",
+      "title":          "Product",
+      "entityType":     "product",
+      "userCreatable":  false,
+      "template":       "product"
+    },
+    {
+      "id":             "search",
+      "title":          "Search Results",
+      "entityType":     "searchresult",
+      "template":       "search-results",
+      "userCreatable":  false
+    },
     /* system pages */
-	{
-	  "id":             "404",
-	  "title":          "404 Not Found",
-	  "entityType":     "webpage",
-	  "documentType":   "web_page",
-	  "template":       "404",
-	  "userCreatable":  false
-	},
+    {
+      "id":             "404",
+      "title":          "404 Not Found",
+      "entityType":     "webpage",
+      "documentType":   "web_page",
+      "template":       "404",
+      "userCreatable":  false
+    },
     {
       "id":             "cart",
       "title":          "Cart",
@@ -367,8 +164,9 @@
       "userCreatable":  false
     }
   ],
-    /* widgets */
-  "widgets": [{
+  /* widgets */
+  "widgets": [
+    {
          "id": "featured_product",
          "displayName": "Featured Products",
          "displayTemplate": "catalog/featuredproducts",
@@ -376,44 +174,45 @@
          "editView": "Taco.view.site.widget.FeaturedProducts",
          "editViewConfig": "{listeners:{afterRender:function() {console.log('test of the editviewConfig system');}}}",
          "properties": []
-     }, {
-         "id": "content",
-         "displayName": "Content",
-         "displayTemplate": "cms/content",
-         "icon": "_0004_html.png"
-     }, {
-         "id": "horizontal_rule",
-         "displayName": "Horizontal Rule",
-         "displayTemplate": "cms/horizontalrule",
-         "icon": "_0005_horizontal-divider.png",
-         "editView": "Taco.view.site.widget.HorizontalRule",
-         "defaultConfig": {
-             "hrBorderWidth": "1px",
-             "hrBorderColor": "#000",
-             "hrBorderStyle": "solid",
-             "hrMarginTop": "None",
-             "hrMarginBottom": "None"
-         }
-     }, {
-         "id": "addthis",
-         "displayName": "AddThis",
-         "displayTemplate": "social/addthis",
-         "editView": "Taco.view.site.widget.AddThis",
-         "properties": [],
-         "category": "social",
-         "icon": "_0008_share.png"
-
-     }, {
-         "id": "facebook_comments",
-         "displayName": "Facebook Comments",
-         "displayTemplate": "social/facebookComments",
-         "icon": "_0008_share.png",
-         "editView": "Taco.view.site.widget.FacebookComments",
-         "minWidth": 400,
-         "properties": [],
-         "category": "social"
-     }
-
-
+    }, 
+    {
+        "id": "content",
+        "displayName": "Content",
+        "displayTemplate": "cms/content",
+        "icon": "_0004_html.png"
+    },
+    {
+        "id": "horizontal_rule",
+        "displayName": "Horizontal Rule",
+        "displayTemplate": "cms/horizontalrule",
+        "icon": "_0005_horizontal-divider.png",
+        "editView": "Taco.view.site.widget.HorizontalRule",
+        "defaultConfig": {
+            "hrBorderWidth": "1px",
+            "hrBorderColor": "#000",
+            "hrBorderStyle": "solid",
+            "hrMarginTop": "None",
+            "hrMarginBottom": "None"
+        }
+    }, 
+    {
+        "id": "addthis",
+        "displayName": "AddThis",
+        "displayTemplate": "social/addthis",
+        "editView": "Taco.view.site.widget.AddThis",
+        "properties": [],
+        "category": "social",
+        "icon": "_0008_share.png"
+    }, 
+    {
+        "id": "facebook_comments",
+        "displayName": "Facebook Comments",
+        "displayTemplate": "social/facebookComments",
+        "icon": "_0008_share.png",
+        "editView": "Taco.view.site.widget.FacebookComments",
+        "minWidth": 400,
+        "properties": [],
+        "category": "social"
+    }
  ]
 }
