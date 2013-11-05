@@ -86,7 +86,8 @@ Ext.define('Taco.view.order.subform.Return', {
         var me = this,
             orderStatus = me.record.get('orderStatus'),
             fulfillmentStatus = me.record.get('fulfillmentStatus'),
-            enabled = orderStatus == 'Completed' || ( orderStatus == 'Processing' && ( fulfillmentStatus == 'Shipped' || fulfillmentStatus == 'PartiallyShipped') );
+            enabled = orderStatus == 'Completed' || (orderStatus == 'Processing' && (fulfillmentStatus == 'Fulfilled' || fulfillmentStatus == 'PartiallyFulfilled'));
+        
         me.createButton.setDisabled(!enabled);
         
 

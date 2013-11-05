@@ -106,7 +106,14 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
                     '<div class="titleRow">',
                         ' {title} ',
                         '<span class="seperator">|</span>',
-                        ' {fulfillmentStatus} ',
+                        
+                        '<tpl if="fulfillmentStatus==\'PartiallyFulfilled\'">',
+                            "Partially Fulfilled",
+                        '<tpl elseif="fulfillmentStatus==\'NotFulfilled\'">',
+                            "Not Fulfilled",
+                        '<tpl else>',
+                            '{fulfillmentStatus}',
+                        '</tpl>',
                     '</div>',
 
                     '<div class="orderCountRow">',
