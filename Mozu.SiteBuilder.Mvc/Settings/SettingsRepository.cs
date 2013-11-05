@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                         {
                             settings = new UX.Models.Settings.GeneralSettings();
                         }
-                        System.Web.HttpRuntime.Cache.Insert(key, settings, null, System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, 0, 3));
+                        System.Web.HttpRuntime.Cache.Insert(key, settings, null, System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, 0, 10));
                         return settings;
                     });
 
