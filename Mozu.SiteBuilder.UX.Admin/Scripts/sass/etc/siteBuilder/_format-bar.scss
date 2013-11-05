@@ -1,0 +1,47 @@
+.mz-cms-format-bar {
+    left: 0;
+    position: fixed;
+    top: -50px;
+    text-align: center;
+    width: 100%;
+    z-index: 100;
+
+    @include transition(top 0.3s cubic-bezier(0.165, 0.84, 0.44, 1));
+    
+    ul {
+        background-color: #DFDFDF;
+        border: 1px solid #bfbfbf;
+        border-top: 0;
+        cursor: default;
+        display: inline-block;
+        font-family: Helvetica;
+        list-style: none;
+        margin: 0;
+        padding: 6px 8px;
+    }
+
+    &.mz-cms-active {
+        top: 0;
+    }
+
+    li {
+        display: inline-block;
+        font-size: 14px;
+        height: 26px;
+        margin: 2px;
+        padding-top: 5px;
+        text-align: center;
+        width: 30px;
+
+        &:hover {
+            background-color: #BFBFBF;
+        }
+
+    }
+
+    .mz-cms-styles {
+        padding-left: 8px;
+        padding-right: 8px;
+        width: auto;
+    }
+}
