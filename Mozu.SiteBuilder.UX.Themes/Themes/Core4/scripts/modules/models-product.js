@@ -1,4 +1,4 @@
-﻿define(["modules/jquery-mozu", "shim!vendor/underscore>_", "modules/backbone-mozu", "modules/models-price"], function ($, _, Backbone, PriceModels) {
+﻿define(["modules/jquery-mozu", "shim!vendor/underscore>_", "modules/backbone-mozu", "hyprlive", "modules/models-price"], function ($, _, Backbone, Hypr, PriceModels) {
 
     function zeroPad(str, len) {
         str = str.toString();
@@ -16,7 +16,7 @@
         initialize: function () {
             var me = this;
             _.defer(function () {
-                me.listenTo(me.collection, 'invalidoptionselected', this.handleInvalid, this);
+                me.listenTo(me.collection, 'invalidoptionselected', me.handleInvalid, me);
             });
             me.on("change:value", _.debounce(function (model, newVal) {
                 var newValObj, values = me.get("values");
@@ -40,7 +40,7 @@
                     me.unset('value');
                     me.unset("shopperEnteredValue");
                 }
-                if (newValObj && !newValObj.isEnabled) me.trigger('invalidoptionselected', newValObj, me);
+                if (newValObj && !newValObj.isEnabled) me.collection.trigger('invalidoptionselected', newValObj, me);
                 me.trigger('optionchange', newVal, me);
             }, 300));
         },
@@ -90,7 +90,7 @@
         validation: {
             quantity: {
                 min: 1,
-                msg: require.mozuLabel('enterProductQuantity')
+                msg: Hypr.getLabel('enterProductQuantity')
             }
         },
         relations: {
@@ -108,7 +108,7 @@
         mainImage: function () {
             var imgs = this.get('content').get("productImages"),
                 img = imgs && imgs[0];
-            return img || { imageUrl: 'http://placehold.it/160&text=' + require.mozuLabel('noImages') }
+            return img || { imageUrl: 'http://placehold.it/160&text=' + Hypr.getLabel('noImages') }
         },
         getConfiguredOptions: function() {
             return _.invoke(this.get("options").filter(function(opt) {

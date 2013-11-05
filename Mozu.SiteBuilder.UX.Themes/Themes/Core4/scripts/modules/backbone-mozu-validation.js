@@ -2,7 +2,7 @@
  * Adds builtin validation features to BackboneJS Models, customized to connect
  * to display internationalized Mozu text labels.
  */
-define(["shim!vendor/underscore>_", "shim!vendor/backbone[shim!vendor/underscore>_=_,jquery=jQuery]>Backbone"], function (_, Backbone) {
+define(["shim!vendor/underscore>_", "shim!vendor/backbone[shim!vendor/underscore>_=_,jquery=jQuery]>Backbone", 'hyprlive'], function (_, Backbone, Hypr) {
 
     // Adapted from Backbone.Validation v0.8.1
     //
@@ -401,18 +401,18 @@ define(["shim!vendor/underscore>_", "shim!vendor/backbone[shim!vendor/underscore
         // Error message for the build in validators.
         // {x} gets swapped out with arguments form the validator.
         var defaultMessages = Validation.messages = {
-            required: require.mozuLabel('genericRequired'),
-            acceptance: require.mozuLabel('genericAcceptance'),
-            min: require.mozuLabel('genericMin'),
-            max: require.mozuLabel('genericMax'),
-            range: require.mozuLabel('genericRange'),
-            length: require.mozuLabel('genericLength'),
-            minLength: require.mozuLabel('genericMinLength'),
-            maxLength: require.mozuLabel('genericMaxLength'),
-            rangeLength: require.mozuLabel('genericRangeLength'),
-            oneOf: require.mozuLabel('genericOneOf'),
-            equalTo: require.mozuLabel('genericEqualTo'),
-            pattern: require.mozuLabel('genericPattern')
+            required: Hypr.getLabel('genericRequired'),
+            acceptance: Hypr.getLabel('genericAcceptance'),
+            min: Hypr.getLabel('genericMin'),
+            max: Hypr.getLabel('genericMax'),
+            range: Hypr.getLabel('genericRange'),
+            length: Hypr.getLabel('genericLength'),
+            minLength: Hypr.getLabel('genericMinLength'),
+            maxLength: Hypr.getLabel('genericMaxLength'),
+            rangeLength: Hypr.getLabel('genericRangeLength'),
+            oneOf: Hypr.getLabel('genericOneOf'),
+            equalTo: Hypr.getLabel('genericEqualTo'),
+            pattern: Hypr.getLabel('genericPattern')
         };
 
         // Label formatters

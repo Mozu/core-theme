@@ -1,7 +1,7 @@
 ﻿/**
  * Extends the BackboneJS View object to create a Backbone.MozuView with extra
  * features for connecting to Backbone.MozuModels, and re-rendering HTML elements
- * using HyprLive templates.
+ * using Hypr templates.
  */
 define([
     "modules/jquery-mozu",
@@ -9,12 +9,12 @@ define([
     "hyprlive",
     "shim!vendor/backbone[shim!vendor/underscore>_=_,jquery=jQuery]>Backbone",
     "modules/views-messages"
-], function ($, _, HyprLive, Backbone, messageViewFactory) {
+], function ($, _, Hypr, Backbone, messageViewFactory) {
 
         Backbone.MozuView = Backbone.View.extend({
             constructor: function (conf) {
                 Backbone.View.apply(this, arguments);
-                this.template = HyprLive.getTemplate(this.options.templateName || this.templateName);
+                this.template = Hypr.getTemplate(this.options.templateName || this.templateName);
                 this.listenTo(this.model, "sync", this.render);
                 this.listenTo(this.model, "loadingchange", this.handleLoadingChange);
                 if (this.model.handlesMessages && this.options.messagesEl) {
@@ -70,7 +70,8 @@ define([
             render: function () {
                 var thenFocus = this.el && document.activeElement && $.contains(this.el, document.activeElement) && {
                     'id': document.activeElement.id,
-                    'mzvalue': document.activeElement.getAttribute('data-mz-value')
+                    'mzvalue': document.activeElement.getAttribute('data-mz-value'),
+                    'value': document.activeElement.value
                 };
                 Backbone.Validation.unbind(this);
                 this.undelegateEvents();
@@ -85,7 +86,7 @@ define([
                     if (thenFocus.id) {
                         $(document.getElementById(thenFocus.id)).focus();
                     } else {
-                        $('[data-mz-value="' + thenFocus.mzvalue + '"]').focus();
+                        $('[data-mz-value="' + thenFocus.mzvalue + '"][value="' + thenFocus.value + '"]').focus();
                     }
                 }
             }
@@ -97,10 +98,12 @@ define([
                     conf['update' + prop.charAt(0).toUpperCase() + prop.substring(1)] = _.debounce(function (e) {
                         var attrs = {},
                             $target = $(e.currentTarget),
-                            value = e.currentTarget.type === "checkbox" ? $target.prop('checked') : $target.val();
-                        attrs[prop] = value;
-                        this.model.set(attrs);
-                        //this.model.validate(attrs);
+                            checked = $target.prop('checked'),
+                            value = e.currentTarget.type === "checkbox" ? checked : $target.val();
+                        if (!(e.currentTarget.type === "radio" && !checked)) {
+                            attrs[prop] = value;
+                            this.model.set(attrs);
+                        }
                     }, 50);
                 });
             }

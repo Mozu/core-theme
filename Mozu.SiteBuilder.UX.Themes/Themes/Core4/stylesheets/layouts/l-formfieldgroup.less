@@ -10,6 +10,11 @@
         label {
             text-align: right;
             display: block;
+            min-width: 100px;
+            @media (max-width: 600px) {
+                min-width: auto;
+                text-align: left;
+            }
         }
     }
     label {

@@ -5,7 +5,7 @@
  */
 
 define(['sdk', 'jquery'], function (Mozu, $) {
-    var apiConfig = require.mozuData('apiconfig');
+    var apiConfig = require.mozuData('apicontext');
     Mozu.setServiceUrls(apiConfig.urls);
     var headers = apiConfig.headers,
         api = Mozu.Tenant(headers['x-vol-tenant'])

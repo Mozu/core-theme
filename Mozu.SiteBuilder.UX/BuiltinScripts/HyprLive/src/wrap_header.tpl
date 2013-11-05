@@ -10,5 +10,5 @@
     var externalDefine = root.define;
     var define = root.define = swigDefine;
 	(function (exportFn) {
-		exportFn(['text!../livetemplates'], function (LiveTemplates) {
+		exportFn(['text!../hyprlivecontext'], function (HyprLiveContext) {
             

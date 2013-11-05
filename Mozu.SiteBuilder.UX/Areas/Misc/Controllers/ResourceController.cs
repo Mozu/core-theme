@@ -292,10 +292,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "siteContext")]
         [System.Web.Http.HttpGet]
-        public SiteContext SiteContextAction()
+        public JObject HyprContextAction()
         {
-            return this.SiteContext;
-
+            var ctx = new JObject();
+            ctx.Add("siteContext", JObject.FromObject(this.SiteContext, new JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() }));
+            ctx.Add("templates", LiveTemplates());
+            return ctx;
         }
 
 

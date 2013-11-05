@@ -1,4 +1,3 @@
-﻿{% preload_json apiContext "apiconfig" %}
-{% preload_json themeSettings "themesettings" %}
-{% preload_json siteContext "sitecontext" %}
+﻿{% preload_json apiContext "apicontext" %}
+{% preload_json pageContext "pagecontext" %}
 {% preload_json user "user" %}
