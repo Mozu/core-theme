@@ -15,7 +15,7 @@ Ext.define('Taco.view.product.GlobalForm', {
         'Taco.view.product.subform.Extras',
         'Taco.view.product.subform.Shipping',
         'Taco.view.product.subform.SEO',
-        'Taco.view.product.subform.CrossSale'
+        //'Taco.view.product.subform.CrossSale'
     ],
     
     persistChangesToModel: true,
@@ -58,8 +58,9 @@ Ext.define('Taco.view.product.GlobalForm', {
 
         Ext.Array.push(items, [
             Ext.create('Taco.view.product.subform.Shipping', subFormCfg),
-            Ext.create('Taco.view.product.subform.SEO', subFormCfg),
-            Ext.create('Taco.view.product.subform.CrossSale', subFormCfg)
+            Ext.create('Taco.view.product.subform.SEO', subFormCfg)
+            //,
+           // Ext.create('Taco.view.product.subform.CrossSale', subFormCfg)
         ]);
 
         this.loadNavItems(items);

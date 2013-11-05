@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.customers.SearchForm', {
 	extend: 'Taco.core.ux.form.Form',
-	requires: ['Taco.store.OptionComboBox', 'Taco.core.ux.form.DateTime', 'Taco.core.ux.form.BoxSelect', 'Ext.form.Label'],
+	requires: ['Taco.store.OptionComboBox', 'Taco.core.ux.form.DateTime', 'Ext.ux.form.field.BoxSelect', 'Ext.form.Label'],
 
     floating: true,
     shadow: false,
