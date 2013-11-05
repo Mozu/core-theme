@@ -15,13 +15,18 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
 
         protected override void Configure()
         {
-            //Mapper.CreateMap<PlatformService.Contracts.TimeZone, UX.Models.Settings.TimeZone>();
-
+           
           
             Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.GeneralSettings, UX.Models.Settings.GeneralSettings>();
 
-            //Mapper.CreateMap<UX.Models.Settings.GeneralSettings, Mozu.SiteSettings.General.Contracts.GeneralSettings>()
-            //      .ForMember(x => x.IPBlocks, o => o.Ignore());
+            Mapper.CreateMap<Mozu.SiteSettings.Order.Contracts.CheckoutSettings, UX.Models.Settings.CheckoutSettings>()
+                  .ForMember(x => x.CustomerCheckoutType, opt => opt.ResolveUsing(x => x.CustomerCheckoutSettings.CustomerCheckoutType))
+                  .ForMember(x => x.IsPayPalEnabled, opt => opt.ResolveUsing(x => x.PaymentSettings.ExternalPaymentWorkflowDefinitions != null && x.PaymentSettings.ExternalPaymentWorkflowDefinitions.Count > 0 && x.PaymentSettings.ExternalPaymentWorkflowDefinitions.FirstOrDefault().IsEnabled))
+                  .ForMember(x => x.PayByMail, opt => opt.ResolveUsing(x => x.PaymentSettings.PayByMail))
+                  .ForMember(x => x.PaymentProcessingFlowType, opt => opt.ResolveUsing(x => x.OrderProcessingSettings.PaymentProcessingFlowType))
+                  .ForMember(x => x.UseOverridePriceToCalculateDiscounts, opt => opt.ResolveUsing(x => x.OrderProcessingSettings.UseOverridePriceToCalculateDiscounts));
+
+           
         }
     }
 }
