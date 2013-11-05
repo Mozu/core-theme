@@ -265,7 +265,7 @@ Ext.define('Taco.model.Order', {
             "useNull": true
         },
         {
-            "name": "shippingStatus",
+            "name": "fulfillmentStatus",
             "type": "string",
             "useNull": true
         },
@@ -322,9 +322,9 @@ Ext.define('Taco.model.Order', {
             convert: function (v, record) {
                 var packages = record.get("packages");
                 var retVal = [];
-
+                
                 for (var i = 0; i < packages.length; i++) {
-                    if (packages[i].status == "NotShipped") {
+                    if (packages[i].status == "NotFulfilled") {
                         retVal.push(packages[i]);
                     }
                 }
@@ -339,9 +339,9 @@ Ext.define('Taco.model.Order', {
             convert: function (v, record) {
                 var packages = record.get("packages");
                 var retVal = [];
-
+                
                 for (var i = 0; i < packages.length; i++) {
-                    if (packages[i].status == "Shipped") {
+                    if (packages[i].status == "Fulfilled") {
                         retVal.push(packages[i]);
                     }
                 }
