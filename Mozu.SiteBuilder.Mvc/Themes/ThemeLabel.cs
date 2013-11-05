@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
 {
@@ -36,6 +38,13 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             foreach (var label in labels)
                 this.Add(label);
+        }
+
+        public Dictionary<string,string> ToDictionary()
+        {
+            var ret = new Dictionary<string, string>();
+            _labels.Values.Each(l => ret.Add(l.Id, l.Value));
+            return ret;
         }
     }
 

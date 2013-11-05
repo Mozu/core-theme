@@ -1,19 +1,19 @@
 ﻿{% extends "page" %}
 
-{% block title-tag-content %} {{ themeSettings.labelLogIn }} - {% parent %} {% endblock title-tag-content %}
+{% block title-tag-content %} {{ labels.logIn }} - {% parent %} {% endblock title-tag-content %}
 
 {% block body-tag-classes %} mz-loginpage {% endblock body-tag-classes %}
 
 {% block body-content %}
     <div class="mz-l-container">
-        <h1 class="mz-pagetitle">{{ themeSettings.labelLogIn }}</h1>
+        <h1 class="mz-pagetitle">{{ labels.logIn }}</h1>
         <form method="post" class="mz-loginform mz-loginform-page">
            {% include "modules/common/message-bar" %}
            <input type="hidden" name="returnUrl" value="{{ model.ReturnUrl }}" />
            <div class="mz-l-formfieldgroup">
                 <div class="mz-l-formfieldgroup-row">
                     <div class="mz-l-formfieldgroup-cell">
-                        <label for="email">{{ themeSettings.labelEmail }}</label>
+                        <label for="email">{{ labels.email }}</label>
                     </div>
                     <div class="mz-l-formfieldgroup-cell">
                         <input name="email" value="{{model.email|default:user.email}}" type="email"/>
@@ -21,7 +21,7 @@
                 </div>
                 <div class="mz-l-formfieldgroup-row">
                     <div class="mz-l-formfieldgroup-cell">
-                        <label for="password">{{ themeSettings.labelPassword }}</label>
+                        <label for="password">{{ labels.password }}</label>
                     </div>
                     <div class="mz-l-formfieldgroup-cell">
                         <input name="password"  type="password"/>
@@ -30,7 +30,7 @@
                 <div class="mz-l-formfieldgroup-row">
                     <div class="mz-l-formfieldgroup-cell"></div>
                     <div class="mz-l-formfieldgroup-cell">
-                        <button class="mz-button mz-button-large">{{ themeSettings.labelLogIn }}</button>
+                        <button class="mz-button mz-button-large">{{ labels.logIn }}</button>
                     </div>
                 </div>
             </div>

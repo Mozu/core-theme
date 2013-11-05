@@ -1,6 +1,6 @@
 ﻿    <div class="mz-l-formfieldgroup-row">
         <div class="mz-l-formfieldgroup-cell">
-            <label for="nameOnCheck">{{ themeSettings.labelNameOnCheck }}<span class="is-required"> *</span>:</label>
+            <label for="nameOnCheck">{{ labels.nameOnCheck }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
             <input type="text" name="nameOnCheck" id="nameOnCheck" data-mz-value="check.nameOnCheck" value="{{ model.check.nameOnCheck }}">
@@ -9,7 +9,7 @@
     </div>
     <div class="mz-l-formfieldgroup-row">
         <div class="mz-l-formfieldgroup-cell">
-            <label for="checkNumber">{{ themeSettings.labelRoutingNumber }}<span class="is-required"> *</span>:</label>
+            <label for="checkNumber">{{ labels.routingNumber }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
             <input type="text" name="checkNumber" id="checkNumber" data-mz-value="check.routingNumber" value="{{ model.check.routingNumber }}">
@@ -18,7 +18,7 @@
     </div>                    
     <div class="mz-l-formfieldgroup-row">
         <div class="mz-l-formfieldgroup-cell">
-            <label for="checkNumber">{{ themeSettings.labelCheckNumber }}<span class="is-required"> *</span>:</label>
+            <label for="checkNumber">{{ labels.checkNumber }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
             <input type="text" name="checkNumber" id="checkNumber" data-mz-value="check.checkNumber" value="{{ model.check.checkNumber }}">

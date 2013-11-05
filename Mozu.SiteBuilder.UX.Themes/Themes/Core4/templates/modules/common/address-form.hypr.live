@@ -11,7 +11,7 @@
 {% endblock local-variables %}
     <div class="mz-l-formfieldgroup-row">
         <div class="mz-l-formfieldgroup-cell">
-            <label for="firstname">{{ themeSettings.labelFirstName }}<span class="is-required"> *</span>:</label>
+            <label for="firstname">{{ labels.firstName }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
             <input type="text" id="mz-shipping-address-firstname" name="firstname" data-mz-value="{{ modelcontext }}firstName" value="{{ model.firstName }}">
@@ -20,7 +20,7 @@
     </div>
     <div class="mz-l-formfieldgroup-row">
         <div class="mz-l-formfieldgroup-cell">
-            <label for="lastname">{{ themeSettings.labelLastName }}<span class="is-required"> *</span>:</label>
+            <label for="lastname">{{ labels.lastName }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
             <input type="text" id="mz-shipping-address-lastname" name="lastname" data-mz-value="{{ modelcontext }}lastNameOrSurname" value="{{ model.lastNameOrSurname }}">
@@ -29,7 +29,7 @@
     </div>
     <div class="mz-l-formfieldgroup-row">
         <div class="mz-l-formfieldgroup-cell">
-            <label for="address-line-1">{{ themeSettings.labelAddress }}<span class="is-required"> *</span>:</label>
+            <label for="address-line-1">{{ labels.address }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
             <input type="text" id="mz-shipping-address-line-1" name="address-line-1" data-mz-value="{{ modelcontext }}address.address1" value="{{ model.address.address1 }}">
@@ -45,7 +45,7 @@
     </div>
     <div class="mz-l-formfieldgroup-row">
         <div class="mz-l-formfieldgroup-cell">
-            <label for="city">{{ themeSettings.labelCity }}<span class="is-required"> *</span>:</label>
+            <label for="city">{{ labels.city }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
             <input type="text" id="mz-shipping-address-city" name="city" data-mz-value="{{ modelcontext }}address.cityOrTown" value="{{ model.address.cityOrTown }}">
@@ -54,7 +54,7 @@
     </div>
     <div class="mz-l-formfieldgroup-row">
         <div class="mz-l-formfieldgroup-cell">
-            <label for="country">{{ themeSettings.labelCountry }}<span class="is-required"> *</span>:</label>
+            <label for="country">{{ labels.country }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
             <select id="mz-shipping-address-country" data-mz-value="{{ modelcontext }}address.countryCode">
@@ -67,7 +67,7 @@
     </div>
     <div class="mz-l-formfieldgroup-row" {% if model.address.countryCode != "US" %}style="display: none"{% endif %}>
         <div class="mz-l-formfieldgroup-cell">
-            <label for="stateprov">{{ themeSettings.labelState }}<span class="is-required"> *</span>:</label>
+            <label for="stateprov">{{ labels.state }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
             <select data-mz-value="{{ modelcontext }}address.stateOrProvince">
@@ -228,7 +228,7 @@
     </div>
     <div {% if model.address.countryCode != "US" %}style="display: none"{% endif %} class="mz-l-formfieldgroup-row">
         <div class="mz-l-formfieldgroup-cell">
-            <label for="postal-code">{{ themeSettings.labelPostalCode }}<span class="is-required"> *</span>:</label>
+            <label for="postal-code">{{ labels.postalCode }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
             <input type="text" id="mz-shipping-address-postal-code" name="postal-code" data-mz-value="{{ modelcontext }}address.postalOrZipCode" value="{{ model.address.postalOrZipCode }}">
@@ -237,7 +237,7 @@
     </div>
     <div {% if model.address.CountryCode != "UK" %}style="display: none"{% endif %} class="mz-l-formfieldgroup-row">
         <div class="mz-l-formfieldgroup-cell">
-            <label for="postal-town">{{ themeSettings.labelPostalTown }}</label>
+            <label for="postal-town">{{ labels.postalTown }}</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
             <input type="text" id="mz-shipping-address-postal-town" name="postal-town" data-mz-value="{{ modelcontext }}address.postalOrZipCode" value="{{ model.address.postalOrZipCode }}">
@@ -246,7 +246,7 @@
     </div>
     <div class="mz-l-formfieldgroup-row">
         <div class="mz-l-formfieldgroup-cell">
-            <label for="shippingphone">{{ themeSettings.labelPhone }}<span class="is-required"> *</span>:</label>
+            <label for="shippingphone">{{ labels.phone }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
             <input type="text" id="mz-shipping-address-phone" name="shippingphone" data-mz-value="{{ modelcontext }}phoneNumbers.home" value="{{ model.phoneNumbers.home }}">

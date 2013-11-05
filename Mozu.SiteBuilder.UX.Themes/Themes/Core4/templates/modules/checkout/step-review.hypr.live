@@ -1,14 +1,14 @@
 ﻿    <h3 class="mz-formstep-header">
-        {{ themeSettings.labelReviewOrder }}
+        {{ labels.reviewOrder }}
     </h3>
     <div class="mz-formstep-body">
         {% if model.isReady %}
-            <p class="mz-formstep-desc">{{ themeSettings.labelReviewOrderText }}</p>
+            <p class="mz-formstep-desc">{{ labels.reviewOrderText }}</p>
 
             {% if themeSettings.requireCheckoutAgreeToTerms %}
             <div class="mz-l-formfieldgroup mz-l-formfieldgroup-norows">
             <label class='inline'>
-                <input type="checkbox" name="terms-and-conditions" id="mz-terms-and-conditions" data-mz-value="agreeToTerms" {% if model.agreeToTerms %} checked="checked"{% endif %}> {{ themeSettings.labelAgreeToTerms }}
+                <input type="checkbox" name="terms-and-conditions" id="mz-terms-and-conditions" data-mz-value="agreeToTerms" {% if model.agreeToTerms %} checked="checked"{% endif %}> {{ labels.agreeToTerms }}
             </label>
             <span class="mz-validationmessage" data-mz-validationmessage-for="agreeToTerms"></span>
             </div>
@@ -17,7 +17,7 @@
             {% if not user or user.isAnonymous %}
             <div class="mz-l-formfieldgroup mz-l-formfieldgroup-norows">
                 <label class='inline'>
-                    <input type="checkbox" name="create-new-account" data-mz-value="createAccount" {% if model.createAccount %} checked="checked"{% endif %} > {{ themeSettings.labelCreateAccount }}
+                    <input type="checkbox" name="create-new-account" data-mz-value="createAccount" {% if model.createAccount %} checked="checked"{% endif %} > {{ labels.createAccount }}
                 </label>
             </div>
 
@@ -25,7 +25,7 @@
                 <div class="mz-l-formfieldgroup mz-create-account-fields">
                     <div class="mz-l-formfieldgroup-row">
                       <div class="mz-l-formfieldgroup-cell">
-                    <label for="new-account-email"> {{ themeSettings.labelEmail }}<span class="is-required"> *</span> </label>
+                    <label for="new-account-email"> {{ labels.email }}<span class="is-required"> *</span> </label>
                       </div>
                       <div class="mz-l-formfieldgroup-cell">
                         <input type="text" name="new-account-email" data-mz-value="User.EmailAddress" value="{{ model.user.emailAddress }}">
@@ -34,7 +34,7 @@
                     </div>
                   <div class="mz-l-formfieldgroup-row">
                       <div class="mz-l-formfieldgroup-cell">
-                    <label for="new-account-password"> {{ themeSettings.labelPassword }}<span class="is-required"> *</span> </label>
+                    <label for="new-account-password"> {{ labels.password }}<span class="is-required"> *</span> </label>
                       </div>
                       <div class="mz-l-formfieldgroup-cell">
                         <input type="password" name="new-account-password" data-mz-value="user.password" value="{{ model.user.password }}">
@@ -43,7 +43,7 @@
                     </div>
                   <div class="mz-l-formfieldgroup-row">
                       <div class="mz-l-formfieldgroup-cell">
-                    <label for="new-account-password"> {{ themeSettings.labelConfirmPassword }}<span class="is-required"> *</span> </label>
+                    <label for="new-account-password"> {{ labels.confirmPassword }}<span class="is-required"> *</span> </label>
                       </div>
                       <div class="mz-l-formfieldgroup-cell">
                         <input type="password" name="new-account-confirm" data-mz-value="user.confirmPassword" value="{{ model.confirmPassword }}">
@@ -55,7 +55,7 @@
             {% endif %}
 
             <div class="mz-formstep-next">
-                <button type="button" class="mz-button mz-button-large" data-mz-action="submit">{{ themeSettings.labelPlaceOrder }}</button>
+                <button type="button" class="mz-button mz-button-large" data-mz-action="submit">{{ labels.placeOrder }}</button>
             </div>
         {% endif %}
     </div>

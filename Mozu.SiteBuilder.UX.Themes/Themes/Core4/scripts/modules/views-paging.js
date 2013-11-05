@@ -17,7 +17,7 @@ define(['modules/jquery-mozu','shim!vendor/underscore>_','modules/backbone-mozu'
             _.each(pagingHelpers, function (helperName) {
                 model[helperName] = me.model[helperName]();
             });
-            this.$el.html(this.template.render({ Model: model }));
+            this.$el.html(this.template.render({ model: model }));
         }
     });
 
