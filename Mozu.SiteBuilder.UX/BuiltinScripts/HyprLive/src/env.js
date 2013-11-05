@@ -26,7 +26,7 @@ var HyprLive = {
         return locals.themeSettings[setting];
     },
     getLabel: function (name) {
-        return locals.themeSettings['label' + name.charAt(0).toUpperCase() + name.substring(1)];
+        return locals.labels[name];
     }
 };
 

@@ -3896,7 +3896,7 @@ for (var lni = 0, llen = volatilelocalNames.length; lni < llen; lni++) {
 
 locals.siteContext = HyprLiveContext.siteContext;
 locals.themeSettings = HyprLiveContext.siteContext.themeSettings;
-locals.labels = HyprLiveContext.siteContext.labels;
+locals.labels = HyprLiveContext.siteContext.labels; 
 
 var HyprLive = {
     engine: new swig.Swig({
@@ -3909,7 +3909,7 @@ var HyprLive = {
         return locals.themeSettings[setting];
     },
     getLabel: function (name) {
-        return locals.themeSettings['label' + name.charAt(0).toUpperCase() + name.substring(1)];
+        return locals.labels[name];
     }
 };
 
