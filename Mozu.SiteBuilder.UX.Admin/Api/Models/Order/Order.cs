@@ -81,7 +81,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "orderStatus")]
         public string OrderStatus { get; set; }
 
-        [DataMember(Name = "shippingStatus")]
+        [DataMember(Name = "fulfillmentStatus")]
         public string FulfillmentStatus { get; set; }
 
         [DataMember(Name = "paymentStatus")]
