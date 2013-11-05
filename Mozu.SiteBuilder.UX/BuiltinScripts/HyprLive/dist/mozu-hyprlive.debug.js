@@ -1,5 +1,5 @@
 /*! 
- * Mozu Hypr Live - v0.2.0 - 2013-11-01
+ * Mozu Hypr Live - v0.2.0 - 2013-11-05
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -17,7 +17,7 @@
     var externalDefine = root.define;
     var define = root.define = swigDefine;
 	(function (exportFn) {
-		exportFn(['text!../livetemplates'], function (LiveTemplates) {
+		exportFn(['text!../hyprlivecontext'], function (HyprLiveContext) {
             
 /*! Swig v1.0.0-rc3 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
@@ -2168,7 +2168,7 @@
                 //}
                 //src = fs.readFileSync(pathname, 'utf8');
 
-                src = LiveTemplates[pathname.toLowerCase()];
+                src = HyprLiveContext.templates[pathname.toLowerCase()];
 
                 if (!options.filename) {
                     options = utils.extend({ filename: pathname }, options);
@@ -3864,12 +3864,12 @@ var HyprLiveTemplate = function (precompiledTpl, swigTpl, path) {
     compiled = {},
     getHyprLiveTemplate = function (path) {
         var lpath = path.toLowerCase(),
-            tptText = LiveTemplates[lpath];
+            tptText = HyprLiveContext.templates[lpath];
         if (!tptText) throw new ReferenceError("HyprLive template \"" + lpath + "\" not found!");
         if (!(lpath in compiled)) {
-            compiled[lpath] = new HyprLiveTemplate(HyprLive.engine.precompile(LiveTemplates[lpath], {
+            compiled[lpath] = new HyprLiveTemplate(HyprLive.engine.precompile(tptText, {
                 filename: path
-            }), HyprLive.engine.compile(LiveTemplates[lpath], {
+            }), HyprLive.engine.compile(tptText, {
                 filename: path
             }), path);
         }
@@ -3883,16 +3883,20 @@ HyprLiveTemplate.prototype = {
 }
 // BEGIN INIT
 
-if (!LiveTemplates) throw new ReferenceError("If no AMD loader is present, there must be a global variable named LiveTemplates for HyprLive to function.");
-LiveTemplates = JSON.parse(LiveTemplates);
+if (!HyprLiveContext) throw new ReferenceError("If no AMD loader is present, there must be a global variable named HyprLiveContext for HyprLive to function.");
+HyprLiveContext = JSON.parse(HyprLiveContext);
 
 var locals = {},
-    localNames = ['themeSettings', 'siteContext', 'user']; // 'pageContext', 'navigation'];
+    volatilelocalNames = ['pageContext', 'user']; // 'navigation'];
 
-for (var lni = 0, llen = localNames.length; lni < llen; lni++) {
-    locals[localNames[lni]] = require.mozuData(localNames[lni].toLowerCase());
-    if (!locals[localNames[lni]]) throw new ReferenceError('This page template fails to preload the ' + localNames[lni] + ' global using {% preload_json ' + localNames[lni] + ' "' + localNames[lni].toLowerCase() + '" %}');
+for (var lni = 0, llen = volatilelocalNames.length; lni < llen; lni++) {
+    locals[volatilelocalNames[lni]] = require.mozuData(volatilelocalNames[lni].toLowerCase());
+    if (!locals[volatilelocalNames[lni]]) throw new ReferenceError('This page template fails to preload the ' + volatilelocalNames[lni] + ' global using {% preload_json ' + volatilelocalNames[lni] + ' "' + volatilelocalNames[lni].toLowerCase() + '" %}');
 }
+
+locals.siteContext = HyprLiveContext.siteContext;
+locals.themeSettings = HyprLiveContext.siteContext.themeSettings;
+locals.labels = HyprLiveContext.siteContext.labels;
 
 var HyprLive = {
     engine: new swig.Swig({
@@ -3900,7 +3904,13 @@ var HyprLive = {
         cmtControls: ['{% comment %}', '{% endcomment %}'],
         locals: locals
     }),
-    getTemplate: getHyprLiveTemplate
+    getTemplate: getHyprLiveTemplate,
+    getThemeSetting: function(setting) {
+        return locals.themeSettings[setting];
+    },
+    getLabel: function (name) {
+        return locals.themeSettings['label' + name.charAt(0).toUpperCase() + name.substring(1)];
+    }
 };
 
 HyprLive.engine.compileFile = function (path) {
@@ -4009,7 +4019,7 @@ HyprLive.engine.setTag("comment", function (str, line, parser, types) {
 		: function (throwAwayDeps, factory) {
 			typeof exports === "object" && typeof module === "object"
 				? (module.exports = factory())
-				: root.HyprLive = factory()
+				: root.Hypr = factory()
 		}
 	);
 }(this));

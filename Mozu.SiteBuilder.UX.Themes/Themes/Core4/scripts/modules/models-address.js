@@ -1,12 +1,12 @@
 ﻿define(
-    ["modules/backbone-mozu"],
-    function (Backbone) {
+    ["modules/backbone-mozu", 'hyprlive'],
+    function (Backbone, Hypr) {
 
         var PhoneNumbers = Backbone.MozuModel.extend({
             validation: {
                 home: {
                     required: true,
-                    msg: require.mozuLabel("phoneMissing")
+                    msg: Hypr.getLabel("phoneMissing")
                 }
             }
         }),
@@ -15,19 +15,19 @@
             validation: {
                 address1: {
                     required: true,
-                    msg: require.mozuLabel("streetMissing")
+                    msg: Hypr.getLabel("streetMissing")
                 },
                 cityOrTown: {
                     required: true,
-                    msg: require.mozuLabel("cityMissing")
+                    msg: Hypr.getLabel("cityMissing")
                 },
                 countryCode: {
                     required: true,
-                    msg: require.mozuLabel("countryMissing")
+                    msg: Hypr.getLabel("countryMissing")
                 },
                 postalOrZipCode: {
                     required: true,
-                    msg: require.mozuLabel("postalCodeMissing")
+                    msg: Hypr.getLabel("postalCodeMissing")
                 }
             }
         });

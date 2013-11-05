@@ -2147,7 +2147,7 @@
                 //}
                 //src = fs.readFileSync(pathname, 'utf8');
 
-                src = LiveTemplates[pathname.toLowerCase()];
+                src = HyprLiveContext.templates[pathname.toLowerCase()];
 
                 if (!options.filename) {
                     options = utils.extend({ filename: pathname }, options);

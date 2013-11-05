@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu', 'modules/backbone-mozu', 'shim!vendor/jquery.history[jquery=jQuery]>History', "modules/models-faceting", "modules/views-paging"], function($, Backbone, History, FacetingModels, PagingViews){
+define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'shim!vendor/jquery.history[jquery=jQuery]>History', "modules/models-faceting", "modules/views-paging"], function($, Hypr, Backbone, History, FacetingModels, PagingViews){
 
     var FacetingView = Backbone.MozuView.extend({
         additionalEvents: {
@@ -28,7 +28,7 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'shim!vendor/jquery.hist
             $facetPanel = $('[data-mz-facets]'),
             categoryId = $categoryPageBody.data('mz-category'),
             productListData = require.mozuData('facetedproducts'),
-            defaultPageSize = require.mozuThemeSetting('defaultPageSize');
+            defaultPageSize = Hypr.getThemeSetting('defaultPageSize');
 
         if (productListData) {
             productListData.baseRequestParams = {

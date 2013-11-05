@@ -1,11 +1,11 @@
-﻿define(['shim!vendor/underscore>_', 'modules/backbone-mozu'], function(_, Backbone) {
+﻿define(['shim!vendor/underscore>_', 'modules/backbone-mozu', 'hyprlive'], function(_, Backbone, Hypr) {
 
     var CartItemProduct = Backbone.MozuModel.extend({
         helpers: ['mainImage'],
         mainImage: function() {
             var imgs = this.get("productImages"),
                 img = imgs && imgs[0];
-            return img || { ImageUrl: 'http://placehold.it/160&text=' + require.mozuLabel('noImages') }
+            return img || { ImageUrl: 'http://placehold.it/160&text=' + Hypr.getLabel('noImages') }
         },
         initialize: function() {
             this.set({Url: "/product/" + this.get("productCode")})

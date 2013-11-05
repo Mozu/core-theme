@@ -6,7 +6,7 @@
 		: function (throwAwayDeps, factory) {
 			typeof exports === "object" && typeof module === "object"
 				? (module.exports = factory())
-				: root.HyprLive = factory()
+				: root.Hypr = factory()
 		}
 	);
 }(this));

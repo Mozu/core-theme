@@ -3,7 +3,7 @@
  * with Mozu text labels.
  */
 
-define(['shim!vendor/jquery.tools.dateinput[jquery=jQuery]>jQuery', 'shim!vendor/underscore>_'], function ($, _) {
+define(['shim!vendor/jquery.tools.dateinput[jquery=jQuery]>jQuery', 'shim!vendor/underscore>_', 'hyprlive'], function ($, _, Hypr) {
     var months = 'January,February,March,April,May,June,July,August,September,October,November,December'.split(','),
         days = 'Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday'.split(',');
 
@@ -11,16 +11,16 @@ define(['shim!vendor/jquery.tools.dateinput[jquery=jQuery]>jQuery', 'shim!vendor
     $.tools.dateinput.conf.locale = locale;
     $.tools.dateinput.localize(locale, {
         months: _.map(months, function (month) {
-            return require.mozuLabel(month.toLowerCase());
+            return Hypr.getLabel(month.toLowerCase());
         }).join(','),
         shortMonths: _.map(months, function (month) {
-            return require.mozuLabel('short' + month);
+            return Hypr.getLabel('short' + month);
         }).join(','),
         days: _.map(days, function (day) {
-            return require.mozuLabel(day.toLowerCase());
+            return Hypr.getLabel(day.toLowerCase());
         }).join(','),
         shortDays: _.map(days, function (day) {
-            return require.mozuLabel('short' + day);
+            return Hypr.getLabel('short' + day);
         }).join(',')
     });
 });

@@ -1,5 +1,5 @@
 /*! 
- * Mozu Require - v0.2.0 - 2013-10-25
+ * Mozu Require - v0.2.0 - 2013-11-05
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -629,16 +629,16 @@ var storeMode = "debug",
         if (script) return script.textContent && JSON.parse(script.textContent);
     }
 
-    var themeSettings;
-    function getMozuThemeSetting(settingName) {
-        if (!themeSettings) themeSettings = getMozuData("themesettings");
-        if (!themeSettings) throw new ReferenceError('This page template fails to preload the theme settings using {% preload_json themeSettings "themesettings" %}.');
-        return themeSettings[settingName];
-    }
+    //var themeSettings;
+    //function getMozuThemeSetting(settingName) {
+    //    if (!themeSettings) themeSettings = getMozuData("themesettings");
+    //    if (!themeSettings) throw new ReferenceError('This page template fails to preload the theme settings using {% preload_json themeSettings "themesettings" %}.');
+    //    return themeSettings[settingName];
+    //}
 
-    function getMozuLabel(labelName) {
-        return getMozuThemeSetting("label" + labelName.charAt(0).toUpperCase() + labelName.substring(1));
-    }
+    //function getMozuLabel(labelName) {
+    //    return getMozuThemeSetting("label" + labelName.charAt(0).toUpperCase() + labelName.substring(1));
+    //}
 
     //Allow getting a global that expressed in
     //dot notation, like 'a.b.c'.
@@ -2582,8 +2582,8 @@ var storeMode = "debug",
     //Set up with config info.
     req(cfg);
     req.mozuData = getMozuData;
-    req.mozuThemeSetting = getMozuThemeSetting;
-    req.mozuLabel = getMozuLabel;
+    //req.mozuThemeSetting = getMozuThemeSetting;
+    //req.mozuLabel = getMozuLabel;
 
 req.mixin = mixin;
 

@@ -1,4 +1,4 @@
-﻿require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/models-product", "modules/views-productimages", "modules/jquery-dateinput-localized"], function ($, Backbone, ProductModels, ProductImageViews) {
+﻿require(["modules/jquery-mozu", "hyprlive", "modules/backbone-mozu", "modules/models-product", "modules/views-productimages", "modules/jquery-dateinput-localized"], function ($, Hypr, Backbone, ProductModels, ProductImageViews) {
 
     var ProductView = Backbone.MozuView.extend({
         templateName: 'modules/product/product-detail',
@@ -11,7 +11,7 @@
             var me = this;
             Backbone.MozuView.prototype.render.apply(this);
             this.$('[data-mz-is-datepicker]').each(function (ix, dp) {
-                $(dp).dateinput().css('color', require.mozuThemeSetting('textColor')).on('change  blur', _.bind(me.onOptionChange, me));
+                $(dp).dateinput().css('color', Hypr.getThemeSetting('textColor')).on('change  blur', _.bind(me.onOptionChange, me));
             });
         },
         onOptionChange: function (e) {
@@ -44,7 +44,7 @@
                 product.isLoading(true);
                 window.location.href = "/cart";
             } else {
-                product.trigger("error", { message: require.mozuLabel('unexpectedError') });
+                product.trigger("error", { message: Hypr.getLabel('unexpectedError') });
             }
         });
 

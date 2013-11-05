@@ -1,5 +1,14 @@
-﻿define(["modules/jquery-mozu", "shim!vendor/underscore>_", "modules/backbone-mozu", "pciaas", "modules/api", "modules/models-user", "modules/models-address"],
-    function ($, _, Backbone, PCIaaS, api, UserModels, AddressModels) {
+﻿define([
+    "modules/jquery-mozu",
+    "shim!vendor/underscore>_",
+    "hyprlive",
+    "modules/backbone-mozu",
+    "modules/api",
+    "modules/models-user",
+    "modules/models-address",
+    "modules/models-paymentmethods"
+],
+    function ($, _, Hypr, Backbone, api, UserModels, AddressModels, PaymentMethods) {
 
         var CheckoutStep = Backbone.MozuModel.extend({
             helpers: ['stepStatus'],
@@ -60,20 +69,17 @@
             validation: {
                 firstName: {
                     required: true,
-                    msg: require.mozuLabel('firstNameMissing')
+                    msg: Hypr.getLabel('firstNameMissing')
                 },
                 lastNameOrSurname: {
                     required: true,
-                    msg: require.mozuLabel('lastNameMissing')
+                    msg: Hypr.getLabel('lastNameMissing')
                 }
             },
             next: function () {
                 if (this.validate()) return false;
                 var parent = this.parent, me = this;
                 this.isLoading(true);
-                //parent.apiModel.update({ FulfillmentContact: this.toJSON() }).then(function () {
-                //    return parent.apiGetShippingMethods();
-                //}).then(function (methods) {
                 parent.syncApiModel();
                 parent.apiModel.getShippingMethodsFromContact().then(function(methods) {
                     return parent.set({
@@ -100,7 +106,7 @@
             validation: {
                 shippingMethodCode: {
                     required: true,
-                    msg: require.mozuLabel('chooseShippingMethod')
+                    msg: Hypr.getLabel('chooseShippingMethod')
                 }
             },
             calculateStepStatus: function () {
@@ -133,78 +139,6 @@
             }
         }),
 
-        // payment methods only validate if they are selected!
-        PaymentMethod = Backbone.MozuModel.extend({
-            present: function (value, attr) {
-                if (!this.selected) return undefined;
-                if (!value) return this.validation[attr.split('.').pop()].msg || require.mozuLabel('genericRequired');
-            }
-        });
-
-        CreditCard = PaymentMethod.extend({
-            validation: {
-                paymentOrCardType: {
-                    fn: "present",
-                    msg: require.mozuLabel('cardTypeMissing')
-                },
-                cardNumberPartOrMask: {
-                    fn: "present",
-                    msg: require.mozuLabel('cardNumberMissing')
-                },
-                expireMonth: {
-                    fn: 'expirationDateInPast'
-                },
-                expireYear: {
-                    fn: 'expirationDateInPast'
-                },
-                nameOnCard: {
-                    fn: "present",
-                    msg: require.mozuLabel('cardNameMissing')
-                },
-                cvv: {
-                    fn: "present",
-                    msg: require.mozuLabel('securityCodeMissing')
-                }
-            },
-            dataTypes: {
-                expireMonth: Backbone.MozuModel.DataTypes.Int,
-                expireYear: Backbone.MozuModel.DataTypes.Int,
-                isCardInfoSaved: Backbone.MozuModel.DataTypes.Boolean
-            },
-            expirationDateInPast: function (value, attr, computedState) {
-                if (!this.selected) return undefined;
-                var expMonth = this.get('expireMonth'),
-                    expYear = this.get('expireYear'),
-                    exp,
-                    thisMonth,
-                    isValid;
-
-                if (isNaN(expMonth) || isNaN(expYear)) return false;
-
-                exp = new Date(expYear, expMonth - 1, 1, 0, 0, 0, 0);
-                thisMonth = new Date();
-                thisMonth.setDate(1);
-                thisMonth.setHours(0, 0, 0, 0);
-
-                isValid = exp >= thisMonth;
-                if (!isValid) return require.mozuLabel('cardExpInvalid');
-            }
-        }),
-
-        Check = PaymentMethod.extend({
-            validation: {
-                nameOnCheck: {
-                    fn: "present"
-                },
-                routingNumber: {
-                    fn: "present"
-                },
-                checkNumber: {
-                    fn: "present"
-                }
-            }
-        }),
-
         BillingContact = Backbone.MozuModel.extend({
             relations: {
                 address: AddressModels.StreetAddress,
@@ -213,11 +147,11 @@
             validation: {
                 firstName: {
                     required: true,
-                    msg: require.mozuLabel('firstNameMissing')
+                    msg: Hypr.getLabel('firstNameMissing')
                 },
                 lastNameOrSurname: {
                     required: true,
-                    msg: require.mozuLabel('lastNameMissing')
+                    msg: Hypr.getLabel('lastNameMissing')
                 }
             }
         }),
@@ -227,9 +161,8 @@
             validation: {
                 paymentType: {
                     required: true,
-                    msg: require.mozuLabel('paymentTypeMissing')
-                },
-
+                    msg: Hypr.getLabel('paymentTypeMissing')
+                }
             },
             dataTypes: {
                 "isSameBillingShippingAddress": Backbone.MozuModel.DataTypes.Boolean,
@@ -237,50 +170,11 @@
             },
             relations: {
                 billingContact: BillingContact,
-                card: CreditCard,
-                check: Check
+                card: PaymentMethods.CreditCard,
+                check: PaymentMethods.Check
             },
-            constructor: function (conf) {
+            initialize: function() {
                 var me = this;
-                CheckoutStep.apply(this, arguments),
-
-                pciSettings = {
-                    framePath: "/../../Assets/pci_receiver.html",
-                    siteId: api.context.Site(),
-                    tenantId: api.context.Tenant(),
-                    apiBase: api.context.getServiceUrls().paymentService
-                },
-
-                fields = {};
-                // create jQuery-style accessor functions for PCIaaS
-                _.each(['paymentOrCardType', 'cardNumberPartOrMask', 'cvv', 'isCardInfoSaved', 'paymentServiceCardId'], function (prop) {
-                    fields[prop] = function (val) {
-                        var card = me.get("Card");
-                        if (!card) return undefined;
-                        if (arguments.length > 0) return card.set(prop, val);
-                        return card.get(prop);
-                    };
-                });
-                this.pciProcessor = PCIaaS({
-                    fields: {
-                        CardType: fields.paymentOrCardType,
-                        CardNumber: fields.cardNumberPartOrMask,
-                        CVV: fields.cvv,
-                        PersistCard: fields.isCardInfoSaved,
-                        HiddenCardID: fields.paymentServiceCardId
-                    },
-                    events: {
-                        success: function () {
-                            me.pciProcessor.applyMask();
-                            me.updateOrder();
-                        },
-                        error: function (messages) {
-                            me.trigger('error', { Messages: messages });
-                            me.stepStatus("invalid");
-                        }
-                    },
-                    settings: pciSettings
-                });
                 this.on('change:paymentType', function (model, newPaymentType) {
                     me.selectPaymentType(newPaymentType);
                 });
@@ -295,12 +189,6 @@
                 this.get('check').selected = newPaymentType == "Check";
                 this.get('card').selected = newPaymentType == "CreditCard";
                 this.trigger('paymentchange');
-            },
-            // the toJSON method should omit the CVV so it is not sent to the wrong API
-            toJSON: function (options) {
-                var j = PaymentMethod.prototype.toJSON.apply(this);
-                if (j.card && (!options || !options.helpers)) delete j.card.cvv;
-                return j;
             },
             calculateStepStatus: function() {
                 this.stepStatus(!!this.parent.get('fulfillmentInfo').get('shippingMethodCode') ? (
@@ -321,7 +209,7 @@
             },
             submit: function () {
                 if (this.validate()) return false;
-                if (this.get('paymentType') === "CreditCard") return this.pciProcessor.process();
+                if (this.get('paymentType') === "CreditCard") return this.get('card').apiModel.save();
                 return this.updateOrder();
             }
         });
@@ -333,25 +221,25 @@
         checkoutPageValidation = {
             'user.emailAddress': {
                 fn: function(value) {
-                    if (this.validateUser && (!value || !value.match(Backbone.Validation.patterns.email))) return require.mozuLabel('emailMissing')
+                    if (this.validateUser && (!value || !value.match(Backbone.Validation.patterns.email))) return Hypr.getLabel('emailMissing')
                 }
             },
             'user.password': {
                 fn: function(value) {
-                    if (this.validateUser && !value) return require.mozuLabel('passwordMissing')
+                    if (this.validateUser && !value) return Hypr.getLabel('passwordMissing')
                 }
             },
             'user.confirmPassword': {
                 fn: function(value) {
-                    if (this.validateUser && value !== this.get('User.password')) return require.mozuLabel('passwordsDoNotMatch')
+                    if (this.validateUser && value !== this.get('User.password')) return Hypr.getLabel('passwordsDoNotMatch')
                 }
             },
         };
 
-        if (require.mozuThemeSetting('requireCheckoutAgreeToTerms')) {
+        if (Hypr.getThemeSetting('requireCheckoutAgreeToTerms')) {
             checkoutPageValidation.agreeToTerms = {
                 acceptance: true,
-                msg: require.mozuLabel('didNotAgreeToTerms')
+                msg: Hypr.getLabel('didNotAgreeToTerms')
             }
         }
 

@@ -36,9 +36,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new {controller = "Home", action = "NotFound",});
 
             routes.MapHttpRoute(
-               "sitecontext",
-               "resources/sitecontext",
-               new { controller = "Resource", action = "sitecontextaction" });
+               "hyprlivecontext",
+               "hyprlivecontext",
+               new { controller = "Resource", action = "hyprcontextaction" });
 
             routes.MapHttpRoute(
                "scripts",

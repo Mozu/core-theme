@@ -1,4 +1,4 @@
-﻿require(["modules/jquery-mozu", "shim!vendor/underscore>_", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages"], function ($, _, Backbone, CheckoutModels, messageViewFactory) {
+﻿require(["modules/jquery-mozu", "shim!vendor/underscore>_", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages"], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory) {
 
     var CheckoutStepView = Backbone.MozuView.extend({
         edit: function () {
@@ -200,7 +200,7 @@
                     el: $('#coupon-code-field'),
                     model: checkoutModel
                 }),
-                comments: require.mozuThemeSetting('showCheckoutCommentsField') && new CommentsView({
+                comments: Hypr.getThemeSetting('showCheckoutCommentsField') && new CommentsView({
                     el: $('#comments-field'),
                     model: checkoutModel
                 }),
