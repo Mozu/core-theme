@@ -1,7 +1,7 @@
 ﻿/**
- * @class Taco.view.application.Index
+ * @class Taco.view.capability.Index
  */
-Ext.define('Taco.view.application.Index', {
+Ext.define('Taco.view.capability.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     requires: [
         'Taco.model.Capability',
@@ -10,7 +10,7 @@ Ext.define('Taco.view.application.Index', {
     typeName: 'Applications',
     gridHeaderLabel: 'Applications',
     
-    editorName: 'Taco.view.application.Edit',
+    editorName: 'Taco.view.capability.Edit',
     
     //plural: false,
     modelName: 'Taco.model.Capability',

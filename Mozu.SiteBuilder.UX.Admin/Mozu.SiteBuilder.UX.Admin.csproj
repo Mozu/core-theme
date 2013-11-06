@@ -599,7 +599,6 @@
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\Capability.js" />
     <Content Include="Scripts\app\controller\Channels.js" />
-    <Content Include="Scripts\app\controller\Applications.js" />
     <Content Include="Scripts\app\controller\SiteBuilder.js" />
     <Content Include="Scripts\app\controller\Websites.js" />
     <Content Include="Scripts\app\controller\CustomerAttributes.js" />
@@ -623,7 +622,6 @@
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
     <Content Include="Scripts\app\model\Channel.js" />
     <Content Include="Scripts\app\model\CheckoutSettings.js" />
-    <Content Include="Scripts\app\model\Application.js" />
     <Content Include="Scripts\app\model\Capability.js" />
     <Content Include="Scripts\app\model\CustomerAttribute.js" />
     <Content Include="Scripts\app\model\ExternalPaymentDefinition.js" />
@@ -644,7 +642,6 @@
     <Content Include="Scripts\app\shared\view\modal\WishList.js" />
     <Content Include="Scripts\app\store\Capability.js" />
     <Content Include="Scripts\app\store\Channels.js" />
-    <Content Include="Scripts\app\store\Applications.js" />
     <Content Include="Scripts\app\store\CustomerAttributes.js" />
     <Content Include="Scripts\app\store\ExternalGatewayDefinitions.js" />
     <Content Include="Scripts\app\store\Locations.js" />
@@ -652,9 +649,9 @@
     <Content Include="Scripts\app\store\OrderAttributes.js" />
     <Content Include="Scripts\app\store\PackagingTypes.js" />
     <Content Include="Scripts\app\store\WishList.js" />
-    <Content Include="Scripts\app\view\application\Edit.js" />
-    <Content Include="Scripts\app\view\application\Form.js" />
-    <Content Include="Scripts\app\view\application\Index.js" />
+    <Content Include="Scripts\app\view\capability\Edit.js" />
+    <Content Include="Scripts\app\view\capability\Form.js" />
+    <Content Include="Scripts\app\view\capability\Index.js" />
     <Content Include="Scripts\app\view\channel\Index.js" />
     <Content Include="Scripts\app\view\customerAttribute\Edit.js" />
     <Content Include="Scripts\app\view\customerAttribute\Form.js" />
