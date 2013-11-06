@@ -1,5 +1,5 @@
 ﻿/**
- * @class Taco.model.Application
+ * @class Taco.model.Capability
  */
 Ext.define('Taco.model.Capability', {
     extend: 'Taco.core.data.Model',
@@ -8,27 +8,6 @@ Ext.define('Taco.model.Capability', {
     ],
     idProperty: "id",
     fields: [        
-        /*
-
-        id: "431e811790614f3e8a4ca26800f2fd94*AddressValidator",
-appId: "431e811790614f3e8a4ca26800f2fd94",
-uiConfigurationUrl: "http://www.MyConfig.com",
-capabilityType: "AddressValidator",
-capabilityMode: "SinglePerSitePerShoppingCountry",
-scopeType: "Site",
-scopeId: 7332,
-initialized: false,
-enabled: false,
-entitlementId: 0,
-entitlementApplicationVersionId: 0,
-applicationName: "tbd",
-licenseType: "blurg",
-developerAccountName: "tbd",
-effectivesStartDate: "2013-10-05T13:54:24.2807086-05:00",
-effectiveEndDate: "2015-11-04T13:54:24.2807086-06:00"
-
-
-       */
         {
             "name": "id",
             "type": "string"

@@ -14,7 +14,7 @@ Ext.define('Taco.view.siteSelection.Index', {
         this.header = {
             title: 'Site Selection'
         };
-        
+        debugger
         contextStore.filter([{ filterFn: function(item) {
             return item.get("contextType") == 's';
         } }]);
