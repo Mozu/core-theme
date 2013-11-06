@@ -1,26 +1,23 @@
-{% block local-variables %}
-    {% set sectionclass="mz-l-stack-section" %}
-{% endblock local-variables %}
 {% if model.content.productShortDescription and themeSettings.showProductDetailShortDesc %}
-<div class="mz-productdetail-shortdesc {{ sectionclass }}">
-  <h4 class="{{ sectionclass }}title">{{ labels.shortDesc }}</h4>
+<div class="mz-productdetail-shortdesc mz-l-stack-section">
+  <h4 class="mz-l-stack-sectiontitle">{{ labels.shortDesc }}</h4>
   <span itemscope="description">{{ model.content.productShortDescription|safe }}</span>
 </div>
 {% endif %}
 
 {% if model.options %}
-<div class="mz-productdetail-options {{ sectionclass }}">
-  <h4 class="{{ sectionclass }}title">{{ labels.options }}</h4>
+<div class="mz-productdetail-options mz-l-stack-section">
+  <h4 class="mz-l-stack-sectiontitle">{{ labels.options }}</h4>
   {% include "modules/product/product-options" %}
 </div>
 {% endif %}
     
-<div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="mz-productdetail-price {{ sectionclass }}">
-  <h4 class="{{ sectionclass }}title">{{ labels.price }}</h4>
+<div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="mz-productdetail-price mz-l-stack-section">
+  <h4 class="mz-l-stack-sectiontitle">{{ labels.price }}</h4>
 {% include "modules/product/price-stack" %}
 </div>
 
-<section class="{{ sectionclass }} mz-productdetail-conversion">
+<section class="mz-l-stack-section mz-productdetail-conversion">
     <span class="mz-qty-label">{{ labels.qty }}</span>
     <input class="mz-productdetail-qty" type="number" value="1" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} data-mz-value="Quantity" />
     <button id="add-to-cart" class="mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} data-mz-action="addToCart" >
@@ -38,14 +35,14 @@
   {% endif %}
 </section>
 
-<div class="mz-productdetail-fulldesc {{ sectionclass }}">
-  <h4 class="{{ sectionclass }}title">{{ labels.fullDesc }}</h4>
+<div class="mz-productdetail-fulldesc mz-l-stack-section">
+  <h4 class="mz-l-stack-sectiontitle">{{ labels.fullDesc }}</h4>
   {{ model.content.productFullDescription|safe }}
 </div>
 
 {% if model.properties and themeSettings.showProductDetailProperties %}
-<div class="mz-productdetail-properties {{ sectionclass }}">
-  <h4 class="{{ sectionclass }}title">{{ labels.properties }}</h4>
+<div class="mz-productdetail-properties mz-l-stack-section">
+  <h4 class="mz-l-stack-sectiontitle">{{ labels.properties }}</h4>
   <dl class="mz-propertylist mz-propertylist-justified">
     {% for property in model.properties %}
     {% if property.values %}
@@ -60,8 +57,8 @@
 {% endif %}
 
 {% if model.measurements and themeSettings.showProductDetailMeasurements %}
-<div class="mz-productdetail-measurements {{ sectionclass }}">
-    <h4 class="{{ sectionclass }}title">{{ labels.measurements }}</h4>
+<div class="mz-productdetail-measurements mz-l-stack-section">
+    <h4 class="mz-l-stack-sectiontitle">{{ labels.measurements }}</h4>
     <dl class="mz-propertylist mz-propertylist-justified">
       <dt>Weight</dt>
       <dd itemprop="weight" itemscope itemtype="http://schema.org/QuantitativeValue">

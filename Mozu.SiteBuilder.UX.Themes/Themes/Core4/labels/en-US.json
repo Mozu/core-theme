@@ -151,6 +151,9 @@
   "errorApology"         : "Sorry, an error occurred.",
   "errorDetail"          : "Our software encountered an error it couldn't resolve.",
 
+  /* My Account page labels */
+  "myAccount"            : "Your Account",
+
   /* Not Found labels */
   "pageNotFound"         : "Page Not Found",
   
