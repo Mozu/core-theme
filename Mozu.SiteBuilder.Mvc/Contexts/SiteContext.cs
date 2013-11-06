@@ -140,7 +140,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
 
 
-        private Task Init()
+        public Task Init()
         {
             if (_initTask == null)
             {

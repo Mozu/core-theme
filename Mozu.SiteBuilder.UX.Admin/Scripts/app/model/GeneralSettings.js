@@ -43,7 +43,12 @@ Ext.define('Taco.model.GeneralSettings', {
                 return Taco.app.context.findCatalog(Taco.app.context.getCurrentSite().catalogId).name;
             }
         },
-        { "name": "isMozuWebSite", "type": "boolean", defaultValue:true},
+        {
+            "name": "isMozuWebSite", "type": "boolean",
+            convert: function (value, record) {
+                return Taco.app.context.getCurrentSite().isMozuRendered;
+            }
+        },
         
         // not in json robots.js
         // todo: need to get this implemnted in the service or remove from the client pending service implementation;
