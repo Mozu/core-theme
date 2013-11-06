@@ -28,6 +28,9 @@ var utils = (function () {
             }
             return target;
         },
+        clone: function(obj) {
+            return JSON.parse(JSON.stringify(obj)); // cheap copy :)
+        },
         inherit: function (parent, more) {
             var ApiInheritedObject = function () {
                 if (this.construct) this.construct.apply(this, arguments);
@@ -78,9 +81,15 @@ var utils = (function () {
             }
         }()),
 
-        ajax: function (method, url, headers, data, success, failure) {
+        ajax: function (method, url, headers, data, success, failure, iframePath) {
             if (typeof data !== "string") data = JSON.stringify(data);
-            var xhr = new (window.XMLHttpRequest ? window.XMLHttpRequest : window.ActiveXObject("Microsoft.XMLHTTP"))();
+            var xhr;
+            if (iframePath) {
+                xhr = new IframeXHR(iframePath);
+            } else {
+                xhr = new (window.XMLHttpRequest ? window.XMLHttpRequest : window.ActiveXObject("Microsoft.XMLHTTP"))();
+            }
+
             var timeout = setTimeout(function () {
                 clearTimeout(timeout);
                 failure({

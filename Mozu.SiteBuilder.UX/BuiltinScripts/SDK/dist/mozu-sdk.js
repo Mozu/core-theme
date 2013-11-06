@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.1.0 - 2013-10-31
+ * Mozu JavaScript SDK - v0.2.0 - 2013-11-06
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1239,6 +1239,9 @@
                         }
                         return target;
                     },
+                    clone: function(obj) {
+                        return JSON.parse(JSON.stringify(obj));
+                    },
                     inherit: function(parent, more) {
                         var ApiInheritedObject = function() {
                             if (this.construct) this.construct.apply(this, arguments);
@@ -1284,9 +1287,14 @@
                             return str.replace(rcase, rstr).toLowerCase();
                         };
                     }(),
-                    ajax: function(method, url, headers, data, success, failure) {
+                    ajax: function(method, url, headers, data, success, failure, iframePath) {
                         if (typeof data !== "string") data = JSON.stringify(data);
-                        var xhr = new (window.XMLHttpRequest ? window.XMLHttpRequest : window.ActiveXObject("Microsoft.XMLHTTP"))();
+                        var xhr;
+                        if (iframePath) {
+                            xhr = new IframeXHR(iframePath);
+                        } else {
+                            xhr = new (window.XMLHttpRequest ? window.XMLHttpRequest : window.ActiveXObject("Microsoft.XMLHTTP"))();
+                        }
                         var timeout = setTimeout(function() {
                             clearTimeout(timeout);
                             failure({
@@ -1384,6 +1392,119 @@
                     return this.name + ": " + this.message;
                 }
             }();
+            var IframeXHR = function(window, document, undefined) {
+                var hasPostMessage = window.postMessage && navigator.userAgent.indexOf("Opera") === -1, firefoxVersion = function() {
+                    var ua = navigator.userAgent, re = /Firefox\/(\d+)/i, match = ua.match(re), versionStr = parseInt(match ? match[1] || false : false), version = isNaN(versionStr) ? false : versionStr;
+                    return version;
+                }(), cacheBust = 1, hashRE = /^#?\d+&/, originRE = /^https?:\/\/[^/]+/i, validateOrigin = function(ixhr, origin) {
+                    return ixhr.frameOrigin === origin.toLowerCase().match(originRE)[0];
+                }, messageDelimiter = "|||||", messageMethods = hasPostMessage ? {
+                    listen: function() {
+                        var self = this;
+                        this.messageListener = function(e) {
+                            if (!e) e = window.event;
+                            if (!validateOrigin(self, e.origin)) throw new Error("Origin " + e.origin + " does not match required origin " + self.frameOrigin);
+                            if (e.data === "ready") return self.postMessage();
+                            self.update(e.data);
+                        };
+                        window.addEventListener("message", this.messageListener, false);
+                    },
+                    postMessage: function() {
+                        return this.getFrameWindow().postMessage(this.getMessage(), this.frameOrigin);
+                    },
+                    detachListeners: function() {
+                        window.removeEventListener("message", this.messageListener, false);
+                    }
+                } : {
+                    listen: function() {
+                        var self = this;
+                        this.interval = setInterval(function() {
+                            var data;
+                            self.hash = document.location.hash;
+                            data = self.hash.replace(hashRE, "");
+                            if (self.hash !== self.lastHash) {
+                                if (data === "ready") return self.postMessage();
+                                if (hashRE.test(self.hash)) {
+                                    self.lastHash = self.hash;
+                                    self.update(data);
+                                }
+                            }
+                        }, 100);
+                    },
+                    postMessage: function(message) {
+                        this.getFrameWindow().location = this.frameUrl.replace(/#.*$/, "") + "#" + +new Date() + cacheBust++ + "&" + this.getMessage();
+                    },
+                    detachListeners: function() {
+                        clearInterval(this.interval);
+                        this.interval = null;
+                    }
+                };
+                var IframeXMLHttpRequest = function(frameUrl) {
+                    this.frameOrigin = frameUrl.match(originRE)[0];
+                    if (!this.frameOrigin) throw new Error(frameUrl + " does not seem to have a valid origin.");
+                    this.frameOrigin = this.frameOrigin.toLowerCase();
+                    this.frameUrl = frameUrl + "?&parenturl=" + encodeURIComponent(location.href) + "&parentdomain=" + encodeURIComponent(location.protocol + "//" + location.host) + "&messagedelimiter=" + encodeURIComponent(messageDelimiter);
+                    this.headers = {};
+                };
+                utils.extend(IframeXMLHttpRequest.prototype, messageMethods, {
+                    readyState: 0,
+                    status: 0,
+                    open: function(method, url) {
+                        this.readyState = 1;
+                        this.method = method;
+                        this.url = url;
+                    },
+                    send: function(data) {
+                        this.messageBody = data;
+                        this.listen();
+                        this.createIframe();
+                    },
+                    createIframe: function() {
+                        this.iframe = document.createElement("iframe");
+                        this.iframe.style.position = "absolute";
+                        this.iframe.style.left = "-9999px";
+                        this.iframe.style.width = "1px";
+                        this.iframe.style.height = "1px";
+                        this.iframe.src = this.frameUrl;
+                        document.body.appendChild(this.iframe);
+                    },
+                    setRequestHeader: function(key, value) {
+                        this.headers[key] = value;
+                    },
+                    getMessage: function() {
+                        var msg = [ this.url, this.messageBody, this.method ];
+                        for (var header in this.headers) {
+                            msg.push(header, this.headers[header]);
+                        }
+                        return msg.join(messageDelimiter);
+                    },
+                    onreadystatechange: function() {},
+                    getFrameWindow: function() {
+                        return this.iframe.contentWindow || this.iframe;
+                    },
+                    cleanup: function() {
+                        var self = this;
+                        setTimeout(function() {
+                            self.detachListeners();
+                            self.iframe.parentNode.removeChild(self.iframe);
+                        }, 250);
+                    },
+                    update: function(data) {
+                        data = data.split(messageDelimiter);
+                        this.readyState = parseInt(data[0]) || 0;
+                        this.status = parseInt(data[1]) || 0;
+                        this.responseText = data[2];
+                        this.onreadystatechange();
+                        if (this.readyState === 4) this.cleanup();
+                    },
+                    abort: function() {
+                        this.status = 0;
+                        this.readyState = 0;
+                        this.cleanup();
+                    }
+                });
+                return IframeXMLHttpRequest;
+            }(this, this.document);
             var ApiReference = function() {
                 var basicOps = {
                     get: "GET",
@@ -1439,11 +1560,16 @@
                         for (var tvar in tptData) {
                             if (utils.getType(tptData[tvar]) == "Array") tptData[tvar] = JSON.stringify(tptData[tvar]);
                         }
-                        returnObj.url = oType.template.expand(utils.extend({
+                        var fullTptContext = utils.extend({
                             _: tptData
-                        }, context.asObject("context-"), tptData, ApiReference.urls));
+                        }, context.asObject("context-"), tptData, ApiReference.urls);
+                        returnObj.url = oType.template.expand(fullTptContext);
                         for (var j = 0; j < copyToConfLength; j++) {
                             if (copyToConf[j] in oType) returnObj[copyToConf[j]] = oType[copyToConf[j]];
+                        }
+                        if (oType.useIframeTransport) {
+                            if (typeof oType.useIframeTransport === "string") oType.useIframeTransport = utils.uritemplate.parse(oType.useIframeTransport);
+                            returnObj.iframeTransportUrl = oType.useIframeTransport.expand(fullTptContext);
                         }
                         if (oType.overridePostData) {
                             var overriddenData;
@@ -1684,6 +1810,21 @@
                         template: "{+orderService}{orderId}/billinginfo",
                         includeSelf: true
                     },
+                    creditcard: {
+                        defaults: {
+                            useIframeTransport: "{+paymentService}../../Assets/mozu_receiver.html"
+                        },
+                        save: {
+                            verb: "POST",
+                            template: "{+paymentService}",
+                            returnType: "string"
+                        },
+                        update: {
+                            verb: "PUT",
+                            template: "{+paymentService}{hiddenCardId}",
+                            returnType: "string"
+                        }
+                    },
                     ordernote: {
                         template: "{+orderService}{orderId}/notes/{id}"
                     },
@@ -1753,7 +1894,6 @@
                 ApiObjectConstructor.create = function(typeName, rawJSON, api) {
                     var type = ApiReference.getType(typeName);
                     if (!type) {
-                        console.log("No Mozu SDK object type for " + typeName);
                         return rawJSON;
                     }
                     if (type.collectionOf) {
@@ -1853,10 +1993,137 @@
                     var items = this.prop("items");
                     if (!items || !items.length) return 0;
                     return utils.reduce(items, function(total, item) {
-                        return item.quantity;
+                        return total + item.quantity;
                     }, 0);
                 }
             });
+            ApiObject.types.creditcard = utils.inherit(ApiObject, function() {
+                var ERRORS = {
+                    CARD_TYPE_MISSING: {
+                        code: "PCI_CARD_TYPE_MISSING",
+                        message: "Card type missing."
+                    },
+                    CARD_NUMBER_MISSING: {
+                        code: "PCI_CARD_NUMBER_MISSING",
+                        message: "Card number missing."
+                    },
+                    CVV_MISSING: {
+                        code: "PCI_CVV_MISSING",
+                        message: "Card security code missing."
+                    },
+                    CARD_NUMBER_UNRECOGNIZED: {
+                        code: "PCI_CARD_NUMBER_UNRECOGNIZED",
+                        message: "Card number is in an unrecognized format."
+                    },
+                    MASK_PATTERN_INVALID: {
+                        code: "PCI_MASK_PATTERN_INVALID",
+                        message: "Supplied mask pattern did not match a valid card number."
+                    }
+                };
+                var charsInCardNumberRE = /[\s-]/g;
+                function fail(obj, error) {
+                    obj.fire("error", error);
+                    obj.api.fire("error", error, obj);
+                    throw new Error(error.message);
+                }
+                function validateCardNumber(obj, cardNumber) {
+                    var maskCharacter = obj.maskCharacter;
+                    if (!cardNumber) return false;
+                    if (cardNumber.indexOf(maskCharacter) !== -1) {
+                        return cardNumber.match(new RegExp("[^" + maskCharacter + "\\d]")) || !cardNumber.match(/\d/);
+                    }
+                    return luhn10(cardNumber);
+                }
+                function luhn10(s) {
+                    var i, n, c, r, t;
+                    r = "";
+                    for (i = 0; i < s.length; i++) {
+                        c = parseInt(s.charAt(i), 10);
+                        if (c >= 0 && c <= 9) r = c + r;
+                    }
+                    if (r.length <= 1) return false;
+                    t = "";
+                    for (i = 0; i < r.length; i++) {
+                        c = parseInt(r.charAt(i), 10);
+                        if (i % 2 != 0) c *= 2;
+                        t = t + c;
+                    }
+                    n = 0;
+                    for (i = 0; i < t.length; i++) {
+                        c = parseInt(t.charAt(i), 10);
+                        n = n + c;
+                    }
+                    return n != 0 && n % 10 == 0;
+                }
+                function createCardNumberMask(obj, cardNumber) {
+                    var maskRE = new RegExp(obj.maskPattern), matches = cardNumber.match(maskRE), toDisplay = cardNumber, toSend = [], maskCharacter = obj.maskCharacter, tempMask = "";
+                    if (!matches) fail(obj, ERRORS.MASK_PATTERN_INVALID);
+                    for (var i = 1; i < matches.length; i++) {
+                        tempMask = "";
+                        for (var j = 0; j < matches[i].length; j++) {
+                            tempMask += maskCharacter;
+                        }
+                        toDisplay = toDisplay.replace(matches[i], tempMask);
+                    }
+                    for (i = toDisplay.length - 1; i >= 0; i--) {
+                        toSend.unshift(toDisplay.charAt(i) === maskCharacter ? cardNumber.charAt(i) : maskCharacter);
+                    }
+                    obj.maskedCardNumber = toDisplay;
+                    return toSend.join("");
+                }
+                function makePayload(obj) {
+                    var data = obj.data, maskCharacter = obj.maskCharacter, maskedData;
+                    if (!data.paymentOrCardType) fail(obj, ERRORS.CARD_TYPE_MISSING);
+                    if (!data.cardNumberPartOrMask) fail(obj, ERRORS.CARD_NUMBER_MISSING);
+                    if (!data.cvv) fail(obj, ERRORS.CVV_MISSING);
+                    maskedData = transform.toCardData(data);
+                    var cardNumber = maskedData.cardNumber.replace(charsInCardNumberRE, "");
+                    if (!validateCardNumber(obj, cardNumber)) fail(obj, ERRORS.CARD_NUMBER_UNRECOGNIZED);
+                    if (cardNumber.indexOf(maskCharacter) === -1) maskedData.numberPart = createCardNumberMask(obj, cardNumber);
+                    delete maskedData.cardNumber;
+                    return maskedData;
+                }
+                var transform = {
+                    fields: {
+                        cardNumber: "cardNumberPartOrMask",
+                        persistCard: "isCardInfoSaved",
+                        cardholderName: "nameOnCard",
+                        cardType: "paymentOrCardType",
+                        cardId: "cardId",
+                        cvv: "cvv"
+                    },
+                    toStorefrontData: function(data) {
+                        var storefrontData = {};
+                        for (var serviceField in this.fields) {
+                            if (serviceField in data) storefrontData[this.fields[serviceField]] = data[serviceField];
+                        }
+                        return storefrontData;
+                    },
+                    toCardData: function(data) {
+                        var cardData = {};
+                        for (var serviceField in this.fields) {
+                            if (this.fields[serviceField] in data) cardData[serviceField] = data[this.fields[serviceField]];
+                        }
+                        return cardData;
+                    }
+                };
+                return {
+                    maskCharacter: "*",
+                    maskPattern: "^(\\d+?)\\d{4}$",
+                    save: function() {
+                        var self = this, isUpdate = !!this.prop("cardId");
+                        return this.action(isUpdate ? "update" : "save", makePayload(this)).then(function(res) {
+                            self.prop(transform.toStorefrontData(isUpdate ? res : {
+                                cardNumber: self.maskedCardNumber,
+                                cvv: self.prop("cvv").replace(/\d/g, self.maskCharacter),
+                                cardId: res
+                            }));
+                            self.fire("sync", utils.clone(self.data), self.data);
+                            return self;
+                        });
+                    }
+                };
+            }());
             ApiObject.types.login = utils.inherit(ApiObject, {
                 postconstruct: function(type, json) {
                     if (json.authTicket && json.authTicket.accessToken) {
@@ -1925,7 +2192,7 @@
                             deferred.resolve(rawJSON, xhr);
                         }, function(error) {
                             deferred.reject(error, xhr, url);
-                        });
+                        }, requestConf.iframeTransportUrl);
                         var cancelled = false, canceller = function() {
                             cancelled = true;
                             xhr.abort();
@@ -1956,7 +2223,7 @@
                                 me.fire("spawn", returnObj, obj);
                                 return returnObj;
                             } else {
-                                obj.data = JSON.parse(JSON.stringify(rawJSON));
+                                obj.data = utils.clone(rawJSON);
                                 delete obj.unsynced;
                                 obj.fire("sync", rawJSON, obj.data);
                                 me.fire("sync", obj, rawJSON, obj.data);

@@ -48,7 +48,6 @@ var ApiObject = (function () {
     ApiObjectConstructor.create = function (typeName, rawJSON, api) {
         var type = ApiReference.getType(typeName);
         if (!type) {
-            console.log("No Mozu SDK object type for " + typeName);
             // for forward compatibility the API should return a response,
             // even one that it doesn't understand
             return rawJSON;

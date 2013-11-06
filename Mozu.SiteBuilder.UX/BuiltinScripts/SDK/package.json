@@ -2,7 +2,7 @@
   "name": "mozu-sdk",
   "title": "Mozu JavaScript SDK",
   "author": "Volusion, Inc.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "devDependencies": {
     "grunt": "~0.4.0",
     "grunt-bower-task": "~0.3.2",

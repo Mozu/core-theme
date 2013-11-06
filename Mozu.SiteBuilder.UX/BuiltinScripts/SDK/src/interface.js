@@ -34,7 +34,7 @@ var ApiInterface = (function () {
                 deferred.resolve(rawJSON, xhr);
             }, function (error) {
                 deferred.reject(error, xhr, url);
-            });
+            }, requestConf.iframeTransportUrl);
 
             var cancelled = false,
                 canceller = function () {
@@ -76,7 +76,7 @@ var ApiInterface = (function () {
                         me.fire('spawn', returnObj, obj);
                         return returnObj;
                     } else {
-                        obj.data = JSON.parse(JSON.stringify(rawJSON)); // cheap copy :)
+                        obj.data = utils.clone(rawJSON);
                         delete obj.unsynced;
                         obj.fire('sync', rawJSON, obj.data);
                         me.fire('sync', obj, rawJSON, obj.data);
