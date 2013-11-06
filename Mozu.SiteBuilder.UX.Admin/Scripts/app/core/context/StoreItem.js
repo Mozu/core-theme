@@ -8,7 +8,12 @@ Ext.define('Taco.core.context.StoreItem', {
     fields: [
         'name',
         'contextType',
-        'urlToken'
+        'urlToken',
+        {
+            name: 'isMozuRendered',
+            type: 'boolean',
+            defaultValue: false
+        }
     ],
     idProperty: 'urlToken'
 });

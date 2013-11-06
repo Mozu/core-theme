@@ -14,9 +14,10 @@ Ext.define('Taco.view.siteSelection.Index', {
         this.header = {
             title: 'Site Selection'
         };
-        debugger
-        contextStore.filter([{ filterFn: function(item) {
-            return item.get("contextType") == 's';
+        
+        contextStore.filter([{
+            filterFn: function (item) {
+            return item.get('isMozuRendered') && item.get("contextType") == 's';
         } }]);
 
         
