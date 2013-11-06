@@ -2590,7 +2590,7 @@ var ApiReference = (function () {
             },
             'update': {
                 verb: 'PUT',
-                template: '{+paymentService}{hiddenCardId}',
+                template: '{+paymentService}{cardId}',
                 returnType: 'string'
             }
         },
@@ -2835,11 +2835,7 @@ ApiObject.types.creditcard = utils.inherit(ApiObject, (function() {
     function validateCardNumber(obj, cardNumber) {
         var maskCharacter = obj.maskCharacter;
         if (!cardNumber) return false;
-        if (cardNumber.indexOf(maskCharacter) !== -1) {
-            // bugfix 9/30/2011: unknown issue causes card number to be sent as all mask characters.
-            return cardNumber.match(new RegExp('[^' + maskCharacter + '\\d]')) || !cardNumber.match(/\d/);
-        }
-        return luhn10(cardNumber);
+        return (cardNumber.indexOf(maskCharacter) !== -1) || luhn10(cardNumber);
     }
 
     function luhn10(s) {
@@ -2911,7 +2907,7 @@ ApiObject.types.creditcard = utils.inherit(ApiObject, (function() {
             "persistCard": "isCardInfoSaved",
             "cardholderName": "nameOnCard",
             "cardType": "paymentOrCardType",
-            "cardId": "cardId",
+            "cardId": "paymentServiceCardId",
             "cvv": "cvv"
         },
         toStorefrontData: function (data) {
@@ -2936,12 +2932,12 @@ ApiObject.types.creditcard = utils.inherit(ApiObject, (function() {
         maskPattern: "^(\\d+?)\\d{4}$",
         save: function () {
             var self = this,
-                isUpdate = !!this.prop('cardId');
+                isUpdate = this.prop(transform.fields.cardId);
             return this.action(isUpdate ? 'update' : 'save', makePayload(this)).then(function (res) {
-                self.prop(transform.toStorefrontData(isUpdate ? res : {
+                self.prop(transform.toStorefrontData({
                     cardNumber: self.maskedCardNumber,
                     cvv: self.prop('cvv').replace(/\d/g, self.maskCharacter),
-                    cardId: res
+                    cardId: isUpdate || res
                 }));
                 self.fire('sync', utils.clone(self.data), self.data);
                 return self;

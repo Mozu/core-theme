@@ -1821,7 +1821,7 @@
                         },
                         update: {
                             verb: "PUT",
-                            template: "{+paymentService}{hiddenCardId}",
+                            template: "{+paymentService}{cardId}",
                             returnType: "string"
                         }
                     },
@@ -2029,10 +2029,7 @@
                 function validateCardNumber(obj, cardNumber) {
                     var maskCharacter = obj.maskCharacter;
                     if (!cardNumber) return false;
-                    if (cardNumber.indexOf(maskCharacter) !== -1) {
-                        return cardNumber.match(new RegExp("[^" + maskCharacter + "\\d]")) || !cardNumber.match(/\d/);
-                    }
-                    return luhn10(cardNumber);
+                    return cardNumber.indexOf(maskCharacter) !== -1 || luhn10(cardNumber);
                 }
                 function luhn10(s) {
                     var i, n, c, r, t;
@@ -2089,7 +2086,7 @@
                         persistCard: "isCardInfoSaved",
                         cardholderName: "nameOnCard",
                         cardType: "paymentOrCardType",
-                        cardId: "cardId",
+                        cardId: "paymentServiceCardId",
                         cvv: "cvv"
                     },
                     toStorefrontData: function(data) {
@@ -2111,12 +2108,12 @@
                     maskCharacter: "*",
                     maskPattern: "^(\\d+?)\\d{4}$",
                     save: function() {
-                        var self = this, isUpdate = !!this.prop("cardId");
+                        var self = this, isUpdate = this.prop(transform.fields.cardId);
                         return this.action(isUpdate ? "update" : "save", makePayload(this)).then(function(res) {
-                            self.prop(transform.toStorefrontData(isUpdate ? res : {
+                            self.prop(transform.toStorefrontData({
                                 cardNumber: self.maskedCardNumber,
                                 cvv: self.prop("cvv").replace(/\d/g, self.maskCharacter),
-                                cardId: res
+                                cardId: isUpdate || res
                             }));
                             self.fire("sync", utils.clone(self.data), self.data);
                             return self;

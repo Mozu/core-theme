@@ -3,8 +3,9 @@
  *   **$.cookie** -- Adds cookie management, using normal jQuery overload style: $.cookie('foo') gets foo cookie, $.cookie('foo','bar') sets it. *(This plugin is a separate file, shimmed in using the shim plugin.)*
  *   **$.fn.jsonData** -- Equivalent to the getter function of  $.fn.data, but without a weird jQuery bug that fails to parse JSON properly if it's been HTML escaped into an attribute.
  *   **$.fn.noFlickerFadeIn** -- A version of $.fn.fadeIn that operates on visibility:invisible objects, so there's no document reflow.
+ *   **$.fn.ScrollTo** -- A plugin to smoothly scroll any element into view.
  */
-define(["shim!vendor/jquery-cookie[jquery=jQuery]>jQuery"], function ($) {
+define(["shim!vendor/jquery-cookie[jquery=jQuery]>jQuery", "vendor/jquery-scrollto"], function ($) {
 
    
     $.fn.jsonData = function (dataAttr) {

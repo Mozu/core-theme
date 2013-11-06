@@ -351,7 +351,7 @@ var ApiReference = (function () {
             },
             'update': {
                 verb: 'PUT',
-                template: '{+paymentService}{hiddenCardId}',
+                template: '{+paymentService}{cardId}',
                 returnType: 'string'
             }
         },
