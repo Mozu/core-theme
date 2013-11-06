@@ -1,13 +1,19 @@
 ﻿{% extends "page" %}
 
-{% block Init %}
-	{% setTemplateVariables BodyTagClasses="mz-my-account" %}
-    {% parent %}
-{% endblock Init%}
+{% block title-tag-content %} {{ labels.myAccount }} - {% parent %} {% endblock title-tag-content %}
 
-{% block BodyContent %}
+{% block body-tag-classes %} mz-myaccount {% endblock body-tag-classes %}
+
+{% block body-content %}
 
 {% require_script "pages/myaccount" %}
+
+{% preload_json model "myaccount" %}
+
+<div class="mz-l-container">
+    <h1 class="mz-pagetitle">
+        {{ labels.myAccount }}
+    </h1>
 
 <div id="mz-my-account" class="mz-my-account-wrap" 
     data-mz-customer="{% json_attribute Model %}"

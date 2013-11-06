@@ -402,6 +402,7 @@
     <Content Include="Themes\Core4\scripts\modules\views-productimages.js" />
     <Content Include="Themes\Core4\scripts\modules\views-messages.js" />
     <Content Include="Themes\Core4\scripts\vendor\bootstrap-popover.js" />
+    <Content Include="Themes\Core4\scripts\vendor\jquery-scrollto.js" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-container.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-sidebar.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-slidebox.less" />
@@ -871,7 +872,7 @@
     <Content Include="Themes\Core4\templates\modules\checkout\comments-field.hypr.live">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Themes\Core4\templates\modules\checkout\coupon-code-field.live">
+    <Content Include="Themes\Core4\templates\modules\checkout\coupon-code-field.hypr.live">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Themes\Core4\templates\modules\checkout\checkout-order-summary.hypr.live" />

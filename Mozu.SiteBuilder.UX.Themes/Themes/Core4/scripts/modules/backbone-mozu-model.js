@@ -39,7 +39,25 @@ define([
                 this.helpers = (this.helpers || []).concat(['isLoading', 'isValid']);
                 Backbone.Model.apply(this, arguments);
                 if (this.mozuType) this.initApiModel(conf);
-                if (this.handlesMessages) this.initMessages();
+                if (this.handlesMessages) {
+                    this.initMessages();
+                } else {
+                    this.passErrors();
+                }
+            },
+            passErrors: function() {
+                var self = this;
+                _.defer(function() {
+                    var ctx = self;
+                    while(ctx = ctx.parent) {
+                        if (ctx.handlesMessages) {
+                            self.on('error', function(e, c) {
+                                ctx.trigger('error', e, c);
+                            });
+                            break;
+                        }
+                    }
+                }, 300);
             },
             get: function (propName) {
                 var prop = propName.split('.'), ret = this, level;
