@@ -4,12 +4,15 @@
  */
 
 Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
-    extend: 'Taco.view.product.subform.Subform',
+    extend: 'Taco.core.ux.form.Form',
     requires: ['Taco.view.settings.paymentAndCheckout.Gateway',
         'Taco.view.settings.paymentAndCheckout.ExternalGateway',
         'Taco.store.ExternalGatewayDefinitions',
         'Taco.store.GatewayDefinitions'],
     title: 'Payment Types',
+    margin: "0 0 20 0",
+    ui: "subform",
+    width: "100%",
     initComponent: function () {
         var me = this;
 

@@ -6,8 +6,19 @@ Ext.define('Taco.model.SiteShippingSettings', {
     requires: ['Taco.model.CustomShippingRate', 'Taco.model.Contact'],
     extend: 'Taco.core.data.Model',
     fields: [
-        { name: 'activeRateProviders', type: 'auto' , defaultValue:[]},
+        // siteShippingOriginAddress is deprecated. remove when transition to omnichannel is complete
         { name: 'siteShippingOriginAddress', type: 'auto' },
+
+        // new omnichannel fields that need to be added to the integration layer
+        { name: ' shipFromId', type: 'string' },
+        { name: 'inStorePickupLabel', type: 'string' },
+        { name: 'enableDirectShip', type: 'boolean' },
+        { name: 'enableInStorePickup', type: 'boolean' },
+        { name: 'locationTypeIds', type: 'auto', defaultValue:[] },
+        
+
+        // existing fields
+        { name: 'activeRateProviders', type: 'auto', defaultValue: [] },
         { name: 'orderHandlingFee', type: 'float' },
         { name: 'customRate', type: 'auto' ,defaultValue: {} }
     ],

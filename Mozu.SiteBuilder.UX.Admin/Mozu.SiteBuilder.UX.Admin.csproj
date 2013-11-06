@@ -950,7 +950,6 @@
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\form\field\Trigger.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\panel\Panel.scss" />
     <Content Include="Scripts\sass\src\overrides\window\MessageBox.scss" />
-    <Content Include="Scripts\sass\src\overrides\window\Window.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\panel\Tool.scss" />
     <Content Include="Scripts\sass\src\view\settings\Publishing.scss" />
     <Content Include="Scripts\app\mocks\channels.json" />

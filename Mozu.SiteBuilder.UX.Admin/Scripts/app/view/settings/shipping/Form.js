@@ -1,5 +1,5 @@
 ﻿/**
- * The discount editor view
+ * 
  */
 Ext.define('Taco.view.settings.shipping.Form', {
     extend: 'Taco.core.ux.form.NavForm2',

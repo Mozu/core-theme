@@ -4,9 +4,12 @@
  */
 
 Ext.define('Taco.view.settings.paymentAndCheckout.subform.LegalInformation', {
-    extend: 'Taco.view.product.subform.Subform',
+    extend: 'Taco.core.ux.form.Form',
     requires: ['Taco.view.settings.paymentAndCheckout.Gateway'],
     title: 'Legal Information',
+    margin: "0 0 20 0",
+    ui: "subform",
+    width: "100%",
     initComponent: function () {
         var me = this;
 
@@ -44,7 +47,6 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.LegalInformation', {
                 {
                     xtype: 'checkboxgroup',
                     fieldLabel: 'Print on packing slip',
-                    margin: '0 0 50 0',
                     // Arrange checkboxes into two columns, distributed vertically
                     columns: 1,
                     vertical: true,

@@ -4,9 +4,14 @@
  */
 
 Ext.define('Taco.view.settings.paymentAndCheckout.subform.CheckoutPreference', {
-    extend: 'Taco.view.product.subform.Subform',
-    requires: ['Taco.view.settings.paymentAndCheckout.Gateway'],
+    extend: 'Taco.core.ux.form.Form',
+    requires: [
+        'Taco.view.settings.paymentAndCheckout.Gateway'
+    ],
     title: 'Checkout Preference',
+    margin: "0 0 20 0",
+    ui: "subform",
+    width: "100%",
     initComponent: function () {
         var me = this;
 
@@ -32,7 +37,6 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.CheckoutPreference', {
                   {
                       xtype: 'radiogroup',
                       fieldLabel: 'Request customer email address for marketing purposes',
-                      margin: '0 0 50 0',
                       // Arrange radio buttons into two columns, distributed vertically
                       columns: 1,
                       vertical: true,
