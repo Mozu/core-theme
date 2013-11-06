@@ -27,6 +27,7 @@ Ext.define('Taco.view.location.subform.Location', {
 
         var locationTypesStore = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.LocationTypes',
+            autoLoad:true,
             listeners: {
                 load: {
                     fn: function () {
@@ -40,13 +41,13 @@ Ext.define('Taco.view.location.subform.Location', {
         
         // note there are two different boxSelects. Dont' use the other one. your welcome.
         me.locationTypeIds = Ext.create('Ext.ux.form.field.BoxSelect', {
-            width: 300,
+            width: 350,
             fieldLabel: 'Location Types',
             name: 'locationTypeIds',
             queryMode: 'local',
             displayField: 'name',
             valueField: 'code',
-            emptyText: 'Select',
+            //emptyText: 'Select',
             allowBlank: false,
             store: locationTypesStore
         });
@@ -55,7 +56,7 @@ Ext.define('Taco.view.location.subform.Location', {
 
         // note there are two different boxSelects. Dont' use the other one. your welcome.
         me.fulfillmentTypeIds = Ext.create('Ext.ux.form.field.BoxSelect', {
-            width: 300,
+            width: 350,
             fieldLabel: 'Fulfillment Types',
             name: 'fulfillmentTypeIds',
             queryMode: 'local',
@@ -110,72 +111,6 @@ Ext.define('Taco.view.location.subform.Location', {
                 ]
             */
         });
-        
-
-
-        /*
-        this.addressView = Ext.create('Ext.form.field.Display',{
-            fieldLabel: 'Address',
-            name:"address",
-            fieldStyle : "color: #333333;padding: 5px 10px 3px 10px;background: white repeat-x 0 0;border-width: 1px;border-style: solid;border-color: #bfbfbf;",
-            width: 400,
-            allowBlank: false,
-            
-            isValid: function () {
-                var value = this.getValue();
-                return (value && value.addressIsValidated);
-            },
-            
-            validate: function () {
-                return this.isValid();
-            },
-            
-            renderer: function (value, field) {
-                return Ext.create('Ext.XTemplate', [
-                    '<tpl if="!address1 && !address2 && !address3 && !address4">',
-                        //'<div class="address-none" style="color:#ccc;"><br></div>',
-                    '<br>',
-                    '<tpl else>',
-                        '<div class="address-line-1">{address1}</div>',
-                        '<div class="address-line-2">{address2}</div>',
-                        '<div class="address-line-3">{address3}</div>',
-                        '<div class="address-line-4">{address4}</div>',
-                        '<div class="city-state-zip">{cityOrTown}, {stateOrProvince} {postalOrZipCode}</div>',
-                        '<div class="country">{countryCode}</div>',
-                    '</tpl>'
-                ]).apply(value);
-            }
-        });
-
-        this.editAddressButton = Ext.create('Ext.button.Button',{
-            ui: "action",
-            scale:"medium",
-            text: 'Edit Address',
-            handler: function () {
-                    var modal = Ext.create('Taco.shared.view.modal.Address', {
-                    record: me.addressView.getValue(),
-                    scale: null,
-                    addressHasNames: false,
-                    showCompanyName: false,
-                    showEmail: false,
-                    showPhoneNumbers: false,
-                    validateAddress: true,
-                    listeners: {
-                        savesuccess: function (win, record) {
-                            var updatedAddressData = record.data;
-                            var address = Ext.clone(me.addressView.originalValue);
-                            var addressFields = Ext.Object.getKeys(address);
-                            address = Ext.copyTo(address, updatedAddressData, addressFields);
-                            me.addressView.setValue(address);
-                        }
-                    }
-                });
-            },
-            scope:this
-
-        });
-
-        */
                 
         this.items = [
             this.locationTypeIds,
@@ -216,46 +151,6 @@ Ext.define('Taco.view.location.subform.Location', {
                 }
             },
             this.addressView,
-            
-            /*
-            this.addressView,
-            {
-                xtype: 'fieldcontainer',
-                width: 400,
-                layout: 'hbox',
-                items: [
-                    this.editAddressButton,
-                    {
-                        xtype: "splitter"
-                    },{
-                        xtype: 'button',
-                        ui: "action",
-                        scale: "medium",
-                        text: "Get Latitude/Longitude",
-                        handler: function () {
-                            this.record.getGeo({
-                                jsonData: {
-                                    address: this.addressView.getValue()
-                                },
-                                success: function (response) {
-                                    // update the lat long fields
-                                    this.getForm().findField("latitude").setValue(json.geolocation.latitude);
-                                    this.getForm().findField("longitude").setValue(json.geolocation.longitude);
-                                },
-                                failure: function(response) {
-                                    
-                                },
-                                scope:this
-                            });
-                        },
-                        scope: this
-                    }
-                ]
-            }, 
-            
-            
-            */
-            
             {
                 xtype: 'fieldcontainer',
                 width:"100%",
