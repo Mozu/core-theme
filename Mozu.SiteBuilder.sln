@@ -20,14 +20,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozu.SiteBuilder.UX.Admin",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozu.SiteBuilder.UX.Models", "Mozu.SiteBuilder.UX.Models\Mozu.SiteBuilder.UX.Models.csproj", "{FE9DA6F5-3477-48A3-8314-572CE5C308FB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".octopack", ".octopack", "{95323DB6-194C-4909-9E1C-9E9610356AA1}"
-	ProjectSection(SolutionItems) = preProject
-		.octopack\NuGet.exe = .octopack\NuGet.exe
-		.octopack\OctoPack.targets = .octopack\OctoPack.targets
-		.octopack\OctoPack.Tasks.dll = .octopack\OctoPack.Tasks.dll
-		.octopack\OctoPack.Tasks.pdb = .octopack\OctoPack.Tasks.pdb
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{16F8C4B3-4E6C-4E3F-B622-A005349EC397}"
 	ProjectSection(SolutionItems) = preProject
 		WE-Markdown.css = WE-Markdown.css
