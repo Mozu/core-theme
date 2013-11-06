@@ -146,9 +146,9 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             if (cachedResult != null )
             {
                 var tcs = new TaskCompletionSource<JObject>();
-                tcs.SetResult(cachedResult.Item2 );
+                tcs.SetResult(cachedResult.Item2 ?? new JObject());
                 _ts = cachedResult.Item1;
-                return tcs.Task;
+                return tcs.Task  ;
             }
 
             if (_getInstanceValues == null)
