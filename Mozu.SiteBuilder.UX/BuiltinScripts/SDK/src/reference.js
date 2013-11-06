@@ -87,9 +87,15 @@ var ApiReference = (function () {
             for (var tvar in tptData) {
                 if (utils.getType(tptData[tvar]) == "Array") tptData[tvar] = JSON.stringify(tptData[tvar]);
             }
-            returnObj.url = oType.template.expand(utils.extend({ _: tptData }, context.asObject('context-'), tptData, ApiReference.urls));
+            var fullTptContext = utils.extend({ _: tptData }, context.asObject('context-'), tptData, ApiReference.urls);
+            returnObj.url = oType.template.expand(fullTptContext);
             for (var j = 0; j < copyToConfLength; j++) {
                 if (copyToConf[j] in oType) returnObj[copyToConf[j]] = oType[copyToConf[j]];
+            }
+            if (oType.useIframeTransport) {
+                // cache templates lazily
+                if (typeof oType.useIframeTransport === "string") oType.useIframeTransport = utils.uritemplate.parse(oType.useIframeTransport);
+                returnObj.iframeTransportUrl = oType.useIframeTransport.expand(fullTptContext);
             }
             if (oType.overridePostData) {
                 var overriddenData;
@@ -333,6 +339,21 @@ var ApiReference = (function () {
         'payment': {
             template: '{+orderService}{orderId}/billinginfo',
             includeSelf: true
+        },
+        'creditcard': {
+            defaults: {
+                useIframeTransport: '{+paymentService}../../Assets/mozu_receiver.html'
+            },
+            'save': {
+                verb: 'POST',
+                template: '{+paymentService}',
+                returnType: 'string'
+            },
+            'update': {
+                verb: 'PUT',
+                template: '{+paymentService}{hiddenCardId}',
+                returnType: 'string'
+            }
         },
         'ordernote': {
             template: '{+orderService}{orderId}/notes/{id}'
