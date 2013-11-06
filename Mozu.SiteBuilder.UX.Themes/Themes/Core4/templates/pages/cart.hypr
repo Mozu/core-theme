@@ -12,7 +12,7 @@
 
 <div class="mz-l-container">
 	<h1 class="mz-pagetitle">{{ labels.cart }}</h1>
-	<form method="post" action="/cart/checkout" id="cartform">
+	<form method="post" action="/checkout" id="cartform">
         {% include "modules/common/message-bar" %}
         <table class="mz-carttable" id="cart">
             {% include "modules/cart/cart-table" %}

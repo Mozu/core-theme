@@ -11,6 +11,7 @@ define(['modules/jquery-mozu', 'modules/api'], function ($, api) {
             }, 500);
         }
         function checkForCartUpdates(apiObject) {
+            if (!apiObject || !apiObject.type) return;
             switch (apiObject.type) {
                 case "cart":
                         clearTimeout(timeout);

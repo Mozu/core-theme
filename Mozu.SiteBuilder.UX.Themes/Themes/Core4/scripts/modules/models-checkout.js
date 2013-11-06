@@ -208,8 +208,11 @@
                 });
             },
             submit: function () {
+                var self = this;
                 if (this.validate()) return false;
-                if (this.get('paymentType') === "CreditCard") return this.get('card').apiModel.save();
+                if (this.get('paymentType') === "CreditCard") return this.get('card').apiModel.save().then(function () {
+                    return self.updateOrder();
+                });
                 return this.updateOrder();
             }
         });
