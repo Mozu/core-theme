@@ -181,38 +181,19 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                 ]
             },
             {
+
                 xtype: 'fieldcontainer',
                 // note this layout is required for radiogroups to have the proper height;
                 layout:"column",
                 items: [
                     {
-                        xtype: "radiogroup",
+                        xtype: "editabledisplayfield",
                         //name:"isWebSite",
-                        fieldLabel: "Mozu Hosted Store Front",
+                        fieldLabel: "Is Mozu Hosted Store Front",
                         //flex: 1,
-                        columnWidth: .5,
-                        name: "isMozuWebSiteGroup",
-                        layout: {
-                            layout : "hbox"
-                        },
-                        columns:1,
-                        defaults: {
-                            name: "isMozuWebSite"
-                        },
-                        items: [
-                            { xtype:"radiofield", boxLabel: "Yes", inputValue: true, id:"radio1" },
-                            { xtype: "radiofield", boxLabel: "No", inputValue: false, id: "radio2" }
-                        ],
-                        listeners: {
-                            change: {
-                                fn: function (cmp, newValue, oldValue, eOpts) {
-                                    //toggle the visibility and set the toggle field to be required when visible and not required when hidden;
-                                    me.customerExperienceTemplate.allowBlank = newValue.isMozuWebSite;
-                                    me.customerExperienceTemplate.setVisible(!newValue.isMozuWebSite);
-                                },
-                                scope:me
-                            }
-                        }
+                        //columnWidth: .5,
+                        name: "isMozuWebSite",
+                        flex: 1
                     },
                     me.customerExperienceTemplate
                 ]
@@ -220,20 +201,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
         ];
 
         this.callParent(arguments);
-    },
-    
-    loadForm: function (record, noCascade) {
-        var me = this,
-            form = me.getForm(),
-            value = me.record.get("isMozuWebSite"),
-            fieldGroup = form.findField("isMozuWebSiteGroup");
-        
-        // need to manualy set radio buttons. Auto setvalues in form.Form doesn't work.
-        // radioButton.setValue() only works for a set of radio buttons when the value is a string instead of boolean. boolean values only set the first field with that field name.6 years later and extjs still screws radio buttons up.
-        fieldGroup.setValue({
-            "isMozuWebSite": value
-        });
-        
-        this.callParent(arguments);
     }
+    
+  
 });

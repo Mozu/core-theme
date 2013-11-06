@@ -28,9 +28,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                   DeveloperAccountName = "tbd",
                                                   EffectiveEndDate = DateTime.Now.AddYears( 2),
                                                   EffectiveStartDate = DateTime.Now.AddDays(-30),
+                                                  ApplicationVersionId=22,
                                                   LicenseType = "blurg"
                                               };
                     }
+                    //http://<env_specific_devcenter_server>/console/storeprofile/<appversionid>/<localecode>
                     var a = new Application ()
                     {
                         AppId = app.AppId,
@@ -49,6 +51,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                                LicenseType = app.Entitlement.LicenseType,
                                                                                Enabled = cap.Enabled,
                                                                                EntitlementId = app.Entitlement.Id,
+                                                                               uiSupportUrl = Mozu.Core.Settings.MozuConfigurationManager.DevCenterPath + "/storeprofile/" + app.Entitlement.ApplicationVersionId +"/en-US",
                                                                                EntitlementApplicationVersionId  = app.Entitlement.ApplicationVersionId ,
                                                                                ApplicationName = app.Entitlement.ApplicationName ,
                                                                                DeveloperAccountName = app.Entitlement.DeveloperAccountName ,

@@ -70,8 +70,9 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         /// </summary>
         private string _theme;
 
-        [DataMember(Name = "isMozuWebSite")]
-        public bool IsMozuWebSite { get; set; }
+        //moved to site def in tenant. not editable
+        //[DataMember(Name = "isMozuWebSite")]
+        //public bool IsMozuWebSite { get; set; }
 
         [DataMember(Name = "templateSiteId")]
         public int? TemplateSiteId { get; set; }

@@ -502,12 +502,6 @@
     <Compile Include="Providers\BSProfileProvider.cs" />
     <Compile Include="Providers\SiteBuilderProfile.cs" />
     <Compile Include="Security\AuthenticationHelper.cs" />
-    <Compile Include="Settings\ISettingsRepository.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Settings\SettingsRepository.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Settings\ThemeSettingsRepository.cs">
       <SubType>Code</SubType>
     </Compile>

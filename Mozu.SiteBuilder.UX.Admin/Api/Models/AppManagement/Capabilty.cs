@@ -72,7 +72,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement
 
         //public List<string> ActiveCreditTypes { get; set; }
 
-
+        public string uiSupportUrl { get; set; }
         public int EntitlementId { get; set; }
         public int EntitlementApplicationVersionId { get; set; }
         public string ApplicationName { get; set; }
