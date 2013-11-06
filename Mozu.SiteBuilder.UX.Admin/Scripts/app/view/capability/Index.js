@@ -5,7 +5,8 @@ Ext.define('Taco.view.capability.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     requires: [
         'Taco.model.Capability',
-        'Taco.store.Capability'
+        'Taco.store.Capability',
+        'Taco.view.capability.Edit'
     ],
     typeName: 'Applications',
     gridHeaderLabel: 'Applications',
