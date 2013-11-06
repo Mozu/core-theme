@@ -1,6 +1,7 @@
 ﻿
 using System.Linq;
 using System.Web.Http;
+using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Settings;
@@ -83,10 +84,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var site = res.ReadAsAsync().Result;
 
 
-            SiteBuilderContext.Save(site: site.Id, sitegroup: site.MasterCatalogId , tenant: site.TenantId, isEditMode: false, cookieProvider: _cookies);
-
+            
             //string domainPriority = System.Configuration.ConfigurationManager.AppSettings["gositeDomainPriority"];
             IEnumerable<string> domainList;
+            var viewMode = DataViewModeType.NoneSet;
             switch ((environment??"").ToLower())
             {
                 case "primary":
@@ -95,13 +96,18 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 case "preview":
                 case "admin-pending":
                 case "staging":
-                    domainList = site.Domains.Where(x => x.IsSystemAssigned).Select(x => "admin-pending-view." + x.DomainName );
+                    {
+                        viewMode = DataViewModeType.Pending;
+                        domainList = site.Domains.Where(x => x.IsSystemAssigned).Select(x => "admin-pending-view." + x.DomainName);
+                    }
+                    
                     break;
                 default:
                     domainList = site.Domains.Select(x => x.DomainName);
                     break;
             }
 
+            SiteBuilderContext.Save(site: site.Id, masterCatalog : site.MasterCatalogId, tenant: site.TenantId, isEditMode: false, dataViewMode: viewMode, cookieProvider: _cookies);
 
             
             string newHostname = (domainList.FirstOrDefault()) ;
@@ -131,76 +137,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
 
-        [System.Web.Http.HttpPost]
-        public ActionResult ChangeSite(ChangeSiteModel model, HttpRequest  form)
-        {
-            Site  site = null;
-            if (!string.IsNullOrEmpty(model.DomainName))
-            {
-                try
-                {
-                    site = _wsRepo.GetSite(model.SiteId).Result.ReadAsAsync().Result;
-                }
-                catch (MozuApplicationException )
-                {
-                    throw;
-                }
-                if (site == null)
-                {
-                    this.ModelState.AddModelError("", "cant find domain name");
-
-                }
-            }
-            else
-            {
-
-                try
-                {
-                    site = _wsRepo.GetSite(model.SiteId).Result.ReadAsAsync().Result;
-                }
-                catch (MozuApplicationException )
-                {
-                    throw;
-                    
-                }
-                if (site == null)
-                {
-                    this.ModelState.AddModelError("", "cant find site id");
-                }
-            }
-            if (site != null)
-            {
-                SiteBuilderContext.Save(site: site.Id, sitegroup: site.MasterCatalogId, tenant: site.TenantId, isEditMode: false, cookieProvider: _cookies);
-
-                return Redirect("/");
-            }
-            return View(model);
-        }
-        //public ActionResult Tenant ()
-        //{
-        //    System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        //    sb.AppendFormat("<form method='post'>TenantID: <input type='textbox' name='id' value='{0}'/><br /><input type='submit' /></form>", this.SiteContext.Id);
-        //    return new ContentResult (){ Content = sb.ToString ()};
-            
-        //}
-        //[HttpPost()]
-        //public ActionResult Tenant(string id , FormCollection col )
-        //{
-        //    var cookie = this.HttpContext.Request.Cookies["sitebuider"];
-        //    if (cookie == null)
-        //    {
-        //        cookie = new HttpCookie("sitebuider");
-        //    }
-        //    cookie["tenant"] = id;
-        //    this.HttpContext.Response.SetCookie(cookie);
-        //    return RedirectToAction("index", "dashboard", new { area = "admin" });
-        //}
-
-        public class ChangeSiteModel
-        {
-            public string DomainName { get; set; }
-            public int SiteId { get; set; }
-        }
+        
     }
 
 }

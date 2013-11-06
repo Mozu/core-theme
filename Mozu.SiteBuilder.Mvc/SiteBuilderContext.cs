@@ -33,16 +33,19 @@ namespace Mozu.SiteBuilder.Mvc
         
         internal const string COOKIENAME = "SBCONTEXT";
 
-       
-        public static void Save(int? site, int? sitegroup, int tenant, bool isEditMode, ICookieProvider cookieProvider)
+
+        public static void Save(int? site, int? masterCatalog, int tenant, bool isEditMode, DataViewModeType dataViewMode, ICookieProvider cookieProvider)
         {
             var cookie = new HttpCookie("") {Expires = DateTime.MaxValue};
 
             cookie["site"] = site.HasValue ? site.ToString() : null;
-            cookie["sitegroup"] = sitegroup.HasValue ? sitegroup.ToString() : null;
+            cookie["masterCatalog"] = masterCatalog.HasValue ? masterCatalog.ToString() : null;
             cookie["tenant"] = tenant.ToString();
             cookie["editmode"] = isEditMode.ToString();
-
+            if (dataViewMode == DataViewModeType.Pending)
+            {
+                cookie["dataview"] = DataViewModeType.Pending.ToString( );
+            }
             cookieProvider.SaveResponseCookie(COOKIENAME, cookie);
         }
     }

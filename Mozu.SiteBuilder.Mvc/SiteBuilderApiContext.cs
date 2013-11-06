@@ -11,6 +11,7 @@ using Mozu.Core.Api;
 using Mozu.Core.Api.Client;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Behaviors;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Security;
@@ -53,7 +54,7 @@ namespace Mozu.SiteBuilder.Mvc
             }
             LoadUser();
             ValidateUser();
-
+            ValidateDataMode();
         }
 
         private static System.Collections.Concurrent.ConcurrentDictionary<string, Site> g_domainSiteLookup = new ConcurrentDictionary<string, Site>(StringComparer.OrdinalIgnoreCase);
@@ -71,18 +72,38 @@ namespace Mozu.SiteBuilder.Mvc
             }
 
             //todo check refreshToken Loc
-            string token = _authenticationHelper.GetRefreshToken();
+          
             var accessToken = _authenticationHelper.GetAccessToken();
             LightweightUserClaims claims;
+
+            /*********************************************
+             * 
+             * //todo:validate has admin cookie somehow?!!!
+             * 
+             * ******************************************/
             if (!string.IsNullOrEmpty(accessToken) && LightweightUserClaims.TryParse(accessToken, out claims))
             {
                 //todo validate tenant and site 
                 this.UserClaims = claims;
             }
 
+            
 
 
+        }
+        private static int PublishBehavorID = new PublishPreviewBehavior().Id;
 
+        void ValidateDataMode()
+        {
+            if (ScopeType != UserScopeType.Shopper || this.DataViewMode != DataViewModeType.Pending)
+            {
+                return;
+            }
+             
+            if (!this.UserClaims.BehaviorIds.Contains(PublishBehavorID))
+            {
+                this.UserClaims.BehaviorIds = this.UserClaims.BehaviorIds.Concat(new int[] { PublishBehavorID }).ToArray();
+            }
         }
 
         bool ValidateUser()
@@ -217,9 +238,14 @@ namespace Mozu.SiteBuilder.Mvc
                     }
                     this.TenantId = tmpInt;
                 }
-                if (int.TryParse(cookie["sitegroup"], out tmpInt))
+                if (int.TryParse(cookie["masterCatalog"], out tmpInt))
                 {
                     this.MasterCatalogId = tmpInt;
+                }
+                DataViewModeType dataViewModeType;
+                if (Enum.TryParse<DataViewModeType>(cookie["dataview"], true, out dataViewModeType))
+                {
+                    this.DataViewMode = dataViewModeType;
                 }
             }
         }
