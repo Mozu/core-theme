@@ -171,7 +171,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                                 }
                                 catch (JsonReaderException)
                                 {
-                                    value = null;
+                                    value = new JObject();
                                 }
                             }
 
