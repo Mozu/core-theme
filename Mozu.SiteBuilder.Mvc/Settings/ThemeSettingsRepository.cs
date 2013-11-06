@@ -183,7 +183,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                             _cache[key] = new Tuple<DateTime, JObject>(_ts.Value, value);
 
                         }
-                        return value;
+                        return value ?? new JObject();
                     });
             }
             return _getInstanceValues;
