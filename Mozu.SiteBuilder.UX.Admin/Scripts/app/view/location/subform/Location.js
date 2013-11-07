@@ -25,6 +25,9 @@ Ext.define('Taco.view.location.subform.Location', {
 
         me.cls = [me.cls, Taco.baseCSSPrefix + 'locationform-location'].join(' ');
 
+
+
+
         var locationTypesStore = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.LocationTypes',
             autoLoad:true,
@@ -78,11 +81,11 @@ Ext.define('Taco.view.location.subform.Location', {
             name: "address",
             allowBlank: true
             // extra components to be inserted after the edit button
-            /*
+            
                 //(Simeon) commented this out pending acquisition of services to do this address to geo location conversion;
                 //http://tfs.ads.volusion.com:8080/tfs/VNext/Mozu/_workitems/edit/19745
 
-                buttonItems: [
+                ,buttonItems: [
                     {
                         xtype: "splitter"
                     }, {
@@ -109,7 +112,7 @@ Ext.define('Taco.view.location.subform.Location', {
                         scope: this
                     }
                 ]
-            */
+            
         });
                 
         this.items = [

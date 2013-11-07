@@ -22,40 +22,41 @@ Ext.define('Taco.shared.view.field.Address', {
     readOnly: false,
     disabled: false,
   //  items:[],
-    config: {
-        // fore the button container to be hidden or shown; will automatically hide and show based on its contents;
-        showButtons: true,
-        // hides/shows the edit button. Will automatically be hidden when field is readOnly or disabled;
-        showEditButton: true,
-        // additional components to be added after the edit button or in place of the edit button;
-        buttonItems: [],
+    
+    // fore the button container to be hidden or shown; will automatically hide and show based on its contents;
+    showButtons: true,
+    // hides/shows the edit button. Will automatically be hidden when field is readOnly or disabled;
+    showEditButton: true,
         
-        // if you want to override the editAddressButton pass in a componened
-        editAddressButton: null,
+    // additional components to be added after the edit button or in place of the edit button;
+    buttonItems: null,
         
-        // Container that will eventually container all the buttons at the bottom of the display field
-        buttonContainer: null,
+    // if you want to override the editAddressButton pass in a componened
+    editAddressButton: null,
+        
+    // Container that will eventually container all the buttons at the bottom of the display field
+    buttonContainer: null,
 
-        // the scoped reference to the display field showing the address information
-        addressField : null,
+    // the scoped reference to the display field showing the address information
+    addressField : null,
 
-        editOnFieldClick: true,
+    editOnFieldClick: true,
 
-        defaultValue : {
-            "address1": "",
-            "address2": "",
-            "address3": "",
-            "address4": "",
-            "cityOrTown": "",
-            "state": "",
-            "countryCode": "",
-            "zipCode": "",				
-            "addressType": {}, 
-            "addressIsValidated": false
-        },
-
-        allowBlank: true
+    defaultValue : {
+        "address1": "",
+        "address2": "",
+        "address3": "",
+        "address4": "",
+        "cityOrTown": "",
+        "state": "",
+        "countryCode": "",
+        "zipCode": "",				
+        "addressType": {}, 
+        "addressIsValidated": false
     },
+
+    allowBlank: true,
+    
 
     initComponent: function () {
         var me = this,
@@ -64,6 +65,13 @@ Ext.define('Taco.shared.view.field.Address', {
         if (!me.items) {
             me.items = [];
         }
+
+        if (!me.buttonItems) {
+            me.buttonItems = [];
+        }
+
+        // this is a work around for arrays defined in the config;
+        //me.buttonItems = Ext.clone(me.buttonItems);
 
         me.addressField = Ext.create('Taco.core.ux.form.field.EditableDisplayField', {
             name: me.name,
@@ -93,11 +101,11 @@ Ext.define('Taco.shared.view.field.Address', {
 
         me.items.push(me.addressField);
         
-        me.initButtons();
+        me.initActionButtons();
         
         me.callParent(arguments);
     },
-    initButtons: function () {
+    initActionButtons: function () {
         var me = this;
         
         if (me.readOnly || me.disabled) {
@@ -105,7 +113,6 @@ Ext.define('Taco.shared.view.field.Address', {
         }
 
         if (me.showEditButton) {
-            
             // if button was not provided, create one.
             if (!me.editAddressButton) {
                 me.editAddressButton = Ext.create('Ext.button.Button', {
@@ -120,15 +127,20 @@ Ext.define('Taco.shared.view.field.Address', {
             me.buttonItems.unshift(me.editAddressButton);
         }
 
-        // button container under the displayField. Can include additional components;
-        me.buttonContainer = Ext.create('Ext.Container', {
-            width: 400,
-            hidden: !me.showButtons,
-            layout: 'hbox',
-            items: me.buttonItems
-        });
+
+        if (me.buttonItems && me.buttonItems.length) {
+            // button container under the displayField. Can include additional components;
+            me.buttonContainer = Ext.create('Ext.Container', {
+                width: 400,
+                //hidden: !me.showButtons,
+                layout: 'hbox',
+                items: me.buttonItems
+            });
+
+            me.items.push(me.buttonContainer);
+        }
+
         
-        me.items.push(me.buttonContainer);
     },
     
     getAddressDisplayTemplate: function () {
@@ -170,5 +182,23 @@ Ext.define('Taco.shared.view.field.Address', {
             }
         });
         
+    },
+    onDestroy: function () {
+        var me = this;
+        
+        me.addressField.destroy();
+        
+        if (me.editAddressButton) {
+            me.editAddressButton.destroy();
+        }
+        
+        if (me.buttonContainer) {
+            
+            me.buttonContainer.destroy();
+        }
+
+        me.buttonItems = null;
+        
+        this.callParent(arguments);
     }
 })
