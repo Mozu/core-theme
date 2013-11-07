@@ -34,6 +34,9 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         [IgnoreDataMember()]
         public List<WidgetRuntimeData> RuntimeData { get; set; }
 
+        [IgnoreDataMember()]
+        public List<ZoneRuntimeData> RuntimeData2 { get; set; }
+
 
       
 

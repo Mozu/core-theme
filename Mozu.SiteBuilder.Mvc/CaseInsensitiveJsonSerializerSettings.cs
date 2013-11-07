@@ -6,6 +6,7 @@ namespace Mozu.SiteBuilder.Mvc
 {
     public class CaseInsensitiveJsonSerializerSettings : JsonSerializerSettings
     {
+        public static CaseInsensitiveJsonSerializerSettings Default = new CaseInsensitiveJsonSerializerSettings();
         public CaseInsensitiveJsonSerializerSettings()
         {
             NullValueHandling = NullValueHandling.Ignore;

@@ -13,13 +13,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 {
     public class PageContext : Mozu.SiteBuilder.UX.Models.IEditableContext
     {
-        private readonly IApiContext _apiContext;
+        private readonly ISiteBuilderApiContext _apiContext;
         private readonly IAuthenticationHelper _authenticationHelper;
 
-        public PageContext(IApiContext apiContext, IAuthenticationHelper authenticationHelper)
+        public PageContext(ISiteBuilderApiContext  apiContext, IAuthenticationHelper authenticationHelper)
         {
             _apiContext = apiContext;
             _authenticationHelper = authenticationHelper;
+            this.IsEditMode = _apiContext.IsEditMode;
         }
         public bool IsSecure { get; set; }
         public string PageType { get; set; }

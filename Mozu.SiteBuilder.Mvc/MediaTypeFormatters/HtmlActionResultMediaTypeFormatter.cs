@@ -55,6 +55,10 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 //var tsc2 = new TaskCompletionSource<bool>();
                 //tsc2.SetResult(true);
                 //return tsc2.Task;
+                if (view == null)
+                {
+                    throw new FileNotFoundException("cant find view " + vrb.ViewName);
+                }
                 return view.AsyncRender(hvc, sw);
             }
             else
