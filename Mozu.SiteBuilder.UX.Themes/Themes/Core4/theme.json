@@ -181,6 +181,12 @@
         "displayTemplate": "cms/content",
         "icon": "_0004_html.png"
     },
+      {
+        "id": "image",
+        "displayName": "test image",
+        "displayTemplate": "cms/image",
+        "icon": "_0004_html.png"
+    },
     {
         "id": "horizontal_rule",
         "displayName": "Horizontal Rule",

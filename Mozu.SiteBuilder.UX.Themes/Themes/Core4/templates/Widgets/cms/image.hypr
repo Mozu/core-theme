@@ -1,7 +1,9 @@
-﻿<div class="mz-image-wrap" {% data_attributes Model%}>
-  {% if not Model.Image_url  %}
-    <img {% data_attributes Model.Image_Url %} src ="/admin/scripts/resources/images/legacy/AddPhotos.png" alt = "Kind of a big deal" />
+﻿<div class="mz-image-wrap" >
+  {% if not Model.config.image  %}
+    <img  src ="/admin/scripts/resources/images/legacy/AddPhotos.png" alt = "Kind of a big deal" />
   {% else %}
-    <img {% data_attributes Model.Image_Url %} src ="{{Model.Image_url.src}}" alt = "{{Model.Image_url.alt}}" width="{{Model.Image_url.width}}" height="{{Model.Image_url.height}}" />
+    <img src ="{{Model.config.image.src}}" alt = "{{Model.config.image.src.alt}}" width="{{Model.config.image.width}}" height="{{Model.config.image.height}}" />
   {% endif %}
+
+
 </div>

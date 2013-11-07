@@ -10,7 +10,7 @@ Ext.define('Taco.view.website.Index', {
         'Taco.store.NavigationTreeNodes',
         'Taco.view.website.Tree'
     ],
-
+    requiresContextOfType: [ 's'],
     header: {
         title: false,
         actions: [{
