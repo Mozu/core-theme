@@ -101,7 +101,7 @@ Ext.define('Taco.view.customers.Index', {
                 text: 'Location',
                 width: 150,
                     renderer: function(value, metaData, record) {
-                    return value ? [Ext.String.capitalize(value), record.get('primaryState')].join(', ') : '';
+                    return value ? [Ext.String.capitalize(value), record.get('primaryStateOrProvince')].join(', ') : '';
                 }
             }, {
                 dataIndex: 'orderCount',
