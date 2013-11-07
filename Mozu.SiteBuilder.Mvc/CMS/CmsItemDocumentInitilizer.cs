@@ -192,6 +192,10 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                                                                                }
                                                                        },
                                                         });
+
+
+          //          var s = Newtonsoft.Json.JsonConvert.SerializeObject(cmsPageContext.RuntimeData2);
+
                     if (cmsPageContext.Page.Document != null)
                     {
                         var widgetRaw = (string) cmsPageContext.Page.Document.Get(CmsConstants.Documents.widget_prop);

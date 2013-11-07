@@ -139,7 +139,7 @@ Ext.define('Taco.Application',{
             'Channels',
             'Locations',
             'LocationTypes',
-            'Websites'
+            'Website'
     ],
     stores: ['Taco.store.LocalizedStrings'],
     context: null,
