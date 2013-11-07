@@ -2,20 +2,22 @@
 (function($, win, doc) {
     'use strict';
 
-    var $doc = $(doc);
+    var $doc = $(doc),
+        editor;
 
-    if (!$.mozu) $.mozu = {};
-
-    $.mozu.editor = {
+    editor = {
         _dragging: false,
 
         init: function() {
 
-            this.$hintBar = $('<div class="mz-cms-hint-bar" style="display:none;"><div class="mz-cms-hint-message"></div></div>').appendTo('body');
+            this.$hintBar = $('<div class="mz-cms-hint-bar" style="display:none"><div class="mz-cms-hint-message"></div></div>').appendTo('body');
 
             $doc.on({
-                mousemove: $.proxy($.mozu.editor._onMousemove, $.mozu.editor)
+                mousemove: $.proxy(this._onMousemove, this)
             });
+
+            $('.mz-cms-grid').mzGrid();
+            $('.mz-cms-widget').mzWidget(); 
         },
 
         dragging: function(val) {
@@ -56,6 +58,14 @@
             if (this._target !== target) return;
 
             this._target = null;
+        },
+
+        showDropZones: function() {
+            $('.mz-cms-grid').addClass('mz-cms-show-zone');
+        },
+
+        hideDropZones: function() {
+            $('.mz-cms-grid').removeClass('mz-cms-show-zone');
         },
 
         drop: function() {
@@ -130,7 +140,14 @@
                 height: height,
                 width: width,
                 display: 'block'
-            }).find('.mz-cms-hint-message').html(data.message);
+            }).removeClass('mz-cms-upright')
+              .find('.mz-cms-hint-message')
+              .html(data.message);
+
+
+            if (data.quadrant === 'left' || data.quadrant === 'right') {
+                this.$hintBar.addClass('mz-cms-upright');
+            }
 
         },
 
@@ -141,7 +158,9 @@
     };
 
     $doc.ready(function() {
-        $.mozu.editor.init();
+        if (!win.Chorizo) win.Chorizo = {};
+        Chorizo.editor = editor;
+        editor.init();
     });
 
 }(jQuery, window, document));

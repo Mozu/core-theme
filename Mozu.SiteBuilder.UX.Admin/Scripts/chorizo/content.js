@@ -35,11 +35,14 @@
         },
 
         _onClick: function(e, ui) {
+            
+
             var $tar;
             $.each(this._items, function(i, item) {
                 if (!item.test()) return;
+                
                 $tar = $(e.target);
-                if ($tar.is(item.selector) || !$tar.parents(item.selector).length) item.action();
+                if (!$tar.is(item.selector) && !$tar.parents(item.selector).length) item.action();
             })
         }
     }
@@ -55,7 +58,16 @@
 
         this.$content = this.element.find('.mz-cms-content');
 
-        if (!this.options.isRichText) this.element.addClass('mz-cms-drag-handle');
+        //if (!this.options.isRichText) this.element.addClass('mz-cms-drag-handle');
+
+        this.element
+            .append($('<ul class="mz-cms-tools"><li class="mz-cms-drag-handle"></li><li class="mz-cms-trash"></li></ul>'));
+
+        this.$drag = this.element.find('.mz-cms-drag-handle')
+                            .html('<i class="fa fa-arrows fa-lg"></i>')
+        this.$trash = this.element.find('.mz-cms-trash')
+                            .html('<i class="fa fa-trash-o fa-lg"></i>')
+                            .on('click', $.proxy(this.remove, this));
     }
 
     Content.DEFAULTS = {};
@@ -105,6 +117,10 @@
         });
     }
 
+    Content.prototype.remove = function() {
+        this.element.mzBlock('remove');
+    }
+
     Content.prototype.state = function(state) {
         return (state) ? this._setState(state) : this._getState();
     }
@@ -141,7 +157,7 @@
 
         this.element
             .attr('data-rich-text', 'true')
-            .append($('<div class="mz-cms-drag-handle mz-cms-text-drag-handle"></div>'));
+            //.append($('<div class="mz-cms-drag-handle mz-cms-text-drag-handle"></div>'));
 
         this.on({
             'click': 'default > editing',
@@ -152,12 +168,12 @@
     Text.prototype = new Content();
 
     Text.prototype._defaultState = function() {
-        $.mozu.formatter.hide();
+        Chorizo.formatter.hide();
         this.$content.removeAttr('contenteditable');
     }
 
     Text.prototype._editingState = function() {
-        $.mozu.formatter.show();
+        Chorizo.formatter.show();
         this.$content.attr('contenteditable', 'true');
         this.$content.focus();
     }
@@ -175,7 +191,7 @@
 
         this.on({
             'click': 'default > selected',
-            //'clickaway .mz-cms-selected': 'selected > default',
+            'clickaway .mz-cms-state-selected': 'selected > default',
             'dblclick': 'default > editing',
             'blur': 'editing > default'
         });
@@ -191,8 +207,6 @@
                 start: $.proxy(this._onStart, this),
                 stop: $.proxy(this._onStop, this)
             });
-
-        this.$img = this.element.find('.image-cover');
     }
 
     Img.prototype = new Content();
@@ -211,28 +225,28 @@
 
     Img.prototype._onStart = function(e, ui) {
         this._moveHandler = $.proxy(this._onMousemove, this);
-        this.offset = this.$img.offset();
-        this.height = this.$img.height();
+        this.offset = this.$content.offset();
+        this.height = this.$content.height();
 
         $doc.on('mousemove', this._moveHandler);
-        $.mozu.editor.stopDrag();
-        $.mozu.editor.cursor('ns-resize');
+        Chorizo.editor.stopDrag();
+        Chorizo.editor.cursor('ns-resize');
     }
 
     Img.prototype._onStop = function(e, ui) {
         $doc.off('mousemove', this._moveHandler);
-        $.mozu.editor.cursor('auto');
+        Chorizo.editor.cursor('auto');
     }
 
     Img.prototype._onMousemove = function(e, ui) {
-        this.$img.height($doc.scrollTop() + e.clientY - this.offset.top);
+        this.$content.height($doc.scrollTop() + e.clientY - this.offset.top);
     }
 
 
     //  Plugin definitions
-    $.mozu.classFactory(Text, 'mozu.mzText');
-    $.mozu.classFactory(Img, 'mozu.mzImg');
-    $.mozu.classFactory(Content, 'mozu.mzContent');
+    Chorizo.classFactory(Text, 'mozu.mzText');
+    Chorizo.classFactory(Img, 'mozu.mzImg');
+    Chorizo.classFactory(Content, 'mozu.mzContent');
 
     $doc.ready(function() {
         controller.init();

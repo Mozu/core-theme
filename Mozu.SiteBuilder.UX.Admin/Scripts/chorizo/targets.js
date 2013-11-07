@@ -18,6 +18,7 @@
     };
 
 
+
     //  GRID class
 
     Grid = function(element, options) {
@@ -25,11 +26,12 @@
         this.element = $(element);
 
         this.dropZoneData = this.element.data('drop-zone');
+        this.span = this.dropZoneData.span;
 
         this.element
             .on({
                 drop: function() {
-                    $.mozu.editor.drop();
+                    Chorizo.editor.drop();
                 }
             })
             .droppable({
@@ -52,7 +54,7 @@
     }
 
     Grid.prototype.initHint = function() {
-        //$.mozu.editor.target(this);
+        //Chorizo.editor.target(this);
     }
 
 
@@ -178,7 +180,7 @@
     Row.prototype = new Target();
 
     Row.prototype.create = function(widgetCfg) {
-        return Row.create(widgetCfg);
+        return Row.create(widgetCfg, this.parent.span);
     }
 
     Row.prototype.rebase = function() {
@@ -286,7 +288,7 @@
     Col.prototype = new Target();
 
     Col.prototype.create = function(widgetCfg) {
-        return Col.create(widgetCfg, this.parent);
+        return Col.create(widgetCfg, this.parent.parent.span);
     }
 
     Col.prototype.rebase = function() {
@@ -338,12 +340,12 @@
         this.size = Col.parseSize(this.element);
 
         $doc.on('mousemove', this._moveHander);
-        $.mozu.editor.stopDrag();
-        $.mozu.editor.cursor('ew-resize');
+        Chorizo.editor.stopDrag();
+        Chorizo.editor.cursor('ew-resize');
     }
 
     Col.prototype._onStop = function(e, ui) {
-        $.mozu.editor.cursor('auto');
+        Chorizo.editor.cursor('auto');
         this.$resizer.removeClass('active');
         $doc.off('mousemove', this._moveHander);
     }
@@ -351,11 +353,12 @@
     Col.prototype._onMousemove = function(e, ui) {
         var newWidth = $doc.scrollLeft() + e.clientX - this.offset.left,
             newSize = Math.round(newWidth / this.gridWidth),
+            delta = newSize - this.size,
+            gridSpan = this.parent.parent.span,
             $next,
-            nextSize,
-            delta = newSize - this.size;
+            nextSize;
 
-        if (this.size === newSize || newSize < 1 || newSize > 11) return;
+        if (this.size === newSize || newSize < 1 || newSize > gridSpan - 1) return;
 
         $next = this.element.next();
 
@@ -365,8 +368,8 @@
 
         if (nextSize - delta < 1) return;
 
-        this.element.attr('class', 'mz-cms-col-' + newSize + '-12');
-        $next.attr('class', 'mz-cms-col-' + (nextSize - delta) + '-12');
+        this.element.attr('class', 'mz-cms-col-' + newSize + '-' + gridSpan);
+        $next.attr('class', 'mz-cms-col-' + (nextSize - delta) + '-' + gridSpan);
 
         this.size = newSize;
     }
@@ -386,7 +389,7 @@
         this.element
             .on({
                 dragstart: $.proxy(function() {
-                    $.mozu.editor.startDrag(this);
+                    Chorizo.editor.startDrag(this);
                 }, this),
                 dropover: $.proxy(function() {
                     this.initHint();
@@ -410,7 +413,7 @@
         if (this.widgetData.isRichText) {
             this.element.mzText({isRichText: true});
         } else {
-            this.element.mzContent({isRichText: false});
+            this.element.mzImg({isRichText: false});
         }
 
         // if (this.widgetData.isRichText) {
@@ -445,7 +448,7 @@
     }
 
     Block.prototype.initHint = function() {
-        $.mozu.editor.target(this);
+        Chorizo.editor.target(this);
         Target.prototype.initHint.call(this);
     }
 
@@ -456,7 +459,7 @@
         if (colOffset.quadrant) return colOffset;
 
         /* //   Code for FLOAT insertion
-            this.offset().quadrant = $.mozu.editor.quadrant(x, y, this.offset());
+            this.offset().quadrant = Chorizo.editor.quadrant(x, y, this.offset());
 
             this.offset().message = (this.offset().quadrant === 'top' || this.offset().quadrant === 'bottom')
                                     ? 'insert'
@@ -477,13 +480,18 @@
         return (y <= this.offset().height / 2) ? 'top' : 'bottom';
     }
 
+    Block.prototype.remove = function () {
+        this.element.remove();
+        this.parent.rebase();
+    }
+
 
 
     // Plugin definitions
 
-    $.mozu.classFactory(Grid, 'mozu.mzGrid');
-    $.mozu.classFactory(Row, 'mozu.mzRow');
-    $.mozu.classFactory(Col, 'mozu.mzCol');
-    $.mozu.classFactory(Block, 'mozu.mzBlock');
+    Chorizo.classFactory(Grid, 'mozu.mzGrid');
+    Chorizo.classFactory(Row, 'mozu.mzRow');
+    Chorizo.classFactory(Col, 'mozu.mzCol');
+    Chorizo.classFactory(Block, 'mozu.mzBlock');
 
 }(jQuery, window, document));
