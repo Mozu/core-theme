@@ -1,9 +1,7 @@
-﻿<div class="mz-image-wrap" >
-  {% if not Model.config.image  %}
-    <img  src ="/admin/scripts/resources/images/legacy/AddPhotos.png" alt = "Kind of a big deal" />
-  {% else %}
-    <img src ="{{Model.config.image.src}}" alt = "{{Model.config.image.src.alt}}" width="{{Model.config.image.width}}" height="{{Model.config.image.height}}" />
-  {% endif %}
+﻿{% if not Model.config.image  %}
+    <div class="mz-cms-image-cover" style="background-image: url('/admin/scripts/resources/images/legacy/AddPhotos.png'); height: 200px;"></div>
+{% else %}
+    <div class="mz-cms-image-cover" style="background-image: url('{{Model.config.image.src}}'); height: {{Model.config.image.height}}px;"></div>
+{% endif %}
 
 
-</div>
