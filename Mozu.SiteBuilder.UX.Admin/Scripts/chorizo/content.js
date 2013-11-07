@@ -225,8 +225,8 @@
 
     Img.prototype._onStart = function(e, ui) {
         this._moveHandler = $.proxy(this._onMousemove, this);
-        this.offset = this.$content.offset();
-        this.height = this.$content.height();
+        this.offset = this.$content.children().first().offset();
+        this.height = this.$content.children().first().height();
 
         $doc.on('mousemove', this._moveHandler);
         Chorizo.editor.stopDrag();
@@ -239,7 +239,7 @@
     }
 
     Img.prototype._onMousemove = function(e, ui) {
-        this.$content.height($doc.scrollTop() + e.clientY - this.offset.top);
+        this.$content.children().first().height($doc.scrollTop() + e.clientY - this.offset.top);
     }
 
 
