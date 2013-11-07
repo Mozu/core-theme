@@ -17,7 +17,26 @@
             });
 
             $('.mz-cms-grid').mzGrid();
-            $('.mz-cms-widget').mzWidget(); 
+            $('.mz-cms-widget').mzWidget();
+
+            this.fireEvent('pageload', this);
+        },
+
+        fireEvent: function() {
+            this.controller().fireEvent.apply(this.controller(), arguments);
+        },
+
+        controller: function() {
+            if (this._controller) return this._controller;
+            if (!win.parent.Taco) {
+                // Mock something up
+                return {
+                    fireEvent: function(name) {
+                        console.log('Editor Event: ', name, Array.prototype.slice.call(arguments, 1));
+                    }
+                };
+            }
+            return this._controller = win.parent.Taco.app.controllers.get('Website');
         },
 
         dragging: function(val) {
