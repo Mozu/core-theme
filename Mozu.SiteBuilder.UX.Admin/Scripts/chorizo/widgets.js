@@ -21,19 +21,19 @@
                     return $('<div>');
                 },
                 start: function() {
-                    $.mozu.editor.startDrag();
+                    Chorizo.editor.startDrag();
                 },
                 stop: function() {
-                    $.mozu.editor.stopDrag();
+                    Chorizo.editor.stopDrag();
                 },
                 drop: function() {
-                    $.mozu.editor.stopDrag();
+                    Chorizo.editor.stopDrag();
                 }
             });
 
     }
 
-    $.mozu.classFactory(Widget, 'mozu.mzWidget');
+    Chorizo.classFactory(Widget, 'mozu.mzWidget');
 
 
 

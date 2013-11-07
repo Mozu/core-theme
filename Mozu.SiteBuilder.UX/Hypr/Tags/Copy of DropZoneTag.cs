@@ -65,15 +65,17 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 return;
             }
             var sb = new StringBuilder();
-            sb.AppendLine( "\r\n\t\t<link rel=\"stylesheet\" href=\"/admin/scripts/build/storefront/sitebuilder.css\">");
-            sb.Append("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js\"></script>");
-            var format = "\t\t<script type=\"text/javascript\" src=\"/admin/scripts/sitebuilder/{0}.js\"></script>\r\n";
+            sb.AppendLine( "\r\n\t\t<link rel=\"stylesheet\" href=\"/admin/scripts/build/chorizo/chorizo.css\">");
+            sb.AppendLine("\t\t<link rel=\"stylesheet\" href=\"//netdna.bootstrapcdn.com/font-awesome/4.0.2/css/font-awesome.min.css\">");
+            sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js\"></script>");
+            sb.AppendLine("\t\t<script src=\"//code.jquery.com/ui/1.10.3/jquery-ui.js\"></script>");
+            var format = "\t\t<script type=\"text/javascript\" src=\"/admin/scripts/chorizo/{0}.js\"></script>\r\n";
             sb.AppendFormat(format,"_classfactory");
-            sb.AppendFormat(format,"editor");
+            sb.AppendFormat(format, "format");
             sb.AppendFormat(format,"content");
-            sb.AppendFormat(format,"format");
             sb.AppendFormat(format,"targets");
-            sb.AppendFormat(format,"widgets");
+            sb.AppendFormat(format, "widgets");
+            sb.AppendFormat(format, "editor");
             buffer = sb.ToString();
         }
     }

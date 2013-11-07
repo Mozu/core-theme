@@ -26,7 +26,6 @@
     background-color: transparent;
     min-height: 14px;
     min-width: 80px;
-    overflow: hidden;
     position: relative;
     padding: 0;
     word-wrap: break-word;
@@ -43,8 +42,7 @@
         background-position: center center;
         background-size: cover;
         display: block;
-        height: 400px;
-        min-height: 40px;
+        height: 100%;
         width: 100%;
     }
 }

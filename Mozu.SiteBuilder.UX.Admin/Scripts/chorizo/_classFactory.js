@@ -2,9 +2,9 @@
 (function($, win, doc) {
     'use strict';
 
-    if (!$.mozu) $.mozu = {};
+    if (!win.Chorizo) win.Chorizo = {};
 
-    $.mozu.classFactory = function(cls, pluginName) {
+    win.Chorizo.classFactory = function(cls, pluginName) {
         var split = pluginName.split('.'),
             namespace = split[0],
             name = split[1],
