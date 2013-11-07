@@ -32,6 +32,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
         protected override void ProcessTag(Mvc.Tags.ArgumentCollection arguments, ref IContext context, out string buffer, out string templateName)
         {
+           
             buffer = templateName = null;
             var httpContext = context.HttpContext();
             var themeEntityDefinitionProvider = context.Resolve<IThemeEntityDefinitionProvider>();

@@ -162,7 +162,7 @@ Ext.define('Taco.model.Product', {
             "useNull": true
         },
         {
-            "name": "siteGroupId",
+            "name": "masterCatalog",
             "type": "int",
             "useNull": false
         },

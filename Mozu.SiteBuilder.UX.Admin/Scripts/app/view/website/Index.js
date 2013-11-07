@@ -88,6 +88,12 @@ Ext.define('Taco.view.website.Index', {
         var store,
             items;
 
+        this.controller = Taco.app.controllers.get('Website');
+
+        this.mon(this.controller,'pageload', this.onPageLoad, this);
+        this.mon(this.controller,'widgetdrop', this.onWidgetDrop, this);
+        this.mon(this.controller, 'widgetedit', this.onWidgetEdit, this);
+        this.mon(this.controller, 'pagedirtychange', this.onDirtyChange, this);
         store = Taco.core.data.StoreManager.getOrCreate('Taco.store.NavigationTreeNodes');
 
         items = [{
@@ -107,12 +113,14 @@ Ext.define('Taco.view.website.Index', {
                     type: 'fit'
                 },
                 items: [{
+                    itemId:'iframe',
                     xtype: 'uxiframe',
                     src: '/widgettest?iseditmode=true'
                 }]
             }, {
                 xtype: 'panel',
                 title: 'Settings',
+                itemId:'settingsPanel',
                 header: false,
                 items: [{
                     xtype: 'formform',
@@ -180,7 +188,88 @@ Ext.define('Taco.view.website.Index', {
         this.down('#primaryAction').setHandler(function () {
             console.log('handler updated');
         });
+        this.iframe = this.down('#iframe');
+        this.settingsPanel = this.down('#settingsPanel');
+        window.webSiteIndex = this;
+    },
+    
+    entityTypeEditConfig: {
+        blog: {
+            editors: ["Taco.view.website.dataViews.Blog", "Taco.view.website.dataViews.Meta"],
+            adapter: 'Taco.view.website.entityAdapters.DocumentEntityAdapter'
+        },
+        "default": {
+            editors: ["Taco.view.website.dataViews.Meta"],
+            adapter: 'Taco.view.website.entityAdapters.DocumentEntityAdapter'
+        },
+        category: {
+            editors: ["Taco.view.category.Basic"],
+            adapter: 'Taco.view.website.entityAdapters.CategoryEntityAdapter'
+        },
+        product: {
+            editors: ["Taco.view.product.edit.Inline"],
+            adapter: 'Taco.view.website.entityAdapters.ProductEntityAdapter'
+        },
+        link: {
+            editors: [],
+            adapter: 'Taco.view.website.entityAdapters.ExternalLinkEntityAdapter'
+        }
+    },
+    getPageSettings:function () {
+        return this.iframe.getWin().require.mozuData('pagecontext');
+    },
+    onPageLoad: function (editor) {
+        var pc = getPageSettings();
+    },
+    onWidgetDrop:function (config) {
+        
+        //{
+        //    //the editor firing the event
+        //    editor: editor,
+        //    //the widgetTypeId of the widgetBeing dropped
+        //    widgetTypeId: 'qewr-asdf-asdf',
+        //    //callback method to be called when content and data are ready to be inserted into the page
+        //    // html is the markup to be inserted the 
+        //    // data is the persistable widgetInstanceData of the widget
+        //    callback: function (html, data) {
+                
+        //    }
+            
+
+    },
+    
+    onDirtyChange:function (config) {
+        
+    },
+    
+    onWidgetEdit:function (config) {
+        
+
+        //{
+        //    //the editor firing the event
+        //    editor: editor,
+        //    //the widgetTypeId of the widgetBeing dropped
+        //    widgetTypeId: 'qewr-asdf-asdf',
+        //    // the  widgetInstanceData of the widget
+        //    data: {
+        //        id: '111-222-333',
+        //        typeId: 'qewr-asdf-asdf',
+        //        config: {
+        //            userId: 'adsf',
+        //            keywords: ['cats', 'more cats'],
+        //            count: 22
+        //        }
+        //    },
+        //    //callback method to be called when content and data are ready to be inserted into the page
+        //    // html is the markup to be inserted the 
+        //    // data is the persistable widgetInstanceData of the widget
+        //    callback: function (html, data) {
+
+        //    }
+            
+
     }
+
 
     // onRender: function () {
     //     this.callParent(arguments);
