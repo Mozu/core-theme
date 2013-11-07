@@ -232,13 +232,18 @@ Ext.define('Taco.shared.view.modal.Address', {
                 if (this.json.total > 0) {
                     var validatedAddr = this.json.items[0];
                     var rawAddr = this.form.getValues();
+                    var a, b;
                     response.error = false;
                     response.changed = false;
                     response.validatedAddr = validatedAddr;
                     for (item in validatedAddr) {
                         if (item == 'addressIsValidated')
                             continue;
-                        if (rawAddr[item] != validatedAddr[item]) {
+                        a = rawAddr[item];
+                        b = validatedAddr[item];
+                        a = a === null ? '' : a.toString().toUpperCase();
+                        b = b === null ? '' : b.toString().toUpperCase();
+                        if (a!==b) {
                             response.changed = true;
                             break;
                         }
