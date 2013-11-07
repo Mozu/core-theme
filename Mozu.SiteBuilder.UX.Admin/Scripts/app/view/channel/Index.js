@@ -90,7 +90,7 @@ Ext.define('Taco.view.channel.Index', {
         columns: [{
             dataIndex: 'code',
             text: 'Code',
-            editor2: {
+            editor: {
                 // defaults to textfield if no xtype is supplied
                 emptyText: "Code",
                 msgTarget: "qtip",
