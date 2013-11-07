@@ -49,7 +49,7 @@ Ext.define('Taco.core.context.TaContext', {
         var ret = '',  sc = this.getCurrentMasterCatalog(), site = this.getCurrentSite();
         ret = 'tenant=' + this.id;
         if (sc) {
-            ret += '&sitegroup=' + sc.id;
+            ret += '&mastercatalog=' + sc.id;
         }
         if (site) {
             ret += '&site=' + site.id;
