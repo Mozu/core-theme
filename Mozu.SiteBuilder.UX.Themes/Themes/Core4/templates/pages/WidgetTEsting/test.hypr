@@ -9,7 +9,7 @@
 {% block body-content %}
 
  {% dropzone2 "testzone1" scope="page" span=12 %}
-
+  {% dropzone2 "testzone2" scope="page" span=12 %}
 {% endblock body-content %}
 
 
