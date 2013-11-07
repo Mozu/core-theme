@@ -180,7 +180,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     IsVisible = source.IsVisible ,
                     IsActive = source.IsActive,
                     DisplayGroup = source.DisplayGroup ,
-                    AttributeCode = (source.Name ?? "").Trim(),
+                    // code is only required at create time (when id is null).
+                    AttributeCode = source.Id == null ? (source.Name ?? "").Trim() : null,
                     Validation = attributeValidation,
                     VocabularyValues = Mapper.Map<List<DC.AttributeVocabularyValue>>(source.Values),
                     AttributeFQN = source.Id,
@@ -207,7 +208,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 source.IsProperty = true;
                 if (source.ValueType != AttributeValueType.Unknown)
                 {
-                    return null;
+                    return source.ValueType.ToString();
                 }
                 else
                 {
