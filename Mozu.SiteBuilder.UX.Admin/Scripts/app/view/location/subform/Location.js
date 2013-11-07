@@ -84,7 +84,7 @@ Ext.define('Taco.view.location.subform.Location', {
             
                 //(Simeon) commented this out pending acquisition of services to do this address to geo location conversion;
                 //http://tfs.ads.volusion.com:8080/tfs/VNext/Mozu/_workitems/edit/19745
-
+                /*
                 ,buttonItems: [
                     {
                         xtype: "splitter"
@@ -111,7 +111,8 @@ Ext.define('Taco.view.location.subform.Location', {
                         },
                         scope: this
                     }
-                ]
+                ]*/
+            
             
         });
                 
