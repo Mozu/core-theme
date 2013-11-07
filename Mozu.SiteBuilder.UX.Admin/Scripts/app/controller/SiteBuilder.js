@@ -102,7 +102,7 @@ Ext.define('Taco.controller.SiteBuilder', {
    * EVENTS FIRED BY THE EDITOR  
    *
    ***********************************/
-    events:function () {
+    events2:function () {
 
         //fires when the page loads.   assumes the editor has an accessor to the window
         this.fireEvent('load', editor);
@@ -173,8 +173,9 @@ Ext.define('Taco.controller.SiteBuilder', {
     * accesed by : Taco.app.controllers.get('sitebuilder')
     *
     *************************************/
-    //returns an array of widgetTypeDefinition
-    findWidgetTypeDefinitions:function(filter) {
-        return [];
+    //returns a  store of widgetTypeDefinition
+    findWidgetTypeDefinitions: function (filter) {
+        return Taco.core.data.StoreManager.getOrCreate("Taco.store.WidgetDefinitions");
+
     }
 });

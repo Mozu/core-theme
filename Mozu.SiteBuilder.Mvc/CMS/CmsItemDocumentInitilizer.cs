@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Document = Mozu.Content.Contracts.Document;
-using Mozu.SiteBuilder.Mvc.Cms;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
@@ -17,12 +18,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
     {
         private readonly ICmsServiceWrapper _cmsServiceWrapper;
 
-        public CmsHelper(ICmsServiceWrapper cmsServiceWrapper )
+        public CmsHelper(ICmsServiceWrapper cmsServiceWrapper)
         {
             _cmsServiceWrapper = cmsServiceWrapper;
         }
 
-        public bool ProcessDocumentRequest(DocumentRequest request, string defaultCollection  , out Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> task)
+        public bool ProcessDocumentRequest(DocumentRequest request, string defaultCollection, out Task<ServiceClientResponse<Document>> task)
         {
             task = null;
             if (request != null)
@@ -30,7 +31,6 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 if (request.Id != null)
                 {
                     task = _cmsServiceWrapper.Get2(request.Collection ?? defaultCollection, request.Id);
-
                 }
                 if (request.Path != null)
                 {
@@ -42,15 +42,14 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public Task<bool> InitCmsPageContext(CmsPageContext cmsPageContext)
         {
-
             if (cmsPageContext == null)
             {
                 return new TaskCompletionSource<bool>(true).Task;
             }
 
-            Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> pageTask = null;
-            Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> templateTask = null;
-            Task<ServiceClientResponse<Mozu.Content.Contracts.Document>> siteTemplateTask = null;
+            Task<ServiceClientResponse<Document>> pageTask = null;
+            Task<ServiceClientResponse<Document>> templateTask = null;
+            Task<ServiceClientResponse<Document>> siteTemplateTask = null;
             var tasks = new List<Task<ServiceClientResponse<Document>>>();
             if (cmsPageContext.Page.Document == null && ProcessDocumentRequest(cmsPageContext.Page, "pages", out pageTask))
             {
@@ -66,11 +65,8 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             }
 
 
-
-            var task =Task.WhenAll(tasks.ToArray()).ContinueWith(u =>
+            Task<bool> task = Task.WhenAll(tasks.ToArray()).ContinueWith(u =>
                 {
-
-
                     if (pageTask != null && pageTask.Result.ResponseMessage.IsSuccessStatusCode)
                     {
                         cmsPageContext.Page.Document = pageTask.Result.ReadAsSync();
@@ -96,7 +92,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                         {
                             if (cmsPageContext.Template == null)
                             {
-                                cmsPageContext.Template = new DocumentRequest()
+                                cmsPageContext.Template = new DocumentRequest
                                                               {
                                                                   Path = templateName,
                                                                   Collection = "templates"
@@ -104,26 +100,76 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                             }
                             templateTask = _cmsServiceWrapper.GetByPath2("templates", templateName);
                             //todo....
-                            
+
                             tasks.Add(templateTask);
                             //var res = await templateTask;
-                            var res = templateTask.Result;
+                            ServiceClientResponse<Document> res = templateTask.Result;
                             if (templateTask.Result.ResponseMessage.IsSuccessStatusCode)
                             {
-
                                 cmsPageContext.Template.Document = templateTask.Result.ReadAsSync();
                                 cmsPageContext.Template.Id = cmsPageContext.Template.Document.Id;
                             }
                         }
-
                     }
 
                     cmsPageContext.RuntimeData = new List<WidgetRuntimeData>();
+                    cmsPageContext.RuntimeData2 = new List<ZoneRuntimeData>();
+                    cmsPageContext.RuntimeData2.Add(new ZoneRuntimeData
+                                                        {
+                                                            Id = "testzone1",
+                                                            Rows = new List<ZoneRowRuntimeData>
+                                                                       {
+                                                                           new ZoneRowRuntimeData
+                                                                               {
+                                                                                   Columns = new List<ZoneColumnsRuntimeData>
+                                                                                                 {
+                                                                                                     new ZoneColumnsRuntimeData
+                                                                                                         {
+                                                                                                             Span = 4,
+                                                                                                             Widgets = new List<ZoneWidgetRuntimeData>
+                                                                                                                           {
+                                                                                                                               new ZoneWidgetRuntimeData
+                                                                                                                                   {
+                                                                                                                                       Id = Guid.NewGuid().ToString(),
+                                                                                                                                       DefinitionId = "content",
+                                                                                                                                       Config = JObject.Parse("{\"body\": \"<h1>Hold on to your butts</h1><p>The path of the righteous\nman is beset on all sides by the iniquities of the selfish and the tyranny of\nevil men. Blessed is he who, in the name of charity and good will, shepherds\nthe weak through the valley of darkness, for he is truly his brother's keeper\nand the finder of lost children. And I will strike down upon thee with great\nvengeance and furious anger those who would attempt to poison and destroy My\nbrothers. And you will know My name is the Lord when I lay My vengeance upon\nthee. </p>\"}")
+                                                                                                                                   },
+                                                                                                                               new ZoneWidgetRuntimeData
+                                                                                                                                   {
+                                                                                                                                       Id = Guid.NewGuid().ToString(),
+                                                                                                                                       DefinitionId = "content",
+                                                                                                                                       Config = JObject.Parse("{\"body\": \"<h1>Hold on to your shoes</h1><p>The path of the righteous\nman is beset on all sides by the iniquities of the selfish and the tyranny of\nevil men. Blessed is he who, in the name of charity and good will, shepherds\nthe weak through the valley of darkness, for he is truly his brother's keeper\nand the finder of lost children. And I will strike down upon thee with great\nvengeance and furious anger those who would attempt to poison and destroy My\nbrothers. And you will know My name is the Lord when I lay My vengeance upon\nthee. </p>\"}")
+                                                                                                                                   }
+                                                                                                                           }
+                                                                                                         },
+                                                                                                     new ZoneColumnsRuntimeData
+                                                                                                         {
+                                                                                                             Span = 8,
+                                                                                                             Widgets = new List<ZoneWidgetRuntimeData>
+                                                                                                                           {
+                                                                                                                               new ZoneWidgetRuntimeData
+                                                                                                                                   {
+                                                                                                                                       Id = Guid.NewGuid().ToString(),
+                                                                                                                                       DefinitionId = "content",
+                                                                                                                                       Config = JObject.Parse("{\"body\": \"<h1>stuff</h1><p>The path of the righteous\nman is beset on all sides by the iniquities of the selfish and the tyranny of\nevil men. Blessed is he who, in the name of charity and good will, shepherds\nthe weak through the valley of darkness, for he is truly his brother's keeper\nand the finder of lost children. And I will strike down upon thee with great\nvengeance and furious anger those who would attempt to poison and destroy My\nbrothers. And you will know My name is the Lord when I lay My vengeance upon\nthee. </p>\"}")
+                                                                                                                                   },
+                                                                                                                               new ZoneWidgetRuntimeData
+                                                                                                                                   {
+                                                                                                                                       Id = Guid.NewGuid().ToString(),
+                                                                                                                                       DefinitionId = "content",
+                                                                                                                                       Config = JObject.Parse("{\"body\": \"<h1>thing</h1><p>The path of the righteous\nman is beset on all sides by the iniquities of the selfish and the tyranny of\nevil men. Blessed is he who, in the name of charity and good will, shepherds\nthe weak through the valley of darkness, for he is truly his brother's keeper\nand the finder of lost children. And I will strike down upon thee with great\nvengeance and furious anger those who would attempt to poison and destroy My\nbrothers. And you will know My name is the Lord when I lay My vengeance upon\nthee. </p>\"}")
+                                                                                                                                   }
+                                                                                                                           }
+                                                                                                         }
+                                                                                                 }
+                                                                               }
+                                                                       }
+                                                        });
                     if (cmsPageContext.Page.Document != null)
                     {
                         var widgetRaw = (string) cmsPageContext.Page.Document.Get(CmsConstants.Documents.widget_prop);
-                        var existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : Newtonsoft.Json.JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
-                        var src = new DocumentRequest()
+                        List<WidgetRuntimeData> existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
+                        var src = new DocumentRequest
                                       {
                                           Id = cmsPageContext.Page.Document.Id,
                                           Collection = cmsPageContext.Page.Document.DocumentListName
@@ -131,12 +177,19 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                         existingWidgets.ForEach(x => x.Source = src);
                         cmsPageContext.RuntimeData.AddRange(existingWidgets);
 
+
+                        List<ZoneRuntimeData> zoneData = string.IsNullOrEmpty(widgetRaw) ? null : JsonConvert.DeserializeObject<List<ZoneRuntimeData>>(widgetRaw);
+                        if (zoneData != null)
+                        {
+                            zoneData.ForEach(x => x.Source = src);
+                            cmsPageContext.RuntimeData2.AddRange(zoneData);
+                        }
                     }
                     if (cmsPageContext.Template.Document != null)
                     {
                         var widgetRaw = (string) cmsPageContext.Template.Document.Get(CmsConstants.Documents.widget_prop);
-                        var existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : Newtonsoft.Json.JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
-                        var src = new DocumentRequest()
+                        List<WidgetRuntimeData> existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
+                        var src = new DocumentRequest
                                       {
                                           Id = cmsPageContext.Template.Document.Id,
                                           Collection = cmsPageContext.Template.Document.DocumentListName
@@ -144,12 +197,18 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                         existingWidgets.ForEach(x => x.Source = src);
                         cmsPageContext.RuntimeData.AddRange(existingWidgets);
 
+                        List<ZoneRuntimeData> zoneData = string.IsNullOrEmpty(widgetRaw) ? null : JsonConvert.DeserializeObject<List<ZoneRuntimeData>>(widgetRaw);
+                        if (zoneData != null)
+                        {
+                            zoneData.ForEach(x => x.Source = src);
+                            cmsPageContext.RuntimeData2.AddRange(zoneData);
+                        }
                     }
                     if (cmsPageContext.SiteTemplate.Document != null)
                     {
                         var widgetRaw = (string) cmsPageContext.SiteTemplate.Document.Get(CmsConstants.Documents.widget_prop);
-                        var existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : Newtonsoft.Json.JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
-                        var src = new DocumentRequest()
+                        List<WidgetRuntimeData> existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
+                        var src = new DocumentRequest
                                       {
                                           Id = cmsPageContext.SiteTemplate.Document.Id,
                                           Collection = cmsPageContext.SiteTemplate.Document.DocumentListName
@@ -157,6 +216,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                         existingWidgets.ForEach(x => x.Source = src);
                         cmsPageContext.RuntimeData.AddRange(existingWidgets);
 
+                        List<ZoneRuntimeData> zoneData = string.IsNullOrEmpty(widgetRaw) ? null : JsonConvert.DeserializeObject<List<ZoneRuntimeData>>(widgetRaw);
+                        if (zoneData != null)
+                        {
+                            zoneData.ForEach(x => x.Source = src);
+                            cmsPageContext.RuntimeData2.AddRange(zoneData);
+                        }
                     }
                     cmsPageContext.Initialized = true;
                     return true;
@@ -174,12 +239,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             }
 
             task = _cmsServiceWrapper.RawCreate2(
-                new Document()
+                new Document
                     {
                         DocumentListName = "templates",
                         DocumentType = "page_template",
-                        Name = System.IO.Path.GetFileName(req.Path),
-                        Path = System.IO.Path.GetDirectoryName(req.Path)
+                        Name = Path.GetFileName(req.Path),
+                        Path = Path.GetDirectoryName(req.Path)
                     });
             return;
         }

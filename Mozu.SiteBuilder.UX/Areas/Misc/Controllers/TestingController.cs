@@ -7,7 +7,9 @@ using Mozu.Core.Api.Contracts;
 using Mozu.Core.Settings;
 using Mozu.PaymentService.Contracts;
 using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.UX.Controllers;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteSettings.Order.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts;
@@ -51,10 +53,30 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
 
+        [System.Web.Http.HttpGet]
+        public async Task<ActionResult> widgettest()
+        {
+            var pc = this.PageContext;
+
+            pc.CmsContext = new CmsPageContext()
+            {
+                Page = new DocumentRequest()
+                {
+                    Path = "widgettest",
+                    Collection = "pages"
+                }
+
+            };
+
+            var helper = new CmsHelper(CmsService);
+            await helper.InitCmsPageContext(PageContext.CmsContext);
+            return this.View("WidgetTEsting/test", this.SiteContext );
+        }
 
 
 
-           [System.Web.Http.HttpGet]
+
+        [System.Web.Http.HttpGet]
         public ActionResult ForceTheme(string themeType = "", string redir = null)
         {
             ThemeMode mode = (ThemeMode)Enum.Parse(typeof(ThemeMode), themeType, true);

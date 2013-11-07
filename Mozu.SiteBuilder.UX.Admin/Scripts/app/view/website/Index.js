@@ -108,7 +108,7 @@ Ext.define('Taco.view.website.Index', {
                 },
                 items: [{
                     xtype: 'uxiframe',
-                    src: 'http://obscure-tundra-3709.herokuapp.com'
+                    src: '/widgettest?iseditmode=true'
                 }]
             }, {
                 xtype: 'panel',

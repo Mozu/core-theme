@@ -190,6 +190,15 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { action = "ForceTheme", controller = "Testing" }
             );
 
+
+            //todo remove before launch
+            routes.MapHttpRoute(
+               "widgettest",
+               "widgettest",
+               new { action = "widgettest", controller = "Testing" }
+           );
+
+
             //routes.MapHttpRoute("resources",
             //   "resources/{action}/{*pathInfo}",
             //   new { controller = "Resource", Action = "script", pathInfo = UrlParameter.Optional });

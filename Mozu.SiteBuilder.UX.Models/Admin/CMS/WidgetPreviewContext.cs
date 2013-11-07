@@ -63,6 +63,51 @@ using System.Runtime.Serialization;
         [DataMember(Name = "output")]
         public string Output { get; set; }
     }
+
+
+    public class ZoneRuntimeData
+    {
+        public string Id { get; set; }
+        public List<ZoneRowRuntimeData> Rows { get; set; }
+        public DocumentRequest Source { get; set; }
+    }
+
+
+    public class ZoneRowRuntimeData
+    {
+        
+        public List<ZoneColumnsRuntimeData> Columns { get; set; } 
+
+    }
+
+    public class ZoneColumnsRuntimeData
+    {
+        public int Span { get; set; }
+        public List<ZoneWidgetRuntimeData> Widgets { get; set; }
+        public List<ZoneRowRuntimeData> Rows { get; set; } 
+         
+
+    }
+    public class ZoneWidgetRuntimeData
+    {
+
+        public ZoneWidgetRuntimeData()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
+       
+        public string DefinitionId { get; set; }
+
+
+        public bool isRichText { get; set; }
+        public Newtonsoft.Json.Linq.JObject Config { get; set; }
+
+      
+      
+        public string Id { get; set; }
+    }
+
+
     [DataContract()]
     public class WidgetRuntimeData : WidgetInstanceData, IModelMetadataParentContainer, IModelMetadataContainer, ICmsMetaDataExtrator
     {
