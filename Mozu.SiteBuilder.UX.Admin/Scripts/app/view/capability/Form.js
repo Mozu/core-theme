@@ -22,13 +22,6 @@ Ext.define('Taco.view.capability.Form', {
         this.callParent(arguments);
     },
     updateForm: function () {
-        this.record.set('enabled', true);
-
-        if (this.record.data.enabled) {
-            this.enableBtn.setText('Disable App');
-        } else {
-            this.enableBtn.setText('Enable App');
-        }
         this.templateLeft.update(this.record);
         this.templateRight.update(this.record);
     },
@@ -37,21 +30,20 @@ Ext.define('Taco.view.capability.Form', {
              data = this.record;
 
         me.enableBtn = Ext.create('Ext.button.Button', {
-            name: 'enabled',
             text: data.enabled ? 'Disable App' : 'Enable App',
-            ui: 'button',
-            style: {
-                color: 'white',
-                backgroundColor: data.enabled ? 'red' : 'green',
-                padding: '15px'
-            },
-            handler: function() {
-                data.set('enabled', true);
+            ui: 'action-toggle',
+            scale: 'medium',
+            enableToggle: true,
+            toggleHandler: function (btn, state) {
+                btn.setText(state ? 'Disable App' : 'Enable App');
+                //Fire off ajax to update the record
+                //reload the store on sucess or pop error if fail
             },
             scope: this
         });
         me.templateLeft = Ext.create('Ext.Component', {
             data: data,
+            padding: '0 0 0 50',
             width: 320,
             tpl: [
                 '<div><span>Capability Type: </span><span>{[values.data.capabilityName]}</span></div>',

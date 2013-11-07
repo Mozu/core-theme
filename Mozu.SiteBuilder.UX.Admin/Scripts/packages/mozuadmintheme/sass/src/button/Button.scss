@@ -32,7 +32,7 @@ $ui-action-primary:
     'action-primary',
     $color-action-primary-foreground,
     $color-action-primary-background,
-    $color-action-primary-background-hover,
+    $color-action-primary-background-hover, 
     $color-action-primary-background-active,
     $color-action-primary-outline,
     $color-action-primary-outline-hover,
@@ -42,7 +42,21 @@ $ui-action-primary:
     38px
 ;
 
-$uis: $ui-link, $ui-action, $ui-action-primary;
+$ui-action-toggle:
+    'action-toggle',
+    $color-action-primary-foreground,
+    green,
+    $color-action-primary-background-hover,
+    red,
+    $color-action-primary-outline,
+    $color-action-primary-outline-hover,
+    $color-action-primary-outline-active,
+    1px,
+    19px,
+    38px
+;
+
+$uis: $ui-link, $ui-action, $ui-action-primary, $ui-action-toggle;
 
 @each $ui-name in $uis {
     @each $ui-name-variant in nth($ui-name, 1), nth($ui-name, 1) + '-toolbar' {
@@ -224,4 +238,20 @@ $uis: $ui-link, $ui-action, $ui-action-primary;
 
 .#{$prefix}btn-action-primary-toolbar-medium-over {
     @extend .#{$prefix}btn-action-primary-medium-over;
+}
+
+// ui: action-toggle
+.#{$prefix}btn-action-toggle-medium-over, 
+.#{$prefix}btn-action-toggle-medium-focus {
+    border-color: green;
+    background-color: green;
+}
+
+.#{$prefix}btn-action-toggle-medium-pressed{
+    &.#{$prefix}btn-action-toggle-medium-focus{
+        background: red;
+    }
+    &.#{$prefix}btn-action-toggle-medium-over{
+        background: red; 
+    }
 }
