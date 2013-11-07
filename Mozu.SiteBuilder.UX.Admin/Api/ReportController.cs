@@ -35,8 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "read/{name}")]
         public async Task<HttpResponseMessage> Read([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string name)
         {
-            var resp = (await _reportWebApiClient.GetReport(name)).ReadAsSync();
-            //            var resp = (await _reportWebApiClient.GetReport(name, pagingParams.startIndex, pagingParams.pageSize)).ReadAsSync();
+            var resp = (await _reportWebApiClient.GetReport(name, pagingParams.startIndex, pagingParams.pageSize)).ReadAsSync();
 
             return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp), LowerCaseJsonMediaTypeFormatter.Default);
         }
@@ -51,7 +50,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 .ToDictionary(item => item.key, item => item.val))
                 ;
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2(rows.ToList(), total: (int)resp.TotalCount), LowerCaseJsonMediaTypeFormatter.Default);
+            // todo: return grandTotals
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(rows.ToList(), total: (int)resp.TotalCount), new System.Net.Http.Formatting.JsonMediaTypeFormatter());
         }
 
         [HttpGetRoute(UriTemplate = "download/{name}")]
