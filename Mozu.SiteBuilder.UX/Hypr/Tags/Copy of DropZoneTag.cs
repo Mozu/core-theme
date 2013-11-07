@@ -166,7 +166,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                         {
                             continue;
                         }
-                        sb.AppendFormat("<div class=\"mz-cms-col-{0}-{0}\">", column.Span, zoneSpan);
+                        sb.AppendFormat("<div class=\"mz-cms-col-{0}-{1}\">", column.Span, zoneSpan);
 
                         foreach (var widget in column.Widgets)
                         {
@@ -199,10 +199,10 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                                 context.Render("widgets/" + widgetDefinition.DisplayTemplate, widget, sw);
                             }
 
-                            sb.Append("</div></div>");
-
+                            sb.Append("</div>");
+                            sb.Append("</div>");
                         }
-
+                        sb.Append("</div>");
 
 
                     }

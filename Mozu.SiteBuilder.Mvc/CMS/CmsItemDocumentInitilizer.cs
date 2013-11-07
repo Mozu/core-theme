@@ -158,12 +158,39 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                                                                                                                                        Id = Guid.NewGuid().ToString(),
                                                                                                                                        DefinitionId = "content",
                                                                                                                                        Config = JObject.Parse("{\"body\": \"<h1>thing</h1><p>The path of the righteous\nman is beset on all sides by the iniquities of the selfish and the tyranny of\nevil men. Blessed is he who, in the name of charity and good will, shepherds\nthe weak through the valley of darkness, for he is truly his brother's keeper\nand the finder of lost children. And I will strike down upon thee with great\nvengeance and furious anger those who would attempt to poison and destroy My\nbrothers. And you will know My name is the Lord when I lay My vengeance upon\nthee. </p>\"}")
+                                                                                                                                   },
+                                                                                                                                    new ZoneWidgetRuntimeData
+                                                                                                                                   {
+                                                                                                                                       Id = Guid.NewGuid().ToString(),
+                                                                                                                                       DefinitionId = "image",
+                                                                                                                                       Config = JObject.Parse("{\"image\":{\"src\":\"http://www.andrew.cmu.edu/user/cfperron/cats/images/cat7.jpg\",\"alt\":\"cat\",\"height\":200,\"width\":200}}")
                                                                                                                                    }
                                                                                                                            }
                                                                                                          }
                                                                                                  }
+                                                                               },
+                                                                               new ZoneRowRuntimeData
+                                                                               {
+                                                                                   Columns = new List<ZoneColumnsRuntimeData>
+                                                                                                 {
+                                                                                                     new ZoneColumnsRuntimeData
+                                                                                                         {
+                                                                                                             Span = 12,
+                                                                                                             Widgets = new List<ZoneWidgetRuntimeData>
+                                                                                                                           {
+                                                                                                                               new ZoneWidgetRuntimeData
+                                                                                                                                   {
+                                                                                                                                       Id = Guid.NewGuid().ToString(),
+                                                                                                                                       DefinitionId = "content",
+                                                                                                                                       Config = JObject.Parse("{\"body\": \"<h1>Hold on to your fud</h1><p>The path of the righteous\nman is beset on all sides by the iniquities of the selfish and the tyranny of\nevil men. Blessed is he who, in the name of charity and good will, shepherds\nthe weak through the valley of darkness, for he is truly his brother's keeper\nand the finder of lost children. And I will strike down upon thee with great\nvengeance and furious anger those who would attempt to poison and destroy My\nbrothers. And you will know My name is the Lord when I lay My vengeance upon\nthee. </p>\"}")
+                                                                                                                                   }
+                                                                                                                              
+                                                                                                                           }
+                                                                                                         },
+                                                                                                    
+                                                                                                 }
                                                                                }
-                                                                       }
+                                                                       },
                                                         });
                     if (cmsPageContext.Page.Document != null)
                     {
