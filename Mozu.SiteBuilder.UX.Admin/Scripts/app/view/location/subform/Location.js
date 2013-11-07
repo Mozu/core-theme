@@ -50,7 +50,7 @@ Ext.define('Taco.view.location.subform.Location', {
             queryMode: 'local',
             displayField: 'name',
             valueField: 'code',
-            //emptyText: 'Select',
+            emptyText: 'Select',
             allowBlank: false,
             store: locationTypesStore
         });

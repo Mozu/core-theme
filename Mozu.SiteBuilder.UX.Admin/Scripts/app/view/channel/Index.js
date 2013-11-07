@@ -90,9 +90,10 @@ Ext.define('Taco.view.channel.Index', {
         columns: [{
             dataIndex: 'code',
             text: 'Code',
-            editor: {
+            editor2: {
                 // defaults to textfield if no xtype is supplied
                 emptyText: "Code",
+                msgTarget: "qtip",
                 // optional enhancement to rowEditor. Makes the field only editable during a create;
                 editableOnCreateOnly: true,
                 selectOnFocus: true,
@@ -104,6 +105,7 @@ Ext.define('Taco.view.channel.Index', {
             editor: {
                 // defaults to textfield if no xtype is supplied
                 emptyText: "Name",
+                msgTarget: "qtip",
                 selectOnFocus: true,
                 allowBlank: false
             },
@@ -115,6 +117,7 @@ Ext.define('Taco.view.channel.Index', {
             editor: {
                 // defaults to textfield if no xtype is supplied
                 emptyText: "Country",
+                msgTarget: "qtip",
                 selectOnFocus: true,
                 allowBlank: false
             },
