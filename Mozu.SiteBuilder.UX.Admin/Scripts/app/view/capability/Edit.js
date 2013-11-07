@@ -3,5 +3,6 @@ Ext.define('Taco.view.capability.Edit', {
     requires: [
         'Taco.view.capability.Form'
     ],
-    formCls: 'Taco.view.capability.Form'
+    formCls: 'Taco.view.capability.Form',
+    actions: []
 });
