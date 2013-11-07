@@ -42,22 +42,11 @@ $color-theme-purple:            rgb(114, 25, 133);
 
 $base-color: $color-neutral-90;
 
-$color-theme-base:              $color-theme-red;
-$color-theme-base-dark:         $color-theme-red-darker;
-$color-theme-base-darker:       $color-theme-red-darker;
-$color-theme-base-darkest:      $color-theme-red-darkest;
-
-$color-theme-accent:            $color-theme-green;
-
-$color-theme-support:           $color-theme-blue-light;
-$color-theme-support-dark:      rgb(163, 184, 214); // #A3B8D6 blue
-$color-theme-support-darker:    $color-theme-blue-bright;
-$color-theme-support-darkest:   $color-theme-blue-darker;
-
 // message colors
-$color-status:                  rgb(204, 255, 204); // #CCFFCC green
-$color-warning:                 rgb(255, 255, 204); // #FFFFCC yellow
-$color-error:                   rgb(255, 204, 204); // #FFCCCC red
+$color-status-success:  $color-theme-green;
+$color-status-info:     $color-theme-blue-bright;
+$color-status-warning:  $color-theme-yellow;
+$color-status-error:    $color-theme-red;
 
 // highlight colors
 $color-selected: $color-theme-blue-light;
@@ -99,6 +88,20 @@ $color-highlighted-background: rgb(112, 210, 219);
 $color-highlighted-background-light: rgb(189, 249, 255);
 $color-highlighted-foreground: $color-neutral-white;
 $color-highlighted-outline: $color-neutral-dark;
+
+$color-theme-base:              $color-theme-red;
+$color-theme-base-dark:         $color-theme-red-darker;
+$color-theme-base-darker:       $color-theme-red-darker;
+$color-theme-base-darkest:      $color-theme-red-darkest;
+$color-theme-accent:            $color-theme-green;
+$color-theme-support:           $color-theme-blue-light;
+$color-theme-support-dark:      rgb(163, 184, 214); // #A3B8D6 blue
+$color-theme-support-darker:    $color-theme-blue-bright;
+$color-theme-support-darkest:   $color-theme-blue-darker;
+
+$color-status:                  rgb(204, 255, 204); // #CCFFCC green
+$color-warning:                 rgb(255, 255, 204); // #FFFFCC yellow
+$color-error:                   rgb(255, 204, 204); // #FFCCCC red
 
 // $color-action-primary-background: rgb(255, 156, 51);
 // $color-action-primary-background-hover: adjust-lightness($color-action-primary-background, 4);

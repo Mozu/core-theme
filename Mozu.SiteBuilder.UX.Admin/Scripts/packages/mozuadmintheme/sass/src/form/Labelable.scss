@@ -7,3 +7,10 @@
 .#{$prefix}form-invalid-under {
     background-image: none;
 }
+
+.#{$prefix}form-item-required {
+    &::before {
+        color: $color-theme-red;
+        content: "* ";
+    }
+}

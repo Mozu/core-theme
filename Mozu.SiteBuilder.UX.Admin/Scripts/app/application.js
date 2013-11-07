@@ -92,7 +92,6 @@ Ext.define('Taco.Application',{
             'Taco.core.ux.CellEditing',
             'Taco.core.ux.Panel',
             'Taco.core.ux.PanelHeader',
-            'Taco.core.ux.form.field.Base',
             'Taco.core.ux.form.field.Container',
             'Taco.core.ux.form.field.EditableDisplayField',
             'Taco.core.ux.DragDropZone',

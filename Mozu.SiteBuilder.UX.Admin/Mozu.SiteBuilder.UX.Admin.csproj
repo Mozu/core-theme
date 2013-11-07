@@ -630,6 +630,7 @@
     <Content Include="Scripts\app\model\OrderAttribute.js" />
     <Content Include="Scripts\app\model\ShippingMethod.js" />
     <Content Include="Scripts\app\model\WishList.js" />
+    <Content Include="Scripts\app\overrides\form\Basic.js" />
     <Content Include="Scripts\app\overrides\form\field\Base.js" />
     <Content Include="Scripts\app\overrides\form\field\ComboBox.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditorButtons.js" />
@@ -1022,7 +1023,6 @@
     <Content Include="Scripts\app\core\ux\content\Sidebar.js" />
     <Content Include="Scripts\app\core\ux\TabBar.js" />
     <Content Include="Scripts\app\core\ux\PanelHeader.js" />
-    <Content Include="Scripts\app\core\ux\form\field\Base.js" />
     <Content Include="Scripts\app\core\ux\form\field\Container.js" />
     <Content Include="Scripts\app\core\ux\form\field\MultiSelect.js" />
     <Content Include="Scripts\app\core\ux\form\TextField.js" />
@@ -3546,4 +3546,5 @@
     <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
   </Target>
   <Import Project="..\packages\OctoPack.2.0.52\build\OctoPack.targets" Condition="Exists('..\packages\OctoPack.2.0.52\build\OctoPack.targets')" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>

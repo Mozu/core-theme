@@ -5,6 +5,9 @@
 Ext.define('Taco.controller.Message', {
     extend: 'Taco.core.Controller',
     views: ['Taco.view.NotifierBar'],
+
+    messages: new Ext.util.MixedCollection(),
+
     init: function () {
         var me = this;
         // last resort event
@@ -14,29 +17,43 @@ Ext.define('Taco.controller.Message', {
         });
 
         me.displayMessages = Ext.Function.createBuffered(function() {
-            this.view.update(this.messages);
-            this.view.isHidden()&&this.view.slideDown();
-        },300,me);
+            me.messages.each(function (item, index) {
+                var prevMessage;
+
+                if (index === 0) {
+                    item.show();
+                } else {
+                    prevMessage = me.messages.getAt(index - 1);
+
+                    if (prevMessage && prevMessage.rendered && !prevMessage.isHidden()) {
+                        item.y = prevMessage.getRegion().bottom + 25;
+                        item.show();
+                    }
+                }
+            }, me);
+        }, 300, me);
 
         me.callParent(arguments);
     },
 
-    messages: [],
+    setMessage: function (message, type) {
+        var dialog;
 
-    setMessage: function(message,type) {
-        var me = this;
-        this.messages.push({ message: message, type: type});
+        dialog = Ext.create(this.getTacoViewNotifierBarView(), {
+            message: message,
+            messageType: type,
+            listeners: {
+                beforehide: {
+                    scope: this,
+                    fn: function () {
+                        this.messages.removeAll();
+                    }
+                }
+            }
+        });
 
-        if (!this.view) {
-            this.view = Ext.create(this.getTacoViewNotifierBarView());
-            
-            //this.view = this.getView('Taco.view.NotifierBar').create();
+        this.messages.add(dialog);
 
-            this.view.on('beforehide',function() {
-                me.messages = [];
-            });
-        }
         this.displayMessages();
     }
-
 });
