@@ -28,19 +28,29 @@ Ext.define('Taco.view.capability.Form', {
     buildFormComponents: function () {
         var me = this,
              data = this.record;
-
+        console.log(data.get('enabled'));
         me.enableBtn = Ext.create('Ext.button.Button', {
-            text: data.enabled ? 'Disable App' : 'Enable App',
+            text: data.get('enabled') ? 'Disable App' : 'Enable App',
             ui: 'action-toggle',
             scale: 'medium',
             enableToggle: true,
             toggleHandler: function (btn, state) {
                 btn.setText(state ? 'Disable App' : 'Enable App');
-                //Fire off ajax to update the record
-                //reload the store on sucess or pop error if fail
+                this.record.set('enabled', state);
+                this.record.save({
+                    callback: function (records, operation, success) {
+                        this.record.reload();
+                    },
+                    scope: this
+                });
             },
             scope: this
         });
+        
+        if (data.get('enabled')) {
+            me.enableBtn.toggle();
+        }
+        
         me.templateLeft = Ext.create('Ext.Component', {
             data: data,
             padding: '0 0 0 50',
