@@ -19,7 +19,12 @@ Ext.define('Taco.controller.Website', {
     *************************************/
     //returns a  store of widgetTypeDefinition
     findWidgetTypeDefinitions: function (filter) {
-        return Taco.core.data.StoreManager.getOrCreate("Taco.store.WidgetDefinitions");
+
+        var json = [];
+        Taco.core.data.StoreManager.getOrCreate("Taco.store.WidgetDefinitions").each(function (item) {
+            json.push(item.data);
+        });
+        return json;
 
     }
 });
