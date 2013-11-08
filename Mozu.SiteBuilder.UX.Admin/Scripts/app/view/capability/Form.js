@@ -28,7 +28,7 @@ Ext.define('Taco.view.capability.Form', {
     buildFormComponents: function () {
         var me = this,
              data = this.record;
-        console.log(data.get('enabled'));
+
         me.enableBtn = Ext.create('Ext.button.Button', {
             text: data.get('enabled') ? 'Disable App' : 'Enable App',
             ui: 'action-toggle',
@@ -47,6 +47,26 @@ Ext.define('Taco.view.capability.Form', {
             scope: this
         });
         
+        //This is a test btn and will be removed //////////////////////////
+        me.initBtn = Ext.create('Ext.button.Button', {
+            text: data.get('initialized') ? 'No init App' : 'init App',
+            ui: 'action-toggle',
+            scale: 'medium',
+            enableToggle: true,
+            toggleHandler: function (btn, state) {
+                btn.setText(state ? 'No init App' : 'init App');
+                this.record.set('initialized', state);
+                console.log(this.record.get('initialized'));
+                this.record.save({
+                    callback: function (records, operation, success) {
+                        this.record.reload();
+                    },
+                    scope: this
+                });
+            },
+            scope: this
+        });
+        /////////////////////////////////////////////////////////////////
         if (data.get('enabled')) {
             me.enableBtn.toggle();
         }
@@ -74,9 +94,12 @@ Ext.define('Taco.view.capability.Form', {
         
         me.infoPanel = Ext.create('Ext.container.Container', {
                 layout: 'hbox',
-                items: [me.enableBtn,
+                items: [
+                    me.enableBtn,
+                    me.initBtn,
                     me.templateLeft,
-                    me.templateRight]
+                    me.templateRight
+                ]
             }
         );
 
