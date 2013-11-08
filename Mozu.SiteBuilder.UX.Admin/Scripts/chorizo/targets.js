@@ -433,10 +433,14 @@
 
         if (widgetCfg.block) return widgetCfg.block;
 
-        $block = $('<div class="mz-cms-block" data-widget="{&quot;isRichText&quot;: true}"><div class="mz-cms-content"></div></div>');
+        $block = $('<div class="mz-cms-block"><div class="mz-cms-content"></div></div>');
 
         // Insert widget content (for now, just doing text)
-        $block.find('.mz-cms-content').html('<h1>Insert</h1><p>Click here to edit</p>');
+        $block
+            .data('widget', widgetCfg)
+            .find('.mz-cms-content')
+            .html(widgetCfg.html);
+
 
         return $block.mzBlock().data('mozu.mzBlock');
     }
