@@ -21,7 +21,7 @@ Ext.define('Taco.core.data.Model', {
     inheritableStatics: {
         allowMethod: function (method) {
             if (this.prototype.behaviors && this.prototype.behaviors[method]) {
-                return Taco.User.behaviors.indexOf(this.prototype.behaviors[method]) != -1;
+                return Ext.Array.indexOf(Taco.User.behaviors, this.prototype.behaviors[method]) !== -1;
             }
             return true;
         },
