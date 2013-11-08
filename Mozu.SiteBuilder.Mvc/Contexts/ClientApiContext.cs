@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private Dictionary<string, string> BuildHeaders(IApiContext apiContext)
         {
             var header = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            header[APIConstants.Headers.APP_CLAIMS] = _gApiClaims.Value;
+            header[APIConstants.Headers.APP_CLAIMS] = _apiClaims.Value;
             header[APIConstants.Headers.CURRENCY] = apiContext.CurrencyCode;
             header[APIConstants.Headers.LOCALE] = apiContext.LocaleCode;
             header[APIConstants.Headers.SITE] = apiContext.SiteId.HasValue ? apiContext.SiteId.Value.ToString() : "";
@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         }
 
         private static Dictionary<string, string> _gUrls;
-        private static Lazy<string> _gApiClaims = new Lazy<string>(()=>LightweightAppClaims.CreateForPublicStorefront().ToAccessToken());
+        Lazy<string> _apiClaims = new Lazy<string>(() => LightweightAppClaims.CreateForPublicStorefront().ToAccessToken());
 
         private static Dictionary<string, string> BuildUrls(ISettings settings)
         {
