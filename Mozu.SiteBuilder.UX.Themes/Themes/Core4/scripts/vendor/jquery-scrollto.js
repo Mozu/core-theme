@@ -3,7 +3,7 @@
     if (typeof module != 'undefined' && module.exports) module.exports = definition();
     else if (typeof define == 'function' && define.amd) define(definition);
     else context[name] = definition();
-})('jquery-scrollto', this, function () {
+})('jquery-scrollto', this, function (require) {
     // Prepare
     var jQuery, $, ScrollTo;
     jQuery = $ = window.jQuery || require('jquery');
