@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using DC = Mozu.Customer.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 {
@@ -48,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         /// List of attributes assigned to the customer.
         /// </summary>
         [DataMember(Name = "attributes")]
-        public List<string> Attributes { get; set; }
+        public List<DC.CustomerAttribute> Attributes { get; set; }
 
         /// <summary>
         /// List of notes for the customer account. Merchants use these internal notes, for example, to make a note of a customer's interests or complaints. 

@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.customers.Form', {
     extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.store.CustomerTags', 'Taco.view.order.Index'],
+    requires: ['Taco.store.CustomerTags', 'Taco.view.order.Index','Taco.view.customers.subform.CustomerAttribute'],
     // enableStoreSyncTasks:true,
     initComponent: function () {
         var data = this.record.getData(),
@@ -55,8 +55,7 @@ Ext.define('Taco.view.customers.Form', {
         });
 
         me.customerAttribute = Ext.create('Taco.view.customers.subform.CustomerAttribute', {
-            record: data,
-            tagStore: this.tagStore
+            record: this.record
         });
 
         this.items = [

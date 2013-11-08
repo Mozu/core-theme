@@ -43,6 +43,10 @@ Ext.define('Taco.model.CustomerAccount', {
             type: 'auto',
             defaultValue: []
         }, {
+            name: 'attributes',
+            type: 'auto',
+            defaultValue: []
+        }, {
             name: 'totalSpent',
             type: 'float',
             defaultValue: 0
@@ -85,6 +89,16 @@ Ext.define('Taco.model.CustomerAccount', {
             foreignProperty: 'account'
         });
     },
+
+    getAttributes: function () {
+        return this.getOrCreateHasManyStore({
+            model: 'Taco.model.ExtensibleAttributeValue',
+            associationKey: 'attributes',
+            foreignProperty: 'account'
+        });
+
+    },
+
     proxy: {
         type: 'ajaxproxy',
         api: {
