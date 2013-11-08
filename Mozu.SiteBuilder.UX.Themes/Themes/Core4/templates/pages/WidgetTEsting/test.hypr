@@ -1,15 +1,11 @@
 {% extends "page" %}
 
-{% block head-tag %}
-	{%parent%}
-	{% cms_edit_resources %}
 
-{% endblock head-tag %}
 	
 {% block body-content %}
 
- {% dropzone2 "testzone1" scope="page" span=12 %}
-  {% dropzone2 "testzone2" scope="page" span=12 %}
+ {% dropzone "testzone1" scope="page" span=12 %}
+  {% dropzone "testzone2" scope="page" span=12 %}
 {% endblock body-content %}
 
 

@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 	    {
 	        var apps = (await _applicationsWebApiClient.GetApplications(startIndex: 0, pageSize: 600)).ReadAsSync().Items;
              
-
+            
 	        var vmApps = Mapper.Map<List<VM.Application>>(apps);
 
 
@@ -62,11 +62,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var app = (await _applicationsWebApiClient.GetApplication(cap.AppId)).ReadAsSync();
 
                 var index = app.Capabilities.FindIndex(_ => _.Id == cap.Id);
-
+                var editCap = app.Capabilities[index];
+                AutoMapper.Mapper.Map(cap, editCap);
                // var newDmCap = Mapper.Map<Mozu.Core.ThirdParty.Contracts.Capability>(cap);
-
-
-                app.Capabilities[index].Enabled = cap.Enabled;
+            
                 //todo other stuff
                 _applicationsWebApiClient.UpsertApplication(app.AppId, app).Wait();
             }

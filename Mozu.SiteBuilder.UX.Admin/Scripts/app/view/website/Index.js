@@ -8,7 +8,8 @@ Ext.define('Taco.view.website.Index', {
     requires: [
         'Taco.model.NavigationTreeNode',
         'Taco.store.NavigationTreeNodes',
-        'Taco.view.website.Tree'
+        'Taco.view.website.Tree',
+        'Taco.view.website.entityAdapters.BaseEntityAdapter'
     ],
     requiresContextOfType: [ 's'],
     header: {
@@ -219,7 +220,24 @@ Ext.define('Taco.view.website.Index', {
         return this.iframe.getWin().require.mozuData('pagecontext');
     },
     onPageLoad: function (editor) {
-        var pc = this.getPageSettings();
+        var me = this,
+            pc = this.getPageSettings();
+        Ext.EventManager.on(this.iframe.getDoc(), 'click', function (e, target, eOpts) {
+            if (target.hostname == this.iframe.getWin().location.hostname) {
+                me.fireEvent('beforeIframeClickNavigate', { url: target.pathname + target.search });
+                this.iframe.getWin().location.href = Ext.String.urlAppend(target.pathname + target.search, 'iseditmode=true');
+                
+                console.log('before nav', arguments);
+                e.stopEvent();
+            }
+
+
+        }, this, {
+            delegate: 'a'
+        });
+        var config = this.entityTypeEditConfig[pc.pageType] || this.entityTypeEditConfig['default'];
+        
+
     },
     onWidgetDrop:function (config) {
         

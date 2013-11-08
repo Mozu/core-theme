@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
+using Mozu.Core.ThirdParty.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement
 {
@@ -60,17 +61,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement
 
         //public List<OperationUrl> OperationUrls { get; set; }
 
-        //public List<InitializablePropertyValue> SupportedShoppingCountries { get; set; }
+        public List<InitializablePropertyValue> SupportedShoppingCountries { get; set; }
 
-        //public List<string> ActiveShoppingCountries { get; set; }
+        public List<string> ActiveShoppingCountries { get; set; }
 
-        //public List<InitializableShippingCountryPropertyValue> SupportedShippingCountries { get; set; }
+        public List<InitializableShippingCountryPropertyValue> SupportedShippingCountries { get; set; }
 
-        //public List<ActiveShippingCountry> ActiveShippingCountries { get; set; }
+        public List<ActiveShippingCountry> ActiveShippingCountries { get; set; }
 
-        //public List<InitializablePropertyValue> SupportedCreditTypes { get; set; }
+        public List<InitializablePropertyValue> SupportedCreditTypes { get; set; }
 
-        //public List<string> ActiveCreditTypes { get; set; }
+        public List<string> ActiveCreditTypes { get; set; }
 
         public string uiSupportUrl { get; set; }
         public int EntitlementId { get; set; }
@@ -82,6 +83,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement
         public DateTime? EffectiveEndDate { get; set; }
         //public AuditInfo AuditInfo { get; set; }
     }
+
+
+
+
+
 
     //public class InitializableShippingCountryPropertyValue : Core.ThirdParty.Contracts.InitializablePropertyValueHierarchy<List<Core.ThirdParty.Contracts.InitializablePropertyValue>>
     //{

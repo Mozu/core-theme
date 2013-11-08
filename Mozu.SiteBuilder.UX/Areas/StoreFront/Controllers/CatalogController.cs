@@ -201,7 +201,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             get { return new RequestContext(this.HttpContext, new RouteData()); }
         }
 
-
+        [InitCmsPageContextActionFilter]
          [System.Web.Http.HttpGet]
         public async Task<HttpResponseMessage > Category(int? categoryId = null, string sortBy = null, int? page = null, int? itemsPerPage = null )
         {

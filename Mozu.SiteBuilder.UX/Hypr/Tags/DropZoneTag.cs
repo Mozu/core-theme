@@ -23,7 +23,7 @@ using Microsoft.FSharp.Core;
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
     [NDjango.ParserNodes.Description("tbd")]
-    [NDjango.Interfaces.Name("dropzone")]
+    [NDjango.Interfaces.Name("dropzone_old")]
     public class DropZoneTag : SimpleTagBase
     {
         public static object HTTPCONTEXTKEY = new object();
