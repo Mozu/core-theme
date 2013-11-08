@@ -56,8 +56,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                                ApplicationName = app.Entitlement.ApplicationName ,
                                                                                DeveloperAccountName = app.Entitlement.DeveloperAccountName ,
                                                                                EffectiveEndDate = app.Entitlement.EffectiveEndDate,
-                                                                               EffectivesStartDate = app.Entitlement.EffectiveStartDate 
-
+                                                                               EffectivesStartDate = app.Entitlement.EffectiveStartDate ,
+                                                                               ActiveShoppingCountries = cap.ActiveShoppingCountries ,
+                                                                               SupportedShoppingCountries = cap.SupportedShoppingCountries
+                                                                               
 
                                                                               
                                                                            }).ToList() 
@@ -66,8 +68,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     return a;
                 });
 
-            Mapper.CreateMap<Capability, Mozu.Core.ThirdParty.Contracts.Capability>();
-           // Mapper.CreateMap<Mozu.Core.ThirdParty.Contracts.Capability,Capability>();
+            Mapper.CreateMap<Capability, Mozu.Core.ThirdParty.Contracts.Capability>()
+                  .ForMember(x => x.SupportedShoppingCountries, opt => opt.Ignore());
+
+            // Mapper.CreateMap<Mozu.Core.ThirdParty.Contracts.Capability,Capability>();
         }
     }
 }
