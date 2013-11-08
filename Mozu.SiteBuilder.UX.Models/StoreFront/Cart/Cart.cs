@@ -13,7 +13,7 @@
 //        public string Id { get; set; }
 
 //        [DataMember]
-//        public string ISOCurrencyCode { get; set; }
+//        public string CurrencyCode { get; set; }
 
 //        [DataMember]
 //        public List<CartItem> Items { get; set; }

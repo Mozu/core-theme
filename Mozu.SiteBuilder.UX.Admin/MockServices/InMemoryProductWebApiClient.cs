@@ -126,7 +126,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
     //            },
     //            Price = new DC.ProductPrice
     //            {
-    //                ISOCurrencyCode = "USD",
+    //                CurrencyCode = "USD",
     //                Price = 12m
     //            },
     //            ProductInCatalogs = new List<DC.ProductInCatalogInfo> {
@@ -153,7 +153,7 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices
     //            },
     //            Price = new DC.ProductPrice
     //            {
-    //                ISOCurrencyCode = "USD",
+    //                CurrencyCode = "USD",
     //                Price = 4.5m
     //            },
     //            ProductInCatalogs = null

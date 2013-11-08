@@ -29,7 +29,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var action = new DCp.PaymentAction
             {
                 ActionName = "CapturePayment",
-                ISOCurrencyCode = "USD",
+                CurrencyCode = "USD",
                 Amount = args.Amount,
                 ReferenceSourcePaymentId = null
             };
@@ -57,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var action = new DCp.PaymentAction
             {
                 ActionName = "CreditPayment",
-                ISOCurrencyCode = "USD",
+                CurrencyCode = "USD",
                 Amount = args.Amount
             };
 
@@ -83,7 +83,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var action = new DCp.PaymentAction
             {
                 ActionName = "VoidPayment",
-                ISOCurrencyCode = "USD",
+                CurrencyCode = "USD",
                 Amount = null,
                 ReferenceSourcePaymentId = null
             };
@@ -110,7 +110,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 // TODO: should determine ActionName from store preferences
                 ActionName = /*"AuthAndCapture"*/ "AuthorizePayment",
-                ISOCurrencyCode = "USD",
+                CurrencyCode = "USD",
                 NewBillingInfo = new DCp.BillingInfo
                 {
                     Card = new DCp.PaymentCard

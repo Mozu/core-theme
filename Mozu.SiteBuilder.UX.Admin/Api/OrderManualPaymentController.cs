@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var action = new DCp.PaymentAction
             {
                 ActionName = args.ActionName,
-                ISOCurrencyCode = "USD",
+                CurrencyCode = "USD",
                 Amount = args.Amount,
                 InteractionDate = args.InteractionDate,
                 NewBillingInfo = new DCp.BillingInfo
@@ -67,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var action = new DCp.PaymentAction
             {
                 ActionName = "CapturePayment",
-                ISOCurrencyCode = "USD",
+                CurrencyCode = "USD",
                 Amount = args.Amount,
                 InteractionDate = args.InteractionDate,
                 // TODO: We should fill in GatewayInteractionId, but the contract does not support it.
@@ -93,7 +93,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var action = new DCp.PaymentAction
             {
                 ActionName = "CreditPayment",
-                ISOCurrencyCode = "USD",
+                CurrencyCode = "USD",
                 Amount = args.Amount,
                 InteractionDate = args.InteractionDate,
                 // TODO: We should fill in GatewayInteractionId, but the contract does not support it.
@@ -118,7 +118,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var action = new DCp.PaymentAction
             {
                 ActionName = "VoidPayment",
-                ISOCurrencyCode = "USD",
+                CurrencyCode = "USD",
                 InteractionDate = args.InteractionDate,
                 // TODO: We should fill in GatewayInteractionId, but the contract does not support it.
                 ManualGatewayInteraction = new DCp.PaymentGatewayInteraction { GatewayInteractionId = args.GatewayInteractionId },

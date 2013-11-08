@@ -11,7 +11,7 @@ namespace Mozu.SiteBuilder.UX.Models.Orders
         [DataMember(Name = "price")]
         public decimal? Price { get; set; }
 
-        [DataMember(Name = "isoCurrencyCode")]
-        public string ISOCurrencyCode { get; set; }
+        [DataMember(Name = "CurrencyCode")]
+        public string CurrencyCode { get; set; }
     }
 }

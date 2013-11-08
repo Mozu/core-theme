@@ -4,7 +4,7 @@
 	"ipAddress": "192.168.1.1",
     "discountTotal": 0,
     "fulfillmentStatus": "Not shipped",
-    "isoCurrencyCode": "usd",
+    "CurrencyCode": "usd",
     "id": "76f4d583b26f40beaeb17e2bb6a63060",
     "items": [{
         "createDate": "\/Date(1347995574405)\/",
@@ -145,7 +145,7 @@
 	"ipAddress": "192.168.1.2",
     "discountTotal": 0,
     "fulfillmentStatus": "Not shipped",
-    "isoCurrencyCode": "usd",
+    "CurrencyCode": "usd",
     "id": "76f4d583b26f40beaeb17e2bb6a63060",
     "items": [{
         "createDate": "\/Date(1347995574405)\/",

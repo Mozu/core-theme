@@ -35,12 +35,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                           {
                                                                               new Setting()
                                                                                   {
-                                                                                      Key = Mozu.ShippingAdmin.Contracts.Constants.Custom.Settings.Amount,
+                                                                                      Key = "Amount",
                                                                                       Value = x.Amount
                                                                                   },
                                                                               new Setting()
                                                                                   {
-                                                                                      Key = Mozu.ShippingAdmin.Contracts.Constants.Custom.Settings.Type,
+                                                                                      Key = "Type",
                                                                                       Value = x.RateType
                                                                                   }
                                                                           }))
@@ -62,8 +62,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
 
             Mapper.CreateMap<Mozu.ShippingAdmin.Contracts.CarrierConfiguration, CustomRate>()
-                  .ForMember(x => x.Amount, opt => opt.MapFrom(x => x.Settings == null ? null : x.GetSettingValue(Mozu.ShippingAdmin.Contracts.Constants.Custom.Settings.Amount)))
-                  .ForMember(x => x.RateType, opt => opt.MapFrom(x => x.Settings == null ? null : x.GetSettingValue(Mozu.ShippingAdmin.Contracts.Constants.Custom.Settings.Type)))
+                  .ForMember(x => x.Amount, opt => opt.MapFrom(x => x.Settings == null ? null : x.GetSettingValue("Amount")))
+                  .ForMember(x => x.RateType, opt => opt.MapFrom(x => x.Settings == null ? null : x.GetSettingValue("Type")))
                   .ForMember(x => x.Name, opt => opt.ResolveUsing(x =>
                       {
                           return x.ConfiguredServiceTypes == null || x.ConfiguredServiceTypes.Count == 0 ? null : x.ConfiguredServiceTypes.First().Content.Name;
