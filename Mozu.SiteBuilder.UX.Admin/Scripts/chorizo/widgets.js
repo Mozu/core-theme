@@ -5,6 +5,8 @@
     var Widget;
 
     Widget = function(element, options) {
+        var me = this;
+
         this.options = $.extend({}, options);
         this.element = $(element);
 
@@ -21,7 +23,7 @@
                     return $('<div>');
                 },
                 start: function() {
-                    Chorizo.editor.startDrag();
+                    Chorizo.editor.startDrag(me.element.data('definition'));
                 },
                 stop: function() {
                     Chorizo.editor.stopDrag();

@@ -19,7 +19,53 @@
             $('.mz-cms-grid').mzGrid();
             $('.mz-cms-widget').mzWidget();
 
+            this.buildWidgets();
+
             this.fireEvent('pageload', this);
+
+            this.showWidgets();
+        },
+
+        buildWidgets: function() {
+            this.$widgetModal = $('<div class="mz-cms-widget-modal" style="display:none"></div>')
+                .appendTo('body');
+            
+            this.addWidgets([{
+                name: 'Text',
+                isRichText: true,
+                id: 'text-sf-asdf'
+            }, {
+                name: 'Image',
+                isRichText: false,
+                id: 'image-asdf-fef'
+            }]);
+
+            $('.mz-cms-widget').mzWidget();
+        },
+
+        buildWidget: function(cfg) {
+            var ret = $('<div class="mz-cms-widget"></div>');
+
+            ret.html(cfg.name)
+                .data('definition', cfg);
+
+            return ret;
+        },
+
+        addWidgets: function(widgets) {
+            var me = this;
+
+            $.each(widgets, function(i, widget) {
+                me.$widgetModal.append(me.buildWidget(widget));
+            });
+        },
+
+        hideWidget: function() {
+            this.$widgetModal.hide();
+        },
+
+        showWidgets: function() {
+            this.$widgetModal.show();
         },
 
         fireEvent: function() {
@@ -32,6 +78,9 @@
                 // Mock something up
                 return {
                     fireEvent: function(name) {
+                        if (name === 'widgetdrop') {
+                            arguments[1].callback('<h1>Header1</h1><p>Paragraph2</p>', {});
+                        }
                         console.log('Editor Event: ', name, Array.prototype.slice.call(arguments, 1));
                     }
                 };
