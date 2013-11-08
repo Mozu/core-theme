@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             
             _settings = settings;
             _httpContext = httpContext;
-            _adminUserWebApiClient = adminUserWebApiClient;
+            _adminUserWebApiClient = adminUserWebApiClient.CloneWithoutUserClaims();
             
             _masterCatalogClient = masterCatalogClient.CloneWithoutUserClaims();
         }
