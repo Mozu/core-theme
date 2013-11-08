@@ -16,10 +16,13 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
     public class NavigationContext 
     {
         private readonly NavigationGandalf _navigationGandalf;
+        private readonly ISiteBuilderApiContext _apiContext;
 
-        public NavigationContext(NavigationGandalf navigationGandalf, ICategoryNavigationProvider categoryNavigationProvider)
+        public NavigationContext(NavigationGandalf navigationGandalf, ICategoryNavigationProvider categoryNavigationProvider, ISiteBuilderApiContext apiContext)
         {
             _navigationGandalf = navigationGandalf;
+            _apiContext = apiContext;
+            
         }
 
         private List<NavigationRuntimeNode> __navigationTree;
@@ -43,6 +46,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             if (_initTask == null)
             {
+                if (_apiContext.SiteId == null)
+                {
+                    throw new NotSupportedException("Navigation requires a context with a siteid");
+                }
                 _initTask = _navigationGandalf.GetTreeNavigation().ContinueWith(_ =>
                     {
                         __navigationTree = _.Result;

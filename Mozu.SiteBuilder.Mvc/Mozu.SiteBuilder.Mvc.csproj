@@ -378,6 +378,7 @@
     <Compile Include="ActionFilters\AddCorrelationHeaderFilterAttribute.cs" />
     <Compile Include="ActionFilters\AnonymousShopperFilter.cs" />
     <Compile Include="ActionFilters\ClientCacheHeadersAttribute.cs" />
+    <Compile Include="ActionFilters\Copy of AnonymousShopperFilter.cs" />
     <Compile Include="ActionFilters\HandleAllTheMvcErrorsFilter.cs" />
     <Compile Include="ActionFilters\RefreshUserAuthTicketFilter.cs" />
     <Compile Include="ActionFilters\SiteBuilderAuthorizeAttribute.cs" />
@@ -585,4 +586,5 @@
     <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
   </Target>
   <Import Project="..\packages\OctoPack.2.0.52\build\OctoPack.targets" Condition="Exists('..\packages\OctoPack.2.0.52\build\OctoPack.targets')" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>

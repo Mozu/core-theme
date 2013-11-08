@@ -97,9 +97,9 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.Register(c => new HyprTemplateManager(tm, c.Resolve<MozuVirtualPathProvider>())).As<ITemplateManager>().InstancePerLifetimeScope();
 
 
+
+            builder.RegisterType<CmsHelper>().InstancePerApiRequest();
             
-
-
             builder.RegisterType<NavigationRepository>().As<INavigationRepository>().InstancePerApiRequest();
 
             builder.RegisterType<NavigationGandalf>().InstancePerLifetimeScope().InstancePerApiRequest();

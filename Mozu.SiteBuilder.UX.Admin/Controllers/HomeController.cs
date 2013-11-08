@@ -63,10 +63,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         
         // GET: /Home/
-
         [HttpGet()]
-        public async Task<ActionResult> Index()
+        public async Task<HttpResponseMessage > Index()
         {
+            try
+            {
+                var res = await GetIndex();
+                return this.Request.CreateResponse(HttpStatusCode.OK, res);
+            }
+            catch (Exception ex)
+            {
+                var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
+                redir.Headers.Location = new System.Uri("/admin/auth/logout", UriKind.Relative);
+                return redir;
+            }
+        }
+
+       
+        async Task<ActionResult> GetIndex()
+        {
+
             var userDcTask = _adminUserWebApiClient.GetUser(_apiContext.UserClaims.UserId, UserScopeType.Tenant.ToString(), _apiContext.TenantId);
             var rolesTask = GetUserSitesRoles(_apiContext.UserClaims.UserId);
             var tenantTask = _tenantsWebApi.GetTenantInternal(  _apiContext.TenantId , false );

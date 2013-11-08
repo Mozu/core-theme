@@ -53,7 +53,11 @@ Ext.define('Taco.model.Capability', {
         { name: "licenseType", type: "string" },
         { name: "developerAccountName", type: "string" },
         { name: "effectivesStartDate", type: "date" },
-        { name: "effectiveEndDate", type: "date" }
+        { name: "effectiveEndDate", type: "date" },
+    
+        { name: 'supportedShoppingCountries', type: 'auto', defaultValue:[],persist :false },
+        { name: 'activeShoppingCountries', type: 'auto' }
+       
     ],
     proxy: {
         type: 'ajaxproxy',

@@ -1,6 +1,6 @@
-﻿/**
- * @class Taco.view.website.entityAdapters.ExternalLinkEntityAdapter
- */
+﻿///**
+// * @class Taco.view.website.entityAdapters.ExternalLinkEntityAdapter
+// */
 // Ext.define('Taco.view.website.entityAdapters.ExternalLinkEntityAdapter', {
 //     extend: 'Taco.view.website.entityAdapters.BaseEntityAdapter',
 //     modelName: 'Taco.model.Product',
