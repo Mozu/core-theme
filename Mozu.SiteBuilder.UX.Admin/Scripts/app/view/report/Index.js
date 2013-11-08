@@ -20,16 +20,17 @@ Ext.define('Taco.view.report.Index', {
     requiresContextOfType: 's',
     sidebar: null,
     constructor: function (conf) {
-        //this.mixins.browsable.constructor(conf);
-        //this.initBrowsable();
         this.callParent(arguments);
     },
 
-    createStoreFromReportDefinition: function (def) {
+    createStoreFromReportDefinition: function (def, criteria) {
         Ext.define('MyReader', {
             extend: 'Ext.data.reader.Json',
             alias: 'reader.report-json',
             read: function (object) {
+                // extract blah blah...
+                console.log('report obj', object);
+
                 var rep = this.callParent([object]);
                 window.rep = rep;
                 
@@ -57,24 +58,25 @@ Ext.define('Taco.view.report.Index', {
             proxy: {
                 type: 'ajax',
                 url: '/admin/app/report/readExt/' + def.key,
+                extraParams: criteria,
                 // TODO...
                 reader: {
-                    type: 'json',
+                    type: 'report-json',
                     root: 'items',
                     successProperty: 'success'
                 }
             }
         });
-        console.log('retrieving store', def.key, ' with fields', fields);
-        console.log(JSON.stringify(fields, null, 2));
-        window._store = store;
         return store;
     },
 
-    loadReport: function (record) {
+    loadReport: function (req) {
+
+
+
         this.body.removeAll();
-        var report = record.raw;
-        var store = this.createStoreFromReportDefinition(report);
+        var report = req.reportRecord.raw;
+        var store = this.createStoreFromReportDefinition(report, req.criteria);
         var cols = Ext.Array.map(report.availableFields, function (item) {
             return {
                 hidden: !(Ext.Array.contains(report.defaultFields, item.key) || report.defaultGroupBy==item.key),
@@ -83,10 +85,16 @@ Ext.define('Taco.view.report.Index', {
             };
         });
         cols[0].flex = 1;
+
         var newGrid = Ext.create('Ext.grid.Panel', {
-            title: record.get('name'),
+            title: req.reportRecord.get('name'),
             store: store,
-            columns: cols
+            columns: cols,
+            dockedItems: [
+                Ext.create('Taco.core.ux.grid.Pager', {
+                    store: store
+                })
+            ]
         });
         this.body.add(newGrid);
     },
@@ -96,6 +104,27 @@ Ext.define('Taco.view.report.Index', {
 
         me.header = {
             title: 'Reports for [TODO]'
+            //actions: [
+            //    {
+            //        xtype: 'splitbutton',
+            //        scale: 'medium',
+            //        text: 'Export Report',
+            //        plain: true,
+            //        shadow: false,
+            //        ui: 'action',
+            //        menu: {
+            //            plain: true,
+            //            shadow: false,
+            //            items: [{
+            //                text: 'My Account',
+            //                plain: true,
+            //                handler: function() {
+            //                    Taco.app.StateManager.attemptNavigate('account');
+            //                }
+            //            }, {}
+            //            ]}
+            //    }
+            //]
         };
 
         Ext.define('MyReader', {
@@ -144,14 +173,18 @@ Ext.define('Taco.view.report.Index', {
                 }
             });
 
-        this.sidebar = Ext.create('Taco.view.report.SidebarList', { store: me.sidebarStore });
-
-        this.sidebar.on('itemclick', function (cmp, record) {
-            var report = record && record.get('key');
-            if (report)
-                this.loadReport(record);
-        }, this);
-
+        this.sidebar = Ext.create('Taco.view.report.SidebarList', {
+            store: me.sidebarStore,
+            listeners: {
+                'runreport': function (req) {
+                    me.loadReport(req);
+                },
+                'downloadreport': function (req) {
+                    var def = req.reportRecord.raw;
+                    location.href = '/admin/app/report/download/' + def.key + '?' + Ext.urlEncode(req.criteria);
+                }
+            }
+        });
 
         Ext.apply(this.body, {
             layout: {
