@@ -6,7 +6,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     requires: [
         'Ext.MessageBox',
         'Taco.view.order.modal.ProductConfigurator',
-        'Taco.view.order.widget.ProductPickerField',
+        'Taco.shared.view.field.ProductPickerField',
         'Taco.view.order.widget.DiscountPickerField',
         'Taco.view.order.widget.DiscountRowBody',
         'Taco.core.ux.grid.Pager',
@@ -542,23 +542,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         var me = this,
             tbConfig;
 
-        
-        var store = Taco.core.data.StoreManager.getOrCreate({
-            type: 'Taco.store.Products',
-            pageSize: me.productsPerPage,
-            // note that clearSort is required to avoid having the sorters get cleared when the store is instantiated;
-            clearSort: false,
-            remoteSort: true,
-            sorters: [{
-                property: 'productName',
-                direction: 'ASC'
-            }],
-            autoLoad: true
-        });
-        
-        this.activeSearchField = Ext.create('Taco.view.order.widget.ProductPickerField', {
+        this.activeSearchField = Ext.create('Taco.shared.view.field.ProductPickerField', {
             fieldCls: "toolbar-field",
-            store: store,
             pageSize: me.productsPerPage,
             listeners: {
                 'specialkey':{

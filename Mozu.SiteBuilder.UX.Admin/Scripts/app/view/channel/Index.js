@@ -29,7 +29,6 @@ Ext.define('Taco.view.channel.Index', {
     
     store: { type: 'Taco.store.Channels' },
 
-   
     useTilePanel: false,
     //launchEditorOnClick: false,
     
@@ -77,12 +76,14 @@ Ext.define('Taco.view.channel.Index', {
             text: 'Name'
         }
     ],
-
+    
+        
     /*
     header: {
         actions:[]
     },
     */    
+    
 
     gridPanelConf: {
       

@@ -18,10 +18,17 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         useEditRecordsButton: false,
         launchEditorOnClick: true,
         header: null,
+        secondToolbarItems:null,
         
         // turns on the row editor behavior of the grid;  Create button will create new record and show the rowEditor;  click on the row will show the editor
         enableRowEditing: false,
         
+        // optional prevlidation check by subclass before showing the row editor. return false to cancel create;
+        beforeRowCreate: Ext.emptyFn,
+        
+        // optional prevlidation check by subclass before showing the row editor. return false to cancel update;
+        beforeRowUpdate : Ext.emptyFn,
+
         // subclass can specify what the data should be by default when doing a create via the rowEditor
         defaultRowEditingData: null,
 
@@ -250,9 +257,11 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
     },
 
-    createItemBrowser: function(conf) {
+    createItemBrowser: function (conf) {
+        
         this.itemBrowser = Ext.create('Taco.core.ux.browser.ItemBrowser', {
             itemStore: this.store,
+            secondToolbarItems: this.secondToolbarItems,
             options: this.options,
             itemType: this.token,
             typeName: this.typeName,
@@ -366,7 +375,12 @@ Ext.define('Taco.core.ux.browser.Browsable', {
     },
 
     onRowEditorUpdate: function(editor, context, opts) {
-        var record = context.record
+        var record = context.record;
+        
+        // check with the rowEditor to see if creation is allowed;
+        if (this.beforeRowUpdate(this.rowEditor, this.store) === false) {
+            return;
+        }
 
         record.save({
             success: function (record, operation) {
@@ -390,6 +404,11 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
     onRowEditorCreate : function() {
         this.rowEditor.cancelEdit();
+        
+        // check with the rowEditor to see if creation is allowed;
+        if (this.beforeRowCreate(this.rowEditor, this.store) === false) {
+            return;
+        }
 
         // Create a model instance
         var modelName = this.store.model.getName();

@@ -228,7 +228,7 @@ Ext.define('Taco.store.Navigation', {
             }, {
                 "id": "locations-inventory",
                 "label": "Inventory",
-                "address": "tbd/inventory"
+                "address": "locationInventory"
             }]
         }, {
             "id": "capability",

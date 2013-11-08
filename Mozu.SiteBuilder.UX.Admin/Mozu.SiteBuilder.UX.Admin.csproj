@@ -599,6 +599,7 @@
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\Capability.js" />
     <Content Include="Scripts\app\controller\Channels.js" />
+    <Content Include="Scripts\app\controller\LocationInventory.js" />
     <Content Include="Scripts\app\controller\SiteBuilder.js" />
     <Content Include="Scripts\app\controller\Website.js" />
     <Content Include="Scripts\app\controller\CustomerAttributes.js" />
@@ -640,6 +641,8 @@
     <Content Include="Scripts\app\overrides\window\MessageBox.js" />
     <Content Include="Scripts\app\overrides\window\Window.js" />
     <Content Include="Scripts\app\shared\view\field\Address.js" />
+    <Content Include="Scripts\app\shared\view\field\LocationPickerField.js" />
+    <Content Include="Scripts\app\shared\view\field\ProductPickerField.js" />
     <Content Include="Scripts\app\shared\view\modal\WishList.js" />
     <Content Include="Scripts\app\store\Capability.js" />
     <Content Include="Scripts\app\store\Channels.js" />
@@ -669,6 +672,7 @@
     <Content Include="Scripts\app\view\location\Edit.js" />
     <Content Include="Scripts\app\view\location\Form.js" />
     <Content Include="Scripts\app\view\location\Index.js" />
+    <Content Include="Scripts\app\view\location\inventory\Index.js" />
     <Content Include="Scripts\app\view\location\subform\Location.js" />
     <Content Include="Scripts\app\view\location\subform\StoreHours.js" />
     <Content Include="Scripts\app\view\orderAttribute\Edit.js" />
@@ -956,7 +960,7 @@
     <Content Include="Scripts\sass\src\view\order\widget\PaymentPanel.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\ProcessReturnPanel.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\ProductConfigurator.scss" />
-    <Content Include="Scripts\sass\src\view\order\widget\ProductPickerField.scss" />
+    <Content Include="Scripts\sass\src\shared\view\field\ProductPickerField.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\ShippingItemGrid.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\UnpackagedItems.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\form\field\Trigger.scss" />
@@ -1193,7 +1197,6 @@
     <Content Include="Scripts\app\view\order\widget\DiscountPickerField.js" />
     <Content Include="Scripts\app\view\order\widget\OrderItemGrid.js" />
     <Content Include="Scripts\app\view\order\widget\ProductConfigurator.js" />
-    <Content Include="Scripts\app\view\order\widget\ProductPickerField.js" />
     <Content Include="Scripts\app\view\order\widget\ShippingItemGrid.js" />
     <Content Include="Scripts\app\view\order\widget\OrderTotalPanel.js" />
     <Content Include="Scripts\app\view\order\widget\Package.js" />
