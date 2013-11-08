@@ -42,6 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.AdminName, op => op.MapFrom(x => x.AdminName))
                 .ForMember(x => x.Values, opt => opt.MapFrom(x => x.VocabularyValues))
                 .ForMember(x => x.Id, opt => opt.MapFrom(x => x.AttributeFQN))
+                .ForMember(x => x.AttributeId, opt => opt.MapFrom(x => x.Id))
                 .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Content.Value))
                 .ForMember(x=> x.IsActive , opt => opt.MapFrom(x=> x.IsActive ))
                 .ForMember(x => x.IsVisible, opt => opt.MapFrom(x => x.IsVisible))
@@ -182,6 +183,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     DisplayGroup = source.DisplayGroup ,
                     // code is only required at create time (when id is null).
                     AttributeCode = source.Id == null ? (source.Name ?? "").Trim() : null,
+                    Id = source.AttributeId,
                     Validation = attributeValidation,
                     VocabularyValues = Mapper.Map<List<DC.AttributeVocabularyValue>>(source.Values),
                     AttributeFQN = source.Id,

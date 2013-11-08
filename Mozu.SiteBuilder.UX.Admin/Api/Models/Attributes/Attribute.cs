@@ -12,6 +12,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
         [DataMember(Name = "id")]
         public string Id { get; set; }
 
+        [DataMember(Name = "attributeId")]
+        public int? AttributeId { get; set; }
+
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
