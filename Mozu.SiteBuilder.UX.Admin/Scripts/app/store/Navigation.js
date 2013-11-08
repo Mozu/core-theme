@@ -6,22 +6,19 @@ Ext.define('Taco.store.Navigation', {
     model: 'Taco.model.NavigationItem',
     autoLoad: true,
     filters:[{
-            filterFn: function (record) {
-                var ret = true;
-                if (record.raw.behaviorIds && record.raw.behaviorIds.length) {
-                    Ext.each(record.raw.behaviorIds, function (behaviorId) {
-                        if (Taco.User.behaviors && Taco.User.behaviors.indexOf(behaviorId) == -1) {
-                            ret = false;
-                            return false;
-                        }
-                        return true;
-                    });
-                }
-                return ret;
-                
+        filterFn: function (record) {
+            var ret = true;
+            if (record.raw.behaviorIds && record.raw.behaviorIds.length) {
+                Ext.each(record.raw.behaviorIds, function (behaviorId) {
+                    if (Taco.User.behaviors && Ext.Array.indexOf(Taco.User.behaviors, behaviorId) === -1) {
+                        return ret = false;
+                    }
+                    return true;
+                });
             }
+            return ret;
         }
-    ],
+    }],
     proxy: {
         type: 'memory',
         data:[{

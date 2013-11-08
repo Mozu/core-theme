@@ -10,7 +10,7 @@ Ext.define('Taco.controller.Message', {
 
     init: function () {
         var me = this;
-        // last resort event
+
         me.application.on({
             setmessage: me.setMessage,
             scope: me
@@ -34,8 +34,35 @@ Ext.define('Taco.controller.Message', {
         }, 300, me);
 
         me.callParent(arguments);
+
+        Taco.core.StateManager.on({
+            navigate: {
+                scope: this,
+                fn: 'destroyMessages'
+            }
+        });
     },
 
+    /**
+     * @private
+     *
+     * Close and destroy all message dialogs. This is used internally when a navigate
+     * event has been fired.
+     */
+    destroyMessages: function () {
+        this.messages.each(function (item) {
+            item.close();
+            this.messages.remove(item);
+        }, this);
+    },
+
+    /**
+     * Create a message dialog.
+     *
+     * @param {String} message The message text.
+     * @param {"success"/"info"/"warning"/"error"} type The message status type.
+     * @return {Taco.view.NotifierBar} The instantiated message dialog.
+     */
     setMessage: function (message, type) {
         var dialog;
 
@@ -45,8 +72,8 @@ Ext.define('Taco.controller.Message', {
             listeners: {
                 beforehide: {
                     scope: this,
-                    fn: function () {
-                        this.messages.removeAll();
+                    fn: function (cmp) {
+                        this.messages.remove(cmp);
                     }
                 }
             }
@@ -55,5 +82,7 @@ Ext.define('Taco.controller.Message', {
         this.messages.add(dialog);
 
         this.displayMessages();
+
+        return dialog;
     }
 });

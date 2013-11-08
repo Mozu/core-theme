@@ -33,7 +33,7 @@ Ext.define('Taco.core.Controller', {
 
                     requiredStoresLoading = true;
 
-                    if (options.loadingStores.indexOf(storeCfg) == -1) {
+                    if (Ext.Array.indexOf(options.loadingStores, storeCfg) === -1) {
 
                         options.loadingStores.push(storeCfg);
 
