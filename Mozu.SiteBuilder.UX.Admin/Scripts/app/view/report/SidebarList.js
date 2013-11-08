@@ -4,34 +4,6 @@
  * Shows report list along with report criteria
  */
 
-/*
-Ext.define('Taco.view.report.SidebarList', {
-    extend: 'Ext.view.View',
-    alias: 'widget.sidebarlist2',
-    cls: Taco.baseCSSPrefix + 'sidebarlist',
-
-    itemSelector: '.' + Taco.baseCSSPrefix + 'sidebarlist-list-item',
-    renderData: {
-        title: 'Report Type'
-    },
-    renderTpl: '<h2 class="' + Taco.baseCSSPrefix + 'sidebarlist-title">{title}</h1>{%this.renderContent(out,values)%}',
-    renderSelectors: {
-        titleEl: 'h2.' + Taco.baseCSSPrefix + 'sidebarlist-title',
-        listEl: 'ul.' + Taco.baseCSSPrefix + 'sidebarlist-list'
-    },
-    tpl: ['<ul class="' + Taco.baseCSSPrefix + 'sidebarlist-list">',
-          '<tpl for=".">',
-            '<li class="' + Taco.baseCSSPrefix + 'sidebarlist-list-item"><a href="javascript:;" class="' + Taco.baseCSSPrefix + 'sidebar-list-itemlink">{key}: {name}<!--{categoryName}--></a></li>',
-          '</tpl>',
-          '</ul>'
-    ],
-    initComponent: function () {
-        this.callParent(arguments);
-    }
-});
-*/
-
-
 Ext.define('Taco.view.report.SidebarList', {
     extend: 'Ext.container.Container',
     requires: [
@@ -44,21 +16,6 @@ Ext.define('Taco.view.report.SidebarList', {
     
     initComponent: function () {
         var me = this;
-//        me.reportSelector = Ext.create('Ext.view.View', {
-//            renderData: {
-//            },
-//            title: 'Report Type',
-//            store: me.store,
-//            tpl: new Ext.XTemplate(
-//   '<ul class="' + Taco.baseCSSPrefix + 'sidebarlist-list">',
-//                  '<tpl for=".">',
-//                    '<li class="' + Taco.baseCSSPrefix + 'sidebarlist-list-item"><a href="javascript:;" class="' + Taco.baseCSSPrefix + 'sidebar-list-itemlink">{key}: {name}<!--{categoryName}--></a></li>',
-//                  '</tpl>',
-//                  '</ul>'
-//),
-//            itemSelector: '.' + Taco.baseCSSPrefix + 'sidebarlist-list-item',
-//            emptyText: 'No reports available'
-//        });
 
         me.reportRadioGroup = Ext.create('Ext.form.RadioGroup', {
             allowBlank: false,

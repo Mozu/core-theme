@@ -104,27 +104,6 @@ Ext.define('Taco.view.report.Index', {
 
         me.header = {
             title: 'Reports for [TODO]'
-            //actions: [
-            //    {
-            //        xtype: 'splitbutton',
-            //        scale: 'medium',
-            //        text: 'Export Report',
-            //        plain: true,
-            //        shadow: false,
-            //        ui: 'action',
-            //        menu: {
-            //            plain: true,
-            //            shadow: false,
-            //            items: [{
-            //                text: 'My Account',
-            //                plain: true,
-            //                handler: function() {
-            //                    Taco.app.StateManager.attemptNavigate('account');
-            //                }
-            //            }, {}
-            //            ]}
-            //    }
-            //]
         };
 
         Ext.define('MyReader', {
