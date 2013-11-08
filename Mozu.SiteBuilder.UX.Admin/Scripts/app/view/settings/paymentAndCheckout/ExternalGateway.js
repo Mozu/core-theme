@@ -11,8 +11,8 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
     initComponent: function () {
         this.header = null;
         var externalGateway = Ext.clone(this.record.get('externalPaymentWorkflows'));
-        var credFieldDefs = this.externalPayment.get('Credentials');
-        var gatewayType = this.externalPayment.get('Name').toUpperCase();
+        var credFieldDefs = this.externalPayment.get('credentials');
+        var gatewayType = this.externalPayment.get('name').toUpperCase();
         var credOriginalValues = [];
         var isEnabled = true;
         
@@ -21,15 +21,15 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
         this.credValues = [];
         
         Ext.each(externalGateway, function (item) {
-            if (gatewayType == item['Name'].toUpperCase()) {
-                credOriginalValues = item['Credentials'];
-                isEnabled = item['IsEnabled'];
+            if (gatewayType == item['name'].toUpperCase()) {
+                credOriginalValues = item['credentials'];
+                isEnabled = item['isEnabled'];
             }
         });
 
         this.typeCheck = Ext.widget({
             xtype: 'checkbox',
-            fieldLabel: this.externalPayment.get('Name'),
+            fieldLabel: this.externalPayment.get('name'),
             checked: isEnabled,
             handler: this.onEnableChange,
             scope: this
@@ -45,15 +45,15 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
             var value = '';
             Ext.each(credOriginalValues, function (item) {
                 if (item.APIName == fieldDef.APIName) {
-                    value = item['Value'];
+                    value = item['value'];
                 }
             });
             
                 credField = Ext.widget(
                 {
                     xtype: 'textfield',
-                    fieldLabel: fieldDef.DisplayName,
-                    name: fieldDef.APIName,
+                    fieldLabel: fieldDef.displayName,
+                    name: fieldDef.apiname,
                     inputType: 'password',
                     value: value
                 });
@@ -87,9 +87,9 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
                 isDirty = true;
             }
 
-            val['DisplayName'] = field.getFieldLabel();
-            val['APIName'] = field.getName();
-            val['Value'] = field.getValue();
+            val['displayName'] = field.getFieldLabel();
+            val['apiName'] = field.getName();
+            val['value'] = field.getValue();
             creds.push(val);
         });
 
@@ -99,10 +99,10 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
 
         if (isDirty) {
             Ext.each(externalGateway, function (item) {
-                if (gatewayType == item['Name'].toUpperCase()) {
+                if (gatewayType == item['name'].toUpperCase()) {
                     
-                    item['Credentials'] = creds;
-                    item['IsEnabled'] = gatewayEnabled;
+                    item['credentials'] = creds;
+                    item['isEnabled'] = gatewayEnabled;
                 }
             });
         }
