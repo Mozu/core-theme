@@ -644,6 +644,7 @@
     <Content Include="Scripts\app\shared\view\field\Address.js" />
     <Content Include="Scripts\app\shared\view\field\LocationPickerField.js" />
     <Content Include="Scripts\app\shared\view\field\ProductPickerField.js" />
+    <Content Include="Scripts\app\shared\view\form\ExtensibleAttribute.js" />
     <Content Include="Scripts\app\shared\view\modal\WishList.js" />
     <Content Include="Scripts\app\store\Capability.js" />
     <Content Include="Scripts\app\store\Channels.js" />
@@ -662,7 +663,6 @@
     <Content Include="Scripts\app\view\customerAttribute\Form.js" />
     <Content Include="Scripts\app\view\customerAttribute\Index.js" />
     <Content Include="Scripts\app\view\customers\subform\BillingInformation.js" />
-    <Content Include="Scripts\app\view\customers\subform\CustomerAttribute.js" />
     <Content Include="Scripts\app\view\customers\subform\Information.js" />
     <Content Include="Scripts\app\view\customers\subform\Notes.js" />
     <Content Include="Scripts\app\view\customers\subform\OrderHistory.js" />
