@@ -6,10 +6,25 @@
 Ext.define('Taco.controller.Website', {
     extend: 'Taco.core.Controller',
     views: ['website.Index'],
-    
+    editorView :'website.Index',
     // modelName: 'Website'
     
 
+    page: function () {
+        var url = '';
+        Ext.Array.each(arguments, function (item) {
+            if (Ext.isString(item)) {
+                if (url.length) {
+                    url += "/";
+                }
+                url += item;
+            }
+        });
+        
+        this.ensureRequiredStores(function () {
+            this.buildIndex(null, { startUrl: url } );
+        });
+    },
 
     /************************************
     *  
@@ -18,13 +33,24 @@ Ext.define('Taco.controller.Website', {
     *
     *************************************/
     //returns a  store of widgetTypeDefinition
-    findWidgetTypeDefinitions: function (filter) {
+    findWidgetTypeDefinitions: function (filter, callback) {
 
-        var json = [];
-        Taco.core.data.StoreManager.getOrCreate("Taco.store.WidgetDefinitions").each(function (item) {
-            json.push(item.data);
-        });
-        return json;
+        var store = Taco.core.data.StoreManager.getOrCreate("Taco.store.WidgetDefinitions"),
+            cb = function () {
+                var json = [];
+                store.each(function (item) {
+                    json.push(item.data);
+                    callback(json);
+                });
+            };
 
+
+        if (store.hasCompletedLoading()) {
+            cb();
+        }
+        else {
+            store.on('load', cb, {single :true});
+        }
+        
     }
 });
