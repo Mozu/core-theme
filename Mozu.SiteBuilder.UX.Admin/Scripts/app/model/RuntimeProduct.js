@@ -174,7 +174,7 @@ Ext.define('Taco.model.RuntimeProduct', {
         "useNull": true
     },
     {
-        "name": "isoCurrencyCode",
+        "name": "currencyCode",
         "type": "string",
         "useNull": true
     },

@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 ActionName = "ApplyCheck",
                 
-                ISOCurrencyCode = "USD",
+                CurrencyCode = "USD",
                 CheckNumber = args.CheckNumber,
                 Amount = args.Amount
             };
@@ -75,7 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var action = new DCp.PaymentAction
             {
                 ActionName = "ApplyCheck",
-                ISOCurrencyCode = "USD",
+                CurrencyCode = "USD",
                 CheckNumber = args.CheckNumber
             };
 

@@ -72,7 +72,7 @@
 
         Price = ViewModelPrototype.extend({
             observables: {
-                ISOCurrencyCode: {},
+                CurrencyCode: {},
                 Cost: { numeric: 2 },
                 Price: { numeric: 2 }
             }
@@ -424,7 +424,7 @@
             hasMessages: true,
             statics: {
                 Id: "",
-                ISOCurrencyCode: "usd"
+                CurrencyCode: "usd"
             },
             submodels: {
                 FulfillmentInfo: FulfillmentInfo,
