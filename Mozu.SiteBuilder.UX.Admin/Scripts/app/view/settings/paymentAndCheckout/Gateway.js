@@ -43,7 +43,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
 
         Ext.Array.each(supportedCardsDef, function (card) {
             supportedCardsCbs.push(
-                { boxLabel: card.Value, name: 'cards', inputValue: card.Key, checked: supportedCards.indexOf(card.Key) > -1 }
+                { boxLabel: card.value, name: 'cards', inputValue: card.key, checked: supportedCards.indexOf(card.key) > -1 }
             );
         });
 
@@ -93,7 +93,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
            gateway['credentials'] = val;
            gateway['credentialsSet'] = true;
        }
-
+     
        gateway['supportedCards'] = me.supportedCardsCbg.getValue().cards;
         
         //update this when ever there is a reason to turn off a gateway.

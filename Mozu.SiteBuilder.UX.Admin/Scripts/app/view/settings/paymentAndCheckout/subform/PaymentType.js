@@ -80,14 +80,16 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
     initExternalGateway: function () {
         //runs this if it is loaded
         if (!this.externalGateWayDefinitionsStore.isLoading()) {
+            console.log(this.externalGateWayDefinitionsStore.isLoading());
             this.buildExternalGateway();
         }
         //runs this if it hasn't loaded
         this.externalGateWayDefinitionsStore.addListener('load', this.buildExternalGateway, this);
 
     },
-    buildExternalGateway: function() {
+    buildExternalGateway: function () {
         var me = this.externalGateWayDefinitionsStore;
+        console.log(this.externalGateWayDefinitionsStore);
         me.each(function (externalPayment) {
             var panel = Ext.create('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
                 record: this.record,
