@@ -257,16 +257,9 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             get
             {
-                var coreThemeDir = _settings.AppSettings("coretheme_directory");
-                if (string.IsNullOrWhiteSpace(coreThemeDir))
-                {
-                    return  Path.GetFullPath(new DirectoryInfo(HttpRuntime.AppDomainAppPath).Parent.FullName + "/Mozu.SiteBuilder.UX.Themes/addons/");
-                }
-                else
-                {
-                    return Path.GetFullPath(HostingEnvironment.MapPath(coreThemeDir) + "../addons/");
-                    
-                }
+                return  Path.GetDirectoryName( LocalThemePath)+"/addons/";
+                
+              
              
             }
         }

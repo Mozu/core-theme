@@ -27,6 +27,11 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
         private ILifetimeScope LifetimeScope { get; set; }
         public override MediaTypeFormatter GetPerRequestFormatterInstance(Type type, System.Net.Http.HttpRequestMessage request, MediaTypeHeaderValue mediaType)
         {
+            var apiContext = request.Resolve<ISiteBuilderApiContext>();
+            if (apiContext.SiteId == null && type.IsAssignableTo<IHyprViewResult>())
+            {
+                return System.Web.Http.GlobalConfiguration.Configuration.Formatters.JsonFormatter;
+            }
             if (this.CanWriteType(type))
             {
                 var formatter = (HtmlActionResultMediaTypeFormatter)this.MemberwiseClone();
@@ -45,6 +50,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 
             if (vrb != null && vrb is IHyprViewResult)
             {
+                
                 var viewEngine = this.RequestMessage.Resolve<HyprViewEngine>();
                 var view = viewEngine.FindPageView(vrb.ViewName);
                 var hvc = new HyprViewContext(this.RequestMessage, vrb.ViewData, null);
