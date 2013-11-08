@@ -167,7 +167,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                     }
                     foreach (var dir in _themeMetaDataProvider.AddonPaths)
                     {
-                        _watchers.Add(CreateWatcher(dir));      
+                        if (System.IO.Directory.Exists(dir))
+                        {
+                            _watchers.Add(CreateWatcher(dir));          
+                        }
+                        
                     }
                 }
             }
@@ -182,6 +186,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         private FileSystemWatcher CreateWatcher(string path)
         {
+           
             var watcher = new FileSystemWatcher(path)
             {
                 IncludeSubdirectories = true,
