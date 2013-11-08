@@ -115,7 +115,7 @@ Ext.define('Taco.view.website.Index', {
                 items: [{
                     itemId:'iframe',
                     xtype: 'uxiframe',
-                    src: '/widgettest?iseditmode=true'
+                    src: '/_gosite/'+ Taco.app.context.getSiteId()+ '?redir=' + encodeURIComponent ('/widgettest?iseditmode=true')
                 }]
             }, {
                 xtype: 'panel',
@@ -219,7 +219,7 @@ Ext.define('Taco.view.website.Index', {
         return this.iframe.getWin().require.mozuData('pagecontext');
     },
     onPageLoad: function (editor) {
-        var pc = getPageSettings();
+        var pc = this.getPageSettings();
     },
     onWidgetDrop:function (config) {
         
