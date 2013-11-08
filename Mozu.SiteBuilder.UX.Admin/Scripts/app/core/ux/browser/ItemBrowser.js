@@ -13,6 +13,9 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
     // bodyPadding: '12 0 0 0',
     useGridPanel: true,
     useTilePanel: false,
+    
+    // array of toolbar items to be added to ths second toolbar below the search toolbar;
+    secondToolbarItems : null,
 
     createItemStore: function() {
         this.itemStore = this.itemStore || Ext.data.StoreManager.lookup(this.itemStoreId);
@@ -174,6 +177,11 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
             }, '->', me.createExpanderCollapser());
         }
         
+        if (this.secondToolbarItems && this.secondToolbarItems.length > 0) {
+            var tbItems = this.secondToolbarItems.concat(conf.items);
+            conf.items = tbItems;
+        }
+        
         me.secondToolbar = conf.items.length > 0 ? Ext.widget('toolbar', conf) : null;
 
         return me.secondToolbar;
@@ -189,7 +197,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
 
     initComponent: function () {
         var me = this;
-
+        
         if (!me.dockedItems || me.dockedItems.length === 0) me.dockedItems = [me.createTopToolbar(), me.createSecondToolbar()];
 
         me.createItemStore().on({

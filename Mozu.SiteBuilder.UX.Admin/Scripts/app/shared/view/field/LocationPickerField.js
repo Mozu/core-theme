@@ -1,8 +1,9 @@
 ﻿/**
- * @class Taco.view.order.widget.ProductPickerField
+ * @class Taco.shared.view.field.LocationPickerField
  */
-Ext.define('Taco.view.order.widget.ProductPickerField', {
+Ext.define('Taco.shared.view.field.LocationPickerField', {
     extend: 'Ext.form.field.ComboBox',
+    alias: 'widget.taco-Locationpickerfield',
     requires: [
         
     ],
@@ -11,20 +12,20 @@ Ext.define('Taco.view.order.widget.ProductPickerField', {
     
     },
     
+    //itemsPerPage: 30,
     displayField: 'name',
     hideLabel: true,
     hideTrigger: false,
     emptyText: "Search",
     selectOnFocus: true,
     flex: 1,
-    //height: 24,
     listConfig: {
         loadingText: 'Searching...',
-        cls : "product-picker-menu",
-        emptyText: 'No matching products found.',
+        //cls : "location-picker-menu",
+        emptyText: 'No matching locations found.',
         // Custom rendering template for each item
         getInnerTpl: function () {
-            return "<span class='product-name'>{productName}</span> <span class='product-code'>{productCode}</span>"
+            return "<span class='name'>{name}</span> <span class='code'>{code}</span>"
         },
 
         // this is an override that hides the paging toolbar when the list only contains a single page of results;
@@ -33,7 +34,6 @@ Ext.define('Taco.view.order.widget.ProductPickerField', {
                 toolbar = me.pagingToolbar;
 
             Ext.view.View.prototype.refresh.call(me);
-
             if (me.rendered && toolbar && toolbar.rendered && !me.preserveScrollOnRefresh) {
                 me.el.appendChild(toolbar.el);
                 if (me.getStore().getTotalCount() <= me.pageSize) me.el.last().hide();
@@ -41,6 +41,7 @@ Ext.define('Taco.view.order.widget.ProductPickerField', {
             }
         }
     },
+    
     pageSize: 30,
 
     // querystring parameter name that contains the search filter data;
@@ -49,8 +50,6 @@ Ext.define('Taco.view.order.widget.ProductPickerField', {
     // default filter parameter used to get the full list
     allQuery: "",
     
-    
-
     // modify the format of the query data to fit the service filtering pattern.
     formatQuery: function (queryEvent, e) {
         // need to format the search text from the combobox into a filter structure the service wants;
@@ -64,15 +63,29 @@ Ext.define('Taco.view.order.widget.ProductPickerField', {
             queryEvent.forceAll = false;
             queryEvent.query = '[{ "property": "all", "value": "' + queryText + '" }]'
         }
-        
-
-//        queryEvent.combo.getStore().load();
 
         return true;
     },
     
     initComponent: function(eOpts) {
         var me = this;
+        
+        
+        if (!me.store) {
+            me.store = Taco.core.data.StoreManager.getOrCreate({
+                type: 'Taco.store.Locations',
+                pageSize: me.pageSize,
+                // note that clearSort is required to avoid having the sorters get cleared when the store is instantiated;
+                clearSort: false,
+                remoteSort: true,
+                sorters: [{
+                    property: 'name',
+                    direction: 'ASC'
+                }],
+                autoLoad: true
+            });
+        }
+
         me.on('beforequery', this.formatQuery, this);
         me.callParent(arguments);
     }
