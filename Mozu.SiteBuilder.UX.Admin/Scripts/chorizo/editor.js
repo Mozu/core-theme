@@ -89,14 +89,33 @@
 
         drop: function() {
             var target = this._hintTarget,
-                quadrant = this._hintQuadrant;
+                quadrant = this._hintQuadrant,
+                widgetCfg = this.widgetCfg;
 
             this.stopDrag();
 
+
             // Make sure there is a target and a quadrant
             if (target && quadrant && target.insert) {
-                target.insert(quadrant, this.widgetCfg);
+
+                // Moving an existing widget
+                if (this.widgetCfg.block) {
+                    target.insert(quadrant, widgetCfg);
+                } else {
+                    // Dropping an new widget
+                    this.fireEvent('widgetdrop', {
+                        editor: this,
+                        widgetTypeId: widgetCfg.typeId,
+                        callback: function(html, data) {
+                            widgetCfg.html = html;
+                            widgetCfg.data = data;
+                            target.insert(quadrant, widgetCfg);
+                        }
+                    });
+                }
+
             }
+
 
             this._hintQuadrant = null;
             this._hintTarget = null;
