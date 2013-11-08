@@ -1,13 +1,18 @@
-Ext.define('Taco.view.customers.subform.CustomerAttribute', {
-    extend: 'Taco.view.customers.subform.Subform',
+Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.taco.extensibleattribute.subform',
     requires: ['Taco.model.ExtensibleAttributeValue'],
-    title: 'Customer Attribute',
-    cls: Taco.baseCSSPrefix + 'customer-notes',
+    width: 960,
+    ui: 'subform',
+    bodyPadding: '19 0',
+    margin: '0 0 20 0',
+    cls: Taco.baseCSSPrefix + 'extensibleattributes',
 
     initComponent: function () {
-        this.attrs = [],
+        this.attrs = [];
 
-        this.attributeDefinitionStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerAttributes');
+        if (!this.attributeDefinitionStore)
+            throw "Configuration problem: there was no attributeDefinitionStore provided to this subform.";
 
         this.items = [ this.getLoadingComponent() ];
 
@@ -18,7 +23,7 @@ Ext.define('Taco.view.customers.subform.CustomerAttribute', {
         } else {
             this.loadAttributes();
         }
-    },
+    }, 
 
     loadAttributes: function () {
         var items = [];
@@ -27,8 +32,8 @@ Ext.define('Taco.view.customers.subform.CustomerAttribute', {
         
         if (!this.attributeDefinitions) return;
 
-        Ext.Array.each(this.attributeDefinitions, function (custAttributeDefinition) {
-            items.push(this.buildContainer(custAttributeDefinition));
+        Ext.Array.each(this.attributeDefinitions, function (attributeDefinition) {
+            items.push(this.buildContainer(attributeDefinition));
         }, this);
 
         if (!items.length) items.push(this.getEmptyComponent());
@@ -40,14 +45,14 @@ Ext.define('Taco.view.customers.subform.CustomerAttribute', {
     getLoadingComponent: function () {
         return {
             xtype: 'component',
-            html: 'Loading customer attribute definitions..'
+            html: 'Loading attribute definitions..'
         };
     },
 
     getEmptyComponent: function () {
         return {
             xtype: 'component',
-            html: 'You don\'t have any customer attributes defined.'
+            html: 'You don\'t have any attributes defined.'
         };
     },
 
@@ -79,10 +84,10 @@ Ext.define('Taco.view.customers.subform.CustomerAttribute', {
         items = [
             {
                 xtype: 'container',
-                cls: 'extra-header',
+                cls: 'attribute-header',
                 items: [{
                     xtype: 'component',
-                    cls: 'extra-attribute',
+                    cls: 'attribute',
                     html: attributeDefinition.get('name')
                 }]
             }, 
@@ -96,18 +101,18 @@ Ext.define('Taco.view.customers.subform.CustomerAttribute', {
         });
     },
 
-    buildEditor: function (ptAttribute, extra, pExtra) {
+    buildEditor: function (attributeDefinition, attr, attrValue) {
         return {
             xtype: 'label',
             text: 'popsicles.'
         };
     },
 
-    findAttribute: function (custAttribute) {
-        return this.record.getAttributes().findRecord('attributeFQN', custAttribute.get('attributeFQN'));
+    findAttribute: function (attributeDefinition) {
+        return this.record.getAttributes().findRecord('attributeFQN', attributeDefinition.get('attributeFQN'));
     },
 
-    getFieldName: function (custAttribute) {
-        return 'customer-attribute-' + custAttribute.getId();
+    getFieldName: function (attributeDefinition) {
+        return 'attribute-' + attributeDefinition.getId();
     }
 });

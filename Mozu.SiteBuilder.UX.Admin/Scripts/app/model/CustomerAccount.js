@@ -96,7 +96,6 @@ Ext.define('Taco.model.CustomerAccount', {
             associationKey: 'attributes',
             foreignProperty: 'account'
         });
-
     },
 
     proxy: {

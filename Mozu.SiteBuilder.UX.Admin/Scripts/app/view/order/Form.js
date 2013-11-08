@@ -14,7 +14,8 @@ Ext.define('Taco.view.order.Form', {
         'Taco.view.order.subform.Detail',
         'Taco.view.order.subform.Payment',
         'Taco.view.order.subform.Shipping',
-        'Taco.view.order.subform.Return'
+        'Taco.view.order.subform.Return',
+        'Taco.shared.view.form.ExtensibleAttribute'
     ],
 
     model: 'Taco.model.Order',
@@ -133,6 +134,12 @@ Ext.define('Taco.view.order.Form', {
             items.push(Ext.create('Taco.view.order.subform.Shipping', subformCfg));
             items.push(Ext.create('Taco.view.order.subform.Return', subformCfg)); 
         }
+
+        items.push(Ext.create('Taco.shared.view.form.ExtensibleAttribute', {
+            title: 'Order Attributes',
+            record: this.record,
+            attributeDefinitionStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.OrderAttributes')
+        }));
 
         this.items = items;
 

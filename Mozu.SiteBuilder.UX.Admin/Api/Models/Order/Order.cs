@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
+using DC = Mozu.CommerceRuntime.Contracts.Orders;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
@@ -44,6 +45,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         [DataMember(Name = "ipAddress")]
         public string IpAddress { get; set; }
+
+        /// <summary>
+        /// List of attributes assigned to the order.
+        /// </summary>
+        [DataMember(Name = "attributes")]
+        public List<DC.OrderAttribute> Attributes { get; set; }
+
 
         [DataMember(Name = "items")]
         public List<OrderItem> Items { get; set; }

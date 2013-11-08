@@ -118,6 +118,11 @@ Ext.define('Taco.model.Order', {
             "useNull": true
         },
         {
+            name: 'attributes',
+            type: 'auto',
+            defaultValue: []
+        }, 
+        {
             "name": "items",
             "type": "auto",
             "useNull": true
@@ -351,7 +356,13 @@ Ext.define('Taco.model.Order', {
     ],
     
 
-
+    getAttributes: function () {
+        return this.getOrCreateHasManyStore({
+            model: 'Taco.model.ExtensibleAttributeValue',
+            associationKey: 'attributes',
+            foreignProperty: 'account'
+        });
+    },
     
     /*
     getPayments: function () {

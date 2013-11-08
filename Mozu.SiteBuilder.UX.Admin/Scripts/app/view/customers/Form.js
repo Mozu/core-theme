@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.customers.Form', {
     extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.store.CustomerTags', 'Taco.view.order.Index','Taco.view.customers.subform.CustomerAttribute'],
+    requires: ['Taco.store.CustomerTags', 'Taco.view.order.Index','Taco.shared.view.form.ExtensibleAttribute'],
     // enableStoreSyncTasks:true,
     initComponent: function () {
         var data = this.record.getData(),
@@ -54,8 +54,10 @@ Ext.define('Taco.view.customers.Form', {
             tagStore: this.tagStore
         });
 
-        me.customerAttribute = Ext.create('Taco.view.customers.subform.CustomerAttribute', {
-            record: this.record
+        me.customerAttribute = Ext.create('Taco.shared.view.form.ExtensibleAttribute', {
+            title: 'Customer Attributes',
+            record: this.record,
+            attributeDefinitionStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerAttributes')
         });
 
         this.items = [
