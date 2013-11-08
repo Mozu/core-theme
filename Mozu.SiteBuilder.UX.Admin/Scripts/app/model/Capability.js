@@ -46,6 +46,7 @@ Ext.define('Taco.model.Capability', {
             "name": "capabilityMode", 
             "type": "string"
         },
+        { name: "scopeId", type: "int" },
         { name: "scopeType", type: "string" },
         { name: "initialized", type: "boolean" },
         { name: "enabled", type: "boolean" },
@@ -55,7 +56,12 @@ Ext.define('Taco.model.Capability', {
         { name: "effectivesStartDate", type: "date" },
         { name: "effectiveEndDate", type: "date" },
     
-        { name: 'supportedShoppingCountries', type: 'auto', defaultValue:[],persist :false },
+        {
+            name: 'supportedShoppingCountries', type: 'auto', defaultValue: [], persist: false,
+            convert: function (v, record) {
+                return Ext.Array.pluck(v || [], 'value');
+            }
+        },
         { name: 'activeShoppingCountries', type: 'auto' }
        
     ],
@@ -63,7 +69,7 @@ Ext.define('Taco.model.Capability', {
         type: 'ajaxproxy',
         api: {
             read: '/admin/app/capabilities/list',
-            update: '/admin/app/capabilities/edit',
+            update: '/admin/app/capabilities/edit'
             
         },
         reader: {

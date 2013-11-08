@@ -24,6 +24,14 @@ Ext.define('Taco.view.capability.Form', {
     updateForm: function () {
         this.templateLeft.update(this.record);
         this.templateRight.update(this.record);
+        //Leaving the hide/show code here incase we need to do this later.......
+        /*
+        if (this.record.get('initialized')) {
+            this.shippingCountry.show();
+        } else {
+          this.shippingCountry.hide();  
+        }
+        */
     },
     buildFormComponents: function () {
         var me = this,
@@ -47,26 +55,6 @@ Ext.define('Taco.view.capability.Form', {
             scope: this
         });
         
-        //This is a test btn and will be removed //////////////////////////
-        me.initBtn = Ext.create('Ext.button.Button', {
-            text: data.get('initialized') ? 'No init App' : 'init App',
-            ui: 'action-toggle',
-            scale: 'medium',
-            enableToggle: true,
-            toggleHandler: function (btn, state) {
-                btn.setText(state ? 'No init App' : 'init App');
-                this.record.set('initialized', state);
-                console.log(this.record.get('initialized'));
-                this.record.save({
-                    callback: function (records, operation, success) {
-                        this.record.reload();
-                    },
-                    scope: this
-                });
-            },
-            scope: this
-        });
-        /////////////////////////////////////////////////////////////////
         if (data.get('enabled')) {
             me.enableBtn.toggle();
         }
@@ -96,7 +84,6 @@ Ext.define('Taco.view.capability.Form', {
                 layout: 'hbox',
                 items: [
                     me.enableBtn,
-                    me.initBtn,
                     me.templateLeft,
                     me.templateRight
                 ]
@@ -144,11 +131,42 @@ Ext.define('Taco.view.capability.Form', {
                 }]
             }
         );
-        
+
+        me.shippingCountry = Ext.widget( {
+            xtype: 'multiselect',
+          //  hidden: !data.get('initialized'),
+            msgTarget: 'side',
+            fieldLabel: 'Shipping Country',
+            name: 'activeShoppingCountries',
+            store: data.get('supportedShoppingCountries'),
+            valueField: 'value',
+            displayField: 'value',
+            value: data.get('activeShoppingCountries'),
+            ddReorder: true,
+            listeners: {
+                change: {
+                    fn: function () {
+                        this.record.set('activeShoppingCountries', this.shippingCountry.getValue());
+                        this.record.save({
+                            callback: function (records, operation, success) {
+                                this.record.reload();
+                            },
+                            scope: this
+                        });
+                    },
+                    delay: 500,
+                    scope: this
+                }
+            },
+            scope: this
+        });
+
         me.items = [
             me.infoPanel,
             me.contactIframe,
-            me.configPanel];
+            me.configPanel,
+            me.shippingCountry
+        ];
 
     }
 });
