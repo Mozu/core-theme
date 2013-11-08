@@ -1,29 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-
-using AutoMapper;
-using Mozu.AdminUser.Contracts;
 using Mozu.Core;
 using Mozu.Core.Logging;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
-using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Controllers;
-using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Security;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Api;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
-using Mozu.SiteBuilder.UX.Models.Admin;
-using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
@@ -99,18 +86,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
       
 
-        //public bool  DeleteRole(int siteId, int roleId)
-        //{
-        //    _rolesHelper.RemoveRoleFromSite(siteId, roleId);
-        //    return true;
-        //}
-          [HttpGet]
+        [HttpGet]
         public HttpResponseMessage  Launchpad()
           {
               var redir = _settings.LoginPath;
             if (_settings.AppSettings("useTenantDomainNames") != "true")
             {
-                redir += "?postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
+                redir += "?postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants&scopeType=tenant";
             }
             
 
@@ -132,7 +114,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var redir = _settings.LoginPath + "/home/Logout";
             if (_settings.AppSettings("ReverseProxy") != "true")
             {
-                redir += "?PostbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
+                redir += "?PostbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants&scopeType=tenant";
             }
             var resp = new HttpResponseMessage(HttpStatusCode.Redirect );
             resp.Headers.Location = new Uri(redir);
