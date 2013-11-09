@@ -1,5 +1,6 @@
 Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
-    extend: 'Ext.panel.Panel',
+    ///extend: 'Ext.panel.Panel',
+    extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco.extensibleattribute.subform',
     requires: ['Taco.model.ExtensibleAttributeValue'],
     width: 960,
@@ -186,34 +187,18 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
         return 'attribute-' + attributeDefinition.getId();
     },
     beforeSave: function () {
-        var form = this.getForm();
-        
-        /*
-        if (this.productType == null) {
-            return;
-        }
-        
         var form = this.getForm(),
-            properties = this.product.getProperties();
+            fields = form.getFields(),
+            attrs = [];
+        Ext.each(fields.items, function (field) {
+            var val = {};
+            val['attributeDefinitionId'] = '';
+            val['fullyQualifiedName'] = field.getName();
+            val['id'] = '';
+            val['values'] = field.getValue();
+            attrs.push(val);
+        });
 
-        this.productTypeProperties.each(function (record) {
-
-            var fieldName = this.getFieldName(record),
-                values = null,
-                field = form.findField(fieldName),
-                pRecord = properties.getById(record.getId());
-            if (field) {
-                values = field.getValue();
-                if (!Ext.isArray(values)) {
-                    values = [values];
-                }
-                if (!pRecord) {
-                    pRecord = properties.add({ attributeFQN: record.getId() })[0];
-                }
-                pRecord.set('values', values);
-            }
-
-        }, this);
-        */
+        this.record.set('attributes', attrs);
     }
 });
