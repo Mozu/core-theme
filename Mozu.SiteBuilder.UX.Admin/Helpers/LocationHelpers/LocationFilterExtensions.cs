@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationHelpers
 
 
         /// <summary>
-        /// Converts a FilterCollection for Channel to a mozu services-compatible filter string.
+        /// Converts a FilterCollection for Location to a mozu services-compatible filter string.
         /// </summary>
         public static string ToFilterString(this FilterCollection extFilter, bool? withVariations = null)
         {

@@ -8,9 +8,9 @@ Ext.define('Taco.controller.LocationInventory', {
     requires: [
         'Taco.view.location.inventory.Index'
     ],
-    models: ['Taco.model.InventoryProduct'],
-    stores: ['Taco.store.InventoryProducts'],
+    models: ['Taco.model.LocationInventory'],
+    stores: ['Taco.store.LocationInventories'],
     views: ['location.inventory.Index'],
-    modelName: 'InventoryProduct',
+    modelName: 'LocationInventory',
     indexView: 'Taco.view.location.inventory.Index'
 });

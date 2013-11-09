@@ -7,8 +7,8 @@ Ext.define('Taco.view.location.inventory.Index', {
     requires: [
         'Taco.shared.view.field.ProductPickerField',
         'Taco.shared.view.field.LocationPickerField',
-        'Taco.model.InventoryProduct',
-        'Taco.store.InventoryProducts'
+        'Taco.model.LocationInventory',
+        'Taco.store.LocationInventories'
     ],
 
     // used by create button
@@ -34,9 +34,9 @@ Ext.define('Taco.view.location.inventory.Index', {
         return true;
     },
     
-    modelName: 'Taco.model.InventoryProduct',
+    modelName: 'Taco.model.LocationInventory',
     
-    store: { type: 'Taco.store.InventoryProducts' },
+    store: { type: 'Taco.store.LocationInventories' },
        
     useTilePanel: false,
     
@@ -60,7 +60,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                             gridPanel = itemBrowser.gridPanel,
                             store = gridPanel.store;
                         
-                        store.clearFilter();
+                        store.clearFilter(true);
                         store.filter({ property: 'locationCode', value: record.get('code') });
                     }
                 }
@@ -160,7 +160,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                 msgTarget: "qtip",
                 allowBlank: true,
                 onEditorShow: function (field, editor, context) {
-                    // need to add the locationCode to the inventoryProduct;
+                    // need to add the locationCode to the locationInventory;
                     var filters = editor.grid.store.filters,
                         locationCode = null,
                         locationFilter = filters.findBy(function (item, index) {

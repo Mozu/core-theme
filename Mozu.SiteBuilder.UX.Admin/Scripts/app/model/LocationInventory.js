@@ -1,10 +1,8 @@
 ﻿/**
-* @class Taco.model.InventoryProduct
-* @author Jimmy Sanford
-* A product or product variation with manageable inventory.
+* @class Taco.model.LocationInventory
 */
 
-Ext.define('Taco.model.InventoryProduct', {
+Ext.define('Taco.model.LocationInventory', {
     extend: 'Taco.core.data.Model',
     requires: ['Taco.core.data.AjaxProxy'],
     fields: [{
@@ -74,11 +72,11 @@ Ext.define('Taco.model.InventoryProduct', {
     proxy: {
         type: 'ajax',
         api: {
-            read: '/admin/Scripts/app/mocks/InventoryProducts.json',
-           // read: '/admin/app/inventoryProduct/list',
-            create: '/admin/app/inventoryProduct/create',
-            update: '/admin/app/inventoryProduct/edit',
-            destroy: '/admin/app/inventoryProduct/delete'
+            //read: '/admin/Scripts/app/mocks/InventoryProducts.json',
+            read: '/admin/app/LocationInventory/list',
+            create: '/admin/app/LocationInventory/create',
+            update: '/admin/app/LocationInventory/edit',
+            destroy: '/admin/app/LocationInventory/delete'
         },
         reader: {
             type: 'json',
