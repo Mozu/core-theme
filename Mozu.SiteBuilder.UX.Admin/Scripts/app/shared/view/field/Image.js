@@ -54,11 +54,11 @@ Ext.define('Taco.shared.view.field.Image', {
         field: 'Ext.form.field.Field',
         uploadable: 'Taco.shared.util.Uploadable'
     },
-    alias: 'widget.taco.imagefield',
+    alias: ['widget.taco.imagefield'],
     labelAlign: 'top',
     labelSeparator: '',
     cls: 'taco-image-field',
-
+    allowMulti: true,
     thumbnailSize: 150,
     
     initComponent: function () {
@@ -442,6 +442,17 @@ Ext.define('Taco.shared.view.field.Image', {
         this.selectedImages.loadData(value);
 
         return this.onSelectedImagesDataChanged();
+    },
+    
+    getValue:function () {
+        var val = this.mixins.field.getValue.apply(this, arguments);
+        if (this.allowMulti === false) {
+            if (Ext.isEmpty(val)) {
+                return null;
+            }
+            return val[0];
+        }
+        return val;
     },
 
     onAssociatorSave: function (associator, selectedRecords) {

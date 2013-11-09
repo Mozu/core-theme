@@ -203,7 +203,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                             if (isContent)
                             {
 
-                                sb.Append((string) widget.Config["body"]);
+                                sb.Append((string)((Newtonsoft.Json.Linq.JObject ) widget.Config)["body"]);
                             }
                             else
                             {

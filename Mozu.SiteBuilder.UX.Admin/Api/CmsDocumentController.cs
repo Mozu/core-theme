@@ -105,7 +105,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var zoneSerilized = Newtonsoft.Json.JsonConvert.SerializeObject(zones);
             doc.Set("widgets", zoneSerilized);
 
-            if (doc.InsertDate != null )
+            if (exitst)
             {
                 doc = (await _cmsService.Update2(doc)).ReadAsSync();
             }

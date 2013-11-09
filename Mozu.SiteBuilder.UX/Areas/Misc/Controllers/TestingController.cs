@@ -63,7 +63,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 Page = new DocumentRequest()
                 {
                     Path = "widgettest",
-                    Collection = "pages"
+                    Collection = "pages",
+                    DocumentType = "web_page"
                 }
 
             };
