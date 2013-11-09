@@ -7,7 +7,7 @@
  	allowedActions:{copy:false,preview:true,destroy:false},
      modelName: 'Taco.model.Product',
      getStore: function () {
-         return this.editor.products;
+         return Taco.core.data.StoreManager.getOrCreate('Taco.store.Products');
      },
 
      isHidden: function () {
@@ -18,7 +18,7 @@
      },
 
      getId: function () {
-         return this.pageProps.pageContext.productCode;
+         return this.pageContext.productCode;
      },
 
      doFormView: function () {
