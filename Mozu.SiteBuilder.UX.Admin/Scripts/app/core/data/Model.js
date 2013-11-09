@@ -113,7 +113,7 @@ Ext.define('Taco.core.data.Model', {
             associationKey = config.associationKey,
             foreignKey = config.foreignKey || null,
             modelClass = Ext.ModelManager.getModel(model),
-            data = this.get(associationKey) | [],
+            data = this.get(associationKey) || [],
             foreignProperty = config.foreignProperty || this.model;
 
         this.hasManyStores = this.hasManyStores || {};
