@@ -2,20 +2,18 @@
 using Mozu.Reporting.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [WebApi("app/report", SuppressDescriptorGeneration = true)]
     public class ReportController : BaseController
     {
-
         private readonly IReportWebApiClient _reportWebApiClient;
         private readonly IReportDefinitionWebApiClient _reportDefinitionWebApiClient;
 
@@ -44,37 +42,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "read/{name}")]
-        public async Task<HttpResponseMessage> Read([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string name)
+        public async Task<HttpResponseMessage> Read([FromUri]PagingParamaters pagingParams, [FromUri]string filter, [FromUri] string groupBy, string name)
         {
-            var filter = this.HttpContext.Request.QueryString["filter"];
-            var groupBy = this.HttpContext.Request.QueryString["groupBy"];
-            var resp = (await _reportWebApiClient.GetReport(name, pagingParams.startIndex, pagingParams.pageSize, null, filter, groupBy)).ReadAsSync();
+            var serviceResponse = (await _reportWebApiClient.GetReport(name, pagingParams.startIndex, pagingParams.pageSize, null, filter, groupBy)).ReadAsSync();
+            var rows = extractReportRows(serviceResponse);
 
-//            resp.Report.GrandTotals[0].Column
-//            resp.Report.GrandTotals[0].Value
-
-            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp), new System.Net.Http.Formatting.JsonMediaTypeFormatter());
-        }
-
-        [HttpGetRoute(UriTemplate = "readExt/{name}")]
-        public async Task<HttpResponseMessage> ReadExt([FromUri]PagingParamaters pagingParams, string name)
-        {
-            var filter = this.HttpContext.Request.QueryString["filter"];
-            var groupBy = this.HttpContext.Request.QueryString["groupBy"];
-            var resp = (await _reportWebApiClient.GetReport(name, pagingParams.startIndex, pagingParams.pageSize, null, filter, groupBy)).ReadAsSync();
-            var rows = extractReportRows(resp);
-
-            // todo: return grandTotals
-
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2(rows.ToList(), total: (int)resp.TotalCount), new System.Net.Http.Formatting.JsonMediaTypeFormatter());
+            // return rows with meta data
+            var resp = List2(rows.ToList(), serviceResponse.Report.GrandTotals, total: (int)serviceResponse.TotalCount);
+            return this.Request.CreateResponse(HttpStatusCode.OK, resp, new System.Net.Http.Formatting.JsonMediaTypeFormatter());
         }
 
         [HttpGetRoute(UriTemplate = "download/{name}")]
-        public async Task<HttpResponseMessage> Download(string name)
+        public async Task<HttpResponseMessage> Download([FromUri]string filter, [FromUri] string groupBy, string name)
         {
-            var resp = (await _reportWebApiClient.GetReportFile(name)).ReadAsSync();
+            var serviceResponse = await _reportWebApiClient.GetReportFile(name, null, filter, groupBy);
 
-            return Request.CreateResponse(HttpStatusCode.OK, resp, new MediaTypeHeaderValue("text/csv"));
+            var httpContent = serviceResponse.ResponseMessage.Content;
+
+            var contentStream = await httpContent.ReadAsStreamAsync();
+            var resp = new HttpResponseMessage(HttpStatusCode.OK);
+            resp.Content = new StreamContent(contentStream);
+            resp.Content.Headers.ContentLength = serviceResponse.ResponseMessage.Content.Headers.ContentLength;
+            resp.Content.Headers.ContentType = serviceResponse.ResponseMessage.Content.Headers.ContentType;
+            resp.Content.Headers.ContentDisposition = serviceResponse.ResponseMessage.Content.Headers.ContentDisposition;
+            return resp;
         }
 
         [HttpGetRoute(UriTemplate = "listDefinitions")]

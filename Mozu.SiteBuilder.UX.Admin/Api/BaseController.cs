@@ -204,6 +204,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 };
         }
 
+        public Response<List<T>, M> List2<T, M>(List<T> list, M metaData, int? total = null)
+        {
+            return new Response<List<T>, M>
+            {
+                Items = list,
+                Success = true,
+                MetaData = metaData,
+                Total = total ?? (list == null ? 0 : list.Count),
+            };
+        }
+
         [Obsolete]
         public Task<Response<List<T>>> EmptyList<T>()
         {
