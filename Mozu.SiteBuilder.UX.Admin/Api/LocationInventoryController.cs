@@ -102,5 +102,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return this.Request.CreateResponse(HttpStatusCode.OK, List2(returnedInventories), LowerCaseJsonMediaTypeFormatter.Default);
         }
 
+        [HttpPostRoute(UriTemplate = "edit")]
+        public async Task<HttpResponseMessage> Edit(List<DC.LocationInventory> locationInventories)
+        {
+            var tasks = new List<Task<ServiceClientResponse<List<DC.LocationInventory>>>>();
+            locationInventories.GroupBy(li => li.LocationCode).Each(locationCodeGroup =>
+            {
+                tasks.Add( _locationInventoryClient.AddLocationInventory( locationCodeGroup.ToList(), locationCodeGroup.Key ) );
+            });
+
+            await Task.WhenAll(tasks);
+
+            var returnedInventories = tasks.SelectMany(t => t.Result.ReadAsSync()).ToList();
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(returnedInventories), LowerCaseJsonMediaTypeFormatter.Default);
+        }
+
+        [HttpPostRoute(UriTemplate = "delete")]
+        public async Task<Response<List<DC.LocationInventory>>> Delete(List<DC.LocationInventory> locationInventories)
+        {
+            var tasks = locationInventories.Select(li => _locationInventoryClient.DeleteLocationInventory(li.LocationCode, li.ProductCode) );
+        
+            await Task.WhenAll(tasks);
+
+            return SuccessWithTotal2<List<DC.LocationInventory>>(locationInventories.Count);
+        }
     }
 }
