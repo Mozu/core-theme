@@ -141,7 +141,7 @@
             $('.mz-cms-grid').each(function (i, grid) {
                 var $grid = $(grid),
                     gridData = {
-                        id: $grid.data('drop-zone'),
+                        id: $grid.data('drop-zone').id,
                         rows: []
                     };
 
@@ -157,8 +157,6 @@
                                 span: $col.mzCol('span'),
                                 widgets: []
                             };
-
-                        
 
                         $col.find('.mz-cms-block').each(function(l, block) {
                             colData.widgets.push($(block).data('widget'));
