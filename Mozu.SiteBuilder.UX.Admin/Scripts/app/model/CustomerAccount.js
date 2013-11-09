@@ -127,6 +127,10 @@ Ext.define('Taco.model.CustomerAccount', {
                             name: 'id',
                             type: 'int'
                         }, {
+                            name: 'attributes',
+                            type: 'auto',
+                            defaultValue: []
+                        }, {
                             name: 'userId',
                             type: 'string'
                         }, {
