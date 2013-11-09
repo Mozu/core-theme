@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
@@ -12,7 +13,6 @@ using Mozu.Location.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers;
 using DC = Mozu.ProductAdmin.Contracts;
 
@@ -43,12 +43,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         public class SuperchargedLocationInventory : DC.LocationInventory
         {
+            [DataMember]
             public string LocationName { get; set; }
             public SuperchargedLocationInventory(DC.LocationInventory locbase, string locationName)
             {
                 // use some automapper magic.
                 Mapper.DynamicMap<DC.LocationInventory, SuperchargedLocationInventory>(locbase, this);
-                this.LocationName = LocationName;
+                this.LocationName = locationName;
             }
         }
 
@@ -70,7 +71,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 // now do a lookup of the location names for all the location codes.
                 var locationCodes = inventories.Items.Select(i => i.LocationCode).Distinct();
-                string locationFilter = String.Join(" or ", locationCodes.Select(lc => "locationcode eq " + lc));
+                string locationFilter = String.Join(" or ", locationCodes.Select(lc => "code eq " + lc));
                 var locations = (await _locationWebApiClient.GetLocations(filter: locationFilter)).ReadAsSync().Items;
                 inventories.Items =
                     (from i in inventories.Items
