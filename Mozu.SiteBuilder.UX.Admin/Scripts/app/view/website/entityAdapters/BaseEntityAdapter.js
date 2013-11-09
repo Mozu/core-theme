@@ -28,7 +28,43 @@
      isDirty:function() {
          return false;
      },
-     addSaveTasks: Ext.emptyFn,
+     
+     getSaveTask: function () {
+         var me = this,
+             tasks = Ext.create('Taco.core.ux.form.Tasks'),
+             zoneData = [];
+         Ext.Array.each(me.editor.persistanceData(), function (zone) {
+             if (!Ext.isEmpty(zone.rows)) {
+                 //todo: check pc for edit type... page/vs template
+                 zone.source = me.pageContext.cmsContext.page;
+                 zoneData.push(zone);
+             }
+         });
+         if (!Ext.isEmpty(zoneData)) {
+             tasks.add({
+                 key: 'widgets',
+                 fn: function (t) {
+
+                     Ext.Ajax.request({
+                         url: '/admin/app/cmsdocument/widgetdata/update',
+                         method: 'post',
+                         jsonData: zoneData,
+                         success: function (response) {
+                             t.callback();
+
+                         }
+                     });
+
+
+                 }
+             });
+         }
+         return tasks;
+
+
+     },
+     
+
  	unload: Ext.emptyFn,
  	set:function(model, add){
  		this.isLoading= false;
