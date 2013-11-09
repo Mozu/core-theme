@@ -135,11 +135,40 @@ Ext.define('Taco.view.order.Form', {
             items.push(Ext.create('Taco.view.order.subform.Return', subformCfg)); 
         }
 
-        items.push(Ext.create('Taco.shared.view.form.ExtensibleAttribute', {
+        this.orderAttr = Ext.create('Taco.shared.view.form.ExtensibleAttribute', {
             title: 'Order Attributes',
             record: this.record,
             attributeDefinitionStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.OrderAttributes')
-        }));
+        });
+
+        this.orderAttr.tools = [{
+            type: 'gear',
+            menu: {
+                plain: true,
+                shadow: false,
+                items: [{
+                    text: 'Save Attributes',
+                    handler: function() {
+                        var form = this.orderAttr.getForm(),
+                        fields = form.getFields(),
+                        attrs = [];
+                        Ext.each(fields.items, function (field) {
+                            var val = {};
+                            val['attributeDefinitionId'] = '';
+                            val['fullyQualifiedName'] = field.getName();
+                            val['id'] = '';
+                            val['values'] = field.getValue();
+                            attrs.push(val);
+                        });
+                        //Fire off ajax
+                        //console.log(attrs);
+
+                    },
+                    scope: this
+                }]
+            }
+        }];
+        items.push(this.orderAttr);
 
         this.items = items;
 
