@@ -46,7 +46,7 @@ Ext.define('Taco.store.Navigation', {
             "items": [{
                 "id": "accounts",
                 "label": "Accounts",
-                "address": "tbd/accounts"
+                "address": "customers"
             }, {
                 "id": "customerAttributes",
                 "label": "Attributes",
