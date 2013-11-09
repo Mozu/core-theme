@@ -3,7 +3,6 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco.extensibleattribute.subform',
     requires: ['Taco.model.ExtensibleAttributeValue'],
-    width: 960,
     ui: 'subform',
     bodyPadding: '19 0',
     margin: '0 0 20 0',
@@ -83,7 +82,6 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
     },
     initComponent: function () {
         this.attrs = [];
-
         if (!this.attributeDefinitionStore)
             throw "Configuration problem: there was no attributeDefinitionStore provided to this subform.";
 

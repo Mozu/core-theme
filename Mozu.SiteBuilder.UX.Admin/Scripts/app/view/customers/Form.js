@@ -59,7 +59,7 @@ Ext.define('Taco.view.customers.Form', {
             record: this.record,
             attributeDefinitionStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerAttributes')
         });
-
+        me.customerAttribute.width = 960;
         this.items = [
             me.profile,
             me.billingInformation,
