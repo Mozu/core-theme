@@ -170,7 +170,13 @@
     Text.prototype._defaultState = function() {
         Chorizo.formatter.hide();
         this.$content.removeAttr('contenteditable');
+        //hack for now
+        var data = this.element.data('widget');
+        data.config = data.config || {};
+        data.config.body = this.element.children().html();
+        
     }
+
 
     Text.prototype._editingState = function() {
         Chorizo.formatter.show();
