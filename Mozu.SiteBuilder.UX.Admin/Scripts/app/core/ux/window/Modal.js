@@ -38,16 +38,16 @@ Ext.define('Taco.core.ux.window.Modal', {
     }],
 
     /**
-     * @cfg {Boolean} bindActionsToWindow
-     * Scope actions to the window instance (defaults to true).
-     */
-    bindActionsToWindow: true,
-
-    /**
      * @cfg {String} primaryText
      * Text of the primary action that will fire the 'save' event
      */
     primaryText: 'Save',
+
+    /**
+     * @cfg {Boolean} scopeActionsToWindow
+     * Scope actions to the window instance (defaults to true).
+     */
+    scopeActionsToWindow: true,
 
     /**
      * @cfg {String} secondaryText
@@ -115,21 +115,9 @@ Ext.define('Taco.core.ux.window.Modal', {
 
         this.callParent(arguments);
 
-        if (this.bindActionsToWindow) {
-            this.bindActions(this.down('#actionBar').items);
+        if (this.scopeActionsToWindow) {
+            this.scopeActions(this.down('#actionBar').items);
         }
-    },
-
-    /**
-     * Set the scope of window actions to the window instance.
-     *
-     * @private
-     * @param  {Ext.util.MixedCollection} items The items collection containing the actions.
-     */
-    bindActions: function (items) {
-        items.each(function (action) {
-            action.scope = this;
-        }, this);
     },
 
     /**
@@ -270,6 +258,18 @@ Ext.define('Taco.core.ux.window.Modal', {
             this.fireEvent('save', this);
             this.close();
         }
+    },
+
+    /**
+     * Set the scope of window actions to the window instance.
+     *
+     * @private
+     * @param  {Ext.util.MixedCollection} items The items collection containing the actions.
+     */
+    scopeActions: function (items) {
+        items.each(function (action) {
+            action.scope = this;
+        }, this);
     },
 
     /**
