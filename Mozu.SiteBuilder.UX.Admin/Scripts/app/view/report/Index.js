@@ -1,6 +1,7 @@
 Ext.define('Taco.view.report.Index', {
     extend: 'Taco.core.ux.content.Container',
     requires: [
+//        'Taco.view.report.Header',
         'Taco.view.report.SidebarList',
         'Taco.core.ux.grid.Panel',
         'Taco.core.ux.TilePanel',
@@ -24,14 +25,31 @@ Ext.define('Taco.view.report.Index', {
     },
 
     createStoreFromReportDefinition: function (def, criteria) {
+        var me = this;
         Ext.define('MyReader', {
             extend: 'Ext.data.reader.Json',
             alias: 'reader.report-json',
             read: function (object) {
-                // extract blah blah...
-                console.log('report obj', object);
-
                 var rep = this.callParent([object]);
+                if (rep.success)
+                {
+                    var data = JSON.parse(object.responseText);
+                    var summary = Ext.Array.map(data.metaData, function (item) {
+                        var rv = {
+                            label: item.Column.Name,
+                            helpText: item.Column.HelpText,
+                            value: item.Value
+                        };
+                        if (item.Column.DisplayFormat == 'Currency')
+                            rv.value = Ext.util.Format.usMoney(rv.value)
+                        else if (item.Column.DisplayFormat == 'Number')
+                            rv.value = Ext.util.Format.number(rv.value, "0,000")
+                        else if (item.Column.DisplayFormat == 'Percent')
+                            rv.value = Ext.util.Format.number(rv.value, "0.000%")
+                        return rv;
+                    });
+                    me.updateSummary(summary);
+                }
                 window.rep = rep;
                 
                 return rep;
@@ -57,9 +75,8 @@ Ext.define('Taco.view.report.Index', {
             fields: fields,
             proxy: {
                 type: 'ajax',
-                url: '/admin/app/report/readExt/' + def.key,
+                url: '/admin/app/report/read/' + def.key,
                 extraParams: criteria,
-                // TODO...
                 reader: {
                     type: 'report-json',
                     root: 'items',
@@ -71,10 +88,9 @@ Ext.define('Taco.view.report.Index', {
     },
 
     loadReport: function (req) {
+        var me = this;
+        me.body.items.items[0].remove(1);
 
-
-
-        this.body.removeAll();
         var report = req.reportRecord.raw;
         var store = this.createStoreFromReportDefinition(report, req.criteria);
         var cols = Ext.Array.map(report.availableFields, function (item) {
@@ -96,7 +112,8 @@ Ext.define('Taco.view.report.Index', {
                 })
             ]
         });
-        this.body.add(newGrid);
+
+        me.body.items.items[0].add(newGrid);
     },
 
     initComponent: function () {
@@ -104,6 +121,28 @@ Ext.define('Taco.view.report.Index', {
 
         me.header = {
             title: 'Reports for [TODO]'
+        };
+        me.summaryTpl = new Ext.XTemplate(
+            '<tpl for=".">',
+                '<div class="taco-order-detail-header-section xorder-data">',
+                    '<label>{#} {label}</label>',
+                    '<h2>{value}</h2>',
+                    '<div class="status">{helpText}</div>',
+                '</div>',
+            '</tpl>'
+        );
+
+        me.summaryPanel = new Ext.create('Ext.Panel', {
+            height: 80,
+            hidden:true,
+            html: ''
+        });
+
+
+        me.updateSummary = function (summary) {
+            var html = me.summaryTpl.apply(summary);
+            me.summaryPanel.show();
+            me.summaryPanel.body.update(html);
         };
 
         Ext.define('MyReader', {
@@ -160,7 +199,10 @@ Ext.define('Taco.view.report.Index', {
                 },
                 'downloadreport': function (req) {
                     var def = req.reportRecord.raw;
-                    location.href = '/admin/app/report/download/' + def.key + '?' + Ext.urlEncode(req.criteria);
+                    var url = '/admin/app/report/download/' + def.key + '?' + Ext.urlEncode(req.criteria);
+
+                    var win = window.open(url, '_blank');
+                    win.focus();
                 }
             }
         });
@@ -169,7 +211,10 @@ Ext.define('Taco.view.report.Index', {
             layout: {
                 type: 'fit'
             },
-            items: [this.grid]
+            items: [ {
+                xtype: 'container',
+                items: [ this.summaryPanel ]
+            }]
         });
 
         this.sidebar = {
