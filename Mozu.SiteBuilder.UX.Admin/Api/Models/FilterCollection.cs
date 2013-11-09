@@ -95,6 +95,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
             return defaultValue;
         }
 
+        public T PopValue<T>(string id, T defaultValue = default(T))
+        {
+            FilterCollectionItem val = this.FirstOrDefault(x => String.Equals(x.property, id, StringComparison.OrdinalIgnoreCase));
+            if (val != null)
+            {
+                this.Remove(val);
+                return (T)val.value;
+            }
+            else
+            {
+                return defaultValue;
+            }
+        }
+
+        public bool ContainsProperty(string id)
+        {
+            return this.Any(f => String.Equals(f.property, id, StringComparison.OrdinalIgnoreCase));
+        }
+
         [System.Diagnostics.DebuggerStepThrough]
         public TVal Get<TEntity, TVal>(Expression<Func<TEntity, TVal>> expression)
         {

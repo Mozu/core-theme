@@ -4,13 +4,13 @@
 Ext.define('Taco.view.inventory.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     alias: 'widget.inventoryindex',
-    requires: ['Taco.model.InventoryProduct', 'Taco.store.InventoryProducts', 'Ext.grid.plugin.CellEditing', 'Taco.view.inventory.QuantityEdit'],
+    requires: ['Taco.model.LocationInventory', 'Taco.store.LocationInventories', 'Ext.grid.plugin.CellEditing', 'Taco.view.inventory.QuantityEdit'],
 
     typeName: 'Inventory',
     gridHeaderLabel: 'product',
     plural: false,
-    modelName: 'Taco.model.InventoryProduct',
-    store: { type: 'Taco.store.InventoryProducts' },
+    modelName: 'Taco.model.LocationInventory',
+    store: { type: 'Taco.store.LocationInventories' },
 
     requiresContextOfType: ['c', 's'],
     useTilePanel: false,

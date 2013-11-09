@@ -329,9 +329,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\protobuf-net.2.0.0.666\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
-    <Reference Include="ReportingData">
-      <HintPath>..\..\..\..\..\..\Users\simeon_kessler\Desktop\reportingFiles\ReportingData.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Net.Http" />
@@ -401,6 +398,7 @@
     <Compile Include="Api\CapabilityController.cs" />
     <Compile Include="Api\CustomerAttributeController.cs" />
     <Compile Include="Api\LocationController.cs" />
+    <Compile Include="Api\LocationInventoryController.cs" />
     <Compile Include="Api\LocationTypeController.cs" />
     <Compile Include="Api\ModelMapping\CapabilityMapping.cs" />
     <Compile Include="Api\ModelMapping\ExtensibleAttributeMapping.cs" />
@@ -483,7 +481,6 @@
     <Compile Include="Api\GeneralSettingController.cs" />
     <Compile Include="Api\IApiController.cs" />
     <Compile Include="Api\ImageController.cs" />
-    <Compile Include="Api\InventoryProductController.cs" />
     <Compile Include="Api\LocalizationApi.cs" />
     <Compile Include="Api\ModelMapping\CheckoutMapping.cs" />
     <Compile Include="Api\ModelMapping\CustomerMapping.cs" />
@@ -574,6 +571,7 @@
     <Compile Include="Helpers\CustomerHelpers\CustomerSortExtensions.cs" />
     <Compile Include="Helpers\DiscountHelpers\DiscountFilterExtensions.cs" />
     <Compile Include="Helpers\LocationHelpers\LocationFilterExtensions.cs" />
+    <Compile Include="Helpers\LocationHelpers\LocationInventoryFilterExtensions.cs" />
     <Compile Include="Helpers\OrderHelpers\OrderFilterExtensions.cs" />
     <Compile Include="Helpers\OrderHelpers\OrderSortExtensions.cs" />
     <Compile Include="Helpers\CurrentUserHelper.cs" />
@@ -626,8 +624,10 @@
     <Content Include="Scripts\app\model\CheckoutSettings.js" />
     <Content Include="Scripts\app\model\Capability.js" />
     <Content Include="Scripts\app\model\CustomerAttribute.js" />
+    <Content Include="Scripts\app\model\ExtensibleAttributeValue.js" />
     <Content Include="Scripts\app\model\ExternalPaymentDefinition.js" />
     <Content Include="Scripts\app\model\Location.js" />
+    <Content Include="Scripts\app\model\LocationInventory.js" />
     <Content Include="Scripts\app\model\LocationType.js" />
     <Content Include="Scripts\app\model\OrderAttribute.js" />
     <Content Include="Scripts\app\model\ShippingMethod.js" />
@@ -650,6 +650,7 @@
     <Content Include="Scripts\app\store\Channels.js" />
     <Content Include="Scripts\app\store\CustomerAttributes.js" />
     <Content Include="Scripts\app\store\ExternalGatewayDefinitions.js" />
+    <Content Include="Scripts\app\store\LocationInventories.js" />
     <Content Include="Scripts\app\store\Locations.js" />
     <Content Include="Scripts\app\store\LocationTypes.js" />
     <Content Include="Scripts\app\store\OrderAttributes.js" />
@@ -1972,8 +1973,6 @@
     <Content Include="Scripts\app\controller\Inventory.js" />
     <Content Include="Scripts\app\model\IpRange.js" />
     <Content Include="Scripts\app\model\TimeZone.js" />
-    <Content Include="Scripts\app\model\InventoryProduct.js" />
-    <Content Include="Scripts\app\store\InventoryProducts.js" />
     <Content Include="Scripts\app\store\IpRanges.js" />
     <Content Include="Scripts\app\store\TimeZones.js" />
     <Content Include="Scripts\app\view\generalSettings\Index.js" />

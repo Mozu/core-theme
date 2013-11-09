@@ -7,10 +7,10 @@
 Ext.define('Taco.controller.Inventory', {
     extend: 'Taco.core.Controller',
     listView: null,
-    models: ['Taco.model.InventoryProduct'],
-    stores: ['Taco.store.InventoryProducts'],
+    models: ['Taco.model.LocationInventory'],
+    stores: ['Taco.store.LocationInventories'],
     views: ['inventory.Index'],
-    modelName: 'InventoryProduct'
+    modelName: 'LocationInventory'
 
     //contextPlaceholders: {
     //    t: function () {
