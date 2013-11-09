@@ -33,7 +33,7 @@
             this.addWidgets([{
                 name: 'Text',
                 isRichText: true,
-                id: 'text'
+                id: 'content'
             }, {
                 name: 'Image',
                 isRichText: false,

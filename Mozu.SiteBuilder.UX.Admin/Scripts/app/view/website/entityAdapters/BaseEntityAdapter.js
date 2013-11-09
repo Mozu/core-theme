@@ -3,7 +3,7 @@
  */
  Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
      extend: 'Ext.util.Observable',
-     //requires: ['Taco.view.website.settings.General', 'Taco.view.website.settings.Templates', 'Taco.view.website.settings.Seo', 'Taco.view.website.settings.Facets'],
+     requires: [],
 
  	allowedActions:{copy:false,preview:false,destroy:false,more: false},
  	load: function() {
