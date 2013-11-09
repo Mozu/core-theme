@@ -7,6 +7,7 @@
 Ext.define('Taco.store.ProductComboBox', {
     extend: 'Ext.data.Store',
     model: 'Taco.model.Product',
+
     pageSize: 10,
     remoteSort: true,
     remoteFilter: true,
@@ -15,8 +16,9 @@ Ext.define('Taco.store.ProductComboBox', {
         clearFilters: true,
         contextLevel: 'sc',
         autoLoad: false,
-        createOnly: true,
+        createOnly: true
     },
+
     proxy: {
         type: 'ajax',
         api: {
@@ -26,10 +28,10 @@ Ext.define('Taco.store.ProductComboBox', {
             SearchType: 'picker'
         },
         reader: {
-                type: 'json',
+            type: 'json',
             root: 'items',
             successProperty: 'success',
-            messageProperty: "message"
+            messageProperty: 'message'
         },
         writer: {
             allowSingle: false,

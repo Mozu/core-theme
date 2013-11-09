@@ -47,7 +47,7 @@ Ext.define('Taco.core.ux.form.field.InlinePicker', {
                 componentCls: 'taco-form-inlinepicker-list',
                 floating: false,
                 hidden: false
-            },
+            }
         }, this.fieldConfig, this.defaultFieldConfig);
 
         combo = this.combo = Ext.widget(comboCfg);

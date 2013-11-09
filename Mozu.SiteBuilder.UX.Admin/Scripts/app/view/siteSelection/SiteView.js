@@ -1,10 +1,12 @@
 Ext.define('Taco.view.siteSelection.SiteView', {
     extend: 'Ext.view.View',
+    alias: 'widget.taco.siteView',
+
     baseCls: Taco.baseCSSPrefix + 'grouped-view',
-    xtype: 'widget.taco.siteView',
+    cls: 'taco-theme-selector',
     disableSelection: true,
     itemSelector: '.theme-swatch',
-    cls: 'taco-theme-selector',
+
     tpl: [
         '<tpl for=.>',
         '{[console.log(values)]}',
@@ -40,33 +42,16 @@ Ext.define('Taco.view.siteSelection.SiteView', {
 
     initComponent: function () {
         this.data = this.store;
-        this.listeners = {
-            itemclick: function(view, model, element, idx, eventObj) {
-                var targetEl = Ext.get(eventObj.target),
-                    width, height, id;
-
-                eventObj.preventDefault();
-                /*
-
-                This came from themes
-
-                if (targetEl.hasCls('action-settings')) {
-                    Ext.defer(function() {
-                        Taco.core.StateManager.attemptNavigate('themesettings/edit/' + model.getId(), {
-                            complexMetaData: {
-                                record: model
-                            }
-                        });
-                    }, 1, this);
-                    return;
-                    
-                }
-                */
-            },
-
-            scope: this
-        };
 
         this.callParent(arguments);
-    },
+
+        this.on({
+            itemclick: {
+                scope: this,
+                fn: function (view, model, element, idx, e) {
+                    e.preventDefault();
+                }
+            }
+        });
+    }
 });

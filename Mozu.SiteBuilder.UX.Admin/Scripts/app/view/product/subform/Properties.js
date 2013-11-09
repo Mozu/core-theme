@@ -7,12 +7,17 @@
 Ext.define('Taco.view.product.subform.Properties', {
     extend: 'Taco.view.product.subform.Subform',
     alias: 'widget.productpropertiesform',
-    requires:['Taco.core.ux.form.field.Product'],
+    requires:[
+        'Taco.core.ux.form.field.Product'
+    ],
+
     title: 'Properties',
+
     layout: {
         type: 'vbox',
         align: 'stretch'
     },
+
     statics: {
         editors: {
             'Date': function (ptAttribute, values) {
@@ -20,7 +25,6 @@ Ext.define('Taco.view.product.subform.Properties', {
                     xtype: 'datefield',
                     name: this.getFieldName(ptAttribute),
                     value: (values && values.length) ? values[0] : null
-                    
                 }];
             },
             'TextArea': function (ptAttribute, values) {
@@ -59,7 +63,6 @@ Ext.define('Taco.view.product.subform.Properties', {
                 }];
             },
             'TextBox': function (ptAttribute, values) {
-                
                 return [{
                     xtype: 'textfield',
                     name: this.getFieldName(ptAttribute),
@@ -68,16 +71,13 @@ Ext.define('Taco.view.product.subform.Properties', {
                 }];
             },
             'productPicker': function (ptAttribute, values) {
-                return [
-                    {
-                        xtype: 'taco.field.product',
-                        name: this.getFieldName(ptAttribute),
-                        width:600,
-                        value: values,
-                    }
-                ];
-            },
-            
+                return [{
+                    xtype: 'taco.field.product',
+                    name: this.getFieldName(ptAttribute),
+                    width: 600,
+                    value: values
+                }];
+            }
         }
     },
     
@@ -95,39 +95,42 @@ Ext.define('Taco.view.product.subform.Properties', {
         }
     },
 
-    
     beforeSave:function() {
         if (this.productType == null) {
             return;
         }
+
         var form = this.getForm(),
             properties = this.product.getProperties();
         
         this.productTypeProperties.each(function (record) {
-
             var fieldName = this.getFieldName(record),
-                values=null,
+                values = null,
                 field = form.findField(fieldName),
                 pRecord = properties.getById(record.getId());
+
             if (field) {
                 values = field.getValue();
                 if (!Ext.isArray(values)) {
                     values = [values];
                 }
+
                 if (!pRecord) {
-                    pRecord = properties.add({ attributeFQN: record.getId() })[0];
+                    pRecord = properties.add({
+                        attributeFQN: record.getId()
+                    })[0];
                 }
+
                 pRecord.set('values', values);
             }
-
         }, this);
     },
 
     loadByProductTypeId: function (id) {
-        
-        var type ,
+        var type,
             properties,
             items = [];
+
         if (!id || !Ext.isNumeric( id )) {
             id = this.product.get('productTypeId');
         }
@@ -211,9 +214,6 @@ Ext.define('Taco.view.product.subform.Properties', {
             attributeFQN = ptAttribute.get('attributeFQN'),
             prop = this.product.getProperties().getById(attributeFQN),
             values = prop ? prop.get('values') : null;
-        
-        
-
 
         if (typeof this.statics().editors[editor] !== 'function') {
             return [{
