@@ -26,8 +26,10 @@ Ext.define('Taco.core.ux.content.Header', {
             title = this.initTitle(),
             actionsCt = this.initActionsContainer();
 
-        items.push(actionsCt);
-        items.unshift(title);
+        items = Ext.isArray(items) ? items : [items];
+
+        if (actionsCt) items.push(actionsCt);
+        if (title) items.unshift(title);
 
         if (this.flexFirstItem && items.length > 0) {
             Ext.apply(items[0], {
@@ -62,21 +64,6 @@ Ext.define('Taco.core.ux.content.Header', {
             layout: {
                 type: 'hbox',
                 align: 'middle'
-            },
-            listeners: {
-                add: {
-                    scope: this,
-                    fn: function (ct, cmp, index) {
-                        if (index === this.actions.length - 1) {
-                            cmp.on({
-                                scope: this,
-                                boxready: function () {
-                                    this.updateLayout();
-                                }
-                            });
-                        }
-                    }
-                }
             }
         };
 
