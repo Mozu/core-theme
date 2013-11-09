@@ -187,7 +187,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
     },
     beforeSave: function () {
         var form = this.getForm();
-        debugger
+        
         /*
         if (this.productType == null) {
             return;
