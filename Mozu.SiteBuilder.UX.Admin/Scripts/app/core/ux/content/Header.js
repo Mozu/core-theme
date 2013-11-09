@@ -9,26 +9,56 @@ Ext.define('Taco.core.ux.content.Header', {
     alias: 'widget.contentheader',
     
     cls: 'taco-content-header',
+    title: 'Header Title',
+    titleData: null,
+
+    flexFirstItem: true,
+    hideActions: false,
+    instructionText: null,
+
     layout: {
         type: 'hbox',
         align: 'middle'
     },
 
-    title: 'Header Title',
-    titleData: null,
-
-    instructionText: null,
-    hideActions: false,
-
     initComponent: function () {
-        this.initTitle();
+        var items = this.items || [],
+            title = this.initTitle(),
+            actionsCt = this.initActionsContainer();
 
-        this.items = [this.title || undefined, {
+        items.push(actionsCt);
+        items.unshift(title);
+
+        if (this.flexFirstItem && items.length > 0) {
+            Ext.apply(items[0], {
+                flex: 1
+            });
+        }
+
+        this.items = items;
+
+        this.callParent(arguments);
+
+        this.title = this.down('#title');
+
+        this.actionsContainer = this.down('#actionsContainer');
+    },
+
+    getActions: function () {
+        return this.actionsContainer;
+    },
+
+    initActionsContainer: function () {
+        var actions = this.actions || [],
+            isHidden = !!(this.hideActions),
+            ct;
+
+        ct = {
             xtype: 'container',
             cls: Taco.baseCSSPrefix + 'actions',
             itemId: 'actionsContainer',
-            items: this.actions,
-            hidden: this.hideActions,
+            items: actions,
+            hidden: isHidden,
             layout: {
                 type: 'hbox',
                 align: 'middle'
@@ -48,63 +78,34 @@ Ext.define('Taco.core.ux.content.Header', {
                     }
                 }
             }
-        }];
+        };
 
-        if (this.title === false) {
-            Ext.apply(this.items[1], {
-                flex: 1
-            });
-        }
-
-        this.callParent(arguments);
-
-        this.title = this.down('#title');
-
-        this.actionsContainer = this.down('#actionsContainer');
+        return ct;
     },
-
-    monitorSize: Ext.emptyFn,
-
-    // if header sizing is ultimately needed, uncomment this method
-    // then attach a listener to the boxready event and give this header a reference to the sidebar
-    // 
-    // monitorSize: function () {
-    //     this.getEl().setStyle('width', this.getWidth() + "px");
-    //     if (this.sidebar) {
-    //         console.log(this.sidebar);
-    //         this.addCls(Taco.baseCSSPrefix + 'content-header-with-sidebar');
-
-    //         if (!this.monitoringSidebar) {
-    //             this.monitoringSidebar = true;
-    //             this.sidebar.on('expand', this.monitorSize, this);
-    //             this.sidebar.on('collapse', this.monitorSize, this);
-    //         }
-    //     }
-    // },
 
     /**
      * Initializes the title config
      * @private
      */
     initTitle: function () {
-        if (this.title === false) {
+        var me = this,
+            title = this.title;
+
+        if (title === false) {
             return;
-        } else if (typeof this.title !== 'object' || this.title === null) {
-            this.title = {
-                html: this.title || 'Title'
+        } else if (typeof title !== 'object' || title === null) {
+            title = {
+                xtype: 'component',
+                html: title || ''
             };
         }
 
-        Ext.apply(this.title, {
-            xtype: 'component',
+        Ext.apply(title, {
             autoEl: 'h1',
-            itemId: 'title',
-            flex: 1
+            itemId: 'title'
         });
-    },
 
-    getActions: function () {
-        return this.actionsContainer;
+        return title;
     },
 
     setTitle: function (title) {
@@ -115,10 +116,14 @@ Ext.define('Taco.core.ux.content.Header', {
 
         if (typeof this.title !== 'object' || this.title === null) {
             this.title = {
+                xtype: 'component',
                 html: title
             };
         } else {
-            this.title.html = title;
+            Ext.apply(this.title, {
+                xtype: 'component',
+                html: title
+            });
         }
     },
 
@@ -126,5 +131,7 @@ Ext.define('Taco.core.ux.content.Header', {
         if (this.title && this.title.isComponent) {
             this.title.update(data);
         }
-    }
+    },
+
+    monitorSize: Ext.emptyFn
 });

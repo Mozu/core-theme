@@ -10,7 +10,19 @@ Ext.define('Taco.view.catalog.Index', {
     requires: [],
 
     header: {
-        title: 'Catalog Testing'
+        title: 'Catalog Testing',
+        flexFirstItem: false,
+        items: [{
+            xtype: 'component',
+            html: 'hi',
+            flex: 1
+        }],
+        actions: [{
+            xtype: 'button',
+            ui: 'action',
+            scale: 'medium',
+            text: 'Test'
+        }]
     },
 
     initComponent: function () {
@@ -62,11 +74,11 @@ Ext.define('Taco.view.catalog.Index', {
                 }]
             }, {
                 xtype: 'button',
-                ui: 'action-primary',
+                ui: 'action',
                 scale: 'medium',
                 text: 'Save',
                 margin: '20 0 0',
-                formBind: true,
+                formBind: false,
                 scope: this,
                 handler: this.handleSave
             }]
@@ -79,5 +91,7 @@ Ext.define('Taco.view.catalog.Index', {
         });
 
         this.callParent(arguments);
-    }
+    },
+
+    handleSave: Ext.emptyFn
 });

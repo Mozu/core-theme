@@ -1,158 +1,235 @@
 @mixin taco-boxselect {
-  $boxselect-item-font-size: px-to-rem(14);
+    /* AUTHORED RULES */
 
-  .#{$prefix}boxselect {
-
-    input {
-      background: none transparent;
-      border: 0px none;
-      font-size: $font-size;
-      line-height: $font-size;
-      height: 24px;
-      width: 100%;
+    .x-boxselect.x-form-text {
+        height: auto;
+        cursor: text;
+        padding: 0;
+        overflow-y: auto;
+    }
+    .x-boxselect ul.x-boxselect-list {
+        padding: 1px 3px;
+    }
+    ul.x-boxselect-list.x-boxselect-singleselect {
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .x-boxselect-input, .x-boxselect-item {
+        display: inline-block;
+        position: relative;
+        *display:inline; /* IE7 */
+        zoom:1; /* IE */
+    }
+    .x-boxselect-input input, .x-boxselect-input div {
+        border-width: 0px;
+        background: none transparent;
+        font-family: $font-family;
+        font-size: 16px;
+        line-height: 20px !important; // original value: 18px
+        height: 26px; // original value: 20px
+        width: 100%;
+    }
+    div.x-boxselect-emptyinput {
+        display: none;
+    }
+    .x-boxselect-stacked .x-boxselect-item {
+        display: block;
+    }
+    .x-boxselect-item {
+        // -moz-border-radius: 6px; -webkit-border-radius: 6px; border-radius: 6px; o-border-radius: 6px; khtml-border-radius: 6px; border: 1px solid #CAD8F3;
+        padding: 5px 1px 3px 5px !important; // original value: 0px 1px 3px 5px
+        margin: 1px 1px 1px 0;
+        background-color: $color-neutral-90; // original value: #DEE7F8
+        cursor: default;
+        border-width: 0px !important;
+    }
+    .x-field:not(.x-item-disabled) .x-boxselect-item:hover {
+        background: #BBCEF1;
+        border: 1px solid #6D95E0;
+    }
+    .x-field:not(.x-item-disabled) .x-boxselect-item.selected {
+        border: 1px solid #316AD3 !important;
+        background: #658FDC !important;
+    }
+    .x-boxselect-item-text {
+        line-height: 16px;
+        padding-right: 20px !important;
+    }
+    .x-boxselect-item-close {
+        cursor: pointer;
+    }
+    .x-boxselect-hideselections .x-boundlist-selected {
+        display: none;
     }
 
-    &.#{$prefix}form-text {
-      cursor: text;
-     //height: 390px !important; // TODO: remove !important hack once generic field styling is fixed
-      height: auto !important;
-      overflow-y: auto;
-      padding: 0px !important; // TODO: remove !important hack once generic field styling is fixed
-    }
-  }
+  /* CUSTOM RULES */
 
-  ul.#{$prefix}boxselect-list {
-    font-size: $font-size;
-    line-height: $font-size;
-    padding: 1px 9px;
-    height: 100%;
-    &.#{$prefix}boxselect-singleselect {
-      overflow: hidden;
-      white-space: nowrap;
+    .#{$prefix}form-empty-field + .#{$prefix}boxselect-emptyinput {
+        display: none;
     }
-  }
+
+  // $boxselect-item-font-size: px-to-rem(14);
+
+  // .#{$prefix}boxselect {
+
+  //   input {
+  //     background: none transparent;
+  //     border: 0px none;
+  //     font-size: $font-size;
+  //     line-height: $font-size;
+  //     height: 24px;
+  //     width: 100%;
+  //   }
+
+  //   &.#{$prefix}form-text {
+  //     cursor: text;
+  //    //height: 390px !important; // TODO: remove !important hack once generic field styling is fixed
+  //     height: auto !important;
+  //     overflow-y: auto;
+  //     padding: 0px !important; // TODO: remove !important hack once generic field styling is fixed
+  //   }
+
+  //   div.#{$prefix}form-empty-field {
+  //     height: 24px;
+  //     line-height: 24px;
+  //   }
+  // }
+
+  // ul.#{$prefix}boxselect-list {
+  //   font-size: $font-size;
+  //   line-height: $font-size;
+  //   padding: 1px 9px;
+  //   height: 100%;
+  //   &.#{$prefix}boxselect-singleselect {
+  //     overflow: hidden;
+  //     white-space: nowrap;
+  //   }
+  // }
+
+  // div.#{$prefix}boxselect-emptyinput {
+  //   display: none;
+  // }
    
-  .#{$prefix}boxselect-input {
-    display: inline-block;
-    min-width: 100px;
-    position: relative;
-    vertical-align: top;
-  }
+  // .#{$prefix}boxselect-input {
+  //   display: inline-block;
+  //   min-width: 100px;
+  //   position: relative;
+  //   vertical-align: top;
+  // }
 
-  .#{$prefix}boxselect-item {
-    cursor: default;
-    display: inline-block;
-    height: 20px;
-    margin: 2px 8px 2px 0px;
-    padding: 0px 1px 0px 5px !important;
-    position: relative;
-    vertical-align: top;
-    @include border-radius(2px);
-  }
-  .#{$prefix}boxselect-stacked {
-    .#{$prefix}boxselect-item {
-      display: block;
-    }
-  }
-  .#{$prefix}field:not(.#{$prefix}item-disabled) {
-    .#{$prefix}boxselect-item {
-      &:hover {
-      }
-      &.selected {
-        .#{$prefix}boxselect-item-text {
-          background-color: $color-selected;
-          // color: $color-neutral-white;
-        }
-      }
-    }
-  }
+  // .#{$prefix}boxselect-item {
+  //   cursor: default;
+  //   display: inline-block;
+  //   height: 20px;
+  //   margin: 2px 8px 2px 0px;
+  //   padding: 0px 1px 0px 5px !important;
+  //   position: relative;
+  //   vertical-align: top;
+  //   @include border-radius(2px);
+  // }
+  // .#{$prefix}boxselect-stacked {
+  //   .#{$prefix}boxselect-item {
+  //     display: block;
+  //   }
+  // }
+  // .#{$prefix}field:not(.#{$prefix}item-disabled) {
+  //   .#{$prefix}boxselect-item {
+  //     &:hover {
+  //     }
+  //     &.selected {
+  //       .#{$prefix}boxselect-item-text {
+  //         background-color: $color-selected;
+  //         // color: $color-neutral-white;
+  //       }
+  //     }
+  //   }
+  // }
 
-  .#{$prefix}boxselect-item-menu-trigger {
-    background-color: $color-neutral-45;
-    color: $color-neutral-white;
-    display: inline-block;
-    font-size: $boxselect-item-font-size;
-    line-height: $boxselect-item-font-size;
-    margin-right: 2px;
-    padding: 4px 20px 2px 4px;
-    text-transform: uppercase;
-    vertical-align: top;
-    @include border-radius(2px);
-  }
+  // .#{$prefix}boxselect-item-menu-trigger {
+  //   background-color: $color-neutral-45;
+  //   color: $color-neutral-white;
+  //   display: inline-block;
+  //   font-size: $boxselect-item-font-size;
+  //   line-height: $boxselect-item-font-size;
+  //   margin-right: 2px;
+  //   padding: 4px 20px 2px 4px;
+  //   text-transform: uppercase;
+  //   vertical-align: top;
+  //   @include border-radius(2px);
+  // }
 
-  .#{$prefix}boxselect-item-text {
-    background-color: $color-neutral-90;
-    display: inline-block;
-    font-size: $boxselect-item-font-size;
-    line-height: $boxselect-item-font-size;
-    padding: 4px 20px 2px 4px;
-    vertical-align: top;
-    @include border-radius(2px);
-  }
+  // .#{$prefix}boxselect-item-text {
+  //   background-color: $color-neutral-90;
+  //   display: inline-block;
+  //   font-size: $boxselect-item-font-size;
+  //   line-height: $boxselect-item-font-size;
+  //   padding: 4px 20px 2px 4px;
+  //   vertical-align: top;
+  //   @include border-radius(2px);
+  // }
 
-  .#{$prefix}boxselect-item-close {
-    cursor: pointer;
-    font-size: px-to-rem(13);
-    line-height: px-to-rem(18);
-    height: 16px;
-    width: 15px;
-    background: transparent;
-    top: 2px;
-    right: 0;
-    //right: 3px !important;
-    //@include icon-font($glyph-close);
-    //top: 5px !important;
-  }
+  // .#{$prefix}boxselect-item-close {
+  //   cursor: pointer;
+  //   font-size: px-to-rem(13);
+  //   line-height: px-to-rem(18);
+  //   height: 16px;
+  //   width: 15px;
+  //   background: transparent;
+  //   top: 2px;
+  //   right: 0;
+  //   //right: 3px !important;
+  //   //@include icon-font($glyph-close);
+  //   //top: 5px !important;
+  // }
 
-  .#{$prefix}boxselect-hideselections {
-    .#{$prefix}boundlist-selected {
-      display: none;
-    }
-  }
+  // .#{$prefix}boxselect-hideselections {
+  //   .#{$prefix}boundlist-selected {
+  //     display: none;
+  //   }
+  // }
 
-  /* MENUS */
+  // /* MENUS */
 
-  .#{$prefix}boxselect-item-menu {
-    .#{$prefix}menu-item {
-      font-size: px-to-rem(13);
-      padding: 4px 8px;
-      text-transform: uppercase;
+  // .#{$prefix}boxselect-item-menu {
+  //   .#{$prefix}menu-item {
+  //     font-size: px-to-rem(13);
+  //     padding: 4px 8px;
+  //     text-transform: uppercase;
 
-      &:hover {
-        background-color: $color-neutral-45;
-        color: $color-neutral-white;
-      }
-    }
-  }
+  //     &:hover {
+  //       background-color: $color-neutral-45;
+  //       color: $color-neutral-white;
+  //     }
+  //   }
+  // }
 
-  .#{$vprefix}combofilter-form-menu {
-    @include border-radius(2px);
-    @include outer-shadow(0.5, 8px, 0px, 2px);
+  // .#{$vprefix}combofilter-form-menu {
+  //   @include border-radius(2px);
+  //   @include outer-shadow(0.5, 8px, 0px, 2px);
 
-    .#{$prefix}menu-body {
-      border: 0px none;
-      @include border-radius(2px);
-    }
-    .#{$prefix}field {
-      margin-left: 20px;
-    }
+  //   .#{$prefix}menu-body {
+  //     border: 0px none;
+  //     @include border-radius(2px);
+  //   }
+  //   .#{$prefix}field {
+  //     margin-left: 20px;
+  //   }
 
-    .#{$vprefix}combofilter-form-title {
-      border-bottom: 1px dashed border-for($color-neutral-white);
-      font-size: px-to-rem(20);
-      font-weight: normal;
-      padding: 20px;
-    }
+  //   .#{$vprefix}combofilter-form-title {
+  //     border-bottom: 1px dashed border-for($color-neutral-white);
+  //     font-size: px-to-rem(20);
+  //     font-weight: normal;
+  //     padding: 20px;
+  //   }
 
-    .#{$vprefix}combofilter-form-actions {
-      padding: 20px;
-      text-align: right;
-    }
-  }
+  //   .#{$vprefix}combofilter-form-actions {
+  //     padding: 20px;
+  //     text-align: right;
+  //   }
+  // }
 
 
-  .x-form-invalid-field{
-      border-color:$color-theme-base;
-  }
-
+  // .x-form-invalid-field{
+  //     border-color:$color-theme-base;
+  // }
 }
