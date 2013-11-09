@@ -12,11 +12,11 @@ Ext.define('Taco.view.catalog.Index', {
     header: {
         title: 'Catalog Testing',
         flexFirstItem: false,
-        items: [{
+        items: {
             xtype: 'component',
             html: 'hi',
             flex: 1
-        }],
+        },
         actions: [{
             xtype: 'button',
             ui: 'action',

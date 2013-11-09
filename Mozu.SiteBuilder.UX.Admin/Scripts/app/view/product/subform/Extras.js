@@ -76,10 +76,13 @@ Ext.define('Taco.view.product.subform.Extras', {
     },
 
     bindExtras: function () {
-        Ext.each(this.extras, function (extra) {
+        Ext.Array.forEach(this.extras, function (extra) {
             var pExtra = this.findExtra(extra.ptAttribute),
                 field;
 
+            if (Ext.isEmpty(pExtra)) return;
+
+            console.log(pExtra);
             pExtra.set('isRequired', extra.checkbox.getValue());
 
             if (extra.list) {
