@@ -65,6 +65,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             wrd.Definition = def;
             wrd.IsPreview = true;
+            
+            wrd.Id = wrd.Id ?? Guid.NewGuid().ToString();
+            wrd.Config = wrd.Config ?? def.DefaultConfig;
+
+
 
             if (wrd.Source == null)
             {
