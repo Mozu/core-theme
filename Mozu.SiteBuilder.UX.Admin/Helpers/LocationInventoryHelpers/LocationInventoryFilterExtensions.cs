@@ -2,7 +2,7 @@
 using System.Linq;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
-namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationHelpers
+namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers
 {
     public static class LocationInventoryFilterExtensions
     {

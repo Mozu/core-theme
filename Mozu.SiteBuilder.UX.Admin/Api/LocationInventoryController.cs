@@ -6,13 +6,14 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.Location.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
-using Mozu.SiteBuilder.UX.Admin.Helpers.LocationHelpers;
+using Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers;
 using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -86,11 +87,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "create")]
-        public async Task<HttpResponseMessage> Create(DC.LocationInventory dc)
+        public async Task<HttpResponseMessage> Create(List<DC.LocationInventory> locationInventories)
         {
-            var resp = (await _locationInventoryClient.AddLocationInventory(new List<DC.LocationInventory> { dc }, dc.LocationCode)).ReadAsSync();
+            var tasks = new List<Task<ServiceClientResponse<List<DC.LocationInventory>>>>();
+            locationInventories.GroupBy(li => li.LocationCode).Each(locationCodeGroup => {
+                tasks.Add( _locationInventoryClient.AddLocationInventory( locationCodeGroup.ToList(), locationCodeGroup.Key ) );
+            });
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp.First()), LowerCaseJsonMediaTypeFormatter.Default);
+            await Task.WhenAll(tasks);
+
+            var returnedInventories = tasks.SelectMany(t => t.Result.ReadAsSync()).ToList();
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(returnedInventories), LowerCaseJsonMediaTypeFormatter.Default);
         }
 
     }
