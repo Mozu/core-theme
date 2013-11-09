@@ -98,7 +98,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
 
             var helper = new CmsHelper(CmsService);
-            await helper.InitCmsPageContext(PageContext.CmsContext);
+            await helper.InitCmsPageContext(PageContext);
            
 
             var vm = Mapper.Map<DC.Document, VM.Document>(pc.CmsContext.Page.Document ,

@@ -20,7 +20,7 @@ namespace Mozu.SiteBuilder.UX.Filters
                 return continuation().ContinueWith(x =>
                     {
                         var helper = new CmsHelper(controller.CmsService);
-                        return helper.InitCmsPageContext(controller.PageContext.CmsContext).ContinueWith(y => x.Result).Result;
+                        return helper.InitCmsPageContext(controller.PageContext).ContinueWith(y => x.Result).Result;
 
                     });
 

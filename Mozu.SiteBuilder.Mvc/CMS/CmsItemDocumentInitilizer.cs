@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
@@ -40,8 +41,9 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             return task != null;
         }
 
-        public Task<bool> InitCmsPageContext(CmsPageContext cmsPageContext)
+        public Task<bool> InitCmsPageContext(PageContext  pageContext )
         {
+            CmsPageContext cmsPageContext = pageContext.CmsContext;
             if (cmsPageContext == null)
             {
                 return new TaskCompletionSource<bool>(true).Task;
@@ -114,87 +116,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
                     cmsPageContext.RuntimeData = new List<WidgetRuntimeData>();
                     cmsPageContext.RuntimeData2 = new List<ZoneRuntimeData>();
-                    //cmsPageContext.RuntimeData2.Add(new ZoneRuntimeData
-                    //                                    {
-                    //                                        Id = "testzone1",
-                    //                                        Rows = new List<ZoneRowRuntimeData>
-                    //                                                   {
-                    //                                                       new ZoneRowRuntimeData
-                    //                                                           {
-                    //                                                               Columns = new List<ZoneColumnsRuntimeData>
-                    //                                                                             {
-                    //                                                                                 new ZoneColumnsRuntimeData
-                    //                                                                                     {
-                    //                                                                                         Span = 4,
-                    //                                                                                         Widgets = new List<ZoneWidgetRuntimeData>
-                    //                                                                                                       {
-                    //                                                                                                           new ZoneWidgetRuntimeData
-                    //                                                                                                               {
-                    //                                                                                                                   Id = Guid.NewGuid().ToString(),
-                    //                                                                                                                   DefinitionId = "content",
-                    //                                                                                                                   Config = JObject.Parse("{\"body\": \"<h1>Hold on to your butts</h1><p>The path of the righteous\nman is beset on all sides by the iniquities of the selfish and the tyranny of\nevil men. Blessed is he who, in the name of charity and good will, shepherds\nthe weak through the valley of darkness, for he is truly his brother's keeper\nand the finder of lost children. And I will strike down upon thee with great\nvengeance and furious anger those who would attempt to poison and destroy My\nbrothers. And you will know My name is the Lord when I lay My vengeance upon\nthee. </p>\"}")
-                    //                                                                                                               },
-                    //                                                                                                           new ZoneWidgetRuntimeData
-                    //                                                                                                               {
-                    //                                                                                                                   Id = Guid.NewGuid().ToString(),
-                    //                                                                                                                   DefinitionId = "content",
-                    //                                                                                                                   Config = JObject.Parse("{\"body\": \"<h1>Hold on to your shoes</h1><p>The path of the righteous\nman is beset on all sides by the iniquities of the selfish and the tyranny of\nevil men. Blessed is he who, in the name of charity and good will, shepherds\nthe weak through the valley of darkness, for he is truly his brother's keeper\nand the finder of lost children. And I will strike down upon thee with great\nvengeance and furious anger those who would attempt to poison and destroy My\nbrothers. And you will know My name is the Lord when I lay My vengeance upon\nthee. </p>\"}")
-                    //                                                                                                               }
-                    //                                                                                                       }
-                    //                                                                                     },
-                    //                                                                                 new ZoneColumnsRuntimeData
-                    //                                                                                     {
-                    //                                                                                         Span = 8,
-                    //                                                                                         Widgets = new List<ZoneWidgetRuntimeData>
-                    //                                                                                                       {
-                    //                                                                                                           new ZoneWidgetRuntimeData
-                    //                                                                                                               {
-                    //                                                                                                                   Id = Guid.NewGuid().ToString(),
-                    //                                                                                                                   DefinitionId = "content",
-                    //                                                                                                                   Config = JObject.Parse("{\"body\": \"<h1>stuff</h1><p>The path of the righteous\nman is beset on all sides by the iniquities of the selfish and the tyranny of\nevil men. Blessed is he who, in the name of charity and good will, shepherds\nthe weak through the valley of darkness, for he is truly his brother's keeper\nand the finder of lost children. And I will strike down upon thee with great\nvengeance and furious anger those who would attempt to poison and destroy My\nbrothers. And you will know My name is the Lord when I lay My vengeance upon\nthee. </p>\"}")
-                    //                                                                                                               },
-                    //                                                                                                           new ZoneWidgetRuntimeData
-                    //                                                                                                               {
-                    //                                                                                                                   Id = Guid.NewGuid().ToString(),
-                    //                                                                                                                   DefinitionId = "content",
-                    //                                                                                                                   Config = JObject.Parse("{\"body\": \"<h1>thing</h1><p>The path of the righteous\nman is beset on all sides by the iniquities of the selfish and the tyranny of\nevil men. Blessed is he who, in the name of charity and good will, shepherds\nthe weak through the valley of darkness, for he is truly his brother's keeper\nand the finder of lost children. And I will strike down upon thee with great\nvengeance and furious anger those who would attempt to poison and destroy My\nbrothers. And you will know My name is the Lord when I lay My vengeance upon\nthee. </p>\"}")
-                    //                                                                                                               },
-                    //                                                                                                                new ZoneWidgetRuntimeData
-                    //                                                                                                               {
-                    //                                                                                                                   Id = Guid.NewGuid().ToString(),
-                    //                                                                                                                   DefinitionId = "image",
-                    //                                                                                                                   Config = JObject.Parse("{\"image\":{\"src\":\"http://www.andrew.cmu.edu/user/cfperron/cats/images/cat7.jpg\",\"alt\":\"cat\",\"height\":200,\"width\":200}}")
-                    //                                                                                                               }
-                    //                                                                                                       }
-                    //                                                                                     }
-                    //                                                                             }
-                    //                                                           },
-                    //                                                           new ZoneRowRuntimeData
-                    //                                                           {
-                    //                                                               Columns = new List<ZoneColumnsRuntimeData>
-                    //                                                                             {
-                    //                                                                                 new ZoneColumnsRuntimeData
-                    //                                                                                     {
-                    //                                                                                         Span = 12,
-                    //                                                                                         Widgets = new List<ZoneWidgetRuntimeData>
-                    //                                                                                                       {
-                    //                                                                                                           new ZoneWidgetRuntimeData
-                    //                                                                                                               {
-                    //                                                                                                                   Id = Guid.NewGuid().ToString(),
-                    //                                                                                                                   DefinitionId = "content",
-                    //                                                                                                                   Config = JObject.Parse("{\"body\": \"<h1>Hold on to your fud</h1><p>The path of the righteous\nman is beset on all sides by the iniquities of the selfish and the tyranny of\nevil men. Blessed is he who, in the name of charity and good will, shepherds\nthe weak through the valley of darkness, for he is truly his brother's keeper\nand the finder of lost children. And I will strike down upon thee with great\nvengeance and furious anger those who would attempt to poison and destroy My\nbrothers. And you will know My name is the Lord when I lay My vengeance upon\nthee. </p>\"}")
-                    //                                                                                                               }
-                                                                                                                              
-                    //                                                                                                       }
-                    //                                                                                     },
-                                                                                                    
-                    //                                                                             }
-                    //                                                           }
-                    //                                                   },
-                    //                                    });
-
-
-          //          var s = Newtonsoft.Json.JsonConvert.SerializeObject(cmsPageContext.RuntimeData2);
+                   
 
                     if (cmsPageContext.Page.Document != null)
                     {
@@ -254,6 +176,41 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                             cmsPageContext.RuntimeData2.AddRange(zoneData);
                         }
                     }
+                    if (pageContext.IsEditMode && !cmsPageContext.RuntimeData2.Any(x => string.Equals(x.Id, "body-bottom", StringComparison.OrdinalIgnoreCase)))
+                    {
+
+
+                        cmsPageContext.RuntimeData2.Add(new ZoneRuntimeData
+                                                            {
+                                                                Id = "body-bottom",
+                                                                Rows = new List<ZoneRowRuntimeData>
+                                                                           {
+                                                                               new ZoneRowRuntimeData
+                                                                                   {
+                                                                                       Columns = new List<ZoneColumnsRuntimeData>
+                                                                                                     {
+                                                                                                         new ZoneColumnsRuntimeData
+                                                                                                             {
+                                                                                                                 Span = 12,
+                                                                                                                 Widgets = new List<ZoneWidgetRuntimeData>
+                                                                                                                               {
+                                                                                                                                   new ZoneWidgetRuntimeData
+                                                                                                                                       {
+                                                                                                                                           Id = Guid.NewGuid().ToString(),
+                                                                                                                                           DefinitionId = "content",
+                                                                                                                                           Config = JObject.Parse("{\"body\": \"<br ><br >\"}")
+                                                                                                                                       },
+                                                                                                                                  
+                                                                                                                               }
+                                                                                                             }
+                                                                                                         
+                                                                                                     }
+                                                                                   }
+                                                                           }
+                                                            });
+                    }
+
+
                     cmsPageContext.Initialized = true;
                     return true;
                 });
