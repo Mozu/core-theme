@@ -6,8 +6,8 @@
      requires:['Taco.view.website.settings.CategoryTemplates'],
      modelName:'Taco.model.Category',
  	allowedActions:{copy:false,preview:true,destroy:false},
-     getStore:function(){
-         return this.editor.categories;
+     getStore:function() {
+         return Taco.core.data.StoreManager.getOrCreate('Taco.store.Categories');
      },
 	
      isHidden:function(){
@@ -18,10 +18,10 @@
      },
 	
      getId: function() {
-         return parseInt(this.pageProps.pageContext.categoryId, 10);
+         return parseInt(this.pageContext.categoryId, 10);
      },
 
-
+    
     getCmsPageDoc:function() {
         var doc,
             me = this,
@@ -65,35 +65,48 @@
     },
      getPageSettings: function () {
          var me = this;
+
          return [
-             {
-                 panelCls: 'Taco.view.website.settings.General',
-                 getRecord: function() {
-                     return me.get();
-                 }
-             },
-             {
-                 panelCls: 'Taco.view.website.settings.CategoryTemplates',
-                 panelCfg:{},
-                 getRecord: function() {
-                     return me.getCmsPageDoc();
-                 }
-             }, {
-                 panelCls:  'Taco.view.website.settings.Seo',
-                 getRecord: function() {
-                     return me.get();
-                 }
-             }, {
-                 panelCls: 'Taco.view.website.settings.Facets',
-                 getRecord: function () {
-                     var fs = me.get().getFacetSets();
-                     if (!fs.pageEditor) {
-                         fs.pageEditor = me.editor;
-                         me.model.getFacetSets().on('dirtychange', me.editor.onFormStateChange, me.editor);
-                     }
-                     return me.get();
-                 }
-             }];
+             Ext.create('Taco.view.website.settings.General',
+                 {
+                     record: me.get()
+                 }),
+             Ext.create('Taco.view.website.settings.CategoryTemplates',
+                 {
+                     record: me.get()
+                 }),
+             Ext.create('Taco.view.website.settings.Seo',
+                 {
+                     record: me.get()
+                 }),
+             Ext.create('Taco.view.website.settings.facets.Facets',
+                 {
+                     record: me.get()
+                 })];
+
+         //,
+         //{
+         //    panelCls: 'Taco.view.website.settings.CategoryTemplates',
+         //    panelCfg:{},
+         //    getRecord: function() {
+         //        return me.getCmsPageDoc();
+         //    }
+         //}, {
+         //    panelCls:  'Taco.view.website.settings.Seo',
+         //    getRecord: function() {
+         //        return me.get();
+         //    }
+         //}, {
+         //    panelCls: 'Taco.view.website.settings.Facets',
+         //    getRecord: function () {
+         //        var fs = me.get().getFacetSets();
+         //        if (!fs.pageEditor) {
+         //            fs.pageEditor = me.editor;
+         //            me.model.getFacetSets().on('dirtychange', me.editor.onFormStateChange, me.editor);
+         //        }
+         //        return me.get();
+         //    }
+
      }
 	
 

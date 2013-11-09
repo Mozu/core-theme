@@ -122,9 +122,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     {
                         viewMode = DataViewModeType.Pending;
                         domainList = site.Domains.Where(x => x.IsSystemAssigned).Select(x => "admin-pending-view." + x.DomainName);
+                        break;
+                    }
+                case "editing":
+                    {
+                        viewMode = DataViewModeType.Pending;
+                        domainList = Enumerable.Empty<string>();
+                        break;
                     }
                     
-                    break;
                 default:
                     domainList = site.Domains.Select(x => x.DomainName);
                     break;

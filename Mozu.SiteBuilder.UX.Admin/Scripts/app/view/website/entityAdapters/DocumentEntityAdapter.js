@@ -13,8 +13,23 @@
          return this.callParent(arguments);
 
      },
+     load:function () {
+         var me = this;
+         if (!this.getId()) {
+             return;
+         }
+         Taco.model.CmsDocument.load(this.getId(), {
+             scope: this,
+             
+             success: function(record, operation) {
+                 this.set(record);
+             }
+             
+         });
+      
+     },
      getId: function () {
-         return this.pageProps.pageContext.collectionId + "_" + this.pageProps.pageContext.documentId;
+         return this.pageContext.cmsContext.page.collection + "_" + this.pageContext.cmsContext.page.id;
      },
 
      constructor: function () {
@@ -25,18 +40,11 @@
      },
      getPageSettings: function () {
          var me = this;
+
          return [
-             {
-                 panelCls: 'Taco.view.website.settings.General',
-                 getRecord: function() {
-                     return me.get();
-                 }
-             },
-             {
-                 panelCls: 'Taco.view.website.settings.Seo',
-                 getRecord: function() {
-                     return me.get();
-                 }
-             }];
+             Ext.create('Taco.view.website.settings.General',
+                 {
+                     record: me.get()
+                 })];
      }
  });

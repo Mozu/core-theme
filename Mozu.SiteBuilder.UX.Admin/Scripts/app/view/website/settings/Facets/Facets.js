@@ -6,14 +6,14 @@
      requires: ['Taco.core.ux.form.field.MultiSelect', 'Taco.view.website.settings.facets.FacetRangeQueryForm'],
      title: "Facets",
      ui: "subform",
-     layout: 'fit',
+     layout: 'vbox',
      cls: Taco.baseCSSPrefix + 'sidebar-modal-facets',
 
      cancelChanges: function() {
          for (var f in this.rangeQueryForms) {
              f.reset();
          }
-         this.form.reset();
+         this.reset();
          this.hide();
      },
 
@@ -26,8 +26,8 @@
              renderTo: Ext.dom.Query.selectNode('[data-for-sourceid="' + rId + '"]'),
              hidden: !isShowing
          });
-         me.form.updateLayout();
-         rangeQueryForm.eventRelayer = me.form.relayEvents(rangeQueryForm, ['savablestatechange','heightchange']);
+         me.updateLayout();
+         rangeQueryForm.eventRelayer = me.relayEvents(rangeQueryForm, ['savablestatechange','heightchange']);
          return rangeQueryForm;
      },
 
@@ -41,7 +41,8 @@
      initComponent: function () {
 
          var me = this;
-
+         
+         
          function setUp() {
              var facetSet = me.facetSetStore.getAt(0);
              if (!facetSet) {
@@ -160,8 +161,8 @@
                                          delete me.rangeQueryForms[rId];
                                      }
                                      configuredFacetsStore.remove(record);
-                                     me.form.fireEvent('savablestatechange', me.form, me.facetSetStore.isDirty());
-                                     me.form.updateLayout();
+                                     me.fireEvent('savablestatechange', me.form, me.facetSetStore.isDirty());
+                                     me.updateLayout();
                                      break;
                                  case 'settings':
                                      rId = record.get('sourceId');
@@ -172,7 +173,7 @@
                                      } else {
                                          rangeQueryForm.hide();
                                      }
-                                     me.form.updateLayout();
+                                     me.updateLayout();
                                      break;
                              }
                          },
@@ -189,12 +190,12 @@
                          for (var rId in me.rangeQueryForms) {
                              me.preserveRangeQueryForm(me.rangeQueryForms[rId]);
                          }
-                         me.form.fireEvent('savablestatechange', me.form, me.facetSetStore.isDirty());
+                         me.fireEvent('savablestatechange', me, me.facetSetStore.isDirty());
                      }
                  }
              });
              me.configuredFacetsView.boundList.selectedItemCls = me.inheritedFacetsView.boundList.selectedItemCls = me.inheritedFacetsView.boundList.overItemCls = 'dummy';
-             me.form.add([me.availableFacetsDropdown, me.inheritedFacetsView, me.configuredFacetsView]);
+             me.add([me.availableFacetsDropdown, me.inheritedFacetsView, me.configuredFacetsView]);
          }
 
          this.facetSetStore = this.record.getFacetSets();
@@ -203,15 +204,15 @@
 
          this.rangeQueryForms = {};
 
-         this.form = {
-             layout: 'vbox',
-             autoScroll: true,
-             beforeSave: function () {
-                 Ext.iterate(me.rangeQueryForms, function (sourceId, form) {
-                     form.updateForm();
-                 });
-             }
-         };
+         //this.form = {
+         //    layout: 'vbox',
+         //    autoScroll: true,
+         //    beforeSave: function () {
+         //        Ext.iterate(me.rangeQueryForms, function (sourceId, form) {
+         //            form.updateForm();
+         //        });
+         //    }
+         //};
 
          this.callParent(arguments);
 
@@ -221,7 +222,7 @@
              setUp();
          }
 
-         this.form.on('heightchange', this.form.updateLayout, this.form);
+       //  this.form.on('heightchange', this.form.updateLayout, this.form);
 
      }
  });

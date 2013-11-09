@@ -5,6 +5,10 @@
      extend: 'Ext.util.Observable',
      requires: [],
 
+    constructor: function(config) {
+        this.callParent(arguments);
+        this.load();
+    },
  	allowedActions:{copy:false,preview:false,destroy:false,more: false},
  	load: function() {
  		var me = this,

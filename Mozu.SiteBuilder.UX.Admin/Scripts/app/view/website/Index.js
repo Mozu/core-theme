@@ -126,12 +126,12 @@ Ext.define('Taco.view.website.Index', {
                     items: [{
                         itemId: 'iframe',
                         xtype: 'uxiframe',
-                        src: '/_gosite/' + Taco.app.context.getSiteId() + '?redir=' + encodeURIComponent(Ext.String.urlAppend(this.options && this.options.startUrl ? this.options.startUrl : '/widgettest', 'iseditmode=true'))
+                        src: '/_gosite/' + Taco.app.context.getSiteId() + '?environment=editing&redir=' + encodeURIComponent(Ext.String.urlAppend(this.options && this.options.startUrl ? this.options.startUrl : '/widgettest', 'iseditmode=true'))
                     }]
                 }, {
                     xtype: 'panel',
                     title: 'Settings',
-                    itemId: 'settingsPanel',
+                   
                     header: false,
                     items: [{
                         xtype: 'formform',
@@ -198,7 +198,7 @@ Ext.define('Taco.view.website.Index', {
 
         this.down('#primaryAction').setHandler(this.onSave, this);
         this.iframe = this.down('#iframe');
-        this.settingsPanel = this.down('#settingsPanel');
+        this.pageSettings = this.down('#pageSettings');
         window.webSiteIndex = this;
     },
 
@@ -231,9 +231,15 @@ Ext.define('Taco.view.website.Index', {
             entitypeTypeHandler = Ext.create(this.entityTypeEditConfig[pc.pageType || "default"], {
                 editor: editor,
                 pageContext:pc,
-                manager: this
+                manager: this,
+                listeners: {
+                    load: me.onEntityTypeAdapterLoad,
+                    scope:me
+                }
             });
 
+        this.pageSettings.removeAll(true);
+        
         this.entitypeTypeHandler = entitypeTypeHandler;
         
         Ext.EventManager.on(this.iframe.getDoc(), 'click', function (e, target, eOpts) {
@@ -251,12 +257,14 @@ Ext.define('Taco.view.website.Index', {
         });
 
 
-        this.loadSettings();
+        
     },
-    loadSettings: function () {
-
+   
+    onEntityTypeAdapterLoad:function () {
+        var settings = this.entitypeTypeHandler.getPageSettings();
+        
+        this.pageSettings.add(settings);
     },
-
     onWidgetDrop: function (cfg) {
         var pageContext = this.getPageContext(),
             jsonData = {
