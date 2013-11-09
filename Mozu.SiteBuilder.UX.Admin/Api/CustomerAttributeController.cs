@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
-        [HttpPostRoute(UriTemplate = "destroy")]
+        [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<List<AttributeModel>>> DeleteAttribute(List<AttributeModel> attributes)
         {
             var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ => _customerAttributeDefinitionWebApiClient.DeleteAttribute(_.AttributeFQN)).ToList();

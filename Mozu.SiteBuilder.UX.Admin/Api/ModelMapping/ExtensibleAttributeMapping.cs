@@ -185,7 +185,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     AttributeCode = source.Id == null ? (source.Name ?? "").Trim() : null,
                     Id = source.AttributeId,
                     Validation = attributeValidation,
-                    VocabularyValues = Mapper.Map<List<DC.AttributeVocabularyValue>>(source.Values),
+                    VocabularyValues = source.InputType == AttributeInputType.List ? Mapper.Map<List<DC.AttributeVocabularyValue>>(source.Values) : null,
                     AttributeFQN = source.Id,
                     AttributeMetadata = Mapper.Map<List<DC.AttributeMetadataItem>>(source.AttributeMetadata),
                     Content = new DC.AttributeLocalizedContent
