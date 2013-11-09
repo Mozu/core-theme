@@ -72,8 +72,6 @@ Ext.define('Taco.view.customers.Form', {
 
         this.callParent(arguments);
 
-        console.log(contactsStore);
-
         this.loadRecord(this.record);
     },
     addSaveTasks: function (tasks, updateRecord, saveRecord) {
