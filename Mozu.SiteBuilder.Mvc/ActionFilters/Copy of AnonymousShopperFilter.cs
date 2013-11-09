@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                     if (pc.CmsContext != null && !pc.CmsContext.Initialized)
                     {
                         var cmsHelper = actionContext.Request.Resolve<CmsHelper>();
-                        return cmsHelper.InitCmsPageContext(pc.CmsContext).ContinueWith(_ => actionResult.Result );
+                        return cmsHelper.InitCmsPageContext(pc).ContinueWith(_ => actionResult.Result );
                     }
                     return actionResult;
                  //   return tcs.Task;

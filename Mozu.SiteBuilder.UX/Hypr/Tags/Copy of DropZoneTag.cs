@@ -12,6 +12,7 @@ using Microsoft.FSharp.Collections;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
+using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
@@ -128,7 +129,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             if (pageContext.CmsContext != null && !pageContext.CmsContext.Initialized)
             {
                 var cmsHelper = context.Resolve<CmsHelper>();
-                cmsHelper.InitCmsPageContext(pageContext.CmsContext).Wait();
+                cmsHelper.InitCmsPageContext(pageContext).Wait();
             }
 
 
@@ -157,7 +158,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
 
             sb.Append(">");
-
+            
             var sw = new StringWriter(sb);
 
             if (zoneRuntimeData != null && zoneRuntimeData.Rows != null && zoneRuntimeData.Rows.Count > 0)
@@ -219,8 +220,31 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     }
                     sb.Append("</div>");
                 }
+               
 
 
+            }
+            else
+            {
+                //if (isEditmode)
+                //{
+                //    sb.Append("<div class=\"mz-cms-row\">");
+                   
+                //    sb.AppendFormat("<div class=\"mz-cms-col-{0}-{1}\">", zoneSpan,12);
+                //    sb.Append("<div class=\"mz-cms-block\" ");
+                //    sb.AppendJsonHtmlAttribute(new ZoneWidgetRuntimeData()
+                //    {
+
+                //    }, "widget");
+                    
+                //    sb.Append(">");
+                //    sb.Append("<div class=\"mz-cms-content\">");
+                //    sb.Append("</div>");
+                //    sb.Append("</div>");
+                //    sb.Append("</div>");
+                //    sb.Append("</div>");
+                //    sb.Append("<br><br>");
+                //}
             }
             sb.Append("</div>");
             buffer = sb.ToString();

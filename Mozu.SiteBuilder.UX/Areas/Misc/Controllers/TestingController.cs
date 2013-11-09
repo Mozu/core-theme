@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             };
 
             var helper = new CmsHelper(CmsService);
-            await helper.InitCmsPageContext(PageContext.CmsContext);
+            await helper.InitCmsPageContext(PageContext);
             return this.View("WidgetTEsting/test", this.SiteContext );
         }
 
