@@ -136,6 +136,46 @@
             $('.mz-cms-grid').removeClass('mz-cms-show-zone');
         },
 
+        persistanceData: function() {
+            var data = [];
+            $('.mz-cms-grid').each(function (i, grid) {
+                var $grid = $(grid),
+                    gridData = {
+                        id: $grid.data('drop-zone'),
+                        rows: []
+                    };
+
+                $grid.find('.mz-cms-row').each(function (j, row) {
+                    var $row = $(row),
+                        rowData = {
+                            columns: []
+                        }; 
+
+                    $row.find('[class^=mz-cms-col]').each(function(k, col) {
+                        var $col = $(col),
+                            colData = {
+                                span: $col.mzCol('span'),
+                                widgets: []
+                            };
+
+                        
+
+                        $col.find('.mz-cms-block').each(function(l, block) {
+                            colData.widgets.push($(block).data('widget'));
+                        });
+
+                        rowData.columns.push(colData);
+                    });
+
+                    gridData.rows.push(rowData);
+                });
+
+                data.push(gridData);
+            });
+            return data;
+
+        },
+
         drop: function() {
             var target = this._hintTarget,
                 quadrant = this._hintQuadrant,
@@ -164,7 +204,6 @@
                 }
 
             }
-
 
             this._hintQuadrant = null;
             this._hintTarget = null;

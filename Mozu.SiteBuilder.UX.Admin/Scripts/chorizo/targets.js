@@ -273,7 +273,7 @@
         return col;
     }
 
-    Col.parseSize = function(element) {
+    Col.span = function(element) {
         var match = element.attr('class').match(/col-\d{1,2}-\d{1,2}/),
             split;
 
@@ -331,13 +331,17 @@
         return;
     }
 
+    Col.prototype.span = function() {
+        return Col.span(this.element);
+    }
+
     Col.prototype._onStart = function(e, ui) {
         this.$resizer.addClass('active');
         this._moveHander = $.proxy(this._onMousemove, this);
         this.offset = this.element.offset();
         this.height = this.element.width();
         this.gridWidth = this.parent.element.width() / 12;
-        this.size = Col.parseSize(this.element);
+        this.size = this.span();
 
         $doc.on('mousemove', this._moveHander);
         Chorizo.editor.stopDrag();
@@ -364,7 +368,7 @@
 
         if ($next.length !== 1) return;
 
-        nextSize = Col.parseSize($next);
+        nextSize = Col.span($next);
 
         if (nextSize - delta < 1) return;
 
