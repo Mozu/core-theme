@@ -203,10 +203,6 @@ Ext.define('Taco.store.Navigation', {
                 "id": "catlogpublishing",
                 "label": "Product",
                 "address": "/pendingChanges/product"
-            }, {
-                "id": "websites2",
-                "label": "Website",
-                "address": "/website"
             }]
         }, {
             "id": "locations",

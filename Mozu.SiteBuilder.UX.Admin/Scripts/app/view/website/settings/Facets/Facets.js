@@ -16,6 +16,12 @@
          this.reset();
          this.hide();
      },
+     beforeSaveMe:function () {
+         Ext.iterate(me.rangeQueryForms, function (sourceId, form) {
+                         form.updateForm();
+                     });
+     },
+    
 
      createRangeQueryForm: function(record, isShowing) {
          var me = this,
@@ -41,8 +47,8 @@
      initComponent: function () {
 
          var me = this;
-         
-         
+
+         window.facetConfig = this;
          function setUp() {
              var facetSet = me.facetSetStore.getAt(0);
              if (!facetSet) {
