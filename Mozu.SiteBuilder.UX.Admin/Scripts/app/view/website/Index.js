@@ -12,13 +12,16 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.website.entityAdapters.BaseEntityAdapter',
         'Taco.view.website.entityAdapters.DocumentEntityAdapter',
         'Taco.view.website.entityAdapters.CategoryEntityAdapter',
-        'Taco.view.website.entityAdapters.ProductEntityAdapter'
+        'Taco.view.website.entityAdapters.ProductEntityAdapter',
+        'Taco.view.website.WidgetEditor'
     ],
     options: {},
 
     requiresContextOfType: ['s'],
     header: {
-        title: false,
+        title: 'a',
+        items:[ { html: 'ok', flex:1 }],
+        flexFirstItem:false,
         actions: [{
                 xtype: 'button',
                 ui: 'action',
@@ -193,9 +196,7 @@ Ext.define('Taco.view.website.Index', {
 
         this.down('#pageSettings').getForm().getBoundItems().add(this.down('#primaryAction'));
 
-        this.down('#primaryAction').setHandler(function () {
-            console.log('handler updated');
-        });
+        this.down('#primaryAction').setHandler(this.onSave, this);
         this.iframe = this.down('#iframe');
         this.settingsPanel = this.down('#settingsPanel');
         window.webSiteIndex = this;
@@ -207,6 +208,12 @@ Ext.define('Taco.view.website.Index', {
         category: 'Taco.view.website.entityAdapters.CategoryEntityAdapter',
         product: 'Taco.view.website.entityAdapters.ProductEntityAdapter',
         link: 'Taco.view.website.entityAdapters.ExternalLinkEntityAdapter'
+    },
+
+    onSave:function () {
+
+        var tasks = this.entitypeTypeHandler.getSaveTask();
+        tasks.execute();
     },
 
     getPageContext: function () {
@@ -223,10 +230,12 @@ Ext.define('Taco.view.website.Index', {
             pc = this.getPageContext(),
             entitypeTypeHandler = Ext.create(this.entityTypeEditConfig[pc.pageType || "default"], {
                 editor: editor,
+                pageContext:pc,
                 manager: this
             });
 
-
+        this.entitypeTypeHandler = entitypeTypeHandler;
+        
         Ext.EventManager.on(this.iframe.getDoc(), 'click', function (e, target, eOpts) {
             if (target.hostname == this.iframe.getWin().location.hostname) {
                 me.fireEvent('beforeIframeClickNavigate', { url: target.pathname + target.search });
@@ -248,85 +257,75 @@ Ext.define('Taco.view.website.Index', {
 
     },
 
-    onWidgetDrop: function (config) {
+    onWidgetDrop: function (cfg) {
         var pageContext = this.getPageContext(),
             jsonData = {
                 zoneScope: 'page',
                 source: pageContext.cmsContext.page,
-                definitionId: config.widgetTypeId
+                definitionId: cfg.widgetTypeId
+                
             };
 
-        var def = this.widgetDefinitions.getById(config.widgetTypeId);
-        
-        
-        //Ext.defer(
-        //    function () {
-        //        var markup;
-        //        if (config.widgetTypeId == 'text') {
-        //            markup = '<div><h1>hi mom' + Ext.Number.randomInt(1, 10000000) + '</h1><div>im herer</div></div>';
-        //            config.callback(markup, {
-        //                id: 'id-' + Ext.Number.randomInt(1, 10000000),
-        //                //widgetTypeDefinition of the widget instance
-        //                typeId: config.widgetTypeId,
-        //                //specific instance config info for the widget
-        //                config: {
-        //                    body: markup
-        //                }
-        //            });
+        var def = this.widgetDefinitions.getById(cfg.widgetTypeId);
+        cfg.config = def.get('defaultConfig');
 
-        //        } else {
-        //            markup = ' <div class="mz-cms-image-cover" style="background-image: url(\'http://arnoldthemethodical.files.wordpress.com/2007/06/small_cat_astonished.jpg\'); height:200px;"></div>';
-        //            config.callback(markup, {
-        //                id: 'id-' + Ext.Number.randomInt(1, 10000000),
-        //                //widgetTypeDefinition of the widget instance
-        //                typeId: config.widgetTypeId,
-        //                //specific instance config info for the widget
-        //                config: {
-        //                    src: markup,
-        //                    alt: 'steve',
-        //                    height:200
-        //                }
-        //            });
-        //        }
+        if (!Ext.isEmpty(def.get('editViewFields')) || !Ext.isEmpty(def.get('editViewConfig'))) {
+            Ext.create('Taco.view.website.WidgetEditor', {
+                editViewFields: def.get('editViewFields'),
+                editViewConfig: def.get('editViewConfig'),
+                widgetData: cfg.config,
+                title: def.get('displayName'),
+                listeners: {
+                    save: function (modal) {
+                        jsonData.config = modal.widgetData;
 
+                        Ext.Ajax.request({
+                            url: '/Widgets/preview',
+                            jsonData: jsonData,
+                            success: function (response) {
+                                var ret = Ext.JSON.decode(response.responseText);
 
-        //    }, 700);
-        
+                                cfg.callback(
+                                    
+                                    ret.output, {
+                                        config:ret.config,
+                                        id:ret.id,
+                                        definitionId:ret.definitionId,
+                                    }
+                                    
+                                );
 
-        if (config.widgetTypeId == 'content' ) {
-            jsonData.config = {
-                body: '<div><h1>hi mom' + Ext.Number.randomInt(1, 10000000) + '</h1><div>im herer</div></div>'
-            };
+                            }
+                        });
 
+                    }
+                }
+            });
+        } else {
+
+            jsonData.config = cfg.config;
+            
+            Ext.Ajax.request({
+                url: '/Widgets/preview',
+                jsonData: jsonData,
+                success: function (response) {
+                    var ret = Ext.JSON.decode(response.responseText);
+
+                    cfg.callback(
+                        ret.output,
+                        ret.config
+                    );
+
+                }
+            });
         }
-
-        Ext.Ajax.request({
-            url: '/Widgets/preview',
-            jsonData: jsonData,
-            success: function (response) {
-                var ret = Ext.JSON.decode(response.responseText);
-
-                config.callback(
-                    ret.output,
-                    ret.config
-                );
-
-            }
-        });
+        
 
 
-        //pc.cmsContext.page
-        //{
-        //    //the editor firing the event
-        //    editor: editor,
-        //    //the widgetTypeId of the widgetBeing dropped
-        //    widgetTypeId: 'qewr-asdf-asdf',
-        //    //callback method to be called when content and data are ready to be inserted into the page
-        //    // html is the markup to be inserted the 
-        //    // data is the persistable widgetInstanceData of the widget
-        //    callback: function (html, data) {
+       
 
-        //    }
+        
+
 
 
     },

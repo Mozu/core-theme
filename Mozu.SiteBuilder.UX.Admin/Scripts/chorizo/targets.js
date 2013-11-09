@@ -441,7 +441,7 @@
 
         // Insert widget content (for now, just doing text)
         $block
-            .data('widget', widgetCfg)
+            .data('widget', widgetCfg.data)
             .find('.mz-cms-content')
             .html(widgetCfg.html);
 

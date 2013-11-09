@@ -100,7 +100,7 @@ using System.Runtime.Serialization;
 
 
         public bool isRichText { get; set; }
-        public Newtonsoft.Json.Linq.JObject Config { get; set; }
+        public object Config { get; set; }
 
       
       

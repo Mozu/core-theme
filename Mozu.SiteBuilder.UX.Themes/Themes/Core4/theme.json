@@ -172,6 +172,7 @@
          "displayTemplate": "catalog/featuredproducts",
          "icon": "_0007_featured-products.png",
          "editView": "Taco.view.site.widget.FeaturedProducts",
+        
          "editViewConfig": "{listeners:{afterRender:function() {console.log('test of the editviewConfig system');}}}",
          "properties": []
     }, 
@@ -179,12 +180,22 @@
         "id": "content",
         "displayName": "Content",
         "displayTemplate": "cms/content",
-        "icon": "_0004_html.png"
+        "icon": "_0004_html.png",
+        "defaultConfig": {
+			"body": "<h2>title<h2><div>Content</div>"
+		}
     },
       {
         "id": "image",
         "displayName": "test image",
         "displayTemplate": "cms/image",
+        "editViewFields":[
+            {
+                "name":"image",
+                "fieldLabel":"image",
+                "xtype":"taco-singleimagefield"
+            }
+         ],
         "icon": "_0004_html.png"
     },
     {
