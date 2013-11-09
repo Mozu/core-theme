@@ -86,7 +86,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var custSettings = (await _carrierConfigurationWebApiClient.GetConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId)).ReadAsSync();
             var settings = Mapper.Map<SiteShippingSettings>(res);
             settings.CustomRate = Mapper.Map<CustomRate>(custSettings);
-            settings.CustomRate.IsEnabled = res.ActiveRateProviders.Any(x => x.Name == SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.Custom);
+            //settings.CustomRate.IsEnabled = res.ActiveRateProviders.Any(x => x.Name == SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.Custom);
 
           
             return Single2<SiteShippingSettings>(settings );
