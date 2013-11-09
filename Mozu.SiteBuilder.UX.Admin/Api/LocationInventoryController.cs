@@ -106,9 +106,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<HttpResponseMessage> Edit(List<DC.LocationInventory> locationInventories)
         {
             var tasks = new List<Task<ServiceClientResponse<List<DC.LocationInventory>>>>();
+
             locationInventories.GroupBy(li => li.LocationCode).Each(locationCodeGroup =>
             {
-                tasks.Add( _locationInventoryClient.AddLocationInventory( locationCodeGroup.ToList(), locationCodeGroup.Key ) );
+                var adjustments = 
+                    (from li in locationCodeGroup
+                     select new DC.LocationInventoryAdjustment { 
+                         LocationCode = li.LocationCode, 
+                         ProductCode = li.ProductCode, 
+                         Type = DC.LocationInventoryAdjustment.TypeConst.Absolute, 
+                         Value = li.StockOnHand.GetValueOrDefault(0) 
+                     }).ToList();
+                tasks.Add( _locationInventoryClient.UpdateLocationInventory( adjustments, locationCodeGroup.Key ) );
             });
 
             await Task.WhenAll(tasks);
