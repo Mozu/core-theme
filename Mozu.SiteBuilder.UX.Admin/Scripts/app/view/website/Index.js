@@ -11,6 +11,8 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.website.Tree',
         'Taco.view.website.entityAdapters.BaseEntityAdapter'
     ],
+    options:{},
+   
     requiresContextOfType: [ 's'],
     header: {
         title: false,
@@ -90,6 +92,9 @@ Ext.define('Taco.view.website.Index', {
             items;
 
         this.controller = Taco.app.controllers.get('Website');
+        this.widgetDefinitions = Taco.core.data.StoreManager.getOrCreate("Taco.store.WidgetDefinitions");
+        
+
 
         this.mon(this.controller,'pageload', this.onPageLoad, this);
         this.mon(this.controller,'widgetdrop', this.onWidgetDrop, this);
@@ -116,7 +121,7 @@ Ext.define('Taco.view.website.Index', {
                 items: [{
                     itemId:'iframe',
                     xtype: 'uxiframe',
-                    src: '/_gosite/'+ Taco.app.context.getSiteId()+ '?redir=' + encodeURIComponent ('/widgettest?iseditmode=true')
+                    src: '/_gosite/' + Taco.app.context.getSiteId() + '?redir=' + encodeURIComponent(Ext.String.urlAppend(  this.options  && this.options.startUrl ? this.options.startUrl : '/widgettest', 'iseditmode=true'))
                 }]
             }, {
                 xtype: 'panel',
@@ -195,39 +200,37 @@ Ext.define('Taco.view.website.Index', {
     },
     
     entityTypeEditConfig: {
-        blog: {
-            editors: ["Taco.view.website.dataViews.Blog", "Taco.view.website.dataViews.Meta"],
-            adapter: 'Taco.view.website.entityAdapters.DocumentEntityAdapter'
-        },
-        "default": {
-            editors: ["Taco.view.website.dataViews.Meta"],
-            adapter: 'Taco.view.website.entityAdapters.DocumentEntityAdapter'
-        },
-        category: {
-            editors: ["Taco.view.category.Basic"],
-            adapter: 'Taco.view.website.entityAdapters.CategoryEntityAdapter'
-        },
-        product: {
-            editors: ["Taco.view.product.edit.Inline"],
-            adapter: 'Taco.view.website.entityAdapters.ProductEntityAdapter'
-        },
-        link: {
-            editors: [],
-            adapter: 'Taco.view.website.entityAdapters.ExternalLinkEntityAdapter'
-        }
+        blog: 'Taco.view.website.entityAdapters.DocumentEntityAdapter',
+        "default": 'Taco.view.website.entityAdapters.DocumentEntityAdapter',
+        category: 'Taco.view.website.entityAdapters.CategoryEntityAdapter',
+        product:'Taco.view.website.entityAdapters.ProductEntityAdapter',
+        link: 'Taco.view.website.entityAdapters.ExternalLinkEntityAdapter'
     },
+    
     getPageSettings:function () {
         return this.iframe.getWin().require.mozuData('pagecontext');
     },
+
+    navigate: function (config) {
+        this.iframe.getWin().location.href = Ext.String.urlAppend(config.url, 'iseditmode=true');
+        Taco.core.StateManager.addState('website/page' + config.url);
+    },
+    
     onPageLoad: function (editor) {
         var me = this,
-            pc = this.getPageSettings();
+            pc = this.getPageSettings(),
+            entitypeTypeHandler = Ext.create(this.entityTypeEditConfig[pc.pageType || "default"], {
+                editor: editor,
+                manager:this
+            });
+        
+  
         Ext.EventManager.on(this.iframe.getDoc(), 'click', function (e, target, eOpts) {
             if (target.hostname == this.iframe.getWin().location.hostname) {
                 me.fireEvent('beforeIframeClickNavigate', { url: target.pathname + target.search });
-                this.iframe.getWin().location.href = Ext.String.urlAppend(target.pathname + target.search, 'iseditmode=true');
-                
-                console.log('before nav', arguments);
+                this.navigate({
+                    url: target.pathname + target.search
+                });
                 e.stopEvent();
             }
 
@@ -235,12 +238,49 @@ Ext.define('Taco.view.website.Index', {
         }, this, {
             delegate: 'a'
         });
-        var config = this.entityTypeEditConfig[pc.pageType] || this.entityTypeEditConfig['default'];
         
 
+        this.loadSettings();
     },
-    onWidgetDrop:function (config) {
+    loadSettings:function () {
         
+    },
+        
+    onWidgetDrop:function (config) {
+
+        Ext.defer(
+            function () {
+                var markup;
+                if (config.widgetTypeId == 'text') {
+                    markup = '<div><h1>hi mom' + Ext.Number.randomInt(1, 10000000) + '</h1><div>im herer</div></div>';
+                    config.callback(markup, {
+                        id: 'id-' + Ext.Number.randomInt(1, 10000000),
+                        //widgetTypeDefinition of the widget instance
+                        typeId: config.widgetTypeId,
+                        //specific instance config info for the widget
+                        config: {
+                            body: markup
+                        }
+                    });
+
+                } else {
+                    markup = '<div><img src="http://arnoldthemethodical.files.wordpress.com/2007/06/small_cat_astonished.jpg" /></div>';
+                    config.callback(markup, {
+                        id: 'id-' + Ext.Number.randomInt(1, 10000000),
+                        //widgetTypeDefinition of the widget instance
+                        typeId: config.widgetTypeId,
+                        //specific instance config info for the widget
+                        config: {
+                            src: markup,
+                            alt: 'steve'
+                        }
+                    });
+                }
+
+
+            }, 700);
+
+
         //{
         //    //the editor firing the event
         //    editor: editor,
@@ -250,9 +290,9 @@ Ext.define('Taco.view.website.Index', {
         //    // html is the markup to be inserted the 
         //    // data is the persistable widgetInstanceData of the widget
         //    callback: function (html, data) {
-                
+
         //    }
-            
+
 
     },
     
