@@ -14,7 +14,7 @@ Ext.define('Taco.view.product.GlobalForm', {
         'Taco.view.product.subform.Properties',
         'Taco.view.product.subform.Extras',
         'Taco.view.product.subform.Shipping',
-        'Taco.view.product.subform.SEO',
+        'Taco.view.product.subform.SEO'
         //'Taco.view.product.subform.CrossSale'
     ],
     

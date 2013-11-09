@@ -1,29 +1,29 @@
 ﻿/**
- * @class Taco.core.ux.form.field.MultiSelect
- * @author Jimmy Sanford
- * Extends Ext.ux.form.MultiSelect.
+ * @class Taco.core.ux.form.field.Product
  */
+
 Ext.define('Taco.core.ux.form.field.Product', {
     extend: 'Ext.ux.form.field.BoxSelect',
     alias: 'widget.taco.field.product',
-    requires:['Taco.store.ProductComboBox'],
-    triggerOnClick: false,
+    requires:[
+        'Taco.store.ProductComboBox'
+    ],
+
     forceSelection: true,
     minChars: 3,
+    triggerOnClick: false,
     typeAhead: true,
-    queryMode:'remote',
+
     displayField: 'productName',
     fieldLabel: 'Select Products',
+    queryMode: 'remote',
     valueField: 'productCode',
-    initComponent : function () {
-        var me = this;
-        me.store = Taco.core.data.StoreManager.getOrCreate(
-           {
-               type: 'Taco.store.ProductComboBox'
-           });
-        
-        me.callParent();
-       
 
-    },   
+    initComponent : function () {
+        this.store = Taco.core.data.StoreManager.getOrCreate({
+           type: 'Taco.store.ProductComboBox'
+        });
+        
+        this.callParent(arguments);
+    }
 });

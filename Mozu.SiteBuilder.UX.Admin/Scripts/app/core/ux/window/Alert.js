@@ -15,10 +15,10 @@ Ext.define('Taco.core.ux.window.Alert', {
     actionBar: {
         layout: {
             type: 'hbox',
-            pack: 'center',
-            defaultMargins: '0 10 0 0',
+            pack: 'center'
         }
     },
+
     actions: [{
         xtype: 'button',
         itemId: 'primaryAction',

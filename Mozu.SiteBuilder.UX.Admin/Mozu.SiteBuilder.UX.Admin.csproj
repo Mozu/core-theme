@@ -1046,7 +1046,6 @@
     <Content Include="Scripts\app\core\ux\modal\SidebarModal.js" />
     <Content Include="Scripts\app\core\ux\content\Sidebar.js" />
     <Content Include="Scripts\app\core\ux\TabBar.js" />
-    <Content Include="Scripts\app\core\ux\PanelHeader.js" />
     <Content Include="Scripts\app\core\ux\form\field\Container.js" />
     <Content Include="Scripts\app\core\ux\form\field\MultiSelect.js" />
     <Content Include="Scripts\app\core\ux\form\TextField.js" />
@@ -2104,7 +2103,6 @@
     <Content Include="Scripts\app\core\ux\form\RemovableColumn.js" />
     <Content Include="Scripts\app\core\ux\form\TextAlignment.js" />
     <Content Include="Scripts\app\core\ux\modal\ContentWithActions.js" />
-    <Content Include="Scripts\app\core\ux\Panel.js" />
     <Content Include="Scripts\app\core\ux\PanelDD.js" />
     <Content Include="Scripts\app\core\ux\MultiImageField.js" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\var\layout\container\Border.scss" />

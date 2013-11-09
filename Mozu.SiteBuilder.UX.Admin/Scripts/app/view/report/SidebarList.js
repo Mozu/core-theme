@@ -9,10 +9,14 @@ Ext.define('Taco.view.report.SidebarList', {
     requires: [
         'Taco.core.ux.action.PrimaryButton'
     ],
+
     cls: Taco.baseCSSPrefix + 'sidebarlist',
-    bubbleEvents: ['runreport'],
     store: null,
     reportSelector: null,
+
+    bubbleEvents: [
+        'runreport'
+    ],
     
     initComponent: function () {
         var me = this;
@@ -109,7 +113,7 @@ Ext.define('Taco.view.report.SidebarList', {
                 ]
             }),
             forceSelection: true,
-            emptyText: 'Select one...',
+            emptyText: 'Select one...'
         });
 
         me.customDateRange = Ext.create('Ext.container.Container', {
@@ -134,8 +138,7 @@ Ext.define('Taco.view.report.SidebarList', {
                 fieldLabel: "End",
                 emptyText: 'MM/DD/YYYY',
                 width: 120
-            }
-            ]
+            }]
         });
 
         me.getReportDefinition = function () {

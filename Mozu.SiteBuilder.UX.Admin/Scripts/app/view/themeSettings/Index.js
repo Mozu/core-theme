@@ -10,17 +10,16 @@ Ext.define('Taco.view.themesettings.Index', {
         'Taco.core.ux.form.BackgroundImageField',
         'Taco.core.ux.form.FontField',
         'Taco.view.themesettings.Section',
-        'Taco.view.themesettings.Group'],
+        'Taco.view.themesettings.Group'
+    ],
+
     settingsConfig: null,
     settingsValues: null,
-    //layout: {
-    //    type: 'vbox',
-    //    align: 'stretch'
-    //},
 
     initComponent: function () {
+        var me = this,
+            panel;
 
-        var me = this;
         me.sections = [];
         me.header = {
             title: 'Theme Settings ' + (me.theme ? ':  ' + me.theme.get('name') : ''),
@@ -32,77 +31,40 @@ Ext.define('Taco.view.themesettings.Index', {
             }]
         };
 
-        
-
-        var panel = Ext.create('Ext.form.Panel', {
+        me.form = Ext.create('Ext.form.Panel', {
             trackResetOnLoad: true,
-            items: [
-                me.formConfig
-            ],
             layout: {
                 type:'vbox',
                 align:'stretch'
-            }
-            // cls: 'taco-theme-settings',
-            //defaults: {
-            //    labelAlign: 'top',
-            //    labelSeparator: ''
-            //    //width: 800
-            //},
-            //layout: {
-            //    type: 'auto'
-            //    //,  align: 'stretch'
-            //}
+            },
+            items: [
+                me.formConfig
+            ]
         });
 
-        me.body = {
-            items: [panel]
-        };
-
-
-        me.form = panel.getForm();
-        me.form.setValues(me.settingsValues);
-
-        me.form.on({
-           
-            validitychange: {
-                fn: function (form,valid) {
-                    me.dirtyButton.setDirty(valid);
-                },
-                scope: me
-            }
+        Ext.apply(me.body, {
+            items: [me.form]
         });
+
+        me.form.getForm().setValues(me.settingsValues);
 
         me.callParent(arguments);
-
-        me.dirtyButton = me.down('dirtybutton');
-        me.dirtyButton.on({
-            click: {
-                fn: me.save,
-                scope: me
-            }
-        });
-        me.dirtyButton.setDirty(me.form.isValid());
     },
 
     save: function () {
-        var me = this;
-
-       // me.resetOriginalValues();
-
-        var values = me.form.getValues();
+        var me = this,
+            values = me.form.getForm().getValues();
 
         Ext.Ajax.request({
             url: '/admin/app/themesetting/instance/save/' + this.themeId,
             method: "POST",
             jsonData: values,
-            success: function (response) {
-                me.dirtyButton.setDirty(me.form.isValid());
-            },
+            success: Ext.emptyFn,
             failure: function (response) {
                 var r = Ext.JSON.decode(response.responseText);
+
                 Taco.app.fireEvent('setmessage', 'Error saving settings.', 'error', r.message);
             }
         });
-    },
+    }
 });

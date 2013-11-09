@@ -1,12 +1,15 @@
 Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
-    ///extend: 'Ext.panel.Panel',
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco.extensibleattribute.subform',
-    requires: ['Taco.model.ExtensibleAttributeValue'],
+    requires: [
+        'Taco.model.ExtensibleAttributeValue'
+    ],
+
     ui: 'subform',
     bodyPadding: '19 0',
     margin: '0 0 20 0',
     cls: Taco.baseCSSPrefix + 'extensibleattributes',
+
     statics: {
         editors: {
             'Date': function (ptAttribute, values) {
@@ -72,16 +75,16 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                         xtype: 'taco.field.product',
                         name: this.getFieldName(ptAttribute),
                         fieldLabel: ptAttribute.get('name'),
-                        width:600,
-                        value: values,
+                        width: 600,
+                        value: values
                     }
                 ];
-            },
-            
+            }
         }
     },
     initComponent: function () {
         this.attrs = [];
+
         if (!this.attributeDefinitionStore)
             throw "Configuration problem: there was no attributeDefinitionStore provided to this subform.";
 
@@ -94,7 +97,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
         } else {
             this.loadAttributes();
         }
-    }, 
+    },
 
     loadAttributes: function () {
         var items = [];
@@ -161,7 +164,6 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
     },
 
     buildEditor: function (attributeDefinition, attr, attrValue) {
-       
         var editor = attributeDefinition.get('inputType'),
             //attributeFQN = ptAttribute.get('attributeFQN'),
             //prop = this.product.getProperties().getById(attributeFQN),
@@ -188,6 +190,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
         var form = this.getForm(),
             fields = form.getFields(),
             attrs = [];
+
         Ext.each(fields.items, function (field) {
             var val = {};
             val['attributeDefinitionId'] = '';
