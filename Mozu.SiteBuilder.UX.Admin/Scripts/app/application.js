@@ -71,7 +71,7 @@ Ext.define('Taco.Application',{
             'Taco.overrides.grid.RowEditor',
             'Taco.overrides.grid.RowEditorButtons',
             'Taco.overrides.menu.Item',
-            'Taco.overrides.panel.Header',
+            'Taco.overrides.menu.Menu',
             'Taco.overrides.panel.Tool',
             'Taco.overrides.window.MessageBox',
             'Ext.data.association.HasOne',

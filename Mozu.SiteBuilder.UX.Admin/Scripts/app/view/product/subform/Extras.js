@@ -76,7 +76,7 @@ Ext.define('Taco.view.product.subform.Extras', {
     },
 
     bindExtras: function () {
-        Ext.Array.forEach(this.extras, function (extra) {
+        Ext.each(this.extras, function (extra) {
             var pExtra = this.findExtra(extra.ptAttribute),
                 field;
 
