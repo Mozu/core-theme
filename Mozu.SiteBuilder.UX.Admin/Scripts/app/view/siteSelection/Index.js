@@ -38,10 +38,11 @@ Ext.define('Taco.view.siteSelection.Index', {
                                             '<span>{[values.name]}</span>',
                                         '</li>',
                                         '<li class="content">',
-                                            '<div><a class="action-preview" href="/admin/{[values.urlToken]}/generalsettings">Site Settings</a></div>',
-                                            '<div><a class="action-settings" href="/admin/{[values.urlToken]}/themes">Theme</a></div>',
-                                            '<div><a class="action-addons" href="/admin/{[values.urlToken]}/sites/pages">Edit</a></div>',
-                                            '<div><a class="action-addons" target="_blank" href="/_gosite/{[values.id]}">View Live Site</a></div>',
+                                            '<div><a  data-url="generalsettings" href="/admin/{[values.urlToken]}/generalsettings">Site Settings</a></div>',
+                                            '<div><a  data-url="themes" href="/admin/{[values.urlToken]}/themes">Theme</a></div>',
+                                            '<div><a  data-url="website" href="/admin/{[values.urlToken]}/website">Edit</a></div>',
+                                            '<div><a  target="_blank" href="/_gosite/{[values.id]}">View Live Site</a></div>',
+                                            '<div><a  target="_blank" href="/_gosite/{[values.id]}?environment=preview">View Preview Site</a></div>',
                                         '</li>',
                                     '</ul>',
                                     '<div class="title-large">{[values.name]}</div>',
@@ -49,7 +50,17 @@ Ext.define('Taco.view.siteSelection.Index', {
                                 '</li>',
                     '</tpl>',
                 '</ul>'
-                ]
+                ],
+                listeners: {
+                    click: {
+                        element: 'el',
+                        delegate: '[data-url]',
+                        fn: function (event, node) {
+                            event.stopEvent();
+                            Taco.core.StateManager.attemptNavigate(node.dataset.url);
+                        }
+                    }
+                }
             }]
         };
 

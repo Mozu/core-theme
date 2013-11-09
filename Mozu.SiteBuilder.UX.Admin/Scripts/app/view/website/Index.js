@@ -131,7 +131,7 @@ Ext.define('Taco.view.website.Index', {
                 }, {
                     xtype: 'panel',
                     title: 'Settings',
-                   
+                    overflowY: 'auto',
                     header: false,
                     items: [{
                         xtype: 'formform',

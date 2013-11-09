@@ -63,12 +63,13 @@
                  }
              });
          }
+         this.addSaveTasks(tasks);
          return tasks;
 
 
      },
      
-
+    addSaveTasks: Ext.emptyFn,
  	unload: Ext.emptyFn,
  	set:function(model, add){
  		this.isLoading= false;

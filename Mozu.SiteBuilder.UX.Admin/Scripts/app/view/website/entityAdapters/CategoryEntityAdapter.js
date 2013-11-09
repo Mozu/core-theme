@@ -47,12 +47,13 @@
         }
         return doc;
     },
+   
     addSaveTasks: function (tasks) {
-        if (this.model.facetSetStore) {
+        if (this.get().facetSetStore) {
            
             tasks.add({
                 key: 'facetSetStore',
-                store: this.model.facetSetStore
+                store: this.get().facetSetStore
             });
           
         }
@@ -67,6 +68,10 @@
          var me = this;
 
          return [
+             Ext.create('Taco.view.website.settings.facets.Facets',
+                 {
+                     record: me.get()
+                 }),
              Ext.create('Taco.view.website.settings.General',
                  {
                      record: me.get()
@@ -79,10 +84,7 @@
                  {
                      record: me.get()
                  }),
-             Ext.create('Taco.view.website.settings.facets.Facets',
-                 {
-                     record: me.get()
-                 })];
+             ];
 
          //,
          //{
