@@ -12,6 +12,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationHelpers
         private const string ZIPCODE  = "postalorzipcode";
         private const string CODE = "code";
         private const string LOCATIONTYPECODE = "locationtype.code";
+        private const string SUPPORTSINVENTORY = "supportsinventory";
 
 
         /// <summary>
@@ -40,9 +41,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationHelpers
                 case "zipcode":
                     return string.Format("({1} cont {0})", filter.value, ZIPCODE);
                 case "code":
-                    return string.Format("({1} cont {0})", filter.value, CODE);
+                    return string.Format("({1} sw {0})", filter.value, CODE);
                 case "locationtypecode":
-                    return string.Format("({1} cont {0})", filter.value, LOCATIONTYPECODE);
+                    return string.Format("({1} sw {0})", filter.value, LOCATIONTYPECODE);
+                case "supportsinventory":
+                    return string.Format("({1} eq {0})", filter.value, SUPPORTSINVENTORY);
                 default:
                     throw new NotImplementedException("unable to filter on property " + filter.property);
             }

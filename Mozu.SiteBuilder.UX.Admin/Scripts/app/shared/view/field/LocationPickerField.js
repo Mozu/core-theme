@@ -45,7 +45,7 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
     pageSize: 30,
 
     // querystring parameter name that contains the search filter data;
-    queryParam: "filter",
+    queryParam: "query",
 
     // default filter parameter used to get the full list
     allQuery: "",
@@ -73,16 +73,22 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
         
         if (!me.store) {
             me.store = Taco.core.data.StoreManager.getOrCreate({
+                createOnly: true,
                 type: 'Taco.store.Locations',
                 pageSize: me.pageSize,
                 // note that clearSort is required to avoid having the sorters get cleared when the store is instantiated;
                 clearSort: false,
                 remoteSort: true,
+                remoteFilter: true,
                 sorters: [{
                     property: 'name',
                     direction: 'ASC'
                 }],
-                autoLoad: true
+                filters: [{
+                    property: 'supportsInventory',
+                    value: true
+                }],
+                autoLoad: false
             });
         }
 
