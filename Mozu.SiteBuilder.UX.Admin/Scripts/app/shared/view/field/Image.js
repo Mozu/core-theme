@@ -123,7 +123,25 @@ Ext.define('Taco.shared.view.field.Image', {
 
         this.uploadAction = Ext.widget({
             xtype: 'action',
-            text: 'upload from computer'
+            text: 'upload from computer',
+            scope: this,
+            listeners : {
+                'click': function () {
+                    this.scope.uploadButton.fileInputEl.dom.click();
+                }
+            }
+        });
+
+        this.uploadButton = Ext.create('Ext.form.field.File', {
+            buttonOnly: true,
+            hideLabel: true,
+            hidden: true,
+            listeners: {
+                'change': function (fb, v) {
+                    this.scope.onUploadFile(fb.fileInputEl.dom.files);
+                }
+            },
+            scope: this
         });
 
         this.fileManagerAction = Ext.widget({
@@ -136,8 +154,9 @@ Ext.define('Taco.shared.view.field.Image', {
         this.items = [
             this.emptyDropZone,
             this.imageView,
-//            this.uploadAction,
-//            { xtype: 'component', html: ' | ', autoEl: { tag: 'span' } },
+            this.uploadButton,
+            this.uploadAction,
+            { xtype: 'component', html: ' | ', autoEl: { tag: 'span' } },
             this.fileManagerAction
         ];
        
