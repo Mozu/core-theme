@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _reportDefinitionWebApiClient = reportDefinitionWebApiClient;
         }
 
-        Dictionary<string, object> extractReportRows(Reporting.Contracts.ReportPagedCollection resp)
+        IEnumerable<Dictionary<string, object>> extractReportRows(Reporting.Contracts.ReportPagedCollection resp)
         {
             var headerNames = resp.Report.Headers.Select(x => x.Key);
             var rows = resp.Items.Select(x => x.Data
