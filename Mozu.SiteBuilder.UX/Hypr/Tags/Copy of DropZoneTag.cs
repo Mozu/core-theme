@@ -10,6 +10,7 @@ using System.Web.UI;
 using AutoMapper;
 using Microsoft.FSharp.Collections;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.Mvc.Tags;
@@ -120,6 +121,14 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 {
                     throw new Exception("invalid scope type " + scope);
                 }
+            }
+             
+
+
+            if (pageContext.CmsContext != null && !pageContext.CmsContext.Initialized)
+            {
+                var cmsHelper = context.Resolve<CmsHelper>();
+                cmsHelper.InitCmsPageContext(pageContext.CmsContext).Wait();
             }
 
 

@@ -33,15 +33,16 @@ Ext.define('Taco.controller.Website', {
     *
     *************************************/
     //returns a  store of widgetTypeDefinition
-    findWidgetTypeDefinitions: function (filter, callback) {
+    findWidgetTypeDefinitions: function (filter, callback,scope) {
 
         var store = Taco.core.data.StoreManager.getOrCreate("Taco.store.WidgetDefinitions"),
             cb = function () {
                 var json = [];
                 store.each(function (item) {
                     json.push(item.data);
-                    callback(json);
                 });
+                callback.apply(scope || store , [json]);
+                
             };
 
 

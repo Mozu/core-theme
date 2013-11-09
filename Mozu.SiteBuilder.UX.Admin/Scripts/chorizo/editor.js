@@ -33,11 +33,11 @@
             this.addWidgets([{
                 name: 'Text',
                 isRichText: true,
-                id: 'text-sf-asdf'
+                id: 'text'
             }, {
                 name: 'Image',
                 isRichText: false,
-                id: 'image-asdf-fef'
+                id: 'image'
             }]);
 
             $('.mz-cms-widget').mzWidget();
@@ -154,7 +154,7 @@
                     // Dropping an new widget
                     this.fireEvent('widgetdrop', {
                         editor: this,
-                        widgetTypeId: widgetCfg.typeId,
+                        widgetTypeId: widgetCfg.id,
                         callback: function(html, data) {
                             widgetCfg.html = html;
                             widgetCfg.data = data;
