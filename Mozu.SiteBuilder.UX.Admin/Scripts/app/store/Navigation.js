@@ -21,7 +21,7 @@ Ext.define('Taco.store.Navigation', {
     }],
     proxy: {
         type: 'memory',
-        data:[{
+        data:[/*{
             "id": "dashboard",
             "label": "Dashboard",
             "address": "dashboard",
@@ -37,37 +37,37 @@ Ext.define('Taco.store.Navigation', {
                     "address": "reports"
                 }
             ]
-        }, {
+        },*/ {
             "id": "customers",
             "label": "Customers",
             "address": "customers",
             "icon": "nav-customers",
             "behaviorIds":[41],
-            "items": [{
+            "items": [/*{
                 "id": "accounts",
                 "label": "Accounts",
                 "address": "customers"
-            }, {
+            }, */{
                 "id": "customerAttributes",
                 "label": "Attributes",
                 "address": "customerattribute"
-            }, {
+            }/*, {
                 "id": "contacts",
                 "label": "Contacts",
                 "address": "tbd/contacts"
-            }]
+            }*/]
         }, {
             "id": "catalog",
             "label": "Catalog",
             "address": "products",
             "behaviorIds": [4],
             "icon": "nav-catalog",
-            "items": [{
+            "items": [/*{
                 "id": "products",
                 "label": "Products",
                 "address": "products",
                 "behaviorIds": [4]
-            }, {
+            }, */{
                 "id": "inventory",
                 "label": "Inventory",
                 "address": "inventory",
@@ -78,13 +78,13 @@ Ext.define('Taco.store.Navigation', {
                 "address": "categories",
                 "behaviorIds": [16]
             }, {
-                "id": "attributes",
-                "label": "Attributes",
-                "address": "attributes"
-            }, {
                 "id": "productTypes",
                 "label": "Product Types",
                 "address": "producttypes"
+            },{
+                "id": "attributes",
+                "label": "Attributes",
+                "address": "attributes"
             }]
         }, {
             "id": "store",
@@ -92,15 +92,19 @@ Ext.define('Taco.store.Navigation', {
             "address": "orders",
             "behaviorIds": [16],
             "icon": "nav-orders",
-            "items": [{
+            "items": [/*{
                 "id": "orders",
                 "behaviorIds": [16],
                 "label": "Orders",
                 "address": "orders"
-            }, {
+            }, */{
                 "id": "orderAttributes",
                 "label": "Attributes",
                 "address": "orderattribute"
+            }, {
+                "id": "fulfilment",
+                "label": "Fulfilment",
+                "address": "tbd/fulfilment"
             }]
         }, {
             "id": "marketing",
@@ -114,7 +118,7 @@ Ext.define('Taco.store.Navigation', {
                 
                 "label": "Discounts",
                 "address": "discounts"
-            }, {
+            }/*, {
                 "id": "promotions",
                 "label": "Promotions",
                 "address": "tbd/promotions"
@@ -122,7 +126,7 @@ Ext.define('Taco.store.Navigation', {
                 "id": "targeting",
                 "label": "Targeting",
                 "address": "tbd/targeting"
-            }]
+            }*/]
         }, {
             "id": "sitebuilder",
             "label": "Site Builder",
@@ -145,11 +149,11 @@ Ext.define('Taco.store.Navigation', {
                 "id": "templates",
                 "label": "Templates",
                 "address": "/pageTemplates"
-            }, {
+            }/*, {
                 "id": "fileManager",
                 "label": "File Manager",
                 "address": "fileManager"
-            }]
+            }*/]
         }, {
             "id": "settings",
             "label": "Settings",
@@ -188,6 +192,18 @@ Ext.define('Taco.store.Navigation', {
                 "id": "publishing",
                 "label": "Publishing",
                 "address": "settings/publishing"
+            }, {
+                "id": "applications-manage",
+                "label": "Applications",
+                "address": "capability"
+            }, {
+                "id": "channels",
+                "label": "Channels",
+                "address": "channel"
+            }, {
+                "id": "fileManager",
+                "label": "File Manager",
+                "address": "fileManager"
             }]
         }, {
             "id": "publishing",
@@ -209,24 +225,24 @@ Ext.define('Taco.store.Navigation', {
             "label": "Locations",
             "address": "locations",
             "icon": "nav-locations",
-            "items": [{
+            "items": [/*{
                 "id": "locations-manage",
                 "label": "Locations",
                 "address": "locations"
-            }, {
+            },*/ {
                 "id": "locationTypes",
                 "label": "Location Types",
                 "address": "locationTypes"
-            }, {
+            },/* {
                 "id": "locations-orders",
                 "label": "Orders",
                 "address": "tbd/orders"
-            }, {
+            },*/ {
                 "id": "locations-inventory",
                 "label": "Inventory",
                 "address": "locationInventory"
             }]
-        }, {
+        }/*, {
             "id": "capability",
             "label": "Applications",
             "address": "capability",
@@ -236,6 +252,26 @@ Ext.define('Taco.store.Navigation', {
                 "label": "Applications",
                 "address": "capability"
             }]
+        }*/, {
+            "id": "report",
+            "label": "Report",
+            "address": "report",
+            "icon": "nav-dashboard",
+            "items": [/*
+                {
+                    "id": "salesreport",
+                    "label": "Sales",
+                    "address": "tbd/sales"
+                }, {
+                    "id": "customerreport",
+                    "label": "Customer",
+                    "address": "tbd/customer"
+                }, {
+                    "id": "productsreport",
+                    "label": "Products",
+                    "address": "reptbd/product"
+                }*/
+            ]
         }],
         reader: {
             type: 'json',
