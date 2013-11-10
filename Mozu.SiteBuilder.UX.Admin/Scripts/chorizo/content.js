@@ -168,12 +168,13 @@
     Text.prototype = new Content();
 
     Text.prototype._defaultState = function() {
+        var widgetData = this.element.data('widget');
+
         Chorizo.formatter.hide();
         this.$content.removeAttr('contenteditable');
-        //hack for now
-        var data = this.element.data('widget');
-        data.config = data.config || {};
-        data.config.body = this.element.children().html();
+
+        widgetData.config = widgetData.config || {};
+        widgetData.config.body = this.$content.html();
         
     }
 

@@ -1,4 +1,5 @@
 .mz-cms-grid {
+
     [contenteditable="true"]:active,
     [contenteditable="true"]:focus {
         border-color: transparent;
@@ -12,21 +13,35 @@
     @include transition(outline-color $duration);
 }
 
-.mz-cms-block {
+.mz-cms-block, .mz-cms-blank-block {
     outline: 1px solid transparent;
     outline-offset: -1px;
     @include transition(outline-color $duration, background-color $duration);
 }
 
 .mz-cms-droppable, .mz-cms-show-zone {
-    .mz-cms-row {
+
+    .mz-cms-row, .mz-cms-block, .mz-cms-blank-block {
         outline-color: $hint-block-color;
         outline-style: dashed;
     }
+}
 
-    .mz-cms-block {
-        outline-color: $hint-block-color !important;
-        outline-style: dashed;
+.mz-cms-blank-block {
+    &:hover {
+        background-color: rgba(0,0,0,0.01);
+        outline-color: $hint-block-hover-color !important;
+        outline-style: solid !important;
+    }
+    div {
+        height: 150px;
+        padding-top: 57px;
+        text-align: center;
+    }
+
+    &.mz-cms-drop-over {
+        background-color: transparentize($hint-color, 0.9);
+        outline-color: $hint-color !important;
     }
 }
 
