@@ -102,7 +102,8 @@ namespace Mozu.SiteBuilder.Mvc
             }
              if (this.UserClaims == null)
              {
-                 throw new HttpUnhandledException("oops");
+                 return;
+              
              }
             if (this.UserClaims.BehaviorIds == null)
             {
@@ -127,7 +128,8 @@ namespace Mozu.SiteBuilder.Mvc
             {
                 if (ScopeType == UserScopeType.Shopper)
                 {
-                    this.UserClaims = LightweightUserClaims.CreateForAnonymousShopper(this.TenantId, this.SiteId.HasValue ? this.SiteId.Value : -1);
+                    return false;
+             
                 }
                 else
                 {
@@ -140,11 +142,7 @@ namespace Mozu.SiteBuilder.Mvc
             }
             if (ScopeType == UserScopeType.Shopper && (!this.UserClaims.Bag.TryGetValue("SiteId", out bagVal) || !int.TryParse(bagVal, out tmpInt) || tmpInt != this.SiteId))
             {
-                this.UserClaims = LightweightUserClaims.CreateForAnonymousShopper(this.TenantId, this.SiteId.HasValue ? this.SiteId.Value : -1 );
-                this.HasInvalidCredentials = true;
                 return false;
-
-
             }
             return true;
         }
