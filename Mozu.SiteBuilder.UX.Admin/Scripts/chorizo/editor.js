@@ -160,7 +160,10 @@
 
                         $col.find('.mz-cms-block').each(function(l, block) {
                             var wd = $(block).data('widget');
-                            console.log('WIDGET-DATA', wd);
+                            if (wd.definitionId == 'content' && wd.config.body == null) {
+                                console.log('content bug travis');
+                            }
+                            
                             colData.widgets.push($(block).data('widget'));
                         });
 

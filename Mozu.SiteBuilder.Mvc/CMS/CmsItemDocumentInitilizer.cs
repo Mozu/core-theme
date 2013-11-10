@@ -176,10 +176,10 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                             cmsPageContext.RuntimeData2.AddRange(zoneData);
                         }
                     }
-                    if (pageContext.IsEditMode && !cmsPageContext.RuntimeData2.Any(x => string.Equals(x.Id, "body-bottom", StringComparison.OrdinalIgnoreCase)))
+                    if ( 1==2 &&  pageContext.IsEditMode && !cmsPageContext.RuntimeData2.Any(x => string.Equals(x.Id, "body-bottom", StringComparison.OrdinalIgnoreCase)))
                     {
 
-
+                        cmsPageContext.RuntimeData2.Clear();
                         cmsPageContext.RuntimeData2.Add(new ZoneRuntimeData
                                                             {
                                                                 Id = "body-bottom",
