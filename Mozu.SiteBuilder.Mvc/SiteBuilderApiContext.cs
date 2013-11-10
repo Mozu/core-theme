@@ -95,11 +95,19 @@ namespace Mozu.SiteBuilder.Mvc
 
         void ValidateDataMode()
         {
-            if (ScopeType != UserScopeType.Shopper || this.DataViewMode != DataViewModeType.Pending)
+            if (ScopeType != UserScopeType.Shopper 
+                || this.DataViewMode != DataViewModeType.Pending)
             {
                 return;
             }
-             
+             if (this.UserClaims == null)
+             {
+                 throw new HttpUnhandledException("oops");
+             }
+            if (this.UserClaims.BehaviorIds == null)
+            {
+                this.UserClaims.BehaviorIds = new int[0];
+            }
             if (!this.UserClaims.BehaviorIds.Contains(PublishBehavorID))
             {
                 this.UserClaims.BehaviorIds = this.UserClaims.BehaviorIds.Concat(new int[] { PublishBehavorID }).ToArray();
@@ -145,7 +153,7 @@ namespace Mozu.SiteBuilder.Mvc
         {
             get
             {
-                if (this._httpRequestMessage.RequestUri.PathAndQuery.IndexOf("/admin", StringComparison.OrdinalIgnoreCase) == 0)
+                if (String.Equals( HttpRuntime.AppDomainAppVirtualPath , "/admin",  StringComparison.OrdinalIgnoreCase))
                 {
                     return UserScopeType.Tenant;
                 }

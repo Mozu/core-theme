@@ -270,8 +270,15 @@ Ext.define('Taco.view.website.Index', {
         });
     },
 
-    onSave:function () {
+    onSave:function (button) {
         var tasks = this.entitypeTypeHandler.getSaveTask();
+        button.setDisabled(true);
+        tasks.on({
+            complete: function () {
+                button.setDisabled(false);
+            }
+        });
+
         tasks.execute();
     },
 
