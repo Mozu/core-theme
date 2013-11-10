@@ -159,13 +159,15 @@
                             };
 
                         $col.find('.mz-cms-block').each(function(l, block) {
+                            var wd = $(block).data('widget');
+                            console.log('WIDGET-DATA', wd);
                             colData.widgets.push($(block).data('widget'));
                         });
 
-                        rowData.columns.push(colData);
+                        colData.widgets.length && rowData.columns.push(colData);
                     });
 
-                    gridData.rows.push(rowData);
+                    rowData.columns.length && gridData.rows.push(rowData);
                 });
 
                 data.push(gridData);
@@ -194,8 +196,11 @@
                         editor: this,
                         widgetTypeId: widgetCfg.id,
                         callback: function(html, data) {
+                            data.isRichText = widgetCfg.isRichText;
                             widgetCfg.html = html;
                             widgetCfg.data = data;
+
+                            console.log('drop-data', data);
                             target.insert(quadrant, widgetCfg);
                         }
                     });

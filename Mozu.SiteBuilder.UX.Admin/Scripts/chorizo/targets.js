@@ -9,7 +9,8 @@
         Grid,
         Row,
         Col,
-        Block;
+        Block,
+        BlankBlock;
 
     cfg = {
         rowHintMargin: 15,
@@ -43,6 +44,8 @@
             });
 
         this.type('grid');
+
+        this.rebase();
     }
 
     Grid.prototype.type = function(val) {
@@ -55,6 +58,22 @@
 
     Grid.prototype.initHint = function() {
         //Chorizo.editor.target(this);
+    }
+
+    Grid.prototype.rebase = function() {
+        if (!this.element.find('.mz-cms-row').length) {
+            this.createBlankBlock();
+        }
+    }
+
+    Grid.prototype.createBlankBlock = function() {
+        var row = Row.create({
+                block: BlankBlock.create()
+            }, this.span)
+
+        row.parent = this;
+
+        this.element.append(row.element);
     }
 
 
@@ -192,6 +211,7 @@
         // If the ROW has no more COLS, remove the row
         if ($cols.length === 0) {
             this.element.remove();
+            this.parent.rebase();
             this.parent = null;
             return;
         }
@@ -439,7 +459,6 @@
 
         $block = $('<div class="mz-cms-block"><div class="mz-cms-content"></div></div>');
 
-        // Insert widget content (for now, just doing text)
         $block
             .data('widget', widgetCfg.data)
             .find('.mz-cms-content')
@@ -494,6 +513,71 @@
     }
 
 
+    //  Blank Block Class
+    BlankBlock = function(element, options) {
+        Target.call(this, element, options);
+
+        this._type = 'blankblock';
+        this.parent = options.parent;
+
+        this.$content = this.element.find('.mz-cms-content');
+
+        this.element.on({
+            dropover: $.proxy(function() {
+                this.initHint();
+                this.element.addClass('mz-cms-drop-over');
+            }, this),
+            dropout: $.proxy(function() {
+                this.element.removeClass('mz-cms-drop-over');
+            }, this)
+        })
+        .droppable({
+            accept: 'mz-cms-block, .mz-cms-widget'
+        })
+        .addClass('mz-cms-blank-block');
+    }
+
+
+
+    BlankBlock.prototype = new Target();
+
+    BlankBlock.create = function() {
+        var $block;
+
+        $block = $('<div class="mz-cms-blank-block"><div class="mz-cms-content"></div></div>');
+
+        $block
+            .data('widget', {})
+            .find('.mz-cms-content')
+            .html('<div>Drop your widget here</div>');
+
+        return $block.mzBlankBlock().data('mozu.mzBlankBlock');
+    }
+
+    BlankBlock.prototype.create = Block.prototype.create;
+
+    BlankBlock.prototype.hint = function(x, y) {
+        this.offset().message = 'replace';
+        this.offset().quadrant = 'top';
+
+        return this.offset();
+    }
+
+    
+
+    BlankBlock.prototype.initHint = function() {
+        Chorizo.editor.target(this);
+        Target.prototype.initHint.call(this);
+    }
+
+    BlankBlock.prototype.insert = function(quadrant, widgetCfg) {
+        Target.prototype.insert.call(this, quadrant, widgetCfg);
+
+        this.parent = null;
+        this.element.remove();
+    }
+
+
 
     // Plugin definitions
 
@@ -501,5 +585,6 @@
     Chorizo.classFactory(Row, 'mozu.mzRow');
     Chorizo.classFactory(Col, 'mozu.mzCol');
     Chorizo.classFactory(Block, 'mozu.mzBlock');
+    Chorizo.classFactory(BlankBlock, 'mozu.mzBlankBlock');
 
 }(jQuery, window, document));
