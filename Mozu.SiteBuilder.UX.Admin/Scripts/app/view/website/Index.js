@@ -321,7 +321,12 @@ Ext.define('Taco.view.website.Index', {
                 success: function (response) {
                     var ret = Ext.JSON.decode(response.responseText);
 
-                    cfg.callback(ret.output, ret.config);
+                    cfg.callback(ret.output, {
+                        config: ret.config,
+                        id: ret.id,
+                        definitionId: ret.definitionId
+                    });
+                    
                 }
             });
         }

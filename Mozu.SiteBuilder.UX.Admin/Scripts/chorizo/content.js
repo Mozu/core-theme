@@ -174,8 +174,9 @@
         this.$content.removeAttr('contenteditable');
 
         widgetData.config = widgetData.config || {};
-        widgetData.config.body = this.$content.html();
-        
+        //this was null travis
+        //widgetData.config.body = this.$content.html();
+        widgetData.config.body = this.element.children().html();
     }
 
 
