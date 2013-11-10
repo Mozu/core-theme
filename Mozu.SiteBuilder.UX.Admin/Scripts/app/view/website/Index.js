@@ -121,7 +121,7 @@ Ext.define('Taco.view.website.Index', {
                     items: [{
                         itemId: 'iframe',
                         xtype: 'uxiframe',
-                        src: '/_gosite/' + Taco.app.context.getSiteId() + '?environment=editing&redir=' + encodeURIComponent(Ext.String.urlAppend(this.options && this.options.startUrl ? this.options.startUrl : '/widgettest', 'iseditmode=true'))
+                        src: '/_gosite/' + Taco.app.context.getSiteId() + '?environment=editing&redir=' + encodeURIComponent(Ext.String.urlAppend(this.options && this.options.startUrl ? this.options.startUrl : '/', 'iseditmode=true'))
                     }]
                 }, {
                     xtype: 'panel',
