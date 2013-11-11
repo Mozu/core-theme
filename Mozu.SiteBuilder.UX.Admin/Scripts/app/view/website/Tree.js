@@ -61,12 +61,21 @@ Ext.define('Taco.view.website.Tree', {
     },
     showCreator: function (tree, linked, record) {
         var me = this,
+            storeCopy,
+            data=[],
             pageTypeDefinitionStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.PageTypeDefinitions'),
             win;
-        pageTypeDefinitionStore.filterBy(function (item) {
+        
+        
+        pageTypeDefinitionStore.filter([{ property: "userCreatable", value: true }]);
+        
 
-            return item.get('userCreatable') === true;
-        });
+        
+        
+
+        //hack to get around filtered store not working... todo spend 5 mins and figure it out
+
+       // storeCopy = Ext.create('Taco.store.PageTypeDefinitions', { data: data });
         
 
         win = Ext.create('Taco.core.ux.window.Modal', {
@@ -87,7 +96,7 @@ Ext.define('Taco.view.website.Tree', {
                         name: 'docInfo',
                         xtype: 'selectfield',
                         fieldLabel: 'Choose type',
-                        mode: 'local',
+                        queryMode: 'local',
                         valueField: 'id',
                         displayField: 'title',
                         width: 200,
