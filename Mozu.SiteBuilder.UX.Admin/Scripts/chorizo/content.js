@@ -200,7 +200,7 @@
         this.on({
             'click': 'default > selected',
             'clickaway .mz-cms-state-selected': 'selected > default',
-            'dblclick': 'default > editing',
+            'dblclick': '* > editing',
             'blur': 'editing > default'
         });
 
@@ -227,6 +227,7 @@
 
     Img.prototype._editingState = function() {
         console.log('editing');
+        Chorizo.editor.edit(this.element.data('mozu.mzBlock'));
     }
 
     Img.prototype._movingState = function() {

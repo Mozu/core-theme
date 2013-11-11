@@ -470,6 +470,19 @@
 
     Block.prototype = new Target();
 
+    Block.prototype.update = function(html, data) {
+        this.element.data('widget', data);
+        this.widgetData = this.element.data('widget');
+
+        this.$content.html(html);
+
+        if (this.widgetData.isRichText) {
+            this.element.mzText({isRichText: true});
+        } else {
+            this.element.mzImg({isRichText: false});
+        }
+    }
+
     Block.prototype.create = function(widgetCfg) {
         return Block.create(widgetCfg);
     }
@@ -492,8 +505,7 @@
                                     ? 'insert'
                                     : 'float';
         */
-
-
+       
         this.offset().message = 'insert';
 
         this.offset().quadrant = this.quadrant(x, y);

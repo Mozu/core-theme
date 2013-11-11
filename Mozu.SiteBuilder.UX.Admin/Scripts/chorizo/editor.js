@@ -68,6 +68,15 @@
             this.$widgetModal.show();
         },
 
+        edit: function(widgetData) {
+            this.fireEvent('widgetedit', {
+                editor: this,
+                data: widgetData
+            }, function(html, data) {
+
+            });
+        },
+
         fireEvent: function() {
             this.controller().fireEvent.apply(this.controller(), arguments);
         },

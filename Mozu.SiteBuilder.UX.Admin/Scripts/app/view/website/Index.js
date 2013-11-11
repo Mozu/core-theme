@@ -345,28 +345,63 @@ Ext.define('Taco.view.website.Index', {
         }
     },
 
-    onWidgetEdit: function (config) {
-        //{
-        //    //the editor firing the event
-        //    editor: editor,
-        //    //the widgetTypeId of the widgetBeing dropped
-        //    widgetTypeId: 'qewr-asdf-asdf',
-        //    // the  widgetInstanceData of the widget
-        //    data: {
-        //        id: '111-222-333',
-        //        typeId: 'qewr-asdf-asdf',
-        //        config: {
-        //            userId: 'adsf',
-        //            keywords: ['cats', 'more cats'],
-        //            count: 22
-        //        }
-        //    },
-        //    //callback method to be called when content and data are ready to be inserted into the page
-        //    // html is the markup to be inserted the 
-        //    // data is the persistable widgetInstanceData of the widget
-        //    callback: function (html, data) {
+    onWidgetEdit: function (cfg) {
+        var pageContext = this.getPageContext(),
+            def = this.widgetDefinitions.getById(cfg.widgetTypeId),
+            jsonData = {
+                zoneScope: 'page',
+                source: pageContext.cmsContext.page,
+                definitionId: cfg.widgetTypeId
+            };
 
-        //    }
+        cfg.config = def.get('defaultConfig');
+
+        if (!Ext.isEmpty(def.get('editViewFields')) || !Ext.isEmpty(def.get('editViewConfig'))) {
+            Ext.create('Taco.view.website.WidgetEditor', {
+                editViewFields: def.get('editViewFields'),
+                editViewConfig: def.get('editViewConfig'),
+                widgetData: cfg.config,
+                title: def.get('displayName'),
+                listeners: {
+                    save: function (modal) {
+                        jsonData.config = modal.widgetData;
+
+                        Ext.Ajax.request({
+                            url: '/Widgets/preview',
+                            jsonData: jsonData,
+                            success: function (response) {
+                                var ret = Ext.JSON.decode(response.responseText);
+
+                                cfg.callback(ret.output, {
+                                    config: ret.config,
+                                    id: ret.id,
+                                    height: ret.height,
+                                    definitionId: ret.definitionId
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+        } else {
+            jsonData.config = cfg.config;
+            
+            Ext.Ajax.request({
+                url: '/Widgets/preview',
+                jsonData: jsonData,
+                success: function (response) {
+                    var ret = Ext.JSON.decode(response.responseText);
+
+                    cfg.callback(ret.output, {
+                        config: ret.config,
+                        id: ret.id,
+                        height: ret.height,
+                        definitionId: ret.definitionId
+                    });
+                    
+                }
+            });
+        }
     },
     onPageCreate: function (tree, cmsDoc, isLinked, parentRecord) {
 
