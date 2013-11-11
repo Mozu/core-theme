@@ -8,15 +8,15 @@
     }
 
     .#{$prefix}grid-cell-treecolumn {
-        font-size: 13px;
+        font-size: 14px;
     }
 
     .#{$prefix}grid-cell-inner-treecolumn {
-        padding: 1px 5px 0px 0px;
+        padding: 3px 5px 2px 0px;
     }
 
     .#{$prefix}tree-node-text {
-        font-size: 13px;
+        font-size: 14px;
 
         span {
             vertical-align: top;
@@ -39,8 +39,8 @@
         margin-right: 4px;
         overflow: hidden;
         @include icon-font($glyph-pagecategory);
-        height: 12px;
-        width: 10px;
+        height: 14px;
+        width: 13px;
 
         &::after {
             color: $color-neutral-40;

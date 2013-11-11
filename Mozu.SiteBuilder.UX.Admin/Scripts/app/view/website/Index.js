@@ -135,18 +135,18 @@ Ext.define('Taco.view.website.Index', {
                         ui: 'subform',
                         title: 'Page Settings',
                         margin: '20 30 10 30',
-                        items: [{
-                            xtype: 'textfield',
-                            fieldLabel: 'foo',
-                            emptyText: 'bar',
-                            allowOnlyWhitespace: false
-                        }]
+                        defaults: {
+                            margin: '10 0 10 0'
+                        }
                     }]
                 }],
             dockedItems: [{
                 dock: 'right',
                 title: 'Sidebar',
                 padding: '0 0 10',
+                collapseDirection: 'right',
+                animCollapse: false,
+                collapsible: true,
                 header: false,
                 width: 240,
                 layout: {
