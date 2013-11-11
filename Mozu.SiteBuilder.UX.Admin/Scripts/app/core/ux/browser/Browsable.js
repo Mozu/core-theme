@@ -153,7 +153,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
 
         this.updateRecordTypeName();
-
+        
         this.store = Taco.core.data.StoreManager.getOrCreate(this.store);
 
         if (this.useGridPanel) {
@@ -259,6 +259,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
     createItemBrowser: function (conf) {
         
+        
         this.itemBrowser = Ext.create('Taco.core.ux.browser.ItemBrowser', {
             itemStore: this.store,
             secondToolbarItems: this.secondToolbarItems,
@@ -292,7 +293,8 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         });
     },
 
-    createSidebar: function() {
+    createSidebar: function () {
+        
         this.filterList = Ext.create('Taco.core.ux.browser.FilterList', {
             itemType: this.token
         });

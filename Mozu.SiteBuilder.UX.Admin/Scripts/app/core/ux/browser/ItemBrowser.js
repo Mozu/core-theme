@@ -25,11 +25,21 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
     createTopToolbar: function() {
         var me = this,
             conf;
-       
+
+
+        me.sliderSpacer = Ext.create('Ext.toolbar.Spacer');
+        
+        // need to make the spacer fill the space when we are in a toggle mode, otherwise it should be the standard 2 pixels;
+        if (me.useGridPanel && me.useTilePanel) {
+            me.sliderSpacer.flex = 1;
+        }
 
         conf = {
             dock: 'top',
-            items: [ '->', {
+            items: [
+                
+                me.sliderSpacer,
+                {
                 xtype: 'slider',
                 hidden: true,
                 width: 100,
@@ -61,8 +71,8 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
                     }
                 }
             }, {
-                xtype: 'tbspacer',
-                flex: 1
+                xtype: 'tbspacer'
+                //,flex: 1
             }, {
                 xtype: 'tbtext',
                 itemId: 'recordCount',
@@ -83,10 +93,18 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
             }]
         };
         
+
+
+
+
+
+
+        
         if (me.filterProperties) {
             me.searchBox = Ext.widget({
                 xtype: 'taco.combofilter',
-                width: 675,
+                //width: 675,
+                flex:1,
                // value: ['steve'],
                 // margin: '20 0',
                 itemStore: me.createItemStore(),
@@ -99,9 +117,12 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
                 });
             }
             conf.items.unshift(me.searchBox);
-        } 
+        }
+        
         if (me.useGridPanel && me.useTilePanel) conf.items.push(me.createToggleGroup());
+        
         me.topToolbar = Ext.widget('toolbar', conf);
+        
         return me.topToolbar;
     },
 
@@ -126,11 +147,13 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
         return me.expanderCollapser;
     },
 
+    //todo: replace this with buttons with a togglegroup
     createToggleGroup: function () {
         var me = this;
         me.toggleGroup = Ext.widget('togglegroup', {
             columns: 2,
             vertical: false,
+            width:60,
             margin: '0 0 0 10',
             items: [
                 { name: 'cardselect', inputValue: '0', fieldCls: 'toggle-gridview', checked: true },

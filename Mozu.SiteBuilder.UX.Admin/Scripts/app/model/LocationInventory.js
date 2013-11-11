@@ -24,11 +24,16 @@ Ext.define('Taco.model.LocationInventory', {
         "useNull": true,
         persist: true
     }, {
+            "name": "locationName",
+            "type": "string",
+            "useNull": true,
+            persist: false
+        }, {
         "name": "stockAvailable",
         "defaultValue": 0,
         "type": "int",
         "useNull": true,
-        persist: true
+            persist: false
     }, {
         "name": "stockReserved",
         "defaultValue": 0,
@@ -40,16 +45,24 @@ Ext.define('Taco.model.LocationInventory', {
         "defaultValue": 0,
         "type": "int",
         "useNull": true,
-        persist: false
-    }, {
+            persist: true
+        },
+        /*
+        //deprecated
+            {
         "name": "stockOnHandAdjustment",
         "defaultValue": 0,
         "type": "any",
         "useNull": true
-    }, {
+            },
+        */
+
+
+        {
         "name": "productCode",
         "type": "string",
-        "useNull": true
+            "useNull": true,
+            "persist": true
     },
 
     // is this still relevant?
@@ -72,7 +85,11 @@ Ext.define('Taco.model.LocationInventory', {
         "type": "string",
         "useNull": true,
         "persist":false
-    }],
+        }
+    ],
+    
+    idProperty: 'id',
+    
     getContextualValue:function(fieldName) {
         return this.get(fieldName);
     },
