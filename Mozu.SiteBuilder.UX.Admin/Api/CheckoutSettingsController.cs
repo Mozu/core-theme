@@ -34,21 +34,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var ret = Mapper.Map<CheckoutSettings>(dcSettings);
 
-            // mock data
-            if (ret.ExternalPaymentWorkflows == null || ret.ExternalPaymentWorkflows.Count == 0)
-            {
-                ret.ExternalPaymentWorkflows = new List<DC.ExternalPaymentWorkflowDefinition> {
-                    new DC.ExternalPaymentWorkflowDefinition {
-                         Name = "PaypalExpress",
-                         IsEnabled = true,
-                         Credentials = new List<DC.ThirdPartyCredentialField> {
-                             new DC.ThirdPartyCredentialField { APIName="bradley", DisplayName="login or something", Value="foo" },
-                             new DC.ThirdPartyCredentialField { APIName="foster", DisplayName="secret key", Value="illuminati" }
-                         }
-                    }
-                };
-            }
-
             return Single2(ret);
         } 
 
