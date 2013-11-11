@@ -19,14 +19,20 @@ Ext.define('Taco.view.dashboard.Index', {
                 pushData['label'] = el.get('label');
                 pushData['icon'] = el.get('icon');
                 pushData['address'] = el.get('address');
+                console.log(el);
                 Ext.Array.forEach(el.itemsStore.data.items, function (subEl, index, arr) {
                     var subNavData = {};
                     subNavData['label'] = subEl.get('label');
                     subNavData['address'] = subEl.get('address');
-                    subNav.push(subNavData);
+                    if (subEl.get('visible')) {
+                        subNav.push(subNavData);
+                    }
                 }, this);
                 pushData['subNav'] = subNav;
-                this.renderData.push(pushData);
+                if (el.get('visible')) {
+                    this.renderData.push(pushData);
+                }
+                
             }, this);
             this.dashboardTpl.update(this.renderData);
         }, this);
