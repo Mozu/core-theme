@@ -22,59 +22,13 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
     initComponent: function () {
         var me = this, isAddressEmpty = true;
 
-        /*
-        // address here is deprecated as part of the omni channel updates;
-        // Todo: remove this commented code when implimentation is complete
-
-        this.addressRecord = Ext.create('Taco.model.Contact', this.record.get('siteShippingOriginAddress') || {});
-        
-        this.addressView = Ext.widget({
-            xtype: 'component',
-            width: 300,
-            margin: '19px 0px 0px 0px',
-            padding: '5px',
-            cls: 'address',
-            style: 'line-height: 2.5rem;background-color: #f9f9f9;border: 1px solid #bfbfbf',
-            data: this.addressRecord.data,
-            tpl: [
-                '<div class="name">{companyName}</div>',
-                '<div class="address-line-1">{address1}</div>',
-                '<div class="address-line-2">{address2}</div>',
-                '<div class="address-line-3">{address3}</div>',
-                '<div class="city-state-zip">{cityOrTown}, {stateOrProvince} {postalOrZipCode}</div>',
-                '<div class="country">{countryCode}</div>',
-                '<div class="phone">{[ values.workPhone ? values.workPhone : values.homePhone ]}</div>'
-            
-            ]
-            
-        });
-
-
-        
-
-        this.editButton = Ext.widget({
-            xtype: 'secondarybutton',
-            margin: '2px 0px 0px 0px',
-            text: 'Edit',
-            click: function () {
-                me.editAddress();
-            } 
-           
-        });
-
-
-        if (this.addressRecord.data) {
-
-            Ext.Object.each(this.addressRecord.data, function (key, value) {
-                if (value && value !== '') {
-                    isAddressEmpty = false;
-                }
-            });
-        }
-        */
-
+        /*  { name: 'shippingLocationCode', type: 'string' },
+            { name: 'inStorePickupLabel', type: 'string' },
+            { name: 'enableInStorePickup', type: 'boolean' },
+            { name: 'storePickupLocationTypeCodes', type: 'auto', defaultValue: [] },
+           */
         this.shipFromCombo = Ext.create('Ext.form.field.ComboBox', {
-            name: 'shipFromId',
+            name: 'shippingLocationCode',
             width:300,
             fieldLabel: 'Shipping From',
             editable: false,
@@ -103,12 +57,12 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
         me.locationTypeIds = Ext.create('Ext.ux.form.field.BoxSelect', {
             width: 450,
             fieldLabel: 'In Store Pickup From Location Types',
-            name: 'locationTypeIds',
+            name: 'storePickupLocationTypeCodes',
             hidden: !this.record.get("enableInStorePickup"),
             queryMode: 'local',
             displayField: 'name',
             valueField: 'code',
-            allowBlank: false,
+            allowBlank: true,
             store: Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.LocationTypes',
                 autoload:true
@@ -117,13 +71,15 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
 
 
         this.items = [
-            this.shipFromCombo, {
-                xtype: "textfield",
-                width: 300,
-                emptyText: "In Store Pickup",
-                fieldLabel: "Override In Store Pickup Label",
-                name:"inStorePickupLabel"
-            }, {
+            this.shipFromCombo,
+            //{
+            //    xtype: "textfield",
+            //    width: 300,
+            //    emptyText: "In Store Pickup",
+            //    fieldLabel: "Override In Store Pickup Label",
+            //    name:"inStorePickupLabel"
+            //},
+            {
                 xtype: 'fieldcontainer',
                 fieldLabel: "Enabled Fulfillment Methods",
                 // note this layout is required for radiogroups to have the proper height;
