@@ -151,15 +151,14 @@ Ext.define('Taco.view.order.Form', {
                     handler: function() {
                         var form = this.orderAttr.getForm(),
                         fields = form.getFields(),
-                        attrs = [];
-                        Ext.each(fields.items, function (field) {
-                            var val = {};
-                            val['attributeDefinitionId'] = '';
-                            val['fullyQualifiedName'] = field.getName();
-                            val['id'] = '';
-                            val['values'] = field.getValue();
-                            attrs.push(val);
-                        });
+                        item = {}, val = [];
+
+                        item['attributeDefinitionId'] = '';
+                        item['fullyQualifiedName'] = field.getName();
+                        item['id'] = '';
+                        val.push(field.getValue().toString());
+                        item['values'] = val;
+                        attrs.push(item);
                         //Fire off ajax
                         //console.log(attrs);
 
