@@ -1,6 +1,6 @@
 ﻿    <h3 class="mz-formstep-header">
         {{ labels.paymentInformation }}
-        <button type="button" class="mz-button mz-formstep-edit" data-mz-action="edit">{{ labels.edit }}</button>
+        <button type="button" class="mz-button mz-button-small mz-formstep-edit" data-mz-action="edit">{{ labels.edit }}</button>
     </h3>
     <div class="mz-formstep-body">
             <div class="mz-formstep-summary">
@@ -10,6 +10,9 @@
                 {% endif %}
                 {% if model.paymentType == "CreditCard" %}
                     <span>{{ model.card.cardNumberPartOrMask }}</span>
+                {% endif %}
+                {% if model.paymentType == "PaypalExpress" %}
+                    <span>{{ labels.paypalExpressSummary }}</span>
                 {% endif %}
 
                 <h4>{{ labels.billingAddress }}</h4>
@@ -31,7 +34,7 @@
                             {% if siteContext.checkoutSettings.isPayPalEnabled %}
                             <label class="mz-paymenttype mz-paymenttype-paypal">
                                 <span class="mz-paymenttype-label">{{ labels.payPal }}</span>
-                                <input data-mz-value="paymentType" name="paymentType" type="radio" class="mz-paymenttype-input" value="PayPal" {% if model.paymentType == "PayPal" %}checked="checked"{% endif %} />
+                                <input data-mz-value="paymentType" name="paymentType" type="radio" class="mz-paymenttype-input" value="PaypalExpress" {% if model.paymentType == "PaypalExpress" %}checked="checked"{% endif %} />
                             </label>
                             {% endif %}
                             <label class="mz-paymenttype mz-paymenttype-creditcard">
@@ -60,6 +63,10 @@
                     <div class="mz-l-formfieldgroup">
                         {% include "modules/checkout/checking-account-form" %}
                     </div>
+                {% endif %}
+                
+                {% if model.paymentType == "PaypalExpress" %}
+                    <p>{{ labels.paypalExpressSummary }}</p>
                 {% endif %}
 
                 <h4>{{ labels.billingAddress }}</h4>

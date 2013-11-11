@@ -3,8 +3,7 @@
     function (Backbone) {
 
         var User = Backbone.MozuModel.extend({
-            mozuType: 'user',
-
+            mozuType: 'user'
         });
 
         return {

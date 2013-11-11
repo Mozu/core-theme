@@ -58,6 +58,7 @@
     ScrollTo = {
         // Configuration
         config: {
+            axis: 'xy',
             duration: 400,
             easing: 'swing',
             callback: undefined,
@@ -168,10 +169,10 @@
             }
 
             // Check to see if the scroll is necessary
-            if ($container.prop('scrollHeight') === $container.width()) {
+            if ($container.prop('scrollHeight') === $container.width() || config.axis.indexOf('y') === -1) {
                 delete scrollOptions.scrollTop;
             }
-            if ($container.prop('scrollWidth') === $container.width()) {
+            if ($container.prop('scrollWidth') === $container.width() || config.axis.indexOf('x') === -1) {
                 delete scrollOptions.scrollLeft;
             }
 

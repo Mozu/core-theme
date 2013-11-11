@@ -1,6 +1,6 @@
     <h3 class="mz-formstep-header">
         {{ labels.shippingMethod }}
-        <button class="mz-button mz-formstep-edit" data-mz-action="edit">{{ labels.edit }}</button>
+        <button class="mz-button mz-button-small mz-formstep-edit" data-mz-action="edit">{{ labels.edit }}</button>
     </h3>
     <div class="mz-formstep-body">
         <div class="mz-formstep-summary">

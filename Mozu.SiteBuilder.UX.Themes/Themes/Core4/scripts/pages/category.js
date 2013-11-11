@@ -48,8 +48,8 @@ define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'shim!vendor
                     model: facetingModel
                 }),
                 productList: new Backbone.MozuView({
-                    templateName: 'modules/product/product-listing-tiled',
-                    el: $categoryPageBody.find('[data-mz-productlisting]'),
+                    templateName: 'modules/product/product-list-tiled',
+                    el: $categoryPageBody.find('[data-mz-productlist]'),
                     model: facetingModel
                 })
             };            if ($facetPanel.length > 0) {                facetingViews.facetPanel = new FacetingView({
