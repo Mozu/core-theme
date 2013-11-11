@@ -29,18 +29,31 @@
         buildWidgets: function() {
             this.$widgetModal = $('<div class="mz-cms-widget-modal" style="display:none"></div>')
                 .appendTo('body');
+           
+            this.controller().findWidgetTypeDefinitions('*', function (widgets) {
+                var convertedData = [];
+                widgets.forEach(function (widget) {
+                    convertedData.push({
+                        name: widget.displayName,
+                        isRichText: widget.id == 'content',
+                        id: widget.id
+                    });
+                });
+                this.addWidgets(convertedData);
+                $('.mz-cms-widget').mzWidget();
+            }, this);
             
-            this.addWidgets([{
-                name: 'Text',
-                isRichText: true,
-                id: 'content'
-            }, {
-                name: 'Image',
-                isRichText: false,
-                id: 'image'
-            }]);
+            //this.addWidgets([{
+            //    name: 'Text',
+            //    isRichText: true,
+            //    id: 'content'
+            //}, {
+            //    name: 'Image',
+            //    isRichText: false,
+            //    id: 'image'
+            //}]);
 
-            $('.mz-cms-widget').mzWidget();
+           
         },
 
         buildWidget: function(cfg) {
@@ -71,7 +84,7 @@
         edit: function(block) {
             this.fireEvent('widgetedit', {
                 editor: this,
-                data: block.data('widget'),
+                data: block.element.data('widget'),
                 callback: function(html, data) {
                     block.update(html, data);
                 }

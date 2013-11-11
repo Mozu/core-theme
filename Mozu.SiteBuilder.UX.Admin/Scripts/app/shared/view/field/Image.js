@@ -441,9 +441,13 @@ Ext.define('Taco.shared.view.field.Image', {
     },
     setValue: function (value) {
        
-        if (!value || !Ext.isArray(value)) {
+        if (!value ) {
             value = [];
         }
+        if (!Ext.isArray(value)) {
+            value = [value];
+        }
+            
 
         Ext.each(value, function (val) {
             if (val.isModel) {
