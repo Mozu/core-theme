@@ -57,7 +57,7 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'hyp
                     $parent.find('[data-mz-role="loginpopover-message"]').html('<span class="mz-validationmessage">' + xhr.responseJSON.Message + '</span>');
                 },                login = function () {
                     setLoading(true);
-                    $.post('/login', {
+                    $.post('/user/login', {
                         email: $parent.find('[data-mz-login-email]').val(),
                         password: $parent.find('[data-mz-login-password]').val()
                     }).then(function (res) {

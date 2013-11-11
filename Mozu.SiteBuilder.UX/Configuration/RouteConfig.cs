@@ -217,14 +217,14 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 var r1=            routes.MapHttpRoute(
                 "AJAX Login",
-                "login",
+                "user/login",
                 new { controller = "Auth", action = "AjaxLogin" },
                 new { acceptConstraint = new AcceptConstraint("text/html", false) });
 
 
             var r2 = routes.MapHttpRoute(
                 "Login",
-                "login",
+                "user/login",
                 new {controller = "Auth", action = "Login"},
                 new { acceptConstraint = new AcceptConstraint("text/html", true) });
 

@@ -11,6 +11,7 @@ using AutoMapper;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Routing;
+using Mozu.Location.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts.Clients;
 //using Mozu.ShippingAdmin.Contracts;
 using Mozu.ShippingAdmin.Contracts.Clients;
@@ -39,6 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ICarrierConfigurationWebApiClient _carrierConfigurationWebApiClient;
         private readonly IShippingSettingsWebApiClient _siteShippingSettingsClient;
         private readonly ICarrierConfigurationGlobalWebApiClient _carrierConfigurationGlobalWebApiClient;
+        private readonly ILocationSettingsWebApiClient _locationSettingsWebApiClient;
         private static Dictionary<string, string> FeatureDic; 
 
         static ShippingController()
@@ -52,11 +54,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         }
-        public ShippingController(ICarrierConfigurationWebApiClient carrierConfigurationWebApiClient, IShippingSettingsWebApiClient siteShippingSettingsClient, ICarrierConfigurationGlobalWebApiClient carrierConfigurationGlobalWebApiClient,   IApiContext apiCtx)
+        public ShippingController(ICarrierConfigurationWebApiClient carrierConfigurationWebApiClient, IShippingSettingsWebApiClient siteShippingSettingsClient, ICarrierConfigurationGlobalWebApiClient carrierConfigurationGlobalWebApiClient,   IApiContext apiCtx , Mozu.Location.Contracts.Clients.ILocationSettingsWebApiClient locationSettingsWebApiClient)
         {
             _carrierConfigurationWebApiClient = carrierConfigurationWebApiClient;
             _siteShippingSettingsClient = siteShippingSettingsClient;
             _carrierConfigurationGlobalWebApiClient = carrierConfigurationGlobalWebApiClient;
+            _locationSettingsWebApiClient = locationSettingsWebApiClient;
 
 
             // _siteShippingSettingsClient.UpdateSiteShippingSettings(new SiteSettings.Shipping.Contracts.SiteShippingSettings())
@@ -82,6 +85,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 		[HttpGetRoute(UriTemplate = "Settings/read")]
         public async Task<Response<SiteShippingSettings>> GetSettings()
         {
+
             var res = (await _siteShippingSettingsClient.GetSiteShippingSettings()).ReadAsSync();
             var custSettings = (await _carrierConfigurationWebApiClient.GetConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId)).ReadAsSync();
             var settings = Mapper.Map<SiteShippingSettings>(res);
@@ -96,6 +100,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "Settings/edit")]
         public async Task<Response<SiteShippingSettings>> EditSettings(SiteShippingSettings settings )
         {
+
+            
+
             var dc = Mapper.Map<Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings>(settings);
             var custSettings = Mapper.Map<Mozu.ShippingAdmin.Contracts.CarrierConfiguration>(settings.CustomRate);
 
