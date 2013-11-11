@@ -33,16 +33,27 @@ Ext.define('Taco.controller.Website', {
     *
     *************************************/
     //returns a  store of widgetTypeDefinition
-    findWidgetTypeDefinitions: function (filter, callback,scope) {
+    findWidgetTypeDefinitions: function (filter, callback) {
 
         var store = Taco.core.data.StoreManager.getOrCreate("Taco.store.WidgetDefinitions"),
             cb = function () {
-                var json = [];
+                var json = [],
+                    convertedData = [];
+                
                 store.each(function (item) {
                     json.push(item.data);
                 });
-                callback.apply(scope || store , [json]);
                 
+                json.forEach(function (widget) {
+                    console.log(widget);
+                    convertedData.push({
+                        name: widget.displayName,
+                        isRichText: widget.id == 'content',
+                        icon: widget.icon,
+                        id: widget.id
+                    });
+                });
+                callback(convertedData);
             };
 
 

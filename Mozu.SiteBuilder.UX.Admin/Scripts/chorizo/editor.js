@@ -16,65 +16,13 @@
                 mousemove: $.proxy(this._onMousemove, this)
             });
 
-            $('.mz-cms-grid').mzGrid();
-            $('.mz-cms-widget').mzWidget();
+            $('body').addClass('mz-cms-editing');
 
-            this.buildWidgets();
+            $('.mz-cms-grid').mzGrid();
+
+            Chorizo.widgets.init();
 
             this.fireEvent('pageload', this);
-
-            this.showWidgets();
-        },
-
-        buildWidgets: function() {
-            this.$widgetModal = $('<div class="mz-cms-widget-modal" style="display:none"></div>')
-                .appendTo('body');
-           
-            this.controller().findWidgetTypeDefinitions('*', function (widgets) {
-                var convertedData = [];
-                widgets.forEach(function (widget) {
-                    convertedData.push({
-                        name: widget.displayName,
-                        isRichText: widget.id == 'content',
-                        id: widget.id
-                    });
-                });
-                this.addWidgets(convertedData);
-                $('.mz-cms-widget').mzWidget();
-            }, this);
-            
-            //this.addWidgets([{
-            //    name: 'Text',
-            //    isRichText: true,
-            //    id: 'content'
-            //}, {
-            //    name: 'Image',
-            //    isRichText: false,
-            //    id: 'image'
-            //}]);
-
-           
-        },
-
-        buildWidget: function(cfg) {
-            var ret = $('<div class="mz-cms-widget"></div>');
-
-            ret.html(cfg.name)
-                .data('definition', cfg);
-
-            return ret;
-        },
-
-        addWidgets: function(widgets) {
-            var me = this;
-
-            $.each(widgets, function(i, widget) {
-                me.$widgetModal.append(me.buildWidget(widget));
-            });
-        },
-
-        hideWidget: function() {
-            this.$widgetModal.hide();
         },
 
         showWidgets: function() {
@@ -105,6 +53,39 @@
                             arguments[1].callback('<h1>Header1</h1><p>Paragraph2</p>', {});
                         }
                         console.log('Editor Event: ', name, Array.prototype.slice.call(arguments, 1));
+                    },
+                    findWidgetTypeDefinitions: function(filter, callback) {
+                        callback([{
+                            "name": "Featured Products",
+                            "isRichText": false,
+                            "icon": "/resources/admin/widgets/_0007_featured-products.png",
+                            "id": "featured_product"
+                        }, {
+                            "name": "Content",
+                            "isRichText": true,
+                            "icon": "/resources/admin/widgets/_0004_html.png",
+                            "id": "content"
+                        }, {
+                            "name": "test image",
+                            "isRichText": false,
+                            "icon": "/resources/admin/widgets/_0004_html.png",
+                            "id": "image"
+                        }, {
+                            "name": "Horizontal Rule",
+                            "isRichText": false,
+                            "icon": "/resources/admin/widgets/_0005_horizontal-divider.png",
+                            "id": "horizontal_rule"
+                        }, {
+                            "name": "AddThis",
+                            "isRichText": false,
+                            "icon": "/resources/admin/widgets/_0008_share.png",
+                            "id": "addthis"
+                        }, {
+                            "name": "Facebook Comments",
+                            "isRichText": false,
+                            "icon": "/resources/admin/widgets/_0008_share.png",
+                            "id": "facebook_comments"
+                        }]);
                     }
                 };
             }
@@ -139,6 +120,10 @@
             });
         },
 
+        widgets: function() {
+            return Chorizo.widgets;
+        },
+
         target: function(target) {
             if (!target.hint) return;
             this._target = target;
@@ -161,18 +146,18 @@
 
         persistanceData: function() {
             var data = [];
-            $('.mz-cms-grid').each(function (i, grid) {
+            $('.mz-cms-grid').each(function(i, grid) {
                 var $grid = $(grid),
                     gridData = {
                         id: $grid.data('drop-zone').id,
                         rows: []
                     };
 
-                $grid.find('.mz-cms-row').each(function (j, row) {
+                $grid.find('.mz-cms-row').each(function(j, row) {
                     var $row = $(row),
                         rowData = {
                             columns: []
-                        }; 
+                        };
 
                     $row.find('[class^=mz-cms-col]').each(function(k, col) {
                         var $col = $(col),
@@ -186,7 +171,7 @@
                             if (wd.definitionId == 'content' && wd.config.body == null) {
                                 console.log('content bug travis');
                             }
-                            
+
                             colData.widgets.push($(block).data('widget'));
                         });
 
@@ -296,8 +281,8 @@
                 width: width,
                 display: 'block'
             }).removeClass('mz-cms-upright')
-              .find('.mz-cms-hint-message')
-              .html(data.message);
+                .find('.mz-cms-hint-message')
+                .html(data.message);
 
 
             if (data.quadrant === 'left' || data.quadrant === 'right') {

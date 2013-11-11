@@ -1011,6 +1011,7 @@
     <Content Include="Scripts\sass\etc\chorizo\_variables.scss" />
     <Content Include="Scripts\sass\etc\chorizo\_widgets.scss" />
     <Content Include="Scripts\config.rb" />
+    <Content Include="Scripts\sass\etc\chorizo\_fonts.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

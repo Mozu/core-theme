@@ -1,25 +1,50 @@
 
-
-
 .mz-cms-widget-modal {
-    border: 1px solid black;
+    background-color: white;
+    border: 1px solid #bfbfbf;
+    font-family: SourceSansProRegular, MyriadWebProRegular, helvetica, arial, verdana, sans-serif;
+    height: 450px;
+    left: 50%;
+    margin-left: -225px;
+    margin-top: -225px;
     position: fixed;
-    right: 0;
-    top: 0;
+    top: 50%;
+    width: 460px;
+
+    @include border-radius(2px);
+
+    .mz-cms-header {
+        font-size: 24px;
+        font-weight: normal;
+        height: auto;
+        line-height: 24px;
+        padding: 19px 19px 10px;
+    }
+
+    .mz-cms-body {
+        padding: 9px 19px 0;
+    }
 
     .mz-cms-widget {
-        border: 1px solid black;
-        background: white;
-        display: block;
-        height: 50px;
-        margin: 10px;
-        text-align: center;
-        width: 50px;
+        display: inline-block;
+        margin: 0 10px 10px 0;
+        vertical-align: top;
+        width: 60px;
 
-        &.mz-cms-draggable {
-            border-style: dashed;
+        .mz-cms-icon {
+            background-size: cover;
+            border: 1px solid #CCC;
+            height: 60px;
+            margin-bottom: 5px;
+            width: 100%;
         }
-    }
+
+        .mz-cms-label {
+            color: #333;
+            font-size: 11px;
+            text-align: center;
+        }
+     }
 
     &:after {
         content: "";
