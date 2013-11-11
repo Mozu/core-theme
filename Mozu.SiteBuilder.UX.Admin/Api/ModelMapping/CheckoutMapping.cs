@@ -45,8 +45,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.GatewayDefinitionId, op => op.MapFrom(dc => dc.GatewayAccount.GatewayDefinitionId))
                 .ForMember(x => x.Credentials, op => op.ResolveUsing(dc => {
                     var creds = new JObject();
-                    foreach (var field in dc.GatewayAccount.CredentialFields)
-                        creds.Add(field.Name, (JToken)field.Value);
+                    if (dc.GatewayAccount != null && dc.GatewayAccount.CredentialFields != null)
+                    {
+                        foreach (var field in dc.GatewayAccount.CredentialFields)
+                            creds.Add(field.Name, (JToken)field.Value);
+                    }
                     return creds;
                 }))
                 ;

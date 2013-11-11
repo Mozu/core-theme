@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.ServiceModel;
-using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
 using Mozu.Core.Api.Routing;
-using DC = Mozu.Customer.Contracts;
+using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Mozu.SiteBuilder.UX.Models.Customers;
-using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
-using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers;
-using AutoMapper;
+using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
+using DC = Mozu.Customer.Contracts;
 //using Mozu.SiteBuilder.Mvc.Customers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -98,119 +94,73 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var dcCustomers = Mapper.Map<List<Mozu.Customer.Contracts.CustomerAccount>>(customers);
             foreach (var dcCust in dcCustomers)
             {
-                var existingDcCustoemr = (await _customerWebApiClient.GetAccount(dcCust.Id)).ReadAsSync();
+                var dcExistingCustomer = (await _customerWebApiClient.GetAccount(dcCust.Id)).ReadAsSync();
 
-                existingDcCustoemr.Groups = existingDcCustoemr.Groups ?? new List<DC.CustomerGroup>();
-                var existingGroups = existingDcCustoemr.Groups.Select(x => x.Id).ToList();
-                var newGroups = dcCust.Groups.Select(x => x.Id).ToList();
+                await Task.WhenAll( ManageGroups(dcCust, dcExistingCustomer), ManageContacts(dcCust), ManageAttributes(dcCust, dcExistingCustomer) );
+                var updatedCustomer = (await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id)).ReadAsSync();
 
-                var groupsToAdd = newGroups.Where(x => !existingGroups.Contains(x));
-                var groupsToDel = existingGroups.Where(x => !newGroups.Contains(x));
-
-                var addTasks =groupsToAdd.Select(x => 
-                    _customerWebApiClient.AddAccountGroup(dcCust.Id, x)
-                    ).ToList();
-                var delTasks =groupsToDel.Select(x => _customerWebApiClient.DeleteAccountGroup(  dcCust.Id , x)).ToList();
-
-               
-                await Task.WhenAll( addTasks);
-                await Task.WhenAll( delTasks);
-                if (dcCust.Contacts != null)
-                {
-                    foreach (var dcContact in dcCust.Contacts)
-                    {
-                        _customerWebApiClient.UpdateAccountContact(dcContact, dcCust.Id, dcContact.Id);
-                    }    
-                }
-
-                await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id);
-                retList.Add( Mapper.Map<ApiCustomer>((await _customerWebApiClient.GetAccount(dcCust.Id)).ReadAsSync()));
+                retList.Add( updatedCustomer.Map<ApiCustomer>() );
             }
             return List2(retList);
             
         }
 
-//        [HttpGetRoute(UriTemplate = "autocomplete/?query={query}")]
-//        public async Task<Response<List<AutoCompleteField<string>>>> GetSearch(string query)
-//        {
-//            var groups = await _customerWebApiClient.GetCustomerGroups(x => x.ToLower().Contains(query.ToLower()));
-//
-//            return List2(groups.Select(x => new AutoCompleteField<string> { Display = x, Value = x }).ToList());
-//        }
+        /// <summary>
+        /// Add/remove customer group subroutine for EditCustomers. Yes, a subroutine.
+        /// </summary>
+        private Task ManageGroups(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
+        {
+            List<Task> groupManagementTasks = new List<Task>();
+            dcExistingCustomer.Groups = dcExistingCustomer.Groups ?? new List<DC.CustomerGroup>();
+            var existingGroups = dcExistingCustomer.Groups.Select(x => x.Id).ToList();
+            var newGroups = dcCustomer.Groups.Select(x => x.Id).ToList();
 
-//        [HttpPostRoute(UriTemplate = "notes/create")]
-//        public async Task<Response<CustomerAccountNote>> CreateNote(CustomerAccountNote customerAccountNote, [FromUri]FilterCollection extFilter)
-//        {
-//            var customerAccountId = extFilter.Get<CustomerAccount, int>(x => x.Id);
-//            var customerNote = await _customerWebApiClient.CreateCustomerNote(customerAccountNote, customerAccountId);
-//
-//            return Single2(customerNote);
-//        }
+            var groupsToAdd = newGroups.Except(existingGroups);
+            var groupsToDel = existingGroups.Except(newGroups);
 
-//        [HttpPostRoute(UriTemplate = "groups/update")]
-//        public Response<CustomerGroup> UpdateGroup(CustomerGroup group)
-//        {
-//            // TODO: This is required for models that are stored in a TreeList. Right now, to leverage
-//            //       checkboxes and drag and drop, a TreeList is being used for these in the UI.
-//            var response = Single2(group, message: "Groups cannot be updated at this time.");
-//
-//            return response;
-//        }
+            groupManagementTasks.AddRange( groupsToAdd.Select(x => _customerWebApiClient.AddAccountGroup(dcCustomer.Id, x) ) );
+            groupManagementTasks.AddRange( groupsToDel.Select(x => _customerWebApiClient.DeleteAccountGroup(dcCustomer.Id, x)) );
 
-//        [HttpPostRoute(UriTemplate = "groups/create")]
-//        public async Task<Response<CustomerGroup>> CreateGroup(CustomerGroup newGroup)
-//        {
-//            var group = await _customerGroupsRepository.Create(newGroup);
-//
-//            return Single2(group);
-//        }
-//
-//        [HttpPostRoute(UriTemplate = "groups/delete")]
-//        public async Task<Response<CustomerGroup>> DeleteGroup(CustomerGroup group)
-//        {
-//            Task<Response<CustomerGroup>> result = null;
-//            try
-//            {
-//                await _customerGroupsRepository.Delete(group);
-//
-//                return await Message<CustomerGroup>(true, string.Format("Successfully deleted group '{0}'", group.Name));
-//            }
-//            catch(AggregateException agex)
-//            {
-//                var ex = agex.UnwrapAgg();
-//                result = Message<CustomerGroup>(false, ex.Message);
-//            }
-//            catch (Exception ex)
-//            {
-//                result = Message<CustomerGroup>(false, ex.Message);
-//            }
-//            return await result;
-//        }
+            return Task.WhenAll(groupManagementTasks);
+        }
 
-//        [HttpPostRoute(UriTemplate = "groups/{customerId}/update")]
-//        public async Task<Response<List<CustomerGroup>>> UpdateCustomerGroups(List<CustomerGroup> customerGroups, int? customerId)
-//        {
-//            if (!customerId.HasValue)
-//                return Message3<List<CustomerGroup>>(false, "customerId is missing. This value is required.");
-//
-//            if (customerGroups == null || !customerGroups.Any())
-//                return Message3<List<CustomerGroup>>(false, "No groups to update.");
-//
-//            var groups = new List<CustomerGroup>();
-//            foreach (var customerGroup in customerGroups)
-//            {
-//                var result = await _customerGroupsRepository.AssignGroupToCustomer(customerId.Value, customerGroup.Id);
-//                groups.Add(result);
-//            }
-//
-//            return List2(groups);
-//        }
+        /// <summary>
+        /// Update contacts subroutine for EditCustomers. Yes, a subroutine.
+        /// </summary>
+        private Task ManageContacts(DC.CustomerAccount dcCustomer)
+        {
+            List<Task> contactManagementTasks = new List<Task>();
+            if (dcCustomer != null && dcCustomer.Contacts != null)
+            {
+                contactManagementTasks.AddRange( dcCustomer.Contacts.Select(con => _customerWebApiClient.UpdateAccountContact(con, dcCustomer.Id, con.Id)) );
+            }
 
-     
+            return Task.WhenAll(contactManagementTasks);
+        }
 
-//        private static string GetGroupsSearchFilter(FilterCollection extFilter)
-//        {
-//            return null;
-//        }
+        /// <summary>
+        /// Update attributes subroutine for EditCustomers. Yes, a subroutine.
+        /// </summary>
+        private Task ManageAttributes(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
+        {
+            List<Task> attributeTasks = new List<Task>();
+
+            var custAttrIds = (dcCustomer.Attributes ?? new List<DC.CustomerAttribute>()).Select(attr => attr.FullyQualifiedName);
+            var existingAttrIds = (dcExistingCustomer.Attributes ?? new List<DC.CustomerAttribute>()).Select(attr => attr.FullyQualifiedName);
+
+            var createdAttributeIds = custAttrIds.Except(existingAttrIds).ToList();
+            var updatedAttributeIds = custAttrIds.Intersect(existingAttrIds).ToList();
+
+            if (createdAttributeIds.Count > 0)
+            {
+                attributeTasks.AddRange( dcCustomer.Attributes.Where(a => createdAttributeIds.Contains(a.FullyQualifiedName)).Select(a => _customerWebApiClient.AddAccountAttribute(a, dcCustomer.Id)) );
+            }
+            if (updatedAttributeIds.Count > 0)
+            {
+                attributeTasks.AddRange( dcCustomer.Attributes.Where(a => updatedAttributeIds.Contains(a.FullyQualifiedName)).Select(a => _customerWebApiClient.UpdateAccountAttribute(a, dcCustomer.Id)) );
+            }
+
+            return Task.WhenAll(attributeTasks);
+        }
     }
 }

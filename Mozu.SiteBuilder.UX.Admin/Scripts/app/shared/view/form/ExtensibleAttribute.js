@@ -186,19 +186,26 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
     getFieldName: function (attributeDefinition) {
         return 'attribute-' + attributeDefinition.getId();
     },
+    parseFieldName: function (fieldName) {
+        return fieldName.replace(/^attribute-/, '');
+    },
+
     beforeSave: function () {
-        var form = this.getForm(),
+        var me = this,
+            form = me.getForm(),
             fields = form.getFields(),
             attrs = [];
 
         Ext.each(fields.items, function (field) {
-            var item = {}, val = [];
-            item['attributeDefinitionId'] = '';
-            item['fullyQualifiedName'] = field.getName();
-            item['id'] = '';
-            val.push(field.getValue().toString());
-            item['values'] = val;
-            attrs.push(item);
+            var fqn = me.parseFieldName(field.getName()),
+                definition = me.attributeDefinitionStore.getById(fqn),
+                val = {
+                    'attributeDefinitionId': definition.get('attributeId'),
+                    'fullyQualifiedName': fqn,
+                    'id': null,
+                    'values': [ field.getValue().toString() ]
+                };
+            attrs.push(val);
         });
 
         this.record.set('attributes', attrs);
