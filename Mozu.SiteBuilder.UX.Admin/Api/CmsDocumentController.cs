@@ -6,6 +6,7 @@ using System.ServiceModel.Web;
 using System.Web.Http;
 using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using DC=Mozu.Content.Contracts;
 using Mozu.Content.Contracts.Clients;
 using System.Threading.Tasks;
@@ -80,10 +81,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        [HttpPostRoute(UriTemplate = "widgetdata/update")]
-        public async Task<Response<List<AVM.ZoneRuntimeData>>> UpdateWidgetData(List<AVM.ZoneRuntimeData> zones)
+        public class UpdateWidgetDataMessage
         {
-            var source = zones.FirstOrDefault().Source;
+            public List<AVM.ZoneRuntimeData> zones;
+            public DocumentRequest source { get; set; }
+        }
+
+        [HttpPostRoute(UriTemplate = "widgetdata/update")]
+        public async Task<Response<List<AVM.ZoneRuntimeData>>> UpdateWidgetData(UpdateWidgetDataMessage message )
+        {
+            var source = message.source;
+            message.zones = message.zones ?? new List<AVM.ZoneRuntimeData>();
+
             var docResult= (await _cmsService.GetByPath2(contentCollection: source.Collection, name: source.Path));
             DC.Document doc;
             bool exitst = false;
@@ -102,7 +111,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 doc = docResult.ReadAsSync();
             }
 
-            var zoneSerilized = Newtonsoft.Json.JsonConvert.SerializeObject(zones);
+            var zoneSerilized = Newtonsoft.Json.JsonConvert.SerializeObject(message.zones);
             doc.Set("widgets", zoneSerilized);
 
             if (exitst)
@@ -113,8 +122,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 doc = (await _cmsService.RawCreate2(doc)).ReadAsSync();
             }
-            
-            return List2(zones);
+
+            return List2(message.zones);
         }
 
 		[HttpGetRoute(UriTemplate = "read")]
