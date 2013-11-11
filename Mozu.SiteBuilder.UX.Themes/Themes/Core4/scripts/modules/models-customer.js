@@ -1,70 +1,66 @@
-﻿define(
-    ["modules/knockout-plus", "modules/knockout-viewmodel", "modules/models-address"],
-    function (ko, ViewModelPrototype, AddressModels) {
+﻿define(['modules/backbone-mozu', 'modules/models-address', 'modules/models-user', 'hyprlive'], function (Backbone, AddressModels, UserModels, Hypr) {
 
-        //var Contact = ViewModelPrototype.extend({
-        //    observables: {
-        //        IsPrimary: {}
-        //    },
-        //    submodels: {
-        //        Address: AddressModels.StreetAddress,
-        //        PhoneNumbers: AddressModels.PhoneNumbers
-        //    }
-        //});
+    var CustomerContact = Backbone.MozuModel.extend({
+        mozuType: 'contact',
+        relations: {
+            address: AddressModels.StreetAddress,
+            phoneNumbers: AddressModels.PhoneNumbers,
+        },
+        validation: {
+            firstName: {
+                required: true,
+                msg: Hypr.getLabel('firstNameMissing')
+            },
+            lastNameOrSurname: {
+                required: true,
+                msg: Hypr.getLabel('lastNameMissing')
+            }
+        },
+        isPrimaryShippingContact: function () {
+            return !!_.findWhere(this.get('types'), { isPrimary: true, name: "Shipping" });
+        },
+        isPrimaryBillingContact: function () {
+            return !!_.findWhere(this.get('types'), { isPrimary: true, name: "Billing" });
+        }
+    }),
 
-        //var Customer = ViewModelPrototype.extend({
-        //    mozuType: 'customer',
-        //    statics: {
-        //        Id: ""
-        //    },
-        //    observableArrays: {
-        //        "Groups": [],
-        //        "Notes": [],
-        //    },
-        //    observables: {
-        //        "OrderSummary": {},
-        //        "EmailAddress": {
-        //            required: {
-        //                pattern: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i,
-        //            }
-        //        },
-        //        "LocaleCode": {},
-        //        "Password": {
-        //            required: true
-        //        },
-        //        "Id": {},
-        //        "primaryBillingContact": {}
-        //    },
-        //    submodelArrays: {
-        //        "Contacts": Contact
-        //    },
-        //    updateEmail: function () {
-        //        var me = this, newEmail = this.EmailAddress();
-        //        this.update({
-        //            EmailAddress: newEmail
-        //        }).then(function () {
-        //            me.oldEmail = newEmail;
-        //            me.publish('emailupdated');
-        //        });
-        //    },
-        //    revertEmail: function () {
-        //        this.EmailAddress(this.oldEmail);
-        //    }
-        //}, function constructCustomer(obj) {
-        //    var self = this;
+    Customer = Backbone.MozuModel.extend({
+        mozuType: 'customer',
+        relations: {
+            user: UserModels.User,
+            contacts: Backbone.Collection.extend({
+                model: CustomerContact
+            }),
+            primaryBillingContact: CustomerContact
+        },
+        initialize: function() {
+            var primaryBillingContact = this.getPrimaryBillingContact();
+            if (primaryBillingContact && primaryBillingContact instanceof Backbone.Model) this.set('primaryBillingContact', primaryBillingContact.toJSON());
+        },
+        toJSON: function(options) {
+            var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
+            if (!options || !options.helpers) delete j.primaryBillingContact;
+            return j;
+        },
+        getPrimaryBillingContact: function () {
+            var contacts = this.get('contacts'),
+                pbc = contacts.find(function (c) {
+                    return c.isPrimaryBillingContact();
+                });
+            return pbc || contacts.first();
+        },
+        fetch: function () {
+            var self = this, user = this.get('user');
+            return user.apiModel.action('getCustomers').then(function (customers) {
+                self.apiModel.prop(customers[0].data);
+                self.apiModel.fire('sync', customers[0].data, customers[0].data);
+                return self.apiModel;
+            });
+        }
+    });
 
-        //    this.oldEmail = obj.EmailAddress;
-
-        //    this.primaryBillingContact = ko.computed(function () {
-        //        return ko.utils.arrayFirst(self.Contacts(), function (c) {
-        //            return c.IsPrimary();
-        //        });
-        //    });
-
-        //});
-
-        //return {
-        //    Customer: Customer
-        //}
-    }
-);
+    return {
+        Contact: CustomerContact,
+        Customer: Customer
+    };
+});

@@ -106,10 +106,11 @@
         },
         cleanup: function () {
             var self = this;
-            setTimeout(function () {
+            if (!self.destroyed) setTimeout(function () {
                 self.detachListeners();
-                self.iframe.parentNode.removeChild(self.iframe);
+                self.iframe.parentNode && self.iframe.parentNode.removeChild(self.iframe);
             }, 250);
+            self.destroyed = true;
         },
         update: function(data) {
             data = data.split(messageDelimiter);

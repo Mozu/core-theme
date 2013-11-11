@@ -1,0 +1,62 @@
+﻿<h3 class="mz-l-stack-sectiontitle">{{ labels.accountSettings }}</h3>
+<div class="mz-accountsettings-name">
+    {% if editing.name %}
+    <input class="mz-accountsettings-firstname" type="text" data-mz-value="primaryBillingContact.firstName" value="{{ model.primaryBillingContact.firstName }}" />
+    <input class="mz-accountsettings-lastname" type="text" data-mz-value="primaryBillingContact.lastNameOrSurname" value="{{ model.primaryBillingContact.lastNameOrSurname }}" />
+    <button class="mz-button mz-button-small mz-accountsettings-namedone" data-mz-action="finishEditName">{{ labels.save }}</button>
+    <button class="mz-button mz-button-small mz-accountsettings-namecancel" data-mz-action="cancelEditName">{{ labels.cancel }}</button>
+    <span class="mz-validationmessage" data-mz-validationmessage-for="primaryBillingContact.firstName"></span>
+    <span class="mz-validationmessage" data-mz-validationmessage-for="primaryBillingContact.lastNameOrSurname"></span>
+    {% else %}
+    <h4 class="mz-accountsettings-displayname" id="account-settings-name">{{ model.primaryBillingContact.firstName }} {{ model.primaryBillingContact.lastNameOrSurname }}</h4>
+    <button class="mz-button mz-button-small mz-accountsettings-nameedit" data-mz-action="startEditName">{{ labels.edit }}</button>
+    {% endif %}
+</div>
+<div class="mz-accountsettings-email">
+    {% if editing.email %}
+    <input class="mz-accountsettings-email" type="email" data-mz-value="primaryBillingContact.email" value="{{ model.primaryBillingContact.email }}" />
+    <button class="mz-button mz-button-small mz-accountsettings-emaildone" data-mz-action="finishEditEmail">{{ labels.save }}</button>
+    <button class="mz-button mz-button-small mz-accountsettings-emailcancel" data-mz-action="cancelEditEmail">{{ labels.cancel }}</button>
+    <span class="mz-validationmessage" data-mz-validationmessage-for="primaryBillingContact.email"></span>
+    {% else %}
+    <p class="mz-accountsettings-displayemail">{{ model.primaryBillingContact.email }}</p>
+    <!--<button class="mz-button mz-button-small mz-accountsettings-emailedit" data-mz-action="startEditEmail">{{ labels.edit }}</button>-->
+    {% endif %}
+</div>
+<div class="mz-accountsettings-password">
+    {% if editing.password %}
+    <label for="account-password" class="mz-accountsettings-passwordlabel">{{ labels.password }}</label>
+    <input id="account-password" class="mz-accountsettings-password" type="password" data-mz-value="password" value="{{ model.password }}" />
+    <label for="account-confirmpassword" class="mz-accountsettings-confirmpasswordlabel">{{ labels.confirmPassword }}</label>
+    <input id="account-confirmpassword" class="mz-accountsettings-confirmpassword" type="password" data-mz-value="confirmPassword" value="{{ model.confirmPassword }}" />
+    <span class="mz-validationmessage" data-mz-validationmessage-for="oldPassword"></span>
+    <span class="mz-validationmessage" data-mz-validationmessage-for="password"></span>
+    <span class="mz-validationmessage" data-mz-validationmessage-for="confirmPassword"></span>
+    <button class="mz-button mz-button-small mz-accountsettings-passworddone" data-mz-action="finishEditPassword">{{ labels.save }}</button>
+    <button class="mz-button mz-button-small mz-accountsettings-passwordcancel" data-mz-action="cancelEditPassword">{{ labels.cancel }}</button>
+    {% else %}
+    <button class="mz-button mz-button-small mz-accountsettings-passwordedit" data-mz-action="startEditPassword">{{ labels.edit }}</button>
+    {% endif %}
+</div>
+<div class="mz-accountsettings-phone">
+    {% if editing.phone %}
+    <input id="account-phone" class="mz-accountsettings-phone" type="tel" data-mz-value="primaryBillingContact.phoneNumbers.home" />
+    <button class="mz-button mz-button-small mz-accountsettings-phonedone" data-mz-action="finishEditPhone">{{ labels.save }}</button>
+    <button class="mz-button mz-button-small mz-accountsettings-phonecancel" data-mz-action="cancelEditPhone">{{ labels.cancel }}</button>
+    {% else %}
+    <p class="mz-accountsettings-displayphone">{{ model.primaryBillingContact.phoneNumbers.home }}</p>
+    <button class="mz-button mz-button-small mz-accountsettings-phoneedit" data-mz-action="startEditPhone">{{ labels.edit }}</button>
+    {% endif %}
+</div>
+<div class="mz-accountsettings-optin">
+    <input type="checkbox" id="account-optin" data-mz-value="optIn" {% if model.optIn %}checked="checked"{% endif %} />
+    <label for="account-optin">{{ labels.accountOptIn }}</label>
+</div>
+<div class="mz-accountsettings-openorders">
+    <h4>{{ labels.openOrders }} <a href="#history">{{ labels.viewOrderHistory }}</a></h4>
+    <ul class="mz-orderlist">
+        {% for order in model.openOrders.items %}
+        <li>{% include "modules/common/order-listing" with model=order %}</li>
+        {% endfor %}
+    </ul>
+</div>

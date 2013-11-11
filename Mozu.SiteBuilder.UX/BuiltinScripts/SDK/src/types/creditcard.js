@@ -1,35 +1,14 @@
 ﻿ApiObject.types.creditcard = utils.inherit(ApiObject, (function() {
 
-    var ERRORS = {
-        CARD_TYPE_MISSING: {
-            code: 'PCI_CARD_TYPE_MISSING',
-            message: 'Card type missing.'
-        },
-        CARD_NUMBER_MISSING: {
-            code: 'PCI_CARD_NUMBER_MISSING',
-            message: 'Card number missing.'
-        },
-        CVV_MISSING: {
-            code: 'PCI_CVV_MISSING',
-            message: 'Card security code missing.'
-        },
-        CARD_NUMBER_UNRECOGNIZED: {
-            code: 'PCI_CARD_NUMBER_UNRECOGNIZED',
-            message: 'Card number is in an unrecognized format.'
-        },
-        MASK_PATTERN_INVALID: {
-            code: 'PCI_MASK_PATTERN_INVALID',
-            message: 'Supplied mask pattern did not match a valid card number.'
-        }
-    };
+    errors.register({
+        'CARD_TYPE_MISSING': 'Card type missing.',
+        'CARD_NUMBER_MISSING': 'Card number missing.',
+        'CVV_MISSING': 'Card security code missing.',
+        'CARD_NUMBER_UNRECOGNIZED': 'Card number is in an unrecognized format.',
+        'MASK_PATTERN_INVALID': 'Supplied mask pattern did not match a valid card number.'
+    });
 
     var charsInCardNumberRE = /[\s-]/g;
-
-    function fail(obj, error) {
-        obj.fire('error', error);
-        obj.api.fire('error', error, obj);
-        throw new Error(error.message);
-    }
 
     function validateCardNumber(obj, cardNumber) {
         var maskCharacter = obj.maskCharacter;
@@ -68,7 +47,7 @@
             maskCharacter = obj.maskCharacter,
             tempMask = "";
 
-        if (!matches) fail(obj, ERRORS.MASK_PATTERN_INVALID);
+        if (!matches) errors.throwOnObject(obj, 'MASK_PATTERN_INVALID');
         for (var i = 1; i < matches.length; i++) {
             tempMask = "";
             for (var j = 0; j < matches[i].length; j++) {
@@ -85,12 +64,12 @@
 
     function makePayload(obj) {
         var data = obj.data, maskCharacter = obj.maskCharacter, maskedData;
-        if (!data.paymentOrCardType) fail(obj, ERRORS.CARD_TYPE_MISSING);
-        if (!data.cardNumberPartOrMask) fail(obj, ERRORS.CARD_NUMBER_MISSING);
-        if (!data.cvv) fail(obj, ERRORS.CVV_MISSING);
+        if (!data.paymentOrCardType) errors.throwOnObject(obj, 'CARD_TYPE_MISSING');
+        if (!data.cardNumberPartOrMask) errors.throwOnObject(obj, 'CARD_NUMBER_MISSING');
+        if (!data.cvv) errors.throwOnObject(obj, 'CVV_MISSING');
         maskedData = transform.toCardData(data)
         var cardNumber = maskedData.cardNumber.replace(charsInCardNumberRE, '');
-        if (!validateCardNumber(obj, cardNumber)) fail(obj, ERRORS.CARD_NUMBER_UNRECOGNIZED);
+        if (!validateCardNumber(obj, cardNumber)) errors.throwOnObject(obj, 'CARD_NUMBER_UNRECOGNIZED');
 
         // only add numberPart if the current card number isn't already masked
         if (cardNumber.indexOf(maskCharacter) === -1) maskedData.numberPart = createCardNumberMask(obj, cardNumber);

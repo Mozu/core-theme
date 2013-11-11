@@ -46,6 +46,7 @@
   "viewCart"             : "View Cart",
   "search"               : "Search",
   "all"                  : "All",
+  "save"                 : "Save",
   "allRightsReserved"    : "All rights reserved.",
   "poweredBy"            : "Powered by Mozu Shopping Cart",
   "product"              : "Product",
@@ -79,7 +80,7 @@
   "email"                : "Email",
   "emailAddress"         : "Email Address",
   "creditCard"           : "Credit Card",
-  "payPal"               : "PayPal",
+  "payPal"               : "Paypal Express",
   "password"             : "Password",
   "confirmPassword"      : "Confirm Password",
   "firstName"            : "First Name",
@@ -95,10 +96,6 @@
   "nextPage"             : "Next Page",
   "pageStatePlural"      : "Showing {0} - {1} of {2} results",
   "pageStateSingular"    : "Showing 1 result",
-  "showing"              : "Showing",
-  "of"                   : "of",
-  "result"               : "result",
-  "results"              : "results",
   "show"                 : "Show",
   "resultsPerPage"       : "results per page",
   "registeredCustomer"   : "Registered customer?",
@@ -117,7 +114,7 @@
   "proceedToCheckout"    : "Proceed to Checkout",
   
   /* Checkout labels */
-  "checkout": "Checkout",
+  "checkout"             : "Checkout",
   "orderSummary"         : "Order Summary",
   "shippingInformation"  : "Shipping Information",
   "shippingMethod"       : "Shipping Method",
@@ -128,6 +125,7 @@
   "billingContact"       : "Billing Contact",
   "paymentType"          : "Payment Type",
   "selectPaymentType"    : "Select a Payment Type",
+  "paypalExpressSummary" : "When you place your order, you will be taken to PayPal to complete your transaction.",
   "checkByMail"          : "Check by Mail",
   "useShippingAddress"   : "Use my shipping address",
   "optIn"                : "Yes! I want to receive news and special offers from {0}!",
@@ -145,6 +143,7 @@
   "billingEmail"         : "Billing Email",
   "mailCheckTo"          : "Mail check to",
   "shipTo"               : "Ship to",
+  "shippedTo"            : "Shipped to",
   "giftMessage"          : "Gift Message",
 
   /* Error page labels */
@@ -152,7 +151,19 @@
   "errorDetail"          : "Our software encountered an error it couldn't resolve.",
 
   /* My Account page labels */
-  "myAccount"            : "Your Account",
+  "myAccount"            : "My Account",
+  "yourAccount"          : "Your Account",
+  "accountSettings"      : "Account Settings",
+  "accountMyWishlist"    : "My Wishlist",
+  "accountYourWishlist"  : "Your Wishlist",
+  "orderHistory"         : "Order History",
+  "paymentMethods"       : "Payment Methods",
+  "addressBook"          : "Address Book",
+  "storeCredit"          : "Store Credit",
+  "accountOptIn"         : "Please keep me up to date on store news and specials",    
+  "openOrders"           : "Open Orders",    
+  "viewOrderHistory"     : "View order history",    
+  "changePassword"       : "Change Password",
 
   /* Not Found labels */
   "pageNotFound"         : "Page Not Found",

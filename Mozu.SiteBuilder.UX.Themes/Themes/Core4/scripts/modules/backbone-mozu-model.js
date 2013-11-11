@@ -231,6 +231,7 @@ define([
             initApiModel: function (conf) {
                 var me = this;
                 this.apiModel = api.createSync(this.mozuType, conf);
+                if (!this.apiModel || !this.apiModel.on) return;
                 this.apiModel.on('action', function () {
                     me.isLoading(true);
                     me.trigger('request');
@@ -355,7 +356,8 @@ define([
             if (conf) conf.validation = flattenValidation(conf, {}, '');
             if (conf && conf.mozuType) {
                 // reflect all methods
-                _.each(api.getAvailableActionsFor(conf.mozuType), function (actionName) {
+                var actions = api.getAvailableActionsFor(conf.mozuType);
+                if (actions) _.each(actions, function (actionName) {
                     var apiActionName = "api" + actionName.charAt(0).toUpperCase() + actionName.substring(1);
                     if (!(apiActionName in conf)) {
                         conf[apiActionName] = function (data) {

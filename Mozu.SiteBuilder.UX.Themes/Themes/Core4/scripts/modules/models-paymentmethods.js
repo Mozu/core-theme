@@ -64,6 +64,11 @@
         }
     }),
 
+
+    PayPal = PaymentMethod.extend({
+        mozuType: 'paypalpayment'
+    }),
+
     Check = PaymentMethod.extend({
         validation: {
             nameOnCheck: {

@@ -5,10 +5,11 @@
     "modules/backbone-mozu",
     "modules/api",
     "modules/models-user",
+    "modules/models-customer",
     "modules/models-address",
     "modules/models-paymentmethods"
 ],
-    function ($, _, Hypr, Backbone, api, UserModels, AddressModels, PaymentMethods) {
+    function ($, _, Hypr, Backbone, api, UserModels, CustomerModels, AddressModels, PaymentMethods) {
 
         var CheckoutStep = Backbone.MozuModel.extend({
             helpers: ['stepStatus'],
@@ -36,7 +37,7 @@
             },
             calculateStepStatus: function () {
                 // override this!
-                var newStepStatus = this.isValid() ? 'complete' : 'invalid';
+                var newStepStatus = this.isValid(!this.stepStatus()) ? 'complete' : 'invalid';
                 this.stepStatus(newStepStatus);
             },
             getOrder: function () {
@@ -58,23 +59,11 @@
         }),
 
         FulfillmentContact = CheckoutStep.extend({
-            relations: {
-                address: AddressModels.StreetAddress,
-                phoneNumbers: AddressModels.PhoneNumbers
-            },
+            relations: CustomerModels.Contact.prototype.relations,
+            validation: CustomerModels.Contact.prototype.validation,
             getOrder: function () {
                 // since this is one step further away from the order, it has to be accessed differently
                 return this.parent.parent;
-            },
-            validation: {
-                firstName: {
-                    required: true,
-                    msg: Hypr.getLabel('firstNameMissing')
-                },
-                lastNameOrSurname: {
-                    required: true,
-                    msg: Hypr.getLabel('lastNameMissing')
-                }
             },
             next: function () {
                 if (this.validate()) return false;
@@ -139,23 +128,6 @@
             }
         }),
 
-        BillingContact = Backbone.MozuModel.extend({
-            relations: {
-                address: AddressModels.StreetAddress,
-                phoneNumbers: AddressModels.PhoneNumbers
-            },
-            validation: {
-                firstName: {
-                    required: true,
-                    msg: Hypr.getLabel('firstNameMissing')
-                },
-                lastNameOrSurname: {
-                    required: true,
-                    msg: Hypr.getLabel('lastNameMissing')
-                }
-            }
-        }),
-
         BillingInfo = CheckoutStep.extend({
             mozuType: 'payment',
             validation: {
@@ -169,7 +141,7 @@
                 "isCardInfoSaved": Backbone.MozuModel.DataTypes.Boolean
             },
             relations: {
-                billingContact: BillingContact,
+                billingContact: CustomerModels.Contact,
                 card: PaymentMethods.CreditCard,
                 check: PaymentMethods.Check
             },
@@ -195,25 +167,18 @@
                     this.isValid(true) ? 'complete' : 'invalid')
                     : 'new');
             },
-            updateOrder: function() {
-                var me = this,
-                    order = me.getOrder();
-                order.update().then(function () {
-                    me.stepStatus("complete");
+            submit: function () {
+                var self = this, order = self.getOrder();
+                if (self.validate()) return false;
+                order.syncApiModel();
+                order.apiModel.addPayment().then(function () {
+                    self.stepStatus("complete");
                     order.isReady(true);
                 }, function () {
-                    me.stepStatus("invalid");
+                    self.stepStatus("invalid");
                 }).ensure(function () {
-                    me.isLoading(false);
-                });
-            },
-            submit: function () {
-                var self = this;
-                if (this.validate()) return false;
-                if (this.get('paymentType') === "CreditCard") return this.get('card').apiModel.save().then(function () {
-                    return self.updateOrder();
-                });
-                return this.updateOrder();
+                    self.isLoading(false);
+                }).done();
             }
         });
 
@@ -234,7 +199,7 @@
             },
             'user.confirmPassword': {
                 fn: function(value) {
-                    if (this.validateUser && value !== this.get('User.password')) return Hypr.getLabel('passwordsDoNotMatch')
+                    if (this.validateUser && value !== this.get('user').get('password')) return Hypr.getLabel('passwordsDoNotMatch')
                 }
             },
         };
@@ -292,6 +257,13 @@
             onCheckoutError: function (error) {
                 var order = this;
                 order.isLoading(false);
+                if (!error) error = {
+                    items: [
+                        {
+                            message: Hypr.getLabel('unknownError')
+                        }
+                    ]
+                };
                 $.each(error.items, function (ix, errorItem) {
                     if (errorItem.errorCode === "MISSING_OR_INVALID_PARAMETER" && errorItem.additionalErrorData && errorItem.additionalErrorData[0] && errorItem.additionalErrorData[0].value === "password" && errorItem.additionalErrorData[0].name === "ParameterName") {
                         order.trigger('passwordinvalid', errorItem.message.substring(errorItem.message.indexOf('Password')));
@@ -331,7 +303,7 @@
 
                 api.steps(process).then(function (completedOrder) {
                     order.isLoading(false);
-                    if (completedOrder.prop("status") === "Submitted") {
+                    if (completedOrder && completedOrder.prop("status") === "Submitted") {
                         order.onCheckoutSuccess(completedOrder.data);
                     } else {
                         order.onCheckoutError(completedOrder);

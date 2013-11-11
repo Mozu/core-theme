@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-11-06
+ * Mozu JavaScript SDK - v0.2.0 - 2013-11-10
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -32,7 +32,10 @@
                     when.isPromise = isPromiseLike;
                     when.isPromiseLike = isPromiseLike;
                     function when(promiseOrValue, onFulfilled, onRejected, onProgress) {
-                        return resolve(promiseOrValue).then(onFulfilled, onRejected, onProgress);
+                        return cast(promiseOrValue).then(onFulfilled, onRejected, onProgress);
+                    }
+                    function cast(x) {
+                        return x instanceof Promise ? x : resolve(x);
                     }
                     function Promise(sendMessage, inspect) {
                         this._message = sendMessage;
@@ -51,10 +54,13 @@
                             return this.then(undef, onRejected);
                         },
                         ensure: function(onFulfilledOrRejected) {
-                            return this.then(injectHandler, injectHandler)["yield"](this);
+                            return typeof onFulfilledOrRejected === "function" ? this.then(injectHandler, injectHandler)["yield"](this) : this;
                             function injectHandler() {
                                 return resolve(onFulfilledOrRejected());
                             }
+                        },
+                        done: function(handleResult, handleError) {
+                            this.then(handleResult, handleError).otherwise(crash);
                         },
                         yield: function(value) {
                             return this.then(function() {
@@ -149,20 +155,31 @@
                             if (!consumers) {
                                 return;
                             }
-                            value = coerce(val);
-                            scheduleConsumers(consumers, value);
+                            var queue = consumers;
                             consumers = undef;
-                            if (status) {
-                                updateStatus(value, status);
-                            }
+                            enqueue(function() {
+                                value = coerce(self, val);
+                                if (status) {
+                                    updateStatus(value, status);
+                                }
+                                runHandlers(queue, value);
+                            });
                         }
                         function promiseReject(reason) {
                             promiseResolve(rejected(reason));
                         }
                         function promiseNotify(update) {
                             if (consumers) {
-                                scheduleConsumers(consumers, progressed(update));
+                                var queue = consumers;
+                                enqueue(function() {
+                                    runHandlers(queue, progressed(update));
+                                });
                             }
+                        }
+                    }
+                    function runHandlers(queue, value) {
+                        for (var i = 0; i < queue.length; i++) {
+                            queue[i](value);
                         }
                     }
                     function fulfilled(value) {
@@ -194,26 +211,23 @@
                             }
                         });
                     }
-                    function coerce(x) {
+                    function coerce(self, x) {
+                        if (x === self) {
+                            return rejected(new TypeError());
+                        }
                         if (x instanceof Promise) {
                             return x;
                         }
-                        if (!(x === Object(x) && "then" in x)) {
-                            return fulfilled(x);
+                        try {
+                            var untrustedThen = x === Object(x) && x.then;
+                            return typeof untrustedThen === "function" ? assimilate(untrustedThen, x) : fulfilled(x);
+                        } catch (e) {
+                            return rejected(e);
                         }
-                        return promise(function(resolve, reject, notify) {
-                            enqueue(function() {
-                                try {
-                                    var untrustedThen = x.then;
-                                    if (typeof untrustedThen === "function") {
-                                        fcall(untrustedThen, x, resolve, reject, notify);
-                                    } else {
-                                        resolve(fulfilled(x));
-                                    }
-                                } catch (e) {
-                                    reject(e);
-                                }
-                            });
+                    }
+                    function assimilate(untrustedThen, x) {
+                        return promise(function(resolve, reject) {
+                            fcall(untrustedThen, x, resolve, reject);
                         });
                     }
                     function NearFulfilledProxy(value) {
@@ -232,14 +246,6 @@
                             throw this.reason;
                         }
                     };
-                    function scheduleConsumers(handlers, value) {
-                        enqueue(function() {
-                            var handler, i = 0;
-                            while (handler = handlers[i++]) {
-                                handler(value);
-                            }
-                        });
-                    }
                     function updateStatus(value, status) {
                         value.then(statusFulfilled, statusRejected);
                         function statusFulfilled() {
@@ -333,11 +339,10 @@
                                 function resolveOne(item, i) {
                                     when(item, mapFunc, fallback).then(function(mapped) {
                                         results[i] = mapped;
-                                        notify(mapped);
                                         if (!--toResolve) {
                                             resolve(results);
                                         }
-                                    }, reject);
+                                    }, reject, notify);
                                 }
                             }
                         });
@@ -374,7 +379,7 @@
                             state: "pending"
                         };
                     }
-                    var reduceArray, slice, fcall, nextTick, handlerQueue, setTimeout, funcProto, call, arrayProto, monitorApi, cjsRequire, undef;
+                    var reduceArray, slice, fcall, nextTick, handlerQueue, setTimeout, funcProto, call, arrayProto, monitorApi, cjsRequire, MutationObserver, undef;
                     cjsRequire = require;
                     handlerQueue = [];
                     function enqueue(task) {
@@ -383,24 +388,23 @@
                         }
                     }
                     function drainQueue() {
-                        var task, i = 0;
-                        while (task = handlerQueue[i++]) {
-                            task();
-                        }
+                        runHandlers(handlerQueue);
                         handlerQueue = [];
                     }
                     setTimeout = global.setTimeout;
-                    monitorApi = typeof console != "undefined" ? console : when;
-                    if (typeof setImmediate === "function") {
-                        nextTick = setImmediate.bind(global);
-                    } else if (typeof MessageChannel !== "undefined") {
-                        var channel = new MessageChannel();
-                        channel.port1.onmessage = drainQueue;
-                        nextTick = function() {
-                            channel.port2.postMessage(0);
-                        };
-                    } else if (typeof process === "object" && process.nextTick) {
+                    monitorApi = typeof console !== "undefined" ? console : when;
+                    if (typeof process === "object" && process.nextTick) {
                         nextTick = process.nextTick;
+                    } else if (MutationObserver = global.MutationObserver || global.WebKitMutationObserver) {
+                        nextTick = function(document, MutationObserver, drainQueue) {
+                            var el = document.createElement("div");
+                            new MutationObserver(drainQueue).observe(el, {
+                                attributes: true
+                            });
+                            return function() {
+                                el.setAttribute("x", "x");
+                            };
+                        }(document, MutationObserver, drainQueue);
                     } else {
                         try {
                             nextTick = cjsRequire("vertx").runOnLoop || cjsRequire("vertx").runOnContext;
@@ -445,6 +449,16 @@
                     };
                     function identity(x) {
                         return x;
+                    }
+                    function crash(fatalError) {
+                        if (typeof monitorApi.reportUnhandled === "function") {
+                            monitorApi.reportUnhandled();
+                        } else {
+                            enqueue(function() {
+                                throw fatalError;
+                            });
+                        }
+                        throw fatalError;
                     }
                     return when;
                 });
@@ -1266,6 +1280,16 @@
                         }
                         return accumulator;
                     },
+                    slice: function(arrayLikeObj, ix) {
+                        return Array.prototype.slice.call(arrayLikeObj, ix);
+                    },
+                    formatString: function(tpt) {
+                        var formatted = tpt, otherArgs = utils.slice(arguments, 1);
+                        for (var i = 0, len = otherArgs.length; i < len; i++) {
+                            formatted = formatted.split("{" + i + "}").join(otherArgs[i] || "");
+                        }
+                        return formatted;
+                    },
                     getType: function() {
                         var reType = /\[object (\w+)\]/;
                         return function(thing) {
@@ -1300,7 +1324,7 @@
                             failure({
                                 items: [ {
                                     message: "Request timed out.",
-                                    errorCode: "TIMEOUT"
+                                    code: "TIMEOUT"
                                 } ]
                             }, xhr);
                         }, 6e4);
@@ -1315,7 +1339,7 @@
                                         failure({
                                             items: [ {
                                                 message: "Unable to parse response: " + xhr.responseText,
-                                                errorCode: "UNKNOWN"
+                                                code: "UNKNOWN"
                                             } ]
                                         }, xhr, e);
                                     }
@@ -1326,7 +1350,7 @@
                                     failure(json || {
                                         items: [ {
                                             message: "Request failed, no response given.",
-                                            errorCode: xhr.status
+                                            code: xhr.status
                                         } ]
                                     }, xhr);
                                 }
@@ -1363,34 +1387,44 @@
                         ctor.prototype.on = ctor.prototype.bind;
                         ctor.prototype.off = ctor.prototype.unbind;
                         ctor.prototype.fire = ctor.prototype.trigger;
-                    },
-                    Exceptions: {
-                        NoRequestConfigFound: function(type, op) {
-                            var str = "No request configuration was found for " + type + ".";
-                            if (op) str = str + op + ".";
-                            return {
-                                name: "No Request Configuration Error",
-                                level: 1,
-                                message: str,
-                                htmlMessage: str,
-                                toString: errorToString
-                            };
-                        },
-                        NoShortcutParamFound: function(type, conf) {
-                            var str = "No shortcut parameter available for '" + typeName + "'. Please supply a configuration object instead of '" + conf + "'.";
-                            return {
-                                name: "No Shortcut Parameter Error",
-                                level: 1,
-                                message: str,
-                                htmlMessage: str,
-                                toString: errorToString
-                            };
-                        }
                     }
                 };
+            }();
+            var errors = function() {
                 function errorToString() {
                     return this.name + ": " + this.message;
                 }
+                var errorTypes = {};
+                return {
+                    register: function(code, message) {
+                        if (typeof code === "object") {
+                            for (var i in code) {
+                                errors.register(i, code[i]);
+                            }
+                        } else {
+                            errorTypes[code] = {
+                                code: code,
+                                message: message
+                            };
+                        }
+                    },
+                    create: function(code) {
+                        var msg = utils.formatString.apply(utils, [ errorTypes[code].message ].concat(utils.slice(arguments, 1)));
+                        return {
+                            name: code,
+                            level: 1,
+                            message: msg,
+                            htmlMessage: msg,
+                            toString: errorToString
+                        };
+                    },
+                    throwOnObject: function(obj, code) {
+                        var error = errors.create.apply(errors, [ code ].concat(utils.slice(arguments, 2)));
+                        obj.fire("error", error);
+                        obj.api.fire("error", error, obj);
+                        throw error;
+                    }
+                };
             }();
             var IframeXHR = function(window, document, undefined) {
                 var hasPostMessage = window.postMessage && navigator.userAgent.indexOf("Opera") === -1, firefoxVersion = function() {
@@ -1484,10 +1518,11 @@
                     },
                     cleanup: function() {
                         var self = this;
-                        setTimeout(function() {
+                        if (!self.destroyed) setTimeout(function() {
                             self.detachListeners();
-                            self.iframe.parentNode.removeChild(self.iframe);
+                            self.iframe.parentNode && self.iframe.parentNode.removeChild(self.iframe);
                         }, 250);
+                        self.destroyed = true;
                     },
                     update: function(data) {
                         data = data.split(messageDelimiter);
@@ -1506,6 +1541,10 @@
                 return IframeXMLHttpRequest;
             }(this, this.document);
             var ApiReference = function() {
+                errors.register({
+                    NO_REQUEST_CONFIG_FOUND: "No request configuration was found for {0}.{1}",
+                    NO_SHORTCUT_PARAM_FOUND: 'No shortcut parameter available for {0}. Please supply a configuration object instead of "{1}".'
+                });
                 var basicOps = {
                     get: "GET",
                     update: "PUT",
@@ -1532,14 +1571,14 @@
                     getRequestConfig: function(operation, typeName, conf, context, obj) {
                         var returnObj, tptData;
                         var oType = objectTypes[typeName];
-                        if (!oType) throw Mozu.Utils.Exceptions.NoRequestConfigFound(typeName, operation);
+                        if (!oType) errors.throwOnObject(obj, "NO_REQUEST_CONFIG_FOUND", typeName, "");
                         if (operation) operation = utils.dashCase(operation);
                         if (oType[operation]) oType = oType[operation];
                         if (typeof oType === "string") oType = {
                             template: oType
                         };
                         if (objectTypes[typeName].defaults) oType = utils.extend({}, objectTypes[typeName].defaults, oType);
-                        if (!oType.template) throw Mozu.Utils.Exceptions.NoRequestConfigFound(typeName, operation);
+                        if (!oType.template) errors.throwOnObject(obj, "NO_REQUEST_CONFIG_FOUND", typeName, operation);
                         returnObj = {};
                         tptData = {};
                         if (typeof oType.template === "string") oType.template = utils.uritemplate.parse(oType.template);
@@ -1551,7 +1590,7 @@
                             }
                         }
                         if (conf !== undefined && typeof conf !== "object") {
-                            if (!oType.shortcutParam) throw Mozu.Utils.Exceptions.NoShortcutParamFound(typeName, conf);
+                            if (!oType.shortcutParam) errors.throwOnObject(obj, "NO_SHORTCUT_PARAM_FOUND", typeName, conf);
                             tptData[oType.shortcutParam] = conf;
                         } else if (conf) {
                             utils.extend(tptData, conf);
@@ -1636,6 +1675,9 @@
                         },
                         collectionOf: "product"
                     },
+                    customers: {
+                        collectionOf: "customer"
+                    },
                     product: {
                         get: {
                             template: "{+productService}{productCode}?{&allowInactive*}",
@@ -1718,6 +1760,11 @@
                             verb: "POST",
                             includeSelf: true,
                             template: "{+userService}{id}/changepassword"
+                        },
+                        "get-customers": {
+                            template: "{+customerService}?fields=UserId+eq+{userId}",
+                            includeSelf: true,
+                            returnType: "customers"
                         }
                     },
                     customer: {
@@ -1757,6 +1804,11 @@
                             noBody: true,
                             includeSelf: true,
                             returnType: "user"
+                        },
+                        "create-payment": {
+                            verb: "POST",
+                            template: "{+orderService}{id}/payments/actions",
+                            includeSelf: true
                         },
                         "apply-coupon": {
                             verb: "PUT",
@@ -1807,8 +1859,10 @@
                         }
                     },
                     payment: {
-                        template: "{+orderService}{orderId}/billinginfo",
-                        includeSelf: true
+                        create: {
+                            template: "{+orderService}{orderId}/payments/actions",
+                            includeSelf: true
+                        }
                     },
                     creditcard: {
                         defaults: {
@@ -1998,34 +2052,14 @@
                 }
             });
             ApiObject.types.creditcard = utils.inherit(ApiObject, function() {
-                var ERRORS = {
-                    CARD_TYPE_MISSING: {
-                        code: "PCI_CARD_TYPE_MISSING",
-                        message: "Card type missing."
-                    },
-                    CARD_NUMBER_MISSING: {
-                        code: "PCI_CARD_NUMBER_MISSING",
-                        message: "Card number missing."
-                    },
-                    CVV_MISSING: {
-                        code: "PCI_CVV_MISSING",
-                        message: "Card security code missing."
-                    },
-                    CARD_NUMBER_UNRECOGNIZED: {
-                        code: "PCI_CARD_NUMBER_UNRECOGNIZED",
-                        message: "Card number is in an unrecognized format."
-                    },
-                    MASK_PATTERN_INVALID: {
-                        code: "PCI_MASK_PATTERN_INVALID",
-                        message: "Supplied mask pattern did not match a valid card number."
-                    }
-                };
+                errors.register({
+                    CARD_TYPE_MISSING: "Card type missing.",
+                    CARD_NUMBER_MISSING: "Card number missing.",
+                    CVV_MISSING: "Card security code missing.",
+                    CARD_NUMBER_UNRECOGNIZED: "Card number is in an unrecognized format.",
+                    MASK_PATTERN_INVALID: "Supplied mask pattern did not match a valid card number."
+                });
                 var charsInCardNumberRE = /[\s-]/g;
-                function fail(obj, error) {
-                    obj.fire("error", error);
-                    obj.api.fire("error", error, obj);
-                    throw new Error(error.message);
-                }
                 function validateCardNumber(obj, cardNumber) {
                     var maskCharacter = obj.maskCharacter;
                     if (!cardNumber) return false;
@@ -2054,7 +2088,7 @@
                 }
                 function createCardNumberMask(obj, cardNumber) {
                     var maskRE = new RegExp(obj.maskPattern), matches = cardNumber.match(maskRE), toDisplay = cardNumber, toSend = [], maskCharacter = obj.maskCharacter, tempMask = "";
-                    if (!matches) fail(obj, ERRORS.MASK_PATTERN_INVALID);
+                    if (!matches) errors.throwOnObject(obj, "MASK_PATTERN_INVALID");
                     for (var i = 1; i < matches.length; i++) {
                         tempMask = "";
                         for (var j = 0; j < matches[i].length; j++) {
@@ -2070,12 +2104,12 @@
                 }
                 function makePayload(obj) {
                     var data = obj.data, maskCharacter = obj.maskCharacter, maskedData;
-                    if (!data.paymentOrCardType) fail(obj, ERRORS.CARD_TYPE_MISSING);
-                    if (!data.cardNumberPartOrMask) fail(obj, ERRORS.CARD_NUMBER_MISSING);
-                    if (!data.cvv) fail(obj, ERRORS.CVV_MISSING);
+                    if (!data.paymentOrCardType) errors.throwOnObject(obj, "CARD_TYPE_MISSING");
+                    if (!data.cardNumberPartOrMask) errors.throwOnObject(obj, "CARD_NUMBER_MISSING");
+                    if (!data.cvv) errors.throwOnObject(obj, "CVV_MISSING");
                     maskedData = transform.toCardData(data);
                     var cardNumber = maskedData.cardNumber.replace(charsInCardNumberRE, "");
-                    if (!validateCardNumber(obj, cardNumber)) fail(obj, ERRORS.CARD_NUMBER_UNRECOGNIZED);
+                    if (!validateCardNumber(obj, cardNumber)) errors.throwOnObject(obj, "CARD_NUMBER_UNRECOGNIZED");
                     if (cardNumber.indexOf(maskCharacter) === -1) maskedData.numberPart = createCardNumberMask(obj, cardNumber);
                     delete maskedData.cardNumber;
                     return maskedData;
@@ -2124,24 +2158,62 @@
             ApiObject.types.login = utils.inherit(ApiObject, {
                 postconstruct: function(type, json) {
                     if (json.authTicket && json.authTicket.accessToken) {
-                        self.api.context.UserClaims(json.authTicket.accessToken);
-                        self.api.fire("login", json.authTicket);
+                        this.api.context.UserClaims(json.authTicket.accessToken);
+                        this.api.fire("login", json.authTicket);
                     }
                 }
             });
-            ApiObject.types.order = utils.inherit(ApiObject, {
-                addNewUser: function(login) {
-                    var self = this;
-                    return self.api.create("user", login).then(function(user) {
-                        return user.action("login", {
-                            emailAddress: user.prop("emailAddress"),
-                            password: user.prop("password")
+            ApiObject.types.order = utils.inherit(ApiObject, function() {
+                errors.register({
+                    BILLING_INFO_MISSING: "Billing info missing.",
+                    PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED: "Payment type missing or unrecognized."
+                });
+                var PaymentStrategies = {
+                    PaypalExpress: function(order, billingInfo) {
+                        return order.createPayment("SetupPaypal").ensure(function(deets) {
+                            console.log(deets);
                         });
-                    }).then(function() {
-                        return self.action("setUserId");
-                    });
-                }
-            });
+                    },
+                    CreditCard: function(order, billingInfo) {
+                        var card = order.api.createSync("creditcard", billingInfo.card);
+                        return card.save().then(function(card) {
+                            billingInfo.card = card.data;
+                            order.prop("billingInfo", billingInfo);
+                            return order.createPayment("CreatePayment");
+                        });
+                    },
+                    Check: function(order, billingInfo) {
+                        return order.createPayment("RequestCheck");
+                    }
+                };
+                return {
+                    addNewUser: function(login) {
+                        var self = this;
+                        return self.api.create("user", login).then(function(user) {
+                            return user.action("login", {
+                                emailAddress: user.prop("emailAddress"),
+                                password: user.prop("password")
+                            });
+                        }).then(function() {
+                            return self.action("setUserId");
+                        });
+                    },
+                    createPayment: function(actionName) {
+                        return this.action("createPayment", {
+                            actionName: actionName,
+                            currencyCode: this.api.context.Currency(),
+                            amount: this.prop("total"),
+                            newBillingInfo: this.prop("billingInfo")
+                        });
+                    },
+                    addPayment: function(payment) {
+                        var billingInfo = this.prop("billingInfo");
+                        if (!billingInfo) errors.throwOnObject(this, "BILLING_INFO_MISSING");
+                        if (!billingInfo.paymentType || !(billingInfo.paymentType in PaymentStrategies)) errors.throwOnObject(this, "PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED");
+                        return PaymentStrategies[billingInfo.paymentType](this, billingInfo);
+                    }
+                };
+            }());
             ApiObject.types.shipment = utils.inherit(ApiObject, {
                 getShippingMethodsFromContact: function(contact) {
                     var self = this;

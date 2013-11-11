@@ -400,9 +400,12 @@
     <Content Include="Themes\Core4\resources\images\button-loading.gif" />
     <Content Include="Themes\Core4\scripts\modules\jquery-dateinput-localized.js" />
     <Content Include="Themes\Core4\scripts\modules\models-paymentmethods.js" />
+    <Content Include="Themes\Core4\scripts\modules\scroll-nav.js" />
     <Content Include="Themes\Core4\scripts\modules\views-productimages.js" />
     <Content Include="Themes\Core4\scripts\modules\views-messages.js" />
+    <Content Include="Themes\Core4\scripts\vendor\bootstrap-affix.js" />
     <Content Include="Themes\Core4\scripts\vendor\bootstrap-popover.js" />
+    <Content Include="Themes\Core4\scripts\vendor\bootstrap-scrollspy.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery-scrollto.js" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-container.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-sidebar.less" />
@@ -566,7 +569,6 @@
     <Content Include="Themes\Core4\stylesheets\modules\product\product-listing.less" />
     <Content Include="Themes\Core4\stylesheets\modules\product\price-stack.less" />
     <Content Include="Themes\Core4\stylesheets\storefront.less" />
-    <Content Include="Themes\Core4\templates\modules\product\product-listing-tiled.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\common\price.hypr.live" />
     <Content Include="Themes\Core4\stylesheets\state\is-crossedout.less" />
     <Content Include="Themes\Core4\stylesheets\state\is-saleprice.less" />
@@ -927,6 +929,24 @@
     <Content Include="Themes\Core4\templates\modules\analytics\google-analytics-ecommerce-tracking-code.hypr" />
     <Content Include="Themes\Core4\labels\en-US.json" />
     <Content Include="Themes\Core4\templates\pages\WidgetTEsting\test.hypr" />
+    <Content Include="Themes\Core4\templates\modules\my-account\my-account-nav.hypr" />
+    <Content Include="Themes\Core4\templates\modules\my-account\my-account-settings.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\my-account\my-account-wishlist.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\my-account\my-account-orderhistory.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\my-account\my-account-paymentmethods.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\my-account\my-account-addressbook.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\my-account\my-account-storecredit.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Themes\Core4\stylesheets\modules\common\address-form.less" />
+    <Content Include="Themes\Core4\stylesheets\pages\myaccount.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\my-account\account-settings.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\common\scroll-nav.less" />
+    <Content Include="Themes\Core4\templates\modules\common\item-listing.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\product\product-list.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\product\product-list-tiled.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\common\order-listing.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\my-account\shipment-listing.hypr.live" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
