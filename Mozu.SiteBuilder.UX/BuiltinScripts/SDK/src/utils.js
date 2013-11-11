@@ -56,6 +56,16 @@ var utils = (function () {
             }
             return accumulator;
         },
+        slice: function(arrayLikeObj, ix) {
+            return Array.prototype.slice.call(arrayLikeObj, ix);
+        },
+        formatString: function(tpt) {
+            var formatted = tpt, otherArgs = utils.slice(arguments, 1);
+            for (var i = 0, len = otherArgs.length; i < len; i++) {
+                formatted = formatted.split('{' + i + '}').join(otherArgs[i] || '');
+            }
+            return formatted;
+        },
         getType: (function () {
             var reType = /\[object (\w+)\]/;
             return function (thing) {
@@ -96,7 +106,7 @@ var utils = (function () {
                     items: [
                         {
                             message: 'Request timed out.',
-                            errorCode: 'TIMEOUT'
+                            code: 'TIMEOUT'
                         }
                     ]
                 }, xhr);
@@ -113,7 +123,7 @@ var utils = (function () {
                                 items: [
                                     {
                                         message: "Unable to parse response: " + xhr.responseText,
-                                        errorCode: 'UNKNOWN'
+                                        code: 'UNKNOWN'
                                     }
                                 ]
                             }, xhr, e);
@@ -126,7 +136,7 @@ var utils = (function () {
                             items: [
                                 {
                                     message: 'Request failed, no response given.',
-                                    errorCode: xhr.status
+                                    code: xhr.status
                                 }
                             ]
                         }, xhr);
@@ -163,7 +173,7 @@ var utils = (function () {
             });
         },
 
-        // the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
+        // the sdk build uses a super-slim override of "define" that pushes AMD deps into an array.
         // this allows us to cleanly vendor AMD-compatible scripts without polluting scope.
         // only downside is, you have to refer to the build script (Gruntfile) to see what order you brought them in.
         when: amds[0],
@@ -174,36 +184,8 @@ var utils = (function () {
             ctor.prototype.on = ctor.prototype.bind;
             ctor.prototype.off = ctor.prototype.unbind;
             ctor.prototype.fire = ctor.prototype.trigger;
-        },
-
-        Exceptions: {
-            NoRequestConfigFound: function (type, op) {
-                var str = "No request configuration was found for " + type + ".";
-                if (op) str = str + op + ".";
-                return {
-                    name: 'No Request Configuration Error',
-                    level: 1,
-                    message: str,
-                    htmlMessage: str,
-                    toString: errorToString
-                };
-            },
-            NoShortcutParamFound: function (type, conf) {
-                var str = "No shortcut parameter available for '" + typeName + "'. Please supply a configuration object instead of '" + conf + "'.";
-                return {
-                    name: "No Shortcut Parameter Error",
-                    level: 1,
-                    message: str,
-                    htmlMessage: str,
-                    toString: errorToString
-                };
-            }
         }
     };
-
-    function errorToString() {
-        return this.name + ": " + this.message;
-    }
 }());
 // END UTILS
 

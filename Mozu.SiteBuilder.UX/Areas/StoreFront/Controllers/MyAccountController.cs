@@ -20,11 +20,11 @@ using Mozu.User.Contracts.Clients;
 using PasswordInfo = Mozu.SiteBuilder.UX.Models.Customers.PasswordInfo;
 using Mozu.Customer.Contracts.Clients;
 using System.Linq;
+using Mozu.Core.Api.Client;
 
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    [StoreFrontAuthorizeAttribute]
     public class MyAccountController : BaseApiController
     {
         private readonly ICustomerRepository _customerRepository;
@@ -68,16 +68,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             _customerRepository = customerRepository;
-            _customerAccountWebApiClient = customerAccountWebApiClient;
+            _customerAccountWebApiClient = customerAccountWebApiClient.CloneWithoutUserClaims();
             _accountContactRepository = accountContactRepository;
-            _userWebApiClient = userWebApiClient;
-            _orderWebApiClient = orderWebApiClient;
+            _userWebApiClient = userWebApiClient.CloneWithoutUserClaims();
+            _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
             _authenticationHelper = authenticationHelper;
             _apiContext = apiContext;
         }
 
         //todo:hyper  remiplement auth att.
        // [SiteBuilderAuthorize()]
+        [HttpGet]
         public async Task<HttpResponseMessage> Index()
         {
             var account = (await _customerAccountWebApiClient.GetAccounts(null, null, null, null, "UserId eq " + CurrentUser.UserId)).ReadAsSync().Items.FirstOrDefault();
@@ -88,15 +89,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             }
 
-            var filter = string.Format("OrderStatus ne \"New\" and CustomerAccountId eq \"{0}\" and OrderNumber ne null", account.Id);
+            var filter = string.Format("Status ne \"Created\" and CustomerAccountId eq \"{0}\" and OrderNumber ne null", account.Id);
 
-            var orders = await _orderWebApiClient.GetOrders(0, 25, null, filter).Result.ReadAsAsync();
+            var openOrders = await _orderWebApiClient.GetOrders(0, 25, null, filter).Result.ReadAsAsync();
 
-            this.ViewData["Orders"] = orders.Items;
+            //this.ViewData["Orders"] = orders.Items;
 
             this.ViewData["User"] = _userWebApiClient.GetUser(CurrentUser.UserId).Result.ReadAsSync();
 
-            return this.Request.CreateResponse(HttpStatusCode.OK,  View("myaccount", account));
+            var jSerializer = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
+            var jAccount = Newtonsoft.Json.Linq.JObject.FromObject(account, jSerializer);
+
+            jAccount.Add("openOrders", Newtonsoft.Json.Linq.JObject.FromObject(openOrders, jSerializer));
+
+            return this.Request.CreateResponse(HttpStatusCode.OK,  View("my-account", jAccount));
         }
 
         public  Task<CustomerAccount  > GetAccount()

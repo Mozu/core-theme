@@ -21,7 +21,7 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'hyp
                 popoverInstance,
                 dismisser = function (e) {
                     // clicking away from a popped popover should dismiss it
-                    if (!$.contains(popoverInstance.$tip[0], e.target)) {
+                    if (!$.contains(popoverInstance.$tip[0], e.target) && !loading) {
                         $this.popover('destroy');
                         $this.on('click', createPopover);
                         $this.off('click', returnFalse);
@@ -32,6 +32,9 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'hyp
                         $parent.off('keypress', 'input', handleEnterKey);
                         $docBody.off('click', dismisser);
                     }
+                },                loading = false,                setLoading = function (yes) {
+                    loading = yes;
+                    $parent[yes ? 'addClass' : 'removeClass']('is-loading');
                 },                handleEnterKey = function(e) {
                     if (e.which === 13) {
                         var $parentForm = $(this).parents('[data-mz-role]');
@@ -50,10 +53,10 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'hyp
                 },                slideLeft = function () {
                     $slideboxOuter.css('left', 0);
                 },                displayMessage = function(xhr) {
-                    $parent.removeClass('is-loading');
+                    setLoading(false);
                     $parent.find('[data-mz-role="loginpopover-message"]').html('<span class="mz-validationmessage">' + xhr.responseJSON.Message + '</span>');
                 },                login = function () {
-                    $parent.addClass('is-loading');
+                    setLoading(true);
                     $.post('/login', {
                         email: $parent.find('[data-mz-login-email]').val(),
                         password: $parent.find('[data-mz-login-password]').val()
@@ -61,7 +64,7 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'hyp
                         window.location.reload();
                     }, displayMessage);
                 },                retrievePassword = function () {
-                    $parent.addClass('is-loading');
+                    setLoading(true);
                     $.post('/resetpassword', {
                         EmailAddress: $parent.find('[data-mz-forgotpassword-email]').val()
                     }).always(displayMessage);

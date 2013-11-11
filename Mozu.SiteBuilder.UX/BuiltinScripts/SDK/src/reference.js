@@ -1,6 +1,11 @@
 ﻿// BEGIN REFERENCE
 var ApiReference = (function () {
 
+    errors.register({
+        'NO_REQUEST_CONFIG_FOUND': 'No request configuration was found for {0}.{1}',
+        'NO_SHORTCUT_PARAM_FOUND': 'No shortcut parameter available for {0}. Please supply a configuration object instead of "{1}".'
+    });
+
     var basicOps = {
         get: 'GET',
         update: 'PUT',
@@ -41,7 +46,7 @@ var ApiReference = (function () {
             var oType = objectTypes[typeName];
             
             // there may not be one
-            if (!oType) throw Mozu.Utils.Exceptions.NoRequestConfigFound(typeName, operation);
+            if (!oType) errors.throwOnObject(obj, 'NO_REQUEST_CONFIG_FOUND', typeName, '');
 
             // get specific details of the requested operation
             if (operation) operation = utils.dashCase(operation);
@@ -54,7 +59,7 @@ var ApiReference = (function () {
             if (objectTypes[typeName].defaults) oType = utils.extend({}, objectTypes[typeName].defaults, oType);
 
             // a template is required
-            if (!oType.template) throw Mozu.Utils.Exceptions.NoRequestConfigFound(typeName, operation);
+            if (!oType.template) errors.throwOnObject(obj, 'NO_REQUEST_CONFIG_FOUND', typeName, operation);
 
             returnObj = {};
             tptData = {};
@@ -73,7 +78,7 @@ var ApiReference = (function () {
 
             // shortcutparam allows you to use the most commonly used conf property as a string or number argument
             if (conf !== undefined && typeof conf !== "object") {
-                if (!oType.shortcutParam) throw Mozu.Utils.Exceptions.NoShortcutParamFound(typeName, conf);
+                if (!oType.shortcutParam) errors.throwOnObject(obj, 'NO_SHORTCUT_PARAM_FOUND', typeName, conf);
                 tptData[oType.shortcutParam] = conf;
             } else if (conf) {
                 // add the conf argued directly into this request fn to the tpt context
@@ -166,6 +171,10 @@ var ApiReference = (function () {
             },
             collectionOf: 'product'
         },
+
+        'customers': {
+            collectionOf: 'customer'
+        },
         'product': {
             get: {
                 template: '{+productService}{productCode}?{&allowInactive*}',
@@ -248,7 +257,13 @@ var ApiReference = (function () {
                 verb: 'POST',
                 includeSelf: true,
                 template: '{+userService}{id}/changepassword'
+            },
+            'get-customers': {
+                template: '{+customerService}?fields=UserId+eq+{userId}',
+                includeSelf: true,
+                returnType: 'customers'
             }
+            
         },
         customer: {
             template: '{+customerService}{id}',
@@ -287,6 +302,11 @@ var ApiReference = (function () {
                 noBody: true,
                 includeSelf: true,
                 returnType: 'user'
+            },
+            'create-payment': {
+                verb: 'POST',
+                template: '{+orderService}{id}/payments/actions',
+                includeSelf: true
             },
             'apply-coupon': {
                 verb: 'PUT',
@@ -337,8 +357,10 @@ var ApiReference = (function () {
             }
         },
         'payment': {
-            template: '{+orderService}{orderId}/billinginfo',
-            includeSelf: true
+            create: {
+                template: '{+orderService}{orderId}/payments/actions',
+                includeSelf: true
+            }
         },
         'creditcard': {
             defaults: {

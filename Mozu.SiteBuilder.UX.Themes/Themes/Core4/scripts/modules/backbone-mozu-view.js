@@ -67,6 +67,14 @@ define([
             handleLoadingChange: function (isLoading) {
                 this.$el[isLoading ? 'addClass' : 'removeClass']('is-loading');
             },
+            getRenderContext: function() {
+                var model = this.model.toJSON({ helpers: true });
+                return {
+                    Model: model,
+                    model: model
+                };
+            },
+            
             render: function () {
                 var thenFocus = this.el && document.activeElement && $.contains(this.el, document.activeElement) && {
                     'id': document.activeElement.id,
@@ -76,10 +84,7 @@ define([
                 Backbone.Validation.unbind(this);
                 this.undelegateEvents();
                 var model = this.model.toJSON({ helpers: true });
-                this.$el.html(this.template.render({
-                    Model: model,
-                    model: model
-                }));
+                this.$el.html(this.template.render(this.getRenderContext()));
                 this.delegateEvents();
                 Backbone.Validation.bind(this);
                 if (thenFocus) {

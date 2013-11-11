@@ -8,7 +8,7 @@
     "sdk"
   ],
   "authors": [
-    "Volusion inv"
+    "Volusion inc"
   ],
   "license": "MIT",
   "homepage": "http://mozu.com",
@@ -23,6 +23,6 @@
   "dependencies": {
     "microevent": "~1.1.1",
     "uritemplate": "*",
-    "when": "~2.4.0"
+    "when": "~2.6.0"
   }
 }

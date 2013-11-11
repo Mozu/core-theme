@@ -95,15 +95,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (model == null) return Redirect("/cart");
             if (model.Status == "Submitted") return Redirect("/checkout/" + model.Id + "/confirmation");
 
-
-            var jOrder = Newtonsoft.Json.Linq.JObject.FromObject(model, new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() });
+            var jSerializer = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
+            var jOrder = Newtonsoft.Json.Linq.JObject.FromObject(model, jSerializer);
 
            // dynamic dOrder = jOrder;
 
             if (model.FulfillmentInfo != null && model.FulfillmentInfo.FulfillmentContact != null && model.FulfillmentInfo.FulfillmentContact.Address != null)
             {
                 var methods = (await _orderWebApiClient.GetAvailableShipmentMethods(id)).ReadAsSync();
-                var asm = JArray.FromObject(methods);
+                var asm = JArray.FromObject(methods, jSerializer);
                 JObject si = (JObject)jOrder["fulfillmentInfo"];
                 si.Add("availableShippingMethods", asm);
                 //jOrder.Add("AvailableShippingMethods", asm);

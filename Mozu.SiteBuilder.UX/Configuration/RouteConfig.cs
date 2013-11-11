@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
         {
             routes.MapHttpRoute(
                 "Storefront_MyAccount2",
-                "user/myaccount",
+                "myaccount",
                 new {controller = "MyAccount", action = "Index"});
 
 

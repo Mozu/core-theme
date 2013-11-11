@@ -1,7 +1,7 @@
 ﻿// SDK Gruntfile
 'use strict';
 
-var allScripts = ['lib/when/when.js', 'lib/uritemplate/bin/uritemplate.js', 'lib/microevent/microevent.js', 'src/utils.js', 'src/iframexhr.js', 'src/reference.js', 'src/object.js', 'src/collection.js', 'src/types/*.js', 'src/interface.js', 'src/context.js', 'src/init.js'];
+var allScripts = ['lib/when/when.js', 'lib/uritemplate/bin/uritemplate.js', 'lib/microevent/microevent.js', 'src/utils.js', 'src/errors.js', 'src/iframexhr.js', 'src/reference.js', 'src/object.js', 'src/collection.js', 'src/types/*.js', 'src/interface.js', 'src/context.js', 'src/init.js'];
 
 var port = 9001,
     testurl = "http://127.0.0.1:" + port + "/tests/SpecRunner.html";

@@ -1,0 +1,21 @@
+﻿<h3 class="mz-l-stack-sectiontitle">{{ labels.accountYourWishlist }}</h3>
+
+<div class="mz-accountwishlist-list">
+  <ul class="mz-itemlisting-list">
+    {% for item in model %}
+    <li class="mz-itemlisting-item">
+      <div class="mz-itemlisting-image">
+        <a href="{{ item.url }}">
+          <img alt="{{ item.content.productName }}" src="{{ item.mainImage.imageUrl}}?size={% block thumbnail-size %}50{% endblock thumbnail-size %}" />
+        </a>
+      </div>
+      <div class="mz-itemlisting-info">
+        <a class="mz-itemlisting-title" href="{{ item.url }}">{{ item.content.productName }}</a>
+        {% include "modules/common/price" with model=item %}
+        <div class="mz-itemlisting-stock">{{ labels.stock }}: {{ item.stock }}</div>
+        <div class="mz-itemlisting-details"></div>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
