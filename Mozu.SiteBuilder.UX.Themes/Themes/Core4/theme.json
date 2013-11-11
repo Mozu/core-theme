@@ -170,7 +170,7 @@
          "id": "featured_product",
          "displayName": "Featured Products",
          "displayTemplate": "catalog/featuredproducts",
-         "icon": "_0007_featured-products.png",
+         "icon": "/resources/admin/widgets/_0007_featured-products.png",
          "editView": "Taco.view.site.widget.FeaturedProducts",
         
          "editViewConfig": "{listeners:{afterRender:function() {console.log('test of the editviewConfig system');}}}",
@@ -180,7 +180,7 @@
         "id": "content",
         "displayName": "Content",
         "displayTemplate": "cms/content",
-        "icon": "_0004_html.png",
+        "icon": "/resources/admin/widgets/_0004_html.png",
         "defaultConfig": {
 			"body": "<h2>Insert Title</h2><p>Insert Content</p>"
 		}
@@ -196,7 +196,7 @@
                 "xtype":"taco-singleimagefield",
             }
          ],
-        "icon": "_0004_html.png",
+        "icon": "/resources/admin/widgets/_0004_html.png",
 		"defaultConfig": {
 			"height": 400
 		}
@@ -205,7 +205,7 @@
         "id": "horizontal_rule",
         "displayName": "Horizontal Rule",
         "displayTemplate": "cms/horizontalrule",
-        "icon": "_0005_horizontal-divider.png",
+        "icon": "/resources/admin/widgets/_0005_horizontal-divider.png",
         "editView": "Taco.view.site.widget.HorizontalRule",
         "defaultConfig": {
             "hrBorderWidth": "1px",
@@ -222,13 +222,13 @@
         "editView": "Taco.view.site.widget.AddThis",
         "properties": [],
         "category": "social",
-        "icon": "_0008_share.png"
+        "icon": "/resources/admin/widgets/_0008_share.png"
     }, 
     {
         "id": "facebook_comments",
         "displayName": "Facebook Comments",
         "displayTemplate": "social/facebookComments",
-        "icon": "_0008_share.png",
+        "icon": "/resources/admin/widgets/_0008_share.png",
         "editView": "Taco.view.site.widget.FacebookComments",
         "minWidth": 400,
         "properties": [],
