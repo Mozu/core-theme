@@ -508,7 +508,7 @@ Ext.define('Taco.model.Product', {
         { type: 'presence', name: 'productName' },
         { type: 'presence', name: 'productCode' },
         { type: 'length', name: 'productCode', min: 3, max: 30 },
-        { type: 'format', name: 'productCode', matcher: /^[A-z0-9\-\.\_]*$/ }
+        { type: 'format', name: 'productCode', matcher: /^[A-z0-9\-\_][A-z0-9\-\_\.]*$/ }
     ],
 
     proxy: {
