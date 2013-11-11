@@ -28,6 +28,20 @@ Ext.define('Taco.view.product.subform.General', {
 
         this.record = this.product;
 
+        // sync changes from code view of the htmleditor to WYSIWYG view
+        var htmlEditorEditModeChangeHandler = function (el, editMode, eOpts) {
+            if (editMode) {
+                if (!this.textareaEl._syncInited) {
+                    this.textareaEl.on('keydown', function () {
+                        this.fireEvent('sync', this, this.textareaEl.getValue());
+                        this.fireEvent('change', this, this.textareaEl.getValue());
+                    }, this, { buffer: 50 });
+                }
+                this.textareaEl._syncInited = true;
+            };
+        }
+
+
         readOnly = this.isEdit() || !(this.isSingleSite || this.isGlobal);
         visable = !readOnly || this.isEdit();
         requiredContent = this.isSingleSite || this.isGlobal;
@@ -101,6 +115,9 @@ Ext.define('Taco.view.product.subform.General', {
                 fieldLabel: 'Short Description',
                 name: 'productShortDescription',
                 emptyText: 'Words',
+                listeners: {
+                    editmodechange: htmlEditorEditModeChangeHandler
+                },
                 width: '100%'
                 //fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
             }, {
@@ -110,6 +127,9 @@ Ext.define('Taco.view.product.subform.General', {
                 name: 'productFullDescription',
                 emptyText: 'Words, words, and more words.  Also, with lists.',
                 //fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
+                listeners: {
+                    editmodechange: htmlEditorEditModeChangeHandler
+                },
                 width: '100%'
             }, {
                 fieldLabel: 'Product Image',
