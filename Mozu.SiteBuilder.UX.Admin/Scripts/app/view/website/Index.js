@@ -347,20 +347,20 @@ Ext.define('Taco.view.website.Index', {
 
     onWidgetEdit: function (cfg) {
         var pageContext = this.getPageContext(),
-            def = this.widgetDefinitions.getById(cfg.widgetTypeId),
+            def = this.widgetDefinitions.getById(cfg.data.definitionId),
             jsonData = {
                 zoneScope: 'page',
                 source: pageContext.cmsContext.page,
-                definitionId: cfg.widgetTypeId
+                definitionId: cfg.data.definitionId
             };
 
-        cfg.config = def.get('defaultConfig');
+
 
         if (!Ext.isEmpty(def.get('editViewFields')) || !Ext.isEmpty(def.get('editViewConfig'))) {
             Ext.create('Taco.view.website.WidgetEditor', {
                 editViewFields: def.get('editViewFields'),
                 editViewConfig: def.get('editViewConfig'),
-                widgetData: cfg.config,
+                widgetData: cfg.data.config,
                 title: def.get('displayName'),
                 listeners: {
                     save: function (modal) {
@@ -383,23 +383,18 @@ Ext.define('Taco.view.website.Index', {
                 }
             });
         } else {
-            jsonData.config = cfg.config;
+            //todo:
+            //cfg.callback();
             
-            Ext.Ajax.request({
-                url: '/Widgets/preview',
-                jsonData: jsonData,
-                success: function (response) {
-                    var ret = Ext.JSON.decode(response.responseText);
 
                     cfg.callback(ret.output, {
                         config: ret.config,
                         id: ret.id,
+                        height: ret.height,
                         definitionId: ret.definitionId
                     });
                     
                 }
-            });
-        }
     },
     onPageCreate: function (tree, cmsDoc, isLinked, parentRecord) {
 
