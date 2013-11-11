@@ -135,13 +135,17 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             scope = scope.ToLowerInvariant();
 
+
+
+            isEditmode = isEditmode && string.Equals(scope, pageContext.EditMode.GetValueOrDefault(EditModes.Page ).ToString(), StringComparison.OrdinalIgnoreCase);
+
             var zoneRuntimeData = (pageContext.CmsContext == null || pageContext.CmsContext.RuntimeData2 == null) ? null : pageContext.CmsContext.RuntimeData2.FirstOrDefault(x => string.Equals(x.Id, zoneId, StringComparison.OrdinalIgnoreCase));
             bool useDefaultId = true;
             var sb = new StringBuilder();
-            sb.Append("<div class=\"mz-cms-grid mz-drop-zone\" ");
+            sb.Append("<div class=\"mz-drop-zone");
             if (isEditmode)
             {
-
+                sb.Append(" mz-cms-grid\" ");
                 sb.AppendJsonHtmlAttribute(new
                                                {
                                                    id = zoneId,
@@ -152,7 +156,10 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
 
             }
-
+            else
+            {
+                sb.Append("\" ");
+            }
 
 
 
