@@ -11,6 +11,7 @@ using AutoMapper;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Routing;
+using Mozu.Location.Contracts;
 using Mozu.Location.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts.Clients;
 //using Mozu.ShippingAdmin.Contracts;
@@ -87,12 +88,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
 
             var res = (await _siteShippingSettingsClient.GetSiteShippingSettings()).ReadAsSync();
+		    var locRes = (await _locationSettingsWebApiClient.GetLocationUsages()).ReadAsSync();
+
             var custSettings = (await _carrierConfigurationWebApiClient.GetConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId)).ReadAsSync();
             var settings = Mapper.Map<SiteShippingSettings>(res);
             settings.CustomRate = Mapper.Map<CustomRate>(custSettings);
-            //settings.CustomRate.IsEnabled = res.ActiveRateProviders.Any(x => x.Name == SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.Custom);
+            
+		    settings.ShippingLocationCode = locRes.Items.Where(x => x.LocationUsageTypeCode == "DS").Select(x => x.LocationCodes != null && x.LocationCodes.Count > 0 ? x.LocationCodes.First() : null).FirstOrDefault();
 
-          
+		    settings.StorePickupLocationTypeCodes = locRes.Items.Where(x => x.LocationUsageTypeCode == "SP").First().LocationTypeCodes;
+		    settings.EnableInStorePickup = settings.StorePickupLocationTypeCodes != null && settings.StorePickupLocationTypeCodes.Count > 0;
+
             return Single2<SiteShippingSettings>(settings );
         }
 
@@ -101,12 +107,43 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<SiteShippingSettings>> EditSettings(SiteShippingSettings settings )
         {
 
+        //     [DataMember(Name = "shippingLocationCode")]
+        //public string ShippingLocationCode { get; set; }
+        //[DataMember(Name = "enableInStorePickup")]
+        //public bool? EnableInStorePickup { get; set; }
+        //[DataMember(Name = "storePickupLocationCodes")]
+        //public List<string> StorePickupLocationCodes { get; set; }
+            if (!string.IsNullOrEmpty(settings.ShippingLocationCode))
+            {
+                var ret1 = await _locationSettingsWebApiClient.UpdateLocationUsage("DS", new LocationUsage()
+                                                                                             {
+                                                                                                 LocationUsageTypeCode = "DS",
+                                                                                                 LocationCodes = new List<string> {settings.ShippingLocationCode}
+                                                                                             });
+                if (ret1.HasException)
+                {
+                    throw ret1.ReadException();
+                }
+            }
             
+            var ret2 = await _locationSettingsWebApiClient.UpdateLocationUsage("SP", new LocationUsage()
+            {
+                LocationUsageTypeCode = "SP",
+                LocationTypeCodes = settings.StorePickupLocationTypeCodes 
+            });
+
+            if (ret2.HasException)
+            {
+                throw ret2.ReadException();
+            }
+
+
 
             var dc = Mapper.Map<Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings>(settings);
             var custSettings = Mapper.Map<Mozu.ShippingAdmin.Contracts.CarrierConfiguration>(settings.CustomRate);
 
             
+
             var customFeature = dc.ActiveRateProviders.FirstOrDefault(x => x.Name == SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.Custom  );
             if (customFeature!= null )
             {
@@ -207,7 +244,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var ret = new List<CarrierConfiguration>();
 
-            var activeProviders = (await _siteShippingSettingsClient.GetActiveRateProviders()).ReadAsSync();
+           // var activeProviders = (await _siteShippingSettingsClient.GetActiveRateProviders()).ReadAsSync();
 
 
             foreach (var setting in settings)
@@ -225,16 +262,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     continue;
                 }
                 var featureId = FeatureDic[dcConfig.Id];
-                if (!activeProviders.Any(x => x.Name == featureId))
-                {
-                    activeProviders.Add(new Core.Api.Contracts.Feature()
-                                            {
-                                                Name = featureId
-                                            });
+                //if (!activeProviders.Any(x => x.Name == featureId))
+                //{
+                //    activeProviders.Add(new Core.Api.Contracts.Feature()
+                //                            {
+                //                                Name = featureId
+                //                            });
 
-                    activeProviders = (await _siteShippingSettingsClient.UpdateActiveRateProviders( activeProviders)).ReadAsSync();
+                //    activeProviders = (await _siteShippingSettingsClient.UpdateActiveRateProviders( activeProviders)).ReadAsSync();
 
-                }
+                //}
 
                 if (setting.PreviousValue != null)
                 {

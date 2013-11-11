@@ -11,12 +11,24 @@ Ext.define('Taco.model.KeyValuePair', {
     [
         {
             "name": "Key",
-            "type": "auto"
+            "type": "auto",
+            convert: function (v, record) {
+                if (record.raw) {
+                    return v || record.raw.key;
+                }
+                return v;
+            }
         },
         {
             name: "Value",
             type: "auto",
-            useNull: true
+            useNull: true,
+            convert: function (v, record) {
+                if (record.raw) {
+                    return v || record.raw.value;
+                }
+                return v;
+            }
         }
     ],
 

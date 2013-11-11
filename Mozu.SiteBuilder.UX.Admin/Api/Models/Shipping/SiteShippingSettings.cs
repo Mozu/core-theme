@@ -18,6 +18,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
         public List<string> SiteShippingRegions { get; set; }
 
 
+        [DataMember(Name = "shippingLocationCode")]
+        public string ShippingLocationCode { get; set; }
+        [DataMember(Name = "enableInStorePickup")]
+        public bool? EnableInStorePickup { get; set; }
+        [DataMember(Name = "storePickupLocationTypeCodes")]
+        public List<string> StorePickupLocationTypeCodes { get; set; }
+
+
 
 
 

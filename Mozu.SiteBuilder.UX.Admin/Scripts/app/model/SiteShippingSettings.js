@@ -9,12 +9,15 @@ Ext.define('Taco.model.SiteShippingSettings', {
         // siteShippingOriginAddress is deprecated. remove when transition to omnichannel is complete
         { name: 'siteShippingOriginAddress', type: 'auto' },
 
+
+
+
         // new omnichannel fields that need to be added to the integration layer
-        { name: ' shipFromId', type: 'string' },
+        { name: 'shippingLocationCode', type: 'string' },
         { name: 'inStorePickupLabel', type: 'string' },
-        { name: 'enableDirectShip', type: 'boolean' },
         { name: 'enableInStorePickup', type: 'boolean' },
-        { name: 'locationTypeIds', type: 'auto', defaultValue:[] },
+        { name: 'storePickupLocationTypeCodes', type: 'auto', defaultValue: [] },
+       
         
 
         // existing fields
