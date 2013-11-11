@@ -34,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var ret = Mapper.Map<CheckoutSettings>(dcSettings);
 
-            return Single2(ret);
+            return Single2(ret); 
         } 
 
         /// <summary>
