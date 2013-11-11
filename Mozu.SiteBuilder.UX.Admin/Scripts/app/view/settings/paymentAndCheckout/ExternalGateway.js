@@ -14,7 +14,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
         var credFieldDefs = this.externalPayment.get('credentials');
         var gatewayType = this.externalPayment.get('name').toUpperCase();
         var credOriginalValues = [];
-        var isEnabled = true;
+        var isEnabled = false;
         
         this.items = [];
         this.credFields = [];
@@ -22,6 +22,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
         
         Ext.each(externalGateway, function (item) {
             if (gatewayType == item['name'].toUpperCase()) {
+                
                 credOriginalValues = item['credentials'];
                 isEnabled = item['isEnabled'];
             }
@@ -98,13 +99,23 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
         }
 
         if (isDirty) {
+            var updated = false;
+            
             Ext.each(externalGateway, function (item) {
                 if (gatewayType == item['name'].toUpperCase()) {
-                    
                     item['credentials'] = creds;
                     item['isEnabled'] = gatewayEnabled;
+                    updated = true;
                 }
             });
+            
+            if (!updated) {
+                val = {};
+                val['credentials'] = creds;
+                val['isEnabled'] = gatewayEnabled;
+                val['name'] = gatewayType;
+                externalGateway.push(val);
+            }
         }
         
         me.record.set('externalPaymentWorkflows', externalGateway);
