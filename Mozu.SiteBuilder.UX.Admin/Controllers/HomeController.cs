@@ -137,6 +137,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             this.ViewData["googleAnalyticsAccount"] = System.Configuration.ConfigurationManager.AppSettings["googleAnalyticsAccount"];
             this.ViewData["siteUsers"] = siteUsers.Items;
 
+            // IE8 compatibility (http://hsivonen.fi/doctype/)
+            this.Response.AddHeader("X-UA-Compatible", "IE=Edge");
+
             this.ViewData["extlib"] = (string)((_httpContext.Request.Cookies.Get("debugExt") != null && _httpContext.Request.Cookies.Get("debugExt").Value == "true") ? "ext-all-dev.js" : "ext-all.js");
          
             if (this.HttpContext.Request["testHarnessMode"] == "true")
