@@ -462,7 +462,8 @@
         $block
             .data('widget', widgetCfg.data)
             .find('.mz-cms-content')
-            .html(widgetCfg.html);
+            .html(widgetCfg.html)
+            .height(widgetCfg.data.config.height);
 
 
         return $block.mzBlock().data('mozu.mzBlock');

@@ -193,10 +193,13 @@
             {
                 "name":"image",
                 "fieldLabel":"image",
-                "xtype":"taco-singleimagefield"
+                "xtype":"taco-singleimagefield",
             }
          ],
-        "icon": "_0004_html.png"
+        "icon": "_0004_html.png",
+		"defaultConfig": {
+			"height": 400
+		}
     },
     {
         "id": "horizontal_rule",

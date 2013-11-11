@@ -47,7 +47,6 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
        
 
         [DataMember(Name = "enabled")]
-      
         public bool? Enabled { get; set; }
 
         private string _category;

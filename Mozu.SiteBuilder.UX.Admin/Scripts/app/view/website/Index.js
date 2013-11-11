@@ -375,7 +375,6 @@ Ext.define('Taco.view.website.Index', {
                                 cfg.callback(ret.output, {
                                     config: ret.config,
                                     id: ret.id,
-                                    height: ret.height,
                                     definitionId: ret.definitionId
                                 });
                             }
@@ -395,7 +394,6 @@ Ext.define('Taco.view.website.Index', {
                     cfg.callback(ret.output, {
                         config: ret.config,
                         id: ret.id,
-                        height: ret.height,
                         definitionId: ret.definitionId
                     });
                     

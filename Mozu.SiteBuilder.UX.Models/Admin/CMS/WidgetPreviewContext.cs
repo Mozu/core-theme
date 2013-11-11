@@ -101,7 +101,6 @@ using System.Runtime.Serialization;
 
         public bool isRichText { get; set; }
         public object Config { get; set; }
-        public float? height { get; set; }
         public string Id { get; set; }
     }
 

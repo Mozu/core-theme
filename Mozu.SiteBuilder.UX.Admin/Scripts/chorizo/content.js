@@ -247,7 +247,7 @@
     Img.prototype._onStop = function(e, ui) {
         $doc.off('mousemove', this._moveHandler);
         Chorizo.editor.cursor('auto');
-        this.widgetData.height = this.$content.outerHeight();
+        this.widgetData.config.height = this.$content.outerHeight();
     }
 
     Img.prototype._onMousemove = function(e, ui) {
