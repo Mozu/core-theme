@@ -11,6 +11,7 @@ Ext.define('Taco.core.ux.form.field.PageTemplate', {
     displayField: 'displayName',
     valueField: 'id',
     forceSelection: true,
+    allowBlank:true,
     growToLongestValue:true,
     initComponent: function () {
         
