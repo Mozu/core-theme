@@ -40,7 +40,8 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
     getSaveTask: function () {
         var me = this,
             tasks = Ext.create('Taco.core.ux.form.Tasks'),
-            zoneData = [];
+            zoneData = [],
+            json;
 
         Ext.each(me.editor.persistanceData(), function (zone) {
             if (!Ext.isEmpty(zone.rows)) {
@@ -49,6 +50,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
                 zoneData.push(zone);
             }
         });
+        
 
         tasks.add({
             key: 'widgets',
@@ -57,7 +59,10 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
                 Ext.Ajax.request({
                     url: '/admin/app/cmsdocument/widgetdata/update',
                     method: 'post',
-                    jsonData: zoneData,
+                    jsonData: {
+                        zones: zoneData,
+                        source: me.pageContext.cmsContext.page
+                    },
                     success: function (response) {
                         t.callback();
 
