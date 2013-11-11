@@ -6,6 +6,15 @@ Ext.define('Taco.model.LocationInventory', {
     extend: 'Taco.core.data.Model',
     requires: ['Taco.core.data.AjaxProxy'],
     fields: [{
+        "name": "id",
+        "type": "string",
+        "convert": function(value, record) {
+            debugger;
+            return record.get("locationCode") + "." + record.get("productCode");
+        },
+        defaultValue: "",
+        "persist": false
+    }, {
         "name": "inventoryHandling",
         "type": "int",
         "useNull": true,
@@ -65,7 +74,6 @@ Ext.define('Taco.model.LocationInventory', {
         "useNull": true,
         "persist":false
     }],
-    idProperty: 'productCode',
     getContextualValue:function(fieldName) {
         return this.get(fieldName);
     },
