@@ -42,7 +42,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
             tasks = Ext.create('Taco.core.ux.form.Tasks'),
             zoneData = [];
 
-        Ext.Array.each(me.editor.persistanceData(), function (zone) {
+        Ext.each(me.editor.persistanceData(), function (zone) {
             if (!Ext.isEmpty(zone.rows)) {
                 //todo: check pc for edit type... page/vs template
                 zone.source = me.pageContext.cmsContext.page;
@@ -50,25 +50,23 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
             }
         });
 
-        if (!Ext.isEmpty(zoneData)) {
-            tasks.add({
-                key: 'widgets',
-                fn: function (t) {
+        tasks.add({
+            key: 'widgets',
+            fn: function (t) {
 
-                    Ext.Ajax.request({
-                        url: '/admin/app/cmsdocument/widgetdata/update',
-                        method: 'post',
-                        jsonData: zoneData,
-                        success: function (response) {
-                            t.callback();
+                Ext.Ajax.request({
+                    url: '/admin/app/cmsdocument/widgetdata/update',
+                    method: 'post',
+                    jsonData: zoneData,
+                    success: function (response) {
+                        t.callback();
 
-                        }
-                    });
+                    }
+                });
 
 
-                }
-            });
-        }
+            }
+        });
 
         this.addSaveTasks(tasks);
 
