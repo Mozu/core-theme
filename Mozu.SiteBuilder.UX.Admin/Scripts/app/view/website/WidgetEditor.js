@@ -27,7 +27,7 @@ Ext.define('Taco.view.website.WidgetEditor', {
         this.form.getForm().setValues(this.widgetData);
         
         this.on('beforesave', function () {
-            me.widgetData = me.form.getForm().getValues(false, false, false, true);
+            me.widgetData = Ext.apply(me.widgetData, me.form.getForm().getValues(false, false, false, true));
         });
     }
 });
