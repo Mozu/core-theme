@@ -68,12 +68,13 @@
             this.$widgetModal.show();
         },
 
-        edit: function(widgetData) {
+        edit: function(block) {
             this.fireEvent('widgetedit', {
                 editor: this,
-                data: widgetData
-            }, function(html, data) {
-
+                data: block.data('widget'),
+                callback: function(html, data) {
+                    block.update(html, data);
+                }
             });
         },
 
