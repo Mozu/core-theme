@@ -116,6 +116,7 @@ Ext.define('Taco.view.website.Index', {
                     title: 'Editor',
                     header: false,
                     layout: {
+
                         type: 'fit'
                     },
                     items: [{
@@ -193,7 +194,7 @@ Ext.define('Taco.view.website.Index', {
 
         this.iframe = this.down('#iframe');
         this.pageSettings = this.down('#pageSettings');
-
+        this.tree = this.down('taco-website-tree');
         // TODO: remove when dev complete
         window.webSiteIndex = this;
 
@@ -201,6 +202,8 @@ Ext.define('Taco.view.website.Index', {
         this.mon(this.controller, 'widgetdrop', this.onWidgetDrop, this);
         this.mon(this.controller, 'widgetedit', this.onWidgetEdit, this);
         this.mon(this.controller, 'pagedirtychange', this.onDirtyChange, this);
+        this.tree.on('pagecreate', this.onPageCreate, this);
+        this.tree.on('urlclick', this.onTreeUrlClick, this);
     },
 
     entityTypeEditConfig: {
@@ -238,10 +241,11 @@ Ext.define('Taco.view.website.Index', {
 
     onPageLoad: function (editor) {
         var me = this,
-            pc = this.getPageContext(),
-            entitypeTypeHandler;
-
-        entitypeTypeHandler = Ext.create(this.entityTypeEditConfig[pc.pageType || "default"], {
+            pc = this.getPageContext();
+        
+        this.pageSettings.removeAll(true);
+        
+        this.entitypeTypeHandler  = Ext.create(this.entityTypeEditConfig[pc.pageType || "default"] || this.entityTypeEditConfig["default"], {
             editor: editor,
             pageContext:pc,
             manager: this,
@@ -251,9 +255,9 @@ Ext.define('Taco.view.website.Index', {
             }
         });
 
-        this.pageSettings.removeAll(true);
+        
 
-        this.entitypeTypeHandler = entitypeTypeHandler;
+     
 
         Ext.EventManager.on(this.iframe.getDoc(), 'click', function (e, target) {
             if (target.hostname == this.iframe.getWin().location.hostname) {
@@ -361,5 +365,14 @@ Ext.define('Taco.view.website.Index', {
         //    callback: function (html, data) {
 
         //    }
+    },
+    onPageCreate: function (tree, cmsDoc, isLinked, parentRecord) {
+
+        this.tree.store.reload();
+        //todo navigage?
+
+    },
+    onTreeUrlClick:function ( tree, url, record, item, index, e, eOpts) {
+        this.navigate({ url: url });
     }
 });
