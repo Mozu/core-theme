@@ -12,7 +12,9 @@ Ext.define('Taco.view.location.inventory.Index', {
     ],
 
     // used by create button
-    typeName: 'Inventory',
+    typeName: 'Location Inventory',
+    
+    requiresContextOfType: ['c', 's'],
     
     gridHeaderLabel: 'Inventory',
     
@@ -36,9 +38,15 @@ Ext.define('Taco.view.location.inventory.Index', {
     
     modelName: 'Taco.model.LocationInventory',
     
-    store: { type: 'Taco.store.LocationInventories' },
-       
+    store: {
+        type: 'Taco.store.LocationInventories',
+        createOnly: true,
+        // todo: figure out why the autoLoad Config is being ignored;
+        autoLoad:false
+    },
+    
     useTilePanel: false,
+    
     
     secondToolbarItems: [
         {
@@ -47,14 +55,13 @@ Ext.define('Taco.view.location.inventory.Index', {
             margin: '0 10 0 0',
             padding: '2 0 0 0'
         }, {
-            xtype: "taco-Locationpickerfield",
+            xtype: "taco-locationpickerfield",
             emptyText: "Choose a location",
             flex:null,
             width: 300,
             listeners: {
                 select: {
                     fn: function (combo, records, eOpts) {
-
                         var record = records[0],
                             itemBrowser = this.up("itembrowser"),
                             gridPanel = itemBrowser.gridPanel,
@@ -191,8 +198,9 @@ Ext.define('Taco.view.location.inventory.Index', {
         }, {
             width: 100,
             text: "Available",
-            dataIndex: 'stockAvailable',
-            editor: {
+            dataIndex: 'stockAvailable'
+            /*
+            ,editor: {
                 emptyText: "Available",
                 msgTarget: "qtip",
                 xtype: "numberfield",
@@ -201,6 +209,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                 selectOnFocus: true,
                 allowBlank: false
             }
+            */
         }, {
             width: 100,
             text: 'On Reserve',
@@ -219,9 +228,7 @@ Ext.define('Taco.view.location.inventory.Index', {
         }, {
             dataIndex: 'stockOnHand',
             width: 100,
-            text: 'On Hand'
-            /*
-            ,
+            text: 'On Hand',
             editor: {
                 emptyText: "On Hand",
                 msgTarget: "qtip",
@@ -231,8 +238,41 @@ Ext.define('Taco.view.location.inventory.Index', {
                 mouseWheelEnabled: false,
                 selectOnFocus: true,
                 allowBlank: false
-            }*/
-        }]
+            }
+        }
+        
+        /*
+        , {
+            xtype: 'taco.menucolumn',
+            text: 'Actions',
+            menuItems: [
+                {
+                    text: 'Delete',
+                    requiredBehaviors: {
+                        model: 'Taco.model.Product',
+                        behavior:'destroy'
+                    },
+                    menuColumnHandler: 'destroyMenuColumnHandler'
+                }, {
+                    text: 'Edit',
+                    requiredBehaviors: {
+                        model: 'Taco.model.Product',
+                        behavior: 'update'
+                    },
+                    menuColumnHandler: function (item, eventData) {
+                        var page = eventData.grid.getParentPage(),
+                            record = eventData.record,
+                            metaData = { id: record.getId() };
+
+                        page.launchEditor(record, metaData);
+                   
+                    }
+                }]
+            }
+            */
+        
+        ]
+        
     },
     
     onRowEditorUpdate : function() {

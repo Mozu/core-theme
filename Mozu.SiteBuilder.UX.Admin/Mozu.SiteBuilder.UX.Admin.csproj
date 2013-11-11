@@ -615,11 +615,15 @@
     <Content Include="Scripts\app\core\context\Catalog.js" />
     <Content Include="Scripts\app\core\util\Common.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
+    <Content Include="Scripts\app\core\ux\browser\SearchList.js" />
     <Content Include="Scripts\app\core\ux\form\field\SingleImageField.js" />
     <Content Include="Scripts\app\core\ux\form\field\EditableDisplayField.js" />
     <Content Include="Scripts\app\core\ux\form\field\InlinePicker.js" />
     <Content Include="Scripts\app\core\ux\form\field\Product.js" />
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
+    <Content Include="Scripts\app\core\ux\mixins\RowEditable.js" />
+    <Content Include="Scripts\app\core\ux\mixins\Searchable.js" />
+    <Content Include="Scripts\app\core\ux\mixins\Pageable.js" />
     <Content Include="Scripts\app\core\ux\window\Alert.js" />
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
@@ -678,6 +682,7 @@
     <Content Include="Scripts\app\view\location\Edit.js" />
     <Content Include="Scripts\app\view\location\Form.js" />
     <Content Include="Scripts\app\view\location\Index.js" />
+    <Content Include="Scripts\app\view\location\inventory\LocationInventory.js" />
     <Content Include="Scripts\app\view\location\inventory\Index.js" />
     <Content Include="Scripts\app\view\location\subform\Location.js" />
     <Content Include="Scripts\app\view\location\subform\StoreHours.js" />

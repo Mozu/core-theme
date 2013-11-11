@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.shared.view.field.LocationPickerField', {
     extend: 'Ext.form.field.ComboBox',
-    alias: 'widget.taco-Locationpickerfield',
+    alias: 'widget.taco-locationpickerfield',
     requires: [
         
     ],
@@ -11,6 +11,8 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
     config: {
     
     },
+    
+    autoSelectFirstRecord: true,
     
     //itemsPerPage: 30,
     displayField: 'name',
@@ -88,11 +90,30 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
                     property: 'supportsInventory',
                     value: true
                 }],
-                autoLoad: false
+                autoLoad: true
             });
         }
 
-        me.on('beforequery', this.formatQuery, this);
+        me.store.on('load', function() {
+            me.selectFirstRecord();
+        }, me, {
+            single:true
+        });
+
+        if (me.autoSelectFirstRecord) {
+            me.on('beforequery', this.formatQuery, this);
+        }
+        
         me.callParent(arguments);
+    },
+
+    selectFirstRecord: function () {
+        var me = this;
+        var recordSelected = me.getStore().getAt(0);
+        if (recordSelected) {
+            me.select(recordSelected);
+            // need to manually fire the select event; manually calling select method on combo doesn't fire the event;
+            this.fireEvent('select', me, [recordSelected]);
+        }
     }
 });
