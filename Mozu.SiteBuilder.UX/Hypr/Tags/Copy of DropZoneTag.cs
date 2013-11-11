@@ -145,7 +145,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             sb.Append("<div class=\"mz-drop-zone");
             if (isEditmode)
             {
-                sb.Append(" mz-cms-grid\" ");
+                sb.Append(" mz-cms-editing mz-cms-grid\" ");
                 sb.AppendJsonHtmlAttribute(new
                                                {
                                                    id = zoneId,
