@@ -9,7 +9,6 @@ Ext.define('Taco.model.LocationInventory', {
         "name": "id",
         "type": "string",
         "convert": function(value, record) {
-            debugger;
             return record.get("locationCode") + "." + record.get("productCode");
         },
         defaultValue: "",
