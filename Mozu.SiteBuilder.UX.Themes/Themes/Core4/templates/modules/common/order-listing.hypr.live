@@ -1,0 +1,18 @@
+﻿<div class="mz-orderlisting">
+    <div class="mz-orderlisting-detail">
+        <h3 class="mz-orderlisting-date">{{ model.submittedDate|date('F j, Y') }}</h3>
+        <dl class="mz-propertylist">
+            <dt>{{ labels.orderNumber }}</dt>
+            <dd>{{ model.orderNumber }}</dd>
+            <dt>{{ labels.total }}</dt>
+            <dd>{{ model.total|currency }}</dd>
+            <dt>{{ labels.shippedTo }}</dt>
+            <dd>{{ model.fulfillmentInfo.fulfillmentContact.firstName }} {{ model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</dd>
+        </dl>
+    </div>
+    <div class="mz-orderlisting-shipments">
+        {% for shipment in model.shipments %}
+        {% include "modules/my-account/shipment-listing" with model=shipment %}
+        {% endfor %}
+    </div>
+</div>

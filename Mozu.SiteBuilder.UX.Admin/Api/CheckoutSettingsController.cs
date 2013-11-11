@@ -39,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 ret.ExternalPaymentWorkflows = new List<DC.ExternalPaymentWorkflowDefinition> {
                     new DC.ExternalPaymentWorkflowDefinition {
-                         Name = "Paypal Express",
+                         Name = "PaypalExpress",
                          IsEnabled = true,
                          Credentials = new List<DC.ThirdPartyCredentialField> {
                              new DC.ThirdPartyCredentialField { APIName="bradley", DisplayName="login or something", Value="foo" },

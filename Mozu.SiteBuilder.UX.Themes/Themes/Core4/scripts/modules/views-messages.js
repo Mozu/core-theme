@@ -16,7 +16,8 @@
                     this.$el.ScrollTo({
                         onlyIfOutside: true,
                         offsetTop: offset,
-                        offsetLeft: offset * 1.5
+                        offsetLeft: offset * 1.5,
+                        axis: 'y'
                     })
                 }
             }

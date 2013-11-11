@@ -10,8 +10,8 @@
     <div data-mz-pagingcontrols class="mz-pagingcontrols">
         {% include "modules/common/paging-controls" %}
     </div>
-    <div data-mz-productlisting>
-        {% include "modules/product/product-listing-tiled" %}
+    <div data-mz-productlist>
+        {% include "modules/product/product-list-tiled" %}
     </div>
     <div data-mz-pagenumbers class="mz-pagenumbers">
         {% include "modules/common/page-numbers" %}
