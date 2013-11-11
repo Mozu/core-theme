@@ -120,7 +120,7 @@ Ext.define('Taco.view.report.Index', {
         var me = this;
 
         me.header = {
-            title: 'Reports for [TODO]'
+            title: 'Reports'
         };
         me.summaryTpl = new Ext.XTemplate(
             '<tpl for=".">',
