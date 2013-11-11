@@ -9,12 +9,11 @@
     background: white;
     border-width: 2px;
     border-style: solid;
-    overflow-y: scroll;
     
     .#{$vprefix}dashboard-item-header{
       text-align: center;
     }
-
+	 
     .#{$vprefix}dashboard-item-item{
       float: left;
       padding: 5px;
