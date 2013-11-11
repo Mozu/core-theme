@@ -244,7 +244,7 @@
                 var order = this,
                     user = order.get('user');
                 if (user) {
-                    $.post('/login', {
+                    $.post('/user/login', {
                         email: user.get('emailAddress'),
                         password: user.get("password")
                     }).then(function () {

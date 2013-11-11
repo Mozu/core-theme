@@ -20,8 +20,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationHelpers
         /// </summary>
         public static string ToFilterString(this FilterCollection extFilter, bool? withVariations = null)
         {
-            var statements = extFilter.Where(x => x.property != "all").Select(GetFilter).ToList();
-            var allFilter = extFilter.FirstOrDefault(x => x.property == "all");
+            var statements = extFilter.Where(x => x.property != "all" && !string.IsNullOrEmpty((x.value ?? "").ToString()) ).Select(GetFilter).ToList();
+            var allFilter = extFilter.FirstOrDefault(x => x.property == "all" && !string.IsNullOrEmpty( (x.value ?? "").ToString() ));
             if (allFilter != null)
                 statements.Add(String.Format("({1} cont {0} or {2} cont {0} or {3} cont {0} or {4} cont {0} or {5} cont {0} or {6} cont {0})", allFilter.value, NAME, STATE, COUNTRYCODE, ZIPCODE, CODE, LOCATIONTYPECODE));
 
