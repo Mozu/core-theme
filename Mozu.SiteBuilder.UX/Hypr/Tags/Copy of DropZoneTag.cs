@@ -202,12 +202,23 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
 
                             sb.Append("<div class=\"mz-cms-block\" ");
+
                             if (isEditmode)
                             {
                                 sb.AppendJsonHtmlAttribute(widget, "widget");
                             }
+                            
                             sb.Append(">");
-                            sb.Append("<div class=\"mz-cms-content\">");
+                            sb.Append("<div class=\"mz-cms-content\"");
+
+                            if (widget.height != null)
+                            {
+                                sb.Append(" style=\"height:");
+                                sb.Append(widget.height);
+                                sb.Append("px;\"");
+                            }
+                            sb.Append(">");
+
                             if (isContent)
                             {
 

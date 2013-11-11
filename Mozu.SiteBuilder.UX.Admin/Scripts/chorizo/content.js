@@ -215,6 +215,8 @@
                 start: $.proxy(this._onStart, this),
                 stop: $.proxy(this._onStop, this)
             });
+
+        this.widgetData = this.element.data('widget');
     }
 
     Img.prototype = new Content();
@@ -244,10 +246,12 @@
     Img.prototype._onStop = function(e, ui) {
         $doc.off('mousemove', this._moveHandler);
         Chorizo.editor.cursor('auto');
+        this.widgetData.height = this.$content.outerHeight();
     }
 
     Img.prototype._onMousemove = function(e, ui) {
-        this.$content.children().first().height($doc.scrollTop() + e.clientY - this.offset.top);
+        var height = $doc.scrollTop() + e.clientY - this.offset.top;
+        this.$content.height(height);
     }
 
 
