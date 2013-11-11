@@ -1,4 +1,34 @@
-﻿.dashboard-panel {
+﻿.#{$vprefix}dashboard-group{
+
+  .#{$vprefix}dashboard-item{
+    float: left;
+    padding: 10px;
+    margin: 30px;
+    height: 250px;
+    width: 250px;
+    background: white;
+    border-width: 2px;
+    border-style: solid;
+    overflow-y: scroll;
+    
+    .#{$vprefix}dashboard-item-header{
+      text-align: center;
+    }
+
+    .#{$vprefix}dashboard-item-item{
+      float: left;
+      padding: 5px;
+    } 
+
+    .#{$vprefix}dashboard-icon{
+      height: 130px;
+      margin-bottom: 14px;
+      background-color: black;
+    }
+  }
+}
+
+.dashboard-panel {
   background-color: $color-neutral-white;
   border: 1px solid $color-neutral-75;
 
