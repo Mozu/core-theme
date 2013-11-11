@@ -63,7 +63,11 @@ Ext.define('Taco.view.website.Index', {
             ui: 'action',
             scale: 'medium',
             text: 'Widgets',
-            margin: '0 0 0 10'
+            margin: '0 0 0 10',
+            handler: function() {
+                console.log(this.$className);
+                this.chorizoEditor.widgets().toggle();
+            }
         }, {
             xtype: 'button',
             ui: 'action',
@@ -242,6 +246,8 @@ Ext.define('Taco.view.website.Index', {
     onPageLoad: function (editor) {
         var me = this,
             pc = this.getPageContext();
+
+        this.chorizoEditor = editor;
         
         this.pageSettings.removeAll(true);
         

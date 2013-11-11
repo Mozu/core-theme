@@ -23,7 +23,7 @@
                             '<li data-role="indent"><i class="fa fa-indent"></i></li>',
                             '<li data-role="outdent"><i class="fa fa-outdent"></i></li>',
                         '</ul>',
-                    '</div>'].join());
+                    '</div>'].join(''));
 
             this.element
                 .appendTo('body')
@@ -42,6 +42,7 @@
 
         hide: function() {
             var proxy = $.proxy(function() {this.element.removeClass('mz-cms-active')}, this);
+            if (!this.element.length) return;
             this._hideTimeout = win.setTimeout(proxy, 150);
         },
 
@@ -67,6 +68,8 @@
     };
 
     win.Chorizo.formatter = bar;
-    bar.init();
+    $doc.ready(function() {
+        bar.init();
+    });
 
 }(jQuery, window, document));
