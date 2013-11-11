@@ -8,6 +8,10 @@ Ext.define('Taco.model.Attribute', {
             name: 'id',
             type: 'auto'
         }, {
+            /* numeric id of this attribute used by the service */
+            name: 'attributeId',
+            type: 'integer'
+        }, {
             name: 'name',
             type: 'string'
         }, {
