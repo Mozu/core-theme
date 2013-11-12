@@ -1,4 +1,4 @@
-﻿define(['modules/backbone-mozu', 'modules/jquery-mozu', 'shim!vendor/underscore>_', 'modules/models-customer'], function(Backbone, $, _, CustomerModels) {
+﻿define(['modules/backbone-mozu', 'modules/jquery-mozu', 'shim!vendor/underscore>_', 'modules/models-customer', 'modules/views-paging'], function(Backbone, $, _, CustomerModels, PagingViews) {
     
     var AccountSettingsView = Backbone.MozuView.extend({
         templateName: 'modules/my-account/my-account-settings',
@@ -71,23 +71,41 @@
         },
 
     });
+
+
+    var OrderHistoryView = Backbone.MozuView.extend({
+        templateName: "modules/common/order-list",
+    });
         
     $(document).ready(function () {
-        var accountModel = CustomerModels.Customer.fromCurrent();
+        var accountModel = window.accountModel =  CustomerModels.Customer.fromCurrent();
         accountModel.set('user', require.mozuData('user'));
-        //accountModel.set('openOrders', require.mozuData('orders'));
 
-        var $accountSettingsEl = $('#account-settings');
+        var $accountSettingsEl = $('#account-settings'),
+            $orderHistoryEl = $('#account-orderhistory'),
+            orderHistory = accountModel.get('orderHistory');
 
-        window.accountSettingsView = new AccountSettingsView({
-            el: $accountSettingsEl,
-            model: accountModel,
-            messagesEl: $('#account-messages')
-        });
+        window.accountViews = {
+            accountSettingsView: new AccountSettingsView({
+                el: $accountSettingsEl,
+                model: accountModel,
+                messagesEl: $('#account-messages')
+            }),
+            accountOrderHistoryView: new OrderHistoryView({
+                el: $orderHistoryEl.find('[data-mz-orderlist]'),
+                model: orderHistory
+            }),
+            accountOrderHistoryPagingControls: new PagingViews.PagingControls({
+                el: $orderHistoryEl.find('[data-mz-pagingcontrols]'),
+                model: orderHistory
+            }),
+            accountOrderHistoryPageNumbers: new PagingViews.PageNumbers({
+                el: $orderHistoryEl.find('[data-mz-pagenumbers]'),
+                model: orderHistory
+            })
+        }
 
-
-        //accountSettingsView.render();
-
+        _.invoke(window.accountViews, 'render');
 
     });
 });

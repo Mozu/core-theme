@@ -32,6 +32,11 @@
             {% include "modules/my-account/my-account-settings" %}
         </div>
 
+        <a id="openorders"></a>
+        <div class="mz-l-stack-section mz-accountopenorders" id="account-openorders">
+            {% include "modules/my-account/my-account-openorders" %}
+        </div>
+
         <a id="wishlist"></a>
         <div class="mz-l-stack-section mz-accountwishlist" id="account-wishlist">
             {% include "modules/my-account/my-account-wishlist" %}
@@ -39,7 +44,7 @@
 
         <a id="orderhistory"></a>
         <div class="mz-l-stack-section mz-accountorderhistory" id="account-orderhistory">
-            {% include "modules/my-account/my-account-orderhistory" %}
+            {% include "modules/my-account/my-account-orderhistory" with model=model.orderHistory %}
         </div>
 
         <a id="paymentmethods"></a>

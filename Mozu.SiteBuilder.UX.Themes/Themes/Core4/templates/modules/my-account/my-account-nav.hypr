@@ -6,6 +6,11 @@
             </a>
         </li>
         <li class="mz-scrollnav-item">
+            <a class="mz-scrollnav-link" href="#openorders">
+                {{ labels.openOrders }}
+            </a>
+        </li>
+        <li class="mz-scrollnav-item">
             <a class="mz-scrollnav-link" href="#wishlist">
                 {{ labels.accountMyWishlist }}
             </a>

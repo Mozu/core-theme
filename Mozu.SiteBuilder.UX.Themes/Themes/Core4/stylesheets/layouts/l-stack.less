@@ -16,6 +16,14 @@
         min-height: 400px; // TODO: remove
         .mz-l-stack-sectiontitle {
             font-size: @fontSizeLarge;
+            a {
+                float: right;
+                margin-left: @gutter/2;
+                font-size: @fontSizeSmall;
+                line-height: @fontSizeLarge;
+                font-weight: normal;
+                .permalink(@textColor);
+            }
         }
     }
 }
