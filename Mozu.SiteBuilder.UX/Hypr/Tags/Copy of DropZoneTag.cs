@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
 
     [NDjango.ParserNodes.Description("tbd")]
-    [NDjango.Interfaces.Name("cms_edit_resources")]
+    [NDjango.Interfaces.Name("cms_resources")]
     public class EditResourcesTag : SimpleTagBase
     {
 
@@ -62,11 +62,15 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             buffer = templateName = null;
             var pageContext = context.PageContext();
             var isEditmode = pageContext.IsEditMode;
+            var sb = new StringBuilder();
+            sb.AppendLine("\t\t<link rel=\"stylesheet\" href=\"/resources/cms/layout.css\">");
             if (!isEditmode)
             {
+                
+                buffer = sb.ToString();
                 return;
             }
-            var sb = new StringBuilder();
+           
             sb.AppendLine( "\r\n\t\t<link rel=\"stylesheet\" href=\"/admin/scripts/build/chorizo/chorizo.css\">");
             sb.AppendLine("\t\t<link rel=\"stylesheet\" href=\"//netdna.bootstrapcdn.com/font-awesome/4.0.2/css/font-awesome.min.css\">");
             sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js\"></script>");
