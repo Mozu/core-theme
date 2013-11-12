@@ -125,7 +125,7 @@ Ext.define('Taco.view.report.Index', {
         me.summaryTpl = new Ext.XTemplate(
             '<tpl for=".">',
                 '<div class="taco-order-detail-header-section xorder-data">',
-                    '<label>{#} {label}</label>',
+                    '<label>{label}</label>',
                     '<h2>{value}</h2>',
                     '<div class="status">{helpText}</div>',
                 '</div>',
