@@ -114,7 +114,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         //
         // GET: /StoreFront/Email/
-
+          [System.Web.Http.HttpGet]
         public async  Task<HttpResponseMessage> Preview(string id)
         {
             string emailTempalte = id;

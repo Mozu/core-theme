@@ -100,7 +100,18 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             buffer = templateName = null;
             var httpContext = context.HttpContext();
             var themeEntityDefinitionProvider = context.Resolve<IThemeEntityDefinitionProvider>();
-            var scope = arguments.GetValueOrDefault<string>("scope", "page");
+            var scope = arguments.GetValueOrDefault<string>("scope", null);
+            if (string.IsNullOrEmpty(scope))
+            {
+                if (arguments.Count > 1 && arguments[1].ArgumentType == TagArgument.ArgumentTypes.ValueArgument)
+                {
+                    scope = (string) arguments[1].Value;
+                }
+                else
+                {
+                    scope = "page";
+                }
+            }
             var zoneSpan = arguments.GetValueOrDefault<int>("span", 12);
             var zoneId = arguments.GetValueOrDefault<string>("zoneId") ?? (string) arguments.First().Value;
             var htmlAttributes = arguments.GetValueOrDefault<IDictionary<string, object>>("htmlAttributes");
@@ -137,7 +148,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
 
 
-            isEditmode = isEditmode && string.Equals(scope, pageContext.EditMode.GetValueOrDefault(EditModes.Page ).ToString(), StringComparison.OrdinalIgnoreCase);
+            isEditmode = isEditmode && string.Equals(scope, pageContext.EditMode.GetValueOrDefault(EditModes.page ).ToString(), StringComparison.OrdinalIgnoreCase);
 
             var zoneRuntimeData = (pageContext.CmsContext == null || pageContext.CmsContext.RuntimeData2 == null) ? null : pageContext.CmsContext.RuntimeData2.FirstOrDefault(x => string.Equals(x.Id, zoneId, StringComparison.OrdinalIgnoreCase));
             bool useDefaultId = true;

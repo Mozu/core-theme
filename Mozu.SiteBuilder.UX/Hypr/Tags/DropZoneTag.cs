@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
 
             StringWriter sw;
-            if (isEditmode && string.Equals(scope, pageContext.EditMode.GetValueOrDefault(EditModes.Page).ToString(), StringComparison.InvariantCultureIgnoreCase))
+            if (isEditmode && string.Equals(scope, pageContext.EditMode.GetValueOrDefault(EditModes.page).ToString(), StringComparison.InvariantCultureIgnoreCase))
             {
                 var jobj = new JsonObject();
                 var dJ = jobj.AsDynamic();

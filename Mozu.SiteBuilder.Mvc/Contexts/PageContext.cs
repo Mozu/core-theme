@@ -8,6 +8,8 @@ using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
@@ -35,7 +37,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public string MetaTitle { get; set; }
 
-
+        [JsonConverter(typeof(StringEnumConverter))]
         public EditModes? EditMode { get; set; }
 
 

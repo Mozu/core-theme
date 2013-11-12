@@ -410,7 +410,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
             // TODO: broke the isolation
             var adminCategoryProvider = new CategoryNavigationProvider(_categoryWebApiClient);
             var gandalf = new NavigationGandalf(_navigationRepository, adminCategoryProvider, _cmsServiceWrapper);
-            return new NavigationController(_navigationRepository, _categoryWebApiClient, _cmsServiceWrapper, gandalf, _logger);
+            return new NavigationController(_navigationRepository, _categoryWebApiClient, _cmsServiceWrapper, gandalf, _logger, null);
         }
     }
 }

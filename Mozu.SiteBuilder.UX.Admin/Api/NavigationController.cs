@@ -11,7 +11,9 @@ using Mozu.Core.Api.Routing;
 using Mozu.Core.Logging;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.CMS;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Filters;
@@ -37,17 +39,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private ICmsServiceWrapper _cmsService;
         private NavigationGandalf _gandalf;
         private ILogger _log;
+        private readonly SiteContext _siteContext;
 
         /// <summary>
         ///  Public constructor.
         /// </summary>
-        public NavigationController(INavigationRepository navRepo, ICategoryWebApiClient catClient, ICmsServiceWrapper cmsService, NavigationGandalf gandalf, ILogger log)
+        public NavigationController(INavigationRepository navRepo, ICategoryWebApiClient catClient, ICmsServiceWrapper cmsService, NavigationGandalf gandalf, ILogger log, SiteContext siteContext )
         {
             _navRepo = navRepo;
             _catClient = catClient;
             _cmsService = cmsService;
             _gandalf = gandalf;
             _log = log;
+            _siteContext = siteContext;
         }
 
         /// <summary>
@@ -58,9 +62,49 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<NavigationTreeNode>>> List()
         {
             _log.Debug("Generating list.");
-            var list = await _gandalf.GetFlatList();
+            var list = await this.GetFlatList();
             
             return List2(list);
+        }
+
+        public async Task<List<NavigationTreeNode>> GetFlatList()
+        {
+            var list = await _gandalf.GetFlatList();
+            IEnumerable<PageTypeDefinition> pageTypes = _siteContext== null ? Enumerable.Empty<PageTypeDefinition >(): _siteContext.Theme.PageTypes;
+            list = list.Concat(pageTypes.Select(x => new NavigationTreeNode()
+                                                         {
+                                                             AllowDrag = false,
+                                                             AllowDrop = false,
+                                                             NodeType= NavigationNodeType.Page ,
+                                                            
+                                                             Id = "templates-" + x.Id,
+                                                             OriginalId = x.Id,
+                                                             Expanded = true,
+                                                             Expandable = false,
+                                                             Name = x.Title,
+                                                             Url = "/templates/" + x.Id,
+                                                             ParentId = "_templates",
+                                                             IsHidden = false
+
+
+                                                         })).ToList();
+            list.Add(new NavigationTreeNode()
+                         {
+                             AllowDrag = false,
+                             AllowDrop = false,
+                             NodeType = NavigationNodeType.Group ,
+                             Id = "_templates",
+                             OriginalId = "_templates",
+                             Expanded = true,
+                             Expandable = false,
+                            Index=99,
+                             Name = "Templates",
+                           
+                             ParentId = "root",
+                             IsHidden = false
+                         });
+
+            return list;
         }
 
         /// <summary>
@@ -339,7 +383,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var navTask = _navRepo.GetSetAsync();
             var catTask = _catClient.GetCategory(categoryId);
-            var listTask = _gandalf.GetFlatList();
+            var listTask = this.GetFlatList();
 
             return 
                 Task.WhenAll(navTask, catTask, listTask)
