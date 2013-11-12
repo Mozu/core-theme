@@ -7,5 +7,6 @@ Ext.define('Taco.model.ExtensibleAttributeValue', {
         { name: 'fullyQualifiedName', type: 'string' },
         { name: 'attributeDefinitionId', type: 'integer' },
         { name: 'values', type: 'auto' }
-    ]
+    ],
+    idProperty: 'fullyQualifiedName'
 });
