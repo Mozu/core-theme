@@ -1,4 +1,4 @@
-﻿ApiObject.types.user = utils.inherit(ApiObject, {
+﻿ApiObject.types.user = {
     postconstruct: function () {
         var self = this;
         this.on('sync', function (json) {
@@ -8,4 +8,4 @@
             }
         });
     }
-});
+};

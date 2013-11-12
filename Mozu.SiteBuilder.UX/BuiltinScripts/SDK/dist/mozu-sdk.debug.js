@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-11-11
+ * Mozu JavaScript SDK - v0.2.0 - 2013-11-12
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2021,6 +2021,11 @@ var utils = (function () {
             }
             return formatted;
         },
+        setOp: function(proto, fnName) {
+            proto[fnName] = function (conf) {
+                return this.api.action(this, fnName, conf);
+            }
+        },
         getType: (function () {
             var reType = /\[object (\w+)\]/;
             return function (thing) {
@@ -2355,6 +2360,13 @@ var ApiReference = (function () {
                 if (a && objectTypes[typeName].hasOwnProperty(a) && !reservedWords[a])
                     actions.push(utils.camelCase(a));
             }
+            var declaredType = (objectTypes[typeName].collectionOf ? ApiCollection : ApiObject).types[typeName];
+            if (declaredType) {
+                for (a in declaredType) {
+                    if (!(utils.dashCase(a) in objectTypes[typeName]) && typeof declaredType[a] === "function") actions.push(a);
+                }
+            }
+
             return actions;
         },
 
@@ -2608,7 +2620,18 @@ var ApiReference = (function () {
                 template: '{+orderService}?filter=CustomerAccountId eq "{id}" and OrderNumber ne null',
                 includeSelf: true,
                 returnType: 'orders'
+            },
+            'get-cards': {
+                template: '{+customerService}{id}/cards',
+                includeSelf: true,
+                returnType: 'accountcards'
+            },
+            'add-card': {
+                template: '{+customerService}{id}/cards',
+                includeSelf: true,
+                returnType: 'accountcard'
             }
+            
         },
         contact: {
             template: '{+customerService}{accountId}/contacts/{id}'
@@ -2705,6 +2728,12 @@ var ApiReference = (function () {
                 includeSelf: true
             }
         },
+        'accountcard': {
+            template: '{+customerService}{id}/cards'
+        },
+        'accountcards': {
+            collectionOf: 'accountcard'
+        },
         'creditcard': {
             defaults: {
                 useIframeTransport: '{+paymentService}../../Assets/mozu_receiver.html'
@@ -2719,6 +2748,9 @@ var ApiReference = (function () {
                 template: '{+paymentService}{cardId}',
                 returnType: 'string'
             }
+        },
+        'creditcards': {
+            collectionOf: 'creditcard'
         },
         'ordernote': {
             template: '{+orderService}{orderId}/notes/{id}'
@@ -2761,9 +2793,6 @@ var ApiObject = (function () {
 
     ApiObjectConstructor.prototype = {
         constructor: ApiObjectConstructor,
-        action: function (actionName, data) {
-            return this.api.action(this, actionName, data);
-        },
         getAvailableActions: function () {
             return ApiReference.getActionsFor(this.type);
         },
@@ -2784,18 +2813,22 @@ var ApiObject = (function () {
         }
     };
 
-    var setOp = function(fnName) {
-        ApiObjectConstructor.prototype[fnName] = function (conf) {
-            return this.action(fnName, conf);
-        }
-    };
-    for (var i in ApiReference.basicOps) {
-        if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
-    }
-
     utils.addEvents(ApiObjectConstructor);
 
     ApiObjectConstructor.types = {};
+    ApiObjectConstructor.hydratedTypes = {};
+
+    ApiObjectConstructor.getHydratedType = function (typeName) {
+        if (!(typeName in this.hydratedTypes)) {
+            var availableActions = ApiReference.getActionsFor(typeName),
+                reflectedMethods = {};
+            for (var i = availableActions.length - 1; i >= 0; i--) {
+                utils.setOp(reflectedMethods, availableActions[i]);
+            }
+            this.hydratedTypes[typeName] = utils.inherit(this, utils.extend({}, reflectedMethods, this.types[typeName] || {}));
+        }
+        return this.hydratedTypes[typeName];
+    }
 
     ApiObjectConstructor.create = function (typeName, rawJSON, api) {
         var type = ApiReference.getType(typeName);
@@ -2807,7 +2840,10 @@ var ApiObject = (function () {
         if (type.collectionOf) {
             return ApiCollection.create(typeName, rawJSON, api, type.collectionOf)
         }
-        return new (typeName in this.types ? this.types[typeName] : this)(typeName, rawJSON, api);
+
+        var ApiObjectType = this.getHydratedType(typeName);
+        
+        return new ApiObjectType(typeName, rawJSON, api);
     };
 
     return ApiObjectConstructor;
@@ -2907,10 +2943,19 @@ var ApiCollection = (function () {
     });
 
     ApiCollectionConstructor.types = {};
+    ApiCollectionConstructor.hydratedTypes = {};
+
+    ApiCollectionConstructor.getHydratedType = ApiObject.getHydratedType;
 
     ApiCollectionConstructor.create = function (type, data, api, itemType) {
         return new (type in this.types ? this.types[type] : this)(type, data, api, itemType);
     }
+
+    ApiCollectionConstructor.create = function (typeName, rawJSON, api, itemType) {
+        var ApiCollectionType = this.getHydratedType(typeName);
+
+        return new ApiCollectionType(typeName, rawJSON, api, itemType);
+    };
 
     return ApiCollectionConstructor;
 
@@ -2918,14 +2963,14 @@ var ApiCollection = (function () {
 // END OBJECT
 
 /***********/
-ApiObject.types.cart = utils.inherit(ApiObject, {
+ApiObject.types.cart = {
     count: function () {
         var items = this.prop('items');
         if (!items || !items.length) return 0;
         return utils.reduce(items, function (total, item) { return total + item.quantity; }, 0);
     }
-});
-ApiObject.types.creditcard = utils.inherit(ApiObject, (function() {
+};
+ApiObject.types.creditcard = (function() {
 
     errors.register({
         'CARD_TYPE_MISSING': 'Card type missing.',
@@ -3038,7 +3083,7 @@ ApiObject.types.creditcard = utils.inherit(ApiObject, (function() {
         save: function () {
             var self = this,
                 isUpdate = this.prop(transform.fields.cardId);
-            return this.action(isUpdate ? 'update' : 'save', makePayload(this)).then(function (res) {
+            return this.api.action(this, (isUpdate ? 'update' : 'save'), makePayload(this)).then(function (res) {
                 self.prop(transform.toStorefrontData({
                     cardNumber: self.maskedCardNumber,
                     cvv: self.prop('cvv').replace(/\d/g, self.maskCharacter),
@@ -3050,18 +3095,29 @@ ApiObject.types.creditcard = utils.inherit(ApiObject, (function() {
         }
     };
 
-}()));
-ApiObject.types.customer = utils.inherit(ApiObject, (function() {
-}()));
-ApiObject.types.login = utils.inherit(ApiObject, {
+}());
+ApiObject.types.customer = (function () {
+    return {
+        addPaymentCard: function (unmaskedCardData) {
+            var self = this, card = this.api.createSync('creditcard', unmaskedCardData);
+            return card.save().then(function (card) {
+                var payload = utils.clone(card.data);
+                payload.cardNumberPart = payload.cardNumber;
+                delete payload.cardNumber;
+                return self.addCard(payload);
+            });
+        }
+    }
+}());
+ApiObject.types.login = {
     postconstruct: function (type, json) {
         if (json.authTicket && json.authTicket.accessToken) {
             this.api.context.UserClaims(json.authTicket.accessToken);
             this.api.fire('login', json.authTicket);
         }
     }
-});
-ApiObject.types.order = utils.inherit(ApiObject, (function() {
+};
+ApiObject.types.order = (function() {
 
     errors.register({
         'BILLING_INFO_MISSING': 'Billing info missing.',
@@ -3108,13 +3164,13 @@ ApiObject.types.order = utils.inherit(ApiObject, (function() {
         addNewUser: function (login) {
             var self = this;
             return self.api.create('user', login).then(function (user) {
-                return user.action('login', { emailAddress: user.prop('emailAddress'), password: user.prop('password') });
+                return user.login({ emailAddress: user.prop('emailAddress'), password: user.prop('password') });
             }).then(function () {
-                return self.action('setUserId');
+                return self.setUserId();
             });
         },
         createPayment: function(extraProps) {
-            return this.action('createPayment', utils.extend({
+            return this.api.action(this, 'createPayment', utils.extend({
                 currencyCode: this.api.context.Currency().toUpperCase(),
                 amount: this.prop('total'),
                 newBillingInfo: this.prop('billingInfo')
@@ -3145,20 +3201,20 @@ ApiObject.types.order = utils.inherit(ApiObject, (function() {
             return OrderStatus2IsComplete[this.prop('status')];
         },
         submitOrder: function () {
-            return this.action('performOrderAction', CONSTANTS.ORDER_ACTIONS.SUBMIT_ORDER);
+            return this.performOrderAction(CONSTANTS.ORDER_ACTIONS.SUBMIT_ORDER);
         }
         
     };
-}()));
-ApiObject.types.shipment = utils.inherit(ApiObject, {
+}());
+ApiObject.types.shipment = {
     getShippingMethodsFromContact: function (contact) {
         var self = this;
         return self.update({ fulfillmentContact: self.prop('fulfillmentContact') }).then(function () {
-            return self.action('getShippingMethods');
+            return self.getShippingMethods();
         });
     }
-});
-ApiObject.types.user = utils.inherit(ApiObject, {
+};
+ApiObject.types.user = {
     postconstruct: function () {
         var self = this;
         this.on('sync', function (json) {
@@ -3168,7 +3224,7 @@ ApiObject.types.user = utils.inherit(ApiObject, {
             }
         });
     }
-});
+};
 // BEGIN INTERFACE
 var ApiInterface = (function () {
     var errorMessage = "No {0} was specified. Run Mozu.Tenant(tenantId).MasterCatalog(masterCatalogId).Site(siteId).",

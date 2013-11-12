@@ -288,7 +288,7 @@ define([
             },
             sync: function (method, model, options) {
                 method = methodMap[method] || method;
-                model.apiModel.action(method, model.attributes).then(function (model) {
+                model.apiModel[method](model.attributes).then(function (model) {
                     options.success(model.data);
                 }, function (error) {
                     options.error(error);
@@ -365,7 +365,7 @@ define([
                             // include self by default...
                             if (actionName in { 'create': true, 'update': true }) data = data || this.toJSON();
                             if (typeof data === "object" && !$.isArray(data) && !$.isPlainObject(data)) data = null;
-                            return this.apiModel.action(actionName, data);
+                            return this.apiModel[actionName](data);
                         };
                     }
                 });

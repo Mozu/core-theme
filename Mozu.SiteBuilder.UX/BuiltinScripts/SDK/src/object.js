@@ -9,9 +9,6 @@ var ApiObject = (function () {
 
     ApiObjectConstructor.prototype = {
         constructor: ApiObjectConstructor,
-        action: function (actionName, data) {
-            return this.api.action(this, actionName, data);
-        },
         getAvailableActions: function () {
             return ApiReference.getActionsFor(this.type);
         },
@@ -32,18 +29,22 @@ var ApiObject = (function () {
         }
     };
 
-    var setOp = function(fnName) {
-        ApiObjectConstructor.prototype[fnName] = function (conf) {
-            return this.action(fnName, conf);
-        }
-    };
-    for (var i in ApiReference.basicOps) {
-        if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
-    }
-
     utils.addEvents(ApiObjectConstructor);
 
     ApiObjectConstructor.types = {};
+    ApiObjectConstructor.hydratedTypes = {};
+
+    ApiObjectConstructor.getHydratedType = function (typeName) {
+        if (!(typeName in this.hydratedTypes)) {
+            var availableActions = ApiReference.getActionsFor(typeName),
+                reflectedMethods = {};
+            for (var i = availableActions.length - 1; i >= 0; i--) {
+                utils.setOp(reflectedMethods, availableActions[i]);
+            }
+            this.hydratedTypes[typeName] = utils.inherit(this, utils.extend({}, reflectedMethods, this.types[typeName] || {}));
+        }
+        return this.hydratedTypes[typeName];
+    }
 
     ApiObjectConstructor.create = function (typeName, rawJSON, api) {
         var type = ApiReference.getType(typeName);
@@ -55,7 +56,10 @@ var ApiObject = (function () {
         if (type.collectionOf) {
             return ApiCollection.create(typeName, rawJSON, api, type.collectionOf)
         }
-        return new (typeName in this.types ? this.types[typeName] : this)(typeName, rawJSON, api);
+
+        var ApiObjectType = this.getHydratedType(typeName);
+        
+        return new ApiObjectType(typeName, rawJSON, api);
     };
 
     return ApiObjectConstructor;

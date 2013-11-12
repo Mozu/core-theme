@@ -1,4 +1,4 @@
-﻿ApiObject.types.order = utils.inherit(ApiObject, (function() {
+﻿ApiObject.types.order = (function() {
 
     errors.register({
         'BILLING_INFO_MISSING': 'Billing info missing.',
@@ -45,13 +45,13 @@
         addNewUser: function (login) {
             var self = this;
             return self.api.create('user', login).then(function (user) {
-                return user.action('login', { emailAddress: user.prop('emailAddress'), password: user.prop('password') });
+                return user.login({ emailAddress: user.prop('emailAddress'), password: user.prop('password') });
             }).then(function () {
-                return self.action('setUserId');
+                return self.setUserId();
             });
         },
         createPayment: function(extraProps) {
-            return this.action('createPayment', utils.extend({
+            return this.api.action(this, 'createPayment', utils.extend({
                 currencyCode: this.api.context.Currency().toUpperCase(),
                 amount: this.prop('total'),
                 newBillingInfo: this.prop('billingInfo')
@@ -82,8 +82,8 @@
             return OrderStatus2IsComplete[this.prop('status')];
         },
         submitOrder: function () {
-            return this.action('performOrderAction', CONSTANTS.ORDER_ACTIONS.SUBMIT_ORDER);
+            return this.performOrderAction(CONSTANTS.ORDER_ACTIONS.SUBMIT_ORDER);
         }
         
     };
-}()));
+}());

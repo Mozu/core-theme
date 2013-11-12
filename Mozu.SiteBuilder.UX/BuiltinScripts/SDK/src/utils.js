@@ -66,6 +66,11 @@ var utils = (function () {
             }
             return formatted;
         },
+        setOp: function(proto, fnName) {
+            proto[fnName] = function (conf) {
+                return this.api.action(this, fnName, conf);
+            }
+        },
         getType: (function () {
             var reType = /\[object (\w+)\]/;
             return function (thing) {

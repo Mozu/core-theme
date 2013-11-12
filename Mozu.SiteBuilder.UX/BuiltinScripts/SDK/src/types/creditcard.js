@@ -1,4 +1,4 @@
-﻿ApiObject.types.creditcard = utils.inherit(ApiObject, (function() {
+﻿ApiObject.types.creditcard = (function() {
 
     errors.register({
         'CARD_TYPE_MISSING': 'Card type missing.',
@@ -111,7 +111,7 @@
         save: function () {
             var self = this,
                 isUpdate = this.prop(transform.fields.cardId);
-            return this.action(isUpdate ? 'update' : 'save', makePayload(this)).then(function (res) {
+            return this.api.action(this, (isUpdate ? 'update' : 'save'), makePayload(this)).then(function (res) {
                 self.prop(transform.toStorefrontData({
                     cardNumber: self.maskedCardNumber,
                     cvv: self.prop('cvv').replace(/\d/g, self.maskCharacter),
@@ -123,4 +123,4 @@
         }
     };
 
-}()));
+}());

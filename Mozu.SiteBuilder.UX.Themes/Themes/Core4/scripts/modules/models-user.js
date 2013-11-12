@@ -5,7 +5,7 @@
         var User = Backbone.MozuModel.extend({
             mozuType: 'user',
             changePassword: function () {
-                return this.apiModel.action('changePassword', {
+                return this.apiModel.changePassword({
                     oldPassword: this.get('oldPassword'),
                     newPassword: this.get('password')
                 });
