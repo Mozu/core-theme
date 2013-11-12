@@ -16,10 +16,10 @@ Ext.define('Taco.view.dashboard.Index', {
             Ext.Array.forEach(me.navigationStore.data.items, function (el, index, arr) {
                 var pushData = {};
                 var subNav = [];
+                pushData['id'] = el.get('id');
                 pushData['label'] = el.get('label');
                 pushData['icon'] = el.get('icon');
                 pushData['address'] = el.get('address');
-                console.log(el);
                 Ext.Array.forEach(el.itemsStore.data.items, function (subEl, index, arr) {
                     var subNavData = {};
                     subNavData['label'] = subEl.get('label');
@@ -44,7 +44,7 @@ Ext.define('Taco.view.dashboard.Index', {
                 '<ul class="taco-dashboard-group">',
                     '<tpl for=".">',
                         '<li class="taco-dashboard-item">',
-                            '<div class="taco-dashboard-icon">ICON</div>',
+                            '<div class="taco-dashboard-icon taco-icon-{[values.id]}"></div>',
                             '<div class= "taco-dashboard-item-header"><a  data-url="{[values.address]}">{[values.label]}</a></div>',
                             '<tpl for="subNav">',
                                 '<div class= "taco-dashboard-item-item"><a  data-url="{[values.address]}">{[values.label]}</a></div>',
@@ -66,7 +66,7 @@ Ext.define('Taco.view.dashboard.Index', {
         });
        
         me.header = {
-            title: 'Dashboard',
+            title: 'Dashboard'
         };
         
         Ext.apply(me.body, {

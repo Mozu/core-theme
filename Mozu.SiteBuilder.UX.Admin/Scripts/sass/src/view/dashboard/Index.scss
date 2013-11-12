@@ -18,14 +18,43 @@
       float: left;
       padding: 5px;
     } 
-
+	 
     .#{$vprefix}dashboard-icon{
       height: 130px;
       margin-bottom: 14px;
-      background-color: black;
+      margin-left: 24%;
+
+
     }
+
+      .#{$vprefix}icon-customers {
+        @include icon-font($glyph-customers, 120px);
+      }
+      .#{$vprefix}icon-catalog {
+        @include icon-font($glyph-catalog, 120px);
+      }
+      .#{$vprefix}icon-store {
+        @include icon-font($glyph-orders, 120px);
+      }
+      .#{$vprefix}icon-marketing {
+        @include icon-font($glyph-marketing, 120px);
+      }
+      .#{$vprefix}icon-sitebuilder {
+        @include icon-font($glyph-sitebuilder, 120px);
+      }
+      .#{$vprefix}icon-publishing {
+        @include icon-font($glyph-publishing, 120px);
+      }
+      .#{$vprefix}icon-locations {
+        @include icon-font($glyph-locations, 120px);
+      }
+      .#{$vprefix}icon-report {
+        @include icon-font($glyph-dashboard, 120px);
+      }
+
   }
 }
+
 
 .dashboard-panel {
   background-color: $color-neutral-white;
