@@ -1544,5 +1544,18 @@ Ext.define('Taco.model.Order', {
         });
 
         Ext.Ajax.request(config);
+    },
+
+    saveAttributes: function (config) {
+
+        Ext.applyIf(config, {
+            url: '/admin/app/order/attributes/update',
+            method: "POST",
+            jsonData: {
+                orderId: this.getId(),
+                attributes: this.get('attributes')
+            }
+        });
+        Ext.Ajax.request(config);
     }
 });
