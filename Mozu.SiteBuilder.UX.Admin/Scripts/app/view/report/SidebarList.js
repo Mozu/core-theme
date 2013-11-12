@@ -86,6 +86,7 @@ Ext.define('Taco.view.report.SidebarList', {
 
         me.dateRange = Ext.create('Ext.form.ComboBox', {
             fieldLabel: 'Date Range',
+            allowBlank: false,
             valueField: 'value',
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: ['text', 'value'],
@@ -102,6 +103,7 @@ Ext.define('Taco.view.report.SidebarList', {
 
         me.groupBy = Ext.create('Ext.form.ComboBox', {
             fieldLabel: 'Group Rows By',
+            allowBlank: false,
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: ['text', 'value'],
                 data: [
@@ -173,7 +175,40 @@ Ext.define('Taco.view.report.SidebarList', {
             {
                 xtype: 'component',
                 html:  '<h2 class="' + Taco.baseCSSPrefix + 'sidebarlist-title">Report List</h2>'
-            },
+            }, {
+                xtype: 'form',
+                items: [
+                    me.reportRadioGroup,
+                    me.dateRange,
+                    me.customDateRange,
+                    me.groupBy
+                ],
+                buttons: [{
+                    xtype: 'splitbutton',
+                    scale: 'medium',
+                    text: 'View Report',
+                    plain: true,
+                    shadow: false,
+                    ui: 'action-primary',
+                    formBind: true,
+                    disabled: true,
+                    handler: function () {
+                        me.fireEvent('runreport', me.getReportDefinition());
+                    },
+                    menu: {
+                        plain: true,
+                        shadow: false,
+                        items: [{
+                            text: 'Export Report (.csv)',
+                            plain: true,
+                            handler: function () {
+                                me.fireEvent('downloadreport', me.getReportDefinition());
+                            }
+                        }
+                        ]
+                    }
+                }]
+            }/*
             me.reportRadioGroup,
             me.dateRange,
             me.customDateRange,
@@ -204,7 +239,7 @@ Ext.define('Taco.view.report.SidebarList', {
                         ]
                     }
                 }]
-            }
+            }*/
         ];
         this.callParent(arguments);
     }
