@@ -180,7 +180,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
     },
 
     findAttribute: function (attributeDefinition) {
-        return this.record.getAttributes().findRecord('attributeFQN', attributeDefinition.get('attributeFQN'));
+        return this.record.getAttributes().findRecord('fullyQualifiedName', attributeDefinition.getId());
     },
 
     getFieldName: function (attributeDefinition) {
@@ -203,7 +203,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                     'attributeDefinitionId': definition.get('attributeId'),
                     'fullyQualifiedName': fqn,
                     'id': null,
-                    'values': [ field.getValue().toString() ]
+                    'values': [ field.getValue() ]
                 };
             attrs.push(val);
         });

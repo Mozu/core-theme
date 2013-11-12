@@ -11,7 +11,6 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers;
 using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
 using DC = Mozu.Customer.Contracts;
-//using Mozu.SiteBuilder.Mvc.Customers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -64,9 +63,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (pagingParameters.id != null)
             {
                 int customerId = Convert.ToInt32(pagingParameters.id);
-                var dcCustomer = (await _customerWebApiClient.GetAccount(customerId)).ReadAsSync();
 
-                var customer = Mapper.Map<ApiCustomer>(dcCustomer);
+                var customer = (await GetAccountWithAttributes(customerId)).Map<ApiCustomer>();
                 return List2(customer);
             }
 
@@ -84,7 +82,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             )).ReadAsSync();
 
             var customers = Mapper.Map<List<ApiCustomer>>(dcCustomers.Items);
+
             return List2(customers);
+        }
+
+        /// <summary>
+        /// Get single customer account with attributes.
+        /// </summary>
+        private Task<DC.CustomerAccount> GetAccountWithAttributes(int accountId)
+        {
+            var customerTask = _customerWebApiClient.GetAccount(accountId);
+            var attributeTask = _customerWebApiClient.GetAccountAttributes(accountId);
+
+            return Task.WhenAll(customerTask, attributeTask).ContinueWith<DC.CustomerAccount>(t =>
+            {
+                var customer = customerTask.Result.ReadAsSync();
+                var attributes = attributeTask.Result.ReadAsSync();
+
+                customer.Attributes = attributes.Items;
+                return customer;
+            });
         }
 
         [HttpPostRoute(UriTemplate = "edit")]
@@ -94,11 +111,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var dcCustomers = Mapper.Map<List<Mozu.Customer.Contracts.CustomerAccount>>(customers);
             foreach (var dcCust in dcCustomers)
             {
-                var dcExistingCustomer = (await _customerWebApiClient.GetAccount(dcCust.Id)).ReadAsSync();
+                var dcExistingCustomer = await GetAccountWithAttributes(dcCust.Id);
 
                 await Task.WhenAll( ManageGroups(dcCust, dcExistingCustomer), ManageContacts(dcCust), ManageAttributes(dcCust, dcExistingCustomer) );
-                var updatedCustomer = (await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id)).ReadAsSync();
+                await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id);
 
+                var updatedCustomer = await GetAccountWithAttributes(dcCust.Id);
                 retList.Add( updatedCustomer.Map<ApiCustomer>() );
             }
             return List2(retList);
