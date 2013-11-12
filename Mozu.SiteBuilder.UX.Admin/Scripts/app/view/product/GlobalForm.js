@@ -66,16 +66,16 @@ Ext.define('Taco.view.product.GlobalForm', {
         this.loadNavItems(items);
     },
 
-    addSaveTasks: function (tasks) {
-        if (this.isSingleSite) {
-            return tasks;
-        }
+    //addSaveTasks: function (tasks) {
+    //    if (this.isSingleSite) {
+    //        return tasks;
+    //    }
 
-        tasks.add([{
-            key: 'save-product-record',
-            saveRecord: this.record
-        }]);
+    //    tasks.add([{
+    //        key: 'save-product-record',
+    //        saveRecord: this.record
+    //    }]);
 
-        return tasks;
-    }
+    //    return tasks;
+    //}
 });

@@ -41,6 +41,8 @@
             //setReadOnly(
         }
 
+        this.bindActionsToForm();
+
         this.on('idchange', function(editor, record) {
             Taco.app.contentView.remove(editor);
             Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), { record: record });
@@ -58,5 +60,14 @@
         this.on('destroyrecord', function(editor, records, operation) {
             Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/index');
         }, this, { delay: 10, single: true, scope: this });
+    },
+
+    bindActionsToForm: function () {
+        var actions = this.header.query('[formBind]'),
+            form = this.form;
+        
+        if (form && form.isComponent) {
+            form.getForm().getBoundItems().add(actions);
+        }
     }
 });

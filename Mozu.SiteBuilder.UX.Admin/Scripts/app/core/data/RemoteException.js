@@ -10,18 +10,25 @@ Ext.define('Taco.core.data.RemoteException', {
 
 
     },
+    getError:function (option) {
+        return Ext.create('Ext.Error',{
+            msg: this.getMessage(),
+            option: option ,   // whatever was passed into the method
+            'error code':  this.getErrorCode() // other arbitrary info
+        });
+    },
     getMessage:function (){
-        if (this.data && this.data.ExceptionDetail) {
-            return this.data.ExceptionDetail.Message;
+        if (this.data && this.data.exceptionDetail) {
+            return this.data.exceptionDetail.message;
         }
-        if (this.data && this.data.ExceptionMessage) {
-            return this.data.ExceptionMessage;
+        if (this.data && this.data.exceptionMessage) {
+            return this.data.exceptionMessage;
         }
         return null;
     },
     getErrorCode: function() {
-        if (this.data && this.data.Items && this.data.Items.length) {
-            return this.data.Items[0].ErrorCode;
+        if (this.data && this.data.items && this.data.items.length) {
+            return this.data.items[0].errorCode;
         }
         return null;
     }
