@@ -29,6 +29,7 @@
     "bannerImageEnabled"                : false,
     "bannerImage"                       : "/resources/images/banner.jpg",
     "bannerImageRepeat"                 : "repeat-x",
+    "itemListingThumbSize"              : 80,
 
     /* Settings specific to category page display */
     "showCategoryFacets"                : true,

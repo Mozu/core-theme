@@ -17,7 +17,7 @@
                 id = "scrollnav-" + new Date().getTime();
                 $this.attr('id', id);
             }
-            $($this.data('mzScrollnav')).scrollspy({ target: '#' + id, offset: gutterWidth });
+            $($this.data('mzScrollnav')).scrollspy({ target: '#' + id, offset: gutterWidth*1.2 });
         });
     });
 });

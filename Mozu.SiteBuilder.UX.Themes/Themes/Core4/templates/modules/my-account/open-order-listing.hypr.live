@@ -1,0 +1,6 @@
+﻿{% extends "modules/common/order-listing" %}
+{% block order-items %}
+        {% for item in model.items %}
+        {% include "modules/my-account/open-order-item-listing" with model=item %}
+        {% endfor %}
+{% endblock order-items %}

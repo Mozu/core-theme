@@ -81,7 +81,8 @@
 
         window.accountSettingsView = new AccountSettingsView({
             el: $accountSettingsEl,
-            model: accountModel
+            model: accountModel,
+            messagesEl: $('#account-messages')
         });
 
 

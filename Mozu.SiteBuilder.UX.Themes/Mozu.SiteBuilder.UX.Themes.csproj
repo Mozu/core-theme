@@ -400,6 +400,7 @@
     <Content Include="SampleThemes\helloWorld\Resources\Scripts\Vendor\jquery.colorbox-min.js" />
     <Content Include="SampleThemes\helloWorld\theme.xml" />
     <Content Include="Scripts\backbone.d.ts" />
+    <Content Include="Themes\Core4\resources\images\button-loading-small.gif" />
     <Content Include="Themes\Core4\resources\images\button-loading.gif" />
     <Content Include="Themes\Core4\scripts\modules\jquery-dateinput-localized.js" />
     <Content Include="Themes\Core4\scripts\modules\models-paymentmethods.js" />
@@ -911,7 +912,9 @@
     <Content Include="Themes\Core4\templates\modules\page-header.hypr">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Themes\Core4\templates\modules\cart\cart-table.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\cart\cart-table.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Themes\Core4\templates\modules\product\price-stack.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\product\product-detail.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\product\product-images.hypr.live" />
@@ -951,7 +954,11 @@
     <Content Include="Themes\Core4\templates\modules\product\product-list.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\product\product-list-tiled.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\common\order-listing.hypr.live" />
-    <Content Include="Themes\Core4\templates\modules\my-account\shipment-listing.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\my-account\open-order-item-listing.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\my-account\open-order-listing.hypr.live" />
+    <Content Include="Themes\Core4\stylesheets\modules\common\order-listing.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\common\order-list.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\common\item-listing.less" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

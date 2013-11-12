@@ -6,13 +6,17 @@
             <dd>{{ model.orderNumber }}</dd>
             <dt>{{ labels.total }}</dt>
             <dd>{{ model.total|currency }}</dd>
+            {% block order-shipped-to %}
             <dt>{{ labels.shippedTo }}</dt>
             <dd>{{ model.fulfillmentInfo.fulfillmentContact.firstName }} {{ model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</dd>
+            {% endblock order-shipped-to %}
         </dl>
     </div>
-    <div class="mz-orderlisting-shipments">
-        {% for shipment in model.shipments %}
-        {% include "modules/my-account/shipment-listing" with model=shipment %}
+    <div class="mz-orderlisting-items">
+    {% block order-items %}
+        {% for item in model.items %}
+        {% include "modules/common/item-listing" with model=item %}
         {% endfor %}
+    {% endblock order-items %}
     </div>
 </div>

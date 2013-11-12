@@ -167,6 +167,9 @@
   "openOrders"           : "Open Orders",    
   "viewOrderHistory"     : "View order history",    
   "changePassword"       : "Change Password",
+  "shipped"              : "Shipped",
+  "trackPackage"         : "Track Package",
+  "returnOrReplace"      : "Return or Replace Items",
 
   /* Not Found labels */
   "pageNotFound"         : "Page Not Found",
