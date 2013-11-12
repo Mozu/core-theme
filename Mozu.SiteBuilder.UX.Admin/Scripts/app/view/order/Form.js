@@ -149,19 +149,17 @@ Ext.define('Taco.view.order.Form', {
                 items: [{
                     text: 'Save Attributes',
                     handler: function() {
-                        var form = this.orderAttr.getForm(),
-                        fields = form.getFields(),
-                        item = {}, val = [];
+                        var me = this;
+                        me.setLoading(true, this.body);
 
-                        item['attributeDefinitionId'] = '';
-                        item['fullyQualifiedName'] = field.getName();
-                        item['id'] = '';
-                        val.push(field.getValue().toString());
-                        item['values'] = val;
-                        attrs.push(item);
-                        //Fire off ajax
-                        //console.log(attrs);
+                        // rely on the subform's "beforeSave" method to save attributes to the model correctly.
+                        me.orderAttr.beforeSave();
 
+                        me.record.saveAttributes({
+                            success: function() { 
+                                me.setLoading(false, this.body); 
+                            }
+                        });
                     },
                     scope: this
                 }]

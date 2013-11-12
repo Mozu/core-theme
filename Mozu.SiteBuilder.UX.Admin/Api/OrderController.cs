@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
@@ -125,6 +125,39 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return SuccessWithTotal2<Order>(1);
         }
+
+        public class UpdateAttributeArgs
+        {
+            public string OrderId { get; set; }
+            public List<DCo.OrderAttribute> Attributes { get; set; }
+        }
+
+        [HttpPostRoute(UriTemplate = "attributes/update")]
+        public async Task<Response<List<DCo.OrderAttribute>>> UpdateAttributes(UpdateAttributeArgs args)
+        {
+            List<DCo.OrderAttribute> returnList = null;
+            var existingAttrs = (await _orderWebApiClient.GetOrderAttributes(args.OrderId)).ReadAsSync();
+            List<Task> attributeTasks = new List<Task>();
+
+            var orderAttrIds = args.Attributes.Select(attr => attr.FullyQualifiedName);
+            var existingAttrIds = (existingAttrs ?? new List<DCo.OrderAttribute>()).Select(attr => attr.FullyQualifiedName);
+
+            var createdAttributeIds = orderAttrIds.Except(existingAttrIds).ToList();
+            var updatedAttributeIds = orderAttrIds.Intersect(existingAttrIds).ToList();
+
+            // because we tell the update to remove missing attributes, create and update cannot run simultaneously.
+            if (createdAttributeIds.Count > 0)
+            {
+                returnList = (await _orderWebApiClient.CreateOrderAttributes(args.OrderId, args.Attributes.Where(a => createdAttributeIds.Contains(a.FullyQualifiedName)).ToList())).ReadAsSync();
+            }
+            if (updatedAttributeIds.Count > 0)
+            {
+                returnList = (await _orderWebApiClient.UpdateOrderAttributes(args.OrderId, args.Attributes, removeMissing: true)).ReadAsSync();
+            }
+
+            return List2(returnList);
+        }
+
 
         public class SetBillingInfoArgs
         {
