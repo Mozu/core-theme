@@ -14,7 +14,6 @@ Ext.define('Taco.view.website.Tree', {
 
     border: false,
     componentCls: 'taco-website-tree',
-    disableSelection: true,
     hideHeaders: true,
     rootVisible: false,
     useArrows: true,
