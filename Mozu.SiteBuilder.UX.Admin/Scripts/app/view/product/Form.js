@@ -11,6 +11,7 @@ Ext.define('Taco.view.product.Form', {
     ],
     
     layout: 'fit',
+    requireDirty: false,
     /**
      * @protected
      */
@@ -165,36 +166,34 @@ Ext.define('Taco.view.product.Form', {
      */
     goGoSingleSite: function (leaveTabs) {
         var me = this;
+
         if (!leaveTabs) {
             me.rebuildTabs();
         }
+
         this.globalForm.isSingleSite = true;
         this.globalForm.buildForm();
-        
 
-         if (!me.globalForm.validityOverride) {
-             me.globalForm.validityOverride = true;
+        if (!me.globalForm.validityOverride) {
+            me.globalForm.validityOverride = true;
 
-             this.globalForm.form.getFields().each(function (field) {
-                 var origIsValidate = Object.getPrototypeOf(field).validate,
-                     fields = me.form.getFields().filterBy(function (_field) {
-                         return _field.name == field.name && _field != field;
-                     });
-                 field.validate = function () {
-                     var ret = origIsValidate.apply(field, arguments);
-                     if (!ret) {
-                         fields.each(function (_field) {
-                             if (_field.validate()) {
-                                 ret = true;
-                             }
+            me.getForm().hasInvalidField = function () {
+                return !!this.getFields().findBy(function(field) {
+                    var preventMark = field.preventMark,
+                        isValid, globalForm;
 
-                         });
-                     }
-                     return ret;
-                 };
+                    globalForm = field.findParentBy(function (ct) {
+                        return ct.getId() === me.globalForm.getId();
+                    });
 
-             });
-         }
+                    field.preventMark = true;
+                    isValid = field.isValid() || (globalForm && globalForm.isHidden());
+                    field.preventMark = preventMark;
+
+                    return !isValid;
+                });
+            };
+        }
 
         me.tabPanel.hideTabAt(0);
         me.tabPanel.setActiveItemAt(1);
@@ -220,16 +219,7 @@ Ext.define('Taco.view.product.Form', {
     },
     
     savableStateCheck: function () {
-        var oldState = this.savableState,
-            newState = this.isValid() && (!this.isEdit() || this.isDirty());
-
-        if (oldState === newState) {
-            return;
-        }
-
-        this.savableState = newState;
-
-        this.fireEvent('savablestatechange', this, newState);
+        throw 'unimplemented function: savableStateCheck';
     },
 
     goGoCatalogSwitch: function () {

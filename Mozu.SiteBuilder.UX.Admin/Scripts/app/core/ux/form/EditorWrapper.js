@@ -45,6 +45,7 @@
     formCls: null,
     record: null,
     titleData: null,
+    enableSaveActionToggle: true,
     validateSavableStateChange:true,
 
     initWrapper: function () {
@@ -55,7 +56,7 @@
             'cancel',
             'destroyrecord'
         ]);
-        this.origionalId = this.record ? this.record.getId(): null;
+        this.originalId = this.record ? this.record.getId(): null;
         
         if (!this.form && this.formCls) {
             this.formCfg = Ext.applyIf({
@@ -69,19 +70,27 @@
 
         if (!this.actions) {
             this.actions = [{
-                xtype: 'secondarybutton',
+                xtype: 'button',
                 itemId: 'cancel',
+                ui: 'action',
+                scale: 'medium',
                 text: this.cancelText,
-                click: this.cancel,
+                margin: '0 0 0 10',
                 hidden: this.cancelHidden || !this.allowCreate(),
-                scope: this
+                scope: this,
+                handler: this.cancel
             }, {
-                xtype: 'dirtybutton',
-                text: this.saveText ,
+                xtype: 'button',
                 itemId: 'save',
-                click: this.save,
+                ui: 'action-primary',
+                scale: 'medium',
+                text: this.saveText,
+                margin: '0 0 0 10',
+                enableToggle: this.enableSaveActionToggle ,
+                formBind: true,
                 hidden: this.saveHidden || !this.allowCreate(),
-                scope: this
+                scope: this,
+                handler: this.save
             }];
         }
 
@@ -153,26 +162,28 @@
     },
     
     onBeforeRender: function () {
-        this.dirtybutton = this.down('dirtybutton#save');
+        this.dirtybutton = this.down('button#save');
 
         if (!this.form) {
             return;
         }
 
         this.form.on({
-            savablestatechange: function (form, isSavable) {
-                this.dirtybutton.setDirty(this.checkSavable(isSavable));
-            },
+            // savablestatechange: function (form, isSavable) {
+            //     this.dirtybutton.setDirty(this.checkSavable(isSavable));
+            // },
             savesuccess: function () {
-                console.log('savesuccess');
-                //this.dirtybutton.setLoading(false);
-                this.dirtybutton.setDirty(false);
                 this.onComplete();
                 this.fireEvent('aftersave', this, this.record, this.isEdit());
-                if (this.record && this.record.getId() != this.origionalId) {
-                    this.fireEvent('idchange', this, this.record, this.origionalId);
+                if (this.record && this.record.getId() != this.originalId) {
+                    this.fireEvent('idchange', this, this.record, this.originalId);
                 }
                 
+            },
+            savecomplete: function () {
+                if (this.dirtybutton) {
+                    this.dirtybutton.toggle(false);
+                }
             },
             titlechange: function (panel, newTitle) {
                 this.updateTitle(newTitle);
@@ -190,15 +201,16 @@
     },
 
     checkSavable: function (isSavable) {
-        if (isSavable && this.validateSavableStateChange) {
-            Ext.each(this.query('form.form'), function (childForm) {
-                if (!childForm.isValid()) {
-                    isSavable = false;
-                    return;
-                }
-            });
-        }
-        return isSavable;
+        console.log('unimplemented function: checkSavable');
+        // if (isSavable && this.validateSavableStateChange) {
+        //     Ext.each(this.query('form.form'), function (childForm) {
+        //         if (!childForm.isValid()) {
+        //             isSavable = false;
+        //             return;
+        //         }
+        //     });
+        // }
+        // return isSavable;
     },
 
     updateTitle: function (title) {
@@ -238,12 +250,12 @@
      * Initialize the save process on the form
      */
     save: function () {
-        this.dirtybutton.setLoading(true);
+        // this.dirtybutton.setLoading(true);
         this.form.save();
     },
     destroyRecord: function () {
         var me = this;
-        me.dirtybutton.setLoading(true);
+        // me.dirtybutton.setLoading(true);
         me.record.destroy({
             callback: function(records, operation, success) {
                 if (operation.success) {

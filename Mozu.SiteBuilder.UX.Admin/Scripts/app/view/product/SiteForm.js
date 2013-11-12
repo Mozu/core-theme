@@ -128,31 +128,31 @@ Ext.define('Taco.view.product.SiteForm', {
         return false;
     },
 
-    addSaveTasks: function (tasks) {
-        if (this.isSingleSite) {
-            tasks.add([{
-                key: 'save-product-record',
-                saveRecord: this.product,
-                dependencies: 'bind-extras'
-            }, {
-                key: 'bind-extras',
-                fn: function (tasks) {
-                    console.log('bind-extras');
-                    var extrasForm = this.down('productextrasform');
+    //addSaveTasks: function (tasks) {
+    //    if (this.isSingleSite) {
+    //        tasks.add([{
+    //            key: 'save-product-record',
+    //            saveRecord: this.product,
+    //            dependencies: 'bind-extras'
+    //        }, {
+    //            key: 'bind-extras',
+    //            fn: function (tasks) {
+    //                console.log('bind-extras');
+    //                var extrasForm = this.down('productextrasform');
 
-                    if (extrasForm) {
-                        extrasForm.bindExtras();
-                    }
+    //                if (extrasForm) {
+    //                    extrasForm.bindExtras();
+    //                }
 
-                    tasks.callback();
-                },
-                scope: this
-            }]);
-            this.addStoreSaveTasks(tasks);
-        }
+    //                tasks.callback();
+    //            },
+    //            scope: this
+    //        }]);
+    //        this.addStoreSaveTasks(tasks);
+    //    }
 
-        return tasks;
-    },
+    //    return tasks;
+    //},
 
     updateScrollPosition: function (newTarget, oldTarget) {
         // console.log('\nupdateScrollPosition', newTarget.sideNavLink, oldTarget.sideNavLink);
