@@ -8,10 +8,16 @@
             'primaryBillingContact.phoneNumbers.home',
             'user.oldPassword',
             'user.password',
-            'user.confirmPassword'
+            'user.confirmPassword',
+            'acceptsMarketing'
         ],
         initialize: function () {
+            var self = this;
             this.editing = {};
+            this.listenTo(this.model, 'change:acceptsMarketing', function () {
+                self.model.syncApiModel();
+                self.model.apiUpdate();
+            });
         },
         startEditName: function () {
             this.editing.name = true;
@@ -56,9 +62,12 @@
         },
         doModelAction: function(action, payload) {
             var self = this;
-            this.model[action](payload).ensure(function () {
-                self.render();
-            }).done();
+            var operation = this.model[action](payload);
+            if (operation.then) {
+                operation.then(function () {
+                    self.render();
+                });
+            }
         },
 
     });

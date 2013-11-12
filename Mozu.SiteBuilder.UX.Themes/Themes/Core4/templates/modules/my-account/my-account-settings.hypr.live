@@ -19,9 +19,19 @@
     <button class="mz-button mz-button-small mz-accountsettings-emailcancel" data-mz-action="cancelEditEmail">{{ labels.cancel }}</button>
     <span class="mz-validationmessage" data-mz-validationmessage-for="primaryBillingContact.email"></span>
     {% else %}
-    <p class="mz-accountsettings-displayemail">{{ model.primaryBillingContact.email }}</p>
+    <div class="mz-accountsettings-displayemail">{{ model.primaryBillingContact.email }}</div>
     <!--<button class="mz-button mz-button-small mz-accountsettings-emailedit" data-mz-action="startEditEmail">{{ labels.edit }}</button>-->
     {% endif %}
+</div>
+<div class="mz-accountsettings-section mz-accountsettings-phone">
+  {% if editing.phone %}
+  <input id="account-phone" class="mz-accountsettings-phone" value="{{ model.primaryBillingContact.phoneNumbers.home }}" type="tel" data-mz-value="primaryBillingContact.phoneNumbers.home" />
+  <button class="mz-button mz-button-small mz-accountsettings-phonedone" data-mz-action="finishEditPhone">{{ labels.save }}</button>
+  <button class="mz-button mz-button-small mz-accountsettings-phonecancel" data-mz-action="cancelEditPhone">{{ labels.cancel }}</button>
+  {% else %}
+  <div class="mz-accountsettings-displayphone">{{ model.primaryBillingContact.phoneNumbers.home }}</div>
+  <button class="mz-button mz-button-small mz-accountsettings-phoneedit" data-mz-action="startEditPhone">{{ labels.edit }}</button>
+  {% endif %}
 </div>
 <div class="mz-accountsettings-section mz-accountsettings-password">
     {% if editing.password %}
@@ -53,9 +63,9 @@
   <div class="mz-l-formfieldgroup-row mz-l-formfieldgroup-actions">
     <div class="mz-l-formfieldgroup-cell"></div>
     <div class="mz-l-formfieldgroup-cell">
-        <span class="mz-validationmessage" data-mz-validationmessage-for="user.oldPassword"></span>
-        <span class="mz-validationmessage" data-mz-validationmessage-for="user.password"></span>
-        <span class="mz-validationmessage" data-mz-validationmessage-for="user.confirmPassword"></span>
+        <div class="mz-validationmessage" data-mz-validationmessage-for="user.oldPassword"></div>
+        <div class="mz-validationmessage" data-mz-validationmessage-for="user.password"></div>
+        <div class="mz-validationmessage" data-mz-validationmessage-for="user.confirmPassword"></div>
         <button class="mz-button mz-button-small mz-accountsettings-passworddone" data-mz-action="finishEditPassword">{{ labels.save }}</button>
         <button class="mz-button mz-button-small mz-accountsettings-passwordcancel" data-mz-action="cancelEditPassword">{{ labels.cancel }}</button>
     </div>
@@ -65,19 +75,9 @@
     <button class="mz-button mz-button-small mz-accountsettings-passwordedit" data-mz-action="startEditPassword">{{ labels.changePassword }}</button>
     {% endif %}
 </div>
-<div class="mz-accountsettings-section mz-accountsettings-phone">
-    {% if editing.phone %}
-    <input id="account-phone" class="mz-accountsettings-phone" type="tel" data-mz-value="primaryBillingContact.phoneNumbers.home" />
-    <button class="mz-button mz-button-small mz-accountsettings-phonedone" data-mz-action="finishEditPhone">{{ labels.save }}</button>
-    <button class="mz-button mz-button-small mz-accountsettings-phonecancel" data-mz-action="cancelEditPhone">{{ labels.cancel }}</button>
-    {% else %}
-    <p class="mz-accountsettings-displayphone">{{ model.primaryBillingContact.phoneNumbers.home }}</p>
-    <button class="mz-button mz-button-small mz-accountsettings-phoneedit" data-mz-action="startEditPhone">{{ labels.edit }}</button>
-    {% endif %}
-</div>
-<div class="mz-accountsettings-section mz-accountsettings-optin">
-    <input type="checkbox" id="account-optin" data-mz-value="optIn" {% if model.optIn %}checked="checked"{% endif %} />
-    <label for="account-optin">{{ labels.accountOptIn }}</label>
+<div class="mz-accountsettings-section mz-accountsettings-acceptsmarketing">
+    <input type="checkbox" id="account-acceptsmarketing" data-mz-value="acceptsMarketing" {% if model.acceptsMarketing %}checked="checked"{% endif %} />
+    <label for="account-acceptsmarketing">{{ labels.accountOptIn }}</label>
 </div>
 <div class="mz-accountsettings-section mz-accountsettings-openorders">
     <h3 class="mz-accountsettings-sectionheader">{{ labels.openOrders }} <a href="#history">{{ labels.viewOrderHistory }}</a></h4>
