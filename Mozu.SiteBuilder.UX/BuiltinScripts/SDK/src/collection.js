@@ -89,10 +89,19 @@ var ApiCollection = (function () {
     });
 
     ApiCollectionConstructor.types = {};
+    ApiCollectionConstructor.hydratedTypes = {};
+
+    ApiCollectionConstructor.getHydratedType = ApiObject.getHydratedType;
 
     ApiCollectionConstructor.create = function (type, data, api, itemType) {
         return new (type in this.types ? this.types[type] : this)(type, data, api, itemType);
     }
+
+    ApiCollectionConstructor.create = function (typeName, rawJSON, api, itemType) {
+        var ApiCollectionType = this.getHydratedType(typeName);
+
+        return new ApiCollectionType(typeName, rawJSON, api, itemType);
+    };
 
     return ApiCollectionConstructor;
 

@@ -35,6 +35,13 @@ var ApiReference = (function () {
                 if (a && objectTypes[typeName].hasOwnProperty(a) && !reservedWords[a])
                     actions.push(utils.camelCase(a));
             }
+            var declaredType = (objectTypes[typeName].collectionOf ? ApiCollection : ApiObject).types[typeName];
+            if (declaredType) {
+                for (a in declaredType) {
+                    if (!(utils.dashCase(a) in objectTypes[typeName]) && typeof declaredType[a] === "function") actions.push(a);
+                }
+            }
+
             return actions;
         },
 
@@ -288,7 +295,18 @@ var ApiReference = (function () {
                 template: '{+orderService}?filter=CustomerAccountId eq "{id}" and OrderNumber ne null',
                 includeSelf: true,
                 returnType: 'orders'
+            },
+            'get-cards': {
+                template: '{+customerService}{id}/cards',
+                includeSelf: true,
+                returnType: 'accountcards'
+            },
+            'add-card': {
+                template: '{+customerService}{id}/cards',
+                includeSelf: true,
+                returnType: 'accountcard'
             }
+            
         },
         contact: {
             template: '{+customerService}{accountId}/contacts/{id}'
@@ -385,6 +403,12 @@ var ApiReference = (function () {
                 includeSelf: true
             }
         },
+        'accountcard': {
+            template: '{+customerService}{id}/cards'
+        },
+        'accountcards': {
+            collectionOf: 'accountcard'
+        },
         'creditcard': {
             defaults: {
                 useIframeTransport: '{+paymentService}../../Assets/mozu_receiver.html'
@@ -399,6 +423,9 @@ var ApiReference = (function () {
                 template: '{+paymentService}{cardId}',
                 returnType: 'string'
             }
+        },
+        'creditcards': {
+            collectionOf: 'creditcard'
         },
         'ordernote': {
             template: '{+orderService}{orderId}/notes/{id}'

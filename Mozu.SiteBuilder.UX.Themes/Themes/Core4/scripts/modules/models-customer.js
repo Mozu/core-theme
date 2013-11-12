@@ -1,4 +1,4 @@
-﻿define(['modules/backbone-mozu', 'modules/models-address', 'modules/models-user', 'hyprlive'], function (Backbone, AddressModels, UserModels, Hypr) {
+﻿define(['modules/backbone-mozu', 'modules/models-address', 'modules/models-user', 'modules/models-orders', 'modules/models-paymentmethods', 'hyprlive'], function (Backbone, AddressModels, UserModels, OrderModels, PaymentMethods, Hypr) {
 
     var CustomerContact = Backbone.MozuModel.extend({
         mozuType: 'contact',
@@ -32,6 +32,11 @@
             contacts: Backbone.Collection.extend({
                 model: CustomerContact
             }),
+            cards: Backbone.Collection.extend({
+                model: PaymentMethods.CreditCard
+            }),
+            editingCard: PaymentMethods.CreditCard, 
+            orderHistory: OrderModels.OrderCollection,
             primaryBillingContact: CustomerContact
         },
         validation: {
@@ -77,6 +82,19 @@
             return user.changePassword().ensure(function () {
                 self.validateUser = false;
                 self.isLoading(false);
+            });
+        },
+        beginEditCard: function(id) {
+            var toEdit = this.get('cards').get(id);
+            if (toEdit)
+                this.set('editingCard', toEdit);
+        },
+        addCard: function () {
+            var self = this;
+            return this.apiModel.addPaymentCard(this.get('editingCard').toJSON()).then(function () {
+                return self.getCards();
+            }).then(function () {
+                return self.unset('editingCard');
             });
         }
     });

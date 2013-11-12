@@ -468,17 +468,17 @@
 
             });
 
-            it("should have an actions method that peforms common actions for the object type", function () {
+            it("should have methods that peforms common actions for the object type", function () {
 
                 return Mozu.Utils.when.all([api.get('product', Fixtures.SampleProductCode).then(function (product) {
-                    expect(product).to.respondTo('action');
-                    return product.action('addToCart').then(function (cartitem) {
+                    expect(product).to.respondTo('addToCart');
+                    return product.addToCart().then(function (cartitem) {
                         expect(cartitem).to.have.property('data').that.is.deep.equal(Fixtures.SampleCartItem);
                     });
                 }),
                 api.get('cart').then(function (cart) {
-                    expect(cart).to.respondTo('action');
-                    return cart.action('empty').then(function (emptycart) {
+                    expect(cart).to.respondTo('empty');
+                    return cart.empty().then(function (emptycart) {
                         expect(emptycart).to.have.property('data').that.is.deep.equal(Fixtures.EmptyCart);
                     });
                 })]);
@@ -497,7 +497,7 @@
                     actionName = "addToCart",
                     onAction = sinon.spy();
                 product.on('action', onAction);
-                product.action('addToCart');
+                product.addToCart();
                 expect(onAction).to.have.been.calledWith(actionName);
             });
 
@@ -514,7 +514,7 @@
                 var product = api.createSync('product', { productCode: Fixtures.SampleProductCode }),
                     onSpawn = sinon.spy();
                 product.on('spawn', onSpawn);
-                return product.action('addToCart').then(function (cartItem) {
+                return product.addToCart().then(function (cartItem) {
                     expect(onSpawn).to.have.been.calledWith(cartItem);
                 });
             });
@@ -526,7 +526,7 @@
                 actionName = "addToCart",
                 onAction = sinon.spy();
             product.api.on('action', onAction);
-            product.action('addToCart');
+            product.addToCart();
             expect(onAction).to.have.been.calledWith(product, actionName);
         });
 
