@@ -493,6 +493,7 @@
     <Content Include="BuiltinScripts\SDK\src\reference.js" />
     <Content Include="BuiltinScripts\SDK\src\utils.js" />
     <Content Include="BuiltinScripts\SDK\tests\SDKSpec.js" />
+    <Content Include="Resources\Cms\layout.css" />
     <Content Include="SetParameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
