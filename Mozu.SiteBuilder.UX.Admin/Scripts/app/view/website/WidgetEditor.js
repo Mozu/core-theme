@@ -13,14 +13,18 @@ Ext.define('Taco.view.website.WidgetEditor', {
     initComponent: function () {
         var me = this;
 
-        this.form = Ext.create('Taco.core.ux.form.Form', {
-            defaults: {
-                xtype: 'textfield'
-            },
-            items: this.editViewFields || []
-        });
+        if (!this.form) {
+            this.form = Ext.create('Taco.core.ux.form.Form', {
+                defaults: {
+                    xtype: 'textfield'
+                },
+                items: this.editViewFields || []
+            });
+        }
+        if (Ext.isEmpty(this.items)) {
+            this.items = [this.form];
+        }
 
-        this.items = [this.form];
         
         this.callParent(arguments);
 

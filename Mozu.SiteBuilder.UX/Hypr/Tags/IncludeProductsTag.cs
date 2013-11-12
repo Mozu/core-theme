@@ -82,7 +82,7 @@ The include_products tag is a special kind of include tag, that includes a named
                 }
                 else
                 {
-                    searchQuery.Append(string.Join(" or ", productCodes));
+                    searchQuery.Append(string.Join(" or ", productCodesFilters));
                 }
             }
             else

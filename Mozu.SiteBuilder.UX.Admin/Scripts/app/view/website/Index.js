@@ -13,7 +13,8 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.website.entityAdapters.DocumentEntityAdapter',
         'Taco.view.website.entityAdapters.CategoryEntityAdapter',
         'Taco.view.website.entityAdapters.ProductEntityAdapter',
-        'Taco.view.website.WidgetEditor'
+        'Taco.view.website.WidgetEditor',
+        'Taco.view.website.widgetEditors.HorizontalRule'
     ],
 
     options: {},
@@ -57,7 +58,18 @@ Ext.define('Taco.view.website.Index', {
             xtype: 'checkboxfield',
             boxLabel: 'View dropzones',
             margin: '0 0 0 25',
-            flex: 1
+            flex: 1,
+            handler: function (checkbox, checked) {
+                this.showDropZones = checked;
+                if (checked) {
+                    this.chorizoEditor.showDropZones();
+                } else {
+                    this.chorizoEditor.hideDropZones();
+                }
+                
+                
+            }
+            
         }, {
             xtype: 'button',
             ui: 'action',
@@ -65,9 +77,8 @@ Ext.define('Taco.view.website.Index', {
             text: 'Widgets',
             margin: '0 0 0 10',
             handler: function() {
-                console.log(this.$className);
                 this.chorizoEditor.widgets().toggle();
-            }
+             }
         }, {
             xtype: 'button',
             ui: 'action',
@@ -78,7 +89,12 @@ Ext.define('Taco.view.website.Index', {
                 plain: true,
                 shadow: false,
                 items: [{
-                    text: 'thom'
+                    text: 'preview',
+                    handler: function (menuItem) {
+                        //scope is set to index on all action buttons by container.
+                        var url = menuItem.up('button').scope.url;
+                        window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent(url), 'taco-preview');
+                    }
                 }]
             }
         }, {
@@ -105,7 +121,7 @@ Ext.define('Taco.view.website.Index', {
         this.widgetDefinitions = Taco.core.data.StoreManager.getOrCreate("Taco.store.WidgetDefinitions");
 
         store = Taco.core.data.StoreManager.getOrCreate('Taco.store.NavigationTreeNodes');
-
+        this.url = this.options && this.options.startUrl ? this.options.startUrl : '/';
         items = [{
             xtype: 'panel',
             itemId: 'editorCardPanel',
@@ -126,7 +142,7 @@ Ext.define('Taco.view.website.Index', {
                     items: [{
                         itemId: 'iframe',
                         xtype: 'uxiframe',
-                        src: '/_gosite/' + Taco.app.context.getSiteId() + '?environment=editing&redir=' + encodeURIComponent(Ext.String.urlAppend(this.options && this.options.startUrl ? this.options.startUrl : '/', 'iseditmode=true'))
+                        src: '/_gosite/' + Taco.app.context.getSiteId() + '?environment=editing&redir=' + encodeURIComponent(Ext.String.urlAppend(this.url, 'iseditmode=true'))
                     }]
                 }, {
                     xtype: 'panel',
@@ -231,6 +247,7 @@ Ext.define('Taco.view.website.Index', {
     },
 
     navigate: function (config) {
+        this.url = config.url;
         this.iframe.getWin().location.href = Ext.String.urlAppend(config.url, 'iseditmode=true');
         Taco.core.StateManager.addState('website/page' + config.url);
     },
@@ -249,8 +266,17 @@ Ext.define('Taco.view.website.Index', {
 
         this.chorizoEditor = editor;
         
+        
+        if (this.showDropZones ) {
+            this.chorizoEditor.showDropZones();
+        } else {
+            this.chorizoEditor.hideDropZones();
+        }
+        
         this.pageSettings.removeAll(true);
         
+
+
         this.entitypeTypeHandler  = Ext.create(this.entityTypeEditConfig[pc.pageType || "default"] || this.entityTypeEditConfig["default"], {
             editor: editor,
             pageContext:pc,
@@ -303,8 +329,8 @@ Ext.define('Taco.view.website.Index', {
 
         cfg.config = def.get('defaultConfig');
 
-        if (!Ext.isEmpty(def.get('editViewFields')) || !Ext.isEmpty(def.get('editViewConfig'))) {
-            Ext.create('Taco.view.website.WidgetEditor', {
+        if (!Ext.isEmpty(def.get('editViewFields')) || !Ext.isEmpty(def.get('editViewConfig')) || !Ext.isEmpty(def.get('editView'))) {
+            Ext.widget(def.get('editView') || 'taco-widgeteditor', {
                 editViewFields: def.get('editViewFields'),
                 editViewConfig: def.get('editViewConfig'),
                 widgetData: cfg.config,
@@ -362,8 +388,8 @@ Ext.define('Taco.view.website.Index', {
 
 
 
-        if (!Ext.isEmpty(def.get('editViewFields')) || !Ext.isEmpty(def.get('editViewConfig'))) {
-            Ext.create('Taco.view.website.WidgetEditor', {
+        if (!Ext.isEmpty(def.get('editViewFields')) || !Ext.isEmpty(def.get('editViewConfig')) || !Ext.isEmpty(def.get('editView'))) {
+            Ext.widget(def.get('editView') || 'taco-widgeteditor', {
                 editViewFields: def.get('editViewFields'),
                 editViewConfig: def.get('editViewConfig'),
                 widgetData: cfg.data.config,

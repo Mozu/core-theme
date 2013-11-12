@@ -170,11 +170,16 @@
          "id": "featured_product",
          "displayName": "Featured Products",
          "displayTemplate": "catalog/featuredproducts",
+	      "editViewFields":[
+            {
+                "name":"productCodes",
+                "fieldLabel":"products",
+                "xtype":"taco-productfield",
+                anchor    : '100%'
+            }
+         ],
          "icon": "/resources/admin/widgets/_0007_featured-products.png",
-         "editView": "Taco.view.site.widget.FeaturedProducts",
-        
-         "editViewConfig": "{listeners:{afterRender:function() {console.log('test of the editviewConfig system');}}}",
-         "properties": []
+         
     }, 
     {
         "id": "content",
@@ -206,7 +211,7 @@
         "displayName": "Horizontal Rule",
         "displayTemplate": "cms/horizontalrule",
         "icon": "/resources/admin/widgets/_0005_horizontal-divider.png",
-        "editView": "Taco.view.site.widget.HorizontalRule",
+        "editView": "taco-horizontalrule-widgeteditor",
         "defaultConfig": {
             "hrBorderWidth": "1px",
             "hrBorderColor": "#000",
@@ -214,13 +219,63 @@
             "hrMarginTop": "None",
             "hrMarginBottom": "None"
         }
+    },
+      {
+      "id": "html",
+      "displayName": "HTML",
+      "displayTemplate": "cms/content",
+      "icon": "/resources/admin/widgets/_0004_html.png",
+      "editViewFields": [{
+			xtype     : 'textareafield',
+			grow      : true,
+			name      : 'body',
+			fieldLabel: 'HTML',
+			anchor    : '100%'
+		}],
+		"defaultConfig": {
+			"body": "<h2>Insert Markup</h2>"
+		}
     }, 
-    {
-        "id": "addthis",
-        "displayName": "AddThis",
-        "displayTemplate": "social/addthis",
-        "editView": "Taco.view.site.widget.AddThis",
-        "properties": [],
+  {
+      "id": "addthis",
+      "displayName": "AddThis",
+      "displayTemplate": "social/addthis",
+      "editViewFields": [{
+              "xtype": "fieldcontainer",
+              "fieldLabel": "Style",
+              "defaultType": "radiofield",
+              "defaults": {
+                  "flex": 1
+              },
+              "layout": "vbox",
+              "items": [{
+                      "boxLabel": "16 pixel icons",
+                      "name": "style",
+                      "inputValue": "1",
+                      "id": "style1"
+                  }, {
+                      "boxLabel": "32 pixel icons",
+                      "name": "style",
+                      "inputValue": "2",
+                      "id": "style2"
+                  }, {
+                      "boxLabel": "16 pixel icons with counts",
+                      "name": "style",
+                      "inputValue": "3",
+                      "id": "style3"
+                  }]
+          }, {
+              "xtype": "box",
+              "html": "Register with <a target=\"_blank\" href=\"https://www.addthis.com\">AddThis</a> for a free in-depth analytics reports and better understand your site's social traffic."
+          }, {
+              "xtype": "textfield",
+              "name": "profileId",
+              "fieldLabel": "AddThis<br/> profile ID",
+              "allowBlank": true
+          }],
+		"defaultConfig": {
+          "style": 1
+		},
         "category": "social",
         "icon": "/resources/admin/widgets/_0008_share.png"
     }, 
@@ -229,9 +284,45 @@
         "displayName": "Facebook Comments",
         "displayTemplate": "social/facebookComments",
         "icon": "/resources/admin/widgets/_0008_share.png",
-        "editView": "Taco.view.site.widget.FacebookComments",
-        "minWidth": 400,
-        "properties": [],
+        "editViewFields":[
+			{
+				"xtype": "slider",
+				"fieldLabel": "Number of posts to display",
+				"labelSeparator": "",
+				"labelAlign": "top",
+				"name": "count",
+				"value": 2,
+				"width": 250,
+				"increment": 1,
+				"minValue": 1,
+				"maxValue": 10
+			},
+			{
+				"xtype": "fieldcontainer",
+				"fieldLabel": "Color scheme",
+				"labelSeparator": "",
+				"labelAlign": "top",
+				"defaultType": "radiofield",
+				"defaults": {
+					"flex": 1,
+					"name": "theme"
+				},
+				"items": [
+					{
+						"boxLabel": "Light",
+						"inputValue": "light"
+					},
+					{
+						"boxLabel": "Dark",
+						"inputValue": "dark"
+					}
+				]
+			}
+		],
+        "defaultConfig": {
+            "count": 5,
+            "theme": "light"
+        },
         "category": "social"
     }
  ]

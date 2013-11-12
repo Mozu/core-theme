@@ -718,6 +718,9 @@
     <Content Include="Scripts\app\view\website\settings\Templates.js" />
     <Content Include="Scripts\app\view\website\Tree.js" />
     <Content Include="Scripts\app\view\website\Index.js" />
+    <Content Include="Scripts\app\view\website\widgetEditors\AddThis.js" />
+    <Content Include="Scripts\app\view\website\widgetEditors\FeaturedProducts.js" />
+    <Content Include="Scripts\app\view\website\widgetEditors\HorizontalRule.js" />
     <Content Include="Scripts\build\all-classes.js" />
     <Content Include="Scripts\build\fonts\journal-webfont.eot" />
     <Content Include="Scripts\build\fonts\journal-webfont.ttf" />
