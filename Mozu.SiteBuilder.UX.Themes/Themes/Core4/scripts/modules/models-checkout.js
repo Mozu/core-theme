@@ -84,7 +84,7 @@
                 }
 
                 var addr = this.get('address');
-                addr.apiModel.action('validateAddress').then(function (resp) {
+               addr.apiModel.validateAddress().then(function (resp) {
                     if (resp.data && resp.data.addressCandidates && resp.data.addressCandidates.length) {
                         var valAddr = resp.data.addressCandidates[0];
 
