@@ -10,7 +10,7 @@
 
     Ext.define('Taco.store.States', {
         extend: 'Ext.data.Store',
-        fields: ['Value', 'Code'],
+        fields: ['value', 'code'],
         pageSize: 100,
         remoteSort: false,
         remoteFilter: false,

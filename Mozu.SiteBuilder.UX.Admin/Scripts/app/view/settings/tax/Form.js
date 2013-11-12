@@ -19,6 +19,7 @@ Ext.define('Taco.view.settings.tax.Form', {
         
         this.statesStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.States');
         this.stores = [this.taxStore];
+        window.statesStore = this.statesStore;
         
         this.taxFreeCheck = Ext.create('Ext.form.field.Checkbox', {
             boxLabel: 'Tax Exempt',
@@ -32,8 +33,8 @@ Ext.define('Taco.view.settings.tax.Form', {
             fieldLabel: 'Choose State' ,
             store: this.statesStore,
             queryMode: 'local',
-            displayField: 'Value',
-            valueField: 'Code'
+            displayField: 'value',
+            valueField: 'code'
         });
 
         this.taxFreeCheck = Ext.create('Ext.form.field.Checkbox', {
