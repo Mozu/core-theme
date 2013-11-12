@@ -13,8 +13,9 @@ Ext.define('Taco.view.settings.tax.Form', {
     initComponent: function() {
 
 
-        this.taxStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.TaxRates');        
-        this.taxStore.addListener('load', this.loadState, this);
+        this.taxStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.TaxRates');
+        // Leaving this code in here, so we can change it back quickly.......
+       // this.taxStore.addListener('load', this.loadState, this);
         
         this.statesStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.States');
         this.stores = [this.taxStore];
