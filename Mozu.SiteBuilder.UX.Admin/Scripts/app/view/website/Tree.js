@@ -70,6 +70,34 @@ Ext.define('Taco.view.website.Tree', {
                 fn: 'showCreator'
             }
         });
+
+        this.mon(this.getView(), {
+            nodedragover: {
+                scope: this,
+                fn: function (targetNode, position, dragData, e) {
+                    var roots = ['_unlinked', '_navigation', '_templates'],
+                        sourceId = dragData.records[0].getId(),
+                        targetId = targetNode.getId(),
+                        isValid = true;
+
+                    if (targetId === '_templates' || targetId.substr(0, 9) === 'templates') {
+                        // cannot drop anything onto templates
+                        isValid = false;
+                    } else if (position === 'before' && Ext.Array.contains(roots, targetId)) {
+                        // cannot drop anything as a sibling of a "root" node
+                        isValid = false;
+                    } else if (Ext.Array.contains(roots, sourceId)) {
+                        // cannot drop "root" nodes onto anything
+                        isValid = false;
+                    } else if (sourceId.substr(0, 8) === 'category') {
+                        // cannot drop a category into the Single Pages collection
+                        isValid = !(targetId === '_unlinked' || targetId.substr(0, 11) === 'page^^pages');
+                    }
+
+                    return isValid;
+                }
+            }
+        });
     },
 
     getMenuItems: function (record, scope) {
