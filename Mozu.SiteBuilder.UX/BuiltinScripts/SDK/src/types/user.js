@@ -2,7 +2,7 @@
     postconstruct: function () {
         var self = this;
         this.on('sync', function (json) {
-            if (json.authTicket && json.authTicket.accessToken) {
+            if (json && json.authTicket && json.authTicket.accessToken) {
                 self.api.context.UserClaims(json.authTicket.accessToken);
                 self.api.fire('login', json.authTicket);
             }

@@ -11,18 +11,21 @@
 
 .mz-button {
     .border-radius(4px);
-    background: #eee;
+    background-color: #eee;
+    background-image: url('/resources/images/button-loading.gif');
+    background-repeat: no-repeat;
+    background-position: -9999px -9999px;
     padding: @gutter/4 @gutter/2;
     min-width: 64px;
     &:hover {
-        background: #e3e3e3;
+        background-color: #e3e3e3;
     }
     &:active {
         .box-shadow(~"inset 0 0 4px #999)");
         .box-shadow(~"inset 0 0 4px rgba(0,0,0,0.3)");
     }
     &[disabled] {
-        background: #eee;
+        background-color: #eee;
         border-color: #eee;
         .box-shadow('none');
     }
@@ -36,10 +39,11 @@
     font-size: @fontSizeSmall;
     padding: @gutter/5 @gutter/4;
     min-width: 40px;
+    background-image: url('/resources/images/button-loading-small.gif');
 }
 
 .is-loading .mz-button, .mz-button.is-loading {
-    background: #eee url('/resources/images/button-loading.gif') no-repeat 50% 50%;
+    background-position: 50% 50%;
     border-color: #eee;
     color: transparent;
     animation: loadingthrob 1s linear 0s alternate infinite;

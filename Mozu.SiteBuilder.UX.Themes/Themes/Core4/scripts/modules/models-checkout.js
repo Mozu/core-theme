@@ -167,17 +167,34 @@
                     this.isValid(true) ? 'complete' : 'invalid')
                     : 'new');
             },
+            getPaypalUrls: function() {
+                var base = window.location.href + (window.location.href.indexOf('?') !== -1 ? "&" : "?");
+                return {
+                    paypalReturnUrl: base + "PaypalExpress=complete",
+                    paypalCancelUrl: base + "PaypalExpress=canceled"
+                }
+            },
             submit: function () {
                 var self = this, order = self.getOrder();
                 if (self.validate()) return false;
+                if (this.get("paymentType") === "PaypalExpress") {
+                    this.set(this.getPaypalUrls());
+                } else {
+                    this.unset(this.getPaypalUrls());
+                }
+                this.syncApiModel();
                 order.syncApiModel();
+                this.isLoading(true);
                 order.apiModel.addPayment().then(function () {
-                    self.stepStatus("complete");
-                    order.isReady(true);
+                    var payment = order.apiModel.getActivePayment();
+                    if (!payment.paymentType === "PaypalExpress") {
+                        self.stepStatus("complete");
+                        self.isLoading(false);
+                        order.isReady(true);
+                    }
                 }, function () {
-                    self.stepStatus("invalid");
-                }).ensure(function () {
                     self.isLoading(false);
+                    self.stepStatus("invalid");
                 }).done();
             }
         });
@@ -224,10 +241,20 @@
             dataTypes: {
                 createAccount: Backbone.MozuModel.DataTypes.Boolean
             },
-            initialize: function() {
-                this.on('change:createAccount', function (me, yes) {
-                    me.validateUser = yes;
-                    if (!yes) me.unset("User");
+            unsetUserIfNoCreateAccount: function(self, yes) {
+                self.validateUser = yes;
+                if (!yes) self.unset("user");
+            },
+            initialize: function () {
+                this.on('change:createAccount', this.unsetUserIfNoCreateAccount);
+                var self = this;
+                _.defer(function () {
+                    self.unsetUserIfNoCreateAccount(self, self.get('createAccount'));
+                    var payment = self.apiModel.getActivePayment();
+                    if (payment) {
+                        if (payment.paymentType === "Check") self.isReady(true);
+                        if (payment.paymentType === "PaypalExpress" && window.location.href.indexOf('PaypalExpress=complete') !== -1) self.isReady(true);
+                    }
                 });
             },
             addCoupon: function () {
@@ -240,10 +267,10 @@
                     me.isLoading(false);
                 });
             },
-            onCheckoutSuccess: function (completedOrder) {
+            onCheckoutSuccess: function () {
                 var order = this,
                     user = order.get('user');
-                if (user) {
+                if (order.get('createAccount') && user) {
                     $.post('/user/login', {
                         email: user.get('emailAddress'),
                         password: user.get("password")
@@ -257,7 +284,7 @@
             onCheckoutError: function (error) {
                 var order = this;
                 order.isLoading(false);
-                if (!error) error = {
+                if (!error || !error.items) error = {
                     items: [
                         {
                             message: Hypr.getLabel('unknownError')
@@ -292,25 +319,25 @@
                 if (order.get('shopperNotes').has('comments')) process.push(function() {
                     return order.update();
                 });
-                process.push(function() {
-                    var availableActions = order.get("availableActions");
-                    if (_.indexOf(availableActions, 'SubmitOrder') !== -1)
-                        return order.apiPerformOrderAction('SubmitOrder');
-                    if (_.indexOf(availableActions, 'CancelOrder') !== -1)
-                        // that's the best way we have of knowing that the order is submitted, currently
-                        return order.onCheckoutSuccess(order.apiModel.data);
+                process.push(function(error) {
+                    if (order.apiModel.isReadyForSubmit()) {
+                        return order.apiModel.submitOrder();
+                    }
+                    if (order.apiModel.isComplete()) {
+                        return order.onCheckoutSuccess();
+                    }
+                    return order.onCheckoutError(error);
                 });
 
-                api.steps(process).then(function (completedOrder) {
-                    order.isLoading(false);
-                    if (completedOrder && completedOrder.prop("status") === "Submitted") {
-                        order.onCheckoutSuccess(completedOrder.data);
+                api.steps(process).then(function (error) {
+                    if (order.apiModel.isComplete()) {
+                        order.onCheckoutSuccess();
                     } else {
-                        order.onCheckoutError(completedOrder);
+                        order.onCheckoutError(error);
                     }
                 }, function (error) {
                     order.onCheckoutError(error);
-                });
+                }).done();
             },
             update: function() {
                 return this.apiModel.update(this.toJSON());

@@ -175,6 +175,16 @@ var ApiReference = (function () {
         'customers': {
             collectionOf: 'customer'
         },
+
+        'orders': {
+            template: '{+orderService}' + genericQueryTpt,
+            shortcutParam: 'filter',
+            defaultParams: {
+                startIndex: 0,
+                pageSize: 15
+            },
+            collectionOf: 'order',
+        },
         'product': {
             get: {
                 template: '{+productService}{productCode}?{&allowInactive*}',
@@ -256,7 +266,7 @@ var ApiReference = (function () {
             'change-password': {
                 verb: 'POST',
                 includeSelf: true,
-                template: '{+userService}{id}/changepassword'
+                template: '{+userService}{userId}/changepassword'
             },
             'get-customers': {
                 template: '{+customerService}?fields=UserId+eq+{userId}',
@@ -267,8 +277,21 @@ var ApiReference = (function () {
         },
         customer: {
             template: '{+customerService}{id}',
-            shortcutParam: 'Id',
-            includeSelf: true
+            shortcutParam: 'id',
+            includeSelf: true,
+            'get-open-orders': {
+                template: '{+orderService}filter=Status ne "Created" and CustomerAccoundId eq "{id}" and OrderNumber ne null',
+                includeSelf: true,
+                returnType: 'orders'
+            },
+            'get-orders': {
+                template: '{+orderService}filter=CustomerAccoundId eq "{id}" and OrderNumber ne null',
+                includeSelf: true,
+                returnType: 'orders'
+            }
+        },
+        contact: {
+            template: '{+customerService}{accountId}/contacts/{id}'
         },
         'login': '{+userService}login',
         'address': {

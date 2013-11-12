@@ -933,7 +933,9 @@
     <Content Include="Themes\Core4\labels\en-US.json" />
     <Content Include="Themes\Core4\templates\pages\WidgetTEsting\test.hypr" />
     <Content Include="Themes\Core4\templates\modules\my-account\my-account-nav.hypr" />
-    <Content Include="Themes\Core4\templates\modules\my-account\my-account-settings.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\my-account\my-account-settings.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Themes\Core4\templates\modules\my-account\my-account-wishlist.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\my-account\my-account-orderhistory.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\my-account\my-account-paymentmethods.hypr.live" />

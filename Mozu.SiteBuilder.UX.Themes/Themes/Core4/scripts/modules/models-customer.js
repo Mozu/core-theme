@@ -33,9 +33,21 @@
             }),
             primaryBillingContact: CustomerContact
         },
+        validation: {
+            'user.password': {
+                fn: function(value) {
+                    if (this.validateUser && !value) return Hypr.getLabel('passwordMissing')
+                }
+            },
+            'user.confirmPassword': {
+                fn: function(value) {
+                    if (this.validateUser && value !== this.get('user').get('password')) return Hypr.getLabel('passwordsDoNotMatch')
+                }
+            },
+        },
         initialize: function() {
             var primaryBillingContact = this.getPrimaryBillingContact();
-            if (primaryBillingContact && primaryBillingContact instanceof Backbone.Model) this.set('primaryBillingContact', primaryBillingContact.toJSON());
+            if (primaryBillingContact && primaryBillingContact instanceof CustomerContact) this.set('primaryBillingContact', primaryBillingContact, { useExistingInstances: true });
         },
         toJSON: function(options) {
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
@@ -49,12 +61,21 @@
                 });
             return pbc || contacts.first();
         },
-        fetch: function () {
+        savePrimaryBillingContact: function () {
+            var self = this;
+            this.isLoading(true);
+            return this.get('primaryBillingContact').apiUpdate().ensure(function () {
+                self.isLoading(false);
+            });
+        },
+        changePassword: function () {
             var self = this, user = this.get('user');
-            return user.apiModel.action('getCustomers').then(function (customers) {
-                self.apiModel.prop(customers[0].data);
-                self.apiModel.fire('sync', customers[0].data, customers[0].data);
-                return self.apiModel;
+            self.validateUser = true;
+            if (this.validate('user.password') || this.validate('user.confirmPassword')) return false;
+            this.isLoading(true);
+            return user.changePassword().ensure(function () {
+                self.validateUser = false;
+                self.isLoading(false);
             });
         }
     });

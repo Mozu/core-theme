@@ -140,6 +140,7 @@ define([
                     }
 
                     if (relation && relation instanceof Model) {
+                        if (options.useExistingInstances && val instanceof this.relations[attr]) return val;
                         relation.set(val);
                         return relation;
                     }

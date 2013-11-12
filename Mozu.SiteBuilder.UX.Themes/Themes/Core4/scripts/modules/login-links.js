@@ -54,7 +54,7 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'hyp
                     $slideboxOuter.css('left', 0);
                 },                displayMessage = function(xhr) {
                     setLoading(false);
-                    $parent.find('[data-mz-role="loginpopover-message"]').html('<span class="mz-validationmessage">' + xhr.responseJSON.Message + '</span>');
+                    $parent.find('[data-mz-role="loginpopover-message"]').html('<span class="mz-validationmessage">' + xhr.responseJSON.message + '</span>');
                 },                login = function () {
                     setLoading(true);
                     $.post('/user/login', {

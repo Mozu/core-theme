@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-11-10
+ * Mozu JavaScript SDK - v0.2.0 - 2013-11-11
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1234,6 +1234,33 @@
                     return MicroEvent;
                 });
             }
+            var CONSTANTS = {
+                BASE_PAYPAL_URL: "https://sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token={0}",
+                PAYMENT_STATUSES: {
+                    NEW: "New"
+                },
+                ORDER_STATUSES: {
+                    ABANDONED: "Abandoned",
+                    ACCEPTED: "Accepted",
+                    CANCELLED: "Cancelled",
+                    COMPLETED: "Completed",
+                    CREATED: "Created",
+                    PENDING_REVIEW: "PendingReview",
+                    PROCESSING: "Processing",
+                    SUBMITTED: "Submitted",
+                    VALIDATED: "Validated"
+                },
+                ORDER_ACTIONS: {
+                    CREATE_ORDER: "CreateOrder",
+                    SUBMIT_ORDER: "SubmitOrder",
+                    ACCEPT_ORDER: "AcceptOrder",
+                    VALIDATE_ORDER: "ValidateOrder",
+                    SET_ORDER_AS_PROCESSING: "SetOrderAsProcessing",
+                    COMPLETE_ORDER: "CompleteOrder",
+                    CANCEL_ORDER: "CancelOrder",
+                    REOPEN_ORDER: "ReopenOrder"
+                }
+            };
             var utils = function() {
                 return {
                     extend: function() {
@@ -1678,6 +1705,15 @@
                     customers: {
                         collectionOf: "customer"
                     },
+                    orders: {
+                        template: "{+orderService}" + genericQueryTpt,
+                        shortcutParam: "filter",
+                        defaultParams: {
+                            startIndex: 0,
+                            pageSize: 15
+                        },
+                        collectionOf: "order"
+                    },
                     product: {
                         get: {
                             template: "{+productService}{productCode}?{&allowInactive*}",
@@ -1759,7 +1795,7 @@
                         "change-password": {
                             verb: "POST",
                             includeSelf: true,
-                            template: "{+userService}{id}/changepassword"
+                            template: "{+userService}{userId}/changepassword"
                         },
                         "get-customers": {
                             template: "{+customerService}?fields=UserId+eq+{userId}",
@@ -1769,8 +1805,21 @@
                     },
                     customer: {
                         template: "{+customerService}{id}",
-                        shortcutParam: "Id",
-                        includeSelf: true
+                        shortcutParam: "id",
+                        includeSelf: true,
+                        "get-open-orders": {
+                            template: '{+orderService}filter=Status ne "Created" and CustomerAccoundId eq "{id}" and OrderNumber ne null',
+                            includeSelf: true,
+                            returnType: "orders"
+                        },
+                        "get-orders": {
+                            template: '{+orderService}filter=CustomerAccoundId eq "{id}" and OrderNumber ne null',
+                            includeSelf: true,
+                            returnType: "orders"
+                        }
+                    },
+                    contact: {
+                        template: "{+customerService}{accountId}/contacts/{id}"
                     },
                     login: "{+userService}login",
                     address: {
@@ -2155,6 +2204,7 @@
                     }
                 };
             }());
+            ApiObject.types.customer = utils.inherit(ApiObject, function() {}());
             ApiObject.types.login = utils.inherit(ApiObject, {
                 postconstruct: function(type, json) {
                     if (json.authTicket && json.authTicket.accessToken) {
@@ -2166,12 +2216,26 @@
             ApiObject.types.order = utils.inherit(ApiObject, function() {
                 errors.register({
                     BILLING_INFO_MISSING: "Billing info missing.",
-                    PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED: "Payment type missing or unrecognized."
+                    PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED: "Payment type missing or unrecognized.",
+                    PAYMENT_MISSING: "Expected a payment to exist on this order and one did not.",
+                    PAYPAL_TRANSACTION_ID_MISSING: "Expected the active payment to include a paymentServiceTransactionId and it did not."
                 });
+                var OrderStatus2IsComplete = {};
+                OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.SUBMITTED] = true;
+                OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.ACCEPTED] = true;
+                OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.PENDING_REVIEW] = true;
+                var OrderStatus2IsReady = {};
+                OrderStatus2IsReady[CONSTANTS.ORDER_ACTIONS.SUBMIT_ORDER] = true;
                 var PaymentStrategies = {
                     PaypalExpress: function(order, billingInfo) {
-                        return order.createPayment("SetupPaypal").ensure(function(deets) {
-                            console.log(deets);
+                        return order.createPayment({
+                            returnUrl: billingInfo.paypalReturnUrl,
+                            cancelUrl: billingInfo.paypalCancelUrl
+                        }).ensure(function() {
+                            var payment = order.getActivePayment();
+                            if (!payment) errors.throwOnObject(order, "PAYMENT_MISSING");
+                            if (!payment.paymentServiceTransactionId) errors.throwOnObject(order, "PAYPAL_TRANSACTION_ID_MISSING");
+                            window.location = utils.formatString(CONSTANTS.BASE_PAYPAL_URL, payment.paymentServiceTransactionId);
                         });
                     },
                     CreditCard: function(order, billingInfo) {
@@ -2179,11 +2243,11 @@
                         return card.save().then(function(card) {
                             billingInfo.card = card.data;
                             order.prop("billingInfo", billingInfo);
-                            return order.createPayment("CreatePayment");
+                            return order.createPayment();
                         });
                     },
                     Check: function(order, billingInfo) {
-                        return order.createPayment("RequestCheck");
+                        return order.createPayment();
                     }
                 };
                 return {
@@ -2198,19 +2262,38 @@
                             return self.action("setUserId");
                         });
                     },
-                    createPayment: function(actionName) {
-                        return this.action("createPayment", {
-                            actionName: actionName,
-                            currencyCode: this.api.context.Currency(),
+                    createPayment: function(extraProps) {
+                        return this.action("createPayment", utils.extend({
+                            currencyCode: this.api.context.Currency().toUpperCase(),
                             amount: this.prop("total"),
                             newBillingInfo: this.prop("billingInfo")
-                        });
+                        }, extraProps || {}));
                     },
                     addPayment: function(payment) {
                         var billingInfo = this.prop("billingInfo");
                         if (!billingInfo) errors.throwOnObject(this, "BILLING_INFO_MISSING");
                         if (!billingInfo.paymentType || !(billingInfo.paymentType in PaymentStrategies)) errors.throwOnObject(this, "PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED");
                         return PaymentStrategies[billingInfo.paymentType](this, billingInfo);
+                    },
+                    getActivePayment: function() {
+                        var payments = this.prop("payments");
+                        if (payments.length === 0) return null;
+                        for (var i = payments.length - 1; i >= 0; i--) {
+                            if (payments[i].status === CONSTANTS.PAYMENT_STATUSES.NEW) return payments[i];
+                        }
+                    },
+                    isReadyForSubmit: function() {
+                        var availableActions = this.prop("availableActions");
+                        for (var i = availableActions.length - 1; i >= 0; i--) {
+                            if (availableActions[i] in OrderStatus2IsReady) return true;
+                        }
+                        return false;
+                    },
+                    isComplete: function() {
+                        return OrderStatus2IsComplete[this.prop("status")];
+                    },
+                    submitOrder: function() {
+                        return this.action("performOrderAction", CONSTANTS.ORDER_ACTIONS.SUBMIT_ORDER);
                     }
                 };
             }());
@@ -2228,7 +2311,7 @@
                 postconstruct: function() {
                     var self = this;
                     this.on("sync", function(json) {
-                        if (json.authTicket && json.authTicket.accessToken) {
+                        if (json && json.authTicket && json.authTicket.accessToken) {
                             self.api.context.UserClaims(json.authTicket.accessToken);
                             self.api.fire("login", json.authTicket);
                         }

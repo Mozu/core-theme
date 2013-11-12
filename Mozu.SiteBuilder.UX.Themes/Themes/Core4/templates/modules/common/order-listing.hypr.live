@@ -1,6 +1,6 @@
 ﻿<div class="mz-orderlisting">
     <div class="mz-orderlisting-detail">
-        <h3 class="mz-orderlisting-date">{{ model.submittedDate|date('F j, Y') }}</h3>
+        <h3 class="mz-orderlisting-date">{{ model.submittedDate|date("F j, Y") }}</h3>
         <dl class="mz-propertylist">
             <dt>{{ labels.orderNumber }}</dt>
             <dd>{{ model.orderNumber }}</dd>

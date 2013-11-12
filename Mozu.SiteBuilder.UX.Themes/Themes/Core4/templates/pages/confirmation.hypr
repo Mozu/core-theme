@@ -13,7 +13,6 @@
     </h1>
 
 	<h4>{{ labels.confirmationText }}</h4>
-
     <div class="mz-l-stack-section">
     <h2>{{ labels.orderDetails }}</h2>
     <dl class="mz-propertylist">
@@ -30,7 +29,12 @@
         <dd>{{ model.billingInfo.card.paymentOrCardType }}</dd>
         <dt>{{ labels.cardNumber }}</dt>
         <dd>{{ model.billingInfo.card.cardNumberPartOrMask }}</dd>
-        {% else %}
+        {% endif %}
+        {% if model.billingInfo.paymentType == "PaypalExpress" %}
+        <dt>{{ labels.paymentType }}</dt>
+        <dd>{{ labels.payPal }}</dd>
+        {% endif %}
+        {% if model.billingInfo.paymentType == "Check" %}
         <dt>{{ labels.checkNumber }}</dt>
         <dd>{{ model.billingInfo.check.checkNumber }}</dd>
         <dt><strong>{{ labels.mailCheckTo }}</strong></dt>
