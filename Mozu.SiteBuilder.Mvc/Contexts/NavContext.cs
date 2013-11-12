@@ -52,7 +52,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 }
                 _initTask = _navigationGandalf.GetTreeNavigation().ContinueWith(_ =>
                     {
-                        __navigationTree = _.Result;
+                        __navigationTree = _.Result ?? new List<NavigationRuntimeNode>();
                     });
                 
             }
