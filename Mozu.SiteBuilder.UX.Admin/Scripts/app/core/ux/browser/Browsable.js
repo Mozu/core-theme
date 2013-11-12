@@ -89,9 +89,6 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         return res;
     },
     initBrowserConfig: function () {
-        // make complex configs stay scoped to the class;
-        this.gridPanelConf = Ext.clone(this.gridPanelConf);
-
 
         if (!this.header) {
             this.header = {};
@@ -105,6 +102,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
             this.rowEditor = Ext.create('Ext.grid.plugin.RowEditing', {
                 clicksToMoveEditor: 1,
                 clicksToEdit: 1,
+                errorSummary: false,
                 listeners: {
                     'edit': {
                         fn: this.onRowEditorUpdate,
