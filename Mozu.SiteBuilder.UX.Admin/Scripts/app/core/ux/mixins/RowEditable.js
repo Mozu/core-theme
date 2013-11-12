@@ -92,8 +92,6 @@ Ext.define('Taco.core.ux.mixins.RowEditable', {
             this.plugins.push(this.rowEditor);
             this.launchEditorOnClick = false;
         }
-
-
     },
     
     onRowEditorUpdate: function (editor, context, opts) {
