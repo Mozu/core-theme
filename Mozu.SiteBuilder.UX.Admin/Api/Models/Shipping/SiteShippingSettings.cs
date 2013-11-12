@@ -8,11 +8,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
     [DataContract]
     public class SiteShippingSettings
     {
-        [DataMember(Name = "activeRateProviders")]
-        public List<Feature> ActiveRateProviders { get; set; }
+        //[DataMember(Name = "activeRateProviders")]
+        //public List<Feature> ActiveRateProviders { get; set; }
 
-        [DataMember(Name = "siteShippingOriginAddress")]
-        public Contact SiteShippingOriginAddress { get; set; }
+        //[DataMember(Name = "siteShippingOriginAddress")]
+        //public Contact SiteShippingOriginAddress { get; set; }
 
         [DataMember(Name = "siteShippingRegions")]
         public List<string> SiteShippingRegions { get; set; }
