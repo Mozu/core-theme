@@ -102,6 +102,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             jAccount.Add("openOrders", Newtonsoft.Json.Linq.JObject.FromObject(openOrders, jSerializer));
 
+            var primaryBillingAccount = account.Contacts.Find(x => x.Types.Exists(y => y.IsPrimary && y.Name == "Billing"));
+            if (primaryBillingAccount == null) primaryBillingAccount = account.Contacts.First();
+
+            jAccount.Add("primaryBillingContact", Newtonsoft.Json.Linq.JObject.FromObject(primaryBillingAccount, jSerializer));
+
             return this.Request.CreateResponse(HttpStatusCode.OK,  View("my-account", jAccount));
         }
 

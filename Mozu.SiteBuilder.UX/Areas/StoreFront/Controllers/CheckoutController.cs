@@ -24,6 +24,7 @@ using Mozu.SiteBuilder.UX.Models.Checkout;
 using Mozu.SiteSettings.Shipping.Contracts.Clients;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using Mozu.CommerceRuntime.Contracts.Orders;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -51,6 +52,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             
             _orderWebApiClient = orderWebApiClient;
             _shippingSettingsWebApiClient = shippingSettingsWebApiClient.CloneWithoutUserClaims();
+
         }
 
         /*public string MerchantId
@@ -64,6 +66,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             return result.Select(x => new KeyValuePair<string, string>(x.ISOCountryCode, x.ISOCountryCode)).ToList();
         }
+
+        private static List<string> CompletedOrderStates = new List<string>{
+            Order.OrderStatusConst.SUBMITTED,
+            Order.OrderStatusConst.ACCEPTED,
+            Order.OrderStatusConst.PENDING_REVIEW
+        };
 
 
         [System.Web.Http.HttpGet]
@@ -93,7 +101,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return Redirect("/cart");
             }
             if (model == null) return Redirect("/cart");
-            if (model.Status == "Submitted") return Redirect("/checkout/" + model.Id + "/confirmation");
+            if (CompletedOrderStates.Contains(model.Status)) return Redirect("/checkout/" + model.Id + "/confirmation");
 
             var jSerializer = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
             var jOrder = Newtonsoft.Json.Linq.JObject.FromObject(model, jSerializer);

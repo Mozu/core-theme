@@ -5,12 +5,30 @@
         display: inline-block;
         margin-right: @gutter/4;
     }
-    .mz-accountsettings-namedone,
-    .mz-accountsettings-namecancel,
-    .mz-accountsettings-emaildone,
-    .mz-accountsettings-emailcancel,
-    .mz-accountsettings-phonedone,
-    .mz-accountsettings-phonecancel {
-        vertical-align: top;
+
+    .mz-accountsettings-displayname {
+        font-size: @fontSizeLarger;
+        margin: 0 @gutter/4 0 0;
+    }
+
+    .mz-accountsettings-name {
+        input, button {
+            vertical-align: middle;
+            margin-bottom: 0;
+        }
+
+        padding-top: @gutter/2;
+        height: @gutter*1.25;
+    }
+
+    .mz-accountsettings-email {
+        padding-top: 0;
+    }
+
+    .mz-accountsettings-firstname,
+    .mz-accountsettings-lastname {
+        width: 80px;
+        font-size: @fontSizeLarger;
+        height: @fontSizeLarger + 4;
     }
 }

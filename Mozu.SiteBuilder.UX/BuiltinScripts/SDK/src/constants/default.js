@@ -1,0 +1,27 @@
+﻿var CONSTANTS = {
+    BASE_PAYPAL_URL: 'https://sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token={0}',
+    PAYMENT_STATUSES: {
+        NEW: "New"
+    },
+    ORDER_STATUSES: {
+        ABANDONED: "Abandoned",
+        ACCEPTED: "Accepted",
+        CANCELLED: "Cancelled",
+        COMPLETED: "Completed",
+        CREATED: "Created",
+        PENDING_REVIEW: "PendingReview",
+        PROCESSING: "Processing",
+        SUBMITTED: "Submitted",
+        VALIDATED: "Validated"
+    },
+    ORDER_ACTIONS: {
+        CREATE_ORDER: "CreateOrder",
+        SUBMIT_ORDER: "SubmitOrder",
+        ACCEPT_ORDER: "AcceptOrder",
+        VALIDATE_ORDER: "ValidateOrder",
+        SET_ORDER_AS_PROCESSING: "SetOrderAsProcessing",
+        COMPLETE_ORDER: "CompleteOrder",
+        CANCEL_ORDER: "CancelOrder",
+        REOPEN_ORDER: "ReopenOrder"
+    }
+};

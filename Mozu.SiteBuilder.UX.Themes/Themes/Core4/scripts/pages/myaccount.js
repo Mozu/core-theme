@@ -2,6 +2,14 @@
     
     var AccountSettingsView = Backbone.MozuView.extend({
         templateName: 'modules/my-account/my-account-settings',
+        autoUpdate: [
+            'primaryBillingContact.firstName',
+            'primaryBillingContact.lastNameOrSurname',
+            'primaryBillingContact.phoneNumbers.home',
+            'user.oldPassword',
+            'user.password',
+            'user.confirmPassword'
+        ],
         initialize: function () {
             this.editing = {};
         },
@@ -9,8 +17,12 @@
             this.editing.name = true;
             this.render();
         },
+        cancelEditName: function() {
+            this.editing.name = false;
+            this.render();
+        },
         finishEditName: function () {
-            this.model.save();
+           this.doModelAction('savePrimaryBillingContact');
             this.editing.name = false;
         },
         startEditPassword: function () {
@@ -18,22 +30,37 @@
             this.render();
         },
         finishEditPassword: function() {
-            this.model.changePassword();
+            this.doModelAction('changePassword');
             this.editing.password = false;
+        },
+        cancelEditPassword: function() {
+            this.editing.password = false;
+            this.render();
         },
         startEditPhone: function() {
             this.editing.phone = true;
             this.render();
         },
         finishEditPhone: function() {
-            this.model.save();
+           this.doModelAction('savePrimaryBillingContact');
+           this.editing.phone = false;
+        },
+        cancelEditPhone: function() {
             this.editing.phone = false;
+            this.render();
         },
         getRenderContext: function () {
             var c = Backbone.MozuView.prototype.getRenderContext.apply(this, arguments);
             c.editing = this.editing;
             return c;
-        }
+        },
+        doModelAction: function(action, payload) {
+            var self = this;
+            this.model[action](payload).ensure(function () {
+                self.render();
+            }).done();
+        },
+
     });
         
     $(document).ready(function () {
@@ -49,7 +76,7 @@
         });
 
 
-        accountSettingsView.render();
+        //accountSettingsView.render();
 
 
     });
