@@ -29,7 +29,7 @@
 Ext.define('Taco.core.ux.mixins.Pageable', {
     requires: ['Taco.core.util.ExceptionWhiner'],
     constructor : function () {
-        this.createGridPager()
+        this.createGridPager();
     },
     createGridPager: function () {
         if (!this.store) {
@@ -41,8 +41,8 @@ Ext.define('Taco.core.ux.mixins.Pageable', {
             store: this.store
         });
 
-        var dockedItems = this.dockedItems || [];
-        dockedItems.push(this.gridPager);
+        this.dockedItems = this.dockedItems || [];
+        this.dockedItems.push(this.gridPager);
 
         return this.gridPager;
     }
