@@ -959,6 +959,7 @@
     <Content Include="Themes\Core4\stylesheets\modules\common\order-listing.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\order-list.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\item-listing.less" />
+    <Content Include="Themes\Core4\stylesheets\pages\category.less" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

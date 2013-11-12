@@ -180,14 +180,15 @@
                 if (this.get("paymentType") === "PaypalExpress") {
                     this.set(this.getPaypalUrls());
                 } else {
-                    this.unset(this.getPaypalUrls());
+                    this.unset('paypalReturnUrl');
+                    this.unset('paypalCancelUrl');
                 }
                 this.syncApiModel();
                 order.syncApiModel();
                 this.isLoading(true);
                 order.apiModel.addPayment().then(function () {
                     var payment = order.apiModel.getActivePayment();
-                    if (!payment.paymentType === "PaypalExpress") {
+                    if (payment.paymentType !== "PaypalExpress") {
                         self.stepStatus("complete");
                         self.isLoading(false);
                         order.isReady(true);

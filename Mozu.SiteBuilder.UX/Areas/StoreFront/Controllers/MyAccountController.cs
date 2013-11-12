@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ using PasswordInfo = Mozu.SiteBuilder.UX.Models.Customers.PasswordInfo;
 using Mozu.Customer.Contracts.Clients;
 using System.Linq;
 using Mozu.Core.Api.Client;
+using Mozu.CommerceRuntime.Contracts.Orders;
 
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -76,6 +78,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _apiContext = apiContext;
         }
 
+
+        private static List<string> OpenOrderStates = new List<string>{
+            Order.OrderStatusConst.SUBMITTED,
+            Order.OrderStatusConst.ACCEPTED,
+            Order.OrderStatusConst.PENDING_REVIEW,
+            Order.OrderStatusConst.PROCESSING
+        };
+
+
         //todo:hyper  remiplement auth att.
        // [SiteBuilderAuthorize()]
         [HttpGet]
@@ -97,9 +108,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             }
 
-            var filter = string.Format("Status ne \"Created\" and CustomerAccountId eq \"{0}\" and OrderNumber ne null", account.Id);
+            var openOrdersSb = new StringBuilder();
+            openOrdersSb.Append(string.Join(" or ", OpenOrderStates.Select(x => string.Format("Status eq \"{0}\"", x))));
+            openOrdersSb.Append(" and CustomerAccountId eq \"");
+            openOrdersSb.Append(account.Id);
+            openOrdersSb.Append("\" and OrderNumber ne null");
+            var openOrdersFilter = openOrdersSb.ToString();
+            var openOrders = await _orderWebApiClient.GetOrders(0, 25, null, openOrdersFilter).Result.ReadAsAsync();
 
-            var openOrders = await _orderWebApiClient.GetOrders(0, 25, null, filter).Result.ReadAsAsync();
+            var orderHistorySb = new StringBuilder();
+            orderHistorySb.Append("CustomerAccountId eq \"");
+            orderHistorySb.Append(account.Id);
+            orderHistorySb.Append("\" and OrderNumber ne null");
+            var orderHistoryFilter = orderHistorySb.ToString();
+            var orderHistory = await _orderWebApiClient.GetOrders(0, 25, null, orderHistoryFilter).Result.ReadAsAsync();
 
             //this.ViewData["Orders"] = orders.Items;
 
@@ -109,6 +131,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var jAccount = Newtonsoft.Json.Linq.JObject.FromObject(account, jSerializer);
 
             jAccount.Add("openOrders", Newtonsoft.Json.Linq.JObject.FromObject(openOrders, jSerializer));
+            jAccount.Add("orderHistory", Newtonsoft.Json.Linq.JObject.FromObject(orderHistory, jSerializer));
 
             var primaryBillingAccount = account.Contacts.Find(x => x.Types.Exists(y => y.IsPrimary && y.Name == "Billing"));
             if (primaryBillingAccount == null) primaryBillingAccount = account.Contacts.First();
