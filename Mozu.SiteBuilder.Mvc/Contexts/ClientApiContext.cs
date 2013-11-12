@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 urls["CmsService"] = settings.AppSettings("service-url-DocumentListWebApi");
                 urls["ReferenceService"] = settings.AppSettings("service-url-ReferenceDataWebApi");
                 urls["PaymentService"] = settings.AppSettings("service-url-StorefrontCardsWebApi");
-                
+                urls["addressValidationService"] = settings.AppSettings("service-url-AddressValidationWebApi");
 
                 if (settings.AppSettings("ReverseProxy") == "true")
                 {
