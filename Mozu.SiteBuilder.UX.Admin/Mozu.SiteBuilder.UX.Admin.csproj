@@ -1018,6 +1018,7 @@
     <Content Include="Scripts\sass\etc\chorizo\_widgets.scss" />
     <Content Include="Scripts\config.rb" />
     <Content Include="Scripts\sass\etc\chorizo\_fonts.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\var\tip\Tip.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\tip\Tip.scss" />
     <Content Include="Scripts\sass\etc\chorizo\layout.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />

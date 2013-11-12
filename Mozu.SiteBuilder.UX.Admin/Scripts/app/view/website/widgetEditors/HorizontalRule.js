@@ -14,19 +14,16 @@ Ext.define('Taco.view.website.widgetEditors.HorizontalRule', {
     alias: 'widget.taco-horizontalrule-widgeteditor',
 
     title: 'Horizontal Rule',
-    // instructionText: 'Customize the horizontal rule with the options below.',
 
     width: 480,
-    // autoSize: false,
 
     initComponent: function () {
         var me = this;
+
         this.form = Ext.create('Taco.core.ux.form.Form', {
             defaults: {
                 xtype: 'combobox',
                 editable: false,
-                labelAlign: 'top',
-                labelSeparator: '',
                 listeners: {
                     change: {
                         fn: me.updatePreview,
@@ -51,14 +48,14 @@ Ext.define('Taco.view.website.widgetEditors.HorizontalRule', {
                 },
                 layout: 'vbox',
                 items: [{
-                    inputValue: 'solid'
-                    , boxLabel: 'solid'
+                    inputValue: 'solid',
+                    boxLabel: 'solid'
                 }, {
-                    inputValue: 'dashed'
-                    , boxLabel: 'dashed'
+                    inputValue: 'dashed',
+                    boxLabel: 'dashed'
                 }, {
-                    inputValue: 'dotted'
-                    , boxLabel: 'dotted'
+                    inputValue: 'dotted',
+                    boxLabel: 'dotted'
                 }]
             }, {
                 fieldLabel: 'Spacing Above',
@@ -87,12 +84,9 @@ Ext.define('Taco.view.website.widgetEditors.HorizontalRule', {
                 }]
             }]
         });
-        
-
-
-        
 
         this.callParent(arguments);
+
         me.mon(
             me.form,
             'afterrender',
@@ -116,16 +110,14 @@ Ext.define('Taco.view.website.widgetEditors.HorizontalRule', {
                 'Large (12px)': '12px'
             };
 
-        if( previewEl ) {
+        if (previewEl) {
             newStyles['border-top-width'] = formValues['hrBorderWidth'];
             newStyles['border-color']     = formValues['hrBorderColor'];
             newStyles['border-style']     = formValues['hrBorderStyle'];
             newStyles['margin-top']       = marginMap[ formValues['hrMarginTop'] ];
             newStyles['margin-bottom']    = marginMap[ formValues['hrMarginBottom'] ];
 
-            previewEl.applyStyles( newStyles );
+            previewEl.applyStyles(newStyles);
         }
-    },
-
-    
+    }
 });

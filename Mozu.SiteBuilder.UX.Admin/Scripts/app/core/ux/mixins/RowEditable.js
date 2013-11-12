@@ -48,6 +48,7 @@ Ext.define('Taco.core.ux.mixins.RowEditable', {
         this.rowEditor = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             clicksToEdit: 1,
+            errorSummary: false,
             listeners: {
                 'edit': {
                     fn: this.onRowEditorUpdate,
