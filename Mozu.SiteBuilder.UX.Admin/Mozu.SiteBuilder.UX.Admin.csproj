@@ -724,6 +724,7 @@
     <Content Include="Scripts\app\view\website\widgetEditors\FeaturedProducts.js" />
     <Content Include="Scripts\app\view\website\widgetEditors\HorizontalRule.js" />
     <Content Include="Scripts\build\all-classes.js" />
+    <Content Include="Scripts\build\chorizo\layout.css" />
     <Content Include="Scripts\build\fonts\journal-webfont.eot" />
     <Content Include="Scripts\build\fonts\journal-webfont.ttf" />
     <Content Include="Scripts\build\fonts\journal-webfont.woff" />
@@ -1018,6 +1019,7 @@
     <Content Include="Scripts\config.rb" />
     <Content Include="Scripts\sass\etc\chorizo\_fonts.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\tip\Tip.scss" />
+    <Content Include="Scripts\sass\etc\chorizo\layout.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
