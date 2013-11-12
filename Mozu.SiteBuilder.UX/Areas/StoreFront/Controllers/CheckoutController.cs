@@ -11,7 +11,8 @@ using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Client;
-
+using Mozu.Location.Contracts.Clients;
+using Mozu.ShippingRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -38,20 +39,25 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ICookieProvider _cookieProvider;
    
         private readonly IOrderWebApiClient _orderWebApiClient;
-        private readonly IShippingSettingsWebApiClient _shippingSettingsWebApiClient;
+        private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
+        private readonly IShippingWebApiClient _shippingWebApiClient;
+        
         private readonly OrderStatusProvider _orderStatusProvider = new OrderStatusProvider();
 
         //private static string _merchantId;
         private const string CookieName = "order";
 
-        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider,  IOrderWebApiClient orderWebApiClient, IShippingSettingsWebApiClient shippingSettingsWebApiClient)
+        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider,  IOrderWebApiClient orderWebApiClient, Mozu.ShippingRuntime.Contracts.Clients.IShippingWebApiClient shippingWebApiClient , Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient )
         {
           
             _authHelper = authHelper;
             _cookieProvider = cookieProvider;
             
             _orderWebApiClient = orderWebApiClient;
-            _shippingSettingsWebApiClient = shippingSettingsWebApiClient.CloneWithoutUserClaims();
+
+            _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
+            _shippingWebApiClient = shippingWebApiClient.CloneWithoutUserClaims();
+           
 
         }
 
@@ -62,9 +68,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         public async Task<List<KeyValuePair<string, string>>> GetShippableCountries()
         {
-            var result =  (await  _shippingSettingsWebApiClient.GetShippingRegions()).ReadAsAsync().Result;
 
-            return result.Select(x => new KeyValuePair<string, string>(x.ISOCountryCode, x.ISOCountryCode)).ToList();
+            var result = (await _shippingWebApiClient.GetShippableCountries()).ReadAsSync().Items;
+
+            var res = result.Select(x => new KeyValuePair<string, string>(x.Name , x.Code )).ToList();
+            if (res.Count == 0)
+            {
+                res.Add( new KeyValuePair<string, string>("us","us"));
+            }
+            return res;
         }
 
         private static List<string> CompletedOrderStates = new List<string>{
@@ -153,10 +165,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [System.Web.Http.HttpGet]
         public async Task<ActionResult>  Confirmation(string orderId)
         {
-            var order = (await _orderWebApiClient.GetOrder(orderId)).ReadAsSync();
+            var locTask = _locationRuntimeWebApiClient.GetDirectShipLocation();
+            var orderTask = _orderWebApiClient.GetOrder(orderId);
+            await Task.WhenAll(locTask, orderTask);
+            var order = orderTask.Result.ReadAsSync();
             if (order == null)
                 return Redirect("/cart");
-            this.ViewData["MailCheckTo"] = (await _shippingSettingsWebApiClient.GetShippingOriginAddress()).ReadAsSync();
+
+
+
+            this.ViewData["MailCheckTo"] = locTask.Result.ReadAsSync();
             return View("confirmation", order);
         }
 

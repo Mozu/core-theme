@@ -144,24 +144,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             
 
-            var customFeature = dc.ActiveRateProviders.FirstOrDefault(x => x.Name == SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.Custom  );
-            if (customFeature!= null )
-            {
-                if (!settings.CustomRate.IsEnabled.GetValueOrDefault( true ))
-                {
-                    dc.ActiveRateProviders.Remove(customFeature);
-                }
-            }
-            else
-            {
-                if (settings.CustomRate.IsEnabled.GetValueOrDefault(true))
-                {
-                    dc.ActiveRateProviders.Add(new Core.Api.Contracts.Feature() 
-                                                   {
-                                                       Name = SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.Custom 
-                                                   });
-                }
-            }
+            //var customFeature = dc.ActiveRateProviders.FirstOrDefault(x => x.Name == SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.Custom  );
+            //if (customFeature!= null )
+            //{
+            //    if (!settings.CustomRate.IsEnabled.GetValueOrDefault( true ))
+            //    {
+            //        dc.ActiveRateProviders.Remove(customFeature);
+            //    }
+            //}
+            //else
+            //{
+            //    if (settings.CustomRate.IsEnabled.GetValueOrDefault(true))
+            //    {
+            //        dc.ActiveRateProviders.Add(new Core.Api.Contracts.Feature() 
+            //                                       {
+            //                                           Name = SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.Custom 
+            //                                       });
+            //    }
+            //}
 
 
             var res = (await _siteShippingSettingsClient.UpdateSiteShippingSettings( dc)).ReadAsSync();
@@ -189,7 +189,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             else
             {
                 var ret = new List<KeyValuePair<string, string>>();
-                foreach (var rp in (await _siteShippingSettingsClient.GetSiteShippingSettings()).ReadAsSync().ActiveRateProviders.Select(x => x.Name))
+                foreach (var rp in Mozu.SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.GetAll() )
                 {
                     var key = FeatureDic.Where(x => string.Equals(x.Value, rp, StringComparison.OrdinalIgnoreCase)).Select(x => x.Key).First();
                     var cConfig = (await _carrierConfigurationGlobalWebApiClient.GetServiceTypes(key, "en-US")).ReadAsSync();
@@ -205,7 +205,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<KeyValuePair<string, string>>>> GetConfiguredRates()
         {
             var res = (await _carrierConfigurationWebApiClient .GetConfigurations(startIndex:0,pageSize:600)).ReadAsSync();
-
+            
             var ret = res.Items.SelectMany( x=> x.ConfiguredServiceTypes ).Select(x => new KeyValuePair<string, string>(x.Code , x.Content != null ? x.Content.Name: x.Code)).ToList();
             return List2(ret);
 

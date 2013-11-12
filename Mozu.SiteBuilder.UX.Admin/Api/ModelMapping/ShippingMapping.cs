@@ -11,7 +11,7 @@ using CustomAttribute = Mozu.ShippingRuntime.Contracts.CustomAttribute;
 using ShippingClass = Mozu.ProductAdmin.Contracts.ShippingClass;
 using ShippingRate = Mozu.ShippingRuntime.Contracts.ShippingRate;
 
-using SiteShippingRegion = Mozu.SiteSettings.Shipping.Contracts.SiteShippingRegion;
+
 using SiteShippingSettings = Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings;
 using Contact = Mozu.SiteBuilder.UX.Admin.Api.Models.Contact;
 
@@ -151,16 +151,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             //Mapper.CreateMap<SiteShippingMethodLocalizedContent, Models.Shipping.SiteShippingMethodLocalizedContent>();
             //Mapper.CreateMap<SiteShippingRegion, Models.Shipping.SiteShippingRegion>();
             Mapper.CreateMap<SiteShippingSettings, Models.Shipping.SiteShippingSettings>()
-                  .ForMember(x => x.ActiveRateProviders, opt => opt.MapFrom(x => x.ActiveRateProviders))
-                  .ForMember(x => x.OrderHandlingFee, opt => opt.MapFrom(x => x.OrderHandlingFee!= null ? x.OrderHandlingFee.Amount : null))
-                  .ForMember(x => x.SiteShippingOriginAddress, opt => opt.MapFrom(x => x.SiteShippingOriginAddress));
+                //.ForMember(x => x.ActiveRateProviders, opt => opt.MapFrom(x => x.ActiveRateProviders))
+                  .ForMember(x => x.OrderHandlingFee, opt => opt.MapFrom(x => x.OrderHandlingFee != null ? x.OrderHandlingFee.Amount : null));
+                //  .ForMember(x => x.SiteShippingOriginAddress, opt => opt.MapFrom(x => x.SiteShippingOriginAddress));
 
             Mapper.CreateMap<Models.Shipping.SiteShippingSettings, SiteShippingSettings>()
-                  .ForMember(x => x.ActiveRateProviders, opt => opt.MapFrom(x => x.ActiveRateProviders))
-                  .ForMember(x => x.OrderHandlingFee, opt => opt.MapFrom(x => x.OrderHandlingFee.HasValue  
-                      ? new  Mozu.SiteSettings.Shipping.Contracts.SiteShippingHandlingFee(){Amount = x.OrderHandlingFee }
-                      :null ))
-                  .ForMember(x => x.SiteShippingOriginAddress, opt => opt.MapFrom(x => x.SiteShippingOriginAddress));
+                //       .ForMember(x => x.ActiveRateProviders, opt => opt.MapFrom(x => x.ActiveRateProviders))
+                  .ForMember(x => x.OrderHandlingFee, opt => opt.MapFrom(x => x.OrderHandlingFee.HasValue
+                                                                                  ? new Mozu.SiteSettings.Shipping.Contracts.SiteShippingHandlingFee() {Amount = x.OrderHandlingFee}
+                                                                                  : null));
+             //     .ForMember(x => x.SiteShippingOriginAddress, opt => opt.MapFrom(x => x.SiteShippingOriginAddress));
 
 
             Mapper.CreateMap<Mozu.Core.Api.Contracts.Feature, Mozu.SiteBuilder.UX.Admin.Api.Models.Feature>();

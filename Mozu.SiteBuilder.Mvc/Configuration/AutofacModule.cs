@@ -4,7 +4,10 @@ using System.Reflection;
 using Autofac;
 using Autofac.Integration.WebApi;
 using Mozu.Core;
+using Mozu.Core.Configuration;
+using Mozu.Location.Contracts.Clients;
 using Mozu.Reference.Contracts.Clients;
+using Mozu.ShippingRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
@@ -28,6 +31,11 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
     {
         protected override void Load(ContainerBuilder builder)
         {
+
+
+            builder.RegisterClassesMatchingInterfaceName(typeof(IShippingWebApiClient).Assembly);
+            builder.RegisterClassesMatchingInterfaceName(typeof(ILocationRuntimeWebApiClient).Assembly);
+             
             builder.RegisterType<MozuVirtualPathProvider>().InstancePerApiRequest();
             //   builder.RegisterType<WidgetProvider>().As<IWidgetProvider>();
             builder.RegisterType<Document>();
@@ -42,8 +50,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.PageContext>().InstancePerApiRequest();
             builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.SiteContext>().InstancePerApiRequest();
             builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.PageContext>().As<IEditableContext>().InstancePerApiRequest();
-
-
+        
             // builder.RegisterType<AuthenticationHelper>().InstancePerLifetimeScope();
             builder.RegisterType<CatalogContext>().As<ICatalogContext>().InstancePerApiRequest();
 
@@ -68,6 +75,9 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<UspsShippingSharedWebApiClient>().As<IUspsShippingSharedWebApiClient>().InstancePerApiRequest();
             builder.RegisterType<UspsShippingInstanceWebApiClient>().As<IUspsShippingInstanceWebApiClient>().InstancePerApiRequest();
             builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>().InstancePerApiRequest();
+
+
+
 
 
             TemplateManagerProvider tmp = new TemplateManagerProvider()
