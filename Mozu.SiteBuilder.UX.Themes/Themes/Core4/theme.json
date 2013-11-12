@@ -179,14 +179,14 @@
                 anchor    : '100%'
             }
          ],
-         "icon": "/resources/admin/widgets/_0007_featured-products.png",
+         "icon": "/resources/admin/widgets/01_photo_text.png",
          
     }, 
     {
         "id": "content",
         "displayName": "Content",
         "displayTemplate": "cms/content",
-        "icon": "/resources/admin/widgets/_0004_html.png",
+        "icon": "/resources/admin/widgets/03_heading_p.png",
         "defaultConfig": {
 			"body": "<h2>Insert Title</h2><p>Insert Content</p>"
 		}
@@ -202,7 +202,7 @@
                 "xtype":"taco-singleimagefield",
             }
          ],
-        "icon": "/resources/admin/widgets/_0004_html.png",
+        "icon": "/resources/admin/widgets/00_photo.png",
 		"defaultConfig": {
 			"height": 400
 		}
@@ -211,7 +211,7 @@
         "id": "horizontal_rule",
         "displayName": "Horizontal Rule",
         "displayTemplate": "cms/horizontalrule",
-        "icon": "/resources/admin/widgets/_0005_horizontal-divider.png",
+        "icon": "/resources/admin/widgets/04_column_divider.png",
         "editView": "taco-horizontalrule-widgeteditor",
         "defaultConfig": {
             "hrBorderWidth": "1px",
@@ -225,7 +225,7 @@
       "id": "html",
       "displayName": "HTML",
       "displayTemplate": "cms/content",
-      "icon": "/resources/admin/widgets/_0004_html.png",
+      "icon": "/resources/admin/widgets/07_code.png",
       "editViewFields": [{
 			xtype     : 'textareafield',
 			grow      : true,
@@ -278,13 +278,13 @@
           "style": 1
 		},
         "category": "social",
-        "icon": "/resources/admin/widgets/_0008_share.png"
+        "icon": "/resources/admin/widgets/13_social.png"
     }, 
     {
         "id": "facebook_comments",
         "displayName": "Facebook Comments",
         "displayTemplate": "social/facebookComments",
-        "icon": "/resources/admin/widgets/_0008_share.png",
+        "icon": "/resources/admin/widgets/13_social.png",
         "editViewFields":[
 			{
 				"xtype": "slider",
