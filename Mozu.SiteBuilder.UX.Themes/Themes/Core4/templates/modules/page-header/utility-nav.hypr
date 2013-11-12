@@ -1,6 +1,6 @@
 ﻿<nav class="mz-utilitynav">
     <ul class="mz-utilitynav-list">
-        {% if user.isAuthenticated %}
+        {% if not user.isAnonymous %}
         <li class="mz-utilitynav-item">
             <div id="mz-logged-in-notice">
                 Welcome, <a href="/myaccount" class="mz-utilitynav-link">{{user.firstName|default:user.email}}</a>! (<a href="/logout" data-mz-action="logout" class="mz-utilitynav-link">{{ labels.logOut }}</a>)

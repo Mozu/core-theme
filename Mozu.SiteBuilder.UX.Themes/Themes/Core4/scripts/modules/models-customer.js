@@ -71,7 +71,7 @@
         changePassword: function () {
             var self = this, user = this.get('user');
             self.validateUser = true;
-            if (this.validate('user.password') || this.validate('user.confirmPassword')) return false;
+            if (this.validate()) return false;
             this.isLoading(true);
             return user.changePassword().ensure(function () {
                 self.validateUser = false;

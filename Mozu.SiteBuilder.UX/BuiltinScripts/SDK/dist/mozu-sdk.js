@@ -1808,12 +1808,12 @@
                         shortcutParam: "id",
                         includeSelf: true,
                         "get-open-orders": {
-                            template: '{+orderService}filter=Status ne "Created" and CustomerAccoundId eq "{id}" and OrderNumber ne null',
+                            template: '{+orderService}?filter=Status ne "Created" and CustomerAccountId eq "{id}" and OrderNumber ne null',
                             includeSelf: true,
                             returnType: "orders"
                         },
                         "get-orders": {
-                            template: '{+orderService}filter=CustomerAccoundId eq "{id}" and OrderNumber ne null',
+                            template: '{+orderService}?filter=CustomerAccountId eq "{id}" and OrderNumber ne null',
                             includeSelf: true,
                             returnType: "orders"
                         }
