@@ -16,7 +16,10 @@ Ext.define('Taco.view.inventory.Index', {
 
     typeName: 'Inventory',
     modelName: 'Taco.model.Product',
-    store: { type: 'Taco.store.Products' },
+    store: {
+        type: 'Taco.store.Products',
+        createOnly:true
+    },
     
     
     gridHeaderLabel: 'product',
@@ -165,7 +168,13 @@ Ext.define('Taco.view.inventory.Index', {
                         browserPage = grid.up('browserpage'),
                         locationList = browserPage.locationList,
                         record = selected[0],
-                        productCode = record.get("productCode");
+                        productCode = "";
+                    
+                    if (!record) {
+                        return;
+                    }
+                    
+                    productCode = record.get("productCode");
                     
                     locationList.store.clearFilter(true);
                     locationList.store.filter({ property: 'productCode', value: productCode });
