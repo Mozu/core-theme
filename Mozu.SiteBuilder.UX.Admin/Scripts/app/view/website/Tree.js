@@ -30,7 +30,7 @@ Ext.define('Taco.view.website.Tree', {
                     output = '<span class="taco-website-tree-icon"></span><span>' + value + '</span>';
                 // output = '<a href="#" class="taco-action-navigate">' + value + '</a>';
 
-                if (isRoot) {
+                if (isRoot && record.getId() != '_templates') {
                     output += ('<span class="taco-website-tree-sublink" data-page-creator="true" data-parent-id="' + id + '" >+ Add Page</span>');
                 }
 

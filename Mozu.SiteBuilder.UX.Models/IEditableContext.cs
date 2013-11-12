@@ -23,6 +23,6 @@ namespace Mozu.SiteBuilder.UX.Models
     }
     public enum EditModes
     {
-        Page,Template,Site
+        page,template,site
     }
 }

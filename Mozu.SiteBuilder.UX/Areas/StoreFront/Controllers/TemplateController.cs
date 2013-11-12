@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web;
-
+using System.Web.Http;
 using Autofac;
 
 using Mozu.ProductRuntime.Contracts;
@@ -57,10 +57,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
            // _lifetimeScope = lifetimeScope;
         }
 
-
+        [HttpGet]
         public async Task<HttpResponseMessage> Index(string templateId)
         {
-            this.PageContext.EditMode = EditModes.Template ;
+            this.PageContext.EditMode = EditModes.template ;
             var pageType = SiteContext.Theme.PageTypes.FirstOrDefault(x => x.Id == templateId);
             if (pageType == null)
             {

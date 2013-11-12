@@ -41,12 +41,21 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         var me = this,
             tasks = Ext.create('Taco.core.ux.form.Tasks'),
             zoneData = [],
+            source,
             json;
+        
+        if ((me.pageContext.editMode || "").toLowerCase() == 'template') {
+            source = me.pageContext.cmsContext.template;
+        } else if ((me.pageContext.editMode || "").toLowerCase() == 'site') {
+            source = me.pageContext.cmsContext.site;
+        } else  {
+            source = me.pageContext.cmsContext.page;
+        }
 
         Ext.each(me.editor.persistanceData(), function (zone) {
             if (!Ext.isEmpty(zone.rows)) {
                 //todo: check pc for edit type... page/vs template
-                zone.source = me.pageContext.cmsContext.page;
+                zone.source = source;
                 zoneData.push(zone);
             }
         });
@@ -61,7 +70,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
                     method: 'post',
                     jsonData: {
                         zones: zoneData,
-                        source: me.pageContext.cmsContext.page
+                        source: source
                     },
                     success: function (response) {
                         t.callback();
