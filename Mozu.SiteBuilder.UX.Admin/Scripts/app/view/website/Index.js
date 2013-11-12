@@ -174,14 +174,16 @@ Ext.define('Taco.view.website.Index', {
                 },
                 items: [{
                         xtype: 'taco-website-tree',
-                        store: store,
-                        viewConfig: {
-                            stripeRows: true
-                        }
+                        store: store
                     }, {
-                        xtype: 'panel',
+                        xtype: 'gridpanel',
                         title: 'Results',
-                        html: 'Results go here.'
+                        store: [],
+                        columns: [{
+                            dataIndex: 'thom',
+                            text: 'Thom',
+                            flex: 1
+                        }]
                     }],
                 dockedItems: [{
                     xtype: 'container',

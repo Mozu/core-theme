@@ -13,6 +13,12 @@
 
     .#{$prefix}grid-cell-inner-treecolumn {
         padding: 3px 5px 2px 0px;
+
+        &:hover {
+            .#{$vprefix}website-tree-menu-trigger {
+                display: block;
+            }
+        }
     }
 
     .#{$prefix}tree-node-text {
@@ -51,5 +57,11 @@
 
     .#{$vprefix}website-tree-sublink {
         float: right;
+    }
+
+    .#{$vprefix}website-tree-menu-trigger {
+        float: right;
+        @include icon-font($glyph-arrowdown);
+        display: none;
     }
 }
