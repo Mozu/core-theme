@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationHelpers
             var statements = extFilter.Where(x => x.property != "all" && !string.IsNullOrEmpty((x.value ?? "").ToString()) ).Select(GetFilter).ToList();
             var allFilter = extFilter.FirstOrDefault(x => x.property == "all" && !string.IsNullOrEmpty( (x.value ?? "").ToString() ));
             if (allFilter != null)
-                statements.Add(String.Format("({1} cont {0} or {2} cont {0} or {3} cont {0} or {4} cont {0} or {5} cont {0} or {6} cont {0})", allFilter.value, NAME, STATE, COUNTRYCODE, ZIPCODE, CODE, LOCATIONTYPECODE));
+                statements.Add(String.Format("({1} cont {0} or {2} eq {0} or {3} eq {0} or {4} eq {0} or {5} eq {0} or {6} eq {0})", allFilter.value, NAME, STATE, COUNTRYCODE, ZIPCODE, CODE, LOCATIONTYPECODE));
 
             return string.Join(" and ", statements);
         }
@@ -35,15 +35,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationHelpers
                 case "name":
                     return string.Format("({1} cont {0})", filter.value, NAME);
                 case "state":
-                    return string.Format("({1} cont {0})", filter.value, STATE);
+                    return string.Format("({1} eq {0})", filter.value, STATE);
                 case "countrycode":
-                    return string.Format("({1} cont {0})", filter.value, COUNTRYCODE);
+                    return string.Format("({1} eq {0})", filter.value, COUNTRYCODE);
                 case "zipcode":
-                    return string.Format("({1} cont {0})", filter.value, ZIPCODE);
+                    return string.Format("({1} eq {0})", filter.value, ZIPCODE);
                 case "code":
-                    return string.Format("({1} sw {0})", filter.value, CODE);
+                    return string.Format("({1} eq {0})", filter.value, CODE);
                 case "locationtypecode":
-                    return string.Format("({1} sw {0})", filter.value, LOCATIONTYPECODE);
+                    return string.Format("({1} eq {0})", filter.value, LOCATIONTYPECODE);
                 case "supportsinventory":
                     return string.Format("({1} eq {0})", filter.value, SUPPORTSINVENTORY);
                 default:
