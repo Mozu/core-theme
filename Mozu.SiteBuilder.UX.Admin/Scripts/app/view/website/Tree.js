@@ -8,14 +8,23 @@ Ext.define('Taco.view.website.Tree', {
     alias: 'widget.taco-website-tree',
     requires: [
         'Taco.model.NavigationTreeNode',
-        'Taco.store.NavigationTreeNodes'
+        'Taco.store.NavigationTreeNodes',
+        'Ext.tree.plugin.TreeViewDragDrop'
     ],
 
     border: false,
     componentCls: 'taco-website-tree',
+    disableSelection: true,
     hideHeaders: true,
     rootVisible: false,
     useArrows: true,
+
+    viewConfig: {
+        stripeRows: true,
+        plugins: {
+            ptype: 'treeviewdragdrop'
+        }
+    },
 
     initComponent: function () {
         this.addEvents('urlclick', 'additemclick');
@@ -25,18 +34,20 @@ Ext.define('Taco.view.website.Tree', {
             flex: 1,
             dataIndex: 'name',
             renderer: function (value, metaData, record) {
-                var id = record.getId(),
-                    isRoot = record.parentNode && record.parentNode.isRoot(),
-                    output = '<span class="taco-website-tree-icon"></span><span>' + value + '</span>';
-                // output = '<a href="#" class="taco-action-navigate">' + value + '</a>';
+                var output = '<span class="taco-website-tree-icon"></span><span>' + value + '</span>';
 
-                if (isRoot && record.getId() != '_templates') {
-                    output += ('<span class="taco-website-tree-sublink" data-page-creator="true" data-parent-id="' + id + '" >+ Add Page</span>');
-                }
+                output += '<span class="taco-website-tree-menu-trigger"></span>';
 
                 return output;
             }
         }];
+
+        this.menu = Ext.create('Ext.menu.Menu', {
+            defaultAlign: 'tr-br',
+            plain: true,
+            shadow: false,
+            items: []
+        });
 
         this.callParent(arguments);
 
@@ -46,13 +57,10 @@ Ext.define('Taco.view.website.Tree', {
                 fn: function (tree, record, item, index, e, eOpts) {
                     var url = record.get('url');
 
-                    if (e.target.dataset.pageCreator) {
-                        if (record.getId() == '_navigation') {
-                            this.fireEvent('additemclick', this, true, record, item, index, e, eOpts);
-                        }
-                        if (record.getId() == '_unlinked') {
-                            this.fireEvent('additemclick', this, false, record, item, index, e, eOpts);
-                        }
+                    if (e.getTarget('.taco-website-tree-menu-trigger', 10)) {
+                        this.menu.removeAll();
+                        this.menu.add(this.getMenuItems(record, this));
+                        this.menu.showBy(item, null, [-5, 0]);
                     } else if (url) {
                         this.fireEvent('urlclick', this, url, record, item, index, e, eOpts);
                     }
@@ -63,6 +71,58 @@ Ext.define('Taco.view.website.Tree', {
                 fn: 'showCreator'
             }
         });
+    },
+
+    getMenuItems: function (record, scope) {
+        var items = [];
+
+        if (record.getId() == '_navigation') {
+            items.push({
+                text: 'Add Page',
+                scope: scope,
+                handler: function () {
+                    this.fireEvent('additemclick', this, true, record);
+                }
+            });
+        } else if (record.getId() == '_unlinked') {
+            items.push({
+                text: 'Add Page',
+                scope: scope,
+                handler: function () {
+                    this.fireEvent('additemclick', this, false, record);
+                }
+        });
+        } else if (record.getId().substr(0, 8) === 'category') {
+            items.push({
+                text: 'Edit',
+                scope: scope,
+                handler: Ext.emptyFn
+            }, {
+                text: 'View Products',
+                scope: scope,
+                handler: Ext.emptyFn
+            });
+        } else {
+            items.push({
+                text: 'Edit',
+                scope: scope,
+                handler: Ext.emptyFn
+            }, {
+                text: 'Rename',
+                scope: scope,
+                handler: Ext.emptyFn
+            }, {
+                text: 'Duplicate',
+                scope: scope,
+                handler: Ext.emptyFn
+            }, {
+                text: 'Delete',
+                scope: scope,
+                handler: Ext.emptyFn
+            });
+        }
+
+        return items;
     },
 
     showCreator: function (tree, linked, record) {

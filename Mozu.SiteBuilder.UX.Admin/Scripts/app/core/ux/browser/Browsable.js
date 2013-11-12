@@ -362,10 +362,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
                                 text = Taco.core.util.ExceptionWhiner.createHtmlList(m.exceptions);
                             }
 
-                            Ext.create('Taco.core.ux.window.Alert', {
-                                autoShow: true,
-                                html: 'Delete Failed. <br />' + text
-                            });
+                            Taco.app.fireEvent('setmessage', 'Delete failed.', 'error');
                             
                         }
                         
