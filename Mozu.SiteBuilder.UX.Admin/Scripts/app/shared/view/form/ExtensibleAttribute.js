@@ -13,12 +13,21 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
     statics: {
         editors: {
             'Date': function (ptAttribute, values) {
+                //debugger
+                var date = new Date(values[0]);
+                //debugger
                 return [{
                     xtype: 'datefield',
                     name: this.getFieldName(ptAttribute),
                     fieldLabel: ptAttribute.get('name'),
-                    value: (values && values.length) ? values[0] : null
-                    
+                    value: date.toLocaleDateString(),//(values && values.length) ? values[0] : null,
+                    listeners: {
+                        afterrender: function () {
+                            //debugger
+                            //this.setValue(values[0]);
+                        }
+                    },
+                    scope: this
                 }];
             },
             'TextArea': function (ptAttribute, values) {
@@ -38,7 +47,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                     xtype: 'checkboxfield',
                     name: this.getFieldName(ptAttribute),
                     fieldLabel: ptAttribute.get('name'),
-                    value:(values && values.length) ? values[0] : null
+                    checked: values[0]
                 }];
             },
             'List': function (ptAttribute, values) {
@@ -199,13 +208,20 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
         Ext.each(fields.items, function (field) {
             var fqn = me.parseFieldName(field.getName()),
                 definition = me.attributeDefinitionStore.getById(fqn),
-                val = {
-                    'attributeDefinitionId': definition.get('attributeId'),
-                    'fullyQualifiedName': fqn,
-                    'id': null,
-                    'values': [ field.getValue() ]
-                };
-            attrs.push(val);
+                item = {};
+            
+            item['attributeDefinitionId'] = definition.get('attributeId');
+            item['fullyQualifiedName'] = fqn;
+            item['id'] = null;
+
+            if (field.getXType() != 'datefield') {
+                item['values'] = [field.getValue()];
+            } else {
+                item['values'] = [field.getValue().toString()];
+            }
+            
+            
+            attrs.push(item);
         });
 
         this.record.set('attributes', attrs);
