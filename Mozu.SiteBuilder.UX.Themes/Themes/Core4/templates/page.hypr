@@ -58,7 +58,6 @@
         {% block head-tag-scripts %}
         <script src="/scripts/vendor/modernizr-respond.min.js"></script>
         {% include "modules/web-fonts-loader" %}
-		{% cms_resources %}
         {% endblock head-tag-scripts %}
 
     </head>

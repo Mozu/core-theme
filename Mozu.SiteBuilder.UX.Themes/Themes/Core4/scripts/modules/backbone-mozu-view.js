@@ -91,7 +91,7 @@ define([
                     if (thenFocus.id) {
                         $(document.getElementById(thenFocus.id)).focus();
                     } else {
-                        $('[data-mz-value="' + thenFocus.mzvalue + '"][value="' + thenFocus.value + '"]').focus();
+                        this.$('[data-mz-value="' + thenFocus.mzvalue + '"]').focus();
                     }
                 }
             }
