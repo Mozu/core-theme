@@ -12,6 +12,7 @@
         }),
 
         StreetAddress = Backbone.MozuModel.extend({
+            mozuType: 'address',
             validation: {
                 address1: {
                     required: true,

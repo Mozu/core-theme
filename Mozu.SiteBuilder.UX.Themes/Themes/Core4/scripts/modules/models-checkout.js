@@ -69,17 +69,54 @@
                 if (this.validate()) return false;
                 var parent = this.parent, me = this;
                 this.isLoading(true);
-                parent.syncApiModel();
-                parent.apiModel.getShippingMethodsFromContact().then(function(methods) {
-                    return parent.set({
-                        availableShippingMethods: methods
+                var completeStep = function () {
+                    parent.syncApiModel();
+                    parent.apiModel.getShippingMethodsFromContact().then(function (methods) {
+                        return parent.set({
+                            availableShippingMethods: methods
+                        });
+                    }).ensure(function () {
+                        me.isLoading(false);
+                        parent.isLoading(false);
+                        me.calculateStepStatus();
+                        parent.calculateStepStatus();
                     });
-                }).ensure(function () {
-                    me.isLoading(false);
-                    parent.isLoading(false);
-                    me.calculateStepStatus();
-                    parent.calculateStepStatus();
+                }
+
+                var addr = this.get('address');
+                addr.apiModel.action('validateAddress').then(function (resp) {
+                    if (resp.data && resp.data.addressCandidates && resp.data.addressCandidates.length) {
+                        var valAddr = resp.data.addressCandidates[0];
+
+                        var addrIsDifferent = (function (addr, valAddr) {
+                            var s1 = '',
+                                s2 = '';
+                            for (var k in valAddr) {
+                                if (k === 'isValidated')
+                                    continue;
+                                s1 = (valAddr[k] || '').toLowerCase();
+                                s2 = (addr.get(k) || '').toLowerCase();
+                                if (s1 != s2) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        })(addr, valAddr);
+
+                        if (addrIsDifferent) {
+                            var ok = confirm('Did you mean ' + valAddr.address1 + ' ' + valAddr.address2 + ' ' + valAddr.cityOrTown + ' ' + valAddr.stateOrProvince + ' ' + valAddr.postalOrZipCode + ' ' + valAddr.countryCode + '?');
+                            if (ok) {
+                                for (var k in valAddr) {
+                                    addr.set(k, valAddr[k]);
+                                }
+                            }
+                        }
+                    }
+                    completeStep();
+                }, function (e) {
+                    completeStep();
                 });
+
             }
         }),
 
