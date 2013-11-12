@@ -1,0 +1,9 @@
+﻿{% extends "modules/common/item-listing" %}
+{% block item-name %}
+    {% if model.dateShipped %} {{ labels.shipped }}: {{ model.dateShipped|date("F j, Y") }} }}{% endif %}
+    {% parent %}
+{% endblock item-name %}
+{% block item-listing-actions %}
+    <a class="mz-itemlisting-action" href="javascript:;" data-mz-trackpackage="{{ model.id }}">{{ labels.trackPackage }}</a>
+    <a class="mz-itemlisting-action" href="javascript:;" data-mz-startreturn="{{ model.id }}">{{ labels.returnOrReplace }}</a>
+{% endblock item-listing-actions %}

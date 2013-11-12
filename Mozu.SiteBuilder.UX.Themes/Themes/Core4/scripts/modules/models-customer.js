@@ -26,6 +26,7 @@
 
     Customer = Backbone.MozuModel.extend({
         mozuType: 'customer',
+        handlesMessages: true,
         relations: {
             user: UserModels.User,
             contacts: Backbone.Collection.extend({

@@ -80,10 +80,10 @@
     <label for="account-acceptsmarketing">{{ labels.accountOptIn }}</label>
 </div>
 <div class="mz-accountsettings-section mz-accountsettings-openorders">
-    <h3 class="mz-accountsettings-sectionheader">{{ labels.openOrders }} <a href="#history">{{ labels.viewOrderHistory }}</a></h4>
+    <h3 class="mz-accountsettings-sectionheader">{{ labels.openOrders }} <a href="#orderhistory">{{ labels.viewOrderHistory }}</a></h4>
     <ul class="mz-orderlist">
         {% for order in model.openOrders.items %}
-        <li>{% include "modules/common/order-listing" with model=order %}</li>
+        <li>{% include "modules/my-account/open-order-listing" with model=order %}</li>
         {% endfor %}
     </ul>
 </div>

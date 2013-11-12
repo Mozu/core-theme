@@ -16,6 +16,18 @@
         min-height: @gutter*1.5;
     }
 
+    .mz-accountsettings-sectionheader {
+        border-top: 1px solid #eee;
+        padding-top: 5px;
+        a {
+            float: right;
+            margin-left: @gutter/2;
+            font-size: @fontSizeSmall;
+            font-weight: normal;
+            .permalink(@textColor);
+        }
+    }
+
     .mz-accountsettings-name {
         input, button {
             vertical-align: middle;

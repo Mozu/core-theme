@@ -1,0 +1,21 @@
+﻿.mz-orderlisting {
+    @leftWidth: @orderDetailWidth + @gutter;
+    position: relative;
+    border: 1px solid #999;
+    min-height: @orderDetailWidth;
+    .mz-orderlisting-detail {
+        position: absolute;
+        box-sizing: border-box;
+        height: 100%;
+        width: @leftWidth;
+        padding: @gutter/2;
+        background-color: #eee;
+    }
+    .mz-orderlisting-items {
+        margin-left: @leftWidth;
+        padding: @gutter/2;
+    }
+    .mz-orderlisting-date {
+        margin: @gutter/4 0;
+    }
+}

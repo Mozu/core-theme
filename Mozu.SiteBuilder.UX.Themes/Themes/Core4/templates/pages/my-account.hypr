@@ -23,6 +23,10 @@
 
     <div id="account-panels" class="mz-myaccount-panels mz-l-stack mz-l-stack-large">
 
+        <div id="account-messages">
+            {% include "modules/common/message-bar" %}
+        </div>
+
         <a id="settings"></a>
         <div class="mz-l-stack-section mz-accountsettings" id="account-settings">
             {% include "modules/my-account/my-account-settings" %}
