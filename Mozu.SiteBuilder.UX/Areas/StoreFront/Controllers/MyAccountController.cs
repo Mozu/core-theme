@@ -108,6 +108,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             }
 
+            var cards = (await _customerAccountWebApiClient.GetAccountCards(account.Id)).ReadAsSync().Items;
+
             var openOrdersSb = new StringBuilder();
             openOrdersSb.Append(string.Join(" or ", OpenOrderStates.Select(x => string.Format("Status eq \"{0}\"", x))));
             openOrdersSb.Append(" and CustomerAccountId eq \"");
@@ -137,6 +139,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (primaryBillingAccount == null) primaryBillingAccount = account.Contacts.First();
 
             jAccount.Add("primaryBillingContact", Newtonsoft.Json.Linq.JObject.FromObject(primaryBillingAccount, jSerializer));
+
+            jAccount.Add("cards", Newtonsoft.Json.Linq.JArray.FromObject(cards, jSerializer));
 
             return this.Request.CreateResponse(HttpStatusCode.OK,  View("my-account", jAccount));
         }

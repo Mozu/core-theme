@@ -79,11 +79,3 @@
     <input type="checkbox" id="account-acceptsmarketing" data-mz-value="acceptsMarketing" {% if model.acceptsMarketing %}checked="checked"{% endif %} />
     <label for="account-acceptsmarketing">{{ labels.accountOptIn }}</label>
 </div>
-<div class="mz-accountsettings-section mz-accountsettings-openorders">
-    <h3 class="mz-accountsettings-sectionheader">{{ labels.openOrders }} <a href="#orderhistory">{{ labels.viewOrderHistory }}</a></h4>
-    <ul class="mz-orderlist">
-        {% for order in model.openOrders.items %}
-        <li>{% include "modules/my-account/open-order-listing" with model=order %}</li>
-        {% endfor %}
-    </ul>
-</div>
