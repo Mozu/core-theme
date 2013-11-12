@@ -4,7 +4,7 @@
 
 Ext.define('Taco.core.ux.form.field.Product', {
     extend: 'Ext.ux.form.field.BoxSelect',
-    alias: 'widget.taco.field.product',
+    alias: ['widget.taco.field.product','widget.taco-productfield'],
     requires:[
         'Taco.store.ProductComboBox'
     ],
