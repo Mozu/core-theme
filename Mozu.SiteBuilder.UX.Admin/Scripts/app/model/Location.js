@@ -34,6 +34,11 @@ Ext.define('Taco.model.Location', {
             "type": "auto",
             "default": []
         },
+    {
+        "name":"shippingOriginContact",
+        type:'auto',
+        default: {}
+    },
         
         // helper field that converts the persisted value to array of strings for use in combobox
         {
