@@ -6,7 +6,7 @@ Ext.define('Taco.model.Location', {
     idProperty: "code",
     fields: [
         {
-            "name": "code", 
+            "name": "code",
             "type": "string",
             "useNull": true
         }, {
@@ -14,17 +14,16 @@ Ext.define('Taco.model.Location', {
             "type": "auto",
             "defaultValue": []
         },
-
         // helper field that converts the persisted value to array of strings for use in combobox
         {
             "name": "locationTypeIds",
             "type": "auto",
             persist: false,
             "convert": function (value, record) {
-                
+
                 var types = record.get("locationTypes") || [];
                 var data = [];
-                Ext.Array.each(types, function(rec) {
+                Ext.Array.each(types, function (rec) {
                     data.push(rec.code);
                 });
                 return data;
@@ -34,22 +33,21 @@ Ext.define('Taco.model.Location', {
             "type": "auto",
             "defaultValue": []
         },
-    {
-        "name":"shippingOriginContact",
-        type:'auto',
-        defaultValue: {}
-    },
-        
+        {
+            "name": "shippingOriginContact",
+            type: 'auto',
+            defaultValue: {}
+        },         
         // helper field that converts the persisted value to array of strings for use in combobox
         {
             "name": "fulfillmentTypeIds",
             "type": "auto",
             persist: false,
             "convert": function (value, record) {
-                
+
                 var type = record.get("fulfillmentTypes") || [];
                 var data = [];
-                Ext.Array.each(type, function(rec) {
+                Ext.Array.each(type, function (rec) {
                     data.push(rec.code);
                 });
                 return data;
@@ -70,20 +68,20 @@ Ext.define('Taco.model.Location', {
             "type": "auto",
             "defaultValue": {
                 "address1": "",
-				"address2": "",
-				"address3": "",
-				"address4": "",
-				"cityOrTown": "",
-				"stateOrProvince": "",
-				"countryCode": "",
-				"zipCode": "",				
-				"addressType": {}, // tbd. not sure what this is. Roeder said he would back to me on this.				
-				"addressIsValidated": false
+                "address2": "",
+                "address3": "",
+                "address4": "",
+                "cityOrTown": "",
+                "stateOrProvince": "",
+                "countryCode": "",
+                "zipCode": "",
+                "addressType": {}, // tbd. not sure what this is. Roeder said he would back to me on this.				
+                "addressIsValidated": false
             }
         },
         // note this is a string version of the structured address object used for display in the grid;
         {
-            "name": "addressToString",   
+            "name": "addressToString",
             "type": "string",
             persist: false,
             "convert": function (val, record) {
@@ -103,7 +101,7 @@ Ext.define('Taco.model.Location', {
             "type": "auto",
             "defaultValue": {
                 lat: null,
-                lng:null
+                lng: null
             }
         }, {
             "name": "phone",
@@ -160,7 +158,7 @@ Ext.define('Taco.model.Location', {
     ],
     proxy: {
         type: 'ajaxproxy',
-        
+
         api: {
             read: '/admin/app/location/list',
             // read: '/admin/Scripts/app/mocks/locations.json',
@@ -201,20 +199,20 @@ Ext.define('Taco.model.Location', {
 
     *
     */
-    getGeo: function(config) {
+    getGeo: function (config) {
         Ext.apply(config, {
             url: '/admin/app/location/getGeo',
             method: "POST",
             errorMsg: "Error getting geo locations"
         });
-        
+
         this.addErrorHandling(config);
-        
+
         Ext.Ajax.request(config);
     },
     
     // fulfillmentTypes are hard coded in the backend services.
-    getFulfillmentTypes : function() {
+    getFulfillmentTypes: function () {
         return [
             {
                 "name": "In Store Pickup",

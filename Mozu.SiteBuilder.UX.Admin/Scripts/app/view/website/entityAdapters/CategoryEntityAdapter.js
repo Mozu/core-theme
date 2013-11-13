@@ -69,10 +69,10 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
     },
 
     addSaveTasks: function (tasks) {
-        if (this.get().facetSetStore) {
+        if (this.get().getFacetSets()) {
             tasks.add({
                 key: 'facetSetStore',
-                store: this.get().facetSetStore
+                store: this.get().getFacetSets()
             });
         }
     },

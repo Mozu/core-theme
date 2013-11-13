@@ -47,5 +47,26 @@ Ext.define('Taco.view.website.settings.General', {
         }];
 
         this.callParent(arguments);
-    }
+    },
+    loadRecord: function (record, cascade) {
+        var values = {};
+        Ext.Array.each(this.record.data.items, function (kvp) {
+            values[kvp.key] = kvp.value;
+        }, this);
+        this.getForm().setValues(values);
+    },
+    persistFormValues: function () {
+        var values = this.getValues();
+        
+        this.record.beginEdit();
+        this.record.set( values);
+        this.record.endEdit();
+       
+    },
+    //persistFormValues: function () {
+        
+    //    this.record.beginEdit();
+    //    this.record.set(obj);
+    //    this.record.endEdit();
+    //}
 });

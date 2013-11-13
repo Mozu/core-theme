@@ -52,7 +52,13 @@ Ext.define('Taco.model.CmsDocument', {
         }
         
     ],
-    set: function(k, v) {
+    set: function (k, v) {
+        
+        if (Ext.isObject(k)) {
+            Ext.Object.each(k, function (kkey, kvalue) {
+                this.set(kkey, kvalue);
+            }, this);
+        }
         if (k in this.self.realFields || !k || typeof k !== "string") {
             return this.callParent(arguments);
         }
@@ -81,24 +87,15 @@ Ext.define('Taco.model.CmsDocument', {
         return kvp ? (decode ? Ext.decode(kvp.value) : kvp.value) : null;
     },
     setItem: function (itemName, itemValue, encode) {
-        var items = this.get('items'),
-           kvp;
-        if (!items) {
-            items = [];
-        }
-        Ext.Array.forEach(items, function (item) {
-            if (item.key === itemName) {
-                kvp = item;
-                item.value = (encode ? Ext.encode(itemValue) : itemValue);
-                return false;
-            }
-        });
+        var items = (this.get('items') || []).concat([]);       
+       
+        
+        Ext.Array.remove(items, Ext.Array.findBy(items, function (item) { return item.key === itemName; }));
 
-        if (!kvp) {
-            items.push({ key: itemName, value: (encode ? Ext.encode(itemValue) : itemValue) });
-        }
+        items.push({ key: itemName, value: (encode ? Ext.encode(itemValue) : itemValue) });
+        
 
-        this.set("items", items.concat([]));
+        this.set("items", items );
 
     },
 

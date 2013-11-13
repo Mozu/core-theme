@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.ServiceModel;
@@ -81,6 +82,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
+
+
         public class UpdateWidgetDataMessage
         {
             public List<AVM.ZoneRuntimeData> zones;
@@ -112,6 +115,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             var zoneSerilized = Newtonsoft.Json.JsonConvert.SerializeObject(message.zones);
+            doc.Properties = new List<DC.PropertyValue>();
             doc.Set("widgets", zoneSerilized);
 
             if (exitst)
@@ -177,6 +181,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 });
             }
 
+            if (doc.Items != null)
+            {
+
+                var w = doc.Items.FirstOrDefault(i => string.Equals(i.Key, "widgets", StringComparison.OrdinalIgnoreCase));
+                if (w != null)
+                {
+                    doc.Items.Remove(w);
+                }
+            }
             return doc;
         }
     }
