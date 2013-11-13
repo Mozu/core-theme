@@ -128,6 +128,7 @@ namespace Mozu.SiteBuilder.Mvc
             {
                 if (ScopeType == UserScopeType.Shopper)
                 {
+                    this.UserClaims = null;
                     return false;
              
                 }
@@ -142,6 +143,7 @@ namespace Mozu.SiteBuilder.Mvc
             }
             if (ScopeType == UserScopeType.Shopper && (!this.UserClaims.Bag.TryGetValue("SiteId", out bagVal) || !int.TryParse(bagVal, out tmpInt) || tmpInt != this.SiteId))
             {
+                this.UserClaims = null;
                 return false;
             }
             return true;

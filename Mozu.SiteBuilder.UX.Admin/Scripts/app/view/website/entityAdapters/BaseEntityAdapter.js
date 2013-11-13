@@ -123,7 +123,9 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         this.fireEvent('load', model);
     },
 
-    addSaveTasks: Ext.emptyFn,
+    addSaveTasks: function (tasks) {
+        this.manager.pageSettings.addSaveTasks(tasks);
+    },
     getId: Ext.emptyFn,
     getStore: Ext.emptyFn,
     setHidden:Ext.emptyFn,

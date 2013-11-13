@@ -205,6 +205,15 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 }
             }
 
+            if (d.Properties != null)
+            {
+                var item = d.Properties.FirstOrDefault(x => string.Equals("widgets", x.PropertyType, StringComparison.OrdinalIgnoreCase));
+                if (item != null)
+                {
+                    d.Properties.Remove(item);
+                }
+              
+            }
             return _docRepo.UpdateDocument(doc.DocumentListName, doc.DocumentId, d);
         }
 
