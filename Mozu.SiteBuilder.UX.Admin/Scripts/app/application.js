@@ -247,6 +247,9 @@ Ext.define('Taco.Application',{
                 
                 this.dirtyState = false;
 
+                // extra filters to be added to all calls. these will be combined with the store.filters; Survives call to clearFilter(); Much like the extraParams
+                this.extraFilters = new Ext.util.MixedCollection();
+
                 this.on({
                     load: function (store) {
                         this.storeHasLoaded = true;
@@ -262,9 +265,24 @@ Ext.define('Taco.Application',{
                         if (store.remoteFilter === false) {
                             operation.filters = [];
                         }
+                        
+                        // add in any required filters for this store; these filters will always be submitted since they are added after any calls to clear the filters;
+                        if (store.extraFilters.getCount()) {
+                            operation.filters = Ext.Array.merge(operation.filters, store.extraFilters.items);
+                        }
+                        
                     },
                     scope: this
                 });
+            },
+
+            destroyStore: function () {
+                var me = this;
+                if (!me.isDestroyed) {
+                    // clean up the extraFilters mixedCollection that was added above;
+                    me.extraFilters = null;
+                }
+                this.callParent(arguments);
             },
 
             dirtyStateCheck: function () {

@@ -52,7 +52,7 @@ Ext.define('Taco.model.OrderPayment', {
         {
             "name": "availableActions",
             "type": "auto",
-            "default": []
+            "defaultValue": []
         },
         {
             'name': 'paymentType',

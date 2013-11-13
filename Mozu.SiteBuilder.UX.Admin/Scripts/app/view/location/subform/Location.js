@@ -42,7 +42,7 @@ Ext.define('Taco.view.location.subform.Location', {
 
         // note there are two different boxSelects. Dont' use the other one. your welcome.
         me.locationTypeIds = Ext.create('Ext.ux.form.field.BoxSelect', {
-            width: 350,
+            width: 400,
             fieldLabel: 'Location Types',
             name: 'locationTypeIds',
             queryMode: 'local',
@@ -56,7 +56,7 @@ Ext.define('Taco.view.location.subform.Location', {
 
         // note there are two different boxSelects. Dont' use the other one. your welcome.
         me.fulfillmentTypeIds = Ext.create('Ext.ux.form.field.BoxSelect', {
-            width: 350,
+            width: 400,
             fieldLabel: 'Fulfillment Types',
             name: 'fulfillmentTypeIds',
             queryMode: 'local',
@@ -219,6 +219,7 @@ Ext.define('Taco.view.location.subform.Location', {
                         xtype: 'numberfield',
                         fieldLabel: "Latitude",
                         name: "lat",
+                        margin:"0 2 0 0",
                         emptyText: "Example: 87.728056",
                         allowBlank: true,
                         hideTrigger: true,
@@ -226,11 +227,10 @@ Ext.define('Taco.view.location.subform.Location', {
                         value: this.record.get("geo").lat,
                         flex: 1
                     }, {
-                        xtype: "splitter"
-                    }, {
                         xtype: 'numberfield',
                         fieldLabel: "Longitude",
                         emptyText: "Example: 87.728056",
+                        margin: "0 0 0 2",
                         allowBlank: true,
                         hideTrigger: true,
                         mouseWheelEnabled: false,

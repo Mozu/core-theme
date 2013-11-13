@@ -110,7 +110,7 @@ Ext.define('Taco.model.Order', {
         {
             "name": "fulfillmentContact",
             "type": "auto",
-            "default": {}
+            "defaultValue": {}
         },
         {
             "name": "ipAddress",

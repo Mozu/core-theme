@@ -12,6 +12,8 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
     
     },
     
+    cls : "taco-locationpickerfield",
+    
     autoSelectFirstRecord: true,
     
     //itemsPerPage: 30,
@@ -19,12 +21,11 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
     hideLabel: true,
     hideTrigger: false,
     emptyText: "Search",
-    selectOnFocus: true,
+    selectOnFocus: false,
     flex: 1,
     listConfig: {
-        loadingText: 'Searching...',
-        //cls : "location-picker-menu",
-        emptyText: 'No matching locations found.',
+        cls: "location-picker-menu",
+
         // Custom rendering template for each item
         getInnerTpl: function () {
             return "<span class='name'>{name}</span> <span class='code'>{code}</span>"
@@ -45,35 +46,13 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
     },
     
     pageSize: 30,
-
-    // querystring parameter name that contains the search filter data;
-    queryParam: "query",
-
-    // default filter parameter used to get the full list
-    allQuery: "",
-    
-    // modify the format of the query data to fit the service filtering pattern.
-    formatQuery: function (queryEvent, e) {
-        // need to format the search text from the combobox into a filter structure the service wants;
-        // always force the query to match what's in the field.
-        // after a selection the queryEvent.query is initially set to "" which is incorrect in this situation;
-        var queryText = queryEvent.combo.getValue() || "";
-        if (queryText == "") {
-            // need to force the load of the full list. just returning a value of "" causes the control to reload the last query;
-            queryEvent.forceAll = true;
-        } else {
-            queryEvent.forceAll = false;
-            queryEvent.query = '[{ "property": "all", "value": "' + queryText + '" }]'
-        }
-
-        return true;
-    },
     
     initComponent: function(eOpts) {
         var me = this;
         
         
         if (!me.store) {
+            
             me.store = Taco.core.data.StoreManager.getOrCreate({
                 createOnly: true,
                 type: 'Taco.store.Locations',
@@ -99,10 +78,6 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
         }, me, {
             single:true
         });
-
-        if (me.autoSelectFirstRecord) {
-            me.on('beforequery', this.formatQuery, this);
-        }
         
         me.callParent(arguments);
     },

@@ -48,6 +48,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                         
                         store.clearFilter(true);
                         store.filter({ property: 'locationCode', value: record.get('code') });
+                        
                     }
                 }
             }
