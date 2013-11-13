@@ -266,14 +266,11 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             // note: i had to use the ext split button. The Taco.core.ux.action.SplitButton doesn't responsd to .enabled(), .disable() and needs to be refactored to support the standard extjs button behaviors fully.
             //me.moveMenuAction = Ext.create("Taco.core.ux.action.SplitButton", {
             me.moveMenuAction = Ext.create(menuXtype, {
-                scale: "medium",
-                //ui:"action",
+                ui: 'link',
+                scale: 'medium',
                 menuAlign: 'tr-br',
-                //cls: "taco-splitbutton",
                 text: moveMenuText,
-                itemId: "moveMenuTrigger",
-                
-
+                itemId: 'moveMenuTrigger',
                 moveAction: "addSelectionToPackage",
                 moveTargetId: lastPackageId,
                 
@@ -315,9 +312,9 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             // note: i had to use the ext split button. The Taco.core.ux.action.SplitButton doesn't responsd to .enabled(), .disable() and needs to be refactored to support the standard extjs button behaviors fully.
             //me.moveMenuAction = Ext.create("Taco.core.ux.action.SplitButton", {
             me.shippingMethodMenu = Ext.create("Ext.button.Button", {
-                scale: "medium",
+                ui: 'link',
+                scale: 'medium',
                 menuAlign: 'tr-br',
-                //cls: "taco-splitbutton",
                 text: "Change Shipping Method",
                 listeners: {
                     menushow: {
@@ -352,8 +349,9 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         if (me.enableShippingLabelButton &&  me.packageData.shippingMethodCode) {
             
             me.shippingLabelButton = Ext.create("Ext.button.Button", {
-                text: "View Shipping Label",
-                scale:"medium",
+                text: 'View Shipping Label',
+                ui: 'link',
+                scale: 'medium',
                 handler: me.viewShippingLabel,
                 scope:me
             });
@@ -364,8 +362,9 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         
         if (me.enabledPackingSlipButton  &&  me.packageData.shippingMethodCode) {
             me.packingSlipButton = Ext.create("Ext.button.Button", {
-                text: "View Packing Slip",
-                scale: "medium",
+                text: 'View Packing Slip',
+                ui: 'link',
+                scale: 'medium',
                 handler: me.viewPackingSlip,
                 scope: me
             });
@@ -375,8 +374,9 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         
         if (me.enabledRemoveButton) {
             me.removeButton = Ext.create("Ext.button.Button", {
-                text: "Remove",
-                scale: "medium",
+                text: 'Remove',
+                ui: 'link',
+                scale: 'medium',
                 handler: me.removeSelectedItems,
                 scope: me
             });
@@ -386,8 +386,9 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         
         if (me.enabledMarkAsShippedButton) {
             me.markAsShippedButton = Ext.create("Ext.button.Button", {
-                text: "Mark As Shipped",
-                scale: "medium",
+                text: 'Mark As Shipped',
+                ui: 'link',
+                scale: 'medium',
                 handler: me.markAsShipped,
                 scope: me
             });
