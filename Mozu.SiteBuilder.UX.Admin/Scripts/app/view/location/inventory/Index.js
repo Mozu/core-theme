@@ -41,6 +41,14 @@ Ext.define('Taco.view.location.inventory.Index', {
     store: {
         type: 'Taco.store.LocationInventories',
         createOnly: true,
+        listeners: {
+            'beforeload' : {
+                fn: function(store, operation) {
+                    
+                    return true;
+                }
+            }
+        },
         // todo: figure out why the autoLoad Config is being ignored;
         autoLoad:false
     },
@@ -59,16 +67,21 @@ Ext.define('Taco.view.location.inventory.Index', {
             emptyText: "Choose a location",
             flex:null,
             width: 300,
+            forceSelection: true,
+            editable: false,
             listeners: {
                 select: {
                     fn: function (combo, records, eOpts) {
                         var record = records[0],
                             itemBrowser = this.up("itembrowser"),
                             gridPanel = itemBrowser.gridPanel,
-                            store = gridPanel.store;
-                        
-                        store.clearFilter(true);
-                        store.filter({ property: 'locationCode', value: record.get('code') });
+                            store = gridPanel.store,
+                            code = record.get('code');
+
+                        // an extra filter to be added to each service call. note this will not be cleared when you clear the filters;
+                        // adding a filter with the same id will be treated like an update
+                        store.extraFilters.add({ id: "locationCode", property: 'locationCode', value: code });
+                        store.load();
                     }
                 }
             }

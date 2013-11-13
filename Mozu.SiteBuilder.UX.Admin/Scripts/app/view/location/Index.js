@@ -64,6 +64,11 @@ Ext.define('Taco.view.location.Index', {
         }]
     },
 
+    /*
+    supported  service search fields
+    code, type.code, name, state, zip, country, supportsinventory
+    */
+
     filterProperties: [
         {
             property: 'all',
@@ -91,6 +96,8 @@ Ext.define('Taco.view.location.Index', {
             text: 'Location Type Code'
         }
     ],
+    
+    
 
     /*
     header: {

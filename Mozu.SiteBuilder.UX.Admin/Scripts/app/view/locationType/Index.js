@@ -24,11 +24,11 @@ Ext.define('Taco.view.locationType.Index', {
     defaultRowEditingData: {
     
     },
-
-   
+    
     useTilePanel: false,
     //launchEditorOnClick: false,
     
+    /*
     filterFormConf: {
         width: 600,
         cls: Taco.baseCSSPrefix + 'combofilter-form orders',
@@ -52,7 +52,11 @@ Ext.define('Taco.view.locationType.Index', {
             ]
         }]
     },
+    */
+    // hide the serach field
+    filterProperties: null,
 
+    /*
     filterProperties: [
         {
             property: 'all',
@@ -66,6 +70,7 @@ Ext.define('Taco.view.locationType.Index', {
             text: 'Code'
         }
     ],
+    */
 
     /*
     header: {

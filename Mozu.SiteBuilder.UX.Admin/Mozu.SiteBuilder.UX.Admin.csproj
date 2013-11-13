@@ -1021,6 +1021,7 @@
     <Content Include="Scripts\packages\mozuadmintheme\sass\var\tip\Tip.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\tip\Tip.scss" />
     <Content Include="Scripts\sass\etc\chorizo\layout.scss" />
+    <Content Include="Scripts\sass\src\shared\view\field\LocaitonPickerField.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

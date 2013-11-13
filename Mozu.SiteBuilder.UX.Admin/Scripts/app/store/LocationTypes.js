@@ -5,9 +5,10 @@
 Ext.define('Taco.store.LocationTypes', {
     extend: 'Ext.data.Store',
     model: 'Taco.model.LocationType',
-    remoteFilter: true,
+    remoteFilter: false,
     remoteSort: true,
     pageSize: 25,
+    clearFilters: true,
     storeManagerConfig: {
         clearFilters: true,
         clearSort: true,

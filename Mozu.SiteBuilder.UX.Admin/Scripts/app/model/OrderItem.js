@@ -64,7 +64,7 @@ Ext.define('Taco.model.OrderItem', {
         {
             "name": "discounts",
             "type": "auto",
-            "default": []
+            "defaultValue": []
         },
         {
             "name": "activeDiscount",
@@ -74,7 +74,7 @@ Ext.define('Taco.model.OrderItem', {
         {
             "name": "shippingDiscounts",
             "type": "auto",
-            "default": []
+            "defaultValue": []
         },
         {
             "name": "activeShippingDiscount",
