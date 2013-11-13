@@ -23,6 +23,11 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
     {
         private const string STRING_SPLIT_DELIM = "^^";
 
+
+        [IgnoreDataMember]
+        public bool? Expandable { get; set; }
+
+
         /// <summary>
         /// The unique identifier of this NavigationNode.
         /// </summary>
