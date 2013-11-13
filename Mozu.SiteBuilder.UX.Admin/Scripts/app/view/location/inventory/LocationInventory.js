@@ -43,12 +43,10 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                 select: {
                     fn: function (combo, records, eOpts) {
                         var record = records[0],
-                            gridPanel = this.up('grid')
+                            gridPanel = this.up('grid'),
                             store = gridPanel.store;
-                        
-                        store.clearFilter(true);
-                        store.filter({ property: 'locationCode', value: record.get('code') });
-                        
+
+                        store.extraFilters.add([{ id:"locationCode", property: 'locationCode', value: record.get('code') }]);
                     }
                 }
             }
