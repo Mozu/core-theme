@@ -46,7 +46,6 @@
     record: null,
     titleData: null,
     enableSaveActionToggle: true,
-    validateSavableStateChange:true,
 
     initWrapper: function () {
         this.addEvents([

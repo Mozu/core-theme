@@ -14,7 +14,6 @@ Ext.define('Taco.core.ux.TileView', {
     nameField: 'name',
     tileSizes: [90, 160, 230],
     itemSelector: 'div.taco-thumbnail-item',
-    overflowY: 'scroll',
 
     initComponent: function () {
         var me = this,

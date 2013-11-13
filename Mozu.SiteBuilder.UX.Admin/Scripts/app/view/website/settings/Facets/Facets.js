@@ -33,7 +33,7 @@
              hidden: !isShowing
          });
          me.updateLayout();
-         rangeQueryForm.eventRelayer = me.relayEvents(rangeQueryForm, ['savablestatechange','heightchange']);
+         rangeQueryForm.eventRelayer = me.relayEvents(rangeQueryForm, ['heightchange']);
          return rangeQueryForm;
      },
 
@@ -167,7 +167,7 @@
                                          delete me.rangeQueryForms[rId];
                                      }
                                      configuredFacetsStore.remove(record);
-                                     me.fireEvent('savablestatechange', me.form, me.facetSetStore.isDirty());
+                                     // me.fireEvent('savablestatechange', me.form, me.facetSetStore.isDirty());
                                      me.updateLayout();
                                      break;
                                  case 'settings':
@@ -196,7 +196,7 @@
                          for (var rId in me.rangeQueryForms) {
                              me.preserveRangeQueryForm(me.rangeQueryForms[rId]);
                          }
-                         me.fireEvent('savablestatechange', me, me.facetSetStore.isDirty());
+                         // me.fireEvent('savablestatechange', me, me.facetSetStore.isDirty());
                      }
                  }
              });
