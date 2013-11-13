@@ -150,31 +150,77 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
     //todo: replace this with buttons with a togglegroup
     createToggleGroup: function () {
         var me = this;
-        me.toggleGroup = Ext.widget('togglegroup', {
-            columns: 2,
-            vertical: false,
-            width:60,
+
+        this.toggleGroup = Ext.create('Ext.Container', {
             margin: '0 0 0 10',
-            items: [
-                { name: 'cardselect', inputValue: '0', fieldCls: 'toggle-gridview', checked: true },
-                { name: 'cardselect', inputValue: '1', fieldCls: 'toggle-tileview' }
-            ],
-            listeners: {
-                change: function (group, selected) {
-                    var slider = me.toggleGroup.slider = me.toggleGroup.slider || me.down('slider') || null;
-
-                    me.getLayout().setActiveItem(parseInt(selected.cardselect));
-
-                    if (slider && !!(parseInt(selected.cardselect))) {
-                        slider.show();
-                        me.expanderCollapser && me.expanderCollapser.hide();
-                    } else {
-                        slider&&slider.hide();
-                        me.expanderCollapser && me.expanderCollapser.show();
+            items: [{
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+                text: '',
+                glyph: 'XE00C@mozicons',
+                toggleGroup: 'gridTileSwitch',
+                allowDepress: false,
+                enableToggle: true,
+                pressed: true,
+                scope: this,
+                style: {
+                    borderRadius: '2px 0px 0px 2px',
+                    padding: '6px 8px 6px 9px'
+                },
+                handler: function () {
+                    this.getLayout().setActiveItem(0);
+                }
+            }, {
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+                text: '',
+                glyph: 'XE00D@mozicons',
+                toggleGroup: 'gridTileSwitch',
+                allowDepress: false,
+                enableToggle: true,
+                scope: this,
+                style: {
+                    borderRadius: '0px 2px 2px 0px',
+                    padding: '7px 9px 5px 9px'
+                },
+                handler: function () {
+                    this.getLayout().setActiveItem(1);
+                },
+                toggleHandler: function (cmp, isPressed) {
+                    if (this.expanderCollapser) {
+                        this.expanderCollapser.setVisible(!isPressed);
                     }
                 }
-            }
+            }]
         });
+        // me.toggleGroup = Ext.widget('togglegroup', {
+        //     columns: 2,
+        //     vertical: false,
+        //     width:60,
+        //     margin: '0 0 0 10',
+        //     items: [
+        //         { name: 'cardselect', inputValue: '0', fieldCls: 'toggle-gridview', checked: true },
+        //         { name: 'cardselect', inputValue: '1', fieldCls: 'toggle-tileview' }
+        //     ],
+        //     listeners: {
+        //         change: function (group, selected) {
+        //             var slider = me.toggleGroup.slider = me.toggleGroup.slider || me.down('slider') || null;
+
+        //             me.getLayout().setActiveItem(parseInt(selected.cardselect));
+
+        //             if (slider && !!(parseInt(selected.cardselect))) {
+        //                 slider.show();
+        //                 me.expanderCollapser && me.expanderCollapser.hide();
+        //             } else {
+        //                 slider&&slider.hide();
+        //                 me.expanderCollapser && me.expanderCollapser.show();
+        //             }
+        //         }
+        //     }
+        // });
+
         return me.toggleGroup;
     },
 

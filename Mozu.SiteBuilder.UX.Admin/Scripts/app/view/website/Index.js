@@ -19,9 +19,17 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.website.entityAdapters.TemplateEntityAdapter'
     ],
 
-    options: {},
-
     requiresContextOfType: ['s'],
+    
+    entityTypeEditConfig: {
+        blog: 'Taco.view.website.entityAdapters.DocumentEntityAdapter',
+        "default": 'Taco.view.website.entityAdapters.DocumentEntityAdapter',
+        category: 'Taco.view.website.entityAdapters.CategoryEntityAdapter',
+        product: 'Taco.view.website.entityAdapters.ProductEntityAdapter',
+        link: 'Taco.view.website.entityAdapters.ExternalLinkEntityAdapter'
+    },
+
+    options: {},
 
     header: {
         title: false,
@@ -124,10 +132,11 @@ Ext.define('Taco.view.website.Index', {
             items;
 
         this.controller = Taco.app.controllers.get('Website');
+        this.url = this.options && this.options.startUrl ? this.options.startUrl : '/';
         this.widgetDefinitions = Taco.core.data.StoreManager.getOrCreate("Taco.store.WidgetDefinitions");
 
         store = Taco.core.data.StoreManager.getOrCreate('Taco.store.NavigationTreeNodes');
-        this.url = this.options && this.options.startUrl ? this.options.startUrl : '/';
+
         items = [{
             xtype: 'panel',
             itemId: 'editorCardPanel',
@@ -233,20 +242,33 @@ Ext.define('Taco.view.website.Index', {
         this.tree.on('urlclick', this.onTreeUrlClick, this);
     },
 
-    entityTypeEditConfig: {
-        blog: 'Taco.view.website.entityAdapters.DocumentEntityAdapter',
-        "default": 'Taco.view.website.entityAdapters.DocumentEntityAdapter',
-        category: 'Taco.view.website.entityAdapters.CategoryEntityAdapter',
-        product: 'Taco.view.website.entityAdapters.ProductEntityAdapter',
-        link: 'Taco.view.website.entityAdapters.ExternalLinkEntityAdapter'
-    },
-
     bindToForm: function () {
         var primaryAction = this.down('#primaryAction');
 
         this.down('#pageSettings').getForm().getBoundItems().add(primaryAction);
 
         primaryAction.setHandler(this.onSave, this);
+    },
+
+    createEntityTypeAdapter: function (pageContext, editor) {
+        var cls = this.entityTypeEditConfig[pageContext.pageType || "default"] || this.entityTypeEditConfig["default"];
+
+        if ((pageContext.editMode || "").toLowerCase() == 'template') {
+            cls = 'Taco.view.website.entityAdapters.TemplateEntityAdapter';
+        } else if ((pageContext.editMode || "").toLowerCase() == 'site') {
+            //todo create sitetemplate
+            cls = 'Taco.view.website.entityAdapters.TemplateEntityAdapter';
+        }
+
+        return  Ext.create(cls, {
+            editor: editor,
+            pageContext: pageContext,
+            manager: this,
+            listeners: {
+                load: this.onEntityTypeAdapterLoad,
+                scope: this
+            }
+        });
     },
 
     getPageContext: function () {
@@ -265,26 +287,6 @@ Ext.define('Taco.view.website.Index', {
         var settings = this.entitypeTypeHandler.getPageSettings();
 
         this.pageSettings.add(settings);
-    },
-
-    createEntityTypeAdapter: function (pageContext, editor) {
-
-        var cls = this.entityTypeEditConfig[pageContext.pageType || "default"] || this.entityTypeEditConfig["default"];
-        if ((pageContext.editMode || "").toLowerCase() == 'template') {
-            cls = 'Taco.view.website.entityAdapters.TemplateEntityAdapter';
-        } else if ((pageContext.editMode || "").toLowerCase() == 'site') {
-            //todo create sitetemplate
-            cls = 'Taco.view.website.entityAdapters.TemplateEntityAdapter';
-        }
-        return  Ext.create(cls, {
-            editor: editor,
-            pageContext: pageContext,
-            manager: this,
-            listeners: {
-                load: this.onEntityTypeAdapterLoad,
-                scope: this
-            }
-        });
     },
 
     onPageLoad: function (editor) {
@@ -442,13 +444,15 @@ Ext.define('Taco.view.website.Index', {
 
         }
     },
-    onPageCreate: function (tree, cmsDoc, isLinked, parentRecord) {
 
+    onPageCreate: function (tree, cmsDoc, isLinked, parentRecord) {
         this.tree.store.reload();
         //todo navigage?
-
     },
+
     onTreeUrlClick: function (tree, url, record, item, index, e, eOpts) {
-        this.navigate({ url: url });
+        this.navigate({
+            url: url
+        });
     }
 });
