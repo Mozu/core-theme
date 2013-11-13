@@ -18,12 +18,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     {
         private readonly IProductCategoryRuntimeWebApiClient _catClient;
         private readonly IProductRuntimeWebApiClient _productClient;
-        private readonly ISiteBuilderContext _ctx;
+        
         private readonly IProductSearchWebApiClient _searchClient;
 
-        public SearchController(IProductCategoryRuntimeWebApiClient catClient, ISiteBuilderContext ctx, IProductRuntimeWebApiClient productClient, IProductSearchWebApiClient searchClient)
+        public SearchController(IProductCategoryRuntimeWebApiClient catClient, IProductRuntimeWebApiClient productClient, IProductSearchWebApiClient searchClient)
         {
-            _ctx = ctx;
+            
             _catClient = catClient;
             _productClient = productClient;
             _searchClient = searchClient;

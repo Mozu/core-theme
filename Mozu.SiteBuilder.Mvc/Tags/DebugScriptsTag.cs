@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         protected override void ProcessTag(ArgumentCollection arguments, ref NDjango.Interfaces.IContext context, out string buffer, out string templateName)
         {
             buffer = templateName = null;
-            ISiteBuilderContext siteContext = context.SiteBuilderContext();
+            
 
 
             var scriptsArray = (List<string>) context.HttpContext().Items ["scripts"];

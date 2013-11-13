@@ -29,7 +29,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         IDocumentListWebApiClient _docRepo;
         ICmsServiceWrapper _cmsService;
         private readonly SiteContext _siteContext;
-        private readonly ISiteBuilderContext _siteBuilderContext;
+        
         //ISessionDocumentStore _sessionDocStore;
        // private IPageTypeProvider _pageTypeProvider;
 

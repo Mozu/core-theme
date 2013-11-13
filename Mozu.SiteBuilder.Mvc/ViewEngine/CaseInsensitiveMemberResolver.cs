@@ -168,8 +168,28 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             {
                 try
                 {
-                    var param = System.Convert.ChangeType(memberName , lookup.Item1[i].GetIndexParameters()[0].ParameterType);
-                    return new FSharpOption<object>(CleanJson(lookup.Item1[i].GetMethod.Invoke(container,new object[]{param })));
+                    object param = null;
+                    if (lookup.Item1[i].GetIndexParameters()[0].ParameterType == typeof (string))
+                    {
+                        param = memberName;
+                    }else if (lookup.Item1[i].GetIndexParameters()[0].ParameterType == typeof (int))
+                    {
+                        int tmpInt;
+                        if (int.TryParse(memberName, out tmpInt))
+                        {
+                            param = tmpInt;
+                        }
+                        
+                    }
+                    else
+                    {
+                        throw new Exception("tell phipps 1 " + lookup.Item1[i].GetIndexParameters()[0].ParameterType);
+                    }
+                    if (param != null)
+                    {
+                        return new FSharpOption<object>(CleanJson(lookup.Item1[i].GetMethod.Invoke(container, new object[] { param })));    
+                    }
+                    
                 }
                 catch 
                 {

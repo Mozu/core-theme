@@ -19,7 +19,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
     {
         
         private IAuthenticationHelper _authenticationHelper;
-        private ISiteBuilderContext _sbc;
+        
         
     
         private readonly IUserHelper _userHelper;
@@ -31,10 +31,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly ICookieProvider _cookieProvider;
         private ILogger _log;
 
-        public AuthController( IAuthenticationHelper authHelper, ISiteBuilderContext sbc,IUserHelper userHelper, IPasswordHelper passwordHelper,ISettings settings , ISiteBuilderApiContext  apiContext, ICookieProvider cookieProvider)
+        public AuthController( IAuthenticationHelper authHelper, IUserHelper userHelper, IPasswordHelper passwordHelper,ISettings settings , ISiteBuilderApiContext  apiContext, ICookieProvider cookieProvider)
         {
             _authenticationHelper = authHelper;
-            _sbc = sbc;
+            
             
             _userHelper = userHelper;
             _passwordHelper = passwordHelper;
@@ -73,7 +73,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             //redirectUrl=%2Fadmin&accessToken=4BOtDlSWnUJ%2Fyli1jpWidgFVEkpey96IBLWO8Kve5Ka8un912AIQsvoOqOJEIC8CVoMYv8x2tsDg99NLkK8%2BiH%2BSvXNi0RrfsTTpieIUyps69%2FnXf6wK8yKouea9k1QLSjcgF72Dyzj4mY4YCYLg0DDKycD28XbrdGHnPIUGFp3svwaK5Ca2PAw1qMasMvut525lcNDVYjdTXbA1gIEqLGiONo5InlFfjduQRPaBhoGtCUuDcspYMG9nHVkKxjSFXdVqEX%2FTmvBMEt4Rh9ruXpbyO5zOB9LqwAtEU94tZxMlnvaJ8QgFN0pDAZ4uZGtOAbgo%2BXydVE76NNiOyqI9L5l%2FsU3pq3SbT96q%2F%2Blb%2FC3RRo5kiN%2F8DxpqlD2yl2AN
             var user = LightweightUserClaims.Parse(accessToken);
 
-            SiteBuilderContext.Save(null, null, user.GetUserScope().Id.Value, false, DataViewModeType.NoneSet , _cookieProvider );
+           // Mozu.SiteBuilder.Mvc.Contexts.SiteContext.Save(null, null, user.GetUserScope().Id.Value, false, DataViewModeType.NoneSet, _cookieProvider);
             
             _apiContext.SetUser(user);
             _authenticationHelper.SaveAccessToken(  accessToken);

@@ -18,7 +18,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class WidgetDefinitionController : BaseController
     {
         private readonly SiteContext _siteContext;
-        private readonly ISiteBuilderContext _siteBuilderContext;
+        
       
 
         public WidgetDefinitionController(SiteContext   siteContext   )

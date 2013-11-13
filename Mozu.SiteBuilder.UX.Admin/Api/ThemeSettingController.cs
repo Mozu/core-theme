@@ -20,18 +20,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [WebApi("app/themesetting", SuppressDescriptorGeneration = true)]
     public class ThemeSettingController : BaseController
     {
-        private readonly ISiteBuilderContext _sbContext;
+        
         private readonly IThemeSettingsRepository _themeSettingsRepository;
         private readonly IThemeRepository _themeRepository;
 
-        public ThemeSettingController(ISiteBuilderContext sbContext, IThemeSettingsRepository themeSettingsRepository, IThemeRepository themeRepository)
+        public ThemeSettingController( IThemeSettingsRepository themeSettingsRepository, IThemeRepository themeRepository)
         {
             if(themeSettingsRepository == null)
             {
                 throw new ArgumentNullException("themeSettingsRepository");
             }
 
-            _sbContext = sbContext;
+            
             _themeSettingsRepository = themeSettingsRepository;
             _themeRepository = themeRepository;
         }

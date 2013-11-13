@@ -13,13 +13,13 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         private readonly ITemplateManager _templateManager;
         private readonly MozuVirtualPathProvider _mozuVirtualPathProvider;
-        private readonly ISiteBuilderContext _siteBuilderContext;
+        
 
-        public HyprViewEngine(ITemplateManager templateManager, MozuVirtualPathProvider mozuVirtualPathProvider, ISiteBuilderContext siteBuilderContext)
+        public HyprViewEngine(ITemplateManager templateManager, MozuVirtualPathProvider mozuVirtualPathProvider)
         {
             _templateManager = templateManager;
             _mozuVirtualPathProvider = mozuVirtualPathProvider;
-            _siteBuilderContext = siteBuilderContext;
+            
         }
 
         public HyprView FindPageView(string path)

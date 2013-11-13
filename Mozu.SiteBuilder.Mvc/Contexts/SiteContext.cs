@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
+using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Settings;
@@ -46,6 +47,25 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _cookieProvider = cookieProvider;
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient.CloneWithoutUserClaims();
         }
+
+        internal const string COOKIENAME = "SBCONTEXT";
+
+
+        public static void Save(int? site, int? masterCatalog, int tenant, bool isEditMode, DataViewModeType dataViewMode, ICookieProvider cookieProvider)
+        {
+            var cookie = new HttpCookie("") { Expires = DateTime.MaxValue };
+
+            cookie["site"] = site.HasValue ? site.ToString() : null;
+            cookie["masterCatalog"] = masterCatalog.HasValue ? masterCatalog.ToString() : null;
+            cookie["tenant"] = tenant.ToString();
+            cookie["editmode"] = isEditMode.ToString();
+            if (dataViewMode == DataViewModeType.Pending)
+            {
+                cookie["dataview"] = DataViewModeType.Pending.ToString();
+            }
+            cookieProvider.SaveResponseCookie(COOKIENAME, cookie);
+        }
+
 
         public Dictionary<string, string> Labels
         {

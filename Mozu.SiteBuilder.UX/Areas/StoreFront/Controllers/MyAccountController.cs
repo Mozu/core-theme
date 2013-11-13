@@ -27,6 +27,7 @@ using Mozu.CommerceRuntime.Contracts.Orders;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
+    [HotOnlyAuthActionFilter]
     public class MyAccountController : BaseApiController
     {
         private readonly ICustomerRepository _customerRepository;
@@ -93,12 +94,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<HttpResponseMessage> Index()
         {
 
-            if (!CurrentUser.IsAuthenticated)
-            {
-                var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
-                redir.Headers.Location = new Uri("/user/login?returnUrl=/myaccount", UriKind.Relative);
-                return redir;
-            }
 
             var account = (await _customerAccountWebApiClient.GetAccounts(filter : "UserId eq \"" + CurrentUser.UserId + "\"")).ReadAsSync().Items.FirstOrDefault();
 

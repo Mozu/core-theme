@@ -383,7 +383,6 @@
     <Compile Include="ActionFilters\HandleAllTheMvcErrorsFilter.cs" />
     <Compile Include="ActionFilters\RefreshUserAuthTicketFilter.cs" />
     <Compile Include="ActionFilters\SiteBuilderAuthorizeAttribute.cs" />
-    <Compile Include="ActionFilters\TenantSiteHeadersResolverActionFilter.cs" />
     <Compile Include="ActionResults\ActionResult.cs" />
     <Compile Include="ActionResults\ViewResult.cs" />
     <Compile Include="ActionResults\ContentResult.cs" />
@@ -469,7 +468,6 @@
     <Compile Include="ICookieProvider.cs" />
     <Compile Include="ISearchContext.cs" />
     <Compile Include="ISiteBuilderApiContext.cs" />
-    <Compile Include="ISiteBuilderContext.cs" />
     <Compile Include="IStorefrontCache.cs" />
     <Compile Include="JsonNetValueProviderFactory.cs" />
     <Compile Include="Localization\ILocalizationRepository.cs" />
@@ -508,7 +506,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SiteBuilderApiContext.cs" />
-    <Compile Include="SiteBuilderContext.cs" />
     <Compile Include="Specifications\CanCheckForAvailableShippingSpecification.cs" />
     <Compile Include="Specifications\HasNameOrCompanySpecification.cs" />
     <Compile Include="Specifications\HasShippableDomesticAddressSpecification.cs" />

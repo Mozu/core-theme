@@ -14,6 +14,7 @@ using Mozu.Core.Api.Client;
 using Mozu.Location.Contracts.Clients;
 using Mozu.ShippingRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Orders;
@@ -30,8 +31,8 @@ using Mozu.CommerceRuntime.Contracts.Orders;
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
 
-   
 
+    [NoWarmAuthActionFilter]
     public class CheckoutController : BaseApiController
     {
        
@@ -60,6 +61,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
            
 
         }
+
+        
 
         /*public string MerchantId
         {

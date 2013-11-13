@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         protected IDocumentListWebApiClient _docRepo;
         protected IDocumentTypeWebApiClient _docTypeRepo;
         protected ICmsServiceWrapper _cmsService;
-        protected ISiteBuilderContext _context;
+        
         protected ICmsTypeHelper _cmsTypeHelper;
         private readonly HyprViewEngine _hyprViewEngine;
       
@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public CmsPagesController(
             IDocumentListWebApiClient docRepo,
             IDocumentTypeWebApiClient docTypeRepo,
-            ISiteBuilderContext context,
+            
             ICmsServiceWrapper cmsService,
             ICmsTypeHelper cmsTypeHelper,
             HyprViewEngine hyprViewEngine
@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _docRepo = docRepo;
             _docTypeRepo = docTypeRepo;
             _cmsService = cmsService;
-            _context = context;
+            
             _cmsTypeHelper= cmsTypeHelper;
             _hyprViewEngine = hyprViewEngine;
 

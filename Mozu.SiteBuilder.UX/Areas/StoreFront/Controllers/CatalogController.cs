@@ -29,13 +29,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
 
 
-    [RefreshUserAuthTicketFilter]
+    
     public class CatalogController : BaseApiController
     {
         IProductWebApiClient   _productClient;
         private readonly ICategoryTreeProvider _categoryTreeProvider;
         IProductSearchWebApiClient _searchClient;
-        ISiteBuilderContext _ctx;
+        
         ISiteBuilderApiContext _apiCtx;
 
         public CatalogController(ICategoryTreeProvider categoryTreeProvider, ISiteBuilderApiContext apiCtx, IProductWebApiClient productClient, IProductSearchWebApiClient searchClient, Autofac.ILifetimeScope lifetimeScope)
@@ -231,7 +231,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
              var lts = (ILifetimeScope) this.ControllerContext.Request.GetDependencyScope().GetService(typeof (ILifetimeScope));
 
-             var sbccc = lts.Resolve<ISiteBuilderContext>();
+             
             PageContext.Title = cat.Name;
 
             PageContext.CmsContext = new CmsPageContext()

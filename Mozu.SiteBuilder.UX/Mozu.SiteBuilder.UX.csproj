@@ -382,9 +382,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionFilters\MediaTypeProcessorAttribute.cs" />
-    <Compile Include="ActionFilters\NotFoundActionFilter.cs" />
-    <Compile Include="ActionFilters\WigitContexInitFilter.cs" />
     <Compile Include="Areas\Misc\Controllers\AccountController.cs" />
     <Compile Include="Areas\Misc\Controllers\CacheFlushController.cs" />
     <Compile Include="Areas\Misc\Controllers\ContentController.cs" />
