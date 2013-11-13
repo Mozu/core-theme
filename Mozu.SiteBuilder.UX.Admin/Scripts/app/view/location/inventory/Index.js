@@ -89,50 +89,43 @@ Ext.define('Taco.view.location.inventory.Index', {
                 width: 560
             },
             items: [
+                /*
                 {
                     name: 'productName',
                     fieldLabel: 'Product Name',
                     flex:1
                 
-                }, {
+                },
+                */
+                {
                     name: 'productCode',
                     fieldLabel: 'Product Code',
                     flex: 1
-                }, {
-                    name: 'locationName',
-                    fieldLabel: 'Location Name',
-                    flex: 1
-                }, {
-                    name: 'locationCode',
-                    fieldLabel: 'Location Code',
-                    flex: 1
                 }
+
             ]
         }]
     },
 
     filterProperties: [
+        /*
         {
             property: 'all',
             text: 'All',
             isDefault: true
         },
+        
         {
             name: 'productName',
             text: 'Product Name'
         },
+        */
         {
             name: 'productCode',
+            isDefault:true,
             text: 'Product Code'
-        },
-        {
-            name: 'locationName',
-            text: 'location Name'
-        },
-        {
-            name: 'locationCode',
-            text: 'Location Code'
         }
+
     ],
 
     /*
