@@ -25,9 +25,7 @@ Ext.define('Taco.view.location.inventory.Index', {
     beforeRowCreate: function (editor, store) {
         var filters = store.filters,
             locationCode = null,
-            locationFilter = filters.findBy(function (item, index) {
-                return (item.property == "locationCode")
-            });
+            locationFilter = store.extraFilters.getByKey("locationCode");
         
         if (!locationFilter) {
             Taco.app.fireEvent('setmessage', "A location selection is required", 'error');
@@ -41,14 +39,6 @@ Ext.define('Taco.view.location.inventory.Index', {
     store: {
         type: 'Taco.store.LocationInventories',
         createOnly: true,
-        listeners: {
-            'beforeload' : {
-                fn: function(store, operation) {
-                    
-                    return true;
-                }
-            }
-        },
         // todo: figure out why the autoLoad Config is being ignored;
         autoLoad:false
     },
