@@ -121,6 +121,8 @@ Ext.define('Taco.view.location.inventory.Index', {
         */
         {
             property: 'productCode',
+            // make it startsWith
+            comparison: "sw",
             isDefault:true,
             text: 'Product Code'
         }
