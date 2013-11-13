@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
-using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core;
-using Mozu.SiteBuilder.Mvc.ActionResults;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.User.Contracts;
+using Mozu.Core.Api.Client;
+using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.Customers;
@@ -19,10 +19,6 @@ using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Customers;
 using Mozu.User.Contracts.Clients;
 using PasswordInfo = Mozu.SiteBuilder.UX.Models.Customers.PasswordInfo;
-using Mozu.Customer.Contracts.Clients;
-using System.Linq;
-using Mozu.Core.Api.Client;
-using Mozu.CommerceRuntime.Contracts.Orders;
 
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -37,44 +33,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly ISiteBuilderApiContext _apiContext;
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
+        private readonly IWishlistWebApiClient _wishlistApiClient;
 
-        public MyAccountController(ICustomerRepository customerRepository, ICustomerAccountWebApiClient customerAccountWebApiClient, IAccountContactRepository accountContactRepository, IUserWebApiClient userWebApiClient, IOrderWebApiClient orderWebApiClient, IAuthenticationHelper authenticationHelper, ISiteBuilderApiContext apiContext)
+        public MyAccountController(ICustomerRepository customerRepository, ICustomerAccountWebApiClient customerAccountWebApiClient, IAccountContactRepository accountContactRepository, IUserWebApiClient userWebApiClient, IOrderWebApiClient orderWebApiClient, IWishlistWebApiClient wishlistWebApiClient, IAuthenticationHelper authenticationHelper, ISiteBuilderApiContext apiContext)
         {
-            if(customerRepository == null)
-            {
-                throw new ArgumentNullException("customerRepository");
-            }
-
-            if(customerAccountWebApiClient == null)
-            {
-                throw new ArgumentNullException("customerAccountWebApiClient");
-            }
-
-            if(accountContactRepository == null)
-            {
-                throw new ArgumentNullException("accountContactRepository");
-            }
-
-            if(userWebApiClient == null)
-            {
-                throw new ArgumentNullException("userWebApiClient");
-            }
-
-            if (orderWebApiClient == null)
-            {
-                throw new ArgumentNullException("orderWebApiClient");
-            }
-
-            if (authenticationHelper == null)
-            {
-                throw new ArgumentNullException("authenticationHelper");
-            }
-
             _customerRepository = customerRepository;
             _customerAccountWebApiClient = customerAccountWebApiClient.CloneWithoutUserClaims();
             _accountContactRepository = accountContactRepository;
             _userWebApiClient = userWebApiClient.CloneWithoutUserClaims();
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
+            _wishlistApiClient = wishlistWebApiClient.CloneWithoutUserClaims();
             _authenticationHelper = authenticationHelper;
             _apiContext = apiContext;
         }
@@ -93,36 +61,26 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<HttpResponseMessage> Index()
         {
-
-
             var account = (await _customerAccountWebApiClient.GetAccounts(filter : "UserId eq \"" + CurrentUser.UserId + "\"")).ReadAsSync().Items.FirstOrDefault();
 
             if (account == null)
             {
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
-
             }
 
-            var cards = (await _customerAccountWebApiClient.GetAccountCards(account.Id)).ReadAsSync().Items;
+            var userTask = _userWebApiClient.GetUser(CurrentUser.UserId);
+            var cardsTask = _customerAccountWebApiClient.GetAccountCards(account.Id);
+            var openOrdersTask = _orderWebApiClient.GetOrders(0, 25, null, BuildOpenOrdersFilter(account.Id));
+            var orderHistoryTask = _orderWebApiClient.GetOrders(0, 25, null, BuildOrderHistoryFilter(account.Id));
 
-            var openOrdersSb = new StringBuilder();
-            openOrdersSb.Append(string.Join(" or ", OpenOrderStates.Select(x => string.Format("Status eq \"{0}\"", x))));
-            openOrdersSb.Append(" and CustomerAccountId eq \"");
-            openOrdersSb.Append(account.Id);
-            openOrdersSb.Append("\" and OrderNumber ne null");
-            var openOrdersFilter = openOrdersSb.ToString();
-            var openOrders = await _orderWebApiClient.GetOrders(0, 25, null, openOrdersFilter).Result.ReadAsAsync();
-
-            var orderHistorySb = new StringBuilder();
-            orderHistorySb.Append("CustomerAccountId eq \"");
-            orderHistorySb.Append(account.Id);
-            orderHistorySb.Append("\" and OrderNumber ne null");
-            var orderHistoryFilter = orderHistorySb.ToString();
-            var orderHistory = await _orderWebApiClient.GetOrders(0, 25, null, orderHistoryFilter).Result.ReadAsAsync();
+            var user = userTask.Result.ReadAsSync();
+            var cards = cardsTask.Result.ReadAsSync();
+            var openOrders = openOrdersTask.Result.ReadAsSync();
+            var orderHistory = orderHistoryTask.Result.ReadAsSync();
 
             //this.ViewData["Orders"] = orders.Items;
 
-            this.ViewData["User"] = _userWebApiClient.GetUser(CurrentUser.UserId).Result.ReadAsSync();
+            this.ViewData["User"] = user;
 
             var jSerializer = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
             var jAccount = Newtonsoft.Json.Linq.JObject.FromObject(account, jSerializer);
@@ -138,6 +96,25 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             jAccount.Add("cards", Newtonsoft.Json.Linq.JArray.FromObject(cards, jSerializer));
 
             return this.Request.CreateResponse(HttpStatusCode.OK,  View("my-account", jAccount));
+        }
+
+        private string BuildOpenOrdersFilter(int accountId)
+        {
+            var openOrdersSb = new StringBuilder();
+            openOrdersSb.Append(string.Join(" or ", OpenOrderStates.Select(x => string.Format("Status eq \"{0}\"", x))));
+            openOrdersSb.Append(" and CustomerAccountId eq \"");
+            openOrdersSb.Append(accountId);
+            openOrdersSb.Append("\" and OrderNumber ne null");
+            return openOrdersSb.ToString();
+        }
+
+        private string BuildOrderHistoryFilter(int accountId)
+        {
+            var orderHistorySb = new StringBuilder();
+            orderHistorySb.Append("CustomerAccountId eq \"");
+            orderHistorySb.Append(accountId);
+            orderHistorySb.Append("\" and OrderNumber ne null");
+            return orderHistorySb.ToString();
         }
 
         public  Task<CustomerAccount  > GetAccount()
