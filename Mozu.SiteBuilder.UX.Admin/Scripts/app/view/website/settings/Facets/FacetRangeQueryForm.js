@@ -72,7 +72,6 @@ Ext.define('Taco.view.website.settings.facets.FacetRangeQueryForm', {
         me.rangeQueries.on({
             change: function (rqs, nV) {
                 me.numRanges.setValue(nV && Ext.isArray(nV) && nV.length);
-                me.savableStateCheck();
             }
         });
         this.callParent(arguments);

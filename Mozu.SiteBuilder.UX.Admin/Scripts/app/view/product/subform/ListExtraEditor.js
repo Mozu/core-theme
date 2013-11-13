@@ -30,10 +30,10 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
 
         this.buildList();
 
-        this.on({
-            savablestatechange: this.onSavableStateChange,
-            scope: this
-        });
+        // this.on({
+        //     savablestatechange: this.onSavableStateChange,
+        //     scope: this
+        // });
     },
 
     loadData: function () {   
@@ -183,16 +183,16 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
 
         this.listEditor.add(items);
 
-        this.resetSavableState();
+        // this.resetSavableState();
     },
 
-    onSavableStateChange: function (form, state) {
-        if (!this.doneButton) {
-            return;
-        }
+    // onSavableStateChange: function (form, state) {
+    //     if (!this.doneButton) {
+    //         return;
+    //     }
 
-        this.doneButton.setDirty(state);
-    },
+    //     this.doneButton.setDirty(state);
+    // },
 
     bindExtra: function (extra) {
         console.log('do stuff!');

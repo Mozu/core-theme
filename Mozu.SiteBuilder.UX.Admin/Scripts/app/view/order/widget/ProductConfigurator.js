@@ -96,7 +96,6 @@
         var me = this;
 
         me.addEvents([
-            'savablestatechange',
             'loadFailure'
         ]);
 
@@ -427,7 +426,6 @@
             this.optionsContainer.add(items);
         }
         
-        this.savableStateCheck();
         this.price.update({
             Price: this.runtimeData.Price,
             PriceRange: this.runtimeData.PriceRange
@@ -536,8 +534,6 @@
                     Price: this.runtimeData.Price,
                     PriceRange: this.runtimeData.PriceRange
                 });
-
-                this.savableStateCheck();
             },
             scope: this
         });
