@@ -168,11 +168,12 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             {
                 try
                 {
+                    Type paramType = lookup.Item1[i].GetIndexParameters()[0].ParameterType;
                     object param = null;
-                    if (lookup.Item1[i].GetIndexParameters()[0].ParameterType == typeof (string))
+                    if (paramType == typeof (string))
                     {
                         param = memberName;
-                    }else if (lookup.Item1[i].GetIndexParameters()[0].ParameterType == typeof (int))
+                    }else if ( paramType == typeof (int))
                     {
                         int tmpInt;
                         if (int.TryParse(memberName, out tmpInt))
@@ -180,10 +181,13 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                             param = tmpInt;
                         }
                         
+                    }else if (paramType == typeof ( object ))
+                    {
+                        param = memberName;
                     }
                     else
                     {
-                        throw new Exception("tell phipps 1 " + lookup.Item1[i].GetIndexParameters()[0].ParameterType);
+                        throw new Exception("tell phipps 1 " + paramType);
                     }
                     if (param != null)
                     {

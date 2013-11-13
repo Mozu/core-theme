@@ -96,7 +96,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                              Id = "_templates",
                              OriginalId = "_templates",
                              Expanded = true,
-                             Expandable = false,
+                             Expandable = true,
                             Index=99,
                              Name = "Templates",
                            

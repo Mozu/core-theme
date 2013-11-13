@@ -65,6 +65,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 NodeType = NavigationNodeType.Group,
                 Id = NAV_ROOT_NODE_NAME,
                 ParentId = SUPER_ROOT_NODE_NAME,
+                Expandable = true,
                 Index = 0
             });
 
@@ -73,6 +74,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 NodeType = NavigationNodeType.Group,
                 Id = UNLINKED_PAGES_NODE_ID,
                 ParentId = SUPER_ROOT_NODE_NAME,
+                Expandable = true,
                 Index = 1
             });
 

@@ -40,6 +40,33 @@ Ext.define('Taco.view.website.Tree', {
                 return output;
             }
         }];
+        
+
+
+
+        this.mon(this.store,
+        {
+            write: function (store, opt) {
+                var record, records = this.getSelectionModel().getSelection();
+                if (records && records.length && records[0].parentNode) {
+                    record = records[0];
+                } else {
+                    record = this.getRootNode().firstChild.firstChild;
+                }
+                
+                //todo fire urlclick
+                this.fireEvent('navigationchange', store, record);
+
+            },
+            move: function (node, oldParent, newParent, index, eOpts) {
+                node.set('editAction', 'move');
+                node.save();
+            },
+            scope: this
+           
+        });
+        
+
 
         this.menu = Ext.create('Ext.menu.Menu', {
             defaultAlign: 'tr-br',

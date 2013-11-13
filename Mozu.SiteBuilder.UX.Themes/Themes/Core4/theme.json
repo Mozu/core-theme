@@ -176,9 +176,22 @@
                 "name":"productCodes",
                 "fieldLabel":"products",
                 "xtype":"taco-productfield",
-                anchor    : '100%'
-            }
+                "anchor"    : "100%"
+            },
+	          {
+				"name":"template",
+				"fieldLabel":"Template",
+				"xtype":"combo",
+				"anchor"    : "100%",
+				"store":[ 
+					["modules/product/product-list-tiled", "tiled"],
+					["modules/product/product-list", "list"]
+				]
+	          }
          ],
+          "defaultConfig": {
+			"template": "modules/product/product-list"
+		 },
          "icon": "/resources/admin/widgets/01_photo_text.png",
          
     }, 

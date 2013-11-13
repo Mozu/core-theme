@@ -47,12 +47,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                         Template = new DocumentRequest()
                                                                           {
                                                                               Collection ="templates",
-                                                                              Path="index"
+                                                                              Path = "home"
                                                                           }
                                                     };
-         
-            
-            return this.View("index");
+
+
+            return this.View("home");
 
 
         }
