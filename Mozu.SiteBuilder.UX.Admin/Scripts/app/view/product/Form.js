@@ -214,6 +214,12 @@ Ext.define('Taco.view.product.Form', {
         //this.globalForm.loadForm(undefined, true);
         this.rebuildTabs();
         this.tabPanel.showTabAt(0);
+        
+        // START HACK
+        this.tabPanel.getLayout().activeItem = null;
+        this.globalForm.hidden = true;
+        // END HACK
+        
         this.tabPanel.setActiveItemAt(this.tabPanel.items.length - 1);
        
     },
