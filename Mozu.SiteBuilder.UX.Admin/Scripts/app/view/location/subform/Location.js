@@ -82,7 +82,7 @@ Ext.define('Taco.view.location.subform.Location', {
        
         me.shippingContextField = Ext.create('Taco.core.ux.form.field.EditableDisplayField', {
             name: 'shippingOriginContact',
-            width: "100%",
+            width: 400,
             fieldLabel: 'shipping Origin Contact',
             onClick: function () {
                 var modal = Ext.widget('taco-modal',

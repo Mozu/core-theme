@@ -35,13 +35,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
           
         IDocumentTypeWebApiClient _docTypeRepo;
         ICmsServiceWrapper _cmsService;
-        ISiteBuilderContext _context;
         ICmsTypeHelper _cmsTypeHelper;
         BlogCache _cache;
         public BlogsController(
           
             IDocumentTypeWebApiClient docTypeRepo,
-            ISiteBuilderContext context,
+            
              ICmsServiceWrapper cmsService,
             ICmsTypeHelper cmsTypeHelper
 
@@ -51,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
           
             _docTypeRepo = docTypeRepo;
             _cmsService = cmsService;
-            _context = context;
+            
             _cmsTypeHelper= cmsTypeHelper;
 
             

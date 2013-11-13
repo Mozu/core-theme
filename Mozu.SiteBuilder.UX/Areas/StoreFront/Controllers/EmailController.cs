@@ -101,13 +101,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
         public EmailController(IDocumentListWebApiClient docRepo,
             IDocumentTypeWebApiClient docTypeRepo,
-            ISiteBuilderContext context,
+            
             ICmsServiceWrapper cmsService,
           
             ICmsTypeHelper cmsTypeHelper,
 
             HyprViewEngine hyprViewEngine)
-            : base(docRepo, docTypeRepo, context, cmsService, cmsTypeHelper, hyprViewEngine)
+            : base(docRepo, docTypeRepo,  cmsService, cmsTypeHelper, hyprViewEngine)
         {
             
         }

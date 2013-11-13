@@ -21,21 +21,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class SiteDirectoryController : BaseController
     {
            // ICmsTypeHelper _cmsTypeHelper;
-        ISiteBuilderContext _sbCtx;
+        
         ICmsServiceWrapper _cmsService;
         ICategoryWebApiClient _catClient;
         //ISessionDocumentStore _sessionDocStore;
         IProductWebApiClient _prodService;
 
         public SiteDirectoryController(
-            ISiteBuilderContext sbCtx,
+            
           ICategoryWebApiClient catClient,
              ICmsServiceWrapper cmsService,
             IProductWebApiClient prodService
             )
         {
             _catClient = catClient;
-            _sbCtx = sbCtx;
+            
             _cmsService = cmsService;
             _prodService = prodService;
         }

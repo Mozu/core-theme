@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     
     public class TemplatesController : BaseApiController
     {
-        private readonly ISiteBuilderContext _siteBuilderContext;
+        
 
 
         //private ILifetimeScope _lifetimeScope;
@@ -45,13 +45,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
        // private readonly IViewEngine _viewEngine;
 
         public TemplatesController(
-            ISiteBuilderContext siteBuilderContext 
             
            
 
             )
         {
-            _siteBuilderContext = siteBuilderContext;
+            
 
             //  _viewEngine = viewEngine;
            // _lifetimeScope = lifetimeScope;

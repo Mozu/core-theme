@@ -13,13 +13,13 @@ namespace Mozu.SiteBuilder.Mvc.CMS
     public abstract class DefinitionProvider<T> where T : new()
     {
         private readonly VirtualPathProvider _virtualPathProvider;
-        private readonly ISiteBuilderContext _sbCtx;
+        
         private readonly JsonSerializer _serializer = new Newtonsoft.Json.JsonSerializer();
 
-        protected DefinitionProvider(VirtualPathProvider virtualPathProvider, ISiteBuilderContext ctx)
+        protected DefinitionProvider(VirtualPathProvider virtualPathProvider)
         {
             _virtualPathProvider = virtualPathProvider;
-            _sbCtx = ctx;
+            
             
         }
 

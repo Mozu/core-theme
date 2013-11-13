@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             //builder.ScanAssemblyAndRegisterTypes(platformService, x => x.IsAssignableFrom(typeof(PlatformService.Contracts.Clients.IReferenceDataWebApiClient)));
             
             builder.RegisterHttpRequestMessage(GlobalConfiguration.Configuration);
-            builder.RegisterType<SiteBuilderContext>().As<ISiteBuilderContext>().InstancePerLifetimeScope();
+            
 
             builder.RegisterType<SbApiContextBuilder>().As<IApiContextBuilder>();
 
@@ -77,7 +77,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
             builder.RegisterClassesMatchingInterfaceName(typeof(Mvc.CookieProvider).Assembly);
             builder.RegisterInstance<System.Runtime.Caching.ObjectCache>(System.Runtime.Caching.MemoryCache.Default);
-            builder.RegisterType<SiteBuilderContext>().As<ISiteBuilderContext>().InstancePerLifetimeScope();
+            
             //builder.RegisterModule(new AutofacWebTypesModule());
            // builder.Register<System.Web.HttpContextBase>((c, p) => new System.Web.HttpContextWrapper(System.Web.HttpContext.Current)).InstancePerDependency();
 

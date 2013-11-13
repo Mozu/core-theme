@@ -28,9 +28,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ICartWebApiClient _cartClient;
         IOrderWebApiClient _orderWebApiClient;
         private readonly ICookieProvider _cookieProvider;
-        ISiteBuilderContext _context;
+        
 
-        public CartController(ICartWebApiClient cartClient, ISiteBuilderContext context, IOrderWebApiClient orderWebApiClient, ICookieProvider cookieProvider)
+        public CartController(ICartWebApiClient cartClient, IOrderWebApiClient orderWebApiClient, ICookieProvider cookieProvider)
         {
             if(cartClient == null)
             {
@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             _cartClient = cartClient;
-            _context = context;
+            
             _orderWebApiClient = orderWebApiClient;
             _cookieProvider = cookieProvider;
         }

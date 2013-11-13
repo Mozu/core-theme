@@ -79,24 +79,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-
-        ISiteBuilderContext _sc;
-        public ISiteBuilderContext SiteContext
-        {
-            get
-            {
-                if (_sc == null)
-                {
-                    _sc = LifetimeScope.Resolve<ISiteBuilderContext>();
-                }
-                return _sc;
-            }
-            set
-            {
-                _sc = value;
-            }
-        }
-
         public HttpContextBase HttpContext
         {
             get

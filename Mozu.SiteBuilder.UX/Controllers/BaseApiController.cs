@@ -13,6 +13,7 @@ using System.Web.Routing;
 using Autofac;
 using Autofac.Core.Lifetime;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
@@ -20,6 +21,7 @@ using Mozu.SiteBuilder.UX.Areas.Misc.Controllers;
 
 namespace Mozu.SiteBuilder.UX.Controllers
 {
+    [RefreshStoreFrontUserAuthTicketFilter]
     public class BaseApiController : ApiControllerBase
     {
 

@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IUserHelper _userHelper;
         private readonly IApiContext _apiContext;
 
-        public AccountController(IMultiScopeAdminUserWebApiClient user, IMultiScopeRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient , IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, IMultiScopeAdminUserWebApiClient adminUserWebApiClient, ISiteBuilderContext siteBuilderContext, ISettings settings,  IUserHelper userHelper, IApiContext apiContext)
+        public AccountController(IMultiScopeAdminUserWebApiClient user, IMultiScopeRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient , IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, IMultiScopeAdminUserWebApiClient adminUserWebApiClient,  ISettings settings,  IUserHelper userHelper, IApiContext apiContext)
         {
             _usersRepo = user;
             _rolesRepo = role;

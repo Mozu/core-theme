@@ -82,8 +82,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.User.Contracts.Clients.IUserWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Shipping.Contracts.Clients.ShippingSettingsWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Order.Contracts.CheckoutSettings ).Assembly);
-		    builder.RegisterType<SiteBuilderContext>().As<ISiteBuilderContext>().InstancePerApiRequest();
-
+		    
             builder.RegisterType<ThemeSettingsRepository>().As<IThemeSettingsRepository>().InstancePerApiRequest();
 
             builder.RegisterType<FiftyOneDegreesMobileDetectionProvider>().As<IMobileDetectionProvider>().InstancePerApiRequest();

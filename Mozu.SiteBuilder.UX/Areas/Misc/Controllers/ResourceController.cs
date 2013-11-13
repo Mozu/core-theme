@@ -215,14 +215,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                                                                                       };
 
         private readonly MozuVirtualPathProvider _pathProvider;
-        private readonly ISiteBuilderContext _sbContext;
+        
         private readonly IThemeSettingsRepository _themeSettingsRepository;
 
 
-        public ResourceController(ISiteBuilderContext sbContext, IThemeSettingsRepository themeSettingsRepository,   MozuVirtualPathProvider pathProvider)
+        public ResourceController( IThemeSettingsRepository themeSettingsRepository,   MozuVirtualPathProvider pathProvider)
         {
             _themeSettingsRepository = themeSettingsRepository;
-            _sbContext = sbContext;
             
             _pathProvider = pathProvider;
         }

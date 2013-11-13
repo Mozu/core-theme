@@ -136,7 +136,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     break;
             }
 
-            SiteBuilderContext.Save(site: site.Id, masterCatalog : site.MasterCatalogId, tenant: site.TenantId, isEditMode: false, dataViewMode: viewMode, cookieProvider: _cookies);
+        Mozu.SiteBuilder.Mvc.Contexts.SiteContext.Save(site: site.Id, masterCatalog : site.MasterCatalogId, tenant: site.TenantId, isEditMode: false, dataViewMode: viewMode, cookieProvider: _cookies);
 
             
             string newHostname = (domainList.FirstOrDefault()) ;

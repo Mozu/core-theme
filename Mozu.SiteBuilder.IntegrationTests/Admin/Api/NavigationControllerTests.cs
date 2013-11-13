@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
     [TestFixture]
     public class NavigationControllerTests
     {
-        private ISiteBuilderContext _siteBuilderContext;
+        
         private ICategoryWebApiClient _categoryWebApiClient;
         private ICmsServiceWrapper _cmsServiceWrapper;
         private INavigationRepository _navigationRepository;
@@ -119,7 +119,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         [SetUp]
         public void SetUp()
         {
-            _siteBuilderContext = Substitute.For<ISiteBuilderContext>();
+            
             _logger = Substitute.For<ILogger>();
         }
 

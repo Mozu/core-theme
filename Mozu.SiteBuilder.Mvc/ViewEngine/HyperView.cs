@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
 
 
-            var siteBuilderContext = viewContext.LifetimeScope.Resolve<ISiteBuilderContext>();
+            
             var requestContext = new Dictionary<string, object>(viewContext.ViewData);
 
 

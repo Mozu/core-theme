@@ -35,7 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
     {
        
         private readonly IAuthenticationHelper _authenticationHelper;
-        private ISiteBuilderContext _sbc;
+        
         private readonly ITenantsWebApiClient _tenantsWebApi;
         
         private readonly IApiContext _apiContext;
@@ -46,11 +46,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         private IMasterCatalogWebApiClient _masterCatalogClient;
 
-        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ISiteBuilderContext sbc, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient)
+        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper,  ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient)
         {
             _usersRepo = usersRepo.CloneWithoutUserClaims();
             _authenticationHelper = authHelper;
-            _sbc = sbc;
+            //_sbc = sbc;
             _apiContext = apiContext;
             _tenantsWebApi = tenantsWebApi.CloneWithoutUserClaims();//  .CloneWithApiContext(x => x.UserClaims = LightweightUserClaims.CreateForSystemUser(UserScopeType.SystemAdmin));
             

@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
      public class MozuVirtualPathProvider : VirtualPathProvider
     {
          private readonly SiteContext _siteContext;
-         private readonly ISiteBuilderContext _siteBuilderContext;
+         
          //private readonly IThemeRepository _themeRepository;
  
 
