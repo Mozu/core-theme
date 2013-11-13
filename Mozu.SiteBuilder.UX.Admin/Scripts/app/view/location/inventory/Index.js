@@ -168,15 +168,13 @@ Ext.define('Taco.view.location.inventory.Index', {
                 xtype: "taco-productpickerfield",
                 editableOnCreateOnly: true,
                 msgTarget: "qtip",
-                allowBlank: true,
+                allowBlank: false,
                 onEditorShow: function (field, editor, context) {
                     // need to add the locationCode to the locationInventory;
-                    var filters = editor.grid.store.filters,
-                        locationCode = null,
-                        locationFilter = filters.findBy(function (item, index) {
-                            return (item.property == "locationCode") 
-                        });
-
+                    var store = editor.grid.store,
+                        locationFilter = store.extraFilters.getByKey("locationCode"),
+                        locationCode;
+                    
                     if (!locationFilter) {
                         return false;
                     }
