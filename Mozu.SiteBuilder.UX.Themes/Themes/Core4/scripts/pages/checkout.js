@@ -11,6 +11,10 @@
                 me.model.next();
             });
         },
+        choose: function () {
+            var me = this;
+            me.model.choose.apply(me.model, arguments);
+        },
         constructor: function () {
             var me = this;
             Backbone.MozuView.apply(this, arguments);

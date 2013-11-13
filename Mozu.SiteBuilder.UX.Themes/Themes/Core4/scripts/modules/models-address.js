@@ -30,6 +30,9 @@
                     required: true,
                     msg: Hypr.getLabel("postalCodeMissing")
                 }
+            },
+            defaults: {
+                candidateValidatedAddresses: null
             }
         });
 

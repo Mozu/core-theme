@@ -65,10 +65,22 @@
                 // since this is one step further away from the order, it has to be accessed differently
                 return this.parent.parent;
             },
+            choose: function (e) {
+                var idx = parseInt($(e.currentTarget).val());
+                if (idx != -1) {
+                    var addr = this.get('address');
+                    var valAddr = addr.get('candidateValidatedAddresses')[idx];
+                    for (var k in valAddr) {
+                        addr.set(k, valAddr[k]);
+                    }
+                }
+                this.next();
+            },
             next: function () {
                 if (this.validate()) return false;
                 var parent = this.parent, me = this;
                 this.isLoading(true);
+                var addr = this.get('address');
                 var completeStep = function () {
                     parent.syncApiModel();
                     parent.apiModel.getShippingMethodsFromContact().then(function (methods) {
@@ -76,6 +88,7 @@
                             availableShippingMethods: methods
                         });
                     }).ensure(function () {
+                        addr.set('candidateValidatedAddresses', null);
                         me.isLoading(false);
                         parent.isLoading(false);
                         me.calculateStepStatus();
@@ -83,39 +96,49 @@
                     });
                 }
 
-                var addr = this.get('address');
-               addr.apiModel.validateAddress().then(function (resp) {
-                    if (resp.data && resp.data.addressCandidates && resp.data.addressCandidates.length) {
-                        var valAddr = resp.data.addressCandidates[0];
+                var promptValidatedAddress = function () {
+                    parent.syncApiModel();
+                    me.isLoading(false);
+                    parent.isLoading(false);
+                    me.stepStatus('invalid');
+                }
 
-                        var addrIsDifferent = (function (addr, valAddr) {
-                            var s1 = '',
-                                s2 = '';
-                            for (var k in valAddr) {
-                                if (k === 'isValidated')
-                                    continue;
-                                s1 = (valAddr[k] || '').toLowerCase();
-                                s2 = (addr.get(k) || '').toLowerCase();
-                                if (s1 != s2) {
-                                    return true;
-                                }
-                            }
-                            return false;
-                        })(addr, valAddr);
-
-                        if (addrIsDifferent) {
-                            var ok = confirm('Did you mean ' + valAddr.address1 + ' ' + valAddr.address2 + ' ' + valAddr.cityOrTown + ' ' + valAddr.stateOrProvince + ' ' + valAddr.postalOrZipCode + ' ' + valAddr.countryCode + '?');
-                            if (ok) {
+                if (addr.get('candidateValidatedAddresses') == null) {
+                    addr.apiModel.validateAddress().then(function (resp) {
+                        if (resp.data && resp.data.addressCandidates && resp.data.addressCandidates.length) {
+                            var addrCompare = function (addr, valAddr) {
+                                var s1 = '',
+                                    s2 = '';
                                 for (var k in valAddr) {
-                                    addr.set(k, valAddr[k]);
+                                    if (k === 'isValidated')
+                                        continue;
+                                    s1 = (valAddr[k] || '').toLowerCase();
+                                    s2 = (addr.get(k) || '').toLowerCase();
+                                    if (s1 != s2) {
+                                        return -1;
+                                    }
+                                }
+                                return 0;
+                            };
+                            var addrIsDifferent = false;
+                            for (var i = 0; i < resp.data.addressCandidates.length; i++) {
+                                if (addrCompare(addr, resp.data.addressCandidates[i]) == 0) {
+                                    completeStep();
+                                    return;
                                 }
                             }
+                            addr.set('candidateValidatedAddresses', resp.data.addressCandidates);
+                            promptValidatedAddress();
                         }
-                    }
+                        else {
+                            completeStep();
+                        }
+                    }, function (e) {
+                        completeStep();
+                    });
+                } else {
                     completeStep();
-                }, function (e) {
-                    completeStep();
-                });
+                }
 
             }
         }),
