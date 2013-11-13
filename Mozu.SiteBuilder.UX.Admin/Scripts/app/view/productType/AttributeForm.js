@@ -187,6 +187,8 @@
             data: this.record.get('selectedValues')
         });
 
+        // Ext.util.Observable.capture(this.selectionStore, function (eventName, e) { console.log(eventName, e); });
+
         valuesField = Ext.create('Taco.core.ux.form.field.MultiSelect', {
             name: 'values',
             height: 300,
@@ -206,7 +208,8 @@
                     listeners: {
                         selectionchange: function (selectionModel, selected) {
                             Ext.each(selected, function (record) {
-                                if (this.selectionStore.find('id', record.get('id')) > -1) {
+                                console.log(record, this.selectionStore, this.selectionStore.find('id', record.get('id')));
+                                if (this.selectionStore.find('id', record.get('id'), 0, false, false, true) > -1) {
                                     return;
                                 }
                                 this.selectionStore.add(record);
