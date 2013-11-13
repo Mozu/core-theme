@@ -155,9 +155,6 @@
                     renderer: function (value, metaData, record, rowIndex, colIndex, store) {
                     	return value == "Pending" ? value + ' <a href="#" class="resend-user-invite">Resend</a>' : value;
                     }
-                }, {
-                    xtype: 'actioncolumn',
-                	iconCls: 'taco-action-delete'
                 }],
 
             	plugins: [cellEditing],
