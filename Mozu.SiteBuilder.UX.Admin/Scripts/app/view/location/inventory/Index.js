@@ -111,17 +111,16 @@ Ext.define('Taco.view.location.inventory.Index', {
         /*
         {
             property: 'all',
-            text: 'All',
-            isDefault: true
+            text: 'All'
         },
         
         {
-            name: 'productName',
+            property: 'productName',
             text: 'Product Name'
         },
         */
         {
-            name: 'productCode',
+            property: 'productCode',
             isDefault:true,
             text: 'Product Code'
         }
