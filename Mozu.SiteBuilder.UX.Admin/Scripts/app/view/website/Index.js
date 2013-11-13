@@ -31,6 +31,7 @@ Ext.define('Taco.view.website.Index', {
                 scale: 'medium',
                 text: 'Page Editor',
                 toggleGroup: 'websiteEditorTabs',
+                allowDepress: false,
                 enableToggle: true,
                 pressed: true,
                 style: {
@@ -47,6 +48,7 @@ Ext.define('Taco.view.website.Index', {
                 scale: 'medium',
                 text: 'Page Settings',
                 toggleGroup: 'websiteEditorTabs',
+                allowDepress: false,
                 enableToggle: true,
                 style: {
                     borderRadius: '0px 2px 2px 0px'
@@ -55,6 +57,9 @@ Ext.define('Taco.view.website.Index', {
                     var cardpanel = this.down('#editorCardPanel');
 
                     cardpanel.getLayout().setActiveItem(1);
+                },
+                toggleHandler: function (cmp, isPressed) {
+                    cmp.nextSibling('checkboxfield').setDisabled(isPressed);
                 }
             }, {
                 xtype: 'checkboxfield',
