@@ -14,8 +14,7 @@ Ext.define('Taco.view.settings.tax.Form', {
 
 
         this.taxStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.TaxRates');
-        // Leaving this code in here, so we can change it back quickly.......
-       // this.taxStore.addListener('load', this.loadState, this);
+        this.taxStore.addListener('load', this.loadState, this);
         
         this.statesStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.States');
         this.stores = [this.taxStore];
@@ -30,7 +29,7 @@ Ext.define('Taco.view.settings.tax.Form', {
 
         this.statesInput = Ext.create('Ext.ux.form.field.BoxSelect', {
             forceSelection:true,
-            fieldLabel: 'Choose State' ,
+            fieldLabel: 'Collect Taxes for the Following States' ,
             store: this.statesStore,
             queryMode: 'local',
             displayField: 'value',
