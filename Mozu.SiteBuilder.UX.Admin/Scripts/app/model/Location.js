@@ -12,7 +12,7 @@ Ext.define('Taco.model.Location', {
         }, {
             "name": "locationTypes",
             "type": "auto",
-            "default": []
+            "defaultValue": []
         },
 
         // helper field that converts the persisted value to array of strings for use in combobox
@@ -32,12 +32,12 @@ Ext.define('Taco.model.Location', {
         }, {
             "name": "fulfillmentTypes",
             "type": "auto",
-            "default": []
+            "defaultValue": []
         },
     {
         "name":"shippingOriginContact",
         type:'auto',
-        default: {}
+        defaultValue: {}
     },
         
         // helper field that converts the persisted value to array of strings for use in combobox
