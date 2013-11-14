@@ -120,7 +120,7 @@
     },
 
     onClickPublish: function () {
-        if (this.form.getSavableState()) {
+        if (!this.form.hasInvalidField()) {
             this.doPublishAfterSave = true;
             this.save();
         } else {
@@ -132,7 +132,7 @@
         Taco.model.Product.publishBulk({
             data: [this.record.getId()],
             success: function () {
-                this.publishButton.setDirty(false);
+                // this.publishButton.setDirty(false);
             },
             failure: function () {
                 Taco.MessageBox.alert(

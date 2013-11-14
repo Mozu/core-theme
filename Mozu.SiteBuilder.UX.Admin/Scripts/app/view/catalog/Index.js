@@ -29,59 +29,16 @@ Ext.define('Taco.view.catalog.Index', {
         var items;
 
         items = [{
-            xtype: 'form',
-            items: [{
-                xtype: 'textfield',
-                name: 'name',
-                fieldLabel: 'Name',
-                msgTarget: 'under',
-                allowOnlyWhitespace: false
-            }, {
-                xtype: 'textfield',
-                name: 'email',
-                fieldLabel: 'Email Address',
-                msgTarget: 'under',
-                regexText: 'Please enter a valid email address',
-                regex: /^\S+@\S+$/,
-                allowOnlyWhitespace: false
-            }, {
-                xtype: 'combobox',
-                name: 'customerType',
-                fieldLabel: 'Type',
-                msgTarget: 'under',
-                store: [
-                    'Personal',
-                    'Professional'
-                ],
-                validator: function (value) {
-                    return value === 'Personal' ? true : 'Please select "Personal"';
-                }
-            }, {
-                xtype: 'radiogroup',
-                name: 'subscribe',
-                fieldLabel: 'Special Offers',
-                msgTarget: 'under',
-                columns: 1,
-                vertical: true,
-                items: [{
-                    name: 'subscribe',
-                    boxLabel: 'Yes, I would like to receive special offers',
-                    inputValue: 'true'
-                }, {
-                    name: 'subscribe',
-                    boxLabel: 'No, thank you',
-                    inputValue: 'false'
-                }]
-            }, {
-                xtype: 'button',
-                ui: 'action',
-                scale: 'medium',
-                text: 'Save',
-                margin: '20 0 0',
-                formBind: false,
-                scope: this,
-                handler: this.handleSave
-            }]
+            xtype: 'button',
+            itemId: 'saveButton',
+            ui: 'action-primary',
+            scale: 'medium',
+            text: 'Save',
+            allowDepress: false,
+            enableToggle: false,
+            scope: this,
+            handler: this.handleSave,
+            toggleHandler: this.handleToggle
         }];
 
         Ext.apply(this.body, {
@@ -91,7 +48,32 @@ Ext.define('Taco.view.catalog.Index', {
         });
 
         this.callParent(arguments);
+
+        this.down('#saveButton').on({
+            beginsave: {
+                scope: this,
+                fn: function (button) {
+                    button.addCls('thom');
+                }
+            },
+            endsave: {
+                scope: this,
+                fn: function (button) {
+                    button.removeCls('thom');
+                }
+            }
+        });
     },
 
-    handleSave: Ext.emptyFn
+    handleSave: function (button, e) {
+        button.fireEvent('beginsave', button);
+
+        Ext.defer(function () {
+            button.fireEvent('endsave', button);
+        }, 2000, this);
+    },
+
+    handleToggle: function (button, state) {
+        console.log('toggle handler', state);
+    }
 });
