@@ -182,6 +182,8 @@
             savecomplete: function () {
                 if (this.dirtybutton) {
                     this.dirtybutton.toggle(false);
+                    this.dirtybutton.removeCls('taco-button-processing');
+                    this.dirtybutton.setText('Save');
                 }
             },
             titlechange: function (panel, newTitle) {
@@ -249,7 +251,8 @@
      * Initialize the save process on the form
      */
     save: function () {
-
+        this.dirtybutton.addCls('taco-button-processing');
+        this.dirtybutton.setText('Saving...');
         // this.dirtybutton.setLoading(true);
         this.form.save();
     },
