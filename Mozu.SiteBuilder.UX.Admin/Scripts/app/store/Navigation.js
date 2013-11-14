@@ -252,12 +252,12 @@ Ext.define('Taco.store.Navigation', {
                 "label": "Applications",
                 "address": "capability"
             }]
-        }*/, {
+        }*//*, {
             "id": "report",
             "label": "Report",
             "address": "report",
             "icon": "nav-dashboard",
-            "items": [/*
+            "items": [
                 {
                     "id": "salesreport",
                     "label": "Sales",
@@ -270,9 +270,9 @@ Ext.define('Taco.store.Navigation', {
                     "id": "productsreport",
                     "label": "Products",
                     "address": "reptbd/product"
-                }*/
+                }
             ]
-        }],
+        }*/],
         reader: {
             type: 'json',
             root: 'items',
