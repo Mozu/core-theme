@@ -39,7 +39,7 @@ Ext.define('Taco.core.ux.mixins.Searchable', {
     
     initSearchable: function () {
         var me = this;
-        debugger
+        
         
         Ext.applyIf(me, {
             enableSearch: true
