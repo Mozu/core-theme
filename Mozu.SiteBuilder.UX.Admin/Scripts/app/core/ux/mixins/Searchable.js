@@ -26,12 +26,12 @@
  */
 
 Ext.define('Taco.core.ux.mixins.Searchable', {
-    
     requires: [
         'Taco.core.util.ExceptionWhiner',
         'Ext.toolbar.Spacer',
         'Taco.core.ux.ComboFilter'
     ],
+
 
     constructor: function () {
         this.initSearchable();
@@ -39,6 +39,11 @@ Ext.define('Taco.core.ux.mixins.Searchable', {
     
     initSearchable: function () {
         var me = this;
+        debugger
+        
+        Ext.applyIf(me, {
+            enableSearch: true
+        });
 
         me.filterFormConf = Ext.clone(me.filterFormConf);
 
@@ -97,6 +102,11 @@ Ext.define('Taco.core.ux.mixins.Searchable', {
             dock: 'top',
             items: [
                 {
+                    xtype: "tbspacer",
+                    flex: 1,
+                    hidden: me.enableSearch
+                },
+                {
                     xtype: "tbspacer"
                 }, {
                     xtype: 'tbtext',
@@ -119,32 +129,30 @@ Ext.define('Taco.core.ux.mixins.Searchable', {
                 }
             ]
         };
-        
-        me.searchBox = Ext.widget({
-            xtype: 'taco.combofilter',
-            flex: 1,
-            hidden:!me.enableSearch,
-            itemStore: me.store,
-            filterForm: me.filterFormConf,
-            filterProperties: me.filterProperties
-        });
 
-
-        //todo: need to figure out where this is set and why;
-        if (this.options && this.options.query) {
-            me.on('afterrender', function () {
-                me.searchBox.setValue([this.options.query]);
-            });
-        }
         
-        conf.items.unshift(
-            {
-                xtype: "tbspacer",
+        if (me.enableSearch) {
+            
+            me.searchBox = Ext.widget({
+                xtype: 'taco.combofilter',
                 flex: 1,
-                hidden: me.enableSearch
-            },
-            me.searchBox
-        );
+                hidden: !me.enableSearch,
+                itemStore: me.store,
+                filterForm: me.filterFormConf,
+                filterProperties: me.filterProperties
+            });
+            
+            //todo: need to figure out where this is set and why;
+            if (this.options && this.options.query) {
+                me.on('afterrender', function () {
+                    me.searchBox.setValue([this.options.query]);
+                });
+            }
+
+            conf.items.unshift(
+                me.searchBox
+            );
+        }
 
         me.searchToolbar = Ext.widget('toolbar', conf);
 

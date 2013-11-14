@@ -98,7 +98,6 @@ Ext.define('Taco.view.inventory.Index', {
         
         this.locationList = Ext.create('Taco.view.location.inventory.LocationInventory', {
             region: "center",
-            enableSearch: true,
             showProductColumns: false,
             showLocationColumns: true,
             secondToolbarItems: [],

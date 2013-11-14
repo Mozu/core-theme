@@ -21,6 +21,8 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
     // turn on the row editing feature for inline grid editing and inline grid creation.  typically used for simple entities with several fields.
     enableRowEditing: true,
     
+    enableSearch:false,
+    
     modelName: 'Taco.model.LocationInventory',
     
     store: { type: 'Taco.store.LocationInventories' },
@@ -65,17 +67,9 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
             },
             items: [
                 {
-                    name: 'productName',
-                    fieldLabel: 'Product Name',
-                    flex:1
-                
-                }, {
-                    name: 'productCode',
-                    fieldLabel: 'Product Code',
-                    flex: 1
-                }, {
                     name: 'locationName',
                     fieldLabel: 'Location Name',
+                    isDefault:true,
                     flex: 1
                 }, {
                     name: 'locationCode',
@@ -86,6 +80,9 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
         }]
     },
 
+    filterProperties : [],
+
+    /*
     filterProperties: [
         {
             property: 'all',
@@ -109,6 +106,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
             text: 'Location Code'
         }
     ],
+    */
     
     viewConfig: {
         deferEmptyText:false,
