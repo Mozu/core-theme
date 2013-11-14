@@ -1,39 +1,38 @@
 ﻿/**
  * @class Taco.view.location.subform.Location
  */
+
 Ext.define('Taco.view.location.subform.Location', {
     // this is the secret sauce. Your subform panel must extend Taco.core.ux.form.Form in order to participate in the automated saveTasks behavior of the parent form
     extend: 'Taco.core.ux.form.Form',
-    // gives the form the correct ux
-    ui: 'subform',
-
     requires: [
         'Ext.ux.form.field.BoxSelect',
         'Taco.shared.view.modal.Address',
         'Taco.shared.view.field.Address',
         'Taco.core.ux.form.field.EditableDisplayField'
     ],
+
+    ui: 'subform', // gives the form the correct ux    
     title: 'Location',
-    margin: "0 0 20 0",
+    margin: '0 0 20 0',
     tools: null,
+
     config: {
         record: null,
         itemId: "location"
     },
+
     initComponent: function () {
         var me = this;
 
         me.cls = [me.cls, Taco.baseCSSPrefix + 'locationform-location'].join(' ');
-
 
         var locationTypesStore = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.LocationTypes',
             autoLoad: true,
             listeners: {
                 load: {
-                    fn: function () {
-
-                    },
+                    fn: Ext.emptyFn,
                     single: true,
                     scope: me
                 }
@@ -51,8 +50,7 @@ Ext.define('Taco.view.location.subform.Location', {
             emptyText: 'Select',
             allowBlank: false,
             store: locationTypesStore
-        });
-        
+        });        
 
         // note there are two different boxSelects. Dont' use the other one. your welcome.
         me.fulfillmentTypeIds = Ext.create('Ext.ux.form.field.BoxSelect', {
@@ -70,69 +68,63 @@ Ext.define('Taco.view.location.subform.Location', {
                 fields: ['code', 'name', "shippingRequired"],
                 data: me.record.getFulfillmentTypes()
             })
-        });      
+        });
 
-      
         var shippingContactTemplate = new Ext.XTemplate(
             '<div class="address-line-1">Name: {firstName} {middleNameOrInitial} {lastNameOrSurname}</div>',
             '<div class="city-state-zip">Company Name: {companyOrOrganization}</div>',
             '<div class="country">PhoneNumber: {phoneNumber}</div>'
-        );        
-     
+        );
        
         me.shippingContextField = Ext.create('Taco.core.ux.form.field.EditableDisplayField', {
             name: 'shippingOriginContact',
             width: 400,
             fieldLabel: 'shipping Origin Contact',
             onClick: function () {
-                var modal = Ext.widget('taco-modal',
-                    {
-                        autoShow: true,
-                        scale: 'large',
-                        items: [{
-                            xtype: 'formform',
-                            defaults: {
-                                xtype: 'textfield',
-                                anchor: '100%'
-                            },
-                            items: [
-                                {
-                                    name: 'firstName',
-                                    fieldLabel: 'First Name',
-                                },
-                                {
-                                    name: 'middleNameOrInitial',
-                                    fieldLabel: 'Middle Name',
-                                }, {
-                                    name: 'lastNameOrSurname',
-                                    fieldLabel: 'Last Name',
-                                }, {
-                                    name: 'companyOrOrganization',
-                                    fieldLabel: 'Company Name',
-                                }, {
-                                    name: 'phoneNumber',
-                                    fieldLabel: 'Phone Number',
-                                    allowBlank: false
-                                }
-                            ]
-                        }],
-                        listeners: {
-                            save: function () {
-                                var data = modal.form.getForm().getValues();
-                                me.shippingContextField.setValue(data);
-
+                var modal = Ext.widget('taco-modal', {
+                    autoShow: true,
+                    scale: 'large',
+                    items: [{
+                        xtype: 'formform',
+                        defaults: {
+                            xtype: 'textfield',
+                            anchor: '100%'
+                        },
+                        items: [
+                            {
+                                name: 'firstName',
+                                fieldLabel: 'First Name'
+                            }, {
+                                name: 'middleNameOrInitial',
+                                fieldLabel: 'Middle Name'
+                            }, {
+                                name: 'lastNameOrSurname',
+                                fieldLabel: 'Last Name'
+                            }, {
+                                name: 'companyOrOrganization',
+                                fieldLabel: 'Company Name'
+                            }, {
+                                name: 'phoneNumber',
+                                fieldLabel: 'Phone Number',
+                                allowBlank: false
                             }
+                        ]
+                    }],
+                    listeners: {
+                        save: function () {
+                            var data = modal.form.getForm().getValues();
+
+                            me.shippingContextField.setValue(data);
                         }
-                    });
+                    }
+                });
+
                 modal.form.getForm().setValues(me.shippingContextField.getValue());
-
             },
-
             renderer: function (value, field) {
                 return shippingContactTemplate.apply(value);
             }
         });
-
 
         me.addressView = Ext.create('Taco.shared.view.field.Address', {
             name: "address",
@@ -216,30 +208,29 @@ Ext.define('Taco.view.location.subform.Location', {
                 width: "100%",
                 layout: 'hbox',
                 items: [{
-                        xtype: 'numberfield',
-                        fieldLabel: "Latitude",
-                        name: "lat",
-                        margin:"0 2 0 0",
-                        emptyText: "Example: 87.728056",
-                        allowBlank: true,
-                        hideTrigger: true,
-                        mouseWheelEnabled: false,
-                        value: this.record.get("geo").lat,
-                        flex: 1
-                    }, {
-                        xtype: 'numberfield',
-                        fieldLabel: "Longitude",
-                        emptyText: "Example: 87.728056",
-                        margin: "0 0 0 2",
-                        allowBlank: true,
-                        hideTrigger: true,
-                        mouseWheelEnabled: false,
-                        name: "lng",
-                        value: this.record.get("geo").lng,
-                        flex: 1
-                    }]
-            },            
-            {
+                    xtype: 'numberfield',
+                    fieldLabel: "Latitude",
+                    name: "lat",
+                    margin:"0 2 0 0",
+                    emptyText: "Example: 87.728056",
+                    allowBlank: true,
+                    hideTrigger: true,
+                    mouseWheelEnabled: false,
+                    value: this.record.get("geo").lat,
+                    flex: 1
+                }, {
+                    xtype: 'numberfield',
+                    fieldLabel: "Longitude",
+                    emptyText: "Example: 87.728056",
+                    margin: "0 0 0 2",
+                    allowBlank: true,
+                    hideTrigger: true,
+                    mouseWheelEnabled: false,
+                    name: "lng",
+                    value: this.record.get("geo").lng,
+                    flex: 1
+                }]
+            }, {
                 xtype: "textfield",
                 name: "phone",
                 width: 200,
@@ -264,8 +255,7 @@ Ext.define('Taco.view.location.subform.Location', {
                 fieldLabel: 'Supports Inventory Flag',
                 boxLabel: "Enabled",
                 allowBlank: true
-            }
-        ];
+            }];
 
         this.callParent(arguments);
     },
