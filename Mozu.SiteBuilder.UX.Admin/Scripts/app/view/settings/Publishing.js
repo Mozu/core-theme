@@ -13,13 +13,10 @@ Ext.define('Taco.view.settings.Publishing', {
         
         this.header.title = 'Publish Settings';
 
-        this.body.items = this.buildItems();
-
-        console.log('ITEMS', this.buildItems());
-
-        // this.body.items = [{
-        //     html: 'THINGS'
-        // }]
+        //this.body.items = this.buildItems();
+        this.body.items = Ext.create('Ext.Container', {
+            items: this.buildItems()
+        });
 
         this.callParent(arguments);
     },
