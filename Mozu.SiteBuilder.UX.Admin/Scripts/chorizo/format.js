@@ -15,6 +15,7 @@
                         '<li data-role="italic"><i class="fa fa-italic"></i></li>',
                         '<li data-role="underline"><i class="fa fa-underline"></i></li>',
                         '<li data-role="createLink"><i class="fa fa-link"></i></li>',
+                        '<li data-role="unlink"><i class="fa fa-unlink"></i></li>',
                         '<li data-role="justifyLeft"><i class="fa fa-align-left"></i></li>',
                         '<li data-role="justifyCenter"><i class="fa fa-align-center"></i></li>',
                         '<li data-role="justifyRight"><i class="fa fa-align-right"></i></li>',
@@ -124,6 +125,7 @@
                         my: 'center top',
                         at: 'center bottom'
                     });
+            
             this.$urlInput.focus();
         },
 

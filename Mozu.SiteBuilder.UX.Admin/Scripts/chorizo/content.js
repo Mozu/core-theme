@@ -160,6 +160,7 @@
             .select($.proxy(this._onSelect, this));
         
         this.element.on({
+            mouseup: $.proxy(this._onMouseup, this),
             click: $.proxy(this._onClick, this)
         });
 
@@ -180,22 +181,24 @@
         this.element.find('[contenteditable]').focus();
     }
 
+    Text.prototype._onMouseup = function(e) {
+        if (this.state() === 'default') this.state('editing');
+    }
+
     Text.prototype._onClick = function(e) {
         var $tar,
             oldUrl;
+            
+        if (this.state() !== 'editing') return;
 
-        if (this.state() === 'default') this.state('editing');
+        $tar = $(e.target);
 
-        if (this.state() === 'editing') {
-            $tar = $(e.target);
+        if (!$tar.is('a')) return;
 
-            if (!$tar.is('a')) return;
+        oldUrl = $tar.attr('href');
+        $tar.attr('href', '#mz-cms-temp-link');
 
-            oldUrl = $tar.attr('href');
-            $tar.attr('href', '#mz-cms-temp-link');
-
-            Chorizo.formatter.showTooltip(oldUrl, $tar);
-        }
+        Chorizo.formatter.showTooltip(oldUrl, $tar);
     }
 
     Text.prototype._onBlur = function(e) {
