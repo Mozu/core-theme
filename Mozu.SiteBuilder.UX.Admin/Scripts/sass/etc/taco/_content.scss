@@ -66,6 +66,25 @@
     }
   }
 
+  .#{$vprefix}website-sidebar {
+    overflow: visible !important;
+
+    .#{$prefix}container-docked-top {
+      visibility: visible !important;
+
+      .#{$vprefix}collapse-handle {
+        background-color: $color-neutral-90;
+        border-color: $color-neutral-75;
+        border-style: solid;
+        border-width: 1px 0px 1px 1px;
+        left: -15px;
+        position: absolute;
+        top: 13px;
+        @include border-radius(2px 0px 0px 2px);
+      }
+    }
+  }
+
   .#{$vprefix}content-sidebar,
   .#{$vprefix}sidebar-modal {
     background-color: $color-neutral-white;

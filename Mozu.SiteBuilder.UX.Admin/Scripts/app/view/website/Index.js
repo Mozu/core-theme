@@ -142,7 +142,7 @@ Ext.define('Taco.view.website.Index', {
             xtype: 'panel',
             itemId: 'editorCardPanel',
             bodyStyle: {
-                'border-right-width': '1px'
+                'border-width': '0px 1px 0px 0px'
             },
             layout: {
                 type: 'card'
@@ -150,6 +150,7 @@ Ext.define('Taco.view.website.Index', {
             items: [{
                     xtype: 'panel',
                     title: 'Editor',
+                    border: false,
                     header: false,
                     layout: {
                         type: 'fit'
@@ -163,6 +164,7 @@ Ext.define('Taco.view.website.Index', {
                     xtype: 'panel',
                     title: 'Settings',
                     overflowY: 'auto',
+                    border: false,
                     header: false,
                     items: [{
                         xtype: 'formform',
@@ -178,34 +180,55 @@ Ext.define('Taco.view.website.Index', {
             dockedItems: [{
                 dock: 'right',
                 title: 'Sidebar',
-                padding: '0 0 10',
+                // padding: '0 0 10',
                 collapseDirection: 'right',
+                cls: 'taco-website-sidebar',
                 animCollapse: false,
                 collapsible: true,
                 header: false,
                 width: 240,
+                style: {
+                    overflow: 'visible'
+                },
                 layout: {
                     type: 'card'
                 },
                 items: [{
-                        xtype: 'taco-website-tree',
-                        store: store
-                    }, {
-                        xtype: 'gridpanel',
-                        title: 'Results',
-                        store: [],
-                        columns: [{
-                            dataIndex: 'thom',
-                            text: 'Thom',
-                            flex: 1
-                        }]
-                    }],
+                    xtype: 'taco-website-tree',
+                    store: store
+                }, {
+                    xtype: 'gridpanel',
+                    title: 'Results',
+                    store: [],
+                    columns: [{
+                        dataIndex: 'thom',
+                        text: 'Thom',
+                        flex: 1
+                    }]
+                }],
                 dockedItems: [{
                     xtype: 'container',
                     dock: 'top',
                     padding: '14 20 0 14',
                     height: 60,
                     items: [{
+                        xtype: 'component',
+                        html: '',
+                        cls: 'taco-collapse-handle',
+                        width: 15,
+                        height: 30,
+                        listeners: {
+                            click: {
+                                scope: this,
+                                element: 'el',
+                                fn: function (e, t) {
+                                    var cmp = Ext.getCmp(t.id);
+
+                                    cmp.up('panel[dock="right"]').toggleCollapse();
+                                }
+                            }
+                        }
+                    }, {
                         xtype: 'textfield',
                         emptyText: 'Search',
                         width: '100%',
