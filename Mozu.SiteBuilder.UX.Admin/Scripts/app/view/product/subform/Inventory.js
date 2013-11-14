@@ -15,6 +15,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
           //  stockOnHand,
             outOfStockState,
             options;
+
         this.record = this.product;
         
         manageStock = Ext.widget({
@@ -36,7 +37,6 @@ Ext.define('Taco.view.product.subform.Inventory', {
             }
         });
 
-
         outOfStockState = Ext.widget({
             xtype: 'selectfield',
             fieldLabel: 'If out of stock...',
@@ -49,12 +49,8 @@ Ext.define('Taco.view.product.subform.Inventory', {
                 ['AllowBackorder', 'Allow backordering'],
                 ['HideProduct', 'Hide Product in Store']
             ],
-            name:'outOfStockBehavior',
-           
+            name:'outOfStockBehavior'
         });
-
-
-
 
         options = Ext.create('Taco.view.product.option.Form', {
             product: this.product

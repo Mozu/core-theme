@@ -1,6 +1,7 @@
 ﻿/**
  * @class Taco.view.customers.Index
  */
+
 Ext.define('Taco.view.customers.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     alias: 'widget.taco.index.customer',
@@ -49,7 +50,7 @@ Ext.define('Taco.view.customers.Index', {
             width: 100,
             renderer: function (value, metaData, record) {
                 return Ext.util.Format.usMoney(value);
-            },
+            }
         }, {
             dataIndex: 'groups',
             text: 'Groups',
@@ -64,28 +65,13 @@ Ext.define('Taco.view.customers.Index', {
     },
     initComponent: function () {
         var me = this;
-        
-        
-        
-        me.header = {
-            title: 'Customers',
-            actions: [
-            /*
-                // simeon: commenting this out.  feature not implemented yet. Button throws error and editor doesn't appear to be editable.
-                {
-                    xtype: 'primarybutton',
-                    text: 'Create New Customer',
-                    click: function () {
-                        me.launchEditor(Ext.create('Taco.model.CustomerAccount'));
-                    }
-                }
-            */
-            ]
-            
+
+        this.header = {
+            title: 'Customers'
         };
-        
 
         this.tagStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerTags');
+
         this.gridPanelConf = {
             columns: [{
                 dataIndex: 'primaryFirstName',
@@ -103,7 +89,7 @@ Ext.define('Taco.view.customers.Index', {
                 dataIndex: 'primaryCityOrTown',
                 text: 'Location',
                 width: 150,
-                    renderer: function(value, metaData, record) {
+                renderer: function(value, metaData, record) {
                     return value ? [Ext.String.capitalize(value), record.get('primaryStateOrProvince')].join(', ') : '';
                 }
             }, {
@@ -116,7 +102,7 @@ Ext.define('Taco.view.customers.Index', {
                 width: 100,
                 renderer: function (value, metaData, record) {
                     return Ext.util.Format.usMoney(value);
-                },
+                }
             }, {
                 dataIndex: 'visitCount',
                 text: 'Total Visits',
@@ -128,44 +114,42 @@ Ext.define('Taco.view.customers.Index', {
                     renderer: function(value, metaData, record) {
                     if (value && value.length) {
                         var names = [];
-                            Ext.each(value || [], function(tagId) {
+                        
+                        Ext.each(value || [], function(tagId) {
                             var tagRecord = me.tagStore.getById(tagId);
+
                             if (tagRecord) {
                                 names.push(tagRecord.get('Value'));
                             }
-                                
-                            
                         });
 
-                        if (names.length)
+                        if (names.length) {
                             return names.join(', ');
+                        }
                     }
                 },
                 minWidth: 100,
                 flex: 1
-                },{
-            xtype: 'taco.menucolumn',
-        text: 'Actions',
-        flex:1,
-        menuItems: [
-        {
-            text: 'Edit',
-            requiredBehaviors: {
-                model: 'Taco.model.CustomerAccount',
-                behavior: 'update'
-            },
-            menuColumnHandler: function (item, eventData) {
-                var page = eventData.grid.getParentPage(),
-                    record = eventData.record,
-                    metaData = { id: record.getId() };
+            }, {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                flex:1,
+                menuItems: [{
+                    text: 'Edit',
+                    requiredBehaviors: {
+                        model: 'Taco.model.CustomerAccount',
+                        behavior: 'update'
+                    },
+                    menuColumnHandler: function (item, eventData) {
+                        var page = eventData.grid.getParentPage(),
+                            record = eventData.record,
+                            metaData = { id: record.getId() };
 
-                page.launchEditor(record, metaData);
-
-            }
-        }],
-        // do any processing needed to show menu
-        onMenuShow: function (menu, eventData) {
-        }
+                        page.launchEditor(record, metaData);
+                    }
+                }],
+                // do any processing needed to show menu
+                onMenuShow: function (menu, eventData) {}
             }]
         };
         

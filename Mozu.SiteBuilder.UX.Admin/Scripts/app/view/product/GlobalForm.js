@@ -64,7 +64,7 @@ Ext.define('Taco.view.product.GlobalForm', {
         ]);
 
         this.loadNavItems(items);
-    },
+    }
 
     //addSaveTasks: function (tasks) {
     //    if (this.isSingleSite) {
