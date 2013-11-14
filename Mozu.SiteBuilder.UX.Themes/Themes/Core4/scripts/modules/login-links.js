@@ -90,7 +90,7 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
     }
     LoginPopover.prototype = new DismissablePopover();
     $.extend(LoginPopover.prototype, {
-        boundMethods: ['handleEnterKey', 'dismisser', 'displayMessage', 'createPopover', 'slideRight', 'slideLeft', 'login', 'retrievePassword', 'onPopoverShow'],
+        boundMethods: ['handleEnterKey', 'dismisser', 'displayMessage', 'displayLoginMessage', 'createPopover', 'slideRight', 'slideLeft', 'login', 'retrievePassword', 'onPopoverShow'],
         template: Hypr.getTemplate('modules/common/login-popover').render(),
         bindListeners: function(on) {
             var onOrOff = on ? "on" : "off";
