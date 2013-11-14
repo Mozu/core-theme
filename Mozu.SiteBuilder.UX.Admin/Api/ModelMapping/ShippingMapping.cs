@@ -64,6 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<Mozu.ShippingAdmin.Contracts.CarrierConfiguration, CustomRate>()
                   .ForMember(x => x.Amount, opt => opt.MapFrom(x => x.Settings == null ? null : x.GetSettingValue("Amount")))
                   .ForMember(x => x.RateType, opt => opt.MapFrom(x => x.Settings == null ? null : x.GetSettingValue("Type")))
+
                   .ForMember(x => x.Name, opt => opt.ResolveUsing(x =>
                       {
                           return x.ConfiguredServiceTypes == null || x.ConfiguredServiceTypes.Count == 0 ? null : x.ConfiguredServiceTypes.First().Content.Name;
@@ -79,8 +80,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                        {
                                            Id = x.id,
                                            Settings = new List<Mozu.ShippingAdmin.Contracts.Setting>(),
-                                           ConfiguredServiceTypes = new List<Mozu.ShippingAdmin.Contracts.ServiceType>()
-
+                                           ConfiguredServiceTypes = new List<Mozu.ShippingAdmin.Contracts.ServiceType>(),
+                                           ConfiguredCountries = x.ConfiguredCountries 
+                                           
                                        };
                         foreach (var carSet in x.Settings)
                         {
@@ -120,7 +122,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                            id = x.Id,
                                            Rates = new List<string>(),
                                            Settings = new JObject(),
-                                           IsConfigured = true 
+                                           IsConfigured = true ,
+                                           ConfiguredCountries = x.ConfiguredCountries 
+
                                        };
                         foreach (var setting in x.Settings)
                         {

@@ -5,7 +5,7 @@
 
 Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
     extend: 'Taco.core.ux.form.Form',
-    requires: [],
+    requires: ['Taco.store.Countries'],
     title: 'base Provider',
     layout: {
         type: 'card',
@@ -15,7 +15,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
     providerId: 'fedex',
     configureCopy: 'lorum jip',
     ratesCopy: 'blu blue blee',
-    customFileds : [],
+    customFileds: [],
     padding: '10 10 10 10',
     initComponent: function () {
         var me = this;
@@ -45,17 +45,15 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
 
 
         this.configFields = Ext.widget({
-            
             xtype: 'formform',
             autoScroll: true,
-         
+
             width: 400,
             layout: {
                 type: 'vbox',
-                align:'stretch'
+                align: 'stretch'
             },
-            items:me.customFileds
-            
+            items: me.customFileds
         });
         this.configFields.getForm().setValues(this.record.get("settings") || {});
 
@@ -74,8 +72,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                         {
                             height: 340,
                             width: 240,
-                            html:  me.configureCopy
-                           
+                            html: me.configureCopy
                         },
                         {
                             xtype: 'action',
@@ -105,6 +102,15 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
             fieldLabel: 'Select Shipping Methods',
             valueField: 'Key'
         });
+        this.countrySelector = Ext.widget('boxselect', {
+            fieldLabel: 'Choose Countries',
+            name: 'configuredCountries',
+            queryMode: 'local',
+            width: 400,
+            displayField: 'name',
+            valueField: 'code',
+            store: Taco.core.data.StoreManager.getOrCreate('Taco.store.Countries')  
+        });
 
         this.ratesContainer = Ext.widget({
             xtype: 'container',
@@ -114,7 +120,14 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                 type: 'hbox'
             },
             items: [
-                this.ratesSelect,
+                {
+                    xtype: 'container',
+                    padding: '40 40 40 40',
+                    items: [
+                        this.ratesSelect,
+                        this.countrySelector
+                    ]
+                },
                 {
                     xtype: 'container',
                     padding: '40 40 40 40',
@@ -122,8 +135,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                         {
                             height: 340,
                             width: 240,
-                            html:me.ratesCopy
-                            
+                            html: me.ratesCopy
                         },
                         {
                             xtype: 'action',
@@ -148,11 +160,13 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
         }
     },
     beforeSave: function () {
-        if (this.configFields.isDirty() || this.ratesSelect.isDirty()) {
+        if (this.configFields.isDirty() || this.ratesSelect.isDirty() || this.countrySelector.isDirty()) {
+
             var settings = this.configFields.getForm().getValues(false, false, false, true),
                 rates = this.ratesSelect.getValue();
             this.record.set('settings', settings);
             this.record.set('rates', rates);
+            this.record.set('configuredCountries', this.countrySelector.getValue());
         }
     }
 });

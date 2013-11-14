@@ -11,6 +11,7 @@ using Mozu.Core.Api.Routing;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.Reference.Contracts;
 using Mozu.Reference.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Tax;
 
@@ -29,12 +30,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 		 [HttpGetRoute(UriTemplate = "states/list")]
-         public async Task<Response<List<FieldData>>> GetTaxRates([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, string country = "us")
+         public async Task<Response<List<FieldData>>> GetStates([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, string country = "us")
          {
              country = string.IsNullOrEmpty(country) ? "us" : country;
              var res = (await _referenceDataWebApi.GetAddressSchema(country)).ReadAsSync();
              var data = res.Fields.First( x => x.Label == "State").Data;
              return List2(data);
+         }
+
+         [HttpGetRoute(UriTemplate = "countries/list")]
+         public async Task<HttpResponseMessage> GetCountries([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
+         {
+           
+             var res = (await _referenceDataWebApi.GetCountries()).ReadAsSync();
+          
+             return this.Request.CreateResponse(HttpStatusCode.OK, List2(res.Items, (int)res.TotalCount), LowerCaseJsonMediaTypeFormatter.Default);
+           
          }
     }
 }

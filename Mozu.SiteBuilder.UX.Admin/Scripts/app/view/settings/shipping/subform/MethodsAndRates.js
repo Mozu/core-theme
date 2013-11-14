@@ -18,7 +18,7 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
     initComponent: function () {
         var me = this;
         
-        this.store = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingCarrierSettings');
+        store = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingCarrierSettings');
 
 
         this.custom = Ext.create('Taco.view.settings.shipping.subform.Custom', {
@@ -47,16 +47,16 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
         this.items = [this.tabs];
         this.callParent(arguments);
 
-        if (this.store.isLoading()) {
-            this.store.on('load', me.onStoreLoad, me);
+        if (store.isLoading()) {
+            store.on('load', me.onStoreLoad, me);
         } else {
-            me.onStoreLoad();
+            me.onStoreLoad(store);
         }
     },
-    onStoreLoad: function () {
+    onStoreLoad: function (store) {
 
         this.fedex = Ext.create('Taco.view.settings.shipping.subform.ShippingProvider', {
-            record: this.store.getById('fedex'),
+            record: store.getById('fedex'),
 
             title: 'FedEx',
             providerId: 'fedex',
@@ -108,7 +108,7 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
         });
 
         this.UPS = Ext.create('Taco.view.settings.shipping.subform.ShippingProvider', {
-            record: this.store.getById('ups'),
+            record: store.getById('ups'),
             title: 'UPS',
             providerId: 'ups',
             configureCopy: '<img src="http://www.ups.com/img/glo_ups_brandmark.gif"/>',
@@ -141,7 +141,7 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
 
 
         this.USPS = Ext.create('Taco.view.settings.shipping.subform.ShippingProvider', {
-            record: this.store.getById('usps'),
+            record: store.getById('usps'),
             title: 'USPS',
             providerId: 'usps',
             configureCopy: '<img src="https://www.usps.com/ContentTemplates/assets/images/global/usps_logo.gif"/> <div>Please provide your USPS account credentials.</div>',
