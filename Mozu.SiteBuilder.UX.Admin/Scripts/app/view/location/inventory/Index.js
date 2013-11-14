@@ -141,129 +141,152 @@ Ext.define('Taco.view.location.inventory.Index', {
             emptyText: "No products with inventory at this location."
         },
         selModel: {},
-        columns: [{
-            dataIndex: 'productCode',
-            width: 100,
-            text: 'Product Code',
-            editor: {
-                // readonly field for display only. Note: the editor is required to allow for the field to be automatically persisted with the save call;
-                xtype: "displayfield",
-                allowBlank: false
-            }
+        columns: [
+            {
+                dataIndex: 'productCode',
+                width: 100,
+                text: 'Product Code',
+                menuDisabled: true,
+                sortable: true,
+                editor: {
+                    // readonly field for display only. Note: the editor is required to allow for the field to be automatically persisted with the save call;
+                    xtype: "displayfield",
+                    allowBlank: false
+                }
 
-        }, {
-            dataIndex: 'productName',
-            flex:1,
-            text: 'Product Name',
-            // product selector
-            editor: {
-                xtype: "taco-productpickerfield",
-                editableOnCreateOnly: true,
-                msgTarget: "qtip",
-                allowBlank: false,
-                onEditorShow: function (field, editor, context) {
-                    // need to add the locationCode to the locationInventory;
-                    var store = editor.grid.store,
-                        locationFilter = store.extraFilters.getByKey("locationCode"),
-                        locationCode;
+            }, {
+                dataIndex: 'productName',
+                flex:1,
+                text: 'Product Name',
+                sortable: false,
+                menuDisabled: true,
+                // product selector
+                editor: {
+                    xtype: "taco-productpickerfield",
+                    editableOnCreateOnly: true,
+                    msgTarget: "qtip",
+                    allowBlank: false,
+                    onEditorShow: function (field, editor, context) {
+                        // need to add the locationCode to the locationInventory;
+                        var store = editor.grid.store,
+                            locationFilter = store.extraFilters.getByKey("locationCode"),
+                            locationCode;
                     
-                    if (!locationFilter) {
-                        return false;
-                    }
+                        if (!locationFilter) {
+                            return false;
+                        }
                     
-                    locationCode = locationFilter.value;
-                    context.record.set("locationCode", locationCode);
-                },
-                listeners: {
-                    select: {
-                        fn: function(combo, records, eOpts) {
-                            var record = records[0],
-                                rowEditor = combo.up('roweditor'),
-                                productCodeField = rowEditor.form.findField("productCode");
+                        locationCode = locationFilter.value;
+                        context.record.set("locationCode", locationCode);
+                    },
+                    listeners: {
+                        select: {
+                            fn: function(combo, records, eOpts) {
+                                var record = records[0],
+                                    rowEditor = combo.up('roweditor'),
+                                    productCodeField = rowEditor.form.findField("productCode");
                             
-                            productCodeField.setValue(record.get("productCode"));
-                            combo.setValue(record.get("productName"));
+                                productCodeField.setValue(record.get("productCode"));
+                                combo.setValue(record.get("productName"));
+                            }
                         }
                     }
                 }
-            }
 
-        }, {
-            width: 100,
-            text: "Available",
-            dataIndex: 'stockAvailable'
-            /*
-            ,editor: {
-                emptyText: "Available",
-                msgTarget: "qtip",
-                xtype: "numberfield",
-                hideTrigger: true,
-                mouseWheelEnabled: false,
-                selectOnFocus: true,
-                allowBlank: false
-            }
-            */
-        }, {
-            width: 100,
-            text: 'On Reserve',
-            dataIndex: 'stockReserved'
-            /*,
-            editor: {
-                emptyText: "On Reserve",
-                msgTarget: "qtip",
-                xtype: "numberfield",
-                hideTrigger: true,
-                mouseWheelEnabled: false,
-                selectOnFocus: true,
-                allowBlank: false
-            }
-            */
-        }, {
-            dataIndex: 'stockOnHand',
-            width: 100,
-            text: 'On Hand',
-            editor: {
-                emptyText: "On Hand",
-                msgTarget: "qtip",
-                xtype: "numberfield",
-                hideTrigger: true,
-                defaultValue:0,
-                mouseWheelEnabled: false,
-                selectOnFocus: true,
-                allowBlank: false
-            }
-        }
-        
-        /*
-        , {
-            xtype: 'taco.menucolumn',
-            text: 'Actions',
-            menuItems: [
-                {
-                    text: 'Delete',
-                    requiredBehaviors: {
-                        model: 'Taco.model.Product',
-                        behavior:'destroy'
-                    },
-                    menuColumnHandler: 'destroyMenuColumnHandler'
-                }, {
-                    text: 'Edit',
-                    requiredBehaviors: {
-                        model: 'Taco.model.Product',
-                        behavior: 'update'
-                    },
-                    menuColumnHandler: function (item, eventData) {
-                        var page = eventData.grid.getParentPage(),
-                            record = eventData.record,
-                            metaData = { id: record.getId() };
+            }, {
+                width: 100,
+                text: "Available",
+                menuDisabled: true,
+                sortable: true,
+                dataIndex: 'stockAvailable'
+                
+                /*
+                ,editor: {
+                    emptyText: "Available",
+                    msgTarget: "qtip",
+                    xtype: "numberfield",
+                    hideTrigger: true,
+                    mouseWheelEnabled: false,
+                    selectOnFocus: true,
+                    allowBlank: false
+                }
+                */
+            }, {
+                width: 100,
+                text: 'On Reserve',
+                menuDisabled: true,
+                sortable: true,
+                dataIndex: 'stockReserved'
+                /*,
+                editor: {
+                    emptyText: "On Reserve",
+                    msgTarget: "qtip",
+                    xtype: "numberfield",
+                    hideTrigger: true,
+                    mouseWheelEnabled: false,
+                    selectOnFocus: true,
+                    allowBlank: false
+                }
+                */
+            }, {
+                dataIndex: 'stockOnHand',
+                width: 100,
+                menuDisabled: true,
+                sortable: true,
+                text: 'On Hand',
+                editor: {
+                    emptyText: "On Hand",
+                    msgTarget: "qtip",
+                    xtype: "numberfield",
+                    hideTrigger: true,
+                    defaultValue:0,
+                    mouseWheelEnabled: false,
+                    selectOnFocus: true,
+                    allowBlank: false
+                }
+            }, {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                menuDisabled: true,
+                sortable: false,
+                menuItems: [
+                    {
+                        text: 'Remove Inventory',
+                        /*
+                        requiredBehaviors: {
+                            model: 'Taco.model.LocationInventory',
+                            behavior:'destroy'
+                        },
+                        */
+                        //menuColumnHandler: 'destroyMenuColumnHandler',
+                        menuColumnHandler: function(item, eventData) {
+                            var record = eventData.record,
+                                store = eventData.grid.store;
+                            
+                            Taco.model.LocationInventory.removeInventory({
+                                records: [record],
+                                store: store
+                            });
+                        }
+                    }, {
+                        text: 'Edit Product',
+                        /*
+                        requiredBehaviors: {
+                            model: 'Taco.model.Product',
+                            behavior: 'update'
+                        },
+                        */
+                        menuColumnHandler: function(item, eventData) {
+                            var record = eventData.record;
+                            
+                            Ext.defer(function () {
+                                Taco.core.StateManager.attemptNavigate('product/edit/' + record.get("productCode"));
+                            }, 1, this);
 
-                        page.launchEditor(record, metaData);
-                   
+                        }
                     }
-                }]
+                ]
             }
-            */
-        
         ]
         
     },

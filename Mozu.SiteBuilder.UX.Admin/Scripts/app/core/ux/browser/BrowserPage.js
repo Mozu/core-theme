@@ -41,6 +41,15 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         this.initBrowserListeners();
     },
 
+    destroy: function () {
+        if (this.rowEditor) {
+            this.rowEditor.destroy();
+            this.rowEditor = null;
+        }
+
+        this.callParent(arguments);
+    },
+
     launchEditor: function (record, options) {
         var me = this,
             modelClass = Ext.ClassManager.get(me.modelName);
