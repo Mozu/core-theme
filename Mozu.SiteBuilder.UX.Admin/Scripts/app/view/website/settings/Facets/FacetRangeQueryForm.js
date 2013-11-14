@@ -76,7 +76,7 @@ Ext.define('Taco.view.website.settings.facets.FacetRangeQueryForm', {
         });
         this.callParent(arguments);
         me.loadRecord(me.record);
-        me.resetSavableState();
+        // me.resetSavableState();
         var displayStyleValue = me.displayStyle.getValue();
         if (!displayStyleValue || !displayStyleValue.facetType) {
             // the radiogroup appears to not be super amazing at keeping only one radio selected at a time

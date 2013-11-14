@@ -484,38 +484,38 @@ Ext.define('Taco.core.ux.form.Form', {
     // removed functions
 
     bindStore: function (store) {
-        throw 'unimplemented function: bindStore';
+        throw 'deprecated function: bindStore';
     },
 
     checkFields: function (container, cmp) {
-        throw 'unimplemented function: checkFields';
+        throw 'deprecated function: checkFields';
     },
 
     getSavableState: function () {
-        throw 'unimplemented function: getSavableState';
+        throw 'deprecated function: getSavableState';
     },
 
     markRequired: function () {
-        throw 'unimplemented function: markRequired';
+        throw 'deprecated function: markRequired';
     },
 
     onFormAdded: function (me, container) {
-        throw 'unimplemented function: onFormAdded';
+        throw 'deprecated function: onFormAdded';
     },
 
     resetSavableState: function (isSavable) {
-        throw 'unimplemented function: resetSavableState';
+        throw 'deprecated function: resetSavableState';
     },
 
     savableStateCheck: function () {
-        throw 'unimplemented function: savableStateCheck';
+        throw 'deprecated function: savableStateCheck';
     },
 
     trackFields: function () {
-        throw 'unimplemented function: trackFields';
+        throw 'deprecated function: trackFields';
     },
 
     validateModel: function () {
-        throw 'unimplemented function: validateModel';
+        throw 'deprecated function: validateModel';
     }
 });

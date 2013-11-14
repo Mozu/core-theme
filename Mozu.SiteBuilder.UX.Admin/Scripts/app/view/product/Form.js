@@ -225,7 +225,7 @@ Ext.define('Taco.view.product.Form', {
     },
     
     savableStateCheck: function () {
-        throw 'unimplemented function: savableStateCheck';
+        throw 'deprecated function: savableStateCheck';
     },
 
     goGoCatalogSwitch: function () {
