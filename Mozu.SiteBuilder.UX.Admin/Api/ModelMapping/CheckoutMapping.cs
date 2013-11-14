@@ -96,7 +96,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         Id = x.Id,
                         IsActive = x.IsActive,
                         CountryCode = x.CountryCode ?? "us",
-                        CredentialFields = new List<DCp.GatewayCredentialFieldValue>()
+                        CredentialFields = new List<DCp.GatewayCredentialFieldValue>(),
+                        GatewayDefinitionId = x.GatewayDefinitionId 
                     };
 
                     Action<KeyValuePair<string, Newtonsoft.Json.Linq.JToken>> foo = cred => account.CredentialFields.Add(new DCp.GatewayCredentialFieldValue { Name = cred.Key, Value = (string)cred.Value });
