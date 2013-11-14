@@ -54,9 +54,7 @@
       <div class="mz-formstep-fields mz-l-formfieldgroup">
 
                 {% if model.paymentType == "CreditCard" %}
-                    <div class="mz-l-formfieldgroup">
-                        {% include "modules/checkout/credit-card-form" with model=model.card %}
-                    </div>
+                    {% include "modules/checkout/billing-credit-card-form" with model=model.card %}
                 {% endif %}
 
                 {% if model.paymentType == "Check" %}

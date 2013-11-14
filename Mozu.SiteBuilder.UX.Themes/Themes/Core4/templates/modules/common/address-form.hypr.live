@@ -1,14 +1,4 @@
-﻿{% block local-variables %}
-    {% comment %}
-    The local-variables block is present in a number of module templates. It
-    exists because this module uses a local variable, in this case
-    "modelcontext" to adjust where in the model the JavaScript should expect to
-    find an address. In the base template, this local variable is unset, which
-    is why this block is empty. In templates that extend this template, they can
-    override this block and insert a {% set modelcontext="something" %} to set
-    this local variable, and the template will then include that value.
-    {% endcomment %}
-{% endblock local-variables %}
+﻿{% block address-form %}
     <div class="mz-l-formfieldgroup-row">
         <div class="mz-l-formfieldgroup-cell">
             <label for="firstname">{{ labels.firstName }}<span class="is-required"> *</span>:</label>
@@ -257,3 +247,4 @@
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}phoneNumbers.home"></span>
         </div>
     </div>
+{% endblock address-form %}

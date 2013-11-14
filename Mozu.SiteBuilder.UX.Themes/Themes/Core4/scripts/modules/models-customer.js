@@ -26,6 +26,15 @@
 
     Customer = Backbone.MozuModel.extend({
         mozuType: 'customer',
+        helpers: ['hasSavedCards', 'hasSavedContacts'],
+        hasSavedCards: function() {
+            var cards = this.get('cards');
+            return cards && cards.length > 0;
+        },
+        hasSavedContacts: function() {
+            var contacts = this.get('contacts');
+            return contacts && contacts.length > 0;
+        },
         handlesMessages: true,
         relations: {
             user: UserModels.User,
@@ -35,7 +44,8 @@
             cards: Backbone.Collection.extend({
                 model: PaymentMethods.CreditCard
             }),
-            editingCard: PaymentMethods.CreditCard, 
+            editingCard: PaymentMethods.CreditCard,
+            editingContact: CustomerContact,
             orderHistory: OrderModels.OrderCollection,
             primaryBillingContact: CustomerContact
         },
@@ -70,7 +80,23 @@
         savePrimaryBillingContact: function () {
             var self = this;
             this.isLoading(true);
-            return this.get('primaryBillingContact').apiUpdate().ensure(function () {
+            var user = this.get('user'),
+                primaryBillingContact = this.getPrimaryBillingContact(),
+                contactFirst = primaryBillingContact.get('firstName'),
+                contactLast = primaryBillingContact.get('lastNameOrSurname'),
+                op = primaryBillingContact.apiUpdate();
+
+            // TODO: When UpdateUser works do this
+            //if ((contactFirst !== user.get('firstName')) || contactLast !== user.get('lastName')) {
+            //    op = op.then(function () {
+            //        return user.apiUpdate({
+            //            firstName: contactFirst,
+            //            lastName: contactLast
+            //        });
+            //    });
+            //}
+
+            return op.ensure(function () {
                 self.isLoading(false);
             });
         },
@@ -87,7 +113,7 @@
         beginEditCard: function(id) {
             var toEdit = this.get('cards').get(id);
             if (toEdit)
-                this.set('editingCard', toEdit);
+                this.set('editingCard', toEdit, { useExistingInstances: true });
         },
         addCard: function () {
             var self = this;
@@ -95,6 +121,49 @@
                 return self.getCards();
             }).then(function () {
                 return self.unset('editingCard');
+            });
+        },
+        deleteCard: function (id) {
+            var self = this;
+            return this.apiModel.deletePaymentCard(id).then(function () {
+                return self.getCards();
+            });
+        },
+        getCards: function () {
+            var self = this;
+            var cardsCollection = this.get('cards');
+            this.syncApiModel();
+            return this.apiModel.getCards().then(function (cc) {
+                cardsCollection.set(cc.data.items);
+                return self;
+            });
+        },
+        beginEditContact: function (id) {
+            var toEdit = this.get('contacts').get(id);
+            if (toEdit)
+                this.set('editingContact', toEdit, { useExistingInstances: true });
+        },
+        addContact: function () {
+            var self = this;
+            return this.apiModel.addContact(this.get('editingContact').toJSON()).then(function () {
+                return self.getContacts();
+            }).then(function () {
+                return self.unset('editingContact');
+            });
+        },
+        deleteContact: function (id) {
+            var self = this;
+            return this.apiModel.deleteContact(id).then(function () {
+                return self.getContacts();
+            });
+        },
+        getContacts: function () {
+            var self = this;
+            var contactsCollection = this.get('contacts');
+            this.syncApiModel();
+            return this.apiModel.getContacts().then(function (cc) {
+                contactsCollection.set(cc.data.items);
+                return self;
             });
         }
     });

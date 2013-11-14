@@ -79,7 +79,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var orderHistory = orderHistoryTask.Result.ReadAsSync();
 
             //this.ViewData["Orders"] = orders.Items;
-
             this.ViewData["User"] = user;
 
             var jSerializer = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
@@ -88,12 +87,39 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             jAccount.Add("openOrders", Newtonsoft.Json.Linq.JObject.FromObject(openOrders, jSerializer));
             jAccount.Add("orderHistory", Newtonsoft.Json.Linq.JObject.FromObject(orderHistory, jSerializer));
 
-            var primaryBillingAccount = account.Contacts.Find(x => x.Types.Exists(y => y.IsPrimary && y.Name == "Billing"));
-            if (primaryBillingAccount == null) primaryBillingAccount = account.Contacts.First();
+            jAccount.Add("hasSavedCards", (Newtonsoft.Json.Linq.JValue)(cards.Items.Count > 0));
+            jAccount.Add("hasSavedContacts", (Newtonsoft.Json.Linq.JValue)(account.Contacts.Count > 0));
 
+
+            var primaryBillingAccount = account.Contacts.Find(x => x.Types.Exists(y => y.IsPrimary && y.Name == "Billing"));
+            if (primaryBillingAccount == null)
+            {
+                if (account.Contacts.Count == 0)
+                {
+                    primaryBillingAccount = (await _customerAccountWebApiClient.AddAccountContact(new Customer.Contracts.CustomerContact
+                    {
+                        FirstName = user.FirstName,
+                        LastNameOrSurname = user.LastName,
+                        Address = new Core.Api.Contracts.Address(),
+                        Email = user.EmailAddress,
+                        Types = new List<Customer.Contracts.ContactType>{
+                            new Customer.Contracts.ContactType{
+                                IsPrimary = true,
+                                Name = Customer.Contracts.ContactTypeConst.BILLING
+                            }
+                        }
+                    }, account.Id)).ReadAsSync();
+                }
+                else
+                {
+                    primaryBillingAccount = account.Contacts.First();
+                }
+            }
             jAccount.Add("primaryBillingContact", Newtonsoft.Json.Linq.JObject.FromObject(primaryBillingAccount, jSerializer));
 
-            jAccount.Add("cards", Newtonsoft.Json.Linq.JArray.FromObject(cards, jSerializer));
+            jAccount.Add("cards", Newtonsoft.Json.Linq.JArray.FromObject(cards.Items, jSerializer));
+
+            jAccount.Add("user", Newtonsoft.Json.Linq.JObject.FromObject(CurrentUser, jSerializer));
 
             return this.Request.CreateResponse(HttpStatusCode.OK,  View("my-account", jAccount));
         }

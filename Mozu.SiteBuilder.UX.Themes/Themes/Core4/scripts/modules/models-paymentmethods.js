@@ -7,6 +7,13 @@
         }
     });
 
+    var twoWayCardShapeMapping = {
+        "cardNumber": "cardNumberPartOrMask",
+        "cardNumberPart": "cardNumberPartOrMask", 
+        "cardType": "paymentOrCardType",
+        "id": "paymentServiceCardId"
+    };
+
     CreditCard = PaymentMethod.extend({
         mozuType: 'creditcard',
         validation: {
@@ -32,6 +39,33 @@
                 fn: "present",
                 msg: Hypr.getLabel('securityCodeMissing')
             }
+        },
+        initialize: function () {
+            var self = this;
+            _.each(twoWayCardShapeMapping, function (k, v) {
+                self.on('change:' + k, function (m, val) {
+                    self.set(v, val, { silent: true });
+                });
+                self.on('change:' + v, function (m, val) {
+                    self.set(v, val, { silent: true });
+                });
+            });
+            
+            //this.on('change:cardNumber', function (m, val) {
+            //    this.set('cardNumberPartOrMask', val, { silent: true })
+            //});
+            //this.on('change:cardNumberPartOrMask', function (m, val) {
+            //    this.set('cardNumber', val, { silent: true })
+            //});
+            //this.on('change:paymentOrCardType', function (m, val) {
+            //    this.set('cardType', val, { silent: true })
+            //});
+            //this.on('change:cardType', function (m, val) {
+            //    this.set('paymentOrCardType', val, { silent: true })
+            //});
+            //this.on('change:paymentServiceCardId', function (m, val) {
+            //    this.set('id', val, { silent: true })
+            //});
         },
         dataTypes: {
             expireMonth: Backbone.MozuModel.DataTypes.Int,
@@ -60,7 +94,11 @@
         toJSON: function (options) {
             var j = PaymentMethod.prototype.toJSON.apply(this);
             if (j.card && (!options || !options.helpers)) delete j.card.cvv;
-            return j;
+            _.each(twoWayCardShapeMapping, function (k, v) {
+                if (!(k in j) && (v in j)) j[k] = j[v];
+                if (!(v in j) && (k in j)) j[v] = j[k];
+            });
+            return j
         }
     }),
 

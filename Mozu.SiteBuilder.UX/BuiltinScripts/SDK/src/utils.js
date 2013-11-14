@@ -31,6 +31,29 @@ var utils = (function () {
         clone: function(obj) {
             return JSON.parse(JSON.stringify(obj)); // cheap copy :)
         },
+        flatten: function (obj, into, prefix, separator) {
+            into = into || {};
+            separator = separator || ".";
+            prefix = prefix || '';
+            for (var n in obj) {
+                key = n;
+                val = obj[n];
+                if (obj.hasOwnProperty(key)) {
+                    if (val && typeof val === 'object' && !(
+                      val instanceof Array ||
+                      val instanceof Date ||
+                      val instanceof RegExp)
+                    ) {
+                        utils.flatten(val.toJSON ? val.toJSON() : val, into, prefix + key + separator, separator);
+                    }
+                    else {
+                        into[prefix + key] = val;
+                    }
+                }
+            }
+
+            return into;
+        },
         inherit: function (parent, more) {
             var ApiInheritedObject = function () {
                 if (this.construct) this.construct.apply(this, arguments);

@@ -367,6 +367,9 @@
                 if (this.get("createAccount")) {
                     var user = this.get("user");
                     process.push(function () {
+                        var billingContact = order.get('billingInfo').get('billingContact');
+                        user.set('firstName', billingContact.get("firstName"));
+                        user.set('lastName', billingContact.get("lastNameOrSurname"));
                         return user.apiCreate();
                     }, function() {
                         return user.apiLogin({

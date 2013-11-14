@@ -1,0 +1,9 @@
+<div class="mz-popover mz-popover-signup">
+  <input type="text" class="mz-popover-signup-firstname" placeholder="{{ labels.firstName }}" data-mz-signup-firstname />
+  <input type="text" class="mz-popover-signup-lastname" placeholder="{{ labels.lastName }}" data-mz-signup-lastname />
+  <input type="email" class="mz-popover-signup-email" placeholder="{{ labels.emailAddress }}" data-mz-signup-emailaddress />
+  <input type="password" class="mz-popover-signup-password" placeholder="{{ labels.password }}" data-mz-signup-password />
+  <input type="password" class="mz-popover-signup-confirmpassword" placeholder="{{ labels.confirmPassword }}" data-mz-signup-confirmpassword />
+  <button class="mz-button mz-popover-signup-register" data-mz-action="signup">{{ labels.register }}</button>
+  <section data-mz-role="popover-message" class="mz-popover-message"></section>
+</div>

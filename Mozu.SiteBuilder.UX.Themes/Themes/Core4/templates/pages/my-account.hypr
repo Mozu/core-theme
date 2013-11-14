@@ -10,8 +10,6 @@
 
 {% preload_json model "customer" %}
 
-{% preload_json ViewData.Orders "orders" %}
-
 <div class="mz-l-container">
     <h1 class="mz-pagetitle">
         {{ labels.yourAccount }}
