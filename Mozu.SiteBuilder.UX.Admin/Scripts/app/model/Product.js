@@ -146,8 +146,8 @@ Ext.define('Taco.model.Product', {
             "useNull": true
         },
         {
-            "name": "inventoryHandling",
-            "type": "int"
+            "name": "outOfStockBehavior",
+            "type": "string"
         },
         {
             "name": "isTaxable",

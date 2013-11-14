@@ -70,10 +70,10 @@ Ext.define('Taco.view.product.subform.Extras', {
         this.add(items);
     },
 
-    addSaveTasks: function (tasks) {
-        console.log('error on addSaveTasks');
-        this.callParent(arguments);
-    },
+    //addSaveTasks: function (tasks) {
+    //    console.log('error on addSaveTasks');
+    //    this.callParent(arguments);
+    //},
 
     bindExtras: function () {
         Ext.each(this.extras, function (extra) {

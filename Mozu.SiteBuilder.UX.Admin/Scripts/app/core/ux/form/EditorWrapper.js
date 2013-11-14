@@ -1,5 +1,4 @@
-﻿Ext.define('Taco.core.ux.form.EditorWrapper', {
-    
+﻿Ext.define('Taco.core.ux.form.EditorWrapper', {    
     /**
      * @cfg {Object[]}
      * Any additional actions you want to add on top of the default Save/Cancel actions
@@ -45,7 +44,7 @@
     formCls: null,
     record: null,
     titleData: null,
-    enableSaveActionToggle: true,
+    enableSaveActionToggle: true,    
 
     initWrapper: function () {
         this.addEvents([
@@ -55,11 +54,11 @@
             'cancel',
             'destroyrecord'
         ]);
-        this.originalId = this.record ? this.record.getId(): null;
-        
+        this.originalId = this.record ? this.record.getId() : null;
+
         if (!this.form && this.formCls) {
             this.formCfg = Ext.applyIf({
-                autoTitle:this.autoTitle,
+                autoTitle: this.autoTitle,
                 record: this.record,
                 overflowY: 'auto'
             }, this.formCfg);
@@ -69,34 +68,35 @@
 
         if (!this.actions) {
             this.actions = [{
-                xtype: 'button',
-                itemId: 'cancel',
-                ui: 'action',
-                scale: 'medium',
-                text: this.cancelText,
-                margin: '0 0 0 10',
-                hidden: this.cancelHidden || !this.allowCreate(),
-                scope: this,
-                handler: this.cancel
-            }, {
-                xtype: 'button',
-                itemId: 'save',
-                ui: 'action-primary',
-                scale: 'medium',
-                text: this.saveText,
-                margin: '0 0 0 10',
-                enableToggle: this.enableSaveActionToggle ,
-                formBind: true,
-                hidden: this.saveHidden || !this.allowCreate(),
-                scope: this,
-                handler: this.save
-            }];
+                    xtype: 'button',
+                    itemId: 'cancel',
+                    ui: 'action',
+                    scale: 'medium',
+                    text: this.cancelText,
+                    margin: '0 0 0 10',
+                    hidden: this.cancelHidden || !this.allowCreate(),
+                    scope: this,
+                    handler: this.cancel
+                }, {
+                    xtype: 'button',
+                    itemId: 'save',
+                    ui: 'action-primary',
+                    scale: 'medium',
+                    text: this.saveText,
+                    margin: '0 0 0 10',
+                    allowDepress: false,
+                    enableToggle: this.enableSaveActionToggle,
+                    formBind: true,
+                    hidden: this.saveHidden || !this.allowCreate(),
+                    scope: this,
+                    toggleHandler: this.save
+                }];
         }
 
         Ext.each(this.additionalActions, function (additionalAction) {
             var beforeItemId = additionalAction.beforeItemId,
                 insertIndex;
-            
+
             if (beforeItemId) {
                 Ext.each(this.actions, function (action, index) {
                     if (action.itemId !== beforeItemId) return;
@@ -159,7 +159,7 @@
 
         return res;
     },
-    
+
     onBeforeRender: function () {
         this.dirtybutton = this.down('button#save');
 
@@ -177,7 +177,7 @@
                 if (this.record && this.record.getId() != this.originalId) {
                     this.fireEvent('idchange', this, this.record, this.originalId);
                 }
-                
+
             },
             savecomplete: function () {
                 if (this.dirtybutton) {
@@ -189,7 +189,7 @@
             },
             afterrender: function () {
                 var header = this.form.getHeader();
-                if( header ) {
+                if (header) {
                     header.hide();
                 }
             },
@@ -249,6 +249,7 @@
      * Initialize the save process on the form
      */
     save: function () {
+
         // this.dirtybutton.setLoading(true);
         this.form.save();
     },
@@ -256,7 +257,7 @@
         var me = this;
         // me.dirtybutton.setLoading(true);
         me.record.destroy({
-            callback: function(records, operation, success) {
+            callback: function (records, operation, success) {
                 if (operation.success) {
                     me.fireEvent('destroyrecord', this, records, operation);
                 }
@@ -279,3 +280,5 @@
         // go back to index page
     }
 });
+
+
