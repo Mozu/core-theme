@@ -4,10 +4,8 @@
 Ext.define('Taco.view.email.Edit', {
     extend: 'Taco.core.ux.form.Editor',
     requiresContextOfType: 's',
-    requires: ['Taco.view.site.CreateModal', 'Taco.view.site.Toolbox', 'Taco.view.site.page.dataViews.Blog', 'Taco.view.site.page.dataViews.Meta',
-        'Taco.view.site.page.Creator', 'Taco.model.PageTypeDefinition', 'Taco.store.TempPages', 'Taco.store.CmsDocuments', 'Taco.core.EventChain',
-        'Taco.view.site.page.entityAdapters.DocumentEntityAdapter', 'Taco.view.site.page.entityAdapters.ProductEntityAdapter', 'Taco.view.site.page.entityAdapters.CategoryEntityAdapter',
-        'Taco.view.site.navigation.ExternalLinkEditor', 'Taco.core.ux.form.Form'
+    requires: [
+         'Taco.core.ux.form.Form'
     ],
     title: 'Email Editor',
     // TODO
@@ -25,14 +23,14 @@ Ext.define('Taco.view.email.Edit', {
             }
         });
         
-        this.editSurface = Ext.create('Taco.view.site.page.EditSurface', {
-            pageSrc: this.pageSrc,
-            cmsDocs: this.cmsDocs,
-            listeners: {
-                edit: this.onEdit,
-                scope: this
-            }
-        });
+        //this.editSurface = Ext.create('Taco.view.site.page.EditSurface', {
+        //    pageSrc: this.pageSrc,
+        //    cmsDocs: this.cmsDocs,
+        //    listeners: {
+        //        edit: this.onEdit,
+        //        scope: this
+        //    }
+        //});
         this.actions = [
                 {
                     xtype: 'secondarybutton',

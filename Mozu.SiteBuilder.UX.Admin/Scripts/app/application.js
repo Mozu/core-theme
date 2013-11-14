@@ -29,7 +29,7 @@
  * @requires Taco.controller.Inventory
  * @requires Taco.controller.Message
  * @requires Taco.controller.Catalog
- * @requires Taco.controller.Sites
+
  * @requires Taco.controller.Testing
  * @requires Taco.controller.FileManager
  * @requires Taco.controller.Discounts
@@ -117,7 +117,6 @@ Ext.define('Taco.Application',{
             'Inventory',
             'Message',
             'Catalog',
-            'Sites',
             'Testing',
             'Discounts',
             'Settings',

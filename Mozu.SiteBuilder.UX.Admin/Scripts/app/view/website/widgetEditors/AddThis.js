@@ -2,7 +2,7 @@
  * @class Taco.view.site.widget.AddThis
  */
 Ext.define('Taco.view.website.widgetEditors.AddThis', {
-    extend: 'Taco.view.site.widget.Editor',
+    extend: 'Taco.view.website.WidgetEditor',
 
     title: 'Add This',
 
