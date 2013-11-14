@@ -22,6 +22,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
     {
         public const string FORCE_THEME_COOKIE_NAME = "SBTHEME";
         private readonly ICookieProvider _cookieProvider;
+        private readonly ISiteBuilderApiContext _siteBuilderApiContext;
+        private readonly IStorefrontCache _cache;
         private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
         private readonly IGeneralSettingsWebApiClient _generalSettingsWebApiClient;
         private readonly IMobileDetectionProvider _mobileDetectionProvider;
@@ -38,13 +40,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         private Dictionary<string, string> _labels;
 
-        public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient)
+        public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, IStorefrontCache cache)
         {
             _generalSettingsWebApiClient = generalSettingsWebApiClient.CloneWithoutUserClaims();
             _themeSettingsRepository = themeSettingsRepository;
             _themeRepository = themeRepository;
             _mobileDetectionProvider = mobileDetectionProvider;
             _cookieProvider = cookieProvider;
+            _siteBuilderApiContext = siteBuilderApiContext;
+            _cache = cache;
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient.CloneWithoutUserClaims();
         }
 
@@ -156,21 +160,53 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             set { _theme = value; }
         }
 
-
-
+        Task<Mozu.SiteSettings.Order.Contracts.CheckoutSettings> GetCheckoutSettings()
+        {
+            var key = typeof ( Mozu.SiteSettings.Order.Contracts.CheckoutSettings).FullName  + this._siteBuilderApiContext.SiteId;
+            var settings = (Mozu.SiteSettings.Order.Contracts.CheckoutSettings) _cache[key];
+            if (settings == null)
+            {
+                return _checkoutSettingsWebApiClient.GetCheckoutSettings().ContinueWith(x =>
+                    {
+                        settings = x.Result.ReadAsSync();
+                        _cache[key] = settings;
+                        return settings;
+                    });
+            }
+            var tcs = new TaskCompletionSource<SiteSettings.Order.Contracts.CheckoutSettings>();
+            tcs.SetResult(settings);
+            return tcs.Task;
+        }
+        Task<Mozu.SiteSettings.General.Contracts.GeneralSettings> GetGeneralSettings()
+        {
+            var key = typeof(Mozu.SiteSettings.General.Contracts.GeneralSettings).FullName + this._siteBuilderApiContext.SiteId;
+            var settings = (Mozu.SiteSettings.General.Contracts.GeneralSettings)_cache[key];
+            if (settings == null)
+            {
+                return _generalSettingsWebApiClient.GetGeneralSettings().ContinueWith(x =>
+                {
+                    settings = x.Result.ReadAsSync();
+                    _cache[key] = settings;
+                    return settings;
+                });
+            }
+            var tcs = new TaskCompletionSource<Mozu.SiteSettings.General.Contracts.GeneralSettings>();
+            tcs.SetResult(settings);
+            return tcs.Task;
+        }
 
 
         public Task Init()
         {
             if (_initTask == null)
             {
-                var genSettingsTask = _generalSettingsWebApiClient.GetGeneralSettings();
-                var checkoutSettingsTask = _checkoutSettingsWebApiClient.GetCheckoutSettings();
+                var genSettingsTask = GetGeneralSettings();
+                var checkoutSettingsTask = GetCheckoutSettings();
                 var settingsServiceTasks = Task.WhenAll(genSettingsTask, checkoutSettingsTask);
                 var initTask = settingsServiceTasks.ContinueWith(task =>
                     {
-                        _generalSettings = Mapper.Map<GeneralSettings>(genSettingsTask.Result.ReadAsSync());
-                        _checkoutSettings = Mapper.Map<CheckoutSettings>(checkoutSettingsTask.Result.ReadAsSync());
+                        _generalSettings = Mapper.Map<GeneralSettings>(genSettingsTask.Result);
+                        _checkoutSettings = Mapper.Map<CheckoutSettings>(checkoutSettingsTask.Result);
                         HttpCookie cookie = _cookieProvider.GetRequestCookie(FORCE_THEME_COOKIE_NAME);
 
                         if (cookie != null && !string.IsNullOrEmpty(cookie.Value))

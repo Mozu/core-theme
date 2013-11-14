@@ -31,7 +31,7 @@
             this.$body = this.element.find('.mz-cms-body');
 
             this.controller().findWidgetTypeDefinitions('*', function(widgets) {
-                console.log(JSON.stringify(widgets));
+                
 
                 $.each(widgets, function(i, widget) {
                     me.$body.append(me.buildWidget(widget));

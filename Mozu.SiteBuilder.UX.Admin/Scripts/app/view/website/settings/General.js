@@ -62,11 +62,6 @@ Ext.define('Taco.view.website.settings.General', {
         this.record.set( values);
         this.record.endEdit();
        
-    },
-    //persistFormValues: function () {
-        
-    //    this.record.beginEdit();
-    //    this.record.set(obj);
-    //    this.record.endEdit();
-    //}
+    }
+   
 });

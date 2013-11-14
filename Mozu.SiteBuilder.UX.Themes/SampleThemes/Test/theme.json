@@ -1,0 +1,13 @@
+{
+  /* About: Basic Information about the theme. */
+  "about": {
+    "name": "Red",
+    "author": "Volusion",
+    "extends": "Core4",
+    "isDesktop": true,
+    "isMobile": true,
+    "defaultLanguage": "en-US"
+  },
+
+  
+}

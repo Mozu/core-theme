@@ -26,8 +26,8 @@ Ext.define('Taco.view.site.page.entityAdapters.CategoryEntityAdapter', {
        var doc,
            me = this,
            pageReq = me.pageProps.pageContext.cms.page;
-       if (pageReq.Id) {
-           doc = me.editor.cmsDocs.getById(pageReq.Id);
+       if (pageReq.id) {
+           doc = me.editor.cmsDocs.getById(pageReq.id);
            if (!doc) {
                doc = me.editor.cmsDocs.add([pageReq.Document])[0];
            }

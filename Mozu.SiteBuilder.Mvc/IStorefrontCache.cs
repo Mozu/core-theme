@@ -50,13 +50,13 @@ namespace Mozu.SiteBuilder.Mvc
     public class DefaultStorefrontCache : IStorefrontCache
     {
         private readonly IApiContext _context;
-        private readonly HttpContextBase _httpContext;
+      
 
         private System.Collections.Hashtable _inner;
-        public DefaultStorefrontCache( Mozu.Core.IApiContext context, System.Web.HttpContextBase httpContext  )
+        public DefaultStorefrontCache( Mozu.Core.IApiContext context )
         {
             _context = context;
-            _httpContext = httpContext;
+          
             var cache = System.Runtime.Caching.MemoryCache.Default;
             var key = typeof (DefaultStorefrontCache).FullName  + context.SiteId;
             _inner = (System.Collections.Hashtable )cache[key];
@@ -67,7 +67,7 @@ namespace Mozu.SiteBuilder.Mvc
                 _inner = new Hashtable();
                 cache.Add(new CacheItem(key, _inner), new CacheItemPolicy()
                                                           {
-                                                              AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(10)
+                                                              AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(5)
                                                           });
             }
 

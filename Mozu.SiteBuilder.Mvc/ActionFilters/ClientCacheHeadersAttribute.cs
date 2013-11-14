@@ -6,6 +6,8 @@
 
 using System.Net.Http.Headers;
 using System.Web.Http.Filters;
+using Mozu.Core.Settings;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
@@ -38,14 +40,15 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
-           
+
+            var settings =actionExecutedContext.Request.Resolve<ISettings>();
             if (ConfigKey == null)
                 return;
 
-            var val = System.Configuration.ConfigurationManager.AppSettings["clientCacheHeaderLength:" + ConfigKey];
+            var val = settings.AppSettings("clientCacheHeaderLength:" + ConfigKey);
             if (val == null)
             {
-                val = System.Configuration.ConfigurationManager.AppSettings["clientCacheHeaderLength:default"];
+                val = settings.AppSettings("clientCacheHeaderLength:default");
             }
             if (val == null || val == "0")
                 return;

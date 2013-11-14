@@ -4,23 +4,64 @@
 
 Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
     extend: 'Taco.view.website.entityAdapters.BaseEntityAdapter',
-    requires:[
-        'Taco.view.website.settings.CategoryTemplates'
+    requires: [
+        'Taco.view.website.settings.CategoryDocument',
+        'Taco.view.website.settings.facets.Facets',
+        'Taco.view.website.settings.Seo'
     ],
 
-    modelName:'Taco.model.Category',
+    modelName: 'Taco.model.Category',
 
-    allowedActions:{
+    allowedActions: {
         copy: false,
         preview: true,
         destroy: false
     },
 
-    getStore:function() {
+    load: function () {
+        var me = this,
+            key = this.getId(),
+            modelFactory = Ext.ModelManager.getModel(this.modelName),
+            store = this.getStore();
+
+
+        me.model = store.getById(key);        
+
+
+        if (me.model === null) {
+            me.isLoading = true;
+            modelFactory.load(key, {
+                success: function (record) {
+                    me.set(record, true);
+                }
+            });
+        } else {
+            this.set(this.model);
+        }
+
+        this.fetchCmsPageDoc();
+
+
+    },
+
+    set: function (model, add) {
+        this.isLoading = false;
+        if (model.$className == this.modelName) {
+            this.model = model;
+        } else {
+            this.cmsPageDoc = model;
+        }
+        if (this.model && this.cmsPageDoc) {
+            this.fireEvent('load', this);
+        }
+
+    },
+    
+    getStore: function () {
         return Taco.core.data.StoreManager.getOrCreate('Taco.store.Categories');
     },
 
-    isHidden:function(){
+    isHidden: function () {
         return this.get().get('isHidden');
     },
 
@@ -28,56 +69,44 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
         this.get().set('isHidden', hide);
     },
 
-    getId: function() {
+    getId: function () {
         return parseInt(this.pageContext.categoryId, 10);
     },
+    getCmsPageDoc: function () {
+        return this.cmsPageDoc;
+    },
 
-    getCmsPageDoc:function() {
-        var doc,
-            me = this,
-            pageReq = me.pageProps.pageContext.cms.page;
+    fetchCmsPageDoc: function () {
+        var me = this,
+            cmsDoc,
+            pageReq = me.pageContext.cmsContext.page;
 
-        if (pageReq.Id) {
-            doc = me.editor.cmsDocs.getById(pageReq.Id);
-
-            if (!doc) {
-                doc = me.editor.cmsDocs.add([pageReq.Document])[0];
-            }
-
-            return doc;
-        } else {
-            doc = Taco.model.CmsDocument.create({
-                name: pageReq.Path,
-                documentType: 'catalog_page',
-                collectionName: 'catalog_pages'
-            });
-
-            doc.on({
-                afteredit: {
-                    scope: this,
-                    single: true,
-                    fn: function () {
-                        if (model.dirty) {
-                            me.editor.cmsDocs.add(model);
-                        }
-                    }
+        if (pageReq.id) {
+            Taco.model.CmsDocument.load(pageReq.collection + '_' + pageReq.id, {
+                success: function (doc) {
+                    me.set(doc);
                 }
             });
+        } else {
+            cmsDoc = Ext.create('Taco.model.CmsDocument', {
+                documentType: pageReq.documentType,
+                name: pageReq.path,
+                collectionName: pageReq.collection
+            });
+            me.set(cmsDoc);
         }
-
-        return doc;
     },
 
     addSaveTasks: function (tasks) {
         if (this.get().getFacetSets()) {
             tasks.add({
-                key: 'facetSetStore',
                 store: this.get().getFacetSets()
             });
         }
+        this.callParent(arguments);
     },
 
-    isDirty:function() {
+    isDirty: function () {
         if (this.model && this.model.facetSetStore) {
             return this.model.facetSetStore.isDirty();
         }
@@ -92,38 +121,12 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
             Ext.create('Taco.view.website.settings.facets.Facets', {
                 record: me.get()
             }),
-            Ext.create('Taco.view.website.settings.General', {
-                record: me.get()
-            }),
-            Ext.create('Taco.view.website.settings.CategoryTemplates', {
-                record: me.get()
+            Ext.create('Taco.view.website.settings.CategoryDocument', {
+                record: me.getCmsPageDoc()
             }),
             Ext.create('Taco.view.website.settings.Seo', {
                 record: me.get()
             })
         ];
-
-    //,
-    //{
-    //    panelCls: 'Taco.view.website.settings.CategoryTemplates',
-    //    panelCfg:{},
-    //    getRecord: function() {
-    //        return me.getCmsPageDoc();
-    //    }
-    //}, {
-    //    panelCls:  'Taco.view.website.settings.Seo',
-    //    getRecord: function() {
-    //        return me.get();
-    //    }
-    //}, {
-    //    panelCls: 'Taco.view.website.settings.Facets',
-    //    getRecord: function () {
-    //        var fs = me.get().getFacetSets();
-    //        if (!fs.pageEditor) {
-    //            fs.pageEditor = me.editor;
-    //            me.model.getFacetSets().on('dirtychange', me.editor.onFormStateChange, me.editor);
-    //        }
-    //        return me.get();
-    //    }
     }
 });

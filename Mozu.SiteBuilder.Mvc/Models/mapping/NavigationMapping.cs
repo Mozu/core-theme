@@ -65,7 +65,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mappings
                .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.Id))
                .ForMember(d => d.OriginalCollection, opt => opt.MapFrom(x => x.DocumentListName))
                .ForMember(d => d.ParentId, opt => opt.UseValue(null))
-               .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Get("link_title") ?? x.Get("title") ?? x.Name))
+               .ForMember(d => d.Name, opt => opt.MapFrom(x =>
+                   x.Get<string>("link_title").GetNullIfWhiteSpace() ?? x.Get<string>("title").GetNullIfWhiteSpace() ?? x.Name))
                .ForMember(d => d.Url, opt => opt.MapFrom(x => "/" + x.DocumentListName + "/" + x.Name))
                .ForMember(d => d.NodeType, opt => opt.UseValue(NavigationNodeType.Page))
                .ForMember(d => d.Index, opt => opt.UseValue(null))

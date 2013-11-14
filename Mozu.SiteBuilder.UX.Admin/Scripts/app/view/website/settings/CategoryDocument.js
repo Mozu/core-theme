@@ -2,7 +2,7 @@
  * @class Taco.view.website.settings.Templates
  */
 
-Ext.define('Taco.view.website.settings.CategoryTemplates', {
+Ext.define('Taco.view.website.settings.CategoryDocument', {
     extend: 'Taco.core.ux.form.Form',
     requires:[
         'Taco.core.ux.form.field.PageTemplate'
@@ -24,5 +24,20 @@ Ext.define('Taco.view.website.settings.CategoryTemplates', {
         }];
 
         this.callParent(arguments);
+    },
+    loadRecord: function (record, cascade) {
+        var values = {};
+        Ext.Array.each(this.record.data.items, function (kvp) {
+            values[kvp.key] = kvp.value;
+        }, this);
+        this.getForm().setValues(values);
+    },
+    persistFormValues: function () {
+        var values = this.getValues();
+
+        this.record.beginEdit();
+        this.record.set(values);
+        this.record.endEdit();
+
     }
 });

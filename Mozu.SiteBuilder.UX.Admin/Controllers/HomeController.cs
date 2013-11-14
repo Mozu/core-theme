@@ -13,6 +13,7 @@ using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Logging;
 using Mozu.Core.Settings;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
@@ -33,7 +34,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
     public class HomeController : AdminApiControllerBase 
     {
-       
+        private readonly ILogger _logger;
+
         private readonly IAuthenticationHelper _authenticationHelper;
         
         private readonly ITenantsWebApiClient _tenantsWebApi;
@@ -46,8 +48,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         private IMasterCatalogWebApiClient _masterCatalogClient;
 
-        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper,  ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient)
+        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper,  ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, Mozu.Core.Logging.ILogger logger)
         {
+            _logger = logger;
+        
             _usersRepo = usersRepo.CloneWithoutUserClaims();
             _authenticationHelper = authHelper;
             //_sbc = sbc;
@@ -73,6 +77,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             }
             catch (Exception ex)
             {
+                _logger.Error("error loading admin", ex);
                 var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
                 redir.Headers.Location = new System.Uri("/admin/auth/logout", UriKind.Relative);
                 return redir;
