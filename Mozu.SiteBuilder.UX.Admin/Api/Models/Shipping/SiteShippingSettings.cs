@@ -63,6 +63,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
         [IgnoreDataMember]
         public Mozu.ShippingAdmin.Contracts.CarrierConfiguration PreviousValue { get; set; }
 
+
+        /// <summary>
+        /// The countries configured for this carrier
+        /// </summary>
+        [DataMember(Name = "configuredCountries")]
+        public List<string> ConfiguredCountries { get; set; }
+
     }
 
     [DataContract]

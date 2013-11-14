@@ -136,8 +136,9 @@
                     failure: function (batch, options) {
                         var msg = batch.operations[0].error;
                         if (msg.remoteException) {
-                            msg = msg.remoteException.getMessage();
                             tasks.errors.push(msg.remoteException.getError());
+                            msg = msg.remoteException.getMessage();
+                            
                         }
                         if (msg) {
                             Taco.app.fireEvent('setmessage', msg, 'error');
