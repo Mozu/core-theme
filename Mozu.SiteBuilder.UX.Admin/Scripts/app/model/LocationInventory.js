@@ -114,5 +114,51 @@ Ext.define('Taco.model.LocationInventory', {
          mockApi: {
             read: '/admin/Scripts/app/mocks/InventoryProducts.json'
         }
+    },
+    
+    statics: {
+        
+
+        removeInventory: function (config) {
+            var me = this,
+                // array or a single record;
+                records = config.records,
+                store = config.store,
+                requestConfig = {
+                    success: function (response) {
+                        
+                    },
+                    failure: function (response) {
+                        
+                    }
+                };
+
+            
+            if (!records) { return }
+            
+            Ext.apply(requestConfig, config);
+
+            var msg = 'Are you sure you want to remove this inventory item?';
+            if (Ext.isArray(records) && records.length > 1) {
+                msg = 'Are you sure you want to remove these inventory items?';
+            }
+
+            Ext.MessageBox.show({
+                title: 'Remove Inventory',
+                // pushes the buttons to the right to be consistant with our dialog ux.
+                rightJustifyButtons: true,
+                // reverses the order of the buttons
+                reverseOrder: true,
+                msg: msg,
+                closable: false,
+                buttons: Ext.Msg.YESNO,
+                fn: function (val) {
+                    if (val === 'yes') {
+                        store.remove(records);
+                        store.sync(requestConfig);
+                    }
+                }
+            });
+        }
     }
 });

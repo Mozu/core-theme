@@ -6,7 +6,7 @@
   // to include this mixin in your class:
 
         mixins: {
-            searchable: 'Taco.core.ux.mixins.Pageable'
+            searchable: 'Taco.core.ux.mixins.Searchable'
         },
 
 

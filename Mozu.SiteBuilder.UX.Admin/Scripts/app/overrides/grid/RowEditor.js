@@ -3,6 +3,15 @@
  * see: http://www.sencha.com/forum/showthread.php?264529-4.2.1-Ext.grid.RowEditor-onFieldChanged()-No-Longer-Called
  * check for fix in when we upgrade to next version of extjs
 
+ *  To prevent a specific column from editing the row, add this  "rowEditOnClick: false" config to the column configuration:
+        
+        Example:
+            {
+                dataIndex: 'name',            
+                text: 'Name',
+                rowEditOnClick: false
+                flex:1            
+            }       
 
  *
  *  Two added features:
@@ -67,7 +76,7 @@ Ext.define('Taco.overrides.grid.RowEditor', {
             }
             return;
         }
-
+        
         if (column.getEditor) {
             field = column.getEditor(null, {
                 xtype: 'displayfield',
@@ -79,8 +88,9 @@ Ext.define('Taco.overrides.grid.RowEditor', {
             if (column.align === 'right') {
                 field.fieldStyle = 'text-align:right';
             }
-
-            if (column.xtype === 'actioncolumn') {
+            
+            // prevent the roweditor from displaying the action column and its subclasses;
+            if (column.xtype === 'actioncolumn' || column.xtype === 'taco.menucolumn') {
                 field.fieldCls += ' ' + Ext.baseCSSPrefix + 'form-action-col-field';
             }
 
@@ -111,7 +121,13 @@ Ext.define('Taco.overrides.grid.RowEditor', {
     *  Also looks for editOnCreateOnly property and disables the field in an edit situation;
     */
     onBeforeEdit: function (editor, context, opts) {
+        var xtype = context.column.xtype;
+        // disable the row editor when the user clicks on an actioncolum or our ux version of the action column. Also allows us to prevent a column from triggering the rowEdit
+        if (xtype == "taco.menucolumn" || xtype == "actioncolumn" || context.column.rowEditOnClick == false) {
+            return false;
+        }
         
+
         var fields = editor.editor.items.items;
         //iterate each field and call an optional method on that field which can be used to manipulate the field each time its shown.
         for (var i = 0; i < fields.length; i++) {

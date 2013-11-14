@@ -90,12 +90,13 @@ Ext.define('Taco.core.ux.browser.Browsable', {
     },
     initBrowserConfig: function () {
 
+        this.gridPanelConf = Ext.clone(this.gridPanelConf);
+
         if (!this.header) {
             this.header = {};
         }
         
         if (this.enableRowEditing) {
-            
             // update the button text to be "Save"
             Ext.grid.RowEditor.prototype.saveBtnText = "Save";
             
@@ -120,6 +121,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
             if (!this.gridPanelConf.plugins) {
                 this.gridPanelConf.plugins = [];
             }
+            
             this.gridPanelConf.plugins.push(this.rowEditor);
             this.launchEditorOnClick = false;
         }

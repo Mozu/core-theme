@@ -45,26 +45,9 @@ Ext.define('Taco.core.ux.mixins.RowEditable', {
 
     constructor: function () {
         var me = this;
-        this.rowEditor = Ext.create('Ext.grid.plugin.RowEditing', {
-            clicksToMoveEditor: 1,
-            clicksToEdit: 1,
-            errorSummary: false,
-            listeners: {
-                'edit': {
-                    fn: this.onRowEditorUpdate,
-                    scope: this
-                },
-                'cancelEdit': {
-                    fn: this.onRowEditorCancel,
-                    scope: this
-                }
-
-            },
-            autoCancel: false
-        });
+        
 
         if (this.enableRowEditing) {
-
             // update the button text to be "Save"
             Ext.grid.RowEditor.prototype.saveBtnText = "Save";
 
@@ -88,6 +71,8 @@ Ext.define('Taco.core.ux.mixins.RowEditable', {
 
             if (!this.plugins) {
                 this.plugins = [];
+            } else {
+                this.plugins = Ext.clone(this.plugins);
             }
             this.plugins.push(this.rowEditor);
             this.launchEditorOnClick = false;
