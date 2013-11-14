@@ -16,6 +16,17 @@
                 msg: Hypr.getLabel('lastNameMissing')
             }
         },
+        toJSON: function() {
+            var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
+            if (!j.types || j.types.length === 0) {
+                j.types = [
+                    {
+                        name: "Billing"
+                    }
+                ]
+            }
+            return j;
+        },
         isPrimaryShippingContact: function () {
             return !!_.findWhere(this.get('types'), { isPrimary: true, name: "Shipping" });
         },
