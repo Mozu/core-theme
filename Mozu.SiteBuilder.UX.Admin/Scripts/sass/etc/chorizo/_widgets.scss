@@ -10,6 +10,7 @@
     position: fixed;
     top: 50%;
     width: 460px;
+    z-index: 100003;
 
     @include border-radius(2px);
 
@@ -50,4 +51,28 @@
         content: "";
         clear: both;
     }
+}
+
+.mz-cms-shadow {
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    height: 510px;
+    left: 50%;
+    margin-left: -255px;
+    margin-top: -255px;
+    position: fixed;
+    top: 50%;
+    width: 520px;
+    z-index: 100002;
+}
+
+.mz-cms-cover {
+    z-index: 100001;
+    display: none;
+    height: 100vh;
+    left: 0;
+    opacity: 0;
+    position: fixed;
+    top: 0;
+    width: 100vw;
 }

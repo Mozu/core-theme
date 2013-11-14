@@ -152,6 +152,20 @@
   width: auto;
 }
 
+/* line 49, ../../sass/etc/chorizo/_format-bar.scss */
+.mz-cms-tooltip {
+  background-color: black;
+  display: none;
+  left: 0;
+  padding: 5px;
+  position: absolute;
+  top: 0;
+}
+/* line 57, ../../sass/etc/chorizo/_format-bar.scss */
+.mz-cms-tooltip input[type="text"] {
+  width: 300px;
+}
+
 /* line 2, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-widget-modal {
   background-color: white;
@@ -164,13 +178,14 @@
   position: fixed;
   top: 50%;
   width: 460px;
+  z-index: 100003;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   -ms-border-radius: 2px;
   -o-border-radius: 2px;
   border-radius: 2px;
 }
-/* line 16, ../../sass/etc/chorizo/_widgets.scss */
+/* line 17, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-widget-modal .mz-cms-header {
   font-size: 24px;
   font-weight: normal;
@@ -178,18 +193,18 @@
   line-height: 24px;
   padding: 19px 19px 10px;
 }
-/* line 24, ../../sass/etc/chorizo/_widgets.scss */
+/* line 25, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-widget-modal .mz-cms-body {
   padding: 9px 19px 0;
 }
-/* line 28, ../../sass/etc/chorizo/_widgets.scss */
+/* line 29, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-widget-modal .mz-cms-widget {
   display: inline-block;
   margin: 0 10px 10px 0;
   vertical-align: top;
   width: 60px;
 }
-/* line 34, ../../sass/etc/chorizo/_widgets.scss */
+/* line 35, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-widget-modal .mz-cms-widget .mz-cms-icon {
   background-size: cover;
   border: 1px solid #CCC;
@@ -197,16 +212,42 @@
   margin-bottom: 5px;
   width: 100%;
 }
-/* line 42, ../../sass/etc/chorizo/_widgets.scss */
+/* line 43, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-widget-modal .mz-cms-widget .mz-cms-label {
   color: #333;
   font-size: 11px;
   text-align: center;
 }
-/* line 49, ../../sass/etc/chorizo/_widgets.scss */
+/* line 50, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-widget-modal:after {
   content: "";
   clear: both;
+}
+
+/* line 56, ../../sass/etc/chorizo/_widgets.scss */
+.mz-cms-shadow {
+  background-color: rgba(0, 0, 0, 0.8);
+  display: none;
+  height: 510px;
+  left: 50%;
+  margin-left: -255px;
+  margin-top: -255px;
+  position: fixed;
+  top: 50%;
+  width: 520px;
+  z-index: 100002;
+}
+
+/* line 69, ../../sass/etc/chorizo/_widgets.scss */
+.mz-cms-cover {
+  z-index: 100001;
+  display: none;
+  height: 100vh;
+  left: 0;
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  width: 100vw;
 }
 
 /* line 6, ../../sass/etc/chorizo/_grid-edit.scss */

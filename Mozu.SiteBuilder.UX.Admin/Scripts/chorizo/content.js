@@ -156,16 +156,52 @@
         Content.call(this, element, options);
 
         this.element
-            .attr('data-rich-text', 'true')
-            //.append($('<div class="mz-cms-drag-handle mz-cms-text-drag-handle"></div>'));
+            .data('rich-text', true)
+            .select($.proxy(this._onSelect, this));
+        
+        this.element.on({
+            click: $.proxy(this._onClick, this)
+        });
 
-        this.on({
-            'click': 'default > editing',
-            'blur .mz-cms-content': 'editing > default'
+        this.element.find('.mz-cms-content').on({
+            blur: $.proxy(this._onBlur, this)
         });
     }
 
     Text.prototype = new Content();
+
+    Text.prototype.editingUrl = function(val) {
+        if (typeof val === 'undefined') return this._editingUrl;
+        this._editingUrl = val;
+        return this;
+    }
+
+    Text.prototype.focus = function() {
+        this.element.find('[contenteditable]').focus();
+    }
+
+    Text.prototype._onClick = function(e) {
+        var $tar,
+            oldUrl;
+
+        if (this.state() === 'default') this.state('editing');
+
+        if (this.state() === 'editing') {
+            $tar = $(e.target);
+
+            if (!$tar.is('a')) return;
+
+            oldUrl = $tar.attr('href');
+            $tar.attr('href', '#mz-cms-temp-link');
+
+            Chorizo.formatter.showTooltip(oldUrl, $tar);
+        }
+    }
+
+    Text.prototype._onBlur = function(e) {
+        if (this.editingUrl()) return;
+        if (this.state() === 'editing') this.state('default');
+    }
 
     Text.prototype._defaultState = function() {
         var widgetData = this.element.data('widget');
@@ -181,13 +217,17 @@
 
 
     Text.prototype._editingState = function() {
-        Chorizo.formatter.show();
+        Chorizo.formatter.show(this);
         this.$content.attr('contenteditable', 'true');
         this.$content.focus();
     }
 
     Text.prototype._movingState = function() {
 
+    }
+
+    Text.prototype._onSelect = function(e) {
+        debugger;
     }
 
 

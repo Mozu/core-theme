@@ -7,12 +7,16 @@
 
     widgets = {
         _modalTpl: [
-            '<div class="mz-cms-widget-modal" style="display:none">',
-                '<div class="mz-cms-header">',
-                    'Widgets',
+            '<div>',
+                '<div class="mz-cms-widget-modal" style="display:none">',
+                    '<div class="mz-cms-header">',
+                        'Widgets',
+                    '</div>',
+                    '<div class="mz-cms-body"></div>',
                 '</div>',
-                '<div class="mz-cms-body"></div>',
-            '</div>'    
+                '<div class="mz-cms-shadow"></div>',
+                '<div class="mz-cms-cover"></div>',
+            '</div>'
         ],
 
         _widgetTpl: [
@@ -25,10 +29,13 @@
         init: function() {
             var me = this;
 
-            this.element = $(this._modalTpl.join(''))
-                .appendTo('body');
+            this.element = $(this._modalTpl.join('')).appendTo('body');
 
-            this.$body = this.element.find('.mz-cms-body');
+            this.$modal = this.element.find('.mz-cms-widget-modal');
+
+
+
+            this.$body = this.$modal.find('.mz-cms-body');
 
             this.controller().findWidgetTypeDefinitions('*', function(widgets) {
                 
@@ -57,15 +64,15 @@
         },
 
         show: function() {
-            this.element.show();
+            this.$modal.show();
         },
 
         hide: function() {
-            this.element.hide();
+            this.$modal.hide();
         },
 
         toggle: function() {
-            this.element.toggle();
+            this.$modal.toggle();
         }
     };
 
