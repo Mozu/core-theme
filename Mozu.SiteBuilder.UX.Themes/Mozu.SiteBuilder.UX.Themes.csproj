@@ -426,6 +426,7 @@
     <Content Include="Themes\Core4\scripts\vendor\bootstrap-popover.js" />
     <Content Include="Themes\Core4\scripts\vendor\bootstrap-scrollspy.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery-scrollto.js" />
+    <Content Include="Themes\Core4\scripts\vendor\placeholder_polyfill.jquery.amd.js" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-container.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-sidebar.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-slidebox.less" />
@@ -908,7 +909,7 @@
     <Content Include="Themes\Core4\templates\modules\checkout\step-shipping-method.hypr.live">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Themes\Core4\templates\modules\checkout\credit-card-form.hypr.live">
+    <Content Include="Themes\Core4\templates\modules\checkout\billing-credit-card-form.hypr.live">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Themes\Core4\templates\modules\product\faceting-form.hypr.live" />
@@ -955,6 +956,22 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Themes\Core4\templates\modules\my-account\my-account-wishlist.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\common\credit-card-form.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Themes\Core4\templates\modules\my-account\my-account-credit-card-form.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Themes\Core4\templates\modules\common\signup-popover.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Themes\Core4\stylesheets\modules\common\placeholder-polyfill.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\common\signup-popover.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\my-account\account-paymentmethods.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\my-account\account-addressbook.less" />
+    <Content Include="Themes\Core4\templates\modules\my-account\my-account-address-form.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="SampleThemes\Test\theme.json" />
     <Content Include="SampleThemes\Test\theme-ui.json" />
     <Content Include="SampleThemes\Test\stylesheets\base\global.less" />

@@ -7,8 +7,10 @@
             <dt>{{ labels.total }}</dt>
             <dd>{{ model.total|currency }}</dd>
             {% block order-shipped-to %}
+            {% if model.fulfillmentInfo.fulfillmentContact %}
             <dt>{{ labels.shippedTo }}</dt>
             <dd>{{ model.fulfillmentInfo.fulfillmentContact.firstName }} {{ model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</dd>
+            {% endif %}
             {% endblock order-shipped-to %}
         </dl>
     </div>

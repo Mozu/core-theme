@@ -7,14 +7,14 @@
     .clearfix();
 
     > .mz-sitenav-list {
-        white-space: nowrap;
+        display: table-row;
         > .mz-sitenav-item:first-child {
-            margin-left: @gutter * .75;
+            padding-left: @gutter * .75;
         }
     } 
 
     .mz-sitenav-item {
-        display: inline-block;
+        display: table-cell;
         // to remove space gap
         font-size: 0.1px;
         position: relative;
@@ -80,7 +80,10 @@
         @media (max-width: 800px) {
             height: auto;
             > .mz-sitenav-list {
-                white-space: normal;
+                display: block;
+            }
+            .mz-sitenav-item {
+                display: inline-block;
             }
             .mz-sitenav-sub {
                 display: none;

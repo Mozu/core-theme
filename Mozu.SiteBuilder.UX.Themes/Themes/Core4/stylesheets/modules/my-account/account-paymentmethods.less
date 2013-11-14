@@ -1,0 +1,37 @@
+﻿.mz-accountpaymentmethods {
+    .mz-accountpaymentmethods-list {
+        margin-top: @gutter/2;
+    }
+    .mz-accountpaymentmethods-method {
+        border-right: 1px solid #eee;
+        margin: 0 @gutter/2 @gutter/2 0;
+        &:last-child {
+            border-right-width: 0;
+        }
+        .clearfix();
+    }
+
+    .mz-accountpaymentmethods-form {
+        width: auto;
+        float: left;
+        margin: 0 @gutter/2 @gutter/2 0;
+    }
+
+    .mz-accountpaymentmethods-actions {
+        float: right;
+        margin: 0 @gutter/2;
+        a {
+            .permalink(#666);
+            display: inline-block;
+            padding: 0 @gutter/4;
+            border-right: 1px solid #eee;
+            &:last-child {
+                border-right-width: 0;
+                padding-right: 0;
+            }
+        }
+    }
+    .mz-accountpaymentmethods-methoddetails {
+        float: left;
+    }
+}

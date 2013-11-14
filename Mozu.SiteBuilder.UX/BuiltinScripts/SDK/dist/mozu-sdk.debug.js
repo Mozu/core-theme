@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-11-12
+ * Mozu JavaScript SDK - v0.2.0 - 2013-11-14
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1986,6 +1986,29 @@ var utils = (function () {
         clone: function(obj) {
             return JSON.parse(JSON.stringify(obj)); // cheap copy :)
         },
+        flatten: function (obj, into, prefix, separator) {
+            into = into || {};
+            separator = separator || ".";
+            prefix = prefix || '';
+            for (var n in obj) {
+                key = n;
+                val = obj[n];
+                if (obj.hasOwnProperty(key)) {
+                    if (val && typeof val === 'object' && !(
+                      val instanceof Array ||
+                      val instanceof Date ||
+                      val instanceof RegExp)
+                    ) {
+                        utils.flatten(val.toJSON ? val.toJSON() : val, into, prefix + key + separator, separator);
+                    }
+                    else {
+                        into[prefix + key] = val;
+                    }
+                }
+            }
+
+            return into;
+        },
         inherit: function (parent, more) {
             var ApiInheritedObject = function () {
                 if (this.construct) this.construct.apply(this, arguments);
@@ -2350,20 +2373,21 @@ var ApiReference = (function () {
 
         getActionsFor: function(typeName) {
             if (!objectTypes[typeName]) return false;
-            var actions = [];
+            var actions = [], isSimpleType = (typeof objectTypes[typeName] === "string");
             for (var a in basicOps) {
-                if (!(a in objectTypes[typeName]))
+                if (isSimpleType || !(a in objectTypes[typeName]))
                     actions.push(a);
-
             }
-            for (a in objectTypes[typeName]) {
-                if (a && objectTypes[typeName].hasOwnProperty(a) && !reservedWords[a])
-                    actions.push(utils.camelCase(a));
+            if (!isSimpleType) {
+                for (a in objectTypes[typeName]) {
+                    if (a && objectTypes[typeName].hasOwnProperty(a) && !reservedWords[a])
+                        actions.push(utils.camelCase(a));
+                }
             }
             var declaredType = (objectTypes[typeName].collectionOf ? ApiCollection : ApiObject).types[typeName];
             if (declaredType) {
                 for (a in declaredType) {
-                    if (!(utils.dashCase(a) in objectTypes[typeName]) && typeof declaredType[a] === "function") actions.push(a);
+                    if (isSimpleType || !(utils.dashCase(a) in objectTypes[typeName]) && typeof declaredType[a] === "function") actions.push(a);
                 }
             }
 
@@ -2424,7 +2448,7 @@ var ApiReference = (function () {
             for (var tvar in tptData) {
                 if (utils.getType(tptData[tvar]) == "Array") tptData[tvar] = JSON.stringify(tptData[tvar]);
             }
-            var fullTptContext = utils.extend({ _: tptData }, context.asObject('context-'), tptData, ApiReference.urls);
+            var fullTptContext = utils.extend({ _: tptData }, context.asObject('context-'), utils.flatten(tptData, {}), ApiReference.urls);
             returnObj.url = oType.template.expand(fullTptContext);
             for (var j = 0; j < copyToConfLength; j++) {
                 if (copyToConf[j] in oType) returnObj[copyToConf[j]] = oType[copyToConf[j]];
@@ -2510,7 +2534,6 @@ var ApiReference = (function () {
 
         'orders': {
             template: '{+orderService}' + genericQueryTpt,
-            shortcutParam: 'filter',
             defaultParams: {
                 startIndex: 0,
                 pageSize: 15
@@ -2581,6 +2604,11 @@ var ApiReference = (function () {
                 verb: 'POST',
                 template: '{+userService}'
             },
+            update: {
+                verb: 'PUT',
+                template: '{+userService}{userId}',
+                includeSelf: true
+            },
             get: {
                 template: '{+userService}{id}',
                 shortcutParam: 'id'
@@ -2611,8 +2639,12 @@ var ApiReference = (function () {
             template: '{+customerService}{id}',
             shortcutParam: 'id',
             includeSelf: true,
+            create: {
+                verb: 'POST',
+                template: '{+customerService}'
+            },
             'get-open-orders': {
-                template: '{+orderService}?filter=Status ne "Created" and CustomerAccountId eq "{id}" and OrderNumber ne null',
+                template: '{+orderService}?filter=Status eq "' + CONSTANTS.ORDER_STATUSES.SUBMITTED + '" or Status eq "' + CONSTANTS.ORDER_STATUSES.ACCEPTED + '" or Status eq "' + CONSTANTS.ORDER_STATUSES.PENDING_REVIEW + '" or Status eq "' + CONSTANTS.ORDER_STATUSES.PROCESSING + '" and CustomerAccountId eq "{id}" and OrderNumber ne null',
                 includeSelf: true,
                 returnType: 'orders'
             },
@@ -2627,14 +2659,47 @@ var ApiReference = (function () {
                 returnType: 'accountcards'
             },
             'add-card': {
-                template: '{+customerService}{id}/cards',
-                includeSelf: true,
+                verb: 'POST',
+                template: '{+customerService}{customer.id}/cards',
+                includeSelf: {
+                    asProperty: 'customer'
+                },
                 returnType: 'accountcard'
+            },
+            'delete-card': {
+                verb: 'DELETE',
+                template: '{+customerService}{customer.id}/cards/{id}',
+                shortcutParam: 'id',
+                includeSelf: {
+                    asProperty: 'customer'
+                },
+                returnType: 'accountcard'
+            },
+            'add-contact': {
+                verb: 'POST',
+                template: '{+customerService}{id}/contacts',
+                includeSelf: true,
+                returnType: 'contact'
+            },
+            'get-contacts': {
+                template: '{+customerService}{id}/contacts',
+                includeSelf: true,
+                returnType: 'contacts'
+            },
+            'delete-contact': {
+                template: '{+customerService}{customer.id}/contacts/{id}',
+                shortcutParam: 'id',
+                includeSelf: {
+                    asProperty: 'customer'
+                },
+                returnType: 'contact'
             }
-            
         },
         contact: {
             template: '{+customerService}{accountId}/contacts/{id}'
+        },
+        contacts: {
+            collectionOf: 'contact'
         },
         'login': '{+userService}login',
         'address': {
@@ -2747,6 +2812,11 @@ var ApiReference = (function () {
                 verb: 'PUT',
                 template: '{+paymentService}{cardId}',
                 returnType: 'string'
+            },
+            'del': {
+                verb: 'DELETE',
+                shortcutParam: 'cardId',
+                template: '{+paymentService}{cardId}'
             }
         },
         'creditcards': {
@@ -3102,9 +3172,18 @@ ApiObject.types.customer = (function () {
             var self = this, card = this.api.createSync('creditcard', unmaskedCardData);
             return card.save().then(function (card) {
                 var payload = utils.clone(card.data);
-                payload.cardNumberPart = payload.cardNumber;
+                payload.cardNumberPart = payload.cardNumberPartOrMask || payload.cardNumber;
+                payload.id = payload.paymentServiceCardId;
                 delete payload.cardNumber;
+                delete payload.cardNumberPartOrMask;
+                delete payload.paymentServiceCardId;
                 return self.addCard(payload);
+            });
+        },
+        deletePaymentCard: function (id) {
+            var self = this;
+            return this.deleteCard(id).then(function () {
+                return self.api.del('creditcard', id);
             });
         }
     }
@@ -3222,6 +3301,30 @@ ApiObject.types.user = {
                 self.api.context.UserClaims(json.authTicket.accessToken);
                 self.api.fire('login', json.authTicket);
             }
+        });
+    },
+    createAndLogin: function(payload) {
+        var self = this;
+        if (!payload) payload = this.data;
+        return this.create(payload).then(function () {
+            return self.login({
+                emailAddress: payload.emailAddress,
+                password: payload.password
+            });
+        });
+    },
+    createWithCustomer: function (payload) {
+        var self = this;
+        return this.createAndLogin(payload).then(function () {
+            return self.api.action('customer', 'create', {
+                userId: self.prop('id')
+            })
+        }).then(function (customer) {
+            return customer.addContact({
+                email: self.prop('emailAddress'),
+                firstName: self.prop('firstName'),
+                lastNameOrSurname: self.prop('lastName')
+            });
         });
     }
 };

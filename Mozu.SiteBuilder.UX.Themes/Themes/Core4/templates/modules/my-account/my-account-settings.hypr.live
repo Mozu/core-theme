@@ -29,7 +29,7 @@
   <button class="mz-button mz-button-small mz-accountsettings-phonedone" data-mz-action="finishEditPhone">{{ labels.save }}</button>
   <button class="mz-button mz-button-small mz-accountsettings-phonecancel" data-mz-action="cancelEditPhone">{{ labels.cancel }}</button>
   {% else %}
-  <div class="mz-accountsettings-displayphone">{{ model.primaryBillingContact.phoneNumbers.home }}</div>
+  <div class="mz-accountsettings-displayphone">{{ model.primaryBillingContact.phoneNumbers.home|default(labels.noPhoneNumber) }}</div>
   <button class="mz-button mz-button-small mz-accountsettings-phoneedit" data-mz-action="startEditPhone">{{ labels.edit }}</button>
   {% endif %}
 </div>

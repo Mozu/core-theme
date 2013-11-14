@@ -1,5 +1,5 @@
 ﻿{% extends "modules/common/address-form" %}
-{% block local-variables %}
+{% block address-form %}
 {% set modelcontext="billingContact." %}
 {% parent %}
-{% endblock local-variables %}
+{% endblock address-form %}

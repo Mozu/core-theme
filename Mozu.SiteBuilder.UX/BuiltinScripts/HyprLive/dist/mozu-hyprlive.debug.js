@@ -1,5 +1,5 @@
 /*! 
- * Mozu Hypr Live - v0.2.0 - 2013-11-05
+ * Mozu Hypr Live - v0.2.0 - 2013-11-14
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -3883,6 +3883,14 @@ HyprLiveTemplate.prototype = {
 }
 // BEGIN INIT
 
+function formatString(str, arr) {
+    var formatted = str, otherArgs = arr;
+    for (var i = 0, len = otherArgs.length; i < len; i++) {
+        formatted = formatted.split('{' + i + '}').join(otherArgs[i] || '');
+    }
+    return formatted;
+}
+
 if (!HyprLiveContext) throw new ReferenceError("If no AMD loader is present, there must be a global variable named HyprLiveContext for HyprLive to function.");
 HyprLiveContext = JSON.parse(HyprLiveContext);
 
@@ -3909,7 +3917,8 @@ var HyprLive = {
         return locals.themeSettings[setting];
     },
     getLabel: function (name) {
-        return locals.labels[name];
+        if (arguments.length === 1) return locals.labels[name];
+        if (arguments.length > 1) return formatString(locals.labels[name], Array.prototype.slice.call(arguments, 1));
     }
 };
 
