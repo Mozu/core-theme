@@ -108,22 +108,20 @@ Ext.define('Taco.view.location.inventory.Index', {
     },
 
     filterProperties: [
-        /*
         {
             property: 'all',
-            text: 'All'
+            text: 'All',
+            isDefault: true
         },
         
         {
             property: 'productName',
             text: 'Product Name'
         },
-        */
         {
             property: 'productCode',
             // make it startsWith
             comparison: "sw",
-            isDefault:true,
             text: 'Product Code'
         }
 
