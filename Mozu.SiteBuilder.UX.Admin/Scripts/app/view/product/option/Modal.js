@@ -27,6 +27,7 @@ Ext.define('Taco.view.product.option.Modal', {
 
             fields.push({
                 xtype: 'taco.field.multiselect',
+                height: 250,
                 fieldLabel: option.get('attributeName'),
                 option: option,
                 store: store,
