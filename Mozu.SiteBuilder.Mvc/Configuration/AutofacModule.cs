@@ -19,7 +19,7 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 using Mozu.SiteSettings.Shipping.Contracts.Clients;
-using Mozu.UspsShippingAdmin.Contracts.Clients;
+
 using NDjango;
 using NDjango.FiltersCS;
 using NDjango.Interfaces;
@@ -72,8 +72,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
             // builder.RegisterType<ShippingRateWebApiClient>().As<IShippingRateWebApiClient>();
             builder.RegisterType<ShippingSettingsWebApiClient>().As<IShippingSettingsWebApiClient>().InstancePerApiRequest();
-            builder.RegisterType<UspsShippingSharedWebApiClient>().As<IUspsShippingSharedWebApiClient>().InstancePerApiRequest();
-            builder.RegisterType<UspsShippingInstanceWebApiClient>().As<IUspsShippingInstanceWebApiClient>().InstancePerApiRequest();
+
             builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>().InstancePerApiRequest();
 
 
