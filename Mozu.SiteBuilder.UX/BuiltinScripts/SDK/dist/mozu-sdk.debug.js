@@ -3323,7 +3323,8 @@ ApiObject.types.user = {
             return customer.addContact({
                 email: self.prop('emailAddress'),
                 firstName: self.prop('firstName'),
-                lastNameOrSurname: self.prop('lastName')
+                lastNameOrSurname: self.prop('lastName'),
+                address: {}
             });
         });
     }
