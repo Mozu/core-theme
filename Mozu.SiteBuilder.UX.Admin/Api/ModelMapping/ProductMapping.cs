@@ -30,6 +30,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             var NULLPUB = new DC.ProductPublishingInfo();
 
             Mapper.CreateMap<DC.Product, Product>()
+                .ForMember(x => x.OutOfStockBehavior , op=> op.MapFrom(dc => (dc.InventoryInfo ?? new DC.ProductInventoryInfo()).OutOfStockBehavior  ))
+                .ForMember(x => x.ManageStock, op => op.MapFrom(dc => (dc.InventoryInfo ?? new DC.ProductInventoryInfo()).ManageStock ))
+
                 .ForMember(x => x.PublishedState, op => op.MapFrom(dc => (dc.PublishingInfo?? NULLPUB).PublishedState ))
                 .ForMember(x => x.LastModifiedBy, op => op.MapFrom(dc => dc.AuditInfo.UpdateBy))
                 .ForMember(x => x.LastModifiedDate, op => op.MapFrom(dc => dc.AuditInfo.UpdateDate))
@@ -73,6 +76,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
             Mapper.CreateMap<Product, DC.Product>()
+
+                .ForMember(dc => dc.InventoryInfo, op => op.MapFrom(p => new DC.ProductInventoryInfo(){ ManageStock = p.ManageStock, OutOfStockBehavior = p.OutOfStockBehavior }))
                 .ForMember(dc => dc.ProductCode, op => op.MapFrom(p => p.ProductCode))
                 .ForMember(dc => dc.Properties, op => op.MapFrom(p => p.Properties))
                 .ForMember(dc => dc.Options, op => op.MapFrom(p => p.Options))
@@ -356,26 +361,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             }
             return null;
         }
-        object InventoryHandlingResolver(DC.Product p)
-        {
-            return 0;
-            //todo:wtf;
-            //if (p.ManageStock.GetValueOrDefault(false) == false)
-            //{
-            //    return 0;
-            //}
-            //if (p.IsBackOrderAllowed.GetValueOrDefault(false))
-            //{
-            //    return 1;
-            //}
-            //if (p.IsHiddenWhenOutOfStock.GetValueOrDefault(false))
-            //{
-            //    return 2;
-            //}
-            //else
-            //{
-            //    return 3;
-            //}
-        }
+       
     }
 }

@@ -12,7 +12,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
     initComponent: function () {
         var track = this.product.get('manageStock'),
             manageStock,
-            stockOnHand,
+          //  stockOnHand,
             outOfStockState,
             options;
         this.record = this.product;
@@ -25,10 +25,10 @@ Ext.define('Taco.view.product.subform.Inventory', {
             listeners: {
                 change: function (field, checked) {
                     if (checked) {
-                        stockOnHand.show();
+                 //       stockOnHand.show();
                         outOfStockState.show();
                     } else {
-                        stockOnHand.hide();
+                 //       stockOnHand.hide();
                         outOfStockState.hide();
                     }
                 },
@@ -36,27 +36,6 @@ Ext.define('Taco.view.product.subform.Inventory', {
             }
         });
 
-        stockOnHand = Ext.widget({
-            xtype: 'textfield',
-            name: 'stockOnHand',
-            fieldLabel: 'Quantity',
-            value: this.product.get('stockOnHand'),
-            margin: '0 0 0 20',
-            hidden: !track,
-            listeners: {
-                change: function (field, newValue) {
-                    this.product.set('stockOnHandAdjustment', 
-                                        newValue === this.product.get('stockOnHand') 
-                                            ? null
-                                            : { 
-                                                type: 'Absolute',
-                                                value: newValue
-                                            }
-                    );
-                },
-                scope: this
-            }
-        });
 
         outOfStockState = Ext.widget({
             xtype: 'selectfield',
@@ -66,19 +45,16 @@ Ext.define('Taco.view.product.subform.Inventory', {
             hidden: !track,
             queryMode: 'local',
             store: [
-                [0, 'Show out of stock message'],
-                [1, 'Allow backordering'],
-                [2, 'Hide Product in Store']
+                ['DisplayMessage', 'Show out of stock message'],
+                ['AllowBackorder', 'Allow backordering'],
+                ['HideProduct', 'Hide Product in Store']
             ],
-            value: this.getOutOfStockState(),
-            listeners: {
-                change: function (field, newValue) {
-                    this.product.set('isBackOrderAllowed', newValue === 1);
-                    this.product.set('isHiddenWhenOutOfStock', newValue === 2);
-                },
-                scope: this
-            }
+            name:'outOfStockBehavior',
+           
         });
+
+
+
 
         options = Ext.create('Taco.view.product.option.Form', {
             product: this.product
@@ -87,10 +63,10 @@ Ext.define('Taco.view.product.subform.Inventory', {
         this.items = [{
             xtype: 'container',
             width: '100%',
-            layout: 'hbox',
+            layout: 'vbox',
             items: [
                 manageStock,
-                stockOnHand,
+             //   stockOnHand,
                 outOfStockState
             ]
         }, options];

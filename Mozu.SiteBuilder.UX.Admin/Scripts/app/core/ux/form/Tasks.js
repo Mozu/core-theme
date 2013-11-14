@@ -211,18 +211,20 @@
 
     workableItemsFilter: function (task) {
 
-        //return task.status === 0 && !Ext.Array.some(task.dependencies, function (key) {
-        //    var dependency = this.tasks.getByKey(key);
-        //    return dependency && dependency.status !== 3;
-        //}, this);
-        var notStarted = task.status === 0;
+        
+        var available = task.status === 0;
 
-        if (notStarted && task.dependencyFilter) {
-            return this.tasks.filterBy(task.dependencyFilter, this).filterBy(function (dependency) {
+        if (available && task.dependencyFilter) {
+            available =  this.tasks.filterBy(task.dependencyFilter, this).filterBy(function (dependency) {
                 return dependency.status !== 3;
             }).getCount() === 0;
         }
-        return notStarted;
+        if (available && task.dependencyForFilter) {
+            available = this.tasks.filterBy(task.dependencyForFilter, this).filterBy(function (dependency) {
+                return dependency == task;
+            }).getCount() === 0;
+        }
+        return available;
 
 
     },

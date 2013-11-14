@@ -71,14 +71,14 @@ namespace Mozu.SiteBuilder.UX.Configuration
 		    builder.RegisterClassesMatchingInterfaceName(typeof (Mozu.SiteBuilder.Mvc.Customers.CustomerRepository).Assembly);
 		    builder.RegisterClassesMatchingInterfaceName(typeof (Mozu.Customer.Contracts.Clients.CustomerAccountWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.AdminUser.Contracts.Clients.IMultiScopeInvitationWebApiClient ).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Content.Contracts.Clients.DocumentListWebApiClient    ).Assembly);
+           // builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Content.Contracts.Clients.DocumentListWebApiClient    ).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductAdmin.Contracts.Category  ).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductRuntime.Contracts.Clients.ProductRuntimeWebApiClient ).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.CommerceRuntime.Contracts.Clients.CartWebApiClient ).Assembly);
             
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Order.Contracts.Clients.CheckoutSettingsWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Reference.Contracts.Clients.ReferenceDataWebApiClient).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.General.Contracts.Clients.GeneralSettingsWebApiClient).Assembly);
+            
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.User.Contracts.Clients.IUserWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Shipping.Contracts.Clients.ShippingSettingsWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Order.Contracts.CheckoutSettings ).Assembly);
@@ -109,8 +109,25 @@ namespace Mozu.SiteBuilder.UX.Configuration
 		    builder.RegisterType<CategoryNavigationProvider>().As<ICategoryNavigationProvider>().InstancePerApiRequest();
 
 		    // builder.RegisterType<MozuServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
+
+            builder.Register(BuildClient<DocumentListWebApiClient>).As<IDocumentListWebApiClient>().InstancePerApiRequest();
+            builder.Register(BuildClient<GeneralSettingsWebApiClient>).As<IGeneralSettingsWebApiClient>().InstancePerApiRequest();
+            
+            builder.RegisterType<PropertyTypeWebApiClient>().As<IPropertyTypeWebApiClient>().InstancePerApiRequest();
+		    builder.RegisterType<DocumentTypeWebApiClient>().As<IDocumentTypeWebApiClient>().InstancePerApiRequest();
+
+            builder.RegisterType<GeneralSettingsWebApiClient>().As<IGeneralSettingsWebApiClient>().InstancePerApiRequest();
+
+            
 		}
 
-        
+        object BuildClient<T>(IComponentContext c)
+        {
+            var ctx = c.Resolve<ISiteBuilderApiContext>();
+            var scmh = c.Resolve<IServiceClientMessageHandler>();
+            var client = (ServiceClientBase) Activator.CreateInstance(typeof (T), scmh);
+            client.Options.DisableCache = ctx.DataViewMode == DataViewModeType.Pending;
+            return client;
+        }
 	}
 }
