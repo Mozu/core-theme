@@ -68,6 +68,7 @@ Ext.define('Taco.view.website.Index', {
                 },
                 toggleHandler: function (cmp, isPressed) {
                     cmp.nextSibling('checkboxfield').setDisabled(isPressed);
+                    cmp.nextSibling('button[text="Widgets"]').setDisabled(isPressed);
                 }
             }, {
                 xtype: 'checkboxfield',

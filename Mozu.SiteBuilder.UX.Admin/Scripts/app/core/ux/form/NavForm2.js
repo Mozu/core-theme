@@ -148,9 +148,6 @@ Ext.define('Taco.core.ux.form.NavForm2', {
 
     loadNavItems: function (items) {
         var components;
-        if ((Ext.isArray(this.formContainer.items) && this.formContainer.items.length > 0) || this.formContainer.items.getCount()) {
-            console.log("formcontainer", this.formContainer.items);
-        }
         
         if (items) {
             this.formContainer.autoDestroy = false;
