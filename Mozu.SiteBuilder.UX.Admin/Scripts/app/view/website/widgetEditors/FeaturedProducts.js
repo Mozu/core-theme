@@ -2,7 +2,7 @@
  * @class Taco.view.site.widget.FeaturedProducts
  */
 Ext.define('Taco.view.website.widgetEditors.FeaturedProducts', {
-    extend: 'Taco.view.site.widget.Editor',
+    extend: 'Taco.view.website.WidgetEditor',
 
     title: 'Select Featured Products',
     instructionText: 'Select four featured products.',

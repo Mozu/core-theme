@@ -675,12 +675,7 @@ Ext.define('Taco.controller.Testing', {
         window.twd = Ext.create('Taco.store.WidgetDefinitions');
     },
 
-    inlineFieldTest: function () {
-        var me = this;
-        me.createContentView('Taco.view.site.page.EditSurface', {
-            pageSrc: '/CmsPages/test'
-        });
-    },
+ 
 
     siteEditor: function () {
         this.createContentView('Taco.view.site.page.Edit');
