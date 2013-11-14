@@ -99,7 +99,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             Task<ServiceClientResponse<DCproduct.MasterCatalogCollection >> masterCatalogsTask;
              masterCatalogsTask = _masterCatalogClient.GetMasterCatalogs( );
 
-             await Task.WhenAll(new Task[] { userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask });
+             await Task.WhenAll( userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask );
 
             //var tenants2 = tenantTask2.Result.ReadAsSync();
             
