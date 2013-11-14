@@ -1,4 +1,17 @@
 ﻿@mixin taco-forms {
+  @-webkit-keyframes button-processing {
+    from {
+      background-position: 0px 0px;
+    } to {
+      background-position: 12px 12px;
+    }
+  }
+
+  .#{$vprefix}button-processing {
+    background-image: linear-gradient(135deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) 10%, transparent 10%, transparent 40%, rgba(0, 0, 0, 0.1) 40%, rgba(0, 0, 0, 0.1) 60%, transparent 60%, transparent 90%, rgba(0, 0, 0, 0.1) 90%);
+    background-size: 12px 12px;
+    -webkit-animation: button-processing 1s linear 0s infinite;
+  }
 
   /* PRODUCT FORM */
 
