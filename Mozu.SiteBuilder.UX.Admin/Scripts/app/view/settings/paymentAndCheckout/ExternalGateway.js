@@ -75,7 +75,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
             this.credPanel.hide();
         }
     },
-    beforeSave: function () {
+    persistFormValues: function () {
         var me = this;
         var isDirty = false, val = {}, creds = [];
         var gatewayType = this.typeCheck.fieldLabel.toUpperCase();
