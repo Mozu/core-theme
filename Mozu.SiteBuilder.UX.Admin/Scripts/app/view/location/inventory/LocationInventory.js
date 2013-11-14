@@ -125,7 +125,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
 
     initColumnConfig: function () {
         var me = this;
-        
+
         this.columns = [
             {
                 width: 100,
@@ -171,37 +171,49 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                     selectOnFocus: true,
                     allowBlank: false
                 }
-            }
-
-            /*
-    , {
-        xtype: 'taco.menucolumn',
-        text: 'Actions',
-        menuItems: [
-            {
-                text: 'Delete',
-                requiredBehaviors: {
-                    model: 'Taco.model.Product',
-                    behavior:'destroy'
-                },
-                menuColumnHandler: 'destroyMenuColumnHandler'
             }, {
-                text: 'Edit',
-                requiredBehaviors: {
-                    model: 'Taco.model.Product',
-                    behavior: 'update'
-                },
-                menuColumnHandler: function (item, eventData) {
-                    var page = eventData.grid.getParentPage(),
-                        record = eventData.record,
-                        metaData = { id: record.getId() };
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                menuDisabled: true,
+                sortable: false,
+                menuItems: [
+                    {
+                        text: 'Remove Inventory',
+                        /*
+                        requiredBehaviors: {
+                            model: 'Taco.model.LocationInventory',
+                            behavior:'destroy'
+                        },
+                        */
+                        //menuColumnHandler: 'destroyMenuColumnHandler',
+                        menuColumnHandler: function(item, eventData) {
+                            var record = eventData.record,
+                                store = eventData.grid.store;
 
-                    page.launchEditor(record, metaData);
-                   
-                }
-            }]
-        }
-        */
+                            Taco.model.LocationInventory.removeInventory({
+                                records: [record],
+                                store: store
+                            });
+                        }
+                    }, {
+                        text: 'Edit Location',
+                        /*
+                        requiredBehaviors: {
+                            model: 'Taco.model.Product',
+                            behavior: 'update'
+                        },
+                        */
+                        menuColumnHandler: function(item, eventData) {
+                            var record = eventData.record;
+
+                            Ext.defer(function() {
+                                Taco.core.StateManager.attemptNavigate('locations/edit/' + record.get("locationCode"));
+                            }, 1, this);
+
+                        }
+                    }
+                ]
+            }
         ];
         
         //if (me.showProductColumns) {
@@ -318,16 +330,9 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
         
         // optional prevalidation check for row create
     beforeRowCreate: function (editor, store) {
-        var filters = store.filters,
-            locationCode = null,
-            activeFilter = filters.findBy(function (item, index) {
-                return (item.property == "locationCode") || (item.property == "productCode")
-            });
-        
-        // todo: need to generalize the error message for product vs location requirement
-
-        if (!activeFilter) {
-            Taco.app.fireEvent('setmessage', "A location selection is required", 'error');
+        var productCode = store.extraFilters.getByKey("productCode");
+        if (!productCode) {
+            Taco.app.fireEvent('setmessage', "A product selection is required", 'error');
             return false;
         }
         return true;

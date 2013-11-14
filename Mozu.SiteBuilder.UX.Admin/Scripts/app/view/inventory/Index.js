@@ -125,15 +125,6 @@ Ext.define('Taco.view.inventory.Index', {
             useGridPanel: this.useGridPanel,
             useTilePanel: this.useTilePanel
         });
-
-        if (this.record && this.record.isModel) {
-            this.on({
-                afterrender: function () {
-                    this.launchLoadedEditor(this.record);
-                },
-                scope: this
-            });
-        }
     },
 
     gridPanelConf: {
@@ -170,16 +161,20 @@ Ext.define('Taco.view.inventory.Index', {
                         productCode = "";
                     
                     if (!record) {
+                        locationList.store.extraFilters.removeAtKey("productCode");
+                        locationList.store.removeAll();
                         return;
                     }
                     
                     productCode = record.get("productCode");
                     
-                    locationList.store.clearFilter(true);
-                    locationList.store.filter({ property: 'productCode', value: productCode });
+                    locationList.store.extraFilters.add({ id: "productCode", property: 'productCode', value: productCode });
                     locationList.defaultRowEditingData = {
                         productCode: productCode
                     };
+
+                    locationList.store.load();
+
                 }
             }
         }
@@ -195,7 +190,7 @@ Ext.define('Taco.view.inventory.Index', {
                 hidden: !this.allowCreate(),
                 listeners: {
                     click: function () {
-                            this.locationList.onRowEditorCreate();
+                        this.locationList.onRowEditorCreate();
                     },
                     scope: this
                 }
@@ -204,8 +199,15 @@ Ext.define('Taco.view.inventory.Index', {
         
         this.callParent(arguments);
         
-        this.store.on('dirtychange', function (store, state) {
-            me.dirtyButton.setDirty(state);
-        });
+        
+        // auto select the first record in the grid so the location grid can get loaded;
+        this.store.on('load', function (store, records, success, eOpts) {
+                if (records.length) {
+                    this.gridPanel.selModel.select(records[0], false);
+                }
+            }, this, {
+   //             single: true
+            }
+        );
     }
 });
