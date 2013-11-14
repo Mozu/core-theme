@@ -16,6 +16,26 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
     using Mozu.Content.Contracts;
 
 
+    public static class StringExtensions
+    {
+        public static string GetNullIfWhiteSpace(this string val)
+        {
+            if (string.IsNullOrWhiteSpace(val))
+            {
+                return null;
+            }
+            return val;
+        }
+        public static string GetNullIfEmpty(this string val)
+        {
+            if (string.IsNullOrEmpty( val))
+            {
+                return null;
+            }
+            return val;
+        }
+    }
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>

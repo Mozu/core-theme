@@ -45,7 +45,7 @@ Ext.define('Taco.controller.Website', {
                 });
                 
                 json.forEach(function (widget) {
-                    console.log(widget);
+             
                     convertedData.push({
                         name: widget.displayName,
                         isRichText: widget.id == 'content',

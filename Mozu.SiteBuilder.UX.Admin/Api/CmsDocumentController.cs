@@ -64,9 +64,33 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<AVM.Document>>> Create(List<AVM.Document> docs)
         {
+            var exitingTasks = docs.Select(doc => _cmsService.GetByPath2(doc.DocumentListName, doc.Name)).ToList();
+            await Task.WhenAll(exitingTasks);
+            var exiting = exitingTasks.Select(x => x.Result).Where(x => x.ResponseMessage.IsSuccessStatusCode).Select(x=>x.ReadAsSync()).ToList();
+            var updates = new List<AVM.Document>();
+            exiting.ForEach(ed =>
+                {
+                    var idx = docs.FindIndex(x => string.Equals(x.DocumentListName, ed.DocumentListName, StringComparison.OrdinalIgnoreCase) && string.Equals(x.Name, ed.Name, StringComparison.OrdinalIgnoreCase));
+                    if (idx > -1)
+                    {
+                        updates.Add(docs[idx]);
+                        docs[idx].DocumentId = ed.Id;
+                        docs.RemoveAt(idx);
+                    }
+
+                });
+
+            
+
             var tasks = docs.Select(doc => _cmsService.Create2(doc)).ToList();
             await Task.WhenAll(tasks);
             var response = tasks.Select(x => x.Result.ReadAsSync()).Select(ConvertDocument).ToList();
+
+            if (updates.Count > 0)
+            {
+                var updateRes = await  this.Update(updates);
+                response.AddRange(updateRes.Items );
+            }
 
             return List2(response);
         }
@@ -140,7 +164,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
-                var idx= pagingParams.id.IndexOf ('_');
+                var idx= pagingParams.id.LastIndexOf( '_');
                 var col =  pagingParams.id.Substring ( 0,idx);
                 var id = pagingParams.id.Substring (idx+1);
                 results = new DC.DocumentCollection()

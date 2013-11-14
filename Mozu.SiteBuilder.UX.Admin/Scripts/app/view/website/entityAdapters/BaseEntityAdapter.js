@@ -15,6 +15,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
 
     constructor: function(config) {
         this.callParent(arguments);
+        this.manager.entitypeTypeHandler = this;
         this.load();
     },
 
@@ -62,7 +63,6 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         
 
         tasks.add({
-            key: 'widgets',
             fn: function (t) {
 
                 Ext.Ajax.request({

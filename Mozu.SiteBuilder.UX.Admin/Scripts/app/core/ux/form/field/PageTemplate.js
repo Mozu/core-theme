@@ -8,7 +8,7 @@ Ext.define('Taco.core.ux.form.field.PageTemplate', {
     alias: 'widget.taco.field.pagetemplate',
     requires: ['Taco.store.PageTypeDefinitions', 'Taco.model.PageTypeDefinition'],
     queryMode: 'local',
-    displayField: 'displayName',
+    displayField: 'title',
     valueField: 'id',
     forceSelection: true,
     allowBlank:true,

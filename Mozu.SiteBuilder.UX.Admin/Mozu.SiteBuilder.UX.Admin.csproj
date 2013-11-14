@@ -711,7 +711,7 @@
     <Content Include="Scripts\app\view\website\entityAdapters\DocumentEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\ExternalLinkEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\ProductEntityAdapter.js" />
-    <Content Include="Scripts\app\view\website\settings\CategoryTemplates.js" />
+    <Content Include="Scripts\app\view\website\settings\CategoryDocument.js" />
     <Content Include="Scripts\app\view\website\settings\Facets\FacetRangeQuery.js" />
     <Content Include="Scripts\app\view\website\settings\Facets\FacetRangeQueryForm.js" />
     <Content Include="Scripts\app\view\website\settings\Facets\FacetRangeQueryGroup.js" />
