@@ -251,9 +251,13 @@
      * Initialize the save process on the form
      */
     save: function () {
-        this.dirtybutton.addCls('taco-button-processing');
-        this.dirtybutton.setText('Saving...');
-        // this.dirtybutton.setLoading(true);
+        if (this.dirtybutton && this.dirtybutton.pressed == false) {
+            return;
+        }
+        if (this.dirtybutton) {
+            this.dirtybutton.addCls('taco-button-processing');
+            this.dirtybutton.setText('Saving...');
+        }
         this.form.save();
     },
     destroyRecord: function () {

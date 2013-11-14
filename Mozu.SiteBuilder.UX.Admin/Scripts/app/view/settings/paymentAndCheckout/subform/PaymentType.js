@@ -98,13 +98,13 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
             this.externalGatewayContainer.add(panel);
         }, this);
     },
-    beforeSave:function () {
-        var me = this;
-        me.callParent(arguments);
-        Ext.each(this.gateWayContainer.query('[form]'), function (subForm) {
-            subForm.beforeSave();
-        });
-    },
+    //beforeSave:function () {
+    //    var me = this;
+    //    me.callParent(arguments);
+    //    Ext.each(this.gateWayContainer.query('[form]'), function (subForm) {
+    //        subForm.beforeSave();
+    //    });
+    //},
     onPaymentTypesChange: function () {
         if (this.gateWayDefinitionsStore.isLoading()) {
             this.mon(this.gateWayDefinitionsStore, 'load', this.onPaymentTypesChange, this);

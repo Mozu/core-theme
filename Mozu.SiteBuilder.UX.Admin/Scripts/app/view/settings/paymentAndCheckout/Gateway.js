@@ -76,11 +76,12 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
         this.callParent(arguments);
     },
     initTitle: Ext.emptyFn,
-    beforeSave: function () {
+    
+    persistFormValues:function() {
         var me = this;
         var gateway = Ext.clone(me.record.get('gateway'));
         var isDirty = false, val = {};
-        
+
         Ext.each(me.credFields, function (field) {
             if (field.isDirty()) {
                 isDirty = true;
@@ -89,15 +90,19 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
         });
 
         gateway['credentialsSet'] = false;
-       if (isDirty) {
-           gateway['credentials'] = val;
-           gateway['credentialsSet'] = true;
-       }
-     
-       gateway['supportedCards'] = me.supportedCardsCbg.getValue().cards;
-        
+        // if (isDirty) {
+        gateway['credentials'] = val;
+        gateway['credentialsSet'] = true;
+        gateway['gatewayDefinitionId'] = this.gatewayDefinition.get('id');
+        // }
+
+        gateway['supportedCards'] = me.supportedCardsCbg.getValue().cards;
+
         //update this when ever there is a reason to turn off a gateway.
         gateway['isActive'] = true;
+
+
         me.record.set('gateway', gateway);
     }
+    
 });
