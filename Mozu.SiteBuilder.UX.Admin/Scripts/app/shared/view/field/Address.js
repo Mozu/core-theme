@@ -169,7 +169,7 @@ Ext.define('Taco.shared.view.field.Address', {
             showCompanyName: false,
             showEmail: false,
             showPhoneNumbers: false,
-            validateAddress: true,
+            validateAddress: false,
             listeners: {
                 savesuccess: function (win, record) {
                     var updatedAddressData = record.data,
