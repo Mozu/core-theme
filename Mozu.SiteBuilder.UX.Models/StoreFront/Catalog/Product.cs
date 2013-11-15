@@ -46,8 +46,6 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         [DataMember(EmitDefaultValue = false)]
         public new ProductPriceRange PriceRange { get; set; }
 
-
-
     }
     //public class ProductPrice: Mozu.ProductRuntime.Contracts.ProductPrice
     //{
