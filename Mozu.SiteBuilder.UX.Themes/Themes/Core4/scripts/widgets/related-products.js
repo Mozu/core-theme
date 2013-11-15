@@ -55,10 +55,8 @@
                         model: relatedProductsCollection,
                         el: rp
                     });
-
-
-
                     relatedProductsView.render();
+                    rp.prepend('<h3>' + title + '</h3>');
 
                 });
 

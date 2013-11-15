@@ -428,6 +428,7 @@
     <Content Include="Themes\Core4\scripts\vendor\bootstrap-scrollspy.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery-scrollto.js" />
     <Content Include="Themes\Core4\scripts\vendor\placeholder_polyfill.jquery.amd.js" />
+    <Content Include="Themes\Core4\scripts\widgets\related-products.js" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-container.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-sidebar.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-slidebox.less" />
@@ -976,6 +977,7 @@
     <Content Include="SampleThemes\Test\theme.json" />
     <Content Include="SampleThemes\Test\theme-ui.json" />
     <Content Include="SampleThemes\Test\stylesheets\base\global.less" />
+    <Content Include="Themes\Core4\stylesheets\layouts\l-carousel.less" />
     <None Include="Themes\Core4\templates\modules\my-account\my-account-orderhistory.hypr" />
     <Content Include="Themes\Core4\templates\modules\my-account\my-account-paymentmethods.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\my-account\my-account-addressbook.hypr.live" />
@@ -1001,6 +1003,7 @@
     </Content>
     <Content Include="Themes\Core4\templates\modules\common\order-list.hypr.live" />
     <Content Include="Themes\Core4\templates\Widgets\catalog\related-products.hypr" />
+    <Content Include="Themes\Core4\templates\modules\product\product-list-carousel.hypr.live" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
