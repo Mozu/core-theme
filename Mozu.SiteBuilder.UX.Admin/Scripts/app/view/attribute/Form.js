@@ -458,8 +458,8 @@ Ext.define('Taco.view.attribute.Form', {
                 readOnly: this.isEdit(),
                 data: 'AdminEntered',
                 store: [
-                    ['ShopperEntered', 'Storefront & Admin'],
-                    ['AdminEntered', 'Admin Only']
+                    ['AdminAndStorefront', 'Storefront & Admin'],
+                    ['Admin', 'Admin Only']
                 ]	
                 //listeners: {
                 //    change: this.onInputTypeChange,
