@@ -696,6 +696,7 @@
     <Content Include="Scripts\app\view\themeSettings\Addons.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\SiteTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\TemplateEntityAdapter.js" />
+    <Content Include="Scripts\app\view\website\misc\ExternalLinkEditor.js" />
     <Content Include="Scripts\app\view\website\WidgetEditor.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\BaseEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\CategoryEntityAdapter.js" />

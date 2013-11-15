@@ -9,7 +9,8 @@ Ext.define('Taco.view.website.Tree', {
     requires: [
         'Taco.model.NavigationTreeNode',
         'Taco.store.NavigationTreeNodes',
-        'Ext.tree.plugin.TreeViewDragDrop'
+        'Ext.tree.plugin.TreeViewDragDrop',
+        'Taco.view.website.misc.ExternalLinkEditor'
     ],
 
     border: false,
@@ -28,6 +29,20 @@ Ext.define('Taco.view.website.Tree', {
     initComponent: function () {
         this.addEvents('urlclick', 'additemclick');
 
+        this.cellEditor = Ext.create('Ext.grid.plugin.CellEditing', {
+            listeners: {
+                beforeedit: function (editor, e, eOpts) {
+                    return editor.allowEdit === true;
+                },
+                edit: function (editor, e, eOpts) {
+                    var node = e.record;
+                    node.set('editAction', 'rename');
+                    node.save();
+                }
+            }
+        });
+        this.plugins = this.plugins || [];
+        this.plugins.push(this.cellEditor);
         this.columns = [{
             xtype: 'treecolumn',
             flex: 1,
@@ -38,34 +53,34 @@ Ext.define('Taco.view.website.Tree', {
                 output += '<span class="taco-website-tree-menu-trigger"></span>';
 
                 return output;
+            },
+            editor: {
+                xtype: 'textfield',
+                allowBlank: false
             }
         }];
-        
-
 
 
         this.mon(this.store,
-        {
-            write: function (store, opt) {
-                var record, records = this.getSelectionModel().getSelection();
-                if (records && records.length && records[0].parentNode) {
-                    record = records[0];
-                } else {
-                    record = this.getRootNode().firstChild.firstChild;
-                }
-                
-                //todo fire urlclick
-                this.fireEvent('navigationchange', store, record);
+            {
+                write: function (store, opt) {
+                    var record, records = this.getSelectionModel().getSelection();
+                    if (records && records.length && records[0].parentNode) {
+                        record = records[0];
+                    } else {
+                        record = this.getRootNode().firstChild.firstChild;
+                    }
 
-            },
-            move: function (node, oldParent, newParent, index, eOpts) {
-                node.set('editAction', 'move');
-                node.save();
-            },
-            scope: this
-           
-        });
-        
+                    //todo fire urlclick
+                    this.fireEvent('navigationchange', store, record);
+
+                },
+                move: function (node, oldParent, newParent, index, eOpts) {
+                    node.set('editAction', 'move');
+                    node.save();
+                },
+                scope: this
+            });
 
 
         this.menu = Ext.create('Ext.menu.Menu', {
@@ -94,7 +109,7 @@ Ext.define('Taco.view.website.Tree', {
             },
             additemclick: {
                 scope: this,
-                fn: 'showCreator'
+                fn: 'showPageCreator'
             }
         });
 
@@ -128,58 +143,99 @@ Ext.define('Taco.view.website.Tree', {
     },
 
     getMenuItems: function (record, scope) {
-        var items = [];
-
-        if (record.getId() == '_navigation') {
-            items.push({
+        var items = [],
+            addLink = {
+                text: 'Add Link',
+                scope: scope,
+                handler: function () {
+                    this.showLinkEditor(null, record);
+                }
+            },
+            editLink = {
+                text: 'Edit Link',
+                scope: scope,
+                handler: function () {
+                    this.showLinkEditor(record, record.parentNode);
+                }
+            },
+            addPage = {
                 text: 'Add Page',
                 scope: scope,
                 handler: function () {
-                    this.fireEvent('additemclick', this, true, record);
+                    this.showPageCreator(record);
                 }
-            });
-        } else if (record.getId() == '_unlinked') {
-            items.push({
-                text: 'Add Page',
-                scope: scope,
-                handler: function () {
-                    this.fireEvent('additemclick', this, false, record);
-                }
-        });
-        } else if (record.getId().substr(0, 8) === 'category') {
-            items.push({
-                text: 'Edit',
-                scope: scope,
-                handler: Ext.emptyFn
-            }, {
-                text: 'View Products',
-                scope: scope,
-                handler: Ext.emptyFn
-            });
-        } else {
-            items.push({
-                text: 'Edit',
-                scope: scope,
-                handler: Ext.emptyFn
-            }, {
-                text: 'Rename',
-                scope: scope,
-                handler: Ext.emptyFn
-            }, {
-                text: 'Duplicate',
-                scope: scope,
-                handler: Ext.emptyFn
-            }, {
+            },
+            deleteLink = {
                 text: 'Delete',
                 scope: scope,
-                handler: Ext.emptyFn
-            });
+                handler: function () {
+                    this.deleteLink(record);
+                }
+            },
+            showProducts = {
+                text: 'Show Products',
+                scope: scope,
+                handler: function () {
+                    this.fireEvent('showproducts', record);
+                }
+            }, rename = {
+                text: 'Rename',
+                scope: scope,
+                handler: function () {
+                    this.onRename(record);
+                }
+            };;
+
+
+        if (record.getId() == '_navigation') {
+            items.push(addLink);
+            items.push(addPage);
+        } else if (record.getId() == '_unlinked') {
+            items.push(addLink);
+            items.push(addPage);
+        } else if (record.data.nodeType === 'category') {
+            items.push(showProducts);
+            items.push(addLink);
+            items.push(addPage);
+        } else if (record.data.nodeType === 'link') {
+            items.push(editLink);
+            items.push(rename);
+            items.push(deleteLink);
+            items.push(addLink);
+            items.push(addPage);
+
+        } else if (record.data.nodeType == 'page') {
+            items.push(rename);
+            items.push(addLink);
+            items.push(addPage);
+            
         }
+        
 
         return items;
     },
+    showLinkEditor: function (record, parentRecord) {
+        var modal = Ext.create('Taco.view.website.misc.ExternalLinkEditor', {
+            record: record,
+            parentRecord:parentRecord 
 
-    showCreator: function (tree, linked, record) {
+        });
+        //modal.on('close', )
+    },
+    deleteLink:function (record) {
+        record.destroy({
+            success: function () {
+                console.log('link deleted');
+            },
+            scope: this
+        });
+    },
+    onRename: function (record) {
+        this.cellEditor.allowEdit = true;
+        this.cellEditor.startEdit(record, this.columns[0]);
+        this.cellEditor.allowEdit = false;
+    },
+    showPageCreator: function (tree, linked, record) {
         var me = this,
             pageTypeDefinitionStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.PageTypeDefinitions'),
             data = [],
@@ -199,22 +255,23 @@ Ext.define('Taco.view.website.Tree', {
             items: [{
                 xtype: 'form',
                 items: [{
-                    xtype: 'textfield',
-                    allowBlank: false,
-                    allowOnlyWhitespace: false,
-                    name: 'title',
-                    fieldLabel: 'Page Name'
-                }, {
-                    name: 'docInfo',
-                    xtype: 'selectfield',
-                    fieldLabel: 'Choose type',
-                    queryMode: 'local',
-                    valueField: 'id',
-                    displayField: 'title',
-                    width: 200,
-                    emptyText: 'Select',
-                    store: pageTypeDefinitionStore
-                }]
+                        xtype: 'textfield',
+                        allowBlank: false,
+                        allowOnlyWhitespace: false,
+                        name: 'title',
+                        width: '100%',
+                        fieldLabel: 'Page Name'
+                    }, {
+                        name: 'docInfo',
+                        xtype: 'selectfield',
+                        fieldLabel: 'Choose type',
+                        queryMode: 'local',
+                        valueField: 'id',
+                        displayField: 'title',
+                        width: '100%',
+                        emptyText: 'Select',
+                        store: pageTypeDefinitionStore
+                    }]
             }],
             listeners: {
                 beforesave: {
@@ -228,15 +285,15 @@ Ext.define('Taco.view.website.Tree', {
                             collectionName: values.docInfo.collectionName,
                             name: values.title,
                             items: [{
-                                key: "title",
-                                value: values.title
-                            }, {
-                                key: "meta_title",
-                                value: values.title
-                            }, {
-                                key: "page_type_definition",
-                                value: values.docInfo
-                            }]
+                                    key: "title",
+                                    value: values.title
+                                }, {
+                                    key: "meta_title",
+                                    value: values.title
+                                }, {
+                                    key: "page_type_definition",
+                                    value: values.docInfo
+                                }]
                         });
 
                         cmsDoc.save({
@@ -289,7 +346,7 @@ Ext.define('Taco.view.website.Tree', {
 
 
 
-///**
+/// **
 // * @class Taco.view.site.navigation.ExternalLinkEditor
 // */
 //Ext.define('Taco.view.site.navigation.ExternalLinkEditor', {

@@ -10,11 +10,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         private const string GLOBAL_PRODUCT_NAME_PROPERTY = "content.productName";
         private const string GLOBAL_PRICE_PROPERTY = "price.price";
         private const string GLOBAL_SALE_PRICE_PROPERTY = "price.saleprice";
-        private const string SITE_PRODUCT_NAME_PROPERTY = "productinsites.content.productName";
-        private const string SITE_PRICE_PROPERTY = "productinsites.price.price";
-        private const string SITE_SALE_PRICE_PROPERTY = "productinsites.price.saleprice";
-        private const string CATEGORY_ID_PROPERTY = "productinsites.productcategories.categoryId";
-        private const string IS_ACTIVE_PROPERTY = "productinsites.isActive";
+        private const string SITE_PRODUCT_NAME_PROPERTY = "productincatalogs.content.productName";
+        private const string SITE_PRICE_PROPERTY = "productincatalogs.price.price";
+        private const string SITE_SALE_PRICE_PROPERTY = "productincatalogs.price.saleprice";
+        private const string CATEGORY_ID_PROPERTY = "productincatalogs.productcategories.categoryId";
+        private const string IS_ACTIVE_PROPERTY = "productincatalogs.isActive";
         private const string STOCK_ON_HAND_PROPERTY = "stockOnHand";
         private const string STOCK_AVAILABLE_PROPERTY = "stockAvailable";
         private const string CREATE_DATE_PROPERTY = "createDate";
