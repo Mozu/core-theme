@@ -3,53 +3,74 @@
   .#{$vprefix}dashboard-item{
     float: left;
     padding: 10px;
-    margin: 30px;
-    height: 250px;
-    width: 250px;
+    margin: 8px;
+    height: 283px;
+    width: 294px;
     background: white;
-    border-width: 2px;
-    border-style: solid;
-    
+
+     a{
+        color: rgba(60, 134, 210, 1);
+        cursor: pointer;
+      }
+
     .#{$vprefix}dashboard-item-header{
       text-align: center;
+      font-size: 25px;
+
+      
     }
 	 
     .#{$vprefix}dashboard-item-item{
       float: left;
-      padding: 5px;
+      padding: 5px; 
+      line-height: 22px;
+      font-size: 14px;
+      text-align: center;
+      border: 0px;
+      width: 100%;
+      a{
+        border-right-width: 1px;
+        border-right-style: solid; 
+        padding-right: 5px;
+        margin-right: 5px;
+      }
+a:last-child{
+       border-right-width: 0px;
+      border-right-style: solid; 
+      }
+
     } 
-	 
+
     .#{$vprefix}dashboard-icon{
-      height: 130px;
+      height: 165px;
       margin-bottom: 14px;
-      margin-left: 24%;
-
-
+      width: 230px;
     }
 
       .#{$vprefix}icon-customers {
-        @include icon-font($glyph-customers, 120px);
+        @include icons-sprite(icon-people);
       }
       .#{$vprefix}icon-catalog {
-        @include icon-font($glyph-catalog, 120px);
+        @include icons-sprite(icon-barcode);
       }
       .#{$vprefix}icon-store {
-        @include icon-font($glyph-orders, 120px);
+        margin-left: -10px;
+        @include icons-sprite(icon-cart);
       }
       .#{$vprefix}icon-marketing {
-        @include icon-font($glyph-marketing, 120px);
+        @include icons-sprite(icon-target);
       }
       .#{$vprefix}icon-sitebuilder {
-        @include icon-font($glyph-sitebuilder, 120px);
+        @include icons-sprite(icon-tools);
       }
       .#{$vprefix}icon-publishing {
-        @include icon-font($glyph-publishing, 120px);
+        @include icons-sprite(icon-cloud);
       }
       .#{$vprefix}icon-locations {
-        @include icon-font($glyph-locations, 120px);
+        @include icons-sprite(icon-map);
       }
       .#{$vprefix}icon-report {
-        @include icon-font($glyph-dashboard, 120px);
+        @include icons-sprite(icon-dashboard);
       }
 
   }

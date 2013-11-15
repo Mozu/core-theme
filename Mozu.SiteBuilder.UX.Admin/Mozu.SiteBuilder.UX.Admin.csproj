@@ -779,6 +779,7 @@
     <Content Include="Scripts\build\images\card-s88713318b6.png" />
     <Content Include="Scripts\build\images\card-sd6d3433d2f.png" />
     <Content Include="Scripts\build\images\card-sd7c19700b9.png" />
+    <Content Include="Scripts\build\images\icons-sc80605d0db.png" />
     <Content Include="Scripts\build\index.html" />
     <Content Include="Scripts\build\locale\ext-lang-af.js" />
     <Content Include="Scripts\build\locale\ext-lang-bg.js" />
@@ -922,6 +923,14 @@
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\error-shipping-label.gif" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading-shipping-label-m.gif" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading-shipping-label-spinner.gif" />
+    <Content Include="Scripts\resources\images\icons\icon-barcode.png" />
+    <Content Include="Scripts\resources\images\icons\icon-cart.png" />
+    <Content Include="Scripts\resources\images\icons\icon-cloud.png" />
+    <Content Include="Scripts\resources\images\icons\icon-dashboard.png" />
+    <Content Include="Scripts\resources\images\icons\icon-map.png" />
+    <Content Include="Scripts\resources\images\icons\icon-people.png" />
+    <Content Include="Scripts\resources\images\icons\icon-target.png" />
+    <Content Include="Scripts\resources\images\icons\icon-tools.png" />
     <Content Include="Scripts\resources\lib\polyfills.js" />
     <Content Include="Scripts\resources\lib\init.min.js" />
     <Content Include="Scripts\sass\src\view\dashboard\Index.scss" />

@@ -46,9 +46,9 @@ Ext.define('Taco.view.dashboard.Index', {
                         '<li class="taco-dashboard-item">',
                             '<div class="taco-dashboard-icon taco-icon-{[values.id]}"></div>',
                             '<div class= "taco-dashboard-item-header"><a  data-url="{[values.address]}">{[values.label]}</a></div>',
-                            '<tpl for="subNav">',
-                                '<div class= "taco-dashboard-item-item"><a  data-url="{[values.address]}">{[values.label]}</a></div>',
-                            '</tpl>',
+                            '<div class= "taco-dashboard-item-item"><tpl for="subNav">',
+                                '<a  data-url="{[values.address]}">{[values.label]}</a>',
+                            '</tpl></div>',
                         '</li>',
                     '</tpl>',
                 '</ul>'
