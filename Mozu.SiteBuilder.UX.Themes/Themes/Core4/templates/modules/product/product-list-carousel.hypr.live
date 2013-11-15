@@ -1,0 +1,3 @@
+﻿{% extends "modules/product/product-list" %}
+{% block module-classes %}mz-productlist-carousel{% endblock module-classes %}
+{% block list-classes %}mz-l-carousel{% endblock list-classes %}

@@ -185,13 +185,75 @@
 				"anchor"    : "100%",
 				"store":[ 
 					["modules/product/product-list-tiled", "tiled"],
-					["modules/product/product-list", "list"]
+					["modules/product/product-list", "list"],
+					["modules/product/product-list-carousel", "carousel"]
 				]
 	          }
          ],
           "defaultConfig": {
 			"template": "modules/product/product-list"
 		 },
+         "icon": "/resources/admin/widgets/01_photo_text.png",
+         
+    }, 
+	    {
+         "id": "crosssells",
+         "displayName": "Cross Sells",
+         "displayTemplate": "catalog/related-products",
+        "editViewFields":[
+
+			{
+				"fieldLabel":"title",
+				"xtype":"textfield",
+				"anchor":"100%"
+			},
+            {
+				"name":"template",
+				"fieldLabel":"Template",
+				"xtype":"combo",
+				"anchor"    : "100%",
+				"store":[ 
+				  ["modules/product/product-list-carousel", "carousel"],
+				  ["modules/product/product-list-tiled", "tiled"],
+				 ["modules/product/product-list", "list"]
+				]
+            }
+         ],
+          "defaultConfig": {
+			  "template": "modules/product/product-list-carousel",
+			  "attributeId":"tenant~product-crosssell",
+			  "title": "Related Items"
+		},
+         "icon": "/resources/admin/widgets/01_photo_text.png",
+         
+    }, 
+	 {
+         "id": "upsells",
+         "displayName": "Up Sells",
+         "displayTemplate": "catalog/related-products",
+        "editViewFields":[
+			{
+				"fieldLabel":"title",
+				"xtype":"textfield",
+				"anchor":"100%"
+			},
+            {
+				"name":"template",
+				"fieldLabel":"Template",
+				"xtype":"combo",
+				"anchor"    : "100%",
+				"store":[ 
+				  ["modules/product/product-list-carousel", "carousel"],
+				  ["modules/product/product-list-tiled", "tiled"],
+				 ["modules/product/product-list", "list"]
+				]
+            }
+         ],
+          "defaultConfig": {
+			  "template": "modules/product/product-list-carousel",
+			  "attributeId":"tenant~product-upsell",
+			  "title": "Other Items"
+		},
          "icon": "/resources/admin/widgets/01_photo_text.png",
          
     }, 

@@ -999,6 +999,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Themes\Core4\templates\modules\common\order-list.hypr.live" />
+    <Content Include="Themes\Core4\templates\Widgets\catalog\related-products.hypr" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

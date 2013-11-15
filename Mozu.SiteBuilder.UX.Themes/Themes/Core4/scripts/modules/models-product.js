@@ -13,16 +13,16 @@
 
     var ProductOption = Backbone.MozuModel.extend({
         idAttribute: "attributeFQN",
-        initialize: function () {
+        initialize: function() {
             var me = this;
-            _.defer(function () {
+            _.defer(function() {
                 me.listenTo(me.collection, 'invalidoptionselected', me.handleInvalid, me);
             });
-            me.on("change:value", _.debounce(function (model, newVal) {
+            me.on("change:value", _.debounce(function(model, newVal) {
                 var newValObj, values = me.get("values");
                 newVal = $.trim(newVal);
                 if (newVal) {
-                    _.each(values, function (fvalue) {
+                    _.each(values, function(fvalue) {
                         if (fvalue.value.toString() === newVal.toString()) {
                             newValObj = fvalue;
                             fvalue.isSelected = true;
@@ -35,8 +35,7 @@
                     if (me.get("attributeDetail").inputType !== "List") {
                         me.set("shopperEnteredValue", newVal);
                     }
-                }
-                else {
+                } else {
                     me.unset('value');
                     me.unset("shopperEnteredValue");
                 }
@@ -52,7 +51,7 @@
                 });
             }
         },
-        parse: function (raw) {
+        parse: function(raw) {
             var selectedValue, storedShopperValue;
             if (!raw.isMultiValue) {
                 selectedValue = _.findWhere(raw.values, { isSelected: true });
@@ -60,10 +59,11 @@
             }
             if (raw.attributeDetail.inputType !== "List") {
                 storedShopperValue = raw.values[0] && raw.values[0].shopperEnteredValue;
-                if (storedShopperValue || storedShopperValue === 0) this.set({
-                    shopperEnteredValue: storedShopperValue,
-                    value: storedShopperValue
-                });
+                if (storedShopperValue || storedShopperValue === 0)
+                    this.set({
+                        shopperEnteredValue: storedShopperValue,
+                        value: storedShopperValue
+                    });
             }
             if (raw.attributeDetail.inputType === "Date" && raw.attributeDetail.validation) {
                 raw.minDate = formatDate(this.attributeDetail.validation.minDateValue);
@@ -72,70 +72,76 @@
             return raw;
         }
     }),
-
-    ProductContent = Backbone.MozuModel.extend({}),
-
-    Product = Backbone.MozuModel.extend({
-        mozuType: 'product',
-        idAttribute: 'productCode',
-        handlesMessages: true,
-        helpers: ['mainImage'],
-        defaults: {
-            purchasableState: {},
-            quantity: 1
-        },
-        dataTypes: {
-            quantity: Backbone.MozuModel.DataTypes.Int
-        },
-        validation: {
-            quantity: {
-                min: 1,
-                msg: Hypr.getLabel('enterProductQuantity')
+        ProductContent = Backbone.MozuModel.extend({}),
+        Product = Backbone.MozuModel.extend({
+            mozuType: 'product',
+            idAttribute: 'productCode',
+            handlesMessages: true,
+            helpers: ['mainImage'],
+            defaults: {
+                purchasableState: {},
+                quantity: 1
+            },
+            dataTypes: {
+                quantity: Backbone.MozuModel.DataTypes.Int
+            },
+            validation: {
+                quantity: {
+                    min: 1,
+                    msg: Hypr.getLabel('enterProductQuantity')
+                }
+            },
+            relations: {
+                content: ProductContent,
+                price: PriceModels.ProductPrice,
+                options: Backbone.Collection.extend({
+                    model: ProductOption
+                })
+            },
+            initialize: function() {
+                this.listenTo(this.get("options"), "optionchange", this.updateConfiguration, this);
+                this.set({ url: "/product/" + this.get("productCode") });
+                this.lastConfiguration = [];
+            },
+            mainImage: function() {
+                var imgs = this.get('content').get("productImages"),
+                    img = imgs && imgs[0];
+                return img || { imageUrl: 'http://placehold.it/160&text=' + Hypr.getLabel('noImages') }
+            },
+            getConfiguredOptions: function() {
+                return _.invoke(this.get("options").filter(function(opt) {
+                    return opt.has("value") || opt.has("shopperEnteredValue");
+                }), 'toJSON');
+            },
+            addToCart: function() {
+                var me = this;
+                if (!this.validate()) {
+                    this.apiModel.prop("options", this.getConfiguredOptions());
+                    this.apiAddToCart(this.get("quantity")).then(function(item) {
+                        me.trigger('addedtocart', item);
+                    });
+                }
+            },
+            updateConfiguration: _.debounce(function() {
+                var newConfiguration = this.getConfiguredOptions();
+                if (JSON.stringify(this.lastConfiguration) !== JSON.stringify(newConfiguration)) {
+                    this.lastConfiguration = newConfiguration;
+                    this.apiConfigure({ options: newConfiguration });
+                }
+            }, 400)
+        }),
+        ProductCollection = Backbone.MozuModel.extend({
+            relations: {
+                items: Backbone.Collection.extend({
+                    model: Product
+                })
             }
-        },
-        relations: {
-            content: ProductContent,
-            price: PriceModels.ProductPrice,
-            options: Backbone.Collection.extend({
-                model: ProductOption
-            })
-        },
-        initialize: function() {
-            this.listenTo(this.get("options"), "optionchange", this.updateConfiguration, this);
-            this.set({ url: "/product/" + this.get("productCode") });
-            this.lastConfiguration = [];
-        },
-        mainImage: function () {
-            var imgs = this.get('content').get("productImages"),
-                img = imgs && imgs[0];
-            return img || { imageUrl: 'http://placehold.it/160&text=' + Hypr.getLabel('noImages') }
-        },
-        getConfiguredOptions: function() {
-            return _.invoke(this.get("options").filter(function(opt) {
-                return opt.has("value") || opt.has("shopperEnteredValue");
-            }), 'toJSON');
-        },
-        addToCart: function() {
-            var me = this;
-            if (!this.validate()) {
-                this.apiModel.prop("options", this.getConfiguredOptions());
-                this.apiAddToCart(this.get("quantity")).then(function(item) {
-                    me.trigger('addedtocart', item);
-                });
-            }
-        },
-        updateConfiguration: _.debounce(function () {
-            var newConfiguration = this.getConfiguredOptions();
-            if (JSON.stringify(this.lastConfiguration) !== JSON.stringify(newConfiguration)) {
-                this.lastConfiguration = newConfiguration;
-                this.apiConfigure({ options: newConfiguration });
-            }
-        },400)
-    });
+        });
 
     return {
         Product: Product,
-        Option: ProductOption
+        Option: ProductOption,
+        ProductCollection: ProductCollection
     };
 
 });

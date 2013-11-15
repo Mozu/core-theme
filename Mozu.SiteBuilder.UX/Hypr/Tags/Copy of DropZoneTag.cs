@@ -181,7 +181,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             sb.Append(">");
             
-            var sw = new StringWriter(sb);
+            var sw = new StringWriter(sb);  
 
             if (zoneRuntimeData != null && zoneRuntimeData.Rows != null && zoneRuntimeData.Rows.Count > 0)
             {
@@ -211,6 +211,21 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                             widgetDefinition = themeEntityDefinitionProvider.GetWidgetDefintion(widget.DefinitionId);
                             if (widgetDefinition == null)
                             {
+                                if (isEditmode)
+                                {
+                                    sb.Append("<div class=\"mz-cms-block\" ");
+                                    sb.AppendJsonHtmlAttribute(widget, "widget");
+                                    sb.Append(">");
+                                    sb.Append("<div class=\"mz-cms-content\"");
+                                    sb.Append(">");
+                                    sb.Append("<b> missing widget type id=[");
+                                    sb.Append(widget.DefinitionId );
+                                    sb.Append("]");
+
+                                    sb.Append("</div>");
+                                    sb.Append("</div>");
+                                   
+                                }
                                 continue;
                             }
 
@@ -243,7 +258,19 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                             }
                             else
                             {
-                                context.Render("widgets/" + widgetDefinition.DisplayTemplate, widget, sw);
+                                StringWriter sw1 = new StringWriter();
+                                try
+                                {
+                                    context.Render("widgets/" + widgetDefinition.DisplayTemplate, widget, sw1);
+                                    sb.Append(sw1.GetStringBuilder().ToString());
+                                }
+                                catch(Exception ex)
+                                {
+                                    if (isEditmode)
+                                    {
+                                        sb.Append(ex.ToString());
+                                    }
+                                }
                             }
 
                             sb.Append("</div>");
