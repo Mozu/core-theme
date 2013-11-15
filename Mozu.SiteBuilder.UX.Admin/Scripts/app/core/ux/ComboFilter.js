@@ -98,21 +98,32 @@ Ext.define('Taco.core.ux.ComboFilter', {
 
         if (!form.isMenu && Ext.isObject(form)) {
             Ext.apply(form, { itemId: 'form' });
+
             form = Ext.create('Taco.core.ux.form.Form', form);
 
-            saveAction = Ext.create('Taco.core.ux.action.Action', {
-                text: 'Apply'
+            saveAction = Ext.create('Ext.button.Button', {
+                ui: 'link',
+                scale: 'medium',
+                text: 'Apply',
+                scope: this,
+                handler: this.onFilterFormSubmit
             });
 
             this.filterForm = Ext.create('Ext.menu.Menu', {
                 plain: true,
                 shadow: false,
+                bodyPadding: 20,
                 cls: Taco.baseCSSPrefix + 'combofilter-form-menu',
+                // layout: {
+                //     type: 'vbox'
+                // },
                 items: [{
                     xtype: 'component',
-                    autoEl: 'h2',
                     cls: Taco.baseCSSPrefix + 'combofilter-form-title',
-                    html: 'Search By'
+                    html: 'Search By',
+                    autoEl: {
+                        tag: 'h2'
+                    }
                 }, form, {
                     xtype: 'container',
                     cls: Taco.baseCSSPrefix + 'combofilter-form-actions',
@@ -126,11 +137,6 @@ Ext.define('Taco.core.ux.ComboFilter', {
             });
 
             this.mon(this.itemStore, 'refresh', this.updateFilterForm, this);
-
-            saveAction.on({
-                click: this.onFilterFormSubmit,
-                scope: this
-            });
         }
 
         return this.filterForm;

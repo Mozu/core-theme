@@ -1020,6 +1020,7 @@
     <Content Include="Scripts\sass\src\shared\view\field\LocaitonPickerField.scss" />
     <Content Include="Scripts\sass\src\overrides\grid\RowEditor.scss" />
     <Content Include="Scripts\sass\src\core\ux\TilePanel.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\src\Component.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
