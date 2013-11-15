@@ -25,6 +25,9 @@
         addToCart: function () {
             this.model.addToCart();
         },
+        addToWishlist: function () {
+            this.model.addToWishlist();
+        },
 
         initialize: function () {
             // handle preset selects, etc
@@ -38,7 +41,8 @@
 
     $(document).ready(function () {
 
-        var product = ProductModels.Product.fromCurrent();
+        var product = ProductModels.Product.fromCurrent();
+
         product.on('addedtocart', function (cartitem) {
             if (cartitem && cartitem.prop('id')) {
                 product.isLoading(true);
@@ -46,6 +50,10 @@
             } else {
                 product.trigger("error", { message: Hypr.getLabel('unexpectedError') });
             }
+        });
+
+        product.on('addedtowishlist', function (cartitem) {
+            $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
         });
 
         var productView = new ProductView({

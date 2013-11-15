@@ -74,6 +74,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 urls["ReferenceService"] = settings.AppSettings("service-url-ReferenceDataWebApi");
                 urls["PaymentService"] = settings.AppSettings("service-url-StorefrontCardsWebApi");
                 urls["addressValidationService"] = settings.AppSettings("service-url-AddressValidationWebApi");
+                urls["wishlistService"] = settings.AppSettings("service-url-WishlistWebApi");
 
                 if (settings.AppSettings("ReverseProxy") == "true")
                 {

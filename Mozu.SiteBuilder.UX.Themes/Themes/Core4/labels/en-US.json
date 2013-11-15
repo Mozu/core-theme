@@ -226,6 +226,8 @@
   "shortDesc"            : "Summary",
   "options"              : "Options",
   "addToCart"            : "Add To Cart",
+  "addToWishlist"        : "Add To Wishlist",
+  "addedToWishlist"      : "Added To Wishlist.",
   "fullDesc"             : "Description",
   "properties"           : "Properties",
   "measurements"         : "Measurements",

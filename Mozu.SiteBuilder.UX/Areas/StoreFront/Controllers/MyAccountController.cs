@@ -26,6 +26,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [HotOnlyAuthActionFilter]
     public class MyAccountController : BaseApiController
     {
+        private const string DEFAULT_WISHLIST_NAME = "my_wishlist";
+
         private readonly ICustomerRepository _customerRepository;
         private readonly IAccountContactRepository _accountContactRepository;
         private readonly IUserWebApiClient _userWebApiClient;
@@ -72,11 +74,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var cardsTask = _customerAccountWebApiClient.GetAccountCards(account.Id);
             var openOrdersTask = _orderWebApiClient.GetOrders(0, 25, null, BuildOpenOrdersFilter(account.Id));
             var orderHistoryTask = _orderWebApiClient.GetOrders(0, 25, null, BuildOrderHistoryFilter(account.Id));
+            var wishlistTask = _wishlistApiClient.GetWishlists(0, 25, null, BuildWishlistFilter(account.Id));
 
             var user = userTask.Result.ReadAsSync();
             var cards = cardsTask.Result.ReadAsSync();
             var openOrders = openOrdersTask.Result.ReadAsSync();
             var orderHistory = orderHistoryTask.Result.ReadAsSync();
+            var wishlistResult = wishlistTask.Result.ReadAsSync();
+
+            var wishlist = (wishlistResult != null && wishlistResult.Items != null ? wishlistResult.Items.FirstOrDefault() : null) ?? new Mozu.CommerceRuntime.Contracts.Wishlists.Wishlist();
 
             //this.ViewData["Orders"] = orders.Items;
             this.ViewData["User"] = user;
@@ -89,7 +95,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             jAccount.Add("hasSavedCards", (Newtonsoft.Json.Linq.JValue)(cards.Items.Count > 0));
             jAccount.Add("hasSavedContacts", (Newtonsoft.Json.Linq.JValue)(account.Contacts.Count > 0));
-
 
             var primaryBillingAccount = account.Contacts.Find(x => x.Types.Exists(y => y.IsPrimary && y.Name == "Billing"));
             if (primaryBillingAccount == null)
@@ -121,6 +126,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             jAccount.Add("user", Newtonsoft.Json.Linq.JObject.FromObject(CurrentUser, jSerializer));
 
+            if (wishlist != null)
+                jAccount.Add("wishlist", Newtonsoft.Json.Linq.JObject.FromObject(wishlist, jSerializer));
+
             return this.Request.CreateResponse(HttpStatusCode.OK,  View("my-account", jAccount));
         }
 
@@ -136,14 +144,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private string BuildOrderHistoryFilter(int accountId)
         {
-            var orderHistorySb = new StringBuilder();
-            orderHistorySb.Append("CustomerAccountId eq \"");
-            orderHistorySb.Append(accountId);
-            orderHistorySb.Append("\" and OrderNumber ne null");
-            return orderHistorySb.ToString();
+            return String.Format("CustomerAccountId eq \"{0}\" and OrderNumber ne null", accountId);
         }
 
-        public  Task<CustomerAccount  > GetAccount()
+        private string BuildWishlistFilter(int accountId)
+        {
+            return String.Format("CustomerAccountId eq \"{0}\" and Name eq \"{1}\"", accountId, DEFAULT_WISHLIST_NAME);
+        }
+
+        public  Task<CustomerAccount> GetAccount()
         {
             return _customerRepository.GetByUserId(CurrentUser.UserId);
         }

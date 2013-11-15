@@ -1,4 +1,5 @@
 ﻿<h3 class="mz-l-stack-sectiontitle">{{ labels.accountYourWishlist }}</h3>
 
 <div class="mz-accountwishlist-list">
+  yay
 </div>
