@@ -23,6 +23,8 @@
             Chorizo.widgets.init();
 
             this.fireEvent('pageload', this);
+
+            this.resetDirtyState();
         },
 
         showWidgets: function() {
@@ -41,6 +43,21 @@
 
         fireEvent: function() {
             this.controller().fireEvent.apply(this.controller(), arguments);
+        },
+
+        dirtyStateCheck: function() {
+            var newState = JSON.stringify(this.persistanceData()),
+                dirty = newState !== this._currentState;
+
+            if (this._dirty === dirty) return;
+            
+            this._dirty = dirty;
+            this.fireEvent('dirtychange', this, dirty);
+        },
+
+        resetDirtyState: function() {
+            this._currentState = JSON.stringify(this.persistanceData());
+            this._dirty = false;
         },
 
         controller: function() {

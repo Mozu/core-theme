@@ -110,6 +110,8 @@
         if (this.parent.type() === 'row') this.parent.rebase();
 
         if (col) col.rebase();
+
+        Chorizo.editor.dirtyStateCheck();
     }
 
     Target.prototype.offset = function(clear) {
@@ -396,6 +398,7 @@
         $next.attr('class', 'mz-cms-col-' + (nextSize - delta) + '-' + gridSpan);
 
         this.size = newSize;
+        Chorizo.editor.dirtyStateCheck();
     }
 
 
@@ -523,6 +526,7 @@
     Block.prototype.remove = function () {
         this.element.remove();
         this.parent.rebase();
+        Chorizo.editor.dirtyStateCheck();
     }
 
 
