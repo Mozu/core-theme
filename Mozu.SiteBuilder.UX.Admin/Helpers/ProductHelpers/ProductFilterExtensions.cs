@@ -7,14 +7,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
 {
     internal static class ProductFilterExtensions
     {
-        private const string PRODUCT_NAME_PROPERTY = "productinsites.content.productName";
+        private const string PRODUCT_NAME_PROPERTY = "productincatalogs.content.productName";
         private const string PRODUCT_CODE_PROPERTY = "productCode";
-        private const string PRICE_PROPERTY = "productinsites.price.price";
-        private const string CATEGORY_ID_PROPERTY = "productinsites.productcategories.categoryId";
-        private const string IS_ACTIVE_PROPERTY = "productinsites.isActive";
+        private const string PRICE_PROPERTY = "productincatalogs.price.price";
+        private const string CATEGORY_ID_PROPERTY = "productincatalogs.productcategories.categoryId";
+        private const string IS_ACTIVE_PROPERTY = "productincatalogs.isActive";
         private const string STOCK_ON_HAND_PROPERTY = "stockOnHand";
-        private const string SITE_ID_PROPERTY = "productinsites.siteId";
-        private const string PRODUCT_FULL_DESCRIPTION = "productinsites.content.productFullDescription";
+        private const string SITE_ID_PROPERTY = "productincatalogs.siteId";
+        private const string PRODUCT_FULL_DESCRIPTION = "productincatalogs.content.productFullDescription";
         private const string PRODUCT_PUBLISHED_STATE = "publishinginfo.publishedstate";
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
             switch (filter.property.ToLowerInvariant())
             {
                 case "categoryids":
-                    return string.Format("productinsites.productcategories.categoryid eq {0}", filter.value);
+                    return string.Format("productincatalogs.productcategories.categoryid eq {0}", filter.value);
                 case "isactive":
                     return string.Format("{1} eq {0}", filter.value , IS_ACTIVE_PROPERTY);
                 case "productname":

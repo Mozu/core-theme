@@ -29,17 +29,6 @@ Ext.define('Taco.view.product.option.VariationGrid', {
                     xtype: 'textfield'
                 }
             }, {
-                text: 'Quantity',
-                dataIndex: 'stockOnHand',
-                editor: {
-                    xtype: 'numberfield',
-                    minValue: 0,
-                    decimalPrecision: 0,
-                    hideTrigger: true,
-                    keyNavEnabled: false,
-                    mouseWheelEnabled: false
-                }
-            }, {
                 text: 'Extra Cost',
                 dataIndex: 'deltaPrice',
                 editor: {

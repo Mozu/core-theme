@@ -20,7 +20,7 @@ Ext.define('Taco.view.website.Index', {
     ],
 
     requiresContextOfType: ['s'],
-    
+
     entityTypeEditConfig: {
         blog: 'Taco.view.website.entityAdapters.DocumentEntityAdapter',
         "default": 'Taco.view.website.entityAdapters.DocumentEntityAdapter',
@@ -84,7 +84,7 @@ Ext.define('Taco.view.website.Index', {
                     }
 
 
-                }            
+                }
             }, {
                 xtype: 'button',
                 ui: 'action',
@@ -129,15 +129,16 @@ Ext.define('Taco.view.website.Index', {
     },
 
     initComponent: function () {
-        var store,
-            items;
+        var navStore,
+            items,
+            gridStore;
 
         this.controller = Taco.app.controllers.get('Website');
         this.url = this.options && this.options.startUrl ? this.options.startUrl : '/';
         this.widgetDefinitions = Taco.core.data.StoreManager.getOrCreate("Taco.store.WidgetDefinitions");
 
-        store = Taco.core.data.StoreManager.getOrCreate('Taco.store.NavigationTreeNodes');
-
+        navStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.NavigationTreeNodes');
+        productStore = Ext.create('Taco.store.ProductComboBox', { autoLoad: false });
         items = [{
             xtype: 'panel',
             itemId: 'editorCardPanel',
@@ -183,6 +184,7 @@ Ext.define('Taco.view.website.Index', {
                 // padding: '0 0 10',
                 collapseDirection: 'right',
                 cls: 'taco-website-sidebar',
+                itemId: 'sideBar',
                 animCollapse: false,
                 collapsible: true,
                 header: false,
@@ -194,50 +196,73 @@ Ext.define('Taco.view.website.Index', {
                     type: 'card'
                 },
                 items: [{
-                    xtype: 'taco-website-tree',
-                    store: store
-                }, {
-                    xtype: 'gridpanel',
-                    title: 'Results',
-                    store: [],
-                    columns: [{
-                        dataIndex: 'thom',
-                        text: 'Thom',
-                        flex: 1
-                    }]
-                }],
+                        xtype: 'taco-website-tree',
+                        store: navStore
+                    }, {
+                        xtype: 'gridpanel',
+                        title: 'Results',
+                        store: productStore,
+                        columns: [{
+                                dataIndex: 'productCode',
+                                text: 'Product Code',
+                                width: 100,
+                            }, {
+                                dataIndex: 'productName',
+                                text: 'Name',
+                                flex: 1
+                            }],
+                        listeners: {
+                            itemclick: this.onGridProductItemClick,
+                            scope: this,
+                        },
+                        dockedItems: [{
+                                xtype: 'pagingtoolbar',
+                                store: productStore,   // same store GridPanel is using
+                                dock: 'bottom',
+                                displayInfo: true
+                            }, {
+                                dock: 'top',
+                                xtype: 'button',
+                                text: '<= back',
+                                handler: function (field) {
+                                    this.sideBar.getLayout().setActiveItem(0);
+                                },
+                                scope: this
+                            }],
+                    }],
                 dockedItems: [{
                     xtype: 'container',
+
                     dock: 'top',
                     padding: '14 20 0 14',
                     height: 60,
                     items: [{
-                        xtype: 'component',
-                        html: '',
-                        cls: 'taco-collapse-handle',
-                        width: 15,
-                        height: 30,
-                        listeners: {
-                            click: {
-                                scope: this,
-                                element: 'el',
-                                fn: function (e, t) {
-                                    var cmp = Ext.getCmp(t.id);
+                            xtype: 'component',
+                            html: '',
+                            cls: 'taco-collapse-handle',
+                            width: 15,
+                            height: 30,
+                            listeners: {
+                                click: {
+                                    scope: this,
+                                    element: 'el',
+                                    fn: function (e, t) {
+                                        var cmp = Ext.getCmp(t.id);
 
-                                    cmp.up('panel[dock="right"]').toggleCollapse();
+                                        cmp.up('panel[dock="right"]').toggleCollapse();
+                                    }
                                 }
                             }
-                        }
-                    }, {
-                        xtype: 'textfield',
-                        emptyText: 'Search',
-                        width: '100%',
-                        listeners: {
-                            change: function (field, newValue) {
-                                field.up('panel').getLayout().setActiveItem(Ext.String.trim(newValue).length > 0 ? 1 : 0);
+                        }, {
+                            xtype: 'textfield',
+                            emptyText: 'Search',
+                            width: '100%',
+                            listeners: {
+                                change: this.onSearchTextChange,
+                                scope: this,
+                                buffer:505
                             }
-                        }
-                    }]
+                        }]
                 }]
             }]
         }];
@@ -255,6 +280,8 @@ Ext.define('Taco.view.website.Index', {
         this.iframe = this.down('#iframe');
         this.pageSettings = this.down('#pageSettings');
         this.tree = this.down('taco-website-tree');
+        this.productGrid = this.down('gridpanel');
+        this.sideBar = this.down('#sideBar');
         // TODO: remove when dev complete
         window.webSiteIndex = this;
 
@@ -262,7 +289,8 @@ Ext.define('Taco.view.website.Index', {
         this.mon(this.controller, 'widgetdrop', this.onWidgetDrop, this);
         this.mon(this.controller, 'widgetedit', this.onWidgetEdit, this);
         this.mon(this.controller, 'pagedirtychange', this.onDirtyChange, this);
-        this.tree.on('pagecreate', this.onPageCreate, this);
+        this.tree.on('showproducts', this.onShowProducts, this);
+        //this.tree.on('pagecreate', this.onPageCreate, this);
         this.tree.on('urlclick', this.onTreeUrlClick, this);
     },
 
@@ -284,7 +312,7 @@ Ext.define('Taco.view.website.Index', {
             cls = 'Taco.view.website.entityAdapters.TemplateEntityAdapter';
         }
 
-        return  Ext.create(cls, {
+        return Ext.create(cls, {
             editor: editor,
             pageContext: pageContext,
             manager: this,
@@ -330,7 +358,7 @@ Ext.define('Taco.view.website.Index', {
 
 
         this.entitypeTypeHandler = this.createEntityTypeAdapter(pc, editor);
-     
+
 
         Ext.EventManager.on(this.iframe.getDoc(), 'click', function (e, target) {
             if (target.hostname == this.iframe.getWin().location.hostname) {
@@ -468,12 +496,37 @@ Ext.define('Taco.view.website.Index', {
 
         }
     },
+    onSearchTextChange: function (field, newValue, oldValue, eOpts) {
+        var store = this.productGrid.store;
 
-    onPageCreate: function (tree, cmsDoc, isLinked, parentRecord) {
-        this.tree.store.reload();
-        //todo navigage?
+        if (!newValue) {
+            this.sideBar.getLayout().setActiveItem(0);
+            return;
+        }
+
+        if (this.sideBar.getLayout().getActiveItem() != this.productGrid) {
+            store.extraFilters.clear();
+        }
+        this.sideBar.getLayout().setActiveItem(this.productGrid);
+        store.extraFilters.clear();
+        store.addFilter([            
+            { id: "all", property: 'all', value: newValue }            
+        ]);
+        // store.extraFilters.add({ id: "categoryids", property: 'categoryids', value: navRecord.get('originalId') });
+        store.load();
     },
-
+    onGridProductItemClick: function (grid, record) {
+        this.navigate({
+            url: '/product/' + record.getId()
+        });
+    },
+    onShowProducts: function (navRecord) {
+        var store = this.productGrid.store;
+        this.sideBar.getLayout().setActiveItem(this.productGrid);
+        store.extraFilters.clear();
+        store.extraFilters.add({ id: "categoryids", property: 'categoryids', value: navRecord.get('originalId') });
+        store.load();
+    },
     onTreeUrlClick: function (tree, url, record, item, index, e, eOpts) {
         this.navigate({
             url: url
