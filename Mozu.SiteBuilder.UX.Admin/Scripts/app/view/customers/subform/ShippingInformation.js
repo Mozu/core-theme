@@ -32,7 +32,8 @@ Ext.define('Taco.view.customers.subform.ShippingInformation', {
 
                     if (e.getTarget('.edit', 10)) {
                         modal = Ext.create('Taco.shared.view.modal.Address', {
-                            record: record
+                            record: record,
+                            validateAddress: true
                         });
                     }
                 }

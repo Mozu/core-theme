@@ -19,39 +19,46 @@ Ext.define('Taco.shared.view.modal.Address', {
     showEmail: true,
     showPhoneNumbers: true,
     
-    validateAddress: true,
+    validateAddress: false,
 
     title:"Edit Address",
 
     formCfg: null,
 
-    actions: [{
-        xtype: 'button',
-        ui: 'action',
-        scale: 'medium',
-        text: 'Validate',
-        handler: function () {
-            this.validateAndPrompt(true, function () {
-            });
-        },
-        itemId: 'otherAction'
-    }, {
-        xtype: 'tbfill'
-    }, {
-        xtype: 'button',
-        itemId: 'secondaryAction'
-    }, {
-        xtype: 'button',
-        itemId: 'primaryAction',
-        handler: function () {
-            var me = this;
-            this.validateAndPrompt(false, function () {
-                me.form.save();
-                me.close();
-            });
-        },
-        formBind: true
-    }],
+    constructor: function (config) {
+        this.actions = [{
+            xtype: 'button',
+            itemId: 'secondaryAction'
+        }, {
+            xtype: 'button',
+            itemId: 'primaryAction',
+            handler: function () {
+                var me = this;
+                this.validateAndPrompt(false, function () {
+                    me.form.save();
+                    me.close();
+                });
+            },
+            formBind: true
+        }];
+
+        if (config.validateAddress) {
+            this.actions = [{
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+                text: 'Validate',
+                handler: function () {
+                    this.validateAndPrompt(true, function () {
+                    });
+                },
+                itemId: 'otherAction'
+            }, {
+                xtype: 'tbfill'
+            }].concat(this.actions);
+        }
+        this.callParent(arguments);
+    },
 
     initComponent: function () {
         var me = this;
@@ -62,7 +69,6 @@ Ext.define('Taco.shared.view.modal.Address', {
         }
 
         
-
         this.form = Ext.widget(Ext.apply({
             xtype: 'taco-addressform',
             header:false,
@@ -143,6 +149,12 @@ Ext.define('Taco.shared.view.modal.Address', {
      */
     validateAndPrompt: function (onDemandMode, callback) {
         var me = this;
+
+        // skip address validation for now
+        if (!me.validateAddress) {
+            callback();
+            return;
+        }
         this.validateForm(function (response) {
             if (response.error) {
                 Ext.Msg.show({
