@@ -33,8 +33,8 @@ Ext.define('Taco.shared.view.modal.Wishlist', {
             columns: [
                 { text: 'Product Code', dataIndex: 'code' },
                 { text: 'Name', dataIndex: 'name' },
-                { text: 'Price', dataIndex: 'price' },
-                { text: 'Sale Price', dataIndex: 'saleprice' },
+                { text: 'Price', dataIndex: 'price', format: 'usMoney' },
+                { text: 'Sale Price', dataIndex: 'saleprice', format: 'usMoney' },
                 { text: 'In Stock', dataIndex: 'stock' },
                 { text: 'Date Added', dataIndex: 'dateadded' },
                 { text: 'Date Purchased', dataIndex: 'datepurchased', flex: 1 }
