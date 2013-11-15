@@ -125,6 +125,10 @@
         return (state) ? this._setState(state) : this._getState();
     }
 
+    Content.prototype.lastState = function() {
+        return this._lastState;
+    }
+
     Content.prototype._getState = function() {
         var state;
 
@@ -140,6 +144,8 @@
     }
 
     Content.prototype._setState = function(state) {
+        this._lastState = this.state();
+
         this.element.removeClass(statePrefix + possibleStates.join(' ' + statePrefix));
 
         if (this['_' + state + 'State']) this['_' + state + 'State']();
@@ -188,7 +194,7 @@
     Text.prototype._onClick = function(e) {
         var $tar,
             oldUrl;
-            
+
         if (this.state() !== 'editing') return;
 
         $tar = $(e.target);
@@ -213,9 +219,14 @@
         this.$content.removeAttr('contenteditable');
 
         widgetData.config = widgetData.config || {};
-        //this was null travis
+
+        if (this.lastState() === 'editing') {
+            widgetData.config.body = this.$content.html();
+            Chorizo.editor.dirtyStateCheck();
+        }
+
         //widgetData.config.body = this.$content.html();
-        widgetData.config.body = this.element.children().html();
+        //widgetData.config.body = this.element.children().html();
     }
 
 
@@ -291,6 +302,7 @@
         $doc.off('mousemove', this._moveHandler);
         Chorizo.editor.cursor('auto');
         this.widgetData.config.height = this.$content.outerHeight();
+        Chorizo.editor.dirtyStateCheck();
     }
 
     Img.prototype._onMousemove = function(e, ui) {
