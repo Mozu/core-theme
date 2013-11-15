@@ -456,7 +456,7 @@ Ext.define('Taco.view.attribute.Form', {
                 allowBlank:!this.record.supportsDisplayGroup(),
                 hidden: !this.record.supportsDisplayGroup(),
                 readOnly: this.isEdit(),
-                data: 'AdminEntered',
+                data: 'Admin',
                 store: [
                     ['AdminAndStorefront', 'Storefront & Admin'],
                     ['Admin', 'Admin Only']
