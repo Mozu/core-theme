@@ -41,6 +41,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
             xtype: 'selectfield',
             fieldLabel: 'If out of stock...',
             width: 250,
+            allowBlank: true,
             margin: '0 0 0 20',
             hidden: !track,
             queryMode: 'local',
