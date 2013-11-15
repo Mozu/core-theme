@@ -151,6 +151,7 @@ Ext.define('Taco.view.settings.Publishing', {
 
             items.push({
                 ui: 'subform',
+                xtype:'panel',
                 title: masterCatalog.name,
                 layout: {
                     type: 'table',
