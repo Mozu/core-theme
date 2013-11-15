@@ -773,14 +773,7 @@
     <Content Include="Scripts\build\fonts\SourceSansPro-SemiboldIt-webfont.eot" />
     <Content Include="Scripts\build\fonts\SourceSansPro-SemiboldIt-webfont.ttf" />
     <Content Include="Scripts\build\fonts\SourceSansPro-SemiboldIt-webfont.woff" />
-    <Content Include="Scripts\build\images\card-s41366a1f4b.png" />
-    <Content Include="Scripts\build\images\card-s45eb4789fc.png" />
-    <Content Include="Scripts\build\images\card-s5ce8972ad2.png" />
-    <Content Include="Scripts\build\images\card-s8858c83bcb.png" />
-    <Content Include="Scripts\build\images\card-s88713318b6.png" />
-    <Content Include="Scripts\build\images\card-sd6d3433d2f.png" />
-    <Content Include="Scripts\build\images\card-sd7c19700b9.png" />
-    <Content Include="Scripts\build\images\icons-sc80605d0db.png" />
+    <Content Include="Scripts\build\images\icons-s9661270dd7.png" />
     <Content Include="Scripts\build\index.html" />
     <Content Include="Scripts\build\locale\ext-lang-af.js" />
     <Content Include="Scripts\build\locale\ext-lang-bg.js" />
@@ -1305,7 +1298,6 @@
     <Content Include="Scripts\build\fonts\SourceSansPro-Regular-webfont.svg" />
     <Content Include="Scripts\build\fonts\SourceSansPro-Semibold-webfont.svg" />
     <Content Include="Scripts\build\fonts\SourceSansPro-SemiboldIt-webfont.svg" />
-    <Content Include="Scripts\build\images\icons-sbbd7e52d6f.png" />
     <Content Include="Scripts\build\resources\images\align\align-center-selected.png" />
     <Content Include="Scripts\build\resources\images\align\align-center.png" />
     <Content Include="Scripts\build\resources\images\align\align-justified-selected.png" />
