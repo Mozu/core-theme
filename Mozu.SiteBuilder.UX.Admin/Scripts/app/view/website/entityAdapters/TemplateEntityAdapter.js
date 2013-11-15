@@ -24,9 +24,8 @@ Ext.define('Taco.view.website.entityAdapters.TemplateEntityAdapter', {
 
     getPageSettings: function () {
        var me = this;
-
        return [
-           
+           { xtype: 'component', html: 'This template has no settings.' }
        ];
     },
 
@@ -37,6 +36,7 @@ Ext.define('Taco.view.website.entityAdapters.TemplateEntityAdapter', {
    
     load:function () {
         var me = this;
+        this.fireEvent('load', this);
         return;
        
      
