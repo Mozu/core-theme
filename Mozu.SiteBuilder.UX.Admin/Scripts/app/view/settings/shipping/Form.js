@@ -11,24 +11,26 @@ Ext.define('Taco.view.settings.shipping.Form', {
     
     initComponent: function () {
         var me = this;
-
+        
         me.shippingFrom = Ext.create('Taco.view.settings.shipping.subform.ShippingFrom', {
             record: me.record
         });
+        
         me.methodsAndRates = Ext.create('Taco.view.settings.shipping.subform.MethodsAndRates', {
             record: me.record
         });
+        
         me.shippingPreferences = Ext.create('Taco.view.settings.shipping.subform.ShippingPreferences', {
             record: me.record
         });
-
+        
         me.navStore = Ext.create('Ext.data.Store', {
             fields: ['title'],
             data: [me.shippingFrom, me.methodsAndRates, me.shippingPreferences]
         });
 
         me.record.on('afteredit', Ext.emptyFn, me); // used to check savable state here
-
+        
         me.items = [
             me.shippingFrom,
             me.methodsAndRates,

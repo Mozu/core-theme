@@ -42,6 +42,8 @@ Ext.define('Taco.core.ux.mixins.Searchable', {
         
         
         Ext.applyIf(me, {
+            searchToolbar: null,
+            hideSearchToolbar: false,
             enableSearch: true
         });
 
@@ -98,63 +100,68 @@ Ext.define('Taco.core.ux.mixins.Searchable', {
         var me = this,
             conf;
 
-        conf = {
-            dock: 'top',
-            items: [
-                {
-                    xtype: "tbspacer",
-                    flex: 1,
-                    hidden: me.enableSearch
-                },
-                {
-                    xtype: "tbspacer"
-                }, {
-                    xtype: 'tbtext',
-                    itemId: 'recordCount',
-                    margin: '6 0 6 14',
-                    style:"",
-                    tpl: new Ext.XTemplate([
-                            '<div>',
-                                '<span class="record-total-count">{totalCount}</span> ',
-                                '<span class="record-unit">',
-                                '<tpl if="totalCount == 1">{[Ext.util.Inflector.singularize(values.unit)]}<tpl else>{unit}</tpl>',
-                                '</span>',
-                            '</div>'
-                    ]),
-                    data: {
-                        count: 0,
-                        totalCount: 0,
-                        unit: 'records'
+        if (!me.hideSearchToolbar) {
+            
+            conf = {
+                dock: 'top',
+                items: [
+                    {
+                        xtype: "tbspacer",
+                        flex: 1,
+                        hidden: me.enableSearch
+                    },
+                    {
+                        xtype: "tbspacer"
+                    }, {
+                        xtype: 'tbtext',
+                        itemId: 'recordCount',
+                        margin: '6 0 6 14',
+                        style: "",
+                        tpl: new Ext.XTemplate([
+                                '<div>',
+                                    '<span class="record-total-count">{totalCount}</span> ',
+                                    '<span class="record-unit">',
+                                    '<tpl if="totalCount == 1">{[Ext.util.Inflector.singularize(values.unit)]}<tpl else>{unit}</tpl>',
+                                    '</span>',
+                                '</div>'
+                        ]),
+                        data: {
+                            count: 0,
+                            totalCount: 0,
+                            unit: 'records'
+                        }
                     }
-                }
-            ]
-        };
+                ]
+            };
 
-        
-        if (me.enableSearch) {
-            
-            me.searchBox = Ext.widget({
-                xtype: 'taco.combofilter',
-                flex: 1,
-                hidden: !me.enableSearch,
-                itemStore: me.store,
-                filterForm: me.filterFormConf,
-                filterProperties: me.filterProperties
-            });
-            
-            //todo: need to figure out where this is set and why;
-            if (this.options && this.options.query) {
-                me.on('afterrender', function () {
-                    me.searchBox.setValue([this.options.query]);
+
+            if (me.enableSearch) {
+
+                me.searchBox = Ext.widget({
+                    xtype: 'taco.combofilter',
+                    flex: 1,
+                    hidden: !me.enableSearch,
+                    itemStore: me.store,
+                    filterForm: me.filterFormConf,
+                    filterProperties: me.filterProperties
                 });
+
+                //todo: need to figure out where this is set and why;
+                if (this.options && this.options.query) {
+                    me.on('afterrender', function () {
+                        me.searchBox.setValue([this.options.query]);
+                    });
+                }
+
+                conf.items.unshift(
+                    me.searchBox
+                );
             }
 
-            conf.items.unshift(
-                me.searchBox
-            );
+            me.searchToolbar = Ext.widget('toolbar', conf);
+            
         }
-
-        me.searchToolbar = Ext.widget('toolbar', conf);
+        
 
         return me.searchToolbar;
     }

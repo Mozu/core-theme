@@ -1,6 +1,6 @@
 ﻿/**
- * @class Taco.model.CustomerGroup
- * A Taco.model.CustomerGroup is a way to 'tag' a Customer. These groups or tags have a unique ID.
+ * @class Taco.model.CustomShippingRate
+ * 
  */
 
 Ext.define('Taco.model.CustomShippingRate', {
@@ -15,11 +15,13 @@ Ext.define('Taco.model.CustomShippingRate', {
     }, {
         'name': 'type',
         'type': 'string',
-        defaultValue: 'FLAT_RATE_PER_ITEM_EXACT_AMOUNT'
+        'defaultValue': 'FLAT_RATE_PER_ITEM_EXACT_AMOUNT'
+    }, {
+        'name': 'configuredCountries',
+        'type': 'auto',
+        'defaultValue': []
     }, {
         'name': 'isEnabled',
         'type': 'bool'
     }]
-
-  
 });
