@@ -5,70 +5,43 @@
 
 Ext.define('Taco.view.settings.shipping.subform.Custom', {
     extend: 'Taco.core.ux.form.Form',
-    requires: [],
+
+    requires: [
+        'Taco.view.settings.shipping.widget.RateList'
+    ],
+    
     title: 'Custom Rate',
-    padding: '10 10 10 10',
+    padding: '0 19 19 19',
+    
+    layout:"fit",
+    
+    modelName: 'Taco.model.CustomShippingRate',
     initComponent: function() {
         var me = this;
-        var customRate = this.record.get('customRate') || {};
 
 
-        this.items = [
-            {
-                xtype: 'textfield',
-                width: 200,
-                emptyText: 'e.g. Standard Shipping',
-                fieldLabel: 'Name',
-                labelAlign: 'top',
-                name: 'name',
-                value: customRate.name
-            },
-            
-            {
-                xtype: 'selectfield',
-                displayField: 'text',
-                valueField: 'value',
-                labelAlign: 'top',
-                fieldLabel: 'Rate Type',
-                value: customRate.type || 'Flat rate per item',
-                width: 200,
-                name: 'type',
-                store: Ext.create('Ext.data.ArrayStore', {
-                    fields: ['text', 'value'],
-                    data: [
-                        ['Flat rate per item', 'FLAT_RATE_PER_ITEM_EXACT_AMOUNT'],
-                        ['Flat rate per order', 'FLAT_RATE_PER_ORDER_EXACT_AMOUNT']
-                    ]
-                })
-            },
-            
-            Ext.create('Taco.core.ux.form.UnitField' /*'Taco.core.ux.form.CurrencyField'*/, {
-                name: 'amount',
-                fieldLabel: 'Rate',
-                labelAlign: 'top',
-                width: 200,
-                unitString: '$',
-                emptyText: '0',
-                unitAtEnd: false,
-                value: customRate.amount
-            }),
-            
-            {
-                xtype: 'checkbox',
-                fieldLabel: 'Status',
-                labelAlign: 'top',
-                name: 'isEnabled',
-                boxLabel:"Enabled",
-                
-                checked: customRate.isEnabled,
-                value: customRate.isEnabled
-            }
-        ];
+        this.rateList = Ext.create('Taco.view.settings.shipping.widget.RateList', {
+            record: me.record
+        });
 
+        
+
+        me.items = [this.rateList];
+        
         this.callParent(arguments);
+
+        
     },
     beforeSave: function () {
-        var settings = this.getForm().getValues(false, false, false, true);
-        this.record.set('customRate', settings);
+        var me = this;
+        var customRates = [];
+        
+        this.rateList.store.each(function(rec) {
+            customRates.push(rec.getData());
+        });
+   
+        this.record.set('customRates', customRates);
+
+        return true;
     }
 });

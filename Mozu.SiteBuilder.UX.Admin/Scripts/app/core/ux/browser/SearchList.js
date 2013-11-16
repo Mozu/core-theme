@@ -22,6 +22,10 @@ Ext.define('Taco.core.ux.browser.SearchList', {
     gridHeaderLabel: "Items",
     
     enableSearch: true,
+    
+    enablePaging: true,
+    
+    hideSearchToolbar: false,
 
     // store: { type: 'Taco.store.InventoryProducts' },
     store: null,
@@ -74,13 +78,12 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         if (me.secondToolbarItems) {
             me.dockedItems.push(me.createSecondToolbar());
         }
-
-
-
         
-
-        // initialize the grid paging toolbar mixin
-        this.mixins.pageable.constructor.apply(this, arguments);
+        if (me.enablePaging) {
+            // initialize the grid paging toolbar mixin
+            this.mixins.pageable.constructor.apply(this, arguments);
+        }
+        
         
         this.callParent(arguments);
         

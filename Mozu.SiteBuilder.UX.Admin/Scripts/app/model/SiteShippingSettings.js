@@ -23,7 +23,11 @@ Ext.define('Taco.model.SiteShippingSettings', {
         // existing fields
         { name: 'activeRateProviders', type: 'auto', defaultValue: [] },
         { name: 'orderHandlingFee', type: 'float' },
-        { name: 'customRate', type: 'auto' ,defaultValue: {} }
+        
+        // Deprecated 
+        { name: 'customRate', type: 'auto', defaultValue: {} },
+        
+        { name: 'customRates', type: 'auto', defaultValue: [] }
     ],
 
     proxy: {
