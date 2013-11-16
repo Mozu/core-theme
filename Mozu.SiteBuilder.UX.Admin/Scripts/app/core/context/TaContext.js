@@ -168,7 +168,7 @@ Ext.define('Taco.core.context.TaContext', {
             store = me.store,
             data = [];
 
-        if (copy !== true && store) {
+        if (copy !== true && store && !store.isFiltered()) {
             return store;
         }
         data.push(me);

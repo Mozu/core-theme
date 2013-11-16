@@ -2,7 +2,7 @@ Ext.define('Taco.view.siteSelection.Index', {
     extend: 'Taco.core.ux.content.Container',
     requires: [],
 
-    requiresContextOfType: 's',
+    
     cls: 'taco-theme-selector',
     
     initComponent: function () {

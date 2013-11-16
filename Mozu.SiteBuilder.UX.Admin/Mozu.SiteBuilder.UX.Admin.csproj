@@ -717,6 +717,7 @@
     <Content Include="Scripts\app\view\website\widgetEditors\AddThis.js" />
     <Content Include="Scripts\app\view\website\widgetEditors\FeaturedProducts.js" />
     <Content Include="Scripts\app\view\website\widgetEditors\HorizontalRule.js" />
+    <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\build\all-classes.js" />
     <Content Include="Scripts\build\chorizo\layout.css" />
     <Content Include="Scripts\build\fonts\journal-webfont.eot" />
@@ -1279,7 +1280,6 @@
     <Content Include="Scripts\app\view\themeSettings\Group.js" />
     <Content Include="Scripts\app\view\themeSettings\Section.js" />
     <Content Include="Scripts\app\view\theme\ThemeView.js" />
-    <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\build.xml" />
     <Content Include="Scripts\build\fonts\journal-webfont.svg" />
     <Content Include="Scripts\build\fonts\mozicons.svg" />
@@ -1962,7 +1962,6 @@
     <Content Include="Scripts\app\view\email\Index.js" />
     <Content Include="Scripts\app\view\inventory\QuantityEdit.js" />
     <Content Include="Scripts\app\view\order\Grid.js" />
-    <Content Include="Scripts\app\view\order\Edit-old.js" />
     <Content Include="Scripts\app\view\order\Index.js" />
     <Content Include="Scripts\app\view\paymentAndCheckout\FieldDescription.js" />
     <Content Include="Scripts\app\view\paymentAndCheckout\Index.js" />
