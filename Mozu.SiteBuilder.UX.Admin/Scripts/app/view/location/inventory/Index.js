@@ -89,14 +89,14 @@ Ext.define('Taco.view.location.inventory.Index', {
                 width: 560
             },
             items: [
-                /*
+            
                 {
                     name: 'productName',
                     fieldLabel: 'Product Name',
                     flex:1
                 
                 },
-                */
+            
                 {
                     name: 'productCode',
                     fieldLabel: 'Product Code',
