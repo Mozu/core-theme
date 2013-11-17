@@ -62,8 +62,8 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
                             name: "type"
                         },
                         items: [
-                            { xtype: "radiofield", boxLabel: "Per Item", inputValue: "FLAT_RATE_PER_ITEM_EXACT_AMOUNT", id: "radio1" },
-                            { xtype: "radiofield", boxLabel: "Per Order", inputValue: "FLAT_RATE_PER_ORDER_EXACT_AMOUNT", id: "radio2" }
+                            { xtype: "radiofield", boxLabel: "Per Item", inputValue: "custom_flat_rate_per_item_exact_amount", id: "radio1" },
+                            { xtype: "radiofield", boxLabel: "Per Order", inputValue: "custom_flat_rate_per_order_exact_amount", id: "radio2" }
                         ]
                     }
                 ]
@@ -128,9 +128,9 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
         me.record.set(me.form.getValues());
     },
     
-    onDestroy: function () {
-        this.form.destroy();
-        this.form = null;
-        this.callParent(arguments);
-    }
+    //onDestroy: function () {
+    //    this.form.destroy();
+    //    this.form = null;
+    //    this.callParent(arguments);
+    //}
 });

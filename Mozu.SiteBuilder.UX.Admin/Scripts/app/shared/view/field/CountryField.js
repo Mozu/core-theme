@@ -12,7 +12,7 @@ Ext.define('Taco.shared.view.field.CountryField', {
     fieldLabel: 'Countries',
     queryMode: 'local',
     displayField: 'name',
-    valueField: 'countryCode',
+    valueField: 'code',
     emptyText: 'Select',
     allowBlank: false,
     
@@ -24,8 +24,7 @@ Ext.define('Taco.shared.view.field.CountryField', {
 
         if (!me.store) {
             me.store = {
-                type: "Taco.store.CountryComboBox",
-                createOnly: me.createOnly
+                type: "Taco.store.Country"
             };
         }
         

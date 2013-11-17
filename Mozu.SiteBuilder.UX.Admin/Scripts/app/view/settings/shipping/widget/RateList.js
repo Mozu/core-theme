@@ -33,7 +33,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
         var me = this;
 
         me.countryStore = Taco.core.data.StoreManager.getOrCreate({
-            type: 'Taco.store.CountryComboBox',
+            type: 'Taco.store.Countries',
             autoLoad: true,
             createOnly:true
         });
@@ -94,9 +94,13 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
                         '</tpl>',
                         '</div>',
                     '</div>', {
-                        getCountryName: function(val) {
+                        getCountryName: function (val) {
+                            //todod: load country store ahead of time.
                             var countryRecord = me.countryStore.getById(val);
-                            return countryRecord.get("name");
+                            if (countryRecord) {
+                               return countryRecord.get("name");
+                            }
+                            return val;
                         }
                     }
                 ]
@@ -142,7 +146,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
         this.store = Ext.create('Ext.data.Store', {
             model: "Taco.model.CustomShippingRate",
             autoLoad: false,
-            data: me.listData.rates
+            data: me.listData
         });
 
         //me.on('selectionchange', me.editItem, me);
@@ -209,11 +213,11 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
         me.store.remove(record);
     },
     
-    onDestroy: function () {
-        var me = this;
+    //onDestroy: function () {
+    //    var me = this;
         
-        me.countryStore.destroy();
-        me.countryStore = null;
-        me.callParent(arguments);
-    }
+    //    me.countryStore.destroy();
+    //    me.countryStore = null;
+    //    me.callParent(arguments);
+    //}
 });
