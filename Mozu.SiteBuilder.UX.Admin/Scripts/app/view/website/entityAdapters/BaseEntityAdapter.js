@@ -44,43 +44,45 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
             zoneData = [],
             source,
             json;
-        
-        if ((me.pageContext.editMode || "").toLowerCase() == 'template') {
-            source = me.pageContext.cmsContext.template;
-        } else if ((me.pageContext.editMode || "").toLowerCase() == 'site') {
-            source = me.pageContext.cmsContext.site;
-        } else  {
-            source = me.pageContext.cmsContext.page;
+        if (me.editor.isDirty()) {
+            if ((me.pageContext.editMode || "").toLowerCase() == 'template') {
+                source = me.pageContext.cmsContext.template;
+            } else if ((me.pageContext.editMode || "").toLowerCase() == 'site') {
+                source = me.pageContext.cmsContext.site;
+            } else {
+                source = me.pageContext.cmsContext.page;
+            }
+
+            Ext.each(me.editor.persistanceData(), function (zone) {
+                if (!Ext.isEmpty(zone.rows)) {
+                    //todo: check pc for edit type... page/vs template
+                    zone.source = source;
+                    zoneData.push(zone);
+                }
+            });
+
+
+            tasks.add({
+                fn: function (t) {
+
+                    Ext.Ajax.request({
+                        url: '/admin/app/cmsdocument/widgetdata/update',
+                        method: 'post',
+                        jsonData: {
+                            zones: zoneData,
+                            source: source
+                        },
+                        success: function (response) {
+                            t.callback();
+
+                        }
+                    });
+
+
+                }
+            });
         }
-
-        Ext.each(me.editor.persistanceData(), function (zone) {
-            if (!Ext.isEmpty(zone.rows)) {
-                //todo: check pc for edit type... page/vs template
-                zone.source = source;
-                zoneData.push(zone);
-            }
-        });
         
-
-        tasks.add({
-            fn: function (t) {
-
-                Ext.Ajax.request({
-                    url: '/admin/app/cmsdocument/widgetdata/update',
-                    method: 'post',
-                    jsonData: {
-                        zones: zoneData,
-                        source: source
-                    },
-                    success: function (response) {
-                        t.callback();
-
-                    }
-                });
-
-
-            }
-        });
 
         this.addSaveTasks(tasks);
 
