@@ -107,6 +107,13 @@
       "template":       "category"
     },
     {
+      "id":             "parent-category",
+      "title":          "ParentCategory",
+      "entityType":     "category",
+      "userCreatable":  false,
+      "template":       "parent-category"
+    },
+    {
       "id":             "product",
       "title":          "Product",
       "entityType":     "product",
