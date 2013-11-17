@@ -188,7 +188,11 @@
     runTasks: function () {
         var task,
             taskJob;
-
+        if (this.tasks.getCount() === 0) {
+            this.complete = true;
+            this.doFinalCallback();
+            return;
+        }
         while (true) {
             if (this.complete) {
                 return;

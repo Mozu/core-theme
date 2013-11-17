@@ -134,17 +134,17 @@ Ext.define('Taco.model.RuntimeProduct', {
         "useNull": true
     },
     {
-        "name": "metaTagDescription",
+        "name": "metaDescription",
         "type": "string",
         "useNull": true
     },
     {
-        "name": "metaTagKeywords",
+        "name": "metaKeywords",
         "type": "string",
         "useNull": true
     },
     {
-        "name": "metaTagTitle",
+        "name": "metaTitle",
         "type": "string",
         "useNull": true
     },
@@ -169,7 +169,7 @@ Ext.define('Taco.model.RuntimeProduct', {
         "useNull": true
     },
     {
-        "name": "seoFriendlyUrl",
+        "name": "slug",
         "type": "string",
         "useNull": true
     },

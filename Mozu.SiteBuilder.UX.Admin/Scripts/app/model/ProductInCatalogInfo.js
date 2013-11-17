@@ -36,17 +36,17 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
             "useNull": false
         },
         {
-            "name": "metaTagDescription",
+            "name": "metaDescription",
             "type": "string",
             "useNull": true
         },
         {
-            "name": "metaTagKeywords",
+            "name": "metaKeywords",
             "type": "string",
             "useNull": true
         },
         {
-            "name": "metaTagTitle",
+            "name": "metaTitle",
             "type": "string",
             "useNull": true
         },
@@ -63,7 +63,7 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
             "useNull": true
         },
         {
-            "name": "seoFriendlyUrl",
+            "name": "slug",
             "type": "string",
             "useNull": true
         },
@@ -206,27 +206,8 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
         //{ type: 'presence', name: 'productCode' },
        // { type: 'length', name: 'productCode', min: 3, max: 30 },
         { type: 'format', name: 'productCode', matcher: /^[A-z0-9\-]*$/ }
-    ],
+    ]
 
     
-    proxy: {
-        type: 'ajax',
-        api: {
-            read: '/admin/app/ProductInCatalogInfo/list',
-            create: '/admin/app/ProductInCatalogInfo/create',
-            update: '/admin/app/ProductInCatalogInfo/edit',
-            destroy: '/admin/app/ProductInCatalogInfo/delete',
-            duplicate: '/admin/app/ProductInCatalogInfo/duplicate'
-        },
-        reader: {
-            type: 'json',
-            root: 'items',
-            successProperty: 'success',
-            messageProperty: "message"
-        },
-        writer: {
-            allowSingle: false,
-            type: 'json'
-        }
-    }
+   
 });

@@ -182,25 +182,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// The HTML metatag title.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "metaTagTitle")]
+        [DataMember(EmitDefaultValue = false, Name = "metaTitle")]
         public string MetaTagTitle { get; set; }
 
         /// <summary>
         /// The HTML metatag description.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "metaTagDescription")]
+        [DataMember(EmitDefaultValue = false, Name = "metaDescription")]
         public string MetaTagDescription { get; set; }
 
         /// <summary>
         /// The HTML metatag keywords.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "metaTagKeywords")]
+        [DataMember(EmitDefaultValue = false, Name = "metaKeywords")]
         public string MetaTagKeywords { get; set; }
 
         /// <summary>
         /// An SEO friendly URL.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "seoFriendlyUrl")]
+        [DataMember(EmitDefaultValue = false, Name = "slug")]
         public string SEOFriendlyUrl { get; set; }
 
         #endregion

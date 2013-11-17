@@ -193,17 +193,17 @@ Ext.define('Taco.model.Product', {
             "useNull": true
         },
         {
-            "name": "metaTagDescription",
+            "name": "metaDescription",
             "type": "string",
             "useNull": true
         },
         {
-            "name": "metaTagKeywords",
+            "name": "metaKeywords",
             "type": "string",
             "useNull": true
         },
         {
-            "name": "metaTagTitle",
+            "name": "metaTitle",
             "type": "string",
             "useNull": true
         },
@@ -228,7 +228,7 @@ Ext.define('Taco.model.Product', {
             "useNull": true
         },
         {
-            "name": "seoFriendlyUrl",
+            "name": "slug",
             "type": "string",
             "useNull": true
         },
@@ -391,9 +391,17 @@ Ext.define('Taco.model.Product', {
         return level.get(fieldName);
     },
     getProductInSite: function () {
-        var siteId = Taco.app.context.getSiteId();
-        if (siteId) {
-            return this.getProductInCatalogs().getById(siteId);
+        var site = Taco.app.context.getCurrentSite();
+        if (site) {
+            return this.getProductInCatalogs().getById(site.catalogId);
+
+        }
+        return null;
+    },
+    getProductInCatalog : function () {
+        var site = Taco.app.context.getCurrentSite();
+        if (site) {
+            return this.getProductInCatalogs().getById(site.catalogId);
 
         }
         return null;
