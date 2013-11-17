@@ -37,6 +37,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public string MetaTitle { get; set; }
 
+        public string MetaKeywords { get; set; }
+
         [JsonConverter(typeof(StringEnumConverter))]
         public EditModes? EditMode { get; set; }
 

@@ -21,27 +21,7 @@ Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
         return this.pageContext.productCode;
     },
 
-    getPageSettings: function () {
-        var me = this;
-
-        return [{
-            panelCls: 'Taco.view.website.settings.General',
-            getRecord: function () {
-
-                return me.get().getProductInSite();
-            }
-        }, {
-        //     panelCls: 'Taco.view.website.settings.Templates',
-        //     getRecord: function () {
-        //         return me.get().getProductInSite();
-        //     }
-        // }, {
-            panelCls: 'Taco.view.website.settings.Seo',
-            getRecord: function () {
-                return me.get().getProductInSite();
-            }
-        }];
-    },
+    
 
     getStore: function () {
         return Taco.core.data.StoreManager.getOrCreate('Taco.store.Products');
@@ -53,6 +33,29 @@ Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
 
     setHidden: function (hide) {
         this.get().set('isActive', !hide);
+    },
+    addSaveTasks: function (tasks) {
+        var record = this.get();
+        tasks.add({
+            saveRecord: record,
+            dependencyFilter: function (item) {
+                return item.updateRecord && (item.updateRecord.modelName == 'Taco.model.ProductInCatalogInfo' || item.updateRecord.modelName == 'Taco.model.Product');
+            }
+        });
+        this.callParent(arguments);
+    },
+    getPageSettings: function () {
+        var me = this;
+
+        return [
+            
+            //Ext.create('Taco.view.website.settings.CategoryDocument', {
+            //    record: me.getCmsPageDoc()
+            //}),
+            Ext.create('Taco.view.website.settings.CatalogSeo', {
+                record: me.get().getProductInCatalog()
+            })
+        ];
     }
 
 });

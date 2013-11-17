@@ -21,13 +21,13 @@ Ext.define('Taco.view.product.subform.SEO', {
             hideOverride: this.isSingleSite,
             items: [{
                 fieldLabel: 'Meta Title',
-                name: 'metaTagTitle'
+                name: 'metaTitle'
             }, {
-                fieldLabel: 'Friendly URL',
-                name: 'seoFriendlyUrl'
+                fieldLabel: 'Slug',
+                name: 'slug'
             }, {
                 fieldLabel: 'Meta Description',
-                name: 'metaTagDescription',
+                name: 'metaDescription',
                 xtype: 'textarea'
             }]
         }];

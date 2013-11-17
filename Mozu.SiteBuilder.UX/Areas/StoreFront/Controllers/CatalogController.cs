@@ -82,7 +82,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             PageContext.PageType = "product";
             PageContext.ProductCode = productCode;
-
+             PageContext.MetaDescription = prod.Content.MetaTagDescription;
+             PageContext.MetaTitle = prod.Content.MetaTagTitle ;
+             PageContext.MetaKeywords = prod.Content.MetaTagKeywords;
+    
 
             PageContext.CmsContext = new CmsPageContext()
             {
@@ -213,6 +216,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
              PageContext.FeedUrl = "/feeds/category/" + categoryId;
 
+             
+
              var catList = await _categoryTreeProvider.GetAllCategories();
             
 
@@ -228,6 +233,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                  
             }
+
+
+            PageContext.MetaDescription = cat.Content.MetaTagDescription;
+            PageContext.MetaTitle = cat.Content.MetaTagTitle;
+            PageContext.MetaKeywords = cat.Content.MetaTagKeywords;
 
              var lts = (ILifetimeScope) this.ControllerContext.Request.GetDependencyScope().GetService(typeof (ILifetimeScope));
 

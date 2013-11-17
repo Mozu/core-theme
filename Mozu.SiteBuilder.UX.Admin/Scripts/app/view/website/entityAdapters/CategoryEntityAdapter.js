@@ -7,7 +7,7 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
     requires: [
         'Taco.view.website.settings.CategoryDocument',
         'Taco.view.website.settings.facets.Facets',
-        'Taco.view.website.settings.Seo'
+        'Taco.view.website.settings.CatalogSeo'
     ],
 
     modelName: 'Taco.model.Category',
@@ -124,7 +124,7 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
             Ext.create('Taco.view.website.settings.CategoryDocument', {
                 record: me.getCmsPageDoc()
             }),
-            Ext.create('Taco.view.website.settings.Seo', {
+            Ext.create('Taco.view.website.settings.CatalogSeo', {
                 record: me.get()
             })
         ];

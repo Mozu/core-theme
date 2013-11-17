@@ -702,6 +702,7 @@
     <Content Include="Scripts\app\view\website\entityAdapters\SiteTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\TemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\misc\ExternalLinkEditor.js" />
+    <Content Include="Scripts\app\view\website\settings\CatalogSeo.js" />
     <Content Include="Scripts\app\view\website\WidgetEditor.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\BaseEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\CategoryEntityAdapter.js" />
@@ -714,7 +715,6 @@
     <Content Include="Scripts\app\view\website\settings\Facets\FacetRangeQueryGroup.js" />
     <Content Include="Scripts\app\view\website\settings\Facets\Facets.js" />
     <Content Include="Scripts\app\view\website\settings\General.js" />
-    <Content Include="Scripts\app\view\website\settings\Seo.js" />
     <Content Include="Scripts\app\view\website\settings\Templates.js" />
     <Content Include="Scripts\app\view\website\Tree.js" />
     <Content Include="Scripts\app\view\website\Index.js" />
