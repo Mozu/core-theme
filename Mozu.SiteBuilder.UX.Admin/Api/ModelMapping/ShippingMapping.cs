@@ -2,7 +2,7 @@
 using AutoMapper;
 using System.Linq;
 using Mozu.PaymentService.Contracts;
-using Mozu.ShippingAdmin.Contracts;
+using MSC=Mozu.ShippingAdmin.Contracts;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping;
 using Newtonsoft.Json.Linq;
 using CarrierConfiguration = Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping.CarrierConfiguration;
@@ -29,48 +29,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected override void Configure()
         {
-            Mapper.CreateMap<CustomRate, Mozu.ShippingAdmin.Contracts.CarrierConfiguration>()
-                  .ForMember(x => x.Id, opt => opt.UseValue(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId))
-                  .ForMember(x => x.Settings, opt => opt.MapFrom(x => new List<Mozu.ShippingAdmin.Contracts.Setting>()
-                                                                          {
-                                                                              new Setting()
-                                                                                  {
-                                                                                      Key = "Amount",
-                                                                                      Value = x.Amount
-                                                                                  },
-                                                                              new Setting()
-                                                                                  {
-                                                                                      Key = "Type",
-                                                                                      Value = x.RateType
-                                                                                  }
-                                                                          }))
-                  .ForMember(x => x.ConfiguredServiceTypes, opt => opt.MapFrom(x => new List<Mozu.ShippingAdmin.Contracts.ServiceType>
-                                                                                        {
-                                                                                            new ServiceType()
-                                                                                                {
-                                                                                                    Code  = "custom_"+ x.RateType  ,
-                                                                                                    Content = new ServiceTypeLocalizedContent()
-                                                                                                                  {
-                                                                                                                      Name  = x.Name ,
-                                                                                                                      LocaleCode = "en-US"
-                                                                                                                  },
-                                                                                                                  IsActive = x.IsEnabled 
-                                                                                                }
 
 
-                                                                                        }));
+            Mapper.CreateMap<MSC.CustomTableRate, CustomTableRate>()
+                  .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Content.Name))
+                  .ForMember(x => x.Id, opt => opt.MapFrom(x => x.Id))
+                  .ForMember(x => x.Amount, opt => opt.MapFrom(x => x.Value))
+                  .ForMember(x => x.RateType, opt => opt.MapFrom(x => x.RateType))
+                  .ForMember(x => x.ConfiguredCountries, opt => opt.MapFrom(x => x.CountryCodes));
 
-
-            Mapper.CreateMap<Mozu.ShippingAdmin.Contracts.CarrierConfiguration, CustomRate>()
-                  .ForMember(x => x.Amount, opt => opt.MapFrom(x => x.Settings == null ? null : x.GetSettingValue("Amount")))
-                  .ForMember(x => x.RateType, opt => opt.MapFrom(x => x.Settings == null ? null : x.GetSettingValue("Type")))
-
-                  .ForMember(x => x.Name, opt => opt.ResolveUsing(x =>
-                      {
-                          return x.ConfiguredServiceTypes == null || x.ConfiguredServiceTypes.Count == 0 ? null : x.ConfiguredServiceTypes.First().Content.Name;
-                      } ));
-
-                
+            Mapper.CreateMap<CustomTableRate, MSC.CustomTableRate>()
+               .ForMember(x => x.Content, opt => opt.MapFrom(x => new MSC.CustomTableRateContent(){ LocaleCode = "en-US", Name= x.Name}))
+               .ForMember(x => x.Id, opt => opt.MapFrom(x => x.Id))
+               .ForMember(x => x.Value, opt => opt.MapFrom(x => x.Amount ))
+               .ForMember(x => x.RateType, opt => opt.MapFrom(x => x.RateType))
+               .ForMember(x => x.CountryCodes, opt => opt.MapFrom(x => x.ConfiguredCountries));  
 
 
             Mapper.CreateMap<CarrierConfiguration, Mozu.ShippingAdmin.Contracts.CarrierConfiguration>().ConvertUsing(

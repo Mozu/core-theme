@@ -37,8 +37,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
         }
 
 
-        [DataMember(EmitDefaultValue = false, Name = "customRate")]
-        public CustomRate CustomRate
+        [DataMember(EmitDefaultValue = false, Name = "customRates")]
+        public List<CustomTableRate> CustomRates
         {
             get;
             set;
@@ -73,21 +73,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
     }
 
     [DataContract]
-    public class CustomRate
+    public class CustomTableRate
     {
-      
+        [DataMember(Name = "id")]
+        public string Id { get; set; }
+
 
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
         [DataMember(Name = "amount")]
-        public string Amount { get; set; }
+        public decimal  Amount { get; set; }
         [DataMember(Name = "type")]
         public string RateType { get; set; }
 
-        [DataMember(Name = "isEnabled")]
-        public bool? IsEnabled { get; set; }
+       [DataMember(Name = "configuredCountries")]
+        public List<string> ConfiguredCountries { get; set; }
 
+        
 
     }
 

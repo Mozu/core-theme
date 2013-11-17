@@ -16,7 +16,7 @@ using Mozu.Location.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts.Clients;
 //using Mozu.ShippingAdmin.Contracts;
 using Mozu.ShippingAdmin.Contracts.Clients;
-
+using MSC = Mozu.ShippingAdmin.Contracts;
 //using Mozu.SiteSettings.Shipping.Contracts.Clients;
 //using Mozu.UspsShippingAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -92,7 +92,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var custSettings = (await _carrierConfigurationWebApiClient.GetConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId)).ReadAsSync();
             var settings = Mapper.Map<SiteShippingSettings>(res);
-            settings.CustomRate = Mapper.Map<CustomRate>(custSettings);
+            settings.CustomRates = Mapper.Map<List<CustomTableRate>>(custSettings.CustomTableRates );
             
 		    settings.ShippingLocationCode = locRes.Items.Where(x => x.LocationUsageTypeCode == "DS").Select(x => x.LocationCodes != null && x.LocationCodes.Count > 0 ? x.LocationCodes.First() : null).FirstOrDefault();
 
@@ -107,12 +107,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<SiteShippingSettings>> EditSettings(SiteShippingSettings settings )
         {
 
-        //     [DataMember(Name = "shippingLocationCode")]
-        //public string ShippingLocationCode { get; set; }
-        //[DataMember(Name = "enableInStorePickup")]
-        //public bool? EnableInStorePickup { get; set; }
-        //[DataMember(Name = "storePickupLocationCodes")]
-        //public List<string> StorePickupLocationCodes { get; set; }
+
+            
+
             if (!string.IsNullOrEmpty(settings.ShippingLocationCode))
             {
                 var ret1 = await _locationSettingsWebApiClient.UpdateLocationUsage("DS", new LocationUsage()
@@ -138,42 +135,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
 
+            var carrierConfiguration = (await _carrierConfigurationWebApiClient.GetConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId)).ReadAsSync();
 
-            var dc = Mapper.Map<Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings>(settings);
-            var custSettings = Mapper.Map<Mozu.ShippingAdmin.Contracts.CarrierConfiguration>(settings.CustomRate);
+			carrierConfiguration.CustomTableRates = Mapper.Map<List<MSC.CustomTableRate>>(settings.CustomRates);
 
+            var res = await _carrierConfigurationWebApiClient.UpdateConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId, carrierConfiguration);
+            if (res.HasException)
+            {
+                throw (res.ReadException());
+            }
             
 
-            //var customFeature = dc.ActiveRateProviders.FirstOrDefault(x => x.Name == SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.Custom  );
-            //if (customFeature!= null )
-            //{
-            //    if (!settings.CustomRate.IsEnabled.GetValueOrDefault( true ))
-            //    {
-            //        dc.ActiveRateProviders.Remove(customFeature);
-            //    }
-            //}
-            //else
-            //{
-            //    if (settings.CustomRate.IsEnabled.GetValueOrDefault(true))
-            //    {
-            //        dc.ActiveRateProviders.Add(new Core.Api.Contracts.Feature() 
-            //                                       {
-            //                                           Name = SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.Custom 
-            //                                       });
-            //    }
-            //}
 
 
-            var res = (await _siteShippingSettingsClient.UpdateSiteShippingSettings( dc)).ReadAsSync();
-            if (settings.CustomRate.IsEnabled.GetValueOrDefault(true))
-            {
-                await _carrierConfigurationWebApiClient.UpdateConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId, custSettings);
-            }
-
+           
 
 
             return await GetSettings();
-            //return Single2<SiteShippingSettings>(settings);
+       
         }
 
 		[HttpGetRoute(UriTemplate = "carrierRates")]
@@ -237,6 +216,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2<CarrierConfiguration>(settings);
         }
 
+      
 
         [HttpPostRoute(UriTemplate = "carrierSettings/edit")]
         public async Task<Response<List<CarrierConfiguration>>> EditCarrierSettings(List<CarrierConfiguration> settings)
