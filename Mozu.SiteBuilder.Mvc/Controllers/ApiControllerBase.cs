@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using Autofac;
@@ -51,6 +52,12 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
         }
 
 
+        public Task<bool> InitCmsContext()
+        {
+
+            var helper = new CmsHelper(this.CmsService);
+            return helper.InitCmsPageContext(this.PageContext);
+        }
 
         private ICmsServiceWrapper _cmsService;
         public ICmsServiceWrapper CmsService

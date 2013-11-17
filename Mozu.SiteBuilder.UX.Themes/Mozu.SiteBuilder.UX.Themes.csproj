@@ -1004,6 +1004,7 @@
     <Content Include="Themes\Core4\templates\modules\common\order-list.hypr.live" />
     <Content Include="Themes\Core4\templates\Widgets\catalog\related-products.hypr" />
     <Content Include="Themes\Core4\templates\modules\product\product-list-carousel.hypr.live" />
+    <Content Include="Themes\Core4\templates\pages\parent-category.hypr" />
     <None Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

@@ -1,0 +1,19 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% if PageContext.MetaTitle %}{{PageContext.MetaTitle}}{% else %}{{model.Name}} - {% parent %} {%endif%}{% endblock title-tag-content %}
+
+
+{% block body-tag-classes %} mz-category {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+{% require_script "pages/category" %}
+
+<div data-mz-category="{{model.categoryId}}" class="mz-l-container">
+    <h1 class="mz-pagetitle">parent cat{{ model.name }}</h1>
+
+	todo list of child cats
+    {% include_products "modules/product/faceted-products" with includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+</div>
+
+{% endblock body-content %}

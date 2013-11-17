@@ -11,7 +11,9 @@ using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Catalog;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
@@ -263,8 +265,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             SetCatalogContext(cat);
 
-        
-            var result= View(cat);
+            var result = View(cat);
+
+
+            var ret = await this.InitCmsContext();
+            if (this.PageContext.CmsContext.Page.Document != null )
+            {
+                var overrideTemplate = this.PageContext.CmsContext.Page.Document.Get<string>("template");
+                if (!string.IsNullOrEmpty(overrideTemplate))
+                {
+                    result.ViewName = overrideTemplate;
+                }
+                    
+            }
+
+            
 
             return this.Request.CreateResponse(HttpStatusCode.OK, result);
 
