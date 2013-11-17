@@ -7,6 +7,7 @@ using System.Web.Hosting;
 using AutoMapper;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -149,8 +150,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             var themecfgJson = JObject.Parse(themecfgJsonText);
 
             themecfg.About = themecfgJson["about"].ToObject<ThemeConfiguration.ThemeAbout>();
-            themecfg.PageTypes = themecfgJson["pageTypes"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>>();
-            themecfg.Widgets = themecfgJson["widgets"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.WidgetDefinition>>();
+            themecfg.PageTypes = themecfgJson["pageTypes"] == null ? new List<PageTypeDefinition> (): themecfgJson["pageTypes"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>>();
+            themecfg.Widgets = themecfgJson["widgets"] == null ? new List<WidgetDefinition> (): themecfgJson["widgets"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.WidgetDefinition>>();
             themecfg.Settings =
                 (
                     from setting in themecfgJson["settings"].Children<JProperty>()
