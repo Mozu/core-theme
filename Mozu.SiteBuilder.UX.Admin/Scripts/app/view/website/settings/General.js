@@ -26,6 +26,7 @@ Ext.define('Taco.view.website.settings.General', {
         }, {
             xtype: 'textfield',
             name: 'link_title',
+            emptyText: '[page name]',
             fieldLabel: 'Navigation Link Name',
             width: '95%'
         }, {
@@ -43,6 +44,7 @@ Ext.define('Taco.view.website.settings.General', {
         }, {
             xtype: 'textfield',
             name: 'redirect_url',
+            emptyText: '[none]',
             width: '95%'
         }];
 
@@ -56,7 +58,16 @@ Ext.define('Taco.view.website.settings.General', {
         this.getForm().setValues(values);
     },
     persistFormValues: function () {
-        var values = this.getValues();
+        var values = this.getValues(),
+            removeEmptyFieldsTypes = ['redirect_url', 'link_title'];
+
+
+        Ext.each(removeEmptyFieldsTypes, function (fieldName) {
+            if (!values[fieldName] && !this.record.get(fieldName)) {
+                delete values[fieldName];
+            }
+        }, this);
+        
         
         this.record.beginEdit();
         this.record.set( values);

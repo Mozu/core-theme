@@ -54,6 +54,10 @@
             this._dirty = dirty;
             this.fireEvent('dirtychange', this, dirty);
         },
+        
+        isDirty: function () {
+            return this._dirty;
+        },
 
         resetDirtyState: function() {
             this._currentState = JSON.stringify(this.persistanceData());
