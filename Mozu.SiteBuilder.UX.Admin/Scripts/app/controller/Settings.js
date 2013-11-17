@@ -41,6 +41,7 @@ Ext.define('Taco.controller.Settings', {
 
     shipping: function () {
         Taco.app.setLoading();
+        
         if (!this.requiresSiteContext()) {
 
             Taco.model.SiteShippingSettings.load(123, {

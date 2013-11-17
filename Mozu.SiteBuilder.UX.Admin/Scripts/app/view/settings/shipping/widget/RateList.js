@@ -32,11 +32,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
     initComponent: function() {
         var me = this;
 
-        me.countryStore = Taco.core.data.StoreManager.getOrCreate({
-            type: 'Taco.store.Countries',
-            autoLoad: true,
-            createOnly:true
-        });
+        me.countryStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Countries');
         
         me.tools = this.getTools();
         
@@ -80,9 +76,9 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
                     '<div class="rate-item">',
                         '<div><span class="name">{name}</span><span class="amount">{amount:usMoney}</span></div>',
                         '<div class="type">',
-                            '<tpl if="type == \'FLAT_RATE_PER_ITEM_EXACT_AMOUNT\'">',
+                            '<tpl if="type == \'CUSTOM_FLAT_RATE_PER_ITEM_EXACT_AMOUNT\'">',
                                'Flat rate per item',
-                            '<tpl elseif="type==\'FLAT_RATE_PER_ORDER_EXACT_AMOUNT\'">',
+                            '<tpl elseif="type==\'CUSTOM_FLAT_RATE_PER_ORDER_EXACT_AMOUNT\'">',
                                 'Flat rate per order',
                             '<tpl else>',
                                 '{type}',

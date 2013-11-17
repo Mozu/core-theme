@@ -10,22 +10,11 @@
 
     Ext.define('Taco.store.Countries', {
         extend: 'Ext.data.Store',
-        fields: ['name', 'code'],
+        model: 'Taco.model.Country',
         pageSize: 800,
         remoteSort: false,
         remoteFilter: false,
-        proxy: {
-            type: 'ajax',
-            api: {
-                read: '/admin/app/Reference/countries/list'
-            },
-            reader: {
-                type: 'json',
-                root: 'items',
-                successProperty: 'success',
-                messageProperty: "message"
-            }   
-        },
+        
         storeManagerConfig: {
             clearFilters: true,
             clearSort: true,

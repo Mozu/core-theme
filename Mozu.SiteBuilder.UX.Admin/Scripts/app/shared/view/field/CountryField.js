@@ -5,7 +5,7 @@ Ext.define('Taco.shared.view.field.CountryField', {
     extend: 'Ext.ux.form.field.BoxSelect',
     alias: 'widget.taco-countryfield',
     requires: [
-        'Taco.store.CountryComboBox'
+        'Taco.store.Countries'
     ],
     
     width: 350,
@@ -24,7 +24,7 @@ Ext.define('Taco.shared.view.field.CountryField', {
 
         if (!me.store) {
             me.store = {
-                type: "Taco.store.Country"
+                type: "Taco.store.Countries"
             };
         }
         

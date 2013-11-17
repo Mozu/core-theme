@@ -3,7 +3,7 @@
   "about": {
     "name": "Core3",
     "author": "Volusion",
-    "extends": null,
+    "extends": "Core4",
     "isDesktop": true,
     "isMobile": false
   },
