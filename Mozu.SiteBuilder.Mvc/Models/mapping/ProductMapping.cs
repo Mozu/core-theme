@@ -85,7 +85,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 //.ForMember(x => x.LowerBoundSalePrice, op => op.MapFrom(x => x.PriceRange == null ? 0 : x.PriceRange.Lower.SalePrice))
                 //.ForMember(x => x.UpperBoundPrice, op => op.MapFrom(x => x.PriceRange == null ? 0 : x.PriceRange.Upper.Price));
 
-
+            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductPriceRange, ProductPriceRange>();
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Product, Product>();
                 //.ForMember(x => x.ProductName, op => op.MapFrom(x => x.Content.ProductName))
                 //.ForMember(x => x.ProductFullDescription, op => op.MapFrom(x => x.Content.ProductFullDescription))
