@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mozu.Core;
+using Mozu.Core.Behaviors;
 using Mozu.Core.Settings;
 using Newtonsoft.Json.Linq;
 using APIConstants = Mozu.Core.Api.Contracts.Constants;
@@ -43,7 +44,19 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         }
 
         private static Dictionary<string, string> _gUrls;
-        Lazy<string> _apiClaims = new Lazy<string>(() => LightweightAppClaims.CreateForPublicStorefront().ToAccessToken());
+        //todo:update core
+        private Lazy<string> _apiClaims = new Lazy<string>(() =>
+            {
+                var claim = LightweightAppClaims.CreateForPublicStorefront();
+                var list = claim.BehaviorIds.ToList();
+                list.Add(new WishlistCreateBehavior().Id);
+                list.Add(new WishlistDeleteBehavior().Id);
+                list.Add(new WishlistReadBehavior().Id);
+                list.Add(new WishlistUpdateBehavior().Id);
+                claim.BehaviorIds = list.ToArray();
+                return claim.ToAccessToken();
+            });
+            //LightweightAppClaims.CreateForPublicStorefront().ToAccessToken());
 
         private static Dictionary<string, string> BuildUrls(ISettings settings)
         {
