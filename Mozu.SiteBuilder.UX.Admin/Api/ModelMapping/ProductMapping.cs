@@ -77,7 +77,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<Product, DC.Product>()
 
-                .ForMember(dc => dc.InventoryInfo, op => op.MapFrom(p => new DC.ProductInventoryInfo(){ ManageStock = p.ManageStock, OutOfStockBehavior = p.OutOfStockBehavior }))
+                .ForMember(dc => dc.InventoryInfo, op => op.MapFrom(p => new DC.ProductInventoryInfo() { ManageStock = p.ManageStock, OutOfStockBehavior = string.IsNullOrEmpty( p.OutOfStockBehavior) ? "DisplayMessage" : p.OutOfStockBehavior }))
                 .ForMember(dc => dc.ProductCode, op => op.MapFrom(p => p.ProductCode))
                 .ForMember(dc => dc.Properties, op => op.MapFrom(p => p.Properties))
                 .ForMember(dc => dc.Options, op => op.MapFrom(p => p.Options))
