@@ -8,7 +8,7 @@ Ext.define('Taco.controller.Website', {
     views: ['website.Index'],
     editorView :'website.Index',
     // modelName: 'Website'
-    
+    requires:['Taco.store.WidgetDefinitions'],
 
     page: function () {
         var url = '';

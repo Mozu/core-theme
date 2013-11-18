@@ -2,9 +2,9 @@
  * @class Taco.view.website.settings.Templates
  */
 
-Ext.define('Taco.view.website.settings.CategoryDocument', {
+Ext.define('Taco.view.website.settings.WebDocument', {
     extend: 'Taco.core.ux.form.Form',
-    requires:[
+    requires: [
         'Taco.core.ux.form.field.PageTemplate'
     ],
 
@@ -20,7 +20,7 @@ Ext.define('Taco.view.website.settings.CategoryDocument', {
             xtype: 'taco.field.pagetemplate',
             name: 'template',
             fieldLabel: 'Page Template',
-            entityType: 'category'
+            entityType: 'webpage'
         }];
 
         this.callParent(arguments);
@@ -34,13 +34,13 @@ Ext.define('Taco.view.website.settings.CategoryDocument', {
     },
     persistFormValues: function () {
         var values = this.getValues();
-        
+
         Ext.Object.each(values, function (key, value) {
             if (!values[key] && !this.record.get(key)) {
                 delete values[key];
             }
         }, this);
-        
+
 
         this.record.beginEdit();
         this.record.set(values);

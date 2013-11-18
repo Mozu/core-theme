@@ -16,7 +16,8 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.website.WidgetEditor',
         'Taco.view.website.widgetEditors.HorizontalRule',
         'Taco.view.website.entityAdapters.SiteTemplateEntityAdapter',
-        'Taco.view.website.entityAdapters.TemplateEntityAdapter'
+        'Taco.view.website.entityAdapters.TemplateEntityAdapter',
+        'Ext.ux.IFrame'
     ],
 
     requiresContextOfType: ['s'],

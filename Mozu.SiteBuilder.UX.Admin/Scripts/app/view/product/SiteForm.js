@@ -11,6 +11,7 @@ Ext.define('Taco.view.product.SiteForm', {
     requires: [
         'Taco.view.product.subform.General',
         'Taco.view.product.subform.Inventory',
+        'Taco.view.product.subform.Options',
         'Taco.view.product.subform.Properties',
         'Taco.view.product.subform.Extras',
         'Taco.view.product.subform.Shipping',
@@ -73,6 +74,7 @@ Ext.define('Taco.view.product.SiteForm', {
         if (this.isSingleSite) {
             Ext.Array.push(items, [
                 Ext.create('Taco.view.product.subform.Inventory', subFormCfg),
+                Ext.create('Taco.view.product.subform.Options', subFormCfg),
                 Ext.create('Taco.view.product.subform.Properties', subFormCfg),
                 Ext.create('Taco.view.product.subform.Extras', subFormCfg),
                 Ext.create('Taco.view.product.subform.Shipping', subFormCfg)

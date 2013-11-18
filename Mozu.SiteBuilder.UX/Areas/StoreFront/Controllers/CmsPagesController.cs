@@ -114,10 +114,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             pc.MetaTitle = vm.Properties.GetValue("meta_title") as string;
             pc.PageType = (string)(vm.Properties.GetValue("page_type")) ?? "cmspage";
 
-            var template = ((string)(vm.Properties.GetValue("template")) ?? this.HttpContext.Request["template"] ?? "blank-page");
-
-
-            template = _hyprViewEngine.FindPageView(template) == null ? "blank-page" : template;
+           
 
             if (!this.PageContext.IsEditMode   )
             {
@@ -134,20 +131,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             }
 
+            var result = View("blank-page", vm);
+          
+            var overrideTemplate = PageContext.CmsContext.Page.Document.Get<string>("template");
+            if (!string.IsNullOrEmpty(overrideTemplate))
+            {
+                var template = this.SiteContext.Theme.PageTypes.FirstOrDefault(x => string.Equals(x.Id, overrideTemplate, StringComparison.OrdinalIgnoreCase));
+                if (template != null)
+                {
+                    result.ViewName  = template.Template ;    
+                }
+                
+            }
 
 
-            //return View(template, vm);
-            //var vr = _viewEngine .FindView(this.ControllerContext, template, null, true);
-            //if (vr.View == null)
-            //{
-            //    vr = _viewEngine.FindView(this.ControllerContext, "blankpage", null, true);
-            //}
-
-            //todo:lookup view and fall back to blankpage if theme doesnt support it.
-
-
-            var result = View(template ?? "blank-page", vm);
-
+            
             return this.Request.CreateResponse(HttpStatusCode.OK, result);
 
         }

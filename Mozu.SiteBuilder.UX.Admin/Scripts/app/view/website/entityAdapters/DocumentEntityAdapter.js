@@ -4,7 +4,10 @@
 
 Ext.define('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
     extend: 'Taco.view.website.entityAdapters.BaseEntityAdapter',
-    requires:['Taco.model.CmsDocument'],
+    requires: [
+        'Taco.model.CmsDocument',
+        'Taco.view.website.settings.General'
+    ],
     modelName: 'Taco.model.CmsDocument',
 
     allowedActions: {

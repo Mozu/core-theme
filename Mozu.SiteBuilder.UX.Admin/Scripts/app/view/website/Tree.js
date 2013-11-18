@@ -172,6 +172,13 @@ Ext.define('Taco.view.website.Tree', {
                     this.deleteLink(record);
                 }
             },
+            deletePage = {
+                text: 'Delete',
+                scope: scope,
+                handler: function () {
+                    this.deletePage(record);
+                }
+            },
             showProducts = {
                 text: 'Show Products',
                 scope: scope,
@@ -208,7 +215,8 @@ Ext.define('Taco.view.website.Tree', {
             items.push(rename);
             items.push(addLink);
             items.push(addPage);
-            
+            items.push(deletePage);
+
         }
         
 
@@ -230,16 +238,29 @@ Ext.define('Taco.view.website.Tree', {
             scope: this
         });
     },
+    deletePage: function (record) {
+        var cmsDoc = Ext.create('Taco.model.CmsDocument', {
+            id: record.get('originalCollection') + '_' + record.get('originalId'),
+            documentId: record.get('originalId'),
+            collectionName: record.get('originalCollection')
+            
+        });
+        cmsDoc.destroy({
+            success: function () {
+                console.log('link deleted');
+                record.destroy();
+            },
+            scope: this
+        });
+    },
     onRename: function (record) {
         this.cellEditor.allowEdit = true;
         this.cellEditor.startEdit(record, this.columns[0]);
         this.cellEditor.allowEdit = false;
     },
-    showPageCreator: function (tree, linked, record) {
+    showPageCreator: function (parentRecord) {
         var me = this,
             pageTypeDefinitionStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.PageTypeDefinitions'),
-            data = [],
-            storeCopy,
             dialog;
 
         pageTypeDefinitionStore.filter([{ property: "userCreatable", value: true }]);
@@ -297,8 +318,23 @@ Ext.define('Taco.view.website.Tree', {
                         });
 
                         cmsDoc.save({
-                            success: function () {
-                                me.fireEvent('pagecreate', dialog, cmsDoc, linked, record);
+                            success: function (cmsRecord) {
+                                var navRecord = Ext.create('Taco.model.NavigationTreeNode', {
+                                    id: 'page^^' + cmsRecord.get('collectionName') + '^^' + cmsRecord.get('documentId'),
+                                    editAction: 'move',
+                                    nodeType: 'page',
+                                    originalCollection:cmsRecord.get('collectionName'),
+                                    url:'/pages/' + cmsRecord.get('name'),
+                                    name:cmsRecord.get('name')
+                                    
+                                });
+                                navRecord.setDirty();
+                                parentRecord.appendChild(navRecord);
+                                navRecord.save();
+                                
+                                    //parentRecord
+                                me.fireEvent('pagecreate', navRecord);
+                                
                                 dialog.close();
                             },
                             failure: function () {
