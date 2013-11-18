@@ -1,5 +1,5 @@
 Ext.define('Taco.view.capability.Form', {
-    extend: 'Ext.panel.Panel',
+    extend: 'Taco.core.ux.form.Form',
     ui: 'subform',
     bodyPadding: '19 0',
     margin: '0 0 20 0',
