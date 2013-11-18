@@ -142,7 +142,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
             var localThemes = entitlements.Items.Where(x => x.ApplicationType == "Theme")
-                .Select(x => x.ApplicationVersionId.ToString())
+                .Select(x => x.ApplicationAssetPath )
                 .Union(Directory.GetDirectories(localThemeDir)
                 .Select(x => Path.GetFileName(x)));
 
