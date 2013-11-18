@@ -30,14 +30,16 @@ Ext.define('Taco.view.website.settings.General', {
             fieldLabel: 'Navigation Link Name',
             width: '95%'
         }, {
+            xtype: 'taco.field.pagetemplate',
+            name: 'template',
+            fieldLabel: 'Page Template',
+            entityType: 'webpage'
+        },
+        {
             xtype: 'checkboxfield',
             name: 'show_in_nav',
             boxLabel: 'Show in Navigation'
-        }, {
-            xtype: 'checkboxfield',
-            name: 'is_group_page',
-            boxLabel: 'Use this page only to group other pages'
-        }, {
+        },  {
             xtype: 'checkboxfield',
             name: '',
             boxLabel: 'Redirect page to'
@@ -58,13 +60,12 @@ Ext.define('Taco.view.website.settings.General', {
         this.getForm().setValues(values);
     },
     persistFormValues: function () {
-        var values = this.getValues(),
-            removeEmptyFieldsTypes = ['redirect_url', 'link_title'];
+        var values = this.getValues();
+        
 
-
-        Ext.each(removeEmptyFieldsTypes, function (fieldName) {
-            if (!values[fieldName] && !this.record.get(fieldName)) {
-                delete values[fieldName];
+        Ext.Object.each(values, function (key, value) {
+            if (!values[key] && !this.record.get(key)) {
+                delete values[key];
             }
         }, this);
         

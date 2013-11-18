@@ -687,6 +687,7 @@
     <Content Include="Scripts\app\view\orderAttribute\Index.js" />
     <Content Include="Scripts\app\view\order\widget\DiscountRowBody.js" />
     <Content Include="Scripts\app\view\pendingChange\Product.js" />
+    <Content Include="Scripts\app\view\product\subform\Options.js" />
     <Content Include="Scripts\app\view\product\subform\CrossSale.js" />
     <Content Include="Scripts\app\view\report\Header.js" />
     <Content Include="Scripts\app\view\report\Index.js" />
@@ -703,6 +704,7 @@
     <Content Include="Scripts\app\view\website\entityAdapters\TemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\misc\ExternalLinkEditor.js" />
     <Content Include="Scripts\app\view\website\settings\CatalogSeo.js" />
+    <Content Include="Scripts\app\view\website\settings\ProductDocument.js" />
     <Content Include="Scripts\app\view\website\WidgetEditor.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\BaseEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\CategoryEntityAdapter.js" />
@@ -715,7 +717,7 @@
     <Content Include="Scripts\app\view\website\settings\Facets\FacetRangeQueryGroup.js" />
     <Content Include="Scripts\app\view\website\settings\Facets\Facets.js" />
     <Content Include="Scripts\app\view\website\settings\General.js" />
-    <Content Include="Scripts\app\view\website\settings\Templates.js" />
+    <Content Include="Scripts\app\view\website\settings\WebDocument.js" />
     <Content Include="Scripts\app\view\website\Tree.js" />
     <Content Include="Scripts\app\view\website\Index.js" />
     <Content Include="Scripts\app\view\website\widgetEditors\AddThis.js" />

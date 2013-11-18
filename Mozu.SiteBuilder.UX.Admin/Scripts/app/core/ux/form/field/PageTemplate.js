@@ -21,6 +21,9 @@ Ext.define('Taco.core.ux.form.field.PageTemplate', {
             this.store.filter({ property: "entityType", value: this.entityType, root: 'data' });
         }
         this.callParent(arguments);
+    },
+    setValue:function() {
+        this.callParent(arguments);
     }
 
    

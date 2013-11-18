@@ -1,66 +1,57 @@
-﻿using System.Net.Http;
-using System.Web;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.ServiceModel.Syndication;
+using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Dependencies;
 using System.Web.Routing;
 using AutoMapper;
 using Autofac;
 using Mozu.Core;
-using Mozu.Core.Api.Contracts;
+using Mozu.Core.Api.Contracts.Client;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
-using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Extensions;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.ServiceModel.Syndication;
-using System.Threading.Tasks;
-
 using IProductWebApiClient = Mozu.ProductRuntime.Contracts.Clients.IProductRuntimeWebApiClient;
+using ProductCollection = Mozu.ProductRuntime.Contracts.ProductCollection;
+using ProductSearchResult = Mozu.ProductRuntime.Contracts.ProductSearchResult;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-
-
-    
     public class CatalogController : BaseApiController
     {
-        IProductWebApiClient   _productClient;
+        private readonly ISiteBuilderApiContext _apiCtx;
         private readonly ICategoryTreeProvider _categoryTreeProvider;
-        IProductSearchWebApiClient _searchClient;
-        
-        ISiteBuilderApiContext _apiCtx;
+        private readonly IProductWebApiClient _productClient;
+        private readonly IProductSearchWebApiClient _searchClient;
 
-        public CatalogController(ICategoryTreeProvider categoryTreeProvider, ISiteBuilderApiContext apiCtx, IProductWebApiClient productClient, IProductSearchWebApiClient searchClient, Autofac.ILifetimeScope lifetimeScope)
+        public CatalogController(ICategoryTreeProvider categoryTreeProvider, ISiteBuilderApiContext apiCtx, IProductWebApiClient productClient, IProductSearchWebApiClient searchClient, ILifetimeScope lifetimeScope)
         {
-            
-            
-     
-
-
             _categoryTreeProvider = categoryTreeProvider;
             _searchClient = searchClient;
             _productClient = productClient;
             _apiCtx = apiCtx;
-
         }
-         [System.Web.Http.HttpGet]
-        public async Task<HttpResponseMessage> ProductDetail(string productCode)
-         {
-             
 
-            var res = await _productClient.GetProduct(productCode, null, "Categories,Properties,Options", PageContext.IsEditMode);
-        
-            if ( !res.ResponseMessage.IsSuccessStatusCode )
+        private RequestContext RequestContext
+        {
+            get { return new RequestContext(HttpContext, new RouteData()); }
+        }
+
+        [HttpGet]
+        public async Task<HttpResponseMessage> ProductDetail(string productCode)
+        {
+            ServiceClientResponse<ProductRuntime.Contracts.Product> res = await _productClient.GetProduct(productCode, null, "Categories,Properties,Options", PageContext.IsEditMode);
+
+            if (!res.ResponseMessage.IsSuccessStatusCode)
             {
                 if (res.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
@@ -69,79 +60,85 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     {
                         if (res.HasException)
                         {
-                            var ex = res.ReadException();
+                            Exception ex = res.ReadException();
                             throw ex;
                         }
                     }
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "Product not found");
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Product not found");
                 }
-               
             }
-            var prod = res.ReadAsAsync().Result;
-            var product = Mapper.Map<Models.StoreFront.Catalog.Product>(prod);
+            ProductRuntime.Contracts.Product prod = res.ReadAsAsync().Result;
+            var product = Mapper.Map<Product>(prod);
 
             SetCatalogContext(product);
 
             PageContext.PageType = "product";
             PageContext.ProductCode = productCode;
-             PageContext.MetaDescription = prod.Content.MetaTagDescription;
-             PageContext.MetaTitle = prod.Content.MetaTagTitle ;
-             PageContext.MetaKeywords = prod.Content.MetaTagKeywords;
-    
+            PageContext.MetaDescription = prod.Content.MetaTagDescription;
+            PageContext.MetaTitle = prod.Content.MetaTagTitle;
+            PageContext.MetaKeywords = prod.Content.MetaTagKeywords;
 
-            PageContext.CmsContext = new CmsPageContext()
+
+            PageContext.CmsContext = new CmsPageContext
+                                         {
+                                             Template = new DocumentRequest
+                                                            {
+                                                                Path = "product"
+                                                            },
+                                             Page = new DocumentRequest
+                                                        {
+                                                            Path = "product-" + productCode,
+                                                            Collection = "catalog_pages",
+                                                            DocumentType = "catalog_page"
+                                                        }
+                                         };
+            ViewResult result = View("product", product);
+
+            await InitCmsContext();
+            var overrideTemplate = PageContext.CmsContext.Page.Document.Get<string>("template");
+            if (!string.IsNullOrEmpty(overrideTemplate))
             {
-                Template = new DocumentRequest()
+                var template = this.SiteContext.Theme.PageTypes.FirstOrDefault(x => string.Equals(x.Id, overrideTemplate, StringComparison.OrdinalIgnoreCase));
+                if (template != null)
                 {
-                    Path = "product"
-                },
-                Page = new DocumentRequest()
-                {
-                    Path = "product-" + productCode,
-                    Collection = "catalog_pages"
+                    result.ViewName = template.Template ;    
                 }
+                
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
 
-
-            };
-
-
-
-
-            //SiteContext.PageContext.WidgetCreationTags.Add ("product-" + productCode);
-            //SiteContext.PageContext.WidgetQuery.Add ("product");
-
-             return this.Request.CreateResponse(HttpStatusCode.OK, View("product", product));
-         }
-         [System.Web.Http.HttpGet]
-        public ActionResult ProductListing(int? categoryId= null , string sortBy = null, int? startIdx = null, int? itemsPerPage = null,  List<object> productCodes = null , bool? includeFacets=null, bool? useUrlParams=null)
+        [HttpGet]
+        public ActionResult ProductListing(int? categoryId = null, string sortBy = null, int? startIdx = null, int? itemsPerPage = null, List<object> productCodes = null, bool? includeFacets = null, bool? useUrlParams = null)
         {
-
-            categoryId = categoryId.GetValueOrDefault(-1) <1  ? null : categoryId;
-            if (useUrlParams.GetValueOrDefault(false)) {
-                var itemsPerPageParam = HttpRequestBase.QueryString["pageSize"];
-                var startIndexParam = HttpRequestBase.QueryString["startIndex"];
+            categoryId = categoryId.GetValueOrDefault(-1) < 1 ? null : categoryId;
+            if (useUrlParams.GetValueOrDefault(false))
+            {
+                string itemsPerPageParam = HttpRequestBase.QueryString["pageSize"];
+                string startIndexParam = HttpRequestBase.QueryString["startIndex"];
                 itemsPerPage = String.IsNullOrWhiteSpace(itemsPerPageParam) ? Convert.ToInt32(SiteContext.ThemeSettings["defaultPageSize"]) : Convert.ToInt32(itemsPerPageParam);
                 startIdx = String.IsNullOrWhiteSpace(startIndexParam) ? 0 : Convert.ToInt32(startIndexParam);
-            } else {
+            }
+            else
+            {
                 itemsPerPage = itemsPerPage.GetValueOrDefault(Convert.ToInt32(SiteContext.ThemeSettings["defaultPageSize"]));
                 startIdx = startIdx.GetValueOrDefault(0);
             }
-            var recurse = categoryId.HasValue ;
+            bool recurse = categoryId.HasValue;
             string filter = null;
             if (productCodes != null && productCodes.Count > 0)
             {
-                var productCodes2 = productCodes.Select(x => x.ToString()).Where( x=> !string.IsNullOrWhiteSpace(x)).Select(x => string.Format("productCode eq {0}", x)).ToList();
+                List<string> productCodes2 = productCodes.Select(x => x.ToString()).Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => string.Format("productCode eq {0}", x)).ToList();
                 if (productCodes2.Count > 0)
                 {
                     filter = string.Join(" or ", productCodes2);
                 }
-                
+
                 itemsPerPage = productCodes.Count;
-             
             }
             if (categoryId.HasValue)
             {
-                if ( !string.IsNullOrWhiteSpace( filter))
+                if (!string.IsNullOrWhiteSpace(filter))
                 {
                     filter = "(categoryId req " + categoryId + ") and (" + filter + ")";
                 }
@@ -154,86 +151,68 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             // recurse: recurse,
             try
             {
-
-                
-
-                if (includeFacets.GetValueOrDefault(false) && categoryId.HasValue )
+                if (includeFacets.GetValueOrDefault(false) && categoryId.HasValue)
                 {
                     string facetValueFilter = HttpRequestBase.QueryString["facetValueFilter"];
-                    var pcDC = _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate:"categoryId:" + categoryId, facetHierValue: "categoryId:" + categoryId, facetHierDepth : "categoryId:2", facetValueFilter: facetValueFilter).Result.ReadAsSync();
-                    var pc = Mapper.Map<ProductSearchResult>(pcDC);
+                    ProductSearchResult pcDC = _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate: "categoryId:" + categoryId, facetHierValue: "categoryId:" + categoryId, facetHierDepth: "categoryId:2", facetValueFilter: facetValueFilter).Result.ReadAsSync();
+                    var pc = Mapper.Map<Models.StoreFront.Catalog.ProductSearchResult>(pcDC);
                     return PartialView(pcDC);
                 }
                 else
                 {
-                    var pcDC = _productClient.GetProducts(filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, responseGroups: "Categories,Measurements,Properties,Options").Result.ReadAsSync();
-                    var pc = Mapper.Map<ProductCollection>(pcDC);
+                    ProductCollection pcDC = _productClient.GetProducts(filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, responseGroups: "Categories,Measurements,Properties,Options").Result.ReadAsSync();
+                    var pc = Mapper.Map<Models.StoreFront.Catalog.ProductCollection>(pcDC);
                     return PartialView(pc);
-                
                 }
 
                 //`
                 //pc.Paging.CurrentSort = sortBy;
                 //pc.Paging.StartIndex = startIdx;
                 //pc.Paging.UrlBase = "?";
-
-
-
-                
             }
             catch (Exception ex)
             {
-                return new ContentResult() {Content = "[product service error]: " + ex.Message};
+                return new ContentResult {Content = "[product service error]: " + ex.Message};
             }
         }
-         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Store ()
-         {
-             var catList = await _categoryTreeProvider.GetAllCategories();
-            var cat = new Category()
-            {
-                Content = new CategoryContent (){Name = "Store"}
-               
-            };
-            this.PageContext.PageType = "category";
+
+        [HttpGet]
+        public async Task<ActionResult> Store()
+        {
+            List<Category> catList = await _categoryTreeProvider.GetAllCategories();
+            var cat = new Category
+                          {
+                              Content = new CategoryContent {Name = "Store"}
+                          };
+            PageContext.PageType = "category";
             PageContext.CategoryId = -1;
             cat.ChildrenCategories = catList.Where(x => x.ParentCategory == null).ToList();
             return View("Category", cat);
         }
 
-        private RequestContext RequestContext
-        {
-            get { return new RequestContext(this.HttpContext, new RouteData()); }
-        }
-
         [InitCmsPageContextActionFilter]
-         [System.Web.Http.HttpGet]
-        public async Task<HttpResponseMessage > Category(int? categoryId = null, string sortBy = null, int? page = null, int? itemsPerPage = null )
+        [HttpGet]
+        public async Task<HttpResponseMessage> Category(int? categoryId = null, string sortBy = null, int? page = null, int? itemsPerPage = null)
         {
             PageContext.PageType = "category";
             PageContext.CategoryId = categoryId;
 
-          
-            var feedUrl = HttpRequestBase.Url;
 
-             PageContext.FeedUrl = "/feeds/category/" + categoryId;
+            Uri feedUrl = HttpRequestBase.Url;
 
-             
-
-             var catList = await _categoryTreeProvider.GetAllCategories();
-            
+            PageContext.FeedUrl = "/feeds/category/" + categoryId;
 
 
+            List<Category> catList = await _categoryTreeProvider.GetAllCategories();
 
-            var cat = catList.Where(x => x.CategoryId == categoryId.GetValueOrDefault (-1)).FirstOrDefault();
+
+            Category cat = catList.Where(x => x.CategoryId == categoryId.GetValueOrDefault(-1)).FirstOrDefault();
             //SiteContext.PageContext.WidgetCreationTags.Add("category-" + categoryId );
             //SiteContext.PageContext.WidgetQuery.Add("category");
 
             if (cat == null)
             {
-                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "category not found");
-
-                 
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "category not found");
             }
 
 
@@ -241,47 +220,46 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.MetaTitle = cat.Content.MetaTagTitle;
             PageContext.MetaKeywords = cat.Content.MetaTagKeywords;
 
-             var lts = (ILifetimeScope) this.ControllerContext.Request.GetDependencyScope().GetService(typeof (ILifetimeScope));
+            var lts = (ILifetimeScope) ControllerContext.Request.GetDependencyScope().GetService(typeof (ILifetimeScope));
 
-             
+
             PageContext.Title = cat.Name;
 
-            PageContext.CmsContext = new CmsPageContext()
-            {
-                Template = new DocumentRequest()
-                {
-                    Path = "category"
-                },
-                Page = new DocumentRequest()
-                           {
-                               Path ="category-"+ categoryId ,
-                               Collection = "catalog_pages",
-                               DocumentType = "catalog_page"
-                           }
+            PageContext.CmsContext = new CmsPageContext
+                                         {
+                                             Template = new DocumentRequest
+                                                            {
+                                                                Path = "category"
+                                                            },
+                                             Page = new DocumentRequest
+                                                        {
+                                                            Path = "category-" + categoryId,
+                                                            Collection = "catalog_pages",
+                                                            DocumentType = "catalog_page"
+                                                        }
+                                         };
 
-            };
-          
             ;
 
             SetCatalogContext(cat);
 
-            var result = View(cat);
+            ViewResult result = View(cat);
 
 
-            var ret = await this.InitCmsContext();
-            if (this.PageContext.CmsContext.Page.Document != null )
+            await InitCmsContext();
+            var overrideTemplate = PageContext.CmsContext.Page.Document.Get<string>("template");
+            if (!string.IsNullOrEmpty(overrideTemplate))
             {
-                var overrideTemplate = this.PageContext.CmsContext.Page.Document.Get<string>("template");
-                if (!string.IsNullOrEmpty(overrideTemplate))
+                var template = this.SiteContext.Theme.PageTypes.FirstOrDefault(x => string.Equals(x.Id, overrideTemplate, StringComparison.OrdinalIgnoreCase));
+                if (template != null)
                 {
-                    result.ViewName = overrideTemplate;
+                    result.ViewName = template.Template ;    
                 }
-                    
+                
             }
 
-            
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, result);
+            return Request.CreateResponse(HttpStatusCode.OK, result);
 
             //.Result.ReadAsSync();
             //AutoMapper.Mapper.Map< Category>( cat );
@@ -289,48 +267,43 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
-         [System.Web.Http.HttpGet]
-        public async Task< HttpResponseMessage>  CategoryFeed(int? categoryId = null)
+        [HttpGet]
+        public async Task<HttpResponseMessage> CategoryFeed(int? categoryId = null)
         {
-            var itemsPerPage = 10;
-            var startIdx = 0;
+            int itemsPerPage = 10;
+            int startIdx = 0;
             // TODO: Sort by Date Last Modified DESC
-            string sortBy = null;// "CreateDate DESC";
+            string sortBy = null; // "CreateDate DESC";
 
-            var catList = await _categoryTreeProvider.GetAllCategories();
-            var cat = catList.Where(x => x.CategoryId == categoryId.GetValueOrDefault(-1)).FirstOrDefault();
+            List<Category> catList = await _categoryTreeProvider.GetAllCategories();
+            Category cat = catList.Where(x => x.CategoryId == categoryId.GetValueOrDefault(-1)).FirstOrDefault();
             if (cat == null)
             {
-                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "category not found");
-
-                
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "category not found");
             }
-         
-            var feedUrl = HttpRequestBase.Url;
+
+            Uri feedUrl = HttpRequestBase.Url;
             Int32.TryParse(HttpRequestBase.QueryString["startIndex"], out startIdx);
 
             // Get Results and populate feed
 
-            var resp = ProductListing(categoryId, sortBy, startIdx, itemsPerPage, null, false, false);
+            ActionResult resp = ProductListing(categoryId, sortBy, startIdx, itemsPerPage, null, false, false);
             if (!(resp is PartialViewResult))
             {
-                return this.Request.CreateResponse(HttpStatusCode.OK, resp);
-
+                return Request.CreateResponse(HttpStatusCode.OK, resp);
             }
-             
-            var result = ((PartialViewResult)resp).Model as ProductCollection;
 
-             var feed = new SyndicationFeed(cat.Name, cat.Name, new Uri(feedUrl, ""));
+            var result = ((PartialViewResult) resp).Model as Models.StoreFront.Catalog.ProductCollection;
+
+            var feed = new SyndicationFeed(cat.Name, cat.Name, new Uri(feedUrl, ""));
 
             feed.Items = result.Items.Select(item =>
                 {
                     var si = new SyndicationItem(
                         item.ProductName,
                         item.Content.ProductShortDescription + (item.Content.ProductImages.Main != null ? string.Format("<br /><img src=\"{0}\" />", new Uri(feedUrl, item.Content.ProductImages.Main.ImageUrl)) : ""),
-                        
-                        
-                        new Uri(feedUrl, "/product/"+ item.ProductCode  ),
-                        string.Format("{0}-{1}", item.ProductCode, item.CreateDate.Ticks  /* TODO: replace with ModifiedDate */),
+                        new Uri(feedUrl, "/product/" + item.ProductCode),
+                        string.Format("{0}-{1}", item.ProductCode, item.CreateDate.Ticks /* TODO: replace with ModifiedDate */),
                         item.CreateDate /* TODO: replace with ModifiedDate */
                         );
                     item.Categories.ForEach(itemCat => si.Categories.Add(new SyndicationCategory(itemCat.Name)));
@@ -339,30 +312,29 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             // Pagination
 
-            if (result.CurrentPage>1)
+            if (result.CurrentPage > 1)
             {
-                var idx = Math.Min(0, result.StartIndex - result.PageSize);
+                int idx = Math.Min(0, result.StartIndex - result.PageSize);
                 var uri = new Uri(feedUrl, "?startIndex=" + idx);
-                feed.Links.Add(new SyndicationLink(uri) { RelationshipType = "prev" });
+                feed.Links.Add(new SyndicationLink(uri) {RelationshipType = "prev"});
             }
             if (result.CurrentPage < result.PageCount)
             {
-                var idx = result.StartIndex + result.PageSize;
+                int idx = result.StartIndex + result.PageSize;
                 var uri = new Uri(feedUrl, "?startIndex=" + idx);
-                feed.Links.Add(new SyndicationLink(uri) { RelationshipType = "next" });
+                feed.Links.Add(new SyndicationLink(uri) {RelationshipType = "next"});
             }
 
-            var res= new RssActionResult() { Feed = feed };
-            return this.Request.CreateResponse(HttpStatusCode.OK, res);
-
+            var res = new RssActionResult {Feed = feed};
+            return Request.CreateResponse(HttpStatusCode.OK, res);
         }
 
         /// <summary>
-        /// Updates the SiteContext.CatalogContext with the current product.
+        ///     Updates the SiteContext.CatalogContext with the current product.
         /// </summary>
         private void SetCatalogContext(Product product)
         {
-           // _ctx.CatalogContext.CurrentProduct = product;
+            // _ctx.CatalogContext.CurrentProduct = product;
             NavigationContext.SetContext(product);
         }
 
@@ -370,6 +342,5 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             NavigationContext.SetContext(category);
         }
-       
     }
 }

@@ -4,24 +4,81 @@
 
 Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
     extend: 'Taco.view.website.entityAdapters.BaseEntityAdapter',
-
+    requires: [
+        'Taco.view.website.settings.CatalogSeo',
+        'Taco.view.website.settings.ProductDocument'
+    ],
     modelName: 'Taco.model.Product',
 
- 	allowedActions: {
+    allowedActions: {
         copy: false,
         preview: true,
         destroy: false
     },
+    load: function () {
+        var me = this,
+            key = this.getId(),
+            modelFactory = Ext.ModelManager.getModel(this.modelName),
+            store = this.getStore();
 
-    doFormView: function () {
-        Taco.core.StateManager.attemptNavigate('products/edit/' + this.get().getId());
+
+        me.model = store.getById(key);
+
+
+        if (me.model === null) {
+            me.isLoading = true;
+            modelFactory.load(key, {
+                success: function (record) {
+                    me.set(record, true);
+                }
+            });
+        } else {
+            this.set(this.model);
+        }
+
+        this.fetchCmsPageDoc();
+
+
     },
+    
+    set: function (model, add) {
+        this.isLoading = false;
+        if (model.$className == this.modelName) {
+            this.model = model;
+        } else {
+            this.cmsPageDoc = model;
+        }
+        if (this.model && this.cmsPageDoc) {
+            this.fireEvent('load', this);
+        }
+
+    },
+    fetchCmsPageDoc: function () {
+        var me = this,
+            cmsDoc,
+            pageReq = me.pageContext.cmsContext.page;
+
+        if (pageReq.id) {
+            Taco.model.CmsDocument.load(pageReq.collection + '_' + pageReq.id, {
+                success: function (doc) {
+                    me.set(doc);
+                }
+            });
+        } else {
+            cmsDoc = Ext.create('Taco.model.CmsDocument', {
+                documentType: pageReq.documentType,
+                name: pageReq.path,
+                collectionName: pageReq.collection
+            });
+            me.set(cmsDoc);
+        }
+    },
+    
+    
 
     getId: function () {
         return this.pageContext.productCode;
-    },
-
-    
+    },    
 
     getStore: function () {
         return Taco.core.data.StoreManager.getOrCreate('Taco.store.Products');
@@ -44,18 +101,19 @@ Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
         });
         this.callParent(arguments);
     },
+    getCmsPageDoc: function () {
+        return this.cmsPageDoc;
+    },
     getPageSettings: function () {
         var me = this;
 
-        return [
-            
-            //Ext.create('Taco.view.website.settings.CategoryDocument', {
-            //    record: me.getCmsPageDoc()
-            //}),
+        return [            
+            Ext.create('Taco.view.website.settings.ProductDocument', {
+                record: me.getCmsPageDoc()
+            }),
             Ext.create('Taco.view.website.settings.CatalogSeo', {
                 record: me.get().getProductInCatalog()
             })
         ];
     }
-
 });

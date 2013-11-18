@@ -66,7 +66,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
              //   stockOnHand,
                 outOfStockState
             ]
-        }, options];
+        }];
 
         this.callParent(arguments);
        
