@@ -49,7 +49,10 @@ Ext.define('Taco.view.siteSelection.Index', {
                                     '<img class="thumbnail" src="/_gosite/{[values.id]}?redir=sitethumbnail">',
                                 '</li>',
                     '</tpl>',
-                '</ul>'
+                '</ul>',
+                '<tpl if="Ext.isEmpty(site)">',
+                    'There are no Mozu-hosted storefronts enabled.',
+                '</tpl>'
                 ],
                 listeners: {
                     click: {
