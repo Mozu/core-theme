@@ -164,11 +164,11 @@ Ext.define('Taco.store.Navigation', {
                 "id": "generalsettings",
                 "label": "General Settings",
                 "address": "generalsettings"
-            }, {
+            }/*, {
                 "id": "emailsettings",
                 "label": "Email",
                 "address": "email"
-            }, {
+            }*/, {
                 "id": "paymentcheckout",
                 "label": "Payment & Checkout",
                 "address": "settings/paymentAndCheckout"
