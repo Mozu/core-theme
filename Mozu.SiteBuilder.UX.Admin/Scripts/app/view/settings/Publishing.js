@@ -9,6 +9,9 @@ Ext.define('Taco.view.settings.Publishing', {
 
     cls: 'taco-publishing-settings',
 
+    // TODO: change this back once we enable do CMS publishing integration work
+    hideCmsOptions: true,
+
     initComponent: function () {
         
         this.header.title = 'Publish Settings';
@@ -23,6 +26,7 @@ Ext.define('Taco.view.settings.Publishing', {
 
     buildItems: function () {
         var items = [];
+        var me = this;
 
         this.suspendSetValue = false;
 
@@ -91,63 +95,65 @@ Ext.define('Taco.view.settings.Publishing', {
             // Get out of there are no sites, bitch!!!
             if (!masterCatalog.sites.length) return;
 
-            Ext.Array.push(subitems, {
-                html: 'Content Publishing',
-                cellCls: 'content'
-            }, {}, {});
-
-            Ext.each(masterCatalog.sites, function (site) {
-                var liveContentRadio,
-                    stagedContentRadio;
-
-                liveContentRadio = Ext.widget({
-                    xtype: 'radio',
-                    inputValue: 'Live',
-                    checked: true,
-                    name: 'content-publishing-' + site.id,
-                    cellCls: 'site radio',
-                    listeners: {
-                        change: function (field) {
-                            site.updateContentPublishingMode(field.getValue() ? 'Live' : 'Pending');
-                        },
-                        click: {
-                            fn: function (e) {
-                                this.confirmLive(liveContentRadio);
-                            },
-                            element: 'inputEl'
-                        },
-                        scope: this
-                    }
-                });
-
-                liveContentRadio.setValue = Ext.bind(function () {
-                    if (!this.suspendSetValue) {
-                        liveContentRadio.__proto__.setValue.apply(liveContentRadio, arguments);
-                    }
-                }, this);
-
-                stagedContentRadio = Ext.widget({
-                    xtype: 'radio',
-                    inputValue: 'Pending',
-                    checked: false,
-                    name: 'content-publishing-' + site.id,
-                    cellCls: 'site radio'
-                });
-
-                stagedContentRadio.setValue = Ext.bind(function () {
-                    if (!this.suspendSetValue) {
-                        stagedContentRadio.__proto__.setValue.apply(stagedContentRadio, arguments);
-                    }
-                }, this);
-
+            if (!me.hideCmsOptions) {
                 Ext.Array.push(subitems, {
-                    html: site.name,
-                    cellCls: 'site site-name'
-                },
-                    liveContentRadio,
-                    stagedContentRadio
-                );
-            }, this);
+                    html: 'Content Publishing',
+                    cellCls: 'content'
+                }, {}, {});
+
+                Ext.each(masterCatalog.sites, function (site) {
+                    var liveContentRadio,
+                        stagedContentRadio;
+
+                    liveContentRadio = Ext.widget({
+                        xtype: 'radio',
+                        inputValue: 'Live',
+                        checked: true,
+                        name: 'content-publishing-' + site.id,
+                        cellCls: 'site radio',
+                        listeners: {
+                            change: function (field) {
+                                site.updateContentPublishingMode(field.getValue() ? 'Live' : 'Pending');
+                            },
+                            click: {
+                                fn: function (e) {
+                                    this.confirmLive(liveContentRadio);
+                                },
+                                element: 'inputEl'
+                            },
+                            scope: this
+                        }
+                    });
+
+                    liveContentRadio.setValue = Ext.bind(function () {
+                        if (!this.suspendSetValue) {
+                            liveContentRadio.__proto__.setValue.apply(liveContentRadio, arguments);
+                        }
+                    }, this);
+
+                    stagedContentRadio = Ext.widget({
+                        xtype: 'radio',
+                        inputValue: 'Pending',
+                        checked: false,
+                        name: 'content-publishing-' + site.id,
+                        cellCls: 'site radio'
+                    });
+
+                    stagedContentRadio.setValue = Ext.bind(function () {
+                        if (!this.suspendSetValue) {
+                            stagedContentRadio.__proto__.setValue.apply(stagedContentRadio, arguments);
+                        }
+                    }, this);
+
+                    Ext.Array.push(subitems, {
+                        html: site.name,
+                        cellCls: 'site site-name'
+                    },
+                        liveContentRadio,
+                        stagedContentRadio
+                    );
+                }, this);
+            }
 
             items.push({
                 ui: 'subform',
