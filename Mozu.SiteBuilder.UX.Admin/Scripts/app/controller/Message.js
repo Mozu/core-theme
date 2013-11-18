@@ -8,6 +8,11 @@ Ext.define('Taco.controller.Message', {
 
     messages: new Ext.util.MixedCollection(),
 
+    refs: [{
+        ref: 'header',
+        selector: 'contentheader'
+    }],
+
     init: function () {
         var me = this;
 
@@ -17,6 +22,13 @@ Ext.define('Taco.controller.Message', {
         });
 
         me.displayMessages = Ext.Function.createBuffered(function() {
+            var header = me.getHeader();
+
+            if (header && header.isComponent) {
+                header.addCls('taco-has-message');
+                header.updateLayout();
+            }
+
             me.messages.each(function (item, index) {
                 var prevMessage;
 
@@ -34,6 +46,22 @@ Ext.define('Taco.controller.Message', {
         }, 300, me);
 
         me.callParent(arguments);
+
+        me.messages.on({
+            remove: {
+                scope: me,
+                fn: function () {
+                    if (me.messages.getCount() < 1) {
+                        var header = me.getHeader();
+
+                        if (header && header.isComponent) {
+                            header.removeCls('taco-has-message');
+                            header.updateLayout();
+                        }
+                    }
+                }
+            }
+        });
 
         Taco.core.StateManager.on({
             navigate: {

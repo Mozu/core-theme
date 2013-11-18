@@ -27,6 +27,10 @@
     .#{$vprefix}content-header {
       border-bottom: 1px solid border-for($color-neutral-95);
       padding: 17px 30px;
+
+      &.#{$vprefix}has-message {
+        padding-top: 80px;
+      }
       
       h1 {
         font-size: px-to-rem(24);

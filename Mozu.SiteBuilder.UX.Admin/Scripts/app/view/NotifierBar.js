@@ -12,8 +12,8 @@
         minHeight: 40,
         overflowY: 'hidden',
         ui: 'modal',
-        width: '75%',
-        y: 108,
+        width: '96%',
+        y: 126,
 
         layout: {
             type: 'fit'
