@@ -67,10 +67,19 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             int intId;
 
             // if the id is an integer, try to get it from the network file share. otherwise, try to find it locally.
-            if (int.TryParse(id, out intId))
-                tmd.ThemePath = Path.GetFullPath(DevThemePath + id);
-            else
-                tmd.ThemePath = Path.GetFullPath(LocalThemePath +"//"+ id);
+            //if (int.TryParse(id, out intId))
+            //    tmd.ThemePath = Path.GetFullPath(DevThemePath + id);
+            //else
+            //    tmd.ThemePath = Path.GetFullPath(LocalThemePath +"//"+ id);
+
+            foreach (var path in this.ThemePaths)
+            {
+                tmd.ThemePath = Path.GetFullPath(path + "//" + id);
+                if (Directory.Exists(tmd.ThemePath))
+                {
+                    break;
+                }
+            }
 
             if (!Directory.Exists(tmd.ThemePath))
                 return null;
@@ -99,6 +108,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             var tmd = new ThemeMetaData { Id = id };
 
             int intId;
+
 
             // if the id is an integer, try to get it from the network file share. otherwise, try to find it locally.
             if (int.TryParse(id, out intId))
@@ -154,7 +164,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             themecfg.Widgets = themecfgJson["widgets"] == null ? new List<WidgetDefinition> (): themecfgJson["widgets"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.WidgetDefinition>>();
             themecfg.Settings =
                 (
-                    from setting in themecfgJson["settings"].Children<JProperty>()
+                from setting in ( themecfgJson["settings"] == null ? new JArray( ) : themecfgJson["settings"] ).Children<JProperty>()
                     select new ThemeSetting { Id = setting.Name, DefaultValue = setting.Value, DeclaredInFile = fileName }
                 ).ToList();
 
@@ -219,7 +229,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             get
             {
-                var devPrefix = _settings.AppSettings("AppDevFileShare");
+                var devPrefix = _settings.AppSettings("DevPackageFileShare");
                 return Path.GetFullPath(devPrefix +"\\themes\\" );
             }
         }
@@ -228,7 +238,25 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             get
             {
-                var devPrefix = _settings.AppSettings("AppDevFileShare");
+                var devPrefix = _settings.AppSettings("DevPackageFileShare");
+                return Path.GetFullPath(devPrefix + "\\widgets\\");
+            }
+        }
+
+        private string CertifiedThemePath
+        {
+            get
+            {
+                var devPrefix = _settings.AppSettings("CertifiedPackageFileShare");
+                return Path.GetFullPath(devPrefix + "\\themes\\");
+            }
+        }
+
+        public string CertifiedAddonPath
+        {
+            get
+            {
+                var devPrefix = _settings.AppSettings("CertifiedPackageFileShare");
                 return Path.GetFullPath(devPrefix + "\\widgets\\");
             }
         }
@@ -269,6 +297,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             get
             {
+                yield return CertifiedThemePath;
                 yield return DevThemePath;
                 yield return LocalThemePath;
             }
@@ -278,6 +307,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             get
             {
+                yield return CertifiedAddonPath;
                 yield return DevAddonPath;
                 yield return LocalAddonPath;
             }
