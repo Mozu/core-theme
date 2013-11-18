@@ -61,7 +61,13 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
                 }
             });
 
-
+            tasks.on('complete', function (endTasks) {
+                if (Ext.isEmpty(endTasks.errors)) {
+                    this.editor.resetDirtyState();
+                }
+                
+            }, this);
+            
             tasks.add({
                 fn: function (t) {
 

@@ -107,6 +107,16 @@ Ext.define('Taco.view.website.Tree', {
                     }
                 }
             },
+            itemcontextmenu: {
+                scope: this,
+                fn: function (tree, record, item, index, e, eOpts) {
+                    var url = record.get('url');
+                    this.menu.removeAll();
+                    this.menu.add(this.getMenuItems(record, this));
+                    this.menu.showBy(item, null, [-5, 0]);
+                    e.stopEvent();
+                }
+            },
             additemclick: {
                 scope: this,
                 fn: 'showPageCreator'
