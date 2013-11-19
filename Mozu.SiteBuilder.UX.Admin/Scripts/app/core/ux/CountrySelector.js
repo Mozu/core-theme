@@ -2,10 +2,19 @@
  * @class Taco.core.ux.CountrySelector
  */
 
+/*
+
+// deprecated;
+
+
+
 Ext.define('Taco.core.ux.CountrySelector', {
     extend: 'Taco.core.ux.TreeList',
     alias: 'widget.countryselector',
-    requires: ['Taco.store.CountryComboBox'],
+    requires: [
+        'Taco.store.CountryComboBox'
+
+    ],
     flex: 1,
 
     initComponent: function () {
@@ -46,4 +55,4 @@ Ext.define('Taco.core.ux.CountrySelector', {
             });
         }
     }
-});
+});*/

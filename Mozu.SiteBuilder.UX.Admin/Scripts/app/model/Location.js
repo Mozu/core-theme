@@ -74,7 +74,7 @@ Ext.define('Taco.model.Location', {
                 "cityOrTown": "",
                 "stateOrProvince": "",
                 "countryCode": "",
-                "zipCode": "",
+                "postalOrZipCode": "",
                 "addressType": {}, // tbd. not sure what this is. Roeder said he would back to me on this.				
                 "addressIsValidated": false
             }

@@ -38,6 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationHelpers
                     return string.Format("({1} eq {0})", filter.value, STATE);
                 case "countrycode":
                     return string.Format("({1} eq {0})", filter.value, COUNTRYCODE);
+                case "postalorzipcode":
                 case "zipcode":
                     return string.Format("({1} eq {0})", filter.value, ZIPCODE);
                 case "code":

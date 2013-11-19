@@ -1,6 +1,6 @@
 ﻿/**
  * @class Taco.core.ux.form.field.EditableDisplayField 
- * 
+ * provide a tpl for field rendering or override the renderer method;
  */
 Ext.define('Taco.core.ux.form.field.EditableDisplayField', {
     extend: 'Ext.form.field.Display',
@@ -11,20 +11,35 @@ Ext.define('Taco.core.ux.form.field.EditableDisplayField', {
     initComponent: function () {
         this.callParent(arguments);
     },
+
+    // Array of strings or XTemplate component that will be used to render the field automatically;
+    tpl: null, 
+
+    // override this method if you need to do any especially complex rendering;
+    renderer: function(value, field) {
+        if (field.tpl) {
+            if (field.tpl.$className != "Ext.XTemplate") {
+                field.tpl = Ext.create('Ext.XTemplate', field.tpl);
+            }
+            return field.tpl.apply(value);
+        } else {
+            return value;
+        }
+    },
+
+    // override this method to handle click on the field;
+    onClick : Ext.emptyFn,
     
     onRender: function () {
         var me = this;
         me.callParent(arguments);
-        
+
         me.mon(me.el, {
             click: me.onClick,
             scope: me
         });
     },
-    
-    // override this method to handle click on the field;
-    onClick : Ext.emptyFn,
-    
+
     // fix to make the isEqual do a deep compare
     isEqual: function (value1, value2) {
         if (Ext.isObject(value1)) {

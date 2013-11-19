@@ -52,7 +52,7 @@ Ext.define('Taco.view.location.Index', {
                 width: 80
             },
             {
-                name: 'zipcode',
+                name: 'postalorzipcode',
                 fieldLabel: 'Zip Code',
                 width: 80
             },
@@ -88,7 +88,7 @@ Ext.define('Taco.view.location.Index', {
             text: 'State'
         },
         {
-            name: 'zipcode',
+            name: 'postalorzipcode',
             text: 'Zip Code'
         },
         {
