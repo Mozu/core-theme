@@ -134,6 +134,8 @@
                             completeStep();
                         }
                     }, function (e) {
+                        // TODO: sink the exception.in a better way.
+                        $('.mz-messagebar').html('');
                         completeStep();
                     });
                 } else {
