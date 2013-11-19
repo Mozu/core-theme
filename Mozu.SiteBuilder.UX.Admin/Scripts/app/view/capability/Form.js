@@ -114,8 +114,7 @@ Ext.define('Taco.view.capability.Form', {
                                 {
                                     xtype: 'uxiframe',
                                     height: '100%',
-                                    //src: 'http://aus02ncfrnt002.dev.volusion.com:8080/Console/storeprofile/241/en-us'
-                                    src: this.record.get('uiConfigurationUrl')
+                                    src: Ext.urlAppend(this.record.get('uiConfigurationUrl'), 'tenantId=' + Taco.app.context.getTenantId())
                                 }
                             ],
                             listeners: {
