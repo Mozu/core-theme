@@ -22,6 +22,12 @@ Ext.define('Taco.view.settings.Publishing', {
         });
 
         this.callParent(arguments);
+
+        // awesome hack
+        try {
+            this.header.actionsContainer.removeAll();
+        } catch (e) { }
+
     },
 
     buildItems: function () {
