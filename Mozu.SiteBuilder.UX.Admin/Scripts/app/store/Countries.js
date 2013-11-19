@@ -14,10 +14,10 @@
         pageSize: 800,
         remoteSort: false,
         remoteFilter: false,
-        
+        sorters:['name'],
         storeManagerConfig: {
-            clearFilters: true,
-            clearSort: true,
+            clearFilters: false,
+            clearSort: false,
             autoLoad: true
         }
     });

@@ -7,9 +7,9 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
     extend: 'Taco.core.ux.browser.SearchList',
 
     requires: [
+        'Taco.store.Countries',
         'Taco.view.settings.shipping.widget.RateEditor',
-        'Taco.model.CustomShippingRate',
-        'Ext.data.Store'
+        'Taco.model.CustomShippingRate'
     ],
     
     title: '',
@@ -25,44 +25,51 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
     modelName: 'Taco.model.CustomShippingRate',
     
     viewConfig: {
-        deferEmptyText:false,
+        deferEmptyText:true,
         emptyText:"No custom rates available"
     },
     
     initComponent: function() {
         var me = this;
 
-        me.countryStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Countries');
-        
-        me.tools = this.getTools();
+        this.store = Ext.create('Ext.data.Store', {
+            model: "Taco.model.CustomShippingRate",
+            autoLoad: false,
+            viewConfig: {
+                emptyText: "loading...",
+                deferEmptyText: false
+            }
+        });
         
         me.listData = me.record.get("customRates");
 
-        
-        
-        
-        // mock data;
-        /*
-        me.listData = {
-            id: "custom",
-            rates: [
-                {
-                    
-                    name: "Domestic",
-                    amount: 15.00,
-                    type: "FLAT_RATE_PER_ITEM_EXACT_AMOUNT",
-                    configuredCountries: ["US"]
+        me.countryStore = Taco.core.data.StoreManager.getOrCreate({
+            type:'Taco.store.Countries',
+            autoLoad: true,
+            listeners: {
+                load: function () {
+                    // need to wait for the countryStore to load before loading the custom rate grid so that the country code can be converted to the readable version;
+                    me.store.loadData(me.listData);
+                    me.body.unmask();
                 },
-                {
-                    
-                    name: "International",
-                    amount: 36.00,
-                    type: "FLAT_RATE_PER_ITEM_EXACT_AMOUNT",
-                    configuredCountries: ["FR", "DE"]
-                }
-            ]
-        };
-        */
+                scope: me
+            }
+        });
+        
+        // add loading mask to grid while we wait for the countryStore to load;
+        me.on('viewready', function () {
+            // note that I have to use the mask instead of setLoading. SetLoading is floating and doesn't work with scrolling and is really buggy;
+            if (!me.countryStore.hasCompletedLoading()) {
+                me.body.mask("Loading");
+            } else {
+                // load the store data now that the countryStore data is available to convert the code to the viewable name
+                me.store.loadData(me.listData);
+            }
+        }, me, {
+            single: true
+        });
+        
+        me.tools = this.getTools();
         
         this.columns = [
             {
@@ -91,7 +98,6 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
                         '</div>',
                     '</div>', {
                         getCountryName: function (val) {
-                            //todod: load country store ahead of time.
                             var countryRecord = me.countryStore.getById(val);
                             if (countryRecord) {
                                return countryRecord.get("name");
@@ -139,11 +145,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
             }
         ];
 
-        this.store = Ext.create('Ext.data.Store', {
-            model: "Taco.model.CustomShippingRate",
-            autoLoad: false,
-            data: me.listData
-        });
+        
 
         //me.on('selectionchange', me.editItem, me);
         
@@ -209,11 +211,8 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
         me.store.remove(record);
     },
     
-    //onDestroy: function () {
-    //    var me = this;
-        
-    //    me.countryStore.destroy();
-    //    me.countryStore = null;
-    //    me.callParent(arguments);
-    //}
+    onDestroy: function () {
+        var me = this;
+        me.callParent(arguments);
+    }
 });

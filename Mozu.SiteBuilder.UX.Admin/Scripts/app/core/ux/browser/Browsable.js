@@ -157,7 +157,12 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
         this.updateRecordTypeName();
         
-        this.store = Taco.core.data.StoreManager.getOrCreate(this.store);
+        
+        // only pass the store through the store manager if its not already a store;
+        if (!this.store.isStore) {
+            this.store = Taco.core.data.StoreManager.getOrCreate(this.store);
+        }
+        
 
         if (this.useGridPanel) {
             this.createGridPanel(this.gridPanelConf || {});
@@ -183,7 +188,9 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
         }, this);
 
-        if (!this.store.hasLoaded()) {
+        // don't load if the store is explicitly set autoLoad false;
+        
+        if ((this.store.autoLoad!=false)  && !this.store.hasLoaded()) {
             this.store.load();
         }
     },

@@ -58,12 +58,10 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
                             layout: "hbox"
                         },
                         columns: 1,
-                        defaults: {
-                            name: "type"
-                        },
+                        
                         items: [
-                            { xtype: "radiofield", boxLabel: "Per Item", inputValue: "CUSTOM_FLAT_RATE_PER_ITEM_EXACT_AMOUNT", id: "radio1" },
-                            { xtype: "radiofield", boxLabel: "Per Order", inputValue: "CUSTOM_FLAT_RATE_PER_ORDER_EXACT_AMOUNT", id: "radio2" }
+                            { xtype: "radiofield", boxLabel: "Per Item", inputValue: "CUSTOM_FLAT_RATE_PER_ITEM_EXACT_AMOUNT", id: "radio1", name: "type" },
+                            { xtype: "radiofield", boxLabel: "Per Order", inputValue: "CUSTOM_FLAT_RATE_PER_ORDER_EXACT_AMOUNT", id: "radio2", name: "type" }
                         ]
                     }
                 ]

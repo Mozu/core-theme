@@ -3,6 +3,10 @@
 * @author Jason Cochran
 * The Country combo box model
 */
+/*
+
+// deprecated
+
 
 Ext.define('Taco.model.CountryComboBox', {
     extend: 'Taco.core.data.Model',
@@ -20,3 +24,5 @@ Ext.define('Taco.model.CountryComboBox', {
         }
     }
 });
+
+*/

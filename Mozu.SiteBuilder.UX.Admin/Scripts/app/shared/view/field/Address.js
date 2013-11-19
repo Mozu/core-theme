@@ -50,14 +50,13 @@ Ext.define('Taco.shared.view.field.Address', {
         "cityOrTown": "",
         "state": "",
         "countryCode": "",
-        "zipCode": "",				
+        "postalOrZipCode": "",				
         "addressType": {}, 
         "addressIsValidated": false
     },
 
     allowBlank: true,
     
-
     initComponent: function () {
         var me = this,
             addressDisplayTpl = me.getAddressDisplayTemplate();
@@ -94,9 +93,7 @@ Ext.define('Taco.shared.view.field.Address', {
                     return "Address is required";
                 }
             },
-            renderer: function (value, field) {
-                return addressDisplayTpl.apply(value);
-            }
+            tpl: me.getAddressDisplayTemplate()
         });
 
         me.items.push(me.addressField);

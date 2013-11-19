@@ -36,13 +36,38 @@ Ext.define('Taco.view.location.inventory.Index', {
     
     modelName: 'Taco.model.LocationInventory',
     
+    initComponent : function() {
+
+
+        this.store = Ext.create('Taco.store.LocationInventories', {
+            autoLoad:false
+        });
+
+        
+        /*
+        this.store.on({
+            load:function() {
+                debugger;
+            },
+            beforeLoad: function() {
+                debugger;
+                return true;
+            }
+        })
+        */
+        
+        this.callParent(arguments);
+    },
+
+/*    
     store: {
         type: 'Taco.store.LocationInventories',
         createOnly: true,
-        // todo: figure out why the autoLoad Config is being ignored;
         autoLoad:false
     },
     
+    */
+
     useTilePanel: false,
     
     

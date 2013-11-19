@@ -2,15 +2,16 @@
 * @class Taco.store.CountryComboBox
 * @author Jason Cochran
 * The CountryComboBox store
+
+* Deprecated use Taco.store.Countries
 */
 
-
-    Ext.define('Taco.store.CountryComboBox', {
+/*
+Ext.define('Taco.store.CountryComboBox', {
         extend: 'Ext.data.Store',
         model: 'Taco.model.CountryComboBox',
         alias: 'widget.countrycomboboxstore',
         autoLoad: true,
-
         data: {
             items: // Country
             [{
@@ -762,8 +763,6 @@
                 name: "Zimbabwe"
             }]
         },
-        sorters: [{
-            property: 'name',
-            direction: 'ASC'
-        }]
+        sorters: ["name"]
     });
+*/

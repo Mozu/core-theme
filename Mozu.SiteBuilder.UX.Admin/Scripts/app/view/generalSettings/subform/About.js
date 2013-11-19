@@ -37,9 +37,10 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             xtype: 'selectfield',
             name: 'timeFormat',
             fieldLabel: 'Time format',
-            valueField: 'value',
+            valueField: 'value',            
             displayField: 'display',
-            width: 185,
+            columnWidth: .5,
+            //margin: "0 4 0 0",
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: [{
                     name: 'value',
@@ -64,6 +65,8 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             valueField: 'name',
             displayField: 'name',
             queryMode: 'local',
+            columnWidth: .5,
+            margin: "0 4 0 0",
             width: 350,
             store: Ext.create('Taco.store.TimeZones', {
                 autoLoad: true
@@ -71,11 +74,10 @@ Ext.define('Taco.view.generalSettings.subform.About', {
         };
         
         me.timeSettings = Ext.widget('fieldcontainer', {
-            layout: 'hbox',
+            layout: 'column',
             width: "100%",
             items: [
                 me.timeZoneSelect,
-                {xtype:"splitter"},
                 me.timeFormatSelect
             ]
         });
@@ -94,6 +96,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             displayField: 'name',
             valueField: 'code',
             allowBlank: false,
+            margin:"0 4 0 0",
             store: Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.Channels',
                 autoLoad: true,
@@ -170,9 +173,6 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                 items: [
                     me.channelCombo,
                     {
-                        xtype: "splitter"
-                    },
-                    {
                         xtype: "editabledisplayfield",
                         name: "catalogName",
                         fieldLabel: "Catalog",
@@ -191,8 +191,15 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                         xtype: "editabledisplayfield",
                         //name:"isWebSite",
                         fieldLabel: "Is Mozu Hosted Store Front",
-                        //flex: 1,
-                        //columnWidth: .5,
+                        margin: "0 4 0 0",
+                        columnWidth: .5,
+                        tpl: [
+                            '<tpl if="values==true">',
+                                "Yes",
+                            '<tpl else>',
+                                "No",
+                            '</tpl>'
+                        ],
                         name: "isMozuWebSite",
                         flex: 1
                     },
