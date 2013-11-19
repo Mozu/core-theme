@@ -5,13 +5,22 @@
             <label for="mz-payment-credit-card-type">{{ labels.cardType }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <select id="mz-payment-credit-card-type" data-mz-value="{{ cardcontext }}paymentOrCardType">
-                <option></option>
-                <option value="VISA" {% if model.paymentOrCardType == "VISA" %}selected="selected"{% endif %}>Visa</option>
-                <option value="MC" {% if model.paymentOrCardType == "MC" %}selected="selected"{% endif %}>MasterCard</option>
-                <option value="AMEX" {% if model.paymentOrCardType == "AMEX" %}selected="selected"{% endif %}>American Express</option>
-                <option value="DISCOVER" {% if model.paymentOrCardType == "DISCOVER" %}selected="selected"{% endif %}>Discover</option>
-            </select>
+			<select id="mz-payment-credit-card-type" data-mz-value="{{ cardcontext }}paymentOrCardType">
+				<option></option>
+
+				{% if siteContext.checkoutSettings.supportedCards.visa %}
+				<option value="VISA" {% if model.paymentOrCardType == "VISA" %}selected="selected"{% endif %}>Visa</option>
+				{% endif %}
+				{% if siteContext.checkoutSettings.supportedCards.mc %}
+				<option value="MC" {% if model.paymentOrCardType == "MC" %}selected="selected"{% endif %}>MasterCard</option>
+				{% endif %}
+				{% if siteContext.checkoutSettings.supportedCards.amex %}
+				<option value="AMEX" {% if model.paymentOrCardType == "AMEX" %}selected="selected"{% endif %}>American Express</option>
+				{% endif %}
+				{% if siteContext.checkoutSettings.supportedCards.discover %}
+				<option value="DISCOVER" {% if model.paymentOrCardType == "DISCOVER" %}selected="selected"{% endif %}>Discover</option>
+				{% endif %}
+			</select>
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}paymentOrCardType"</span>
         </div>
     </div>
