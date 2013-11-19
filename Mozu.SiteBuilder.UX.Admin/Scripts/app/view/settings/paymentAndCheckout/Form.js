@@ -17,10 +17,13 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Form', {
         me.checkoutPrefrences = Ext.create('Taco.view.settings.paymentAndCheckout.subform.CheckoutPreference', me);
         me.legalInformation = Ext.create('Taco.view.settings.paymentAndCheckout.subform.LegalInformation', me);
         
+        //me.items = [
+        //    me.paymentTypes,
+        //    me.checkoutPrefrences,
+        //    me.legalInformation
+        //];
         me.items = [
-            me.paymentTypes,
-            me.checkoutPrefrences,
-            me.legalInformation
+            me.paymentTypes
         ];
         me.callParent(arguments);
         this.loadNavItems();
