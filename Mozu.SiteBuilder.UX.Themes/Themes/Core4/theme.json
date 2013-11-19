@@ -216,6 +216,12 @@
 				"xtype":"textfield",
 				"anchor":"100%"
 			},
+			{
+				"fieldLabel":"Number per row",
+				"name": "numberOfItems",
+				"xtype":"spinnerfield",
+				"anchor":"100%"
+			},
             {
 				"name":"template",
 				"fieldLabel":"Template",
@@ -231,19 +237,45 @@
           "defaultConfig": {
 			  "template": "modules/product/product-list-carousel",
 			  "attributeId":"tenant~product-crosssell",
+			  "numberOfItems":"6",
 			  "title": "Related Items"
 		},
          "icon": "/resources/admin/widgets/01_photo_text.png",
          
-    }, 
+    },
+	{
+         "id": "instockrequest",
+         "displayName": "Instock Request",
+         "displayTemplate": "misc/instock-request",
+        "editViewFields":[
+
+			{
+				"fieldLabel":"title",
+				"xtype":"textfield",
+				"anchor":"100%"
+				}
+			
+         ],
+          "defaultConfig": {
+			  "title": "Related Items"
+		},
+         "icon": "/resources/admin/widgets/01_photo_text.png",
+         
+    },  
 	 {
          "id": "upsells",
          "displayName": "Up Sells",
          "displayTemplate": "catalog/related-products",
         "editViewFields":[
 			{
-				"fieldLabel":"title",
+				"fieldLabel":"Title",
 				"xtype":"textfield",
+				"anchor":"100%"
+			},
+			{
+				"fieldLabel":"Number per row",
+				"name": "numberOfItems",
+				"xtype":"spinnerfield",
 				"anchor":"100%"
 			},
             {
@@ -261,6 +293,7 @@
           "defaultConfig": {
 			  "template": "modules/product/product-list-carousel",
 			  "attributeId":"tenant~product-upsell",
+			  "numberOfItems":"6",
 			  "title": "Other Items"
 		},
          "icon": "/resources/admin/widgets/01_photo_text.png",
