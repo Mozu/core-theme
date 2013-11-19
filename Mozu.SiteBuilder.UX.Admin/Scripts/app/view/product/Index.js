@@ -173,14 +173,16 @@ Ext.define('Taco.view.product.Index', {
                 eventData.record.productInCatalogsStore().each(function (record) {
                     var sites = record.get('sites');
                     Ext.each(sites, function (site) {
-                        previewAction.menu.add(Ext.applyIf({
-                            text: site.name ,
-                            menuColumnHandler: function (item, eventData) {
-                                window.open('/_gosite/' + site.id  + '?environment=preview&redir=' + encodeURIComponent('/product/' + eventData.record.getId()), 'taco-preview');
+                        if (site.isMozuRendered) {
+                            previewAction.menu.add(Ext.applyIf({
+                                text: site.name,
+                                menuColumnHandler: function (item, eventData) {
+                                    window.open('/_gosite/' + site.id + '?environment=preview&redir=' + encodeURIComponent('/product/' + eventData.record.getId()), 'taco-preview');
 
-                                console.log(arguments);
-                            }
-                        }, defaults));
+                                    console.log(arguments);
+                                }
+                            }, defaults));
+                        }
                     });
                 });
                 previewAction.setVisible(eventData.record.productInCatalogsStore().count());
