@@ -161,7 +161,7 @@ Ext.define('Taco.view.product.subform.General', {
     },
 
     onProductTypeChange: function (selectField, value) {
-        var parentForm;
+        var parentForm, product;
         
         
         parentForm = this.up('productsiteform, productglobalform');
@@ -170,9 +170,11 @@ Ext.define('Taco.view.product.subform.General', {
         if (!parentForm) {
             return;
         }
+       
         
         //need to set the productTypeId for variations to work.
-        parentForm.product.set('productTypeId', value);
+        product = parentForm.product || parentForm.record;
+        product.set('productTypeId', value);
         
 
         if (!this.propertiesForm) {
