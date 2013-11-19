@@ -1,0 +1,7 @@
+<div class="mz-instock-request">
+    <div>Notify me when this product is back in stock.</div>
+	<div>
+	    Email: <input type="text" name="email"> </input>
+	    <button>Notify Me</button>
+	</div>
+</div>
