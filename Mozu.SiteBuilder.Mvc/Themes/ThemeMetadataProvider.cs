@@ -63,23 +63,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 return null;
 
             var tmd = new ThemeMetaData { Id = id };
-            
-            int intId;
 
-            // if the id is an integer, try to get it from the network file share. otherwise, try to find it locally.
-            //if (int.TryParse(id, out intId))
-            //    tmd.ThemePath = Path.GetFullPath(DevThemePath + id);
-            //else
-            //    tmd.ThemePath = Path.GetFullPath(LocalThemePath +"//"+ id);
-
-            foreach (var path in this.ThemePaths)
-            {
-                tmd.ThemePath = Path.GetFullPath(path + "//" + id);
-                if (Directory.Exists(tmd.ThemePath))
-                {
-                    break;
-                }
-            }
+            tmd.ThemePath = ThemePaths.Select(p => Path.GetFullPath(p + "//" + id)).FirstOrDefault(p => Directory.Exists(p));
 
             if (!Directory.Exists(tmd.ThemePath))
                 return null;
