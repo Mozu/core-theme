@@ -32,25 +32,17 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
    
     public class CheckoutSettings
     {
-
         public string CustomerCheckoutType { get; set; }
-
 
         public string PaymentProcessingFlowType { get; set; }
 
-
         public bool PayByMail { get; set; }
 
-
         public bool UseOverridePriceToCalculateDiscounts { get; set; }
-
-       
     
         public bool IsPayPalEnabled { get; set; }
 
-
-
-
+        public Dictionary<string, string> SupportedCards { get; set; }
     }
 
     [DataContract]

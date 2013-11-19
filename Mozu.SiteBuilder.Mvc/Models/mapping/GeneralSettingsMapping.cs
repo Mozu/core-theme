@@ -24,6 +24,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                   .ForMember(x => x.IsPayPalEnabled, opt => opt.ResolveUsing(x => x.PaymentSettings.ExternalPaymentWorkflowDefinitions != null && x.PaymentSettings.ExternalPaymentWorkflowDefinitions.Count > 0 && x.PaymentSettings.ExternalPaymentWorkflowDefinitions.FirstOrDefault().IsEnabled))
                   .ForMember(x => x.PayByMail, opt => opt.ResolveUsing(x => x.PaymentSettings.PayByMail))
                   .ForMember(x => x.PaymentProcessingFlowType, opt => opt.ResolveUsing(x => x.OrderProcessingSettings.PaymentProcessingFlowType))
+                  .ForMember(x => x.SupportedCards, opt => opt.ResolveUsing(x => x.PaymentSettings.Gateways != null && x.PaymentSettings.Gateways.Count > 0 ? x.PaymentSettings.Gateways.FirstOrDefault().SupportedCards.ToDictionary(card => card) : new Dictionary<string, string>()))
                   .ForMember(x => x.UseOverridePriceToCalculateDiscounts, opt => opt.ResolveUsing(x => x.OrderProcessingSettings.UseOverridePriceToCalculateDiscounts));
 
            
