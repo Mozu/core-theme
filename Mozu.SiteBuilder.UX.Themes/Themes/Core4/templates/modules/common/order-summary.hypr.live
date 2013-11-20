@@ -9,13 +9,14 @@
         </thead>
         {% for item in model.items %}
             <tbody class="mz-ordersummary-lineitems">
-                <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountedTotal < item.total %}is-discounted{% endif %}">
+              <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountTotal > 0 %}is-discounted{% endif %}">
                     <td class="mz-ordersummary-item-product">{{ item.product.name }}</td>
                     <td>{{ item.quantity }}</td>
                     <td><span class="mz-ordersummary-price">{{ item.unitPrice.baseAmount|currency }}</span></td>
                     <td><span class="mz-ordersummary-price mz-ordersummary-itemtotal">{{ item.subtotal|currency }}</span></td>
                 </tr>
-                {% if item.discountedTotal < item.total %}
+              
+                {% if item.discountTotal > 0 %}
                     <tr class="mz-ordersummary-line mz-ordersummary-line-discount">
                         <td colspan="2">
                             {% if item.discount %}
@@ -27,7 +28,7 @@
                             <span class="mz-ordersummary-price mz-ordersummary-discountamt" >{{ item.discountTotal|currency}} OFF</span>
                         </td>
                         <td>{{ item.unitPrice.discountedAmount|currency }}</td>
-                        <td class="mz-ordersummary-price mz-ordersummary-itemtotal">{{ item.total }}</td>
+                        <td class="mz-ordersummary-price mz-ordersummary-itemtotal">{{ item.total|currency }}</td>
                     </tr>
                 {% endif %}
             </tbody>
