@@ -15,7 +15,7 @@ Ext.define('Taco.view.product.subform.Properties', {
 
     layout: {
         type: 'vbox',
-        align: 'left'
+        align: 'stretch'
     },
 
     statics: {
