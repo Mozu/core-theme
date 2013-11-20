@@ -48,7 +48,7 @@ Ext.define('Taco.shared.view.field.Address', {
         "address3": "",
         "address4": "",
         "cityOrTown": "",
-        "state": "",
+        "stateOrProvince": "",
         "countryCode": "",
         "postalOrZipCode": "",				
         "addressType": {}, 
@@ -60,7 +60,7 @@ Ext.define('Taco.shared.view.field.Address', {
     initComponent: function () {
         var me = this,
             addressDisplayTpl = me.getAddressDisplayTemplate();
-
+        
         if (!me.items) {
             me.items = [];
         }
@@ -171,7 +171,7 @@ Ext.define('Taco.shared.view.field.Address', {
                 savesuccess: function (win, record) {
                     var updatedAddressData = record.data,
                         address = Ext.clone(me.addressField.originalValue),
-                        addressFields = Ext.Object.getKeys(address);
+                        addressFields = Ext.Object.getKeys(me.defaultValue);
                     
                     address = Ext.copyTo(address, updatedAddressData, addressFields);
                     me.addressField.setValue(address);
