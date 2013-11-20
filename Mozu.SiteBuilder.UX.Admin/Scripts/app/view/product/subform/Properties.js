@@ -15,7 +15,7 @@ Ext.define('Taco.view.product.subform.Properties', {
 
     layout: {
         type: 'vbox',
-        align: 'stretch'
+        align: 'left'
     },
 
     statics: {
@@ -24,6 +24,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                 return [{
                     xtype: 'datefield',
                     name: this.getFieldName(ptAttribute),
+                    fieldLabel: ptAttribute.get('attributeName'),
                     value: (values && values.length) ? values[0] : null
                 }];
             },
@@ -31,8 +32,9 @@ Ext.define('Taco.view.product.subform.Properties', {
                 return [{
                     xtype: 'textareafield',
                     name: this.getFieldName(ptAttribute),
+                    fieldLabel: ptAttribute.get('attributeName'),
                     value:(values && values.length) ? values[0] : null,
-                    width: '100%',
+                    width: 600,
                     rows: 12,
                     resizable: true,
                     resizeHandles: 's'
@@ -42,17 +44,20 @@ Ext.define('Taco.view.product.subform.Properties', {
                 return [{
                     xtype: 'checkboxfield',
                     name: this.getFieldName(ptAttribute),
+                    fieldLabel: ptAttribute.get('attributeName'),
                     value:(values && values.length) ? values[0] : null
                 }];
             },
             'List': function (ptAttribute, values) {
                 return [{
-                    xtype: ptAttribute.get('allowMulti') ? 'taco.field.multiselect' : 'selectfield',
+                    xtype: ptAttribute.get('allowMulti') ? 'taco.field.multiselect' : 'combobox',
                     name: this.getFieldName(ptAttribute),
+                    fieldLabel: ptAttribute.get('attributeName'),
                     displayField: 'value',
                     valueField: 'id',
                     allowBlank: ptAttribute.get('isRequired') === true ? false: true,
                     value: (values && values.length) ? values[0] : null,
+                    width: 400,
                     store: Ext.create('Ext.data.Store', {
                         fields: [
                             {name: 'id', type: 'string'},
@@ -66,15 +71,17 @@ Ext.define('Taco.view.product.subform.Properties', {
                 return [{
                     xtype: 'textfield',
                     name: this.getFieldName(ptAttribute),
+                    fieldLabel: ptAttribute.get('attributeName'),
                     value: (values && values.length) ? values[0] : null,
-                    width: '100%'
+                    width: 400
                 }];
             },
             'productPicker': function (ptAttribute, values) {
                 return [{
                     xtype: 'taco.field.product',
                     name: this.getFieldName(ptAttribute),
-                    width: 600,
+                    fieldLabel: ptAttribute.get('attributeName'),
+                    width: 400,
                     value: values
                 }];
             }
@@ -145,7 +152,7 @@ Ext.define('Taco.view.product.subform.Properties', {
         this.productTypeProperties = properties = type.getProperties();
 
         properties.each(function (ptAttribute) {
-            items.push(this.buildContainer(ptAttribute));
+            Ext.Array.push(items, this.buildEditor(ptAttribute));
         }, this);
 
         if (!items.length) {
@@ -163,52 +170,6 @@ Ext.define('Taco.view.product.subform.Properties', {
         };
     },
 
-    buildContainer: function (ptAttribute) {
-        var items = this.buildEditor(ptAttribute);
-        
-        items.unshift({
-            xtype: 'container',
-            padding: '0 0 10',
-            layout: {
-                type: 'hbox',
-                align: 'stretch'
-            },
-            items: [{
-                xtype: 'component',
-                flex: 1,
-                html: ptAttribute.get('attributeName')
-            }/*, { part of a larger story; uncomment when that time comes
-                xtype: 'action',
-                text: 'Remove',
-                hidden: ptAttribute.get('isRequired'),
-                attributeFQN: ptAttribute.get('attributeFQN'),
-                listeners: {
-                    click: Ext.bind(function (it) {
-                        this.remove(it.up().up());
-                        var index = this.productTypeProperties.find('attributeFQN', it.attributeFQN);
-                        this.productTypeProperties.removeAt(index);
-                        this.productTypeProperties.commitChanges();
-
-                        var initLength = this.product.data.properties.length;
-                        for (var x = 0; x < initLength; x++) {
-                            if (this.product.data.properties[x].attributeFQN == it.attributeFQN) {
-                                this.product.data.properties.splice(x, 1);
-                                x--;
-                                initLength--;
-                            }
-                        }
-                    },this)
-                }
-            }*/]
-        });
-        
-        return Ext.widget({
-            xtype: 'container',
-            cls: 'taco-attribute-form',
-            items: items        
-        });
-    },
-
     buildEditor: function (ptAttribute) {
         var editor = ptAttribute.getAttributeMetaDataValue('uicontrol') ||  ptAttribute.get('inputType'),
             attributeFQN = ptAttribute.get('attributeFQN'),
@@ -221,8 +182,13 @@ Ext.define('Taco.view.product.subform.Properties', {
                 html: 'Error: could not find editor type: ' + editor
             }];
         }
-        
-        return this.statics().editors[editor].apply(this, [ptAttribute, values]);
+
+        return Ext.widget({
+            xtype: 'panel',
+            ui: 'subform-subform',
+            margin: '10 0 0',
+            items: this.statics().editors[editor].apply(this, [ptAttribute, values])
+        });
     },
 
     getFieldName: function (ptAttribute) {
