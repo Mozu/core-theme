@@ -12,13 +12,10 @@ Ext.define('Taco.view.product.subform.Options', {
     initComponent: function () {
         var track = this.product.get('manageStock'),
             manageStock,
-          //  stockOnHand,
             outOfStockState,
             options;
 
         this.record = this.product;
-        
-       
 
         options = Ext.create('Taco.view.product.option.Form', {
             product: this.product
@@ -27,8 +24,5 @@ Ext.define('Taco.view.product.subform.Options', {
         this.items = [options];
 
         this.callParent(arguments);
-       
-    }
-
-    
+    } 
 });

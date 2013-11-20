@@ -13,7 +13,8 @@ Ext.define('Taco.view.product.option.Form', {
 
     requires: [
         'Taco.view.product.option.VariationGrid',
-        'Taco.view.product.option.Modal'
+        'Taco.view.product.option.Modal',
+        'Taco.view.product.variant.Modal'
     ],
 
     title: 'Options',
@@ -37,7 +38,17 @@ Ext.define('Taco.view.product.option.Form', {
             xtype: 'container',
             items: [
                 this.options,
-                this.variations
+                this.variations, {
+                    xtype: 'button',
+                    text: 'Click me, bitch!',
+                    scale: 'medium',
+                    ui: 'action',
+
+                    handler: function() {
+                        console.log('You clicked me, you bitch!');
+                        Ext.create('Taco.view.product.variant.Modal');
+                    }
+                }
             ]
         }];
 
