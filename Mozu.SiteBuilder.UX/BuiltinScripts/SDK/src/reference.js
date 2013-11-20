@@ -495,7 +495,30 @@ var ApiReference = (function () {
                 }
             }
         },
-        'addressschemas': '{+referenceService}addressschemas'
+        'addressschemas': '{+referenceService}addressschemas',
+        'wishlist': {
+            'get-default': {
+                template: '{+wishlistService}?startIndex=0&pageSize=1&filter=Name%20eq%20my_wishlist',
+                returnType: 'wishlists'
+            },
+            'create-default': {
+                verb: 'POST',
+                template: '{+wishlistService}',
+                defaultParams: {
+                    name: 'my_wishlist',
+                    typeTag: 'default'      
+                },
+                overridePostData: true
+            },
+            'add-item': {
+                verb: 'POST',
+                template: '{+wishlistService}{id}/items/',
+                includeSelf: true
+            }
+        },
+        'wishlists': {
+            collectionOf: 'wishlist'
+        }
     };
 
     return pub;
