@@ -68,6 +68,9 @@ Ext.define('Taco.core.ux.window.Modal', {
     constructor: function (config) {
         var actions,
             actionBar;
+        
+        // Init config if not passed in on create
+        if (typeof config === 'undefined') config = {};
 
         actions = this.configureActions(config);
         actionBar = this.initActionBar(actions, config.actionBar || this.actionBar);
@@ -151,8 +154,12 @@ Ext.define('Taco.core.ux.window.Modal', {
      * @return {Object[]} The array completed window action configuration objects.
      */
     configureActions: function (windowCfg) {
-        var actionsCfg = windowCfg.actions || this.actions,
+        var actionsCfg,
             actions;
+
+        windowCfg = windowCfg || {};
+
+        actionsCfg = windowCfg.actions || this.actions
 
         // actions may be one object instead of an array of them
         actionsCfg = Ext.isArray(actionsCfg) ? actionsCfg : [actionsCfg];
