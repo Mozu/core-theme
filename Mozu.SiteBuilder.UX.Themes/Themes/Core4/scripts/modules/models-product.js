@@ -134,14 +134,12 @@
             }
         },
         apiAddToWishlist: function (quantity) {
-            return this.getDefaultWishlistId().then(function (id) {
+            var me = this;
+
+            return me.getDefaultWishlistId().then(function (id) {
+                var you = me;
                 var url = api.context.getServiceUrls().wishlistService + "/" + id + "/items";
-                return api.request("POST", url, { quantity: quantity, product: { productCode: 'beepants' } }).then(function () {
-                    var url2 = api.context.getServiceUrls().wishlistService + "/" + id;
-                    return api.request("GET", url2);
-                }).then(function() {
-                    return this.getDefaultWishlistId()
-                })
+                return api.request("POST", url, { quantity: quantity, product: { productCode: me.get('productCode') } });
             });
         },
         getDefaultWishlistId: function () {
