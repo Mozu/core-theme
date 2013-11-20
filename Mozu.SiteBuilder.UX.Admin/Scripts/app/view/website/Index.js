@@ -144,55 +144,67 @@ Ext.define('Taco.view.website.Index', {
 
         items = [{
             xtype: 'panel',
-            itemId: 'editorCardPanel',
             bodyStyle: {
                 'border-width': '0px 1px 0px 0px'
             },
             layout: {
-                type: 'card'
+                type: 'border'
             },
             items: [{
                 xtype: 'panel',
-                title: 'Editor',
-                border: false,
-                header: false,
+                itemId: 'editorCardPanel',
+                region: 'center',
                 layout: {
-                    type: 'fit'
+                    type: 'card'
                 },
                 items: [{
-                    itemId: 'iframe',
-                    xtype: 'uxiframe',
-                    src: '/_gosite/' + Taco.app.context.getSiteId() + '?environment=editing&redir=' + encodeURIComponent(Ext.String.urlAppend(this.url, 'iseditmode=true'))
+                    xtype: 'panel',
+                    title: 'Editor',
+                    border: false,
+                    header: false,
+                    layout: {
+                        type: 'fit'
+                    },
+                    items: [{
+                        itemId: 'iframe',
+                        xtype: 'uxiframe',
+                        src: '/_gosite/' + Taco.app.context.getSiteId() + '?environment=editing&redir=' + encodeURIComponent(Ext.String.urlAppend(this.url, 'iseditmode=true'))
+                    }]
+                }, {
+                    xtype: 'panel',
+                    title: 'Settings',
+                    overflowY: 'auto',
+                    border: false,
+                    header: false,
+                    items: [{
+                        xtype: 'formform',
+                        itemId: 'pageSettings',
+                        ui: 'subform',
+                        title: 'Page Settings',
+                        margin: '20 30 10 30',
+                        defaults: {
+                            margin: '10 0 10 0'
+                        }
+                    }]
                 }]
             }, {
                 xtype: 'panel',
-                title: 'Settings',
-                overflowY: 'auto',
-                border: false,
-                header: false,
-                items: [{
-                    xtype: 'formform',
-                    itemId: 'pageSettings',
-                    ui: 'subform',
-                    title: 'Page Settings',
-                    margin: '20 30 10 30',
-                    defaults: {
-                        margin: '10 0 10 0'
-                    }
-                }]
-            }],
-            dockedItems: [{
-                dock: 'right',
-                title: 'Sidebar',
-                collapseDirection: 'right',
-                cls: 'taco-website-sidebar',
                 itemId: 'sideBar',
+                region: 'east',
+                title: 'Sidebar',
+                cls: 'taco-website-sidebar',
+                collapseDirection: 'right',
+                collapseMode: 'mini',
                 animCollapse: false,
                 collapsible: true,
                 header: false,
                 width: 240,
                 style: {
                     overflow: 'visible'
+                },
+                split: {
+                    canResize: false,
+                    size: 5
                 },
                 layout: {
                     type: 'card'
@@ -240,24 +252,21 @@ Ext.define('Taco.view.website.Index', {
                     padding: '14 20 0 14',
                     height: 60,
                     items: [{
-                        xtype: 'component',
-                        html: '',
-                        cls: 'taco-collapse-handle',
-                        width: 15,
-                        height: 30,
-                        listeners: {
-                            click: {
-                                scope: this,
-                                element: 'el',
-                                fn: function (e, t) {
-                                    this.sideBar.toggleCollapse();
-                                    // var cmp = Ext.getCmp(t.id);
-
-                                    // cmp.up('panel[dock="right"]').toggleCollapse();
-                                }
-                            }
-                        }
-                    }, {
+                    //     xtype: 'component',
+                    //     html: '',
+                    //     cls: 'taco-collapse-handle',
+                    //     width: 15,
+                    //     height: 30,
+                    //     listeners: {
+                    //         click: {
+                    //             scope: this,
+                    //             element: 'el',
+                    //             fn: function (e, t) {
+                    //                 this.sideBar.toggleCollapse();
+                    //             }
+                    //         }
+                    //     }
+                    // }, {
                         xtype: 'textfield',
                         emptyText: 'Search',
                         width: '100%',
