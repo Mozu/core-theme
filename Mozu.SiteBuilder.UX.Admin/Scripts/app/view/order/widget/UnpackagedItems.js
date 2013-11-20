@@ -28,9 +28,10 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
             // billing contact info
             firstName: "John",
             lastName: "Smith",
+            cityOrTown: "",
             address1: "321654 horseback hollow, Austin, Tx 78954",
-            zipCode: "78757",
-            state: "Tx",
+            postalOrZipCode: "78757",
+            stateOrProvince: "Tx",
             phoneNumber: "542.654.6543",
             email: "noone@sopmwhere.com"
         }
@@ -127,7 +128,7 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
                     '<div class="shipTo">',
                         'Shipped to: {firstName} {lastName} ',
                         '<span class="seperator">|</span>',
-                        ' {address1} {postalOrZipCode} {stateOrProvince} ',
+                        ' {address1} {cityOrTown} {postalOrZipCode} {stateOrProvince} ',
                         '<tpl if="values.phoneNumber">',
                             '<span class="seperator">|</span>',
                             ' {phoneNumber} ',

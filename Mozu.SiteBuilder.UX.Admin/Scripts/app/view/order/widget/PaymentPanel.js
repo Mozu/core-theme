@@ -197,7 +197,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 '<div class="billingInformation">',
                     '<span class="fullName">Bill to: {billingContact.firstName} {billingContact.lastName}</span>',
                     '<span class="seperator">|</span>',
-                    '<span class="address">{billingContact.address1} {billingContact.address2} {billingContact.cityOrTown} {billingContact.state}  {billingContact.zipCode} {billingContact.countryCode}  </span>',
+                    '<span class="address">{billingContact.address1} {billingContact.address2} {billingContact.cityOrTown} {billingContact.stateOrProvince}  {billingContact.postalOrZipCode} {billingContact.countryCode}  </span>',
                     '<span class="seperator">|</span>',
                     '<span class="phoneNumber">{[ values.billingContact.workPhone ? values.billingContact.workPhone : values.billingContact.homePhone ]}</span>',
                 '</div>'

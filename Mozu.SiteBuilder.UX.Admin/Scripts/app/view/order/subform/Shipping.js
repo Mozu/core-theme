@@ -117,9 +117,10 @@ Ext.define('Taco.view.order.subform.Shipping', {
                 // billing contact info
                 firstName: billingContact.firstName,
                 lastName: billingContact.lastName,
+                cityOrTown: billingContact.cityOrTown,
                 address1: billingContact.address1,
-                zipCode: billingContact.zipCode,
-                state: billingContact.state,
+                postalOrZipCode: billingContact.postalOrZipCode,
+                stateOrProvince: billingContact.stateOrProvince,
                 phoneNumber: billingContact.phoneNumber,
                 email: billingContact.email
             }
@@ -166,8 +167,10 @@ Ext.define('Taco.view.order.subform.Shipping', {
                         firstName: billingContact.firstName,
                         lastName: billingContact.lastName,
                         address1: billingContact.address1,
-                        zipCode: billingContact.zipCode,
-                        state: billingContact.state,
+                        
+                        cityOrTown: billingContact.cityOrTown,
+                        postalOrZipCode: billingContact.postalOrZipCode,
+                        stateOrProvince: billingContact.stateOrProvince,
                         phoneNumber: billingContact.phoneNumber,
                         email: billingContact.email
                     }
@@ -246,9 +249,10 @@ Ext.define('Taco.view.order.subform.Shipping', {
                     // billing contact info
                     firstName: billingContact.firstName,
                     lastName: billingContact.lastName,
+                    cityOrTown: billingContact.cityOrTown,
                     address1: billingContact.address1,
-                    zipCode: billingContact.zipCode,
-                    state: billingContact.state,
+                    postalOrZipCode: billingContact.postalOrZipCode,
+                    stateOrProvince: billingContact.stateOrProvince,
                     phoneNumber: billingContact.phoneNumber,
                     email: billingContact.email
                 }

@@ -4,7 +4,6 @@
 * The StateComboBox store
 */
 
-
     Ext.define('Taco.store.StateComboBox', {
         extend: 'Ext.data.Store',
         model: 'Taco.model.StateComboBox',

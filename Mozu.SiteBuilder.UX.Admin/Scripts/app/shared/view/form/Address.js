@@ -9,8 +9,7 @@ Ext.define('Taco.shared.view.form.Address', {
 
 	requires: [
 		'Taco.model.Contact',
-		'Taco.core.ux.form.SelectField',
-		'Taco.store.StateComboBox'
+		'Taco.core.ux.form.SelectField'
 	],
 
 	title: 'Edit Address',
