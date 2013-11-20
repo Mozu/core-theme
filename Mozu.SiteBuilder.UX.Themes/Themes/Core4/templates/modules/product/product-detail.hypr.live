@@ -18,8 +18,11 @@
 </div>
 
 <section class="mz-l-stack-section mz-productdetail-conversion">
+<div class="mz-productdetail-conversion-controls">
   <span class="mz-qty-label">{{ labels.qty }}</span>
   <input class="mz-productdetail-qty" type="number" value="1" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} data-mz-value="Quantity" />
+</div>
+  <div class="mz-productdetail-conversion-buttons">
   <button id="add-to-cart" class="mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} data-mz-action="addToCart" >
       {{ labels.addToCart }}
   </button>
@@ -29,6 +32,7 @@
       {{ labels.addToWishlist }}
   </button>
   {% endif %}
+  </div>
 
   <span class="mz-validationmessage" data-mz-validationmessage-for="Quantity"></span>
 
