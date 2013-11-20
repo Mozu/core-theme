@@ -69,9 +69,10 @@ Ext.define('Taco.view.order.widget.Package', {
             // billing contact info
             firstName: "",
             lastName: "",
+            cityOrTown: "",
             address1: "",
-            zipCode: "",
-            state: "",
+            postalOrZipCode: "",
+            stateOrProvince: "",
             phoneNumber: "",
             email: ""
         }
@@ -133,7 +134,8 @@ Ext.define('Taco.view.order.widget.Package', {
     },
     
 
-    getHeaderTemplate : function() {
+    getHeaderTemplate: function () {
+        
         return {
             xtype: "component",
             tpl: [
@@ -191,7 +193,7 @@ Ext.define('Taco.view.order.widget.Package', {
                     '<div class="shipTo">',
                         'Ship to:  {firstName} {lastName} ',
                         '<span class="seperator">|</span>',
-                        ' {address1} {postalOrZipCode} {stateOrProvince} ',
+                        '{address1} {cityOrTown} {postalOrZipCode} {stateOrProvince} ',
                         '<tpl if="values.phoneNumber">',
                             '<span class="seperator">|</span>',
                             ' {phoneNumber} ',

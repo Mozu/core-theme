@@ -1,9 +1,13 @@
 /**
  * @class Taco.view.customers.SearchForm
  */
+/*
+// deprecated
+
+
 Ext.define('Taco.view.customers.SearchForm', {
 	extend: 'Taco.core.ux.form.Form',
-	requires: ['Taco.store.OptionComboBox', 'Taco.core.ux.form.DateTime', 'Ext.ux.form.field.BoxSelect', 'Ext.form.Label'],
+	requires: ['Taco.store.OptionComboBox', 'Taco.core.ux.form.DateTime', 'Ext.ux.form.field.BoxSelect', 'Ext.form.Label', 'Taco.store.StateComboBox'],
 
     floating: true,
     shadow: false,
@@ -206,3 +210,4 @@ Ext.define('Taco.view.customers.SearchForm', {
 		me.callParent(arguments);
 	}
 });
+*/

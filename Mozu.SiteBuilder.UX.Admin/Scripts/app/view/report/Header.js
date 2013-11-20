@@ -20,7 +20,7 @@ Ext.define('Taco.view.report.Header', {
             '<h2><a href="\#customers/edit/{customerId}\">{billingContact.firstName} {billingContact.lastName}</a></h2>',
             '<div class="company">{billingContact.companyName}</div>',
         '<tpl if="billingContact.address1">',
-            '<div class="address">{billingContact.address1} {billingContact.cityOrTown}, {billingContact.state} {billingContact.zipCode} {billingContact.countryCode}</div>',
+            '<div class="address">{billingContact.address1} {billingContact.cityOrTown}, {billingContact.stateOrProvince} {billingContact.postalOrZipCode} {billingContact.countryCode}</div>',
         '</tpl>',
         '</div>',
         '<div class="taco-order-detail-header-section history-data">',
