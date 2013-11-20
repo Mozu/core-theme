@@ -54,8 +54,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         };
 
         var actionsWithLabels = Ext.Array.map(me.record.data.availableActions, function (action) {
-            if (!labels[action])
-                throw "unmapped action: " + action;
+            if (!labels[action] && console && console.error)
+                console.error("unmapped action: " + action);
             return { "val": action, "lbl": labels[action] };
         });
 

@@ -304,8 +304,8 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                         address4: formValues.address4,
                         cityOrTown: formValues.cityOrTown,
                         countryCode: formValues.countryCode,
-                        zipCode: formValues.zipCode,
-                        state: formValues.state,
+                        postalOrZipCode: formValues.postalOrZipCode,
+                        stateOrProvince: formValues.stateOrProvince,
                         homePhone: formValues.homePhone,
                         mobilePhone: formValues.mobilePhone,
                         workPhone: formValues.workPhone
