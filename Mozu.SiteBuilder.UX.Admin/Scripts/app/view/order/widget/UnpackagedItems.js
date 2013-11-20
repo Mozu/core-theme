@@ -128,7 +128,7 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
                     '<div class="shipTo">',
                         'Shipped to: {firstName} {lastName} ',
                         '<span class="seperator">|</span>',
-                        ' {address1} {cityOrTown} {postalOrZipCode} {stateOrProvince} ',
+                        ' {address1} {cityOrTown}, {stateOrProvince} {postalOrZipCode}  {countryCode}',
                         '<tpl if="values.phoneNumber">',
                             '<span class="seperator">|</span>',
                             ' {phoneNumber} ',
