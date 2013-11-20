@@ -8,6 +8,7 @@ Ext.define('Taco.store.Capability', {
     storeManagerConfig: {
         clearFilters: true,
         clearSort: true,
-        autoLoad: true
+        autoLoad: true,
+        createOnly: true
     }
 });

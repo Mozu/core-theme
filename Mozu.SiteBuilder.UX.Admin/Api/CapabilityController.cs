@@ -16,6 +16,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers;
 using Mozu.SiteSettings.Application.Contracts.Clients;
 using VM = Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement;
+using System.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -45,7 +46,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 	        List<VM.Capability> list = vmApps.SelectMany(x => x.Crapabilities).ToList();
 
+
+            if (!string.IsNullOrEmpty(pagingParams.id))
+            {
+                list = list.Where(x => x.Id == pagingParams.id).ToList();
+            }
+
+
 	        var ret = this.List2<VM.Capability>(list);
+
+            
 
 
 	        return this.Request.CreateResponse(HttpStatusCode.OK , ret,  LowerCaseJsonMediaTypeFormatter.Default );

@@ -11,7 +11,6 @@ Ext.define('Taco.view.capability.Form', {
     title: 'Applications',
 
     initComponent: function () {
-     
         this.title = this.record.get('applicationName');
         this.buildFormComponents();
        
@@ -22,16 +21,19 @@ Ext.define('Taco.view.capability.Form', {
         this.callParent(arguments);
     },
     updateForm: function () {
+        
         this.templateLeft.update(this.record);
         this.templateRight.update(this.record);
         //Leaving the hide/show code here incase we need to do this later.......
-        /*
+        
         if (this.record.get('initialized')) {
-            this.shippingCountry.show();
+            //this.shippingCountry.show();
+            this.enableBtn.enable();
         } else {
-          this.shippingCountry.hide();  
+            //this.shippingCountry.hide();  
+            this.enableBtn.disable();
         }
-        */
+        
     },
     buildFormComponents: function () {
         var me = this,
@@ -41,13 +43,15 @@ Ext.define('Taco.view.capability.Form', {
             text: data.get('enabled') ? 'Disable App' : 'Enable App',
             ui: 'action-toggle',
             scale: 'medium',
+            disabled: !data.get('initialized'),
             enableToggle: true,
             toggleHandler: function (btn, state) {
                 btn.setText(state ? 'Disable App' : 'Enable App');
                 this.record.set('enabled', state);
                 this.record.save({
                     callback: function (records, operation, success) {
-                        this.record.reload();
+                        //this.record.reload();
+                        this.updateForm();
                     },
                     scope: this
                 });
@@ -66,7 +70,7 @@ Ext.define('Taco.view.capability.Form', {
             tpl: [
                 '<div><span>Capability Type: </span><span>{[values.data.capabilityName]}</span></div>',
                 '<div><span>Publisher Name: </span><span>{[values.data.developerAccountName]}</span></div>',
-                '<div><span>Publisher Date: </span><span>{[Ext.util.Format.date(values.data.effectivesStartDate, "m/d/Y")]}</span></div>',
+                '<div><span>Published Date: </span><span>{[Ext.util.Format.date(values.data.effectivesStartDate, "m/d/Y")]}</span></div>',
                 '<div><span>Enabled: </span><span>{[values.data.enabled]}</span></div>'
             ]
         });
@@ -148,7 +152,7 @@ Ext.define('Taco.view.capability.Form', {
                         this.record.set('activeShoppingCountries', this.shippingCountry.getValue());
                         this.record.save({
                             callback: function (records, operation, success) {
-                                this.record.reload();
+                               // this.record.reload();
                             },
                             scope: this
                         });
