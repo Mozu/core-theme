@@ -162,6 +162,7 @@
   "accountSettings"      : "Account Settings",
   "accountMyWishlist"    : "My Wishlist",
   "accountYourWishlist"  : "Your Wishlist",
+  "accountNoWishlists"   : "You do not have any wishlists.",
   "orderHistory"         : "Order History",
   "paymentMethods"       : "Payment Methods",
   "addressBook"          : "Address Book",

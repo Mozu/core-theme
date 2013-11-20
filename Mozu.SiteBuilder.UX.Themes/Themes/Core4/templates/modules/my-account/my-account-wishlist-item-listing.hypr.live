@@ -1,0 +1,7 @@
+﻿{% extends "modules/common/item-listing" %}
+
+{% block item-details %}
+  {% parent %}
+  <div class="mz-itemlisting-quantity">{{ labels.qty }}: {{ item.quantity }}</div>
+<div class="mz-itemlisting-price">{{ labels.price }}: {{ item.unitPrice.baseAmount|currency }}</div>
+{% endblock %}

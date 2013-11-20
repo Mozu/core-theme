@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.Themes.Exceptions;
 using Mozu.SiteBuilder.Mvc.Themes.Factories;
 
@@ -163,11 +164,19 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                     _watchers = new List<FileSystemWatcher>();
                     foreach (string dir in _themeMetaDataProvider.ThemePaths)
                     {
-                        _watchers.Add(CreateWatcher(dir));
+                        if (Directory.Exists(dir))
+                        {
+                            _watchers.Add(CreateWatcher(dir));
+                        }
+                        else
+                        {
+                            var log = LoggingService.LoggerFor<ThemeRepository>();
+                            log.Error(String.Format("Cannot create watcher for invalid path: \"{0}\"", dir));
+                        }
                     }
                     foreach (var dir in _themeMetaDataProvider.AddonPaths)
                     {
-                        if (System.IO.Directory.Exists(dir))
+                        if (Directory.Exists(dir))
                         {
                             _watchers.Add(CreateWatcher(dir));          
                         }
@@ -186,7 +195,6 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         private FileSystemWatcher CreateWatcher(string path)
         {
-           
             var watcher = new FileSystemWatcher(path)
             {
                 IncludeSubdirectories = true,
