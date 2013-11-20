@@ -70,20 +70,16 @@ Ext.define('Taco.view.location.subform.Location', {
             })
         });
 
-        var shippingContactTemplate = new Ext.XTemplate(
-            '<div class="address-line-1">Name: {firstName} {middleNameOrInitial} {lastNameOrSurname}</div>',
-            '<div class="city-state-zip">Company Name: {companyOrOrganization}</div>',
-            '<div class="country">PhoneNumber: {phoneNumber}</div>'
-        );
-       
         me.shippingContextField = Ext.create('Taco.core.ux.form.field.EditableDisplayField', {
             name: 'shippingOriginContact',
             width: 400,
-            fieldLabel: 'shipping Origin Contact',
+            fieldLabel: 'Shipping Origin Contact',
             onClick: function () {
                 var modal = Ext.widget('taco-modal', {
                     autoShow: true,
                     scale: 'large',
+                    closeAction:"destroy",
+                    title:"Shipping origin contact",
                     items: [{
                         xtype: 'formform',
                         defaults: {
@@ -102,6 +98,7 @@ Ext.define('Taco.view.location.subform.Location', {
                                 fieldLabel: 'Last Name'
                             }, {
                                 name: 'companyOrOrganization',
+                                allowBlank: false,
                                 fieldLabel: 'Company Name'
                             }, {
                                 name: 'phoneNumber',
@@ -113,7 +110,6 @@ Ext.define('Taco.view.location.subform.Location', {
                     listeners: {
                         save: function () {
                             var data = modal.form.getForm().getValues();
-
                             me.shippingContextField.setValue(data);
                         }
                     }
@@ -121,9 +117,13 @@ Ext.define('Taco.view.location.subform.Location', {
 
                 modal.form.getForm().setValues(me.shippingContextField.getValue());
             },
-            renderer: function (value, field) {
-                return shippingContactTemplate.apply(value);
-            }
+            tpl: [
+                '<tpl if="values.firstName || values.middleNameOrInitial ||  values.lastNameOrSurname">',
+                    '<div class="address-line-1">Name: {firstName} {middleNameOrInitial} {lastNameOrSurname}</div>',
+                '</tpl>',
+                '<div class="city-state-zip">Company Name: {companyOrOrganization}</div>',
+                '<div class="country">PhoneNumber: {phoneNumber}</div>'
+            ]
         });
 
         me.addressView = Ext.create('Taco.shared.view.field.Address', {

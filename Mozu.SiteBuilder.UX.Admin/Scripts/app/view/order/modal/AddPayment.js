@@ -14,7 +14,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
     
     initComponent: function () {
         var me = this;
-
+        
         this.form = Ext.create('Taco.core.ux.form.Form', {
             layout: {
                 type: 'vbox'
@@ -267,6 +267,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         if (!PCI) {
             return me.mon(Taco.app, 'pciloaded', me.createPciProcessor, me);
         }
+        
 
         me.pciProcessor = PCI({
             fields: me.getPciFieldsAdapter(),
@@ -311,6 +312,8 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                         workPhone: formValues.workPhone
                     },
                     amount = formValues.amount;
+
+                    
 
                     billingInfo.paymentServiceCardId = me._hiddenCardId;
 
@@ -410,6 +413,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
     save: function () {
         this.setLoading(true, this.body);
+        
         this.pciProcessor.process();
     },
 

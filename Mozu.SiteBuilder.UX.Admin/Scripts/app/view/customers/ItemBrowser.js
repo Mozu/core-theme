@@ -1,6 +1,11 @@
 /**
  * @class Taco.view.customers.ItemBrowser
  */
+
+/*
+
+// Deprecated
+
 Ext.define('Taco.view.customers.ItemBrowser', {
     extend: 'Taco.core.ux.browser.ItemBrowser',
     alias: 'widget.customersbrowser',
@@ -8,7 +13,7 @@ Ext.define('Taco.view.customers.ItemBrowser', {
 
     initComponent: function () {
         var me = this;
-
+        
         me.filterStore = Ext.create(Ext.data.Store, {
             fields: [{
                 name: 'key',
@@ -218,3 +223,5 @@ Ext.define('Taco.view.customers.ItemBrowser', {
         });
     }
 });
+
+*/
