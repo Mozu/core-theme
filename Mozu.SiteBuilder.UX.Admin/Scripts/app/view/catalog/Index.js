@@ -284,7 +284,7 @@ Ext.define('Taco.view.catalog.Index', {
             }, this);
         }
 
-        return pairs;
+        return pairs || {};
     },
 
     /**
