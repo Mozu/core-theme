@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-11-14
+ * Mozu JavaScript SDK - v0.2.0 - 2013-11-20
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2843,7 +2843,30 @@ var ApiReference = (function () {
                 }
             }
         },
-        'addressschemas': '{+referenceService}addressschemas'
+        'addressschemas': '{+referenceService}addressschemas',
+        'wishlist': {
+            'get-default': {
+                template: '{+wishlistService}?startIndex=0&pageSize=1&filter=Name%20eq%20my_wishlist',
+                returnType: 'wishlists'
+            },
+            'create-default': {
+                verb: 'POST',
+                template: '{+wishlistService}',
+                defaultParams: {
+                    name: 'my_wishlist',
+                    typeTag: 'default'      
+                },
+                overridePostData: true
+            },
+            'add-item': {
+                verb: 'POST',
+                template: '{+wishlistService}{id}/items/',
+                includeSelf: true
+            }
+        },
+        'wishlists': {
+            collectionOf: 'wishlist'
+        }
     };
 
     return pub;
@@ -3285,6 +3308,14 @@ ApiObject.types.order = (function() {
         
     };
 }());
+ApiObject.types.product = {
+    addToWishlist: function (quantity) {
+        var self = this;
+        return this.api.createSync('wishlist').getOrCreate().then(function (wishlist) {
+            return wishlist.addItem({ quantity: quantity, product: self.data });
+        });
+    }
+};
 ApiObject.types.shipment = {
     getShippingMethodsFromContact: function (contact) {
         var self = this;
@@ -3326,6 +3357,14 @@ ApiObject.types.user = {
                 lastNameOrSurname: self.prop('lastName'),
                 address: {}
             });
+        });
+    }
+};
+ApiObject.types.wishlist = {
+    getOrCreate: function () {
+        var self = this;
+        return this.getDefault().then(function(listOfWishlists) {
+            return listOfWishlists.data.items.length === 0 ? self.createDefault() : listOfWishlists[0];
         });
     }
 };

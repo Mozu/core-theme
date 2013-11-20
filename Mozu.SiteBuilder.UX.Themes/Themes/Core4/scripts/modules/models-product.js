@@ -133,64 +133,64 @@
                 });
             }
         },
-        apiAddToWishlist: function (quantity) {
-            var me = this;
+        //apiAddToWishlist: function (quantity) {
+        //    var me = this;
 
-            return me.getDefaultWishlistId().then(function (id) {
-                var you = me;
-                var url = api.context.getServiceUrls().wishlistService + "/" + id + "/items";
-                return api.request("POST", url, { quantity: quantity, product: { productCode: me.get('productCode') } });
-            });
-        },
-        getDefaultWishlistId: function () {
-            if (/* wishlistid is cached */ false)
-                return $.Deferred().resolve(/* wishlist id */ 0);
-            else
-                return this.getOrCreateWishlistByName("my_wishlist").then(function(wl) { return wl.id });
-        },
-        // if you put spaces in this name, you're gonna have a bad time. the service doesn't do url encoding well.
-        getOrCreateWishlistByName: function (name) {
-            var me = this,
-                serviceUrl = api.context.getServiceUrls().wishlistService,
-                getWishlistsUrl = serviceUrl + "?startIndex=0&pageSize=1&filter=Name%20eq%20" + name;
+        //    return me.getDefaultWishlistId().then(function (id) {
+        //        var you = me;
+        //        var url = api.context.getServiceUrls().wishlistService + "/" + id + "/items";
+        //        return api.request("POST", url, { quantity: quantity, product: { productCode: me.get('productCode') } });
+        //    });
+        //},
+        //getDefaultWishlistId: function () {
+        //    if (/* wishlistid is cached */ false)
+        //        return $.Deferred().resolve(/* wishlist id */ 0);
+        //    else
+        //        return this.getOrCreateWishlistByName("my_wishlist").then(function(wl) { return wl.id });
+        //},
+        //// if you put spaces in this name, you're gonna have a bad time. the service doesn't do url encoding well.
+        //getOrCreateWishlistByName: function (name) {
+        //    var me = this,
+        //        serviceUrl = api.context.getServiceUrls().wishlistService,
+        //        getWishlistsUrl = serviceUrl + "?startIndex=0&pageSize=1&filter=Name%20eq%20" + name;
         
-            var promise = $.Deferred();
+        //    var promise = $.Deferred();
 
-            api.request("GET", getWishlistsUrl).then(function(resp) {
-                if (resp.items.length > 0) {
-                    promise.resolve(resp.items[0]);
-                }
-                else {
-                    api.request("POST", serviceUrl, {Name: name})
-                    .then(function(resp) {
-                        promise.resolve(resp);
-                    });
-                }
-            });
+        //    api.request("GET", getWishlistsUrl).then(function(resp) {
+        //        if (resp.items.length > 0) {
+        //            promise.resolve(resp.items[0]);
+        //        }
+        //        else {
+        //            api.request("POST", serviceUrl, {Name: name})
+        //            .then(function(resp) {
+        //                promise.resolve(resp);
+        //            });
+        //        }
+        //    });
 
-            return promise;
-        },
-        // supplant for api.request() that does not automatically handle errors
-        // also, i can't get to "utils" in the sdk, so I have to use jquery promises instead of zetlen promises.
-        apiRequestInternal: function(method, url, conf) {
-            var data;
+        //    return promise;
+        //},
+        //// supplant for api.request() that does not automatically handle errors
+        //// also, i can't get to "utils" in the sdk, so I have to use jquery promises instead of zetlen promises.
+        //apiRequestInternal: function(method, url, conf) {
+        //    var data;
 
-            if (conf) {
-                data = conf.data || conf;
-            }
+        //    if (conf) {
+        //        data = conf.data || conf;
+        //    }
 
-            var contextHeaders = api.context.asObject("x-vol-");
+        //    var contextHeaders = api.context.asObject("x-vol-");
 
 
 
-            $.ajax(url, {
-                type: method,
-                headers: contextHeaders,
-                data: data
-            });
+        //    $.ajax(url, {
+        //        type: method,
+        //        headers: contextHeaders,
+        //        data: data
+        //    });
 
-            return promise;
-        },
+        //    return promise;
+        //},
         updateConfiguration: _.debounce(function() {
             var newConfiguration = this.getConfiguredOptions();
             if (JSON.stringify(this.lastConfiguration) !== JSON.stringify(newConfiguration)) {
