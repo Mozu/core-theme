@@ -23,6 +23,8 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     /// </summary>
     public class ClientCacheHeadersAttribute : ActionFilterAttribute
     {
+        public override bool AllowMultiple { get { return false; } }
+
         /// <summary>
         /// Gets or sets the cache duration in seconds. The default is 120 seconds.
         /// </summary>
