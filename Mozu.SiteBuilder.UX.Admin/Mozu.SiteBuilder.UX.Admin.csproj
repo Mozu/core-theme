@@ -613,6 +613,7 @@
     <Content Include="Scripts\app\core\ux\form\field\EditableDisplayField.js" />
     <Content Include="Scripts\app\core\ux\form\field\InlinePicker.js" />
     <Content Include="Scripts\app\core\ux\form\field\Product.js" />
+    <Content Include="Scripts\app\core\ux\form\FilterContainer.js" />
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\mixins\RowEditable.js" />
     <Content Include="Scripts\app\core\ux\mixins\Searchable.js" />
