@@ -25,20 +25,17 @@ Ext.define('Taco.view.productType.Form', {
     ],
 
     initComponent: function () {
-        var options = this.record.get('options'),
-            extras = this.record.get('extras'),
-            properties = this.record.get('properties');
+        var me=this,
+            options = me.record.get('options'),
+            extras = me.record.get('extras'),
+            properties = me.record.get('properties');
 
-        this.stores = this.stores || [];
-        this.stores.push(this.record.getOptions(), this.record.getExtras(), this.record.getProperties());
+        me.stores = me.stores || [];
+        me.stores.push(me.record.getOptions(), me.record.getExtras(), me.record.getProperties());
         
-        this.defaults = {
-            xtype: 'taco.producttype.attributegroup',
-            productType: this.record
-        };        
         
 
-        this.productUsageCheckboxGroup = Ext.create('Ext.form.FieldContainer', {
+        me.productUsageCheckboxGroup = Ext.create('Ext.form.FieldContainer', {
             fieldLabel: "Supported Usage Types",
             // note this layout is required for radiogroups to have the proper height;
             layout: "column",
@@ -50,6 +47,14 @@ Ext.define('Taco.view.productType.Form', {
                     name: "productUsageGroup",
                     layout: {
                         layout: "hbox"
+                    },
+                    listeners: {
+                        change: {
+                            fn: function (group, newValue, oldValue, eOpts) {
+                                me.onUsageTypeChange(newValue);
+                            },
+                            scope:me
+                        }
                     },
                     allowBlank:false,
                     defaults: {
@@ -83,7 +88,7 @@ Ext.define('Taco.view.productType.Form', {
             ]
         });
 
-        this.items = [{
+        me.items = [{
             xtype: 'textfield',
             fieldLabel: 'Name',
             labelPosition: 'top',
@@ -92,19 +97,29 @@ Ext.define('Taco.view.productType.Form', {
             emptyText: 'Enter a Product Type Name',
             name: 'name'
         }, 
-        this.productUsageCheckboxGroup,    
+        me.productUsageCheckboxGroup,    
         {
+            xtype: 'taco.producttype.attributegroup',
+            itemId: "optionsAttributeGroup",
+            productType: me.record,
             type: 'options'
+            
         }, {
+            xtype: 'taco.producttype.attributegroup',
+            itemId: "extrasAttributeGroup",
+            productType: me.record,
             type: 'extras'
         }, {
+            xtype: 'taco.producttype.attributegroup',
+            itemId: "propertiesAttributeGroup",
+            productType: me.record,
             type: 'properties'
         }];
             
        
-        this.callParent(arguments);
+        me.callParent(arguments);
         
-        this.replaceMonitor();
+        me.replaceMonitor();
     },
 
     replaceMonitor: function () {
@@ -441,6 +456,39 @@ Ext.define('Taco.view.productType.Form', {
 
     onDrop: function (plugin, ct, cmp, startIdx, idx) {
         console.log(cmp.getId(), startIdx, idx);
+    },
+    
+    onUsageTypeChange: function (data) {
+        var usageData = data.productUsageField,
+            showExtras = false,
+            showOptions = false;
+        
+        // make sure the data is an array. will be string if one checkbox is selected;
+        if (Ext.isString(usageData)) {
+            usageData = [usageData];
+        }
+
+        // based on which of the checkboxes are selected will need to alter the rolled up visibility of the extras, options, and properties
+        Ext.Array.each(usageData, function(item) {
+            switch (item){
+                case "standard":
+                    showExtras = true;
+                    break;
+                case "configurable":
+                    showOptions = showExtras = true;
+                    break;
+                case "bundle":
+                    showExtras = true;
+                    break;
+                case "component":
+                    break;
+            }
+        });
+        
+        // set the visiblity of the various section;
+        // note that properties is always visible;
+        this.down("#extrasAttributeGroup").setVisible(showExtras);
+        this.down("#optionsAttributeGroup").setVisible(showOptions);
     },
     
     loadRecord: function () {
