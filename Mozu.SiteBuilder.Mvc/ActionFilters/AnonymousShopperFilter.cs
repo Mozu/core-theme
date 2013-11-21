@@ -13,6 +13,8 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
     public class AnonymousShopperFilterAttribute : ActionFilterAttribute
     {
+        public override bool AllowMultiple { get { return false; } }
+
         private static int PublishBehavorID = new PublishPreviewBehavior().Id;
         public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
         {

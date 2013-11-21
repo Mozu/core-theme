@@ -16,7 +16,9 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     public class RefreshStoreFrontUserAuthTicketFilter : ActionFilterAttribute
     {
         private StoreFrontAuthorizeAttribute _storeFrontAuthorizeAttribute = new StoreFrontAuthorizeAttribute();
-       
+
+        public override bool AllowMultiple { get { return false; } }
+
         public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
         {
             _storeFrontAuthorizeAttribute.RefreshUserAuthTicket(actionContext);
