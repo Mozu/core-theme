@@ -294,7 +294,25 @@
         },
         "icon": "/resources/admin/widgets/01_photo_text.png",
 
-    }, {
+    }, 	{
+         "id": "instockrequest",
+         "displayName": "Instock Request",
+         "displayTemplate": "misc/instock-request",
+        "editViewFields":[
+
+			{
+				"fieldLabel":"title",
+				"xtype":"textfield",
+				"anchor":"100%"
+				}
+			
+         ],
+          "defaultConfig": {
+			  "title": "Related Items"
+		},
+         "icon": "/resources/admin/widgets/01_photo_text.png",
+         
+    },  {
         "id": "content",
         "displayName": "Content",
         "displayTemplate": "cms/content",
