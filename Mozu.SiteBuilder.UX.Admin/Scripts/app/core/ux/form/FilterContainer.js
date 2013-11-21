@@ -1,78 +1,43 @@
-/**
- * @class Taco.view.catalog.Index
+﻿/**
+ * @class Taco.core.ux.form.FilterContainer
  * @author Jimmy Sanford
  *
- * This is just a file for component testing. It should probably be located somewhere else.
+ * The base class for a filter container, consisting of three components:
+ *
+ * - A textfield, which allows simple keyword filtering as well as tokenized advanced filtering;
+ * - A dialog window, which contains a form designed for advanced filtering;
+ * - A button, which opens and closes the dialog.
  */
 
-Ext.define('Taco.view.catalog.Index', {
-    extend: 'Taco.core.ux.content.Container',
-    requires: [
-        'Taco.core.ux.form.FilterContainer'
-    ],
+Ext.define('Taco.core.ux.form.FilterContainer', {
+    extend: 'Ext.form.FieldContainer',
+    alias: 'widget.taco-filtercontainer',
 
-    header: {
-        title: 'Component Testing'
-    },
+    layout: 'hbox',
 
     initComponent: function () {
-        var store, items;
-
-        store = Ext.create('Ext.data.ArrayStore', {
-            fields: [
-                { name: 'item', type: 'string' },
-                { name: 'isMeal', type: 'boolean' },
-                { name: 'price', type: 'number' },
-                { name: 'size', type: 'string' }
-            ],
-            data: [
-                ['Big Mac', true, 3.99],
-                ['Chicken McNuggets, 20 pieces', false, 5],
-                ['Chocolate Shake, large', false, 2.89, 'large'],
-                ['French Fries, small', false, 0.99, 'small']
-            ]
-        });
-
-        items = [{
-            xtype: 'container',
-            layout: 'hbox',
-            items: [{
-                xtype: 'textfield',
-                itemId: 'textFilter',
-                margin: '0 10 20 0',
-                width: 400,
-                listeners: {
-                    specialkey: {
-                        scope: this,
-                        fn: this.handleFieldSubmit
-                    }
-                }
-            }, {
-                xtype: 'button',
-                itemId: 'advancedFilter',
-                ui: 'action',
-                scale: 'medium',
-                glyph: 'XE010@mozicons',
-                width: 57,
-                enableToggle: true,
-                scope: this,
-                toggleHandler: this.handleButtonToggle
-            }]
-        }, {
-            xtype: 'dataview',
-            itemId: 'list',
-            store: store,
-            itemSelector: 'li.mcds',
-            height: 400,
+        this.items = [{
+            xtype: 'textfield',
+            itemId: 'textFilter',
+            margin: '0 10 20 0',
             width: 400,
-            tpl: '<tpl for="."><li class="mcds">{item} {price:usMoney} {isMeal} {size}</li></tpl>'
+            listeners: {
+                specialkey: {
+                    scope: this,
+                    fn: this.handleFieldSubmit
+                }
+            }
+        }, {
+            xtype: 'button',
+            itemId: 'advancedFilter',
+            ui: 'action',
+            scale: 'medium',
+            glyph: 'XE010@mozicons',
+            width: 57,
+            enableToggle: true,
+            scope: this,
+            toggleHandler: this.handleButtonToggle
         }];
-
-        Ext.apply(this.body, {
-            cls: Taco.baseCSSPrefix + 'catalog',
-            layout: 'auto',
-            items: items
-        });
 
         this.callParent(arguments);
 
