@@ -91,6 +91,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         [DataMember(Name="pageTypes")]
         public List<Models.CMS.PageTypeDefinition> PageTypes { get; set; }
 
+
+      [DataMember(Name = "emailTemplates")]
+        public List<Models.CMS.PageTypeDefinition> EmailTemplates { get; set; }
+
         [IgnoreDataMember]
         public List<Models.CMS.WidgetDefinition> Widgets { get; set; }
         

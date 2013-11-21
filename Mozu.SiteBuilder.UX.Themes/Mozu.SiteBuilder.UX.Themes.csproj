@@ -850,12 +850,10 @@
     <Content Include="Themes\Core3\Resources\old_stylesheets\pages\search-results.less" />
     <Content Include="Themes\Core3\Resources\old_stylesheets\storefront.less" />
     <Content Include="Themes\Core3\Resources\old_stylesheets\textonly.less" />
-    <Content Include="Themes\Core4\templates\email\AdminInvite.hypr" />
-    <Content Include="Themes\Core4\templates\email\AdminRoleAdded.hypr" />
-    <Content Include="Themes\Core4\templates\email\NewUser.hypr" />
-    <Content Include="Themes\Core4\templates\email\OrderStatus.hypr" />
-    <Content Include="Themes\Core4\templates\email\ResetPassword.hypr" />
-    <Content Include="Themes\Core4\templates\email\TBD.hypr" />
+    <Content Include="Themes\Core4\templates\email\new-user.hypr" />
+    <Content Include="Themes\Core4\templates\email\order-status.hypr" />
+    <Content Include="Themes\Core4\templates\email\reset-password.hypr" />
+    <Content Include="Themes\Core4\templates\email\email.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\social\addthis.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\social\facebookcomments.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\misc\pickels.hypr" />

@@ -7,7 +7,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         private static readonly string[] g_formats = new[] { "templates\\modules\\{0}", "templates\\{0}" };
 
 
-        private static readonly string[] g_page_formats = new[] { "templates\\pages\\{0}" };
+        private static readonly string[] g_page_formats = new[] { "templates\\pages\\{0}", "templates\\{0}" };
         private static readonly string[] g_widget_formats = new[] { "widgets\\{0}" };
 
 
