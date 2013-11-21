@@ -71,6 +71,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
             Mapper.CreateMap<ProductType, DC.ProductType>()
+                .ForMember( dc=> dc.ProductUsages, opt=> opt.MapFrom( x=> x.ProductUsages))
                 .ForMember(dc => dc.Id, opt => opt.MapFrom(x => x.Id))
                 .ForMember(dc => dc.Name, opt => opt.MapFrom(x => x.Name))
                 .ForMember(dc => dc.IsBaseProductType, opt => opt.MapFrom(x => x.IsBase))

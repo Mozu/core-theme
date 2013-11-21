@@ -17,6 +17,7 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.website.widgetEditors.HorizontalRule',
         'Taco.view.website.entityAdapters.SiteTemplateEntityAdapter',
         'Taco.view.website.entityAdapters.TemplateEntityAdapter',
+        'Taco.view.website.entityAdapters.EmailTemplateEntityAdapter',
         'Ext.ux.IFrame'
     ],
 
@@ -24,10 +25,11 @@ Ext.define('Taco.view.website.Index', {
 
     entityTypeEditConfig: {
         blog: 'Taco.view.website.entityAdapters.DocumentEntityAdapter',
-        "default": 'Taco.view.website.entityAdapters.DocumentEntityAdapter',
+        'default': 'Taco.view.website.entityAdapters.DocumentEntityAdapter',
         category: 'Taco.view.website.entityAdapters.CategoryEntityAdapter',
         product: 'Taco.view.website.entityAdapters.ProductEntityAdapter',
-        link: 'Taco.view.website.entityAdapters.ExternalLinkEntityAdapter'
+        link: 'Taco.view.website.entityAdapters.ExternalLinkEntityAdapter',
+        email: 'Taco.view.website.entityAdapters.EmailTemplateEntityAdapter'
     },
 
     options: {},

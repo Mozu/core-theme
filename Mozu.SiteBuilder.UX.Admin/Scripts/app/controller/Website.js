@@ -33,17 +33,21 @@ Ext.define('Taco.controller.Website', {
     *
     *************************************/
     //returns a  store of widgetTypeDefinition
-    findWidgetTypeDefinitions: function (filter, callback) {
+    findWidgetTypeDefinitions: function (win, callback) {
 
         var store = Taco.core.data.StoreManager.getOrCreate("Taco.store.WidgetDefinitions"),
             cb = function () {
                 var json = [],
-                    convertedData = [];
+                    convertedData = [],
+                    pageContext = win.require.mozuData('pagecontext');
                 
                 store.each(function (item) {
                     json.push(item.data);
                 });
                 
+
+
+
                 json.forEach(function (widget) {
              
                     convertedData.push({

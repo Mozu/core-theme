@@ -317,9 +317,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<DC.ProductLocalizedImage, Models.ProductModels.ProductLocalizedImage>();
 
-            Mapper.CreateMap<Models.ProductModels.StockOnHandAdjustment, DC.StockOnHandAdjustment>();
-            Mapper.CreateMap<DC.StockOnHandAdjustment, Models.ProductModels.StockOnHandAdjustment>();
-
+           
             Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, UnitOfMeasure>();
             Mapper.CreateMap<UnitOfMeasure, Mozu.Core.Api.Contracts.Measurement>();
 

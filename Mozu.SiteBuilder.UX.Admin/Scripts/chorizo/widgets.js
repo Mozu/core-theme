@@ -37,7 +37,7 @@
 
             this.$body = this.$modal.find('.mz-cms-body');
 
-            this.controller().findWidgetTypeDefinitions('*', function(widgets) {
+            this.controller().findWidgetTypeDefinitions( window, function(widgets) {
                 
 
                 $.each(widgets, function(i, widget) {
