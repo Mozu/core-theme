@@ -77,6 +77,11 @@ Ext.define('Taco.model.Product', {
             useNull: true
         },
         {
+            name: 'productUsage',
+            type: 'string',
+            defaultValue: "standard"
+        },
+        {
             name: "publishedState",
             type: "string",
             useNull: true
