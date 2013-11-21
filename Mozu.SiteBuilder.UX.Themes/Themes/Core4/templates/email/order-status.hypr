@@ -1,21 +1,6 @@
-﻿<html  lang="en">
-   
-    <head>
+﻿  {% extends "email/email" %}
 
-        <style>
-            body {
-                background-color: #FFF;
-                padding: 20px;
-            }
-
-        </style>
-    </head>
-  
-  
-    <body class=""  >
-  
-        <div id="mz-order-confirmation" class="mz-order-confirmation">
-	
+  {% block body-content %}
             <table id="mz-purchase-details" class="mz-purchase-details">
                 <thead>
                     <tr>
@@ -181,7 +166,6 @@
                 </tfoot>
             </table>
    
-        </div>
-        <div {% data_attributes ViewData.content.html_2 %}> {{ViewData.content.html_2}}</div>
-    </body>
-</html>
+      
+
+		{% endblock body-content %}

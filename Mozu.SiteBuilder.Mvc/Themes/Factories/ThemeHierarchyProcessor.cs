@@ -80,6 +80,12 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                 theme.PageTypes = theme.PageTypes.Union(theme.Parent.PageTypes, new PageTemplateDefinitionEQ() ).ToList();
 
             }
+
+             if (theme.Parent.EmailTemplates  != null)
+             {
+                 theme.EmailTemplates = theme.EmailTemplates.Union(theme.Parent.EmailTemplates, new PageTemplateDefinitionEQ()).ToList();
+
+             }
             
         }
     }

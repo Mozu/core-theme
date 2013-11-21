@@ -11,6 +11,7 @@ Ext.define('Taco.store.LocationInventories', {
     model: 'Taco.model.LocationInventory',
     pageSize: 25,
     remoteSort: true,
+    autoLoad: false,
     remoteFilter: true,
     storeManagerConfig: {
         clearFilters: true,

@@ -47,6 +47,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 	        List<VM.Capability> list = vmApps.SelectMany(x => x.Crapabilities).ToList();
 
 
+
+
             if (!string.IsNullOrEmpty(pagingParams.id))
             {
                 list = list.Where(x => x.Id == pagingParams.id).ToList();

@@ -9,6 +9,7 @@ using System.Web.Http;
 using Autofac;
 using Mozu.Core.Messaging.Contracts.Notification;
 using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Newtonsoft.Json;
@@ -26,6 +27,7 @@ using Mozu.SiteBuilder.UX.Models.Checkout;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 using Mozu.User.Contracts;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
+using System.Linq;
 using AutoMapper;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -40,9 +42,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             public const string PasswordReset = "user.passwordreset";
             public const string NewUserCreated = "user.created";
-            public const string AdminUserInvited = "user.admin.invited";
-            public const string AdminRoleAdded = "user.admin.roleadded";
-            public const string OrderEmailTopic = "order.changed";
+        public const string OrderEmailTopic = "order.changed";
             public const string OrderShippedTopic = "order.shipped";
         }
 
@@ -53,46 +53,26 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                        new EmailTypeInfo()
                                            {
                                                ModelType = typeof (ResetPasswordEmailMessage),
-                                               Template = "email/resetpassword",
-                                               CmsDoc="resetpassword",
-                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, Topics.PasswordReset )
+                                          
+                                              Topic =  Topics.PasswordReset 
                                            },
                                        new EmailTypeInfo()
                                            {
                                                ModelType =  typeof (NewUserEmailMessage),
-                                               Template = "email/newuser",
-                                               CmsDoc="newuser",
-                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, Topics.NewUserCreated)
+                                               Topic = Topics.NewUserCreated
                                            },
-                                        new EmailTypeInfo()
-                                           {
-                                               ModelType = typeof (Invitation),
-                                               Template = "email/admininvite",
-                                               CmsDoc="userinvited",
-                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, Topics.AdminUserInvited)
-                                           },
-                                           new EmailTypeInfo()
-                                           {
-                                               ModelType = typeof (Invitation),
-                                               Template = "email/adminroleadded",
-                                               CmsDoc="adminroleadded",
-                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic, Topics.AdminRoleAdded)
-                                           },
+                                    
                                        new EmailTypeInfo()
                                            {
                                                ModelType = typeof (Mozu.CommerceRuntime.Contracts.Orders.Order ),
-                                              // MappingType = typeof(OrderInformation),
-                                               Template = "email/orderstatus",
-                                               CmsDoc="orderstatus",
-                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic,Topics.OrderEmailTopic )//OrderNotificationTopics.TopicBase ,OrderNotificationTopics.Open ) //todo: fix this one...
+                                              
+                                               Topic = Topics.OrderEmailTopic
                                            },
                                             new EmailTypeInfo()
                                            {
                                                ModelType = typeof (Mozu.CommerceRuntime.Contracts.Orders.Order ),
-                                            //   MappingType = typeof(OrderInformation),
-                                               Template = "email/orderstatus",
-                                               CmsDoc="orderstatus",
-                                               Topic = string.Format("{0}.{1}",EmailNotification.PrimaryTopic,Topics.OrderShippedTopic ) //,OrderNotificationTopics.TopicBase ,OrderNotificationTopics.Cancelled   ) //todo: fix this one...
+                                          
+                                               Topic = Topics.OrderShippedTopic 
                                            }
 
                                    };
@@ -117,22 +97,26 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
           [System.Web.Http.HttpGet]
         public async  Task<HttpResponseMessage> Preview(string id)
         {
-            string emailTempalte = id;
-            var res = await Page("email", emailTempalte);
+            
+           var emailTempalte=    this.SiteContext.Theme.EmailTemplates.FirstOrDefault(x => string.Equals(x.Id, id, StringComparison.OrdinalIgnoreCase));
+
+
+           var res = await Page("email", GetCmsPage(emailTempalte));
             if (res.StatusCode == HttpStatusCode.NotFound  )
             {
                 var reqDoc = new Mvc.Models.CMS.Admin.Document(){
                       DocumentListName = "email",
                       DocumentType = "email",
-                      Name = emailTempalte ,
-                      Items = new List<VM.Admin.DocumentProperty>()
-                      {
-                          new VM.Admin.DocumentProperty ()
-                          {
-                              Key = CmsConstants.Widgets.page_type_definition,
-                              Value = "email"
-                          }
-                      }
+                      Name = GetCmsPage(emailTempalte) 
+                      //Items = emailTempalte.Properties == null ? null : emailTempalte.Properties..Select(_=> _.k)
+                      //Items = new List<VM.Admin.DocumentProperty>()
+                      //{
+                      //    new VM.Admin.DocumentProperty ()
+                      //    {
+                      //        Key = CmsConstants.Widgets.page_type_definition,
+                      //        Value = "subject"
+                      //    }
+                      //}
                 };
 
                 var task = _cmsService.Create2(reqDoc);
@@ -141,14 +125,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 //_cmsService.Create ( )
                 //CreatePage("home page", "home", "home");
 
-                res = await Page("email", emailTempalte);
+                res = await Page("email", emailTempalte.Template  );
             }
 
             ViewResult vr = ((ObjectContent )res.Content).Value   as ViewResult;
-            vr.ViewName = "email/" + emailTempalte;
+              vr.ViewName = emailTempalte.Template;
             this.ViewData["content"] = vr.Model;
-
-            return this.Request.CreateResponse(HttpStatusCode.OK, View("email/" + emailTempalte, new List<int>()));
+            
+            return this.Request.CreateResponse(HttpStatusCode.OK, View(emailTempalte.Template, new List<int>()));
 
         }
 
@@ -167,21 +151,27 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         		innerPayload = (string) token.SelectToken("Payload").SelectToken("InnerPayload");
         	}
 
-
+            if (topic.StartsWith(EmailNotification.PrimaryTopic))
+            {
+                topic = topic.Substring(EmailNotification.PrimaryTopic.Length +1 );
+            }
 
         	var emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic, topic, StringComparison.OrdinalIgnoreCase));
+
+            var emailTempalte = this.SiteContext.Theme.EmailTemplates.FirstOrDefault(x => string.Equals(x.Id, topic, StringComparison.OrdinalIgnoreCase));
+
         	if (emailTypeInfo == null)
         	{
         		return this.Request.CreateErrorResponse( HttpStatusCode.BadRequest ,"unknown topic " + topic);
         	}
 
 
-        	var v = await  Page("email", emailTypeInfo.CmsDoc );
+            var v = await Page("email", GetCmsPage(emailTempalte));
             object cmdContent = null;
         	var vr = ((ObjectContent) v.Content).Value as ViewResult  ;
 			if (vr !=null)
 			{
-				//ViewData["content"] = vr.Model;
+				ViewData["content"] = vr.Model;
 			    cmdContent = vr.Model;
 			}
 
@@ -199,7 +189,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //                       Subject = "TEST SUBJECT " + emailTypeInfo.Topic ,
             //                       Body = viewString
             //                   };
-            return this.Request.CreateResponse(HttpStatusCode.OK, new EmailRenderActionResult(emailTypeInfo, emailTypeInfo.Template, model, cmdContent));
+            return this.Request.CreateResponse(HttpStatusCode.OK, new EmailRenderActionResult(emailTypeInfo, emailTempalte.Template , model, cmdContent));
 
 
         }
@@ -254,13 +244,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return JsonConvert.DeserializeObject(json);
             }
             var jobj = JsonConvert.DeserializeObject(json, eti.ModelType);
-            if (eti.MappingType != null)
-            {
-                jobj = AutoMapper.Mapper.Map(jobj, eti.ModelType, eti.MappingType);
-            }
+            //if (eti.MappingType != null)
+            //{
+            //    jobj = AutoMapper.Mapper.Map(jobj, eti.ModelType, eti.MappingType);
+            //}
             return jobj;
         }
 
+        string GetCmsPage(PageTypeDefinition def)
+        {
+            return def.Id.Replace(".", "~");
+        }
         
     }
 
@@ -273,11 +267,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     public class EmailTypeInfo
     {
         public string Topic { get; set; }
-        public string Template { get; set; }
+       
         public Type ModelType { get; set; }
 
-        public string CmsDoc { get; set; }
+  
 
-        public Type MappingType { get; set; }
+       // public Type MappingType { get; set; }
     }
 }

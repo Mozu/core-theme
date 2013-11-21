@@ -80,26 +80,31 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //}
         //
         // GET: /StoreFront/Details/5
-   
+
         [System.Web.Http.HttpGet]
         public async Task<HttpResponseMessage> Page(string collection, string pageName)
         {
-            
+
 
             var pc = this.PageContext;
 
             pc.CmsContext = new CmsPageContext()
-            {
-                Page = new DocumentRequest(){
-                    Path=pageName,
-                    Collection = collection
-                } 
-                
-            };
+                                {
+                                    Page = new DocumentRequest()
+                                               {
+                                                   Path = pageName,
+                                                   Collection = collection
+                                               }
+
+                                };
 
             var helper = new CmsHelper(CmsService);
             await helper.InitCmsPageContext(PageContext);
-           
+
+            if (pc.CmsContext.Page.Document  == null)
+            {
+                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "page not found");
+            }
 
             var vm = Mapper.Map<DC.Document, VM.Document>(pc.CmsContext.Page.Document ,
                                                           opt => opt.ConstructServicesUsing(this.LifetimeScope .Resolve ));

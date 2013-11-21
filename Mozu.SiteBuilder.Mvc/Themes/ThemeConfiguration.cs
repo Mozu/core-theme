@@ -24,6 +24,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         [DataMember(Name = "pageTypes")]
         public List<PageTypeDefinition> PageTypes { get; set; }
 
+        [DataMember(Name = "emailTemplates")]
+        public List<PageTypeDefinition> EmailTemplates { get; set; }
+
+        
+
         [DataMember(Name = "widgets")]
         public List<WidgetDefinition> Widgets { get; set; }
 
