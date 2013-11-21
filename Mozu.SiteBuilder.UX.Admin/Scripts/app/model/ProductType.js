@@ -9,12 +9,11 @@ Ext.define('Taco.model.ProductType', {
         { name: 'name', type: 'string' },
         { name: 'isBase', type: 'boolean' },
         { name: 'options', type: 'auto', defaultValue: [] },
-        {name:'numberOfProducts', type:'int'},
+        { name: 'numberOfProducts', type:'int'},
         { name: 'extras', type: 'auto', defaultValue: [] },
         { name: 'properties', type: 'auto', defaultValue: [] },
-    { name: 'modifiedDate', type: 'date' }
-    
-        
+        { name: 'productUsage', type: 'array', defaultValue: ["standard"] },
+        { name: 'modifiedDate', type: 'date' }
     ],
     getOptions: function () {
         return this.getOrCreateHasManyStore({
