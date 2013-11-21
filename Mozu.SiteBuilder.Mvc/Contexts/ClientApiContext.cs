@@ -81,8 +81,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     
                     foreach (var url in urls.ToArray())
                     {
+
                         int idx = (((string) url.Value) ?? "").IndexOf("webapi/", StringComparison.OrdinalIgnoreCase);
-                        if (idx > 0)
+                        if (idx > 0 && url.Key != "PaymentService")
                         {
                             urls[url.Key] = "/api" + ((string) url.Value).Substring(idx + 6);
                         }
