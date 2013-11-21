@@ -253,9 +253,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.PricingRuntime.Contracts.1.1.0.4\lib\Mozu.PricingRuntime.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.1.0.7\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.2.0-dev007\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -704,10 +704,12 @@
     <Content Include="Scripts\app\view\siteSelection\SiteView.js" />
     <Content Include="Scripts\app\view\tbd\Index.js" />
     <Content Include="Scripts\app\view\themeSettings\Addons.js" />
+    <Content Include="Scripts\app\view\website\entityAdapters\EmailTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\SiteTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\TemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\misc\ExternalLinkEditor.js" />
     <Content Include="Scripts\app\view\website\settings\CatalogSeo.js" />
+    <Content Include="Scripts\app\view\website\settings\EmailTemplate.js" />
     <Content Include="Scripts\app\view\website\settings\ProductDocument.js" />
     <Content Include="Scripts\app\view\website\WidgetEditor.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\BaseEntityAdapter.js" />
@@ -1113,15 +1115,6 @@
     <Content Include="Scripts\app\core\ux\tinymce\WindowManager.js" />
     <Content Include="Scripts\app\core\ux\window\Window.js" />
     <Content Include="Scripts\app\locale\Strings.js" />
-    <Content Include="Configs\AppSettings.SI.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Configs\AppSettings.Prod.config" />
-    <Content Include="Configs\Log4Net.CI.config" />
-    <Content Include="Configs\Log4Net.config" />
-    <Content Include="Configs\Log4Net.Debug.config" />
-    <Content Include="Configs\Log4Net.Demo.config" />
-    <Content Include="Configs\Log4Net.Release.config" />
     <Content Include="PreDeploy.ps1" />
     <Content Include="PostDeploy.ps1" />
     <Content Include="Scripts\.sencha\app\build.properties" />
@@ -3342,13 +3335,6 @@
     <Content Include="Scripts\.project" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Configs\AppSettings.CI.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Configs\AppSettings.Dev.config" />
-    <Content Include="Configs\AppSettings.Demo.config">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Scripts\makedocs.bat" />
     <None Include="Properties\PublishProfiles\demo.pubxml" />
     <Content Include="Scripts\app\locale\lang-de.csv" />

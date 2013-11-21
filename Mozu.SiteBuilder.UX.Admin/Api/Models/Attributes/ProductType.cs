@@ -31,5 +31,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
         [DataMember(Name = "modifiedDate")]
         public DateTime? ModifiedDate { get; set; }
 
+
+
+        /// <summary>
+        /// List of ProductUsages supported by the ProductType.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "productUsages")]
+        public List<String> ProductUsages { get; set; }
+
     }
 }

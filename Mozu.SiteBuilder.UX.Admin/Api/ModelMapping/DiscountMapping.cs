@@ -23,30 +23,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<DC.Discount, Discount>()
                   .ForMember(x => x.TargetType, opt => opt.MapFrom(x=> x.Target.Type ))
                   .ForMember(x => x.IncludeAllProducts   , opt => opt.MapFrom(x=> x.Target.IncludeAllProducts  ))
-                  .ForMember(x => x.MinimumLifetimeValueAmount, opt => opt.MapFrom(x => x.Target.MinimumLifetimeValueAmount))
+                  .ForMember(x => x.MinimumLifetimeValueAmount, opt => opt.MapFrom(x => x.Conditions.MinimumLifetimeValueAmount))
                   .ForMember(x => x.Categories    , opt => opt.MapFrom(x=> (x.Target.Categories ?? Enumerable.Empty<DC.TargetedCategory>()).Select( _=> _.Id ).ToList()  ))
-                  .ForMember(x => x.Products     , opt => opt.MapFrom(x=> (x.Target.Products  ?? Enumerable.Empty<DC.TargetedProduct >()).Select( _=> _.Code  ).ToList()  ))
+                  .ForMember(x => x.Products     , opt => opt.MapFrom(x=> (x.Target.Products  ?? Enumerable.Empty<DC.TargetedProduct >()).Select( _=> _.ProductCode   ).ToList()  ))
                   .ForMember(x => x.ExcludedCategories, opt => opt.MapFrom(x => (x.Target.ExcludedCategories ?? Enumerable.Empty<DC.TargetedCategory>()).Select(_ => _.Id).ToList()))
-                  .ForMember(x => x.ExcludedProducts, opt => opt.MapFrom(x => (x.Target.ExcludedProducts ?? Enumerable.Empty<DC.TargetedProduct>()).Select(_ => _.Code).ToList()))
+                  .ForMember(x => x.ExcludedProducts, opt => opt.MapFrom(x => (x.Target.ExcludedProducts ?? Enumerable.Empty<DC.TargetedProduct>()).Select(_ => _.ProductCode ).ToList()))
                   .ForMember(x => x.ShippingMethods, opt => opt.MapFrom(x => (x.Target.ShippingMethods ?? Enumerable.Empty<DC.TargetedShippingMethod>()).Select(_ => _.Code).ToList()))
-                  .ForMember(x => x.MinimumOrderAmount     , opt => opt.MapFrom(x=> x.Target.MinimumOrderAmount   ))
+                  .ForMember(x => x.MinimumOrderAmount, opt => opt.MapFrom(x => x.Conditions.MinimumOrderAmount))
                   
                   .ForMember(x => x.Name , op => op.ResolveUsing(dc => dc.Content.Name ));
 
             // To data contract
             Mapper.CreateMap<Discount, DC.Discount>()
                   .ForMember(x => x.Content, opt => opt.MapFrom(x => new DC.DiscountLocalizedContent() {Name = x.Name}))
+                  .ForMember(x => x.Conditions , opt => opt.MapFrom(x => new DC.DiscountCondition() 
+                                                                        {
+                                                                            
+                                                                            MinimumOrderAmount = x.MinimumOrderAmount,
+                                                                            MinimumLifetimeValueAmount = x.MinimumLifetimeValueAmount
+                                                                        }))
                   .ForMember(x => x.Target, opt => opt.MapFrom(x => new DC.DiscountTarget()
                                                                         {
                                                                             Type = x.TargetType,
                                                                             Categories = (x.Categories ?? Enumerable.Empty<int>()).Select(_ => new DC.TargetedCategory() {Id = _}).ToList(),
                                                                             ExcludedCategories  = (x.ExcludedCategories  ?? Enumerable.Empty<int>()).Select(_ => new DC.TargetedCategory()  { Id = _ }).ToList(),
-                                                                            ExcludedProducts = (x.ExcludedProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedProduct() { Code = _ }).ToList(),
-                                                                            Products = (x.Products ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedProduct() {Code = _}).ToList(),
+                                                                            ExcludedProducts = (x.ExcludedProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedProduct() { ProductCode = _ }).ToList(),
+                                                                            Products = (x.Products ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedProduct() {ProductCode  = _}).ToList(),
                                                                             ShippingMethods = (x.ShippingMethods ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedShippingMethod() {Code = _}).ToList(),
-                                                                            MinimumOrderAmount = x.MinimumOrderAmount,
-                                                                            IncludeAllProducts = x.IncludeAllProducts,
-                                                                            MinimumLifetimeValueAmount = x.MinimumLifetimeValueAmount
+                                                                           IncludeAllProducts = x.IncludeAllProducts
                                                                         }))
                   .AfterMap((s, d) =>
                       {

@@ -73,8 +73,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 // the Mozu service does not accept a null StartDate, even though the field is nullable.
                 // TODO: this may be fixed in the future on their end.
-                if (dc.StartDate == null)
-                    dc.StartDate = DateTime.UtcNow;
+                if (dc.Conditions.StartDate  == null)
+                    dc.Conditions.StartDate = DateTime.UtcNow;
 
                 // the Mozu service does not allow us to pick "FreeShipping" but have no shipping methods associated.
                 if (dc.Target.Type == "FreeShipping" && (dc.Target.ShippingMethods == null || dc.Target.ShippingMethods.Count == 0))
