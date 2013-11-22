@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             {
                 if (_lifetimeScope == null)
                 {
-                    _lifetimeScope = (ILifetimeScope)this.ControllerContext.Request.GetDependencyScope().GetService(typeof(ILifetimeScope));
+                    _lifetimeScope = (ILifetimeScope)this.Request.GetDependencyScope().GetService(typeof(ILifetimeScope));
 
 
                 }

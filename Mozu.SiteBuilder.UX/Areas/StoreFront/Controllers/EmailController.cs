@@ -13,6 +13,7 @@ using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Messaging.Contracts.Notification;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
+using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
@@ -154,13 +155,30 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             object model = Convert(innerPayload, emailTypeInfo);
 
+
+
+
+            var viewEngine = Request.Resolve<HyprViewEngine>();
+            var view = viewEngine.FindPageView(emailTempalte.Template);
+            var vdd = new ViewDataDictionary();
+            vdd["model"] = model;
+            vdd["content"] = cmdContent;
+
+            var hvc = new HyprViewContext(this.Request , vdd, null);
+            var stringWriter = new StringWriter();
+            view.Render(hvc, stringWriter);
+
+
+
+
             //var viewString = RenderViewToString(emailTypeInfo.Template , model, cmdContent);
-            //var response = new EmailResponse
-            //                   {
-            //                       Subject = "TEST SUBJECT " + emailTypeInfo.Topic ,
-            //                       Body = viewString
-            //                   };
-            return Request.CreateResponse(HttpStatusCode.OK, new EmailRenderActionResult(emailTypeInfo, emailTempalte.Template, model, cmdContent));
+            var response = new EmailResponse
+                               {
+                                   Subject = "TEST SUBJECT " + emailTypeInfo.Topic,
+                                   Body = stringWriter.GetStringBuilder() .ToString( )
+                               };
+
+            return Request.CreateResponse(HttpStatusCode.OK, response);
         }
 
         private static object Convert(string json, EmailTypeInfo eti)
@@ -200,10 +218,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             public override void ExecuteResult(HttpRequestMessage requestMessage)
             {
-                throw new NotImplementedException();
-                //todo:hyper reimplemnt email.
-                // var viewString = RenderViewToString(_emailInfo.Template , _model, _cmsDoc, context );
-                //var response = new EmailResponse
+                var viewEngine = requestMessage.Resolve<HyprViewEngine>();
+                var view = viewEngine.FindPageView(_viewName);
+                var vdd = new ViewDataDictionary();
+                vdd["model"] = _model;
+                vdd["content"] = _cmsDoc;
+
+                var hvc = new HyprViewContext(requestMessage, vdd, null);
+                var stringWriter = new StringWriter();
+                view.Render(hvc, stringWriter);
+
+
+
+               
+      
                 //               {
                 //                   Subject = "TEST SUBJECT " + _emailInfo.Topic ,
                 //                   Body = viewString
