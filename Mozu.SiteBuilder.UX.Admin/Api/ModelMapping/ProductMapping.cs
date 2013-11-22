@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<DC.Product, Product>()
                 .ForMember(x => x.OutOfStockBehavior , op=> op.MapFrom(dc => (dc.InventoryInfo ?? new DC.ProductInventoryInfo()).OutOfStockBehavior  ))
                 .ForMember(x => x.ManageStock, op => op.MapFrom(dc => (dc.InventoryInfo ?? new DC.ProductInventoryInfo()).ManageStock ))
-
+                .ForMember(x => x.ProductUsage, op => op.MapFrom(x => x.ProductUsage))
                 .ForMember(x => x.PublishedState, op => op.MapFrom(dc => (dc.PublishingInfo?? NULLPUB).PublishedState ))
                 .ForMember(x => x.LastModifiedBy, op => op.MapFrom(dc => dc.AuditInfo.UpdateBy))
                 .ForMember(x => x.LastModifiedDate, op => op.MapFrom(dc => dc.AuditInfo.UpdateDate))
@@ -79,6 +79,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                 .ForMember(dc => dc.InventoryInfo, op => op.MapFrom(p => new DC.ProductInventoryInfo() { ManageStock = p.ManageStock, OutOfStockBehavior = string.IsNullOrEmpty( p.OutOfStockBehavior) ? "DisplayMessage" : p.OutOfStockBehavior }))
                 .ForMember(dc => dc.ProductCode, op => op.MapFrom(p => p.ProductCode))
+                 .ForMember(x => x.ProductUsage, op => op.MapFrom(x => x.ProductUsage))
                 .ForMember(dc => dc.Properties, op => op.MapFrom(p => p.Properties))
                 .ForMember(dc => dc.Options, op => op.MapFrom(p => p.Options))
                 .ForMember(x => x.Extras, op => op.MapFrom(dc => dc.Extras == null ? null : dc.Extras.Where(x => x.Values != null && x.Values.Count > 0).ToList()))
