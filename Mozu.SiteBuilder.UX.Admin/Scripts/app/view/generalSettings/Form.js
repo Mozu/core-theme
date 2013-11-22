@@ -11,6 +11,7 @@ Ext.define('Taco.view.generalsettings.Form', {
         'Taco.view.generalSettings.subform.About',
         'Taco.view.generalSettings.subform.Notifications',
         'Taco.view.generalSettings.subform.Analytics',
+        'Taco.view.generalSettings.subform.AddressValidation',
         'Taco.view.generalSettings.subform.Robots',
         'Taco.view.generalSettings.subform.Tools',
         'Taco.view.generalSettings.subform.Maintenance'],
@@ -29,6 +30,7 @@ Ext.define('Taco.view.generalsettings.Form', {
         //    Ext.create('Taco.view.generalSettings.subform.Maintenance', subFormConfig),
         //    Ext.create('Taco.view.generalSettings.subform.Notifications', subFormConfig),
         //    Ext.create('Taco.view.generalSettings.subform.Analytics', subFormConfig),
+        //    Ext.create('Taco.view.generalSettings.subform.AddressValidation', subFormConfig),
         //    Ext.create('Taco.view.generalSettings.subform.Robots', subFormConfig),
         //    Ext.create('Taco.view.generalSettings.subform.Tools', subFormConfig)
         //];
@@ -37,6 +39,7 @@ Ext.define('Taco.view.generalsettings.Form', {
             Ext.create('Taco.view.generalSettings.subform.About', subFormConfig),
             Ext.create('Taco.view.generalSettings.subform.Notifications', subFormConfig),
             Ext.create('Taco.view.generalSettings.subform.Analytics', subFormConfig),
+            Ext.create('Taco.view.generalSettings.subform.AddressValidation', subFormConfig),
         ];
 
         me.callParent(arguments);

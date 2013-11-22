@@ -16,7 +16,7 @@
       {% endif %}
 
       {% if model.address.candidateValidatedAddresses != null %}
-      
+
       <div class="mz-formstep-fields mz-l-formfieldgroup">
         Select an address from these alternatives:
 
@@ -35,6 +35,7 @@
           </div>
         </label>
         {% endfor %}
+        {% if siteContext.generalSettings.allowInvalidAddresses %}
         <label class="mz-l-formfieldgroup-row">
           <div class="mz-l-formfieldgroup-cell">
               <span>Original</span>
@@ -48,6 +49,7 @@
             {{model.address.cityOrTown}}, {{model.address.stateOrProvince}} {{model.address.postalOrZipCode}} {{model.address.countryCode}}
           </div>
         </label>
+        {% endif %}
       </div>
       {% endif %}
 

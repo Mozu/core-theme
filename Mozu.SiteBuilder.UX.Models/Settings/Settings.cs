@@ -138,6 +138,12 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember(Name = "googleAnalyticsEcomEnabled")]
         public bool? IsGoogleAnalyticsEcommerceEnabled { get; set; }
 
+        [DataMember(Name = "allowInvalidAddresses")]
+        public bool? AllowInvalidAddresses { get; set; }
+
+        [DataMember(Name = "isAddressValidationEnabled")]
+        public bool? IsAddressValidationEnabled { get; set; }
+
         public string DesktopTheme
         {
             get { return _theme; }

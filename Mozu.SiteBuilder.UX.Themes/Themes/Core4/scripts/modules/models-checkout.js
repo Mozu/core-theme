@@ -78,7 +78,10 @@
             },
             next: function () {
                 if (this.validate()) return false;
-                var parent = this.parent, me = this;
+                var parent = this.parent,
+                    me = this,
+                    isAddressValidationEnabled = Hypr.engine.options.locals.siteContext.generalSettings.isAddressValidationEnabled,
+                    allowInvalidAddresses = Hypr.engine.options.locals.siteContext.generalSettings.allowInvalidAddresses;
                 this.isLoading(true);
                 var addr = this.get('address');
                 var completeStep = function () {
@@ -103,45 +106,50 @@
                     me.stepStatus('invalid');
                 }
 
-                if (addr.get('candidateValidatedAddresses') == null) {
-                    addr.apiModel.validateAddress().then(function (resp) {
-                        if (resp.data && resp.data.addressCandidates && resp.data.addressCandidates.length) {
-                            var addrCompare = function (addr, valAddr) {
-                                var s1 = '',
-                                    s2 = '';
-                                for (var k in valAddr) {
-                                    if (k === 'isValidated')
-                                        continue;
-                                    s1 = (valAddr[k] || '').toLowerCase();
-                                    s2 = (addr.get(k) || '').toLowerCase();
-                                    if (s1 != s2) {
-                                        return -1;
+                if (!isAddressValidationEnabled) {
+                    completeStep();
+                } else {
+                    if (addr.get('candidateValidatedAddresses') == null) {
+                        addr.apiModel.validateAddress().then(function (resp) {
+                            if (resp.data && resp.data.addressCandidates && resp.data.addressCandidates.length) {
+                                var addrCompare = function (addr, valAddr) {
+                                    var s1 = '',
+                                        s2 = '';
+                                    for (var k in valAddr) {
+                                        if (k === 'isValidated')
+                                            continue;
+                                        s1 = (valAddr[k] || '').toLowerCase();
+                                        s2 = (addr.get(k) || '').toLowerCase();
+                                        if (s1 != s2) {
+                                            return -1;
+                                        }
+                                    }
+                                    return 0;
+                                };
+                                var addrIsDifferent = false;
+                                for (var i = 0; i < resp.data.addressCandidates.length; i++) {
+                                    if (addrCompare(addr, resp.data.addressCandidates[i]) == 0) {
+                                        completeStep();
+                                        return;
                                     }
                                 }
-                                return 0;
-                            };
-                            var addrIsDifferent = false;
-                            for (var i = 0; i < resp.data.addressCandidates.length; i++) {
-                                if (addrCompare(addr, resp.data.addressCandidates[i]) == 0) {
-                                    completeStep();
-                                    return;
-                                }
+                                addr.set('candidateValidatedAddresses', resp.data.addressCandidates);
+                                promptValidatedAddress();
                             }
-                            addr.set('candidateValidatedAddresses', resp.data.addressCandidates);
-                            promptValidatedAddress();
-                        }
-                        else {
-                            completeStep();
-                        }
-                    }, function (e) {
-                        // TODO: sink the exception.in a better way.
-                        $('.mz-messagebar').html('');
+                            else {
+                                completeStep();
+                            }
+                        }, function (e) {
+                            if (allowInvalidAddresses) {
+                                // TODO: sink the exception.in a better way.
+                                $('.mz-messagebar').html('');
+                                completeStep();
+                            }
+                        });
+                    } else {
                         completeStep();
-                    });
-                } else {
-                    completeStep();
+                    }
                 }
-
             }
         }),
 
