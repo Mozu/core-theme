@@ -14,6 +14,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
         [DataMember(EmitDefaultValue = false, Name = "values")]
         public List<object> Values { get; set; }
+
+
+        [DataMember(EmitDefaultValue = false, Name = "exists")]
+        public bool? VariationExists { get; set; }
     }
 
 
