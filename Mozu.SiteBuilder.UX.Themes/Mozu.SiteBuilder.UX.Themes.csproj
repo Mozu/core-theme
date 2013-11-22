@@ -852,7 +852,7 @@
     <Content Include="Themes\Core3\Resources\old_stylesheets\textonly.less" />
     <Content Include="Themes\Core4\templates\email\new-user.hypr" />
     <Content Include="Themes\Core4\templates\email\order-status.hypr" />
-    <Content Include="Themes\Core4\templates\email\reset-password.hypr" />
+    <Content Include="Themes\Core4\templates\email\password-reset.hypr" />
     <Content Include="Themes\Core4\templates\email\email.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\social\addthis.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\social\facebookcomments.hypr" />
@@ -1240,6 +1240,7 @@
   <ItemGroup>
     <Content Include="Themes\Core4\stylesheets\widgets\instock-request.less" />
     <Content Include="Themes\Core4\templates\modules\my-account\my-account-wishlist-item-listing.hypr.live" />
+    <Content Include="Themes\Core4\templates\email\product-instock.hypr" />
     <None Include="Themes\Core4\templates\modules\product\product-instock-request.hypr.live" />
   </ItemGroup>
   <ItemGroup>
