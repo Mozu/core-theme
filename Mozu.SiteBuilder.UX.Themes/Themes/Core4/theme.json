@@ -280,25 +280,36 @@
         "id": "upsells",
         "displayName": "Up Sells",
         "displayTemplate": "catalog/related-products",
-        "editViewFields": [{
-            "fieldLabel": "title",
-            "xtype": "textfield",
-            "anchor": "100%"
-        }, {
-            "name": "template",
-            "fieldLabel": "Template",
-            "xtype": "combo",
-            "anchor": "100%",
-            "store": [
-                ["modules/product/product-list-carousel", "carousel"],
-                ["modules/product/product-list-tiled", "tiled"],
-                ["modules/product/product-list", "list"]
-            ]
-        }],
+        "editViewFields": [
+
+            {
+                "fieldLabel": "title",
+				"name": "title",
+                "xtype": "textfield",
+                "anchor": "100%"
+            }, {
+                "name": "template",
+                "fieldLabel": "Template",
+                "xtype": "combo",
+                "anchor": "100%",
+                "store": [
+                    ["modules/product/product-list-carousel", "carousel"],
+                    ["modules/product/product-list-tiled", "tiled"],
+                    ["modules/product/product-list", "list"]
+                ]
+            },
+			{
+                "fieldLabel": "count",
+				"name": "count",
+                "xtype": "spinnerfield",
+                "anchor": "100%"
+            }
+        ],
         "defaultConfig": {
             "template": "modules/product/product-list-carousel",
             "attributeId": "tenant~product-upsell",
-            "title": "Other Items"
+            "title": "Other Items",
+            "count": "4"
         },
         "icon": "/resources/admin/widgets/01_photo_text.png",
 

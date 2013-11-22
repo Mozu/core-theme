@@ -24,15 +24,23 @@ define(['modules/jquery-mozu', 'shim!vendor/underscore>_', "modules/api", "modul
         $(document).ready(function () {
             var currentProduct = ProductModels.Product.fromCurrent();
             
-            if (currentProduct.attributes.inventoryInfo.onlineStockAvailable < 1) {
-                var relatedProductsView = new InstockReqView({
-                    model: ProductModels.Product.fromCurrent(),
-                    el: $('.mz-instock-request').parent()
-                });
-
+            var relatedProductsView = new InstockReqView({
+                model: ProductModels.Product.fromCurrent(),
+                el: $('.mz-instock-request').parent()
+            });
+            
+            if (currentProduct.attributes.inventoryInfo && currentProduct.attributes.inventoryInfo.onlineStockAvailable < 1) {
+                //renders on store front if there is no stock
                 relatedProductsView.render();
             } else {
-                $('.mz-instock-request').parent().html('');
+                if (currentProduct.attributes.inventoryInfo) {
+                    //removes from store front if there is stock
+                    $('.mz-instock-request').parent().html('');
+                } else {
+                    //displays for preview in site builder
+                    relatedProductsView.render();
+                }
+                
             }
 
 
