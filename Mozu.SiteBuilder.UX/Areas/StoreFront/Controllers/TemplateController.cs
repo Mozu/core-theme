@@ -15,6 +15,7 @@ using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Cart;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
+using Mozu.SiteBuilder.UX.Models.StoreFront.Commerce;
 using Newtonsoft.Json.Linq;
 using DC = Mozu.Content.Contracts;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
@@ -29,6 +30,7 @@ using Mozu.SiteBuilder.Mvc.Models.CMS;
 using System.Threading.Tasks;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using CartItem = Mozu.SiteBuilder.UX.Models.StoreFront.Commerce.CartItem;
 using ProductImage = Mozu.ProductRuntime.Contracts.ProductImage;
 using ProductOption = Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductOption;
 
@@ -73,7 +75,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 Template = new DocumentRequest()
                                   {
                                     Path = pageType.Template     ,
-                                    Collection="templates"
+                                    Collection="templates",
+                                    DocumentType = "page_template"
                                   }
             };
 
@@ -82,31 +85,53 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         object GetModel(PageTypeDefinition template)
         {
+
             if (template.EntityType == null)
             {
                 return new JObject();
             }
+            var product = new Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product()
+                                   {
+                                       Options = new List<ProductRuntime.Contracts.ProductOption>(),
+                                       ProductCode = "test",
+                                       Properties  = new List<ProductProperty>(),
+                                       Content = new Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductContent()
+                                                     {
+                                                         ProductName ="test",
+                                                         ProductFullDescription = "test Full Description",
+                                                         ProductShortDescription = "test Short Description",
+                                                         ProductImages = new ProductImageCollection()
+                                                     },
+
+                                   };
+            ;
             switch (template.EntityType)
             {
                 case "cart":
                     {
-                        //return new Mozu.SiteBuilder.UX.Models.StoreFront.Cart.Cart()
-                        //   {
-                        //       Items = new List<CartItem>()
-                        //   };
-                        throw new NotImplementedException();
-                        // TODO: replace with new cart viewmodel
+                        return new Mozu.SiteBuilder.UX.Models.StoreFront.Commerce.Cart()
+                                   {
+                                       Items = new List<CartItem>()
+                                                   {
+                                                       new CartItem()
+                                                           {
+                                                               DiscountTotal = 50,
+                                                               Product = new Mozu.SiteBuilder.UX.Models.StoreFront.Commerce.Product()
+                                                                             {
+                                                                                 ProductCode = product.ProductCode,
+                                                                                 Name = product.ProductName
+
+                                                                             }
+                                                           }
+                                                   },
+                                       Total = 100,
+                                       Id = "123",
+
+                                   };
                     }
                 case "product":
                     {
-                        return new Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product()
-                                   {
-                                       Options = new List<ProductRuntime.Contracts.ProductOption>(),
-                                       Content = new Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductContent()
-                                                     {
-                                                         ProductImages = new ProductImageCollection()
-                                                     }
-                                   };
+                        return product;
                     }
                 default:
                     {

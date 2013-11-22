@@ -51,10 +51,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 Template = new DocumentRequest()
                 {
-                    Path = "cart"
+                    Path = "cart",
+                    DocumentType = "page_template"
                 }
 
             };
+
+            PageContext.PageType = "cart";
+           
             
             var cart = (await _cartClient.GetOrCreateCart() ).ReadAsAsync().Result;
 
