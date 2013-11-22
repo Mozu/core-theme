@@ -4,6 +4,52 @@ using System.Runtime.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 {
+
+    //  [DataContract]
+    //public class BundledProduct
+    //{
+        
+    //}
+
+
+
+    [DataContract(Namespace = "http://admin.productservice.volusion.com")]
+    public class BundledProduct
+    {
+        [DataMember(EmitDefaultValue = false, Name = "productCode")]
+        public string ProductCode { get; set; }
+
+        [DataMember(EmitDefaultValue = false, Name = "qty")]
+        public int Qty { get; set; }
+
+        /// <summary>
+        /// The list price.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "salePrice")]
+        public decimal? SalePrice { get; set; }
+
+        /// <summary>
+        /// The price.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "price")]
+        public decimal? Price { get; set; }
+        [DataMember(EmitDefaultValue = false, Name = "productName")]
+        public string ProductName { get; set; }
+
+        [DataMember(EmitDefaultValue = false, Name = "packageHeight")]
+        public decimal? PackageHeight { get; set; }
+
+        [DataMember(EmitDefaultValue = false, Name = "packageWidth")]
+        public decimal? PackageWidth { get; set; }
+
+        [DataMember(EmitDefaultValue = false, Name = "packageLength")]
+        public decimal? PackageLength { get; set; }
+
+        [DataMember(EmitDefaultValue = false, Name = "packageWeight")]
+        public decimal? PackageWeight { get; set; }
+    }
+
+
     /// <summary>
     /// Represents an editable product.
     /// See http://vconfluence.ads.volusion.com/display/Product/Product+-+v1#Product-v1-ProductDetails
@@ -18,7 +64,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [DataMember(EmitDefaultValue = false, Name = "productCode")]
         public string ProductCode { get; set; }
 
-
+        [DataMember(EmitDefaultValue = false, IsRequired = false, Name = "bundledProducts")]
+        public List<BundledProduct> BundledProducts { get; set; }
 
         [DataMember(EmitDefaultValue = false, Name = "publishedState")]
         public string PublishedState { get; set; }
