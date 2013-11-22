@@ -21,7 +21,7 @@
     <body class=""  >
 
 		{% dropzone "top" %}
-
+		 <div>{{ViewData.content.html_1}}</div>
 		{% block body-content %}{% endblock body-content %}
         
 		{% dropzone "body" %}

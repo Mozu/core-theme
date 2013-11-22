@@ -230,11 +230,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         // GET: /Resource/
         [ClientCacheHeaders(ConfigKey = "stylesheets")]
         [System.Web.Http.HttpGet]
-        public HttpResponseMessage  Stylesheets(string pathinfo)
+        public HttpResponseMessage Stylesheets(string pathinfo, bool debug = false)
         {
             if (Path.GetExtension(pathinfo) == ".less")
             {
-                return Less(pathinfo, true); // TODO: set debug to false later
+                return Less(pathinfo, debug); // TODO: set debug to false later
             }
             else
             {
@@ -624,16 +624,23 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             protected override void WriteFile(HttpResponseBase response)
             {
-                using (Stream stream = _file.OpenRead() )
+                WriteFile(response.OutputStream);
+            }
+
+
+            public void WriteFile(Stream outputStream  )
+            {
+                using (Stream stream = _file.OpenRead())
                 {
                     Stream source = stream;
                     if (Transform != null)
                     {
-                        source = Transform(stream, _file.VirtualPath );
+                        source = Transform(stream, _file.VirtualPath);
                     }
-                    source.CopyTo(response.OutputStream);
+                    source.CopyTo(outputStream);
                 }
             }
+
 
             protected async override  System.Threading.Tasks.Task WriteFileAsync(HttpResponseBase response)
             {
