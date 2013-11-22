@@ -107,7 +107,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             vr.ViewName = emailTempalte.Template;
             ViewData["content"] = vr.Model;
 
-            return Request.CreateResponse(HttpStatusCode.OK, View(emailTempalte.Template, new List<int>()));
+            return Request.CreateResponse(HttpStatusCode.OK, View(emailTempalte.Template, new object()));
         }
 
         [HttpPost]

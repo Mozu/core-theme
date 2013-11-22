@@ -74,7 +74,7 @@
 	  {
 		"id": "return.changed",
 		"title": "Return Status",
-		"template": "email/return-status",
+		"template": "email/order-status",
 		"properties": {
 		  "subject": "Order Status #{model.orderNumber}"
 		}
@@ -97,7 +97,7 @@
 	  },
 	  {
 		"id": "product.instock",
-		"title": "Return Status",
+		"title": "Back in Stock",
 		"template": "email/product-instock",
 		"properties": {
 		  "subject": "Back in Stock"

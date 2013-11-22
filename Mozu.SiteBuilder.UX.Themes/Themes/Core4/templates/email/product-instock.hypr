@@ -1,0 +1,8 @@
+﻿  {% extends "email/email" %}
+
+  {% block body-content %}
+  <H1>Back in Stock</H1>
+  <h2>{{model.productCode}}</h2>
+
+
+{% endblock body-content %}
