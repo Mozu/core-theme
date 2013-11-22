@@ -602,7 +602,7 @@
     <Content Include="Themes\Core4\stylesheets\modules\product\product-options.less" />
     <Content Include="Themes\Core4\stylesheets\state\is-required.less" />
     <Content Include="Themes\Core3\theme-ui.json" />
-    <Content Include="Themes\Core3\theme.json" />
+    <Content Include="Themes\Core3\theme_.json" />
     <Content Include="Themes\Core4\stylesheets\state\is-disabled.less" />
     <Content Include="Themes\Core4\templates\modules\page-header\store-branding.hypr" />
     <Content Include="Themes\Core4\stylesheets\state\fades-in.less" />
