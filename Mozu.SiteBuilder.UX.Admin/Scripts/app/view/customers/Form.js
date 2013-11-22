@@ -27,7 +27,7 @@ Ext.define('Taco.view.customers.Form', {
         this.cls = this.cls + ' ' + Taco.baseCSSPrefix + 'customer-editor';
         
         me.profile = Ext.create('Taco.view.customers.subform.Information', {
-            record: data,
+            record: this.record,
             tagStore: this.tagStore
         });
 
