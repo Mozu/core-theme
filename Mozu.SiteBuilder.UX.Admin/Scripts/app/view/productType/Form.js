@@ -35,7 +35,7 @@ Ext.define('Taco.view.productType.Form', {
         
         
 
-        me.productUsageCheckboxGroup = Ext.create('Ext.form.FieldContainer', {
+        me.productUsagesCheckboxGroup = Ext.create('Ext.form.FieldContainer', {
             fieldLabel: "Supported Usage Types",
             // note this layout is required for radiogroups to have the proper height;
             layout: "column",
@@ -44,7 +44,7 @@ Ext.define('Taco.view.productType.Form', {
                 {
                     xtype: "checkboxgroup",
                     columnWidth: .5,
-                    name: "productUsageGroup",
+                    name: "productUsagesGroup",
                     layout: {
                         layout: "hbox"
                     },
@@ -58,30 +58,30 @@ Ext.define('Taco.view.productType.Form', {
                     },
                     allowBlank:false,
                     defaults: {
-                        //name: "productUsage"
+                        //name: "productUsages"
                     },
                     columns: 1,
                     items: [
                         {
                             xtype: "checkboxfield",
-                            name: "productUsageField",
+                            name: "productUsagesField",
                             boxLabel: "Standard Product",
-                            inputValue: "standard"
+                            inputValue: "Standard"
                         }, {
                             xtype: "checkboxfield",
-                            name: "productUsageField",
+                            name: "productUsagesField",
                             boxLabel: "Configurable Product With Options",
-                            inputValue: "configurable"
+                            inputValue: "Configurable"
                         }, {
                             xtype: "checkboxfield",
-                            name: "productUsageField",
+                            name: "productUsagesField",
                             boxLabel: "Product Bundle",
-                            inputValue: "bundle"
+                            inputValue: "Bundle"
                         }, {
                             xtype: "checkboxfield",
-                            name: "productUsageField",
+                            name: "productUsagesField",
                             boxLabel: "Bundle Component",
-                            inputValue: "component"
+                            inputValue: "Component"
                         }
                     ]
                 }
@@ -97,7 +97,7 @@ Ext.define('Taco.view.productType.Form', {
             emptyText: 'Enter a Product Type Name',
             name: 'name'
         }, 
-        me.productUsageCheckboxGroup,    
+        me.productUsagesCheckboxGroup,    
         {
             xtype: 'taco.producttype.attributegroup',
             itemId: "optionsAttributeGroup",
@@ -459,7 +459,7 @@ Ext.define('Taco.view.productType.Form', {
     },
     
     onUsageTypeChange: function (data) {
-        var usageData = data.productUsageField,
+        var usageData = data.productUsagesField,
             showExtras = false,
             showOptions = false;
         
@@ -471,16 +471,16 @@ Ext.define('Taco.view.productType.Form', {
         // based on which of the checkboxes are selected will need to alter the rolled up visibility of the extras, options, and properties
         Ext.Array.each(usageData, function(item) {
             switch (item){
-                case "standard":
+                case "Standard":
                     showExtras = true;
                     break;
-                case "configurable":
+                case "Configurable":
                     showOptions = showExtras = true;
                     break;
-                case "bundle":
+                case "Bundle":
                     showExtras = true;
                     break;
-                case "component":
+                case "Component":
                     break;
             }
         });
@@ -494,12 +494,12 @@ Ext.define('Taco.view.productType.Form', {
     loadRecord: function () {
         var me = this,
             form = me.getForm(),
-            productUsageGroup = form.findField("productUsageGroup");
+            productUsagesGroup = form.findField("productUsagesGroup");
         
         this.callParent(arguments);
         
-        productUsageGroup.setValue({
-            productUsageField: this.record.get("productUsage")
+        productUsagesGroup.setValue({
+            productUsagesField: this.record.get("productUsages")
         });
 
     },
@@ -510,13 +510,13 @@ Ext.define('Taco.view.productType.Form', {
         // do any manual record updates from the form;
         var form = me.getForm();
         // this data member wants the record data instead of the array of values that is return by combo. need to translate to record.data objects
-        var productUsageGroupData = form.findField("productUsageGroup").getValue().productUsageField;
+        var productUsagesGroupData = form.findField("productUsagesGroup").getValue().productUsagesField;
         // need to force the data to array since extjs checkbox returns string if one value is checked;.
-        if (Ext.isString(productUsageGroupData)) {
-            productUsageGroupData = [productUsageGroupData];
+        if (Ext.isString(productUsagesGroupData)) {
+            productUsagesGroupData = [productUsagesGroupData];
         }
    
-        this.record.set("productUsage", productUsageGroupData);
+        this.record.set("productUsages", productUsagesGroupData);
         
         return true;
     }

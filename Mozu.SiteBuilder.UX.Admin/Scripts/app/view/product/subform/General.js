@@ -17,6 +17,9 @@ Ext.define('Taco.view.product.subform.General', {
 
         this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
 
+        
+
+
         this.defaults = {
             width: 200,
             product: this.product,
@@ -63,7 +66,7 @@ Ext.define('Taco.view.product.subform.General', {
             readOnly: readOnly && this.product.get('productTypeId'),
             required: true && visable,
             queryMode: 'local',
-            hidden :!visable,
+            hidden: !visable,
             // width: 200,
             shrinkWrap: 3,
             displayField: 'name',
@@ -71,6 +74,34 @@ Ext.define('Taco.view.product.subform.General', {
             store: this.productTypeStore,
             listeners: {
                 change: this.onProductTypeChange
+            }
+        }, {
+            xtype: 'selectfield',
+            fieldLabel: 'Product Usage',
+            name: 'productUsages',
+            readOnly: readOnly && this.product.get('productTypeId'),
+            required: true && visable,
+            queryMode: 'local',
+            hidden: !visable,
+            // width: 200,
+            shrinkWrap: 3,
+            displayField: 'name',
+            valueField: 'id',
+            data: [{
+                name: "Standard Product",
+                id: "standard"
+            }, {
+                name: "Configurable Product With Options",
+                id: "configured"
+            }, {
+                name: "Product Bundle",
+                id: "standard"
+            }, {
+                name: "Bundle Component",
+                id: "component"
+            }],
+            listeners: {
+                change: this.onProductUsageChange
             }
         }, {
             xtype:'formform',
@@ -160,45 +191,51 @@ Ext.define('Taco.view.product.subform.General', {
         this.callParent( arguments );
     },
 
-    onProductTypeChange: function (selectField, value) {
-        var parentForm, product;
-        
-        
-        parentForm = this.up('productsiteform, productglobalform');
-        
 
+    // when the user chagnes the productUsage type selection, will need to alter the visibility and behavior of several components;
+    onProductUsageChange: function() {
+        debugger;
+    },
+
+    onProductTypeChange: function (selectField, value) {
+        var me = this,
+            parentForm,
+            product;
+
+        debugger;
+
+        parentForm = me.up('productsiteform, productglobalform');
+       
         if (!parentForm) {
             return;
         }
        
-        
         //need to set the productTypeId for variations to work.
         product = parentForm.product || parentForm.record;
         product.set('productTypeId', value);
         
-
-        if (!this.propertiesForm) {
-            this.propertiesForm = parentForm.down('productpropertiesform');
+        if (!me.propertiesForm) {
+            me.propertiesForm = parentForm.down('productpropertiesform');
         }
 
-        if (this.propertiesForm) {
-            this.propertiesForm.loadByProductTypeId(value);    
+        if (me.propertiesForm) {
+            me.propertiesForm.loadByProductTypeId(value);
         }
 
-        if (!this.extrasForm) {
-            this.extrasForm = parentForm.down('productextrasform');
+        if (!me.extrasForm) {
+            me.extrasForm = parentForm.down('productextrasform');
         }
 
-        if (this.extrasForm) {
-            this.extrasForm.loadByProductTypeId(value);
+        if (me.extrasForm) {
+            me.extrasForm.loadByProductTypeId(value);
         }
 
-        if (!this.optionsForm) {
-            this.optionsForm = parentForm.down('optionproductform');
+        if (!me.optionsForm) {
+            me.optionsForm = parentForm.down('optionproductform');
         }
 
-        if (this.optionsForm) {
-            this.optionsForm.loadByProductTypeId(value);
+        if (me.optionsForm) {
+            me.optionsForm.loadByProductTypeId(value);
         }
 
     }

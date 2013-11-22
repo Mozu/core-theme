@@ -12,14 +12,14 @@ Ext.define('Taco.model.ProductType', {
         { name: 'numberOfProducts', type:'int'},
         { name: 'extras', type: 'auto', defaultValue: [] },
         { name: 'properties', type: 'auto', defaultValue: [] },
-        { name: 'productUsage', type: 'array', defaultValue: ["standard"] },
-        { name: 'modifiedDate', type: 'date' },
+        { name: 'productUsages', type: 'array', defaultValue: ["Standard"] },
+        { name: 'modifiedDate', type: 'date' }
     /*    String Array Of one or many of the following string Values
             "Standard";
             "Configurable";
             "Bundle";
             "Component"; */
-        { name: 'productUsages', type: 'auto', defaultValue: [] }
+        
     ],
     getOptions: function () {
         return this.getOrCreateHasManyStore({
