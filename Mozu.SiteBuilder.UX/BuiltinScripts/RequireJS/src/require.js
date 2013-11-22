@@ -132,17 +132,6 @@
         if (script) return script.textContent && JSON.parse(script.textContent);
     }
 
-    //var themeSettings;
-    //function getMozuThemeSetting(settingName) {
-    //    if (!themeSettings) themeSettings = getMozuData("themesettings");
-    //    if (!themeSettings) throw new ReferenceError('This page template fails to preload the theme settings using {% preload_json themeSettings "themesettings" %}.');
-    //    return themeSettings[settingName];
-    //}
-
-    //function getMozuLabel(labelName) {
-    //    return getMozuThemeSetting("label" + labelName.charAt(0).toUpperCase() + labelName.substring(1));
-    //}
-
     //Allow getting a global that expressed in
     //dot notation, like 'a.b.c'.
     function getGlobal(value) {
@@ -617,7 +606,7 @@
                             // at the main module.
                             c = pkg ? getOwn(config.config, mod.map.id + '/' + pkg.main) :
                                       getOwn(config.config, mod.map.id);
-                            return c || {};
+                            return  c || {};
                         },
                         exports: defined[mod.map.id]
                     });
@@ -1472,7 +1461,7 @@
                         }
 
                         return context.nameToUrl(normalize(moduleNamePlusExt,
-                                                relMap && relMap.id, true), ext, true);
+                                                relMap && relMap.id, true), ext,  true);
                     },
 
                     defined: function (id) {
@@ -2085,8 +2074,6 @@
     //Set up with config info.
     req(cfg);
     req.mozuData = getMozuData;
-    //req.mozuThemeSetting = getMozuThemeSetting;
-    //req.mozuLabel = getMozuLabel;
 
 req.mixin = mixin;
 

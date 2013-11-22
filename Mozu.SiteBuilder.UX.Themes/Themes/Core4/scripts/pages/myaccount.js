@@ -79,6 +79,39 @@
         }
     });
 
+    var WishListView = EditableView.extend({
+        templateName: 'modules/my-account/my-account-wishlist',
+        addItemToCart: function (e) {
+            var self = this, $target = $(e.currentTarget),
+                id = $target.data('mzItemId');
+            if (id) {
+                this.editing.added = id;
+                return this.doModelAction('addItemToCart', id);
+            }
+        },
+        doNotRemove: function() {
+            this.editing.added = false;
+            this.editing.remove = false;
+            this.render();
+        },
+        beginRemoveItem: function (e) {
+            var self = this;
+            var id = $(e.currentTarget).data('mzItemId');
+            if (id) {
+                this.editing.remove = id;
+                this.render();
+            }
+        },
+        finishRemoveItem: function(e) {
+            var self = this;
+            var id = $(e.currentTarget).data('mzItemId');
+            return this.model.apiDeleteItem(id).then(function () {
+                self.editing.remove = false;
+                return self.model.fetch();
+            })
+        }
+    });
+
 
     var OrderHistoryView = Backbone.MozuView.extend({
         templateName: "modules/common/order-list",
@@ -174,6 +207,7 @@
             $orderHistoryEl = $('#account-orderhistory'),
             $paymentMethodsEl = $('#account-paymentmethods'),
             $addressBookEl = $('#account-addressbook'),
+            $wishListEl = $('#account-wishlist'),
             orderHistory = accountModel.get('orderHistory');
 
         window.accountViews = {
@@ -201,6 +235,10 @@
             addressBook: new AddressBookView({
                 el: $addressBookEl,
                 model: accountModel
+            }),
+            wishList: new WishListView({
+                el: $wishListEl,
+                model: accountModel.get('wishlist')
             })
         }
 

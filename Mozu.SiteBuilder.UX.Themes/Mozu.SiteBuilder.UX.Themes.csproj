@@ -1241,6 +1241,7 @@
     <Content Include="Themes\Core4\stylesheets\widgets\instock-request.less" />
     <Content Include="Themes\Core4\templates\modules\my-account\my-account-wishlist-item-listing.hypr.live" />
     <Content Include="Themes\Core4\templates\email\product-instock.hypr" />
+    <Content Include="Themes\Core4\stylesheets\state\notices.less" />
     <None Include="Themes\Core4\templates\modules\product\product-instock-request.hypr.live" />
   </ItemGroup>
   <ItemGroup>

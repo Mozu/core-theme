@@ -20,4 +20,6 @@
     
   {% endblock item-listing-actions %}
   </div>
+  {% block item-listing-extras %}
+  {% endblock item-listing-extras %}
 </div>

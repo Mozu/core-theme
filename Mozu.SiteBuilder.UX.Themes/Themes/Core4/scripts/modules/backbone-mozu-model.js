@@ -362,10 +362,16 @@ define([
                     var apiActionName = "api" + actionName.charAt(0).toUpperCase() + actionName.substring(1);
                     if (!(apiActionName in conf)) {
                         conf[apiActionName] = function (data) {
+                            var self = this;
                             // include self by default...
                             if (actionName in { 'create': true, 'update': true }) data = data || this.toJSON();
                             if (typeof data === "object" && !$.isArray(data) && !$.isPlainObject(data)) data = null;
-                            return this.apiModel[actionName](data);
+                            this.isLoading(true);
+                            var p = this.apiModel[actionName](data);
+                            p.ensure(function () {
+                                self.isLoading(false);
+                            });
+                            return p;
                         };
                     }
                 });

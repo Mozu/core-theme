@@ -177,7 +177,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
 
-            this.ViewData["MailCheckTo"] = locTask.Result.ReadAsSync();
+            this.ViewData["mailCheckTo"] = locTask.Result.ReadAsSync();
             return View("confirmation", order);
         }
 

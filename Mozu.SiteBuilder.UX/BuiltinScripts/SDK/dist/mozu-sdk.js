@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-11-20
+ * Mozu JavaScript SDK - v0.2.0 - 2013-11-22
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1236,6 +1236,7 @@
             }
             var CONSTANTS = {
                 BASE_PAYPAL_URL: "https://sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token={0}",
+                DEFAULT_WISHLIST_NAME: "my_wishlist",
                 PAYMENT_STATUSES: {
                     NEW: "New"
                 },
@@ -1620,7 +1621,7 @@
                         var declaredType = (objectTypes[typeName].collectionOf ? ApiCollection : ApiObject).types[typeName];
                         if (declaredType) {
                             for (a in declaredType) {
-                                if (isSimpleType || !(utils.dashCase(a) in objectTypes[typeName]) && typeof declaredType[a] === "function") actions.push(a);
+                                if (isSimpleType || !(utils.dashCase(a) in objectTypes[typeName] && !reservedWords[a]) && typeof declaredType[a] === "function") actions.push(a);
                             }
                         }
                         return actions;
@@ -1694,7 +1695,11 @@
                     returnType: true,
                     noBody: true,
                     includeSelf: true,
-                    collectionOf: true
+                    collectionOf: true,
+                    overridePostData: true,
+                    useIframeTransport: true,
+                    construct: true,
+                    postconstruct: true
                 };
                 var objectTypes = {
                     products: {
@@ -2047,15 +2052,19 @@
                     },
                     addressschemas: "{+referenceService}addressschemas",
                     wishlist: {
+                        get: {
+                            template: "{+wishlistService}{id}",
+                            includeSelf: true
+                        },
                         "get-default": {
-                            template: "{+wishlistService}?startIndex=0&pageSize=1&filter=Name%20eq%20my_wishlist",
+                            template: "{+wishlistService}?startIndex=0&pageSize=1&filter=Name%20eq%20" + CONSTANTS.DEFAULT_WISHLIST_NAME,
                             returnType: "wishlists"
                         },
                         "create-default": {
                             verb: "POST",
                             template: "{+wishlistService}",
                             defaultParams: {
-                                name: "my_wishlist",
+                                name: CONSTANTS.DEFAULT_WISHLIST_NAME,
                                 typeTag: "default"
                             },
                             overridePostData: true
@@ -2064,6 +2073,26 @@
                             verb: "POST",
                             template: "{+wishlistService}{id}/items/",
                             includeSelf: true
+                        },
+                        "delete-all-items": {
+                            verb: "DELETE",
+                            template: "{+wishlistService}{id}/items/"
+                        },
+                        "delete-item": {
+                            verb: "DELETE",
+                            template: "{+wishlistService}{id}/items/{itemId}",
+                            includeSelf: true,
+                            shortcutParam: "itemId"
+                        },
+                        "edit-item": {
+                            verb: "PUT",
+                            template: "{+wishlistService}{id}/items/{itemId}",
+                            includeSelf: true
+                        },
+                        "add-item-to-cart": {
+                            verb: "POST",
+                            returnType: "cartitem",
+                            template: "{+cartService}current/items/"
                         }
                     },
                     wishlists: {
@@ -2501,14 +2530,41 @@
                     });
                 }
             };
-            ApiObject.types.wishlist = {
-                getOrCreate: function() {
-                    var self = this;
-                    return this.getDefault().then(function(listOfWishlists) {
-                        return listOfWishlists.data.items.length === 0 ? self.createDefault() : listOfWishlists[0];
-                    });
-                }
-            };
+            ApiObject.types.wishlist = function() {
+                errors.register({
+                    NO_ITEMS_IN_WISHLIST: "No items in wishlist.",
+                    NO_MATCHING_ITEM_IN_WISHLIST: "No wishlist item matching ID {0}"
+                });
+                var getItem = function(list, item) {
+                    var items = list.prop("items");
+                    if (!items || items.length === 0) {
+                        return errors.throwOnObject(list, "NO_ITEMS_IN_WISHLIST");
+                    }
+                    if (typeof item === "string") {
+                        for (var i = items.length - 1; i >= 0; i--) {
+                            if (items[i].id === item) {
+                                item = items[i];
+                                break;
+                            }
+                        }
+                        if (typeof item === "string") {
+                            return errors.throwOnObject(list, "NO_MATCHING_ITEM_IN_WISHLIST", item);
+                        }
+                    }
+                    return item;
+                };
+                return {
+                    getOrCreate: function() {
+                        var self = this;
+                        return this.getDefault().then(function(listOfWishlists) {
+                            return listOfWishlists.data.items.length === 0 ? self.createDefault() : listOfWishlists[0];
+                        });
+                    },
+                    addItemToCartById: function(item) {
+                        return this.addItemToCart(getItem(this, item));
+                    }
+                };
+            }();
             var ApiInterface = function() {
                 var errorMessage = "No {0} was specified. Run Mozu.Tenant(tenantId).MasterCatalog(masterCatalogId).Site(siteId).", requiredContextValues = [ "Tenant", "MasterCatalog", "Site" ];
                 var ApiInterfaceConstructor = function(context) {
@@ -2566,7 +2622,7 @@
                                 me.fire("spawn", returnObj, obj);
                                 return returnObj;
                             } else {
-                                obj.data = utils.clone(rawJSON);
+                                if (rawJSON || rawJSON === 0 || rawJSON === false) obj.data = utils.clone(rawJSON);
                                 delete obj.unsynced;
                                 obj.fire("sync", rawJSON, obj.data);
                                 me.fire("sync", obj, rawJSON, obj.data);
