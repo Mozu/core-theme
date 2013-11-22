@@ -677,6 +677,7 @@
     <Content Include="Scripts\app\view\customers\subform\ShippingInformation.js" />
     <Content Include="Scripts\app\view\customers\subform\StoreCredit.js" />
     <Content Include="Scripts\app\view\customers\subform\Subform.js" />
+    <Content Include="Scripts\app\view\generalSettings\subform\AddressValidation.js" />
     <Content Include="Scripts\app\view\locationType\Index.js" />
     <Content Include="Scripts\app\view\location\Edit.js" />
     <Content Include="Scripts\app\view\location\Form.js" />
