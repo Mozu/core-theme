@@ -149,7 +149,7 @@
 
     var CommentsView = Backbone.MozuView.extend({
         templateName: 'modules/checkout/comments-field',
-        autoUpdate: ['comments']
+        autoUpdate: ['shopperNotes.comments']
     });
 
     var ReviewOrderView = Backbone.MozuView.extend({
