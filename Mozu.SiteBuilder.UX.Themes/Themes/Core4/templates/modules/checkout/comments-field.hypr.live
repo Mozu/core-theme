@@ -2,5 +2,5 @@
       <label for="order-comments">{{ labels.comments }}:</label>
     </div>
     <div class="mz-l-formfieldgroup-cell">
-      <textarea id="order-comments" class="mz-checkoutform-comments-field" name="comments" data-mz-value="Comments">{{ model.comments }}</textarea>
+      <textarea id="order-comments" class="mz-checkoutform-comments-field" name="comments" data-mz-value="shopperNotes.comments">{{ model.shopperNotes.comments }}</textarea>
     </div>
