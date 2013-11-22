@@ -5,7 +5,7 @@ Ext.define('Taco.view.customers.subform.Information', {
     initComponent: function () {
         
         var me= this,
-            data = this.record;
+            data = this.record.getData();
         console.log(this.tagStore);
         me.taxExemptIdField = Ext.create('Ext.form.field.Text', {
             name: 'taxExemptId',

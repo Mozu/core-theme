@@ -542,6 +542,7 @@
     <Compile Include="Api\VolusionLoginHelper.cs" />
     <Compile Include="Api\WebToolsController.cs" />
     <Compile Include="Api\WidgetDefinitionController.cs" />
+    <Compile Include="Api\WishlistController.cs" />
     <Compile Include="App_Start\Diagnostics.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Configuration\BootStrapperAdmin.cs" />
@@ -604,7 +605,7 @@
     <Content Include="Scripts\app\controller\Reports.js" />
     <Content Include="Scripts\app\controller\SiteSelection.js" />
     <Content Include="Scripts\app\controller\Tbd.js" />
-    <Content Include="Scripts\app\controller\WishLists.js" />
+    <Content Include="Scripts\app\controller\Wishlists.js" />
     <Content Include="Scripts\app\core\context\Catalog.js" />
     <Content Include="Scripts\app\core\util\Common.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
@@ -625,6 +626,7 @@
     <Content Include="Scripts\app\model\Channel.js" />
     <Content Include="Scripts\app\model\CheckoutSettings.js" />
     <Content Include="Scripts\app\model\Capability.js" />
+    <Content Include="Scripts\app\model\WishlistItem.js" />
     <Content Include="Scripts\app\model\Country.js" />
     <Content Include="Scripts\app\model\CustomerAttribute.js" />
     <Content Include="Scripts\app\model\ExtensibleAttributeValue.js" />
@@ -634,7 +636,7 @@
     <Content Include="Scripts\app\model\LocationType.js" />
     <Content Include="Scripts\app\model\OrderAttribute.js" />
     <Content Include="Scripts\app\model\ShippingMethod.js" />
-    <Content Include="Scripts\app\model\WishList.js" />
+    <Content Include="Scripts\app\model\Wishlist.js" />
     <Content Include="Scripts\app\overrides\form\Basic.js" />
     <Content Include="Scripts\app\overrides\form\field\Base.js" />
     <Content Include="Scripts\app\overrides\form\field\ComboBox.js" />
@@ -649,7 +651,7 @@
     <Content Include="Scripts\app\shared\view\field\LocationPickerField.js" />
     <Content Include="Scripts\app\shared\view\field\ProductPickerField.js" />
     <Content Include="Scripts\app\shared\view\form\ExtensibleAttribute.js" />
-    <Content Include="Scripts\app\shared\view\modal\WishList.js" />
+    <Content Include="Scripts\app\shared\view\modal\Wishlist.js" />
     <Content Include="Scripts\app\store\Capability.js" />
     <Content Include="Scripts\app\store\Channels.js" />
     <Content Include="Scripts\app\store\Countries.js" />
@@ -660,7 +662,7 @@
     <Content Include="Scripts\app\store\LocationTypes.js" />
     <Content Include="Scripts\app\store\OrderAttributes.js" />
     <Content Include="Scripts\app\store\PackagingTypes.js" />
-    <Content Include="Scripts\app\store\WishList.js" />
+    <Content Include="Scripts\app\store\Wishlists.js" />
     <Content Include="Scripts\app\view\capability\Edit.js" />
     <Content Include="Scripts\app\view\capability\Form.js" />
     <Content Include="Scripts\app\view\capability\Index.js" />
