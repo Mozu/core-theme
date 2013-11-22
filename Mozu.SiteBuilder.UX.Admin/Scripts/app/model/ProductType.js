@@ -12,7 +12,7 @@ Ext.define('Taco.model.ProductType', {
         { name: 'numberOfProducts', type:'int'},
         { name: 'extras', type: 'auto', defaultValue: [] },
         { name: 'properties', type: 'auto', defaultValue: [] },
-        { name: 'productUsages', type: 'array', defaultValue: ["Standard"] },
+        { name: 'productUsages', type: 'array', defaultValue: ["Standard","Configurable", "Bundle", "Component"] },
         { name: 'modifiedDate', type: 'date' }
     /*    String Array Of one or many of the following string Values
             "Standard";
