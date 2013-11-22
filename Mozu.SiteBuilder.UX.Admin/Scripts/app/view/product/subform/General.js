@@ -13,7 +13,11 @@ Ext.define('Taco.view.product.subform.General', {
     title: 'General',
     margin: '20 0',
     initComponent: function () {
-        var readOnly,requiredContent,visable;
+        var me = this,
+            readOnly,
+            requiredContent,
+            visable;
+        
 
         this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
 
@@ -32,17 +36,44 @@ Ext.define('Taco.view.product.subform.General', {
         this.record = this.product;
 
         // sync changes from code view of the htmleditor to WYSIWYG view
-        var htmlEditorEditModeChangeHandler = function (el, editMode, eOpts) {
+        var htmlEditorEditModeChangeHandler = function(el, editMode, eOpts) {
             if (editMode) {
                 if (!this.textareaEl._syncInited) {
-                    this.textareaEl.on('keydown', function () {
+                    this.textareaEl.on('keydown', function() {
                         this.fireEvent('sync', this, this.textareaEl.getValue());
                         this.fireEvent('change', this, this.textareaEl.getValue());
                     }, this, { buffer: 50 });
                 }
                 this.textareaEl._syncInited = true;
-            };
-        }
+            }
+            ;
+        };
+
+        this.productUsageStore = Ext.create('Ext.data.Store', {
+            fields: ['id', "name"],
+            data: [
+                {
+                    name: "Standard Product",
+                    id: "Standard"
+                }, {
+                    name: "Configurable Product With Options",
+                    id: "Configurable"
+                }, {
+                    name: "Product Bundle",
+                    id: "Bundle"
+                }, {
+                    name: "Bundle Component",
+                    id: "Component"
+                }
+            ],
+            listeners: {
+                change: this.onProductUsageChange
+            }
+        });
+        
+
+        
+
 
 
         readOnly = this.isEdit() || !(this.isSingleSite || this.isGlobal);
@@ -77,32 +108,20 @@ Ext.define('Taco.view.product.subform.General', {
             }
         }, {
             xtype: 'selectfield',
+            itemId:"productUsageField",
             fieldLabel: 'Product Usage',
-            name: 'productUsages',
-            readOnly: readOnly && this.product.get('productTypeId'),
+            name: 'productUsage',
+            readOnly: readOnly || this.product.get('productTypeId'),
+            // field is only editable once a productType is selected;
+            disabled: !this.product.get('productTypeId'),
             required: true && visable,
             queryMode: 'local',
             hidden: !visable,
-            // width: 200,
+            width: 300,
             shrinkWrap: 3,
             displayField: 'name',
             valueField: 'id',
-            data: [{
-                name: "Standard Product",
-                id: "standard"
-            }, {
-                name: "Configurable Product With Options",
-                id: "configured"
-            }, {
-                name: "Product Bundle",
-                id: "standard"
-            }, {
-                name: "Bundle Component",
-                id: "component"
-            }],
-            listeners: {
-                change: this.onProductUsageChange
-            }
+            store: this.productUsageStore
         }, {
             xtype:'formform',
             persistChangesToModel: true,
@@ -188,27 +207,89 @@ Ext.define('Taco.view.product.subform.General', {
             }]
         }];
 
-        this.callParent( arguments );
+        this.callParent(arguments);
+        
+        // if we already have a product type selected; we need to filter the productUsage combo
+        var productTypeId = this.product.get('productTypeId');
+        if (productTypeId) {
+            var productTypeRecord = this.productTypeStore.getById(productTypeId);
+            me.filterProductUsageField(productTypeRecord.get("productUsages"));
+        }
+
     },
 
 
     // when the user chagnes the productUsage type selection, will need to alter the visibility and behavior of several components;
     onProductUsageChange: function() {
-        debugger;
+        
+        
+    },
+    
+    /**
+    *  Filter the ProductUsageField values based on the values that are alllowed. These are taken from the current productType Selection;
+    */
+    filterProductUsageField: function (values) {
+        var me = this,
+            validProductUsages,
+            productUsageField,
+            currentValue,
+            currentValueValid,
+            store;
+        
+        productUsageField = me.query("#productUsageField")[0];
+        currentValue = productUsageField.getValue()
+        store = productUsageField.store;
+        
+        // values could be a string if there was only one value; 
+        if (values && Ext.isString(values)) {
+            validProductUsages = [values];
+        } else {
+            // already and array. good to go;
+            validProductUsages = values;
+        }
+        
+        store.clearFilter();
+        store.filter([
+            {
+                filterFn: function (record) {
+                    var isValid = Ext.Array.some(validProductUsages, function (item, index, array) {
+                        return (item == record.data.id);
+                    });
+                    
+                    // see if the current value is still available in the list of valid values;
+                    if (currentValue == record.data.id) {
+                        currentValueValid = isValid
+                    }
+                    
+                    return isValid;
+                },
+                scope:me
+            }
+        ]);
+        
+        //if the current value of the field is no longer valid after the filtering then remove it;
     },
 
     onProductTypeChange: function (selectField, value) {
         var me = this,
+            productTypeRecord = selectField.store.getById(value),
+            productUsages = productTypeRecord.get("productUsages"),
+            productUsageField,
             parentForm,
             product;
-
-        debugger;
-
+        
         parentForm = me.up('productsiteform, productglobalform');
        
         if (!parentForm) {
             return;
         }
+
+        // once a productType is selected, enable the productUsage field;
+        productUsageField = parentForm.findField("productUsage");
+        productUsageField.enable();
+
+        // when the user changes the productType field we need to update the available productUsages based on the selected productType
+        me.ownerCt.filterProductUsageField(productUsages);
        
         //need to set the productTypeId for variations to work.
         product = parentForm.product || parentForm.record;

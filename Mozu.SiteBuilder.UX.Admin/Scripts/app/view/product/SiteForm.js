@@ -39,9 +39,14 @@ Ext.define('Taco.view.product.SiteForm', {
 
         this.siteId = this.record.get('siteId');
 
+
+        /*
+        // deprecated; remnant of navForm(the original)
+
         this.navStore = Ext.create('Ext.data.Store', {
             fields: ['title']
         });
+        */
 
         this.callParent(arguments);
 
