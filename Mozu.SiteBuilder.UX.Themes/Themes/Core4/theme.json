@@ -247,6 +247,7 @@
 
             {
                 "fieldLabel": "title",
+				"name": "title",
                 "xtype": "textfield",
                 "anchor": "100%"
             }, {
@@ -259,12 +260,19 @@
                     ["modules/product/product-list-tiled", "tiled"],
                     ["modules/product/product-list", "list"]
                 ]
+            },
+			{
+                "fieldLabel": "count",
+				"name": "count",
+                "xtype": "spinnerfield",
+                "anchor": "100%"
             }
         ],
         "defaultConfig": {
             "template": "modules/product/product-list-carousel",
             "attributeId": "tenant~product-crosssell",
-            "title": "Related Items"
+            "title": "Related Items",
+            "count": "4"
         },
         "icon": "/resources/admin/widgets/01_photo_text.png",
 
