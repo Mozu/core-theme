@@ -99,7 +99,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 //_cmsService.Create ( )
                 //CreatePage("home page", "home", "home");
 
-                res = await Page("email", emailTempalte.Template);
+                res = await Page("email", GetCmsPage(emailTempalte));
             }
 
             PageContext.PageType = "email";
