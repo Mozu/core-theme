@@ -39,7 +39,7 @@ var ApiReference = (function () {
             var declaredType = (objectTypes[typeName].collectionOf ? ApiCollection : ApiObject).types[typeName];
             if (declaredType) {
                 for (a in declaredType) {
-                    if (isSimpleType || !(utils.dashCase(a) in objectTypes[typeName]) && typeof declaredType[a] === "function") actions.push(a);
+                    if (isSimpleType || !(utils.dashCase(a) in objectTypes[typeName] && !reservedWords[a]) && typeof declaredType[a] === "function") actions.push(a);
                 }
             }
 
@@ -138,7 +138,11 @@ var ApiReference = (function () {
         returnType: true,
         noBody: true,
         includeSelf: true,
-        collectionOf: true
+        collectionOf: true,
+        overridePostData: true,
+        useIframeTransport: true,
+        construct: true,
+        postconstruct: true,
     };
     var objectTypes = {
         'products': {
@@ -497,15 +501,19 @@ var ApiReference = (function () {
         },
         'addressschemas': '{+referenceService}addressschemas',
         'wishlist': {
+            'get': {
+                template: '{+wishlistService}{id}',
+                includeSelf: true
+            },
             'get-default': {
-                template: '{+wishlistService}?startIndex=0&pageSize=1&filter=Name%20eq%20my_wishlist',
+                template: '{+wishlistService}?startIndex=0&pageSize=1&filter=Name%20eq%20' + CONSTANTS.DEFAULT_WISHLIST_NAME,
                 returnType: 'wishlists'
             },
             'create-default': {
                 verb: 'POST',
                 template: '{+wishlistService}',
                 defaultParams: {
-                    name: 'my_wishlist',
+                    name: CONSTANTS.DEFAULT_WISHLIST_NAME,
                     typeTag: 'default'      
                 },
                 overridePostData: true
@@ -514,6 +522,26 @@ var ApiReference = (function () {
                 verb: 'POST',
                 template: '{+wishlistService}{id}/items/',
                 includeSelf: true
+            },
+            'delete-all-items': {
+                verb: 'DELETE',
+                template: '{+wishlistService}{id}/items/'
+            },
+            'delete-item': {
+                verb: 'DELETE',
+                template: '{+wishlistService}{id}/items/{itemId}',
+                includeSelf: true,
+                shortcutParam: 'itemId'
+            },
+            'edit-item': {
+                verb: 'PUT',
+                template: '{+wishlistService}{id}/items/{itemId}',
+                includeSelf: true
+            },
+            'add-item-to-cart': {
+                verb: 'POST',
+                returnType: 'cartitem',
+                template: '{+cartService}current/items/'
             }
         },
         'wishlists': {

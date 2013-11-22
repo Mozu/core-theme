@@ -35,10 +35,15 @@
         <dd>{{ labels.payPal }}</dd>
         {% endif %}
         {% if model.billingInfo.paymentType == "Check" %}
+        <!--
         <dt>{{ labels.checkNumber }}</dt>
         <dd>{{ model.billingInfo.check.checkNumber }}</dd>
+        -->
         <dt><strong>{{ labels.mailCheckTo }}</strong></dt>
-        <dd class="mz-addresssummary">{% include "modules/common/address-summary" with model=ViewData.mailCheckTo %}</dd>
+        <dd class="mz-addresssummary">
+            <span>{{ ViewData.mailCheckTo.shippingOriginContact.firstName}} {{ ViewData.mailCheckTo.shippingOriginContact.lastNameOrSurname }}</span>
+            <span>{{ ViewData.mailCheckTo.shippingOriginContact.companyOrOrganization }}</span>
+            {% include "modules/common/address-summary" with model=ViewData.mailCheckTo %}</dd>
         {% endif %}
         <dt>{{ labels.shipTo }}</dt>
         <dd class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}</dd>

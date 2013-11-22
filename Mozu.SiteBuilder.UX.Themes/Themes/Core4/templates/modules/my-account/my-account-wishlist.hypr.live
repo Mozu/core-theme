@@ -1,8 +1,8 @@
 ﻿<h3 class="mz-l-stack-sectiontitle">{{ labels.accountYourWishlist }}</h3>
 
 <div class="mz-accountwishlist-list">
-  {% if model.wishlist and model.wishlist.items %}
-    {% for item in model.wishlist.items %}
+  {% if model.hasItems %}
+    {% for item in model.items %}
       {% include "modules/my-account/my-account-wishlist-item-listing" with model=item %}
     {% endfor %}
   {% else %}

@@ -1,4 +1,4 @@
-﻿define(['modules/backbone-mozu', 'modules/models-address', 'modules/models-user', 'modules/models-orders', 'modules/models-paymentmethods', 'hyprlive'], function (Backbone, AddressModels, UserModels, OrderModels, PaymentMethods, Hypr) {
+﻿define(['modules/backbone-mozu', 'modules/models-address', 'modules/models-user', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'hyprlive'], function (Backbone, AddressModels, UserModels, OrderModels, PaymentMethods, ProductModels, Hypr) {
 
     var CustomerContact = Backbone.MozuModel.extend({
         mozuType: 'contact',
@@ -35,6 +35,30 @@
         }
     }),
 
+    WishlistItem = Backbone.MozuModel.extend({
+        relations: {
+            product: ProductModels.Product
+        }
+    }),
+
+    Wishlist = Backbone.MozuModel.extend({
+        mozuType: 'wishlist',
+        helpers: ['hasItems'],
+        hasItems: function() {
+            return this.get('items').length > 0;
+        },
+        relations: {
+            items: Backbone.Collection.extend({
+                model: WishlistItem
+            })
+        },
+        addItemToCart: function(id) {
+            return this.apiAddItemToCartById(id).then(function (item) {
+                self.trigger('addedtocart', item, id);
+                return item;
+            });
+        }
+    }),
     Customer = Backbone.MozuModel.extend({
         mozuType: 'customer',
         helpers: ['hasSavedCards', 'hasSavedContacts'],
@@ -55,6 +79,7 @@
             cards: Backbone.Collection.extend({
                 model: PaymentMethods.CreditCard
             }),
+            wishlist: Wishlist,
             editingCard: PaymentMethods.CreditCard,
             editingContact: CustomerContact,
             orderHistory: OrderModels.OrderCollection,

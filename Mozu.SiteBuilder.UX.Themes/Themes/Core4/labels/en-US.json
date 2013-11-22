@@ -162,7 +162,7 @@
   "accountSettings"      : "Account Settings",
   "accountMyWishlist"    : "My Wishlist",
   "accountYourWishlist"  : "Your Wishlist",
-  "accountNoWishlists"   : "You do not have any wishlists.",
+  "accountNoWishlists"   : "You do not have any wishlist items.",
   "orderHistory"         : "Order History",
   "paymentMethods"       : "Payment Methods",
   "addressBook"          : "Address Book",
@@ -181,6 +181,10 @@
   "addNewContact"        : "Add new address",
   "noSavedContacts"      : "You have no saved addresses.",
   "confirmDeleteContact" : "Are you sure you want to delete the address {0}?",
+  "removeFromWishlist"   : "Remove From Wishlist",
+  "addedToCart"          : "{0} has been added to your cart.",
+  "leaveOnWishlist"      : "Leave On Wishlist",
+  "confirmRemoveFromWishlist": "Are you sure you want to remove {0} from your wishlist?",
 
   /* Not Found labels */
   "pageNotFound"         : "Page Not Found",
@@ -228,7 +232,7 @@
   "options"              : "Options",
   "addToCart"            : "Add To Cart",
   "addToWishlist"        : "Add To Wishlist",
-  "addedToWishlist"      : "Added To Wishlist.",
+  "addedToWishlist"      : "Added to wishlist",
   "fullDesc"             : "Description",
   "properties"           : "Properties",
   "measurements"         : "Measurements",

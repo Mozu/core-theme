@@ -79,7 +79,7 @@
         mozuType: 'product',
         idAttribute: 'productCode',
         handlesMessages: true,
-        helpers: ['mainImage'],
+        helpers: ['mainImage', 'notDoneConfiguring'],
         defaults: {
             purchasableState: {},
             quantity: 1
@@ -109,6 +109,10 @@
             var imgs = this.get('content').get("productImages"),
                 img = imgs && imgs[0];
             return img || { imageUrl: 'http://placehold.it/160&text=' + Hypr.getLabel('noImages') }
+        },
+        notDoneConfiguring: function() {
+            var purchasableState = this.get('purchasableState');
+            return purchasableState.isPurchasable === false && purchasableState.messages && purchasableState.messages[0] && purchasableState.messages[0].message === "Not done configuring";
         },
         getConfiguredOptions: function() {
             return _.invoke(this.get("options").filter(function(opt) {

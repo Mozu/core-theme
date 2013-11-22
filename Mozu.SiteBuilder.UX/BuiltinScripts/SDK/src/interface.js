@@ -76,7 +76,8 @@ var ApiInterface = (function () {
                         me.fire('spawn', returnObj, obj);
                         return returnObj;
                     } else {
-                        obj.data = utils.clone(rawJSON);
+                        if (rawJSON || rawJSON === 0 || rawJSON === false)
+                            obj.data = utils.clone(rawJSON);
                         delete obj.unsynced;
                         obj.fire('sync', rawJSON, obj.data);
                         me.fire('sync', obj, rawJSON, obj.data);
