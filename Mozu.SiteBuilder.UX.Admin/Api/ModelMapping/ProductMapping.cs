@@ -29,7 +29,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             var NULLPRICE = new DC.ProductPrice();
             var NULLPUB = new DC.ProductPublishingInfo();
 
+            Mapper.CreateMap<DC.BundledProduct, BundledProduct>()
+                  .ForMember(x => x.SalePrice, opt => opt.MapFrom(x => x.Price.SalePrice))
+                  .ForMember(x => x.Price, opt => opt.MapFrom(x => x.Price.Price))
+                  .ForMember(x => x.PackageWeight, op => op.MapFrom(dc => dc.PackageWeight == null ? null : dc.PackageWeight.Value))
+                  .ForMember(x => x.PackageHeight, op => op.MapFrom(dc => dc.PackageHeight == null ? null : dc.PackageHeight.Value))
+                  .ForMember(x => x.PackageLength, op => op.MapFrom(dc => dc.PackageLength == null ? null : dc.PackageLength.Value))
+                  .ForMember(x => x.PackageWidth, op => op.MapFrom(dc => dc.PackageWidth == null ? null : dc.PackageWidth.Value))
+                  .ForMember(x => x.ProductCode, opt => opt.MapFrom(x => x.ProductCode))
+                  .ForMember(x => x.Qty, opt => opt.MapFrom(x => x.Qty))
+                  .ForMember(x => x.ProductName, opt => opt.MapFrom(x => x.ProductName));
+
+            Mapper.CreateMap<BundledProduct, DC.BundledProduct>()
+                  .ForMember(x => x.ProductCode, opt => opt.MapFrom(x => x.ProductCode))
+                  .ForMember(x => x.Qty, opt => opt.MapFrom(x => x.Qty))
+                  .ForMember(x => x.ProductName, opt => opt.MapFrom(x => x.ProductName));
+
+
             Mapper.CreateMap<DC.Product, Product>()
+                .ForMember(x => x.BundledProducts, opt => opt.MapFrom(x=>x.BundledProducts))
                 .ForMember(x => x.OutOfStockBehavior , op=> op.MapFrom(dc => (dc.InventoryInfo ?? new DC.ProductInventoryInfo()).OutOfStockBehavior  ))
                 .ForMember(x => x.ManageStock, op => op.MapFrom(dc => (dc.InventoryInfo ?? new DC.ProductInventoryInfo()).ManageStock ))
                 .ForMember(x => x.ProductUsage, op => op.MapFrom(x => x.ProductUsage))
@@ -76,7 +94,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
             Mapper.CreateMap<Product, DC.Product>()
-
+                .ForMember(x => x.BundledProducts, opt => opt.MapFrom(x => x.BundledProducts))
                 .ForMember(dc => dc.InventoryInfo, op => op.MapFrom(p => new DC.ProductInventoryInfo() { ManageStock = p.ManageStock, OutOfStockBehavior = string.IsNullOrEmpty( p.OutOfStockBehavior) ? "DisplayMessage" : p.OutOfStockBehavior }))
                 .ForMember(dc => dc.ProductCode, op => op.MapFrom(p => p.ProductCode))
                  .ForMember(x => x.ProductUsage, op => op.MapFrom(x => x.ProductUsage))
