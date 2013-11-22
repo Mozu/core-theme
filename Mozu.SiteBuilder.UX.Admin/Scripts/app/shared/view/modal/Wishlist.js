@@ -46,7 +46,7 @@ Ext.define('Taco.shared.view.modal.Wishlist', {
                 { text: 'Sale Price', dataIndex: 'product', renderer: function (product) { var value = product.price.saleprice; return value ? Ext.util.Format.usMoney(value) : ""; } },
                 { text: 'Quantity', dataIndex: 'quantity' },
                 { text: 'Purchasable', dataIndex: 'purchasableStatusType' },
-                { text: 'Date Added', dataIndex: 'auditInfo', renderer: function (auditinfo) { debugger; return Ext.util.Format.date(auditinfo.createDate, 'm/d/Y'); } }
+                { text: 'Date Added', dataIndex: 'auditInfo', renderer: function (auditinfo) { return Ext.util.Format.date(auditinfo.createDate, 'm/d/Y'); } }
             ],
             scope: this
         });
