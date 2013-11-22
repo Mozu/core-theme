@@ -216,5 +216,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
         [DataMember(EmitDefaultValue = false, Name = "outOfStockBehavior")]
         public string OutOfStockBehavior { get; set; }
+
+        [DataMember(EmitDefaultValue = false, Name = "productUsage")]
+        public string ProductUsage { get; set; }
     }
 }
