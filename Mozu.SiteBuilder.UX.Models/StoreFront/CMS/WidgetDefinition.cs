@@ -63,6 +63,11 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
         public Newtonsoft.Json.Linq.JObject DefaultConfig { get; set; }
 
 
+
+        [DataMember(Name = "validPageTypes")]
+        public List<string> ValidPageTypes { get; set; }
+
+
         
 
 

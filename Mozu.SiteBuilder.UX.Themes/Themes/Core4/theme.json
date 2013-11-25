@@ -238,6 +238,7 @@
             "template": "modules/product/product-list"
         },
         "icon": "/resources/admin/widgets/01_photo_text.png",
+        "validPageTypes":["*"]
 
     }, {
         "id": "crosssells",
@@ -275,7 +276,7 @@
             "count": "4"
         },
         "icon": "/resources/admin/widgets/01_photo_text.png",
-
+		"validPageTypes":["product","cart"]
     }, {
         "id": "upsells",
         "displayName": "Up Sells",
@@ -312,7 +313,7 @@
             "count": "4"
         },
         "icon": "/resources/admin/widgets/01_photo_text.png",
-
+		"validPageTypes":["product","cart"]
     }, 	{
          "id": "instockrequest",
          "displayName": "Instock Request",
@@ -330,7 +331,7 @@
 			  "title": "Related Items"
 		},
          "icon": "/resources/admin/widgets/01_photo_text.png",
-         
+         "validPageTypes":["product"]
     },  {
         "id": "content",
         "displayName": "Content",
@@ -338,7 +339,8 @@
         "icon": "/resources/admin/widgets/03_heading_p.png",
         "defaultConfig": {
             "body": "<h2>Insert Title</h2><p>Insert Content</p>"
-        }
+        },
+        "validPageTypes":["*"]
     }, {
         "id": "image",
         "displayName": "test image",
@@ -351,7 +353,8 @@
         "icon": "/resources/admin/widgets/00_photo.png",
         "defaultConfig": {
             "height": 400
-        }
+        },
+        "validPageTypes":["*"]
     }, {
         "id": "horizontal_rule",
         "displayName": "Horizontal Rule",
@@ -364,7 +367,8 @@
             "hrBorderStyle": "solid",
             "hrMarginTop": "None",
             "hrMarginBottom": "None"
-        }
+        },
+        "validPageTypes":["*"]
     }, {
         "id": "html",
         "displayName": "HTML",
@@ -379,7 +383,8 @@
         }],
         "defaultConfig": {
             "body": "<h2>Insert Markup</h2>"
-        }
+        },
+        "validPageTypes":["*"]
     }, {
         "id": "addthis",
         "displayName": "AddThis",
@@ -421,7 +426,8 @@
             "style": 1
         },
         "category": "social",
-        "icon": "/resources/admin/widgets/13_social.png"
+        "icon": "/resources/admin/widgets/13_social.png",
+        "validPageTypes":["*"]
     }, {
         "id": "facebook_comments",
         "displayName": "Facebook Comments",
@@ -460,6 +466,7 @@
             "count": 5,
             "theme": "light"
         },
-        "category": "social"
+        "category": "social",
+        "validPageTypes":["*"]
     }]
 }

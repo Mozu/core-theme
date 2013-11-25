@@ -42,7 +42,11 @@ Ext.define('Taco.controller.Website', {
                     pageContext = win.require.mozuData('pagecontext');
                 
                 store.each(function (item) {
-                    json.push(item.data);
+                    var validPageTypes = item.get('validPageTypes');
+                    if (Ext.isEmpty(validPageTypes) || Ext.Array.contains(validPageTypes, '*') || Ext.Array.contains(validPageTypes, pageContext.pageType)) {
+                        json.push(item.data);
+                    }
+                    //
                 });
                 
 
