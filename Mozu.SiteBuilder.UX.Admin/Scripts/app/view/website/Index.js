@@ -206,7 +206,7 @@ Ext.define('Taco.view.website.Index', {
                 },
                 split: {
                     canResize: false,
-                    size: 5
+                    size: 10
                 },
                 layout: {
                     type: 'card'
