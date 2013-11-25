@@ -186,7 +186,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 };
         }
 
-        public Response<List<T>, M> List2<T, M>(List<T> list, M metaData, int? total = null)
+        public Response<List<T>, M> List2<T, M>(List<T> list, int? total, M metaData)
         {
             return new Response<List<T>, M>
             {

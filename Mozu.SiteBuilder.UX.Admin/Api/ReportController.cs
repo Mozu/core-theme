@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var rows = extractReportRows(serviceResponse);
 
             // return rows with meta data
-            var resp = List2(rows.ToList(), serviceResponse.Report.GrandTotals, total: (int)serviceResponse.TotalCount);
+            var resp = List2(rows.ToList(), total: (int)serviceResponse.TotalCount, metaData: serviceResponse.Report.GrandTotals);
             return this.Request.CreateResponse(HttpStatusCode.OK, resp, new System.Net.Http.Formatting.JsonMediaTypeFormatter());
         }
 
