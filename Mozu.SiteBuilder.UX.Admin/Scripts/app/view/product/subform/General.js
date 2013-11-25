@@ -225,11 +225,12 @@ Ext.define('Taco.view.product.subform.General', {
     onProductUsageChange: function (field, value) {
         var me = this,
             globalForm = me.up('productglobalform'),
-            bundleSubForm = globalForm.down('#bundleSubForm');
+            parentForm = me.up('productsiteform, productglobalform'),
+            bundleSubForm = parentForm.down('#bundleSubForm');
 
         // add/ remove the bundle items subPanel based on the productUsage value;;
         if (value == "Bundle") {
-            globalForm.formContainer.insert(
+            parentForm.formContainer.insert(
                 1,
                 Ext.create('Taco.view.product.subform.Bundle', {
                         isGlobal: true,
@@ -238,11 +239,11 @@ Ext.define('Taco.view.product.subform.General', {
                     }
                 )
             );
-            globalForm.loadNavItems();
+            parentForm.loadNavItems();
         } else if (bundleSubForm) {
             // if we already have a bundle subForm destroy it;
             bundleSubForm.destroy();
-            globalForm.loadNavItems();
+            parentForm.loadNavItems();
         }
     },
     
