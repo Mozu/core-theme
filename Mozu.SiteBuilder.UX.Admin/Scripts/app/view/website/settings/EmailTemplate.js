@@ -19,41 +19,38 @@ Ext.define('Taco.view.website.settings.EmailTemplate', {
         width: '95%',
         enableFont:false
     },
-    initComponent: function () {
-        this.items = [
-            {
-                name: 'subject',
-                xtype: 'textfield',
 
-                fieldLabel: 'Subject Line',
-            }, 
-            {
-                name: 'html_1',
-                fieldLabel: 'Html block 1',
-            },
-            {
-                name: 'html_2',
-                fieldLabel: 'Html block 2',
-            },
-            {
-                name: 'html_3',
-                fieldLabel: 'Html block 3',
-            },
-            {
-                name: 'html_4',
-                fieldLabel: 'Html block 4'
-            }
-        ];
+    initComponent: function () {
+        this.items = [{
+            name: 'subject',
+            xtype: 'textfield',
+            fieldLabel: 'Subject Line'
+        }, {
+            name: 'html_1',
+            fieldLabel: 'Html block 1'
+        }, {
+            name: 'html_2',
+            fieldLabel: 'Html block 2'
+        }, {
+            name: 'html_3',
+            fieldLabel: 'Html block 3'
+        }, {
+            name: 'html_4',
+            fieldLabel: 'Html block 4'
+        }];
 
         this.callParent(arguments);
     },
+
     loadRecord: function (record, cascade) {
         var values = {};
+
         Ext.Array.each(this.record.data.items, function (kvp) {
             values[kvp.key] = kvp.value;
         }, this);
         this.getForm().setValues(values);
     },
+
     persistFormValues: function () {
         var values = this.getValues();
 
@@ -67,6 +64,5 @@ Ext.define('Taco.view.website.settings.EmailTemplate', {
         this.record.beginEdit();
         this.record.set(values);
         this.record.endEdit();
-
     }
 });

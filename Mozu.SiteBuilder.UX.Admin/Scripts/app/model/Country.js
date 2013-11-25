@@ -3,6 +3,7 @@
  */
 Ext.define('Taco.model.Country', {
     extend: 'Taco.core.data.Model',
+
     fields: ['name', 'code'],
     idProperty: 'code',
     proxy: {
@@ -16,5 +17,5 @@ Ext.define('Taco.model.Country', {
             successProperty: 'success',
             messageProperty: "message"
         }
-    },
+    }
 });
