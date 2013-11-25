@@ -31,7 +31,7 @@
 
     .#{$prefix}grid-row-alt {
         .#{$prefix}grid-td {
-            background-color: $color-neutral-90;
+            background-color: rgb(238, 238, 238);
         }
     }
     .#{$prefix}grid-row-selected {

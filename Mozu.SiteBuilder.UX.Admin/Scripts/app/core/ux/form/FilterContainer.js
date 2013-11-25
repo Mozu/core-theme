@@ -53,66 +53,27 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         console.log(value);
     },
 
-    findNearestValue: function (store, dataIndex, rawValue) {
-        return store.findRecord(dataIndex, rawValue, 0, false, false, false).getId();
+    /**
+     * Search a store for a record matching the provided value.
+     * This method matches string-based user input to a record in the store.
+     * 
+     * @param  {Ext.data.Store} store The store to search.
+     * @param  {String} dataIndex The name of the record field to test.
+     * @param  {String} rawValue A string that the field value should begin with.
+     * @return {Object} The value of the field, specified by returnIndex, on the record that was found.
+     */
+    findNearestRecord: function (store, dataIndex, rawValue) {
+        return store.findRecord(dataIndex, rawValue, 0, false, false, false);
     },
 
     /**
      * Instantiate and return the advanced filters form, which will be inserted into the dialog.
-     * @template
+     * 
      * @return {Ext.form.Panel} The instantiated form.
      */
     getAdvancedForm: function () {
-        if (!this.advancedForm) {
-            this.advancedForm = Ext.create('Taco.core.ux.form.Form', {
-                items: [{
-                    xtype: 'textfield',
-                    name: 'item',
-                    fieldLabel: 'Item'
-                }, {
-                    xtype: 'checkbox',
-                    name: 'isMeal',
-                    fieldLabel: 'Other Filters',
-                    boxLabel: 'Limit search to value meals'
-                }, {
-                    xtype: 'combobox',
-                    name: 'size',
-                    fieldLabel: 'Size',
-                    valueField: 'id',
-                    displayField: 'name',
-                    queryMode: 'local',
-                    valueNotFoundText: 'not found',
-                    editable: false,
-                    forceSelection: true,
-                    store: this.filterStores.getByKey('size')
-                }, {
-                    xtype: 'fieldcontainer',
-                    fieldLabel: 'Price Range',
-                    layout: {
-                        type: 'hbox',
-                        align: 'middle'
-                    },
-                    items: [{
-                        xtype: 'numberfield',
-                        name: 'minPrice',
-                        hideTrigger: true,
-                        keyNavEnabled: false,
-                        mouseWheelEnabled: false,
-                        width: 200
-                    }, {
-                        xtype: 'component',
-                        html: 'to',
-                        margin: '0 10'
-                    }, {
-                        xtype: 'numberfield',
-                        name: 'maxPrice',
-                        hideTrigger: true,
-                        keyNavEnabled: false,
-                        mouseWheelEnabled: false,
-                        width: 200
-                    }]
-                }]
-            });
+        if (!this.advancedForm.isComponent) {
+            this.advancedForm = Ext.create('Taco.core.ux.form.Form', this.advancedForm);
         }
 
         return this.advancedForm;
@@ -121,6 +82,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
     /**
      * Respond to the advanced filters button by opening or closing a dialog containing a form.
      * This method will also instantiate the dialog, if necessary.
+     * 
      * @param  {Ext.button.Button} button The button.
      * @param  {Boolean} state The next state of the button; true means pressed.
      */
@@ -161,9 +123,8 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
     /**
      * Respond to the closing of the dialog, regardless of what action triggered the close.
      * This method is responsible for depressing the advanced filters button.
-     * @param  {Taco.core.ux.window.Modal} dialog The dialog that fired the event.
      */
-    handleDialogClose: function (dialog) {
+    handleDialogClose: function () {
         this.down('#advancedFilter').toggle(false);
     },
 
@@ -171,77 +132,60 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * Respond to a `save` event fired by the dialog.
      * This method triggers an update to the value of the textfield filter, then triggers a filter
      * request to the server.
-     * @param  {Taco.core.ux.window.Modal} dialog The dialog that fired the event.
      */
-    handleDialogSave: function (dialog) {
-        var simple = this.down('#textFilter'),
-            complexValue = dialog.getForm().getForm().getValues();
-
-        this.setTextFilterValue(simple, complexValue);
-
-        this.doFilter(complexValue);
+    handleDialogSave: function () {
+        this.syncAndFilter(this.getAdvancedForm().getForm().getValues());
     },
 
     /**
      * Respond to the opening of the dialog.
      * This method triggers an update to the values of the dialog's form fields.
-     * @param  {Taco.core.ux.window.Modal} dialog The dialog that fired the event.
-     * @return {[type]}        [description]
      */
-    handleDialogShow: function (dialog) {
+    handleDialogShow: function () {
         var simple = this.down('#textFilter'),
-            complexValue = this.parseTextFilterValue(simple);
+            jsonValue = this.parseTextFilterValue(simple);
 
-        this.setAdvancedFilterValues(complexValue);
+        this.setAdvancedFilterValues(jsonValue);
     },
 
     /**
      * Respond to an attempt to submit the textfield filter.
      * This method triggers a filter request to the server.
+     * 
      * @param  {Ext.form.field.Text} field The textfield filter.
      * @param  {Event} e The specialkey event.
      */
     handleFieldSubmit: function (field, e) {
-        var complexValue;
-
         if (e.getKey() === e.ENTER) {
-            complexValue = this.parseTextFilterValue(field);
-
             if (this.modal) {
                 this.modal.close();
             }
-
-            this.setTextFilterValue(field, complexValue);
-
-            this.doFilter(complexValue);
+        
+            this.syncAndFilter(this.parseTextFilterValue(field));
         }
     },
 
+    /**
+     * Place this filter's stores in a MixedCollection for reference by key.
+     */
     initFilterStores: function () {
-        this.filterStores = new Ext.util.MixedCollection();
+        var stores = new Ext.util.MixedCollection();
 
-        this.filterStores.add('size', Ext.create('Ext.data.ArrayStore', {
-            fields: [
-                { name: 'id', type: 'string' },
-                { name: 'name', type: 'string' }
-            ],
-            data: [
-                ['S', 'Small'],
-                ['M', 'Medium'],
-                ['L', 'Large']
-            ]
-        }));
+        stores.addAll(this.filterStores);
+
+        this.filterStores = stores;
     },
 
     /**
      * Transform filter data from the textfield filter's raw value, which is a string, into an object.
+     * 
      * @param  {Ext.form.field.Text} field The textfield with string data.
      * @return {Object} The object containing field keys and values.
      */
     parseTextFilterValue: function (field) {
         var value = field.getValue(),
             form = this.getAdvancedForm(),
-            pairs = {},
+            jsonValue = {},
             values,
             lastKey;
 
@@ -250,35 +194,29 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
             Ext.Array.each(values, function (item, index, all) {
                 var colonIndex = item.indexOf(':'),
-                    key, val;
+                    key,
+                    val;
 
                 if (colonIndex !== -1) {
                     key = Ext.String.createVarName(item.substr(0, colonIndex));
                     val = item.substr(colonIndex + 1);
                     lastKey = key;
 
-                    pairs[key] = val;
+                    jsonValue[key] = val;
                 } else {
                     if (!Ext.isEmpty(lastKey)) {
-                        pairs[lastKey] = Ext.String.trim([pairs[lastKey], item].join(' '));
+                        jsonValue[lastKey] = Ext.String.trim([jsonValue[lastKey], item].join(' '));
                     }
                 }
             }, this);
         }
 
-        Ext.Object.each(pairs, function (fieldName, rawValue) {
-            var store = this.filterStores.getByKey(fieldName);
-
-            if (store) {
-                pairs[fieldName] = this.findNearestValue(store, form.getForm().findField(fieldName).displayField, rawValue);
-            }
-        }, this);
-
-        return pairs;
+        return jsonValue;
     },
 
     /**
      * Set the values in the advanced filters dialog's form fields.
+     * 
      * @param {Object} values The object containing field keys and values.
      */
     setAdvancedFilterValues: function (values) {
@@ -294,9 +232,9 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             if (!Ext.isEmpty(comboFields)) {
                 Ext.Array.each(comboFields, function (field) {
                     var potentialValue = values[field.getName()],
-                        value = this.findNearestValue(field.getStore(), field.displayField, potentialValue);
+                        record = this.findNearestRecord(field.getStore(), field.displayField, potentialValue);
 
-                    field.setValue(value);
+                    field.setValue(record);
                 }, this);
             }
         }
@@ -304,18 +242,63 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
     /**
      * Set the value of the textfield filter.
-     * @param {Ext.form.field.Text} field The textfield filter.
+     * 
      * @param {Object} values The object containing field keys and values.
      */
-    setTextFilterValue: function (field, values) {
-        var simpleValue = [];
+    setTextFilterValue: function (values) {
+        var field = this.down('#textFilter'),
+            simpleValue = [];
 
-        Ext.Object.each(values, function (key, value) {
-            if (!Ext.isEmpty(value)) {
-                simpleValue.push([key, value].join(':'));
+        Ext.Object.each(values, function (fieldName, rawValue) {
+            if (!Ext.isEmpty(rawValue)) {
+                simpleValue.push([fieldName, rawValue].join(':'));
             }
         }, this);
 
         field.setValue(Ext.String.trim(simpleValue.join(' ')));
+    },
+
+    /**
+     * Iterate over a values object, producing one version for the textfield filter and another for
+     * submission to the server, then update the textfield filter and submit the filter request.
+     * 
+     * @param  {Object} values The values object.
+     * @return {Object} The nested values object, containing both textfield and JSON values objects.
+     */
+    syncAndFilter: function (values) {
+        var form = this.getAdvancedForm(),
+            stores = this.filterStores,
+            syncedValues = {};
+
+        syncedValues['json'] = Ext.apply({}, values);
+        syncedValues['text'] = Ext.apply({}, values);
+
+        Ext.Object.each(values, function (fieldName, rawValue) {
+            var displayField,
+                record;
+
+            if (Ext.isEmpty(rawValue)) {
+                delete syncedValues['json'][fieldName];
+                delete syncedValues['json'][fieldName];
+            }
+
+            if (stores.containsKey(fieldName)) {
+                displayField = form.getForm().findField(fieldName).displayField;
+                record = this.findNearestRecord(stores.getByKey(fieldName), displayField, rawValue);
+
+                if (record) {
+                    syncedValues['json'][fieldName] = record.getId();
+                    syncedValues['text'][fieldName] = record.get(displayField);
+                } else {
+                    delete syncedValues['json'][fieldName];
+                    delete syncedValues['text'][fieldName];
+                }
+            }
+        }, this);
+
+        this.setTextFilterValue(syncedValues['text']);
+        this.doFilter(syncedValues['json']);
+
+        return syncedValues;
     }
 });

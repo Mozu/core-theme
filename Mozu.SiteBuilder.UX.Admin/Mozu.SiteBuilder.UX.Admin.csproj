@@ -1038,6 +1038,7 @@
     <Content Include="Scripts\sass\src\view\settings\shipping\widget\RateList.scss" />
     <Content Include="Scripts\sass\src\core\ux\TilePanel.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\Component.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\src\resizer\Splitter.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Parameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
