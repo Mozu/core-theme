@@ -305,23 +305,23 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
     createSidebar: function () {
         
-        // this.filterList = Ext.create('Taco.core.ux.browser.FilterList', {
-        //     itemType: this.token
-        // });
+        this.filterList = Ext.create('Taco.core.ux.browser.FilterList', {
+            itemType: this.token
+        });
 
-        // this.sidebar = {
-        //     items: [this.filterList]
-        // };
+        this.sidebar = {
+            items: [this.filterList]
+        };
 
-        // this.filterList.on('itemclick', function (cmp, record) {
-        //     var newFilter = record && record.get('configuration');
-        //     if (newFilter) {
-        //         this.store.clearFilter(true); // clear silently so as not to throw two dataChanged events
-        //         this.store.filter([newFilter]);
-        //     } else {
-        //         this.store.clearFilter();
-        //     }
-        // }, this);
+        this.filterList.on('itemclick', function (cmp, record) {
+            var newFilter = record && record.get('configuration');
+            if (newFilter) {
+                this.store.clearFilter(true); // clear silently so as not to throw two dataChanged events
+                this.store.filter([newFilter]);
+            } else {
+                this.store.clearFilter();
+            }
+        }, this);
     },
 
     launchBulkEditor: function () {
