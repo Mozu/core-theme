@@ -15,6 +15,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class ProductMapping : Profile
     {
+        private const int MAX_ATTRIBUTE_VALUE_LENGTH = 50;
+
         public override string ProfileName
         {
             get
@@ -187,10 +189,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                              };
                                if (v != null && v is string)
                                {
+                                   var vStr = (string)v;
                                    ppv.Content = new DC.ProductPropertyValueLocalizedContent()
                                                      {
-                                                         StringValue = (string) v
+                                                         StringValue = vStr
                                                      };
+                                   // value can't be longer than 50 chars
+                                   if (vStr.Length > MAX_ATTRIBUTE_VALUE_LENGTH)
+                                   {
+                                       ppv.Value = vStr.Substring(0, MAX_ATTRIBUTE_VALUE_LENGTH);
+                                   }
                                }
                                return ppv;
                            }).ToList();
@@ -336,7 +344,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<DC.ProductLocalizedImage, Models.ProductModels.ProductLocalizedImage>();
 
-           
+
             Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, UnitOfMeasure>();
             Mapper.CreateMap<UnitOfMeasure, Mozu.Core.Api.Contracts.Measurement>();
 
