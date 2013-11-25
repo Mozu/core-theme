@@ -90,7 +90,12 @@ Ext.define('Taco.model.WidgetDefinition', {
          {
              name: 'createView',
              type: 'string'
-         }
+         },
+        {
+            name: 'validPageTypes',
+            type: 'auto',
+            defaultValue:['*']
+        }
     ],
 
     proxy: {
