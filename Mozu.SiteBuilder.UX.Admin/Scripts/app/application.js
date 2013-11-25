@@ -111,6 +111,7 @@ Ext.define('Taco.Application',{
             'Reports',
             'Navigation',
             'Customers',
+            'StoreCredits',
             'CustomerAttributes',
             'Categories',
             'Products',
