@@ -14,11 +14,14 @@ Ext.define('Taco.view.generalsettings.Form', {
         'Taco.view.generalSettings.subform.AddressValidation',
         'Taco.view.generalSettings.subform.Robots',
         'Taco.view.generalSettings.subform.Tools',
-        'Taco.view.generalSettings.subform.Maintenance'],
+        'Taco.view.generalSettings.subform.Maintenance'
+    ],
+
     title: 'General Settings',
     manageHeight: false,
     createTitle: 'General Settings',
     editTitle: 'General Settings',
+
     initComponent: function () {
         var me = this;
         var subFormConfig = {
@@ -39,15 +42,15 @@ Ext.define('Taco.view.generalsettings.Form', {
             Ext.create('Taco.view.generalSettings.subform.About', subFormConfig),
             Ext.create('Taco.view.generalSettings.subform.Notifications', subFormConfig),
             Ext.create('Taco.view.generalSettings.subform.Analytics', subFormConfig),
-            Ext.create('Taco.view.generalSettings.subform.AddressValidation', subFormConfig),
+            Ext.create('Taco.view.generalSettings.subform.AddressValidation', subFormConfig)
         ];
 
         me.callParent(arguments);
         
         this.loadNavItems();
     },
+
     loadForm: function (record, noCascade) {
         this.callParent(arguments);
     }
-    
 });
