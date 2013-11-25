@@ -61,9 +61,9 @@
         };
 
     var IframeXMLHttpRequest = function (frameUrl) {
-        this.frameOrigin = frameUrl.match(originRE)[0];
-        if (!this.frameOrigin) throw new Error(frameUrl + " does not seem to have a valid origin.");
-        this.frameOrigin = this.frameOrigin.toLowerCase();
+        var frameMatch = frameUrl.match(originRE);
+        if (!frameMatch || !frameMatch[0]) throw new Error(frameUrl + " does not seem to have a valid origin.");
+        this.frameOrigin = frameMatch[0].toLowerCase();
         this.frameUrl = frameUrl + "?&parenturl=" + encodeURIComponent(location.href) + "&parentdomain=" + encodeURIComponent(location.protocol + '//' + location.host) + "&messagedelimiter=" + encodeURIComponent(messageDelimiter);
         this.headers = {};
     };

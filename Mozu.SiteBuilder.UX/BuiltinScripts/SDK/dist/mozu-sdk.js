@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-11-22
+ * Mozu JavaScript SDK - v0.2.0 - 2013-11-25
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1524,8 +1524,9 @@
                     }
                 };
                 var IframeXMLHttpRequest = function(frameUrl) {
-                    this.frameOrigin = frameUrl.match(originRE)[0];
-                    if (!this.frameOrigin) throw new Error(frameUrl + " does not seem to have a valid origin.");
+                    var frameMatch = frameUrl.match(originRE);
+                    if (!frameMatch || !frameMatch[0]) throw new Error(frameUrl + " does not seem to have a valid origin.");
+                    this.frameOrigin = frameMatch[0];
                     this.frameOrigin = this.frameOrigin.toLowerCase();
                     this.frameUrl = frameUrl + "?&parenturl=" + encodeURIComponent(location.href) + "&parentdomain=" + encodeURIComponent(location.protocol + "//" + location.host) + "&messagedelimiter=" + encodeURIComponent(messageDelimiter);
                     this.headers = {};
