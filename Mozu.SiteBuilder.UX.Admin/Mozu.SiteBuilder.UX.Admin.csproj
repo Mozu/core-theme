@@ -663,6 +663,7 @@
     <Content Include="Scripts\app\store\LocationTypes.js" />
     <Content Include="Scripts\app\store\OrderAttributes.js" />
     <Content Include="Scripts\app\store\PackagingTypes.js" />
+    <Content Include="Scripts\app\store\StoreCredits.js" />
     <Content Include="Scripts\app\store\Wishlists.js" />
     <Content Include="Scripts\app\view\capability\Edit.js" />
     <Content Include="Scripts\app\view\capability\Form.js" />
