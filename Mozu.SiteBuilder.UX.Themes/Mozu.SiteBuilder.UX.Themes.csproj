@@ -423,9 +423,11 @@
     <Content Include="Themes\Core4\scripts\modules\scroll-nav.js" />
     <Content Include="Themes\Core4\scripts\modules\views-productimages.js" />
     <Content Include="Themes\Core4\scripts\modules\views-messages.js" />
+    <Content Include="Themes\Core4\scripts\modules\views-productlists.js" />
     <Content Include="Themes\Core4\scripts\vendor\bootstrap-affix.js" />
     <Content Include="Themes\Core4\scripts\vendor\bootstrap-popover.js" />
     <Content Include="Themes\Core4\scripts\vendor\bootstrap-scrollspy.js" />
+    <Content Include="Themes\Core4\scripts\vendor\isotope.min.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery-scrollto.js" />
     <Content Include="Themes\Core4\scripts\vendor\placeholder_polyfill.jquery.amd.js" />
     <Content Include="Themes\Core4\scripts\widgets\instock-request.js" />

@@ -1,4 +1,4 @@
-﻿<div class="mz-productlisting">
+﻿<div class="mz-productlisting" data-mz-product="{{ model.productCode }}">
     <div class="mz-productlisting-image">
         <a href="{{model.url}}">
             <img src="{{model.mainImage.imageUrl}}?size={% block thumbnail-size %}160{% endblock thumbnail-size %}" />

@@ -1,12 +1,14 @@
-define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'shim!vendor/jquery.history[jquery=jQuery]>History', "modules/models-faceting", "modules/views-paging"], function($, Hypr, Backbone, History, FacetingModels, PagingViews){
+define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'shim!vendor/jquery.history[jquery=jQuery]>History', "modules/models-faceting", "modules/views-productlists", "modules/views-paging"], function($, Hypr, Backbone, History, FacetingModels, ProductListViews, PagingViews){
 
-    var FacetingView = Backbone.MozuView.extend({
+    var useAnimatedLists = Hypr.getThemeSetting('useAnimatedProductLists') && !Modernizr.mq('(max-width: 480px)'),
+    
+    FacetingView = Backbone.MozuView.extend({
         additionalEvents: {
             "change [data-mz-facet-value]": "setFacetValue"
         },
         templateName: "modules/product/faceting-form",
-        initialize: function() {
-            this.listenTo(this.model, 'loadingchange', function(isLoading) {
+        initialize: function () {
+            this.listenTo(this.model, 'loadingchange', function (isLoading) {
                 this.$el.find('input').prop('disabled', isLoading);
             });
         },
@@ -47,11 +49,13 @@ define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'shim!vendor
                     el: $categoryPageBody.find('[data-mz-pagenumbers]'),
                     model: facetingModel
                 }),
-                productList: new Backbone.MozuView({
-                    templateName: 'modules/product/product-list-tiled',
+                productList: ( useAnimatedLists ? new ProductListViews.AnimatedList({
+                    el: $categoryPageBody.find('[data-mz-productlist] .mz-productlist-list'),
+                    model: facetingModel
+                }) : new ProductListViews.List({
                     el: $categoryPageBody.find('[data-mz-productlist]'),
                     model: facetingModel
-                })
+                }) )
             };            if ($facetPanel.length > 0) {                facetingViews.facetPanel = new FacetingView({
                     el: $facetPanel,                    model: facetingModel
                 });            }

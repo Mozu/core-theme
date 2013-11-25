@@ -37,6 +37,7 @@
         /* Settings specific to product listing modules */
         "listProductShortDesc": true,
         "listProductCode": true,
+        "useAnimatedProductLists": true,
 
         /* Settings specific to product pages */
         "showProductDetailShortDesc": true,
