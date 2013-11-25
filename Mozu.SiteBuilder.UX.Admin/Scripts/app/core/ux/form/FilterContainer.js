@@ -13,6 +13,14 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
     extend: 'Ext.form.FieldContainer',
     alias: 'widget.taco-filtercontainer',
 
+    /**
+     * @cfg {String} [defaultFieldName="keyword"]
+     * The key or fieldName to use for textfield input without a corresponding field in the form.
+     * When JSON data is sent to the server, this will be used as the key for what the server
+     * understands to be a generic or catch-all field.
+     */
+    defaultFieldName: 'keyword',
+
     layout: 'hbox',
 
     initComponent: function () {
@@ -184,7 +192,6 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      */
     parseTextFilterValue: function (field) {
         var value = field.getValue(),
-            form = this.getAdvancedForm(),
             jsonValue = {},
             values,
             lastKey;
@@ -204,7 +211,10 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
                     jsonValue[key] = val;
                 } else {
-                    if (!Ext.isEmpty(lastKey)) {
+                    if (index === 0) {
+                        key = lastKey = 'keyword';
+                        jsonValue[key] = item;
+                    } else if (!Ext.isEmpty(lastKey)) {
                         jsonValue[lastKey] = Ext.String.trim([jsonValue[lastKey], item].join(' '));
                     }
                 }
@@ -251,7 +261,11 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
         Ext.Object.each(values, function (fieldName, rawValue) {
             if (!Ext.isEmpty(rawValue)) {
-                simpleValue.push([fieldName, rawValue].join(':'));
+                if (fieldName === this.defaultFieldName) {
+                    simpleValue.push(rawValue);
+                } else {
+                    simpleValue.push([fieldName, rawValue].join(':'));
+                }
             }
         }, this);
 
