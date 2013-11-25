@@ -152,7 +152,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                         '<span class="seperator">|</span>',
                             ' id: {id} ',
                         '<span class="seperator">|</span>',
-                            ' Amount: ${amount} ',
+                            ' Amount: {amount:usMoney} ',
                         '<span class="seperator">|</span>',
                             'Type: {interactionType} ',
                         '<tpl if="gatewayTransactionId">',

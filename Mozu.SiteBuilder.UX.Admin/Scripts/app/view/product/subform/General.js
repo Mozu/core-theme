@@ -7,7 +7,7 @@
 Ext.define('Taco.view.product.subform.General', {
     extend: 'Taco.view.product.subform.Subform',
     requires: [
-        'Taco.shared.view.field.Image'
+        'Taco.shared.view.field.Image'        
     ],
 
     title: 'General',
@@ -18,11 +18,7 @@ Ext.define('Taco.view.product.subform.General', {
             requiredContent,
             visable;
         
-
         this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
-
-        
-
 
         this.defaults = {
             width: 200,
@@ -71,11 +67,6 @@ Ext.define('Taco.view.product.subform.General', {
             }
         });
         
-
-        
-
-
-
         readOnly = this.isEdit() || !(this.isSingleSite || this.isGlobal);
         visable = !readOnly || this.isEdit();
         requiredContent = this.isSingleSite || this.isGlobal;
@@ -121,7 +112,10 @@ Ext.define('Taco.view.product.subform.General', {
             shrinkWrap: 3,
             displayField: 'name',
             valueField: 'id',
-            store: this.productUsageStore
+            store: this.productUsageStore,
+            listeners: {
+                change: this.onProductUsageChange
+            }
         }, {
             xtype:'formform',
             persistChangesToModel: true,
@@ -181,12 +175,18 @@ Ext.define('Taco.view.product.subform.General', {
                     editmodechange: htmlEditorEditModeChangeHandler
                 },
                 width: '100%'
-            }, {
+            },
+
+
+                
+            {
                 fieldLabel: 'Product Image',
                 name: 'productImages',
                 xtype: 'taco.imagefield',
                 width: '100%'
-            }]
+            }
+            
+            ]
         }, {
             xtype: 'productoverride',
             width: '100%',
@@ -218,11 +218,32 @@ Ext.define('Taco.view.product.subform.General', {
 
     },
 
+    
+    /**
+    * when the user chagnes the productUsage type selection, will need to alter the visibility and behavior of several components;
+    */ 
+    onProductUsageChange: function (field, value) {
+        var me = this,
+            globalForm = me.up('productglobalform'),
+            bundleSubForm = globalForm.down('#bundleSubForm');
 
-    // when the user chagnes the productUsage type selection, will need to alter the visibility and behavior of several components;
-    onProductUsageChange: function() {
-        
-        
+        // add/ remove the bundle items subPanel based on the productUsage value;;
+        if (value == "Bundle") {
+            globalForm.formContainer.insert(
+                1,
+                Ext.create('Taco.view.product.subform.Bundle', {
+                        isGlobal: true,
+                        product: me.product,
+                        persistChangesToModel: true
+                    }
+                )
+            );
+            globalForm.loadNavItems();
+        } else if (bundleSubForm) {
+            // if we already have a bundle subForm destroy it;
+            bundleSubForm.destroy();
+            globalForm.loadNavItems();
+        }
     },
     
     /**

@@ -626,6 +626,7 @@
     <Content Include="Scripts\app\model\Channel.js" />
     <Content Include="Scripts\app\model\CheckoutSettings.js" />
     <Content Include="Scripts\app\model\Capability.js" />
+    <Content Include="Scripts\app\model\BundledProduct.js" />
     <Content Include="Scripts\app\model\StoreCredit.js" />
     <Content Include="Scripts\app\model\WishlistItem.js" />
     <Content Include="Scripts\app\model\Country.js" />
@@ -693,11 +694,13 @@
     <Content Include="Scripts\app\view\orderAttribute\Index.js" />
     <Content Include="Scripts\app\view\order\widget\DiscountRowBody.js" />
     <Content Include="Scripts\app\view\pendingChange\Product.js" />
+    <Content Include="Scripts\app\view\product\subform\Bundle.js" />
     <Content Include="Scripts\app\view\product\subform\Options.js" />
     <Content Include="Scripts\app\view\product\subform\CrossSale.js" />
     <Content Include="Scripts\app\view\product\variant\Grid.js" />
     <Content Include="Scripts\app\view\product\variant\Modal.js" />
     <Content Include="Scripts\app\view\product\variant\Options.js" />
+    <Content Include="Scripts\app\view\product\widget\ProductBundleGrid.js" />
     <Content Include="Scripts\app\view\report\Header.js" />
     <Content Include="Scripts\app\view\report\Index.js" />
     <Content Include="Scripts\app\view\report\SidebarList.js" />
