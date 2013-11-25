@@ -13,7 +13,8 @@ Ext.define('Taco.model.Product', {
         'Taco.model.ProductVariation',
         'Ext.data.association.HasMany',
         'Taco.model.ProductInCatalogInfo',
-        'Taco.model.ProductVariation'
+        'Taco.model.ProductVariation',
+        'Taco.model.BundledProduct'
     ],
     requiredStores: ['Taco.store.ProductTypes'],
     statics: {
@@ -303,7 +304,23 @@ Ext.define('Taco.model.Product', {
             convert: function (v, record) {
                 return (record.get("options").length || record.get("extras").length);
             }
+        },
+        {
+            name: "bundledProducts",
+            type: "auto",
+            defaultValue: [{
+                productName: "Standard Product",
+                productCode: "test",
+                quantity: 2,
+                price: 29.99,
+                salePrice: 28.99,
+                packageWeight: 12,
+                packageLength: 2,
+                packageWidth: 4,
+                packageHeight: 3,
+            }]
         }
+        
     ],
     loadRuntimeProduct: function (cfg) {
 
@@ -410,6 +427,13 @@ Ext.define('Taco.model.Product', {
 
         }
         return null;
+    },
+    getBundledProducts: function () {
+        return this.getOrCreateHasManyStore({
+            model: 'Taco.model.BundledProduct',
+            associationKey: 'bundledProducts',
+            foreignProperty: 'product'
+        });
     },
     getProperties: function () {
         return this.getOrCreateHasManyStore({

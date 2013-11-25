@@ -926,8 +926,8 @@ weight: 2
                         '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{productCode}</td>',
                         '<td style="border-top: 2px solid black; font-weight: bold; padding: 4px 30px 15px 4px; width: 100%;">{productName}</td>',
                         '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{quantity}</td>',
-                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">${unitPrice}</td>',
-                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">${total}</td>',
+                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{unitPrice:usMoney}</td>',
+                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{total:usMoney}</td>',
                     '</tr></tpl>',
                 '</tbody></table>',
             '</div>'

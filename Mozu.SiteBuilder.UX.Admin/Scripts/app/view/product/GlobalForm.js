@@ -10,6 +10,7 @@ Ext.define('Taco.view.product.GlobalForm', {
     alias: 'widget.productglobalform',
     requires: [
         'Taco.view.product.subform.General',
+        'Taco.view.product.subform.Bundle',
         'Taco.view.product.subform.Options',
         'Taco.view.product.subform.Inventory',
         'Taco.view.product.subform.Properties',
@@ -43,11 +44,20 @@ Ext.define('Taco.view.product.GlobalForm', {
                 product: this.record,
                 persistChangesToModel: true
             },
-            items;
+            items = [];
 
-        items = [
+        
+
+        Ext.Array.push(items, [
             Ext.create('Taco.view.product.subform.General', subFormCfg)
-        ];
+        ]);
+
+        // if this product has a product usage of type "Bundle" add the subPanel for managing its items
+        if (this.record.get("productUsage") == "Bundle") {
+            Ext.Array.push(items, [
+                Ext.create('Taco.view.product.subform.Bundle', subFormCfg)
+            ]);
+        }
 
         if (!this.isSingleSite) {
             Ext.Array.push(items, [
