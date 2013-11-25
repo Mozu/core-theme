@@ -105,6 +105,10 @@ Ext.define('Taco.store.Navigation', {
                 "id": "fulfilment",
                 "label": "Fulfilment",
                 "address": "tbd/fulfilment"
+            }, {
+                "id": "storecredit",
+                "label": "Store Credit",
+                "address": "StoreCredits"
             }]
         }, {
             "id": "marketing",
