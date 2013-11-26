@@ -653,6 +653,7 @@
     <Content Include="Scripts\app\shared\view\field\LocationPickerField.js" />
     <Content Include="Scripts\app\shared\view\field\ProductPickerField.js" />
     <Content Include="Scripts\app\shared\view\form\ExtensibleAttribute.js" />
+    <Content Include="Scripts\app\shared\view\modal\StoreCredit.js" />
     <Content Include="Scripts\app\shared\view\modal\Wishlist.js" />
     <Content Include="Scripts\app\store\Capability.js" />
     <Content Include="Scripts\app\store\Channels.js" />
