@@ -82,6 +82,17 @@ Ext.define('Taco.view.customers.subform.Information', {
                 },
                 scope: this
             }, {
+                xtype: 'button',
+                text: 'View Store Credit',
+                cls: 'customer-wish-list-btn',
+                handler: function () {
+                    //console.log(this.record);
+                    var model = Ext.create('Taco.shared.view.modal.StoreCredit', {
+                        record: this.record
+                    });
+                },
+                scope: this
+            }, {
                 store: this.tagStore,
                 xtype: 'boxselect',
                 width: 320,
