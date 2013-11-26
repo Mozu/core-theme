@@ -279,6 +279,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
             gridHeaderLabel: this.gridHeaderLabel,
             filterFormConf: this.filterFormConf,
             filterProperties: this.filterProperties,
+            advancedSearchConfig: this.advancedSearchConfig,
             isCollectionContext: Taco.app.context.getCurrent().contextType === "c",
             gridPanel: this.gridPanel,
             tilePanel: this.tilePanel,

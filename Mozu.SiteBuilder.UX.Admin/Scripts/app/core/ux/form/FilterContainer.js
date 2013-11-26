@@ -13,6 +13,10 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
     extend: 'Ext.form.FieldContainer',
     alias: 'widget.taco-filtercontainer',
 
+    //@event filter
+    //@event beforefilter
+    
+
     /**
      * @cfg {String} [defaultFieldName="keyword"]
      * The key or fieldName to use for textfield input without a corresponding field in the form.
@@ -23,29 +27,35 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
     layout: 'hbox',
 
+    currentFilterString: '{}',
+    
     initComponent: function () {
+
+        this.addEvents('beforefilter', 'filter');
+
         this.items = [{
-            xtype: 'textfield',
-            itemId: 'textFilter',
-            margin: '0 10 20 0',
-            width: 400,
-            listeners: {
-                specialkey: {
-                    scope: this,
-                    fn: this.handleFieldSubmit
+                xtype: 'textfield',
+                itemId: 'textFilter',
+                margin: '0 10 20 0',
+                flex: 1,
+                width: 400,
+                listeners: {
+                    specialkey: {
+                        scope: this,
+                        fn: this.handleFieldSubmit
+                    }
                 }
-            }
-        }, {
-            xtype: 'button',
-            itemId: 'advancedFilter',
-            ui: 'action',
-            scale: 'medium',
-            glyph: 'XE010@mozicons',
-            width: 57,
-            enableToggle: true,
-            scope: this,
-            toggleHandler: this.handleButtonToggle
-        }];
+            }, {
+                xtype: 'button',
+                itemId: 'advancedFilter',
+                ui: 'action',
+                scale: 'medium',
+                glyph: 'XE010@mozicons',
+                width: 57,
+                enableToggle: true,
+                scope: this,
+                toggleHandler: this.handleButtonToggle
+            }];
 
         this.callParent(arguments);
 
@@ -58,6 +68,30 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * @param  {Object} value An object containing field keys and values.
      */
     doFilter: function (value) {
+        var filterString = Ext.JSON.encodeValue(value);
+        if (filterString == this.currentFilterString) {
+            return;
+        }
+        if (this.fireEvent('beforefilter', this, value) !== false) {
+
+            if (this.store.remoteFilter) {
+                this.filtering = true;
+                this.currentFilterString = filterString;
+                
+                this.store.load({
+                    params: {
+                        advancedSearch: filterString
+                    },
+                    callback: function () {
+                        this.filtering = false;
+                        this.fireEvent('filter', this, value);
+                    },
+                    scope: this
+                });
+            }
+
+
+        }
         console.log(value);
     },
 
@@ -71,7 +105,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * @return {Object} The value of the field, specified by returnIndex, on the record that was found.
      */
     findNearestRecord: function (store, dataIndex, rawValue) {
-        return store.findRecord(dataIndex, rawValue, 0, false, false, false);
+        return store.getById(rawValue) || store.findRecord(dataIndex, rawValue, 0, false, false, false);
     },
 
     /**
@@ -168,7 +202,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             if (this.modal) {
                 this.modal.close();
             }
-        
+
             this.syncAndFilter(this.parseTextFilterValue(field));
         }
     },
@@ -298,6 +332,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
             if (stores.containsKey(fieldName)) {
                 displayField = form.getForm().findField(fieldName).displayField;
+                
                 record = this.findNearestRecord(stores.getByKey(fieldName), displayField, rawValue);
 
                 if (record) {

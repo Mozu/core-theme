@@ -91,10 +91,22 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
                     unit: 'records'
                 }
             }]
-        };
+        };        
         
-        
-        if (me.filterProperties) {
+
+        if (me.advancedSearchConfig) {
+
+            me.searchBox = Ext.widget({
+                xtype: 'taco-filtercontainer',
+                width: '100%',
+                flex: 1,
+                advancedForm: me.advancedSearchConfig.form,
+                store: me.createItemStore(),
+                filterStores: me.advancedSearchConfig.stores,
+                value: this.options && this.options.query ?  this.options.query : undefined 
+            });
+            conf.items.unshift(me.searchBox);
+        }else if (me.filterProperties) {
             me.searchBox = Ext.widget({
                 xtype: 'taco.combofilter',
                 //width: 675,
@@ -114,6 +126,8 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
         } else {
             conf.items.unshift("->");
         }
+        
+
         
         if (me.useGridPanel && me.useTilePanel) conf.items.push(me.createToggleGroup());
         

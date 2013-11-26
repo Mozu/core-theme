@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -10,7 +11,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
     {
         private const string PRODUCT_NAME_PROPERTY = "productincatalogs.content.productName";
         private const string PRODUCT_CODE_PROPERTY = "productCode";
-        private const string PRICE_PROPERTY = "productincatalogs.price.price";
+        private const string PRICE_PROPERTY = "productsincatalog.price.price";
         private const string CATEGORY_ID_PROPERTY = "productincatalogs.productcategories.categoryId";
         private const string IS_ACTIVE_PROPERTY = "productincatalogs.isActive";
         private const string STOCK_ON_HAND_PROPERTY = "stockOnHand";
@@ -123,10 +124,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                 case "productcode" :
                     return string.Format("ProductCode eq \"{0}\"", value);
                 case "producttypeid":
+                case "producttype":
                     return string.Format("productTypeId eq {0}", value);
+                case "minprice":
+                    return string.Format("{1} ge {0}", filter.value,  PRICE_PROPERTY);
+                case "maxprice":
+                    return string.Format("{1} le {0}", filter.value, PRICE_PROPERTY);
                 case "productusage":
                 {
-                    if (value is IEnumerable)
+                    if (!(value is string ) && value is IEnumerable)
                     {
                         string[] filters = ((IEnumerable)value).Cast<string>().Select(v => "productUsage eq " + v).ToArray();
                         return "(" + String.Join(" or ", filters) + ")";
@@ -136,6 +142,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                         return string.Format("productUsage eq {0}", value);
                     }
                 }
+                case "modifiedfrom" :
+                return string.Format("updatedate ge {0}", filter.value);
+                case "modifiedto":
+                return string.Format("updatedate le {0}", filter.value);
                 case "price":
                     return string.Format("{2} {1} {0}", filter.value, filter.comparison, PRICE_PROPERTY);
                 case "stockonhand":
