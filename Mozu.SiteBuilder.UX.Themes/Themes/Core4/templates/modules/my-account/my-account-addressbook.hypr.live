@@ -12,7 +12,13 @@
     </div>
     <div class="mz-accountaddressbook-contactdetails mz-addresssummary">
       {% include "modules/common/address-summary" with model=contact %}
-      <span>{{ model.email }}</span>
+      <span>{{ contact.email }}</span>
+        {% for type in contact.types %}
+        <span class="mz-accountaddressbook-contacttype">
+            <strong>{{ type.name }}</strong> 
+            {% if type.isPrimary %}<em class="is-primary">({{ labels.primary }})</em>{% endif %}
+        </span>
+        {% endfor %}
     </div>
   </li>
   {% endif %}

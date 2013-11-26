@@ -70,7 +70,7 @@ define([
             },
             setRelation: function (attr, val, options) {
                 var relation = this.attributes[attr],
-                    id = this.idAttribute || "Id",
+                    id = this.idAttribute || "id",
                     modelToSet, modelsToAdd = [], modelsToRemove = [];
 
                 //if (options.unset && relation) delete relation.parent;
@@ -141,13 +141,17 @@ define([
 
                     if (relation && relation instanceof Model) {
                         if (options.useExistingInstances && val instanceof this.relations[attr]) return val;
-                        relation.set(val);
+                        if (options.unset) {
+                            relation.clear();
+                        } else {
+                            relation.set(val);
+                        }
                         return relation;
                     }
 
                     options._parent = this;
 
-                    val = new this.relations[attr](val, options);
+                    if (!(val instanceof this.relations[attr])) val =  new this.relations[attr](val, options);
                     val.parent = this;
                 }
 
@@ -207,7 +211,8 @@ define([
                     } else {
                         delete this.changed[attr];
                     }
-                    unset ? delete current[attr] : current[attr] = val;
+                    var isARelation = this.relations && this.relations[attr] && (val instanceof this.relations[attr]);
+                    (unset && !isARelation) ? delete current[attr] : current[attr] = val;
                 }
 
                 // Trigger all relevant attribute changes.
@@ -366,6 +371,7 @@ define([
                             // include self by default...
                             if (actionName in { 'create': true, 'update': true }) data = data || this.toJSON();
                             if (typeof data === "object" && !$.isArray(data) && !$.isPlainObject(data)) data = null;
+                            this.syncApiModel();
                             this.isLoading(true);
                             var p = this.apiModel[actionName](data);
                             p.ensure(function () {

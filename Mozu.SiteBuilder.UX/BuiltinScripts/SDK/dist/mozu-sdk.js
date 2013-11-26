@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-11-25
+ * Mozu JavaScript SDK - v0.2.0 - 2013-11-26
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1263,6 +1263,7 @@
                 }
             };
             var utils = function() {
+                var maxFlattenDepth = 20;
                 return {
                     extend: function() {
                         var src, copy, name, options, target = arguments[0], i = 1, length = arguments.length;
@@ -1284,7 +1285,9 @@
                     clone: function(obj) {
                         return JSON.parse(JSON.stringify(obj));
                     },
-                    flatten: function(obj, into, prefix, separator) {
+                    flatten: function(obj, into, prefix, separator, depth) {
+                        if (depth === 0) throw "Cannot flatten circular object.";
+                        if (!depth) depth = maxFlattenDepth;
                         into = into || {};
                         separator = separator || ".";
                         prefix = prefix || "";
@@ -1293,7 +1296,7 @@
                             val = obj[n];
                             if (obj.hasOwnProperty(key)) {
                                 if (val && typeof val === "object" && !(val instanceof Array || val instanceof Date || val instanceof RegExp)) {
-                                    utils.flatten(val.toJSON ? val.toJSON() : val, into, prefix + key + separator, separator);
+                                    utils.flatten(val.toJSON ? val.toJSON() : val, into, prefix + key + separator, separator, --depth);
                                 } else {
                                     into[prefix + key] = val;
                                 }
@@ -1526,8 +1529,7 @@
                 var IframeXMLHttpRequest = function(frameUrl) {
                     var frameMatch = frameUrl.match(originRE);
                     if (!frameMatch || !frameMatch[0]) throw new Error(frameUrl + " does not seem to have a valid origin.");
-                    this.frameOrigin = frameMatch[0];
-                    this.frameOrigin = this.frameOrigin.toLowerCase();
+                    this.frameOrigin = frameMatch[0].toLowerCase();
                     this.frameUrl = frameUrl + "?&parenturl=" + encodeURIComponent(location.href) + "&parentdomain=" + encodeURIComponent(location.protocol + "//" + location.host) + "&messagedelimiter=" + encodeURIComponent(messageDelimiter);
                     this.headers = {};
                 };
@@ -1904,7 +1906,8 @@
                         }
                     },
                     contact: {
-                        template: "{+customerService}{accountId}/contacts/{id}"
+                        template: "{+customerService}{accountId}/contacts/{id}",
+                        includeSelf: true
                     },
                     contacts: {
                         collectionOf: "contact"

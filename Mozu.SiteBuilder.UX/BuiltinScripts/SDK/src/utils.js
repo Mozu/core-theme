@@ -1,6 +1,9 @@
 ﻿// BEGIN UTILS
 // Many of these poached from lodash
 var utils = (function () {
+
+    var maxFlattenDepth = 20;
+
     return {
         extend: function () {
             var src, copy, name, options,
@@ -31,7 +34,9 @@ var utils = (function () {
         clone: function(obj) {
             return JSON.parse(JSON.stringify(obj)); // cheap copy :)
         },
-        flatten: function (obj, into, prefix, separator) {
+        flatten: function (obj, into, prefix, separator, depth) {
+            if (depth === 0) throw "Cannot flatten circular object.";
+            if (!depth) depth = maxFlattenDepth;
             into = into || {};
             separator = separator || ".";
             prefix = prefix || '';
@@ -44,7 +49,7 @@ var utils = (function () {
                       val instanceof Date ||
                       val instanceof RegExp)
                     ) {
-                        utils.flatten(val.toJSON ? val.toJSON() : val, into, prefix + key + separator, separator);
+                        utils.flatten(val.toJSON ? val.toJSON() : val, into, prefix + key + separator, separator, --depth);
                     }
                     else {
                         into[prefix + key] = val;

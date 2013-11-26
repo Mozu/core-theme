@@ -165,13 +165,23 @@
             'createAccount',
             'isReady'
         ],
-        initialize: function() {
+        initialize: function () {
+            var me = this;
+            this.$el.on('keypress', 'input', function (e) {
+                if (e.which === 13) {
+                    me.handleEnterKey();
+                    return false;
+                }
+            });
             this.model.on('passwordinvalid', function(e, message) {
                 this.$('[data-mz-validationmessage-for="password"]').text(message);
             });
         },
         submit: function () {
             _.defer(_.bind(this.model.submit, this.model));
+        },
+        handleEnterKey: function () {
+            this.submit();
         }
     });
 

@@ -1,5 +1,5 @@
 /*! 
- * Mozu Hypr Live - v0.2.0 - 2013-11-14
+ * Mozu Hypr Live - v0.2.0 - 2013-11-26
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -3155,13 +3155,14 @@
                     throw new Error('Expected "' + missing + '" on line ' + line + ' but found "' + token.match + '".');
                 }
 
-                if (this.prevToken.type === types.VAR && this.prevToken.match === "with") {
-                    addlKey = token.match;
+                if (this.prevToken.type === types.ASSIGNMENT) {
+                    addlCtx[addlKey] = parser.checkMatch(token.match.split('.'));
                     return false;
                 }
 
-                if (this.prevToken.type === types.ASSIGNMENT) {
-                    addlCtx[addlKey] = parser.checkMatch(token.match.split('.'));
+
+                if (w) {
+                    addlKey = token.match;
                     return false;
                 }
 

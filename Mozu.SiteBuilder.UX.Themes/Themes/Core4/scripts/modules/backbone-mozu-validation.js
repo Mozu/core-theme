@@ -65,7 +65,10 @@ define(["shim!vendor/underscore>_", "shim!vendor/backbone[shim!vendor/underscore
         //       'address.street': 'Street',
         //       'address.zip': 1234
         //     };
-        var flatten = function (obj, into, prefix) {
+        var maxFlattenDepth = 20;
+        var flatten = function (obj, into, prefix, depth) {
+            if (depth === 0) throw "Cannot flatten circular object.";
+            if (!depth) depth = maxFlattenDepth;
             into = into || {};
             prefix = prefix || '';
 
@@ -81,7 +84,7 @@ define(["shim!vendor/underscore>_", "shim!vendor/backbone[shim!vendor/underscore
                       val instanceof RegExp ||
                       val instanceof Backbone.Collection)
                     ) {
-                        flatten(val, into, prefix + key + '.');
+                        flatten(val, into, prefix + key + '.', --depth);
                     }
                     else {
                         into[prefix + key] = val;

@@ -20,7 +20,7 @@
     {% endif %}
     {% endfor %}
     {% if editing.card == "new" %}
-        {% include "modules/my-account/my-account-credit-card-form" with model=model.editingCard %}
+        {% include "modules/my-account/my-account-credit-card-form" with model=model.editingCard billingContacts=model.billingContacts %}
     {% endif %}
 </ul>
 {% else %}
