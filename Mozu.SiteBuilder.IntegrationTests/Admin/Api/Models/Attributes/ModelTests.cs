@@ -59,27 +59,27 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
             actual.Max.ShouldEqual(attribute.Validation.MaxNumericValue);
         }
 
-        [Test]
-        public void Can_map_from_Contract_Attribute_to_SiteBuilder_Attribute_for_String()
-        {
-            var attribute = new ProductAdmin.Contracts.Attribute
-            {
-                DataType = "String",
-                Validation = new AttributeValidation
-                {
-                    MaxStringLength = 40,
-                    MinStringLength = 20,
-                },
-            };
+        //[Test]
+        //public void Can_map_from_Contract_Attribute_to_SiteBuilder_Attribute_for_String()
+        //{
+        //    var attribute = new ProductAdmin.Contracts.Attribute
+        //    {
+        //        DataType = "String",
+        //        Validation = new AttributeValidation
+        //        {
+        //            MaxStringLength = 40,
+        //            MinStringLength = 20,
+        //        },
+        //    };
 
-            var actual = AutoMapper.Mapper.Map<Attribute>(attribute);
+        //    var actual = AutoMapper.Mapper.Map<Attribute>(attribute);
 
-            actual.Min.ShouldBeType<int>();
-            actual.Min.ShouldEqual(attribute.Validation.MinStringLength);
+        //    actual.Min.ShouldBeType<int>();
+        //    actual.Min.ShouldEqual(attribute.Validation.MinStringLength);
 
-            actual.Max.ShouldBeType<int>();
-            actual.Max.ShouldEqual(attribute.Validation.MaxStringLength);
-        }
+        //    actual.Max.ShouldBeType<int>();
+        //    actual.Max.ShouldEqual(attribute.Validation.MaxStringLength);
+        //}
 
         [Test, Explicit("Run to create some sample JSON")]
         public void Can_create_a_test_ProductType()

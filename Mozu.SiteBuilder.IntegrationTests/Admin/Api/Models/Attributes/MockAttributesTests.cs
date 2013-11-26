@@ -26,14 +26,14 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
             _attributeController = new AttributeController(new AttributeHelper(attributeWebApiClient));
         }
 
-        [Test]
-        public void Mock_attributes_can_be_mapped()
-        {
-            var collection = _attributeController.ListAttributes(new PagingParamaters(), new FilterCollection()).Result;
+        //[Test]
+        //public void Mock_attributes_can_be_mapped()
+        //{
+        //    var collection = _attributeController.ListAttributes(new PagingParamaters(), new FilterCollection()).Result;
 
-            var attributes = collection.Items.Select(AutoMapper.Mapper.Map<ProductAdmin.Contracts.Attribute>);
+        //    var attributes = collection.Items.Select(AutoMapper.Mapper.Map<ProductAdmin.Contracts.Attribute>);
 
-            attributes.Count().ShouldEqual(collection.Items.Count);
-        }
+        //    attributes.Count().ShouldEqual(collection.Items.Count);
+        //}
     }
 }
