@@ -56,7 +56,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                                ApplicationName = app.Entitlement.ApplicationName ,
                                                                                DeveloperAccountName = app.Entitlement.DeveloperAccountName ,
                                                                                EffectiveEndDate = app.Entitlement.EffectiveEndDate,
-                                                                               EffectivesStartDate = app.Entitlement.EffectiveStartDate ,
+                                                                               EffectiveStartDate = app.Entitlement.EffectiveStartDate ,
+                                                                               PublishedDate = app.Entitlement.PublishedDate,
                                                                                ActiveShoppingCountries = cap.ActiveShoppingCountries ,
                                                                                SupportedShoppingCountries = cap.SupportedShoppingCountries
                                                                                
