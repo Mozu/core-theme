@@ -68,12 +68,7 @@ Ext.define('Taco.view.storeCredit.Form', {
                 '{firstName} {middleName} {lastName}',
                 '</tpl>',
                 '</tpl>'
-            ),
-            listeners: {
-                beforequery: function (query) {
-                    debugger
-                }
-            }
+            )
         };
 
         me.customerNumber = {
