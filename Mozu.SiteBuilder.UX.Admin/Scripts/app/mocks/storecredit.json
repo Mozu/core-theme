@@ -6,7 +6,8 @@
 		issuedAmount: '29.99',
 		issuedBy: 'Puppy Cat',
 		expires: '1/1/2011',
-        customerName: 'Cat Bug',
+        customerName: 'Coco Nut',
+		customerId: '1010',
 		modifiedDate: '7/23/2013',
 		balance: '10',
 		email: true
