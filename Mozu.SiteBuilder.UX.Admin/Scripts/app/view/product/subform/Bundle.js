@@ -53,5 +53,20 @@ Ext.define('Taco.view.product.subform.Bundle', {
         ];
 
         this.callParent(arguments);
+    },
+    // Called before the updateTask of Taco.core.ux.form.Form is executed; Return false to cancel the save; Can be used to manipulate the record data prior to saving;
+    beforeSave: function () {
+        var me = this
+
+        // need to serialize the store into jsons for persistance
+        var store = this.productBundleGrid.store;
+        var data = [];
+        store.each(function(record) {
+            data.push(record.data);
+        });
+        
+        this.product.set('bundledProducts', data);
+        
+        return true;
     }
 });

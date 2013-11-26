@@ -10,6 +10,7 @@ Ext.define('Taco.view.product.SiteForm', {
     alias: 'widget.productsiteform',
     requires: [
         'Taco.view.product.subform.General',
+        'Taco.view.product.subform.Bundle',
         'Taco.view.product.subform.Inventory',
         'Taco.view.product.subform.Options',
         'Taco.view.product.subform.Properties',
@@ -71,10 +72,17 @@ Ext.define('Taco.view.product.SiteForm', {
                 isGlobal: false,
                 persistChangesToModel: true
             };
-
+        
         Ext.Array.push(items, [
             Ext.create('Taco.view.product.subform.General', subFormCfg)
         ]);
+        
+        // if this product has a product usage of type "Bundle" add the subPanel for managing its items
+        if (this.record.get("productUsage") == "Bundle") {
+            Ext.Array.push(items, [
+                Ext.create('Taco.view.product.subform.Bundle', subFormCfg)
+            ]);
+        }
 
         if (this.isSingleSite) {
             Ext.Array.push(items, [

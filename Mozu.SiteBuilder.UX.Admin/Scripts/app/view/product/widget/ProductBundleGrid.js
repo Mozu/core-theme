@@ -20,13 +20,16 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
     width: "100%",
 
     initComponent: function () {
-        var me = this;
-
+        var me = this;        
         
+
         Ext.apply(me, {
             viewConfig: {
                 deferEmptyText: false,
-                emptyText: "No items in this bundle"
+                emptyText: "No items in this bundle",
+                plugins: [
+                    { ptype: 'gridviewdragdrop' }
+                ]
             },
             listeners: {
                 'edit': {
@@ -41,19 +44,9 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 })
             ],
             columns: this.getColumnConfig()
-        });        
-        
-        
-        this.store = this.product.getBundledProducts({
-            
         });
-
-        /*
-        this.store = Ext.create('Ext.data.Store', {
-            model: "Taco.model.BundledProduct",
-            data: this.product.get
-        });
-        */
+        
+        this.store = this.product.getBundledProducts();
 
         this.callParent(arguments);
     },
@@ -144,10 +137,13 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
             });
         
         
+        /*
         productStore.extraFilters.add(
             { id: "productUsage", property: 'productUsage', operator: "=", value: ["Standard ", "Component"] }
             //{ id: "productUsage", property: 'productUsage', operator: "=", value: "Standard" }
         );
+        */
+        
         
         
         productStore.load();
@@ -159,11 +155,24 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 save: {
                     fn: function (modal, values) {
                         // add a default quantity of 1 to each selected record
+                        var bundleStore = this.store;
+                        var itemsToAdd = [];
+
+
                         Ext.Array.each(values, function (record) {
-                            record.set("quantity", 1);
+                            
+                            var item = Ext.create('Taco.model.BundledProduct', record.data);
+                            item.set('quantity', 1);
+                            itemsToAdd.push(item);
+
+                            //remove any records from the store that match what we just added;
+                            var existingRecord = bundleStore.getById(record.get("productCode"));
+                            if (existingRecord) {
+                                bundleStore.remove(existingRecord);
+                            }
                         });
 
-                        this.store.add(values);
+                        bundleStore.add(itemsToAdd);
                     },
                     scope: me
                 }

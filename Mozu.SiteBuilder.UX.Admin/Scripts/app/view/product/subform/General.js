@@ -228,6 +228,8 @@ Ext.define('Taco.view.product.subform.General', {
             parentForm = me.up('productsiteform, productglobalform'),
             bundleSubForm = parentForm.down('#bundleSubForm');
 
+        
+
         // add/ remove the bundle items subPanel based on the productUsage value;;
         if (value == "Bundle") {
             parentForm.formContainer.insert(
