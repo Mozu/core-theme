@@ -352,7 +352,8 @@ var ApiReference = (function () {
             }
         },
         contact: {
-            template: '{+customerService}{accountId}/contacts/{id}'
+            template: '{+customerService}{accountId}/contacts/{id}',
+            includeSelf: true
         },
         contacts: {
             collectionOf: 'contact'

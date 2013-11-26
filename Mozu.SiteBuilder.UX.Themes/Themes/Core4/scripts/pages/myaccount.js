@@ -125,7 +125,11 @@
             'editingCard.cardNumberPartOrMask',
             'editingCard.expireMonth',
             'editingCard.expireYear',
-            'editingCard.cvv'
+            'editingCard.cvv',
+            'editingCard.billingContactId'
+        ],
+        renderOnChange: [
+            'editingCard.billingContactId'
         ],
         beginAddCard: function () {
             this.editing.card = "new";
@@ -142,6 +146,7 @@
         },
         cancelEditCard: function () {
             this.editing.card = false;
+            this.model.endEditCard();
             this.render();
         },
         beginDeleteCard: function (e) {
@@ -166,11 +171,17 @@
             'editingContact.address.countryCode',
             'editingContact.address.stateOrProvince',
             'editingContact.address.postalOrZipCode',
-            'editingContact.phoneNumbers.home'
+            'editingContact.phoneNumbers.home',
+            'editingContact.isBillingContact',
+            'editingContact.isPrimaryBillingContact',
+            'editingContact.isShippingContact',
+            'editingContact.isPrimaryShippingContact',
             ],
-            renderOnChange: [
-                'editingContact.address.countryCode'
-            ],
+        renderOnChange: [
+            'editingContact.address.countryCode',
+            'editingContact.isBillingContact',
+            'editingContact.isShippingContact'
+        ],
         beginAddContact: function () {
             this.editing.contact = "new";
             this.render();
@@ -181,11 +192,12 @@
             this.render();
         },
         finishEditContact: function () {
-            this.doModelAction('addContact');
+            this.doModelAction('saveContact');
             this.editing.contact = false;
         },
         cancelEditContact: function () {
             this.editing.contact = false;
+            this.model.endEditContact();
             this.render();
         },
         beginDeleteContact: function (e) {

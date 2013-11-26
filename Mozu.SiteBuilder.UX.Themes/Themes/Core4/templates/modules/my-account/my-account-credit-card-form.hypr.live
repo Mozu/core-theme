@@ -3,6 +3,28 @@
     {% set cardcontext="editingCard." %}
     <li class="mz-accountpaymentmethods-method mz-accountpaymentmethods-form">
     {% parent %}
+    <div class="mz-l-formfieldgroup mz-creditcard-billingaddresses">
+        <div class="mz-l-formfieldgroup-cell">
+            <label>{{ labels.selectBillingAddress }} <span class="is-required">*</span></label>
+        </div>
+        <div class="mz-l-formfieldgroup-cell">
+            {% for contact in billingContacts %}
+            <label class="mz-creditcard-billingaddress">
+                <input type="radio" data-mz-value="editingCard.billingContactId" name="billingContactId" value="{{ contact.id }}" {% if model.billingContactId == contact.id %} checked="checked" {% endif %}>
+                <div class="mz-addresssummary">
+                    {% include "modules/common/address-summary" with model=contact %}
+                </div>
+            </label>
+            {% endfor %}
+            <label class="mz-creditcard-billingaddress">
+                <input type="radio" data-mz-value="editingCard.billingContactId" name="billingContactId" value="new" data-mz-enternewcontact {% if model.billingContactId == "new" %} checked="checked" {% endif %}>
+                <div class="mz-addresssummary">
+                    <span>{{ labels.enterNewAddress }}</span>
+                </div>
+                {% if model.billingContactId == "new" %} {% include "modules/my-account/my-account-address-form" %} {% endif %}
+            </label>
+        </div>
+    </div>
     <div class="mz-creditcard-actions">
         <button class="mz-button mz-creditcard-save" data-mz-action="finishEditCard">{{ labels.save }}</button>
         <button class="mz-button mz-creditcard-cancel" data-mz-action="cancelEditCard">{{ labels.cancel }}</button>
