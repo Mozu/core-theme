@@ -2,6 +2,7 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
     extend: 'Taco.core.ux.window.Modal',
     requires: [
         'Ext.data.Store',
+        'Ext.grid.plugin.CellEditing',
         'Taco.store.StoreCredits'
     ],
     autoShow: true,
@@ -12,6 +13,15 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
     actions: [{
         xtype: 'button',
         itemId: 'primaryAction',
+        text: 'Save',
+        handler: function () {
+            var me = this;
+            me.close();
+        },
+        formBind: true
+    },{
+        xtype: 'button',
+        itemId: 'secondaryAction',
         text: 'Close',
         handler: function () {
             var me = this;
@@ -28,13 +38,32 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
         me.storeCreditStore.load();
         me.wishlistGrid = Ext.create('Ext.grid.Panel', {
             store: this.storeCreditStore,
+            selType: 'cellmodel',
+            plugins: [
+                Ext.create('Ext.grid.plugin.CellEditing', {
+                    clicksToEdit: 1
+                })
+            ],
             columns: [
                 { text: 'Code', dataIndex: 'code'},
                 { text: 'Date Issued', dataIndex: 'dateIssued'},
-                { text: 'Amount', dataIndex: 'amount'},
+                { text: 'Amount', dataIndex: 'issuedAmount'},
                 { text: 'Issued By', dataIndex: 'issuedBy'},
                 { text: 'Expires', dataIndex: 'expires' },
-                { text: 'Balance', dataIndex: 'balance'}
+                {
+                    text: 'Balance',
+                    dataIndex: 'balance',
+                    editor: {
+                        emptyText: "Amount",
+                        msgTarget: "qtip",
+                        xtype: "numberfield",
+                        hideTrigger: true,
+                        defaultValue: 0,
+                        mouseWheelEnabled: false,
+                        selectOnFocus: true,
+                        allowBlank: false
+                    }
+                }
             ],
             scope: this
         });
