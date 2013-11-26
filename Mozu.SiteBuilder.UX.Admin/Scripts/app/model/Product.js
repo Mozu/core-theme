@@ -308,7 +308,9 @@ Ext.define('Taco.model.Product', {
         {
             name: "bundledProducts",
             type: "auto",
-            defaultValue: [{
+            defaultValue: [
+
+                /*{
                 productName: "Standard Product",
                 productCode: "test",
                 quantity: 2,
@@ -317,8 +319,20 @@ Ext.define('Taco.model.Product', {
                 packageWeight: 12,
                 packageLength: 2,
                 packageWidth: 4,
-                packageHeight: 3,
-            }]
+                packageHeight: 3
+            }, {
+                productName: "Bundle Component",
+                productCode: "test2",
+                quantity: 2,
+                price: 29.99,
+                salePrice: 28.99,
+                packageWeight: 12,
+                packageLength: 2,
+                packageWidth: 4,
+                packageHeight: 3
+            }
+            */
+            ]
         }
         
     ],

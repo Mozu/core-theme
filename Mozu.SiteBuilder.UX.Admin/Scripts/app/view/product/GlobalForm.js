@@ -46,13 +46,13 @@ Ext.define('Taco.view.product.GlobalForm', {
             },
             items = [];
 
-        
-
         Ext.Array.push(items, [
             Ext.create('Taco.view.product.subform.General', subFormCfg)
         ]);
 
+
         // if this product has a product usage of type "Bundle" add the subPanel for managing its items
+        
         if (this.record.get("productUsage") == "Bundle") {
             Ext.Array.push(items, [
                 Ext.create('Taco.view.product.subform.Bundle', subFormCfg)
