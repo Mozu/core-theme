@@ -4,7 +4,10 @@
 Ext.define('Taco.view.product.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     alias: 'widget.prodindex',
-    requires: ['Taco.model.Product', 'Taco.store.Products'],
+    requires: [
+        'Taco.model.Product',
+        'Taco.store.Products',
+        'Taco.view.product.AdvancedSearchForm'],
 
     typeName: 'Product',
     modelName: 'Taco.model.Product',
@@ -14,45 +17,47 @@ Ext.define('Taco.view.product.Index', {
     useTilePanel: false,
 
     requiresContextOfType: ['c', 's'],
-    
-    filterFormConf: {
-        width: 600,
-        cls: Taco.baseCSSPrefix + 'combofilter-form products',
-        items: [{
-            xtype: 'container',
-            justify: false,
-            defaults: {
-                xtype: 'textfield',
-                width: 560
-            },
-            items: [{
-                name: 'productCode',
-                fieldLabel: 'Product Code',
-                width: 160
-            }, {
-                name: 'productName',
-                fieldLabel: 'Name'
-            }]
-        }]
-    },
 
-    filterProperties: [{
-        property: 'all',
-        text: 'All',
-        isDefault: true
-    }, {
-        property: 'productName',
-        text: 'Name'
-    }, {
-        property: 'productCode',
-        text: 'Code'
-    }, {
-        property: 'producttypeid',
-        text: 'Product Type'
-    }, {
-        property: 'productFullDescription',
-        text: 'Description'
-    }],
+
+
+    //filterFormConf: {
+    //    width: 600,
+    //    cls: Taco.baseCSSPrefix + 'combofilter-form products',
+    //    items: [{
+    //        xtype: 'container',
+    //        justify: false,
+    //        defaults: {
+    //            xtype: 'textfield',
+    //            width: 560
+    //        },
+    //        items: [{
+    //                name: 'productCode',
+    //                fieldLabel: 'Product Code',
+    //                width: 160
+    //            }, {
+    //                name: 'productName',
+    //                fieldLabel: 'Name'
+    //            }]
+    //    }]
+    //},
+
+    //filterProperties: [{
+    //        property: 'all',
+    //        text: 'All',
+    //        isDefault: true
+    //    }, {
+    //        property: 'productName',
+    //        text: 'Name'
+    //    }, {
+    //        property: 'productCode',
+    //        text: 'Code'
+    //    }, {
+    //        property: 'producttypeid',
+    //        text: 'Product Type'
+    //    }, {
+    //        property: 'productFullDescription',
+    //        text: 'Description'
+    //    }],
     
     //initComponent: function () {
     //    var me = this;
@@ -68,126 +73,126 @@ Ext.define('Taco.view.product.Index', {
     //    };
     //    this.callParent(arguments);
     //},
-    
+
     gridPanelConf: {
         columns: [{
-            dataIndex: 'productCode',
-            text: 'Code',
-            width: 100
-        }, {
-            dataIndex: 'productName',
-            text: 'Name',
-            minWidth: 120,
-            flex: 1,
-            renderer: function (value, metaData, record) {
-                return record.getContextualValue('productName');
+                dataIndex: 'productCode',
+                text: 'Code',
+                width: 100
+            }, {
+                dataIndex: 'productName',
+                text: 'Name',
+                minWidth: 120,
+                flex: 1,
+                renderer: function (value, metaData, record) {
+                    return record.getContextualValue('productName');
 
-            }
-        }, {
-            dataIndex: 'price',
-            text: 'Price',
-            width: 70,
-            renderer: function (value, metaData, record) {
-                value = record.getContextualValue('price');
-                return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
-            }
-        }, {
-            dataIndex: 'salePrice',
-            text: 'Sale Price',
-            width: 100,
-            renderer: function (value, metaData, record) {
-                value = record.getContextualValue('salePrice');
-                return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
-            }
-        }, {
-            dataIndex: 'productInCatalogs',
-            text: 'Catalogs',
-            sortable:false,
-            width: 120,
-            renderer: function (value) {
-                return !Ext.isEmpty(value) ? value.length : '--';
-            }
-        }, {
-            dataIndex: 'productInCatalogs',
-            text: 'Overridden',
-            sortable: false,
-            width: 100,
-            renderer: function (value) {
-                var output;
-
-                if (Ext.isEmpty(value)) {
-                    output = '--';
-                } else {
-                    output = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true) ? 'Yes' : 'No';
-                }
-
-                return output;
-            }
-        }, {
-            dataIndex: 'stockOnHand',
-            text: 'Stock',
-            width: 70,
-            renderer: function (value) {
-                return Ext.isNumeric(value) ? value : '--';
-            }
-        }, {
-            xtype: 'taco.menucolumn',
-            text: 'Actions',
-            menuItems:[{
-                itemId: 'preview',
-                text: 'Preview in',
-                hideOnClick :false,
-                menu: {
-                    plain: true,
-                    shadow: false,
-                    cls: Taco.baseCSSPrefix + 'grid-row-menu',
-                    items:[]
                 }
             }, {
-                text: 'Delete',
-                requiredBehaviors: {
-                    model: 'Taco.model.Product',
-                    behavior:'destroy'
-                },
-                menuColumnHandler: 'destroyMenuColumnHandler'
+                dataIndex: 'price',
+                text: 'Price',
+                width: 70,
+                renderer: function (value, metaData, record) {
+                    value = record.getContextualValue('price');
+                    return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
+                }
             }, {
-                text: 'Edit',
-                requiredBehaviors: {
-                    model: 'Taco.model.Product',
-                    behavior: 'update'
-                },
-                menuColumnHandler: function (item, eventData) {
-                    var page = eventData.grid.getParentPage(),
-                        record = eventData.record,
-                        metaData = { id: record.getId() };
+                dataIndex: 'salePrice',
+                text: 'Sale Price',
+                width: 100,
+                renderer: function (value, metaData, record) {
+                    value = record.getContextualValue('salePrice');
+                    return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
+                }
+            }, {
+                dataIndex: 'productInCatalogs',
+                text: 'Catalogs',
+                sortable: false,
+                width: 120,
+                renderer: function (value) {
+                    return !Ext.isEmpty(value) ? value.length : '--';
+                }
+            }, {
+                dataIndex: 'productInCatalogs',
+                text: 'Overridden',
+                sortable: false,
+                width: 100,
+                renderer: function (value) {
+                    var output;
 
-                    page.launchEditor(record, metaData);
-                   
+                    if (Ext.isEmpty(value)) {
+                        output = '--';
+                    } else {
+                        output = Ext.Array.contains(Ext.Array.pluck(value, 'isContentOverridden'), true) ? 'Yes' : 'No';
+                    }
+
+                    return output;
+                }
+            }, {
+                dataIndex: 'stockOnHand',
+                text: 'Stock',
+                width: 70,
+                renderer: function (value) {
+                    return Ext.isNumeric(value) ? value : '--';
+                }
+            }, {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                menuItems: [{
+                        itemId: 'preview',
+                        text: 'Preview in',
+                        hideOnClick: false,
+                        menu: {
+                            plain: true,
+                            shadow: false,
+                            cls: Taco.baseCSSPrefix + 'grid-row-menu',
+                            items: []
+                        }
+                    }, {
+                        text: 'Delete',
+                        requiredBehaviors: {
+                            model: 'Taco.model.Product',
+                            behavior: 'destroy'
+                        },
+                        menuColumnHandler: 'destroyMenuColumnHandler'
+                    }, {
+                        text: 'Edit',
+                        requiredBehaviors: {
+                            model: 'Taco.model.Product',
+                            behavior: 'update'
+                        },
+                        menuColumnHandler: function (item, eventData) {
+                            var page = eventData.grid.getParentPage(),
+                                record = eventData.record,
+                                metaData = { id: record.getId() };
+
+                            page.launchEditor(record, metaData);
+
+                        }
+                    }],
+                onMenuShow: function (menu, eventData) {
+                    var previewAction = menu.items.get('preview'),
+                        defaults = eventData.header.menuItemDefaults;
+
+                    previewAction.menu.removeAll();
+                    eventData.record.productInCatalogsStore().each(function (record) {
+                        var sites = record.get('sites');
+                        Ext.each(sites, function (site) {
+                            if (site.isMozuRendered) {
+                                previewAction.menu.add(Ext.applyIf({
+                                    text: site.name,
+                                    menuColumnHandler: function (item, eventData) {
+                                        window.open('/_gosite/' + site.id + '?environment=preview&redir=' + encodeURIComponent('/product/' + eventData.record.getId()), 'taco-preview');
+
+                                        console.log(arguments);
+                                    }
+                                }, defaults));
+                            }
+                        });
+                    });
+                    previewAction.setVisible(eventData.record.productInCatalogsStore().count());
                 }
             }],
-            onMenuShow: function(menu, eventData) {
-                var previewAction = menu.items.get('preview'),
-                    defaults = eventData.header.menuItemDefaults;
-
-                previewAction.menu.removeAll();
-                eventData.record.productInCatalogsStore().each(function (record) {
-                    var sites = record.get('sites');
-                    Ext.each(sites, function (site) {
-                        if (site.isMozuRendered) {
-                            previewAction.menu.add(Ext.applyIf({
-                                text: site.name,
-                                menuColumnHandler: function (item, eventData) {
-                                    window.open('/_gosite/' + site.id + '?environment=preview&redir=' + encodeURIComponent('/product/' + eventData.record.getId()), 'taco-preview');
-
-                                    console.log(arguments);
-                                }
-                            }, defaults));
-                        }
-                    });
-                });
-                previewAction.setVisible(eventData.record.productInCatalogsStore().count());
-            }
-        }],
         contextConf: {
             c: {
                 useMultiGrid: true,
@@ -196,95 +201,103 @@ Ext.define('Taco.view.product.Index', {
                     pluginId: 'expander',
                     rowBodyTpl: new Ext.XTemplate(
                         '<tpl for="productInCatalogs"><tr class="x-grid-row-body">',
-                            '<td colspan="3" class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
-                            '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><a href="#" class="taco-launch-editor" data-site-id="{siteId}">{productName}</a></div></td>',
-                            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{price:this.formatPrice}</div></td>',
-                            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{salePrice:this.formatPrice}</div></td>',
-                            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{siteId:this.toSiteName}</div></td>',
-                            '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{isContentOverridden:this.formatOverridden}</div></td>',
-                            '<td class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
+                        '<td colspan="3" class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
+                        '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><a href="#" class="taco-launch-editor" data-site-id="{siteId}">{productName}</a></div></td>',
+                        '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{price:this.formatPrice}</div></td>',
+                        '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{salePrice:this.formatPrice}</div></td>',
+                        '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{siteId:this.toSiteName}</div></td>',
+                        '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{isContentOverridden:this.formatOverridden}</div></td>',
+                        '<td class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
                         '</tr></tpl>',
-                    {
-                        formatOverridden: function (value) {
-                            return value ? '<span class="overridden">Overridden</span>' : '';
-                        },
-                        formatPrice: function (value) {
-                            return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
-                        },
-                        toSiteName: function (value) {
-                            var catalog = Taco.app.context.findCatalog(value);
-                            return catalog ? catalog.name : 'n/a';
-                        }
-                    })
+                        {
+                            formatOverridden: function (value) {
+                                return value ? '<span class="overridden">Overridden</span>' : '';
+                            },
+                            formatPrice: function (value) {
+                                return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
+                            },
+                            toSiteName: function (value) {
+                                var catalog = Taco.app.context.findCatalog(value);
+                                return catalog ? catalog.name : 'n/a';
+                            }
+                        })
                 }]
             }
         }
     },
 
     bulkEditorColumns: [{
-        dataIndex: 'productCode',
-        text: 'Code',
-        width: 100
-    }, {
-        dataIndex: 'productName',
-        text: 'Name',
-        minWidth: 120,
-        flex: 1,
-        editor: {
-            xtype: 'textfield'
-        }
-    }, {
-        dataIndex: 'price',
-        text: 'Price',
-        width: 100,
-        renderer: function (value) {
-            return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
-        },
-        editor: {
-            xtype: 'currencyfield',
-            minValue: 0,
-            decimalPrecision: 2,
-            hideTrigger: true,
-            keyNavEnabled: false,
-            mouseWheelEnabled: false
-        }
-    }, {
-        dataIndex: 'salePrice',
-        text: 'Sale Price',
-        width: 100,
-        renderer: function (value) {
-            return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
-        },
-        editor: {
-            xtype: 'currencyfield',
-            minValue: 0,
-            decimalPrecision: 2,
-            hideTrigger: true,
-            keyNavEnabled: false,
-            mouseWheelEnabled: false
-        }
-    }],
+            dataIndex: 'productCode',
+            text: 'Code',
+            width: 100
+        }, {
+            dataIndex: 'productName',
+            text: 'Name',
+            minWidth: 120,
+            flex: 1,
+            editor: {
+                xtype: 'textfield'
+            }
+        }, {
+            dataIndex: 'price',
+            text: 'Price',
+            width: 100,
+            renderer: function (value) {
+                return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
+            },
+            editor: {
+                xtype: 'currencyfield',
+                minValue: 0,
+                decimalPrecision: 2,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }, {
+            dataIndex: 'salePrice',
+            text: 'Sale Price',
+            width: 100,
+            renderer: function (value) {
+                return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
+            },
+            editor: {
+                xtype: 'currencyfield',
+                minValue: 0,
+                decimalPrecision: 2,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }],
 
     tilePanelConf: {
         actions: [{
-            iconCls: 'download',
-            tooltip: 'View Product',
-            eventName: 'viewitem'
-        }, {
-            iconCls: 'duplicate',
-            tooltip: 'Duplicate Product',
-            eventName: 'duplicateitem'
-        }, {
-            iconCls: 'delete',
-            tooltip: 'Delete Product',
-            eventName: 'deleteitem'
-        }],
+                iconCls: 'download',
+                tooltip: 'View Product',
+                eventName: 'viewitem'
+            }, {
+                iconCls: 'duplicate',
+                tooltip: 'Duplicate Product',
+                eventName: 'duplicateitem'
+            }, {
+                iconCls: 'delete',
+                tooltip: 'Delete Product',
+                eventName: 'deleteitem'
+            }],
         imageCollection: 'productImages',
         imageField: 'imagePath',
         isDragable: false,
         nameField: 'productName'
     },
-
+    initComponent: function () {
+        var asf = Ext.create('Taco.view.product.AdvancedSearchForm');
+        this.advancedSearchConfig = {
+            form: Ext.create('Taco.view.product.AdvancedSearchForm'),
+            stores: asf.getSupportingStores()
+        };
+        this.callParent(arguments);
+    },
+    
     launchLoadedEditor: function (record, options) {
         var site = Taco.app.context.getCurrentSite(),
             infoStore,

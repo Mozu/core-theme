@@ -1,6 +1,15 @@
-﻿using System.Net.Http.Headers;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
+using System.Web.Http.Hosting;
 using System.Web.Http.Routing;
+using System.Web.Http.WebHost;
 using System.Web.Routing;
 
 
@@ -13,6 +22,16 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
         public void Register(HttpRouteCollection routes)
         {
+            //routes.MapHttpRoute(
+            //    "seoRedirect",
+            //    "{*url}",
+            //    new { controller = "Home", action = "SeoProcessor"  },
+            //    null,
+            //    new SeoMessageHandler()
+            //    );
+
+        
+
             routes.MapHttpRoute(
                 "Storefront_MyAccount2",
                 "myaccount",
@@ -240,10 +259,155 @@ var r1=            routes.MapHttpRoute(
                 new {controller = "Home", action = "NotFound"}
                 );
 
-            //routes.MapHttpRoute(
-            //    "Storefront_SignIn",
-            //    "user/{action}",
-            //    new { controller = "Auth", action = "SignIn" });
+      
+        }
+        private class SeoMessageHandler: HttpMessageHandler
+        {
+            Lazy<HttpRouteCollection> _routeCollection = new Lazy<HttpRouteCollection>(() =>
+                {
+                    var collection = new HttpRouteCollection();
+                    var routes = System.Web.Http.GlobalConfiguration.Configuration.Routes;
+                    foreach (var route in routes)
+                    {
+
+                        if (!(route.Handler is SeoMessageHandler))
+                        {
+                            collection.Add(Guid.NewGuid().ToString(), route);
+                        }
+
+
+                    }
+                    return collection;
+
+            });
+            Lazy<HttpMessageInvoker> _defaultInvoker = new Lazy<HttpMessageInvoker>(() =>
+                {
+                    return new HttpMessageInvoker(System.Web.Http.GlobalConfiguration.DefaultHandler);
+                });
+
+
+            private static void RemoveOptionalRoutingParameters(IDictionary<string, object> routeValueDictionary)
+            {
+                int count = routeValueDictionary.Count;
+                int index = 0;
+                string[] strArray = new string[count];
+                foreach (KeyValuePair<string, object> pair in routeValueDictionary)
+                {
+                    if (pair.Value == RouteParameter.Optional)
+                    {
+                        strArray[index] = pair.Key;
+                        index++;
+                    }
+                }
+                for (int i = 0; i < index; i++)
+                {
+                    string key = strArray[i];
+                    routeValueDictionary.Remove(key);
+                }
+            }
+
+ 
+
+
+            protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+            {
+
+                IHttpRouteData routeData = null;
+                if ( request.RequestUri.PathAndQuery.Contains("redir"))
+                {
+                    var url = request.RequestUri.ParseQueryString()["redir"];
+
+                    var ub = new UriBuilder();
+                    ub.Host = "localhost";
+                    ub.Path = url;
+
+                    
+                    #region magicstrings
+                    var req = new HttpRequestMessage(HttpMethod.Get, ub.Uri);
+                    //magic strings taken from decompiled source :(
+                    var httpContextBase = (HttpContextBase )request.Properties["MS_HttpContext"];
+                    var myHttpContext = new MyHttpContextBase(httpContextBase, url);
+                    
+                    req.Properties["MS_HttpContext"] = myHttpContext;
+                    myHttpContext.Items["MS_HttpRequestMessage"] = req;
+                    #endregion
+                    routeData = _routeCollection.Value.GetRouteData(req);
+                    
+                }
+                if ( routeData == null )
+                {
+                    routeData = this._routeCollection.Value.GetRouteData(request);
+                }
+
+                RemoveOptionalRoutingParameters(routeData.Values);
+                request.Properties[HttpPropertyKeys.HttpRouteDataKey] = routeData;
+                
+                HttpMessageInvoker invoker = (routeData.Route.Handler == null) ? _defaultInvoker .Value : new HttpMessageInvoker(routeData.Route.Handler, false);
+                return invoker.SendAsync(request, cancellationToken);
+            }
+
+            class MyHttpContextBase : HttpContextBase
+            {
+                private HttpContextBase httpContext;
+                private System.Collections.IDictionary _items;
+                public override System.Collections.IDictionary Items
+                {
+                    get { return _items; }
+                }
+                public MyHttpContextBase(HttpContextBase httpContext, string pathInfo)
+                {
+                    // TODO: Complete member initialization
+                    _items = new System.Collections.Hashtable();
+                    this.httpContext = httpContext;
+                    MyRequest = new MyHttpRequestBase(this.httpContext.Request, pathInfo);
+                }
+                public override HttpRequestBase Request
+                {
+                    get { return MyRequest; }
+                }
+
+                HttpRequestBase MyRequest { get; set; }
+            }
+            class MyHttpRequestBase : HttpRequestBase
+            {
+                private HttpRequestBase _httpRequestBase;
+                private readonly string _appRelativeCurrentExecutionFilePath;
+
+                public MyHttpRequestBase(HttpRequestBase httpRequestBase, string appRelativeCurrentExecutionFilePath)
+                {
+                    // TODO: Complete member initialization
+                    this._httpRequestBase = httpRequestBase;
+                    _appRelativeCurrentExecutionFilePath = appRelativeCurrentExecutionFilePath;
+                }
+
+                public override string AppRelativeCurrentExecutionFilePath
+                {
+                    get
+                    {
+                        return _appRelativeCurrentExecutionFilePath;
+                    }
+                }
+                public override string PathInfo
+                {
+                    get { return ""; }
+                }
+
+            }
+
+        }
+        private class SeoConstraint : IHttpRouteConstraint
+        {
+            private readonly bool _forRedirect;
+
+            public SeoConstraint(bool forRedirect)
+            {
+                _forRedirect = forRedirect;
+            }
+
+            public bool Match(System.Net.Http.HttpRequestMessage request, IHttpRoute route, string parameterName, System.Collections.Generic.IDictionary<string, object> values, HttpRouteDirection routeDirection)
+            {
+                return request.RequestUri.PathAndQuery.IndexOf("redir=") > -1;
+            }
         }
 
         class AcceptConstraint : IHttpRouteConstraint 

@@ -5,6 +5,7 @@ using System.Web.Http.ModelBinding;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using System.Runtime.Serialization.Json;
 using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers
 {
@@ -69,6 +70,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers
             }
             col.SearchType = qs["searchType"];
             col.query = qs["query"];
+
+
+
+            string advancedSearchStr = qs["advancedSearch"];
+            if (!string.IsNullOrWhiteSpace(advancedSearchStr))
+            {
+                var advancedSearch = (Newtonsoft.Json.Linq.JObject ) Newtonsoft.Json.JsonConvert.DeserializeObject(advancedSearchStr);
+                foreach (var kvp in advancedSearch)
+                {
+                    var key = kvp.Key == "keyword" ? "all" : kvp.Key;
+                    var value = kvp.Value is JValue ? ((JValue) kvp.Value).Value : kvp.Value;
+                   col.Add(new FilterCollectionItem()
+                               {
+                                   field = key,
+                                   property = key,
+                                   value = value
+                               });
+                }
+            }
+
+
             col.QueryString = qs;
             bindingContext.Model = col;
 

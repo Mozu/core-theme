@@ -101,6 +101,7 @@ Ext.define('Taco.view.catalog.Index', {
             xtype: 'taco-filtercontainer',
             width: '100%',
             advancedForm: form,
+            store:store,
             filterStores: stores
         }, {
             xtype: 'dataview',

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 //
@@ -73,7 +74,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         
             return this.View("404");
         }
+          [System.Web.Http.HttpGet]
+        public async Task<HttpResponseMessage > SeoProcessor(string url= null)
+        {
+            return this.Request.CreateResponse();
+        }
 
+        [System.Web.Http.HttpGet]
         public async Task<ActionResult> GoogleSiteVerification(string hash)
         {
             var webToolsRepository = LifetimeScope.Resolve<IWebToolsRepository>();
@@ -81,7 +88,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             return File(fileStream, "text/html");
         }
-
+[System.Web.Http.HttpGet]
         public async Task<ActionResult> RobotsTxt()
         {
             var webToolsRepository = LifetimeScope.Resolve<IWebToolsRepository>();
