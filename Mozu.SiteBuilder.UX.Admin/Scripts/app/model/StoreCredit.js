@@ -31,6 +31,10 @@ Ext.define('Taco.model.StoreCredit', {
             type: 'string'
         },
         {
+            name: 'customerId',
+            type: 'string'
+        },
+        {
             name: 'modifiedDate',
             type: 'date'
         },

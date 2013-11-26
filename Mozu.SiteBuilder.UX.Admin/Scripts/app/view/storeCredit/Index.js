@@ -49,6 +49,12 @@ Ext.define('Taco.view.storeCredit.Index', {
             flex: 1,
             minWidth: 120
         }, {
+            dataIndex: 'customerId',
+            text: 'Custoemr Id',
+            flex: 1,
+            minWidth: 120,
+            hidden: true
+        }, {
             xtype: 'taco.menucolumn',
             text: 'Actions',
             menuItems: [{
@@ -59,7 +65,9 @@ Ext.define('Taco.view.storeCredit.Index', {
                 menuColumnHandler: 'destroyMenuColumnHandler'
             }, {
                 text: 'Go To Customer Account',
-                menuColumnHandler: 'destroyMenuColumnHandler'
+                menuColumnHandler: function (event, item) {
+                    Taco.core.StateManager.attemptNavigate('customer/edit/' + item.record.get('customerId'));
+                }
             }]
         }]
     }
