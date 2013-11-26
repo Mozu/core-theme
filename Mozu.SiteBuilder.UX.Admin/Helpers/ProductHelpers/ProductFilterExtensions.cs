@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -120,13 +121,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                 case "productfulldescription":
                     return string.Format("{1} cont \"{0}\"", filter.value, PRODUCT_FULL_DESCRIPTION);
                 case "productcode" :
-                    {
-                       return string.Format("ProductCode eq \"{0}\"", value);    
-                    }
-                    
+                    return string.Format("ProductCode eq \"{0}\"", value);
                 case "producttypeid":
                     return string.Format("productTypeId eq {0}", value);
-               
+                case "productusage":
+                {
+                    if (value is IEnumerable)
+                    {
+                        string[] filters = ((IEnumerable)value).Cast<string>().Select(v => "productUsage eq " + v).ToArray();
+                        return "(" + String.Join(" or ", filters) + ")";
+                    }
+                    else
+                    {
+                        return string.Format("productUsage eq {0}", value);
+                    }
+                }
                 case "price":
                     return string.Format("{2} {1} {0}", filter.value, filter.comparison, PRICE_PROPERTY);
                 case "stockonhand":

@@ -145,8 +145,8 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
         
         
         productStore.extraFilters.add(
-            //{ id: "productUsage", property: 'productUsage', operator: "=", value: ["Standard ", "Component"] }
-            { id: "productUsage", property: 'productUsage', operator: "=", value: "Standard" }
+            { id: "productUsage", property: 'productUsage', operator: "=", value: ["Standard ", "Component"] }
+            //{ id: "productUsage", property: 'productUsage', operator: "=", value: "Standard" }
         );
         
         
