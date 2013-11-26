@@ -13,11 +13,13 @@ using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Handlers.Message;
 using Mozu.Core.Configuration;
+using Mozu.Core.Logging;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.Logging;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.Settings;
@@ -37,6 +39,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
 {
 	public class AutofacModule : Module
 	{
+        private const string APPLICATION_NAME = "Mozu.SiteBuilder.UX";
+
 		public string ApiBaseUri { get; set; }
         class SbApiContextBuilder : IApiContextBuilder
         {
@@ -119,6 +123,10 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.RegisterType<GeneralSettingsWebApiClient>().As<IGeneralSettingsWebApiClient>().InstancePerApiRequest();
 
             
+
+            // add these two logging context providers for loggers provided by the DI framework.
+            builder.RegisterType<CurrentRequestLoggingContextProvider>().As<ILoggingContextProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", APPLICATION_NAME).InstancePerLifetimeScope();
 		}
 
         object BuildClient<T>(IComponentContext c)
