@@ -13,9 +13,11 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
     extend: 'Ext.form.FieldContainer',
     alias: 'widget.taco-filtercontainer',
 
-    //@event filter
-    //@event beforefilter
-    
+    /**
+     * @private
+     * @property {String} [currentFilterString={}]
+     */
+    currentFilterString: '{}',
 
     /**
      * @cfg {String} [defaultFieldName="keyword"]
@@ -26,54 +28,82 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
     defaultFieldName: 'keyword',
 
     layout: 'hbox',
-
-    currentFilterString: '{}',
     
     initComponent: function () {
+        var form;
 
-        this.addEvents('beforefilter', 'filter');
+        this.addEvents(
+            /**
+             * @event beforefilter
+             * Fires before the filter request is sent to the server.
+             * Return false to cancel the request.
+             */
+            'beforefilter',
+
+            /**
+             * @event filter
+             * Fires after the filter request has been processed by the server.
+             */
+            'filter'
+        );
 
         this.items = [{
-                xtype: 'textfield',
-                itemId: 'textFilter',
-                margin: '0 10 20 0',
-                flex: 1,
-                width: 400,
-                listeners: {
-                    specialkey: {
-                        scope: this,
-                        fn: this.handleFieldSubmit
-                    }
+            xtype: 'textfield',
+            itemId: 'textFilter',
+            margin: '0 10 20 0',
+            msgTarget: 'qtip',
+            flex: 1,
+            width: 400,
+            listeners: {
+                specialkey: {
+                    scope: this,
+                    fn: this.handleFieldSubmit
                 }
-            }, {
-                xtype: 'button',
-                itemId: 'advancedFilter',
-                ui: 'action',
-                scale: 'medium',
-                glyph: 'XE010@mozicons',
-                width: 57,
-                enableToggle: true,
-                scope: this,
-                toggleHandler: this.handleButtonToggle
-            }];
+            }
+        }, {
+            xtype: 'button',
+            itemId: 'advancedFilter',
+            ui: 'action',
+            scale: 'medium',
+            glyph: 'XE010@mozicons',
+            width: 57,
+            enableToggle: true,
+            scope: this,
+            toggleHandler: this.handleButtonToggle
+        }];
 
         this.callParent(arguments);
 
         this.initFilterStores();
-        this.getAdvancedForm();
+
+        form = this.getAdvancedForm();
+        form.getForm().getFields().each(function (field) {
+            field.on({
+                specialkey: {
+                    scope: this,
+                    fn: function (field, e) {
+                        if (e.getKey() === e.ENTER) {
+                            field.up('window').primaryHandler();
+                        }
+                    }
+                }
+            });
+        }, this);
     },
 
     /**
      * Send a filter request to the server.
+     * 
      * @param  {Object} value An object containing field keys and values.
      */
     doFilter: function (value) {
         var filterString = Ext.JSON.encodeValue(value);
-        if (filterString == this.currentFilterString) {
+
+        if (filterString === this.currentFilterString) {
             return;
         }
-        if (this.fireEvent('beforefilter', this, value) !== false) {
 
+        if (this.fireEvent('beforefilter', this, value) !== false) {
             if (this.store.remoteFilter) {
                 this.filtering = true;
                 this.currentFilterString = filterString;
@@ -89,10 +119,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                     scope: this
                 });
             }
-
-
         }
-        console.log(value);
     },
 
     /**
@@ -202,7 +229,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             if (this.modal) {
                 this.modal.close();
             }
-
+        
             this.syncAndFilter(this.parseTextFilterValue(field));
         }
     },
