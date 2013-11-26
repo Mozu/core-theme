@@ -79,8 +79,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement
         public string ApplicationName { get; set; }
         public string LicenseType { get; set; }
         public string DeveloperAccountName { get; set; }
-        public DateTime? EffectivesStartDate { get; set; }
+        public DateTime? EffectiveStartDate { get; set; }
         public DateTime? EffectiveEndDate { get; set; }
+        public DateTime? PublishedDate { get; set; }
         //public AuditInfo AuditInfo { get; set; }
     }
 
@@ -165,7 +166,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement
     //    public string LicenseType { get; set; }
 
     //    [DataMember]
-    //    public DateTime? EffectivesStartDate { get; set; }
+    //    public DateTime? EffectiveStartDate { get; set; }
 
     //    [DataMember]
     //    public DateTime? EffectiveEndDate { get; set; }
