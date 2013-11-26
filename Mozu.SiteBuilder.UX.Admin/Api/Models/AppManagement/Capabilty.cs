@@ -82,6 +82,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement
         public DateTime? EffectiveStartDate { get; set; }
         public DateTime? EffectiveEndDate { get; set; }
         public DateTime? PublishedDate { get; set; }
+        public DateTime? CreateDate { get; set; }
         //public AuditInfo AuditInfo { get; set; }
     }
 

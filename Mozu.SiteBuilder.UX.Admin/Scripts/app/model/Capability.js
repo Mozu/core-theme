@@ -56,7 +56,8 @@ Ext.define('Taco.model.Capability', {
         { name: "publishedDate", type: "date" },
         { name: "effectiveStartDate", type: "date" },
         { name: "effectiveEndDate", type: "date" },
-    
+        { name: "createDate", type: "date" },
+
         {
             name: 'supportedShoppingCountries', type: 'auto', defaultValue: [], persist: false,
             convert: function (v, record) {
