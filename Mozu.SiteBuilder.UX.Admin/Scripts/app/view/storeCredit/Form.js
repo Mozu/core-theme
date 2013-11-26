@@ -4,7 +4,7 @@
 Ext.define('Taco.view.storeCredit.Form', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
-        //'Taco.store.ConfiguredShippingRates'
+        'Taco.store.Customers'
     ],
     ui: 'subform',
     title: 'Store Credit',
@@ -15,8 +15,9 @@ Ext.define('Taco.view.storeCredit.Form', {
         this.callParent(arguments);
     },
 
-    buildFormComponents: function () {
+    buildFormComponents: function() {
         var me = this;
+        me.customersStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Customers');
 
         me.codeField = {
             xtype: 'textfield',
@@ -41,11 +42,38 @@ Ext.define('Taco.view.storeCredit.Form', {
         };
 
         me.customerName = {
-            xtype: 'textfield',
+            xtype: 'combobox',
             name: 'customerName',
             fieldLabel: 'Customer Name',
+            store: me.customersStore,
+            displayField: 'firstName',
+            valueField: 'id',
+            queryMode: 'local',
             required: true,
-            allowBlank: false
+            allowBlank: false,
+            // Template for the dropdown menu.
+            // Note the use of "x-boundlist-item" class,
+            // this is required to make the items selectable.
+            tpl: Ext.create('Ext.XTemplate',
+                '<tpl for=".">',
+                '<tpl for="contacts">',
+                '<div class="x-boundlist-item">{firstName} {middleName} {lastName}</div>',
+                '</tpl>',
+                '</tpl>'
+            ),
+            // template for the content inside text field
+            displayTpl: Ext.create('Ext.XTemplate',
+                '<tpl for=".">',
+                '<tpl for="contacts">',
+                '{firstName} {middleName} {lastName}',
+                '</tpl>',
+                '</tpl>'
+            ),
+            listeners: {
+                beforequery: function (query) {
+                    debugger
+                }
+            }
         };
 
         me.customerNumber = {
