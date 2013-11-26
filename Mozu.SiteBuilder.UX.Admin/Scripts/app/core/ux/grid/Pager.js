@@ -3,17 +3,20 @@
  */
 Ext.define('Taco.core.ux.grid.Pager', {
     extend: 'Ext.Component',
-    requires: ['Taco.core.ux.action.Action'],
     alias: 'widget.taco.pager',
+    requires: [
+        'Taco.core.ux.action.Action'
+    ],
 
     componentCls: Taco.baseCSSPrefix + 'pager',
     dock: 'bottom',
+
     tpl: [
-        '<tpl if="previous"><a href="{previous}" style="margin-right:6px" class="taco-action"><-</a></tpl>',
-        '<tpl for="pages">',
-            '<a class="taco-action {cls}" href="{page}">{page}</a>',
-        '</tpl>',
-        '<tpl if="next"><a href="{next}" style="margin-left:6px" class="taco-action">-></a></tpl>'
+        '<tpl if="previous"><a href="{previous}" class="taco-pager-item previous">Previous</a></tpl>',
+        '<div class="taco-pager-list"><tpl for="pages">',
+            '<a class="taco-pager-item {cls}" href="{page}">{page}</a>',
+        '</tpl></div>',
+        '<tpl if="next"><a href="{next}" class="taco-pager-item next">Next</a></tpl>'
     ],
 
     store: null,
@@ -23,31 +26,25 @@ Ext.define('Taco.core.ux.grid.Pager', {
 
         this.callParent(arguments);
 
-        this.mon(this.store, 'load', this.onLoad, this);
-        this.on('beforerender', this.onLoad, this, {
-            single: true
+        this.mon(this.store, {
+            load: {
+                scope: this,
+                fn: 'onLoad'
+            }
         });
+
         this.on({
-            click: {
-                element: 'el',
-                fn: this.onClick
+            beforerender: {
+                scope: this,
+                fn: 'onLoad',
+                single: true
             },
-            scope: this
+            click: {
+                scope: this,
+                fn: 'onClick',
+                element: 'el'
+            }
         });
-    },
-
-    onLoad: function (store) {
-        var pageData = this.getPageData();
-
-        this.update(pageData);
-    },
-
-    onClick: function (e, t, options) {
-        e.preventDefault();
-        var page = t.getAttribute('href');
-        if (page) {
-            this.store.loadPage(page);
-        }
     },
 
     getPageData: function () {
@@ -88,13 +85,14 @@ Ext.define('Taco.core.ux.grid.Pager', {
         return data;
     },
 
-    movePrevious: function () {
-        var me = this,
-            prev = me.store.currentPage - 1;
+    moveFirst: function () {
+        this.store.loadPage(1);
+    },
 
-        if (prev > 0) {
-            me.store.previousPage();
-        }
+    moveLast: function () {
+        var last = this.getPageData().lastPage;
+
+        this.store.loadPage(last);
     },
 
     moveNext: function () {
@@ -106,13 +104,28 @@ Ext.define('Taco.core.ux.grid.Pager', {
         }
     },
 
-    moveFirst: function () {
-        this.store.loadPage(1);
+    movePrevious: function () {
+        var me = this,
+            prev = me.store.currentPage - 1;
+
+        if (prev > 0) {
+            me.store.previousPage();
+        }
     },
 
-    moveLast: function () {
-        var last = this.getPageData().lastPage;
+    onClick: function (e, t, options) {
+        var page = t.getAttribute('href');
 
-        this.store.loadPage(last);
+        e.preventDefault();
+
+        if (page) {
+            this.store.loadPage(page);
+        }
+    },
+
+    onLoad: function (store) {
+        var pageData = this.getPageData();
+
+        this.update(pageData);
     }
 });

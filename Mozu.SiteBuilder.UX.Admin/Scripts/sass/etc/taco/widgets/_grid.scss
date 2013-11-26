@@ -295,21 +295,45 @@
   .#{$vprefix}pager {
     background: none transparent;
     border-width: 0px;
-    padding: 7px;
+    min-width: 300px;
+    padding: 10px 0px 0px;
 
-    .#{$vprefix}action {
-      background-color: $color-neutral-90;
+    .#{$vprefix}pager-list {
+      margin: 0px 100px;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .#{$vprefix}pager-item {
+      background-color: $color-neutral-95;
+      border: 1px solid $color-neutral-75;
+      color: $color;
       display: inline-block;
-      height: 28px;
-      margin: 2px;
-      min-width: 28px;
-      padding-top: 6px;
+      font-size: 14px;
+      height: 25px;
+      line-height: 1.0;
+      margin: 0px 5px;
+      padding: 6px 8px 0px;
+      min-width: 25px;
       text-align: center;
       @include border-radius(2px);
       
-      &.active{
+      &.active {
         background-color: $color-theme-accent;
+        border-color: $color-theme-accent;
         color: $color-neutral-white;
+      }
+      &.previous {
+        left: 0px;
+        margin: 0px;
+        position: absolute;
+        top: 10px;
+      }
+      &.next {
+        margin: 0px;
+        position: absolute;
+        right: 0px;
+        top: 10px;
       }
     }
   }
