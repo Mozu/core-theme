@@ -6,5 +6,6 @@ Ext.define('Taco.controller.StoreCredits', {
     models: ['Taco.model.StoreCredit'],
     stores: ['Taco.store.StoreCredits'],
     views: ['storeCredit.Index'],
-    modelName: 'StoreCredit'
+    modelName: 'StoreCredit',
+    editorView: 'Taco.view.storeCredit.Edit'
 });

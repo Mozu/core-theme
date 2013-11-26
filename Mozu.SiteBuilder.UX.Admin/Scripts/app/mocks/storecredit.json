@@ -3,7 +3,7 @@
 		id: 1,
 		code:  "Thom's Day Sale",
 		dateIssued: '1/1/2001',
-		issueAmount: '29.99',
+		issuedAmount: '29.99',
 		issuedBy: 'Puppy Cat',
 		expires: '1/1/2011',
         customerName: 'Cat Bug',

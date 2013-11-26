@@ -711,6 +711,8 @@
     <Content Include="Scripts\app\view\settings\shipping\widget\RateList.js" />
     <Content Include="Scripts\app\view\siteSelection\Index.js" />
     <Content Include="Scripts\app\view\siteSelection\SiteView.js" />
+    <Content Include="Scripts\app\view\storeCredit\Edit.js" />
+    <Content Include="Scripts\app\view\storeCredit\Form.js" />
     <Content Include="Scripts\app\view\storeCredit\Index.js" />
     <Content Include="Scripts\app\view\tbd\Index.js" />
     <Content Include="Scripts\app\view\themeSettings\Addons.js" />

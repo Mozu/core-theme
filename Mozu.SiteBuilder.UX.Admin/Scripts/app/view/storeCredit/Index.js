@@ -5,7 +5,7 @@
 Ext.define('Taco.view.storeCredit.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
 
-    requires: ['Taco.model.StoreCredit', 'Taco.store.StoreCredits'/*, 'Taco.view.storeCredit.Edit'*/],
+    requires: ['Taco.model.StoreCredit', 'Taco.store.StoreCredits', 'Taco.view.storeCredit.Edit'],
 
     requiresContextOfType: [],
 
@@ -13,8 +13,8 @@ Ext.define('Taco.view.storeCredit.Index', {
     store: {
         type: 'Taco.store.StoreCredits'
     },
-    //editorName: 'Taco.view.storeCredit.Edit',
-    //filterProperty: 'name',
+    editorName: 'Taco.view.storeCredit.Edit',
+    filterProperty: 'name',
     typeName: 'Store Credit',
 
     initComponent: function () {
