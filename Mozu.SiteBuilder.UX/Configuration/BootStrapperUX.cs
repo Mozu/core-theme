@@ -41,7 +41,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
         {
          
             httpConfiguration.Filters.Add( new AnonymousShopperFilterAttribute());
-            httpConfiguration.Filters.Add(new ErrorFilterAttribute());
+
+            // handle exceptions with a pretty screen
+            httpConfiguration.Filters.Add(new StorefrontErrorFilterAttribute(exceptionFilter));
 
 
             //todo:hyprlive add as webapi filteres

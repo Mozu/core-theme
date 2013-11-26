@@ -412,7 +412,7 @@
     <Compile Include="Configuration\PciSettingsProvider.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\CheckoutController.cs" />
-    <Compile Include="Filters\ErrorFilterAttribute.cs" />
+    <Compile Include="Filters\StorefrontErrorFilterAttribute.cs" />
     <Compile Include="Filters\InitCmsPageContextAttribute.cs" />
     <Compile Include="Filters\InitSettingsAttribute.cs" />
     <Compile Include="Global.asax.cs">
