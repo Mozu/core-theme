@@ -71,7 +71,13 @@ $color-action-primary-outline: $color-theme-red-darker;
 $color-action-primary-outline-hover: $color-theme-red-darkest;
 $color-action-primary-outline-active: $color-theme-red-darkest;
 
-
+$color-action-toggle-foreground: $color-neutral-white;
+$color-action-toggle-background: $color-theme-green;
+$color-action-toggle-background-hover: darken($color-theme-green, 5%);
+$color-action-toggle-background-active: $color-theme-blue;
+$color-action-toggle-outline: darken($color-theme-green, 5%);
+$color-action-toggle-outline-hover: darken($color-theme-green, 10%);
+$color-action-toggle-outline-active: $color-theme-blue-darker;
 
 /* OLD COLORS */
 

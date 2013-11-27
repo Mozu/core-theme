@@ -44,13 +44,13 @@ $ui-action-primary:
 
 $ui-action-toggle:
     'action-toggle',
-    $color-action-primary-foreground,
-    green,
-    $color-action-primary-background-hover,
-    red,
-    $color-action-primary-outline,
-    $color-action-primary-outline-hover,
-    $color-action-primary-outline-active,
+    $color-action-toggle-foreground,
+    $color-action-toggle-background,
+    $color-action-toggle-background-hover,
+    $color-action-toggle-background-active,
+    $color-action-toggle-outline,
+    $color-action-toggle-outline-hover,
+    $color-action-toggle-outline-active,
     1px,
     19px,
     38px
@@ -241,17 +241,15 @@ $uis: $ui-link, $ui-action, $ui-action-primary, $ui-action-toggle;
 }
 
 // ui: action-toggle
-.#{$prefix}btn-action-toggle-medium-over, 
-.#{$prefix}btn-action-toggle-medium-focus {
-    border-color: green;
-    background-color: green;
+
+.#{$prefix}btn-action-toggle-medium {
+    @extend .#{$prefix}btn-action-medium;
 }
 
-.#{$prefix}btn-action-toggle-medium-pressed{
-    &.#{$prefix}btn-action-toggle-medium-focus{
-        background: red;
-    }
-    &.#{$prefix}btn-action-toggle-medium-over{
-        background: red; 
+.#{$prefix}btn-action-toggle-medium-over {
+    @include box-shadow(inset 0px -1px darken($color-theme-green, 10%));
+
+    &.#{$prefix}btn-action-toggle-medium-pressed {
+        @include box-shadow(inset 0px -1px $color-theme-blue-darker);
     }
 }

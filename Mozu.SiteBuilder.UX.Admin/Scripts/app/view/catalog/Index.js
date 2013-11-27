@@ -16,101 +16,26 @@ Ext.define('Taco.view.catalog.Index', {
     },
 
     initComponent: function () {
-        var store, stores, form, items;
-
-        store = Ext.create('Ext.data.ArrayStore', {
-            fields: [
-                { name: 'item', type: 'string' },
-                { name: 'isMeal', type: 'boolean' },
-                { name: 'price', type: 'number' },
-                { name: 'size', type: 'string' }
-            ],
-            data: [
-                ['Big Mac', true, 3.99],
-                ['Chicken McNuggets, 20 pieces', false, 5],
-                ['Chocolate Shake, large', false, 2.89, 'large'],
-                ['French Fries, small', false, 0.99, 'small']
-            ]
-        });
-
-        stores = {
-            'size': Ext.create('Ext.data.ArrayStore', {
-                fields: [
-                    { name: 'id', type: 'string' },
-                    { name: 'name', type: 'string' }
-                ],
-                data: [
-                    ['S', 'Small'],
-                    ['M', 'Medium'],
-                    ['L', 'Large']
-                ]
-            })
-        };
-
-        form = Ext.create('Taco.core.ux.form.Form', {
-            items: [{
-                xtype: 'textfield',
-                name: 'item',
-                fieldLabel: 'Item'
-            }, {
-                xtype: 'checkbox',
-                name: 'isMeal',
-                fieldLabel: 'Other Filters',
-                boxLabel: 'Limit search to value meals'
-            }, {
-                xtype: 'combobox',
-                name: 'size',
-                fieldLabel: 'Size',
-                valueField: 'id',
-                displayField: 'name',
-                queryMode: 'local',
-                valueNotFoundText: 'not found',
-                editable: false,
-                forceSelection: true,
-                store: stores['size']
-            }, {
-                xtype: 'fieldcontainer',
-                fieldLabel: 'Price Range',
-                layout: {
-                    type: 'hbox',
-                    align: 'middle'
-                },
-                items: [{
-                    xtype: 'numberfield',
-                    name: 'minPrice',
-                    hideTrigger: true,
-                    keyNavEnabled: false,
-                    mouseWheelEnabled: false,
-                    width: 200
-                }, {
-                    xtype: 'component',
-                    html: 'to',
-                    margin: '0 10'
-                }, {
-                    xtype: 'numberfield',
-                    name: 'maxPrice',
-                    hideTrigger: true,
-                    keyNavEnabled: false,
-                    mouseWheelEnabled: false,
-                    width: 200
-                }]
-            }]
-        });
+        var items;
 
         items = [{
-            xtype: 'taco-filtercontainer',
-            width: '100%',
-            advancedForm: form,
-            store:store,
-            filterStores: stores
+            xtype: 'button',
+            itemId: 'switch',
+            ui: 'action',
+            scale: 'medium',
+            text: 'Launch Image Widget',
+            enableToggle: true,
+            scope: this,
+            toggleHandler: this.handleToggle
         }, {
-            xtype: 'dataview',
-            itemId: 'list',
-            itemSelector: 'li.mcds',
-            store: store,
-            height: 400,
-            width: 400,
-            tpl: '<tpl for="."><li class="mcds">{item} {price:usMoney} {isMeal} {size}</li></tpl>'
+            xtype: 'button',
+            ui: 'action-toggle',
+            scale: 'medium',
+            text: 'Enable Application',
+            margin: '0 0 0 10',
+            enableToggle: true,
+            scope: this,
+            toggleHandler: function (button, state) { button.setText(state ? 'Disable Application' : 'Enable Application'); }
         }];
 
         Ext.apply(this.body, {
@@ -120,5 +45,120 @@ Ext.define('Taco.view.catalog.Index', {
         });
 
         this.callParent(arguments);
+    },
+
+    handleDialogClose: function (dialog) {
+        this.down('#switch').toggle(false);
+    },
+
+    handleDialogSave: Ext.emptyFn,
+
+    handleToggle: function (button, state) {
+        if (state) {
+            if (!this.dialog) {
+                this.dialog = Ext.create('Taco.core.ux.window.Modal', {
+                    title: 'Image Widget',
+                    tools: [{
+                        xtype: 'button',
+                        ui: 'action',
+                        scale: 'medium',
+                        text: 'Content',
+                        toggleGroup: 'imageWidgetTabs',
+                        allowDepress: false,
+                        enableToggle: true,
+                        pressed: true,
+                        scope: this,
+                        style: {
+                            borderRadius: '2px 0px 0px 2px'
+                        },
+                        handler: function () {
+                            this.dialog.getForm().getLayout().setActiveItem(0);
+                        }
+                    }, {
+                        xtype: 'button',
+                        ui: 'action',
+                        scale: 'medium',
+                        text: 'Style',
+                        toggleGroup: 'imageWidgetTabs',
+                        allowDepress: false,
+                        enableToggle: true,
+                        scope: this,
+                        style: {
+                            borderRadius: '0px 2px 2px 0px'
+                        },
+                        handler: function () {
+                            this.dialog.getForm().getLayout().setActiveItem(1);
+                        }
+                    }],
+                    scale: 'large',
+                    layout: {
+                        type: 'fit'
+                    },
+                    items: [{
+                        xtype: 'formform',
+                        layout: {
+                            type: 'card'
+                        },
+                        items: [{
+                            xtype: 'formform',
+                            title: 'Content',
+                            header: false,
+                            items: [{
+                                xtype: 'button',
+                                ui: 'action',
+                                scale: 'medium',
+                                text: 'Select Existing'
+                            }]
+                        }, {
+                            xtype: 'formform',
+                            title: 'Style',
+                            header: false,
+                            items: [{
+                                xtype: 'container',
+                                layout: {
+                                    type: 'hbox'
+                                },
+                                items: [{
+                                    xtype: 'combobox',
+                                    name: 'borderWidth',
+                                    fieldLabel: 'Border Width',
+                                    editable: false,
+                                    forceSelection: true,
+                                    store: ['1px', '2px', '3px']
+                                }, {
+                                    xtype: 'combobox',
+                                    name: 'borderStyle',
+                                    fieldLabel: 'Border Style',
+                                    editable: false,
+                                    forceSelection: true,
+                                    store: ['Solid', 'Dashed', 'Dotted', 'None']
+                                }, {
+                                    xtype: 'textfield',
+                                    name: 'borderColor',
+                                    fieldLabel: 'Border Color'
+                                }]
+                            }]
+                        }]
+                    }]
+                });
+
+                this.dialog.on({
+                    close: {
+                        scope: this,
+                        fn: 'handleDialogClose'
+                    },
+                    save: {
+                        scope: this,
+                        fn: 'handleDialogSave'
+                    }
+                });
+            }
+
+            this.dialog.show();
+        } else {
+            if (this.dialog) {
+                this.dialog.close();
+            }
+        }
     }
 });
