@@ -46,7 +46,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         var tdCls = "x-grid-table x-grid-with-row-lines";
         var tdInnerCls = "x-grid-cell-inner adustment-cell-inner";
 
-        var editableCls = ""
+        var editableCls = "";
         if (this.isEditable) {
             editableCls = " orderEditable";
         }
@@ -78,7 +78,14 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                         '</td>',
                     '</tr>',
                 '</tpl>',
-
+                
+                '<tpl if="storeCredit &gt; 0">',
+                    '<tr class="storeCredit ', '<tpl if="!isActive">suppressed<tpl else>active</tpl>', '">',
+                        '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">Store Credit</div></td>',
+                        '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">-{storeCredit:usMoney}</div></td>',
+                    '</tr>',
+                '</tpl>',
+                
                 '<tpl if="orderAdjustment.amount !== 0">',
                     '<tr>',
                         '<td class="' + tdCls + '"><div class="' + tdInnerCls + '">Order Adjustment</div></td>',
