@@ -88,8 +88,8 @@ Ext.define('Taco.view.redirects.Index', {
                 url: '/admin/app/redirects/import',
                 items: [this.uploadButton]
             });
-
-        this.header.actions = [           
+        this.header = Ext.apply({}, this.header);
+        this.header.actions = [
             {
                 xtype: 'button',
                 text: 'Import',
@@ -119,6 +119,7 @@ Ext.define('Taco.view.redirects.Index', {
                 scope: this
             }
         ];
+    
         this.callParent(arguments);
 
         this.add(this.importForm);

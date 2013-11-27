@@ -8,7 +8,8 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
         'Ext.data.Store',
         'Ext.grid.plugin.CellEditing',
         'Taco.model.BundledProduct',
-        'Taco.view.product.Modal'
+        'Taco.view.product.Modal',
+        'Taco.store.ProductBundlePicker'
     ],
     title: "",
     //cls: Taco.baseCSSPrefix + 'searchlist',
@@ -127,27 +128,11 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
     */
     addItem: function () {
         var me = this,
-            productStore = Taco.core.data.StoreManager.getOrCreate({
-                type: 'Taco.store.Products',
-                storeId: "bundleableProducts",
-                createOnly: true,
-                clearFilters: true,
-                clearSort: true,
-                autoLoad: false
-            });
-        
-        
-        
-        productStore.extraFilters.add(
-            { id: "productUsage", property: 'productUsage', operator: "=", value: ["Standard ", "Component"] }
-            //{ id: "productUsage", property: 'productUsage', operator: "=", value: "Standard" }
-        );
-        
-        
-        
-        
-        productStore.load();
+            productStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductBundlePicker');
 
+        if (!productStore.hasLoaded()) {
+            productStore.load();
+        }
         
         var productSelector = Ext.create('Taco.view.product.Modal', {
             store: productStore,

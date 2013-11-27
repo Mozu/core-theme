@@ -420,7 +420,6 @@ Ext.define('Taco.model.Product', {
            
             level = this.getProductInCatalogs().getById(ctx.getCatalogId());
             if (level == null) {
-                Ext.Error.raise('missing cat info for ctx ' + ctx.getCatalogId() + ' in product ' + this.getId());
                 level = this;
             }
         }

@@ -98,7 +98,7 @@ Ext.define('Taco.view.settings.Publishing', {
             );
 
 
-            // Get out of there are no sites, bitch!!!
+            // Get out of there are no sites, gary!!!
             if (!masterCatalog.sites.length) return;
 
             if (!me.hideCmsOptions) {

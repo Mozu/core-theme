@@ -19,7 +19,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [DataMember(EmitDefaultValue = false, Name = "productCode")]
         public string ProductCode { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "qty")]
+        [DataMember(EmitDefaultValue = false, Name = "quantity")]
         public int Qty { get; set; }
 
         /// <summary>

@@ -40,12 +40,12 @@ Ext.define('Taco.view.product.option.Form', {
                 this.options,
                 this.variations, {
                     xtype: 'button',
-                    text: 'Click me, bitch!',
+                    text: 'Click me, gary!',
                     scale: 'medium',
                     ui: 'action',
 
                     handler: function() {
-                        console.log('You clicked me, you bitch!');
+                        console.log('You clicked me, you gary!');
                         Ext.create('Taco.view.product.variant.Modal');
                     }
                 }
