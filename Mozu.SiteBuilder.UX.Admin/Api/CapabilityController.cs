@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 	    [HttpGetRoute(UriTemplate = "list")]
         public async Task<HttpResponseMessage> CapList([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
 	    {
-	        var apps = (await _applicationsWebApiClient.GetApplications(startIndex: 0, pageSize: 600)).ReadAsSync().Items;
+            var apps = (await _applicationsWebApiClient.GetApplications(startIndex: 0, pageSize: 600)).ReadAsSync().Items;
              
             
 	        var vmApps = Mapper.Map<List<VM.Application>>(apps);
@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-            if (!string.IsNullOrEmpty(pagingParams.id))
+            if (pagingParams != null && !string.IsNullOrEmpty(pagingParams.id))
             {
                 list = list.Where(x => x.Id == pagingParams.id).ToList();
             }
@@ -73,10 +73,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var app = (await _applicationsWebApiClient.GetApplication(cap.AppId)).ReadAsSync();
 
-                var index = app.Capabilities.FindIndex(_ => _.Id == cap.Id);
-                var editCap = app.Capabilities[index];
-                AutoMapper.Mapper.Map(cap, editCap);
-               // var newDmCap = Mapper.Map<Mozu.Core.ThirdParty.Contracts.Capability>(cap);
+                if (cap.AppId == cap.Id)
+                {
+                    // gosh this is awful, but need to do this to support Extensions w/o refactoring a bunch of stuff
+                    app.Enabled = cap.Enabled;
+                }
+                else
+                {
+                    var index = app.Capabilities.FindIndex(_ => _.Id == cap.Id);
+                    var editCap = app.Capabilities[index];
+                    AutoMapper.Mapper.Map(cap, editCap);
+                    // var newDmCap = Mapper.Map<Mozu.Core.ThirdParty.Contracts.Capability>(cap);
+                }
             
                 //todo other stuff
                 _applicationsWebApiClient.UpsertApplication(app.AppId, app).Wait();
