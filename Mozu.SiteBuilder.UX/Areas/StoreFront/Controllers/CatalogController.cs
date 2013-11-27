@@ -61,7 +61,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         if (res.HasException)
                         {
                             Exception ex = res.ReadException();
-                            throw ex;
+                            return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Product not found.", ex);
                         }
                     }
                     return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Product not found");
