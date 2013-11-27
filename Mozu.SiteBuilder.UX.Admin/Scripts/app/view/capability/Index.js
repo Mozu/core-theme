@@ -101,7 +101,20 @@ Ext.define('Taco.view.capability.Index', {
             }, {
                 text: 'Coverage Area',
                 width: 200,
-                dataIndex: "scopeType"
+                dataIndex: "scopeType",
+                renderer: function (value, row) {
+                    try {
+                        var scopeId = row.record.data.scopeId;
+                        if (value == 'Site') {
+                            value += ': ' + Taco.app.context.findSite(scopeId).name;
+                        } else if (value == 'Catalog') {
+                            value += ': ' + Taco.app.context.findMasterCatalog(scopeId).name;
+                        } else if (value == 'MasterCatalog') {
+                            value += ': ' + Taco.app.context.findCatalog(scopeId).name;
+                        }
+                    } catch (e) { }
+                    return value;
+                }
             }, {
                 text: 'Expiration',
                 width: 200,
