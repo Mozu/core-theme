@@ -107,11 +107,11 @@ Ext.define('Taco.view.report.SidebarList', {
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: ['text', 'value'],
                 data: [
-                    ['Day', 'Day'],
-                    ['Week', 'Week'],
-                    ['Month', 'Month'],
-                    ['Quarter', 'Quarter'],
-                    ['Year', 'Year']
+                    ['Days', 'Days'],
+                    ['Weeks', 'Weeks'],
+                    ['Months', 'Months'],
+                    ['Quarters', 'Quarters'],
+                    ['Years', 'Years']
                 ]
             }),
             forceSelection: true,
@@ -130,6 +130,7 @@ Ext.define('Taco.view.report.SidebarList', {
                 name: 'startDate',
                 fieldLabel: "Start",
                 emptyText: 'MM/DD/YYYY',
+                allowBlank: false,
                 width: 120
             }, {
                 xtype: 'component',
@@ -139,6 +140,7 @@ Ext.define('Taco.view.report.SidebarList', {
                 name: 'endDate',
                 fieldLabel: "End",
                 emptyText: 'MM/DD/YYYY',
+                allowBlank: false,
                 width: 120
             }]
         });
@@ -151,13 +153,13 @@ Ext.define('Taco.view.report.SidebarList', {
             var startDate = me.customDateRange.down('[name=startDate]').getValue();
             var endDate = me.customDateRange.down('[name=endDate]').getValue();
             if (startDate) {
-                filter += 'CreateDate ge ' + Ext.Date.format(startDate, 'Y-m-d');
+                filter += 'Days ge ' + Ext.Date.format(startDate, 'Y-m-d');
             }
             if (endDate) {
                 if (startDate) {
                     filter += ' and ';
                 }
-                filter += 'CreateDate le ' + Ext.Date.format(endDate, 'Y-m-d');
+                filter += 'Days le ' + Ext.Date.format(endDate, 'Y-m-d');
             }
 
             var req = {

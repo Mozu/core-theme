@@ -18,7 +18,7 @@ Ext.define('Taco.view.report.Index', {
     ],
 
     cls: undefined,
-    requiresContextOfType: 's',
+//    requiresContextOfType: ['c', 's'],
     sidebar: null,
     constructor: function (conf) {
         this.callParent(arguments);
@@ -50,14 +50,7 @@ Ext.define('Taco.view.report.Index', {
                     });
                     me.updateSummary(summary);
                 }
-                window.rep = rep;
-                
                 return rep;
-                Ext.Array.each(resp.records, function (rec) {
-                    rec.data.categoryName = rec.raw.category.name;
-                    rec.data.name = rec.raw.content.name;
-                });
-                return resp;
             }
         });
 
@@ -95,12 +88,15 @@ Ext.define('Taco.view.report.Index', {
         var store = this.createStoreFromReportDefinition(report, req.criteria);
         var cols = Ext.Array.map(report.availableFields, function (item) {
             return {
-                hidden: !(Ext.Array.contains(report.defaultFields, item.key) || report.defaultGroupBy==item.key),
+                hidden: !(Ext.Array.contains(report.defaultFields, item.key) || item.key == req.criteria.groupBy),
                 text: item.name,
                 dataIndex: item.key
             };
         });
-        cols[0].flex = 1;
+        if (cols.length > 0) {
+            cols[0].flex = 1;
+            cols[cols.length - 1].flex = 1;
+        }
 
         var newGrid = Ext.create('Ext.grid.Panel', {
             title: req.reportRecord.get('name'),
@@ -150,7 +146,6 @@ Ext.define('Taco.view.report.Index', {
             alias: 'reader.my-json',
             read: function (object) {
                 var resp = this.callParent([object]);
-                window.resp = resp;
                 Ext.Array.each(resp.records, function (rec) {
                     rec.data.categoryName = rec.raw.category.name;
                     rec.data.name = rec.raw.content.name;
