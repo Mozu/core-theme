@@ -131,6 +131,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         }
 
         public System.Collections.Specialized.NameValueCollection QueryString { get; set; }
+
+        public string ResponseGroups { get; set; }
     }
 
     public class SortingCollectionItem

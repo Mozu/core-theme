@@ -78,7 +78,7 @@ Ext.define('Taco.view.product.SiteForm', {
         ]);
         
         // if this product has a product usage of type "Bundle" add the subPanel for managing its items
-        if (this.record.get("productUsage") == "Bundle") {
+        if (this.product.get("productUsage") == "Bundle") {
             Ext.Array.push(items, [
                 Ext.create('Taco.view.product.subform.Bundle', subFormCfg)
             ]);

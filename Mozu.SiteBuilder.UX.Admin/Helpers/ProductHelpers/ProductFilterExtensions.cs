@@ -52,31 +52,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
             StringBuilder sb = new StringBuilder();
             foreach (var filter in extFilter.Where(x => x.value != null && x.property != "all" && !string.IsNullOrEmpty(x.value.ToString())))
             {
-                var values = filter.value.ToString().Trim().Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
-                if (values.Length > 1)
-                {
-                    if (sb.Length > 1)
-                    {
-                        sb.Append(" and ");
-                    }
-                    sb.Append("( ");
-                    for ( int  i = 0; i < values.Length ;i++)
-                    {
-                        var filterString = GetFilter(values[i], filter);
-                        if (!string.IsNullOrWhiteSpace(filterString))
-                        {
-                            if (i > 0)
-                            {
-                                sb.Append(" or ");
-                            }
-                            sb.Append(filterString);
-                        }
+                //this was bullshitty
+                //var values = filter.value.ToString().Trim().Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+                //if (values.Length > 1)
+                //{
+                //    if (sb.Length > 1)
+                //    {
+                //        sb.Append(" and ");
+                //    }
+                //    sb.Append("( ");
+                //    for ( int  i = 0; i < values.Length ;i++)
+                //    {
+                //        var filterString = GetFilter(values[i], filter);
+                //        if (!string.IsNullOrWhiteSpace(filterString))
+                //        {
+                //            if (i > 0)
+                //            {
+                //                sb.Append(" or ");
+                //            }
+                //            sb.Append(filterString);
+                //        }
 
-                    }
-                    sb.Append(" ) ");
-                }
-                else
-                {
+                //    }
+                //    sb.Append(" ) ");
+                //}
+              //  else
+              //  {
                     var filterString = GetFilter(filter.value, filter);
                     if (!string.IsNullOrWhiteSpace(filterString))
                     {
@@ -88,7 +89,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                         
                     }
                     
-                }
+                //}
             }
 
             return sb.ToString().Trim();
@@ -134,7 +135,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                 {
                     if (!(value is string ) && value is IEnumerable)
                     {
-                        string[] filters = ((IEnumerable)value).Cast<string>().Select(v => "productUsage eq " + v).ToArray();
+                        string[] filters = ((IEnumerable)value).Cast<object>().Select(v => "productUsage eq " + v).ToArray();
                         return "(" + String.Join(" or ", filters) + ")";
                     }
                     else

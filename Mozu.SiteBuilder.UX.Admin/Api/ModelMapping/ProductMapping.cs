@@ -43,9 +43,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.ProductName, opt => opt.MapFrom(x => x.ProductName));
 
             Mapper.CreateMap<BundledProduct, DC.BundledProduct>()
-                  .ForMember(x => x.ProductCode, opt => opt.MapFrom(x => x.ProductCode))
-                  .ForMember(x => x.Qty, opt => opt.MapFrom(x => x.Qty))
-                  .ForMember(x => x.ProductName, opt => opt.MapFrom(x => x.ProductName));
+                .ForMember(x => x.ProductCode, opt => opt.MapFrom(x => x.ProductCode))
+                .ForMember(x => x.Qty, opt => opt.MapFrom(x => x.Qty))
+                .ForMember(x => x.ProductName, opt => opt.MapFrom(x => x.ProductName))
+                .ForMember(x => x.Price, opt => opt.Ignore())
+                .ForMember(x => x.PackageWeight, opt => opt.Ignore())
+                .ForMember(x => x.PackageHeight, opt => opt.Ignore())
+                .ForMember(x => x.PackageLength, opt => opt.Ignore())
+                .ForMember(x => x.PackageWidth, opt => opt.Ignore());
 
 
             Mapper.CreateMap<DC.Product, Product>()

@@ -69,6 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers
                 col = new FilterCollection();
             }
             col.SearchType = qs["searchType"];
+            col.ResponseGroups = qs["responseGroups"];
             col.query = qs["query"];
 
 

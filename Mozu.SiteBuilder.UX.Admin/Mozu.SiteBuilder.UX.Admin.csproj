@@ -660,6 +660,7 @@
     <Content Include="Scripts\app\shared\view\modal\Wishlist.js" />
     <Content Include="Scripts\app\store\Capability.js" />
     <Content Include="Scripts\app\store\Channels.js" />
+    <Content Include="Scripts\app\store\ProductBundlePicker.js" />
     <Content Include="Scripts\app\store\RedirectEntries.js" />
     <Content Include="Scripts\app\store\Countries.js" />
     <Content Include="Scripts\app\store\CustomerAttributes.js" />
