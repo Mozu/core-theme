@@ -139,7 +139,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.AdminName, op => op.MapFrom(x => x.AdminName))
                 .ForMember(x => x.Values, opt => opt.MapFrom(x => x.VocabularyValues))
                 .ForMember(x => x.Id, opt => opt.MapFrom(x => x.AttributeFQN))
-                .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Content.Name))
+                .ForMember(x => x.Name, opt => opt.MapFrom(x =>x.Content== null ? null : x.Content.Name))
                 .ForMember( x=> x.AttributeMetadata , opt=> opt.MapFrom(x=> x.AttributeMetadata))
                 .ForMember(x => x.Regex, opt => opt.MapFrom(x => x.Validation.RegularExpression))
                 .ForMember(x => x.Min, opt => opt.MapFrom(dc => dc.Validation.MinNumericValue ?? dc.Validation.MinStringLength))

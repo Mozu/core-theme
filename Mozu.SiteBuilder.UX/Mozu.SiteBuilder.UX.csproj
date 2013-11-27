@@ -465,9 +465,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="BuiltinScripts\HyprLive\package.json" />
-    <Content Include="Parameters.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="BuiltinScripts\RequireJS\src\require.js" />
     <Content Include="BuiltinScripts\SDK\dist\mozu-sdk.debug.js" />
     <Content Include="BuiltinScripts\SDK\dist\mozu-sdk.js" />
