@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
-using System.Web.Http.Hosting;
 using System.Web.Http.Routing;
-using Mozu.SiteBuilder.Mvc.SEO;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.SiteBuilder.UX.Models.Navigation;
 
 namespace Mozu.SiteBuilder.UX.Configuration
 {
@@ -48,6 +38,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "hyprlivecontext",
                 "hyprlivecontext",
                 new {controller = "Resource", action = "hyprcontextaction"});
+
+            routes.MapHttpRoute(
+                "Visit_Tracking_Pixel",
+                "nsa.gov",
+                new { controller = "Visit", action = "TrackingPixel" });
 
             routes.MapHttpRoute(
                 "scripts",
