@@ -44,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-	        List<VM.Capability> list = vmApps.SelectMany(x => x.Crapabilities).ToList();
+	        List<VM.Capability> list = vmApps.SelectMany(x => x.Capabilities).ToList();
 
 
 

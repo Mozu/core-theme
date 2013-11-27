@@ -18,7 +18,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected override void Configure()
         {
-            Mapper.CreateMap<DC.Application, Application>().ConstructUsing(app =>
+            Mapper.CreateMap<DC.Application, Application>()
+                .ForMember(x => x.Capabilities, opt => opt.Ignore())
+                .ConstructUsing(app =>
                 {
                     if (app.Entitlement == null)
                     {
@@ -38,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         AppId = app.AppId,
                         Initialized = app.Initialized,
                         Enabled = app.Enabled ,
-                        Crapabilities = app.Capabilities.Select( cap => new Capability()
+                        Capabilities = app.Capabilities.Select( cap => new Capability()
                                                                            {
                                                                                AppId = app.AppId ,
                                                                                Id = cap.Id,
@@ -67,10 +69,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                            }).ToList() 
                         
                     };
-                    if (a.Crapabilities.Count() == 0)
+                    if (a.Capabilities.Count() == 0)
                     {
                         // It's an extension, so let's add it as a capability!
-                        a.Crapabilities.Add(new Capability()
+                        a.Capabilities.Add(new Capability()
                         {
                             AppId = app.AppId,
                             Id = app.AppId,

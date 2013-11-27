@@ -13,7 +13,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement
 
         public string UIConfigurationUrl { get; set; }
 
-        public List<Capability> Crapabilities { get; set; }
+        public List<Capability> Capabilities { get; set; }
 
        // public Entitlement Entitlement { get; set; }
 
