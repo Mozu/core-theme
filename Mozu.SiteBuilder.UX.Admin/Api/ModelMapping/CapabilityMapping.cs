@@ -67,6 +67,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                            }).ToList() 
                         
                     };
+                    if (a.Crapabilities.Count() == 0)
+                    {
+                        // It's an extension, so let's add it as a capability!
+                        a.Crapabilities.Add(new Capability()
+                        {
+                            AppId = app.AppId,
+                            Id = app.AppId,
+                            UIConfigurationUrl = app.UIConfigurationUrl,
+                            CapabilityType = "Extensions",
+                            //CapabilityMode = cap.CapabilityMode ,
+                            //ScopeId = cap.ScopeId ,
+                            //ScopeType = cap.ScopeType ,
+                            //Initialized = cap.Initialized,
+                            LicenseType = app.Entitlement.LicenseType,
+                            Enabled = app.Enabled,
+                            EntitlementId = app.Entitlement.Id,
+                            uiSupportUrl = Mozu.Core.Settings.MozuConfigurationManager.DevCenterPath + "/storeprofile/" + app.Entitlement.ApplicationVersionId +"/en-US",
+                            EntitlementApplicationVersionId  = app.Entitlement.ApplicationVersionId ,
+                            ApplicationName = app.Entitlement.ApplicationName ,
+                            DeveloperAccountName = app.Entitlement.DeveloperAccountName ,
+                            EffectiveEndDate = app.Entitlement.EffectiveEndDate,
+                            EffectiveStartDate = app.Entitlement.EffectiveStartDate ,
+                            CreateDate = app.Entitlement.CreateDate,
+                            PublishedDate = app.Entitlement.PublishedDate,
+                            //ActiveShoppingCountries = cap.ActiveShoppingCountries ,
+                            //SupportedShoppingCountries = cap.SupportedShoppingCountries
+                        });
+                    }
                     return a;
                 });
 
