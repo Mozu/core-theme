@@ -421,6 +421,7 @@
     <Compile Include="MediaTypeFormatters\LowerCaseJsonMediaTypeFormatte.cs" />
     <Compile Include="MessageHandler\ErrorHandlerMessageHandler.cs" />
     <Compile Include="MessageHandler\HttpContextInjectingMessageHandler.cs" />
+    <Compile Include="SEO\RedirectRepository.cs" />
     <Compile Include="SiteBuilderApiContextBuilder.cs" />
     <Compile Include="Tags\PreloadJsonTag.cs" />
     <Compile Include="Tags\ParentTag.cs" />

@@ -49,99 +49,100 @@
 Ext.ns('Taco');
 Taco.baseCSSPrefix = 'taco-';
 
-Ext.Ajax.defaultHeaders = { Accept: '*/*'};
+Ext.Ajax.defaultHeaders = { Accept: '*/*' };
 
 window.console = window.console || {
-    log: function() {
+    log: function () {
     }
 };
 
 //Ext.Loader.setPath('Taco', '/admin/Scripts/app');
 
-Ext.define('Taco.Application',{
+Ext.define('Taco.Application', {
     extend: 'Ext.app.Application',
     name: 'Taco',
     appFolder: '/admin/Scripts/app',
     autoCreateViewport: false,
     requires: [
-            'Taco.core.util.Common',
-            'Taco.overrides.form.Basic',
-            'Taco.overrides.form.field.Base',
-            'Taco.overrides.form.field.ComboBox',
-            'Taco.overrides.grid.RowEditor',
-            'Taco.overrides.grid.RowEditorButtons',
-            'Taco.overrides.menu.Item',
-            'Taco.overrides.menu.Menu',
-            'Taco.overrides.panel.Tool',
-            'Taco.overrides.window.MessageBox',
-            'Ext.data.association.HasOne',
-            'Taco.core.data.RemoteException',
-            'Taco.core.context.TaContext',
-            'Taco.locale.Strings',
-            'Taco.store.LocalizedStrings',
-            'Taco.core.data.StoreManager',
-            'Taco.core.data.ReadAheadProxy',
-            'Taco.core.data.AjaxProxy',
-            'Taco.core.data.CategoryTreeProxy',
-            'Taco.view.Viewport',
-            'Taco.core.util.UploadManager',
-            'Taco.core.StateManager',
-            'Ext.util.Cookies',
-            'Taco.core.ux.IconList',
-            'Taco.core.ux.CardPanel',
-            'Taco.core.ux.CellEditing',
-            'Taco.core.ux.DragDropZone',
-            'Taco.core.ux.form.field.Container',
-            'Taco.core.ux.form.field.EditableDisplayField',
-            'Taco.core.ux.window.MessageBox',
-            'Taco.view.Header',
-            'Ext.state.CookieProvider',
-            'Ext.draw.Component',
-            'Ext.layout.container.Form',
-            'Ext.layout.container.Column',
-            'Ext.layout.container.Accordion',
-            'Ext.layout.container.Absolute',
-            'Ext.form.field.Radio',
+        'Taco.core.util.Common',
+        'Taco.overrides.form.Basic',
+        'Taco.overrides.form.field.Base',
+        'Taco.overrides.form.field.ComboBox',
+        'Taco.overrides.grid.RowEditor',
+        'Taco.overrides.grid.RowEditorButtons',
+        'Taco.overrides.menu.Item',
+        'Taco.overrides.menu.Menu',
+        'Taco.overrides.panel.Tool',
+        'Taco.overrides.window.MessageBox',
+        'Ext.data.association.HasOne',
+        'Taco.core.data.RemoteException',
+        'Taco.core.context.TaContext',
+        'Taco.locale.Strings',
+        'Taco.store.LocalizedStrings',
+        'Taco.core.data.StoreManager',
+        'Taco.core.data.ReadAheadProxy',
+        'Taco.core.data.AjaxProxy',
+        'Taco.core.data.CategoryTreeProxy',
+        'Taco.view.Viewport',
+        'Taco.core.util.UploadManager',
+        'Taco.core.StateManager',
+        'Ext.util.Cookies',
+        'Taco.core.ux.IconList',
+        'Taco.core.ux.CardPanel',
+        'Taco.core.ux.CellEditing',
+        'Taco.core.ux.DragDropZone',
+        'Taco.core.ux.form.field.Container',
+        'Taco.core.ux.form.field.EditableDisplayField',
+        'Taco.core.ux.window.MessageBox',
+        'Taco.view.Header',
+        'Ext.state.CookieProvider',
+        'Ext.draw.Component',
+        'Ext.layout.container.Form',
+        'Ext.layout.container.Column',
+        'Ext.layout.container.Accordion',
+        'Ext.layout.container.Absolute',
+        'Ext.form.field.Radio',
         'Taco.core.ux.form.field.SingleImageField'
     ],
     controllers: [
-            'Analytics',
-            'Capability',
-            'Dashboard',
-            'Reports',
-            'Navigation',
-            'Customers',
-            'StoreCredits',
-            'CustomerAttributes',
-            'Categories',
-            'Products',
-            'PendingChanges',
-            'Inventory',
-            'Message',
-            'Catalog',
-            'Testing',
-            'Discounts',
-            'Settings',
-            'PageTemplates',
-            'Tbd',
-            'Themes',
-            'Themesettings',
-            'Account',
-            'GeneralSettings',
-            'Email',
-            'Orders',
-            'OrderAttributes',
-            'Errors',
-            'Roles',
-            'ProductTypes',
-            'Attributes',
-            'FileManager',
-            'Channels',
-            'Locations',
-            'LocationTypes',
-            'Website',
-            'LocationInventory',
-            'SiteSelection'
+        'Analytics',
+        'Capability',
+        'Dashboard',
+        'Reports',
+        'Navigation',
+        'Customers',
+        'StoreCredits',
+        'CustomerAttributes',
+        'Categories',
+        'Products',
+        'PendingChanges',
+        'Inventory',
+        'Message',
+        'Catalog',
+        'Testing',
+        'Discounts',
+        'Settings',
+        'PageTemplates',
+        'Tbd',
+        'Themes',
+        'Themesettings',
+        'Account',
+        'GeneralSettings',
+        'Email',
+        'Orders',
+        'OrderAttributes',
+        'Errors',
+        'Roles',
+        'ProductTypes',
+        'Attributes',
+        'FileManager',
+        'Channels',
+        'Locations',
+        'LocationTypes',
+        'Website',
+        'LocationInventory',
+        'SiteSelection',
+        'Redirects'
     ],
     stores: ['Taco.store.LocalizedStrings'],
     context: null,
@@ -155,12 +156,12 @@ Ext.define('Taco.Application',{
                     visable;
                 if (me.requiredBehaviors) {
                     if (!Ext.isArray(me.requiredBehaviors)) {
-                        me.requiredBehaviors= [me.requiredBehaviors];
+                        me.requiredBehaviors = [me.requiredBehaviors];
                     }
                     Ext.each(me.requiredBehaviors, function (reqBeh) {
                         var model;
                         if (Ext.isNumber(reqBeh)) {
-                            if (!Ext.Array.contains( Taco.User.behaviors, reqBeh)) {
+                            if (!Ext.Array.contains(Taco.User.behaviors, reqBeh)) {
                                 me.hidden = true;
                             }
                         }
@@ -209,7 +210,7 @@ Ext.define('Taco.Application',{
                 var me = this,
                     value;
                 if (!me.rendered) {
-                    return me.value ;
+                    return me.value;
                 }
                 if (!me.sourceEditMode) {
                     if (document.getElementById(me.iframeEl.id)) {
@@ -218,7 +219,7 @@ Ext.define('Taco.Application',{
                         console.log('damn');
                     }
                 }
-                value =  me.textareaEl.dom.value ;
+                value = me.textareaEl.dom.value;
                 me.value = value;
                 return value;
             },
@@ -235,7 +236,7 @@ Ext.define('Taco.Application',{
                         me.relayCmd(cmd, value);
                         return;
                     }
-                    
+
                     me.focus();
                     me.execCmd(cmd, value);
                     me.updateToolbar();
@@ -245,7 +246,7 @@ Ext.define('Taco.Application',{
         Ext.override(Ext.data.AbstractStore, {
             constructor: function () {
                 this.callParent(arguments);
-                
+
                 this.dirtyState = false;
 
                 // extra filters to be added to all calls. these will be combined with the store.filters; Survives call to clearFilter(); Much like the extraParams
@@ -262,16 +263,16 @@ Ext.define('Taco.Application',{
                     datachanged: function () {
                         this.dirtyStateCheck();
                     },
-                    beforeload: function(store,operation) {
+                    beforeload: function (store, operation) {
                         if (store.remoteFilter === false) {
                             operation.filters = [];
                         }
-                        
+
                         // add in any required filters for this store; these filters will always be submitted since they are added after any calls to clear the filters;
                         if (store.extraFilters.getCount()) {
                             operation.filters = Ext.Array.merge(operation.filters, store.extraFilters.items);
                         }
-                        
+
                     },
                     scope: this
                 });
@@ -287,7 +288,7 @@ Ext.define('Taco.Application',{
             },
 
             dirtyStateCheck: function () {
-              
+
                 var currentState = this.isDirty();
 
                 if (currentState === this.dirtyState) {
@@ -313,7 +314,7 @@ Ext.define('Taco.Application',{
                 Ext.Object.each(me.events, function (eventName, eventObj) {
                     var listners = Ext.Array.clone(eventObj.listeners);
                     Ext.each(listners, function (listnerCfg) {
-                        
+
                         if (listnerCfg.scope === owner) {
                             if (eventName === "beforefill") {
                                 console.log(eventName);
@@ -432,7 +433,7 @@ Ext.define('Taco.Application',{
             }
         });
 
-        Ext.override(Ext.data.Connection , {
+        Ext.override(Ext.data.Connection, {
             onStateChange: function (request) {
                 if (request && request.xhr && request.xhr.readyState === 4) {
                     this.clearTimeout(request);
@@ -442,7 +443,7 @@ Ext.define('Taco.Application',{
                 }
             }
         });
-        
+
         Ext.override(Ext.data.StoreManager, {
             lookup: function (cfg) {
                 if (cfg && !cfg.isStore && (cfg.type || cfg.model)) {
@@ -453,7 +454,7 @@ Ext.define('Taco.Application',{
         });
 
         Ext.override(Ext.ux.form.MultiSelect, {
-            afterRender: function() {
+            afterRender: function () {
                 var me = this,
                     records;
 
@@ -478,7 +479,7 @@ Ext.define('Taco.Application',{
                         ddGroup: me.dragGroup,
                         dragText: '{0} Item{1}',
                         validHandleClass: 'x-boundlist-item-drag',
-                        onInitDrag: function(x, y) {
+                        onInitDrag: function (x, y) {
                             var me = this,
                                 data = me.dragData,
                                 view = data.view,
@@ -496,14 +497,14 @@ Ext.define('Taco.Application',{
                             me.onStartDrag(x, y);
                             return true;
                         },
-                        isValidHandleChild: function(node) {
+                        isValidHandleChild: function (node) {
                             var valid = true,
                                 nodeName,
                                 i, len;
 
                             try {
                                 nodeName = node.nodeName.toUpperCase();
-                            } catch(e) {
+                            } catch (e) {
                                 nodeName = node.nodeName;
                             }
                             valid = valid && !this.invalidHandleTypes[nodeName];
@@ -524,7 +525,7 @@ Ext.define('Taco.Application',{
                     me.dropZone = Ext.create('Ext.view.DropZone', {
                         view: me.boundList,
                         ddGroup: me.dropGroup,
-                        handleNodeDrop: function(data, dropRecord, position) {
+                        handleNodeDrop: function (data, dropRecord, position) {
                             var view = this.view,
                                 store = view.getStore(),
                                 records = data.records,
@@ -548,7 +549,7 @@ Ext.define('Taco.Application',{
 
 
         Ext.override(Ext.tree.View, {
-            destroy: function() {
+            destroy: function () {
                 var treeStore = this.panel.getStore();
                 if (treeStore) {
                     treeStore.removeOwnedListener(this);
@@ -559,21 +560,15 @@ Ext.define('Taco.Application',{
 
                 return this.callParent(arguments);
             }
-        });
-        
-        
-       
-        
-
-        
+        });        
 
 
         Ext.util.Observable.prototype.removeOwnedListener =
-            function(owner) {
+            function (owner) {
                 var me = this;
-                Ext.Object.each(me.events, function(eventName, eventObj) {
+                Ext.Object.each(me.events, function (eventName, eventObj) {
                     var listners = Ext.Array.clone(eventObj.listeners);
-                    Ext.each(listners, function(listnerCfg) {
+                    Ext.each(listners, function (listnerCfg) {
 
                         if (listnerCfg.scope === owner) {
                             if (eventName === "beforefill") {
@@ -587,8 +582,8 @@ Ext.define('Taco.Application',{
         this.callParent([config]);
     },
 
-    init:function () {
-        var stringStore =Taco.core.data.StoreManager.getOrCreate('Taco.store.LocalizedStrings');
+    init: function () {
+        var stringStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.LocalizedStrings');
         stringStore.loadRawData(Taco.localizationValues);
         this.callParent(arguments);
     },
@@ -606,7 +601,7 @@ Ext.define('Taco.Application',{
         }, 500, this);
 
     },
-   
+
     signalCacheFlush: function (data) {
         return;
         //depricating gheto flush of cache
@@ -650,7 +645,7 @@ Ext.define('Taco.Application',{
         this.DragDropZone.initDocumentListeners(this);
     },
 
-    initPrimaryMenu: function() {
+    initPrimaryMenu: function () {
         var nc = this.getNavigationController();
         if (!nc._initialized) {
             nc.init();
@@ -679,7 +674,7 @@ Ext.define('Taco.Application',{
             },
             numMask: /[\d\.]/,
             nullableint: function (v) {
-                return v === "" || !isNaN(parseInt(v,10));
+                return v === "" || !isNaN(parseInt(v, 10));
             },
             nullableintMask: /\d/
         });
@@ -692,7 +687,7 @@ Ext.define('Taco.Application',{
 
             Ext.each(Ext.query('link[rel=stylesheet]'), function () {
                 var oldLink = new Ext.dom.Element(this),
-                        link = document.createElement('link');
+                    link = document.createElement('link');
 
                 link.rel = 'stylesheet';
                 link.href = this.href.split('?')[0] + '?' + tick;

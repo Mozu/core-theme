@@ -425,6 +425,7 @@
     <Compile Include="JsonExtensions.cs" />
     <Compile Include="ModelBase.cs" />
     <Compile Include="ModelMetaData\MozuModelMetadataProvider.cs" />
+    <Compile Include="Navigation\Redirect.cs" />
     <Compile Include="Orders\AppliedDiscount.cs" />
     <Compile Include="Orders\AvailableActionsInfo.cs" />
     <Compile Include="Orders\Category.cs" />

@@ -414,6 +414,7 @@
     <Compile Include="Api\OrderAttributeController.cs" />
     <Compile Include="Api\OrderDiscountController.cs" />
     <Compile Include="Api\PublishingSettingsController.cs" />
+    <Compile Include="Api\RedirectController.cs" />
     <Compile Include="Api\ReportController.cs" />
     <Compile Include="Api\ReturnController.cs" />
     <Compile Include="Api\CustomerController.cs" />
@@ -596,6 +597,7 @@
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\Capability.js" />
     <Content Include="Scripts\app\controller\Channels.js" />
+    <Content Include="Scripts\app\controller\Redirects.js" />
     <Content Include="Scripts\app\controller\LocationInventory.js" />
     <Content Include="Scripts\app\controller\StoreCredits.js" />
     <Content Include="Scripts\app\controller\Website.js" />
@@ -627,6 +629,7 @@
     <Content Include="Scripts\app\model\CheckoutSettings.js" />
     <Content Include="Scripts\app\model\Capability.js" />
     <Content Include="Scripts\app\model\BundledProduct.js" />
+    <Content Include="Scripts\app\model\RedirectEntry.js" />
     <Content Include="Scripts\app\model\StoreCredit.js" />
     <Content Include="Scripts\app\model\WishlistItem.js" />
     <Content Include="Scripts\app\model\Country.js" />
@@ -657,6 +660,7 @@
     <Content Include="Scripts\app\shared\view\modal\Wishlist.js" />
     <Content Include="Scripts\app\store\Capability.js" />
     <Content Include="Scripts\app\store\Channels.js" />
+    <Content Include="Scripts\app\store\RedirectEntries.js" />
     <Content Include="Scripts\app\store\Countries.js" />
     <Content Include="Scripts\app\store\CustomerAttributes.js" />
     <Content Include="Scripts\app\store\ExternalGatewayDefinitions.js" />
@@ -671,6 +675,7 @@
     <Content Include="Scripts\app\view\capability\Form.js" />
     <Content Include="Scripts\app\view\capability\Index.js" />
     <Content Include="Scripts\app\view\channel\Index.js" />
+    <Content Include="Scripts\app\view\redirects\Index.js" />
     <Content Include="Scripts\app\view\customerAttribute\Edit.js" />
     <Content Include="Scripts\app\view\customerAttribute\Form.js" />
     <Content Include="Scripts\app\view\customerAttribute\Index.js" />
@@ -1051,9 +1056,6 @@
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\resizer\Splitter.scss" />
     <Content Include="Scripts\app\mocks\storecredit.json" />
     <None Include="SetupSenchaWorkspace.ps1" />
-    <Content Include="Parameters.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
     <Content Include="Scripts\app.js" />

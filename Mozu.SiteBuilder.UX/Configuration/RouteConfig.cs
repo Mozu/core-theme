@@ -11,7 +11,11 @@ using System.Web.Http.Hosting;
 using System.Web.Http.Routing;
 using System.Web.Http.WebHost;
 using System.Web.Routing;
-
+using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.SEO;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.UX.Configuration
 {
@@ -22,13 +26,13 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
         public void Register(HttpRouteCollection routes)
         {
-            //routes.MapHttpRoute(
-            //    "seoRedirect",
-            //    "{*url}",
-            //    new { controller = "Home", action = "SeoProcessor"  },
-            //    null,
-            //    new SeoMessageHandler()
-            //    );
+            routes.MapHttpRoute(
+                "seoRedirect",
+                "{*url}",
+                new { controller = "Home", action = "SeoProcessor" },
+                null,
+                new SeoMessageHandler()
+                );
 
         
 
@@ -265,6 +269,7 @@ var r1=            routes.MapHttpRoute(
         {
             Lazy<HttpRouteCollection> _routeCollection = new Lazy<HttpRouteCollection>(() =>
                 {
+
                     var collection = new HttpRouteCollection();
                     var routes = System.Web.Http.GlobalConfiguration.Configuration.Routes;
                     foreach (var route in routes)
@@ -311,39 +316,62 @@ var r1=            routes.MapHttpRoute(
 
             protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
             {
-
-                IHttpRouteData routeData = null;
-                if ( request.RequestUri.PathAndQuery.Contains("redir"))
-                {
-                    var url = request.RequestUri.ParseQueryString()["redir"];
-
-                    var ub = new UriBuilder();
-                    ub.Host = "localhost";
-                    ub.Path = url;
-
-                    
-                    #region magicstrings
-                    var req = new HttpRequestMessage(HttpMethod.Get, ub.Uri);
-                    //magic strings taken from decompiled source :(
-                    var httpContextBase = (HttpContextBase )request.Properties["MS_HttpContext"];
-                    var myHttpContext = new MyHttpContextBase(httpContextBase, url);
-                    
-                    req.Properties["MS_HttpContext"] = myHttpContext;
-                    myHttpContext.Items["MS_HttpRequestMessage"] = req;
-                    #endregion
-                    routeData = _routeCollection.Value.GetRouteData(req);
-                    
-                }
-                if ( routeData == null )
-                {
-                    routeData = this._routeCollection.Value.GetRouteData(request);
-                }
-
-                RemoveOptionalRoutingParameters(routeData.Values);
-                request.Properties[HttpPropertyKeys.HttpRouteDataKey] = routeData;
+                var redirRepo = request.Resolve<IRedirectRepository>();
                 
-                HttpMessageInvoker invoker = (routeData.Route.Handler == null) ? _defaultInvoker .Value : new HttpMessageInvoker(routeData.Route.Handler, false);
-                return invoker.SendAsync(request, cancellationToken);
+                var task = redirRepo.FetchRedirectEntries().ContinueWith(_ =>
+                {
+                    var redirects = _.Result;
+                    var stem = request.RequestUri.AbsolutePath;
+                    var redir = redirects.FirstOrDefault(x => string.Equals(stem, x.Source, StringComparison.OrdinalIgnoreCase));
+
+                    IHttpRouteData routeData = null;
+                    if (redir != null)
+                    {
+                        if (redir.IsRewrite.GetValueOrDefault(false))
+                        {
+                            var url = "~" + redir.Destination;
+
+                            var ub = new UriBuilder();
+                            ub.Host = "localhost";
+                            ub.Path = url;
+
+
+                            #region magicstrings
+
+                            var req = new HttpRequestMessage(HttpMethod.Get, ub.Uri);
+                            //magic strings taken from decompiled source :(
+                            var httpContextBase = (HttpContextBase) request.Properties["MS_HttpContext"];
+                            var myHttpContext = new MyHttpContextBase(httpContextBase, url);
+
+                            req.Properties["MS_HttpContext"] = myHttpContext;
+                            myHttpContext.Items["MS_HttpRequestMessage"] = req;
+
+                            #endregion
+
+                            routeData = _routeCollection.Value.GetRouteData(req);
+                        }
+                        else
+                        {
+                            var resp= request.CreateResponse(HttpStatusCode.MovedPermanently);
+                            resp.Headers.Location = new Uri(redir.Destination, UriKind.RelativeOrAbsolute);
+                            var tcs = new TaskCompletionSource<HttpResponseMessage>();
+                            tcs.SetResult(resp);
+                            return tcs.Task;
+                        }
+                    }
+                    if (routeData == null)
+                    {
+                        routeData = this._routeCollection.Value.GetRouteData(request);
+                    }
+
+                    RemoveOptionalRoutingParameters(routeData.Values);
+                    request.Properties[HttpPropertyKeys.HttpRouteDataKey] = routeData;
+
+                    HttpMessageInvoker invoker = (routeData.Route.Handler == null) ? _defaultInvoker.Value : new HttpMessageInvoker(routeData.Route.Handler, false);
+                    return invoker.SendAsync(request, cancellationToken);
+
+                });
+                return task.Unwrap();
             }
 
             class MyHttpContextBase : HttpContextBase
