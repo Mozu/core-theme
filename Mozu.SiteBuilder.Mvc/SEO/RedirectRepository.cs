@@ -16,14 +16,14 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 {
      public interface  IRedirectRepository
      {
-         Task<List<RedirectEntry>> FetchRedirectEntries();
-         Task<List<RedirectEntry>> UpdateRedirectEntries(List<RedirectEntry> redirects);
+         Task<Dictionary<string, RedirectEntry>> FetchRedirectEntries();
+         Task<Dictionary<string, RedirectEntry>> UpdateRedirectEntries(Dictionary<string, RedirectEntry> redirects);
      }
      public class RedirectRepository : IRedirectRepository
     {
         private readonly ISiteBuilderApiContext _siteBuilderApiContext;
         private readonly IDocumentListWebApiClient _documentListWebApiClient;
-        private Task<List<RedirectEntry>> _redirectEntryListTask;
+        private Task<Dictionary<string, RedirectEntry>> _redirectEntryListTask;
         private MemoryCache _cache;
         ILogger _logger;
         public RedirectRepository(Mozu.Content.Contracts.Clients.IDocumentListWebApiClient documentListWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, ILogger logger)
@@ -41,27 +41,29 @@ namespace Mozu.SiteBuilder.Mvc.SEO
              var key = typeof(RedirectRepository).FullName + dateStamp + _siteBuilderApiContext.SiteId + (_siteBuilderApiContext.DataViewMode == DataViewModeType.Pending);
              return key;
          }
-        Task<List<RedirectEntry>> IRedirectRepository.FetchRedirectEntries()
+
+         private const string FileName = "redirects.1.1";
+        Task<Dictionary<string,RedirectEntry>> IRedirectRepository.FetchRedirectEntries()
         {
             if (_redirectEntryListTask == null)
             {
-                return _redirectEntryListTask=_documentListWebApiClient.GetTreeDocument( "settings", "redirects").ContinueWith(gdt =>
+                return _redirectEntryListTask = _documentListWebApiClient.GetTreeDocument("settings", FileName).ContinueWith(gdt =>
                     {
-                        List<RedirectEntry>ret = null;
+                        Dictionary<string, RedirectEntry> ret = null;
                         var gtRes = gdt.Result;
                         if (!gtRes.ResponseMessage.IsSuccessStatusCode)
                         {
-                            return new List<RedirectEntry>();
+                            return new Dictionary<string, RedirectEntry>(StringComparer.OrdinalIgnoreCase);
                             //provision?
                         }
                         var doc = gdt.Result.ReadAsSync();
                         var key = CreateKey(doc);
-                         ret = _cache[key] as List<RedirectEntry>;
+                         ret = _cache[key] as Dictionary<string, RedirectEntry>;
                         if (ret == null)
                         {
                             lock (typeof (RedirectRepository))
                             {
-                                ret = _cache[key] as List<RedirectEntry>;
+                                ret = _cache[key] as Dictionary<string, RedirectEntry>;
                                 if (ret == null)
                                 {
                                     var res = _documentListWebApiClient.GetDocumentContent("settings", doc.Id ).Result;
@@ -74,19 +76,20 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                                         var jr = new Newtonsoft.Json.JsonTextReader(tr);
                                         try
                                         {
-                                            ret = Newtonsoft.Json.JsonSerializer.CreateDefault().Deserialize<List<RedirectEntry>>(jr);
+                                            ret = Newtonsoft.Json.JsonSerializer.CreateDefault().Deserialize< Dictionary<string, RedirectEntry>>(jr);
+                                            ret = new Dictionary<string, RedirectEntry>(ret, StringComparer.OrdinalIgnoreCase );
                                             _cache[key] = ret;
                                         }
                                         catch (Exception ex)
                                         {
                                             _logger.Error(ex);
-                                            ret = new List<RedirectEntry>();
+                                            ret = new Dictionary<string, RedirectEntry>(StringComparer.OrdinalIgnoreCase);
                                         }
                                         
                                     }
                                     else
                                     {
-                                        ret= new List<RedirectEntry>();
+                                        ret= new Dictionary<string, RedirectEntry>();
                                     }
                                 }
                             }
@@ -98,13 +101,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return _redirectEntryListTask;
         }
 
-        Task<List<RedirectEntry>> IRedirectRepository.UpdateRedirectEntries(List<RedirectEntry> redirects)
+        Task<Dictionary<string, RedirectEntry>> IRedirectRepository.UpdateRedirectEntries(Dictionary<string, RedirectEntry> redirects)
         {
 
-            return _documentListWebApiClient.GetTreeDocument("settings", "redirects").ContinueWith(gdt =>
+            return _documentListWebApiClient.GetTreeDocument("settings", FileName).ContinueWith(gdt =>
                 {
                     bool exists = false;
-                    List<RedirectEntry> ret = null;
+                    Dictionary<string, RedirectEntry> ret = null;
                     var gtRes = gdt.Result;
                     if (gtRes.ResponseMessage.IsSuccessStatusCode)
                     {
@@ -112,8 +115,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     }
                     if (!exists)
                     {
-                        gtRes = _documentListWebApiClient.CreateDocument("settings", new Document() {Name = "redirects", DocumentType = "document"}).Result;
-                        //   = _documentListWebApiClient.GetDocument("settings", "redirects").Result;
+                        gtRes = _documentListWebApiClient.CreateDocument("settings", new Document() { Name = FileName, DocumentType = "document" }).Result;
+                        
                     }
                   
                     var doc = gtRes.ReadAsSync();

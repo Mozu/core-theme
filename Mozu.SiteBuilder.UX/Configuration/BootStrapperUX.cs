@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Formatting;
+﻿using System.Net;
+using System.Net.Http.Formatting;
 using System.Reflection;
 using System.Web.Http;
 
@@ -25,6 +26,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
         {
             base.AddMessageHandlers(httpConfiguration, messageErrorHandler);
             httpConfiguration.MessageHandlers.Insert(0, new HttpContextInjectingMessageHandler());
+            httpConfiguration.MessageHandlers.Add(new SeoDelegatingHandler());
             httpConfiguration.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
 
         }
@@ -32,6 +34,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
         {
             this.AddFormatters(httpConfiguration.Formatters);
             new RouteConfig().Register(httpConfiguration.Routes);
+            
         }
         public override void InitializeAutoMapperProfiles(System.Web.Http.HttpConfiguration httpConfiguration)
         {

@@ -135,7 +135,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             this.ViewData["user"] = user;
             this.ViewData["siteRoles"] = roles;
 
-            this.ViewData["authCookieDomain"] = _settings.AppSettings("authCookieDomain");
+            
             
             this.ViewData["extlocalefile"] = GetExtLocaleFile(Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName);
             this.ViewData["useGoogleAnalytics"] = System.Configuration.ConfigurationManager.AppSettings["useGoogleAnalytics"];

@@ -5,7 +5,7 @@ Ext.define('Taco.store.Navigation', {
     extend: 'Ext.data.Store',
     model: 'Taco.model.NavigationItem',
     autoLoad: true,
-    filters:[{
+    filters: [{
         filterFn: function (record) {
             var ret = true;
             if (record.raw.behaviorIds && record.raw.behaviorIds.length) {
@@ -21,7 +21,7 @@ Ext.define('Taco.store.Navigation', {
     }],
     proxy: {
         type: 'memory',
-        data:[/*{
+        data: [/*{
             "id": "dashboard",
             "label": "Dashboard",
             "address": "dashboard",
@@ -38,91 +38,91 @@ Ext.define('Taco.store.Navigation', {
                 }
             ]
         },*/ {
-            "id": "customers",
-            "label": "Customers",
-            "address": "customers",
-            "icon": "nav-customers",
-            "behaviorIds":[41],
-            "items": [/*{
+                "id": "customers",
+                "label": "Customers",
+                "address": "customers",
+                "icon": "nav-customers",
+                "behaviorIds": [41],
+                "items": [/*{
                 "id": "accounts",
                 "label": "Accounts",
                 "address": "customers"
             }, */{
-                "id": "customerAttributes",
-                "label": "Attributes",
-                "address": "customerattribute"
-            }/*, {
+                    "id": "customerAttributes",
+                    "label": "Attributes",
+                    "address": "customerattribute"
+                }/*, {
                 "id": "contacts",
                 "label": "Contacts",
                 "address": "tbd/contacts"
             }*/]
-        }, {
-            "id": "catalog",
-            "label": "Catalog",
-            "address": "products",
-            "behaviorIds": [4],
-            "icon": "nav-catalog",
-            "items": [/*{
+            }, {
+                "id": "catalog",
+                "label": "Catalog",
+                "address": "products",
+                "behaviorIds": [4],
+                "icon": "nav-catalog",
+                "items": [/*{
                 "id": "products",
                 "label": "Products",
                 "address": "products",
                 "behaviorIds": [4]
             }, */{
-                "id": "inventory",
-                "label": "Inventory",
-                "address": "inventory",
-                "behaviorIds": [4]
+                        "id": "inventory",
+                        "label": "Inventory",
+                        "address": "inventory",
+                        "behaviorIds": [4]
+                    }, {
+                        "id": "categories",
+                        "label": "Categories",
+                        "address": "categories",
+                        "behaviorIds": [16]
+                    }, {
+                        "id": "productTypes",
+                        "label": "Product Types",
+                        "address": "producttypes"
+                    }, {
+                        "id": "attributes",
+                        "label": "Attributes",
+                        "address": "attributes"
+                    }]
             }, {
-                "id": "categories",
-                "label": "Categories",
-                "address": "categories",
-                "behaviorIds": [16]
-            }, {
-                "id": "productTypes",
-                "label": "Product Types",
-                "address": "producttypes"
-            },{
-                "id": "attributes",
-                "label": "Attributes",
-                "address": "attributes"
-            }]
-        }, {
-            "id": "store",
-            "label": "Orders",
-            "address": "orders",
-            "behaviorIds": [16],
-            "icon": "nav-orders",
-            "items": [/*{
+                "id": "store",
+                "label": "Orders",
+                "address": "orders",
+                "behaviorIds": [16],
+                "icon": "nav-orders",
+                "items": [/*{
                 "id": "orders",
                 "behaviorIds": [16],
                 "label": "Orders",
                 "address": "orders"
             }, */{
-                "id": "orderAttributes",
-                "label": "Attributes",
-                "address": "orderattribute"
+                        "id": "orderAttributes",
+                        "label": "Attributes",
+                        "address": "orderattribute"
+                    }, {
+                        "id": "fulfilment",
+                        "label": "Fulfilment",
+                        "address": "tbd/fulfilment"
+                    }, {
+                        "id": "storecredit",
+                        "label": "Store Credit",
+                        "address": "StoreCredits"
+                    }]
             }, {
-                "id": "fulfilment",
-                "label": "Fulfilment",
-                "address": "tbd/fulfilment"
-            }, {
-                "id": "storecredit",
-                "label": "Store Credit",
-                "address": "StoreCredits"
-            }]
-        }, {
-            "id": "marketing",
-            "label": "Marketing",
-            "address": "discounts",
-            "behaviorIds":[24],
-            "icon": "nav-marketing",
-            "items": [{
-                "id": "discounts",
+                "id": "marketing",
+                "label": "Marketing",
+                "address": "discounts",
                 "behaviorIds": [24],
-                
-                "label": "Discounts",
-                "address": "discounts"
-            }/*, {
+                "icon": "nav-marketing",
+                "items": [{
+                    "id": "discounts",
+                    "behaviorIds": [24],
+
+                    "label": "Discounts",
+                    "address": "discounts"
+                }/*, {
                 "id": "promotions",
                 "label": "Promotions",
                 "address": "tbd/promotions"
@@ -131,122 +131,130 @@ Ext.define('Taco.store.Navigation', {
                 "label": "Targeting",
                 "address": "tbd/targeting"
             }*/]
-        }, {
-            "id": "sitebuilder",
-            "label": "Site Builder",
-            "address": "siteSelection",
-            //"address": "sites/pages",
-            "icon": "nav-sites",
-            "items": [/*{
-                "id": "website",
-                "label": "Website",
-                "address": "sites/pages"
-            }, */{
-                "id": "siteselection",
-                "label": "Website",
-                "address": "siteSelection"
             }, {
-                "id": "themes",
-                "label": "Themes",
-                "address": "themes"
-            }, {
-                "id": "templates",
-                "label": "Templates",
-                "address": "/pageTemplates"
-            }/*, {
+                "id": "sitebuilder",
+                "label": "Site Builder",
+                "address": "siteSelection",
+                "showBreadCrumbs":false,
+                //"address": "sites/pages",
+                "icon": "nav-sites",
+                "items": [{
+                    "id": "webedit",
+                    "visible": false,
+                        "label": "Edit",
+                        "address": "website"
+                    }, {
+                        "id": "themes",
+                        "label": "Themes",
+                        "visible": false,
+                        "address": "themes"
+                    },
+                    {
+                        "id": "redirects",
+                        "label": "Redirects",
+                        "visible": false,
+                        "address": "redirects"
+                    },
+                    {
+                        "id": "generalsettings",
+                        "label": "Site Settings",
+                        "visible": false,
+                        "address": "generalsettings"
+                    }
+                    /*, {
                 "id": "fileManager",
                 "label": "File Manager",
                 "address": "fileManager"
             }*/]
-        }, {
-            "id": "settings",
-            "label": "Settings",
-            "address": "generalsettings",
-            "icon": "nav-settings",
-            "visible": false,
-            "items": [{
-                "id": "generalsettings",
-                "label": "General Settings",
-                "address": "generalsettings"
-            }/*, {
+            }, {
+                "id": "settings",
+                "label": "Settings",
+                "address": "generalsettings",
+                "icon": "nav-settings",
+                "visible": false,
+                "items": [{
+                        "id": "generalsettings",
+                        "label": "General Settings",
+                        "address": "generalsettings"
+                    }/*, {
                 "id": "emailsettings",
                 "label": "Email",
                 "address": "email"
             }*/, {
-                "id": "paymentcheckout",
-                "label": "Payment & Checkout",
-                "address": "settings/paymentAndCheckout"
-            }, {
-                "id": "tax",
-                "label": "Tax",
-                "address": "settings/tax"
-            }, {
-                "id": "shipping",
-                "label": "Shipping",
-                "address": "settings/shipping"
-            }, {
-                "id": "users",
-                "label": "Users",
-                "address": "account/users"
-            }, {
-                "id": "roles",
-                "label": "Roles",
-                "address": "account/roles"
+                        "id": "paymentcheckout",
+                        "label": "Payment & Checkout",
+                        "address": "settings/paymentAndCheckout"
+                    }, {
+                        "id": "tax",
+                        "label": "Tax",
+                        "address": "settings/tax"
+                    }, {
+                        "id": "shipping",
+                        "label": "Shipping",
+                        "address": "settings/shipping"
+                    }, {
+                        "id": "users",
+                        "label": "Users",
+                        "address": "account/users"
+                    }, {
+                        "id": "roles",
+                        "label": "Roles",
+                        "address": "account/roles"
+                    }, {
+                        "id": "publishing",
+                        "label": "Publishing",
+                        "address": "settings/publishing"
+                    }, {
+                        "id": "applications-manage",
+                        "label": "Applications",
+                        "address": "capability"
+                    }, {
+                        "id": "channels",
+                        "label": "Channels",
+                        "address": "channel"
+                    }, {
+                        "id": "fileManager",
+                        "label": "File Manager",
+                        "address": "fileManager"
+                    }]
             }, {
                 "id": "publishing",
-                "label": "Publishing",
-                "address": "settings/publishing"
+                "label": "Publish",
+                "address": "pendingchanges",
+                "icon": "nav-publishing",
+                "behaviorIds": [8],
+                "items": [{
+                        "id": "cmspublishing",
+                        "label": "Content",
+                        "address": "/pendingChanges/cms"
+                    }, {
+                        "id": "catlogpublishing",
+                        "label": "Product",
+                        "address": "/pendingChanges/product"
+                    }]
             }, {
-                "id": "applications-manage",
-                "label": "Applications",
-                "address": "capability"
-            }, {
-                "id": "channels",
-                "label": "Channels",
-                "address": "channel"
-            }, {
-                "id": "fileManager",
-                "label": "File Manager",
-                "address": "fileManager"
-            }]
-        }, {
-            "id": "publishing",
-            "label": "Publish",
-            "address": "pendingchanges",
-            "icon": "nav-publishing",
-            "behaviorIds":[8],
-            "items": [{
-                "id": "cmspublishing",
-                "label": "Content",
-                "address": "/pendingChanges/cms"
-            }, {
-                "id": "catlogpublishing",
-                "label": "Product",
-                "address": "/pendingChanges/product"
-            }]
-        }, {
-            "id": "locations",
-            "label": "Locations",
-            "address": "locations",
-            "icon": "nav-locations",
-            "items": [/*{
+                "id": "locations",
+                "label": "Locations",
+                "address": "locations",
+                "icon": "nav-locations",
+                "items": [/*{
                 "id": "locations-manage",
                 "label": "Locations",
                 "address": "locations"
             },*/ {
-                "id": "locationTypes",
-                "label": "Location Types",
-                "address": "locationTypes"
-            },/* {
+                        "id": "locationTypes",
+                        "label": "Location Types",
+                        "address": "locationTypes"
+                    }, /* {
                 "id": "locations-orders",
                 "label": "Orders",
                 "address": "tbd/orders"
             },*/ {
-                "id": "locations-inventory",
-                "label": "Inventory",
-                "address": "locationInventory"
-            }]
-        }/*, {
+                        "id": "locations-inventory",
+                        "label": "Inventory",
+                        "address": "locationInventory"
+                    }]
+            }/*, {
             "id": "capability",
             "label": "Applications",
             "address": "capability",
