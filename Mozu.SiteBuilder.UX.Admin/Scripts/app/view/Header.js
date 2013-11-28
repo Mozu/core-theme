@@ -48,7 +48,8 @@ Ext.define('Taco.view.Header', {
         });
 
         contextSwitcherTrigger = Ext.create('Taco.view.navigation.ContextSwitcher');
-
+        this.breadCrumb = breadcrumb;
+        
         this.primaryMenu = Ext.create('Taco.view.navigation.PrimaryMenu', {
             trigger: primaryMenuTrigger,
             breadcrumb: breadcrumb
@@ -105,9 +106,9 @@ Ext.define('Taco.view.Header', {
             click: {
                 scope: this.el,
                 element: 'el',
-                fn: function (e, t) {
-                    var link = e.getTarget('a'),
-                        dest;
+                delegate: 'a',
+                fn: function (e, link) {
+                    var dest;
 
                     if (link) {
                         e.preventDefault();

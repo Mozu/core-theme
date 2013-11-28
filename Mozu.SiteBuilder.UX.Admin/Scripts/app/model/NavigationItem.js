@@ -8,7 +8,11 @@ Ext.define('Taco.model.NavigationItem', {
     fields: ['id', 'label', 'icon', 'address', {
         name: 'visible',
         type: "boolean",
-        defaultValue:true
+        defaultValue: true
+    }, {
+        name: 'showBreadCrumbs',
+        type: "boolean",
+        defaultValue: true
     }],
     // belongsTo: 'NavigationItem',
     hasMany: [{

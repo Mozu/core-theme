@@ -46,7 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 DC.Product prod = result.ReadAsAsync().Result;
                 return List2(Mapper.Map<Product>(prod));
             }
-            string responseGroups = !string.IsNullOrEmpty( extFilter.ResponseGroups)? extFilter.ResponseGroups :(extFilter.SearchType == "global" || extFilter.SearchType == "picker" ? "min" : "all");
+            string responseGroups = !string.IsNullOrEmpty(extFilter.ResponseGroups) ? extFilter.ResponseGroups : (extFilter.SearchType == "global" || extFilter.SearchType == "picker" ? "min" : "ProductInCatalogs,Min,Price");
 
             string filter = extFilter.ToFilterString();
             string sort = pagingParams.sort.ToSortString();

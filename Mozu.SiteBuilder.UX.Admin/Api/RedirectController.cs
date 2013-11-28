@@ -11,10 +11,15 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
+using AutoMapper;
+using FiftyOne.Foundation.Mobile.Detection.Matchers;
 using Mozu.Core.Api.Routing;
+using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Navigation;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -34,9 +39,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
          [HttpGetRoute(UriTemplate = "list")]
          public async Task<Response<List<RedirectEntry>>> List([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, [FromUri] bool draft = false)
          {
-             var list = await _redirectRepository.FetchRedirectEntries();
-             var tot = list.Count;
-             list = list.Skip((pagingParams.pageIndex.Value - 1)*pagingParams.pageSize.Value).Take(pagingParams.pageSize.Value).ToList();
+             var dic = await _redirectRepository.FetchRedirectEntries();
+             var tot = dic.Count;
+             var list = dic.Values.OrderBy(x=> x.Source ).Skip((pagingParams.pageIndex.Value - 1) * pagingParams.pageSize.Value).Take(pagingParams.pageSize.Value).ToList();
              return List2(list, tot);
          }
 
@@ -49,21 +54,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
          [HttpPostRoute(UriTemplate = "edit")]
          public async Task<Response<List<RedirectEntry>>> Edit(List<RedirectEntry> redirects)
          {
-             var list = await _redirectRepository.FetchRedirectEntries();
-             foreach (var redirectEntry in redirects)
-             {
-                 var idx = list.FindIndex(x => x.Source == redirectEntry.Source);
-                 if (idx > -1)
-                 {
-                     list[idx] = redirectEntry;
-                 }
-                 else
-                 {
-                     list.Add(redirectEntry);
-                 }
-             }
-             list = list.OrderBy(x => x.Source).ToList();
-             list = await _redirectRepository.UpdateRedirectEntries(list);
+             redirects.ForEach(x=>Validate(x));
+             var dic = await _redirectRepository.FetchRedirectEntries();
+             EnumerableExtensions.Each(redirects, x=>dic[x.Source]= x);
+
+             dic = await _redirectRepository.UpdateRedirectEntries(dic);
 
              return List2(redirects);
          }
@@ -71,18 +66,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
          [HttpPostRoute(UriTemplate = "delete")]
          public async Task<Response<List<RedirectEntry>>> Delete(List<RedirectEntry> redirects)
          {
-             var list = await _redirectRepository.FetchRedirectEntries();
-             foreach (var redirectEntry in redirects)
-             {
-                 var idx = list.FindIndex(x => x.Source == redirectEntry.Source);
-                 if (idx > -1)
-                 {
-                    list.RemoveAt(idx);
-                 }
-                 
-             }
+             var dic = await _redirectRepository.FetchRedirectEntries();
+             EnumerableExtensions.Each(redirects, x=>dic.Remove(x.Source));
           //   list = list.OrderBy(x => x.Source).ToList();
-             list = await _redirectRepository.UpdateRedirectEntries(list);
+             dic = await _redirectRepository.UpdateRedirectEntries(dic);
 
              return List2(redirects);
          }
@@ -94,27 +81,137 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
              var ms = new MemoryStream();
              var sw = new StreamWriter(ms);
-             var list = await _redirectRepository.FetchRedirectEntries();
+             var dic = await _redirectRepository.FetchRedirectEntries();
         
              sw.WriteLine("source,destination,rewrite");
-             list.ForEach(x => sw.WriteLine("\"{0}\",\"{1}\",{2}", x.Source.Replace("\"", "\"\""), x.Destination.Replace("\"", "\"\""), x.IsRewrite.GetValueOrDefault(false) ? 1 : 0));
+             EnumerableExtensions.Each(dic.Values, x =>
+             {
+                 EscapeWrite(sw,x.Source);
+                 sw.Write(',');
+                 EscapeWrite(sw, x.Destination);
+                 sw.Write( ',');
+                 sw.WriteLine(x.IsRewrite.GetValueOrDefault(false) ? 1 : 0);
+                     
+             });
              sw.Flush();
              ms.Position = 0;
-             var content = new StreamContent(ms);
-             var resp = Request.CreateResponse(HttpStatusCode.OK, content);
+             
+             var resp = Request.CreateResponse(HttpStatusCode.OK);
+             resp.Content = new StreamContent(ms);
              resp.Content.Headers.ContentType= new MediaTypeHeaderValue("text/csv");
              resp.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-             resp.Content.Headers.ContentDisposition.Name = "export";
-             resp.Content.Headers.ContentDisposition.FileName = "export.csv";
+             resp.Content.Headers.ContentDisposition.Name = "redirect";
+             resp.Content.Headers.ContentDisposition.FileName = "redirects_export.csv";
              
              return resp;
          }
 
+         void EscapeWrite(TextWriter  sw ,string inSTr)
+         {
+             if (inSTr.IndexOf('\"') > -1 )
+             {
+                 sw.Write('\"');
+                 sw.Write(inSTr.Replace("\"", "\"\""));
+                 sw.Write('\"');
+                 
+                     
+             }
+             else if (inSTr.IndexOf('\"') > -1 || inSTr.IndexOf(',') > -1)
+             {
+                 sw.Write('\"');
+                 sw.Write(inSTr);
+                 sw.Write('\"');
 
+             }
+             else
+             {
+                 sw.Write(inSTr);
+             }
+             
+         }
+
+         private void Validate(RedirectEntry entry, int? lineNumber = null)
+         {
+             bool isValid = true;
+
+             if (string.IsNullOrWhiteSpace(entry.Source) || string.IsNullOrWhiteSpace(entry.Destination))
+             {
+                 isValid = false;
+             }
+             else 
+             {
+                 if (entry.Source[0] == '/')
+                 {
+                     entry.Source = entry.Source.Substring(1);    
+                 }
+                 if (entry.Destination [0] == '/')
+                 {
+                     entry.Destination = entry.Destination.Substring(1);
+                 }
+             }
+
+
+
+             if (!isValid)
+             {
+
+                 var json = JsonConvert.SerializeObject(entry, Formatting.None); 
+
+                 if (lineNumber.HasValue)
+                 {
+                     throw new InvalidOperationException(string.Format("invalid entry on line {0}. ({1})", lineNumber.Value,json));
+                 }
+                 else
+                 {
+                     throw new InvalidOperationException(string.Format("invalid entry ({0})", json));
+                 }
+
+             }
+         }
+    
          [HttpPostRoute(UriTemplate = "import")]
          public async Task<HttpResponseMessage> Import()
          {
-             throw new NotImplementedException();
+
+             MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(System.IO.Path.GetTempPath());
+             var  bodyparts = await Request.Content.ReadAsMultipartAsync(streamProvider);
+             var fileinfo = new FileInfo(streamProvider.FileData.SingleOrDefault().LocalFileName);
+
+             var file = bodyparts.Contents.First();
+             Dictionary<string, RedirectEntry> dic = new Dictionary<string, RedirectEntry>(StringComparer.OrdinalIgnoreCase);
+                 
+             using (var stream = fileinfo.OpenRead())
+             {
+                 using (CsvReader rdr = new CsvReader(stream))
+                 {
+                     bool first = true;
+                     foreach (string[] row in rdr.RowEnumerator)
+                     {
+                         if (first)
+                         {
+                             first = false;
+                             if (string.Equals(row[0], "source", StringComparison.OrdinalIgnoreCase))
+                             {
+                                 continue;
+                             }
+                         }
+
+                         var entry = new RedirectEntry()
+                                         {
+                                             Source = row[0],
+                                             Destination = row[1],
+                                             IsRewrite = row.Length > 2 && row[2] == "1"
+                                         };
+                         Validate(entry, dic.Count );
+                             dic[entry.Source] = entry;
+                         
+
+                     }
+                 }
+             }
+
+             dic = await _redirectRepository.UpdateRedirectEntries(dic);
+             return Request.CreateResponse(HttpStatusCode.OK, EmptySingle2<bool>());
          }
 
 

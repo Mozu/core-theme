@@ -9,10 +9,11 @@ Ext.define('Taco.view.redirects.Index', {
     ],
     typeName: 'Redirects',
     gridHeaderLabel: 'Redirects',
+    requiresContextOfType: 's',
+    
+    
 
-    //editorName: 'Taco.view.locationType.Edit',
-
-    //plural: false,
+    
     modelName: 'Taco.model.RedirectEntry',
 
     store: { type: 'Taco.store.RedirectEntries' },
@@ -64,7 +65,22 @@ Ext.define('Taco.view.redirects.Index', {
                 },
                 text: 'Rewrite',
                 width: 100
-            }]
+            }, {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                width: 100,
+                menuItems: [{
+                    text: 'Delete',
+                    requiredBehaviors: {
+                        model: 'Taco.model.RedirectEntry',
+                        behavior: 'destroy'
+                    },
+                    menuColumnHandler: function (item, eventData) {
+                        eventData.record.destroy();
+                    }
+                }]
+            }
+        ]
     },
     initComponent: function () {
         this.header = this.header || {};
@@ -75,18 +91,24 @@ Ext.define('Taco.view.redirects.Index', {
             hidden: true,
             name: 'file',
             listeners: {
-                'change': function (fb, v) {
-                    this.scope.onUploadFile(fb.fileInputEl.dom.files);
-                }
-            },
-            scope: this
+                afterrender: function (cmp) {
+                    //cmp.fileInputEl.set({accept: '.csv'});
+                },
+                change: function (cmp, v) {
+                    this.onImport();
+                   // cmp.fileInputEl.set({ accept: '.csv' });
+                },
+                scope: this
+               
+            }
         });
 
         this.importForm = Ext.create('Ext.form.Panel',
             {
                 hidden: true,
                 url: '/admin/app/redirects/import',
-                items: [this.uploadButton]
+                items: [this.uploadButton],
+                
             });
         this.header = Ext.apply({}, this.header);
         this.header.actions = [
@@ -97,6 +119,7 @@ Ext.define('Taco.view.redirects.Index', {
                 ui: 'action',
                 hidden: !this.allowCreate(),
                 handler: function () {
+                    this.uploadButton.fileInputEl.set({ accept: '.csv' });
                     this.uploadButton.fileInputEl.dom.click();
                 },
                 scope: this
@@ -127,15 +150,21 @@ Ext.define('Taco.view.redirects.Index', {
     onImport: function () {
         this.importForm.submit({
             success: function (form, action) {
-                Ext.Msg.alert('Success', action.result.message);
+               // Ext.Msg.alert('Success', action.result.message);
+                Taco.app.fireEvent('setmessage', 'imported', 'status');
+                this.store.reload();
+
             },
             failure: function (form, action) {
-                Ext.Msg.alert('Failed', action.result ? action.result.message : 'No response');
-            }
+               // Ext.Msg.alert('Failed', action.result ? action.result.message : 'No response');
+                Taco.app.fireEvent('setmessage', 'Failed:' + action.result ? action.result.message : 'No response', 'error');
+            },
+            scope:this
         });
     },
     onExport: function () {
         window.location.href = '/admin/app/redirects/export';
 
     }
+    
 });

@@ -108,11 +108,11 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
         var bc = this.breadcrumb,
             data = Ext.apply({ selected: parent == selected }, parent.getData()),
             subData = [];
-       
-        parent.items().each(function (subRecord) {
-            subData.push(Ext.apply({ selected: subRecord == selected }, subRecord.getData()));
-        });
-
+            if (parent.get('showBreadCrumbs')) {
+            parent.items().each(function (subRecord) {
+                subData.push(Ext.apply({ selected: subRecord == selected }, subRecord.getData()));
+            });
+        }
 
         Ext.apply(data, { items: subData });
         bc.update(data);
