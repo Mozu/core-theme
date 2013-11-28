@@ -148,7 +148,7 @@ Ext.define('Taco.Application', {
     context: null,
     constructor: function (config) {
 
-        this.context = Ext.create('Taco.core.context.TaContext', Taco.User.taContext);
+        this.context = Ext.create('Taco.core.context.TaContext', Taco.user.taContext);
 
         Ext.override(Ext.Component, {
             beforeRender: function () {
@@ -161,7 +161,7 @@ Ext.define('Taco.Application', {
                     Ext.each(me.requiredBehaviors, function (reqBeh) {
                         var model;
                         if (Ext.isNumber(reqBeh)) {
-                            if (!Ext.Array.contains(Taco.User.behaviors, reqBeh)) {
+                            if (!Ext.Array.contains(Taco.user.behaviors, reqBeh)) {
                                 me.hidden = true;
                             }
                         }

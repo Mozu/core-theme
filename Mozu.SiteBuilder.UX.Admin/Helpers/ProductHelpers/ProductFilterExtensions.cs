@@ -143,6 +143,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                         return string.Format("productUsage eq {0}", value);
                     }
                 }
+                case "modifiedby":
+                return string.Format("(createby eq \"{0}\" or updateby eq \"{0}\")", filter.value );
                 case "modifiedfrom" :
                 return string.Format("updatedate ge {0}", filter.value);
                 case "modifiedto":

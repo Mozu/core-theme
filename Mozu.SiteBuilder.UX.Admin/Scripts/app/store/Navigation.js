@@ -10,7 +10,7 @@ Ext.define('Taco.store.Navigation', {
             var ret = true;
             if (record.raw.behaviorIds && record.raw.behaviorIds.length) {
                 Ext.each(record.raw.behaviorIds, function (behaviorId) {
-                    if (Taco.User.behaviors && Ext.Array.indexOf(Taco.User.behaviors, behaviorId) === -1) {
+                    if (Taco.user.behaviors && Ext.Array.indexOf(Taco.user.behaviors, behaviorId) === -1) {
                         return ret = false;
                     }
                     return true;

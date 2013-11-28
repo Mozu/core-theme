@@ -74,7 +74,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
             
         if (me.behaviors && me.behaviors[method]) {
             Ext.each(me.behaviors[method], function (behavior) {
-                if (Taco.User.behaviors.indexOf(behavior) == -1) {
+                if (Taco.user.behaviors.indexOf(behavior) == -1) {
                     res = false;
                     return false;
                 }

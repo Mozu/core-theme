@@ -25,7 +25,7 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             xtype: 'button',
             ui: 'link',
             scale: 'medium',
-            text: Taco.User.name || Taco.User.email || '[user]',
+            text: Taco.user.name || Taco.user.email || '[user]',
             menuAlign: 'tr-br?',
             menu: {
                 plain: true,
