@@ -1,6 +1,7 @@
 ﻿@using System.Diagnostics
 @using System.Web.Configuration
 @using Mozu.Core.Api.Contracts
+@using Mozu.SiteBuilder.Mvc
 @using Mozu.SiteBuilder.UX.Admin.Api
 @using Newtonsoft.Json
 @using Mozu.Core.Settings;
@@ -44,7 +45,7 @@
                                  siteUsersRaw = siteUsers
                              };
     };
-    window.Taco = @Html.Raw(JsonConvert.SerializeObject(windowTaco));
+    window.Taco = @Html.Raw(JsonConvert.SerializeObject(windowTaco,Newtonsoft.Json.Formatting.None,CaseInsensitiveJsonSerializerSettings.Default));
     window.Taco.adminAppPath = window.location.protocol + "//" + window.location.host + '@Url.Content("~")';
     @if (ViewData["useGoogleAnalytics"] as string == "true")
     {

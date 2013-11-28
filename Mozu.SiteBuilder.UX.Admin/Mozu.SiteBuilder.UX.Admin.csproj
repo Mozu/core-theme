@@ -381,6 +381,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\AdminUserController.cs" />
     <Compile Include="Api\AddressController.cs" />
     <Compile Include="Api\ApiAuthorizeAttribute.cs" />
     <Compile Include="Api\AttributeController.cs" />
@@ -612,6 +613,7 @@
     <Content Include="Scripts\app\core\util\Common.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
     <Content Include="Scripts\app\core\ux\browser\SearchList.js" />
+    <Content Include="Scripts\app\core\ux\form\field\AdminUser.js" />
     <Content Include="Scripts\app\core\ux\form\field\SingleImageField.js" />
     <Content Include="Scripts\app\core\ux\form\field\EditableDisplayField.js" />
     <Content Include="Scripts\app\core\ux\form\field\InlinePicker.js" />
@@ -658,7 +660,9 @@
     <Content Include="Scripts\app\shared\view\form\ExtensibleAttribute.js" />
     <Content Include="Scripts\app\shared\view\modal\StoreCredit.js" />
     <Content Include="Scripts\app\shared\view\modal\Wishlist.js" />
+    <Content Include="Scripts\app\store\AdminUsers.js" />
     <Content Include="Scripts\app\store\Capability.js" />
+    <Content Include="Scripts\app\store\ChannelPicker.js" />
     <Content Include="Scripts\app\store\Channels.js" />
     <Content Include="Scripts\app\store\ProductBundlePicker.js" />
     <Content Include="Scripts\app\store\RedirectEntries.js" />
@@ -676,6 +680,7 @@
     <Content Include="Scripts\app\view\capability\Form.js" />
     <Content Include="Scripts\app\view\capability\Index.js" />
     <Content Include="Scripts\app\view\channel\Index.js" />
+    <Content Include="Scripts\app\view\order\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\redirects\Index.js" />
     <Content Include="Scripts\app\view\customerAttribute\Edit.js" />
     <Content Include="Scripts\app\view\customerAttribute\Form.js" />
@@ -3240,7 +3245,7 @@
     <Content Include="Scripts\app\model\ProductOptionValue.js" />
     <Content Include="Scripts\app\model\ProductProperty.js" />
     <Content Include="Scripts\app\model\ProductVariation.js" />
-    <Content Include="Scripts\app\model\User.js" />
+    <Content Include="Scripts\app\model\AdminUser.js" />
     <Content Include="Scripts\app\model\UspsConfiguration.js" />
     <Content Include="Scripts\app\model\UspsSharedShippingMethod.js" />
     <Content Include="Scripts\app\model\WidgetDefinition.js" />

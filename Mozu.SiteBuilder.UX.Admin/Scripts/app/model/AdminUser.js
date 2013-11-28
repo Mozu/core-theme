@@ -1,9 +1,9 @@
 ﻿/**
-* @class Taco.model.User
+* @class Taco.model.AdminUser
 * @author jons mom!
 */
 
-Ext.define('Taco.model.User', {
+Ext.define('Taco.model.AdminUser', {
     extend: 'Taco.core.data.Model',
     behaviors: {
         read: 28,
@@ -12,26 +12,17 @@ Ext.define('Taco.model.User', {
         destroy: 31
     },
     fields: [
-        { name: 'id', type: 'string', isHidden: true },
-        { name: 'email', type: 'string' },
-        { name: 'expiration', type: 'date' },
-        { name: 'isAuthenticated', type: 'boolean' },
-        { name: 'accessLevel', type: 'string' },
-        { name: 'activity', type: 'string' },
-         { name: 'name', type: 'string' },
+        { name: 'id', type: 'string'},
+        { name: 'emailAddress', type: 'string' },
+        {name:'fullName' ,convert:function (v, r) {
+            return r.raw.firstName + ' ' + r.raw.lastName;
+        }},
          { name: 'firstName', type: 'string' },
          { name: 'lastName', type: 'string' },
-         { name: 'siteName', type: 'string' }
-         
+        { name: 'roles', type: 'auto' , defaultValue:[]},
     ],
 
 
-
-    // Event name overrides
-    saveSuccess: "usersaved",
-    saveFailure: "usersavefailure",
-    destroyFailure: "userdestroyfailure",
-    destroySuccess: "userdestroysuccess",
 
     proxy: {
         type: 'ajaxproxy',

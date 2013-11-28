@@ -1,80 +1,84 @@
 ﻿/**
  * @class Taco.view.product.AdvancedSearchForm
  */
-Ext.define('Taco.view.product.AdvancedSearchForm', {
+Ext.define('Taco.view.order.AdvancedSearchForm', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
-        'Taco.core.ux.form.field.AdminUser'
+        'Taco.core.ux.form.field.AdminUser',
+        'Taco.store.ChannelPicker'
     ],
     getSupportingStores: function () {
         return this.supportingStores;
     },
-
+    defaults: {
+        width: 480,
+        xtype: 'textfield'
+    },
     initComponent: function () {
-       
+
         this.supportingStores = {
-            productType: Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes'),
-            productUsage: Ext.create('Ext.data.Store', {
+            channel: Taco.core.data.StoreManager.getOrCreate('Taco.store.ChannelPicker'),
+            orderStatus: Ext.create('Ext.data.Store', {
                 fields: ['id', "name"],
                 data: [
                     {
-                        name: "Standard Product",
-                        id: "Standard"
+                        name: "Submitted ",
+                        id: "Submitted "
                     }, {
-                        name: "Configurable Product With Options",
-                        id: "Configurable"
+                        name: "Processing ",
+                        id: "Processing "
                     }, {
-                        name: "Product Bundle",
-                        id: "Bundle"
+                        name:'Accepted',
+                        id:'Accepted'
+                    },{
+                        name: "Completed",
+                        id: "Completed "
                     }, {
-                        name: "Bundle Component",
-                        id: "Component"
-                    }
+                        name: "Cancelled ",
+                        id: "Cancelled "
+                    }                
                 ]
             }),
             modifiedBy: Taco.core.data.StoreManager.getOrCreate('Taco.store.AdminUsers')
-    };
+        };
+
+
         this.items = [{
-                xtype: 'textfield',
                 name: 'keyword',
                 fieldLabel: 'Keyword Search'
             }, {
-                xtype: 'textfield',
-                name: 'productCode',
-                fieldLabel: 'Product Code'
-            }, {
                 xtype: 'combobox',
-                name: 'productType',
-                fieldLabel: 'Product Type',
+                name: 'orderStatus',
+                fieldLabel: 'Order Status',
                 valueField: 'id',
                 displayField: 'name',
                 queryMode: 'local',
                 valueNotFoundText: 'not found',
                 editable: false,
-                forceSelection: true,
-                store: this.supportingStores.productType
+                //     forceSelection: true,
+                store: this.supportingStores.orderStatus
+            }, {
+                xtype: 'combobox',
+                name: 'channel',
+                fieldLabel: 'Channel',
+                valueField: 'code',
+                displayField: 'name',
+                queryMode: 'local',
+                valueNotFoundText: 'not found',
+                editable: false,
+                //     forceSelection: true,
+                store: this.supportingStores.channel
             },
             {
-                xtype: 'combobox',
-                name: 'productUsage',
-                fieldLabel: 'Product Usage',
-                valueField: 'id',
-                displayField: 'name',
-                queryMode: 'local',
-                valueNotFoundText: 'not found',
-                editable: false,
-                forceSelection: true,
-                store: this.supportingStores.productUsage
-            }, {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Price Range',
+                fieldLabel: 'Total Price Range',
                 layout: {
                     type: 'hbox',
                     align: 'middle'
                 },
                 items: [{
                         xtype: 'numberfield',
-                        name: 'minPrice',
+                        name: 'minTotal',
                         hideTrigger: true,
                         keyNavEnabled: false,
                         mouseWheelEnabled: false,
@@ -85,7 +89,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                         margin: '0 10'
                     }, {
                         xtype: 'numberfield',
-                        name: 'maxPrice',
+                        name: 'maxTotal',
                         hideTrigger: true,
                         keyNavEnabled: false,
                         mouseWheelEnabled: false,
@@ -103,7 +107,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                 editable: false,
                 forceSelection: true,
                 store: this.supportingStores.modifiedBy
-            }, 
+            },
             {
                 xtype: 'fieldcontainer',
                 fieldLabel: 'Modfied Range',

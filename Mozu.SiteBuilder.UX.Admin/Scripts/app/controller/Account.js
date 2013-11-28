@@ -6,13 +6,13 @@
 Ext.define('Taco.controller.Account', {
     extend: 'Taco.core.Controller',
     modelName: 'Taco.model.Account',
-    requires: ['Taco.view.account.Overview', 'Taco.view.account.Billing', 'Taco.view.account.Users', 'Taco.model.User'], 
+    requires: ['Taco.view.account.Overview', 'Taco.view.account.Billing', 'Taco.view.account.Users', 'Taco.model.AdminUser'], 
     views: ['account.Overview', 'account.Billing', 'account.Users'],
 
     index: function () {
         var me = this;
             
-        Ext.ModelManager.getModel('Taco.model.User').load(Taco.User.id, {
+        Ext.ModelManager.getModel('Taco.model.AdminUser').load(Taco.user.id, {
             success: function (data) {
                 me.createContentView('Taco.view.account.Overview', {
                     recordId: data

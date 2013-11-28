@@ -24,7 +24,7 @@ Ext.define('Taco.model.OrderNote', {
     }, {
         "name": "createBy",
         "type": "string",
-        defaultValue: Taco.User.id,
+        defaultValue: Taco.user.id,
         "useNull": true
     }, {
         "name": "updateDate",
@@ -54,7 +54,7 @@ Ext.define('Taco.model.OrderNote', {
             return v;
         }
         if (!user) {
-            Ext.ModelManager.getModel('Taco.model.User').load(record.data.createBy, {
+            Ext.ModelManager.getModel('Taco.model.AdminUser').load(record.data.createBy, {
                 success: function (user) {
                     cache[record.data.createBy] = user;
                     record.set('createByName', user.get('firstName') + ' ' + user.get('lastName'));

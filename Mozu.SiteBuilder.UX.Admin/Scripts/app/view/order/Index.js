@@ -9,7 +9,8 @@ Ext.define('Taco.view.order.Index', {
     requires: [
         'Taco.model.Order',
         'Taco.store.Orders',
-        'Taco.view.order.modal.ProductConfigurator'
+        'Taco.view.order.modal.ProductConfigurator',
+        'Taco.view.order.AdvancedSearchForm'
     ],
 
     typeName: 'Order',
@@ -21,62 +22,7 @@ Ext.define('Taco.view.order.Index', {
     //todo:  changing to s until orders support site id in resource
    // requiresContextOfType: ['s'],
 
-    filterFormConf: {
-        width: 600,
-        cls: Taco.baseCSSPrefix + 'combofilter-form orders',
-        items: [{
-            xtype: 'container',
-            justify: false,
-            defaults: {
-                xtype: 'textfield',
-                width: 560
-            },
-            items: [{
-                name: 'orderNumber',
-                fieldLabel: 'Order Number',
-                width: 160
-            }, {
-                name: 'billingContactFirstName',
-                fieldLabel: 'First Name',
-                width: 160
-            }, {
-                name: 'billingContactLastName',
-                fieldLabel: 'Last Name',
-                width: 160
-            }, {
-                name: 'billingContactAddress',
-                fieldLabel: 'Address',
-                width: 160
-            }, {
-                name: 'channelName',
-                fieldLabel: 'Channel',
-                width: 160
-            }]
-        }]
-    },
-
-    filterProperties: [{
-        property: 'all',
-        text: 'All',
-        isDefault: true
-        }, {
-            property: 'orderNumber',
-            text: 'Order Number'
-        }, {
-            property: 'billingContactFirstName',
-            text: 'First Name'
-        }, {
-            property: 'billingContactLastName',
-            text: 'Last Name'
-        }, {
-            property: 'billingContactAddress',
-            text: 'Address'
-        }, {
-            property: 'channel',
-            text: 'Channel'
-        }
-    ],
-
+   
 
     gridPanelConf: {
         columns: [{
@@ -239,6 +185,15 @@ Ext.define('Taco.view.order.Index', {
             infoRecord;
 
         this.callParent(arguments);
-    }
+    },
 
+
+    initComponent: function () {
+        var asf = Ext.create('Taco.view.order.AdvancedSearchForm');
+        this.advancedSearchConfig = {
+            form: asf,
+            stores: asf.getSupportingStores()
+        };
+        this.callParent(arguments);
+    }
 });
