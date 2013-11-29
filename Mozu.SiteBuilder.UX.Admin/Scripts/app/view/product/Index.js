@@ -289,13 +289,9 @@ Ext.define('Taco.view.product.Index', {
         isDragable: false,
         nameField: 'productName'
     },
-    initComponent: function () {
-        var asf = Ext.create('Taco.view.product.AdvancedSearchForm');
-        this.advancedSearchConfig = {
-            form: asf,
-            stores: asf.getSupportingStores()
-        };
-        this.callParent(arguments);
+    
+    advancedSearchConfig : {
+        advancedFormCls: 'Taco.view.product.AdvancedSearchForm'
     },
     
     launchLoadedEditor: function (record, options) {

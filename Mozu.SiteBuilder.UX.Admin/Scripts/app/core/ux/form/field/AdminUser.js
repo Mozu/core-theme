@@ -3,24 +3,20 @@
  */
 
 Ext.define('Taco.core.ux.form.field.AdminUser', {
-    extend: 'Ext.ux.form.field.BoxSelect',
-    alias: ['widget.taco.field.product','widget.taco-productfield'],
+    extend: 'Ext.form.ComboBox',
+    alias: ['widget.taco-adminuserfield'],
     requires:[
         'Taco.store.AdminUsers'
     ],
 
-    forceSelection: true,
-    minChars: 3,
-    triggerOnClick: false,
-    typeAhead: true,
-
-    displayField: 'fullName',
-    fieldLabel: 'Select User',
-    queryMode: 'local',
+    
+    fieldLabel: 'Users',
     valueField: 'id',
-
-    initComponent : function () {
-        this.store = Taco.core.data.StoreManager.getOrCreate('Taco.store.AdminUsers');
-        this.callParent(arguments);
-    }
+    displayField: 'fullName',
+    queryMode: 'local',
+    valueNotFoundText: 'not found',
+    editable: true,
+    forceSelection: true,
+    
+    store: { type: 'Taco.store.AdminUsers' }
 });

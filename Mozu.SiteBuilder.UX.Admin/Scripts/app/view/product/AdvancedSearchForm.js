@@ -6,128 +6,140 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
     requires: [
         'Taco.core.ux.form.field.AdminUser'
     ],
-    getSupportingStores: function () {
-        return this.supportingStores;
+
+    defaults: {
+        width: 450,
+        xtype: 'textfield'
     },
+    items: [{
+        name: 'keyword',
+        fieldLabel: 'Keyword Search'
+    }, {
+        name: 'productCode',
+        fieldLabel: 'Product Code'
+    },
+        {
+            xtype:'container',
+            layout: 'hbox',
+           
+            items: [
+                {
+                    xtype: 'combobox',
+                    name: 'productType',
+                    fieldLabel: 'Product Type',
+                    valueField: 'id',
+                    width:200,
+                    displayField: 'name',
+                    queryMode: 'local',
+                    allowBlank: true,
+                    valueNotFoundText: 'not found',
+                    editable: true,
+                    forceSelection: true,
+                    store: { type: 'Taco.store.ProductTypes' }
+                },{ width:20},
+                {
+                    xtype: 'combobox',
+                    name: 'productUsage',
+                    fieldLabel: 'Product Usage',
+                    width: 200,
+                    valueField: 'id',
+                    displayField: 'name',
+                    queryMode: 'local',
+                    valueNotFoundText: 'not found',
+                    editable: true,
+                    forceSelection: true,
+                    store: Ext.create('Ext.data.Store', {
+                        fields: ['id', "name"],
+                        data: [
+                            {
+                                name: "Standard Product",
+                                id: "Standard"
+                            }, {
+                                name: "Configurable Product With Options",
+                                id: "Configurable"
+                            }, {
+                                name: "Product Bundle",
+                                id: "Bundle"
+                            }, {
+                                name: "Bundle Component",
+                                id: "Component"
+                            }
+                        ]
+                    })
+                }]
+        },
+        {
+            xtype: 'combo',
+            store: { type: 'Taco.store.Categories' },
 
-    initComponent: function () {
-       
-        this.supportingStores = {
-            productType: Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes'),
-            productUsage: Ext.create('Ext.data.Store', {
-                fields: ['id', "name"],
-                data: [
-                    {
-                        name: "Standard Product",
-                        id: "Standard"
-                    }, {
-                        name: "Configurable Product With Options",
-                        id: "Configurable"
-                    }, {
-                        name: "Product Bundle",
-                        id: "Bundle"
-                    }, {
-                        name: "Bundle Component",
-                        id: "Component"
-                    }
-                ]
-            }),
-            modifiedBy: Taco.core.data.StoreManager.getOrCreate('Taco.store.AdminUsers')
-    };
-        this.items = [{
-                xtype: 'textfield',
-                name: 'keyword',
-                fieldLabel: 'Keyword Search'
-            }, {
-                xtype: 'textfield',
-                name: 'productCode',
-                fieldLabel: 'Product Code'
-            }, {
-                xtype: 'combobox',
-                name: 'productType',
-                fieldLabel: 'Product Type',
-                valueField: 'id',
-                displayField: 'name',
-                queryMode: 'local',
-                valueNotFoundText: 'not found',
-                editable: false,
-                forceSelection: true,
-                store: this.supportingStores.productType
-            },
-            {
-                xtype: 'combobox',
-                name: 'productUsage',
-                fieldLabel: 'Product Usage',
-                valueField: 'id',
-                displayField: 'name',
-                queryMode: 'local',
-                valueNotFoundText: 'not found',
-                editable: false,
-                forceSelection: true,
-                store: this.supportingStores.productUsage
-            }, {
-                xtype: 'fieldcontainer',
-                fieldLabel: 'Price Range',
-                layout: {
-                    type: 'hbox',
-                    align: 'middle'
-                },
-                items: [{
-                        xtype: 'numberfield',
-                        name: 'minPrice',
-                        hideTrigger: true,
-                        keyNavEnabled: false,
-                        mouseWheelEnabled: false,
-                        width: 200
-                    }, {
-                        xtype: 'component',
-                        html: 'to',
-                        margin: '0 10'
-                    }, {
-                        xtype: 'numberfield',
-                        name: 'maxPrice',
-                        hideTrigger: true,
-                        keyNavEnabled: false,
-                        mouseWheelEnabled: false,
-                        width: 200
-                    }]
-            },
-            {
-                xtype: 'combobox',
-                name: 'modifiedBy',
-                fieldLabel: 'Modified By',
-                valueField: 'id',
-                displayField: 'fullName',
-                queryMode: 'local',
-                valueNotFoundText: 'not found',
-                editable: false,
-                forceSelection: true,
-                store: this.supportingStores.modifiedBy
-            }, 
-            {
-                xtype: 'fieldcontainer',
-                fieldLabel: 'Modfied Range',
-                layout: {
-                    type: 'hbox',
-                    align: 'middle'
-                },
-                items: [{
-                        xtype: 'datefield',
-                        name: 'modifiedFrom',
-                        //                    fieldLabel: 'Modified From',
-                        width: 200
-                    }, {
-                        xtype: 'component',
-                        html: 'to',
-                        margin: '0 10'
-                    }, {
-                        xtype: 'datefield',
-                        name: 'modifiedTo',
-                        //fieldLabel: 'Modified To',
-                        width: 200
-                    }]
-            }];
+            name: 'category',
+            fieldLabel: 'Category',
 
-        this.callParent(arguments);
-    }
+            valueField: 'id',
+            displayField: 'name',
+            queryMode: 'local',
+            valueNotFoundText: 'not found',
+            editable: true,
+            forceSelection: true,
+            listeners: {
+                added: function (cmp) {
+                    cmp.hidden = !Taco.app.context.getCatalogId();
+                }
+            }
+        },
+        {
+            xtype: 'fieldcontainer',
+            fieldLabel: 'Price Range',
+            layout: {
+                type: 'hbox',
+                align: 'middle'
+            },
+            items: [{
+                    xtype: 'numberfield',
+                    name: 'minPrice',
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false,
+                    width: 200
+                }, {
+                    xtype: 'component',
+                    html: 'to',
+                    margin: '0 10'
+                }, {
+                    xtype: 'numberfield',
+                    name: 'maxPrice',
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false,
+                    width: 200
+                }]
+        },
+        {
+            xtype: 'taco-adminuserfield',
+            name: 'modifiedBy',
+            fieldLabel: 'Modified By',
+        },
+        {
+            xtype: 'fieldcontainer',
+            fieldLabel: 'Modfied Range',
+            layout: {
+                type: 'hbox',
+                align: 'middle'
+            },
+            items: [{
+                    xtype: 'datefield',
+                    name: 'modifiedFrom',
+                    //                    fieldLabel: 'Modified From',
+                    width: 200
+                }, {
+                    xtype: 'component',
+                    html: 'to',
+                    margin: '0 10'
+                }, {
+                    xtype: 'datefield',
+                    name: 'modifiedTo',
+                    //fieldLabel: 'Modified To',
+                    width: 200
+                }]
+        }]
 });

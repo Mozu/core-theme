@@ -101,28 +101,17 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
                 width: '100%',
                 flex: 1,
                 advancedForm: me.advancedSearchConfig.form,
+                advancedFormCls: me.advancedSearchConfig.advancedFormCls,
                 store: me.createItemStore(),
                 filterStores: me.advancedSearchConfig.stores,
                 value: this.options && this.options.query ?  this.options.query : undefined 
             });
             conf.items.unshift(me.searchBox);
-        }else if (me.filterProperties) {
-            me.searchBox = Ext.widget({
-                xtype: 'taco.combofilter',
-                //width: 675,
-                flex: 1,
-                // value: ['steve'],
-                // margin: '20 0',
-                itemStore: me.createItemStore(),
-                filterForm: me.filterFormConf,
-                filterProperties: me.filterProperties
+        } else if (me.filterProperties) {
+            Ext.log({
+                msg: 'filterProperties depricated',
+                level: 'warn'
             });
-            if (this.options && this.options.query) {
-                me.on('afterrender', function() {
-                    me.searchBox.setValue([this.options.query]);
-                });
-            }
-            conf.items.unshift(me.searchBox);
         } else {
             conf.items.unshift("->");
         }

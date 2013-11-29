@@ -130,6 +130,10 @@ Ext.define('Taco.core.context.TaContext', {
         return this.getCurrentContext();
     },
     getCatalogId: function () {
+        var catId = this.getCurrentContext().getCatalogId();
+        if (catId) {
+            return catId
+        }
         if (this.masterCatalogs.length == 1) {
             return this.masterCatalogs[0].getCatalogId();
         }
