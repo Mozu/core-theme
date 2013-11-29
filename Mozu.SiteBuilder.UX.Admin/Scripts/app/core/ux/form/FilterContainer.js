@@ -28,7 +28,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
     defaultFieldName: 'keyword',
 
     layout: 'hbox',
-    
+
     initComponent: function () {
         var form;
 
@@ -39,7 +39,6 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
              * Return false to cancel the request.
              */
             'beforefilter',
-
             /**
              * @event filter
              * Fires after the filter request has been processed by the server.
@@ -48,35 +47,36 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         );
 
         this.items = [{
-            xtype: 'textfield',
-            itemId: 'textFilter',
-            margin: '0 10 20 0',
-            msgTarget: 'qtip',
-            flex: 1,
-            width: 400,
-            listeners: {
-                specialkey: {
-                    scope: this,
-                    fn: this.handleFieldSubmit
+                xtype: 'textfield',
+                itemId: 'textFilter',
+                margin: '0 10 20 0',
+                msgTarget: 'qtip',
+                flex: 1,
+                width: 400,
+                listeners: {
+                    specialkey: {
+                        scope: this,
+                        fn: this.handleFieldSubmit
+                    }
                 }
-            }
-        }, {
-            xtype: 'button',
-            itemId: 'advancedFilter',
-            ui: 'action',
-            scale: 'medium',
-            glyph: 'XE010@mozicons',
-            width: 57,
-            enableToggle: true,
-            scope: this,
-            toggleHandler: this.handleButtonToggle
-        }];
+            }, {
+                xtype: 'button',
+                itemId: 'advancedFilter',
+                ui: 'action',
+                scale: 'medium',
+                glyph: 'XE010@mozicons',
+                width: 57,
+                enableToggle: true,
+                scope: this,
+                toggleHandler: this.handleButtonToggle
+            }];
 
         this.callParent(arguments);
-
-        this.initFilterStores();
+        
 
         form = this.getAdvancedForm();
+
+
         form.getForm().getFields().each(function (field) {
             field.on({
                 specialkey: {
@@ -89,6 +89,8 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                 }
             });
         }, this);
+
+        this.initFilterStores();
     },
 
     /**
@@ -107,7 +109,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             if (this.store.remoteFilter) {
                 this.filtering = true;
                 this.currentFilterString = filterString;
-                
+
                 this.store.load({
                     params: {
                         advancedSearch: filterString
@@ -141,11 +143,18 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * @return {Ext.form.Panel} The instantiated form.
      */
     getAdvancedForm: function () {
-        if (!this.advancedForm.isComponent) {
-            this.advancedForm = Ext.create('Taco.core.ux.form.Form', this.advancedForm);
+
+        if (this.advancedForm && this.advancedForm.isComponent) {
+            return this.advancedForm;
         }
 
+        if (this.advancedFormCls) {
+            this.advancedForm = Ext.create(this.advancedFormCls);
+        } else {
+            this.advancedForm = Ext.create('Taco.core.ux.form.Form', this.advancedForm);
+        }
         return this.advancedForm;
+
     },
 
     /**
@@ -179,9 +188,10 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                         }
                     }
                 });
+                this.add(this.modal);
             }
 
-            this.modal.showBy(this.down('#textFilter'), 'tl-bl?', [0, 10]);
+            this.modal.showBy(this.down('#textFilter'), 'tr-br?', [0, 10]);
         } else {
             if (this.modal) {
                 this.modal.close();
@@ -229,7 +239,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             if (this.modal) {
                 this.modal.close();
             }
-        
+
             this.syncAndFilter(this.parseTextFilterValue(field));
         }
     },
@@ -240,7 +250,15 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
     initFilterStores: function () {
         var stores = new Ext.util.MixedCollection();
 
-        stores.addAll(this.filterStores);
+        if (this.filterStores) {
+            stores.addAll(this.filterStores);
+        }
+
+        this.getAdvancedForm().getForm().getFields().each(function (field) {
+            if (field.store && !stores.getByKey(field.name)) {
+                stores.add(field.name, field.store);
+            }
+        });
 
         this.filterStores = stores;
     },
@@ -359,7 +377,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
             if (stores.containsKey(fieldName)) {
                 displayField = form.getForm().findField(fieldName).displayField;
-                
+
                 record = this.findNearestRecord(stores.getByKey(fieldName), displayField, rawValue);
 
                 if (record) {

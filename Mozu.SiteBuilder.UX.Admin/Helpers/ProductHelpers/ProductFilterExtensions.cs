@@ -113,6 +113,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         {
             switch (filter.property.ToLowerInvariant())
             {
+                case "categoryid":
+                case "category":
                 case "categoryids":
                     return string.Format("productincatalogs.productcategories.categoryid eq {0}", filter.value);
                 case "isactive":
