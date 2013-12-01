@@ -1,10 +1,12 @@
 ﻿.mz-accountaddressbook {
+    @contactWidth: 240px;
     .mz-accountaddressbook-list {
         margin-top: @gutter/2;
     }
     .mz-accountaddressbook-contact {
         border-right: 1px solid #eee;
         margin: 0 @gutter/2 @gutter/2 0;
+        width: @contactWidth;
         &:last-child {
             border-right-width: 0;
         }
@@ -12,9 +14,10 @@
     }
 
     .mz-accountaddressbook-form {
-        width: auto;
+        width: @contactWidth - (@gutter/2);
         float: left;
         margin: 0 @gutter/2 @gutter/2 0;
+        padding-right: @gutter/2;
     }
 
     .mz-accountaddressbook-actions {

@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-11-26
+ * Mozu JavaScript SDK - v0.2.0 - 2013-11-27
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2697,6 +2697,7 @@ var ApiReference = (function () {
                 returnType: 'contacts'
             },
             'delete-contact': {
+                verb: 'DELETE',
                 template: '{+customerService}{customer.id}/contacts/{id}',
                 shortcutParam: 'id',
                 includeSelf: {

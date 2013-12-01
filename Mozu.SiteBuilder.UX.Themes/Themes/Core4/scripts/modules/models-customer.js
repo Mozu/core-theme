@@ -5,8 +5,10 @@
         contactTypeListeners = {};
     _.each(contactTypes, function(contactType) {
         contactTypeListeners['change:is'+contactType+'Contact'] = function(model, yes) {
-            var types = this.get('types') || [],
-                newType = { name: contactType },
+            // cheap copy to avoid accidental persistence
+            var types = this.get('types');
+            types = types ? JSON.parse(JSON.stringify(types)) : [];
+            var newType = { name: contactType },
                 isAlready = _.findWhere(types, newType);
             if (yes && !isAlready) {
                 types.push(newType);
@@ -42,23 +44,7 @@
                 msg: Hypr.getLabel('lastNameMissing')
             }
         },
-        //toJSON: function() {
-        //    var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
-        //    if (!j.types || j.types.length === 0) {
-        //        j.types = [
-        //            {
-        //                name: "Billing"
-        //            }
-        //        ]
-        //    }
-        //    return j;
-        //},
-        //isPrimaryShippingContact: function () {
-        //    return !!_.findWhere(this.get('types'), { isPrimary: true, name: "Shipping" });
-        //},
-        //isPrimaryBillingContact: function () {
-        //    return !!_.findWhere(this.get('types'), { isPrimary: true, name: "Billing" });
-        //},
+
         toJSON: function(options) {
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
             if (!options || !options.helpers) {
@@ -74,22 +60,27 @@
             if (!id) return this.apiCreate();
             return this.apiUpdate();
         },
+        setTypeHelpers: function(model, types) {
+            var self = this;
+            _.each(contactTypes, function (contactType) {
+                self.unset('is' + contactType + 'Contact');
+                self.unset('isPrimary' + contactType + 'Contact');
+                _.each(types, function (type) {
+                    var toSet = {};
+                    if (type.name === contactType) {
+                        toSet['is' + contactType + 'Contact'] = true;
+                        if (type.isPrimary) toSet['isPrimary' + contactType + 'Contact'] = true;
+                        self.set(toSet, { silent: true });
+                    }
+                });
+            });
+        },
         initialize: function () {
             var self = this,
                 types = this.get('types')
-            if (types) {
-                _.each(types, function (type) {
-                    _.each(contactTypes, function(contactType) {
-                        var toSet = {};
-                        if (type.name === contactType) {
-                            toSet['is'+contactType+'Contact'] = true;
-                            if (type.isPrimary) toSet['isPrimary'+contactType+'Contact'] = true;
-                            self.set(toSet, { silent: true });
-                        }
-                    });
-                });
-            }
+            if (types) this.setTypeHelpers(null, types);
             this.on(contactTypeListeners);
+            this.on('change:types', this.setTypeHelpers, this);
         }
     }),
 
@@ -166,10 +157,6 @@
             var primaryBillingContact = this.getPrimaryBillingContact();
             if (primaryBillingContact && primaryBillingContact instanceof CustomerContact) this.set('primaryBillingContact', primaryBillingContact, { useExistingInstances: true });
 
-            //this.set({
-            //    editingCard: new PaymentMethods.CreditCard({}),
-            //    editingContact: new CustomerContact({})
-            //}, { useExistingInstances: true });
             this.get('editingContact').set('accountId', this.get('id'));
         },
         toJSON: function(options) {
@@ -251,7 +238,7 @@
         beginEditContact: function (id) {
             var toEdit = this.get('contacts').get(id);
             if (toEdit)
-                this.get('editingContact').set(toEdit.toJSON({ helpers: true }), { silent: true });
+                this.get('editingContact').set(toEdit.toJSON({ helpers: true, ensureCopy: true }));
         },
         endEditContact: function() {
             var editingContact = this.get('editingContact');
@@ -277,7 +264,7 @@
             var contactsCollection = this.get('contacts');
             this.syncApiModel();
             return this.apiModel.getContacts().then(function (cc) {
-                contactsCollection.set(cc.data.items);
+                contactsCollection.reset(cc.data.items);
                 return self;
             });
         }

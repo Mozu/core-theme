@@ -343,6 +343,7 @@ var ApiReference = (function () {
                 returnType: 'contacts'
             },
             'delete-contact': {
+                verb: 'DELETE',
                 template: '{+customerService}{customer.id}/contacts/{id}',
                 shortcutParam: 'id',
                 includeSelf: {
