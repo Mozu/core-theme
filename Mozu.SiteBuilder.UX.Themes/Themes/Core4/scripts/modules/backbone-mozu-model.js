@@ -144,7 +144,7 @@ define([
                         if (options.unset) {
                             relation.clear();
                         } else {
-                            relation.set(val);
+                            relation.set((val && val.toJSON) ? val.toJSON() : val);
                         }
                         return relation;
                     }
@@ -323,7 +323,7 @@ define([
                     }
                 });
 
-                return attrs;
+                return (options && options.ensureCopy) ? JSON.parse(JSON.stringify(attrs)) : attrs;
             }
         }, {
             fromCurrent: function () {
