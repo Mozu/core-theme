@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @class Taco.view.product.subform.General
  * @author Michael Speed Elder
  *
@@ -80,12 +80,7 @@ Ext.define('Taco.view.product.subform.General', {
             minLength: visable ? 3 : 0,
             hidden: !visable,
             width: 200,
-            xtype: 'textfield',
-            listeners: {
-                change:function (cmp, value) {
-                    me.product.tempProductCode = value;
-                }
-            },
+            xtype: 'textfield'
         }, {
             xtype: 'selectfield',
             fieldLabel: 'Product Type',
@@ -341,7 +336,7 @@ Ext.define('Taco.view.product.subform.General', {
         }
 
         if (!me.optionsForm) {
-            me.optionsForm = parentForm.down('optionproductform');
+            me.optionsForm = parentForm.down('taco-product-options');
         }
 
         if (me.optionsForm) {

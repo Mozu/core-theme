@@ -7,19 +7,53 @@
 Ext.define('Taco.view.product.variant.Modal', {
     extend: 'Taco.core.ux.window.Modal',
     requires: [
-        'Taco.view.product.variant.Grid'
+        'Taco.view.product.variant.Grid',
+        'Taco.view.product.variant.Options'
     ],
 
     primaryText: 'Save',
+    primaryHandler: function () {
+        this.onSave();
+    },
+
+    secondaryHandler: function () {
+        this.onCancel();
+    },
+
     scale: 'large',
     title: 'Edit Variants',
+
+    layout: 'fit',
+
+    autoShow: true,
+
+    actions: [{
+        xtype: 'button',
+        text: 'Update Options',
+        ui: 'action',
+        scale: 'medium',
+        handler: function() {
+            this.updateOptions.apply(this, arguments);
+        }
+    }, {
+        xtype: 'tbfill'
+    }, {
+        xtype: 'button',
+        itemId: 'secondaryAction'
+    }, {
+        xtype: 'button',
+        itemId: 'primaryAction',
+        formBind: true
+    }],
 
     initComponent: function () {
         
         this.form = Ext.create('Taco.core.ux.form.Form', {
+            layout: 'fit',
             items: [
                 Ext.create('Taco.view.product.variant.Grid', {
-                  shit: true  
+                  product: this.product,
+                  productType: this.productType
                 })
             ]
         });
@@ -27,5 +61,38 @@ Ext.define('Taco.view.product.variant.Modal', {
         this.items = [this.form];
 
         this.callParent(arguments);
+
+        this.on({
+            beforesave: this.onBeforeSave,
+            scope: this
+        });
+    },
+
+    onBeforeSave: function () {
+
+    },
+
+    updateOptions: function () {
+        Ext.create('Taco.view.product.variant.Options', {
+            product: this.product,
+            productType: this.productType
+        })
+    },
+
+    onSave: function () {
+        this.product.getVariations().sync();
+        this.hide();
+    },
+
+    onCancel: function () {
+        var options = this.product.getOptions(),
+            variants = this.product.getVariations();
+
+        options.rejectChanges();
+
+        variants.whenLoaded(function () {
+            variants.rejectChanges();
+            this.hide();
+        }, this);
     }
 });

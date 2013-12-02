@@ -29,18 +29,12 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
         this.callParent(arguments);
 
         this.buildList();
-
-        // this.on({
-        //     savablestatechange: this.onSavableStateChange,
-        //     scope: this
-        // });
     },
 
     loadData: function () {   
         this.listItems = [];
 
         Ext.each(this.productExtra.get('values'), function (value) {
-            //console.log('load value', value);
             this.listItems.push({
                 id: value.value,
                 value: value.value,
@@ -127,7 +121,6 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
     },
 
     updateProductExtra: function () {
-        console.log('updating product extra', this.extraValues);
         this.productExtra.set('values', this.extraValues);
     },
 
@@ -182,17 +175,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
         });
 
         this.listEditor.add(items);
-
-        // this.resetSavableState();
     },
-
-    // onSavableStateChange: function (form, state) {
-    //     if (!this.doneButton) {
-    //         return;
-    //     }
-
-    //     this.doneButton.setDirty(state);
-    // },
 
     bindExtra: function (extra) {
         console.log('do stuff!');

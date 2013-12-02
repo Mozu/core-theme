@@ -46,8 +46,12 @@ Ext.define('Taco.view.product.option.Form', {
 
                     handler: function() {
                         console.log('You clicked me, you gary!');
-                        Ext.create('Taco.view.product.variant.Modal');
-                    }
+                        Ext.create('Taco.view.product.variant.Modal', {
+                            product: this.product,
+                            productType: this.productType
+                        });
+                    },
+                    scope: this
                 }
             ]
         }];

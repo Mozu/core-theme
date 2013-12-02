@@ -21,7 +21,6 @@ Ext.define('Taco.controller.Analytics', {
     	var me = this;
     	var gaUA = ua || Taco.googleAnalyticsAccountId;
     	if (!gaUA) {
-    	    console.log("Google Analytics account ID not present.");
     	    this.trackingEnabled = false;
     	    return false;
     	}
