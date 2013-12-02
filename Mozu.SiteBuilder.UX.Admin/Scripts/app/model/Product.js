@@ -505,6 +505,7 @@ Ext.define('Taco.model.Product', {
                         values: option.data.values
                     });
                 });
+                params.tempProductCode = me.tempProductCode;
                 params.productTypeId = me.get('productTypeId');
                 params.options = Ext.JSON.encode(params.options);
                 this.load({

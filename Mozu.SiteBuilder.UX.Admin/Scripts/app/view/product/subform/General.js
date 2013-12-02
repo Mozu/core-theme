@@ -80,7 +80,12 @@ Ext.define('Taco.view.product.subform.General', {
             minLength: visable ? 3 : 0,
             hidden: !visable,
             width: 200,
-            xtype: 'textfield'
+            xtype: 'textfield',
+            listeners: {
+                change:function (cmp, value) {
+                    me.product.tempProductCode = value;
+                }
+            },
         }, {
             xtype: 'selectfield',
             fieldLabel: 'Product Type',
