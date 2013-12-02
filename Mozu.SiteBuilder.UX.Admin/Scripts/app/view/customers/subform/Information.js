@@ -6,10 +6,10 @@ Ext.define('Taco.view.customers.subform.Information', {
         
         var me= this,
             data = this.record.getData();
-        console.log(this.tagStore);
+
         me.taxExemptIdField = Ext.create('Ext.form.field.Text', {
-            name: 'taxExemptId',
-            hidden: !this.record.taxExempt,
+            name: 'taxId',
+            hidden: !data.taxExempt,
             width: 300,
             fieldLabel: 'Tax Exempt Code'
         });
