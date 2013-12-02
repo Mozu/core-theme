@@ -7,7 +7,7 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
     ],
     autoShow: true,
     width: 900,
-    title: 'Store Crdit',
+    title: 'Store Credit',
     formCfg: null,
     closable: true,
     actions: [{
@@ -49,7 +49,16 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
                 { text: 'Date Issued', dataIndex: 'dateIssued'},
                 { text: 'Amount', dataIndex: 'issuedAmount'},
                 { text: 'Issued By', dataIndex: 'issuedBy'},
-                { text: 'Expires', dataIndex: 'expires' },
+                {
+                    text: 'Expires', dataIndex: 'expires',
+                    editor: {
+                        emptyText: "Amount",
+                        msgTarget: "qtip",
+                        xtype: "datefield",
+                        selectOnFocus: true,
+                        allowBlank: false
+                    }
+                },
                 {
                     text: 'Balance',
                     dataIndex: 'balance',

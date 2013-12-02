@@ -8,7 +8,7 @@ Ext.define('Taco.view.storeCredit.Form', {
     ],
     ui: 'subform',
     title: 'Store Credit',
-    
+    layout: 'fit',
     initComponent: function () {
         this.buildFormComponents();
 
@@ -90,7 +90,7 @@ Ext.define('Taco.view.storeCredit.Form', {
         };
 
         me.transHistory = {
-            xtype: 'textfield',
+            xtype: 'textarea',
             name: 'transactionHistory',
             fieldLabel: 'Transaction History'
         };
