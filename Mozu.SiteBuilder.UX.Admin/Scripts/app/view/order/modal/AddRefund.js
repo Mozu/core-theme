@@ -39,7 +39,41 @@ Ext.define('Taco.view.order.modal.AddRefund', {
                 }
             ]
         });
-
+        
+        this.paymentSelection = Ext.create('Ext.form.FieldContainer', {
+            //xtyp: 'fieldcontainer',
+            defaultType: 'radiofield',
+            height: 87,
+            style: { height: 87 },
+            items: [
+                 {
+                     boxLabel: 'Credit Card',
+                     name: 'paymentType',
+                     inputValue: 'card',
+                     id: 'creditcard',
+                     handler: function (radio) {
+                         if (radio.getValue()) {
+                             this.grid.show();
+                             this.storeCreditPanel.hide();
+                             //this.grid.hide();
+                         } 
+                     }, scope: this
+                 }, {
+                     boxLabel: 'Store Credit',
+                     name: 'paymentType',
+                     inputValue: 'credit',
+                     id: 'storecredit',
+                     handler: function (radio) {
+                         if (radio.getValue()) {
+                             //show other panel
+                             this.storeCreditPanel.show();
+                             this.grid.hide();
+                         } 
+                     }, scope: this
+                 }
+            ]
+        });
+        
         this.grid = Ext.create('Taco.core.ux.grid.Panel', {
             store: this.store,
             viewConfig: {
@@ -107,7 +141,35 @@ Ext.define('Taco.view.order.modal.AddRefund', {
             ]
         });
 
-        this.items = [this.grid];
+        this.storeCreditPanel = Ext.create('Ext.panel.Panel', {
+            hidden: true,
+            layout: 'fit',
+            overflowY: 'scroll',
+            items: [{
+                xtype: 'textfield',
+                fieldLabel: 'Original Amount',
+                editable: false
+            }, {
+                xtype: 'textfield',
+                fieldLabel: 'Store Credit ID'
+            }, {
+                xtype: 'textfield',
+                fieldLabel: 'Refund Amount'
+            }, {
+                xtype: 'textarea',
+                fieldLabel: 'Transaction History'
+            }, {
+                xtype: 'checkboxfield',
+                fieldLabel: 'Email store credit information to customer'
+            }]
+        });
+
+        this.items = [
+                {
+                    xtype: 'container',
+                    items: [this.paymentSelection, this.grid, this.storeCreditPanel]
+                }
+            ];
         
         this.callParent(arguments);
 
