@@ -43,6 +43,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
             
             switch (filter.property.ToLowerInvariant())
             {
+                case "groups":
+                    return string.Format("groups eq {0}", filter.value);
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);

@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.customers.Form', {
     extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.store.CustomerTags', 'Taco.view.order.Index','Taco.shared.view.form.ExtensibleAttribute'],
+    requires: ['Taco.store.CustomerGroups', 'Taco.view.order.Index', 'Taco.shared.view.form.ExtensibleAttribute'],
     // enableStoreSyncTasks:true,
     initComponent: function () {
         var data = this.record.getData(),
@@ -18,7 +18,7 @@ Ext.define('Taco.view.customers.Form', {
         ].join(' ');
 
         this.store = this.record.getContacts();
-        this.tagStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerTags');
+        this.tagStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerGroups');
 
         this.tagStore.on('add', function (store, records) {
             console.log('tagstoreadd', records);
@@ -92,17 +92,17 @@ Ext.define('Taco.view.customers.Form', {
 
             if (me.tagStore.isDirty()) {
                 
-                updateTask = tasks.tasks.getByKey('update-record');
-                updateTask.dependencies = ['groupFieldUpdate'];
+                
 
 
                 tasks.add({
                     store: me.tagStore,
-                    key: 'tagstore'
+                    dependencyForFilter: function (task) {
+                        return task.saveRecord == me.record;
+                    }
                 });
 
                 tasks.add({
-                    key: 'groupFieldUpdate',
                     fn: function (gfutasks) {
 
                         Ext.Array.each(groupValue, function (val, index) {
@@ -120,9 +120,9 @@ Ext.define('Taco.view.customers.Form', {
                         gfutasks.callback();
 
                     },
-                    dependencies: [
-                        'tagstore'
-                    ]
+                    dependencyFilter:function (task) {
+                        return task.store == me.tagStore
+                    }
                 });
             }
 

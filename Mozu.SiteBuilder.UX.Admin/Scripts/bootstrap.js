@@ -76,6 +76,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.core.ux.grid.MenuColumn": [],
   "Taco.model.ProductTypeAttribute": [],
   "Taco.core.ux.content.Container": [],
+  "Taco.view.customers.AdvancedSearchForm": [],
   "Taco.controller.Categories": [],
   "Taco.view.order.widget.ShippingItemGrid": [],
   "Taco.model.ProductOptionValue": [],
@@ -579,7 +580,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.core.ux.HtmlEditor": [],
   "Taco.core.ux.SidebarList": [],
   "Taco.view.order.modal.EditOrderDetail": [],
-  "Taco.store.CustomerTags": [],
+  "Taco.store.CustomerGroups": [],
   "Taco.store.CustomerAttributes": [],
   "Taco.view.generalSettings.subform.About": [],
   "Taco.controller.OrderAttributes": [],
@@ -808,6 +809,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.core.ux.content.Container": [
     "widget.contentcontainer"
   ],
+  "Taco.view.customers.AdvancedSearchForm": [],
   "Taco.controller.Categories": [],
   "Taco.view.order.widget.ShippingItemGrid": [],
   "Taco.model.ProductOptionValue": [],
@@ -1023,8 +1025,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.ux.grid.TransformGrid": [],
   "Taco.view.category.Modal": [],
   "Taco.core.ux.form.field.AdminUser": [
-    "widget.taco-productfield",
-    "widget.taco.field.product"
+    "widget.taco-adminuserfield"
   ],
   "Taco.overrides.menu.Item": [],
   "Taco.view.navigation.ContextSwitcherView": [],
@@ -1607,7 +1608,7 @@ Ext.ClassManager.addNameAliasMappings({
     "widget.sidebarlist"
   ],
   "Taco.view.order.modal.EditOrderDetail": [],
-  "Taco.store.CustomerTags": [],
+  "Taco.store.CustomerGroups": [],
   "Taco.store.CustomerAttributes": [],
   "Taco.view.generalSettings.subform.About": [],
   "Taco.controller.OrderAttributes": [],

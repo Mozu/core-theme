@@ -151,7 +151,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Filters
 
 
             //if refresh token is missing it means they've logged out of the log out app.
-            string refreshToken = authHelper.GetRefreshToken();
+            string refreshToken = authHelper.GetAdminRefreshToken();
             if (string.IsNullOrEmpty(refreshToken))
             {
                 return false;
@@ -172,7 +172,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Filters
                     {
                         TenantAdminUserAuthTicket ticket = res.ReadAsSync();
 
-                        authHelper.SaveAccessToken(ticket.AccessToken);
+                        authHelper.SaveAdminAccessToken(ticket.AccessToken);
 
                         context.SetUser(LightweightUserClaims.Parse(ticket.AccessToken));
                     }

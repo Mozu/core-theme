@@ -1,4 +1,5 @@
-﻿using Mozu.Core;
+﻿using System;
+using Mozu.Core;
 using Mozu.Core.Api.Contracts;
 using Mozu.User.Contracts;
 
@@ -8,15 +9,26 @@ namespace Mozu.SiteBuilder.Mvc.Security
     {
         //void LogOut(IApiContext context);
        // void SaveAuthTicket(UserAuthTicket ticket );
-        void SaveAccessToken(string accessToken);
-        string GetAccessToken();
+        void SaveAdminAccessToken(string accessToken);
+        string GetAdminAccessToken();
         string GetProfileToken();
-        string GetRefreshToken();
+        string GetAdminRefreshToken();
 
 
 
-        void SaveAuthTicket(UserAuthTicket ticket);
+        void SaveStoreFrontRefreshToken(string token, DateTime? expiryTime);
 
-        UserAuthTicket GetAuthTicket();
+        string GetStoreFrontRefreshToken();
+
+        string GetStoreFrontAccessToken();
+
+        void SaveStoreFrontAccessToken(string token, string profile);
+
+
+        // void SaveAuthTicket(UserAuthTicket ticket);
+
+        //    UserAuthTicket GetAuthTicket();
+
+        //   void SaveAccessToken(string p);
     }
 }

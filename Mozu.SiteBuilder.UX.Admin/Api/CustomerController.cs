@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
@@ -36,10 +38,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpGetRoute(UriTemplate = "groups/list")]
-        public async Task<Response<List<KeyValuePair< int,string >>>> GetGroups()
+        public async Task<HttpResponseMessage> GetGroups()
         {
             var ret =(await _customerGroupWebApiClient.GetGroups(0, 200)).ReadAsSync().Items.OrderBy(x => x.Name).Select(x => new KeyValuePair<int, string>(x.Id, x.Name)).ToList();
-            return List2(ret);
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(ret));
         }
 
         [HttpPostRoute(UriTemplate = "groups/create")]
