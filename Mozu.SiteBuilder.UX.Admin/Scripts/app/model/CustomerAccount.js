@@ -173,7 +173,7 @@ Ext.define('Taco.model.CustomerAccount', {
                             type: 'boolean',
                             defaultValue:false
                         }, {
-                            name: 'taxExemptId',
+                            name: 'taxId',
                             type: 'string',
                             defaultValue:""
                         }
