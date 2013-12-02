@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Mozu.Core.Api.Client;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -16,6 +17,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly IReportWebApiClient _reportWebApiClient;
         private readonly IReportDefinitionWebApiClient _reportDefinitionWebApiClient;
+        private readonly bool demoMode = true;
 
         public ReportController(IReportWebApiClient reportWebApiClient, IReportDefinitionWebApiClient reportDefinitionWebApiClient)
         {
@@ -36,6 +38,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "list")]
         public async Task<HttpResponseMessage> List()
         {
+            if (demoMode)
+            {
+                _reportWebApiClient.Options.AdditionalHeaders.Remove("x-vol-tenant");
+                //                _reportWebApiClient.Options.AdditionalHeaders.Add("x-vol-user-claims", null);
+            }
             var resp = (await _reportWebApiClient.GetReports()).ReadAsSync();
 
             return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp), LowerCaseJsonMediaTypeFormatter.Default);
@@ -44,7 +51,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "read/{name}")]
         public async Task<HttpResponseMessage> Read([FromUri]PagingParamaters pagingParams, [FromUri]string filter, [FromUri] string groupBy, string name)
         {
-            var serviceResponse = (await _reportWebApiClient.GetReport(name, pagingParams.startIndex, pagingParams.pageSize, null, filter, groupBy)).ReadAsSync();
+            var client = _reportWebApiClient;
+            if (demoMode)
+            {
+                //client = _reportWebApiClient.CloneWith(Core.Api.Contracts.TargetContextLevelType.Tenant).CloneWithoutUserClaims();
+                client = _reportWebApiClient.CloneWithoutUserClaims();
+                //client.Options.AdditionalHeaders.Add("x-vol-tenant", "8844");
+            }
+
+            var serviceResponse = (await client.GetReportAsync(name, pagingParams.startIndex, pagingParams.pageSize, null, filter, groupBy)).ReadAsSync();
             var rows = extractReportRows(serviceResponse);
 
             // return rows with meta data
@@ -55,8 +70,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "download/{name}")]
         public async Task<HttpResponseMessage> Download([FromUri]string filter, [FromUri] string groupBy, string name)
         {
-            var serviceResponse = await _reportWebApiClient.GetReportFile(name, null, filter, groupBy);
-
+            var serviceResponse = await _reportWebApiClient.GetReportFileAsync(name, null, filter, groupBy);
             var httpContent = serviceResponse.ResponseMessage.Content;
 
             var contentStream = await httpContent.ReadAsStreamAsync();
