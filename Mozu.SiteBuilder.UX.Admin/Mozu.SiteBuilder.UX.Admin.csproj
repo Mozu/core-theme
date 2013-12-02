@@ -644,6 +644,7 @@
     <Content Include="Scripts\app\model\OrderAttribute.js" />
     <Content Include="Scripts\app\model\ShippingMethod.js" />
     <Content Include="Scripts\app\model\Wishlist.js" />
+    <Content Include="Scripts\app\overrides\data\AbstractStore.js" />
     <Content Include="Scripts\app\overrides\form\Basic.js" />
     <Content Include="Scripts\app\overrides\form\field\Base.js" />
     <Content Include="Scripts\app\overrides\form\field\ComboBox.js" />
@@ -1059,8 +1060,10 @@
     <Content Include="Scripts\sass\src\view\settings\shipping\widget\RateList.scss" />
     <Content Include="Scripts\sass\src\core\ux\TilePanel.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\Component.scss" />
+    <Content Include="Scripts\sass\src\view\product\variant\Modal.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\resizer\Splitter.scss" />
     <Content Include="Scripts\app\mocks\storecredit.json" />
+    <Content Include="Scripts\sass\src\view\product\variant\Grid.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
