@@ -96,6 +96,7 @@
         relations: {
             content: ProductContent,
             price: PriceModels.ProductPrice,
+            priceRange: PriceModels.ProductPriceRange,
             options: Backbone.Collection.extend({
                 model: ProductOption
             })
