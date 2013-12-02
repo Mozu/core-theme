@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 		[HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<ProductVariation>>> ListProducts([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, [FromUri]string productCode = null, [FromUri] string options = null, [FromUri ] int? productTypeId = null)
+        public async Task<Response<List<ProductVariation>>> ListProducts([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, [FromUri]string productCode = null, [FromUri] string options = null, [FromUri ] int? productTypeId = null, [FromUri]string tempProductCode = null )
         {
             
             var filter = "IsOrphan ne true";
@@ -55,6 +55,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     var dcOPtions = Mapper.Map<List<Mozu.ProductAdmin.Contracts.ProductOption>>(productOptions);
                     collection = (await _productTypeWebApiClient.GenerateProductVariations(productOptionsIn: dcOPtions, productTypeId: productTypeId, productCode: productCode, startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filter)).ReadAsSync();
+                //    string format = "000";
+                    for (int i = 0; i < collection.Items.Count; i++)
+                    {
+                        var item = collection.Items[i];
+                        item.IsActive = true;
+                        if (!string.IsNullOrEmpty(tempProductCode))
+                        {
+                            item.VariationProductCode = tempProductCode + "-" + (i + 1).ToString("000");
+                        }
+
+                    }
+                    
+                    
                 }
 
             }
