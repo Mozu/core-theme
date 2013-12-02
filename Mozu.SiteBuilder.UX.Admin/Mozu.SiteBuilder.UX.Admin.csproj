@@ -680,6 +680,7 @@
     <Content Include="Scripts\app\view\capability\Form.js" />
     <Content Include="Scripts\app\view\capability\Index.js" />
     <Content Include="Scripts\app\view\channel\Index.js" />
+    <Content Include="Scripts\app\view\customers\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\redirects\Index.js" />
     <Content Include="Scripts\app\view\customerAttribute\Edit.js" />
@@ -1183,7 +1184,7 @@
     <Content Include="Scripts\app\store\CmsDocumentDrafts.js" />
     <Content Include="Scripts\app\shared\store\Files.js" />
     <Content Include="Scripts\app\store\ConfiguredShippingRates.js" />
-    <Content Include="Scripts\app\store\CustomerTags.js" />
+    <Content Include="Scripts\app\store\CustomerGroups.js" />
     <Content Include="Scripts\app\store\ShippingCarrierSettings.js" />
     <Content Include="Scripts\app\store\GeneralSettings.js" />
     <Content Include="Scripts\app\store\ItemFilters.js" />
@@ -1967,7 +1968,7 @@
     <Content Include="Scripts\app\store\OrderNotes.js" />
     <Content Include="Scripts\app\store\CustomerAccountNotes.js" />
     <Content Include="Scripts\app\store\CustomerGroupComboBox.js" />
-    <Content Include="Scripts\app\store\CustomerGroups.js" />
+    <Content Include="Scripts\app\store\CustomerGroupNames.js" />
     <Content Include="Scripts\app\store\Customers.js" />
     <Content Include="Scripts\app\store\GatewayDefinitions.js" />
     <Content Include="Scripts\app\store\Roles.js" />
@@ -3163,7 +3164,6 @@
     <Content Include="Scripts\app\core\ux\CellEditor.js" />
     <Content Include="Scripts\app\core\ux\ComponentColumn.js" />
     <Content Include="Scripts\app\core\ux\ComplexDataView.js" />
-    <Content Include="Scripts\app\core\ux\form\BoxSelect.js" />
     <Content Include="Scripts\app\core\ux\form\FieldGroup.js" />
     <Content Include="Scripts\app\core\ux\form\TextFieldColumn.js" />
     <Content Include="Scripts\app\core\ux\form\Step.js" />

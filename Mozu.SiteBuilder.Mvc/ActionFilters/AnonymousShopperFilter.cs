@@ -22,18 +22,8 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             if (apiContext.UserClaims == null && apiContext.SiteId.HasValue )
             {
                 apiContext.SetUser(LightweightUserClaims.CreateForAnonymousShopper(apiContext.TenantId, apiContext.SiteId.Value));
-                if (apiContext.DataViewMode == DataViewModeType.Pending)
-                {
-                    if (apiContext.UserClaims.BehaviorIds == null)
-                    {
-                        apiContext.UserClaims.BehaviorIds = new int[0];
-                    }
-                    if (!apiContext.UserClaims.BehaviorIds.Contains(PublishBehavorID))
-                    {
-                        apiContext.UserClaims.BehaviorIds = apiContext.UserClaims.BehaviorIds.Concat(new int[] { PublishBehavorID }).ToArray();
-                    }
-                }
-                actionContext.Request.Resolve<IAuthenticationHelper>().SaveAccessToken(apiContext.UserClaims.ToAccessToken());
+               
+                actionContext.Request.Resolve<IAuthenticationHelper>().SaveStoreFrontAccessToken(apiContext.UserClaims.ToAccessToken(), null);
             }
             base.OnActionExecuting(actionContext);
         }

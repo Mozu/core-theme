@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Web;
@@ -72,8 +73,16 @@ namespace Mozu.SiteBuilder.Mvc
             }
 
             //todo check refreshToken Loc
-          
-            var accessToken = _authenticationHelper.GetAccessToken();
+            string accessToken = null;
+            if (this.ScopeType == UserScopeType.Shopper)
+            {
+                accessToken = _authenticationHelper.GetStoreFrontAccessToken();
+            }
+            else
+            {
+                accessToken = _authenticationHelper.GetAdminAccessToken();
+            }
+            
             LightweightUserClaims claims;
 
             /*********************************************
@@ -286,6 +295,18 @@ namespace Mozu.SiteBuilder.Mvc
 
         public void SetUser(LightweightUserClaims user)
         {
+            if (this.DataViewMode == DataViewModeType.Pending)
+            {
+                if ( user != null && (user.BehaviorIds == null || !user.BehaviorIds.Contains( PublishBehavorID) ))
+                {
+                    if (user.BehaviorIds == null)
+                    {
+                        user.BehaviorIds = new int[0];
+                    }
+                    user.BehaviorIds = user.BehaviorIds.Concat(new int[] { PublishBehavorID }).ToArray();
+                    
+                }
+            }
             this.UserClaims = user;
         }
 

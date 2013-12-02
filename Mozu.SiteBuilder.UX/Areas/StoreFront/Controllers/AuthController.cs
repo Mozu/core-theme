@@ -44,12 +44,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         protected void DoLogout() 
         {
             var user = LightweightUserClaims.CreateForAnonymousShopper(_apiContext.TenantId, _apiContext.SiteId.Value);
-            _authenticationHelper.SaveAuthTicket(new UserAuthTicket()
-                                                     {
-                                                         AccessToken= user.ToAccessToken(),
-                                                         User = new Mozu.Core.Api.Contracts.UserProfile() ,
-                                                         RefreshToken = null
-                                                     });
+            _authenticationHelper.SaveAdminAccessToken(null);
             _apiContext.SetUser(user);
         }
 
@@ -71,9 +66,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 //    return Redirect("/admin");
                 //}
                 var ticket = res.ReadAsSync().AuthTicket;
+                var  profile = new    Mozu.Core.UserProfile ()
+                                            {
+                                                EmailAddress = ticket.User.EmailAddress,
+                                                FirstName = ticket.User.FirstName,
+                                                LastName = ticket.User.LastName ,
+                                                UserId = ticket.User.UserId 
+                                            };
+                
 
-                _authenticationHelper.SaveAuthTicket(ticket);
-
+                _authenticationHelper.SaveStoreFrontAccessToken( ticket.AccessToken , profile.ToToken());
+                _authenticationHelper.SaveStoreFrontRefreshToken(ticket.RefreshToken , ticket.RefreshTokenExpiration );
                 _apiContext.SetUser(LightweightUserClaims.Parse(ticket.AccessToken));
 
             }

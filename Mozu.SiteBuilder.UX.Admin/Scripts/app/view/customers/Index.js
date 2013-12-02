@@ -7,7 +7,8 @@ Ext.define('Taco.view.customers.Index', {
     alias: 'widget.taco.index.customer',
     requires: [
         'Taco.model.CustomerAccount',
-        'Taco.store.Customers'
+        'Taco.store.Customers',
+        'Taco.view.customers.AdvancedSearchForm'
     ],
 
     typeName: 'Customer',
@@ -70,7 +71,7 @@ Ext.define('Taco.view.customers.Index', {
             title: 'Customers'
         };
 
-        this.tagStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerTags');
+        this.tagStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerGroups');
 
         this.gridPanelConf = {
             columns: [{
@@ -155,6 +156,11 @@ Ext.define('Taco.view.customers.Index', {
         
         this.callParent(arguments);
     },
+    
+    advancedSearchConfig : {
+        advancedFormCls: 'Taco.view.customers.AdvancedSearchForm'
+    },
+    
 
     launchEditor: function (record) {
         Ext.defer(function () {

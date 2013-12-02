@@ -76,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             Mozu.SiteBuilder.Mvc.Contexts.SiteContext.Save(null, null, user.GetUserScope().Id.Value, false, DataViewModeType.NoneSet, _cookieProvider);
             
             _apiContext.SetUser(user);
-            _authenticationHelper.SaveAccessToken(  accessToken);
+            _authenticationHelper.SaveAdminAccessToken(  accessToken);
             redirectUrl = string.IsNullOrEmpty(redirectUrl) ? "/admin" : redirectUrl;
 
             var message = new System.Net.Http.HttpResponseMessage(HttpStatusCode.Redirect );
