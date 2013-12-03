@@ -73,16 +73,19 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                     {
                         cmsPageContext.Page.Document = pageTask.Result.ReadAsSync();
                         cmsPageContext.Page.Id = cmsPageContext.Page.Document.Id;
+                        cmsPageContext.Page.PublishState = cmsPageContext.Page.Document.PublishState;
                     }
                     if (templateTask != null && templateTask.Result.ResponseMessage.IsSuccessStatusCode)
                     {
                         cmsPageContext.Template.Document = templateTask.Result.ReadAsSync();
                         cmsPageContext.Template.Id = cmsPageContext.Template.Document.Id;
+                        cmsPageContext.Template.PublishState = cmsPageContext.Template.Document.PublishState;
                     }
                     if (siteTemplateTask != null && siteTemplateTask.Result.ResponseMessage.IsSuccessStatusCode)
                     {
                         cmsPageContext.SiteTemplate.Document = siteTemplateTask.Result.ReadAsSync();
                         cmsPageContext.SiteTemplate.Id = cmsPageContext.SiteTemplate.Document.Id;
+                        cmsPageContext.SiteTemplate.PublishState = cmsPageContext.SiteTemplate.Document.PublishState;
                     }
 
                     tasks.Clear();
@@ -110,6 +113,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                             {
                                 cmsPageContext.Template.Document = templateTask.Result.ReadAsSync();
                                 cmsPageContext.Template.Id = cmsPageContext.Template.Document.Id;
+                                cmsPageContext.Template.PublishState = cmsPageContext.Template.Document.PublishState;
                             }
                         }
                     }
@@ -176,39 +180,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                             cmsPageContext.RuntimeData2.AddRange(zoneData);
                         }
                     }
-                    if ( 1==2 &&  pageContext.IsEditMode && !cmsPageContext.RuntimeData2.Any(x => string.Equals(x.Id, "body-bottom", StringComparison.OrdinalIgnoreCase)))
-                    {
 
-                        cmsPageContext.RuntimeData2.Clear();
-                        cmsPageContext.RuntimeData2.Add(new ZoneRuntimeData
-                                                            {
-                                                                Id = "body-bottom",
-                                                                Rows = new List<ZoneRowRuntimeData>
-                                                                           {
-                                                                               new ZoneRowRuntimeData
-                                                                                   {
-                                                                                       Columns = new List<ZoneColumnsRuntimeData>
-                                                                                                     {
-                                                                                                         new ZoneColumnsRuntimeData
-                                                                                                             {
-                                                                                                                 Span = 12,
-                                                                                                                 Widgets = new List<ZoneWidgetRuntimeData>
-                                                                                                                               {
-                                                                                                                                   new ZoneWidgetRuntimeData
-                                                                                                                                       {
-                                                                                                                                           Id = Guid.NewGuid().ToString(),
-                                                                                                                                           DefinitionId = "content",
-                                                                                                                                           Config = JObject.Parse("{\"body\": \"<br ><br >\"}")
-                                                                                                                                       },
-                                                                                                                                  
-                                                                                                                               }
-                                                                                                             }
-                                                                                                         
-                                                                                                     }
-                                                                                   }
-                                                                           }
-                                                            });
-                    }
 
 
                     cmsPageContext.Initialized = true;

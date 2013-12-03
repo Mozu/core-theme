@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web;
 
 using Autofac;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
@@ -26,7 +27,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    
+    [InitCmsPageContextActionFilter]
     public class CmsPagesController : BaseApiController
     {
 

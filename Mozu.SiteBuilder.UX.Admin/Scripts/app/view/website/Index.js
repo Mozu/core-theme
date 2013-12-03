@@ -126,7 +126,20 @@ Ext.define('Taco.view.website.Index', {
                 scale: 'medium',
                 text: 'Save',
                 margin: '0 0 0 10'
-            }]
+            },
+        {
+            xtype: 'button',
+            itemId: 'publishAction',
+            ui: 'action-primary',
+            scale: 'medium',
+            text: 'Publish',
+            margin: '0 0 0 10',
+            hidden: true,
+            disabled: true,
+            handler: function () {
+                this.onPublish();
+            }
+        }]
     },
 
     initComponent: function () {
@@ -290,6 +303,11 @@ Ext.define('Taco.view.website.Index', {
 
         this.callParent(arguments);
 
+       
+        this.publishButton = this.down('#publishAction');
+        this.down('#publishAction').setVisible(Taco.app.context.getCurrent().isPublishingEnabled());
+        
+
         this.bindToForm();
 
         this.iframe = this.down('#iframe');
@@ -316,6 +334,15 @@ Ext.define('Taco.view.website.Index', {
         this.down('#pageSettings').getForm().getBoundItems().add(primaryAction);
 
         primaryAction.setHandler(this.onSave, this);
+    },
+
+    setPublishable:function (value) {
+        if (value) {
+            this.publishButton.enable();
+        } else {
+            this.publishButton.disable();
+        }
+        
     },
 
     createEntityTypeAdapter: function (pageContext, editor) {
@@ -361,8 +388,11 @@ Ext.define('Taco.view.website.Index', {
         var me = this,
             pc = this.getPageContext();
 
+
         this.chorizoEditor = editor;
 
+        this.setPublishable(false);
+        
         if (this.showDropZones) {
             this.chorizoEditor.showDropZones();
         } else {
@@ -402,6 +432,10 @@ Ext.define('Taco.view.website.Index', {
         });
 
         tasks.execute();
+    },
+    
+    onPublish:function () {
+        this.entitypeTypeHandler.publish();
     },
 
     onWidgetDrop: function (cfg) {

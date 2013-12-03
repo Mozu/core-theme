@@ -15,5 +15,7 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         [System.Runtime.Serialization.IgnoreDataMember()]
         public Mozu.Content.Contracts.Document Document { get; set; }
 
+
+        public string PublishState { get; set; }
     }
 }

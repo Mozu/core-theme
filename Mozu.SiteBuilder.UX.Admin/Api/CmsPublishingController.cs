@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Models.Admin;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -22,6 +24,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         [DataMember(Name = "docType")]
         public string DocType;
+
+       
     }
 
 
@@ -40,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Public constructor.
         /// </summary>
         //public CmsPublishingController(IMoreAwesomeDocumentWebApiClient documentClient)
-       public CmsPublishingController(IDocumentListWebApiClient documentClient, IDocumentPublishingWebApiClient documentPublishingWebApiClient)
+       public CmsPublishingController(IDocumentListWebApiClient documentClient, IDocumentPublishingWebApiClient documentPublishingWebApiClient )
         {
             _documentClient = documentClient;
             _documentPublishingWebApiClient = documentPublishingWebApiClient;
@@ -70,6 +74,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             List<DocumentDraft> items = Mapper.Map<List<DocumentDraft>>(res.Items);
 
             return List2(items, (int)res.TotalCount);
+        }
+
+
+        /// <summary>
+        /// Publish a set of documents.
+        /// </summary>
+        [HttpPostRoute(UriTemplate = "enablePublishing")]
+        public async Task<Response<bool>> EnablePublishing( TaContextSite site )
+        {
+            var client =  _documentClient.CloneWithApiContext(x => x.SiteId = site.Id);
+            var res = (await client.GetDocumentLists(startIndex: 0, pageSize: 200)).ReadAsSync();
+            var updateTasks= res.Items.Select(x =>
+            {
+                x.EnablePublishing = site.PublishingEnabled ;
+                return client.UpdateDocumentList(x.Name, x);
+            }).ToArray();
+            Task.WhenAll(updateTasks);
+           return  this.SuccessWithTotal2<bool>(0);
+
         }
 
         /// <summary>
@@ -148,6 +171,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     throw res.ReadException();
                 }
             }
+           
             else
             {
                 var res = await _documentPublishingWebApiClient.PublishDocuments(null, documentLists: documentListName);

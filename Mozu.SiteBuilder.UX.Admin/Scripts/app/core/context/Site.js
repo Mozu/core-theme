@@ -40,8 +40,26 @@
     getMasterCatalog: function() {
         return this.masterCatalog;
     },
-
-    updateContentPublishingMode: function(value) {
+    isPublishingEnabled:function () {
+        return this.publishingEnabled;
+    },
+    updateContentPublishingMode: function (value) {
+        this.publishingEnabled = value == 'Pending';
+        
+        Ext.Ajax.request({
+            url: '/admin/app/cmspublishing/enablePublishing',
+            method: 'POST',
+            jsonData : {
+                id: this.id,
+                publishingEnabled: this.publishingEnabled
+            },
+            failure : function () {
+                console.log(arguments);
+            },
+            success: function (response) {
+                console.log(arguments);
+            }
+        });
         console.log('updateContentPublishingMode for Site ID', this.id, ' -> ', value);
     }
 

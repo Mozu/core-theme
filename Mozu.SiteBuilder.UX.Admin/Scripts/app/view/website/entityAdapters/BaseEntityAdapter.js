@@ -17,6 +17,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         this.callParent(arguments);
         this.manager.entitypeTypeHandler = this;
         this.load();
+        this.initPublishableState();
     },
 
     deleteRecord:function(){
@@ -64,6 +65,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
             tasks.on('complete', function (endTasks) {
                 if (Ext.isEmpty(endTasks.errors)) {
                     this.editor.resetDirtyState();
+                    this.manager.setPublishable(true);
                 }
                 
             }, this);
@@ -93,6 +95,38 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         this.addSaveTasks(tasks);
 
         return tasks;
+    },
+
+    initPublishableState:function () {
+        if (!this.pageContext || !this.pageContext.cmsContext) {
+            return;
+        }
+        Ext.Object.each(this.pageContext.cmsContext, function (key, value, myself) {
+            if (value && value.publishState == 'draft') {
+                this.manager.setPublishable(true);
+            }
+        }, this);
+       
+    },
+
+    publish:function () {
+        if (!this.pageContext || !this.pageContext.cmsContext) {
+            return;
+        }
+        var store = Ext.create('Taco.store.CmsDocumentDrafts');
+        
+        Ext.Object.each(this.pageContext.cmsContext, function (key, value, myself) {
+            if (value.id) {
+                var doc = store.add({ id: value.id })[0];
+                doc.set('isPublished', true);
+            }
+        }, this);
+        store.sync({            
+           success:function () {
+               this.manager.setPublishable(false);
+           },
+           scope:this
+        });
     },
 
     isDirty: function () {

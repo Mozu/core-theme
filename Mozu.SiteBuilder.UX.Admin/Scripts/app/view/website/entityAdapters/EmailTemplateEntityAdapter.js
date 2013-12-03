@@ -49,6 +49,5 @@ Ext.define('Taco.view.website.entityAdapters.EmailTemplateEntityAdapter', {
             }
         });
 
-    },
-    publish: Ext.emptyFn
+    }
 });

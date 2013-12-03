@@ -23,25 +23,37 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AutoMapper.Internal;
 
 namespace NDjango.FiltersCS
 {
-    /// <summary>
-    ///     Hex encodes characters for use in JavaScript strings.
-    ///     This does not make the string safe for use in HTML, but does protect you from syntax errors 
-    ///     when using templates to generate JavaScript/JSON.
-    /// </summary>
-    [NDjango.Interfaces.Name("safe")]
-    public class SafeFilter : NDjango.Interfaces.ISimpleFilter
-    {
-        #region ISimpleFilter Members
-        private static IDictionary<string, string> jsEscapes;
+    ///// <summary>
+    /////     Hex encodes characters for use in JavaScript strings.
+    /////     This does not make the string safe for use in HTML, but does protect you from syntax errors 
+    /////     when using templates to generate JavaScript/JSON.
+    ///// </summary>
+    //[NDjango.Interfaces.Name("safe")]
+    //public class SafeFilter : NDjango.Interfaces.ISimpleFilter
+    //{
+        
+    //    public object Perform(object __p1)
+    //    {
 
-        public object Perform(object __p1)
-        {
-            return Convert.ToString(__p1);
-        }
+    //        return new SafeString()
+    //               {
+    //                   InnerString = __p1.ToNullSafeString()
+    //               };
+    //    }
 
-        #endregion
-    }
+    //    //         (string text).Replace("&","&amp;").Replace("<","&lt;").Replace(">","&gt;").Replace("'","&#39;").Replace("\"","&quot;")    
+    //}
+
+    //public class IHtmlString 
+    //{
+    //    public string InnerString { get; set; }
+    //    public override string ToString()
+    //    {
+    //        return InnerString;
+    //    }
+    //}
 }

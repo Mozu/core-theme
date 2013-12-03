@@ -8,6 +8,7 @@ using System.Web.Http;
 using Autofac;
 
 using Mozu.ProductRuntime.Contracts;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
@@ -36,7 +37,7 @@ using ProductOption = Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductOptio
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    
+    [InitCmsPageContextActionFilter]
     public class TemplatesController : BaseApiController
     {
         
@@ -69,6 +70,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 
             }
             var pc = PageContext;
+            pc.PageType = pageType.EntityType;
 
             pc.CmsContext = new CmsPageContext()
             {

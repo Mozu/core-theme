@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -9,6 +10,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Razor;
 using Mozu.AdminUser.Contracts.Clients;
+using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
@@ -35,6 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
     public class HomeController : AdminApiControllerBase 
     {
         private readonly ILogger _logger;
+        private readonly IDocumentListWebApiClient _documentListWebApiClient;
 
         private readonly IAuthenticationHelper _authenticationHelper;
         
@@ -48,10 +51,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         private IMasterCatalogWebApiClient _masterCatalogClient;
 
-        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper,  ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, Mozu.Core.Logging.ILogger logger)
+        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper,  ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, Mozu.Core.Logging.ILogger logger, Mozu.Content.Contracts.Clients.IDocumentListWebApiClient documentListWebApiClient )
         {
             _logger = logger;
-        
+            _documentListWebApiClient = documentListWebApiClient;
+
             _usersRepo = usersRepo.CloneWithoutUserClaims();
             _authenticationHelper = authHelper;
             //_sbc = sbc;
@@ -127,8 +131,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 Id = _apiContext.UserClaims.UserId
             };
 
+            var sitesListTasks = tenant.Sites.Select(x => _documentListWebApiClient.CloneWithApiContext(z=> z.SiteId = x.Id  )
+                .GetDocumentList("pages").ContinueWith(y =>
+                    new KeyValuePair<int, bool>(x.Id, y.Result.ReadAsSync().EnablePublishing.GetValueOrDefault(false))
+                )).ToArray();
+            
+            await Task.WhenAll(sitesListTasks);
+            var sitePubList = sitesListTasks.Select(x => x.Result).ToList();
+            
+
+
             var taContext = AutoMapper.Mapper.Map<TaContext>(tenant);
             AutoMapper.Mapper.Map(masterCatalogs, taContext);
+
+            taContext.MasterCatalogs.ForEach(mc => mc.Sites.ForEach(site => site.PublishingEnabled = sitePubList.Where(x=> x.Key == site.Id ).Select(x=> x.Value ).FirstOrDefault()   ));
 
             this.ViewData["localizationValues"] = new LocalizationController(_httpContext).GetStrings();
             this.ViewData["taContext"] = taContext;
