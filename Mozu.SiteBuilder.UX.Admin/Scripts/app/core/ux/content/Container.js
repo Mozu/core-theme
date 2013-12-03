@@ -67,14 +67,14 @@ Ext.define('Taco.core.ux.content.Container', {
 
         me.items = [me.main];
 
-        if (me.sidebar || me.hasSidebar) {
-            me.sidebar = me.sidebar || {};
+        // if (me.sidebar || me.hasSidebar) {
+        //     me.sidebar = me.sidebar || {};
 
-            // create the sidebar unless some subclass has created it!
-            if (!me.sidebar.$className) me.sidebar = Ext.widget('sidebar', Ext.applyIf(me.sidebar, { region: 'east' }));
+        //     // create the sidebar unless some subclass has created it!
+        //     if (!me.sidebar.$className) me.sidebar = Ext.widget('sidebar', Ext.applyIf(me.sidebar, { region: 'east' }));
 
-            me.items.push(me.sidebar);
-        }
+        //     me.items.push(me.sidebar);
+        // }
     },
 
     subscribeEvents: function () {
