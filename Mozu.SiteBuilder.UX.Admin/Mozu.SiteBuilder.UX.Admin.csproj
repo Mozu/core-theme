@@ -753,6 +753,7 @@
     <Content Include="Scripts\app\view\website\Tree.js" />
     <Content Include="Scripts\app\view\website\Index.js" />
     <Content Include="Scripts\app\view\website\widgetEditors\AddThis.js" />
+    <Content Include="Scripts\app\view\website\widgetEditors\Image.js" />
     <Content Include="Scripts\app\view\website\widgetEditors\FeaturedProducts.js" />
     <Content Include="Scripts\app\view\website\widgetEditors\HorizontalRule.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -1064,6 +1065,7 @@
     <Content Include="Scripts\sass\src\view\product\variant\Modal.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\resizer\Splitter.scss" />
     <Content Include="Scripts\app\mocks\storecredit.json" />
+    <Content Include="Scripts\sass\src\view\website\widgetEditors\Image.scss" />
     <Content Include="Scripts\sass\src\view\product\variant\Grid.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />

@@ -8,7 +8,8 @@
 Ext.define('Taco.view.catalog.Index', {
     extend: 'Taco.core.ux.content.Container',
     requires: [
-        'Taco.core.ux.form.FilterContainer'
+        'Taco.core.ux.form.FilterContainer',
+        'Taco.view.website.widgetEditors.Image'
     ],
 
     header: {
@@ -56,91 +57,7 @@ Ext.define('Taco.view.catalog.Index', {
     handleToggle: function (button, state) {
         if (state) {
             if (!this.dialog) {
-                this.dialog = Ext.create('Taco.core.ux.window.Modal', {
-                    title: 'Image Widget',
-                    tools: [{
-                        xtype: 'button',
-                        ui: 'action',
-                        scale: 'medium',
-                        text: 'Content',
-                        toggleGroup: 'imageWidgetTabs',
-                        allowDepress: false,
-                        enableToggle: true,
-                        pressed: true,
-                        scope: this,
-                        style: {
-                            borderRadius: '2px 0px 0px 2px'
-                        },
-                        handler: function () {
-                            this.dialog.getForm().getLayout().setActiveItem(0);
-                        }
-                    }, {
-                        xtype: 'button',
-                        ui: 'action',
-                        scale: 'medium',
-                        text: 'Style',
-                        toggleGroup: 'imageWidgetTabs',
-                        allowDepress: false,
-                        enableToggle: true,
-                        scope: this,
-                        style: {
-                            borderRadius: '0px 2px 2px 0px'
-                        },
-                        handler: function () {
-                            this.dialog.getForm().getLayout().setActiveItem(1);
-                        }
-                    }],
-                    scale: 'large',
-                    layout: {
-                        type: 'fit'
-                    },
-                    items: [{
-                        xtype: 'formform',
-                        layout: {
-                            type: 'card'
-                        },
-                        items: [{
-                            xtype: 'formform',
-                            title: 'Content',
-                            header: false,
-                            items: [{
-                                xtype: 'button',
-                                ui: 'action',
-                                scale: 'medium',
-                                text: 'Select Existing'
-                            }]
-                        }, {
-                            xtype: 'formform',
-                            title: 'Style',
-                            header: false,
-                            items: [{
-                                xtype: 'container',
-                                layout: {
-                                    type: 'hbox'
-                                },
-                                items: [{
-                                    xtype: 'combobox',
-                                    name: 'borderWidth',
-                                    fieldLabel: 'Border Width',
-                                    editable: false,
-                                    forceSelection: true,
-                                    store: ['1px', '2px', '3px']
-                                }, {
-                                    xtype: 'combobox',
-                                    name: 'borderStyle',
-                                    fieldLabel: 'Border Style',
-                                    editable: false,
-                                    forceSelection: true,
-                                    store: ['Solid', 'Dashed', 'Dotted', 'None']
-                                }, {
-                                    xtype: 'textfield',
-                                    name: 'borderColor',
-                                    fieldLabel: 'Border Color'
-                                }]
-                            }]
-                        }]
-                    }]
-                });
+                this.dialog = Ext.create('Taco.view.website.widgetEditors.Image');
 
                 this.dialog.on({
                     close: {
@@ -155,10 +72,8 @@ Ext.define('Taco.view.catalog.Index', {
             }
 
             this.dialog.show();
-        } else {
-            if (this.dialog) {
-                this.dialog.close();
-            }
+        } else if (this.dialog) {
+            this.dialog.close();
         }
     }
 });
