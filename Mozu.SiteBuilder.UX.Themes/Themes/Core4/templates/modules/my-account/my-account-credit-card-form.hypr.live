@@ -8,21 +8,7 @@
             <label>{{ labels.selectBillingAddress }} <span class="is-required">*</span></label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            {% for contact in billingContacts %}
-            <label class="mz-creditcard-billingaddress">
-                <input type="radio" data-mz-value="editingCard.billingContactId" name="billingContactId" value="{{ contact.id }}" {% if model.billingContactId == contact.id %} checked="checked" {% endif %}>
-                <div class="mz-addresssummary">
-                    {% include "modules/common/address-summary" with model=contact %}
-                </div>
-            </label>
-            {% endfor %}
-            <label class="mz-creditcard-billingaddress">
-                <input type="radio" data-mz-value="editingCard.billingContactId" name="billingContactId" value="new" data-mz-enternewcontact {% if model.billingContactId == "new" %} checked="checked" {% endif %}>
-                <div class="mz-addresssummary">
-                    <span>{{ labels.enterNewAddress }}</span>
-                </div>
-                {% if model.billingContactId == "new" %} {% include "modules/my-account/my-account-address-form" %} {% endif %}
-            </label>
+            {% include "modules/my-account/my-account-contact-selector" %}
         </div>
     </div>
     <div class="mz-creditcard-actions">

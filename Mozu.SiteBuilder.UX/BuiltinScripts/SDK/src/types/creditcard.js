@@ -120,6 +120,13 @@
                 self.fire('sync', utils.clone(self.data), self.data);
                 return self;
             });
+        },
+        saveToCustomer: function (customerId) {
+            var self = this;
+            return this.save().then(function (cardId) {
+                cardId = cardId || self.prop('id');
+                return self.api.createSync('customer', { id: customerId }).addCard(self.data);
+            });
         }
     };
 

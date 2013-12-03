@@ -22,8 +22,10 @@
             var types = this.get('types'),
                 typeConf = { name: contactType },
                 type = _.findWhere(types, typeConf);
-            type.isPrimary = yes;
-            this.set('types', types, { silent: true })
+            if (type) {
+                type.isPrimary = yes;
+                this.set('types', types, { silent: true })
+            }
         }
     });
 
@@ -180,16 +182,6 @@
                 contactLast = primaryBillingContact.get('lastNameOrSurname'),
                 op = primaryBillingContact.apiUpdate();
 
-            // TODO: When UpdateUser works do this
-            //if ((contactFirst !== user.get('firstName')) || contactLast !== user.get('lastName')) {
-            //    op = op.then(function () {
-            //        return user.apiUpdate({
-            //            firstName: contactFirst,
-            //            lastName: contactLast
-            //        });
-            //    });
-            //}
-
             return op.ensure(function () {
                 self.isLoading(false);
             });
@@ -205,16 +197,21 @@
             });
         },
         beginEditCard: function(id) {
-            var toEdit = this.get('cards').get(id);
-            if (toEdit)
-                this.get('editingCard').set(toEdit.toJSON({ helpers: true }), { silent: true });
+            var toEdit = this.get('cards').get(id),
+                editingCardModel = {
+                    billingContacts: this.billingContacts()
+                };
+            if (toEdit) {
+                _.extend(editingCardModel, toEdit.toJSON({ helpers: true }));
+            }
+            this.get('editingCard').set(editingCardModel);
         },
         endEditCard: function() {
             this.get('editingCard').clear({ silent: true });
         },
         saveCard: function () {
             var self = this;
-            return this.apiModel.addPaymentCard(this.get('editingCard').toJSON()).then(function () {
+            return this.apiSavePaymentCard(this.get('editingCard').toJSON()).then(function () {
                 return self.getCards();
             }).then(function () {
                 return self.get('editingCard').clear({ silent: true });

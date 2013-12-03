@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-11-27
+ * Mozu JavaScript SDK - v0.2.0 - 2013-12-03
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2675,6 +2675,13 @@ var ApiReference = (function () {
                     asProperty: 'customer'
                 },
                 returnType: 'accountcard'
+            },            'update-card': {
+                verb: 'PUT',
+                template: '{+customerService}{customer.id}/cards/{id}',
+                includeSelf: {
+                    asProperty: 'customer'
+                },
+                returnType: 'accountcard'
             },
             'delete-card': {
                 verb: 'DELETE',
@@ -3221,14 +3228,22 @@ ApiObject.types.creditcard = (function() {
                 self.fire('sync', utils.clone(self.data), self.data);
                 return self;
             });
+        },
+        saveToCustomer: function (customerId) {
+            var self = this;
+            return this.save().then(function (cardId) {
+                cardId = cardId || self.prop('id');
+                return self.api.createSync('customer', { id: customerId }).addCard(self.data);
+            });
         }
     };
 
 }());
 ApiObject.types.customer = (function () {
     return {
-        addPaymentCard: function (unmaskedCardData) {
-            var self = this, card = this.api.createSync('creditcard', unmaskedCardData);
+        savePaymentCard: function (unmaskedCardData) {
+            var self = this, card = this.api.createSync('creditcard', unmaskedCardData),
+                isUpdate = !!(unmaskedCardData.paymentServiceCardId || unmaskedCardData.id);
             return card.save().then(function (card) {
                 var payload = utils.clone(card.data);
                 payload.cardNumberPart = payload.cardNumberPartOrMask || payload.cardNumber;
@@ -3236,7 +3251,7 @@ ApiObject.types.customer = (function () {
                 delete payload.cardNumber;
                 delete payload.cardNumberPartOrMask;
                 delete payload.paymentServiceCardId;
-                return self.addCard(payload);
+                return isUpdate ? self.updateCard(payload) : self.addCard(payload);
             });
         },
         deletePaymentCard: function (id) {
