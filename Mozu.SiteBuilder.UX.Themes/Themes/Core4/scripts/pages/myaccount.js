@@ -131,17 +131,13 @@
         renderOnChange: [
             'editingCard.billingContactId'
         ],
-        beginAddCard: function () {
-            this.editing.card = "new";
-            this.render();
-        },
         beginEditCard: function (e) {
             var id = this.editing.card = e.currentTarget.getAttribute('data-mz-card');
             this.model.beginEditCard(id);
             this.render();
         },
         finishEditCard: function () {
-            this.doModelAction('addCard');
+            this.doModelAction('saveCard');
             this.editing.card = false;
         },
         cancelEditCard: function () {

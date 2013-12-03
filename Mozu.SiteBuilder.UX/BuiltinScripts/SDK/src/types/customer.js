@@ -1,7 +1,8 @@
 ﻿ApiObject.types.customer = (function () {
     return {
-        addPaymentCard: function (unmaskedCardData) {
-            var self = this, card = this.api.createSync('creditcard', unmaskedCardData);
+        savePaymentCard: function (unmaskedCardData) {
+            var self = this, card = this.api.createSync('creditcard', unmaskedCardData),
+                isUpdate = !!(unmaskedCardData.paymentServiceCardId || unmaskedCardData.id);
             return card.save().then(function (card) {
                 var payload = utils.clone(card.data);
                 payload.cardNumberPart = payload.cardNumberPartOrMask || payload.cardNumber;
@@ -9,7 +10,7 @@
                 delete payload.cardNumber;
                 delete payload.cardNumberPartOrMask;
                 delete payload.paymentServiceCardId;
-                return self.addCard(payload);
+                return isUpdate ? self.updateCard(payload) : self.addCard(payload);
             });
         },
         deletePaymentCard: function (id) {
