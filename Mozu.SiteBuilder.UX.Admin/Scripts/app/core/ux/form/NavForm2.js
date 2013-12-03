@@ -23,7 +23,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         this.relayEvents(this.formContainer, ['add']);
 
         this.navStore = Ext.create('Ext.data.Store', {
-            fields: ['title']
+            fields: ['title',"hidden"]
         });
 
         this.items = [{
@@ -40,9 +40,16 @@ Ext.define('Taco.core.ux.form.NavForm2', {
             tpl: [
                 '<ul>',
                     '<tpl for=".">',
-                        '<li class="taco-form-nav-link">{title}</li>',
+                        '<tpl if="this.isVisible(values)">',
+                            '<li class="taco-form-nav-link">{title}</li>',
+                        '</tpl>',
                     '</tpl>',
-                '</ul>'
+                '</ul>',
+                {
+                    isVisible: function (values) {
+                        return !values.hidden;
+                    }
+                }
             ]
         },
             this.formContainer
@@ -82,7 +89,6 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     },
 
     rebuildMap: function () {
-      
         this.locationMap = [];
         this.recordMap = [];
 
@@ -147,7 +153,8 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     },
 
     loadNavItems: function (items) {
-        var components;
+        var components,
+            recordsToAdd = [];
         
         if (items) {
             this.formContainer.autoDestroy = false;
@@ -157,7 +164,14 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         } else {
             components = this.formContainer.items.items;
         }
-        
-        this.navStore.loadRawData(components);
+
+        // need to cull hidden panels from the store so that the dataview doesn't mismatch the record to the item clicked;  It currently uses index position and the hidden records are causing the mismatch;
+        Ext.Array.each(components, function(item) {
+            if (!item.hidden) {
+                recordsToAdd.push(item);
+            }
+        });
+
+        this.navStore.loadRawData(recordsToAdd);
     }
 });

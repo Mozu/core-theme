@@ -9,6 +9,7 @@ Ext.define('Taco.view.product.subform.Categories', {
     requires: [
         'Taco.core.ux.form.field.MultiSelect'
     ],
+    alias: 'widget.productcategoriessubform',
     
     title: 'Categories',
     

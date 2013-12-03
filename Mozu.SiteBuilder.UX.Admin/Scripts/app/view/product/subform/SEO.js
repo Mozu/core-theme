@@ -6,7 +6,7 @@
 
 Ext.define('Taco.view.product.subform.SEO', {
     extend: 'Taco.view.product.subform.Subform',
-
+    alias: 'widget.productseosubform',
     title: 'SEO',
     
     initComponent: function () {

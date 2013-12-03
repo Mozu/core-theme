@@ -147,7 +147,7 @@ Ext.define('Taco.view.product.Form', {
             catalog = this.masterCatalog.findCatalog(catalogId);
 
         return Ext.create('Taco.view.product.SiteForm', {
-            isSingleSite: this.isSingleSite,
+            isSingleSite: this.singleSiteCheck(),
             record: productInCatalogInfo,
             product: this.record,
             productInCatalogInfo: productInCatalogInfo,
@@ -166,7 +166,7 @@ Ext.define('Taco.view.product.Form', {
      */
     goGoSingleSite: function (leaveTabs) {
         var me = this;
-
+        
         if (!leaveTabs) {
             me.rebuildTabs();
         }
@@ -196,7 +196,13 @@ Ext.define('Taco.view.product.Form', {
         }
 
         me.tabPanel.hideTabAt(0);
+        
         me.tabPanel.setActiveItemAt(1);
+        
+        //refresh the visibility of the siteForm
+        //me.tabPanel.items.getAt(1).updateSubFormVisibility();
+        
+        
     },
 
     /**
@@ -205,6 +211,7 @@ Ext.define('Taco.view.product.Form', {
      */
     goGoMultiSite: function (leaveTabs) {
         var me = this;
+        
         if (!leaveTabs) {
             this.rebuildTabs();
         }
@@ -238,12 +245,15 @@ Ext.define('Taco.view.product.Form', {
             return;
         }
 
+        
         //  Must rebuild tabs now since stateOrProvince switched
         if (this.isSingleSite) {
             this.goGoSingleSite();
         } else {
             this.goGoMultiSite();
         }
+        
+        
     },
     
     /**
@@ -364,6 +374,7 @@ Ext.define('Taco.view.product.Form', {
 
     onTabSelectionChange: function (tabPanel, values, oldValues) {
         //console.log('tab selection changed')
+        
         var addCatalogs= Ext.Array.difference(values, oldValues),
             removeCatalogs = Ext.Array.difference(oldValues, values);
 

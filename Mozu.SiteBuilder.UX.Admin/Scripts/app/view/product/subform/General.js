@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @class Taco.view.product.subform.General
  * @author Michael Speed Elder
  *
@@ -6,8 +6,18 @@
 
 Ext.define('Taco.view.product.subform.General', {
     extend: 'Taco.view.product.subform.Subform',
+    alias: 'widget.productgeneralsubform',
     requires: [
-        'Taco.shared.view.field.Image'        
+        'Taco.core.ux.HtmlEditor',
+        'Taco.view.product.subform.OverrideForm',
+        'Ext.form.field.ComboBox',
+        'Taco.view.product.subform.Bundle',
+        'Taco.core.ux.form.Form',
+        'Ext.data.Store',
+        'Ext.form.field.Text',
+        'Taco.shared.view.field.Image',
+        'Taco.core.ux.form.SelectField',
+        'Taco.store.ProductTypes'
     ],
 
     title: 'General',
@@ -17,7 +27,9 @@ Ext.define('Taco.view.product.subform.General', {
             readOnly,
             requiredContent,
             visable;
+
         
+
         this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
 
         this.defaults = {
@@ -61,11 +73,10 @@ Ext.define('Taco.view.product.subform.General', {
                     name: "Bundle Component",
                     id: "Component"
                 }
-            ],
-            listeners: {
-                change: this.onProductUsageChange
-            }
+            ]
         });
+
+        
         
         readOnly = this.isEdit() || !(this.isSingleSite || this.isGlobal);
         visable = !readOnly || this.isEdit();
@@ -102,7 +113,7 @@ Ext.define('Taco.view.product.subform.General', {
             itemId:"productUsageField",
             fieldLabel: 'Product Usage',
             name: 'productUsage',
-            readOnly: readOnly || this.product.get('productTypeId'),
+            readOnly: !this.product.phantom,
             // field is only editable once a productType is selected;
             disabled: !this.product.get('productTypeId'),
             required: true && visable,
@@ -223,30 +234,17 @@ Ext.define('Taco.view.product.subform.General', {
     * when the user chagnes the productUsage type selection, will need to alter the visibility and behavior of several components;
     */ 
     onProductUsageChange: function (field, value) {
+        
         var me = this,
-            globalForm = me.up('productglobalform'),
             parentForm = me.up('productsiteform, productglobalform'),
             bundleSubForm = parentForm.down('#bundleSubForm');
-
         
+        
+        parentForm.onProductUsageChange(me, value);
 
         // add/ remove the bundle items subPanel based on the productUsage value;;
-        if (value == "Bundle") {
-            parentForm.formContainer.insert(
-                1,
-                Ext.create('Taco.view.product.subform.Bundle', {
-                        isGlobal: true,
-                        product: me.product,
-                        persistChangesToModel: true
-                    }
-                )
-            );
-            parentForm.loadNavItems();
-        } else if (bundleSubForm) {
-            // if we already have a bundle subForm destroy it;
-            bundleSubForm.destroy();
-            parentForm.loadNavItems();
-        }
+        
+
     },
     
     /**
@@ -261,7 +259,7 @@ Ext.define('Taco.view.product.subform.General', {
             store;
         
         productUsageField = me.query("#productUsageField")[0];
-        currentValue = productUsageField.getValue()
+        currentValue = productUsageField.getValue();
         store = productUsageField.store;
         
         // values could be a string if there was only one value; 

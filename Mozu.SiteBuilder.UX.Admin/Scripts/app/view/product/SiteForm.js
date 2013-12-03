@@ -21,7 +21,8 @@ Ext.define('Taco.view.product.SiteForm', {
         'Taco.view.product.subform.SEO'
     ],
     mixins: {
-        scrollspy: 'Taco.core.ux.ScrollSpy' // TODO: resolve JS error with this and getEl()
+        scrollspy: 'Taco.core.ux.ScrollSpy', // TODO: resolve JS error with this and getEl()
+        bundleable: 'Taco.view.product.mixins.Bundleable'
     },
     scrollSpyOffset: 240,
 
@@ -49,9 +50,19 @@ Ext.define('Taco.view.product.SiteForm', {
         });
         */
 
+        
+        //initialize the bundling mixin
+        this.mixins.bundleable.constructor.apply(this, arguments);
+
         this.callParent(arguments);
 
         this.buildForm();
+
+        
+        
+
+        
+
 
         this.on({
             overrideChange: this.handleOverrideChange,
@@ -61,10 +72,13 @@ Ext.define('Taco.view.product.SiteForm', {
             scope: this
         });
     },
+    
 
     buildForm: function () {
+    
         var items = [],
             subFormCfg = {
+                hidden:false,
                 record: this.record,
                 product: this.product,
                 productInCatalogInfo: this.productInCatalogInfo,
@@ -77,8 +91,8 @@ Ext.define('Taco.view.product.SiteForm', {
             Ext.create('Taco.view.product.subform.General', subFormCfg)
         ]);
         
-        // if this product has a product usage of type "Bundle" add the subPanel for managing its items
-        if (this.product.get("productUsage") == "Bundle") {
+        // if this product has a product usage of type "Bundle" add the subPanel for managing its items. This should only occur in siteForm when there is a single site, since the global form is hidden.
+        if (this.product.get("productUsage") == "Bundle" && this.isSingleSite) {
             Ext.Array.push(items, [
                 Ext.create('Taco.view.product.subform.Bundle', subFormCfg)
             ]);
@@ -102,8 +116,12 @@ Ext.define('Taco.view.product.SiteForm', {
             Ext.create('Taco.view.product.subform.Merchandising', subFormCfg),
             Ext.create('Taco.view.product.subform.SEO', subFormCfg)
         ]);
-
+        
+        //Need to call loadNaveItems to intialize the loading of the subforms
         this.loadNavItems(items);
+        
+        // Note that this method will also reload the navItems to reflect the updated visiblity.
+        this.updateSubFormVisibility();
     },
 
     constructor: function () {

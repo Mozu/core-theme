@@ -77,7 +77,7 @@ Ext.define('Taco.view.product.subform.Options', {
             Ext.each(option.get('values'), function (val, i) {
                 if (i > 0) ret.push(', ');
                 ret.push(val);
-            });
+        });
 
             ret.push('<br>');
         }, this);
@@ -103,5 +103,5 @@ Ext.define('Taco.view.product.subform.Options', {
 
     rebuild: function () {
         this.list.update(this.buildOptionsHtml());
-    }
+    } 
 });

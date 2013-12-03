@@ -6,7 +6,7 @@
 
 Ext.define('Taco.view.product.subform.Merchandising', {
     extend: 'Taco.view.product.subform.Subform',
-
+    alias: 'widget.productmerchandisingsubform',
     title: 'Merchandising',
 
     initComponent: function () {
