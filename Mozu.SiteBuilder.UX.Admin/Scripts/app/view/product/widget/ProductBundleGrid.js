@@ -5,8 +5,11 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
     extend: 'Taco.core.ux.browser.SearchList',
     alias: 'widget.productbundlegrid',
     requires: [
+        'Ext.form.field.Number',
+        'Ext.grid.plugin.DragDrop',
         'Ext.data.Store',
         'Ext.grid.plugin.CellEditing',
+        'Taco.store.Products',
         'Taco.model.BundledProduct',
         'Taco.view.product.Modal',
         'Taco.store.ProductBundlePicker'

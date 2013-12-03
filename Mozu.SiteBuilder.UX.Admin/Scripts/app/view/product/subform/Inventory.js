@@ -4,7 +4,7 @@
 
 Ext.define('Taco.view.product.subform.Inventory', {
     extend: 'Taco.view.product.subform.Subform',
-
+    alias: 'widget.productinventorysubform',
     requires: ['Taco.view.product.option.Form'],
 
     title: 'Inventory',
