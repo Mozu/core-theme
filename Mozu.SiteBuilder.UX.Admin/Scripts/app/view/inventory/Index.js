@@ -17,7 +17,7 @@ Ext.define('Taco.view.inventory.Index', {
     typeName: 'Inventory',
     modelName: 'Taco.model.Product',
     store: {
-        type: 'Taco.store.Products',
+        type: 'Taco.store.InventoriedProducts',
         createOnly:true
     },
     
