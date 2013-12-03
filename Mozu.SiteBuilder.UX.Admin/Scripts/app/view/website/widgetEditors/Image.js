@@ -9,7 +9,9 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
     extend: 'Taco.view.website.WidgetEditor',
     alias: 'widget.taco-image-widgeteditor',
     requires: [
-        'Taco.store.NavigationTreeNodes'
+        'Taco.core.ux.form.FileInputButton',
+        'Taco.store.NavigationTreeNodes',
+        'Taco.view.fileManager.Associator'
     ],
 
     title: 'Image',
@@ -73,24 +75,37 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                 items: [{
                     xtype: 'container',
                     layout: {
-                        type: 'hbox'
+                        type: 'hbox',
+                        align: 'bottom'
                     },
                     items: [{
+                        xtype: 'combobox',
+                        name: 'imageSource',
+                        fieldLabel: 'Image Source',
+                        value: 'File',
+                        width: 170,
+                        editable: false,
+                        forceSelection: true,
+                        store: ['File', 'External URL']
+                    }, {
                         xtype: 'button',
                         ui: 'action',
                         scale: 'medium',
                         text: 'Select Existing',
+                        margin: '0 0 0 10',
                         enableToggle: true,
                         scope: this,
                         toggleHandler: function (button, state) {
                             this.toggleAssociator(state, button, 'imageUrls');
                         }
                     }, {
-                        xtype: 'button',
-                        ui: 'action',
-                        scale: 'medium',
+                        xtype: 'tacofilefield',
                         text: 'Upload',
-                        margin: '0 0 0 10'
+                        margin: '0 0 0 10',
+                        buttonConfig: {
+                            ui: 'action',
+                            scale: 'medium'
+                        }
                     }, {
                         xtype: 'textfield',
                         name: 'imageUrls',
@@ -211,12 +226,16 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                 }, {
                     xtype: 'container',
                     itemId: 'urlFields',
+                    padding: '10 0 0',
                     hidden: true,
+                    layout: {
+                        type: 'hbox'
+                    },
                     items: [{
                         xtype: 'combobox',
                         name: 'urlType',
                         margin: '0 0 10',
-                        width: 260,
+                        width: 170,
                         editable: false,
                         forceSelection: true,
                         value: 'External URL',
@@ -225,107 +244,116 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                             change: {
                                 scope: this,
                                 fn: function (field, newValue, oldValue) {
-                                    var associatorButton = field.nextSibling().down('#associatorButton'),
+                                    var urlField = field.nextSibling('[name="clickThroughUrl"]'),
+                                        associatorButton = field.nextSibling('#associatorButton'),
+                                        uploadButton = field.nextSibling('#uploadButton'),
                                         cardIndex = (newValue === 'Internal URL') ? 1 : 0;
 
                                     if (newValue === 'File') {
                                         cardIndex = 2;
+                                        urlField.hide();
                                         associatorButton.show();
+                                        uploadButton.show();
                                     } else {
+                                        urlField.show();
                                         associatorButton.hide();
+                                        uploadButton.hide();
                                     }
 
-                                    field.nextSibling('#urlSelectors').getLayout().setActiveItem(cardIndex);
+                                    field.up('#urlFields').nextSibling('#urlSelectors').getLayout().setActiveItem(cardIndex);
                                 }
                             }
                         }
                     }, {
-                        xtype: 'container',
+                        xtype: 'textfield',
+                        name: 'clickThroughUrl',
+                        emptyText: 'http://',
+                        margin: '0 0 0 15',
+                        flex: 1
+                    }, {
+                        xtype: 'button',
+                        itemId: 'associatorButton',
+                        ui: 'action',
+                        scale: 'medium',
+                        text: 'Select Existing',
+                        margin: '0 0 0 15',
+                        hidden: true,
+                        enableToggle: true,
+                        scope: this,
+                        toggleHandler: function (button, state) {
+                            this.toggleAssociator(state, button, 'clickThroughUrl');
+                        }
+                    }, {
+                        xtype: 'tacofilefield',
+                        itemId: 'uploadButton',
+                        text: 'Upload',
+                        margin: '0 0 0 15',
+                        hidden: true,
+                        buttonConfig: {
+                            ui: 'action',
+                            scale: 'medium'
+                        }
+                    }]
+                }, {
+                    xtype: 'container',
+                    itemId: 'urlSelectors',
+                    height: 160,
+                    layout: {
+                        type: 'card'
+                    },
+                    items: [{
+                        // Card 0: External URL
                         layout: {
-                            type: 'hbox'
+                            type: 'fit'
                         },
                         items: [{
-                            xtype: 'textfield',
-                            name: 'clickThroughUrl',
-                            emptyText: 'http://',
-                            margin: '0 0 10',
-                            flex: 1
-                        }, {
-                            xtype: 'button',
-                            itemId: 'associatorButton',
-                            ui: 'action',
-                            scale: 'medium',
-                            glyph: 'XE010@mozicons',
-                            margin: '0 0 0 10',
-                            width: 57,
-                            hidden: true,
-                            enableToggle: true,
-                            scope: this,
-                            toggleHandler: function (button, state) {
-                                this.toggleAssociator(state, button, 'clickThroughUrl');
+                            xtype: 'component'
+                        }]
+                    }, {
+                        // Card 1: Internal URL
+                        layout: {
+                            type: 'fit'
+                        },
+                        items: [{
+                            xtype: 'treepanel',
+                            componentCls: 'taco-website-tree',
+                            hideHeaders: true,
+                            rootVisible: false,
+                            useArrows: true,
+                            store: Taco.core.data.StoreManager.getOrCreate('Taco.store.NavigationTreeNodes'),
+                            columns: [{
+                                xtype: 'treecolumn',
+                                flex: 1,
+                                dataIndex: 'name',
+                                renderer: function (value, metaData, record) {
+                                    return '<span class="taco-website-tree-icon"></span><span>' + value + '</span>';
+                                }
+                            }],
+                            listeners: {
+                                selectionchange: {
+                                    scope: this,
+                                    fn: function (selModel, records) {
+                                        var textfield = selModel.view.up('form').getForm().findField('clickThroughUrl'),
+                                            urls;
+
+                                        urls = Ext.Array.map(records, function (record) {
+                                            return record.get('url');
+                                        }, this).join(', ');
+                                        
+                                        textfield.setValue(urls);
+                                    }
+                                }
                             }
                         }]
                     }, {
-                        xtype: 'container',
-                        itemId: 'urlSelectors',
-                        height: 160,
+                        // Card 2: File
                         layout: {
-                            type: 'card'
+                            type: 'fit'
                         },
                         items: [{
-                            // Card 0: External URL
-                            layout: {
-                                type: 'fit'
-                            },
-                            items: [{
-                                xtype: 'component'
-                            }]
-                        }, {
-                            // Card 1: Internal URL
-                            layout: {
-                                type: 'fit'
-                            },
-                            items: [{
-                                xtype: 'treepanel',
-                                componentCls: 'taco-website-tree',
-                                hideHeaders: true,
-                                rootVisible: false,
-                                useArrows: true,
-                                store: Taco.core.data.StoreManager.getOrCreate('Taco.store.NavigationTreeNodes'),
-                                columns: [{
-                                    xtype: 'treecolumn',
-                                    flex: 1,
-                                    dataIndex: 'name',
-                                    renderer: function (value, metaData, record) {
-                                        return '<span class="taco-website-tree-icon"></span><span>' + value + '</span>';
-                                    }
-                                }],
-                                listeners: {
-                                    selectionchange: {
-                                        scope: this,
-                                        fn: function (selModel, records) {
-                                            var textfield = selModel.view.up('form').getForm().findField('clickThroughUrl'),
-                                                urls;
-
-                                            urls = Ext.Array.map(records, function (record) {
-                                                return record.get('url');
-                                            }, this).join(', ');
-                                            
-                                            textfield.setValue(urls);
-                                        }
-                                    }
-                                }
-                            }]
-                        }, {
-                            // Card 2: File
-                            layout: {
-                                type: 'fit'
-                            },
-                            items: [{
-                                xtype: 'component',
-                                cls: 'taco-image-dropzone',
-                                html: 'Drag and drop files here'
-                            }]
+                            xtype: 'component',
+                            cls: 'taco-image-dropzone',
+                            html: 'Drag and drop files here'
                         }]
                     }]
                 }]
