@@ -126,7 +126,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var ret2 = await _locationSettingsWebApiClient.UpdateLocationUsage("SP", new LocationUsage()
             {
                 LocationUsageTypeCode = "SP",
-                LocationTypeCodes = settings.StorePickupLocationTypeCodes 
+                LocationTypeCodes = settings.EnableInStorePickup == true ? settings.StorePickupLocationTypeCodes : new List<string>()
             });
 
             if (ret2.HasException)
