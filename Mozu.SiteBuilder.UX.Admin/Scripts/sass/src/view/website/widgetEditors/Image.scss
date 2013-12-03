@@ -1,0 +1,33 @@
+.#{$vprefix}image-dropzone {
+    background-color: $color-neutral-95;
+    border: 1px dashed $color-neutral-75;
+    color: $color-neutral-80;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 30px 10px;
+    text-align: center;
+    @include border-radius(2px);
+    @include icon-font($glyph-dropimage, 80px, $color-neutral-80);
+    @include transition-duration(0.3s);
+    @include transition-property(background, border, box-shadow, color, text-shadow, transform);
+    @include transition-timing-function(ease-in-out);
+
+    &::after {
+        left: 50%;
+        margin-left: -40px;
+        top: 60px;
+        @include transition-duration(0.3s);
+        @include transition-property(background, border, box-shadow, color, text-shadow, transform);
+        @include transition-timing-function(ease-in-out);
+    }
+
+    &:hover {
+        background-color: $color-neutral-90;
+        border-color: $color-neutral-70;
+        color: $color-neutral-70;
+
+        &::after {
+            color: $color-neutral-70;
+        }
+    }
+}
