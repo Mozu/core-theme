@@ -49,6 +49,8 @@ Ext.define('Taco.model.CmsDocument', {
             "type": "auto",
             defaultValue:[],
             "useNull": true
+        }, {
+            name: 'publishState'
         }
         
     ],

@@ -10,7 +10,7 @@ Ext.define('Taco.view.settings.Publishing', {
     cls: 'taco-publishing-settings',
 
     // TODO: change this back once we enable do CMS publishing integration work
-    hideCmsOptions: true,
+    hideCmsOptions: false,
 
     initComponent: function () {
         
@@ -114,7 +114,7 @@ Ext.define('Taco.view.settings.Publishing', {
                     liveContentRadio = Ext.widget({
                         xtype: 'radio',
                         inputValue: 'Live',
-                        checked: true,
+                        checked: !site.isPublishingEnabled(),
                         name: 'content-publishing-' + site.id,
                         cellCls: 'site radio',
                         listeners: {
@@ -140,7 +140,7 @@ Ext.define('Taco.view.settings.Publishing', {
                     stagedContentRadio = Ext.widget({
                         xtype: 'radio',
                         inputValue: 'Pending',
-                        checked: false,
+                        checked: site.isPublishingEnabled(),
                         name: 'content-publishing-' + site.id,
                         cellCls: 'site radio'
                     });

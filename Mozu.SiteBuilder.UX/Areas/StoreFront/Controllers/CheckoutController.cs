@@ -31,7 +31,7 @@ using Mozu.CommerceRuntime.Contracts.Orders;
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
 
-
+    [InitCmsPageContextActionFilter]
     [NoWarmAuthActionFilter]
     public class CheckoutController : BaseApiController
     {

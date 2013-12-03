@@ -40,7 +40,5 @@ Ext.define('Taco.view.website.entityAdapters.TemplateEntityAdapter', {
         return;
        
      
-    },
-
-    publish: Ext.emptyFn
+    }
 });

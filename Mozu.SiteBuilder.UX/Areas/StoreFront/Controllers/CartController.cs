@@ -9,6 +9,7 @@ using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Carts;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
@@ -23,6 +24,7 @@ using Product = Mozu.ProductRuntime.Contracts.Product;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
+    [InitCmsPageContextActionFilter]
     public class CartController : BaseApiController
     {
         private readonly ICartWebApiClient _cartClient;

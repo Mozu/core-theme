@@ -66,8 +66,8 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
         [DataMember(Name = "defaultHost")]
         public string DefaultHost { get; set; }
 
-        [DataMember(Name = "contentPublishingMode")]
-        public string ContentPublishingMode { get; set; }
+        [DataMember(Name = "publishingEnabled")]
+        public bool PublishingEnabled { get; set; }
 
 
 

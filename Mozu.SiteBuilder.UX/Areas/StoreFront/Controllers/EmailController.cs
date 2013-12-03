@@ -11,6 +11,7 @@ using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Messaging.Contracts.Notification;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
@@ -26,6 +27,7 @@ using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
+    [InitCmsPageContextActionFilter]
     public class EmailController : CmsPagesController
     {
         private static readonly List<EmailTypeInfo> g_emailTypeInfos;

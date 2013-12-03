@@ -190,6 +190,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             doc.DocumentId = result.Id;
 
             doc.DocumentType = result.DocumentType;
+            doc.PublishState = result.PublishState;
+            
                         
             doc.Items = new List<AVM.DocumentProperty>();
             doc.DocumentListName = result.DocumentListName  ;

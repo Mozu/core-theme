@@ -85,7 +85,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
                 .WithLibrary(typeof (AutofacModule).Assembly)
                 .WithLoader(new TemplateLoader())
 
-                .WithSetting("settings.DEFAULT_AUTOESCAPE", false);
+                .WithSetting("settings.DEFAULT_AUTOESCAPE", true);
 
 
             Assembly ass = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(x => new AssemblyName(x.FullName).Name == "Mozu.SiteBuilder.UX");
@@ -101,6 +101,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
                    .SingleInstance();
 
             NDjango.Interfaces.ResolverConfig.Resolver = new CaseInsensitiveMemberResolver();
+            NDjango.Interfaces.EscaperConfig.Escaper = new SafeEscaper();
             ITemplateManager tm = tmp.GetNewManager();
 
             builder.Register(c => new HyprTemplateManager(tm, c.Resolve<MozuVirtualPathProvider>())).As<ITemplateManager>().InstancePerLifetimeScope();

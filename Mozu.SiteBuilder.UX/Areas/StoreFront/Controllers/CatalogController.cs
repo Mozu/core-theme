@@ -26,6 +26,8 @@ using ProductSearchResult = Mozu.ProductRuntime.Contracts.ProductSearchResult;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
+
+    [InitCmsPageContextActionFilter]
     public class CatalogController : BaseApiController
     {
         private readonly ISiteBuilderApiContext _apiCtx;
@@ -190,7 +192,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("Category", cat);
         }
 
-        [InitCmsPageContextActionFilter]
+   
         [HttpGet]
         public async Task<HttpResponseMessage> Category(int? categoryId = null, string sortBy = null, int? page = null, int? itemsPerPage = null)
         {

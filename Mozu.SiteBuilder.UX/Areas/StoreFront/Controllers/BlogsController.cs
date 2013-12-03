@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Newtonsoft.Json.Linq;
@@ -28,7 +29,7 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
 
-     
+     [InitCmsPageContextActionFilter]
     public class BlogsController : BaseApiController
     {
     
