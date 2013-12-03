@@ -321,6 +321,13 @@ var ApiReference = (function () {
                     asProperty: 'customer'
                 },
                 returnType: 'accountcard'
+            },            'update-card': {
+                verb: 'PUT',
+                template: '{+customerService}{customer.id}/cards/{id}',
+                includeSelf: {
+                    asProperty: 'customer'
+                },
+                returnType: 'accountcard'
             },
             'delete-card': {
                 verb: 'DELETE',

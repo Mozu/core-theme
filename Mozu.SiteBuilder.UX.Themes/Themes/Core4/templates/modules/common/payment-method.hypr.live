@@ -1,0 +1,13 @@
+﻿<div class="mz-paymentmethod {% block module-classes %}{% endblock module-classes %}">
+    <div class="mz-paymentmethod-actions">
+      {% block payment-method-actions %}
+      {% endblock payment-method-actions %}
+    </div>
+   <div class="mz-paymentmethod-methoddetails">
+     {% block payment-method-details %}
+     <strong class="mz-paymentmethod-methodtype">{{ model.cardType }}</strong>
+     <div class="mz-paymentmethod-cardnumber">{{ model.cardNumberPart }}</div>
+     <div class="mz-paymentmethod-cardexp">{{ labels.expires }} {{ model.expireMonth }}/{{model.expireYear }}</div>
+     {% endblock payment-method-details %}
+   </div>
+ </div>

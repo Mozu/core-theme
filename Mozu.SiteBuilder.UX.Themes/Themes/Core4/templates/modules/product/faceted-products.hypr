@@ -6,7 +6,7 @@
 </div>
 {% endif %}
 
-<div class="mz-productlisting-faceted mz-l-paginatedlist">
+<div class="mz-l-paginatedlist">
     <div data-mz-pagingcontrols class="mz-pagingcontrols">
         {% include "modules/common/paging-controls" %}
     </div>
