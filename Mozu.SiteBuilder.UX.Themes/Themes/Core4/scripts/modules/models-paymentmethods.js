@@ -50,22 +50,6 @@
                     self.set(v, val, { silent: true });
                 });
             });
-            
-            //this.on('change:cardNumber', function (m, val) {
-            //    this.set('cardNumberPartOrMask', val, { silent: true })
-            //});
-            //this.on('change:cardNumberPartOrMask', function (m, val) {
-            //    this.set('cardNumber', val, { silent: true })
-            //});
-            //this.on('change:paymentOrCardType', function (m, val) {
-            //    this.set('cardType', val, { silent: true })
-            //});
-            //this.on('change:cardType', function (m, val) {
-            //    this.set('paymentOrCardType', val, { silent: true })
-            //});
-            //this.on('change:paymentServiceCardId', function (m, val) {
-            //    this.set('id', val, { silent: true })
-            //});
         },
         dataTypes: {
             expireMonth: Backbone.MozuModel.DataTypes.Int,
