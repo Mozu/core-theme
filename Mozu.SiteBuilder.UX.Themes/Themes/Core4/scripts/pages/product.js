@@ -40,8 +40,21 @@
             // handle preset selects, etc
             var me = this;
             this.$('[data-mz-product-option]').each(function () {
-                var $this = $(this);
-                if ($this.val()) me.configure($this);
+                var $this = $(this), isChecked, wasChecked;
+                if ($this.val()) {
+                    switch ($this.type()) {
+                        case "checkbox":
+                        case "radio":
+                            isChecked = $this.prop('checked');
+                            wasChecked = !!$this.attr('checked');
+                            if ((isChecked && !wasChecked) || (wasChecked && !isChecked)) {
+                                me.configure($this);
+                            }
+                            break;
+                        default:
+                            me.configure($this);
+                    }
+                }
             });
         }
     });
