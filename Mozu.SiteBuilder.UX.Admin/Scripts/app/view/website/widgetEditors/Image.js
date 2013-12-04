@@ -18,7 +18,7 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
 
     autoShow: false,
     width: 580,
-    height: 640,
+    height: 600,
 
     layout: {
         type: 'fit'
@@ -81,50 +81,96 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                     items: [{
                         xtype: 'combobox',
                         name: 'imageSource',
-                        fieldLabel: 'Image Source',
                         value: 'File',
                         width: 170,
                         editable: false,
                         forceSelection: true,
-                        store: ['File', 'External URL']
+                        store: ['File', 'External URL'],
+                        listeners: {
+                            change: {
+                                scope: this,
+                                fn: function (field, newValue, oldValue) {
+                                    var isFile = newValue === 'File',
+                                        cardIndex = isFile ? 0 : 1;
+
+                                    field.nextSibling('#imageAssociatorButton').setVisible(isFile);
+                                    field.nextSibling('#imageUploadButton').setVisible(isFile);
+                                    field.nextSibling('[name=imageExternalUrl]').setVisible(newValue === 'External URL');
+                                    this.down('#imageSelectors').getLayout().setActiveItem(cardIndex);
+                                }
+                            }
+                        }
                     }, {
                         xtype: 'button',
+                        itemId: 'imageAssociatorButton',
                         ui: 'action',
                         scale: 'medium',
                         text: 'Select Existing',
-                        margin: '0 0 0 10',
+                        margin: '0 0 0 15',
                         enableToggle: true,
                         scope: this,
                         toggleHandler: function (button, state) {
-                            this.toggleAssociator(state, button, 'imageUrls');
+                            this.toggleAssociator(state, button, 'imageFileId');
                         }
                     }, {
                         xtype: 'tacofilefield',
+                        itemId: 'imageUploadButton',
                         text: 'Upload',
-                        margin: '0 0 0 10',
+                        margin: '0 0 0 15',
                         buttonConfig: {
                             ui: 'action',
                             scale: 'medium'
                         }
                     }, {
                         xtype: 'textfield',
-                        name: 'imageUrls',
+                        name: 'imageFileId',
                         hideMode: 'offsets',
-                        margin: '0 0 0 10',
+                        margin: '0 0 0 15',
+                        flex: 1,
+                        hidden: true
+                    }, {
+                        xtype: 'textfield',
+                        name: 'imageExternalUrl',
+                        hideMode: 'offsets',
+                        emptyText: 'http://',
+                        margin: '0 0 0 15',
                         flex: 1,
                         hidden: true
                     }]
                 }, {
-                    xtype: 'component',
-                    cls: 'taco-image-dropzone',
-                    html: 'Drag and drop images here',
-                    margin: '20 0 0',
-                    height: 160
+                    xtype: 'container',
+                    itemId: 'imageSelectors',
+                    layout: {
+                        type: 'card'
+                    },
+                    items: [{
+                        // Card 0: File
+                        layout: {
+                            type: 'fit'
+                        },
+                        items: [{
+                            xtype: 'component',
+                            cls: 'taco-image-dropzone',
+                            html: 'Drag and drop images here',
+                            margin: '20 0 0',
+                            height: 160
+                        }]
+                    }, {
+                        // Card 1: External URL
+                        layout: {
+                            type: 'fit'
+                        },
+                        items: [{
+                            xtype: 'component'
+                        }]
+                    }]
                 }, {
                     xtype: 'textarea',
+                    name: 'imageCaption',
                     fieldLabel: 'Image Caption'
                 }, {
                     xtype: 'textarea',
+                    name: 'imageAltText',
                     fieldLabel: 'Alt Text'
                 }]
             }, {
@@ -156,12 +202,13 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         value: 'Solid',
                         store: ['Solid', 'Dashed', 'Dotted', 'None']
                     }, {
-                        xtype: 'textfield',
+                        xtype: 'colorfield',
                         name: 'borderColor',
                         fieldLabel: 'Border Color',
-                        value: 'Black',
+                        inputCls: 'x-form-text',
                         margin: '0 0 0 15',
-                        width: 170
+                        width: 170,
+                        pickerSize: 30
                     }]
                 }, {
                     xtype: 'container',
@@ -181,8 +228,8 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                             change: {
                                 scope: this,
                                 fn: function (field, newValue, oldValue) {
-                                    field.nextSibling('[name=imageWidth]').setVisible(newValue === 'Specific Size');
-                                    field.nextSibling('[name=imageHeight]').setVisible(newValue === 'Specific Size');
+                                    this.down('[name=imageWidth]').setVisible(newValue === 'Specific Size');
+                                    this.down('[name=imageHeight]').setVisible(newValue === 'Specific Size');
                                 }
                             }
                         }
@@ -219,21 +266,21 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         change: {
                             scope: this,
                             fn: function (fieldgroup, newValue, oldValue) {
-                                fieldgroup.nextSibling('#urlFields').setVisible(newValue.imageClickAction === 'url');
+                                this.down('#linkFields').setVisible(newValue.imageClickAction === 'url');
                             }
                         }
                     }
                 }, {
                     xtype: 'container',
-                    itemId: 'urlFields',
-                    padding: '10 0 0',
+                    itemId: 'linkFields',
+                    padding: '7 0 0',
                     hidden: true,
                     layout: {
                         type: 'hbox'
                     },
                     items: [{
                         xtype: 'combobox',
-                        name: 'urlType',
+                        name: 'linkSource',
                         margin: '0 0 10',
                         width: 170,
                         editable: false,
@@ -244,35 +291,22 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                             change: {
                                 scope: this,
                                 fn: function (field, newValue, oldValue) {
-                                    var urlField = field.nextSibling('[name="clickThroughUrl"]'),
-                                        associatorButton = field.nextSibling('#associatorButton'),
-                                        uploadButton = field.nextSibling('#uploadButton'),
-                                        cardIndex = (newValue === 'Internal URL') ? 1 : 0;
+                                    var isFile = newValue === 'File';
+                                    var cardIndex = isFile ? 2 : 0;
 
-                                    if (newValue === 'File') {
-                                        cardIndex = 2;
-                                        urlField.hide();
-                                        associatorButton.show();
-                                        uploadButton.show();
-                                    } else {
-                                        urlField.show();
-                                        associatorButton.hide();
-                                        uploadButton.hide();
-                                    }
+                                    if (newValue === 'Internal URL') cardIndex = 1;
 
-                                    field.up('#urlFields').nextSibling('#urlSelectors').getLayout().setActiveItem(cardIndex);
+                                    field.nextSibling('#linkAssociatorButton').setVisible(isFile);
+                                    field.nextSibling('#linkUploadButton').setVisible(isFile);
+                                    field.nextSibling('[name=linkInternalUrl]').setVisible(newValue === 'Internal URL');
+                                    field.nextSibling('[name=linkExternalUrl]').setVisible(newValue === 'External URL');
+                                    this.down('#linkSelectors').getLayout().setActiveItem(cardIndex);
                                 }
                             }
                         }
                     }, {
-                        xtype: 'textfield',
-                        name: 'clickThroughUrl',
-                        emptyText: 'http://',
-                        margin: '0 0 0 15',
-                        flex: 1
-                    }, {
                         xtype: 'button',
-                        itemId: 'associatorButton',
+                        itemId: 'linkAssociatorButton',
                         ui: 'action',
                         scale: 'medium',
                         text: 'Select Existing',
@@ -281,11 +315,11 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         enableToggle: true,
                         scope: this,
                         toggleHandler: function (button, state) {
-                            this.toggleAssociator(state, button, 'clickThroughUrl');
+                            this.toggleAssociator(state, button, 'linkFileId');
                         }
                     }, {
                         xtype: 'tacofilefield',
-                        itemId: 'uploadButton',
+                        itemId: 'linkUploadButton',
                         text: 'Upload',
                         margin: '0 0 0 15',
                         hidden: true,
@@ -293,10 +327,29 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                             ui: 'action',
                             scale: 'medium'
                         }
+                    }, {
+                        xtype: 'textfield',
+                        name: 'linkExternalUrl',
+                        emptyText: 'http://',
+                        margin: '0 0 0 15',
+                        flex: 1,
+                        hidden: false
+                    }, {
+                        xtype: 'textfield',
+                        name: 'linkInternalUrl',
+                        margin: '0 0 0 15',
+                        flex: 1,
+                        hidden: true
+                    }, {
+                        xtype: 'textfield',
+                        name: 'linkFileId',
+                        margin: '0 0 0 15',
+                        flex: 1,
+                        hidden: true
                     }]
                 }, {
                     xtype: 'container',
-                    itemId: 'urlSelectors',
+                    itemId: 'linkSelectors',
                     height: 160,
                     layout: {
                         type: 'card'
@@ -333,14 +386,14 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                                 selectionchange: {
                                     scope: this,
                                     fn: function (selModel, records) {
-                                        var textfield = selModel.view.up('form').getForm().findField('clickThroughUrl'),
+                                        var field = this.getForm().getForm().findField('linkInternalUrl'),
                                             urls;
 
                                         urls = Ext.Array.map(records, function (record) {
                                             return record.get('url');
                                         }, this).join(', ');
                                         
-                                        textfield.setValue(urls);
+                                        field.setValue(urls);
                                     }
                                 }
                             }
@@ -381,7 +434,7 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         var urls;
 
                         urls = Ext.Array.map(records, function (record) {
-                            return record.get('url');
+                            return record.getId();
                         }, this).join(', ');
                         
                         field.setValue(urls);

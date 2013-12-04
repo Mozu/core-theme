@@ -52,7 +52,9 @@ Ext.define('Taco.view.catalog.Index', {
         this.down('#switch').toggle(false);
     },
 
-    handleDialogSave: Ext.emptyFn,
+    handleDialogSave: function (dialog) {
+        console.log(dialog.getForm().getValues());
+    },
 
     handleToggle: function (button, state) {
         if (state) {
