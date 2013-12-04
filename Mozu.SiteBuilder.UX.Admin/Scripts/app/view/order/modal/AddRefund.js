@@ -39,41 +39,44 @@ Ext.define('Taco.view.order.modal.AddRefund', {
                 }
             ]
         });
-        
-        this.paymentSelection = Ext.create('Ext.form.FieldContainer', {
-            //xtyp: 'fieldcontainer',
-            defaultType: 'radiofield',
-            height: 87,
-            style: { height: 87 },
-            items: [
-                 {
-                     boxLabel: 'Credit Card',
-                     name: 'paymentType',
-                     inputValue: 'card',
-                     id: 'creditcard',
-                     checked: true,
-                     handler: function (radio) {
-                         if (radio.getValue()) {
-                             this.grid.show();
-                             this.storeCreditPanel.hide();
-                             //this.grid.hide();
-                         } 
-                     }, scope: this
-                 }, {
-                     boxLabel: 'Store Credit',
-                     name: 'paymentType',
-                     inputValue: 'credit',
-                     id: 'storecredit',
-                     handler: function (radio) {
-                         if (radio.getValue()) {
-                             //show other panel
-                             this.storeCreditPanel.show();
-                             this.grid.hide();
-                         } 
-                     }, scope: this
-                 }
-            ]
+
+        this.creditCardRadio = Ext.create('Ext.form.field.Radio', {
+            boxLabel: 'Credit Card',
+            name: 'paymentType',
+            inputValue: 'card',
+            checked: true,
+            handler: function (radio) {
+                this.checkValidity();
+                if (radio.getValue()) {
+                    this.grid.show();
+                    this.storeCreditPanel.hide();
+                }
+            },
+            scope: this
         });
+        
+        this.instoreCreditRadio = Ext.create('Ext.form.field.Radio', {
+            boxLabel: 'Store Credit',
+            name: 'paymentType',
+            inputValue: 'credit',
+            handler: function (radio) {
+                if (radio.getValue()) {
+                    //show other panel
+                    this.storeCreditPanel.show();
+                    this.grid.hide();
+                }
+            },
+            scope: this
+        });
+
+        this.paymentSelection = Ext.create('Ext.form.FieldContainer', {
+            defaultType: 'radiofield',
+            vertical: true,
+            items: [
+                 this.creditCardRadio, this.instoreCreditRadio
+            ],
+            scope: this
+        },this);
         
         this.grid = Ext.create('Taco.core.ux.grid.Panel', {
             store: this.store,
@@ -139,10 +142,16 @@ Ext.define('Taco.view.order.modal.AddRefund', {
                 Ext.create('Ext.grid.plugin.CellEditing', {
                     clicksToEdit: 1
                 })
-            ]
+            ],
+            scope: this
         });
         
-        this.storeCreditPanel = Ext.create('Ext.panel.Panel', {
+        var totalOrder = 0;
+        Ext.Array.each(this.order.data.payments, function(item) {
+            totalOrder += item.amountCollected;
+        });
+
+        this.storeCreditPanel = Ext.create('Ext.form.Panel', {
             hidden: true,
             defaults: {
               width: 500  
@@ -150,20 +159,26 @@ Ext.define('Taco.view.order.modal.AddRefund', {
             items: [{
                 xtype: 'textfield',
                 fieldLabel: 'Original Amount',
-                editable: false
+                value: totalOrder,
+                readOnly: true
             }, {
                 xtype: 'textfield',
-                fieldLabel: 'Store Credit ID'
+                fieldLabel: 'Store Credit ID',
+                allowBlank: false
             }, {
-                xtype: 'textfield',
-                fieldLabel: 'Refund Amount'
+                xtype: 'numberfield',
+                fieldLabel: 'Refund Amount',
+                hideTrigger: true,
+                allowBlank: false
             }, {
                 xtype: 'textarea',
-                fieldLabel: 'Transaction History'
+                fieldLabel: 'Transaction History',
+                allowBlank: false
             }, {
                 xtype: 'checkboxfield',
                 fieldLabel: 'Email store credit information to customer'
-            }]
+            }],
+            scope: this
         });
 
         this.items = [
@@ -182,8 +197,15 @@ Ext.define('Taco.view.order.modal.AddRefund', {
             }
         });
 
+        this.storeCreditPanel.on({
+           validitychange: {
+               scope: this,
+               fn: 'checkValidity'
+           } 
+        });
+
         this.grid.on({
-            edit: {
+           edit: {
                 scope: this,
                 fn: 'checkValidity'
             },
@@ -192,19 +214,25 @@ Ext.define('Taco.view.order.modal.AddRefund', {
                 fn: 'checkValidity'
             }
         });
+
+        this.primaryAction = this.down('#primaryAction');
     },
 
     checkValidity: function () {
-        var primaryAction = this.down('#primaryAction'),
+
+        var primaryAction = this.primaryAction,
             refundIndex;
-
-        // determine if any record in the store has a refund of more than 0 dollars
-        refundIndex = this.store.findBy(function (item) {
-            return item.get('amountToRefund') > 0;
-        });
-
-        // if such a record was found, disable the save button
-        primaryAction.setDisabled(refundIndex === -1);
+        
+        if (this.creditCardRadio.getValue()) {
+            // determine if any record in the store has a refund of more than 0 dollars
+            refundIndex = this.grid.store.findBy(function(item) {
+                return item.get('amountToRefund') > 0;
+            });
+            // if such a record was found, disable the save button
+            primaryAction.setDisabled(refundIndex === -1);
+        } else {
+            primaryAction.setDisabled(!this.storeCreditPanel.getForm().isValid());
+        }        
     },
     
     save: function () {
