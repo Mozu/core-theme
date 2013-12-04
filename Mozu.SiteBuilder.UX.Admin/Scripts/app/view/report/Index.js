@@ -56,9 +56,11 @@ Ext.define('Taco.view.report.Index', {
 
 
         var fields = Ext.Array.map(def.availableFields, function (item) {
+            var ty = item.type.toLowerCase();
             return {
                 "name": item.key,
-                "type": item.type.toLowerCase()
+                // terrible hack, do this the right way silly.
+                "type": ty == 'date' ? 'string' : ty
             };
         });
 
