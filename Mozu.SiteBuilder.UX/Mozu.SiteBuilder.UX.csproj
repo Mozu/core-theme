@@ -440,7 +440,6 @@
     <Content Include="BuiltinScripts\HyprLive\Gruntfile.js" />
     <Content Include="BuiltinScripts\HyprLive\init_debug.js" />
     <Content Include="BuiltinScripts\HyprLive\src\filters.js" />
-    <Content Include="BuiltinScripts\HyprLive\src\swig.mozu.js" />
     <Content Include="BuiltinScripts\HyprLive\src\tags.js" />
     <Content Include="BuiltinScripts\HyprLive\src\loader.js" />
     <Content Include="BuiltinScripts\HyprLive\src\env.js" />
