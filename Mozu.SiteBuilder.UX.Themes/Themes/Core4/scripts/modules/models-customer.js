@@ -199,7 +199,7 @@
         beginEditCard: function(id) {
             var toEdit = this.get('cards').get(id),
                 editingCardModel = {
-                    billingContacts: this.billingContacts()
+                    contacts: this.billingContacts()
                 };
             if (toEdit) {
                 _.extend(editingCardModel, toEdit.toJSON({ helpers: true }));

@@ -126,10 +126,10 @@
             'editingCard.expireMonth',
             'editingCard.expireYear',
             'editingCard.cvv',
-            'editingCard.billingContactId'
+            'editingCard.contactId'
         ],
         renderOnChange: [
-            'editingCard.billingContactId'
+            'editingCard.contactId'
         ],
         beginEditCard: function (e) {
             var id = this.editing.card = e.currentTarget.getAttribute('data-mz-card');
