@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using Autofac;
+using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
@@ -25,6 +26,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
         }
         private ILifetimeScope LifetimeScope { get; set; }
+        private ILogger _logger;
         public override MediaTypeFormatter GetPerRequestFormatterInstance(Type type, System.Net.Http.HttpRequestMessage request, MediaTypeHeaderValue mediaType)
         {
             var apiContext = request.Resolve<ISiteBuilderApiContext>();
@@ -38,6 +40,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 formatter.RequestMessage = request;
                 formatter.LifetimeScope = (ILifetimeScope)request.GetDependencyScope().GetService(typeof(ILifetimeScope));
                 formatter.MediaType = mediaType;
+                formatter._logger = formatter.LifetimeScope.ResolveOptional<ILogger>() ?? LoggingService.LoggerFor<HtmlActionResultMediaTypeFormatter>();
                 return formatter;
             }
             return this;
@@ -65,7 +68,14 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 {
                     throw new FileNotFoundException("cant find view " + vrb.ViewName);
                 }
-                return view.AsyncRender(hvc, sw);
+                return view.AsyncRender(hvc, sw).ContinueWith(_ =>
+                {
+                    if (_.IsFaulted)
+                    {
+                        _logger.Error("An unhandled exception occured in the HtmlActionResultMediaTypeFormatter.", _.Exception);
+                    }
+                    return _.Result;
+                });
             }
             else
             {
@@ -84,6 +94,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 }
                 catch (Exception ex)
                 {
+                    _logger.Error("An unhandled exception occured in the HtmlActionResultMediaTypeFormatter.", ex);
                     tsc.SetException(new HtmlMediaTypeFormattingException(ex));
                   
                 }
