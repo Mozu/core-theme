@@ -1,4 +1,4 @@
-﻿define(['modules/jquery-mozu', 'shim!vendor/underscore>_', "modules/backbone-mozu",], function ($, _, Backbone) {
+﻿define(['modules/jquery-mozu', 'shim!vendor/underscore>_', "modules/backbone-mozu", 'hyprlive'], function ($, _, Backbone, Hypr) {
 
     var ProductPageImagesView = Backbone.MozuView.extend({
         templateName: 'modules/product/product-images',
@@ -11,7 +11,7 @@
             this.$mainImage = this.$('[data-mz-productimage-main]');
             _.each(this.model.get('content').get('productImages'), function (img) {
                 var i = new Image();
-                i.src = img.imageUrl + "?size=220";
+                i.src = img.imageUrl + "?max=" + Hypr.getThemeSetting('productImagesContainerWidth');
                 imageCache[img.sequence.toString()] = i;
             });
         },
