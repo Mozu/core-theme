@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
 {
@@ -64,5 +65,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
 
         [IgnoreDataMember]
         public Category Parent { get; set; }
+
+        [DataMember(Name="categoryImages")]
+        public List<CategoryImage> CategoryImages { get; set; }
+    }
+
+    [DataContract]
+    public class CategoryImage
+    {
+        [DataMember(Name = "url")]
+        public string Url { get; set; }
     }
 }
