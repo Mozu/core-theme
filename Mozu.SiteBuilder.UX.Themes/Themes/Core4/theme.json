@@ -43,6 +43,8 @@
         "showProductDetailShortDesc": true,
         "showProductDetailProperties": true,
         "showProductDetailMeasurements": true,
+        "productImagesContainerWidth": 350,
+        "maxProductImageThumbnailSize": 50,
 
         /* Settings specific to the cart */
         "showCartItemOptions": true,
