@@ -31,7 +31,7 @@
         "CreditCard": function (order, billingInfo) {
             var card = order.api.createSync('creditcard', billingInfo.card);
             return card.save().then(function(card) {
-                billingInfo.card = card.data;
+                billingInfo.card = card.getOrderData();
                 order.prop('billingInfo', billingInfo);
                 return order.createPayment();
             });

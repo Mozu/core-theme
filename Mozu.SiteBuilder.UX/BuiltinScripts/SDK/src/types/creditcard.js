@@ -127,6 +127,18 @@
                 cardId = cardId || self.prop('id');
                 return self.api.createSync('customer', { id: customerId }).addCard(self.data);
             });
+        },
+        getOrderData: function () {
+            return {
+                cardNumberPartOrMask: this.maskedCardNumber,
+                cvv: this.data.cvv,
+                nameOnCard: this.data.nameOnCard,
+                paymentOrCardType: this.data.paymentOrCardType || this.data.cardType,
+                paymentServiceCardId: this.data.paymentServiceCardId || this.data.cardId,
+                isCardInfoSaved: this.data.isCardInfoSaved || this.data.persistCard,
+                expireMonth: this.data.expireMonth,
+                expireYear: this.data.expireYear
+            }
         }
     };
 

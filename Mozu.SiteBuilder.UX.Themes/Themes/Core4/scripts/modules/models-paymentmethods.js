@@ -82,7 +82,7 @@
                 if (!(k in j) && (v in j)) j[k] = j[v];
                 if (!(v in j) && (k in j)) j[v] = j[k];
             });
-            return j
+            return j;
         }
     }),
 

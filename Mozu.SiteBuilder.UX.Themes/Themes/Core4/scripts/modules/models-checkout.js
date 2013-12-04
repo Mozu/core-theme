@@ -253,10 +253,8 @@
                     this.unset('paypalReturnUrl');
                     this.unset('paypalCancelUrl');
                 }
-                this.syncApiModel();
-                order.syncApiModel();
                 this.isLoading(true);
-                order.apiModel.addPayment().then(function () {
+                order.apiAddPayment().then(function () {
                     var payment = order.apiModel.getActivePayment();
                     if (payment.paymentType !== "PaypalExpress") {
                         self.stepStatus("complete");
