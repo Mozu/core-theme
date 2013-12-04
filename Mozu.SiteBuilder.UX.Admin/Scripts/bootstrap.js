@@ -131,7 +131,6 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.core.ux.simplegrid.Body": [],
   "Taco.store.Products": [],
   "Taco.view.product.subform.ListExtraEditor": [],
-  "Taco.core.ux.tinymce.TinyMCE": [],
   "Taco.shared.view.field.Address": [],
   "Taco.core.ux.form.Editor": [],
   "Taco.core.ux.form.FontPicker": [],
@@ -293,7 +292,6 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.view.order.widget.CreateReturnPanel": [],
   "Taco.view.product.Edit": [],
   "Taco.core.ux.form.SlugField": [],
-  "Taco.core.ux.tinymce.WindowManager": [],
   "Taco.store.ProductBundlePicker": [],
   "Taco.store.ThemeListing": [],
   "Taco.model.CouponCode": [],
@@ -899,9 +897,6 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.view.product.subform.ListExtraEditor": [
     "widget.taco.product.listextraeditor"
   ],
-  "Taco.core.ux.tinymce.TinyMCE": [
-    "widget.tinymcefield"
-  ],
   "Taco.shared.view.field.Address": [
     "widget.taco-addressfield"
   ],
@@ -1163,7 +1158,6 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.core.ux.form.SlugField": [
     "widget.slugfield"
   ],
-  "Taco.core.ux.tinymce.WindowManager": [],
   "Taco.store.ProductBundlePicker": [],
   "Taco.store.ThemeListing": [],
   "Taco.model.CouponCode": [],

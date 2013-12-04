@@ -634,42 +634,6 @@ Ext.define('Taco.controller.Testing', {
 
     },
 
-    htmlEditor: function () {
-        this.createContentView('Taco.core.ux.content.Container', {
-
-            header: {
-                title: "TinyMCE Toons",
-                height: 50
-            },
-
-            body: {
-                items: [Ext.create('Ext.form.Panel', {
-                    width: 600,
-                    height: 500,
-                    items: [{
-                        xtype: 'tinymcefield',
-                        name: 'bio',
-                        labelAlign: 'top',
-                        height: 500,
-                        width: 600
-                        // ,
-                        //                                tinymceConfig: {
-                        //                                    plugins: "safari,advlink,imagemanager",
-                        //                                    theme_advanced_buttons1: 'insertimage,|,undo,redo,|,formatselect,fontselect,|,bold,italic,underline,strikethrough,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,|,link,unlink,|,numlist,bullist,|,code',
-                        //                                    theme_advanced_buttons2: '',
-                        //                                    theme_advanced_buttons3: '',
-                        //                                    theme_advanced_buttons4: '',
-                        //                                    theme_advanced_toolbar_location: "external",
-                        //                                    theme_advanced_statusbar_location: "none",
-                        //                                    skin: 'default'
-                        //                                }
-                    }]
-                })]
-            }
-
-
-        });
-    },
 
     widgetDefinition: function () {
         window.twd = Ext.create('Taco.store.WidgetDefinitions');
