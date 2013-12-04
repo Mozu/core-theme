@@ -27,7 +27,11 @@ var HyprLive = {
     engine: new swig.Swig({
         cache: false,
         cmtControls: ['{% comment %}', '{% endcomment %}'],
-        locals: locals
+        locals: locals,
+        getTemplateText: function (path) {
+            return HyprLiveContext.templates[path]
+        },
+        noResolveParents: true
     }),
     getTemplate: getHyprLiveTemplate,
     getThemeSetting: function(setting) {

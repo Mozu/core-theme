@@ -13,11 +13,11 @@ module.exports = function (grunt) {
 
         banner: grunt.file.read("src/banner.tpl"),
 
-        //bower: {
-        //    install: {
-        //        cleanup: true
-        //    }
-        //},
+        bower: {
+            install: {
+                cleanup: true
+            }
+        },
         clean: {
             dist: {
                 src: ['dist']
@@ -35,7 +35,7 @@ module.exports = function (grunt) {
             //    dest: '<%= releasetemp %>'
             //},
             debug: {
-                src: ['src/wrap_header.tpl', 'src/swig.mozu.js', 'src/loader.js', 'src/env.js', 'src/tags.js', 'src/filters.js', 'src/wrap_footer.tpl'],
+                src: ['src/wrap_header.tpl', 'lib/swig/swig.js', 'src/loader.js', 'src/env.js', 'src/tags.js', 'src/filters.js', 'src/wrap_footer.tpl'],
                 dest: '<%= pkg.main %>.debug.js'
             }
         },
@@ -64,39 +64,40 @@ module.exports = function (grunt) {
             dist: {
                 dir: 'dist'
             }
-        },
-        connect: {
-            server: {
-                options: {
-                    port: port,
-                    base: '.'
-                }
-            },
-            browser: {
-                options: {
-                    port: port,
-                    base: '.',
-                    keepalive: true,
-                    open: testurl
-                }
-            }
-        },
-        mocha: {
-            test: {
-                options: {
-                    reporter: 'Nyan',
-                    urls: [testurl],
-                    run: true
-                }
-            }
         }
+        //connect: {
+        //    server: {
+        //        options: {
+        //            port: port,
+        //            base: '.'
+        //        }
+        //    },
+        //    browser: {
+        //        options: {
+        //            port: port,
+        //            base: '.',
+        //            keepalive: true,
+        //            open: testurl
+        //        }
+        //    }
+        //},
+        //mocha: {
+        //    test: {
+        //        options: {
+        //            reporter: 'Nyan',
+        //            urls: [testurl],
+        //            run: true
+        //        }
+        //    }
+        //}
     });
 
+    grunt.loadNpmTasks('grunt-bower-task');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-connect');
-    grunt.loadNpmTasks('grunt-mocha');
+    //grunt.loadNpmTasks('grunt-contrib-uglify');
+    //grunt.loadNpmTasks('grunt-contrib-connect');
+    //grunt.loadNpmTasks('grunt-mocha');
 
     grunt.registerMultiTask('tfscheckout', 'Using Team Foundation Server, checks out the files that will be modified, so TFS is aware that changes were made.', function () {
         var done = this.async(),
@@ -123,12 +124,12 @@ module.exports = function (grunt) {
         });
     });
 
-    var order = ['clean:dist', 'concat', /*'uglify',*/ 'clean:tmp', 'tfscheckout' /*, 'connect:server', 'mocha' */];
+    var order = ['bower', 'clean:dist', 'concat', /*'uglify',*/ 'clean:tmp', 'tfscheckout' /*, 'connect:server', 'mocha' */];
 
     grunt.registerTask('default', order);
-    grunt.registerTask('test', ['connect:server', 'mocha']);
-    grunt.registerTask('testdebug', ['connect:browser']);
-    grunt.registerTask('notest', order.slice(0, -2));
-    grunt.registerTask('debug', ['notest', 'testdebug']);
+    //grunt.registerTask('test', ['connect:server', 'mocha']);
+    //grunt.registerTask('testdebug', ['connect:browser']);
+    //grunt.registerTask('notest', order.slice(0, -2));
+    //grunt.registerTask('debug', ['notest', 'testdebug']);
 
 };
