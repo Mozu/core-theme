@@ -30,8 +30,12 @@ Ext.define('Taco.view.product.subform.General', {
 
         
 
-        this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
-
+        this.productTypeStore = Ext.clone(Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes'));
+        this.productTypeStore.filter([
+            { filterFn: function (item) {
+                return item.get('name').toUpperCase() != 'BASE'; }}
+        ]);
+        
         this.defaults = {
             width: 200,
             product: this.product,
