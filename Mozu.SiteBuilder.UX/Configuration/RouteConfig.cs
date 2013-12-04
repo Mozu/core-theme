@@ -213,18 +213,35 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new {acceptConstraint = new AcceptConstraint("text/html", true)});
 
 
-            IHttpRoute r1 = routes.MapHttpRoute(
+            routes.MapHttpRoute(
                 "AJAX Login",
                 "user/login",
                 new {controller = "Auth", action = "AjaxLogin"},
                 new {acceptConstraint = new AcceptConstraint("text/html", false)});
 
 
-            IHttpRoute r2 = routes.MapHttpRoute(
+            routes.MapHttpRoute(
                 "Login",
                 "user/login",
                 new {controller = "Auth", action = "Login"},
                 new {acceptConstraint = new AcceptConstraint("text/html", true)});
+
+
+            routes.MapHttpRoute(
+              "AjaxCreateAccount",
+              "user/create",
+              new { controller = "Auth", action = "AjaxCreateAccount" },
+              new { acceptConstraint = new AcceptConstraint("text/html", false) });
+
+
+            routes.MapHttpRoute(
+                "CreateAccount",
+                "user/create",
+                new { controller = "Auth", action = "CreateAccount" },
+                new { acceptConstraint = new AcceptConstraint("text/html", true) });
+
+
+
 
             routes.MapHttpRoute(
                 "Reset Password",

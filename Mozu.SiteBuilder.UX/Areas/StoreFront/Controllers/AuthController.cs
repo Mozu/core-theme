@@ -8,33 +8,42 @@ using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Customer.Contracts;
+using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models;
-using Mozu.User.Contracts;
+
 using VMUser = Mozu.SiteBuilder.UX.Models.Customers.User;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Mozu.Core.Api.Client;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
   
     public class AuthController : BaseApiController
     {
-        private Mozu.User.Contracts.Clients.IUserWebApiClient _userWebApiClient;
-        private Mozu.User.Contracts.Clients.IAuthTicketWebApiClient _authTicketWebApiClient;
+        
         private readonly ICookieProvider _cookieProvider;
         private readonly ISiteBuilderApiContext _apiContext;
         private IAuthenticationHelper _authenticationHelper;
+        private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
+        private readonly IAuthTicketWebApiClient _authTicketWebApiClient;
 
-        public AuthController(IAuthenticationHelper authenticationHelper, Mozu.User.Contracts.Clients.IUserWebApiClient userWebApiClient, Mozu.User.Contracts.Clients.IAuthTicketWebApiClient authTicketWebApiClient, ICookieProvider cookieProvider, ISiteBuilderApiContext  apiContext)
+        public AuthController(IAuthenticationHelper authenticationHelper, Mozu.Customer.Contracts.Clients.ICustomerAccountWebApiClient   customerAccountWebApiClient, Mozu.Customer.Contracts.Clients.IAuthTicketWebApiClient authTicketWebApiClient, ICookieProvider cookieProvider, ISiteBuilderApiContext  apiContext)
         {
+            if (customerAccountWebApiClient == null) throw new ArgumentNullException("customerAccountWebApiClient");
+            if (authTicketWebApiClient == null) throw new ArgumentNullException("authTicketWebApiClient");
             _authenticationHelper = authenticationHelper;
-            _userWebApiClient = userWebApiClient;
+            _customerAccountWebApiClient = customerAccountWebApiClient;
             _authTicketWebApiClient = authTicketWebApiClient;
+         
+
+
             _cookieProvider = cookieProvider;
             _apiContext = apiContext;
         }
@@ -48,10 +57,41 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _apiContext.SetUser(user);
         }
 
-        protected async Task<ServiceClientResponse<UserLoginResult>> DoLogin(string email, string password)
+
+        async Task<ServiceClientResponse<CustomerAuthTicket>> DoCreateAccount(CustomerAccountAndAuthInfo accountInfo )
         {
-            var res = (await _userWebApiClient.CloneWithoutUserClaims().Login(new Mozu.Core.Api.Contracts.UserAuthInfo()
+            var res = await  _customerAccountWebApiClient.AddAccountAndLogin(accountInfo);
+            if (res.ResponseMessage.IsSuccessStatusCode)
             {
+                var authTicket = res.ReadAsSync();
+                var cust = authTicket.CustomerAccount;
+                var userId = authTicket.UserId;
+
+
+
+                var profile = new Mozu.Core.UserProfile()
+                {
+                    EmailAddress = cust.EmailAddress,
+                    FirstName = cust.FirstName,
+                    LastName = cust.LastName,
+                    UserId = cust.UserId,
+                    UserName = cust.UserName,
+                };
+
+
+                _authenticationHelper.SaveStoreFrontAccessToken(authTicket.AccessToken, profile.ToToken());
+                _authenticationHelper.SaveStoreFrontRefreshToken(authTicket.RefreshToken, authTicket.RefreshTokenExpiration);
+                _apiContext.SetUser(LightweightUserClaims.Parse(authTicket.AccessToken));
+
+            }
+
+            return res;
+        }
+
+        protected async Task<ServiceClientResponse<CustomerAuthTicket>> DoLogin(string email, string password)
+        {
+            var res = (await _authTicketWebApiClient.CreateUserAuthTicket( new UserAuthInfo()
+             {
 
                 EmailAddress = email,
                 Password = password
@@ -60,26 +100,28 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
-                var user = _userWebApiClient.CloneWithoutUserClaims().GetUserByEmail(email).Result.ReadAsSync();
-                //if (user.IsAdminUser)
-                //{
-                //    return Redirect("/admin");
-                //}
-                var ticket = res.ReadAsSync().AuthTicket;
-                var  profile = new    Mozu.Core.UserProfile ()
-                                            {
-                                                EmailAddress = ticket.User.EmailAddress,
-                                                FirstName = ticket.User.FirstName,
-                                                LastName = ticket.User.LastName ,
-                                                UserId = ticket.User.UserId 
-                                            };
+                var authTicket = res.ReadAsSync();
+                var cust = authTicket.CustomerAccount;
+                var userId = authTicket.UserId;
+         
                 
+              
+                var profile = new Mozu.Core.UserProfile()
+                                            {
+                                                EmailAddress = cust.EmailAddress,
+                                                FirstName = cust.FirstName,
+                                                LastName = cust.LastName,
+                                                UserId = cust.UserId,
+                                                UserName = cust.UserName,
+                                           };
 
-                _authenticationHelper.SaveStoreFrontAccessToken( ticket.AccessToken , profile.ToToken());
-                _authenticationHelper.SaveStoreFrontRefreshToken(ticket.RefreshToken , ticket.RefreshTokenExpiration );
-                _apiContext.SetUser(LightweightUserClaims.Parse(ticket.AccessToken));
+
+                _authenticationHelper.SaveStoreFrontAccessToken(authTicket.AccessToken , profile.ToToken());
+                _authenticationHelper.SaveStoreFrontRefreshToken(authTicket.RefreshToken, authTicket.RefreshTokenExpiration);
+                _apiContext.SetUser(LightweightUserClaims.Parse(authTicket.AccessToken));
 
             }
+            
             return res;
         }
 
@@ -137,6 +179,56 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public string returnUrl { get; set; }
         }
 
+         [System.Web.Http.HttpPost]
+        public async Task<HttpResponseMessage> CreateAccount(CustomerAccountAndAuthInfo authInfo)
+         {
+             var res = await DoCreateAccount(authInfo);
+             if (res.ResponseMessage.IsSuccessStatusCode)
+             {
+                 return res.ResponseMessage;
+             }
+
+             if (res.ResponseMessage.IsSuccessStatusCode)
+             {
+                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, new
+                                                                             {
+                                                                                 Message = String.Format("Logged in as {0}.", authInfo.Account.EmailAddress)
+                                                                             });
+             }
+             else
+             {
+                 return Request.CreateResponse(System.Net.HttpStatusCode.Unauthorized, new
+                 {
+                     Message = String.Format("Login as {0} failed. Please try again.", authInfo.Account.EmailAddress)
+                 });
+             }
+         }
+
+         [System.Web.Http.HttpPost]
+         public async Task<HttpResponseMessage> AjaxCreateAccount(CustomerAccountAndAuthInfo authInfo)
+         {
+             var res = await DoCreateAccount(authInfo);
+             if (res.ResponseMessage.IsSuccessStatusCode)
+             {
+                 return res.ResponseMessage;
+             }
+
+             if (res.ResponseMessage.IsSuccessStatusCode)
+             {
+                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, new
+                 {
+                     Message = String.Format("Logged in as {0}.", authInfo.Account.EmailAddress)
+                 });
+             }
+             else
+             {
+                 return Request.CreateResponse(System.Net.HttpStatusCode.Unauthorized, new
+                 {
+                     Message = String.Format("Login as {0} failed. Please try again.", authInfo.Account.EmailAddress)
+                 });
+             }
+         }
+
         [System.Web.Http.HttpPost]
         public async Task<HttpResponseMessage>   Login(LoginDetails details)
         {
@@ -185,33 +277,36 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
           [System.Web.Http.HttpPost]
          public object  AjaxResetPassword(string email)
         {
-            var res = _userWebApiClient.ResetPassword( new ResetPasswordInfo(){
+            var res =  _customerAccountWebApiClient.ResetPassword( new ResetPasswordInfo()
+            {
+                UserName = email,
                 EmailAddress = email
             }).Result;
-              if (res.ResponseMessage.IsSuccessStatusCode)
-              {
+            if (res.ResponseMessage.IsSuccessStatusCode)
+            {
 
-                  return new Response<bool>()
-                             {
-                                 Data = true,
-                                 Success = true
-                             };
-              }
-              else
-              {
+                return new Response<bool>()
+                           {
+                               Data = true,
+                               Success = true
+                           };
+            }
+            else
+            {
 
-                  var ex = res.ReadException();
+                var ex = res.ReadException();
 
-                  var errorCollection = ex.Data["DataContract"] as ErrorCollection;
+                var errorCollection = ex.Data["DataContract"] as ErrorCollection;
 
-                  return new Response<string>()
-                             {
-                                 Message = "nope you stink",
-                                 ServiceErrorCollection = errorCollection,
-                                 Success = false
+                return new Response<string>()
+                           {
+                               Message = "nope you stink",
+                               ServiceErrorCollection = errorCollection,
+                               Success = false
 
-                             };
-              }
+                           };
+            }
+       
         }
         //  [System.Web.Http.HttpPost]
         //public object  AjaxSignIn(string email, string password)
