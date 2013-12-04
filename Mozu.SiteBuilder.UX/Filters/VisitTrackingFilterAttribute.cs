@@ -43,6 +43,10 @@ namespace Mozu.SiteBuilder.UX.Filters
         /// </summary>
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
+            // on exceptions, Response is null, and this filter has no business to conduct.
+            if (actionExecutedContext.Response == null)
+                return;
+
             var requestHeaders = actionExecutedContext.Request.Headers;
             var responseHeaders = actionExecutedContext.Response.Headers;
             var pageContext = actionExecutedContext.Request.Resolve<PageContext>();
