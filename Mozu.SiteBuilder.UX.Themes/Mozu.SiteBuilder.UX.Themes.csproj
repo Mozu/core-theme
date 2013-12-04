@@ -1255,6 +1255,7 @@
     <Content Include="Themes\Core4\stylesheets\modules\common\contact-selector.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\payment-method.less" />
     <None Include="Themes\Core4\templates\modules\product\product-instock-request.hypr.live" />
+    <Content Include="Themes\Core4\templates\Widgets\cms\image2.hypr" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core4\templates\Widgets\misc\instock-request.hypr" />
