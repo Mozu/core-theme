@@ -1,9 +1,9 @@
 ﻿<div class="mz-contactselector {% block module-classes %}{% endblock module-classes %}">
     {% block contact-selector %}
-    {% for contact in model.billingContacts %}
+    {% for contact in model.contacts %}
     <label class="mz-contactselector-contact">
         <span class="mz-contactselector-inputwrapper">
-            <input type="radio" data-mz-value="{{ modelcontext }}billingContactId" name="billingContactId" value="{{ contact.id }}" {% if model.billingContactId == contact.id %} checked="checked" {% endif %}>
+            <input type="radio" data-mz-value="{{ modelcontext }}contactId" name="contactId" value="{{ contact.id }}" {% if model.contactId == contact.id %} checked="checked" {% endif %}>
         </span>
         <span class="mz-contactselector-summarywrapper">
             <div class="mz-addresssummary">
@@ -14,10 +14,10 @@
     {% endfor %}
     <label class="mz-contactselector-contact mz-contactselector-new">
         <span class="mz-contactselector-inputwrapper">
-            <input type="radio" data-mz-value="{{ modelcontext }}billingContactId" name="billingContactId" value="new" data-mz-enternewcontact {% if model.billingContactId == "new" %} checked="checked" {% endif %}>
+            <input type="radio" data-mz-value="{{ modelcontext }}contactId" name="contactId" value="new" data-mz-enternewcontact {% if model.contactId == "new" %} checked="checked" {% endif %}>
         </span>
         <span class="mz-contactselector-summarywrapper">
-            {% if model.billingContactId == "new" %}
+            {% if model.contactId == "new" %}
             {% block enter-new-form %}
             {% include "modules/common/address-form" %}
             {% endblock enter-new-form %}

@@ -19,8 +19,15 @@
         },
         configure: function ($optionEl) {
             var newValue = $optionEl.val(),
-                id = $optionEl.data('mz-product-option');
-            this.model.get('options').get(id).set("value", newValue);
+                oldValue,
+                id = $optionEl.data('mz-product-option'),
+                option = this.model.get('options').get(id);
+            if (option) {
+                oldValue = option.get('value');
+                if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
+                    option.set('value', newValue);
+                }
+            }
         },
         addToCart: function () {
             this.model.addToCart();
