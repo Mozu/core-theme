@@ -129,13 +129,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // fill out UnpackagedItems list
                     order.UnpackagedItems =
                         (from orderItem in order.Items
-                         let packagedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.OrderItemId == orderItem.Id)
+                         let packagedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode  == orderItem.ProductCode )
                          let packagedQuantity = packagedItems.Sum(i => i.Quantity)
                          let remainingQuantity = orderItem.Quantity - packagedQuantity
                          where remainingQuantity > 0
                          select new OrderPackageItem
                          {
-                             OrderItemId = orderItem.Id,
+                           
                              ProductCode = orderItem.ProductCode,
                              ProductName = orderItem.ProductName,
                              Weight = orderItem.UnitWeight * remainingQuantity,
@@ -315,7 +315,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private void Map_DcPackageItem_to_OrderPackageItem()
         {
             Mapper.CreateMap<ShippingDC.PackageItem, OrderPackageItem>()
-                .ForMember(x => x.OrderItemId, op => op.MapFrom(dc => dc.OrderItemId))
+                .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.ProductCode))
                 .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
                 ;
         }
@@ -353,7 +353,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private void Map_OrderPackageItem_to_DcPackageItem()
         {
             Mapper.CreateMap<OrderPackageItem, ShippingDC.PackageItem>()
-                .ForMember(dc => dc.OrderItemId, op => op.MapFrom(x => x.OrderItemId))
+                .ForMember(dc => dc.ProductCode, op => op.MapFrom(x => x.ProductCode))
                 .ForMember(dc => dc.Quantity, op => op.MapFrom(x => x.Quantity))
                 ;
         }
@@ -450,7 +450,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             if (packageItem == null || order == null || order.Items == null)
                 return;
 
-            var itemInOrder = order.Items.FirstOrDefault(i => i.Id == packageItem.OrderItemId);
+            var itemInOrder = order.Items.FirstOrDefault(i => i.Id == packageItem.ProductCode);
 
             if (itemInOrder == null)
                 return;
