@@ -53,29 +53,29 @@ namespace Mozu.SiteBuilder.Mvc.Cms
 
        
 
-       string _canonicalUrl;
-       [DataMember(Name = "canonicalUrl")]
-       public string CanonicalUrl
-       {
-           get
-           {
-               if (_canonicalUrl == null)
-               {
-                   var ctx = System.Web.HttpContext.Current;
-                   if (ctx != null)
-                   {
-                       _canonicalUrl = "http://yourhostnamehere" + ctx.Request.Path;
-                       //var uri = new Uri(ctx.Request.Url, ctx.Request.Path);
-                       //_canonicalUrl = uri.ToString();
-                   }
-               }
-               return _canonicalUrl;
-           }
-           set
-           {
-               _canonicalUrl = value;
-           }
-       }
+//       string _canonicalUrl;
+//       [DataMember(Name = "canonicalUrl")]
+//       public string CanonicalUrl
+//       {
+//           get
+//           {
+//               if (_canonicalUrl == null)
+//               {
+//                   var ctx = System.Web.HttpContext.Current;
+//                   if (ctx != null)
+//                   {
+//                       _canonicalUrl = "http://yourhostnamehere" + ctx.Request.Path;
+//                       //var uri = new Uri(ctx.Request.Url, ctx.Request.Path);
+//                       //_canonicalUrl = uri.ToString();
+//                   }
+//               }
+//               return _canonicalUrl;
+//           }
+//           set
+//           {
+//               _canonicalUrl = value;
+//           }
+//       }
 
 
        [DataMember(Name = "cms")]

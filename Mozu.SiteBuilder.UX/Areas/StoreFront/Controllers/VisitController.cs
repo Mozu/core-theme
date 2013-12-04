@@ -1,13 +1,11 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Http;
 using Mozu.Core.Logging;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Web;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -18,100 +16,73 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     /// </summary>
     public class VisitController : ApiController
     {
-        private const string VISIT_COOKIE_NAME = "mzVisit";
-        private const string SESSION_COOKIE_NAME = "mzSession";
-        // TODO: thisis a duplicate value from VisitTrackingPixelTag.
-        private const string VISITOR_COOKIE_NAME = "mzVisitor";
-
-        // 1x1 transparant pixel gif, base64 encoded. source: http://www.fishofprey.com/2009/05/base-64-encoding-for-1x1-px-transparent.html
+        // 1x1 transparant pixel gif, base64 encoded.
         private const string PIXEL_CONTENT_BASE64 = @"R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
         private static byte[] PIXEL_BYTES = Convert.FromBase64String(PIXEL_CONTENT_BASE64);
 
+        private PageContext _pageContext;
         private ILogger _logger;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public VisitController(ILogger logger)
+        public VisitController(PageContext pageContext, ILogger logger)
         {
+            _pageContext = pageContext;
             _logger = logger;
         }
 
         [HttpGet]
-        public HttpResponseMessage TrackingPixel([FromUri(Name="r")]string visitorId)
+        public HttpResponseMessage TrackingPixel([FromUri(Name="r")]string visitId)
         {
             // try to parse the visitor id from the query string.
-            Guid visitorIdFromArg = Guid.Empty;
+            Guid visitIdFromArg = Guid.Empty;
             try
             {
-                visitorIdFromArg = visitorId.DecodeUrlSafeGuid();
+                visitIdFromArg = visitId.DecodeUrlSafeGuid();
             }
             catch (Exception e)
             {
-                _logger.Warn("Tracking pixel requested with an unparsable visitor id: " + visitorId, e);
+                _logger.Warn("Tracking pixel requested with an unparsable visit id: " + visitId, e);
                 return Pixel();
             }
 
-            // try to parse the visitor id from the cookie.
-            var visitorCookie = Request.Headers.GetCookies(VISITOR_COOKIE_NAME).Select(cookies => cookies[VISITOR_COOKIE_NAME]).FirstOrDefault();
-            Guid visitorIdFromCookie = Guid.Empty;
-            if (visitorCookie == null)
-            {
-                _logger.Info("Tracking pixel requested with no cookies in payload. Assuming visitor has cookies disabled. Visitor id from query string: " + visitorIdFromArg.ToString("N"));
+            // if the Visit thinks this is the landing page, cookies must be disabled.
+            if (_pageContext.Visit == null || _pageContext.Visit.IsLanding)
                 return Pixel();
-            }
 
             // make sure the cookie id and the query string id match
-            Guid.TryParseExact(visitorCookie.Value, "N", out visitorIdFromCookie);
-            if (visitorIdFromCookie != visitorIdFromArg)
+            if (_pageContext.Visit.VisitId != visitId)
             {
-                _logger.Warn("Tracking pixel requested with mismatched visitor ids. Query string: " + visitorIdFromArg.ToString("N") + ". Cookie: " + visitorCookie != null ? visitorCookie.Value : "null" + ".");
+                _logger.Warn("Tracking pixel requested with mismatched visit ids. Query string: " + visitId + ". Cookie: " + _pageContext.Visit.VisitId + ".");
                 return Pixel();
             }
 
-            // check for both an existing visit cookie and a session cookie.
-            var visitCookie = Request.Headers.GetCookies(VISIT_COOKIE_NAME).Select(cookies => cookies[VISIT_COOKIE_NAME]).FirstOrDefault();
-            var sessionCookie = Request.Headers.GetCookies(SESSION_COOKIE_NAME).Select(cookies => cookies[SESSION_COOKIE_NAME]).FirstOrDefault();
-            if (visitCookie != null && sessionCookie != null)
+            // only log the visit if it wasn't already tracked.
+            if (!_pageContext.Visit.IsTracked)
             {
-                // visit cookie is fresh, push the cookie out 30 minutes and do not log anything.
-                return Pixel(visitCookie.Value);
+                // log the visit.
+                var visitTrackingEvent = new {
+                    VisitId = _pageContext.Visit.VisitId,
+                    VisitorId = _pageContext.Visit.VisitorId,
+                    UserAgent = Request.Headers.UserAgent.ToString(),
+                    LandingPage = Request.Headers.Referrer
+                };
+                _logger.Info("I caught a visit!", visitTrackingEvent);
+                _pageContext.Visit.IsTracked = true;
             }
 
-            // finally, log the visit.
-            string visitId = Guid.NewGuid().ToString("N");
-            var logInfo = new {
-                VisitorId = visitorIdFromArg.ToString("N"), 
-                VisitId = visitId,
-                UserAgent = this.Request.Headers.UserAgent, 
-                LandingPage = this.Request.Headers.Referrer
-            };
-            _logger.Info("I caught a visit!", logInfo);
-            return Pixel(visitId);
+            return Pixel();
         }
         
         /// <summary>
         /// Returns a 1x1 transparant gif.
         /// </summary>
-        private HttpResponseMessage Pixel(string visitId = null)
+        private HttpResponseMessage Pixel()
         {
-            if (visitId == null)
-                visitId = Guid.NewGuid().ToString("N");
-
-            // create a visit cookie that expires in 30 minutes
-            var visitCookie = new CookieHeaderValue(VISIT_COOKIE_NAME, visitId) {
-                Expires = DateTimeOffset.UtcNow.AddMinutes(30),
-                HttpOnly = true
-            };
-            // create a second "session" cookie that will expire when the user closes their browser.
-            var sessionCookie = new CookieHeaderValue(SESSION_COOKIE_NAME, visitId) {
-                HttpOnly = true
-            };
-
             var pixelResponse = new HttpResponseMessage(HttpStatusCode.OK);
             pixelResponse.Content = new ByteArrayContent(PIXEL_BYTES);
             pixelResponse.Content.Headers.ContentType = new MediaTypeHeaderValue("image/gif");
-            pixelResponse.Headers.AddCookies(new[] { visitCookie, sessionCookie });
             return pixelResponse;
         }
     }

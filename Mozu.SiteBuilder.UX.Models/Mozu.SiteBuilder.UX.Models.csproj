@@ -479,6 +479,7 @@
     <Compile Include="StoreFront\Commerce\Cart.cs" />
     <Compile Include="StoreFront\Email\ResetPasswordEmailMessage.cs" />
     <Compile Include="Users\Role.cs" />
+    <Compile Include="Visit\Visit.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="StoreFront\Navigation\" />

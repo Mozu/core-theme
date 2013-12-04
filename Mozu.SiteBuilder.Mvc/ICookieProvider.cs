@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.Mvc
         
         public CookieProvider( HttpContextBase context ,ISettings settings   )
         {
-            Context = context ?? new HttpContextWrapper(HttpContext.Current);
+            Context = context;
 
            
 
