@@ -127,10 +127,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 innerPayload = (string) token.SelectToken("Payload").SelectToken("InnerPayload");
             }
 
-            if (topic.StartsWith(EmailNotification.PrimaryTopic))
-            {
-                topic = topic.Substring(EmailNotification.PrimaryTopic.Length + 1);
-            }
+            //if (topic.StartsWith(EmailNotification.PrimaryTopic))
+            //{
+            //    topic = topic.Substring(EmailNotification.PrimaryTopic.Length + 1);
+            //}
 
             EmailTypeInfo emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic, topic, StringComparison.OrdinalIgnoreCase));
 

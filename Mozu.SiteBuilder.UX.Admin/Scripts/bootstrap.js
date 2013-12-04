@@ -129,8 +129,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.core.context.TaContext": [],
   "Taco.model.Wishlist": [],
   "Taco.core.ux.simplegrid.Body": [],
-  "Taco.view.product.subform.ListExtraEditor": [],
   "Taco.store.Products": [],
+  "Taco.view.product.subform.ListExtraEditor": [],
   "Taco.core.ux.tinymce.TinyMCE": [],
   "Taco.shared.view.field.Address": [],
   "Taco.core.ux.form.Editor": [],
@@ -161,8 +161,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.core.context.Site": [],
   "Taco.controller.Attributes": [],
   "Taco.model.OrderItemDiscount": [],
-  "Taco.store.CustomerGroups": [],
   "Ext.ux.event.Player": [],
+  "Taco.store.CustomerGroups": [],
   "Taco.view.settings.paymentAndCheckout.subform.CheckoutPreference": [],
   "Taco.core.ux.form.NavForm": [],
   "Taco.core.ux.modal.Mini": [],
@@ -242,6 +242,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.core.ux.IconList": [],
   "Taco.store.StoreCredits": [],
   "Ext.ux.event.RecorderManager": [],
+  "Taco.view.product.mixins.Bundleable": [],
   "Taco.core.ux.window.Modal": [],
   "Taco.core.ux.grid.Header": [],
   "Taco.store.LocalizedStrings": [],
@@ -257,8 +258,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.model.ProductType": [],
   "Taco.view.website.widgetEditors.AddThis": [],
   "Taco.view.option.preview.RadioButtons": [],
-  "Taco.view.website.WidgetEditor": [],
   "Taco.view.product.AdvancedSearchForm": [],
+  "Taco.view.website.WidgetEditor": [],
   "Taco.core.ux.CellEditing": [],
   "Taco.core.data.Model": [],
   "Taco.controller.StoreCredits": [],
@@ -273,6 +274,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.model.WishlistItem": [],
   "Taco.view.settings.shipping.Edit": [],
   "Taco.model.ExtensibleAttributeValue": [],
+  "Taco.store.InventoriedProducts": [],
   "Taco.controller.Catalog": [],
   "Taco.view.generalSettings.subform.AddressValidation": [],
   "Ext.ux.LiveSearchGridPanel": [],
@@ -349,8 +351,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.view.order.subform.ShippingSimple": [],
   "Taco.view.settings.paymentAndCheckout.ExternalGateway": [],
   "Taco.core.ux.Hint": [],
-  "Taco.core.util.GetsParentPage": [],
   "Taco.model.ThemeListing": [],
+  "Taco.core.util.GetsParentPage": [],
   "Taco.core.util.Common": [],
   "Taco.view.order.subform.Shipping": [],
   "Taco.view.customers.Form": [],
@@ -363,6 +365,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.view.product.subform.Options": [],
   "Taco.model.CmsDocumentDraft": [],
   "Taco.view.inventory.Index": [],
+  "Taco.view.website.widgetEditors.Image": [],
   "Taco.view.order.widget.ProductConfigurator": [],
   "Taco.overrides.window.Window": [],
   "Taco.core.ux.grid.Pager": [],
@@ -443,6 +446,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.model.Discount": [],
   "Taco.core.ux.form.Linker": [],
   "Taco.core.context.Catalog": [],
+  "Taco.store.CustomerGroupNames": [],
   "Ext.ux.form.SearchField": [],
   "Taco.view.product.subform.General": [],
   "Taco.core.ux.action.Button": [],
@@ -577,10 +581,9 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.overrides.form.field.ComboBox": [],
   "Taco.controller.Inventory": [],
   "Taco.view.image.UploadItem": [],
-  "Taco.core.ux.HtmlEditor": [],
   "Taco.core.ux.SidebarList": [],
+  "Taco.core.ux.HtmlEditor": [],
   "Taco.view.order.modal.EditOrderDetail": [],
-  "Taco.store.CustomerGroups": [],
   "Taco.store.CustomerAttributes": [],
   "Taco.view.generalSettings.subform.About": [],
   "Taco.controller.OrderAttributes": [],
@@ -599,6 +602,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.store.CmsDocumentDrafts": [],
   "Taco.model.ProductComboBox": [],
   "Taco.locale.Strings": [],
+  "Taco.view.product.variant.Options": [],
   "Taco.view.capability.Edit": [],
   "Taco.model.Behavior": [],
   "Taco.model.Contact": [],
@@ -630,6 +634,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.view.channel.Index": [],
   "Taco.view.paymentAndCheckout.StandaloneAccordion": [],
   "Taco.controller.Redirects": [],
+  "Taco.overrides.data.AbstractStore": [],
   "Taco.view.settings.shipping.subform.ShippingPreferences": [],
   "Taco.view.settings.Publishing": [],
   "Taco.core.ux.form.field.Product": [],
@@ -669,8 +674,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.core.ux.action.TreeListAction": [],
   "Taco.view.product.variant.Modal": [],
   "Taco.store.ChannelPicker": [],
-  "Taco.store.NavigationTreeNodes": [],
   "Taco.core.FormPanel": [],
+  "Taco.store.NavigationTreeNodes": [],
   "Taco.model.UspsConfiguration": [],
   "Taco.model.OrderNote": [],
   "Taco.controller.Themes": [],
@@ -813,7 +818,9 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.controller.Categories": [],
   "Taco.view.order.widget.ShippingItemGrid": [],
   "Taco.model.ProductOptionValue": [],
-  "Taco.view.product.subform.Shipping": [],
+  "Taco.view.product.subform.Shipping": [
+    "widget.productshippingsubform"
+  ],
   "Taco.core.ux.EditPanel": [
     "widget.editpanel"
   ],
@@ -871,7 +878,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Taco.model.ShippingClass": [],
   "Taco.store.Capability": [],
-  "Taco.view.product.subform.SEO": [],
+  "Taco.view.product.subform.SEO": [
+    "widget.productseosubform"
+  ],
   "Taco.store.CustomerAccountNotes": [],
   "Ext.ux.dd.PanelFieldDragZone": [],
   "Taco.core.ux.content.Body": [
@@ -886,10 +895,10 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.core.ux.simplegrid.Body": [
     "widget.simplegridbody"
   ],
+  "Taco.store.Products": [],
   "Taco.view.product.subform.ListExtraEditor": [
     "widget.taco.product.listextraeditor"
   ],
-  "Taco.store.Products": [],
   "Taco.core.ux.tinymce.TinyMCE": [
     "widget.tinymcefield"
   ],
@@ -949,8 +958,8 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.core.context.Site": [],
   "Taco.controller.Attributes": [],
   "Taco.model.OrderItemDiscount": [],
-  "Taco.store.CustomerGroups": [],
   "Ext.ux.event.Player": [],
+  "Taco.store.CustomerGroups": [],
   "Taco.view.settings.paymentAndCheckout.subform.CheckoutPreference": [],
   "Taco.core.ux.form.NavForm": [
     "widget.taco.navform"
@@ -1083,6 +1092,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.ux.event.RecorderManager": [
     "widget.eventrecordermanager"
   ],
+  "Taco.view.product.mixins.Bundleable": [],
   "Taco.core.ux.window.Modal": [
     "widget.taco-modal"
   ],
@@ -1100,10 +1110,10 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.model.ProductType": [],
   "Taco.view.website.widgetEditors.AddThis": [],
   "Taco.view.option.preview.RadioButtons": [],
+  "Taco.view.product.AdvancedSearchForm": [],
   "Taco.view.website.WidgetEditor": [
     "widget.taco-widgeteditor"
   ],
-  "Taco.view.product.AdvancedSearchForm": [],
   "Taco.core.ux.CellEditing": [
     "plugin.tacocellediting"
   ],
@@ -1116,7 +1126,9 @@ Ext.ClassManager.addNameAliasMappings({
     "plugin.tabscrollermenu"
   ],
   "Taco.core.util.Protectable": [],
-  "Taco.view.product.subform.Categories": [],
+  "Taco.view.product.subform.Categories": [
+    "widget.productcategoriessubform"
+  ],
   "Taco.store.ThemeFonts": [],
   "Taco.core.ux.simplegrid.Grid": [
     "widget.simplegrid"
@@ -1126,6 +1138,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.model.WishlistItem": [],
   "Taco.view.settings.shipping.Edit": [],
   "Taco.model.ExtensibleAttributeValue": [],
+  "Taco.store.InventoriedProducts": [],
   "Taco.controller.Catalog": [],
   "Taco.view.generalSettings.subform.AddressValidation": [],
   "Ext.ux.LiveSearchGridPanel": [],
@@ -1240,8 +1253,8 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.core.ux.Hint": [
     "widget.hint"
   ],
-  "Taco.core.util.GetsParentPage": [],
   "Taco.model.ThemeListing": [],
+  "Taco.core.util.GetsParentPage": [],
   "Taco.core.util.Common": [],
   "Taco.view.order.subform.Shipping": [],
   "Taco.view.customers.Form": [],
@@ -1254,13 +1267,20 @@ Ext.ClassManager.addNameAliasMappings({
   "MyReader": [
     "reader.my-json"
   ],
-  "Taco.view.product.subform.Inventory": [],
+  "Taco.view.product.subform.Inventory": [
+    "widget.productinventorysubform"
+  ],
   "Taco.store.ShippingCarrierSettings": [],
   "Taco.view.order.widget.ProcessReturnPanel": [],
-  "Taco.view.product.subform.Options": [],
+  "Taco.view.product.subform.Options": [
+    "widget.taco-product-options"
+  ],
   "Taco.model.CmsDocumentDraft": [],
   "Taco.view.inventory.Index": [
     "widget.inventoryindex"
+  ],
+  "Taco.view.website.widgetEditors.Image": [
+    "widget.taco-image-widgeteditor"
   ],
   "Taco.view.order.widget.ProductConfigurator": [],
   "Taco.overrides.window.Window": [],
@@ -1386,10 +1406,13 @@ Ext.ClassManager.addNameAliasMappings({
     "widget.linker"
   ],
   "Taco.core.context.Catalog": [],
+  "Taco.store.CustomerGroupNames": [],
   "Ext.ux.form.SearchField": [
     "widget.searchfield"
   ],
-  "Taco.view.product.subform.General": [],
+  "Taco.view.product.subform.General": [
+    "widget.productgeneralsubform"
+  ],
   "Taco.core.ux.action.Button": [
     "widget.taco.button"
   ],
@@ -1601,14 +1624,13 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.view.image.UploadItem": [
     "widget.uploaditem"
   ],
-  "Taco.core.ux.HtmlEditor": [
-    "widget.tacohtmleditor"
-  ],
   "Taco.core.ux.SidebarList": [
     "widget.sidebarlist"
   ],
+  "Taco.core.ux.HtmlEditor": [
+    "widget.tacohtmleditor"
+  ],
   "Taco.view.order.modal.EditOrderDetail": [],
-  "Taco.store.CustomerGroups": [],
   "Taco.store.CustomerAttributes": [],
   "Taco.view.generalSettings.subform.About": [],
   "Taco.controller.OrderAttributes": [],
@@ -1637,6 +1659,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.store.CmsDocumentDrafts": [],
   "Taco.model.ProductComboBox": [],
   "Taco.locale.Strings": [],
+  "Taco.view.product.variant.Options": [],
   "Taco.view.capability.Edit": [],
   "Taco.model.Behavior": [],
   "Taco.model.Contact": [],
@@ -1680,6 +1703,7 @@ Ext.ClassManager.addNameAliasMappings({
     "widget.standalone-accordion"
   ],
   "Taco.controller.Redirects": [],
+  "Taco.overrides.data.AbstractStore": [],
   "Taco.view.settings.shipping.subform.ShippingPreferences": [],
   "Taco.view.settings.Publishing": [],
   "Taco.core.ux.form.field.Product": [
@@ -1689,7 +1713,9 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.model.Product": [],
   "Taco.core.ux.form.FieldGroup": [],
   "Taco.view.settings.shipping.Form": [],
-  "Taco.view.product.subform.Merchandising": [],
+  "Taco.view.product.subform.Merchandising": [
+    "widget.productmerchandisingsubform"
+  ],
   "Taco.view.fileManager.Associator": [],
   "Taco.view.settings.shipping.subform.MethodsAndRates": [],
   "Taco.model.WidgetInstance": [],
@@ -1740,10 +1766,10 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Taco.view.product.variant.Modal": [],
   "Taco.store.ChannelPicker": [],
-  "Taco.store.NavigationTreeNodes": [],
   "Taco.core.FormPanel": [
     "widget.formpanel"
   ],
+  "Taco.store.NavigationTreeNodes": [],
   "Taco.model.UspsConfiguration": [],
   "Taco.model.OrderNote": [],
   "Taco.controller.Themes": [],

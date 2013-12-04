@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "download/{name}")]
         public async Task<HttpResponseMessage> Download([FromUri]string filter, [FromUri] string groupBy, string name)
         {
-            var serviceResponse = await _reportWebApiClient.GetReportFileAsync(name, null, filter, groupBy);
+            var serviceResponse = await _reportWebApiClient.GetReportAsync( name: name, filter:filter,groupBy: groupBy);
             var httpContent = serviceResponse.ResponseMessage.Content;
 
             var contentStream = await httpContent.ReadAsStreamAsync();

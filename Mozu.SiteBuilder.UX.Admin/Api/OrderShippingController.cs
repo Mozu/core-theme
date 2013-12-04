@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var source = (await _orderWebApiClient.GetPackage(args.OrderId, args.SourcePackageId)).ReadAsSync();
                 foreach (var item in args.Items)
                 {
-                    var sourceItem = source.Items.FirstOrDefault(i => i.OrderItemId == item.OrderItemId);
+                    var sourceItem = source.Items.FirstOrDefault(i => i.ProductCode == item.ProductCode);
                     if (sourceItem == null)
                         continue;
 
@@ -110,7 +110,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 foreach (var argItem in args.Items)
                 {
-                    var sourcePackageItem = source.Items.First(i => i.OrderItemId == argItem.OrderItemId);
+                    var sourcePackageItem = source.Items.First(i => i.ProductCode == argItem.ProductCode);
                     if (sourcePackageItem.Quantity == argItem.Quantity)
                     {
                         source.Items.Remove(sourcePackageItem);
@@ -120,10 +120,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         sourcePackageItem.Quantity -= argItem.Quantity;
                     }
 
-                    var destPackageItem = dest.Items.FirstOrDefault(i => i.OrderItemId == argItem.OrderItemId);
+                    var destPackageItem = dest.Items.FirstOrDefault(i => i.ProductCode == argItem.ProductCode);
                     if (destPackageItem == null)
                     {
-                        destPackageItem = new DCs.PackageItem { OrderItemId = argItem.OrderItemId, Quantity = 0 };
+                        destPackageItem = new DCs.PackageItem { ProductCode = argItem.ProductCode, Quantity = 0 };
                         dest.Items.Add(destPackageItem);
                     }
                     destPackageItem.Quantity += argItem.Quantity;
@@ -157,7 +157,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 foreach (var argItem in args.Items)
                 {
-                    var sourcePackageItem = source.Items.First(i => i.OrderItemId == argItem.OrderItemId);
+                    var sourcePackageItem = source.Items.First(i => i.ProductCode == argItem.ProductCode);
                     if (sourcePackageItem.Quantity == argItem.Quantity)
                     {
                         source.Items.Remove(sourcePackageItem);
@@ -185,10 +185,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 foreach (var argItem in args.Items)
                 {
-                    var destPackageItem = dest.Items.FirstOrDefault(i => i.OrderItemId == argItem.OrderItemId);
+                    var destPackageItem = dest.Items.FirstOrDefault(i => i.ProductCode == argItem.ProductCode);
                     if (destPackageItem == null)
                     {
-                        destPackageItem = new DCs.PackageItem { OrderItemId = argItem.OrderItemId, Quantity = 0 };
+                        destPackageItem = new DCs.PackageItem { ProductCode = argItem.ProductCode, Quantity = 0 };
                         dest.Items.Add(destPackageItem);
                     }
                     destPackageItem.Quantity += argItem.Quantity;

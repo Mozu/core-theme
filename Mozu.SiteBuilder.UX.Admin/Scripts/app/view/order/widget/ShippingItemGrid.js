@@ -513,11 +513,11 @@ quantity: 2
 weight: 2
             */
 
-            {
-                "name": "orderItemId",
-                "type": "string",
-                "useNull": true
-            },
+            //{
+            //    "name": "orderItemId",
+            //    "type": "string",
+            //    "useNull": true
+            //},
             
             {
                 "name": "productCode",

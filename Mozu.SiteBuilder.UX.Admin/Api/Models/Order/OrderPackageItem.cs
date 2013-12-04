@@ -6,8 +6,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
     [DataContract]
     public class OrderPackageItem
     {
-        [DataMember(Name = "orderItemId")]
-        public string OrderItemId { get; set; }
+       // [DataMember(Name = "orderItemId")]
+        //public string ProductCode { get; set; }
+
+
+        //ProductCode--orderItemId
+
         
         [DataMember(Name = "quantity")]
         public int Quantity { get; set; }
