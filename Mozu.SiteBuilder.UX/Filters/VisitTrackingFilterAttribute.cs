@@ -52,7 +52,7 @@ namespace Mozu.SiteBuilder.UX.Filters
                 responseHeaders.SetVisitorCookie(pageContext.Visit.VisitorId);
             }
             var sessionCookie = requestHeaders.GetSessionCookie();
-            if (sessionCookie == null || (sessionCookie.Value == "f" && pageContext.Visit.IsTracked))
+            if (sessionCookie == null || (pageContext.Visit.IsTracked && sessionCookie.Value != "t"))
             {
                 responseHeaders.SetSessionCookie(pageContext.Visit.IsTracked ? "t" : "f");
             }

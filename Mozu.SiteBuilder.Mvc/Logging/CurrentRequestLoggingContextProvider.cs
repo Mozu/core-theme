@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web;
 using Mozu.Core.Logging;
+using Mozu.SiteBuilder.Mvc.Contexts;
 
 namespace Mozu.SiteBuilder.Mvc.Logging
 {
@@ -11,23 +12,49 @@ namespace Mozu.SiteBuilder.Mvc.Logging
     /// </summary>
     public class CurrentRequestLoggingContextProvider : ILoggingContextProvider
     {
+        private HttpContextBase _httpContext;
+        private PageContext _pageContext;
+
+        public CurrentRequestLoggingContextProvider() { }
+
+        public CurrentRequestLoggingContextProvider(HttpContextBase httpContext, PageContext pageContext)
+        {
+            _httpContext = httpContext;
+            _pageContext = pageContext;
+        }
+
         public IDictionary<string, object> GetProperties()
         {
-            var dict = new Dictionary<string, object>(2);
+            var dict = new Dictionary<string, object>(4);
 
-            try
+            if (_pageContext != null && _pageContext.Visit != null)
             {
-                if (HttpContext.Current != null && HttpContext.Current.Request != null)
-                {
-                    dict.Add("RawUrl", HttpContext.Current.Request.RawUrl);
-
-                    if (HttpContext.Current.Request.Url != null)
-                        dict.Add("AbsoluteUrl", HttpContext.Current.Request.Url.AbsoluteUri);
-                }
+                dict.Add("VisitId", _pageContext.Visit.VisitId);
+                dict.Add("VisitorId", _pageContext.Visit.VisitorId);
             }
-            // supress HttpContext.Current not available exceptions
-            catch (Exception) { }
 
+            // if context was passed via container
+            if (_httpContext != null && _httpContext.Request != null)
+            {
+                dict.Add("RawUrl", _httpContext.Request.RawUrl);
+                dict.Add("AbsoluteUrl", _httpContext.Request.Url != null ? _httpContext.Request.Url.AbsoluteUri : null);
+            }
+            // otherwise, fall back to the horrible HttpContext.Current way.
+            else
+            {
+                try
+                {
+                    if (HttpContext.Current != null && HttpContext.Current.Request != null)
+                    {
+                        dict.Add("RawUrl", HttpContext.Current.Request.RawUrl);
+
+                        if (HttpContext.Current.Request.Url != null)
+                            dict.Add("AbsoluteUrl", HttpContext.Current.Request.Url.AbsoluteUri);
+                    }
+                }
+                // supress HttpContext.Current not available exceptions
+                catch (Exception) { }
+            }
             return dict;
         }
     }
