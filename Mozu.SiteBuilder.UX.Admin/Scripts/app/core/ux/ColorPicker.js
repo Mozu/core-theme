@@ -171,19 +171,25 @@ Ext.define('Taco.core.ux.ColorPicker', {
         });
 
         this.sample = Ext.create('Ext.draw.Component', {
-            width: 64,
-            height: 64,
+            width: 30,
+            height: 30,
             items: [{
                 type: 'image',
                 src: '/admin/Scripts/resources/images/legacy/background-alpha.png',
                 width: '100%',
                 height: '100%'
-            }, this.sampleColor]
+            },
+                this.sampleColor
+            ]
         });
 
         this.hexField = Ext.create('Ext.form.field.Text', {
-            width: 200,
-            value: '#' + this.toHex(this.rgb.r) + this.toHex(this.rgb.g) + this.toHex(this.rgb.b)
+            value: '#' + this.toHex(this.rgb.r) + this.toHex(this.rgb.g) + this.toHex(this.rgb.b),
+            margin: '0 0 0 15',
+            width: 210,
+            style: {
+                display: 'inline-table'
+            }
         });
 
         this.alphaSlider = Ext.create('Ext.slider.Single', {
@@ -191,7 +197,8 @@ Ext.define('Taco.core.ux.ColorPicker', {
             value: this.hsv.a,
             increment: 0.1,
             minValue: 0,
-            maxValue: 100
+            maxValue: 100,
+            margin: '5 0 10'
         });
 
         this.items = [this.picker, this.slider, this.alphaSlider, this.sample, this.hexField];

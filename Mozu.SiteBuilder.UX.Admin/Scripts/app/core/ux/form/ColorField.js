@@ -3,16 +3,16 @@
  */
 
 Ext.define('Taco.core.ux.form.ColorField', {
-    extend: 'Ext.form.field.Base',
+    extend: 'Ext.form.field.Text',
+    alias: 'widget.colorfield',
     requires: [
         'Taco.core.ux.ColorPicker',
         'Taco.core.ux.window.Modal'
     ],
-    alias: 'widget.colorfield',
 
-    inputType: 'button',
-    value: 'rgba(0,0,0,1)',
     fieldCls: 'x-form-field taco-color-field',
+    value: 'rgba(0,0,0,1)',
+
     pickerSize: 50,
 
     initComponent: function () {
@@ -25,39 +25,46 @@ Ext.define('Taco.core.ux.form.ColorField', {
     },
 
     initColors: function () {
-                
-        this.inputEl.on({
-            click: function () {
-                this.picker = Ext.create('Taco.core.ux.ColorPicker', {
-                    value: this.value,
-                    listeners: {
-                        change: function (value) {
-                            this.setValue(value);
-                        },
-                        scope: this
-                    }
-                });
+        this.on({
+            focus: {
+                scope: this,
+                fn: function () {
+                    this.picker = Ext.create('Taco.core.ux.ColorPicker', {
+                        value: this.value
+                    });
 
-                this.modal = Ext.create('Taco.core.ux.window.Modal', {
-                    autoShow: true,
-                    scale: 'medium',
-                    items: [this.picker]
-                });
-            },
-            scope: this
+                    this.picker.on({
+                        change: {
+                            scope: this,
+                            fn: function (value) {
+                                this.setValue(value);
+                            }
+                        }
+                    });
+
+                    this.modal = Ext.create('Taco.core.ux.window.Modal', {
+                        autoShow: true,
+                        closeAction: 'destroy',
+                        title: 'Select Color',
+                        width: 400,
+                        height: 480,
+                        items: [this.picker]
+                    });
+                }
+            }
         });
 
         this.inputEl.setStyle({
-            width: this.pickerSize + 'px',
-            height: this.pickerSize + 'px',
-            backgroundColor: this.value
+            backgroundColor: this.value,
+            color: this.value
         });
     },
 
     setValue: function (value) {
         if (this.inputEl && this.inputEl.setStyle) {
             this.inputEl.setStyle({
-                backgroundColor: value
+                backgroundColor: value,
+                color: value
             });
         }
         this.callParent(arguments);
