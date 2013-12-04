@@ -620,6 +620,7 @@
     <Content Include="Scripts\app\core\ux\form\field\Product.js" />
     <Content Include="Scripts\app\core\ux\form\FilterContainer.js" />
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
+    <Content Include="Scripts\app\core\ux\mixins\Navigable.js" />
     <Content Include="Scripts\app\core\ux\mixins\RowEditable.js" />
     <Content Include="Scripts\app\core\ux\mixins\Searchable.js" />
     <Content Include="Scripts\app\core\ux\mixins\Pageable.js" />
@@ -683,6 +684,9 @@
     <Content Include="Scripts\app\view\capability\Index.js" />
     <Content Include="Scripts\app\view\channel\Index.js" />
     <Content Include="Scripts\app\view\customers\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\discount\ConditionsForm.js" />
+    <Content Include="Scripts\app\view\discount\CriteriaForm.js" />
+    <Content Include="Scripts\app\view\discount\GeneralForm.js" />
     <Content Include="Scripts\app\view\order\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\redirects\Index.js" />
     <Content Include="Scripts\app\view\customerAttribute\Edit.js" />
