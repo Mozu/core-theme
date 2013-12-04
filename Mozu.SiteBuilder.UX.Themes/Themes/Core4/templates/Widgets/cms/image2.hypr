@@ -1,0 +1,8 @@
+﻿<h2>hello</h2>
+
+{% if not Model.config  %}
+    <div class="mz-cms-image-cover" style="background-image: url('/admin/scripts/resources/images/legacy/AddPhotos.png');"></div>
+{% else %}
+    <div class="mz-cms-image-cover" style="background-image: url('/files/6005/1/{{Model.config.imageFileId}}');"></div>
+{% endif %}
+

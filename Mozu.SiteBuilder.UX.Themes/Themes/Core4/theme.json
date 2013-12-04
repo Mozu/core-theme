@@ -395,7 +395,21 @@
             "height": 400
         },
         "validPageTypes":["*"]
-    }, {
+    },
+    {
+      "id":"cms-image",
+      "displayName":"image",
+      "displayTemplate" :"cms/image2",
+        "icon": "/resources/admin/widgets/00_photo.png",
+      "editView": "taco-image-widgeteditor",
+        "defaultConfig": {
+            "height": 400,
+             "imageHeight": 400
+        },
+        "validPageTypes":["*"]
+    },
+		
+		{
         "id": "horizontal_rule",
         "displayName": "Horizontal Rule",
         "displayTemplate": "cms/horizontalrule",

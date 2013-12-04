@@ -15,6 +15,7 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.website.entityAdapters.ProductEntityAdapter',
         'Taco.view.website.WidgetEditor',
         'Taco.view.website.widgetEditors.HorizontalRule',
+        'Taco.view.website.widgetEditors.Image',
         'Taco.view.website.entityAdapters.SiteTemplateEntityAdapter',
         'Taco.view.website.entityAdapters.TemplateEntityAdapter',
         'Taco.view.website.entityAdapters.EmailTemplateEntityAdapter',
@@ -453,6 +454,8 @@ Ext.define('Taco.view.website.Index', {
             Ext.widget(def.get('editView') || 'taco-widgeteditor', {
                 editViewFields: def.get('editViewFields'),
                 editViewConfig: def.get('editViewConfig'),
+                autoShow: true,
+                closeAction:'destroy',
                 widgetData: cfg.config,
                 title: def.get('displayName'),
                 listeners: {
@@ -511,6 +514,8 @@ Ext.define('Taco.view.website.Index', {
             Ext.widget(def.get('editView') || 'taco-widgeteditor', {
                 editViewFields: def.get('editViewFields'),
                 editViewConfig: def.get('editViewConfig'),
+                autoShow: true,
+                closeAction: 'destroy',
                 widgetData: cfg.data.config,
                 title: def.get('displayName'),
                 listeners: {
