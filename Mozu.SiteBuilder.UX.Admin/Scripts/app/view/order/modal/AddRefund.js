@@ -6,7 +6,7 @@ Ext.define('Taco.view.order.modal.AddRefund', {
     extend: 'Taco.core.ux.window.Modal',
 
     autoShow: true,
-    scale: 'medium',
+    scale: 'large',
     title: 'Add Refund',
 
     layout: {
@@ -51,6 +51,7 @@ Ext.define('Taco.view.order.modal.AddRefund', {
                      name: 'paymentType',
                      inputValue: 'card',
                      id: 'creditcard',
+                     checked: true,
                      handler: function (radio) {
                          if (radio.getValue()) {
                              this.grid.show();
@@ -140,11 +141,12 @@ Ext.define('Taco.view.order.modal.AddRefund', {
                 })
             ]
         });
-
+        
         this.storeCreditPanel = Ext.create('Ext.panel.Panel', {
             hidden: true,
-            layout: 'fit',
-            overflowY: 'scroll',
+            defaults: {
+              width: 500  
+            },
             items: [{
                 xtype: 'textfield',
                 fieldLabel: 'Original Amount',
