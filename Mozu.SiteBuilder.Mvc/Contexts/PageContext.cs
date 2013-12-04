@@ -8,6 +8,7 @@ using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using Mozu.SiteBuilder.UX.Models.Visit;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -29,6 +30,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public string PageTypeId { get; set; }
 
         public CmsPageContext CmsContext {get;set;}
+
+        public Visit Visit { get; set; }
 
         public string Title { get; set; }
 

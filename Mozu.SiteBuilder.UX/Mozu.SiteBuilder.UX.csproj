@@ -416,6 +416,7 @@
     <Compile Include="Filters\StorefrontErrorFilterAttribute.cs" />
     <Compile Include="Filters\InitCmsPageContextAttribute.cs" />
     <Compile Include="Filters\InitSettingsAttribute.cs" />
+    <Compile Include="Filters\VisitTrackingFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

@@ -1,9 +1,7 @@
-﻿using System.Net;
-using System.Net.Http.Formatting;
+﻿using System.Net.Http.Formatting;
 using System.Reflection;
 using System.Web.Http;
 
-using System.Web.Routing;
 using Mozu.Core.Api;
 using Mozu.Core.Api.ErrorHandler;
 using Mozu.Core.Logging;
@@ -43,11 +41,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
         protected override void AddFilters(HttpConfiguration httpConfiguration, Core.Api.Filters.Exception.ApiExceptionFilter exceptionFilter, Core.Api.Routing.ReflectedControllerIndex controllers)
         {
          
-            httpConfiguration.Filters.Add( new AnonymousShopperFilterAttribute());
+            httpConfiguration.Filters.Add(new AnonymousShopperFilterAttribute());
+            httpConfiguration.Filters.Add(new VisitTrackingFilterAttribute());
 
             // handle exceptions with a pretty screen
             httpConfiguration.Filters.Add(new StorefrontErrorFilterAttribute(exceptionFilter));
-
 
             //todo:hyprlive add as webapi filteres
             // httpConfiguration.Filters.Add(new NotFoundActionHttpFilter());
