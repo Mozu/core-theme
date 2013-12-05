@@ -205,7 +205,7 @@ Ext.define('Taco.view.product.Index', {
                     rowBodyTpl: new Ext.XTemplate(
                         '<tpl for="productInCatalogs"><tr class="x-grid-row-body">',
                         '<td colspan="3" class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
-                        '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><a href="#" class="taco-launch-editor" data-site-id="{siteId}">{productName}</a></div></td>',
+                        '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><a href="#" class="taco-launch-editor" data-catalog-id="{catalogId}">{productName}</a></div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{price:this.formatPrice}</div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{salePrice:this.formatPrice}</div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{catalogId:this.toCatalogName}</div></td>',
@@ -298,12 +298,12 @@ Ext.define('Taco.view.product.Index', {
     },
     
     launchLoadedEditor: function (record, options) {
-        var site = Taco.app.context.getSite(),
-            infoStore,
-            infoRecord;
 
-        this.callParent(arguments);
-    },
+        
+        Ext.defer(function () {
+            Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), { complexMetaData: { _record: record, options: options } });
+        }, 1, this);
+    }
     /*
     initComponent: function() {
         var me = this;
@@ -319,10 +319,10 @@ Ext.define('Taco.view.product.Index', {
         };
     },
     */
-    launchEditor: function (record) {
-        Ext.defer(function () {
-            Taco.core.StateManager.attemptNavigate('product/edit/' + record.getId(), { complexMetaData: { _record: record } });
-        }, 1, this);
-        return;
-    }
+    //launchEditor: function (record) {
+    //    Ext.defer(function () {
+    //        Taco.core.StateManager.attemptNavigate('product/edit/' + record.getId(), { complexMetaData: { _record: record } });
+    //    }, 1, this);
+    //    return;
+    //}
 });
