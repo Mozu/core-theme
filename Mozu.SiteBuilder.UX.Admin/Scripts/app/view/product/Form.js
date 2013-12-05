@@ -260,12 +260,16 @@ Ext.define('Taco.view.product.Form', {
      * Handles the use case of create in site context mode
      */
     createSiteInfoCheck:function() {
+        var ctx;
         if (!this.record.phantom) {
             return;
         }
-        var catalogId  = Taco.app.context.getCurrent().getCatalogId();
-        if (catalogId != null) {
-            this.addCatalog(catalogId);
+        ctx = Taco.app.context.getCurrent();
+       
+        if ( ctx.getCatalogId() != null) {
+            this.addCatalog(ctx.getCatalogId());
+        }else if (ctx.contextType == 'm' && ctx.catalogs.length == 1) {
+            this.addCatalog(ctx.catalogs[0].getCatalogId());
         }
     },
 

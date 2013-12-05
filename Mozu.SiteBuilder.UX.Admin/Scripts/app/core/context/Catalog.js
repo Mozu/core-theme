@@ -23,7 +23,7 @@
     },
 
     getCatalogId: function () {
-        return this.catalogId;
+        return this.id;
     },
 
     getCatalog:function () {

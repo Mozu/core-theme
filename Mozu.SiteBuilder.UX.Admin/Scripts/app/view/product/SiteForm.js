@@ -39,7 +39,7 @@ Ext.define('Taco.view.product.SiteForm', {
         this.defaults = this.defaults || {};
         this.defaults.isSingleSite = this.isSingleSite;
 
-        this.siteId = this.record.get('siteId');
+        this.catalogId = this.record.get('catalogId');
 
 
         /*
