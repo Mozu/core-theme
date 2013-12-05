@@ -3,11 +3,8 @@
  */
 Ext.define('Taco.model.StoreCredit', {
     extend: 'Taco.core.data.Model',
-    idProperty: 'id',
+    idProperty: 'code',
     fields: [{
-            name: 'id',
-            type: 'int'
-        }, {
             name: 'code',
             type: 'string'
         }, {
