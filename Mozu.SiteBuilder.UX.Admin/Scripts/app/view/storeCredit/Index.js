@@ -29,7 +29,7 @@ Ext.define('Taco.view.storeCredit.Index', {
             flex: 1,
             minWidth: 120
         }, {
-            dataIndex: 'issuedAmount',
+            dataIndex: 'initialBalance',
             text: 'Issued Amount',
             flex: 1,
             minWidth: 120
@@ -39,13 +39,13 @@ Ext.define('Taco.view.storeCredit.Index', {
             flex: 1,
             minWidth: 120
         }, {
-            dataIndex: 'dateIssued',
+            dataIndex: 'activationDate',
             text: 'Date Issued',
             flex: 1,
             minWidth: 120
         }, {
             dataIndex: 'balance',
-            text: 'balance',
+            text: 'currentBalance',
             flex: 1,
             minWidth: 120
         }, {
