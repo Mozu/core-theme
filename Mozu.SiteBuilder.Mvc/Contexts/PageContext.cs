@@ -55,18 +55,33 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get
             {
-                var 
-                _user = _user ?? new UX.Models.Customers.User
+                if (_user == null)
                 {
-                    Email = UserProfile.EmailAddress, //profile != null ? profile.EmailAddress : null,
-                    FirstName = UserProfile.FirstName, // profile != null ? profile.FirstName : null,
-                    LastName = UserProfile.LastName, // profile != null ? profile.LastName : null,
-                    UserId = _apiContext.UserClaims.UserId, // gcu.UserId,
-                    AccountId = _apiContext.UserClaims.Bag.ContainsKey("AccountId") ? _apiContext.UserClaims.Bag["AccountId"] : "",
-                    IsAuthenticated = !_apiContext.UserClaims.IsAnonymous && _apiContext.UserClaims.IsAuthenticated, //!gcu.IsAnonymous && gcu.IsAuthenticated,
-                    IsAnonymous = _apiContext.UserClaims.IsAnonymous
-                };
 
+
+                    string tempStr;
+                    int accountId = -1;
+                    if (_apiContext.UserClaims.Bag.TryGetValue("AccountId", out tempStr))
+                    {
+                        if (!int.TryParse(tempStr, out accountId))
+                        {
+                            accountId = -1;
+                        }
+                    }
+
+                    _user = _user ?? new UX.Models.Customers.User
+                                     {
+                                         Email = UserProfile.EmailAddress, //profile != null ? profile.EmailAddress : null,
+                                         FirstName = UserProfile.FirstName, // profile != null ? profile.FirstName : null,
+                                         LastName = UserProfile.LastName, // profile != null ? profile.LastName : null,
+                                         UserId = _apiContext.UserClaims.UserId, // gcu.UserId,
+                                         AccountId = accountId > 0 ? (int?) accountId : (int?) null,
+
+
+                                         IsAuthenticated = !_apiContext.UserClaims.IsAnonymous && _apiContext.UserClaims.IsAuthenticated, //!gcu.IsAnonymous && gcu.IsAuthenticated,
+                                         IsAnonymous = _apiContext.UserClaims.IsAnonymous
+                                     };
+                }
                 return _user;
             }
         }
