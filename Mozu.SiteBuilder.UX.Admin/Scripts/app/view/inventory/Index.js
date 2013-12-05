@@ -11,7 +11,8 @@ Ext.define('Taco.view.inventory.Index', {
         'Taco.store.LocationInventories', 
         'Ext.grid.plugin.CellEditing', 
         'Taco.view.inventory.QuantityEdit',
-        'Taco.view.location.inventory.LocationInventory'
+        'Taco.view.location.inventory.LocationInventory',
+        'Taco.store.InventoriedProducts'
     ],
 
     typeName: 'Inventory',
