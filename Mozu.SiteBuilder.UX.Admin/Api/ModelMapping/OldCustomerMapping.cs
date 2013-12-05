@@ -7,7 +7,7 @@ using SB = Mozu.SiteBuilder.UX.Models.Customers;
 using AC = Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 using CS = Mozu.Customer.Contracts;
 using AP = Mozu.Core.Api.Contracts;
-using US = Mozu.User.Contracts;
+
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -44,10 +44,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<SB.Address, AP.Address>();
             Mapper.CreateMap<AP.Address, SB.Address>();
 
-            Mapper.CreateMap<US.PasswordInfo, AC.PasswordInfo>();
-            Mapper.CreateMap<AC.PasswordInfo, US.PasswordInfo>();
+            //Mapper.CreateMap<US.PasswordInfo, AC.PasswordInfo>();
+            //Mapper.CreateMap<AC.PasswordInfo, US.PasswordInfo>();
 
-            Mapper.CreateMap<AC.AccountInformation, US.PasswordInfo>();
+          //  Mapper.CreateMap<AC.AccountInformation, US.PasswordInfo>();
 
             Mapper.CreateMap<AP.User, AC.AccountInformation>()
                 .ForMember(x => x.Email, m => m.MapFrom(x => x.EmailAddress));
@@ -58,8 +58,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<AP.User, AC.LoginUser >();
             Mapper.CreateMap<AC.LoginUser, AP.User>();
 
-            Mapper.CreateMap<AC.Invitation, US.Invitation>();
-            Mapper.CreateMap<US.Invitation, AC.Invitation>();
+            //Mapper.CreateMap<AC.Invitation, US.Invitation>();
+            //Mapper.CreateMap<US.Invitation, AC.Invitation>();
             Mapper.CreateMap<AP.UserRole, AC.AccountUserRole>();
             Mapper.CreateMap<AC.Invitation, AC.AccountUser>()
                 .ForMember(x => x.Activity, m => m.ResolveUsing(x => x.State))

@@ -17,7 +17,7 @@ using Mozu.SiteBuilder.Mvc.Customers;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Customers;
-using Mozu.User.Contracts.Clients;
+
 using PasswordInfo = Mozu.SiteBuilder.UX.Models.Customers.PasswordInfo;
 
 
@@ -31,19 +31,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private readonly ICustomerRepository _customerRepository;
         private readonly IAccountContactRepository _accountContactRepository;
-        private readonly IUserWebApiClient _userWebApiClient;
+        
         private readonly IOrderWebApiClient _orderWebApiClient;
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly ISiteBuilderApiContext _apiContext;
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
         private readonly IWishlistWebApiClient _wishlistApiClient;
 
-        public MyAccountController(ICustomerRepository customerRepository, ICustomerAccountWebApiClient customerAccountWebApiClient, IAccountContactRepository accountContactRepository, IUserWebApiClient userWebApiClient, IOrderWebApiClient orderWebApiClient, IWishlistWebApiClient wishlistWebApiClient, IAuthenticationHelper authenticationHelper, ISiteBuilderApiContext apiContext)
+        public MyAccountController(ICustomerRepository customerRepository, ICustomerAccountWebApiClient customerAccountWebApiClient, IAccountContactRepository accountContactRepository,  IOrderWebApiClient orderWebApiClient, IWishlistWebApiClient wishlistWebApiClient, IAuthenticationHelper authenticationHelper, ISiteBuilderApiContext apiContext)
         {
             _customerRepository = customerRepository;
             _customerAccountWebApiClient = customerAccountWebApiClient.CloneWithoutUserClaims();
             _accountContactRepository = accountContactRepository;
-            _userWebApiClient = userWebApiClient.CloneWithoutUserClaims();
+            
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
             _wishlistApiClient = wishlistWebApiClient.CloneWithoutUserClaims();
             _authenticationHelper = authenticationHelper;
@@ -71,13 +71,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
             }
 
-            var userTask = _userWebApiClient.GetUser(CurrentUser.UserId);
+          
             var cardsTask = _customerAccountWebApiClient.GetAccountCards(account.Id);
             var openOrdersTask = _orderWebApiClient.GetOrders(0, 25, null, BuildOpenOrdersFilter(account.Id));
             var orderHistoryTask = _orderWebApiClient.GetOrders(0, 25, null, BuildOrderHistoryFilter(account.Id));
             var wishlistTask = _wishlistApiClient.GetWishlists(0, 25, null, BuildWishlistFilter(account.Id));
 
-            var user = userTask.Result.ReadAsSync();
+            
             var cards = cardsTask.Result.ReadAsSync();
             var openOrders = openOrdersTask.Result.ReadAsSync();
             var orderHistory = orderHistoryTask.Result.ReadAsSync();
@@ -86,7 +86,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var wishlist = (wishlistResult != null && wishlistResult.Items != null ? wishlistResult.Items.FirstOrDefault() : null) ?? new Mozu.CommerceRuntime.Contracts.Wishlists.Wishlist();
 
             //this.ViewData["Orders"] = orders.Items;
-            this.ViewData["User"] = user;
+            this.ViewData["User"] = PageContext.User ;
 
             var jSerializer = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
             var jAccount = Newtonsoft.Json.Linq.JObject.FromObject(account, jSerializer);
@@ -104,10 +104,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 {
                     primaryBillingAccount = (await _customerAccountWebApiClient.AddAccountContact(new Customer.Contracts.CustomerContact
                     {
-                        FirstName = user.FirstName,
-                        LastNameOrSurname = user.LastName,
+                        FirstName = PageContext.User.FirstName,
+                        LastNameOrSurname = PageContext.User.LastName,
                         Address = new Core.Api.Contracts.Address(),
-                        Email = user.EmailAddress,
+                        Email = PageContext.User.Email ,
                         Types = new List<Customer.Contracts.ContactType>{
                             new Customer.Contracts.ContactType{
                                 IsPrimary = true,
@@ -201,21 +201,31 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<string> UpdateEmail(string email)
         {
             var userId = CurrentUser.UserId;
-            var user = await _userWebApiClient.GetUser(userId).Result.ReadAsAsync();
+           
+           
+            var account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId)).ReadAsSync();
+            account.EmailAddress = email;
 
-            user.EmailAddress = email;
+            account = (await _customerAccountWebApiClient.UpdateAccount(account, account.Id)).ReadAsSync();
 
-            var res = await _userWebApiClient.UpdateUser(user, userId).Result.ReadAsAsync();
-
-            return email;
+            return account.EmailAddress ;
         }
 
         [HttpPost]
         public async Task<bool> ChangePassword(PasswordInfo info)
         {
-            var passwordInfo = new Mozu.User.Contracts.PasswordInfo { NewPassword = info.NewPassword, OldPassword = info.OldPassword };
-            var res = await _userWebApiClient.ChangePassword(passwordInfo, CurrentUser.UserId).Result.ReadAsAsync();
 
+            var account = (await _customerAccountWebApiClient.ChangePassword(new Customer.Contracts.PasswordInfo()
+                                                                             {
+                                                                                 NewPassword = info.NewPassword,
+                                                                                 OldPassword = info.OldPassword
+                                                                             }, this.PageContext.User.AccountId ));
+
+         
+            if (account.HasException)
+            {
+                throw account.ReadException();
+            }
             return true;
         }
 

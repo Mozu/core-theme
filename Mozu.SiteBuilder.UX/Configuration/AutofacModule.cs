@@ -29,7 +29,7 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Navigation;
 using Mozu.SiteSettings.General.Contracts.Clients;
-using Mozu.User.Contracts.Clients;
+
 using NDjango;
 using NDjango.Interfaces;
 using Module = Autofac.Module;
@@ -83,7 +83,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Order.Contracts.Clients.CheckoutSettingsWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Reference.Contracts.Clients.ReferenceDataWebApiClient).Assembly);
             
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.User.Contracts.Clients.IUserWebApiClient).Assembly);
+            
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Shipping.Contracts.Clients.ShippingSettingsWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Order.Contracts.CheckoutSettings ).Assembly);
 		    

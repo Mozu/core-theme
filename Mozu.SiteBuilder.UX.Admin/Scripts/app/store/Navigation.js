@@ -237,6 +237,7 @@ Ext.define('Taco.store.Navigation', {
                 "label": "Locations",
                 "address": "locations",
                 "icon": "nav-locations",
+                "behaviorIds": [186],
                 "items": [/*{
                 "id": "locations-manage",
                 "label": "Locations",

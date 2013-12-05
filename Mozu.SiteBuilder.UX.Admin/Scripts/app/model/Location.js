@@ -4,6 +4,13 @@
 Ext.define('Taco.model.Location', {
     extend: 'Taco.core.data.Model',
     idProperty: "code",
+    behaviors: {
+        read: 186,
+        create: 183,
+        update: 184,
+        destroy: 185
+    },
+
     fields: [
         {
             "name": "code",

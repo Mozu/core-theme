@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Settings;
@@ -21,7 +22,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public GeneralSettingController(IGeneralSettingWrapper wrapper, Mozu.CommerceRuntime.Contracts.Clients.IChannelWebApiClient channelWebApiClient)
         {
             _wrapper = wrapper;
-            _channelWebApiClient = channelWebApiClient;
+            _channelWebApiClient = channelWebApiClient.CloneWithoutUserClaims();
         }
 
         [HttpGetRoute(UriTemplate = "read")]

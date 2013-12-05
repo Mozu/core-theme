@@ -8,6 +8,13 @@ Ext.define('Taco.model.GeneralSettings', {
         'Taco.store.ThemeListing',
         'Taco.store.Channels'
     ],
+    behaviors: {
+        read: 186,
+        create: 183,
+        update: 184,
+        destroy: 185
+    },
+    
     fields: [
         { "name": "allowAllIps", "type": "boolean", "useNull": true },
         { "name": "daylightSaving", "type": "boolean", "useNull": true },
