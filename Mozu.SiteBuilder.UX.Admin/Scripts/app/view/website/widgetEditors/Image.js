@@ -27,6 +27,11 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
     initComponent: function () {
         var me = this;
 
+        this.imageStore = Ext.create('Ext.data.Store', {
+            fields: ['id', 'url'],
+            data: []
+        });
+
         this.tools = [{
             xtype: 'button',
             ui: 'action',
@@ -140,6 +145,8 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                 }, {
                     xtype: 'container',
                     itemId: 'imageSelectors',
+                    padding: '10 0 0',
+                    height: 170,
                     layout: {
                         type: 'card'
                     },
@@ -149,11 +156,30 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                             type: 'fit'
                         },
                         items: [{
-                            xtype: 'component',
+                            xtype: 'dataview',
                             cls: 'taco-image-dropzone',
-                            html: 'Drag and drop images here',
-                            margin: '20 0 0',
-                            height: 160
+                            height: 160,
+                            deferEmptyText: false,
+                            emptyText: 'Drag and drop an image here',
+                            itemSelector: 'div.thumb',
+                            store: this.imageStore,
+                            tpl: [
+                                '<tpl for=".">',
+                                    '<div class="thumb" style="background-image: url({url});">',
+                                        '<div class="controls"><span class="remove"></span></div>',
+                                    '</div>',
+                                '</tpl>'
+                            ],
+                            listeners: {
+                                itemclick: {
+                                    scope: this,
+                                    fn: function (view, record, item, index, e) {
+                                        if (e.getTarget('span.remove', 10)) {
+                                            this.imageStore.removeAll();
+                                        }
+                                    }
+                                }
+                            }
                         }]
                     }, {
                         // Card 1: External URL
@@ -161,7 +187,8 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                             type: 'fit'
                         },
                         items: [{
-                            xtype: 'component'
+                            xtype: 'component',
+                            height: 160
                         }]
                     }]
                 }, {
@@ -205,10 +232,8 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         xtype: 'colorfield',
                         name: 'borderColor',
                         fieldLabel: 'Border Color',
-                        inputCls: 'x-form-text',
                         margin: '0 0 0 15',
-                        width: 170,
-                        pickerSize: 30
+                        width: 170
                     }]
                 }, {
                     xtype: 'container',
@@ -266,14 +291,17 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         change: {
                             scope: this,
                             fn: function (fieldgroup, newValue, oldValue) {
-                                this.down('#linkFields').setVisible(newValue.imageClickAction === 'url');
+                                var isUrl = newValue.imageClickAction === 'url';
+
+                                this.down('#linkFields').setVisible(isUrl);
+                                this.down('#linkSelectors').setVisible(isUrl);
                             }
                         }
                     }
                 }, {
                     xtype: 'container',
                     itemId: 'linkFields',
-                    padding: '7 0 0',
+                    padding: '2 0 0',
                     hidden: true,
                     layout: {
                         type: 'hbox'
@@ -281,7 +309,6 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                     items: [{
                         xtype: 'combobox',
                         name: 'linkSource',
-                        margin: '0 0 10',
                         width: 170,
                         editable: false,
                         forceSelection: true,
@@ -350,7 +377,8 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                 }, {
                     xtype: 'container',
                     itemId: 'linkSelectors',
-                    height: 160,
+                    padding: '10 0 0',
+                    height: 170,
                     layout: {
                         type: 'card'
                     },
@@ -360,7 +388,8 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                             type: 'fit'
                         },
                         items: [{
-                            xtype: 'component'
+                            xtype: 'component',
+                            height: 160
                         }]
                     }, {
                         // Card 1: Internal URL
@@ -406,7 +435,8 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         items: [{
                             xtype: 'component',
                             cls: 'taco-image-dropzone',
-                            html: 'Drag and drop files here'
+                            html: 'Drag and drop files here',
+                            height: 160
                         }]
                     }]
                 }]
@@ -433,7 +463,11 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                     fn: function (dialog, records) {
                         var urls;
 
-                        urls = Ext.Array.map(records, function (record) {
+                        urls = Ext.Array.map(records, function (record, index) {
+                            if (index === 0) {
+                                this.imageStore.removeAll();
+                                this.imageStore.add(record);
+                            }
                             return record.getId();
                         }, this).join(', ');
                         
