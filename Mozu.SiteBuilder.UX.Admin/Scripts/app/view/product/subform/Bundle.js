@@ -53,20 +53,38 @@ Ext.define('Taco.view.product.subform.Bundle', {
         ];
 
         this.callParent(arguments);
+
+        
+
+        me.mon(me.productBundleGrid.store, 'datachanged', me.onStoreDataChanged, me);
+        
+
     },
+    
+    onStoreDataChanged: function (bundleStore) {
+        var me = this,
+            productForm = me.up("productform");
+        
+        // when the contents of the bundle store chanes, we need to notifiy the other subForms of the changes so that they can react. Specifically, the shipping and price area will update;
+        //todo change this to fire on the record instead of the productForm
+        if (productForm) {
+            productForm.fireEvent('bundleItemChange');
+        }
+    },
+
     // Called before the updateTask of Taco.core.ux.form.Form is executed; Return false to cancel the save; Can be used to manipulate the record data prior to saving;
     beforeSave: function () {
-        var me = this
-
+        /*
+        var me = this;
         // need to serialize the store into jsons for persistance
         var store = this.productBundleGrid.store;
         var data = [];
         store.each(function(record) {
-            data.push(record.data);
+            data.push(Ext.clone(record.data));
         });
         
         this.product.set('bundledProducts', data);
-        
+        */
         return true;
     }
 });

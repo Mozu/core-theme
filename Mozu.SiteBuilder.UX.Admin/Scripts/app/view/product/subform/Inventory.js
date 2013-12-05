@@ -10,7 +10,8 @@ Ext.define('Taco.view.product.subform.Inventory', {
     title: 'Inventory',
     
     initComponent: function () {
-        var track = this.product.get('manageStock'),
+        var me = this,
+            track = this.product.get('manageStock'),
             manageStock,
           //  stockOnHand,
             outOfStockState,
@@ -69,7 +70,11 @@ Ext.define('Taco.view.product.subform.Inventory', {
         }];
 
         this.callParent(arguments);
-       
+        
+        me.on('afterrender', function() {
+            me.up("productform").on('productusagechange', me.onProductUsageChange);
+        });
+
     },
 
     getOutOfStockState: function () {
@@ -84,5 +89,18 @@ Ext.define('Taco.view.product.subform.Inventory', {
         }
 
         return result;
+    },
+    
+    /**
+    *   When the productUsage changes, the inventory subForm should have the following behavior
+    *   When productUsage is bundle, do not allow managment of inventory
+    *
+    *
+    *
+    *
+    */
+    onProductUsageChange :function(view, value) {
+        
+
     }
 });

@@ -13,7 +13,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         
         // items from subclass
         var originalItems = this.items || [];
-
+        
         this.formContainer = Ext.widget({
             xtype: 'container',
             cls: 'taco-form-nav-container',
@@ -157,9 +157,10 @@ Ext.define('Taco.core.ux.form.NavForm2', {
             recordsToAdd = [];
         
         if (items) {
-            this.formContainer.autoDestroy = false;
+            //this.formContainer.autoDestroy = false;
             this.formContainer.removeAll();
-            this.formContainer.autoDestroy = true;
+            //this.formContainer.autoDestroy = true;
+            //destroy itemsToRemoved
             components = this.formContainer.add(items);
         } else {
             components = this.formContainer.items.items;

@@ -41,5 +41,28 @@ Ext.define('Taco.core.util.Common', {
         }
         return false;
 
+    },
+    
+    /**
+         * Filter out null values from Array and maps in place.
+         * @param {Array/Object} the array/Object to filter
+         * @return the original item with null elements removed
+         */
+    filterNulls: function (l) {
+        if (typeof l == "object") {
+            if (l.constructor == Array) {
+                var i = j = 0;
+                for (var i = 0; i < l.length; i++)
+                    if (l[i])
+                        l[j++] = l[i];
+                l.length = j;
+            }
+            else {
+                for (var k in l)
+                    if (l.hasOwnProperty(k) && !l[k])
+                        delete l[k];
+            }
+        }
+        return l;
     }
 });

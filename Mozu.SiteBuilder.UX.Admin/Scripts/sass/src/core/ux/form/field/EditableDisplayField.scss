@@ -5,14 +5,21 @@
 	
 	.x-form-editable-display-field{
 		color: #333333;
-		padding: 5px 10px 3px 10px;	
+		padding: 6px 11px 4px 11px;	
 		background: white repeat-x 0 0;
-		border-width: 1px;
-		border-style: solid;
-		border-color: #bfbfbf;
+		//border-width: 1px;
+		//border-style: solid;
+		//border-color: #bfbfbf;
 		line-height:20px;
 		min-height:$form-field-height;
 		height:"auto";
+	}
+
+	.x-form-editable-display-field-border{		
+		padding: 5px 10px 3px 10px;	
+		border-width: 1px;
+		border-style: solid;
+		border-color: #bfbfbf;
 	}
 
 	.x-form-editable-display-field.x-form-invalid-field {

@@ -26,7 +26,6 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
     initComponent: function () {
         var me = this;        
         
-
         Ext.apply(me, {
             viewConfig: {
                 deferEmptyText: false,
@@ -39,6 +38,8 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 'edit': {
                     fn: function(editor, column, e) {
                         column.record.commit();
+                        
+                        column.record.save();
                     }
                 }
             },
@@ -49,7 +50,20 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
             ],
             columns: this.getColumnConfig()
         });
+
+
         
+
+        //var data = Ext.clone(me.product.get("bundledProducts")) 
+        
+
+        /*
+        this.store = Ext.create('Ext.data.Store', {
+            model: "Taco.model.BundledProduct",
+            data: data
+        });
+        */
+
         this.store = this.product.getBundledProducts();
 
         this.callParent(arguments);
@@ -151,6 +165,9 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                             
                             var item = Ext.create('Taco.model.BundledProduct', record.data);
                             item.set('quantity', 1);
+                            // need to manually set the dirtystate on new records because they automatically get an id which ext uses to determine if there is a phantom (ie dirty);
+                            item.setDirty();
+                            
                             itemsToAdd.push(item);
 
                             //remove any records from the store that match what we just added;
