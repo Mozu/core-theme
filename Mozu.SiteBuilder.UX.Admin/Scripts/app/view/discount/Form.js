@@ -15,20 +15,56 @@ Ext.define('Taco.view.discount.Form', {
         'Taco.view.discount.CriteriaForm'
     ],
 
+    mixins: {
+        navigable: 'Taco.core.ux.mixins.Navigable'
+    },
+
     title: 'Discount',
+
+    constructor: function () {
+        
+        this.callParent(arguments);
+
+        this.mixins.navigable.constructor.call(this);
+    },
 
     initComponent: function () {
         this.items = [{
             xtype: 'taco-discount-general',
+            itemId: 'general',
+            parentForm: this,
             record: this.record
         }, {
             xtype: 'taco-discount-conditions',
+            itemId: 'conditions',
+            parentForm: this,
             record: this.record
         }, {
             xtype: 'taco-discount-criteria',
-            record: this.record
+            itemId: 'criteria',
+            parentForm: this,
+            record: this.record,
+            hidden: true
         }];
 
-        this.callParent(arguments);   
+        this.callParent(arguments);
+
+        this.general = this.down('#general');
+        this.conditions = this.down('#conditions');
+        this.criteria = this.down('#criteria');
+
+        Ext.defer(function () {
+            this.add({
+                xtype: 'taco-discount-criteria',
+                itemId: 'criteria1',
+                parentForm: this,
+                record: this.record
+                //hidden: true
+            })
+        }, 6000, this)
+    },
+
+    showCriteria: function () {
+        this.criteria.show();
     }
 });

@@ -9,6 +9,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-general',
     ui: 'subform',
+    margin: '0 0 39 0',
 
     initComponent: function () {
 
