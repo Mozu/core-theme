@@ -216,10 +216,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<Credit>>> GetCredits()//[FromUri]int? customerId, [FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             string filter = null;
+            //var customerId = 1001;
+
             //if (customerId != null)
             //    filter = string.Format("CustomerId eq {0}", customerId);
             var dcitem = (await _creditWebApiClient.GetCredits(0, 600, filter: filter)).ReadAsSync();
             var vmitem = Mapper.Map<List<Credit>>(dcitem.Items);
+            
+            vmitem.ForEach(cred => {
+                var customer = GetAccountWithAttributes(cred.CustomerId).Result.Map<ApiCustomer>();
+                cred.Customer = customer != null && customer.Contacts != null && customer.Contacts.Count() > 0 ? customer.Contacts[0] : new Contact();
+            });
+
             return List2(vmitem);
         }
 
