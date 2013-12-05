@@ -11,7 +11,10 @@ Ext.define('Taco.view.redirects.Index', {
     gridHeaderLabel: 'Redirects',
     requiresContextOfType: 's',
     
-    
+    contextConfig: {
+        supportedLevels: ['s'],
+        requiresContextOfType: ['s']
+    },
 
     
     modelName: 'Taco.model.RedirectEntry',

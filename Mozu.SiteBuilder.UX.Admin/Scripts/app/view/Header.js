@@ -18,7 +18,7 @@ Ext.define('Taco.view.Header', {
 
     initComponent: function () {
         var me = this,
-            primaryMenuTrigger, breadcrumb, contextSwitcherTrigger;
+            primaryMenuTrigger, breadcrumb;
 
         primaryMenuTrigger = Ext.create('Taco.core.ux.action.Action', {
             xtype: 'action',
@@ -47,7 +47,7 @@ Ext.define('Taco.view.Header', {
             ]
         });
 
-        contextSwitcherTrigger = Ext.create('Taco.view.navigation.ContextSwitcher');
+       // contextSwitcherTrigger = Ext.create('Taco.view.navigation.ContextSwitcher');
         this.breadCrumb = breadcrumb;
         
         this.primaryMenu = Ext.create('Taco.view.navigation.PrimaryMenu', {
@@ -97,7 +97,7 @@ Ext.define('Taco.view.Header', {
                 type: 'hbox',
                 align: 'middle'
             },
-            items: [primaryMenuTrigger, breadcrumb, contextSwitcherTrigger]
+            items: [primaryMenuTrigger, breadcrumb]//, contextSwitcherTrigger]
         }];
 
         this.callParent(arguments);

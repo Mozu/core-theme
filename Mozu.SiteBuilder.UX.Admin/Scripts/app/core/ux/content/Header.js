@@ -5,7 +5,7 @@
 
 Ext.define('Taco.core.ux.content.Header', {
     extend: 'Ext.container.Container',
-    requires: ['Taco.core.ux.action.SecondaryButton', 'Taco.core.ux.action.PrimaryButton'],
+    requires: ['Taco.core.ux.action.SecondaryButton', 'Taco.core.ux.action.PrimaryButton', 'Taco.core.ux.content.ContextMenu'],
     alias: 'widget.contentheader',
     
     cls: 'taco-content-header',
@@ -31,11 +31,18 @@ Ext.define('Taco.core.ux.content.Header', {
         if (actionsCt) items.push(actionsCt);
         if (title) items.unshift(title);
 
+        
         if (this.flexFirstItem && items.length > 0) {
             Ext.apply(items[0], {
                 flex: 1
             });
         }
+        
+        if (!Ext.isEmpty(this.contextConfig)) {
+            items.unshift(Ext.create('Taco.core.ux.content.ContextMenu', this.contextConfig ));
+        }
+        
+
 
         this.items = items;
 

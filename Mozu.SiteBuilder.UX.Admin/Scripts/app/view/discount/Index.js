@@ -15,7 +15,11 @@ Ext.define('Taco.view.discount.Index', {
     editorName: 'Taco.view.discount.Edit',
     typeName: 'Discount',
 
-    requiresContextOfType: 's',
+   
+    contextConfig: {
+        supportedLevels: ['c'],
+        requiresContextOfType: ['c', 's']
+    },
     
     initComponent: function () {
         var me = this;

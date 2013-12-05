@@ -99,7 +99,7 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
                 ordersStore.load(options);
                 customerStore.load(options);
 
-                if (ctx.contextType == 's' || ctx.contextType == 'c') {
+                if (ctx.contextType == 's' || ctx.contextType == 'm' || ctx.contextType == 'c') {
 
 
                     tmpStore = Taco.core.data.StoreManager.getOrCreate({

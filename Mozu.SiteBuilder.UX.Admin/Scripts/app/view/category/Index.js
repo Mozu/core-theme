@@ -9,7 +9,12 @@ Ext.define('Taco.view.category.Index', {
         'Taco.store.CategoriesTree'
     ],
 
-    requiresContextOfType: 's',
+    contextConfig: {
+        supportedLevels: ['c'],
+        requiresContextOfType: [ 'c', 's']
+    },
+    
+    
     setHidden: function (records) {
         var me = this;
 
@@ -42,7 +47,7 @@ Ext.define('Taco.view.category.Index', {
         };
 
         
-        me.store = Taco.core.data.StoreManager.getCategoryTreeBySite();
+        me.store = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
 
         me.treelist = Ext.create('Taco.core.ux.TreeList', {
             store: me.store,

@@ -5,28 +5,37 @@
     stagingHost: '',
     defaultHost: '',
     urlToken: null,
-    contextType: 'a',
+    contextType: 'c',
 
     masterCatalog: null,
 
     constructor: function (config) {
         var me = this;
         config = Ext.apply({}, config);
-
+        me.sites = [];       
         Ext.apply(me, config);
         me.callParent([config]);
         me.urlToken = me.contextType + '-' + me.id;
     },
 
     getSiteId: function () {
-        return this.id;
+        return null;
     },
 
     getCatalogId: function () {
         return this.catalogId;
     },
 
-
+    getCatalog:function () {
+        return this;
+    },
+    getSite: function () {
+        return null;
+    },
+    
+    getSites:function () {
+        return this.sites;
+    },
 
     getMasterCatalogId: function () {
         return this.masterCatalog.getMasterCatalogId();

@@ -8,6 +8,9 @@ Ext.define('Taco.view.settings.shipping.Edit', {
         'Taco.view.settings.shipping.Form'
     ],
     formCls: 'Taco.view.settings.shipping.Form',
-    requiresContextOfType: ['s'],
+    contextConfig: {
+        supportedLevels: ['s'],
+        requiresContextOfType: ['s']
+    },
     requiredStores: ['Taco.store.Countries']
 });

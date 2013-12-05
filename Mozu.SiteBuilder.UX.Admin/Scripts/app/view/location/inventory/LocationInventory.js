@@ -14,7 +14,10 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
     // used by create button
     typeName: 'Location Inventory',
     
-    requiresContextOfType: ['c', 's'],
+    contextConfig: {
+        supportedLevels: ['m', 'c'],
+        requiresContextOfType: ['m', 's', 'c']
+    },
     
     gridHeaderLabel: 'Location',
     

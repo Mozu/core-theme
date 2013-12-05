@@ -22,7 +22,11 @@ Ext.define('Taco.view.website.Index', {
         'Ext.ux.IFrame'
     ],
 
-    requiresContextOfType: ['s'],
+    contextConfig: {
+        supportedLevels: ['s'],
+        requiresContextOfType: ['s'],
+        hidden :true
+    },
 
     entityTypeEditConfig: {
         blog: 'Taco.view.website.entityAdapters.DocumentEntityAdapter',

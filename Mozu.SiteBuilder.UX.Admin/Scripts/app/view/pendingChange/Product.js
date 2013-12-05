@@ -18,7 +18,10 @@ Ext.define('Taco.view.pendingChange.Product', {
     store: { type: 'Taco.store.Products' },
     useTilePanel: false,
 
-    requiresContextOfType: ['c', 's'],
+    contextConfig: {
+        supportedLevels: ['m', 'c'],
+        requiresContextOfType: ['m', 's', 'c']
+    },
     
     filterFormConf: {
         width: 600,

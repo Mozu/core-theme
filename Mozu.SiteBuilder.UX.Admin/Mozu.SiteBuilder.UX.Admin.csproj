@@ -613,6 +613,7 @@
     <Content Include="Scripts\app\core\util\Common.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
     <Content Include="Scripts\app\core\ux\browser\SearchList.js" />
+    <Content Include="Scripts\app\core\ux\content\ContextMenu.js" />
     <Content Include="Scripts\app\core\ux\form\field\AdminUser.js" />
     <Content Include="Scripts\app\core\ux\form\field\SingleImageField.js" />
     <Content Include="Scripts\app\core\ux\form\field\EditableDisplayField.js" />
@@ -1070,7 +1071,6 @@
     <Content Include="Scripts\app.js" />
     <Content Include="Scripts\app\controller\Attributes.js" />
     <Content Include="Scripts\app\controller\FileManager.js" />
-    <Content Include="Scripts\app\controller\PageTemplates.js" />
     <Content Include="Scripts\app\controller\ProductTypes.js" />
     <Content Include="Scripts\app\controller\PendingChanges.js" />
     <Content Include="Scripts\app\controller\Errors.js" />
@@ -1254,7 +1254,6 @@
     <Content Include="Scripts\app\view\order\widget\Package.js" />
     <Content Include="Scripts\app\view\order\widget\PaymentPanel.js" />
     <Content Include="Scripts\app\view\order\widget\UnpackagedItems.js" />
-    <Content Include="Scripts\app\view\pageTemplate\Index.js" />
     <Content Include="Scripts\app\view\pendingChange\Cms.js" />
     <Content Include="Scripts\app\view\productType\AttributeForm.js" />
     <Content Include="Scripts\app\view\productType\AttributeGroup.js" />
@@ -1780,7 +1779,6 @@
     <Content Include="Scripts\resources\images\temp\image-gallery-slider.png" />
     <Content Include="Scripts\app\controller\Account.js" />
     <Content Include="Scripts\app\controller\Orders.js" />
-    <Content Include="Scripts\app\controller\Email.js" />
     <Content Include="Scripts\app\controller\PaymentAndCheckout.js" />
     <Content Include="Scripts\app\controller\Themes.js" />
     <Content Include="Scripts\app\controller\Customers.js" />
@@ -1835,13 +1833,10 @@
     <Content Include="Scripts\app\core\ux\modal\Helper.js" />
     <Content Include="Scripts\app\view\customers\ItemBrowser.js" />
     <Content Include="Scripts\app\view\customers\SearchForm.js" />
-    <Content Include="Scripts\app\view\email\Edit.js" />
-    <Content Include="Scripts\app\view\email\Index.js" />
     <Content Include="Scripts\app\view\inventory\QuantityEdit.js" />
     <Content Include="Scripts\app\view\order\Grid.js" />
     <Content Include="Scripts\app\view\order\Index.js" />
     <Content Include="Scripts\app\view\paymentAndCheckout\FieldDescription.js" />
-    <Content Include="Scripts\app\view\paymentAndCheckout\Index.js" />
     <Content Include="Scripts\app\view\paymentAndCheckout\RadioList.js" />
     <Content Include="Scripts\app\view\paymentAndCheckout\StandaloneAccordion.js" />
     <Content Include="Scripts\app\controller\GeneralSettings.js" />

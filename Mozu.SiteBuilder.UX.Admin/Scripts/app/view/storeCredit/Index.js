@@ -7,7 +7,7 @@ Ext.define('Taco.view.storeCredit.Index', {
 
     requires: ['Taco.model.StoreCredit', 'Taco.store.StoreCredits', 'Taco.view.storeCredit.Edit'],
 
-    requiresContextOfType: [],
+    
 
     modelName: 'Taco.model.StoreCredit',
     store: {

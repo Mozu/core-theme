@@ -16,8 +16,11 @@ Ext.define('Taco.view.product.Index', {
     filterProperty: 'productName2',
     useTilePanel: false,
 
-    requiresContextOfType: ['c', 's'],
-
+    
+    contextConfig: {
+        supportedLevels: ['m', 'c'],
+        requiresContextOfType: ['m', 'c', 's']
+    },
 
 
     //filterFormConf: {
@@ -194,7 +197,7 @@ Ext.define('Taco.view.product.Index', {
                 }
             }],
         contextConf: {
-            c: {
+            m: {
                 useMultiGrid: true,
                 plugins: [{
                     ptype: 'rowexpander',
@@ -205,7 +208,7 @@ Ext.define('Taco.view.product.Index', {
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><a href="#" class="taco-launch-editor" data-site-id="{siteId}">{productName}</a></div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{price:this.formatPrice}</div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{salePrice:this.formatPrice}</div></td>',
-                        '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{siteId:this.toSiteName}</div></td>',
+                        '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{catalogId:this.toCatalogName}</div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{isContentOverridden:this.formatOverridden}</div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
                         '</tr></tpl>',
@@ -216,7 +219,7 @@ Ext.define('Taco.view.product.Index', {
                             formatPrice: function (value) {
                                 return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
                             },
-                            toSiteName: function (value) {
+                            toCatalogName: function (value) {
                                 var catalog = Taco.app.context.findCatalog(value);
                                 return catalog ? catalog.name : 'n/a';
                             }
@@ -295,7 +298,7 @@ Ext.define('Taco.view.product.Index', {
     },
     
     launchLoadedEditor: function (record, options) {
-        var site = Taco.app.context.getCurrentSite(),
+        var site = Taco.app.context.getSite(),
             infoStore,
             infoRecord;
 

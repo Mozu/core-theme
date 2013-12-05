@@ -855,7 +855,7 @@ weight: 2
                 fulfillmentContact: this.order.data.fulfillmentContact,
                 payment: this.order.data.payments[0],
                 order: this.order.data,
-                siteName: Taco.app.context.getCurrentSite().name
+                siteName: Taco.app.context.getSite().name
             },
             win = window.open(),
             tpl;

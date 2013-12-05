@@ -18,7 +18,7 @@ Ext.define('Taco.view.report.Index', {
     ],
 
     cls: undefined,
-//    requiresContextOfType: ['c', 's'],
+
     sidebar: null,
     constructor: function (conf) {
         this.callParent(arguments);

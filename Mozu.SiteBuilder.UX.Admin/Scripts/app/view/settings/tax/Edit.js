@@ -8,5 +8,8 @@ Ext.define('Taco.view.settings.tax.Edit', {
         'Taco.view.settings.tax.Form'
     ],
     formCls: 'Taco.view.settings.tax.Form',
-    requiresContextOfType: ['s']
+    contextConfig: {
+        supportedLevels: ['s'],
+        requiresContextOfType: ['s']
+    },
 });
