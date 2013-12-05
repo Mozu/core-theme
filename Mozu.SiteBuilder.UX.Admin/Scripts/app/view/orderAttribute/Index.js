@@ -7,7 +7,7 @@ Ext.define('Taco.view.orderAttribute.Index', {
    
     requires: ['Taco.model.OrderAttribute', 'Taco.store.OrderAttributes'/*, 'Taco.view.attribute.Edit'*/],
 
-    requiresContextOfType: [],
+   
 
     modelName: 'Taco.model.OrderAttribute',
     store: {

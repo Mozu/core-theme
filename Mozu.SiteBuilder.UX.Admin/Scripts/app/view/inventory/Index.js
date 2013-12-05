@@ -26,7 +26,12 @@ Ext.define('Taco.view.inventory.Index', {
     plural: false,
     
 
-    requiresContextOfType: ['c', 's'],
+    contextConfig: {
+        supportedLevels: ['m','c'],
+        requiresContextOfType: ['m', 's', 'c']
+    },
+    
+  
     useTilePanel: false,
     launchEditorOnClick: false,
     hasSidebar:false,
@@ -119,7 +124,7 @@ Ext.define('Taco.view.inventory.Index', {
             gridHeaderLabel: this.gridHeaderLabel,
             filterFormConf: this.filterFormConf,
             filterProperties: this.filterProperties,
-            isCollectionContext: Taco.app.context.getCurrent().contextType === "c",
+            isCollectionContext: Taco.app.context.getCurrent().contextType === "m",
             gridPanel: this.gridPanel,
             tilePanel: this.tilePanel,
             useGridPanel: this.useGridPanel,

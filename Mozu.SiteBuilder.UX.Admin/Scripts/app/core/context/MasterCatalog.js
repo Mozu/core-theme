@@ -1,7 +1,7 @@
 ﻿Ext.define('Taco.core.context.MasterCatalog', {
     //extend: 'Ext.util.Observable',
     urlToken: null,
-    contextType: 'c',
+    contextType: 'm',
     name: '',
     id: -1,
     sites: null,
@@ -12,50 +12,61 @@
     
     constructor: function (config) {
         var me = this;
-        var sites = [];
+        var sites = [],
+            catalogs = [];
        
         if (me.sites) {
             sites = Ext.Array.clone(me.sites);
         }
-
-        me.sites = sites;
-        config = Ext.apply({}, config);
-        Ext.apply(me, config);
         
-        me.callParent([config]);
-
-        me.urlToken = me.contextType +'-'+ me.id;
-        
-        Ext.each(me.sites, function (site, idx) {
-            site.masterCatalog = me;
-            me.sites[idx]= Ext.create('Taco.core.context.Site', site);
-        });
-        
-
-        var catalogs = [];
-
         if (me.catalogs) {
             catalogs = Ext.Array.clone(me.catalogs);
         }
 
+        me.sites = sites;
         me.catalogs = catalogs;
+        
         config = Ext.apply({}, config);
         Ext.apply(me, config);
+        
+
 
         me.callParent([config]);
+        
 
-        me.urlToken = me.contextType + '-' + me.id;
-
+        me.urlToken = me.contextType +'-'+ me.id;
+        
         Ext.each(me.catalogs, function (catalog, idx) {
-            catalog.catalogCollection = me;
+            catalog.masterCatalog = me;
             me.catalogs[idx] = Ext.create('Taco.core.context.Catalog', catalog);
         });
+        
+        Ext.each(me.sites, function (site, idx) {
+            site.masterCatalog = me;
+            me.sites[idx] = Ext.create('Taco.core.context.Site', site);
+            me.sites[idx].catalog = Ext.Array.findBy(me.catalogs, function (cat) { return site.catalogId == cat.id; });
+            if (me.sites[idx].catalog) {
+                me.sites[idx].catalog.sites.push(me.sites[idx]);
+            }
+
+        });
+        
+        
+    },
+    
+
+    getMasterCatalog: function () {
+        return this;
     },
 
+    getSite:function () {
+        return null;
+    },
+    
     getSiteId: function () {
-        if (this.sites.length == 1) {
-            return this.sites[0].getSiteId();
-        }
+        //if (this.sites.length == 1) {
+        //    return this.sites[0].getSiteId();
+        //}
         return null;
 
     }, 
@@ -91,9 +102,10 @@
         return this.id;
     },
     getCatalogId: function () {
-        if (this.catalogs.length == 1) {
-            return this.catalogs[0].getCatalogId();
-        }
+        
+        return null;
+    },
+    getCatalog:function () {
         return null;
     },
 

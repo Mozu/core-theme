@@ -426,17 +426,17 @@ Ext.define('Taco.model.Product', {
         return level.get(fieldName);
     },
     getProductInSite: function () {
-        var site = Taco.app.context.getCurrentSite();
-        if (site) {
-            return this.getProductInCatalogs().getById(site.catalogId);
+        var catalog = Taco.app.context.getCatalog();
+        if (catalog) {
+            return this.getProductInCatalogs().getById(catalog.catalogId);
 
         }
         return null;
     },
     getProductInCatalog : function () {
-        var site = Taco.app.context.getCurrentSite();
-        if (site) {
-            return this.getProductInCatalogs().getById(site.catalogId);
+        var catalog = Taco.app.context.getCatalog();
+        if (catalog) {
+            return this.getProductInCatalogs().getById(catalog.getCatalogId());
 
         }
         return null;

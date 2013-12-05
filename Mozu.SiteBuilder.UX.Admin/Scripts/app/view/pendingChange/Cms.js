@@ -16,7 +16,11 @@ Ext.define('Taco.view.pendingChange.Cms', {
     filterProperty: 'productName',
     useTilePanel: false,
 
-    requiresContextOfType: ['c', 's'],
+    contextConfig: {
+        supportedLevels: ['s'],
+        requiresContextOfType: [ 's']
+    },
+    
     publishAllText: "Publish All",
     
     publishAll: function (type) {

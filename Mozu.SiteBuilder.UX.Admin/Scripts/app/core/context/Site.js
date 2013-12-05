@@ -26,13 +26,20 @@
         return this.catalogId;
     },
     
+    getCatalog:function () {
+        return this.catalog;
+    },
+    
     getMasterCatalogId: function () {
         return this.masterCatalogId;
     },
     getIsMozuRendered: function () {
         return this.isMozuRendered;
     },
-
+    getSite: function () {
+        return this;
+    },
+    
     getMasterCatalogId: function () {
         return this.masterCatalog.getMasterCatalogId();
     },

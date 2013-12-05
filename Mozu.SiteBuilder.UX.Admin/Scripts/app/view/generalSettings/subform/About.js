@@ -176,7 +176,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                         xtype: "editabledisplayfield",
                         name: "catalogName",
                         fieldLabel: "Catalog",
-                        value: Taco.app.context.findCatalog(Taco.app.context.getCurrentSite().catalogId).name,
+                        value: Taco.app.context.findCatalog(Taco.app.context.getSite().catalogId).name,
                         flex: 1
                     }
                 ]

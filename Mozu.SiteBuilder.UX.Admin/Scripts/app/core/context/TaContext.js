@@ -46,7 +46,7 @@ Ext.define('Taco.core.context.TaContext', {
         return this.masterCatalogs.length == 1 && this.masterCatalogs[0].sites.length == 1;
     },
     toCookieString:function() {
-        var ret = '',  sc = this.getCurrentMasterCatalog(), site = this.getCurrentSite();
+        var ret = '', sc = this.getMasterCatalog(), site = this.getSite();
         ret = 'tenant=' + this.id;
         if (sc) {
             ret += '&mastercatalog=' + sc.id;
@@ -58,19 +58,18 @@ Ext.define('Taco.core.context.TaContext', {
     },
     onBeforeAjaxRequest:function(conn, options, eOpts) {
 
-        var headers = options.headers = options.headers || {}, sc = this.getCurrentMasterCatalog(), site = this.getCurrentSite();
-
-        headers['x-vol-tenant'] = this.id || this.id;
-        if (sc) {
-            headers['x-vol-site-group'] = sc.id;
-            headers['x-vol-master-catalog'] = sc.id;
-        }
-        if (site) {
-            headers['x-vol-site'] = site.id;
-            headers['x-vol-catalog'] = site.getCatalogId();
-            headers['x-vol-site-group'] = sc.getMasterCatalogId();
-            headers['x-vol-master-catalog'] = site.getMasterCatalogId();
-        }
+        var headers = options.headers = options.headers || {},
+            volHeaders = {
+                'x-vol-tenant': this.id,
+                'x-vol-master-catalog': this.getMasterCatalogId(),
+                'x-vol-catalog': this.getCatalogId(),
+                'x-vol-site': this.getSiteId()
+            };
+        Ext.Object.each(volHeaders, function (key, value) {
+            if (value) {
+                headers[key] = value;
+            }
+        });
         if (options && options.operation && options.operation.headers) {
             Ext.apply(headers, options.operation.headers);
         }
@@ -130,14 +129,11 @@ Ext.define('Taco.core.context.TaContext', {
         return this.getCurrentContext();
     },
     getCatalogId: function () {
-        var catId = this.getCurrentContext().getCatalogId();
-        if (catId) {
-            return catId
+        if (this == this.getCurrentContext()) {
+            return null;
         }
-        if (this.masterCatalogs.length == 1) {
-            return this.masterCatalogs[0].getCatalogId();
-        }
-        return null;
+        return this.getCurrentContext().getCatalogId();
+        
     },
     getCurrentContext: function () {
         return this.currentCtx;
@@ -149,9 +145,7 @@ Ext.define('Taco.core.context.TaContext', {
 
     getSiteId: function () {
         if (this == this.getCurrentContext()) {
-            if (this.masterCatalogs.length == 1) {
-                return this.masterCatalogs[0].getSiteId();
-            }
+           
             return null;
         }
         return this.getCurrentContext().getSiteId();
@@ -159,9 +153,6 @@ Ext.define('Taco.core.context.TaContext', {
    
     getMasterCatalogId: function () {
         if (this == this.getCurrentContext()) {
-            if (this.masterCatalogs.length == 1) {
-                return this.masterCatalogs[0].getMasterCatalogId();
-            }
             return null;
         }
         return this.getCurrentContext().getMasterCatalogId();
@@ -180,9 +171,11 @@ Ext.define('Taco.core.context.TaContext', {
         Ext.each(me.masterCatalogs, function(sc) {
             data.push(sc);
 
-            Ext.each(sc.sites, function(site) {
-                site.parentCollectionID = sc.id;
-                data.push(site);
+            Ext.each(sc.catalogs, function (catalog) {
+                data.push(catalog);
+                Ext.each(catalog.sites, function (site) {
+                    data.push(site);
+                });
             });
         });
 
@@ -227,33 +220,30 @@ Ext.define('Taco.core.context.TaContext', {
        
     },
 
-    getCurrentMasterCatalog: function () {
+    getCatalog:function () {
         var cc = this.getCurrentContext();
-        if (cc.contextType == 'c') {
-            return cc;
+        if (cc == this) {
+            return null;
         }
-        if (cc.contextType == 's') {
-            return cc.getMasterCatalog();
+        return cc.getCatalog();
+    },
+    getSite:function () {
+        var cc = this.getCurrentContext();
+        if (cc == this) {
+            return null;
         }
-        if (this.masterCatalogs.length == 1) {
-            return this.masterCatalogs[0];
+        return cc.getSite();
+    },
+    getMasterCatalog: function () {
+        
+        var cc = this.getCurrentContext();
+        if (cc == this) {
+            return null;
         }
-        return null;
+        return cc.getMasterCatalog();
     },
 
-    getCurrentSite: function () {
-        var cc = this.getCurrentContext(), sc = this.getCurrentMasterCatalog();
-        if (cc.contextType == 's') {
-            return cc;
-        }
-        if (sc != null) {
-            if (sc.sites.length == 1) {
-                return sc.sites[0];
-            }
-        }
-        
-        return null;
-    },
+    
     findMasterCatalog: function (id) {
         var me = this,
             foundCol;

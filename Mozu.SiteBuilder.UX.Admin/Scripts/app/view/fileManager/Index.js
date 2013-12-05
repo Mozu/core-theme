@@ -19,7 +19,12 @@ Ext.define('Taco.view.fileManager.Index', {
         uploadable: 'Taco.shared.util.Uploadable'
     },
 
-    requiresContextOfType: ['c','s'],
+   
+    contextConfig: {
+        supportedLevels: ['m'],
+        requiresContextOfType: ['m', 's', 'c']
+    },
+    
     typeName: 'File Manager',
     gridHeaderLabel: 'File',
     plural: false,

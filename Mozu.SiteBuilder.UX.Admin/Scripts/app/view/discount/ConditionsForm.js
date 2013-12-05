@@ -345,7 +345,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
      */
     launchCategoryModal: function (list) {
         var listStore = list.getStore(),
-            treeStore = Taco.core.data.StoreManager.getCategoryTreeBySite();
+            treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
 
         this.modal = Ext.create('Taco.view.category.Modal', {
             store: treeStore

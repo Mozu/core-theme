@@ -32,7 +32,7 @@ Ext.define('Taco.view.product.Form', {
 
         this.isSingleSite = this.singleSiteCheck();
 
-        this.masterCatalog = Taco.app.context.getCurrentMasterCatalog();
+        this.masterCatalog = Taco.app.context.getMasterCatalog();
 
         this.globalForm = Ext.create('Taco.view.product.GlobalForm', {
             record: this.record,

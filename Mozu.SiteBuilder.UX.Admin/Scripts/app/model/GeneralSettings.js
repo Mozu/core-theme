@@ -35,20 +35,20 @@ Ext.define('Taco.model.GeneralSettings', {
         {   "name": "catalogId", 
             "type": "string" ,
             convert: function (value, record) {
-                return Taco.app.context.getCurrentSite().catalogId;
+                return Taco.app.context.getSite().catalogId;
             }
         },
         {
             "name": "catalogName",
             "type": "string",
             convert: function (value,record) {
-                return Taco.app.context.findCatalog(Taco.app.context.getCurrentSite().catalogId).name;
+                return Taco.app.context.findCatalog(Taco.app.context.getSite().catalogId).name;
             }
         },
         {
             "name": "isMozuWebSite", "type": "boolean",
             convert: function (value, record) {
-                return Taco.app.context.getCurrentSite().isMozuRendered;
+                return Taco.app.context.getSite().isMozuRendered;
             }
         },
         

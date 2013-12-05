@@ -17,11 +17,18 @@ Ext.define('Taco.view.order.Index', {
     modelName: 'Taco.model.Order',
     store: { type: 'Taco.store.Orders' },
     editorName: 'Taco.view.order.Edit',
+    
+    contextConfig: {
+        supportedLevels: ['t','s'],
+        requiresContextOfType: ['t', 'm', 'c', 's']
+    },
+
+
+
     //filterProperty: 'orderNumber',
     useTilePanel: false,
     //todo:  changing to s until orders support site id in resource
-   // requiresContextOfType: ['s'],
-
+  
    
 
     gridPanelConf: {
@@ -180,7 +187,7 @@ Ext.define('Taco.view.order.Index', {
 
 
     launchLoadedEditor: function (record, options) {
-        var site = Taco.app.context.getCurrentSite(),
+        var site = Taco.app.context.getSite(),
             infoStore,
             infoRecord;
 

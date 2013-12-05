@@ -7,7 +7,12 @@ Ext.define('Taco.view.attribute.Index', {
   
     requires: ['Taco.model.Attribute', 'Taco.store.Attributes', 'Taco.view.attribute.Edit'],
 
-    requiresContextOfType: ['c', 's'],
+  
+    contextConfig: {
+        supportedLevels: ['m'],
+        requiresContextOfType: ['m', 'c', 's']
+    },
+    
 
     modelName: 'Taco.model.Attribute',
     store: {

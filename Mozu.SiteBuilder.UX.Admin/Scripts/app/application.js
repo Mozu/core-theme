@@ -39,7 +39,7 @@
  * @requires Taco.controller.Themesettings
  * @requires Taco.controller.Account
  * @requires Taco.controller.GeneralSettings
- * @requires Taco.controller.Email
+ 
  * @requires Taco.controller.Orders
  * @requires Taco.controller.PhoneOrders
  
@@ -123,13 +123,13 @@ Ext.define('Taco.Application', {
         'Testing',
         'Discounts',
         'Settings',
-        'PageTemplates',
+        
         'Tbd',
         'Themes',
         'Themesettings',
         'Account',
         'GeneralSettings',
-        'Email',
+        
         'Orders',
         'OrderAttributes',
         'Errors',

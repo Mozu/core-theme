@@ -9,7 +9,10 @@ Ext.define('Taco.view.theme.Index', {
         'Taco.store.ThemeListing'
     ],
 
-    requiresContextOfType: 's',
+    contextConfig: {
+        supportedLevels: ['s'],
+        requiresContextOfType: ['s']
+    },
     
     initComponent: function() {
         this.header = {

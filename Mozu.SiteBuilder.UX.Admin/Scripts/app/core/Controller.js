@@ -15,7 +15,6 @@ Ext.define('Taco.core.Controller', {
      */
     contextPlaceholders: {},
 
-
     ensureRequiredStores: function (options) {
         var me = this,
             model = Taco.model[this.modelName],
@@ -58,7 +57,7 @@ Ext.define('Taco.core.Controller', {
             });
 
         }
-        
+
         if (requiredStoresLoading) {
             Taco.app.setLoading();
             return;
@@ -94,8 +93,8 @@ Ext.define('Taco.core.Controller', {
         this.ensureRequiredStores(function () {
             this.buildIndex(record, options);
         });
-   
-        
+
+
     },
 
     getIndexView: function () {
@@ -206,10 +205,10 @@ Ext.define('Taco.core.Controller', {
             //removing initial view  to aviod events firing from the create of the view from messin with the 
             Taco.app.contentView.removeAll(true);
             view = view.$className ? view : Ext.create(view, cfg);
-            if (view.requiresContextOfType) {
+            if (view.contextConfig && view.contextConfig.requiresContextOfType) {
                 view.mon(Taco.app.context, "beforecontextchange", function (newContext) {
                     var works = this.worksInContext(view, newContext);
-                    if (!works) Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', Ext.isArray(view.requiresContextOfType) ? view.requiresContextOfType[0] : view.requiresContextOfType).raw);
+                    if (!works) Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', Ext.isArray(view.contextConfig.requiresContextOfType) ? view.contextConfig.requiresContextOfType[0] : view.contextConfig.requiresContextOfType).raw);
                     return works;
                 }, this);
             }
@@ -221,13 +220,22 @@ Ext.define('Taco.core.Controller', {
 
     worksInContext: function (view, ctx) {
         var ctype = ctx.contextType,
-            reqctype = view.requiresContextOfType;
+            reqctype = (view.contextConfig || {}).requiresContextOfType;
         return (!reqctype || reqctype === ctype || (Ext.isArray(reqctype) && Ext.Array.indexOf(reqctype, ctype) !== -1));
     },
 
     requiresSiteContext: function () {
+        var context = Taco.app.context.getCurrentContext(),
+            newContext = null;
         if (Taco.app.context.getCurrent().contextType !== 's') {
-            Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', 's').raw);
+
+            if (context.contextType == 't') {
+                newContext = context.masterCatalogs[0].sites[0];
+            } else if (context.contextType == 'm' || context.contextType == 'c') {
+                newContext = context.sites[0];
+            }
+            
+            Taco.app.context.setCurrentContext(newContext);
             return true;
         }
         return false;
@@ -235,17 +243,45 @@ Ext.define('Taco.core.Controller', {
 
     confirmContext: function (viewClass) {
         var context = Taco.app.context.getCurrentContext(),
-            requiredContextType = viewClass.prototype.requiresContextOfType;
-
-
+            requiresContextOfType = (viewClass.prototype.contextConfig || {}).requiresContextOfType,
+            newContext = null;
         if (this.worksInContext(viewClass.prototype, context)) return true;
 
-        if (Ext.isArray(requiredContextType)) requiredContextType = requiredContextType[0];
+        if (!Ext.isArray(requiresContextOfType)) {
+            requiresContextOfType = [requiresContextOfType];
+        }
 
-        if (!requiredContextType) return true; // should never happen at this point
 
         // at this point we know the current context is inappropriate:
-        Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', requiredContextType).raw);
+
+
+        if (!newContext && Ext.Array.contains(requiresContextOfType, 'm')) {
+            if (context.contextType == 't') {
+                newContext = context.masterCatalogs[0];
+            }
+        }
+
+
+        if (!newContext && Ext.Array.contains(requiresContextOfType, 'c')) {
+            if (context.contextType == 't') {
+                newContext = context.masterCatalogs[0].catalogs[0];
+            } else if (context.contextType == 'm') {
+                newContext = context.catalogs[0];
+            }
+        }
+        if (!newContext && Ext.Array.contains(requiresContextOfType, 's')) {
+            if (context.contextType == 't') {
+                newContext = context.masterCatalogs[0].sites[0];
+            } else if (context.contextType == 'm' || context.contextType == 'c') {
+                newContext = context.sites[0];
+            }
+        }
+
+        if (!newContext) {
+            throw 'oops';
+        }
+
+        Taco.app.context.setCurrentContext(newContext);
         return false;
     }
 });

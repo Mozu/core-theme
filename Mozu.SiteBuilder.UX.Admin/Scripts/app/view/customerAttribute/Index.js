@@ -7,7 +7,7 @@ Ext.define('Taco.view.customerAttribute.Index', {
 
     requires: ['Taco.model.CustomerAttribute', 'Taco.store.CustomerAttributes', 'Taco.view.customerAttribute.Edit'],
 
-    requiresContextOfType: [],
+    
 
     modelName: 'Taco.model.CustomerAttribute',
     store: {

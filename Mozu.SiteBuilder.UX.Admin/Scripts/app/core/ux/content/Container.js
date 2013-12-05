@@ -54,7 +54,10 @@ Ext.define('Taco.core.ux.content.Container', {
     arrangePanels: function () {
         var me = this;
 
-        me.header = Ext.create(me.headerCls, Ext.apply(me.header || {}, { region: 'north' }));
+        me.header = (me.header || {});
+        
+        
+        me.header = Ext.create(me.headerCls, Ext.apply(me.header, { region: 'north', contextConfig: this.contextConfig  }));
 
         me.body = Ext.create(me.bodyCls, Ext.apply(me.body || {}, { region: 'center' }));
 

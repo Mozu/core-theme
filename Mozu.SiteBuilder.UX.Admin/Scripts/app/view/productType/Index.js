@@ -14,7 +14,10 @@ Ext.define('Taco.view.productType.Index', {
     editorName: 'Taco.view.productType.Edit',
     filterProperty: 'name',
 
-    requiresContextOfType: ['c', 's'],
+    contextConfig: {
+        supportedLevels: ['m'],
+        requiresContextOfType: ['m', 's', 'c']
+    },
     
     //initComponent: function () {
     //    var me = this;
