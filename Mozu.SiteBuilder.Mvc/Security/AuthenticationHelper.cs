@@ -10,7 +10,7 @@ using System.Threading;
 using System.Web.Security;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Settings;
-using Mozu.User.Contracts.Clients;
+
 
 namespace Mozu.SiteBuilder.Mvc.Security
 {
@@ -18,7 +18,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Mozu.User.Contracts;
+    
     using System.Web;
     using System.ComponentModel;
     using Mozu.Core;

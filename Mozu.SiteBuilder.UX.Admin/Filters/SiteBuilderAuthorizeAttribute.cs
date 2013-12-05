@@ -8,10 +8,11 @@ using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Settings;
+using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.User.Contracts.Clients;
+
 
 namespace Mozu.SiteBuilder.UX.Admin.Filters
 {

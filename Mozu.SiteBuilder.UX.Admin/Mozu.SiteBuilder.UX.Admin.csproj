@@ -242,7 +242,7 @@
     </Reference>
     <Reference Include="Mozu.Customer.Contracts, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Customer.Contracts.1.2.0.6\lib\Mozu.Customer.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Customer.Contracts.1.2.0.7\lib\Mozu.Customer.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Location.Contracts, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -307,10 +307,6 @@
     <Reference Include="Mozu.Tenant.Contracts, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Tenant.Contracts.1.2.0.1\lib\Mozu.Tenant.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.User.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.User.Contracts.1.1.0.1\lib\Mozu.User.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="NDjango.Core40, Version=0.0.0.0, Culture=neutral, PublicKeyToken=ac1e89aa411d579d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

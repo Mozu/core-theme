@@ -18,7 +18,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
-using Mozu.User.Contracts.Clients;
+
 using Constants = Mozu.Core.Api.Contracts.Constants;
 
 namespace Mozu.SiteBuilder.Mvc

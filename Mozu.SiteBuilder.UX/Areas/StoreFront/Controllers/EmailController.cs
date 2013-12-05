@@ -11,6 +11,7 @@ using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Messaging.Contracts.Notification;
+using Mozu.Customer.Contracts;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
@@ -18,7 +19,7 @@ using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
-using Mozu.User.Contracts;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using DC = Mozu.Content.Contracts;

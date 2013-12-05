@@ -10,7 +10,7 @@ using Mozu.Core;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.User.Contracts.Clients;
+
 using Mozu.SiteBuilder.Mvc.Security;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters

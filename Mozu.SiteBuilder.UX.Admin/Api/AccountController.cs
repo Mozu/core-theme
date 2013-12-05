@@ -22,7 +22,7 @@ using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.Tenant.Contracts.Clients;
 using AdminUser2 = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
 using ApiRole = Mozu.Core.Api.Contracts.Role;
-using IAuthTicketWebApiClient = Mozu.User.Contracts.Clients.IAuthTicketWebApiClient;
+
 using IInvitationWebApiClient = Mozu.AdminUser.Contracts.Clients.IMultiScopeInvitationWebApiClient ;
 using Invitation = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.Invitation;
 using IMultiScopeRoleWebApiClient = Mozu.AdminUser.Contracts.Clients.IMultiScopeRoleWebApiClient;
@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IUserHelper _userHelper;
         private readonly IApiContext _apiContext;
 
-        public AccountController(IMultiScopeAdminUserWebApiClient user, IMultiScopeRoleWebApiClient role, IAuthTicketWebApiClient auth, ITenantsWebApiClient tenantsClient , IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, IMultiScopeAdminUserWebApiClient adminUserWebApiClient,  ISettings settings,  IUserHelper userHelper, IApiContext apiContext)
+        public AccountController(IMultiScopeAdminUserWebApiClient user, IMultiScopeRoleWebApiClient role,  ITenantsWebApiClient tenantsClient , IAuthenticationHelper authHelper, IUniversalSiteApiClient siteClient, IInvitationWebApiClient invitationWebApiClient, IMultiScopeAdminUserWebApiClient adminUserWebApiClient,  ISettings settings,  IUserHelper userHelper, IApiContext apiContext)
         {
             _usersRepo = user;
             _rolesRepo = role;

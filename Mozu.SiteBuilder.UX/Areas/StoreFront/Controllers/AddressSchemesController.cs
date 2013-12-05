@@ -9,7 +9,7 @@ using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models;
-using Mozu.User.Contracts;
+
 using User = Mozu.SiteBuilder.UX.Models.Customers.User;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -17,16 +17,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
     public class AddressSchemesController : BaseApiController
     {
-        private Mozu.User.Contracts.Clients.IUserWebApiClient _userWebApiClient;
-        private Mozu.User.Contracts.Clients.IAuthTicketWebApiClient _authTicketWebApiClient;
+     
         private readonly ICookieProvider _cookieProvider;
 
 
-        public AddressSchemesController(Mozu.User.Contracts.Clients.IUserWebApiClient userWebApiClient, Mozu.User.Contracts.Clients.IAuthTicketWebApiClient authTicketWebApiClient, ICookieProvider cookieProvider)
+        public AddressSchemesController(ICookieProvider cookieProvider)
         {
 
-            _userWebApiClient = userWebApiClient;
-            _authTicketWebApiClient = authTicketWebApiClient;
+         
             _cookieProvider = cookieProvider;
 
         }

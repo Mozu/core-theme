@@ -9,9 +9,10 @@ using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Mozu.Core;
+using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.User.Contracts.Clients;
+
 using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
@@ -48,10 +49,10 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                     var ticket = res.ReadAsSync();
                     var profile = new UserProfile()
                     {
-                        EmailAddress = ticket.User.EmailAddress,
-                        FirstName = ticket.User.FirstName,
-                        LastName = ticket.User.LastName,
-                        UserId = ticket.User.UserId
+                        EmailAddress = ticket.CustomerAccount.EmailAddress,
+                        FirstName = ticket.CustomerAccount.FirstName,
+                        LastName = ticket.CustomerAccount.LastName,
+                        UserId = ticket.CustomerAccount.UserId
                     };
                     authHelper.SaveStoreFrontAccessToken(ticket.AccessToken, profile.ToToken());
                     authHelper.SaveStoreFrontRefreshToken(ticket.RefreshToken, ticket.RefreshTokenExpiration);
