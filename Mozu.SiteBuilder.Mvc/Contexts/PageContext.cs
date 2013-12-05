@@ -55,13 +55,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get
             {
+                var 
                 _user = _user ?? new UX.Models.Customers.User
                 {
                     Email = UserProfile.EmailAddress, //profile != null ? profile.EmailAddress : null,
                     FirstName = UserProfile.FirstName, // profile != null ? profile.FirstName : null,
                     LastName = UserProfile.LastName, // profile != null ? profile.LastName : null,
                     UserId = _apiContext.UserClaims.UserId, // gcu.UserId,
-                    CustomerId = _apiContext.UserClaims.Bag.ContainsKey("customerId")?"asf":"asdf",
+                    AccountId = _apiContext.UserClaims.Bag.ContainsKey("AccountId") ? _apiContext.UserClaims.Bag["AccountId"] : "",
                     IsAuthenticated = !_apiContext.UserClaims.IsAnonymous && _apiContext.UserClaims.IsAuthenticated, //!gcu.IsAnonymous && gcu.IsAuthenticated,
                     IsAnonymous = _apiContext.UserClaims.IsAnonymous
                 };

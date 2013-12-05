@@ -22,7 +22,7 @@ namespace Mozu.SiteBuilder.UX.Models.Customers
 
         [DataMember(Name = "isAnonymous")]
          public bool IsAnonymous { get; set; }
-         [DataMember(Name = "customerId")]
-        public string CustomerId { get; set; }
+         [DataMember(Name = "accountId")]
+        public int? AccountId { get; set; }
     }
 }
