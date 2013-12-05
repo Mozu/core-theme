@@ -14,7 +14,8 @@ Ext.define('Taco.model.Product', {
         'Ext.data.association.HasMany',
         'Taco.model.ProductInCatalogInfo',
         'Taco.model.ProductVariation',
-        'Taco.model.BundledProduct'
+        'Taco.model.BundledProduct',
+        'Taco.store.ProductTypes'
     ],
     requiredStores: ['Taco.store.ProductTypes'],
     statics: {
@@ -256,6 +257,7 @@ Ext.define('Taco.model.Product', {
         {
             "name": "packageWeight",
             "type": "float",
+            "defaultValue": 1,
             "useNull": true
         },
         {

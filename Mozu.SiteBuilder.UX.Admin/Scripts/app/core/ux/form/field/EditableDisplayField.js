@@ -8,7 +8,11 @@ Ext.define('Taco.core.ux.form.field.EditableDisplayField', {
     fieldCls: 'x-form-editable-display-field',
     validateOnChange: true,
     readOnly: false,
+    border:true,
     initComponent: function () {
+        if (this.border) {
+            this.fieldCls += " x-form-editable-display-field-border";
+        }
         this.callParent(arguments);
     },
 

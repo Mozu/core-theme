@@ -112,12 +112,15 @@ Ext.define('Taco.view.product.mixins.Bundleable', {
                 });
                 
                 if (this.isGlobal || this.isSingleSite) {
+                    
                     // a global site or a siteForm when there is a singleSite enabled;
                     this.enableBundling();
                     Ext.apply(viewConfig, {
                         bundle: true
                     });
+                    
                 } else {
+                    
                     // this is when you have multiple sites enabled and this is a siteform
                     this.disableBundling();
                     Ext.apply(viewConfig, {
@@ -192,7 +195,11 @@ Ext.define('Taco.view.product.mixins.Bundleable', {
         // persist the value to the record;
         this.product.set('productUsage', value);
 
+        // hide and show the various subForms based on selection;
         this.updateSubFormVisibility(value);
+        
+        // fire event so the varios subForms can update based on the change;
+        me.up("productform").fireEvent('productusagechange', me, value);
     },
     
     enableBundling : function() {

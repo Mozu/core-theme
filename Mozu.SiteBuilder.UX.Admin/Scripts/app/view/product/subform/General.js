@@ -27,14 +27,29 @@ Ext.define('Taco.view.product.subform.General', {
             readOnly,
             requiredContent,
             visable;
-
         
+        
+        // get the data from the preloaded product type store;
+        var tempProductTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
 
-        this.productTypeStore = Ext.clone(Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes'));
+        // need to cache the data because other stores are requesting the store to be loaded and its reseting the filters;
+        var data = Ext.clone(tempProductTypeStore.data.items);
+        
+        this.productTypeStore = Ext.create('Ext.data.Store', {
+            model: "Taco.model.ProductType",
+            data:data
+        });
+            
+        // filter out the base productType, its not allowed to be a basis for products
+        // note: the store is set to auto clear filters so this filter should not effect other stores.
         this.productTypeStore.filter([
-            { filterFn: function (item) {
-                return item.get('name').toUpperCase() != 'BASE'; }}
+            {
+                filterFn: function (item) {
+                    return !item.get('isBase');
+                }
+            }
         ]);
+
         
         this.defaults = {
             width: 200,
@@ -79,59 +94,93 @@ Ext.define('Taco.view.product.subform.General', {
                 }
             ]
         });
+        
+
+        // remove for multi site;
+        if (this.isGlobal || this.isSingleSite) {
+            
+
+            this.productCodeField = Ext.widget({
+                fieldLabel: 'Code',
+                name: 'productCode',
+                emptyText: '#######',
+                readOnly: !this.product.phantom,
+                required: true,
+                allowBlank: false,
+                minLength: 3,
+                //hidden: !visable,
+                width: 200,
+                xtype: 'textfield'
+            });
+
+
+            this.productTypeField = Ext.widget({
+                //xtype: 'selectfield',
+                xtype: 'combobox',
+                fieldLabel: 'Product Type',
+                name: 'productTypeId',
+                readOnly: !this.product.phantom,
+                required: true,
+                editable: false,
+                queryMode: 'local',
+                //hidden: !visable,
+                // width: 200,
+                shrinkWrap: 3,
+                displayField: 'name',
+                valueField: 'id',
+              //  queryCaching: true,
+                store: this.productTypeStore,
+                listeners: {
+                    change: this.onProductTypeChange
+                }
+            });
+
+            this.productUsageField = Ext.widget({
+                xtype: 'selectfield',
+                itemId: "productUsageField",
+                fieldLabel: 'Product Usage',
+                name: 'productUsage',
+                readOnly: !this.product.phantom,
+                // field is only editable once a productType is selected;
+                //disabled: !this.product.phantom,
+                required: true,
+                queryMode: 'local',
+               // hidden: !visable,
+                width: 300,
+                shrinkWrap: 3,
+                displayField: 'name',
+                valueField: 'id',
+                store: this.productUsageStore,
+                listeners: {
+                    change: function(view, value) {
+                        // update the record immediately;
+                        me.product.set("productUsage", value);
+                        // kick of the visibility snerst for the subForms;
+                        var parentForm = me.up('productsiteform, productglobalform');
+                        parentForm.onProductUsageChange(me, value);
+                    }
+                }
+            });
+
+
+        }
+        
+        
+
+
 
         
         
         readOnly = this.isEdit() || !(this.isSingleSite || this.isGlobal);
         visable = !readOnly || this.isEdit();
         requiredContent = this.isSingleSite || this.isGlobal;
-        this.items = [{
-            fieldLabel: 'Code',
-            name: 'productCode',
-            emptyText: '#######',
-            readOnly: readOnly,
-            required: true && visable,
-            allowBlank: false,
-            minLength: visable ? 3 : 0,
-            hidden: !visable,
-            width: 200,
-            xtype: 'textfield'
-        }, {
-            xtype: 'selectfield',
-            fieldLabel: 'Product Type',
-            name: 'productTypeId',
-            readOnly: readOnly && this.product.get('productTypeId'),
-            required: true && visable,
-            queryMode: 'local',
-            hidden: !visable,
-            // width: 200,
-            shrinkWrap: 3,
-            displayField: 'name',
-            valueField: 'id',
-            store: this.productTypeStore,
-            listeners: {
-                change: this.onProductTypeChange
-            }
-        }, {
-            xtype: 'selectfield',
-            itemId:"productUsageField",
-            fieldLabel: 'Product Usage',
-            name: 'productUsage',
-            readOnly: !this.product.phantom,
-            // field is only editable once a productType is selected;
-            disabled: !this.product.get('productTypeId'),
-            required: true && visable,
-            queryMode: 'local',
-            hidden: !visable,
-            width: 300,
-            shrinkWrap: 3,
-            displayField: 'name',
-            valueField: 'id',
-            store: this.productUsageStore,
-            listeners: {
-                change: this.onProductUsageChange
-            }
-        }, {
+        this.items = [
+            this.productCodeField,
+            this.productTypeField,
+            this.productUsageField,
+            
+
+            {
             xtype:'formform',
             persistChangesToModel: true,
             record: this.productInCatalogInfo,
@@ -207,48 +256,160 @@ Ext.define('Taco.view.product.subform.General', {
             width: '100%',
             overrideFieldName: 'isPriceOverridden',
             hideOverride: this.isSingleSite,
-            defaults: {
-                width: 200
-            },
-            items: [{
-                fieldLabel: 'Price',
-                name: 'price',
-                emptyText: '$10.00'
-            }, {
-                fieldLabel: 'Sale Price',
-                name: 'salePrice',
-                emptyText: 'Enter the sale price here',
-                cls: Taco.baseCSSPrefix + 'flex-field-spacing'
-            }]
+            items: [
+                {
+                    xtype: "fieldcontainer",
+                    layout: 'hbox',
+                    fieldLabel: 'Price',
+                    items: [
+                        {
+                            xtype:"numberfield",
+                            width: 200,
+                            name: 'price',
+                            hideTrigger: true,
+                            mouseWheelEnabled: false,
+                            selectOnFocus: true,
+                            emptyText: '$10.00'
+                        },{
+                            xtype: "editabledisplayfield",
+                            itemId:"rollupBundlePrice",
+                            flex: 1,
+                            margin: "0 0 0 5",
+                            border:false,
+                            tpl: [
+                                "<tpl if='price'>",
+                                    "<span class='taco-rolledup-price'>{price:usMoney}</span> (Total price of individual products)",
+                                "</tpl>"
+                            ]
+                        }
+                    ],
+                    width: "100%"
+                },
+                {
+                    xtype: "fieldcontainer",
+                    layout: 'hbox',
+                    fieldLabel: 'Sale Price',
+                    items: [
+                        {
+                            xtype: "numberfield",
+                            width: 200,
+                            name: 'salePrice',
+                            emptyText: 'Enter the sale price here',
+                            //cls: Taco.baseCSSPrefix + 'flex-field-spacing'
+                            hideTrigger: true,
+                            mouseWheelEnabled: false,
+                            selectOnFocus: true
+                        
+                        }, {
+                            xtype: "editabledisplayfield",
+                            itemId: "rollupBundleSalePrice",
+                            flex: 1,
+                            margin: "0 0 0 5",
+                            border: false,
+                            tpl: [
+                                "<tpl if='price'>",
+                                    "<span class='taco-rolledup-price'>{price:usMoney}</span> (Total sale price of individual products)",
+                                "</tpl>"
+                            ]
+                        }
+                    ],
+                    width: "100%"
+                }
+                
+                
+            ]
         }];
+
+        
+        this.items = Taco.core.util.Common.filterNulls(this.items);
+        
 
         this.callParent(arguments);
         
         // if we already have a product type selected; we need to filter the productUsage combo
-        var productTypeId = this.product.get('productTypeId');
-        if (productTypeId) {
-            var productTypeRecord = this.productTypeStore.getById(productTypeId);
-            me.filterProductUsageField(productTypeRecord.get("productUsages"));
+        // we will not have to tdo this if there is no productUsage field (siteForm in a multi site configuration)
+        if (this.productUsageField) {
+            var productTypeId = this.product.get('productTypeId');
+            if (productTypeId) {
+                var productTypeRecord = this.productTypeStore.getById(productTypeId);
+                me.filterProductUsageField(productTypeRecord.get("productUsages"));
+            }
         }
 
+        // listend for changes to the productUsage and bundleItem changes on the main form;
+        me.on('afterrender', function () {
+            var productForm = me.up("productform");
+            me.mon(productForm, 'productusagechange', me.updatePriceUI, me);
+            me.mon(productForm, 'bundleItemChange', me.updatePriceUI, me);
+
+        },me);
     },
 
     
+        
     /**
-    * when the user chagnes the productUsage type selection, will need to alter the visibility and behavior of several components;
+    * when the productUsage changes, will need to alter the ux for price on the general form;
     */ 
-    onProductUsageChange: function (field, value) {
-        
+    updatePriceUI: function () {
         var me = this,
-            parentForm = me.up('productsiteform, productglobalform'),
-            bundleSubForm = parentForm.down('#bundleSubForm');
-        
-        
-        parentForm.onProductUsageChange(me, value);
+            productUsageValue = me.product.get("productUsage"),
+            rollupBundlePriceField = this.down('#rollupBundlePrice'),
+            price = 0,
+            rollupBundleSalePriceField = this.down('#rollupBundleSalePrice'),
+            salePrice = 0,
+            bundledProducts;
 
-        // add/ remove the bundle items subPanel based on the productUsage value;;
         
 
+        // calculate the combined prices of each item
+        if (productUsageValue == 'Bundle') {
+            //store
+            bundledProducts = this.record.getBundledProducts();
+            
+            bundledProducts.each(function (item) {
+                price += item.data.price * item.data.quantity;
+                
+                if (item.data.salePrice) {
+                    salePrice += item.data.salePrice * item.data.quantity;
+                } else {
+                    // no sale price for this item, use the full price
+                    salePrice += item.data.price * item.data.quantity;
+                }
+                
+
+                /*
+                    packageHeight: 1
+                    packageLength: 4
+                    packageWeight: 2
+                    packageWidth: 1
+                    price: 3.99
+                    productCode: "tentSpike-1"
+                    productName: "TentSpike"
+                    quantity: 1
+                    salePrice: 2.69
+                */
+
+            });
+        }
+
+        rollupBundlePriceField.setValue({
+            price: price
+        });
+        
+        
+        rollupBundleSalePriceField.setValue({
+            price:salePrice
+        });
+        
+
+
+    },
+    
+    loadRecord: function (record) {
+        var me = this;
+        me.updatePriceUI(me, record.get("productUsage"));
+
+        me.callParent(arguments);
     },
     
     /**

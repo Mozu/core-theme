@@ -153,9 +153,11 @@ Ext.define('Taco.core.Controller', {
 
     create: function (id, additionalParams, appState) {
         var record = appState ? appState.record : Ext.create('Taco.model.' + this.modelName);
-
-        this.createContentView(this.getEditorView(), {
-            record: record
+        
+        this.ensureRequiredStores(function () {
+            this.createContentView(this.getEditorView(), {
+                record: record
+            });
         });
     },
 

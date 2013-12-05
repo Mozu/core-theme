@@ -9,7 +9,7 @@ Ext.define('Taco.view.product.Form', {
         'Taco.view.product.GlobalForm',
         'Taco.view.product.SiteForm'
     ],
-    
+    alias: 'widget.productform',
     layout: 'fit',
     requireDirty: false,
     /**
@@ -172,6 +172,7 @@ Ext.define('Taco.view.product.Form', {
         }
 
         this.globalForm.isSingleSite = true;
+        
         this.globalForm.buildForm();
 
         if (!me.globalForm.validityOverride) {
@@ -195,14 +196,16 @@ Ext.define('Taco.view.product.Form', {
             };
         }
 
+        
+
         me.tabPanel.hideTabAt(0);
-        
+
         me.tabPanel.setActiveItemAt(1);
-        
+
         //refresh the visibility of the siteForm
         //me.tabPanel.items.getAt(1).updateSubFormVisibility();
-        
-        
+
+
     },
 
     /**
@@ -314,6 +317,9 @@ Ext.define('Taco.view.product.Form', {
         if (this.inSitesStore.getById(catalogId)) {
             return;
         }
+        
+        
+
         var siteInfo = Ext.create('Taco.model.ProductInCatalogInfo', {
             catalogId: catalogId,
             productCode:this.record.getId()
@@ -378,6 +384,10 @@ Ext.define('Taco.view.product.Form', {
 
     onTabSelectionChange: function (tabPanel, values, oldValues) {
         //console.log('tab selection changed')
+        
+        // need to persist values form the form to the record before doing the add since the forms get destroyed in the process;
+        //this.updateForm();
+        
         
         var addCatalogs= Ext.Array.difference(values, oldValues),
             removeCatalogs = Ext.Array.difference(oldValues, values);
