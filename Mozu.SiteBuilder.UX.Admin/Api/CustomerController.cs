@@ -189,16 +189,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Task.WhenAll(attributeTasks);
         }
 
-        [HttpGetRoute(UriTemplate = "credits/list")]
-        public async Task<HttpResponseMessage> GetCredits()
+        [HttpGetRoute(UriTemplate = "credits2/list")]
+        public async Task<HttpResponseMessage> GetCredits2()
         {
             var resp = (await _creditWebApiClient.GetCredits(0, 600)).ReadAsSync();
 
             return this.Request.CreateResponse(HttpStatusCode.OK, List2(resp), LowerCaseJsonMediaTypeFormatter.Default);
         }
 
-        [HttpPostRoute(UriTemplate = "credits/create")]
-        public async Task<HttpResponseMessage> AddCredit(DC.Credit.Credit credit)
+        [HttpPostRoute(UriTemplate = "credits2/create")]
+        public async Task<HttpResponseMessage> AddCredit2(DC.Credit.Credit credit)
         {
             var resp = (await _creditWebApiClient.AddCredit(credit)).ReadAsSync();
 
@@ -206,29 +206,47 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "credits/edit")]
-        public async Task<HttpResponseMessage> EditCredit(DC.Credit.Credit credit)
+        public async Task<HttpResponseMessage> EditCredit2(DC.Credit.Credit credit)
         {
             var resp = (await _creditWebApiClient.UpdateCredit(credit, credit.Code)).ReadAsSync();
             return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp), LowerCaseJsonMediaTypeFormatter.Default);
         }
 
-        //[HttpGetRoute(UriTemplate = "credits/list")]
-        //public async Task<Response<List<Credit>>> GetCredits()
-        //{
-        //    //_creditWebApiClient.AddCredit(new DC.Credit.Credit()
-        //    //{
-        //    //    InitialBalance = 12,
-        //    //    CurrentBalance = 12,
-        //    //    ActivationDate = DateTime.Now,
-        //    //    CreditType = "StoreCredit",
-        //    //    CurrencyCode = "USD",
-        //    //    CustomerId = 1001,
-        //    //    ExpirationDate = null
-        //    //});
-        //    var dcitem = (await _creditWebApiClient.GetCredits(0, 600)).ReadAsSync();
-        //    var vmitem = Mapper.Map<List<Credit>>(dcitem.Items);
-        //    return List2(vmitem);
-        //}
+        [HttpGetRoute(UriTemplate = "credits/list")]
+        public async Task<Response<List<Credit>>> GetCredits()
+        {
+            // TODO: filter...
+            var filter = "CustomerId eq 1001";
+            //_creditWebApiClient.AddCredit(new DC.Credit.Credit()
+            //{
+            //    InitialBalance = 12,
+            //    CurrentBalance = 12,
+            //    ActivationDate = DateTime.Now,
+            //    CreditType = "StoreCredit",
+            //    CurrencyCode = "USD",
+            //    CustomerId = 1001,
+            //    ExpirationDate = null
+            //});
+            var dcitem = (await _creditWebApiClient.GetCredits(0, 600, filter: filter)).ReadAsSync();
+            var vmitem = Mapper.Map<List<Credit>>(dcitem.Items);
+            return List2(vmitem);
+        }
+
+        [HttpPostRoute(UriTemplate = "credits/create")]
+        public async Task<Response<Credit>> AddCredit(Credit credit)
+        {
+            var dcitem = Mapper.Map<DC.Credit.Credit>(credit);
+            dcitem = (await _creditWebApiClient.AddCredit(dcitem)).ReadAsSync();
+            return Single2(Mapper.Map<Credit>(dcitem));
+        }
+
+        [HttpPostRoute(UriTemplate = "credits/edit")]
+        public async Task<Response<Credit>> EditCredit(Credit credit)
+        {
+            var dcitem = Mapper.Map<DC.Credit.Credit>(credit);
+            dcitem = (await _creditWebApiClient.UpdateCredit(dcitem, dcitem.Code)).ReadAsSync();
+            return Single2(Mapper.Map<Credit>(dcitem));
+        }
 
         //[HttpPostRoute(UriTemplate = "credits/edit")]
         //public async Task<Response<List<Credit>>> EditCredits(List<Credit> credits)

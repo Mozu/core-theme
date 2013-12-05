@@ -29,13 +29,13 @@ Ext.define('Taco.view.storeCredit.Form', {
 
         me.dateIssued = {
             xtype: 'datefield',
-            name: 'dateIssued',
+            name: 'activationDate',
             fieldLabel: 'Date Issued'
         };
 
         me.amount = {
             xtype: 'textfield',
-            name: 'amount',
+            name: 'initialBalance',
             fieldLabel: 'Amount',
             required: true,
             allowBlank: false

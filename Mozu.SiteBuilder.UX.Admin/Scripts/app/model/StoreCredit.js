@@ -11,11 +11,11 @@ Ext.define('Taco.model.StoreCredit', {
             name: 'code',
             type: 'string'
         }, {
-            name: 'dateIssued',
+            name: 'activationDate',
             type: 'date'
         },
         {
-            name: 'issuedAmount',
+            name: 'initialBalance',
             type: 'string'
         },
         {
@@ -23,7 +23,7 @@ Ext.define('Taco.model.StoreCredit', {
             type: 'string'
         },
         {
-            name: 'expires',
+            name: 'expirationDate',
             type: 'date'
         },
         {
@@ -39,7 +39,7 @@ Ext.define('Taco.model.StoreCredit', {
             type: 'date'
         },
         {
-            name: 'balance',
+            name: 'currentBalance',
             type: 'string'
         },
         {

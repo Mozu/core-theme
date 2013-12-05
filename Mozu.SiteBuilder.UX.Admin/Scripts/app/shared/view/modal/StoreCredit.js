@@ -46,11 +46,11 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
             ],
             columns: [
                 { text: 'Code', dataIndex: 'code'},
-                { text: 'Date Issued', dataIndex: 'dateIssued'},
-                { text: 'Amount', dataIndex: 'issuedAmount'},
+                { text: 'Date Issued', dataIndex: 'activationDate' },
+                { text: 'Amount', dataIndex: 'initialBalance' },
                 { text: 'Issued By', dataIndex: 'issuedBy'},
                 {
-                    text: 'Expires', dataIndex: 'expires',
+                    text: 'Expires', dataIndex: 'expirationDate',
                     editor: {
                         emptyText: "Amount",
                         msgTarget: "qtip",
@@ -61,7 +61,7 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
                 },
                 {
                     text: 'Balance',
-                    dataIndex: 'balance',
+                    dataIndex: 'currentBalance',
                     editor: {
                         emptyText: "Amount",
                         msgTarget: "qtip",
