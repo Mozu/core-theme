@@ -213,11 +213,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "credits/list")]
-        public async Task<Response<List<Credit>>> GetCredits([FromUri]int? customerId, [FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<Credit>>> GetCredits()//[FromUri]int? customerId, [FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             string filter = null;
-            if (customerId != null)
-                filter = string.Format("CustomerId eq {0}", customerId);
+            //if (customerId != null)
+            //    filter = string.Format("CustomerId eq {0}", customerId);
             var dcitem = (await _creditWebApiClient.GetCredits(0, 600, filter: filter)).ReadAsSync();
             var vmitem = Mapper.Map<List<Credit>>(dcitem.Items);
             return List2(vmitem);
