@@ -9,6 +9,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-conditions',
     ui: 'subform',
+    margin: '0 0 39 0',
 
     title: 'Discount Conditions',
 
