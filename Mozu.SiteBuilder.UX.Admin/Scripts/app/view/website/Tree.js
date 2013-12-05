@@ -96,12 +96,17 @@ Ext.define('Taco.view.website.Tree', {
             itemclick: {
                 scope: this,
                 fn: function (tree, record, item, index, e, eOpts) {
-                    var url = record.get('url');
+                    var url = record.get('url'),
+                        items;
 
                     if (e.getTarget('.taco-website-tree-menu-trigger', 10)) {
+                        items = this.getMenuItems(record, this);
                         this.menu.removeAll();
-                        this.menu.add(this.getMenuItems(record, this));
-                        this.menu.showBy(item, null, [-5, 0]);
+
+                        if (items.length > 0) {
+                            this.menu.add(items);
+                            this.menu.showBy(item, null, [-5, 0]);
+                        }
                     } else if (url) {
                         this.fireEvent('urlclick', this, url, record, item, index, e, eOpts);
                     }
