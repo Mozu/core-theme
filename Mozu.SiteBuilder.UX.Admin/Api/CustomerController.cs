@@ -249,6 +249,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(Mapper.Map<Credit>(dcitem));
         }
 
+        [HttpGetRoute(UriTemplate = "credits/{code}/transactions/list")]
+        public async Task<HttpResponseMessage> GetCreditTransactions(string code)
+        {
+            var resp = (await _creditWebApiClient.GetTransactions(code)).ReadAsSync();
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(resp.Items), LowerCaseJsonMediaTypeFormatter.Default);
+
+            //_creditWebApiClient.GetTransactions(code)
+            //var dcitem = Mapper.Map<DC.Credit.Credit>(credit);
+            //dcitem = (await _creditWebApiClient.UpdateCredit(dcitem, dcitem.Code)).ReadAsSync();
+            //return Single2(Mapper.Map<Credit>(dcitem));
+        }
+
         //[HttpPostRoute(UriTemplate = "credits/edit")]
         //public async Task<Response<List<Credit>>> EditCredits(List<Credit> credits)
         //{
