@@ -8,11 +8,15 @@ using System.Web.Http;
 using AutoMapper;
 using Mozu.Core.Api.Routing;
 using Mozu.Customer.Contracts.Clients;
+using Mozu.Customer.Contracts.Credit;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers;
 using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
+using Credit = Mozu.SiteBuilder.UX.Admin.Api.Models.Credit;
 using DC = Mozu.Customer.Contracts;
+using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
+
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -21,12 +25,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly ICustomerAccountWebApiClient _customerWebApiClient;
         private readonly ICustomerGroupWebApiClient _customerGroupWebApiClient;
+        private readonly ICreditWebApiClient _creditWebApiClient;
 
-
-        public CustomerController(ICustomerAccountWebApiClient customerWebApiClient, Mozu.Customer.Contracts.Clients.ICustomerGroupWebApiClient customerGroupWebApiClient )
+        public CustomerController(ICustomerAccountWebApiClient customerWebApiClient, Mozu.Customer.Contracts.Clients.ICustomerGroupWebApiClient customerGroupWebApiClient, ICreditWebApiClient creditWebApiClient)
         {
             _customerWebApiClient = customerWebApiClient;
             _customerGroupWebApiClient = customerGroupWebApiClient;
+            _creditWebApiClient = creditWebApiClient;
         }
 
         [HttpGetRoute(UriTemplate = "search")]
@@ -183,5 +188,66 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return Task.WhenAll(attributeTasks);
         }
+
+        [HttpGetRoute(UriTemplate = "credits/list")]
+        public async Task<HttpResponseMessage> GetCredits()
+        {
+            var resp = (await _creditWebApiClient.GetCredits(0, 600)).ReadAsSync();
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(resp), LowerCaseJsonMediaTypeFormatter.Default);
+        }
+
+        [HttpPostRoute(UriTemplate = "credits/create")]
+        public async Task<HttpResponseMessage> AddCredit(DC.Credit.Credit credit)
+        {
+            var resp = (await _creditWebApiClient.AddCredit(credit)).ReadAsSync();
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp), LowerCaseJsonMediaTypeFormatter.Default);
+        }
+
+        [HttpPostRoute(UriTemplate = "credits/edit")]
+        public async Task<HttpResponseMessage> EditCredit(DC.Credit.Credit credit)
+        {
+            var resp = (await _creditWebApiClient.UpdateCredit(credit, credit.Code)).ReadAsSync();
+            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp), LowerCaseJsonMediaTypeFormatter.Default);
+        }
+
+        //[HttpGetRoute(UriTemplate = "credits/list")]
+        //public async Task<Response<List<Credit>>> GetCredits()
+        //{
+        //    //_creditWebApiClient.AddCredit(new DC.Credit.Credit()
+        //    //{
+        //    //    InitialBalance = 12,
+        //    //    CurrentBalance = 12,
+        //    //    ActivationDate = DateTime.Now,
+        //    //    CreditType = "StoreCredit",
+        //    //    CurrencyCode = "USD",
+        //    //    CustomerId = 1001,
+        //    //    ExpirationDate = null
+        //    //});
+        //    var dcitem = (await _creditWebApiClient.GetCredits(0, 600)).ReadAsSync();
+        //    var vmitem = Mapper.Map<List<Credit>>(dcitem.Items);
+        //    return List2(vmitem);
+        //}
+
+        //[HttpPostRoute(UriTemplate = "credits/edit")]
+        //public async Task<Response<List<Credit>>> EditCredits(List<Credit> credits)
+        //{
+        //    var retList = new List<Credit>();
+        //    var dcCredits = Mapper.Map<List<DC.Credit>>(credits);
+        //    foreach (var dcCredit in dcCredits)
+        //    {
+        //        //var dcExistingCustomer = await GetAccountWithAttributes(dcCust.Id);
+
+        //        //await Task.WhenAll(ManageGroups(dcCust, dcExistingCustomer), ManageContacts(dcCust), ManageAttributes(dcCust, dcExistingCustomer));
+        //        //await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id);
+
+        //        //var updatedCustomer = await GetAccountWithAttributes(dcCust.Id);
+        //        //retList.Add(updatedCustomer.Map<ApiCustomer>());
+        //    }
+        //    return List2(retList);
+
+        //}
+
     }
 }
