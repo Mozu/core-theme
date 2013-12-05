@@ -1,7 +1,6 @@
 ﻿/**
-* @class Taco.store.Products
-* @author Thomas Phipps
-* The Products store
+* @class Taco.store.InventoriedProducts
+* Products which are capable of "manageStock".
 */
 
 Ext.define('Taco.store.InventoriedProducts', {
