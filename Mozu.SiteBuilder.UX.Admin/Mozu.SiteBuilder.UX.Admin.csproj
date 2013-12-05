@@ -269,9 +269,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Reference.Contracts.1.2.0-dev006\lib\Mozu.Reference.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Reporting.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Reporting.Contracts, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Reporting.Contracts.1.2.0-dev1002\lib\Mozu.Reporting.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Reporting.Contracts.1.2.0-dev006\lib\Mozu.Reporting.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ShippingAdmin.Contracts, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

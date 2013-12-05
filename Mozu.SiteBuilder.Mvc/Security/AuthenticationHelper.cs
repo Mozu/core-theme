@@ -105,9 +105,9 @@ namespace Mozu.SiteBuilder.Mvc.Security
         string IAuthenticationHelper.GetAdminRefreshToken()
         {
             var cookie = CookieProvider.GetRequestCookie(AdminRefershCookieName);
-            if (cookie != null && !string.IsNullOrEmpty(cookie.Value))
+            if (cookie != null && cookie.HasKeys )
             {
-                return cookie.Value;
+                return cookie["Token"];
             }
             return null;
         }

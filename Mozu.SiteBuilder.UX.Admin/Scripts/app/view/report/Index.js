@@ -209,14 +209,27 @@ Ext.define('Taco.view.report.Index', {
                 type: 'fit'
             },
             items: [ {
-                xtype: 'container',
-                items: [ this.summaryPanel ]
+                xtype: 'panel',
+                items: [this.summaryPanel],
+                    dockedItems: [
+                   {
+                       xtype: 'container',
+                       dock: 'right',
+                       itemId: 'fart',
+                       items: [this.sidebar]
+                   }
+
+                ]
             }]
+           
         });
 
-        this.sidebar = {
-            items: [this.sidebar]
-        };
+        //this.sidebar = {
+        //    items: [this.sidebar]
+        //};
+
+        
+
 
         this.callParent(arguments);
     }
