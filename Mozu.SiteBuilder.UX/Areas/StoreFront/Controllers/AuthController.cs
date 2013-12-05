@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         async Task<ServiceClientResponse<CustomerAuthTicket>> DoCreateAccount(CustomerAccountAndAuthInfo accountInfo )
         {
-            var res = await  _customerAccountWebApiClient.AddAccountAndLogin(accountInfo);
+            var res = await  _customerAccountWebApiClient.CloneWithoutUserClaims().AddAccountAndLogin(accountInfo);
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
                 var authTicket = res.ReadAsSync();
@@ -207,26 +207,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
          [System.Web.Http.HttpPost]
          public async Task<HttpResponseMessage> AjaxCreateAccount(CustomerAccountAndAuthInfo authInfo)
          {
-             var res = await DoCreateAccount(authInfo);
-             if (res.ResponseMessage.IsSuccessStatusCode)
-             {
-                 return res.ResponseMessage;
-             }
+             var res= await  DoCreateAccount(authInfo);
 
-             if (res.ResponseMessage.IsSuccessStatusCode)
-             {
-                 return Request.CreateResponse(System.Net.HttpStatusCode.OK, new
-                 {
-                     Message = String.Format("Logged in as {0}.", authInfo.Account.EmailAddress)
-                 });
-             }
-             else
-             {
-                 return Request.CreateResponse(System.Net.HttpStatusCode.Unauthorized, new
-                 {
-                     Message = String.Format("Login as {0} failed. Please try again.", authInfo.Account.EmailAddress)
-                 });
-             }
+             return res.ResponseMessage;
+             ;
+
+
          }
 
         [System.Web.Http.HttpPost]
