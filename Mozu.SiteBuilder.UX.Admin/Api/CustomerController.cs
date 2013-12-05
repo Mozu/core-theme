@@ -91,7 +91,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var customers = Mapper.Map<List<ApiCustomer>>(dcCustomers.Items);
 
-            return List2(customers);
+            return List2(customers, total: (int)dcCustomers.TotalCount);
         }
 
         /// <summary>
