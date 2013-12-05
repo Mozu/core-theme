@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using DC = Mozu.Customer.Contracts.Credit;
+
+namespace Mozu.SiteBuilder.UX.Admin.Api.Models
+{
+    public class Credit
+    {
+        public DateTime? ActivationDate { get; set; }
+        public string Code { get; set; }
+        public string CreditType { get; set; }
+        public string CurrencyCode { get; set; }
+        public decimal CurrentBalance { get; set; }
+        public DateTime? ExpirationDate { get; set; }
+        public decimal InitialBalance { get; set; }
+    }
+}

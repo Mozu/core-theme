@@ -399,6 +399,7 @@
     <Compile Include="Api\LocationInventoryController.cs" />
     <Compile Include="Api\LocationTypeController.cs" />
     <Compile Include="Api\ModelMapping\CapabilityMapping.cs" />
+    <Compile Include="Api\ModelMapping\CreditMapping.cs" />
     <Compile Include="Api\ModelMapping\ExtensibleAttributeMapping.cs" />
     <Compile Include="Api\ModelMapping\ReturnMapping.cs" />
     <Compile Include="Api\ModelMapping\RuntimeProductMapping.cs" />
@@ -408,6 +409,7 @@
     <Compile Include="Api\Models\Checkout\GatewayDefinition.cs" />
     <Compile Include="Api\Models\Checkout\PreAuthorizationDefinition.cs" />
     <Compile Include="Api\Models\Checkout\PreAuthorizeTransactionTypeDataContract.cs" />
+    <Compile Include="Api\Models\Credit.cs" />
     <Compile Include="Api\Models\Order\OrderDiscount.cs" />
     <Compile Include="Api\Models\Order\OrderItemProductOption.cs" />
     <Compile Include="Api\Models\RuntimeProductOption.cs" />
