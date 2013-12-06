@@ -193,6 +193,11 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     ': {Value}',
                     '</span>',
                     '</tpl>',
+                    '<tpl for="bundledProducts">',
+                        '<div class="bundledProduct">',
+                            '{productCode} - {productName} ({quantity})',
+                        '</div>',
+                    '</tpl>',
                     ' Fulfillment Method: {fulfillmentMethod}',
                     '</div>'
                     ),

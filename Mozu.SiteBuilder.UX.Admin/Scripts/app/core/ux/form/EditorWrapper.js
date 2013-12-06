@@ -1,4 +1,4 @@
-﻿Ext.define('Taco.core.ux.form.EditorWrapper', {    
+﻿Ext.define('Taco.core.ux.form.EditorWrapper', {
     /**
      * @cfg {Object[]}
      * Any additional actions you want to add on top of the default Save/Cancel actions

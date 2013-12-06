@@ -11,15 +11,20 @@
         var me = this;
         
         this.additionalActions = [{
-            xtype: 'dirtybutton',
+            //xtype: 'dirtybutton',
+            xtype: "button",
+            ui: "action-primary",
+            scale:"medium",
             itemId: 'publish',
             text: 'Publish',
+            disabled:true,
             beforeItemId: 'save',
             margin: '0 0 0 10',
             hidden: !this.checkProductPublishing(),
-            click: this.onClickPublish,
-            scope: this,
-            dirtyState: this.record.get('publishedState') !== 'Live'
+            handler: this.onClickPublish,
+            //dirtyState: this.record.get('publishedState') !== 'Live'
+            scope: this
+            
         }, {
             xtype: 'button',
             itemId: 'moreButton',
@@ -88,9 +93,29 @@
     },
 
     onBeforeRender: function () {
+        var me = this;
+        
         this.callParent(arguments);
 
-        this.publishButton = this.down('dirtybutton#publish');
+        this.publishButton = this.down('button#publish');
+
+        if (me.publishButton) {
+            // if the form becomes invalid disable the publish button
+            me.mon(me.form, 'validitysavChange', function (view, valid) {
+                me.publishButton.setDisabled(!valid);
+            }, me);
+
+            // if the form gets modified, enable the publish button, but only if its valid when it becomes dirty;
+            me.mon(me.form, 'dirtychange', function () {
+                // note: I am not calling this.form.isValid() because that call causes the form error messages to appear;
+                var isValid = !me.form.hasInvalidField() && me.form.isDirty();
+                if (isValid) {
+                    me.publishButton.enable();
+                }
+            }, me);
+        }
+        
+
 
         // this.form.on({
         //     savablestatechange: function (form, isSavable) {
@@ -104,7 +129,7 @@
         this.on({
             aftersave: function () {
                 if (this.doPublishAfterSave) {
-                    this.doPublish()
+                    this.doPublish();
                 }
             },
             scope: this
@@ -120,9 +145,20 @@
     },
 
     onClickPublish: function () {
-        if (!this.form.hasInvalidField()) {
+
+        if (this.form.hasInvalidField()) {
+            // cant publish if the form is invalid. IE it hasn't got its required fields;
+            return;
+        }
+
+        
+        this.publishButton.addCls('taco-button-processing');
+        this.publishButton.setText('Publishing...');
+
+        // if the form is dirty, we need to persist the changes before doing the publish
+        if (this.form.isDirty()) {
             this.doPublishAfterSave = true;
-            this.save();
+            this.form.save();
         } else {
             this.doPublish();
         }
@@ -133,6 +169,8 @@
             data: [this.record.getId()],
             success: function () {
                 // this.publishButton.setDirty(false);
+                this.publishButton.removeCls('taco-button-processing');
+                this.publishButton.setText('Publish');
             },
             failure: function () {
                 Taco.MessageBox.alert(
