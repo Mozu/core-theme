@@ -27,9 +27,18 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
             get { return this.Images.FirstOrDefault(); }
         }
 
+        private string _url;
         public string Url
         {
-            get { return "/product/" + this.ProductCode; }
+            get
+            {
+                if (_url == null)
+                {
+                    _url = (this.Content != null && !string.IsNullOrEmpty(this.Content.SEOFriendlyUrl)) ? "/" + this.Content.SEOFriendlyUrl + "/p=" + this.ProductCode : "/product/" + this.ProductCode;
+                }
+
+                return _url;
+            }
         }
 
         [DataMember]

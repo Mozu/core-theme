@@ -101,9 +101,10 @@
                 model: ProductOption
             })
         },
-        initialize: function() {
+        initialize: function () {
+            var slug = this.get('content').get('seoFriendlyUrl');
             this.listenTo(this.get("options"), "optionchange", this.updateConfiguration, this);
-            this.set({ url: "/product/" + this.get("productCode") });
+            this.set({ url: slug ? "/"+ slug + "/p="+ this.get("productCode") :  "/product/" + this.get("productCode") });
             this.lastConfiguration = [];
         },
         mainImage: function() {
