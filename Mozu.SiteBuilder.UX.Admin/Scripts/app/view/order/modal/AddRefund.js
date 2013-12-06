@@ -165,7 +165,7 @@ Ext.define('Taco.view.order.modal.AddRefund', {
             }, /*{
                 xtype: 'textfield',
                 fieldLabel: 'Store Credit ID',
-                allowBlank: false
+                allowBlank: false 
             }, */{
                 xtype: 'numberfield',
                 fieldLabel: 'Refund Amount',
