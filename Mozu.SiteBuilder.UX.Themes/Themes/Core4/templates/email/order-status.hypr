@@ -1,170 +1,68 @@
 ﻿  {% extends "email/email" %}
 
   {% block body-content %}
-            <table id="mz-purchase-details" class="mz-purchase-details">
-                <thead>
-                    <tr>
-                        <td class="mz-field-interstitial" colspan="2">Order#: <strong>{{ Model.OrderNumber }}</strong></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="mz-field-interstitial" colspan="2"><hr></td>
-                    </tr>
-                    {% if Model.BillingInfo.PaymentType == PaymentTypes.CreditCard %}
-                    <tr>
-                        <td class="mz-field-label">Billing Name:</td>
-                        <td>{{ Model.BillingInfo.BillingContact.FirstName }} {{ Model.BillingInfo.BillingContact.LastNameOrSurname }}</td>
-                    </tr>
-                    <tr>
-                        <td class="mz-field-label">Billing Address:</td>
-                        <td>{{ Model.BillingInfo.BillingContact.Address.Address1 }}</td>
-                    </tr>
-                    {% if Model.BillingInfo.BillingContact.Address.Address2 %}
-                    <tr>
-                        <td></td>
-                        <td>{{ Model.BillingInfo.BillingContact.Address.Address2 }}</td>
-                    </tr>
-                    {% endif %}
-                    <tr>
-                        <td></td>
-                        <td>{{ Model.BillingInfo.BillingContact.Address.CityOrTown }}, {{ Model.BillingInfo.BillingContact.Address.StateOrProvince }} {{ Model.BillingInfo.BillingContact.Address.PostalOrZipCode }}</td>
-                    </tr>
-                    <tr>
-                        <td class="mz-field-label">Phone:</td>
-                        <td>{{ Model.BillingInfo.BillingContact.PhoneNumbers.Home }}</td>
-                    </tr>
-                    <tr>
-                        <td class="mz-field-label">Email:</td>
-                        <td>{{ Model.BillingInfo.BillingContact.Email }}</td>
-                    </tr>
-                    <tr>
-                        <td class="mz-field-interstitial" colspan="2"><hr></td>
-                    </tr>
-                    <tr>
-                        <td class="mz-field-label">Card Type:</td>
-                        <td>{{ Model.BillingInfo.Card.PaymentOrCardType }}</td>
-                    </tr>
-                    <tr>
-                        <td class="mz-field-label">Credit Card #:</td>
-                        <td>{{ Model.BillingInfo.Card.CardNumberPartOrMask }}</td>
-                    </tr>
-                    {% comment %} {# this isn't returned by the services #}
-                    <tr>
-                        <td class="mz-field-label">Expiration:</td>
-                        <td>{{ Model.BillingInfo.Card.ExpireMonth }}.{{ Model.BillingInfo.Card.ExpireYear }}</td>
-                    </tr>
-                    {% endcomment %}
-                    {% else %} {# "Pay by Check" #}
-                    <tr>
-                        <td class="mz-field-label">Payment Type:</td>
-                        <td>{{ Model.BillingInfo.PaymentType }}</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td class="mz-field-label"><strong>Mail check to:</strong></td>
-                        <td>{{ ViewData.MailCheckTo.SenderName }}</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>{{ ViewData.MailCheckTo.Address1 }}</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>{{ ViewData.MailCheckTo.CityOrTown }}, {{ ViewData.MailCheckTo.StateOrProvince }} {{ ViewData.MailCheckTo.PostalOrZipCode }} </td>
-                    </tr>
-                    {% endif %}
-                    <tr>
-                        <td></td>
-                        <td>&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td class="mz-field-label">Ship to:</td>
-                        <td>{{ Model.FulfillmentInfo.FulfillmentContact.FirstName }} {{ Model.FulfillmentInfo.FulfillmentContact.LastNameOrSurname }}</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>{{ Model.FulfillmentInfo.FulfillmentContact.Address.Address1 }}</td>
-                    </tr>
-                    {% if Model.FulfillmentInfo.FulfillmentContact.Address.Address2  %}
-                    <tr>
-                        <td></td>
-                        <td>{{ Model.FulfillmentInfo.FulfillmentContact.Address.Address2 }}</td>
-                    </tr>
-                    {% endif %}
-                    <tr>
-                        <td></td>
-                        <td>{{ Model.FulfillmentInfo.FulfillmentContact.Address.CityOrTown }}, {{ Model.FulfillmentInfo.FulfillmentContact.Address.StateOrProvince }} {{ Model.FulfillmentInfo.FulfillmentContact.Address.PostalOrZipCode }}</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td class="mz-field-label">Shipping Method:</td>
-                        <td><strong>{{ Model.FulfillmentInfo.ShippingMethodName }}</strong></td>
-                    </tr>
-                </tbody>
-            </table><!-- #purchase-details-->
+          <div class="mz-l-stack">
+    <h1 class="mz-pagetitle">
+        {{ labels.orderConfirmation }}
+    </h1>
 
-            <h3>Order Summary</h3>
-            <table id="mz-order-summary" class="mz-order-summary">
-                <thead>
-                    <tr>
-                        <th>Description</th>
-                        <th>Qty</th>
-                        <th>Unit Price</th>
-                        <th>Total Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in Model.Items %}
-                    <tr class="mz-item-row">
-                        <td>{{ item.Product.Name }}</td>
-                        <td>{{ item.Quantity }}</td>
-                        <td>{{ item.Product.Price.Price|currency }}</td>
-                        <td>{{ item.Total|currency }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="3">
-                            Comments:<br>
-                                     {% for note in Model.Notes %}
-                                     <p>{{ note.Text }}</p>
-                                     {% endfor %}
-                        </td>
-                        <td colspan="2">
-                            <table>
-                                <tr>
-                                    <td>Subtotal:</td>
-                                    <td>{{ Model.Subtotal|currency }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Coupon/Discount:</td>
-                                    <td>{{ Model.DiscountTotal|currency }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Tax:</td>
-                                    <td>{{ Model.TaxTotal|currency }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Shipping & Handling:</td>
-                                    <td>{{ Model.ShippingTotal|currency }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Total:</td>
-                                    <td>{{ Model.Total|currency }}</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
+	
+    <div class="mz-l-stack-section">
+    <h2>{{ labels.orderDetails }}</h2>
+    <dl class="mz-propertylist">
+        <dt>{{ labels.orderNumber }}</dt>
+        <dd>{{ model.orderNumber }}</dd>
+        <dt>{{ labels.billingName }}</dt>
+        <dd>{{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}</dd>
+        <dt>{{ labels.billingAddress }}</dt>
+        <dd class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.billingInfo.billingContact %}</dd>
+        <dt>{{ labels.billingEmail }}</dt>
+        <dd>{{ model.billingInfo.billingContact.email }}</dd>
+        {% if model.billingInfo.paymentType == "CreditCard" %}
+        <dt>{{ labels.cardType }}</dt>
+        <dd>{{ model.billingInfo.card.paymentOrCardType }}</dd>
+        <dt>{{ labels.cardNumber }}</dt>
+        <dd>{{ model.billingInfo.card.cardNumberPartOrMask }}</dd>
+        {% endif %}
+        {% if model.billingInfo.paymentType == "PaypalExpress" %}
+        <dt>{{ labels.paymentType }}</dt>
+        <dd>{{ labels.payPal }}</dd>
+        {% endif %}
+        {% if model.billingInfo.paymentType == "Check" %}
+        <!--
+        <dt>{{ labels.checkNumber }}</dt>
+        <dd>{{ model.billingInfo.check.checkNumber }}</dd>
+        -->
+        <dt><strong>{{ labels.mailCheckTo }}</strong></dt>
+        <dd class="mz-addresssummary">
+            <span>{{ ViewData.mailCheckTo.shippingOriginContact.firstName}} {{ ViewData.mailCheckTo.shippingOriginContact.lastNameOrSurname }}</span>
+            <span>{{ ViewData.mailCheckTo.shippingOriginContact.companyOrOrganization }}</span>
+            {% include "modules/common/address-summary" with model=ViewData.mailCheckTo %}</dd>
+        {% endif %}
+        <dt>{{ labels.shipTo }}</dt>
+        <dd class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}</dd>
+        <dt>{{ labels.shippingMethod }}</dt>
+        <dd>{{ model.fulfillmentInfo.shippingMethodName }}</dd>
+    </dl>
+    </div>
+
+    <div class="mz-l-stack-section">
+	<h2>{{ labels.orderSummary }} </h2>
+    {% include "modules/common/order-summary" %}
+    {% if model.shopperNotes.comments %}
+    <div class="mz-ordercomments">
+        <h5 class="mz-ordercomments-header">{{ labels.comments }}</h5>
+        <p class="mz-ordercomments-body">{{ model.shopperNotes.comments }}</p>
+    </div>
+    {% endif %}
+    {% if model.shopperNotes.giftMessage %}
+    <div class="mz-ordercomments">
+        <h5 class="mz-ordercomments-header">{{ labels.giftMessage }}</h5>
+        <p class="mz-ordercomments-body">{{ model.shopperNotes.giftMessage }}</p>
+    </div>
+    {% endif %}
+    </div>
+</div><!-- #order-confirmation -->
    
       
 

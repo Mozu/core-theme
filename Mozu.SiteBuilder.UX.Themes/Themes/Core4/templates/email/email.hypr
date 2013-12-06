@@ -7,7 +7,9 @@
 		  <script src="/scripts/vendor/modernizr-respond.min.js"></script>
 		      {% include "modules/trailing-scripts" %}
 		{%endif%}
+		{%comment%}
 		{% cms_resources %}
+		{%endcomment%}
         <style>
             body {
                 background-color: #FFF;
