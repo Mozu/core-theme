@@ -40,6 +40,29 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 header[APIConstants.Headers.DATA_VIEW_MODE] = apiContext.DataViewMode.ToString();
             }
+
+
+            ///*************************************************88
+            // * REMOVE AFTER CUSTOMER IS FIXED
+            // * 
+            // * **********************************************/
+
+            //var appClaim  =LightweightAppClaims.CreateForSystemApp("food", false);
+
+            //apiContext.UserClaims.BehaviorIds = appClaim.BehaviorIds;
+
+            //header[APIConstants.Headers.APP_CLAIMS] = appClaim.ToAccessToken();
+            //header[APIConstants.Headers.USER_CLAIMS] = apiContext.UserClaims.ToAccessToken();
+
+            ///*************************************************88
+            // * REMOVE AFTER CUSTOMER IS FIXED
+            // * 
+            // * **********************************************/
+
+
+
+
+
             return header;
         }
 
@@ -47,6 +70,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         //todo:update core
         private Lazy<string> _apiClaims = new Lazy<string>(() =>
             {
+
+
                 var claim = LightweightAppClaims.CreateForPublicStorefront();
                 var list = claim.BehaviorIds.ToList();
                 list.Add(new WishlistCreateBehavior().Id);
