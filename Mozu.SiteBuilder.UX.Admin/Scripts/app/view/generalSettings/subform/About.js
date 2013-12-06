@@ -193,14 +193,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                         fieldLabel: "Is Mozu Hosted Store Front",
                         margin: "0 4 0 0",
                         columnWidth: .5,
-                        tpl: [
-                            '<tpl if="values==true">',
-                                "Yes",
-                            '<tpl else>',
-                                "No",
-                            '</tpl>'
-                        ],
-                        name: "isMozuWebSite",
+                        value: me.record.get('isMozuWebSite') ? 'Yes' : 'No',
                         flex: 1
                     },
                     me.customerExperienceTemplate
