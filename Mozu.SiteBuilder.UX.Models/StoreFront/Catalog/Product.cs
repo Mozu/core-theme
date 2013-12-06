@@ -34,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
             {
                 if (_url == null)
                 {
-                    _url = (this.Content != null && !string.IsNullOrEmpty(this.Content.SEOFriendlyUrl)) ? "/" + this.Content.SEOFriendlyUrl + "/p=" + this.ProductCode : "/product/" + this.ProductCode;
+                    _url = (this.Content != null && !string.IsNullOrEmpty(this.Content.SEOFriendlyUrl)) ? "/" + this.Content.SEOFriendlyUrl + "?p=" + this.ProductCode : "/product/" + this.ProductCode;
                 }
 
                 return _url;
