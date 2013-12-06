@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.Customer.Contracts.Clients;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
@@ -16,6 +17,8 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Returns;
 using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
 using DCr = Mozu.CommerceRuntime.Contracts.Returns;
+using DCu = Mozu.Customer.Contracts;
+
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -26,15 +29,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ISettings _settings;
         private IOrderWebApiClient _orderWebApiClient;
         private readonly IReturnWebApiClient _returnWebApiClient;
+        private readonly ICreditWebApiClient _creditWebApiClient;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public ReturnController(IOrderWebApiClient orderWebApiClient, IReturnWebApiClient returnWebApiClient, ISettings settings)
+        public ReturnController(IOrderWebApiClient orderWebApiClient, IReturnWebApiClient returnWebApiClient, ICreditWebApiClient creditWebApiClient, ISettings settings)
         {
             _settings = settings;
             _orderWebApiClient = orderWebApiClient;
             _returnWebApiClient = returnWebApiClient;
+            _creditWebApiClient = creditWebApiClient;
         }
 
 		[HttpGetRoute(UriTemplate = "list")]
@@ -141,6 +146,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string orderId { get; set; }
             public string returnId { get; set; }
             public string paymentId { get; set; }
+            public string paymentType { get; set; }
             public decimal  amount { get; set; }
         }
         [HttpPostRoute(UriTemplate = "paymentAction")]
@@ -149,12 +155,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var dcPaymentAction = new CommerceRuntime.Contracts.Payments.PaymentAction()
                                   {
                                       ActionName = "CreditPayment",
-                                      ReferenceSourcePaymentId = action.paymentId,
                                       Amount = action.amount
-
                                   };
-            var dcRma = (await _returnWebApiClient.CreatePaymentActionForReturn(action.returnId, dcPaymentAction)).ReadAsSync();
+            if (action.paymentType == "CreditCard")
+            {
+                dcPaymentAction.ReferenceSourcePaymentId = action.paymentId;
+            }
+            else if (action.paymentType == "StoreCredit") {
+                var order = (await _orderWebApiClient.GetOrder(action.orderId)).ReadAsSync();
+                
+                var storeCredit = (await _creditWebApiClient.AddCredit(new DCu.Credit.Credit()
+                {
+                    InitialBalance = action.amount,
+                    CurrentBalance = action.amount,
+                    ActivationDate = DateTime.UtcNow,
+                    CreditType = "StoreCredit",
+                    CurrencyCode = "USD",
+                    CustomerId = order.CustomerAccountId
+                })).ReadAsSync();
 
+                dcPaymentAction.NewBillingInfo.StoreCreditCode = storeCredit.Code;
+            }
+
+            var dcRma = (await _returnWebApiClient.CreatePaymentActionForReturn(action.returnId, dcPaymentAction)).ReadAsSync();
 
             dcRma.RefundAmount = dcRma.Payments.Sum(x => x.AmountCredited);
             dcRma = (await _returnWebApiClient.UpdateReturn(dcRma.Id, dcRma)).ReadAsSync();
@@ -171,10 +194,35 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var dcPaymentAction = new CommerceRuntime.Contracts.Payments.PaymentAction()
                 {
                     ActionName = "CreditPayment",
-                    ReferenceSourcePaymentId = action.paymentId,
+                    //ReferenceSourcePaymentId = action.paymentId,
                     Amount = action.amount
 
                 };
+                if (action.paymentType == "CreditCard")
+                {
+                    dcPaymentAction.ReferenceSourcePaymentId = action.paymentId;
+                }
+                else if (action.paymentType == "StoreCredit")
+                {
+                    var order = (await _orderWebApiClient.GetOrder(action.orderId)).ReadAsSync();
+
+                    var storeCredit = (await _creditWebApiClient.AddCredit(new DCu.Credit.Credit()
+                    {
+                        InitialBalance = action.amount,
+                        CurrentBalance = action.amount,
+                        ActivationDate = DateTime.UtcNow,
+                        CreditType = "StoreCredit",
+                        CurrencyCode = "USD",
+                        CustomerId = order.CustomerAccountId
+                    })).ReadAsSync();
+
+                    dcPaymentAction.NewBillingInfo = new CommerceRuntime.Contracts.Payments.BillingInfo()
+                        {
+                            PaymentType = "StoreCredit",
+                            StoreCreditCode = storeCredit.Code
+                        };
+                }
+
                 var dcRma = (await _returnWebApiClient.CreatePaymentActionForReturn(action.returnId, dcPaymentAction)).ReadAsSync();
                 retList.Add(Mapper.Map<Return>( dcRma ));
             }
