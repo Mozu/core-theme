@@ -90,10 +90,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         protected async Task<ServiceClientResponse<CustomerAuthTicket>> DoLogin(string email, string password)
         {
-            var res = (await _authTicketWebApiClient.CreateUserAuthTicket( new UserAuthInfo()
+            var res = (await _authTicketWebApiClient.CreateUserAuthTicket( new CustomerUserAuthInfo()
              {
-
-                EmailAddress = email,
+                Username = email,
                 Password = password
 
             }));
