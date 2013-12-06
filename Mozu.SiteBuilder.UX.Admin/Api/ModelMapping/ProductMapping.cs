@@ -345,10 +345,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
             Mapper.CreateMap<Models.ProductModels.ProductLocalizedImage, DC.ProductLocalizedImage>()
+                .ForMember(x=> x.CmsId , opt=>opt.MapFrom(x=> x.CmsId ))
                 .ForMember(x => x.Sequence, op => op.Ignore());
 
-            Mapper.CreateMap<DC.ProductLocalizedImage, Models.ProductModels.ProductLocalizedImage>();
-
+            Mapper.CreateMap<DC.ProductLocalizedImage, Models.ProductModels.ProductLocalizedImage>()
+                .ForMember(x => x.CmsId, opt => opt.MapFrom(x => x.CmsId));
 
             Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, UnitOfMeasure>();
             Mapper.CreateMap<UnitOfMeasure, Mozu.Core.Api.Contracts.Measurement>();

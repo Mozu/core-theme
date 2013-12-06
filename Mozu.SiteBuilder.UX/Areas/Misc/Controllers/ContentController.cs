@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Web;
 
@@ -15,6 +17,7 @@ using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
+using Mozu.Tenant.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
@@ -22,6 +25,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
     {
          IDocumentListWebApiClient  _docRepo;
         IApiContext _appCtx;
+        private static ConcurrentDictionary<int, Mozu.Tenant.Contracts.Site> _siteLookup = new ConcurrentDictionary<int, Tenant.Contracts.Site>();
         public ContentController(IDocumentListWebApiClient docRepo, IApiContext appCtx)
         {
            // SuppressMissingContextRedirect = true;
@@ -178,18 +182,48 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return GetFromFSCache(ctx, collection, documentId);
             
         }
-          [System.Web.Http.HttpGet]
-        public  ActionResult Index(int tenant, int sitegroup, string site, string collection, string documentId, int size = 0, int max = 0)
+
+        private Tenant.Contracts.Site LookupSite(int siteid)
+        {
+            var client = this.Request.Resolve<ISitesWebApiClient>().CloneWithoutUserClaims();
+            var siteRes = client.GetSite(siteid , false).Result;
+            if (siteRes.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+            return siteRes.ReadAsSync();
+
+        }
+
+        [System.Web.Http.HttpGet]
+        public ActionResult Index(int tenant, int mastercat, int site, string collection, string documentId, int size = 0, int max = 0)
         {
            var context = new ApiContext()
                                      {
                                          TenantId = tenant,
-                                         MasterCatalogId = sitegroup
+                                         MasterCatalogId = mastercat
                                      };
-            int tmp;
-            if (int.TryParse(site, out tmp))
+            
+
+
+            //for local dev testing...
+            if (site > -1)
             {
-                context.SiteId = tmp;
+                var siteLookup = _siteLookup.GetOrAdd(site, LookupSite);
+                if (siteLookup == null)
+                {
+                    throw new FileNotFoundException("cant find site:"+ site);
+                }
+                context.TenantId = siteLookup.TenantId;
+                context.MasterCatalogId = siteLookup.MasterCatalogId;
+             //   context.SiteId = tmp;
+            }
+
+            //thru rev prox
+            if (context.TenantId < 0)
+            {
+                context.TenantId = this.SbApiContext.TenantId;
+                context.MasterCatalogId = this.SbApiContext.MasterCatalogId;
             }
             try
             {
@@ -200,7 +234,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     tpl = GetFromFSCache(context,collection, documentId);
                     if (tpl == null)
                     {
-                        var mutexName = (context.TenantId + ";" + context.MasterCatalogId.Value + ";" + context.SiteId.GetValueOrDefault(0) + ";" + collection + ";" + documentId).ToLowerInvariant();
+                        var mutexName = (context.TenantId + ";" + context.MasterCatalogId.Value + ";"  + collection + ";" + documentId).ToLowerInvariant();
 
                         mutex = new Semaphore(1,1,mutexName);
                         if (!mutex.WaitOne(10000))

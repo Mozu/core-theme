@@ -11,8 +11,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
         [DataMember(EmitDefaultValue = false, Name = "alt")]
         public string AltText { get; set; }
-        [DataMember(EmitDefaultValue = false, Name = "imagePath")]
-        public string ImagePath { get; set; }
+        [DataMember(EmitDefaultValue = false, Name = "cmsId")]
+        public string CmsId { get; set; }
 
         [DataMember(EmitDefaultValue = false, Name = "isoCultureCode")]
         public string ISOCultureCode { get; set; }

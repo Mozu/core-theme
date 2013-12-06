@@ -178,6 +178,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "SiteThumbnail",
                 new {controller = "Resource", action = "SiteThumbnail"});
 
+
             routes.MapHttpRoute(
                 "StoreFront_Prefixed_default",
                 "storefront/{controller}/{action}",
@@ -199,11 +200,28 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new {action = "Index"}
                 );
 
+
+            //old tbd remove
             routes.MapHttpRoute(
                 "Misc_content",
-                "files/{tenant}/{sitegroup}/{documentId}",
-                new {action = "index", controller = "content", collection = "files", site = ""}
+                "files/{tenant}/{mastercat}/{documentId}",
+                new {action = "index", controller = "content", collection = "files", site = -1}
                 );
+
+
+            routes.MapHttpRoute(
+                "Misc_content_2",
+                "cms/{site}/files/{documentId}",
+                new { action = "index", controller = "content", collection = "files", tenant = -1, mastercat =-1}
+                );
+
+            routes.MapHttpRoute(
+                "Misc_content_3",
+                "cms/files/{documentId}",
+                new { action = "index", controller = "content", collection = "files", tenant = -1, mastercat = -1, site = -1 }
+                );
+
+           
 
 
             routes.MapHttpRoute(
