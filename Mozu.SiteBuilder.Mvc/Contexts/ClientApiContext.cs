@@ -73,12 +73,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
 
                 var claim = LightweightAppClaims.CreateForPublicStorefront();
-                var list = claim.BehaviorIds.ToList();
-                list.Add(new WishlistCreateBehavior().Id);
-                list.Add(new WishlistDeleteBehavior().Id);
-                list.Add(new WishlistReadBehavior().Id);
-                list.Add(new WishlistUpdateBehavior().Id);
-                claim.BehaviorIds = list.ToArray();
+                //var list = claim.BehaviorIds.ToList();
+                //list.Add(new WishlistCreateBehavior().Id);
+                //list.Add(new WishlistDeleteBehavior().Id);
+                //list.Add(new WishlistReadBehavior().Id);
+                //list.Add(new WishlistUpdateBehavior().Id);
+                //claim.BehaviorIds = list.ToArray();
                 return claim.ToAccessToken();
             });
             //LightweightAppClaims.CreateForPublicStorefront().ToAccessToken());

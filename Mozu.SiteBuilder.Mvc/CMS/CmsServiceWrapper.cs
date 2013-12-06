@@ -178,6 +178,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             }
 
             var d = _docRepo.GetDocument( documentListName : doc.DocumentListName, documentId : doc.DocumentId ).Result.ReadAsSync();
+            d.Name = doc.Name;
             // d.PublishState = CmsConstants.Documents.doc_state_active;
             foreach (var item in doc.Items)
             {
