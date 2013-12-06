@@ -24,6 +24,11 @@ Ext.define('Taco.view.report.Index', {
         this.callParent(arguments);
     },
 
+    contextConfig: {
+        supportedLevels: ['m', 'c'],
+        requiresContextOfType: ['m', 'c', 's']
+    },
+
     createStoreFromReportDefinition: function (def, criteria) {
         var me = this;
         Ext.define('MyReader', {
