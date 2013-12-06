@@ -101,7 +101,7 @@
 
         if (me.publishButton) {
             // if the form becomes invalid disable the publish button
-            me.mon(me.form, 'validitysavChange', function (view, valid) {
+            me.mon(me.form, 'validityChange', function (view, valid) {
                 me.publishButton.setDisabled(!valid);
             }, me);
 
