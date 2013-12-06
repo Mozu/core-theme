@@ -90,6 +90,10 @@
         white-space: normal;
     } 
 
+	.bundledProduct{
+		padding-left:40px;
+	}
+
     // border that matches background color to keep the container height from changing on mouseover 
     .#{$prefix}grid-cell {
         vertical-align:top;   

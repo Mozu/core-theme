@@ -119,6 +119,12 @@ Ext.define('Taco.model.OrderItem', {
             defaultValue: []
         },
         
+        {
+            name: "bundledProducts",
+            type: "auto",
+            defaultValue: []
+        },
+        
         // added this so the ui can modify its behavior when products are deleted
         {
             "name": "isDeleted", 
