@@ -40,6 +40,10 @@ define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'shim!vendor
                 facetHierDepth: 'categoryId:2'
             };
 
+            productListData.constantParams = {
+                c: categoryId
+            };
+
             var facetingModel = new FacetingModels.FacetedProductCollection(productListData);            var facetingViews = {
                 pagingControls: new PagingViews.PagingControls({
                     el: $categoryPageBody.find('[data-mz-pagingcontrols]'),
