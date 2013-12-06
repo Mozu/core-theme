@@ -38,16 +38,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             g_emailTypeInfos = new List<EmailTypeInfo>
                                    {
-                                       new EmailTypeInfo
-                                           {
-                                               ModelType = typeof (ResetPasswordEmailMessage),
-                                               Topic = Topics.PasswordReset
-                                           },
-                                       new EmailTypeInfo
-                                           {
-                                               ModelType = typeof (NewUserEmailMessage),
-                                               Topic = Topics.NewUserCreated
-                                           },
+                                       //new EmailTypeInfo
+                                       //    {
+                                       //        ModelType = typeof (ResetPasswordEmailMessage),
+                                       //        Topic = Topics.PasswordReset
+                                       //    },
+                                       //new EmailTypeInfo
+                                       //    {
+                                       //        ModelType = typeof (NewUserEmailMessage),
+                                       //        Topic = Topics.NewUserCreated
+                                       //    },
                                        new EmailTypeInfo
                                            {
                                                ModelType = typeof (Order),
@@ -116,27 +116,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpPost]
-        public async Task<HttpResponseMessage> Render()
+        public async Task<HttpResponseMessage> Render(EmailNotification notification)
         {
             string topic;
             string innerPayload;
             int? customerAccountId;
             UX.Models.Customers.User user = null;
             HttpRequestBase request = HttpRequestBase;
-            request.InputStream.Position = 0;
 
-            using (var reader = new StreamReader(request.InputStream))
+
+
+
+
+            if (notification.MessagePublishingContext != null && !string.IsNullOrEmpty(notification.MessagePublishingContext.CustomerId ))
             {
-                JToken token = JObject.Parse(reader.ReadToEnd());
-                topic = token.Value<string>("Topic");
-                innerPayload = token.Value<string>("Payload");
-                customerAccountId = token.SelectToken("MessagePublishingContext").Value<int?>("CustomerId");
-            }
-
-
-            if (customerAccountId != null)
-            {
-                var dcUser = (await _customerAccountWebApiClient.GetAccount(customerAccountId)).ReadAsSync();
+                var dcUser = (await _customerAccountWebApiClient.GetAccount(int.Parse(notification.MessagePublishingContext.CustomerId))).ReadAsSync();
                 
                 user = new UX.Models.Customers.User
                                      {
@@ -144,22 +138,25 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                          FirstName = dcUser.FirstName,
                                          LastName = dcUser.LastName,
                                          UserId = dcUser.UserId,
-                                         AccountId = customerAccountId
+                                         AccountId = dcUser.Id 
                                      };
             }
+
+            
+            
 
             //if (topic.StartsWith(EmailNotification.PrimaryTopic))
             //{
             //    topic = topic.Substring(EmailNotification.PrimaryTopic.Length + 1);
             //}
 
-            EmailTypeInfo emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic, topic, StringComparison.OrdinalIgnoreCase));
+            EmailTypeInfo emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic, notification.Topic , StringComparison.OrdinalIgnoreCase));
 
-            VM.PageTypeDefinition emailTempalte = SiteContext.Theme.EmailTemplates.FirstOrDefault(x => string.Equals(x.Id, topic, StringComparison.OrdinalIgnoreCase));
+            VM.PageTypeDefinition emailTempalte = SiteContext.Theme.EmailTemplates.FirstOrDefault(x => string.Equals(x.Id, notification.Topic, StringComparison.OrdinalIgnoreCase));
 
-            if (emailTypeInfo == null)
+            if (emailTempalte == null)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "unknown topic " + topic);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "no templates defined for  topic " + notification.Topic );
             }
 
 
@@ -176,7 +173,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //vr.ViewName = "email/" + emailTypeInfo.Template;
 
 
-            object model = Convert(innerPayload, emailTypeInfo);
+            object model = Convert(notification.Payload , emailTypeInfo);
 
 
 

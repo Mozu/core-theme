@@ -23,6 +23,10 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
     public class ViewDataDictionary : Dictionary<string, object>
     {
+        public ViewDataDictionary() : base(StringComparer.OrdinalIgnoreCase)
+        {
+            
+        }
         public object Model
         {
             get
