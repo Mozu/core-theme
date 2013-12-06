@@ -224,6 +224,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<Credit>> EditCredit(Credit credit)
         {
             var dcitem = Mapper.Map<DC.Credit.Credit>(credit);
+            dcitem.CurrencyCode = "USD";
+            dcitem.CreditType = "StoreCredit";
             dcitem = (await _creditWebApiClient.UpdateCredit(dcitem, dcitem.Code)).ReadAsSync();
             return Single2(Mapper.Map<Credit>(dcitem));
         }
