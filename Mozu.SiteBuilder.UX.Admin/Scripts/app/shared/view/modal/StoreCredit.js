@@ -34,15 +34,16 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
         var me = this;
         me.cls += ' ' + Taco.baseCSSPrefix + 'address-editor';
 
-        me.storeCreditStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.StoreCredits');
-        me.storeCreditStore.load();
-        //debugger
+        me.storeCreditStore = Ext.clone(Taco.core.data.StoreManager.getOrCreate('Taco.store.StoreCredits'));
+        me.storeCreditStore.removeAll();
+
         Ext.Ajax.request({
-            url: '/admin/app/customer/credits/list?customerid='+this.record.get('id'),
-             method: 'POST',
+            url: '/admin/app/customer/credits/list?customerId=' + this.record.get('id'),
+             method: 'GET',
              success: function (response) {
-                 var json = Ext.util.JSON.decode(response.responseText);
+                 var json = Ext.JSON.decode(response.responseText);
                  console.log(json);
+                 me.storeCreditStore.loadData(json.items);
              },
              failure: function (response) {
          	}
