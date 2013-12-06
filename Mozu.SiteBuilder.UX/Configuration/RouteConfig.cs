@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
@@ -10,7 +12,42 @@ namespace Mozu.SiteBuilder.UX.Configuration
     {
         public void Register(HttpRouteCollection routes)
         {
-           
+            routes.MapHttpRoute(
+                "StoreFront_productDetails_SEO",
+                "{slug}",
+                new {controller = "Catalog", action = "ProductDetail"},
+                new {productCode = new QuseryStringConstraint("p")});
+
+            routes.MapHttpRoute(
+               "StoreFront_productDetails",
+               "product/{productCode}",
+               new { controller = "Catalog", action = "ProductDetail" });
+
+
+
+            routes.MapHttpRoute(
+               "StoreFront_pages",
+               "pages/{pageName}",
+               new { controller = "cmspages", action = "Page", collection = "pages" });
+
+
+
+            routes.MapHttpRoute(
+                "StoreFront_categories_SEO",
+                "{slug}",
+                new { controller = "Catalog", action = "Category" },
+                new { categoryId = new QuseryStringConstraint("c") });
+
+
+            routes.MapHttpRoute(
+                "StoreFront_categories",
+                "category/{categoryId}",
+                new { controller = "Catalog", action = "Category" });
+
+            
+
+
+
 
             routes.MapHttpRoute(
                 "Storefront_MyAccount2",
@@ -42,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             routes.MapHttpRoute(
                 "Visit_Tracking_Pixel",
                 "nsa.gov",
-                new { controller = "Visit", action = "TrackingPixel" });
+                new {controller = "Visit", action = "TrackingPixel"});
 
             routes.MapHttpRoute(
                 "scripts",
@@ -63,15 +100,13 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "js/{action}-{mode}.js",
                 new {controller = "BuiltinScripts", mode = "min"});
 
+            
             routes.MapHttpRoute(
-                "StoreFront_pages",
-                "pages/{pageName}",
-                new {controller = "cmspages", action = "Page", collection = "pages"});
+                "StoreFront_feeds_categories",
+                "feeds/category/{categoryId}",
+                new { controller = "Catalog", action = "CategoryFeed" });
 
-            routes.MapHttpRoute(
-                "StoreFront_pages_create",
-                "pages/create/{pageName}",
-                new {controller = "CmsPages", action = "Create", collection = "pages"});
+           
 
             routes.MapHttpRoute(
                 "StoreFront_rss",
@@ -83,25 +118,16 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "blogs/{post}",
                 new {controller = "Blogs", action = "Post"});
 
-            routes.MapHttpRoute(
-                "StoreFront_feeds_categories",
-                "feeds/category/{categoryId}",
-                new {controller = "Catalog", action = "CategoryFeed"});
+            
 
-            routes.MapHttpRoute(
-                "StoreFront_categories",
-                "category/{categoryId}",
-                new {controller = "Catalog", action = "Category"});
+            
 
             routes.MapHttpRoute(
                 "StoreFront_ajax_Configure",
                 "product/configure",
                 new {controller = "Catalog", action = "Configure"});
 
-            routes.MapHttpRoute(
-                "StoreFront_productDetails",
-                "product/{productCode}",
-                new {controller = "Catalog", action = "ProductDetail"});
+           
 
             routes.MapHttpRoute(
                 "StoreFront_checkout",
@@ -228,25 +254,32 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
             routes.MapHttpRoute(
-              "AjaxCreateAccount",
-              "user/create",
-              new { controller = "Auth", action = "AjaxCreateAccount" },
-              new { acceptConstraint = new AcceptConstraint("text/html", false) });
+                "AjaxCreateAccount",
+                "user/create",
+                new {controller = "Auth", action = "AjaxCreateAccount"},
+                new {acceptConstraint = new AcceptConstraint("text/html", false)});
 
 
             routes.MapHttpRoute(
                 "CreateAccount",
                 "user/create",
-                new { controller = "Auth", action = "CreateAccount" },
-                new { acceptConstraint = new AcceptConstraint("text/html", true) });
-
-
+                new {controller = "Auth", action = "CreateAccount"},
+                new {acceptConstraint = new AcceptConstraint("text/html", true)});
 
 
             routes.MapHttpRoute(
                 "Reset Password",
                 "resetpassword",
                 new {controller = "Auth", action = "ResetPassword"});
+
+
+            routes.MapHttpRoute(
+               "StoreFront_pages_seo",
+               "{pageName}",
+               new { controller = "cmspages", action = "Page", collection = "pages" });
+
+
+
 
             routes.MapHttpRoute(
                 "Error",
@@ -278,8 +311,32 @@ namespace Mozu.SiteBuilder.UX.Configuration
         }
 
 
-      
+        private class QuseryStringConstraint : IHttpRouteConstraint
+        {
+            private readonly string _queryString;
 
-     
+
+            public QuseryStringConstraint(string queryString)
+            {
+                _queryString = queryString;
+            }
+
+
+            public bool Match(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+            {
+                if (string.IsNullOrEmpty(request.RequestUri.Query))
+                {
+                    return false;
+                }
+                var val = request.GetQueryNameValuePairs().Where(x => string.Equals(x.Key, _queryString, StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
+                if (string.IsNullOrEmpty(val))
+                {
+                    return false;
+                }
+                values[parameterName] = val;
+
+                return true;
+            }
+        }
     }
 }
