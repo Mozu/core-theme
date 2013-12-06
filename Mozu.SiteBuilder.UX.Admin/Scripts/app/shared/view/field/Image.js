@@ -426,7 +426,7 @@ Ext.define('Taco.shared.view.field.Image', {
     onSelectedImagesDataChanged: function () {
         var value = [];
         this.selectedImages.each(function (record) {
-            value.push({ url: record.get('url') });
+            value.push({ url: record.get('url') , cmsId:record.get('cmsId')});
         });
         
         if (value && value.length) {
@@ -479,7 +479,7 @@ Ext.define('Taco.shared.view.field.Image', {
     },
 
     onAssociatorSave: function (associator, selectedRecords) {
-        console.log(arguments);
+
         this.selectedImages.add(selectedRecords);
     },
 

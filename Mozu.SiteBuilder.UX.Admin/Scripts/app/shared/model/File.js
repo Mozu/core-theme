@@ -5,7 +5,18 @@
 Ext.define('Taco.shared.model.File', {
     extend: 'Taco.core.data.Model',
     requires: [],
-    fields: [{
+    fields: [
+        {
+            name: 'cmsId',
+            type:'string',
+            useNull: true,
+            convert:function (v, record) {
+                v = record.raw ? record.raw.id : null;
+                return v;
+            }
+        },
+
+        {
             name: 'id',
             type: 'string',
             useNull: true
@@ -75,6 +86,9 @@ Ext.define('Taco.shared.model.File', {
             }
         }
     ],
+    isCmsFile:function () {
+        return !!this.get('cmsId');
+    },
     idProperty: 'id',
     validations: [{
             type: 'length',

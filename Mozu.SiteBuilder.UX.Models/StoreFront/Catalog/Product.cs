@@ -284,7 +284,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         {
             get
             {
-                return ImageUrl ?? ImagePath;
+                return ImageUrl ;
             }
         }
         [IgnoreDataMember]
@@ -310,7 +310,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 get
                 {
                     var pi = (ProductImage)_img.MemberwiseClone();
-                    pi.ImagePath = pi.ImagePath + "?" + key;
+                    pi.ImageUrl = pi.ImageUrl + "?" + key;
 
                     return pi;
                 }
