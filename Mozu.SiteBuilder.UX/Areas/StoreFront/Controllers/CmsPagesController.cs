@@ -16,7 +16,10 @@ using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
 
 using AutoMapper;
 using Mozu.Content.Contracts.Clients;
+using Mozu.Customer.Contracts.Clients;
 using Mozu.Core.Collections;
+using Mozu.Core.Api.Client;
+
 using Mozu.Content.Contracts;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.CMS;
@@ -36,6 +39,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         protected ICmsServiceWrapper _cmsService;
         
         protected ICmsTypeHelper _cmsTypeHelper;
+        protected ICustomerAccountWebApiClient _customerAccountWebApiClient;
         private readonly HyprViewEngine _hyprViewEngine;
       
      
@@ -46,6 +50,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             
             ICmsServiceWrapper cmsService,
             ICmsTypeHelper cmsTypeHelper,
+            ICustomerAccountWebApiClient customerAccountWebApiClient,
             HyprViewEngine hyprViewEngine
 
             )
@@ -54,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _docRepo = docRepo;
             _docTypeRepo = docTypeRepo;
             _cmsService = cmsService;
-            
+            _customerAccountWebApiClient = customerAccountWebApiClient.CloneWithoutUserClaims();
             _cmsTypeHelper= cmsTypeHelper;
             _hyprViewEngine = hyprViewEngine;
 

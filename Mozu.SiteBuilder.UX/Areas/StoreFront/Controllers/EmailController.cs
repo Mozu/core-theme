@@ -25,6 +25,7 @@ using Newtonsoft.Json.Linq;
 using DC = Mozu.Content.Contracts;
 //using VMOrder = Mozu.SiteBuilder.UX.Models.Checkout.or;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
+using Mozu.Customer.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -64,8 +65,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                IDocumentTypeWebApiClient docTypeRepo,
                                ICmsServiceWrapper cmsService,
                                ICmsTypeHelper cmsTypeHelper,
+                               ICustomerAccountWebApiClient customerAccountWebApiClient,
                                HyprViewEngine hyprViewEngine)
-            : base(docRepo, docTypeRepo, cmsService, cmsTypeHelper, hyprViewEngine)
+            : base(docRepo, docTypeRepo, cmsService, cmsTypeHelper, customerAccountWebApiClient, hyprViewEngine)
         {
         }
 
@@ -118,6 +120,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             string topic;
             string innerPayload;
+            int? customerAccountId;
+            UX.Models.Customers.User user = null;
             HttpRequestBase request = HttpRequestBase;
             request.InputStream.Position = 0;
 
@@ -126,6 +130,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 JToken token = JObject.Parse(reader.ReadToEnd());
                 topic = token.Value<string>("Topic");
                 innerPayload = token.Value<string>("Payload");
+                customerAccountId = token.SelectToken("MessagePublishingContext").Value<int?>("CustomerId");
+            }
+
+
+            if (customerAccountId != null)
+            {
+                var dcUser = (await _customerAccountWebApiClient.GetAccount(customerAccountId)).ReadAsSync();
+                
+                user = new UX.Models.Customers.User
+                                     {
+                                         Email = dcUser.EmailAddress,
+                                         FirstName = dcUser.FirstName,
+                                         LastName = dcUser.LastName,
+                                         UserId = dcUser.UserId,
+                                         AccountId = customerAccountId
+                                     };
             }
 
             //if (topic.StartsWith(EmailNotification.PrimaryTopic))
@@ -166,6 +186,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var vdd = new ViewDataDictionary();
             vdd["model"] = model;
             vdd["content"] = cmdContent;
+            vdd["User"] = user;
 
             var hvc = new HyprViewContext(this.Request , vdd, null);
             var stringWriter = new StringWriter();
