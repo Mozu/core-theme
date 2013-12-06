@@ -53,10 +53,17 @@ Ext.define('Taco.view.storeCredit.Index', {
             minWidth: 120
         }, {
             dataIndex: 'customerId',
-            text: 'Custoemr Id',
+            text: 'Customer Id',
             flex: 1,
             minWidth: 120,
             hidden: true
+        }, {
+            dataIndex: 'customer',
+            text: 'Customer Email',
+            flex: 1,
+            minWidth: 120,
+            hidden: true,
+            renderer: function (customer) { return customer.email; }
         }, {
             xtype: 'taco.menucolumn',
             text: 'Actions',

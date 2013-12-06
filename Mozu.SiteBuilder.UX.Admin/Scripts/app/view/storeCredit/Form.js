@@ -20,6 +20,20 @@ Ext.define('Taco.view.storeCredit.Form', {
         var me = this;
         me.customersStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Customers');
 
+        //selects the user that is passed in. This allows the renderer to do its thing and auto poplate
+        // the email field if the user has one.
+        /*me.customersStore.on('load', function (it) {
+            
+            if (this.isEdit() && me.customerName.getValue() == this.record.get('customerId')) {
+                debugger
+                var customerRec = '';
+                customerRec = this.customersStore.findRecord('id', this.record.get('customerId'));
+                this.customerName.select(customerRec);
+            }
+
+        }, this);*/
+        me.customersStore.load();
+        
         me.codeField = Ext.widget({
             xtype: 'textfield',
             name: 'code',
@@ -56,11 +70,20 @@ Ext.define('Taco.view.storeCredit.Form', {
             allowBlank: false
         });
 
+        var pushData = {};
+        var push2 = {};
+        pushData['firstName'] = this.record.get('customer').firstName;
+        push2['contacts'] = pushData;
+        var renderData = [];
+        renderData.push(push2);
+        console.log(renderData);
         me.customerName = Ext.widget({
             xtype: 'taco-customerfield',
             fieldLabel: 'Customer Name',
             allowBlank: false,
             name: 'customerId',
+            //data: this.record.get('customerId'),
+            data: renderData,
             displayTpl: Ext.create('Ext.XTemplate',
                 '<tpl for=".">',
                 '<tpl for="contacts">',
@@ -82,10 +105,11 @@ Ext.define('Taco.view.storeCredit.Form', {
                 scope: this
             }
         });
-
+        
         me.emailCustomer = Ext.widget({
             xtype: 'checkboxfield',
             name: 'email',
+            value: this.record.get('customer').primaryEmail,
             fieldLabel: 'Email store credit information to customer'
         });
         
@@ -93,6 +117,7 @@ Ext.define('Taco.view.storeCredit.Form', {
             xtype: 'textfield',
             name: 'customeremail',
             fieldLabel: 'Customer Email',
+            value: this.record.get('customer').email,
             readOnly: true
         });
 
