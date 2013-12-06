@@ -34,10 +34,11 @@ Ext.define('Taco.view.storeCredit.Index', {
             flex: 1,
             minWidth: 120
         }, {
-            dataIndex: 'customerName',
+            dataIndex: 'customer',
             text: 'Customer Name',
             flex: 1,
-            minWidth: 120
+            minWidth: 120,
+            renderer: function (customer) { return customer.firstName + ' ' + customer.lastName; }
         }, {
             dataIndex: 'activationDate',
             text: 'Date Issued',

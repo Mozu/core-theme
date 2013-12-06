@@ -24,10 +24,6 @@ Ext.define('Taco.model.StoreCredit', {
             type: 'date'
         },
         {
-            name: 'customerName',
-            type: 'string'
-        },
-        {
             name: 'customerId',
             type: 'string'
         },
@@ -42,7 +38,12 @@ Ext.define('Taco.model.StoreCredit', {
         {
             name: 'email',
             type: 'bool'
-        }],
+        },
+        {
+            name: 'customer',
+            type: []
+        }
+    ],
 
     proxy: {
         type: 'ajaxproxy',

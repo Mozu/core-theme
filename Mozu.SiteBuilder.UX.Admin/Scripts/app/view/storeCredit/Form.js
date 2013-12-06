@@ -34,6 +34,12 @@ Ext.define('Taco.view.storeCredit.Form', {
             readOnly: me.isEdit()
         });
         
+        me.expirationDate = Ext.widget({
+            xtype: 'datefield',
+            name: 'expirationDate',
+            fieldLabel: 'Expiration Date'
+        });
+
         me.orginalAmount = Ext.widget({
             xtype: 'textfield',
             name: 'initialBalance',
@@ -101,6 +107,7 @@ Ext.define('Taco.view.storeCredit.Form', {
         me.items = [
             me.codeField,
             me.dateIssued,
+            me.expirationDate,
             me.orginalAmount,
             me.amount,
             me.customerName,
