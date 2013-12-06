@@ -270,6 +270,7 @@ Ext.define('Taco.store.Navigation', {
             "label": "Reports",
             "address": "report",
             "icon": "nav-dashboard",
+            "behaviorIds": [188],
             "items": [/*
                 {
                     "id": "salesreport",
