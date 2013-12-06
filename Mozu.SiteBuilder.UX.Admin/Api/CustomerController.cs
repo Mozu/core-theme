@@ -223,9 +223,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "credits/edit")]
         public async Task<Response<Credit>> EditCredit(Credit credit)
         {
+            var existingItem = (await _creditWebApiClient.GetCredit(credit.Code)).ReadAsSync();
+            var adjustment = credit.CurrentBalance - existingItem.CurrentBalance;
+            if (adjustment != 0)
+            {
+                await _creditWebApiClient.AddTransaction(credit.Code, new CreditTransaction()
+                {
+                    TransactionType = adjustment > 0 ? "Credit" : "Debit",
+                    ImpactAmount = adjustment
+                });
+            }
+
             var dcitem = Mapper.Map<DC.Credit.Credit>(credit);
             dcitem.CurrencyCode = "USD";
             dcitem.CreditType = "StoreCredit";
+            //dcitem.CurrentBalance = 
+            
             dcitem = (await _creditWebApiClient.UpdateCredit(dcitem, dcitem.Code)).ReadAsSync();
             return Single2(Mapper.Map<Credit>(dcitem));
         }
