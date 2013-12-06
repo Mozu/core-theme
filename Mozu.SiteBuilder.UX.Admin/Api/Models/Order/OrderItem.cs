@@ -5,9 +5,38 @@ using DC = Mozu.CommerceRuntime.Contracts.Products;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
+  
+    public class BundledProduct
+    {
+        public string ProductCode { get; set; }
+
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        public int Quantity { get; set; }
+
+        public bool IsPackagedStandAlone { get; set; }
+
+        public int? ProductReservationId { get; set; }
+     
+        public decimal? UnitWeight { get; set; }
+    }
+
+
+
     [DataContract]
     public class OrderItem
     {
+
+
+        [DataMember(Name = "bundledProducts")]
+        public List<BundledProduct> BundledProducts
+        {
+            get; set;
+        }
+
+
         [DataMember(Name = "id")]
         public string Id { get; set; }
 

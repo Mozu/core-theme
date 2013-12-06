@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AutoMapper;
+using Mozu.Core.Api.Contracts;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using CustomerDC = Mozu.Customer.Contracts;
 using DiscountDC = Mozu.CommerceRuntime.Contracts.Discounts;
@@ -154,7 +155,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcOrderItem_to_OrderItem()
         {
-            Mapper.CreateMap<OrdersDC.OrderItem, OrderItem>()
+            Mapper.CreateMap<ProductsDC.BundledProduct, BundledProduct>()
+                .ForMember(x => x.UnitWeight, opt => opt.MapFrom(x => x.Measurements.Weight.Value));
+
+            Mapper.CreateMap<BundledProduct, ProductsDC.BundledProduct>()
+                .ForMember(x => x.Measurements, opt => opt.MapFrom(x => new CommerceDC.PackageMeasurements()
+                                                                        {
+                                                                            Weight = new Measurement()
+                                                                                     {
+                                                                                         Value = x.UnitWeight, Unit = "lb"
+                                                                                     }
+                                                                        }));
+
+        
+
+        Mapper.CreateMap<OrdersDC.OrderItem, OrderItem>()
+                   .ForMember(x => x.BundledProducts , op => op.MapFrom(dc => dc.Product.BundledProducts ))
                   .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
                   .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.Product.ProductCode))
                   .ForMember(x => x.ProductName, op => op.MapFrom(dc => dc.Product.Name))
@@ -361,6 +377,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private void Map_OrderItem_to_DcOrderItem()
         {
             Mapper.CreateMap<OrderItem, OrdersDC.OrderItem>()
+               
                   .ForMember(dc => dc.Id, op => op.MapFrom(x => x.Id))
                   .ForMember(dc => dc.UnitPrice, op => op.Ignore())
                   .ForMember(dc => dc.Product, op => op.ResolveUsing(x => {
