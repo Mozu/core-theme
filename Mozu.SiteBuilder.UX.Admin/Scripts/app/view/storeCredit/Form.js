@@ -38,7 +38,7 @@ Ext.define('Taco.view.storeCredit.Form', {
             xtype: 'textfield',
             name: 'initialBalance',
             fieldLabel: 'Original Amount',
-            allowBlank: false,
+           // allowBlank: false,
             readOnly: me.isEdit(),
             hidden: !me.isEdit()
         });

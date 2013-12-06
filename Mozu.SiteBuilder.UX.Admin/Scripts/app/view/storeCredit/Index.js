@@ -42,10 +42,12 @@ Ext.define('Taco.view.storeCredit.Index', {
             dataIndex: 'activationDate',
             text: 'Date Issued',
             flex: 1,
-            minWidth: 120
+            minWidth: 120,
+            xtype: 'datecolumn',
+            format: 'M d g:ia'
         }, {
-            dataIndex: 'balance',
-            text: 'currentBalance',
+            dataIndex: 'currentBalance',
+            text: 'Current Balance',
             flex: 1,
             minWidth: 120
         }, {
