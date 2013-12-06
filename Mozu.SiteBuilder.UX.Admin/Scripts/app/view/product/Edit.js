@@ -17,7 +17,7 @@
             scale:"medium",
             itemId: 'publish',
             text: 'Publish',
-            disabled:true,
+            disabled: this.record.get('publishedState') == 'Live',
             beforeItemId: 'save',
             margin: '0 0 0 10',
             hidden: !this.checkProductPublishing(),
@@ -100,6 +100,9 @@
         this.publishButton = this.down('button#publish');
 
         if (me.publishButton) {
+            
+            
+
             // if the form becomes invalid disable the publish button
             me.mon(me.form, 'validityChange', function (view, valid) {
                 me.publishButton.setDisabled(!valid);
@@ -171,6 +174,7 @@
                 // this.publishButton.setDirty(false);
                 this.publishButton.removeCls('taco-button-processing');
                 this.publishButton.setText('Publish');
+                this.publishButton.disable();
             },
             failure: function () {
                 Taco.MessageBox.alert(
