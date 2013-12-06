@@ -49,6 +49,37 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
 
         
 
+        
+
+             /// <summary>
+        /// List of categories this discount applies to.
+        /// </summary>
+        [DataMember(Name = "conditionalCategories")]
+        public List<int> DiscountConditionCategories { get; set; }
+
+        /// <summary>
+        /// List of products this discount requires to.
+        /// </summary>
+        [DataMember(Name = "conditionalProducts")]
+        public List<string> DiscountConditionProducts { get; set; }
+
+        /// <summary>
+        /// List of categories this order cant have .
+        /// </summary>
+        [DataMember(Name = "conditionalExcludedCategories")]
+        public List<int> DiscountConditionExcludedCategories { get; set; }
+
+        /// <summary>
+        /// List of products this discount requires to.
+        /// </summary>
+        [DataMember(Name = "conditionalExcludedProducts")]
+        public List<string> DiscountConditionExcludedProducts { get; set; }
+
+
+
+
+
+
         /// <summary>
         /// List of categories this discount applies to.
         /// </summary>
