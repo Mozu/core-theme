@@ -17,8 +17,8 @@ Ext.define('Taco.view.discount.Index', {
 
    
     contextConfig: {
-        supportedLevels: ['c'],
-        requiresContextOfType: ['c', 's']
+        supportedLevels: ['s'],
+        requiresContextOfType: ['s']
     },
     
     initComponent: function () {
