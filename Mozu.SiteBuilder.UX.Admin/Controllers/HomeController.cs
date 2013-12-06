@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         {
             
             _logger = logger;
-            _documentListWebApiClient = documentListWebApiClient;
+            _documentListWebApiClient = documentListWebApiClient.CloneWithoutUserClaims();
 
             _usersRepo = usersRepo.CloneWithoutUserClaims();
             _authenticationHelper = authHelper;

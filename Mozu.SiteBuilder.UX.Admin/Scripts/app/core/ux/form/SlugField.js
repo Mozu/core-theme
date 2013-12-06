@@ -4,16 +4,16 @@
 
 Ext.define('Taco.core.ux.form.SlugField', {
     extend: 'Ext.form.field.Text',
-    alias: 'widget.slugfield',
+    alias: ['widget.slugfield', 'widget.taco-slugfield'],
     slugCls: 'taco-slug-prefix',
-    slugPrefix: 'www.google.com',
+   // slugPrefix: '/',
 
-    fieldSubTpl: [ // note: {id} here is really {inputId}, but {cmpId} is available
-    '<div class="{slugCls}"><span>{slugPrefix}</span></div>', '<input id="{id}" type="{type}" {inputAttrTpl}', ' size="1"', // allows inputs to fully respect CSS widths across all browsers
-    '<tpl if="name"> name="{name}"</tpl>', '<tpl if="value"> value="{value}"</tpl>', '<tpl if="placeholder"> placeholder="{placeholder}"</tpl>', '<tpl if="maxLength !== undefined"> maxlength="{maxLength}"</tpl>', '<tpl if="readOnly"> readonly="readonly"</tpl>', '<tpl if="disabled"> disabled="disabled"</tpl>', '<tpl if="tabIdx"> tabIndex="{tabIdx}"</tpl>', '<tpl if="fieldStyle"> style="{fieldStyle}"</tpl>', ' class="{fieldCls} {typeCls} {editableCls}" autocomplete="off"/>',
-    {
-        disableFormats: true
-    }],
+    //fieldSubTpl2: [ // note: {id} here is really {inputId}, but {cmpId} is available
+    //'<div class="{slugCls}"><span>{slugPrefix}</span></div>', '<input id="{id}" type="{type}" {inputAttrTpl}', ' size="1"', // allows inputs to fully respect CSS widths across all browsers
+    //'<tpl if="name"> name="{name}"</tpl>', '<tpl if="value"> value="{value}"</tpl>', '<tpl if="placeholder"> placeholder="{placeholder}"</tpl>', '<tpl if="maxLength !== undefined"> maxlength="{maxLength}"</tpl>', '<tpl if="readOnly"> readonly="readonly"</tpl>', '<tpl if="disabled"> disabled="disabled"</tpl>', '<tpl if="tabIdx"> tabIndex="{tabIdx}"</tpl>', '<tpl if="fieldStyle"> style="{fieldStyle}"</tpl>', ' class="{fieldCls} {typeCls} {editableCls}" autocomplete="off"/>',
+    //{
+    //    disableFormats: true
+    //}],
 
     onRender: function() {
         var me = this,
@@ -23,14 +23,14 @@ Ext.define('Taco.core.ux.form.SlugField', {
 
         me.prefixEl = me.el.down('.' + me.slugCls);
 
-        paddingLeft = parseInt(me.inputEl.getStyle('padding-left'));
+        //paddingLeft = parseInt(me.inputEl.getStyle('padding-left'));
 
-        me.inputEl.setStyle({
-            'padding-left': me.prefixEl.getComputedWidth() + paddingLeft + 'px'
-        });
-        me.prefixEl.setStyle({
-            'height': me.inputEl.getComputedHeight() + 'px'
-        });
+        //me.inputEl.setStyle({
+        //    'padding-left': me.prefixEl.getComputedWidth() + paddingLeft + 'px'
+        //});
+        //me.prefixEl.setStyle({
+        //    'height': me.inputEl.getComputedHeight() + 'px'
+        //});
 
         me.inputEl.on({
             keyup: function() {
@@ -73,7 +73,7 @@ Ext.define('Taco.core.ux.form.SlugField', {
         var me = this;
 
         if (typeof value === 'string') {
-            return me.callParent([value.replace(/((?!([A-Z]|[a-z]|\d)).)+/g, '-').toLowerCase()]);
+            return me.callParent([value.replace(/((?!([A-Z]|[a-z]|\d|[\.])).)+/g, '-').toLowerCase()]);
         }
         return me.callParent(value);
     },

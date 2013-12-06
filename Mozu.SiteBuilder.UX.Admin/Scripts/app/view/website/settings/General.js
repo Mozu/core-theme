@@ -14,7 +14,9 @@ Ext.define('Taco.view.website.settings.General', {
     layout: {
         type: 'vbox'
     },
-
+    defaults: {
+        width: '95%'
+    },
     initComponent: function () {
         this.items = [{
             xtype: 'checkboxfield',

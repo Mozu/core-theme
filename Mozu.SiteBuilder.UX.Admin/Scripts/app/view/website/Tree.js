@@ -10,7 +10,8 @@ Ext.define('Taco.view.website.Tree', {
         'Taco.model.NavigationTreeNode',
         'Taco.store.NavigationTreeNodes',
         'Ext.tree.plugin.TreeViewDragDrop',
-        'Taco.view.website.misc.ExternalLinkEditor'
+        'Taco.view.website.misc.ExternalLinkEditor',
+        'Taco.core.ux.form.SlugField'
     ],
 
     border: false,
@@ -206,7 +207,8 @@ Ext.define('Taco.view.website.Tree', {
                 handler: function () {
                     this.onRename(record);
                 }
-            };;
+            };
+        ;
 
 
         if (record.getId() == '_navigation') {
@@ -233,19 +235,18 @@ Ext.define('Taco.view.website.Tree', {
             items.push(deletePage);
 
         }
-        
+
 
         return items;
     },
     showLinkEditor: function (record, parentRecord) {
         var modal = Ext.create('Taco.view.website.misc.ExternalLinkEditor', {
             record: record,
-            parentRecord:parentRecord 
-
+            parentRecord: parentRecord
         });
         //modal.on('close', )
     },
-    deleteLink:function (record) {
+    deleteLink: function (record) {
         record.destroy({
             success: function () {
                 console.log('link deleted');
@@ -257,8 +258,7 @@ Ext.define('Taco.view.website.Tree', {
         var cmsDoc = Ext.create('Taco.model.CmsDocument', {
             id: record.get('originalCollection') + '_' + record.get('originalId'),
             documentId: record.get('originalId'),
-            collectionName: record.get('originalCollection')
-            
+            collectionName: record.get('originalCollection')            
         });
         cmsDoc.destroy({
             success: function () {
@@ -296,7 +296,28 @@ Ext.define('Taco.view.website.Tree', {
                         allowOnlyWhitespace: false,
                         name: 'title',
                         width: '100%',
-                        fieldLabel: 'Page Name'
+                        fieldLabel: 'Page Title',
+                        listeners: {
+                            change: function (cmp, newValue) {
+                                cmp.slugField = cmp.slugField || cmp.up('form').down('taco-slugfield');
+                                var previous = cmp.slugField.onNameChangeValue,
+                                    current = cmp.slugField.getValue(),
+                                    newValue;
+                                if (current && previous != current) {
+                                    return;
+                                }
+                                cmp.slugField.setValue(newValue);
+                                cmp.slugField.onNameChangeValue = cmp.slugField.getValue();
+                            }
+                        }
+                    },
+                    {
+                        xtype: 'taco-slugfield',
+                        allowBlank: false,
+                        allowOnlyWhitespace: false,
+                        name: 'name',
+                        width: '100%',
+                        fieldLabel: 'Page Url'
                     }, {
                         name: 'docInfo',
                         xtype: 'selectfield',
@@ -319,7 +340,7 @@ Ext.define('Taco.view.website.Tree', {
                         cmsDoc = Ext.create('Taco.model.CmsDocument', {
                             documentType: values.docInfo.documentType,
                             collectionName: values.docInfo.collectionName,
-                            name: values.title,
+                            name: values.name,
                             items: [{
                                     key: "title",
                                     value: values.title
@@ -329,6 +350,10 @@ Ext.define('Taco.view.website.Tree', {
                                 }, {
                                     key: "page_type_definition",
                                     value: values.docInfo
+                                },
+                                {
+                                    key: "link_title",
+                                    value: values.title                                        
                                 }]
                         });
 
@@ -338,18 +363,17 @@ Ext.define('Taco.view.website.Tree', {
                                     id: 'page^^' + cmsRecord.get('collectionName') + '^^' + cmsRecord.get('documentId'),
                                     editAction: 'move',
                                     nodeType: 'page',
-                                    originalCollection:cmsRecord.get('collectionName'),
-                                    url:'/pages/' + cmsRecord.get('name'),
-                                    name:cmsRecord.get('name')
-                                    
+                                    originalCollection: cmsRecord.get('collectionName'),
+                                    url: '/' + cmsRecord.get('name'),
+                                    name: values.title                                    
                                 });
                                 navRecord.setDirty();
                                 parentRecord.appendChild(navRecord);
                                 navRecord.save();
-                                
-                                    //parentRecord
+
+                                //parentRecord
                                 me.fireEvent('pagecreate', navRecord);
-                                
+
                                 dialog.close();
                             },
                             failure: function () {

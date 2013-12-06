@@ -195,7 +195,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
                     var root = nodeTree.First(n => n.Id == NAV_ROOT_NODE_NAME);
                     var unlinked = nodeTree.First(n => n.Id == UNLINKED_PAGES_NODE_ID);
-                    root.Expandable = unlinked.Expandable = false;
+                  
                     root.Expanded = unlinked.Expanded = true;
 
                     return nodeTree;

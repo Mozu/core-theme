@@ -6,6 +6,7 @@
 
 Ext.define('Taco.view.product.subform.SEO', {
     extend: 'Taco.view.product.subform.Subform',
+    requires:['Taco.core.ux.form.SlugField'],
     alias: 'widget.productseosubform',
     title: 'SEO',
 
@@ -24,6 +25,7 @@ Ext.define('Taco.view.product.subform.SEO', {
                     name: 'metaTitle'
                 }, {
                     fieldLabel: 'Slug',
+                    xtype:'taco-slugfield',
                     name: 'slug'
                 }, {
                     fieldLabel: 'Meta Description',
@@ -37,7 +39,7 @@ Ext.define('Taco.view.product.subform.SEO', {
         if (Ext.isEmpty((this.productInCatalogInfo || this.product).get('slug'))) {
             this.on('boxready', function () {
                 this.productForm = this.up('productform');
-                this.slugField = this.down('[name="slug"]');
+                this.slugField = this.down('taco-slugfield');
                 this.mon(this.productForm, 'productnamechange', this.onNameChange, this);
             });
         }
@@ -53,14 +55,10 @@ Ext.define('Taco.view.product.subform.SEO', {
         if (current && previous != current) {
             return;
         }
-        newValue = name
-            .replace(/^\s\s*/, '') // Trim start
-            .replace(/\s\s*$/, '') // Trim end
-            .toLowerCase() // Camel case is bad
-            .replace(/[^a-z0-9_\-~!\+\s]+/g, '') // Exchange invalid chars
-            .replace(/[\s]+/g, '-'); // Swap whitespace for single hyphen
-        this.slugField.onNameChangeValue = newValue;
-        this.slugField.setValue(newValue);
+        
+        
+        this.slugField.setValue(name);
+        this.slugField.onNameChangeValue =  this.slugField.getValue();
 
     }
 });

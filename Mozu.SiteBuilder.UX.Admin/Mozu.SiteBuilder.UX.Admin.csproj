@@ -767,6 +767,7 @@
     <Content Include="Scripts\app\view\website\misc\ExternalLinkEditor.js" />
     <Content Include="Scripts\app\view\website\settings\CatalogSeo.js" />
     <Content Include="Scripts\app\view\website\settings\EmailTemplate.js" />
+    <Content Include="Scripts\app\view\website\settings\DocumentSeo.js" />
     <Content Include="Scripts\app\view\website\settings\ProductDocument.js" />
     <Content Include="Scripts\app\view\website\WidgetEditor.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\BaseEntityAdapter.js" />
