@@ -159,25 +159,27 @@ Ext.define('Taco.view.order.modal.AddRefund', {
             items: [{
                 xtype: 'textfield',
                 fieldLabel: 'Original Amount',
+                name: 'originalAmount',
                 value: totalOrder,
                 readOnly: true
-            }, {
+            }, /*{
                 xtype: 'textfield',
                 fieldLabel: 'Store Credit ID',
                 allowBlank: false
-            }, {
+            }, */{
                 xtype: 'numberfield',
                 fieldLabel: 'Refund Amount',
+                name: 'refundAmount',
                 hideTrigger: true,
                 allowBlank: false
-            }, {
+            }/*, {
                 xtype: 'textarea',
                 fieldLabel: 'Transaction History',
                 allowBlank: false
             }, {
                 xtype: 'checkboxfield',
                 fieldLabel: 'Email store credit information to customer'
-            }],
+            }*/],
             scope: this
         });
 
@@ -239,19 +241,27 @@ Ext.define('Taco.view.order.modal.AddRefund', {
         var me = this,
             payments = [];
 
-        this.store.each(function (item) {
-            if (item.get('amountToRefund') > 0) {
-                payments.push({
-                    orderId: this.order.getId(),
-                    returnId: this.record.getId(),
-                    paymentType: 'CreditCard',
-                    amount: item.get('amountToRefund'),
-                    paymentId: item.get('id')
-                });
-            }
-        }, this);
-        
-        // me.setLoading(true, me.body);
+        if (this.creditCardRadio.getValue()) {
+            this.store.each(function (item) {
+                if (item.get('amountToRefund') > 0) {
+                    payments.push({
+                        orderId: this.order.getId(),
+                        returnId: this.record.getId(),
+                        paymentType: 'CreditCard',
+                        amount: item.get('amountToRefund'),
+                        paymentId: item.get('id')
+                    });
+                }
+            }, this);
+        } else {
+            //this.storeCreditPanel.getValues()['refundAmount']  
+            payments.push({
+                orderId: this.order.getId(),
+                returnId: this.record.getId(),
+                paymentType: 'StoreCredit',
+                amount: this.storeCreditPanel.getValues()['refundAmount']
+            });
+        }
         
         this.record.performPaymentAction(payments, {
             success: function () {

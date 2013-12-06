@@ -24,7 +24,7 @@ Ext.define('Taco.view.storeCredit.Form', {
             xtype: 'textfield',
             name: 'code',
             fieldLabel: 'Code',
-            allowBlank: false
+            readonly: me.isEdit()
         });
 
         me.dateIssued = Ext.widget({
@@ -71,25 +71,11 @@ Ext.define('Taco.view.storeCredit.Form', {
                 change: function (field, value) {
                     if (field.valueModels) {
                         this.customerEmail.setValue(field.valueModels[0].get('primaryEmail'));
-                    }
-                        
-                    console.log('customer', field.getValue());
-                    
+                    }  
                 },
                 scope: this
             }
         });
-        /*
-        Why do we need to display the customer Id
-        This isn't even displayed on the customer page
-
-        me.customerNumber = {
-            xtype: 'textfield',
-            name: 'customerNumber',
-            fieldLabel: 'Customer Number'
-        };
-        */
-       
 
         me.emailCustomer = Ext.widget({
             xtype: 'checkboxfield',
@@ -107,7 +93,8 @@ Ext.define('Taco.view.storeCredit.Form', {
         me.transHistory = Ext.widget({
             xtype: 'textarea',
             name: 'transactionHistory',
-            fieldLabel: 'Transaction History'
+            fieldLabel: 'Transaction History',
+            readOnly: true
         });
 
 
@@ -117,10 +104,12 @@ Ext.define('Taco.view.storeCredit.Form', {
             me.orginalAmount,
             me.amount,
             me.customerName,
-            //me.customerNumber,
             me.customerEmail,
             me.emailCustomer,
             me.transHistory
         ];
+    },
+    beforeSave: function() {
+        console.log(this.record);
     }
 });
