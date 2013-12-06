@@ -9,42 +9,58 @@ Ext.define('Taco.view.product.subform.Inventory', {
 
     title: 'Inventory',
     
+    // enables the manage button; This is part of future work;
+    manageEnabled: false,
+    
     initComponent: function () {
         var me = this,
             track = this.product.get('manageStock'),
-            manageStock,
           //  stockOnHand,
-            outOfStockState,
             options;
 
-        this.record = this.product;
         
-        manageStock = Ext.widget({
+
+        this.record = this.product;
+
+        if (this.manageEnabled) {
+            this.manageInventoryButton = Ext.create('Ext.button.Button', {
+                ui: "action-primary",
+                hidden: this.product.get("productUsage") == "Bundle",
+                scale: "medium",
+                margin: "0 0 20, 0",
+                text: "Manage",
+                handler: me.manageInventory,
+                scope: me
+            });
+            
+            this.tools = [this.manageInventoryButton];
+        }
+        
+        this.manageStock = Ext.widget({
             xtype: 'checkboxfield',
             name: 'manageStock',
             boxLabel: 'Track stock level',
             checked: track,
+            //hidden: this.product.get("productUsage") == "Bundle",
             listeners: {
                 change: function (field, checked) {
-                    if (checked) {
-                 //       stockOnHand.show();
-                        outOfStockState.show();
-                    } else {
-                 //       stockOnHand.hide();
-                        outOfStockState.hide();
-                    }
+                    this.updateFieldVisibility();
                 },
                 scope: this
             }
         });
 
-        outOfStockState = Ext.widget({
+        
+        // need to filter the list of possible values;
+        // if the productUsage is of type bundle, we will need to remove the allowBackorder option;
+        
+        this.outOfStockState = Ext.widget({
             xtype: 'selectfield',
             fieldLabel: 'If out of stock...',
             width: 250,
             allowBlank: true,
             margin: '0 0 0 20',
-            hidden: !track,
+            //hidden: (!track || this.product.get("productUsage") == "Component"),
             queryMode: 'local',
             store: [
                 ['DisplayMessage', 'Show out of stock message'],
@@ -63,18 +79,66 @@ Ext.define('Taco.view.product.subform.Inventory', {
             width: '100%',
             layout: 'vbox',
             items: [
-                manageStock,
+                this.manageStock,
              //   stockOnHand,
-                outOfStockState
+                this.outOfStockState
             ]
         }];
 
         this.callParent(arguments);
         
-        me.on('afterrender', function() {
-            me.up("productform").on('productusagechange', me.onProductUsageChange);
+        this.updateFieldVisibility();
+
+        me.on('afterrender', function () {
+            var productForm = me.up("productform");
+            me.mon(productForm, 'productusagechange', me.onProductUsageChange, me);
         });
 
+    },
+    
+    // all the logic for what is show or hidden is managed here;
+    updateFieldVisibility: function () {
+        var me = this;
+        
+        // hide if the productUsage is Bundle
+        var value = this.product.get("productUsage");
+
+        this.manageStock.setVisible(value != "Bundle");
+
+        var track = this.manageStock.getValue();
+        
+
+        // hide if the productUsage is component
+        var outOfStockStateVisible = false;
+            
+        if (this.product.get("productUsage") == "Bundle") {
+            outOfStockStateVisible = true;
+            
+            //filter out the allow backordering option
+            this.outOfStockState.store.filter([
+                {
+                    filterFn: function (item) {
+                        return item.get('field1') != "AllowBackorder";
+                    }
+                }
+            ]);
+
+        } else if (this.product.get("productUsage") == "Component") {
+            outOfStockStateVisible = false;
+            this.outOfStockState.store.clearFilter();
+        } else {
+            this.outOfStockState.store.clearFilter();
+            if (track) {
+                outOfStockStateVisible = true;
+            }
+        }
+        
+        this.outOfStockState.setVisible(outOfStockStateVisible);
+
+        if (me.manageEnabled) {
+            // hide if the productUsage is Bundle
+            this.manageInventoryButton.setVisible(value != "Bundle");
+        }
     },
 
     getOutOfStockState: function () {
@@ -99,8 +163,14 @@ Ext.define('Taco.view.product.subform.Inventory', {
     *
     *
     */
-    onProductUsageChange :function(view, value) {
+    onProductUsageChange: function (view, value) {
+        var me = this;
+        this.updateFieldVisibility();
+    },
+    
+    // todo implement this feature
+    manageInventory : function () {
         
-
     }
+
 });
