@@ -214,9 +214,17 @@ Ext.define('Taco.view.product.subform.General', {
                 allowBlank: false,
                 minLength: 3,
                 name: 'productName',
+                
                 emptyText: 'Some product description',
                 width: '100%',
-                required: true
+                required: true,
+                listeners: {
+                    change: function (cmp, newValue ) {
+                        cmp.productForm = cmp.productForm || cmp.up('productform');
+                        me.up("productform").fireEvent('productnamechange', this.productInCatalogInfo || this.product, newValue);
+                    },
+                    scope:this
+                }
             }, {
                 xtype: 'htmleditor',
                 enableFont: false,
@@ -342,7 +350,10 @@ Ext.define('Taco.view.product.subform.General', {
             me.mon(productForm, 'productusagechange', me.updatePriceUI, me);
             me.mon(productForm, 'bundleItemChange', me.updatePriceUI, me);
 
-        },me);
+        }, me);
+        
+
+        this.down('#productName')
     },
 
     
