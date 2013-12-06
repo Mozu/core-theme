@@ -36,6 +36,18 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
 
         me.storeCreditStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.StoreCredits');
         me.storeCreditStore.load();
+        //debugger
+        Ext.Ajax.request({
+            url: '/admin/app/customer/credits/list?customerid='+this.record.get('id'),
+             method: 'POST',
+             success: function (response) {
+                 var json = Ext.util.JSON.decode(response.responseText);
+                 console.log(json);
+             },
+             failure: function (response) {
+         	}
+         });
+
         me.wishlistGrid = Ext.create('Ext.grid.Panel', {
             store: this.storeCreditStore,
             selType: 'cellmodel',
