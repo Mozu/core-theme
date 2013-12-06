@@ -213,7 +213,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "credits/list")]
-        public async Task<Response<List<Credit>>> GetCredits([FromUri]int? customerId)
+        public async Task<Response<List<Credit>>> GetCredits([FromUri]int? customerId = null)
         {
             string filter = null;
             if (customerId != null)
