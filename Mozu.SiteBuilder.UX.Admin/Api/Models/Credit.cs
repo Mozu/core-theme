@@ -14,7 +14,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         public decimal InitialBalance { get; set; }
         public decimal CurrentBalance { get; set; }
         public int CustomerId { get; set; }
-        public string CustomerName { get; set; }
         public DateTime? ExpirationDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public string IssuedBy { get; set; }
