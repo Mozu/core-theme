@@ -22,7 +22,22 @@ Ext.define('Taco.view.category.Form', {
             maxLength: 80,
             enforceMaxLength: true,
             required: true,
-            minLength: 3
+            minLength: 3,
+            listeners: {
+                change: function (cmp, newValue) {
+                    cmp.slugField = cmp.slugField || cmp.up('formform').down('[name="slug"]');
+                    var previous = cmp.slugField.onNameChangeValue,
+                        current = cmp.slugField.getValue(),
+                        newValue;
+                    if (current && previous != current) {
+                        return;
+                    }
+                    cmp.slugField.setValue(newValue);
+                    cmp.slugField.onNameChangeValue = cmp.slugField.getValue();
+
+                }
+            }
+            
         },
         // note: i had to nest the combo box in a fieldcontainer and do layout fit to get the combo to be 100% width. not sure why.
         {
@@ -56,8 +71,8 @@ Ext.define('Taco.view.category.Form', {
         }, {
             name: 'slug',
             fieldLabel: 'SEO Friendly URL',
-            xtype: 'slugfield',
-            slugPrefix: 'www.mystore.com/category/'
+            xtype: 'slugfield'
+            
         },  {
             name: 'pageTitle',
             fieldLabel: 'Page Title'
