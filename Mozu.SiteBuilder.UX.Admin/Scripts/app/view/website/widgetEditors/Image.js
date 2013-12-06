@@ -10,6 +10,7 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
     alias: 'widget.taco-image-widgeteditor',
     requires: [
         'Taco.core.ux.form.FileInputButton',
+        'Taco.core.ux.form.field.SingleImageField',
         'Taco.store.NavigationTreeNodes',
         'Taco.view.fileManager.Associator'
     ],
@@ -28,6 +29,11 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
         var me = this;
 
         this.imageStore = Ext.create('Ext.data.Store', {
+            fields: ['id', 'url'],
+            data: []
+        });
+
+        this.linkStore = Ext.create('Ext.data.Store', {
             fields: ['id', 'url'],
             data: []
         });
@@ -115,7 +121,7 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         enableToggle: true,
                         scope: this,
                         toggleHandler: function (button, state) {
-                            this.toggleAssociator(state, button, 'imageFileId');
+                            this.toggleAssociator(state, button, this.imageStore);
                         }
                     }, {
                         xtype: 'tacofilefield',
@@ -156,30 +162,9 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                             type: 'fit'
                         },
                         items: [{
-                            xtype: 'dataview',
-                            cls: 'taco-image-dropzone',
+                            xtype: 'taco-singleimagefield',
                             height: 160,
-                            deferEmptyText: false,
-                            emptyText: 'Drag and drop an image here',
-                            itemSelector: 'div.thumb',
-                            store: this.imageStore,
-                            tpl: [
-                                '<tpl for=".">',
-                                    '<div class="thumb" style="background-image: url({url});">',
-                                        '<div class="controls"><span class="remove"></span></div>',
-                                    '</div>',
-                                '</tpl>'
-                            ],
-                            listeners: {
-                                itemclick: {
-                                    scope: this,
-                                    fn: function (view, record, item, index, e) {
-                                        if (e.getTarget('span.remove', 10)) {
-                                            this.imageStore.removeAll();
-                                        }
-                                    }
-                                }
-                            }
+                            store: this.imageStore
                         }]
                     }, {
                         // Card 1: External URL
@@ -342,7 +327,7 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         enableToggle: true,
                         scope: this,
                         toggleHandler: function (button, state) {
-                            this.toggleAssociator(state, button, 'linkFileId');
+                            this.toggleAssociator(state, button, this.linkStore);
                         }
                     }, {
                         xtype: 'tacofilefield',
@@ -433,10 +418,9 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                             type: 'fit'
                         },
                         items: [{
-                            xtype: 'component',
-                            cls: 'taco-image-dropzone',
-                            html: 'Drag and drop files here',
-                            height: 160
+                            xtype: 'taco-singleimagefield',
+                            height: 160,
+                            store: this.linkStore
                         }]
                     }]
                 }]
@@ -444,11 +428,33 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
         });
 
         this.callParent(arguments);
+
+        this.mon(this.imageStore, {
+            datachanged: {
+                scope: this,
+                fn: function (store) {
+                    var record = store.first(),
+                        value = record ? record.getId() : null;
+
+                    this.getForm().getForm().findField('imageFileId').setValue(value);
+                }
+            }
+        });
+
+        this.mon(this.linkStore, {
+            datachanged: {
+                scope: this,
+                fn: function (store) {
+                    var record = store.first(),
+                        value = record ? record.getId() : null;
+
+                    this.getForm().getForm().findField('linkFileId').setValue(value);
+                }
+            }
+        });
     },
 
-    toggleAssociator: function (state, button, fieldName) {
-        var field = this.getForm().getForm().findField(fieldName);
-
+    toggleAssociator: function (state, button, store) {
         if (state) {
             if (!this.associator) {
                 this.associator = Ext.create('Taco.view.fileManager.Associator', {});
@@ -463,15 +469,12 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                     fn: function (dialog, records) {
                         var urls;
 
-                        urls = Ext.Array.map(records, function (record, index) {
+                        urls = Ext.Array.each(records, function (record, index) {
                             if (index === 0) {
-                                this.imageStore.removeAll();
-                                this.imageStore.add(record);
+                                store.removeAll();
+                                store.add(record);
                             }
-                            return record.getId();
-                        }, this).join(', ');
-                        
-                        field.setValue(urls);
+                        }, this);
                     }
                 },
                 close: {
@@ -494,6 +497,6 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
      * @private
      */
     beforeDestroy: function () {
-        Ext.destroy(this.associator);
+        Ext.destroy(this.associator, this.imageStore, this.linkStore);
     }
 });

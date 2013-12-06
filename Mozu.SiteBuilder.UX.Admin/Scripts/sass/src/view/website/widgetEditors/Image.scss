@@ -72,6 +72,16 @@
         @include transition-timing-function(ease-in-out);
     }
 
+    &.drag-over {
+        background-color: $color-selected;
+        border-color: $color-selected-border;
+    }
+
+    &.drag-and-drop-active {
+        background-color: $color-selected;
+        border-color: $color-selected-border;
+    }
+
     &:hover {
         background-color: $color-neutral-90;
         border-color: $color-neutral-70;
