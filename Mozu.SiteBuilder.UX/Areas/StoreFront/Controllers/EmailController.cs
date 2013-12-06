@@ -156,7 +156,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (emailTempalte == null)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "no templates defined for  topic " + notification.Topic );
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "no templates defined for  topic " + notification.Topic);
             }
 
 
@@ -192,10 +192,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
 
+
             //var viewString = RenderViewToString(emailTypeInfo.Template , model, cmdContent);
             var response = new EmailResponse
                                {
-                                   Subject = "TEST SUBJECT " + emailTypeInfo.Topic,
+                                   Subject =  !string.IsNullOrEmpty(emailTempalte.Title) ? emailTempalte.Title :  notification.Topic,
                                    Body = stringWriter.GetStringBuilder() .ToString( )
                                };
 
