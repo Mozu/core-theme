@@ -124,8 +124,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             using (var reader = new StreamReader(request.InputStream))
             {
                 JToken token = JObject.Parse(reader.ReadToEnd());
-                topic = (string) token.SelectToken("Topic").First();
-                innerPayload = (string) token.SelectToken("Payload").SelectToken("InnerPayload");
+                topic = token.Value<string>("Topic");
+                innerPayload = token.Value<string>("Payload");
             }
 
             //if (topic.StartsWith(EmailNotification.PrimaryTopic))
