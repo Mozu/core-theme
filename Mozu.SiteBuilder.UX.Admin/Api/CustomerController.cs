@@ -244,6 +244,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //    ExpirationDate = null
             //});
             var dcitem = Mapper.Map<DC.Credit.Credit>(credit);
+            dcitem.InitialBalance = dcitem.CurrentBalance;
+            dcitem.CurrencyCode = "USD";
+            dcitem.CreditType = "StoreCredit";
             dcitem = (await _creditWebApiClient.AddCredit(dcitem)).ReadAsSync();
             return Single2(Mapper.Map<Credit>(dcitem));
         }
