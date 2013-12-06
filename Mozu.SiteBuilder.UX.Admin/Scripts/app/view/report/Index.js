@@ -89,6 +89,8 @@ Ext.define('Taco.view.report.Index', {
 
     loadReport: function (req) {
         var me = this;
+
+
         me.body.items.items[0].remove(1);
 
         var report = req.reportRecord.raw;
@@ -107,6 +109,7 @@ Ext.define('Taco.view.report.Index', {
 
         var newGrid = Ext.create('Ext.grid.Panel', {
             title: req.reportRecord.get('name'),
+            style: { 'padding': '0 10px' },
             store: store,
             columns: cols,
             dockedItems: [
@@ -117,6 +120,7 @@ Ext.define('Taco.view.report.Index', {
         });
 
         me.body.items.items[0].add(newGrid);
+
     },
 
     initComponent: function () {
@@ -136,8 +140,9 @@ Ext.define('Taco.view.report.Index', {
         );
 
         me.summaryPanel = new Ext.create('Ext.Panel', {
-            height: 80,
-            hidden:true,
+            height: 100,
+            style: { 'padding': '0 0 10px 0' },
+            hidden: true,
             html: ''
         });
 
@@ -213,14 +218,20 @@ Ext.define('Taco.view.report.Index', {
             layout: {
                 type: 'fit'
             },
-            items: [ {
+            style: { 'padding' : '0px' },
+            items: [{
                 xtype: 'panel',
+                bodyStyle: {
+                    'padding' : '0 0 10px 0',
+                    'border-width': '0px 1px 0px 0px'
+                },
+                autoScroll: true,
                 items: [this.summaryPanel],
-                    dockedItems: [
+                dockedItems: [
                    {
                        xtype: 'container',
                        dock: 'right',
-                       itemId: 'fart',
+                       style: { 'background-color': 'white' },
                        items: [this.sidebar]
                    }
 
@@ -228,13 +239,6 @@ Ext.define('Taco.view.report.Index', {
             }]
            
         });
-
-        //this.sidebar = {
-        //    items: [this.sidebar]
-        //};
-
-        
-
 
         this.callParent(arguments);
     }
