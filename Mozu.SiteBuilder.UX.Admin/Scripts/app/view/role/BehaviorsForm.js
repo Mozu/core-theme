@@ -29,15 +29,25 @@ Ext.define('Taco.view.role.BehaviorsForm', {
         var record = this.record;
         var store = this.store;
         tasks.add([{
-            key: 'sync-behavior-store',
+            
             store: this.store,
-            dependencies: 'update-fk-store'
+            dependencyFilter: function  ( task ){
+                return !!task.bing;
+            }
+            
         }, {
-            key: 'update-fk-store',
-            updateForeignKey: 'roleId',
-            record: this.record,
-            store: this.store,
-            dependencies: 'save-record'
+            fn: function (task) {
+                var id = record.getId();
+                Ext.each(store.getModifiedRecords(),function  ( storeRecord ){
+                    storeRecord.set('roleId', id);
+                });
+                task.callback();
+            },
+            bing: true,
+            dependencyFilter: function (task) {
+                return task.saveRecord == record;
+            }
+            
         }]);
 
         return tasks;
