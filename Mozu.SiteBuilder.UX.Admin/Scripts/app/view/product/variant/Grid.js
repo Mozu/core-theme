@@ -88,6 +88,10 @@ Ext.define('Taco.view.product.variant.Grid', {
 
         this.plugins = [this.rowEditor];
 
+        if (!this.store.hasLoaded()) {
+            this.store.load();
+        }
+
         this.callParent(arguments);
 
         this.getView().getRowClass = function (record) {
