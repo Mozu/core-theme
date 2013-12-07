@@ -7,5 +7,9 @@
 Ext.define('Taco.view.generalSettings.Index', {
     extend: 'Taco.core.ux.form.FullEditor',
     requires: ['Taco.view.generalsettings.Form'],
-    formCls: 'Taco.view.generalsettings.Form'
+    formCls: 'Taco.view.generalsettings.Form',
+    contextConfig: {
+        supportedLevels: ['s'],
+        requiresContextOfType: ['s']
+    }
 });
