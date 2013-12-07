@@ -467,7 +467,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             if (packageItem == null || order == null || order.Items == null)
                 return;
 
-            var itemInOrder = order.Items.FirstOrDefault(i => i.Id == packageItem.ProductCode);
+            var itemInOrder = order.Items.FirstOrDefault(i => i.ProductCode == packageItem.ProductCode);
 
             if (itemInOrder == null)
                 return;
