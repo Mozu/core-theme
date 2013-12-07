@@ -101,22 +101,19 @@ Ext.define('Taco.shared.view.form.Address', {
             allowBlank: false,
             style: { 'display': 'inline-table' }
         }, {
-            xtype: 'combo',
+            xtype: 'combobox',
             name: 'countryCode',
             margin: '0 0 5 0',
             style: { 'display': 'inline-table' },
             fieldLabel: 'Country',
-            queryMode: 'local',
-            displayField: 'label',
-            valueField: 'val',
             allowBlank: false,
-            store: Ext.create('Ext.data.Store', {
-                fields: ['val', 'label'],
-                data: [
-                    { "val": "US", "label": "US" }
-                ]
-            })
-        });
+            queryMode: 'local',
+            displayField: 'name',
+            valueField: 'code',
+            store: Taco.core.data.StoreManager.getOrCreate('Taco.store.Countries') ,
+            emptyText: "Country",
+            selectOnFocus: true
+	    });
 	    
         if (this.showPhoneNumbers) {
             fields.push({
