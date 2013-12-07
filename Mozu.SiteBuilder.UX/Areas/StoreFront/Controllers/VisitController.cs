@@ -2,9 +2,13 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Web;
 using System.Web.Http;
 using Mozu.Core.Logging;
+using Mozu.Core.Messaging.Publish;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -14,21 +18,27 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     /// One cookie can't be a session cookie (deleted when browser is closed) and also have an expiration date,
     /// So we use two cookies to accomplish this.
     /// </summary>
-    public class VisitController : ApiController
+    public class VisitController : ApiControllerBase
     {
         // 1x1 transparant pixel gif, base64 encoded.
         private const string PIXEL_CONTENT_BASE64 = @"R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
         private static byte[] PIXEL_BYTES = Convert.FromBase64String(PIXEL_CONTENT_BASE64);
 
+        private HttpContextBase _httpContext;
         private PageContext _pageContext;
+        private ISiteBuilderApiContext _apiContext;
+        private IPublisher _publisher;
         private ILogger _logger;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public VisitController(PageContext pageContext, ILogger logger)
+        public VisitController(HttpContextBase httpContext, PageContext pageContext, ISiteBuilderApiContext apiContext, IPublisher publisher, ILogger logger)
         {
+            _httpContext = httpContext;
             _pageContext = pageContext;
+            _publisher = publisher;
+            _apiContext = apiContext;
             _logger = logger;
         }
 
@@ -62,13 +72,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (!_pageContext.Visit.IsTracked)
             {
                 // log the visit.
-                var visitTrackingEvent = new {
+                var visitTrackingEvent = new Mozu.Core.Messaging.Contracts.Visit.Commands.CreateWebsiteVisit  {
                     VisitId = _pageContext.Visit.VisitId,
-                    VisitorId = _pageContext.Visit.VisitorId,
-                    UserAgent = Request.Headers.UserAgent.ToString(),
-                    LandingPage = Request.Headers.Referrer
+                    VisitType = "Website",
+                    WebSiteId = _apiContext.SiteId,
+                    WebUserAgent = _httpContext.Request.UserAgent,
+                    BrowserLocationCode = null, // location on mobile devices.
+                    BrowserPlatform = _httpContext.Request.Browser != null ? _httpContext.Request.Browser.Platform : null,
+                    WebReferrer = null // currently have no way to track this
+                    // TODO: would be nice to have a place to track landing page.
                 };
                 _logger.Info("I caught a visit!", visitTrackingEvent);
+                _publisher.Publish(visitTrackingEvent);
                 _pageContext.Visit.IsTracked = true;
             }
 
