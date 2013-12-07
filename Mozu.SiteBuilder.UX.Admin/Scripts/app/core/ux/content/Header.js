@@ -28,19 +28,32 @@ Ext.define('Taco.core.ux.content.Header', {
 
         items = Ext.isArray(items) ? items : [items];
 
-        if (actionsCt) items.push(actionsCt);
+        if (actionsCt) {
+            items.push({ xtype: 'container', flex: 1 });
+            items.push(actionsCt);
+        }
+        if (!Ext.isEmpty(this.contextConfig)) {
+            items.unshift(Ext.create('Taco.core.ux.content.ContextMenu', this.contextConfig));
+            if (title) {
+                items.unshift({
+                    autoEl: 'h3',
+                    style: {
+                        'font-weight' : 'normal'
+                    },
+                    xtype: 'component',
+                    html: '&nbsp;for&nbsp;'
+                });
+            }
+        }
         if (title) items.unshift(title);
 
         
-        if (this.flexFirstItem && items.length > 0) {
-            Ext.apply(items[0], {
-                flex: 1
-            });
-        }
+        //if (this.flexFirstItem && items.length > 0) {
+        //    Ext.apply(items[0], {
+        //        flex: 1
+        //    });
+        //}
         
-        if (!Ext.isEmpty(this.contextConfig)) {
-            items.unshift(Ext.create('Taco.core.ux.content.ContextMenu', this.contextConfig ));
-        }
         
 
 

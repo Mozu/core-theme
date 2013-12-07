@@ -10,7 +10,7 @@ Ext.define('Taco.core.ux.content.ContextMenu', {
     valueField: 'urlToken',
     queryMode: 'local',
     forceSelection: true,
-    minWidth: 100,
+    minWidth: 150,
     growToLongestValue: false,
     editable:false,
     supportedLevels: [],
