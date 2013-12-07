@@ -486,10 +486,11 @@ Ext.define('Taco.model.Product', {
         this.getProductInCatalogs().loadData(this.get('productInCatalogs'));
     },
 
-    getVariations: function () {
+    getVariations: function (autoLoad) {
         var me = this,
             params,
             proxy;
+        autoLoad = !(autoLoad === false);
 
         if (me.productVariationStore) {
             return me.productVariationStore;
@@ -525,11 +526,13 @@ Ext.define('Taco.model.Product', {
 
         params = {};
 
-        if (me.phantom) {
-            me.productVariationStore.loadFromOptions();
-        } else {
-            this.productVariationStore.load();
+        if (autoLoad) {
+            if (me.phantom) {
+                me.productVariationStore.loadFromOptions();
+            } else {
+                this.productVariationStore.load();
 
+            }
         }
 
 

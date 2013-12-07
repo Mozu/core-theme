@@ -23,7 +23,7 @@ Ext.define('Taco.view.product.Form', {
         this.title = this.record.data.productName;
       
 
-        this.stores = [this.inSitesStore, this.record.getOptions(), this.record.getVariations()];
+        this.stores = [this.inSitesStore, this.record.getOptions(), this.record.getVariations(false)];
 
         this.siteForms = [];
 
