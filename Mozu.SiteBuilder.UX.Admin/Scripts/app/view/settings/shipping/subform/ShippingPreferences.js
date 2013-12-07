@@ -17,6 +17,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingPreferences', {
             name: 'orderHandlingFee',
             fieldLabel: "Additional Handling Fee",
             labelAlign: 'top',
+            forcePrecision: true,
             width: 200,
             unitString: '$',
             emptyText: '0',

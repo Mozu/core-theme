@@ -249,6 +249,8 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         me.totalLossAmount = Ext.create('Taco.core.ux.form.UnitField', {
             name: 'totalLossAmount',
             unitString: '$',
+            
+            forcePrecision:true,
             unitAtEnd:false,
             fieldLabel: 'Total Loss',
             width: 150,

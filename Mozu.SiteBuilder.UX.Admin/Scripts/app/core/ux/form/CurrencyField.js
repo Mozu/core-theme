@@ -9,5 +9,6 @@ Ext.define('Taco.core.ux.form.CurrencyField', {
 
     unitAtEnd: false,
     unitString: '$',
-    displayDecimalPrecision: true
+    // force the field to have the same number of decimal places as are defined in decimalPrecision; defualts to two
+    forcePrecision:true
 });
