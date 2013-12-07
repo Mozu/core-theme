@@ -160,6 +160,10 @@
 
         // if the form is dirty, we need to persist the changes before doing the publish
         if (this.form.isDirty()) {
+            if (this.record.phantom) {
+                this.suspendEvent('idchange');
+                this.fireIdChangeAfterPublish = true;
+            }
             this.doPublishAfterSave = true;
             this.form.save();
         } else {
@@ -175,6 +179,10 @@
                 this.publishButton.removeCls('taco-button-processing');
                 this.publishButton.setText('Publish');
                 this.publishButton.disable();
+                if (this.fireIdChangeAfterPublish) {
+                    this.resumeEvent('idchange');
+                    this.fireEvent('idchange', this, this.record);
+                }
             },
             failure: function () {
                 Taco.MessageBox.alert(
