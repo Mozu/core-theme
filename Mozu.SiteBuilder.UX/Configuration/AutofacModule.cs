@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
+using MassTransit;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
@@ -14,6 +15,8 @@ using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Handlers.Message;
 using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
+using Mozu.Core.Messaging.Publish;
+using Mozu.Core.Settings;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Catalog;
@@ -29,7 +32,6 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Navigation;
 using Mozu.SiteSettings.General.Contracts.Clients;
-
 using NDjango;
 using NDjango.Interfaces;
 using Module = Autofac.Module;
@@ -127,6 +129,20 @@ namespace Mozu.SiteBuilder.UX.Configuration
             // add these two logging context providers for loggers provided by the DI framework.
             builder.RegisterType<CurrentRequestLoggingContextProvider>().As<ILoggingContextProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", APPLICATION_NAME).InstancePerLifetimeScope();
+
+            // configure the CustomerVisitPublisher with its own MassTransit IServiceBus, pointing to the correct rabbitMQ connectionstring
+            builder.Register<IServiceBus>(c => ServiceBusFactory.New(sbc =>
+                {
+                    sbc.ReceiveFrom(c.Resolve<ISettings>().ConnectionStrings("SiteBuilderMessageQueue").Value);
+                    sbc.UseRabbitWithPublisherConfirms(c, APPLICATION_NAME).WithFileBackingStore();
+                    sbc.UseControlBus();
+                    // sbc.UseLog4Net();
+                }))
+                .SingleInstance()
+                .Named<IServiceBus>("siteBuilderPublisherMessageQueue")
+                ;
+            builder.RegisterType<Publisher>().As<IPublisher>()
+                .WithParameter((p, c) => p.ParameterType == typeof(IServiceBus), (p, c) => c.ResolveNamed<IServiceBus>("siteBuilderPublisherMessageQueue"));
 		}
 
         object BuildClient<T>(IComponentContext c)
