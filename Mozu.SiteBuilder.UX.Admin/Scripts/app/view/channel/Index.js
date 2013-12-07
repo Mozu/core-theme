@@ -116,7 +116,14 @@ Ext.define('Taco.view.channel.Index', {
         }, {
             dataIndex: 'countryCode',
             editor: {
-                // defaults to textfield if no xtype is supplied
+                'xtype': 'combobox',
+                fieldLabel: null,
+                name: 'countryCode',
+                queryMode: 'local',
+                xwidth: 400,
+                displayField: 'name',
+                valueField: 'code',
+                store: Taco.core.data.StoreManager.getOrCreate('Taco.store.Countries') ,
                 emptyText: "Country",
                 msgTarget: "qtip",
                 selectOnFocus: true,
