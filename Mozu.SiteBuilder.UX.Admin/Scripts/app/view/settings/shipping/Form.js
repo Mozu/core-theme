@@ -8,7 +8,8 @@ Ext.define('Taco.view.settings.shipping.Form', {
         'Taco.view.settings.shipping.subform.MethodsAndRates',
         'Taco.view.settings.shipping.subform.ShippingPreferences'
     ],
-    
+    title: 'Shipping Settings',
+
     initComponent: function () {
         var me = this;
         
