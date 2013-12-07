@@ -45,49 +45,49 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
 
             return _cmsService.GetByPath2(NavigationContentCollection, NavigationFileName)
-                              .ContinueWith(docResultIntermediate =>
-                                  {
-                                      var serviceClientResponse = docResultIntermediate.Result;
-                                      // if the document doesn't exist, create it first.
-                                      if (serviceClientResponse != null && serviceClientResponse.ResponseMessage != null && serviceClientResponse.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                                      {
-                                          var doc = CreateNavigationDocument(new NavigationSet());
-                                          var res = new TestResponse<DC.Document>(doc);
-                                          return res.Task;
+                .ContinueWith(docResultIntermediate =>
+                {
+                    var serviceClientResponse = docResultIntermediate.Result;
+                    // if the document doesn't exist, create it first.
+                    if (serviceClientResponse != null && serviceClientResponse.ResponseMessage != null && serviceClientResponse.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        var doc = CreateNavigationDocument(new NavigationSet());
+                        var res = new TestResponse<DC.Document>(doc);
+                        return res.Task;
 
 
-                                      }
+                    }
 
-                                      // otherwise, pass through the result.
-                                      return docResultIntermediate;
-                                  })
-                              .Unwrap()
-                              .ContinueWith(docResult =>
-                                  {
-                                      var doc = docResult.Result.ReadAsSync();
-                                      var jsonString = doc.Get<string>("data");
-                                      if (!string.IsNullOrEmpty(jsonString))
-                                      {
-                                          return Newtonsoft.Json.JsonConvert.DeserializeObject<NavigationSet>(jsonString);
-                                      }
-                                      return new NavigationSet();
-                                      // retrieve the document content
-                                      //return _docWebApiClient.GetDocumentContent(doc.DocumentListName, doc.Id);
+                    // otherwise, pass through the result.
+                    return docResultIntermediate;
+                })
+                .Unwrap()
+                .ContinueWith(docResult =>
+                {
+                    var doc = docResult.Result.ReadAsSync();
+                    var jsonString = doc.Get<string>("data");
+                    if (!string.IsNullOrEmpty(jsonString))
+                    {
+                        return Newtonsoft.Json.JsonConvert.DeserializeObject<NavigationSet>(jsonString);
+                    }
+                    return new NavigationSet();
+                    // retrieve the document content
+                    //return _docWebApiClient.GetDocumentContent(doc.DocumentListName, doc.Id);
 
-                                  });
+                });
         }
 
         private static DC.Document CreateNavigationDocument(NavigationSet set)
         {
             var doc = new DC.Document
-                          {
-                              Name = NavigationFileName,
-                              DocumentType = "document",
-                              DocumentListName = NavigationContentCollection,
-                              Properties = new List<DC.PropertyValue>()
-                          };
-            
-             UpdateNavigationDocument(doc, set);
+                      {
+                          Name = NavigationFileName,
+                          DocumentType = "document",
+                          DocumentListName = NavigationContentCollection,
+                          Properties = new List<DC.PropertyValue>()
+                      };
+
+            UpdateNavigationDocument(doc, set);
             return doc;
         }
 
@@ -95,7 +95,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         private static void UpdateNavigationDocument(DC.Document doc, NavigationSet set)
         {
             doc.Set("data", Newtonsoft.Json.JsonConvert.SerializeObject(set));
-            
+
         }
 
 
@@ -106,16 +106,25 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         public Task SaveSetAsync(NavigationSet set)
         {
             return _cmsService.GetByPath2(NavigationContentCollection, NavigationFileName)
-                              .ContinueWith(docResultIntermediate =>
-                                  {
-                                      var doc = docResultIntermediate.Result.ReadAsSync();
-                                      UpdateNavigationDocument(doc, set);
-                                      return _cmsService.Update2(doc);
+                .ContinueWith(docResultIntermediate =>
+                {
+                    var doc = docResultIntermediate.Result.ReadAsSync();
+                    if (doc == null)
+                    {
+                        doc = CreateNavigationDocument(set);
+                        return _cmsService.RawCreate2(doc);
+                    }
+                    else
+                    {
+                        UpdateNavigationDocument(doc, set);
+                        return _cmsService.Update2(doc);
 
-                                  });
-            
+
+                    }
+
+                });
+
+
         }
-
-      
     }
 }
