@@ -14,11 +14,12 @@ Ext.define('Taco.core.ux.form.UnitField', {
     keyNavEnabled: false,
     mouseWheelEnabled: false,
     enableKeyEvents: true,
+    selectOnFocus:true,
 
     unitAtEnd: true,
     unitString: '_',
-    displayDecimalPrecision: false,
-
+    // force the field to have two decimal places
+    forcePrecision:false,
     initComponent: function() {
         var me = this;
 
@@ -202,7 +203,7 @@ Ext.define('Taco.core.ux.form.UnitField', {
         value = this.fixPrecision(value);
         value = Ext.isNumber(value) ? value : parseFloat(String(value).replace(decimalSeparator, '.'));
 
-        if (this.displayDecimalPrecision && String(value).indexOf(decimalSeparator) > 0)
+        if (this.forcePrecision && String(value).indexOf(decimalSeparator) > 0)
             value = value.toFixed(this.decimalPrecision); // coerce decimal points.
 
         value = isNaN(value) ? '' : String(value).replace('.', decimalSeparator);

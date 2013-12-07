@@ -255,9 +255,13 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     renderer: 'usMoney',
                     tdCls: "editableCell",  // adds the dotted line hover to the cells in the column
                     editor: {
-                        xtype: 'unitfield',
-                        unitString: "$",
-                        unitAtEnd: false,
+                        xtype: 'numberfield',
+                        forcePrecision: true,
+                        hideTrigger: true,
+                        mouseWheelEnabled: false,
+                        selectOnFocus: true,
+                        //unitString: "$",
+                        //unitAtEnd: false,
                         allowBlank: true,
                         minValue: 0,
                         maxValue: 100000
@@ -400,12 +404,12 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             });
         }
     },
-
+    /*
     // returns the column configuration for this grid
     getColumnConfig: function () {
         var me = this,
             columns = [];
-
+       
         columns.push(
             {
                 text: 'Quantity',
@@ -489,7 +493,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
         return columns;
     },
-    
+    */
     editOrder: function (animationTarget) {
         
         // to avoid duplication, bubble up the component hierarchy looking for 

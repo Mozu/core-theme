@@ -675,6 +675,7 @@
     <Content Include="Scripts\app\overrides\form\Basic.js" />
     <Content Include="Scripts\app\overrides\form\field\Base.js" />
     <Content Include="Scripts\app\overrides\form\field\ComboBox.js" />
+    <Content Include="Scripts\app\overrides\form\field\Number.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditorButtons.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditor.js" />
     <Content Include="Scripts\app\overrides\menu\Menu.js" />

@@ -1,5 +1,5 @@
 ﻿/**
- * @class Taco.view.product.subform.General
+ * @class Taco.view.price.subform.General
  * @author Michael Speed Elder
  *
  */
@@ -274,6 +274,7 @@ Ext.define('Taco.view.product.subform.General', {
                             xtype:"numberfield",
                             width: 200,
                             name: 'price',
+                            forcePrecision:true,
                             hideTrigger: true,
                             mouseWheelEnabled: false,
                             selectOnFocus: true,
@@ -301,6 +302,7 @@ Ext.define('Taco.view.product.subform.General', {
                         {
                             xtype: "numberfield",
                             width: 200,
+                            forcePrecision:true,
                             name: 'salePrice',
                             emptyText: 'Enter the sale price here',
                             //cls: Taco.baseCSSPrefix + 'flex-field-spacing'

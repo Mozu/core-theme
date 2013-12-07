@@ -17,6 +17,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         this.minimumOrderAmountInput = Ext.create('Taco.core.ux.form.UnitField' /*'Taco.core.ux.form.CurrencyField'*/, {
             name: 'minimumOrderAmount',
             fieldLabel: "Minimum Order Amount",
+            forcePrecision:true,
             labelAlign: 'top',
             width: 600,
             unitString: '$',
@@ -316,6 +317,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             name: 'minimumLifetimeValueAmount',
             hidden: this.record.get('scope') != 'Order',
             unitString: '$',
+            forcePrecision:true,
             unitAtEnd: false,
             hideTrigger: true,
             width: 600,

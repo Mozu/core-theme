@@ -101,6 +101,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
             name: 'amount',
             minValue: 0,
             width: 150,
+            forcePrecision:(this.record.get('amountType') === 'Amount'),
             margin: '0 0 0 10',
             unitAtEnd: this.record.get('amountType') === 'Amount' ? false : true,
             unitString: this.record.get('amountType') === 'Amount' ? '$' : '%',
@@ -183,6 +184,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
             me.amountInput.setMaxValue(value === 'Percentage' ? 100 : Number.MAX_VALUE);
             me.amountInput.unitAtEnd = (value === 'Percentage' ? true : false);
             me.amountInput.unitString = (value === 'Percentage' ? '%' : '$');
+            me.amountInput.forcePrecision = (value === 'Amount');
             me.amountInput.setValue(amount);
         }
     },
