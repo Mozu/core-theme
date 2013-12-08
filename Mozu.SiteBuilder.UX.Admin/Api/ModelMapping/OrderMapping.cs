@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AutoMapper;
 using Mozu.Core.Api.Contracts;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
-using CustomerDC = Mozu.Customer.Contracts;
+using CommerceDC = Mozu.CommerceRuntime.Contracts.Commerce;
 using DiscountDC = Mozu.CommerceRuntime.Contracts.Discounts;
 using OrdersDC = Mozu.CommerceRuntime.Contracts.Orders;
 using PaymentsDC = Mozu.CommerceRuntime.Contracts.Payments;
 using ProductsDC = Mozu.CommerceRuntime.Contracts.Products;
 using ShippingDC = Mozu.CommerceRuntime.Contracts.Fulfillment;
-using CommerceDC = Mozu.CommerceRuntime.Contracts.Commerce;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -26,6 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             Map_DcOrder_to_Order();
             Map_DcOrderItem_to_OrderItem();
+            Map_BundledProduct_to_OrderItem();
             Map_DcAppliedProductDiscount_to_OrderItemDiscount();
             Map_DcShippingDiscount_to_ShippingDiscount();
             Map_DcPayment_to_OrderPayment();
@@ -133,15 +133,44 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                          let packagedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode  == orderItem.ProductCode )
                          let packagedQuantity = packagedItems.Sum(i => i.Quantity)
                          let remainingQuantity = orderItem.Quantity - packagedQuantity
+                         where orderItem.BundledProducts == null || orderItem.BundledProducts.Count == 0
                          where remainingQuantity > 0
                          select new OrderPackageItem
                          {
-                           
                              ProductCode = orderItem.ProductCode,
                              ProductName = orderItem.ProductName,
                              Weight = orderItem.UnitWeight * remainingQuantity,
                              Quantity = remainingQuantity
                          }).ToList();
+                    var unpackagedBundleItems = 
+                        from parentItem in order.Items
+                        from bundleItem in parentItem.BundledProducts
+                        let packagedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == bundleItem.ProductCode)
+                        let packagedQuantity = packagedItems.Sum(i => i.Quantity)
+                        let bundleQuantity = bundleItem.Quantity * parentItem.Quantity
+                        let remainingQuantity = bundleQuantity - packagedQuantity
+                        where remainingQuantity > 0
+                        select new OrderPackageItem
+                        {
+                            ProductCode = bundleItem.ProductCode,
+                            ProductName = bundleItem.Name,
+                            Weight = bundleItem.UnitWeight * remainingQuantity,
+                            Quantity = remainingQuantity
+                        };
+                    // merge unpackaged bundle items into UnpackagedItems
+                    foreach (var unpackagedBundleItem in unpackagedBundleItems)
+                    {
+                        var existingItem = order.UnpackagedItems.FirstOrDefault(upi => upi.ProductCode == unpackagedBundleItem.ProductCode);
+                        if (existingItem != null)
+                        {
+                            existingItem.Quantity += unpackagedBundleItem.Quantity;
+                            existingItem.Weight += unpackagedBundleItem.Weight;
+                        }
+                        else
+                        {
+                            order.UnpackagedItems.Add(unpackagedBundleItem);
+                        }
+                    }
                 })
                 .AfterMap((dc, order) =>
                 {
@@ -198,6 +227,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   });
             // TODO: shopper entered value
             ;
+        }
+
+
+        /// <summary>
+        /// Bundled products have to become a first class class OrderItem in order to build UnshippedItems list
+        /// </summary>
+        private void Map_BundledProduct_to_OrderItem()
+        {
+            Mapper.CreateMap<BundledProduct, OrderItem>()
+                .ForMember(x => x.BundledProducts, op => op.Ignore())
+                .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.ProductCode))
+                .ForMember(x => x.ProductName, op => op.MapFrom(dc => dc.Name))
+                .ForMember(x => x.UnitWeight, op => op.MapFrom(dc => dc.UnitWeight))
+                .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
+//                             ProductCode = orderItem.ProductCode,
+//                             ProductName = orderItem.ProductName,
+//                             Weight = orderItem.UnitWeight * remainingQuantity,
+//                             Quantity = remainingQuantity
+                ;
         }
 
         private void Map_DcAppliedProductDiscount_to_OrderItemDiscount()
