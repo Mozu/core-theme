@@ -134,7 +134,10 @@
         addToWishlist: function () {
             var me = this;
             if (!this.validate()) {
-                this.apiAddToWishlist(this.get("quantity")).then(function (item) {
+                this.apiAddToWishlist({
+                    customerAccountId: require.mozuData('user').accountId,
+                    quantity: this.get("quantity")
+                }).then(function (item) {
                     me.trigger('addedtowishlist', item);
                 });
             }

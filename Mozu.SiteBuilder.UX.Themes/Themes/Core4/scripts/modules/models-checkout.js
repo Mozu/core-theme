@@ -4,12 +4,11 @@
     "hyprlive",
     "modules/backbone-mozu",
     "modules/api",
-    "modules/models-user",
     "modules/models-customer",
     "modules/models-address",
     "modules/models-paymentmethods"
 ],
-    function ($, _, Hypr, Backbone, api, UserModels, CustomerModels, AddressModels, PaymentMethods) {
+    function ($, _, Hypr, Backbone, api, CustomerModels, AddressModels, PaymentMethods) {
 
         var CheckoutStep = Backbone.MozuModel.extend({
             helpers: ['stepStatus'],
@@ -273,19 +272,19 @@
         var ShopperNotes = Backbone.MozuModel.extend(),
 
         checkoutPageValidation = {
-            'user.emailAddress': {
+            'emailAddress': {
                 fn: function(value) {
-                    if (this.validateUser && (!value || !value.match(Backbone.Validation.patterns.email))) return Hypr.getLabel('emailMissing')
+                    if (this.attributes.createAccount && (!value || !value.match(Backbone.Validation.patterns.email))) return Hypr.getLabel('emailMissing')
                 }
             },
-            'user.password': {
+            'password': {
                 fn: function(value) {
-                    if (this.validateUser && !value) return Hypr.getLabel('passwordMissing')
+                    if (this.attributes.createAccount && !value) return Hypr.getLabel('passwordMissing')
                 }
             },
-            'user.confirmPassword': {
+            'confirmPassword': {
                 fn: function(value) {
-                    if (this.validateUser && value !== this.get('user').get('password')) return Hypr.getLabel('passwordsDoNotMatch')
+                    if (this.attributes.createAccount && value !== this.get('password')) return Hypr.getLabel('passwordsDoNotMatch')
                 }
             },
         };
@@ -303,52 +302,33 @@
             relations: {
                 fulfillmentInfo: FulfillmentInfo,
                 billingInfo: BillingInfo,
-                shopperNotes: ShopperNotes,
-                user: UserModels.User
+                shopperNotes: ShopperNotes
             },
             validation: checkoutPageValidation,
             dataTypes: {
                 createAccount: Backbone.MozuModel.DataTypes.Boolean
             },
-            unsetUserIfNoCreateAccount: function(self, yes) {
-                self.validateUser = yes;
-                if (!yes) self.unset("user");
-            },
             initialize: function () {
-                this.on('change:createAccount', this.unsetUserIfNoCreateAccount);
                 var self = this;
                 _.defer(function () {
-                    self.unsetUserIfNoCreateAccount(self, self.get('createAccount'));
                     var payment = self.apiModel.getActivePayment();
                     if (payment) {
                         if (payment.paymentType === "Check") self.isReady(true);
                         if (payment.paymentType === "PaypalExpress" && window.location.href.indexOf('PaypalExpress=complete') !== -1) self.isReady(true);
                     }
                 });
+                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'apiCheckout');
             },
             addCoupon: function () {
                 var me = this;
                 this.isLoading(true);
-                return this.apiApplyCoupon(this.get('couponCode')).then(function () {
-                    return me.apiModel.get();
-                }).then(function () {
+                return this.apiAddCoupon(this.get('couponCode')).then(function () {
                     me.set('couponCode', '');
                     me.isLoading(false);
                 });
             },
             onCheckoutSuccess: function () {
-                var order = this,
-                    user = order.get('user');
-                if (order.get('createAccount') && user) {
-                    $.post('/user/login', {
-                        email: user.get('emailAddress'),
-                        password: user.get("password")
-                    }).then(function () {
-                        return order.trigger('complete');
-                    });
-                } else {
-                    order.trigger('complete');
-                }
+                this.trigger('complete');
             },
             onCheckoutError: function (error) {
                 var order = this;
@@ -368,54 +348,48 @@
                     }
                 });
             },
+            addNewCustomer: function() {
+                var self = this,
+                    billingContact = this.get('billingInfo').get('billingContact'),
+                    email = this.get('emailAddress');
+                return this.apiAddNewCustomer({
+                    account: {
+                        emailAddress: email,
+                        userName: email,
+                        firstName: billingContact.get("firstName"),
+                        lastName: billingContact.get("lastNameOrSurname")
+                    },
+                    password: this.get('password')
+                }).then(function (customer) {
+                    // this should only happen once per session--if the order tries to do it again, bad things happen
+                    self.customerCreated = true;
+                    self.trigger('sync', self);
+                });
+            },
             submit: function() {
-                var order = this, process = [];
+                var order = this,
+                    process = [];
                 if (this.validate()) return false;
                 this.isLoading(true);
-                if (this.get("createAccount")) {
-                    var user = this.get("user");
-                    process.push(function () {
-                        var billingContact = order.get('billingInfo').get('billingContact');
-                        user.set('firstName', billingContact.get("firstName"));
-                        user.set('lastName', billingContact.get("lastNameOrSurname"));
-                        return user.apiCreate();
-                    }, function() {
-                        return user.apiLogin({
-                            emailAddress: user.get('emailAddress'),
-                            password: user.get('password')
-                        });
-                    },function(login) {
-                        return order.apiSetUserId();
-                    });
+                if (this.get("createAccount") && !this.customerCreated) {
+                    process.push(this.addNewCustomer);
                 } 
-                if (order.get('shopperNotes').has('comments')) process.push(function() {
-                    return order.update();
-                });
-                process.push(function(error) {
-                    if (order.apiModel.isReadyForSubmit()) {
-                        return order.apiModel.submitOrder();
-                    }
-                    if (order.apiModel.isComplete()) {
-                        return order.onCheckoutSuccess();
-                    }
-                    return order.onCheckoutError(error);
-                });
+                if (this.get('shopperNotes').has('comments')) {
+                    process.push(this.update);
+                }
+                api.steps(process).then(this.apiCheckout).then(this.onCheckoutSuccess, this.onCheckoutError).done();
 
-                api.steps(process).then(function (error) {
-                    if (order.apiModel.isComplete()) {
-                        order.onCheckoutSuccess();
-                    } else {
-                        order.onCheckoutError(error);
-                    }
-                }, function (error) {
-                    order.onCheckoutError(error);
-                }).done();
             },
             update: function() {
                 return this.apiModel.update(this.toJSON());
             },
             isReady: function (val) {
                 this.set("isReady", val);
+            },
+            toJSON: function () {
+                var j = Backbone.MozuModel.prototype.toJSON.apply(this);
+                delete j.password;
+                return j;
             }
         });
 

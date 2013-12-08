@@ -26,12 +26,12 @@
     var AccountSettingsView = EditableView.extend({
         templateName: 'modules/my-account/my-account-settings',
         autoUpdate: [
-            'primaryBillingContact.firstName',
-            'primaryBillingContact.lastNameOrSurname',
-            'primaryBillingContact.phoneNumbers.home',
-            'user.oldPassword',
-            'user.password',
-            'user.confirmPassword',
+            'firstName',
+            'lastName',
+            //'primaryBillingContact.phoneNumbers.home',
+            'oldPassword',
+            'password',
+            'confirmPassword',
             'acceptsMarketing'
         ],
         initialize: function () {
@@ -50,7 +50,7 @@
             this.render();
         },
         finishEditName: function () {
-            this.doModelAction('savePrimaryBillingContact');
+            this.doModelAction('updateName');
             this.editing.name = false;
         },
         startEditPassword: function () {
@@ -58,25 +58,25 @@
             this.render();
         },
         finishEditPassword: function() {
-            this.doModelAction('changePassword');
+            this.doModelAction('apiChangePassword');
             this.editing.password = false;
         },
         cancelEditPassword: function() {
             this.editing.password = false;
             this.render();
-        },
-        startEditPhone: function() {
-            this.editing.phone = true;
-            this.render();
-        },
-        finishEditPhone: function() {
-            this.doModelAction('savePrimaryBillingContact');
-            this.editing.phone = false;
-        },
-        cancelEditPhone: function() {
-            this.editing.phone = false;
-            this.render();
         }
+        //startEditPhone: function() {
+        //    this.editing.phone = true;
+        //    this.render();
+        //},
+        //finishEditPhone: function() {
+        //    this.doModelAction('savePrimaryBillingContact');
+        //    this.editing.phone = false;
+        //},
+        //cancelEditPhone: function() {
+        //    this.editing.phone = false;
+        //    this.render();
+        //}
     });
 
     var WishListView = EditableView.extend({
@@ -126,10 +126,25 @@
             'editingCard.expireMonth',
             'editingCard.expireYear',
             'editingCard.cvv',
-            'editingCard.contactId'
+            'editingCard.contactId',
+            'editingContact.firstName',
+            'editingContact.lastNameOrSurname',
+            'editingContact.address.address1',
+            'editingContact.address.address2',
+            'editingContact.address.address3',
+            'editingContact.address.cityOrTown',
+            'editingContact.address.countryCode',
+            'editingContact.address.stateOrProvince',
+            'editingContact.address.postalOrZipCode',
+            'editingContact.phoneNumbers.home',
+            'editingContact.isBillingContact',
+            'editingContact.isPrimaryBillingContact',
+            'editingContact.isShippingContact',
+            'editingContact.isPrimaryShippingContact'
         ],
         renderOnChange: [
-            'editingCard.contactId'
+            'editingCard.contactId',
+            'editingContact.address.countryCode'
         ],
         beginEditCard: function (e) {
             var id = this.editing.card = e.currentTarget.getAttribute('data-mz-card');

@@ -1,9 +1,7 @@
 ﻿{% extends "modules/common/contact-selector" %}
 {% block module-classes %} mz-l-tiles {% endblock module-classes %}
 {% block contact-selector %}
-{% set modelcontext="editingCard." %}
+{% set contactcontext="editingCard." %}
+{% set addresscontext="editingContact." %}
 {% parent %}
 {% endblock contact-selector %}
-{% block enter-new-form %}
-{% include "modules/my-account/my-account-address-form" %}
-{% endblock enter-new-form %}

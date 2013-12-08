@@ -64,68 +64,38 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<HttpResponseMessage> Index()
         {
-            var account = (await _customerAccountWebApiClient.GetAccounts(filter : "UserId eq \"" + CurrentUser.UserId + "\"")).ReadAsSync().Items.FirstOrDefault();
+            //var account = (await _customerAccountWebApiClient.GetAccounts(filter : "UserId eq \"" + CurrentUser.UserId + "\"")).ReadAsSync().Items.FirstOrDefault();
+
+            var account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId)).ReadAsSync();
 
             if (account == null)
             {
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
             }
 
-          
             var cardsTask = _customerAccountWebApiClient.GetAccountCards(account.Id);
             var openOrdersTask = _orderWebApiClient.GetOrders(0, 25, null, BuildOpenOrdersFilter(account.Id));
             var orderHistoryTask = _orderWebApiClient.GetOrders(0, 25, null, BuildOrderHistoryFilter(account.Id));
-            var wishlistTask = _wishlistApiClient.GetWishlists(0, 25, null, BuildWishlistFilter(account.Id));
+            //var wishlistTask = _wishlistApiClient.GetWishlists(0, 25, null, BuildWishlistFilter(account.Id));
+            var wishlistTask = _wishlistApiClient.GetWishlistByName(account.Id, DEFAULT_WISHLIST_NAME);
+            var wishlistItemsTask = _wishlistApiClient.GetWishlistItemsByWishlistName(account.Id, DEFAULT_WISHLIST_NAME, null, null, "UpdateDate asc");
 
-            
             var cards = cardsTask.Result.ReadAsSync();
             var openOrders = openOrdersTask.Result.ReadAsSync();
             var orderHistory = orderHistoryTask.Result.ReadAsSync();
-            var wishlistResult = wishlistTask.Result.ReadAsSync();
+            var wishlist = wishlistTask.Result.ReadAsSync();
+            wishlist.Items = wishlistItemsTask.Result.ReadAsSync().Items;
 
-            var wishlist = (wishlistResult != null && wishlistResult.Items != null ? wishlistResult.Items.FirstOrDefault() : null) ?? new Mozu.CommerceRuntime.Contracts.Wishlists.Wishlist();
-
-            //this.ViewData["Orders"] = orders.Items;
-            this.ViewData["User"] = PageContext.User ;
+            //var wishlist = (wishlistResult != null && wishlistResult.Items != null ? wishlistResult.Items.FirstOrDefault() : null) ?? new Mozu.CommerceRuntime.Contracts.Wishlists.Wishlist();
 
             var jSerializer = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
             var jAccount = Newtonsoft.Json.Linq.JObject.FromObject(account, jSerializer);
 
             jAccount.Add("openOrders", Newtonsoft.Json.Linq.JObject.FromObject(openOrders, jSerializer));
             jAccount.Add("orderHistory", Newtonsoft.Json.Linq.JObject.FromObject(orderHistory, jSerializer));
-
             jAccount.Add("hasSavedCards", (Newtonsoft.Json.Linq.JValue)(cards.Items.Count > 0));
             jAccount.Add("hasSavedContacts", (Newtonsoft.Json.Linq.JValue)(account.Contacts.Count > 0));
-
-            var primaryBillingAccount = account.Contacts.Find(x => x.Types.Exists(y => y.IsPrimary && y.Name == "Billing"));
-            if (primaryBillingAccount == null)
-            {
-                if (account.Contacts.Count == 0)
-                {
-                    primaryBillingAccount = (await _customerAccountWebApiClient.AddAccountContact(new Customer.Contracts.CustomerContact
-                    {
-                        FirstName = PageContext.User.FirstName,
-                        LastNameOrSurname = PageContext.User.LastName,
-                        Address = new Core.Api.Contracts.Address(),
-                        Email = PageContext.User.Email ,
-                        Types = new List<Customer.Contracts.ContactType>{
-                            new Customer.Contracts.ContactType{
-                                IsPrimary = true,
-                                Name = Customer.Contracts.ContactTypeConst.BILLING
-                            }
-                        }
-                    }, account.Id)).ReadAsSync();
-                }
-                else
-                {
-                    primaryBillingAccount = account.Contacts.First();
-                }
-            }
-            jAccount.Add("primaryBillingContact", Newtonsoft.Json.Linq.JObject.FromObject(primaryBillingAccount, jSerializer));
-
             jAccount.Add("cards", Newtonsoft.Json.Linq.JArray.FromObject(cards.Items, jSerializer));
-
-            jAccount.Add("user", Newtonsoft.Json.Linq.JObject.FromObject(CurrentUser, jSerializer));
 
             if (wishlist != null)
                 jAccount.Add("wishlist", Newtonsoft.Json.Linq.JObject.FromObject(wishlist, jSerializer));
@@ -202,7 +172,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var userId = CurrentUser.UserId;
            
-           
+
             var account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId)).ReadAsSync();
             account.EmailAddress = email;
 
@@ -221,7 +191,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                                                  OldPassword = info.OldPassword
                                                                              }, this.PageContext.User.AccountId ));
 
-         
+
             if (account.HasException)
             {
                 throw account.ReadException();

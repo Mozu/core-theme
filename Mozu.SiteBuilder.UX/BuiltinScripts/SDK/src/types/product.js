@@ -1,8 +1,8 @@
 ﻿ApiObject.types.product = {
-    addToWishlist: function (quantity) {
+    addToWishlist: function (payload) {
         var self = this;
-        return this.api.createSync('wishlist').getOrCreate().then(function (wishlist) {
-            return wishlist.addItem({ quantity: quantity, product: self.data });
+        return this.api.createSync('wishlist', { customerAccountId: payload.customerAccountId }).getOrCreate().then(function (wishlist) {
+            return wishlist.addItem({ quantity: payload.quantity, product: self.data });
         });
     }
 };

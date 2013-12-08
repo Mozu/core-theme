@@ -4,8 +4,8 @@
             <label for="firstname">{{ labels.firstName }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input type="text" name="firstname" data-mz-value="{{ modelcontext }}firstName" value="{{ model.firstName }}">
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}firstName"></span>
+            <input type="text" name="firstname" data-mz-value="{{ addresscontext }}firstName" value="{{ model.firstName }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}firstName"></span>
         </div>
     </div>
     <div class="mz-l-formfieldgroup-row">
@@ -13,8 +13,8 @@
             <label for="lastname">{{ labels.lastName }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input type="text" name="lastname" data-mz-value="{{ modelcontext }}lastNameOrSurname" value="{{ model.lastNameOrSurname }}">
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}lastNameOrSurname"></span>
+            <input type="text" name="lastname" data-mz-value="{{ addresscontext }}lastNameOrSurname" value="{{ model.lastNameOrSurname }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}lastNameOrSurname"></span>
         </div>
     </div>
     <div class="mz-l-formfieldgroup-row">
@@ -22,14 +22,14 @@
             <label for="address-line-1">{{ labels.address }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input type="text" name="address-line-1" data-mz-value="{{ modelcontext }}address.address1" value="{{ model.address.address1 }}">
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}address.address1"></span>
+            <input type="text" name="address-line-1" data-mz-value="{{ addresscontext }}address.address1" value="{{ model.address.address1 }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}address.address1"></span>
         </div>
     </div>
     <div class="mz-l-formfieldgroup-row">
         <div class="mz-l-formfieldgroup-cell"></div>
         <div class="mz-l-formfieldgroup-cell">
-            <input type="text" name="address-line-2" data-mz-value="{{ modelcontext }}address.address2" value="{{ model.address.address2 }}">
+            <input type="text" name="address-line-2" data-mz-value="{{ addresscontext }}address.address2" value="{{ model.address.address2 }}">
             <span class="mz-validationmessage">&nbsp;</span>
         </div>
     </div>
@@ -38,12 +38,12 @@
             <label for="city">{{ labels.city }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input type="text" name="city" data-mz-value="{{ modelcontext }}address.cityOrTown" value="{{ model.address.cityOrTown }}">
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}address.cityOrTown"></span>
+            <input type="text" name="city" data-mz-value="{{ addresscontext }}address.cityOrTown" value="{{ model.address.cityOrTown }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}address.cityOrTown"></span>
         </div>
                         <div class="mz-addressform-autocompletefields">
-                <label for="autocomplete-state">{{ labels.state }}</label><input type="text" name="state" data-mz-value="{{ modelcontext }}address.stateOrProvince" value="{{ model.address.stateOrProvince }}" />
-                <label for="autocomplete-zip">{{ labels.zip }}</label><input type="text" name="zip" data-mz-value="{{ modelcontext }}address.postalOrZipCode" value="{{ model.address.postalOrZipCode }}" />
+                <label for="autocomplete-state">{{ labels.state }}</label><input type="text" name="state" data-mz-value="{{ addresscontext }}address.stateOrProvince" value="{{ model.address.stateOrProvince }}" />
+                <label for="autocomplete-zip">{{ labels.zip }}</label><input type="text" name="zip" data-mz-value="{{ addresscontext }}address.postalOrZipCode" value="{{ model.address.postalOrZipCode }}" />
             </div>
     </div>
     <div class="mz-l-formfieldgroup-row">
@@ -51,12 +51,12 @@
             <label for="country">{{ labels.country }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <select data-mz-value="{{ modelcontext }}address.countryCode">
+            <select data-mz-value="{{ addresscontext }}address.countryCode">
                 <option></option>
                     <option {% if model.address.countryCode == "US" %}selected="selected"{% endif %} value="US">United States</option>
                     <option {% if model.address.countryCode == "UK" %}selected="selected"{% endif %} value="UK">United Kingdom</option>
             </select>
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}address.countryCode"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}address.countryCode"></span>
         </div>
     </div>
     <div class="mz-l-formfieldgroup-row" {% if model.address.countryCode != "US" %}style="display: none"{% endif %}>
@@ -64,7 +64,7 @@
             <label for="stateprov">{{ labels.state }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <select data-mz-value="{{ modelcontext }}address.stateOrProvince">
+            <select data-mz-value="{{ addresscontext }}address.stateOrProvince">
                 <option></option>
                 <option {% if model.address.stateOrProvince == "AK" %}selected="selected"{% endif %} value="AK">
                     Alaska
@@ -217,7 +217,7 @@
                     Wyoming
                 </option>
             </select>
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}address.stateOrProvince"></span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}address.stateOrProvince"></span>
         </div>
     </div>
     <div {% if model.address.countryCode != "US" %}style="display: none"{% endif %} class="mz-l-formfieldgroup-row">
@@ -225,8 +225,8 @@
             <label for="postal-code">{{ labels.postalCode }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input type="text" name="postal-code" data-mz-value="{{ modelcontext }}address.postalOrZipCode" value="{{ model.address.postalOrZipCode }}">
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}address.postalOrZipCode"></span>
+            <input type="text" name="postal-code" data-mz-value="{{ addresscontext }}address.postalOrZipCode" value="{{ model.address.postalOrZipCode }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}address.postalOrZipCode"></span>
         </div>
     </div>
     <div {% if model.address.CountryCode != "UK" %}style="display: none"{% endif %} class="mz-l-formfieldgroup-row">
@@ -234,8 +234,8 @@
             <label for="postal-town">{{ labels.postalTown }}</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input type="text" name="postal-town" data-mz-value="{{ modelcontext }}address.postalOrZipCode" value="{{ model.address.postalOrZipCode }}">
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}address.postalOrZipCode"></span>
+            <input type="text" name="postal-town" data-mz-value="{{ addresscontext }}address.postalOrZipCode" value="{{ model.address.postalOrZipCode }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}address.postalOrZipCode"></span>
         </div>
     </div>
     <div class="mz-l-formfieldgroup-row">
@@ -243,8 +243,8 @@
             <label for="shippingphone">{{ labels.phone }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input type="text" name="shippingphone" data-mz-value="{{ modelcontext }}phoneNumbers.home" value="{{ model.phoneNumbers.home }}">
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ modelcontext }}phoneNumbers.home"></span>
+            <input type="text" name="shippingphone" data-mz-value="{{ addresscontext }}phoneNumbers.home" value="{{ model.phoneNumbers.home }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}phoneNumbers.home"></span>
         </div>
     </div>
 {% endblock address-form %}

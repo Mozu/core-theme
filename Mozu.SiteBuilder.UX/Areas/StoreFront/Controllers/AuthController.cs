@@ -20,7 +20,6 @@ using Mozu.SiteBuilder.UX.Models;
 using VMUser = Mozu.SiteBuilder.UX.Models.Customers.User;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Mozu.Core.Api.Client;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -42,8 +41,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _customerAccountWebApiClient = customerAccountWebApiClient;
             _authTicketWebApiClient = authTicketWebApiClient;
          
-
-
             _cookieProvider = cookieProvider;
             _apiContext = apiContext;
         }

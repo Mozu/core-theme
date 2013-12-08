@@ -1,5 +1,14 @@
 ﻿ApiObject.types.customer = (function () {
     return {
+        postconstruct: function() {
+            var self = this;
+            this.on('sync', function (json) {
+                if (json && json.authTicket && json.authTicket.accessToken) {
+                    self.api.context.UserClaims(json.authTicket.accessToken);
+                    self.api.fire('login', json.authTicket);
+                }
+            });
+        },
         savePaymentCard: function (unmaskedCardData) {
             var self = this, card = this.api.createSync('creditcard', unmaskedCardData),
                 isUpdate = !!(unmaskedCardData.paymentServiceCardId || unmaskedCardData.id);
