@@ -8,7 +8,6 @@
         initialize: function () {
             // preload images
             var imageCache = this.imageCache = {};
-            this.$mainImage = this.$('[data-mz-productimage-main]');
             _.each(this.model.get('content').get('productImages'), function (img) {
                 var i = new Image();
                 i.src = img.imageUrl + "?max=" + Hypr.getThemeSetting('productImagesContainerWidth');
@@ -16,10 +15,19 @@
             });
         },
         switchImage: function (e) {
-            var $thumb = $(e.currentTarget),
-                seq = $thumb.data('mz-productimage-thumb');
-            this.$mainImage.prop('src', this.imageCache[seq].src);
+            var $thumb = $(e.currentTarget);
+            this.selectedImageIx = $thumb.data('mz-productimage-thumb');
+            this.updateMainImage();
             return false;
+        },
+        updateMainImage: function () {
+            if (this.imageCache[this.selectedImageIx]) {
+                this.$('[data-mz-productimage-main]').prop('src', this.imageCache[this.selectedImageIx].src);
+            }
+        },
+        render: function () {
+            Backbone.MozuView.prototype.render.apply(this, arguments);
+            this.updateMainImage();
         }
     });
 
