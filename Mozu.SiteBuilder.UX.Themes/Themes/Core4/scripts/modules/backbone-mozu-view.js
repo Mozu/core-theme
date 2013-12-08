@@ -34,7 +34,7 @@ define([
                         }
                         prop = hier[0];
                     }
-                    this.listenTo(model, 'change', this.dequeueRender, this);
+                    this.listenTo(model, 'change', _.debounce(this.dequeueRender, 150), this);
                     this.listenTo(model, 'change:' + prop, this.enqueueRender, this);
                 }, this);
             }
@@ -44,12 +44,12 @@ define([
         enqueueRender: function() {
             this.renderQueued = true;
         },
-        dequeueRender: _.debounce(function () {
+        dequeueRender: function () {
             if (this.renderQueued) {
                 this.render();
                 this.renderQueued = false;
             }
-        }, 150),
+        },
         events: function () {
             var defaults = _.object(_.flatten(_.map(this.$('[data-mz-value]'), function (el) {
                 var val = el.getAttribute('data-mz-value');

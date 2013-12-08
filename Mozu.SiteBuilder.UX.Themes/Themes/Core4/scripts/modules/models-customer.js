@@ -1,4 +1,4 @@
-﻿define(['modules/backbone-mozu', 'shim!vendor/underscore>_', 'modules/models-address', 'modules/models-user', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'hyprlive'], function (Backbone, _, AddressModels, UserModels, OrderModels, PaymentMethods, ProductModels, Hypr) {
+﻿define(['modules/backbone-mozu', 'shim!vendor/underscore>_', 'modules/models-address', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'hyprlive'], function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, Hypr) {
 
 
     var contactTypes = ["Billing", "Shipping"],
@@ -112,7 +112,7 @@
     }),
     Customer = Backbone.MozuModel.extend({
         mozuType: 'customer',
-        helpers: ['hasSavedCards', 'hasSavedContacts', 'billingContacts'],
+        helpers: ['hasSavedCards', 'hasSavedContacts'],
         hasSavedCards: function() {
             var cards = this.get('cards');
             return cards && cards.length > 0;
@@ -121,12 +121,11 @@
             var contacts = this.get('contacts');
             return contacts && contacts.length > 0;
         },
-        billingContacts: function() {
-            return _.invoke(this.get('contacts').where({ isBillingContact: true }), 'toJSON');
-        },
+        //billingContacts: function() {
+        //    return _.invoke(this.get('contacts').where({ isBillingContact: true }), 'toJSON');
+        //},
         handlesMessages: true,
         relations: {
-            user: UserModels.User,
             contacts: Backbone.Collection.extend({
                 model: CustomerContact
             }),
@@ -136,18 +135,17 @@
             wishlist: Wishlist,
             editingCard: PaymentMethods.CreditCard,
             editingContact: CustomerContact,
-            orderHistory: OrderModels.OrderCollection,
-            primaryBillingContact: CustomerContact
+            orderHistory: OrderModels.OrderCollection
         },
         validation: {
-            'user.password': {
+            password: {
                 fn: function(value) {
-                    if (this.validateUser && !value) return Hypr.getLabel('passwordMissing')
+                    if (this.validatePassword && !value) return Hypr.getLabel('passwordMissing')
                 }
             },
-            'user.confirmPassword': {
+            confirmPassword: {
                 fn: function(value) {
-                    if (this.validateUser && value !== this.get('user').get('password')) return Hypr.getLabel('passwordsDoNotMatch')
+                    if (this.validatePassword && value !== this.get('password')) return Hypr.getLabel('passwordsDoNotMatch')
                 }
             },
         },
@@ -156,50 +154,25 @@
             editingContact: {}
         },
         initialize: function() {
-            var primaryBillingContact = this.getPrimaryBillingContact();
-            if (primaryBillingContact && primaryBillingContact instanceof CustomerContact) this.set('primaryBillingContact', primaryBillingContact, { useExistingInstances: true });
-
             this.get('editingContact').set('accountId', this.get('id'));
         },
-        toJSON: function(options) {
-            var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
-            if (!options || !options.helpers) delete j.primaryBillingContact;
-            return j;
-        },
-        getPrimaryBillingContact: function () {
-            var contacts = this.get('contacts'),
-                pbc = contacts.find(function (c) {
-                    return c.get('isPrimaryBillingContact');
-                });
-            return pbc || contacts.first();
-        },
-        savePrimaryBillingContact: function () {
-            var self = this;
-            this.isLoading(true);
-            var user = this.get('user'),
-                primaryBillingContact = this.getPrimaryBillingContact(),
-                contactFirst = primaryBillingContact.get('firstName'),
-                contactLast = primaryBillingContact.get('lastNameOrSurname'),
-                op = primaryBillingContact.apiUpdate();
-
-            return op.ensure(function () {
-                self.isLoading(false);
-            });
-        },
         changePassword: function () {
-            var self = this, user = this.get('user');
-            self.validateUser = true;
+            var self = this;
+            self.validatePassword = true;
             if (this.validate()) return false;
-            this.isLoading(true);
-            return user.changePassword().ensure(function () {
-                self.validateUser = false;
-                self.isLoading(false);
+            return this.apiChangePassword({
+                oldPassword: this.get('oldPassword'),
+                newPassword: this.get('password')
+            }).ensure(function () {
+                self.validatePassword = false;
             });
         },
         beginEditCard: function(id) {
             var toEdit = this.get('cards').get(id),
+                contacts = this.get('contacts').toJSON(),
                 editingCardModel = {
-                    contacts: this.billingContacts()
+                    contacts: contacts,
+                    hasSavedContacts: this.hasSavedContacts()
                 };
             if (toEdit) {
                 _.extend(editingCardModel, toEdit.toJSON({ helpers: true }));
@@ -210,12 +183,26 @@
             this.get('editingCard').clear({ silent: true });
         },
         saveCard: function () {
-            var self = this;
-            return this.apiSavePaymentCard(this.get('editingCard').toJSON()).then(function () {
-                return self.getCards();
-            }).then(function () {
-                return self.get('editingCard').clear({ silent: true });
-            });
+            var self = this,
+                editingCard = this.get('editingCard').toJSON(),
+                doSaveCard = function () {
+                    return self.apiSavePaymentCard(editingCard).then(function () {
+                        return self.getCards();
+                    }).then(function () {
+                        return self.get('editingCard').clear({ silent: true });
+                    });
+                },
+                saveContactFirst = function () {
+                    self.get('editingContact').set('isBillingContact', true);
+                    return self.saveContact().then(function (contact) {
+                        editingCard.contactId = contact.prop('id');
+                    });
+                };
+            if (!editingCard.contactId || editingCard.contactId === "new") {
+                return saveContactFirst().then(doSaveCard);
+            } else {
+                return doSaveCard();
+            }
         },
         deleteCard: function (id) {
             var self = this;
@@ -242,12 +229,17 @@
             editingContact.clear({ silent: true });
             editingContact.set('accountId', this.get('id'));
         },
-        saveContact: function (id) {
+        saveContact: function () {
             var self = this,
-                editingContact = this.get('editingContact');
-            return editingContact.save().then(function () {
+                editingContact = this.get('editingContact'),
+                apiContact;
+            
+            return editingContact.save().then(function (contact) {
+                apiContact = contact;
                 self.endEditContact();
                 return self.getContacts();
+            }).then(function () {
+                return apiContact;
             });
         },
         deleteContact: function (id) {
@@ -259,10 +251,16 @@
         getContacts: function () {
             var self = this;
             var contactsCollection = this.get('contacts');
-            this.syncApiModel();
-            return this.apiModel.getContacts().then(function (cc) {
+            return this.apiGetContacts().then(function (cc) {
                 contactsCollection.reset(cc.data.items);
+                self.trigger('sync', cc.data);
                 return self;
+            });
+        },
+        updateName: function () {
+            return this.apiUpdate({
+                firstName: this.get('firstName'),
+                lastName: this.get('lastName')
             });
         }
     });

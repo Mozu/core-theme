@@ -255,49 +255,80 @@ var ApiReference = (function () {
                 noBody: true
             }
         },
-        'user': {
-            create: {
-                verb: 'POST',
-                template: '{+userService}'
-            },
-            update: {
-                verb: 'PUT',
-                template: '{+userService}{userId}',
-                includeSelf: true
-            },
-            get: {
-                template: '{+userService}{id}',
-                shortcutParam: 'id'
-            },
-            'get-by-email': {
-                template: '{+userService}{?emailAddress*}',
-                shortcutParam: 'emailAddress'
-            },
-            login: {
-                verb: 'POST',
-                template: '{+userService}login',
-                includeSelf: true,
-                returnType: 'login'
-            },
-            'change-password': {
-                verb: 'POST',
-                includeSelf: true,
-                template: '{+userService}{userId}/changepassword'
-            },
-            'get-customers': {
-                template: '{+customerService}?fields=UserId+eq+{userId}',
-                includeSelf: true,
-                returnType: 'customers'
-            }
+        //'user': {
+        //    create: {
+        //        verb: 'POST',
+        //        template: '{+userService}'
+        //    },
+        //    update: {
+        //        verb: 'PUT',
+        //        template: '{+userService}{userId}',
+        //        includeSelf: true
+        //    },
+        //    get: {
+        //        template: '{+userService}{id}',
+        //        shortcutParam: 'id'
+        //    },
+        //    'get-by-email': {
+        //        template: '{+userService}{?emailAddress*}',
+        //        shortcutParam: 'emailAddress'
+        //    },
+        //    login: {
+        //        verb: 'POST',
+        //        template: '{+userService}login',
+        //        includeSelf: true,
+        //        returnType: 'login'
+        //    },
+        //    'change-password': {
+        //        verb: 'POST',
+        //        includeSelf: true,
+        //        template: '{+userService}{userId}/changepassword'
+        //    },
+        //    'get-customers': {
+        //        template: '{+customerService}?fields=UserId+eq+{userId}',
+        //        includeSelf: true,
+        //        returnType: 'customers'
+        //    }
             
-        },
+        //},
         customer: {
             template: '{+customerService}{id}',
             shortcutParam: 'id',
             includeSelf: true,
             create: {
                 verb: 'POST',
-                template: '{+customerService}'
+                template: '{+customerService}add-account-and-login',
+                returnType: 'login',
+            },
+            'create-storefront': {
+                verb: 'POST',
+                template: '{+storefrontUserService}create',
+                returnType: 'login',
+            },
+            'login': {
+                verb: 'POST',
+                template: '{+customerService}../authtickets',
+                returnType: 'login'
+            },
+            'login-storefront': {
+                verb: 'POST',
+                template: '{+storefrontUserService}login',
+                returnType: 'login'
+            },
+            update: {
+                verb: 'PUT',
+                template: '{+customerService}{id}',
+                includeSelf: true
+            },
+            'reset-password': {
+                verb: 'POST',
+                template: '{+customerService}reset-password',
+                returnType: 'string'
+            },
+            'change-password': {
+                verb: 'POST',
+                template: '{+customerService}{id}/change-password',
+                includeSelf: true
             },
             'get-open-orders': {
                 template: '{+orderService}?filter=Status eq "' + CONSTANTS.ORDER_STATUSES.SUBMITTED + '" or Status eq "' + CONSTANTS.ORDER_STATUSES.ACCEPTED + '" or Status eq "' + CONSTANTS.ORDER_STATUSES.PENDING_REVIEW + '" or Status eq "' + CONSTANTS.ORDER_STATUSES.PROCESSING + '" and CustomerAccountId eq "{id}" and OrderNumber ne null',
@@ -514,9 +545,13 @@ var ApiReference = (function () {
                 template: '{+wishlistService}{id}',
                 includeSelf: true
             },
+            'get-by-name': {
+                template: '{+wishlistService}{customerAccountId}/{name}',
+                includeSelf: true,
+            },
             'get-default': {
-                template: '{+wishlistService}?startIndex=0&pageSize=1&filter=Name%20eq%20' + CONSTANTS.DEFAULT_WISHLIST_NAME,
-                returnType: 'wishlists'
+                template: '{+wishlistService}{customerAccountId}/' + CONSTANTS.DEFAULT_WISHLIST_NAME,
+                includeSelf: true
             },
             'create-default': {
                 verb: 'POST',
@@ -551,6 +586,14 @@ var ApiReference = (function () {
                 verb: 'POST',
                 returnType: 'cartitem',
                 template: '{+cartService}current/items/'
+            },
+            'get-items-by-name': {
+                returnType: 'wishlistitems',
+                template: '{+wishlistService}{customerAccountId}/{name}/items{?startIndex,pageSize,sortBy,filter}',
+                defaultParams: {
+                    sortBy: 'UpdateDate desc'
+                },
+                includeSelf: true
             }
         },
         'wishlists': {

@@ -128,7 +128,7 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
             this.displayMessage(xhr.responseJSON.message);
         },        login: function () {
             this.setLoading(true);
-            $.post('/user/login', {
+            api.action('customer', 'loginStorefront', {
                 email: this.$parent.find('[data-mz-login-email]').val(),
                 password: this.$parent.find('[data-mz-login-password]').val()
             }).then(function (res) {
@@ -159,7 +159,7 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
             if (e.which === 13) { this.signup(); }
         },
         validate: function(payload) {
-            if (!payload.emailAddress) return this.displayMessage(Hypr.getLabel('emailMissing')), false;
+            if (!payload.account.emailAddress) return this.displayMessage(Hypr.getLabel('emailMissing')), false;
             if (!payload.password) return this.displayMessage(Hypr.getLabel('passwordMissing')), false;
             if (payload.password !== this.$parent.find('[data-mz-signup-confirmpassword]').val()) return this.displayMessage(Hypr.getLabel('passwordsDoNotMatch')), false;
             return true;
@@ -171,23 +171,30 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
             this.displayMessage(res.message);
         },
         signup: function () {
-            var self = this, payload = {
-                emailAddress: this.$parent.find('[data-mz-signup-emailaddress]').val(),
-                password: this.$parent.find('[data-mz-signup-password]').val(),
-                firstName: this.$parent.find('[data-mz-signup-firstname]').val(),
-                lastName: this.$parent.find('[data-mz-signup-lastname]').val()
-            };
+            var self = this,
+                email = this.$parent.find('[data-mz-signup-emailaddress]').val(),
+                firstName = this.$parent.find('[data-mz-signup-firstname]').val(),
+                lastName = this.$parent.find('[data-mz-signup-lastname]').val(),
+                payload = {
+                    account: {
+                        emailAddress: email,
+                        userName: email,
+                        firstName: firstName,
+                        lastName: lastName,
+                        contacts: [{
+                            email: email,
+                            firstName: firstName,
+                            lastNameOrSurname: lastName
+                        }]
+                    },
+                    password: this.$parent.find('[data-mz-signup-password]').val()
+                };
             if (this.validate(payload)) {
-                var user = api.createSync('user', payload);
+                //var user = api.createSync('user', payload);
                 this.setLoading(true);
-                user.createWithCustomer().then(function () {
-                    return $.post('/user/login', {
-                        email: payload.emailAddress,
-                        password: payload.password
-                    }).then(function (res) {
-                        window.location.reload();
-                    }, self.displayLoginMessage);
-                }, this.displayApiMessage)
+                return api.action('customer', 'createStorefront', payload).then(function () {
+                    window.location.reload();
+                }, self.displayLoginMessage);
             }
         }
     });

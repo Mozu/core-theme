@@ -1,5 +1,5 @@
 /*! 
- * Mozu Hypr Live - v0.2.0 - 2013-12-04
+ * Mozu Hypr Live - v0.2.0 - 2013-12-05
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -4767,7 +4767,7 @@ function formatString(str, arr) {
 if (!HyprLiveContext) throw new ReferenceError("If no AMD loader is present, there must be a global variable named HyprLiveContext for HyprLive to function.");
 HyprLiveContext = JSON.parse(HyprLiveContext);
 
-var locals = {},
+var locals = HyprLiveContext.locals,
     volatilelocalNames = ['pageContext', 'user']; // 'navigation'];
 
 for (var lni = 0, llen = volatilelocalNames.length; lni < llen; lni++) {
@@ -4775,9 +4775,7 @@ for (var lni = 0, llen = volatilelocalNames.length; lni < llen; lni++) {
     if (!locals[volatilelocalNames[lni]]) throw new ReferenceError('This page template fails to preload the ' + volatilelocalNames[lni] + ' global using {% preload_json ' + volatilelocalNames[lni] + ' "' + volatilelocalNames[lni].toLowerCase() + '" %}');
 }
 
-locals.siteContext = HyprLiveContext.siteContext;
-locals.themeSettings = HyprLiveContext.siteContext.themeSettings;
-locals.labels = HyprLiveContext.siteContext.labels; 
+
 
 var HyprLive = {
     engine: new swig.Swig({

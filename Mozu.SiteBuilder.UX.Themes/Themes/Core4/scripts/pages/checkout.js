@@ -127,10 +127,21 @@
             // override adding the isLoading class so the apply button 
             // doesn't go loading whenever other parts of the order change
         },
+        initialize: function() {
+            this.listenTo(this.model, 'change:couponCode', this.onEnterCouponCode, this);
+            this.codeEntered = !!this.model.get('couponCode');
+        },
+        onEnterCouponCode: function (model, code) {
+            if (code && !this.codeEntered) {
+                this.codeEntered = true;
+                this.$el.find('button').prop('disabled', false);
+            }
+            if (!code && this.codeEntered) {
+                this.codeEntered = false;
+                this.$el.find('button').prop('disabled', true);
+            }
+        },
         autoUpdate: [
-            'couponCode'
-        ],
-        renderOnChange: [
             'couponCode'
         ],
         addCoupon: function (e) {
@@ -157,9 +168,9 @@
         autoUpdate: [
             'createAccount',
             'agreeToTerms',
-            'user.emailAddress',
-            'user.password',
-            'user.confirmPassword'
+            'emailAddress',
+            'password',
+            'confirmPassword'
         ],
         renderOnChange: [
             'createAccount',

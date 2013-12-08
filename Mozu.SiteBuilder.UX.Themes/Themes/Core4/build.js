@@ -29,7 +29,6 @@
                 'modules/models-faceting',
                 'modules/models-messages',
                 'modules/models-product',
-                'modules/models-user',
                 'modules/views-messages',
                 'modules/views-paging'
             ],

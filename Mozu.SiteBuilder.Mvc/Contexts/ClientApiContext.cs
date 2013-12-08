@@ -83,6 +83,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             });
             //LightweightAppClaims.CreateForPublicStorefront().ToAccessToken());
 
+        private static readonly List<string> NonProxyUrls = new List<string> {
+            "PaymentService",
+            "storefrontUserService"
+        };
+
         private static Dictionary<string, string> BuildUrls(ISettings settings)
         {
             if (_gUrls == null)
@@ -100,6 +105,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 urls["PaymentService"] = settings.AppSettings("service-url-StorefrontCardsWebApi");
                 urls["addressValidationService"] = settings.AppSettings("service-url-AddressValidationWebApi");
                 urls["wishlistService"] = settings.AppSettings("service-url-WishlistWebApi");
+                urls["storefrontUserService"] = "/user/";
 
                 if (settings.AppSettings("ReverseProxy") == "true")
                 {
@@ -108,7 +114,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     {
 
                         int idx = (((string) url.Value) ?? "").IndexOf("webapi/", StringComparison.OrdinalIgnoreCase);
-                        if (idx > 0 && url.Key != "PaymentService")
+                        if (idx > 0 && !NonProxyUrls.Contains(url.Key))
                         {
                             urls[url.Key] = "/api" + ((string) url.Value).Substring(idx + 6);
                         }

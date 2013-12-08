@@ -294,8 +294,21 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         public JObject HyprContextAction()
         {
             var ctx = new JObject();
-            ctx.Add("siteContext", JObject.FromObject(this.SiteContext, new JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() }));
+            var serializer = new JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
+            var siteContext = JObject.FromObject(this.SiteContext, serializer);
+            var themeSettings = siteContext.GetValue("themeSettings");
+            var labels = siteContext.GetValue("labels");
+
+
+            var locals = new JObject();
+            locals.Add("themeSettings", themeSettings);
+            siteContext.Remove("themeSettings");
+            locals.Add("labels", labels);
+            siteContext.Remove("labels");
+            locals.Add("siteContext", siteContext);
+
             ctx.Add("templates", LiveTemplates());
+            ctx.Add("locals", locals);
             return ctx;
         }
 

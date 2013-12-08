@@ -1,5 +1,4 @@
 ﻿{% block credit-card-form %}
-<div class="mz-l-formfieldgroup mz-creditcardform">
     <div class="mz-l-formfieldgroup-row">
         <div class="mz-l-formfieldgroup-cell">
             <label for="mz-payment-credit-card-type">{{ labels.cardType }}<span class="is-required"> *</span>:</label>
@@ -89,5 +88,4 @@
         </div>
     </div>
     
-</div>
 {% endblock credit-card-form %}

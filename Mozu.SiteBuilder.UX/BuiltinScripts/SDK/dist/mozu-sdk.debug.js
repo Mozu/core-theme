@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-12-04
+ * Mozu JavaScript SDK - v0.2.0 - 2013-12-08
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2609,49 +2609,80 @@ var ApiReference = (function () {
                 noBody: true
             }
         },
-        'user': {
-            create: {
-                verb: 'POST',
-                template: '{+userService}'
-            },
-            update: {
-                verb: 'PUT',
-                template: '{+userService}{userId}',
-                includeSelf: true
-            },
-            get: {
-                template: '{+userService}{id}',
-                shortcutParam: 'id'
-            },
-            'get-by-email': {
-                template: '{+userService}{?emailAddress*}',
-                shortcutParam: 'emailAddress'
-            },
-            login: {
-                verb: 'POST',
-                template: '{+userService}login',
-                includeSelf: true,
-                returnType: 'login'
-            },
-            'change-password': {
-                verb: 'POST',
-                includeSelf: true,
-                template: '{+userService}{userId}/changepassword'
-            },
-            'get-customers': {
-                template: '{+customerService}?fields=UserId+eq+{userId}',
-                includeSelf: true,
-                returnType: 'customers'
-            }
+        //'user': {
+        //    create: {
+        //        verb: 'POST',
+        //        template: '{+userService}'
+        //    },
+        //    update: {
+        //        verb: 'PUT',
+        //        template: '{+userService}{userId}',
+        //        includeSelf: true
+        //    },
+        //    get: {
+        //        template: '{+userService}{id}',
+        //        shortcutParam: 'id'
+        //    },
+        //    'get-by-email': {
+        //        template: '{+userService}{?emailAddress*}',
+        //        shortcutParam: 'emailAddress'
+        //    },
+        //    login: {
+        //        verb: 'POST',
+        //        template: '{+userService}login',
+        //        includeSelf: true,
+        //        returnType: 'login'
+        //    },
+        //    'change-password': {
+        //        verb: 'POST',
+        //        includeSelf: true,
+        //        template: '{+userService}{userId}/changepassword'
+        //    },
+        //    'get-customers': {
+        //        template: '{+customerService}?fields=UserId+eq+{userId}',
+        //        includeSelf: true,
+        //        returnType: 'customers'
+        //    }
             
-        },
+        //},
         customer: {
             template: '{+customerService}{id}',
             shortcutParam: 'id',
             includeSelf: true,
             create: {
                 verb: 'POST',
-                template: '{+customerService}'
+                template: '{+customerService}add-account-and-login',
+                returnType: 'login',
+            },
+            'create-storefront': {
+                verb: 'POST',
+                template: '{+storefrontUserService}create',
+                returnType: 'login',
+            },
+            'login': {
+                verb: 'POST',
+                template: '{+customerService}../authtickets',
+                returnType: 'login'
+            },
+            'login-storefront': {
+                verb: 'POST',
+                template: '{+storefrontUserService}login',
+                returnType: 'login'
+            },
+            update: {
+                verb: 'PUT',
+                template: '{+customerService}{id}',
+                includeSelf: true
+            },
+            'reset-password': {
+                verb: 'POST',
+                template: '{+customerService}reset-password',
+                returnType: 'string'
+            },
+            'change-password': {
+                verb: 'POST',
+                template: '{+customerService}{id}/change-password',
+                includeSelf: true
             },
             'get-open-orders': {
                 template: '{+orderService}?filter=Status eq "' + CONSTANTS.ORDER_STATUSES.SUBMITTED + '" or Status eq "' + CONSTANTS.ORDER_STATUSES.ACCEPTED + '" or Status eq "' + CONSTANTS.ORDER_STATUSES.PENDING_REVIEW + '" or Status eq "' + CONSTANTS.ORDER_STATUSES.PROCESSING + '" and CustomerAccountId eq "{id}" and OrderNumber ne null',
@@ -2868,9 +2899,13 @@ var ApiReference = (function () {
                 template: '{+wishlistService}{id}',
                 includeSelf: true
             },
+            'get-by-name': {
+                template: '{+wishlistService}{customerAccountId}/{name}',
+                includeSelf: true,
+            },
             'get-default': {
-                template: '{+wishlistService}?startIndex=0&pageSize=1&filter=Name%20eq%20' + CONSTANTS.DEFAULT_WISHLIST_NAME,
-                returnType: 'wishlists'
+                template: '{+wishlistService}{customerAccountId}/' + CONSTANTS.DEFAULT_WISHLIST_NAME,
+                includeSelf: true
             },
             'create-default': {
                 verb: 'POST',
@@ -2905,6 +2940,14 @@ var ApiReference = (function () {
                 verb: 'POST',
                 returnType: 'cartitem',
                 template: '{+cartService}current/items/'
+            },
+            'get-items-by-name': {
+                returnType: 'wishlistitems',
+                template: '{+wishlistService}{customerAccountId}/{name}/items{?startIndex,pageSize,sortBy,filter}',
+                defaultParams: {
+                    sortBy: 'UpdateDate desc'
+                },
+                includeSelf: true
             }
         },
         'wishlists': {
@@ -3253,6 +3296,15 @@ ApiObject.types.creditcard = (function() {
 }());
 ApiObject.types.customer = (function () {
     return {
+        postconstruct: function() {
+            var self = this;
+            this.on('sync', function (json) {
+                if (json && json.authTicket && json.authTicket.accessToken) {
+                    self.api.context.UserClaims(json.authTicket.accessToken);
+                    self.api.fire('login', json.authTicket);
+                }
+            });
+        },
         savePaymentCard: function (unmaskedCardData) {
             var self = this, card = this.api.createSync('creditcard', unmaskedCardData),
                 isUpdate = !!(unmaskedCardData.paymentServiceCardId || unmaskedCardData.id);
@@ -3276,9 +3328,15 @@ ApiObject.types.customer = (function () {
 }());
 ApiObject.types.login = {
     postconstruct: function (type, json) {
+        var accessToken;
         if (json.authTicket && json.authTicket.accessToken) {
-            this.api.context.UserClaims(json.authTicket.accessToken);
-            this.api.fire('login', json.authTicket);
+            accessToken = json.authTicket.accessToken;
+        } else if (json.accessToken) {
+            accessToken = json.accessToken;
+        }
+        if (accessToken) {
+            this.api.context.UserClaims(accessToken);
+            this.api.fire('login', json);
         }
     }
 };
@@ -3288,7 +3346,8 @@ ApiObject.types.order = (function() {
         'BILLING_INFO_MISSING': 'Billing info missing.',
         'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED': 'Payment type missing or unrecognized.',
         'PAYMENT_MISSING': 'Expected a payment to exist on this order and one did not.',
-        'PAYPAL_TRANSACTION_ID_MISSING': 'Expected the active payment to include a paymentServiceTransactionId and it did not.'
+        'PAYPAL_TRANSACTION_ID_MISSING': 'Expected the active payment to include a paymentServiceTransactionId and it did not.',
+        'SUBMIT_ACTION_NOT_AVAILABLE': 'Order cannot be submitted because Submit action is not present. Is order complete?'
     });
 
     var OrderStatus2IsComplete = {};
@@ -3326,11 +3385,15 @@ ApiObject.types.order = (function() {
     };
     
     return {
-        addNewUser: function (login) {
+        addCoupon: function(couponCode) {
             var self = this;
-            return self.api.create('user', login).then(function (user) {
-                return user.login({ emailAddress: user.prop('emailAddress'), password: user.prop('password') });
-            }).then(function () {
+            return this.applyCoupon(couponCode).then(function () {
+                return self.get();
+            });
+        },
+        addNewCustomer: function (newCustomerPayload) {
+            var self = this;
+            return self.api.action('customer', 'createStorefront', newCustomerPayload).then(function (customer) {
                 return self.setUserId();
             });
         },
@@ -3363,19 +3426,25 @@ ApiObject.types.order = (function() {
             return false;
         },
         isComplete: function () {
-            return OrderStatus2IsComplete[this.prop('status')];
+            return !!OrderStatus2IsComplete[this.prop('status')];
         },
         submitOrder: function () {
             return this.performOrderAction(CONSTANTS.ORDER_ACTIONS.SUBMIT_ORDER);
+        },
+        checkout: function () {
+            if (!this.isReadyForSubmit()) {
+                errors.throwOnObject(this, 'SUBMIT_ACTION_NOT_AVAILABLE');
+            }
+            return this.isComplete() || this.submitOrder();
         }
         
     };
 }());
 ApiObject.types.product = {
-    addToWishlist: function (quantity) {
+    addToWishlist: function (payload) {
         var self = this;
-        return this.api.createSync('wishlist').getOrCreate().then(function (wishlist) {
-            return wishlist.addItem({ quantity: quantity, product: self.data });
+        return this.api.createSync('wishlist', { customerAccountId: payload.customerAccountId }).getOrCreate().then(function (wishlist) {
+            return wishlist.addItem({ quantity: payload.quantity, product: self.data });
         });
     }
 };
@@ -3450,10 +3519,12 @@ ApiObject.types.wishlist = (function() {
     }
 
     return {
-        getOrCreate: function () {
+        getOrCreate: function (cid) {
             var self = this;
-            return this.getDefault().then(function(listOfWishlists) {
-                return listOfWishlists.data.items.length === 0 ? self.createDefault() : listOfWishlists[0];
+            return this.getDefault({ customerAccountId: cid }).then(function (list) {
+                return list;
+            }, function () {
+                return self.createDefault({ customerAccountId: cid });
             });
         },
         addItemToCartById: function (item) {

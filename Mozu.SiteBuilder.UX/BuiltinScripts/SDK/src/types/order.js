@@ -4,7 +4,8 @@
         'BILLING_INFO_MISSING': 'Billing info missing.',
         'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED': 'Payment type missing or unrecognized.',
         'PAYMENT_MISSING': 'Expected a payment to exist on this order and one did not.',
-        'PAYPAL_TRANSACTION_ID_MISSING': 'Expected the active payment to include a paymentServiceTransactionId and it did not.'
+        'PAYPAL_TRANSACTION_ID_MISSING': 'Expected the active payment to include a paymentServiceTransactionId and it did not.',
+        'SUBMIT_ACTION_NOT_AVAILABLE': 'Order cannot be submitted because Submit action is not present. Is order complete?'
     });
 
     var OrderStatus2IsComplete = {};
@@ -42,11 +43,15 @@
     };
     
     return {
-        addNewUser: function (login) {
+        addCoupon: function(couponCode) {
             var self = this;
-            return self.api.create('user', login).then(function (user) {
-                return user.login({ emailAddress: user.prop('emailAddress'), password: user.prop('password') });
-            }).then(function () {
+            return this.applyCoupon(couponCode).then(function () {
+                return self.get();
+            });
+        },
+        addNewCustomer: function (newCustomerPayload) {
+            var self = this;
+            return self.api.action('customer', 'createStorefront', newCustomerPayload).then(function (customer) {
                 return self.setUserId();
             });
         },
@@ -79,10 +84,16 @@
             return false;
         },
         isComplete: function () {
-            return OrderStatus2IsComplete[this.prop('status')];
+            return !!OrderStatus2IsComplete[this.prop('status')];
         },
         submitOrder: function () {
             return this.performOrderAction(CONSTANTS.ORDER_ACTIONS.SUBMIT_ORDER);
+        },
+        checkout: function () {
+            if (!this.isReadyForSubmit()) {
+                errors.throwOnObject(this, 'SUBMIT_ACTION_NOT_AVAILABLE');
+            }
+            return this.isComplete() || this.submitOrder();
         }
         
     };

@@ -25,10 +25,12 @@
     }
 
     return {
-        getOrCreate: function () {
+        getOrCreate: function (cid) {
             var self = this;
-            return this.getDefault().then(function(listOfWishlists) {
-                return listOfWishlists.data.items.length === 0 ? self.createDefault() : listOfWishlists[0];
+            return this.getDefault({ customerAccountId: cid }).then(function (list) {
+                return list;
+            }, function () {
+                return self.createDefault({ customerAccountId: cid });
             });
         },
         addItemToCartById: function (item) {
