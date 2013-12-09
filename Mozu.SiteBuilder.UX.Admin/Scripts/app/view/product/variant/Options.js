@@ -78,6 +78,8 @@ Ext.define('Taco.view.product.variant.Options', {
 
             record.set('values', field.getValue());
         }, this);
+
+        this.fireEvent('redooptions');
     },
 
     findAttributeName: function (record) {

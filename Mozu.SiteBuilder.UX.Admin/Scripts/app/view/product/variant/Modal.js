@@ -75,7 +75,11 @@ Ext.define('Taco.view.product.variant.Modal', {
     updateOptions: function () {
         Ext.create('Taco.view.product.variant.Options', {
             product: this.product,
-            productType: this.productType
+            productType: this.productType,
+            listeners: {
+                redooptions: this.redrawGrid,
+                scope: this
+            }
         })
     },
 
@@ -94,5 +98,13 @@ Ext.define('Taco.view.product.variant.Modal', {
             variants.rejectChanges();
             this.hide();
         }, this);
+    },
+
+    redrawGrid: function () {
+        this.removeAll();
+        this.add(Ext.create('Taco.view.product.variant.Grid', {
+            product: this.product,
+            productType: this.productType
+        }));
     }
 });

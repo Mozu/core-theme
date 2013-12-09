@@ -24,9 +24,16 @@ Ext.define('Taco.view.product.subform.Options', {
             text: 'Select Values',
             scale: 'medium',
             ui: 'action',
-            width: 70,
+            width: 150,
 
             handler: function() {
+                if (this.product.phantom) {
+                    Taco.MessageBox.alert(
+                        'Sorry!',
+                        'You must first finish and save the Product before assigning option values.'
+                    );
+                    return;
+                }
                 Ext.create('Taco.view.product.variant.Modal', {
                     product: this.product,
                     productType: this.productType,
