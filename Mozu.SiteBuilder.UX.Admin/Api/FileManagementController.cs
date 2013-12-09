@@ -23,6 +23,7 @@ using Mozu.SiteBuilder.Mvc.CMS;
 using System.Threading.Tasks;
 using Mozu.Core.Api.Contracts.Client;
 using System.IO;
+using Mozu.SiteBuilder.UX.Admin.Helpers.FileManagerHelpers;
 using Mozu.Core.Api.Client;
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -69,9 +70,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
-
-
-                var ret = (await _documentWebApiClient.GetDocuments(documentListName: "files", pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex )).ReadAsSync();
+                var filter = extFilter.ToFilterString();
+                string sortBy = pagingParams.sort.ToSortString();
+                var ret = (await _documentWebApiClient.GetDocuments(documentListName: "files", pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex, filter: filter, sortBy:sortBy)).ReadAsSync();
                 vm = AutoMapper.Mapper.Map<List<FileManagementFile>>(ret.Items);
                 totalCount = (int)ret.TotalCount;
 

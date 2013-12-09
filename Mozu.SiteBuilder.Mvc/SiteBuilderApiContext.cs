@@ -221,7 +221,7 @@ namespace Mozu.SiteBuilder.Mvc
                 }
             }
 
-            if (!SiteId.HasValue)
+            if ( this.TenantId == -1 || (  !SiteId.HasValue && this.ScopeType == UserScopeType.Shopper))
             {
                 LoadFromCookie(_cookieProvider);
             }

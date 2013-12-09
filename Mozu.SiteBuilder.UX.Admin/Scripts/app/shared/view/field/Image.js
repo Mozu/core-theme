@@ -426,8 +426,8 @@ Ext.define('Taco.shared.view.field.Image', {
     onSelectedImagesDataChanged: function () {
         var value = [];
         this.selectedImages.each(function (record) {
-            value.push({ url: record.get('url') , cmsId:record.get('cmsId')});
-        });
+            value.push({ url: record.get('url') , cmsId: record.get('cmsId') });
+        }, this);
         
         if (value && value.length) {
             this.emptyDropZone.hide();
@@ -439,6 +439,13 @@ Ext.define('Taco.shared.view.field.Image', {
         
         return this.mixins.field.setValue.call(this, value);
     },
+    
+
+   
+    
+
+
+
     setValue: function (value) {
        
         if (!value ) {

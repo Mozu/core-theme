@@ -11,7 +11,7 @@ Ext.define('Taco.shared.model.File', {
             type:'string',
             useNull: true,
             convert:function (v, record) {
-                v = record.raw ? record.raw.id : null;
+                v = v|| (record.raw ? record.raw.id : null);
                 return v;
             }
         },
@@ -32,14 +32,6 @@ Ext.define('Taco.shared.model.File', {
             name: 'width',
             type: 'int',
             useNull: true
-        }, {
-            name: 'thumbnail',
-            type: 'string',
-            useNull: true,
-            persist: false,
-            convert: function fullName(v, record) {
-                return v || record.get('localthumbnail') || '/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getMasterCatalogId() + '/' + record.getId();
-            }
         }, {
             name: 'alt',
             type: 'string',
@@ -76,16 +68,35 @@ Ext.define('Taco.shared.model.File', {
             type: 'number',
             defaultValue: 1,
             persist: false
-        }, {
+        },  {
+            name: 'thumbnail',
+            type: 'string',
+            useNull: true,
+            persist: false,
+            convert: function fullName(v, record) {
+                var raw = record.raw || {};
+                return v || (raw.localthumbnail || '/cms/' + record.getCurrentSiteId() + '/files/' + (raw.cmsId || raw.id));
+            }
+        },{
             name: 'url',
             type: 'string',
             useNull: true,
             persist: false,
             convert: function fullName(v, record) {
-                return record.raw.url || '/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getMasterCatalogId() + '/' + record.getId();
+                var raw = record.raw || {};
+                return v || (raw.url || '/cms/' + record.getCurrentSiteId() + '/files/' + (raw.cmsId || raw.id));
             }
         }
     ],
+    getCurrentSiteId: function () {
+        
+        var siteId = Taco.app.context.getSiteId();
+        if (!siteId) {
+            siteId = Taco.app.context.getCurrentContext().sites[0].getSiteId();
+        }
+        return siteId;
+
+    },
     isCmsFile:function () {
         return !!this.get('cmsId');
     },

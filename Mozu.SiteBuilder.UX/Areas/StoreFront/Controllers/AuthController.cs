@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Web;
-
+using Magnum.Extensions;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Extensions;
 using Mozu.Customer.Contracts;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
@@ -50,14 +52,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         protected void DoLogout() 
         {
             var user = LightweightUserClaims.CreateForAnonymousShopper(_apiContext.TenantId, _apiContext.SiteId.Value);
-            _authenticationHelper.SaveAdminAccessToken(null);
+            _authenticationHelper.SaveStoreFrontAccessToken(null, null);
+            _authenticationHelper.SaveStoreFrontRefreshToken( null, DateTime.Now );
+
             _apiContext.SetUser(user);
         }
 
 
         async Task<ServiceClientResponse<CustomerAuthTicket>> DoCreateAccount(CustomerAccountAndAuthInfo accountInfo )
         {
-            var res = await  _customerAccountWebApiClient.CloneWithoutUserClaims().AddAccountAndLogin(accountInfo);
+            var res = await _customerAccountWebApiClient.AddAccountAndLogin(accountInfo);
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
                 var authTicket = res.ReadAsSync();
@@ -147,6 +151,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             DoLogout();
 
             var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
+           
+            //redir.Headers.AddCookies(
+            //    HttpContext.Response.Cookies.AllKeys.Select(x=> HttpContext.Response.Cookies[x]).Select(x=> new CookieHeaderValue(x.Name, x.Value ){Expires =x.Expires,Secure=x.Secure }));
+            
             redir.Headers.Location = MakeRedirectUri(returnUrl);
             return redir;
 

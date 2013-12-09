@@ -73,23 +73,6 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
             }, {
                 xtype: 'tbspacer'
                 //,flex: 1
-            }, {
-                xtype: 'tbtext',
-                itemId: 'recordCount',
-                margin: '0 0 0 14',
-                tpl: new Ext.XTemplate([
-                        '<div>',
-                            '<span class="record-total-count">{totalCount}</span> ',
-                            '<span class="record-unit">',
-                            '<tpl if="totalCount == 1">{[Ext.util.Inflector.singularize(values.unit)]}<tpl else>{unit}</tpl>',
-                            '</span>',
-                        '</div>'
-                ]),
-                data: {
-                    count: 0,
-                    totalCount: 0,
-                    unit: 'records'
-                }
             }]
         };        
         
@@ -268,14 +251,14 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
         
         if (!me.dockedItems || me.dockedItems.length === 0) me.dockedItems = [me.createTopToolbar(), me.createSecondToolbar()];
 
-        me.createItemStore().on({
-            load: me.onItemStoreUpdate,
-            bulkremove: me.onItemStoreUpdate,
-            // datachanged: me.onItemStoreUpdate,
-            scope: me
-        });
+        //me.createItemStore().on({
+        //    load: me.onItemStoreUpdate,
+        //    bulkremove: me.onItemStoreUpdate,
+        //    // datachanged: me.onItemStoreUpdate,
+        //    scope: me
+        //});
         
-        this.on('afterrender', this.onItemStoreUpdate, this);
+        //this.on('afterrender', this.onItemStoreUpdate, this);
 
         this.callParent(arguments);
 
@@ -288,41 +271,41 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
         });
     },
 
-    onItemStoreUpdate: function (store, records, indexesOrSuccess, isMove) {
-        var me = this,
-            rc = me.down('#recordCount'),
-            netChange, data,
-            unitLabel;
+    //onItemStoreUpdate: function (store, records, indexesOrSuccess, isMove) {
+    //    var me = this,
+    //        rc = me.down('#recordCount'),
+    //        netChange, data,
+    //        unitLabel;
         
-        // if the component has not been rendered yet, we can't update it
-        if (!rc) return;
+    //    // if the component has not been rendered yet, we can't update it
+    //    if (!rc) return;
 
-        // if afterrender triggered this function, the first argument is not a store
-        store = store.isStore ? store : me.itemStore;
+    //    // if afterrender triggered this function, the first argument is not a store
+    //    store = store.isStore ? store : me.itemStore;
 
-        // if bulkremove triggered this function, totalCount will be out of sync
-        netChange = (isMove === false) ? records.length * -1 : 0;
-        if (me.gridHeaderLabel) {
-            if (records && records.length > 0) {
-                unitLabel = Ext.util.Inflector.pluralize(me.gridHeaderLabel);
-            } else {
-                unitLabel = me.gridHeaderLabel;
-            }
+    //    // if bulkremove triggered this function, totalCount will be out of sync
+    //    netChange = (isMove === false) ? records.length * -1 : 0;
+    //    if (me.gridHeaderLabel) {
+    //        if (records && records.length > 0) {
+    //            unitLabel = Ext.util.Inflector.pluralize(me.gridHeaderLabel);
+    //        } else {
+    //            unitLabel = me.gridHeaderLabel;
+    //        }
             
-        } else {
-            unitLabel = me.itemType;
-        }
-        data = {
-            count: store.getCount(),
-            totalCount: store.getTotalCount() + netChange,
-            unit: unitLabel
-        };
+    //    } else {
+    //        unitLabel = me.itemType;
+    //    }
+    //    data = {
+    //        count: store.getCount(),
+    //        totalCount: store.getTotalCount() + netChange,
+    //        unit: unitLabel
+    //    };
 
-        data.totalCount = data.totalCount > data.count ? data.totalCount : data.count;
+    //    data.totalCount = data.totalCount > data.count ? data.totalCount : data.count;
 
-        rc.update(data);
-        rc.renderData = data;
-    },
+    //    rc.update(data);
+    //    rc.renderData = data;
+    //},
 
     onKeyUp: function (field) {
         var me = this,

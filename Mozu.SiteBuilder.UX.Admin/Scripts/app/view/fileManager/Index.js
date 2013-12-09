@@ -12,7 +12,8 @@ Ext.define('Taco.view.fileManager.Index', {
         'Taco.core.ux.DragDropZone',
         'Taco.shared.store.Files',
         'Taco.core.ux.form.TextField',
-        'Taco.core.ux.form.FileInputButton'
+        'Taco.core.ux.form.FileInputButton',
+        'Taco.view.fileManager.AdvancedSearchForm'
     ],
 
     mixins: {
@@ -23,6 +24,10 @@ Ext.define('Taco.view.fileManager.Index', {
     contextConfig: {
         supportedLevels: ['m'],
         requiresContextOfType: ['m', 's', 'c']
+    },
+    
+    advancedSearchConfig: {
+        advancedFormCls: 'Taco.view.fileManager.AdvancedSearchForm'
     },
     
     typeName: 'File Manager',
