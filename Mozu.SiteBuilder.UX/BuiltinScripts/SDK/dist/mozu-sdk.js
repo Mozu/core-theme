@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-12-08
+ * Mozu JavaScript SDK - v0.2.0 - 2013-12-09
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2111,9 +2111,10 @@
                             returnType: "wishlistitems",
                             template: "{+wishlistService}{customerAccountId}/{name}/items{?startIndex,pageSize,sortBy,filter}",
                             defaultParams: {
-                                sortBy: "UpdateDate desc"
+                                sortBy: "UpdateDate asc"
                             },
-                            includeSelf: true
+                            includeSelf: true,
+                            returnType: "wishlistitems"
                         }
                     },
                     wishlists: {
@@ -2635,6 +2636,14 @@
                     },
                     addItemToCartById: function(item) {
                         return this.addItemToCart(getItem(this, item));
+                    },
+                    get: function() {
+                        var self = this;
+                        return this.getItemsByName().then(function(items) {
+                            self.prop("items", items);
+                            self.fire("sync", self.data, self);
+                            return self;
+                        });
                     }
                 };
             }();

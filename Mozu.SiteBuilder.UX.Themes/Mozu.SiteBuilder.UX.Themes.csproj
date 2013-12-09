@@ -513,10 +513,8 @@
     <Content Include="Themes\Core4\scripts\pages\product.js" />
     <Content Include="Themes\Core4\scripts\vendor\backbone.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery-cookie.js" />
-    <Content Include="Themes\Core4\scripts\vendor\jquery.history.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery.tools.dateinput.js" />
     <Content Include="Themes\Core4\scripts\vendor\modernizr-respond.min.js" />
-    <Content Include="Themes\Core4\scripts\vendor\pci-temp.js" />
     <Content Include="Themes\Core4\scripts\vendor\underscore.js" />
     <Content Include="Themes\Core3\MetaData\Widgets\catalog\featuredproducts\_0007_featured-products.png" />
     <Content Include="Themes\Core3\MetaData\Widgets\cms\content\_0004_html.png" />

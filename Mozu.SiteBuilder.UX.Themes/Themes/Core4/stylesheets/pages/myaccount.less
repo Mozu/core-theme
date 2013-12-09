@@ -15,4 +15,19 @@
         margin-top: 3px;
         text-indent: @gutter;
     }
+    @media (max-width: 600px) {
+        .mz-myaccount-panels {
+            margin-left: 0;
+        }
+        .mz-myaccount-nav {
+            float: none;
+            width: auto;
+            margin-bottom: @gutter;
+            .clearfix();
+            .mz-scrollnav-item {
+                float: left;
+                margin: @gutter/4;
+            }
+        }
+    }
 }

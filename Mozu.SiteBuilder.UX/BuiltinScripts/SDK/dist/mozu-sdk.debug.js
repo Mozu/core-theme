@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-12-08
+ * Mozu JavaScript SDK - v0.2.0 - 2013-12-09
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2945,9 +2945,10 @@ var ApiReference = (function () {
                 returnType: 'wishlistitems',
                 template: '{+wishlistService}{customerAccountId}/{name}/items{?startIndex,pageSize,sortBy,filter}',
                 defaultParams: {
-                    sortBy: 'UpdateDate desc'
+                    sortBy: 'UpdateDate asc'
                 },
-                includeSelf: true
+                includeSelf: true,
+                returnType: 'wishlistitems'
             }
         },
         'wishlists': {
@@ -3529,6 +3530,16 @@ ApiObject.types.wishlist = (function() {
         },
         addItemToCartById: function (item) {
             return this.addItemToCart(getItem(this, item));
+        },
+        get: function () {
+            // overriding get to always use getItemsByName to get the items collection
+            // so items are always sorted by update date
+            var self = this;
+            return this.getItemsByName().then(function (items) {
+                self.prop('items', items);
+                self.fire('sync', self.data, self);
+                return self;
+            });
         }
     };
 }());

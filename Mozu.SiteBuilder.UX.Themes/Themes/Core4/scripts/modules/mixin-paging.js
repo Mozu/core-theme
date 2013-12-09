@@ -20,9 +20,13 @@ define(['jquery'], function($) {
         },
 
         setPage: function (num) {
-            if (parseInt(num) <= parseInt(this.get('pageCount'))) this.get($.extend({}, this.lastRequest, {
+            if (parseInt(num) <= parseInt(this.get('pageCount'))) this.apiGet($.extend({}, this.lastRequest, {
                 startIndex: (num - 1) * parseInt(this.get('pageSize'))
             }));
+        },
+
+        changePageSize: function() {
+            return this.apiGet($.extend({}, this.lastRequest, { pageSize: this.get('pageSize') }));
         },
 
         firstIndex: function() {

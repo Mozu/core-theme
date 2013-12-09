@@ -58,7 +58,7 @@
             this.render();
         },
         finishEditPassword: function() {
-            this.doModelAction('apiChangePassword');
+            this.doModelAction('changePassword');
             this.editing.password = false;
         },
         cancelEditPassword: function() {
@@ -107,7 +107,7 @@
             var id = $(e.currentTarget).data('mzItemId');
             return this.model.apiDeleteItem(id).then(function () {
                 self.editing.remove = false;
-                return self.model.fetch();
+                return self.model.apiGet();
             })
         }
     });
@@ -115,6 +115,9 @@
 
     var OrderHistoryView = Backbone.MozuView.extend({
         templateName: "modules/common/order-list",
+        initialize: function () {
+            this.listenTo(this.model, "change:pageSize", _.bind(this.model.changePageSize, this.model));
+        }
     });
 
     var PaymentMethodsView = EditableView.extend({

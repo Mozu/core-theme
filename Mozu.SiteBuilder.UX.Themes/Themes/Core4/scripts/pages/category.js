@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'shim!vendor/jquery.history[jquery=jQuery]>History', "modules/models-faceting", "modules/views-productlists", "modules/views-paging"], function($, Hypr, Backbone, History, FacetingModels, ProductListViews, PagingViews){
+define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', "modules/models-faceting", "modules/views-productlists", "modules/views-paging"], function($, Hypr, Backbone, FacetingModels, ProductListViews, PagingViews){
 
     var useAnimatedLists = Hypr.getThemeSetting('useAnimatedProductLists') && !Modernizr.mq('(max-width: 480px)'),
     
@@ -63,12 +63,15 @@ define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'shim!vendor
             };            if ($facetPanel.length > 0) {                facetingViews.facetPanel = new FacetingView({
                     el: $facetPanel,                    model: facetingModel
                 });            }
+            Backbone.history.start({ pushState: true, root: window.location.pathname });
+            var router = new Backbone.Router();
+
             facetingModel.on('facetchange', function () {
                 var newURL, lrClone = JSON.parse(JSON.stringify(facetingModel.lastRequest));
                 $.each(lrClone, function (p) { if (p in productListData.baseRequestParams) delete lrClone[p] });
                 if (parseInt(lrClone.pageSize) === defaultPageSize) delete lrClone.pageSize;
                 newURL = $.isEmptyObject(lrClone) ? window.location.href.replace(window.location.search, '') : "?" + $.param(lrClone);
-                History.replaceState(null, null, newURL);
+                router.navigate(newURL, { replace: true });
             });
 
             facetingModel.on('change:pageSize', facetingModel.updateFacets, facetingModel);
