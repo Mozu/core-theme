@@ -76,17 +76,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var cardsTask = _customerAccountWebApiClient.GetAccountCards(account.Id);
             var openOrdersTask = _orderWebApiClient.GetOrders(0, 25, null, BuildOpenOrdersFilter(account.Id));
             var orderHistoryTask = _orderWebApiClient.GetOrders(0, 25, null, BuildOrderHistoryFilter(account.Id));
-            //var wishlistTask = _wishlistApiClient.GetWishlists(0, 25, null, BuildWishlistFilter(account.Id));
-            var wishlistTask = _wishlistApiClient.GetWishlistByName(account.Id, DEFAULT_WISHLIST_NAME);
-            var wishlistItemsTask = _wishlistApiClient.GetWishlistItemsByWishlistName(account.Id, DEFAULT_WISHLIST_NAME, null, null, "UpdateDate asc");
+            var wishlistTask = _wishlistApiClient.GetWishlistByName(account.Id, DEFAULT_WISHLIST_NAME);            
+            CommerceRuntime.Contracts.Wishlists.Wishlist wishlist = null;
+            try {
+                wishlist = wishlistTask.Result.ReadAsSync();
+            }
+            catch (Exception ex)
+            {
+
+            }
 
             var cards = cardsTask.Result.ReadAsSync();
             var openOrders = openOrdersTask.Result.ReadAsSync();
             var orderHistory = orderHistoryTask.Result.ReadAsSync();
-            var wishlist = wishlistTask.Result.ReadAsSync();
-            wishlist.Items = wishlistItemsTask.Result.ReadAsSync().Items;
-
-            //var wishlist = (wishlistResult != null && wishlistResult.Items != null ? wishlistResult.Items.FirstOrDefault() : null) ?? new Mozu.CommerceRuntime.Contracts.Wishlists.Wishlist();
+            if (wishlist != null) {
+                var wishlistItemsTask = _wishlistApiClient.GetWishlistItemsByWishlistName(account.Id, DEFAULT_WISHLIST_NAME, null, null, "UpdateDate asc");
+                wishlist.Items = wishlistItemsTask.Result.ReadAsSync().Items;
+            }
 
             var jSerializer = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
             var jAccount = Newtonsoft.Json.Linq.JObject.FromObject(account, jSerializer);
@@ -97,8 +103,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             jAccount.Add("hasSavedContacts", (Newtonsoft.Json.Linq.JValue)(account.Contacts.Count > 0));
             jAccount.Add("cards", Newtonsoft.Json.Linq.JArray.FromObject(cards.Items, jSerializer));
 
-            if (wishlist != null)
-                jAccount.Add("wishlist", Newtonsoft.Json.Linq.JObject.FromObject(wishlist, jSerializer));
+            if (wishlist != null) {
+                var wishlistObj = Newtonsoft.Json.Linq.JObject.FromObject(wishlist, jSerializer);
+                wishlistObj.Add("hasItems", wishlist.Items.Count() > 0);
+                jAccount.Add("wishlist", wishlistObj);
+            }
 
             return this.Request.CreateResponse(HttpStatusCode.OK,  View("my-account", jAccount));
         }

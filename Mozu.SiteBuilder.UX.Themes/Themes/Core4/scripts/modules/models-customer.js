@@ -121,9 +121,6 @@
             var contacts = this.get('contacts');
             return contacts && contacts.length > 0;
         },
-        //billingContacts: function() {
-        //    return _.invoke(this.get('contacts').where({ isBillingContact: true }), 'toJSON');
-        //},
         handlesMessages: true,
         relations: {
             contacts: Backbone.Collection.extend({
@@ -155,11 +152,14 @@
         },
         initialize: function() {
             this.get('editingContact').set('accountId', this.get('id'));
+            this.get('orderHistory').lastRequest = {
+                filter: 'CustomerAccountId+eq+"' + this.get('id') + '"+and+OrderNumber+ne+null'
+            };
         },
         changePassword: function () {
             var self = this;
             self.validatePassword = true;
-            if (this.validate()) return false;
+            if (this.validate('password') || this.validate('confirmPassword')) return false;
             return this.apiChangePassword({
                 oldPassword: this.get('oldPassword'),
                 newPassword: this.get('password')
@@ -262,6 +262,13 @@
                 firstName: this.get('firstName'),
                 lastName: this.get('lastName')
             });
+        },
+        toJSON: function () {
+            var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
+            delete j.password;
+            delete j.confirmPassword;
+            delete j.oldPassword;
+            return j;
         }
     });
 

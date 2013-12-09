@@ -63,7 +63,7 @@ define([
                 var prop = propName.split('.'), ret = this, level;
                 while (ret && (level = prop.shift())) ret = Backbone.Model.prototype.get.call(ret, level);
                 if (!ret && this.relations && (propName in this.relations)) {
-                    ret = this.setRelation(propName, {}, { silent: true });
+                    ret = this.setRelation(propName, null, { silent: true });
                     this.attributes[propName] = ret;
                 }
                 return ret;

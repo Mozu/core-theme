@@ -591,9 +591,10 @@ var ApiReference = (function () {
                 returnType: 'wishlistitems',
                 template: '{+wishlistService}{customerAccountId}/{name}/items{?startIndex,pageSize,sortBy,filter}',
                 defaultParams: {
-                    sortBy: 'UpdateDate desc'
+                    sortBy: 'UpdateDate asc'
                 },
-                includeSelf: true
+                includeSelf: true,
+                returnType: 'wishlistitems'
             }
         },
         'wishlists': {
