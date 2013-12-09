@@ -39,7 +39,6 @@ Ext.define('Taco.view.product.subform.Options', {
                     productType: this.productType,
                     listeners: {
                         hide: function () {
-                            console.log('rebuilding when variations are loaded');
                             this.product.getVariations().whenLoaded(this.rebuild, this);
                         },
                         scope: this
@@ -62,19 +61,30 @@ Ext.define('Taco.view.product.subform.Options', {
         if (!this.productType) return '';
 
         this.product.getOptions().each(function (option) {
-            var attributeName;
-            console.log(option.raw);
+            var attribute;
 
             if (!option.get('values').length) return;
 
-            attributeName = this.findAttributeName(option);
+            attribute = this.findAttribute(option);
 
-            ret.push(attributeName + ' - ');
+            if (!attribute) {
+                console.log('Failed to find Attribute for option: ', option);
+                return;
+            }
+
+            ret.push(attribute.get('attributeName') + ' - ');
 
             Ext.each(option.get('values'), function (val, i) {
+                var value = Ext.Array.findBy(attribute.get('selectedValues'), function (item) {
+                        return typeof item.id !== 'undefined' && (item.id.toString() === val.toString());
+                    });
+
+                if (!value) return;
+
                 if (i > 0) ret.push(', ');
-                ret.push(val);
-        });
+
+                ret.push(value.value);
+            }, this);
 
             ret.push('<br>');
         }, this);
@@ -82,12 +92,8 @@ Ext.define('Taco.view.product.subform.Options', {
         return ret.join('');
     },
 
-    findAttributeName: function (record) {
-        var option = this.productType.getOptions().findRecord('attributeFQN', record.get('attributeFQN'));
-
-        if (!option) return;
-
-        return option.get('attributeName');
+    findAttribute: function (record) {
+        return this.productType.getOptions().findRecord('attributeFQN', record.get('attributeFQN'));
     },
 
     loadByProductTypeId: function (value) {

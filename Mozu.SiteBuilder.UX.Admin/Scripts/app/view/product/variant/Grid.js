@@ -57,13 +57,20 @@ Ext.define('Taco.view.product.variant.Grid', {
         }];
 
         this.product.getOptions().each(function (option, index) {
+            var attribute = this.findAttribute(option);
+
             optionColumns.push({
                 flex: 1,
-                text: this.findAttributeName(option),
+                text: attribute.get('attributeName'),
                 dataIndex: 'options',
                 sortable: false,
                 renderer: function (value) {
-                    return value[index].value;
+                    var attributeValue = Ext.Array.findBy(attribute.get('selectedValues'), function (item) {
+                        return typeof item.id !== 'undefined' && (item.id.toString() === value[index].value.toString());
+                    });
+
+                    if (!attributeValue) return '';
+                    return attributeValue.value;
                 }
             });
         }, this);
@@ -107,11 +114,7 @@ Ext.define('Taco.view.product.variant.Grid', {
         
     },
 
-    findAttributeName: function (record) {
-        var option = this.productType.getOptions().findRecord('attributeFQN', record.get('attributeFQN'));
-
-        if (!option) return;
-
-        return option.get('attributeName');
-    }
+    findAttribute: function (record) {
+        return this.productType.getOptions().findRecord('attributeFQN', record.get('attributeFQN'));
+    },
 });
