@@ -84,6 +84,7 @@
                 this.isLoading(true);
                 var addr = this.get('address');
                 var completeStep = function () {
+                    $('.mz-messagebar').html('');
                     parent.syncApiModel();
                     parent.apiModel.getShippingMethodsFromContact().then(function (methods) {
                         return parent.set({
@@ -143,6 +144,8 @@
                                 // TODO: sink the exception.in a better way.
                                 $('.mz-messagebar').html('');
                                 completeStep();
+                            } else {
+                                $('.mz-messagebar').html('The address you entered could not be validated. Please check your address and try again.');
                             }
                         });
                     } else {
