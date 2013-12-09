@@ -95,10 +95,6 @@ Ext.define('Taco.view.capability.Index', {
                 width: 200,
                 dataIndex: "licenseType"
             }, {
-                text: 'Site',
-                width: 200,
-                dataIndex: "uiConfigurationUrl"
-            }, {
                 text: 'Coverage Area',
                 width: 200,
                 dataIndex: "scopeType",

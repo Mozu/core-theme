@@ -89,6 +89,20 @@ Ext.define('Taco.core.ux.window.Window', {
             this.ghost = false;
         }
 
+        if (this.resizable === true) {
+            this.resizable = {
+                dynamic: true,
+                heightIncrement: 1,
+                widthIncrement: 1
+            };
+        }
+
+        if (!Ext.isEmpty(this.resizable)) {
+            this.resizable.minWidth = this.resizable.minWidth || this.width;
+            this.resizable.minHeight = this.resizable.minHeight || this.height;
+            //this.constrainResizer();
+        }
+
         this.callParent(arguments);
 
         if (this.manageOverflow) {

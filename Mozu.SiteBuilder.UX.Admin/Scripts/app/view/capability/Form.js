@@ -118,8 +118,11 @@ Ext.define('Taco.view.capability.Form', {
                     handler: function () {
                         var modal = Ext.create('Taco.core.ux.window.Window', {
                             autoShow: true,
+                            resizable: true,
+                            draggable: true,
                             scale: 'large',
                             shadow: true,
+                            height: 700,
                             items: [
                                 {
                                     xtype: 'uxiframe',
