@@ -78,7 +78,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             routes.MapHttpRoute(
                 "Visit_Tracking_Pixel",
-                "nsa.gov",
+                "_mzblank.gif",
                 new {controller = "Visit", action = "TrackingPixel"});
 
             routes.MapHttpRoute(
