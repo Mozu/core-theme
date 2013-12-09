@@ -100,7 +100,6 @@ Ext.define('Taco.core.ux.window.Window', {
         if (!Ext.isEmpty(this.resizable)) {
             this.resizable.minWidth = this.resizable.minWidth || this.width;
             this.resizable.minHeight = this.resizable.minHeight || this.height;
-            //this.constrainResizer();
         }
 
         this.callParent(arguments);
