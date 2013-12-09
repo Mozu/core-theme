@@ -130,7 +130,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.RegisterType<CurrentRequestLoggingContextProvider>().As<ILoggingContextProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", APPLICATION_NAME).InstancePerLifetimeScope();
 
-            // configure the CustomerVisitPublisher with its own MassTransit IServiceBus, pointing to the correct rabbitMQ connectionstring
+            // Register a MassTransit IServiceBus. This IServiceBus is picked up by Mozu.Core.Messaging.Publisher.
+            // The rabbitMQ connectionstring is used to recieve control messages sent to our application by MassTransit.
             builder.Register<IServiceBus>(c => ServiceBusFactory.New(sbc =>
                 {
                     sbc.ReceiveFrom(c.Resolve<ISettings>().ConnectionStrings("SiteBuilderMessageQueue").Value);
@@ -139,10 +140,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
                     // sbc.UseLog4Net();
                 }))
                 .SingleInstance()
-                .Named<IServiceBus>("siteBuilderPublisherMessageQueue")
+                .As<IServiceBus>()
                 ;
-            builder.RegisterType<Publisher>().As<IPublisher>()
-                .WithParameter((p, c) => p.ParameterType == typeof(IServiceBus), (p, c) => c.ResolveNamed<IServiceBus>("siteBuilderPublisherMessageQueue"));
 		}
 
         object BuildClient<T>(IComponentContext c)

@@ -61,11 +61,13 @@ namespace Mozu.SiteBuilder.UX.Configuration
         protected override void InitializeContainerFactory(Core.Configuration.AutofacContainerFactory containerFactory)
         {
             base.InitializeContainerFactory(containerFactory);
-            containerFactory.UsingAssembly(Assembly.Load("Mozu.Core.Api"))
+            containerFactory
+               .UsingAssembly(Assembly.Load("Mozu.Core.Api"))
                .UsingAssembly(typeof(ISitesWebApiClient).Assembly)
                //.UsingAssembly(typeof(IStartUpTask).Assembly)
                .UsingAssembly(typeof(IPermissionsRepository).Assembly)
                .UsingAssembly(Assembly.Load("Mozu.SiteBuilder.Mvc"))
+               .UsingAssembly(Assembly.Load("Mozu.Core.Messaging"))
                .UsingAssembly(Assembly.GetExecutingAssembly())
                ;
 
