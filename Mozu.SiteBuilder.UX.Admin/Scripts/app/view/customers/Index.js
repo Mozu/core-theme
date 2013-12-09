@@ -8,7 +8,8 @@ Ext.define('Taco.view.customers.Index', {
     requires: [
         'Taco.model.CustomerAccount',
         'Taco.store.Customers',
-        'Taco.view.customers.AdvancedSearchForm'
+        'Taco.view.customers.AdvancedSearchForm',
+        'Taco.store.CustomerGroups'
     ],
 
     typeName: 'Customer',

@@ -13,15 +13,6 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
     actions: [{
         xtype: 'button',
         itemId: 'primaryAction',
-        text: 'Save',
-        handler: function () {
-            var me = this;
-            me.close();
-        },
-        formBind: true
-    },{
-        xtype: 'button',
-        itemId: 'secondaryAction',
         text: 'Close',
         handler: function () {
             var me = this;
@@ -42,7 +33,6 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
              method: 'GET',
              success: function (response) {
                  var json = Ext.JSON.decode(response.responseText);
-                 console.log(json);
                  me.storeCreditStore.loadData(json.items);
              },
              failure: function (response) {
@@ -63,18 +53,18 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
                 { text: 'Amount', dataIndex: 'initialBalance' },
                 { text: 'Issued By', dataIndex: 'issuedBy'},
                 {
-                    text: 'Expires', dataIndex: 'expirationDate',
+                    text: 'Expires', dataIndex: 'expirationDate'/*,
                     editor: {
                         emptyText: "Amount",
                         msgTarget: "qtip",
                         xtype: "datefield",
                         selectOnFocus: true,
                         allowBlank: false
-                    }
+                    }*/
                 },
                 {
                     text: 'Balance',
-                    dataIndex: 'currentBalance',
+                    dataIndex: 'currentBalance'/*,
                     editor: {
                         emptyText: "Amount",
                         msgTarget: "qtip",
@@ -84,7 +74,7 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
                         mouseWheelEnabled: false,
                         selectOnFocus: true,
                         allowBlank: false
-                    }
+                    }*/
                 }
             ],
             scope: this
@@ -94,7 +84,7 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
             me.wishlistGrid,
             {
                 xtype: 'checkboxfield',
-                boxLabel: 'Notify customer of changes in their Stroe Credit'
+                boxLabel: 'Notify customer of changes in their Store Credit'
             }];
 
         this.callParent(arguments);

@@ -31,8 +31,9 @@ Ext.define('Taco.store.CustomerGroupNames', {
                 Value: record.data.Value
             });
         });
-        this.loadData(data);
-
+        if (data.length > 0) {
+            this.loadData(data);
+        }
     },
     storeManagerConfig: {
         createOnly: true
