@@ -36,6 +36,17 @@
                 plain: true,
                 shadow: false,
                 items: [{
+                    itemId: 'live',
+                    text: 'View in',
+                    menu: {
+                        plain: true,
+                        shadow: false,
+                        defaults: {
+                            plain: true
+                        },
+                        items: []
+                    }
+                },{
                     itemId: 'preview',
                     text: 'Preview in',
                     menu: {
@@ -54,11 +65,15 @@
                 listeners: {
                     show: function (menu) {
                         var previewItem = menu.items.get('preview'),
-                            previewSites = [];
+                            liveItems = menu.items.get('live'),
+                            previewMenu,
+                            liveMenu,
+                            previewSites = [],
+                            liveSites = [];
 
                         if (previewItem && previewItem.menu) {
                             previewMenu = previewItem.menu;
-
+                            liveMenu = liveItems.menu;
                             Ext.each(me.record.getProductInCatalogs().data.items,function (pis) {
                                 var sites = pis.get('sites');
                                 Ext.each(sites, function (site) {
@@ -66,16 +81,26 @@
                                         previewSites.push({
                                             itemId: site.id,
                                             text: site.name,
-                                            handler: Ext.bind(me.preview, me, [site])
+                                            handler: Ext.bind(me.viewInSite, me, [site, 'preview'])
+                                        });
+                                        liveSites.push({
+                                            itemId: site.id,
+                                            text: site.name,
+                                            handler: Ext.bind(me.viewInSite, me, [site, 'live'])
                                         });
                                     }
                                 });
                             });
+                            
+                           
 
                             if (!Ext.Array.equals(Ext.Array.pluck(previewSites, 'itemId'), previewMenu.items.keys)) {
                                 previewMenu.removeAll();
                                 previewMenu.add(previewSites);
+                                liveMenu.removeAll();
+                                liveMenu.add(liveSites);
                             }
+                           
                         }
                     },
                     scope: this
@@ -88,10 +113,9 @@
         this.callParent(arguments);
     },
 
-    preview: function (site) {
-        window.open('/_gosite/' + site.id + '?environment=preview&redir=' + encodeURIComponent('/product/' + this.record.getId()), 'taco-preview');
+    viewInSite: function (site, env) {
+        window.open('/_gosite/' + site.id + '?environment='+ env+'&redir=' + encodeURIComponent('/product/' + this.record.getId()), 'taco-preview');
     },
-
     onBeforeRender: function () {
         var me = this;
         

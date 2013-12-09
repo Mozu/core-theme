@@ -341,15 +341,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         MetaTagKeywords = piso.MetaTagKeywords,
                         SEOFriendlyUrl = piso.SEOFriendlyUrl
                     }
-                ))
+                )).AfterMap((info, catalogInfo) =>
+                {
+                    if (catalogInfo != null && catalogInfo.Content != null && catalogInfo.Content.ProductImages != null)
+                    {
+                        catalogInfo.Content.ProductImages.Each(x =>
+                        {
+                            if (!string.IsNullOrWhiteSpace(x.CmsId))
+                            {
+                                x.ImageUrl = null;
+                            }
+                        });
+                    }
+                })
                 ;
 
             Mapper.CreateMap<Models.ProductModels.ProductLocalizedImage, DC.ProductLocalizedImage>()
-                .ForMember(x=> x.CmsId , opt=>opt.MapFrom(x=> x.CmsId ))
-                .ForMember(x => x.Sequence, op => op.Ignore());
+                .ForMember(x => x.CmsId, opt => opt.MapFrom(x => x.CmsId))
+                .ForMember(x => x.Sequence, op => op.Ignore())
+                .ForMember(x => x.ImageUrl, opt => opt.MapFrom(x => string.IsNullOrEmpty(x.CmsId) ? x.ImageUrl : null));
 
             Mapper.CreateMap<DC.ProductLocalizedImage, Models.ProductModels.ProductLocalizedImage>()
                 .ForMember(x => x.CmsId, opt => opt.MapFrom(x => x.CmsId));
+                
 
             Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, UnitOfMeasure>();
             Mapper.CreateMap<UnitOfMeasure, Mozu.Core.Api.Contracts.Measurement>();

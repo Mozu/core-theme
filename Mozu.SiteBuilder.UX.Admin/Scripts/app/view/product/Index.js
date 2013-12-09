@@ -142,6 +142,16 @@ Ext.define('Taco.view.product.Index', {
                 xtype: 'taco.menucolumn',
                 text: 'Actions',
                 menuItems: [{
+                    itemId: 'live',
+                    text: 'View in',
+                    hideOnClick: false,
+                    menu: {
+                        plain: true,
+                        shadow: false,
+                        cls: Taco.baseCSSPrefix + 'grid-row-menu',
+                        items: []
+                    }
+                }, {
                         itemId: 'preview',
                         text: 'Preview in',
                         hideOnClick: false,
@@ -175,9 +185,11 @@ Ext.define('Taco.view.product.Index', {
                     }],
                 onMenuShow: function (menu, eventData) {
                     var previewAction = menu.items.get('preview'),
+                        liveAction = menu.items.get('live'),
                         defaults = eventData.header.menuItemDefaults;
 
                     previewAction.menu.removeAll();
+                    liveAction.menu.removeAll();
                     eventData.record.productInCatalogsStore().each(function (record) {
                         var sites = record.get('sites');
                         Ext.each(sites, function (site) {
@@ -186,6 +198,15 @@ Ext.define('Taco.view.product.Index', {
                                     text: site.name,
                                     menuColumnHandler: function (item, eventData) {
                                         window.open('/_gosite/' + site.id + '?environment=preview&redir=' + encodeURIComponent('/product/' + eventData.record.getId()), 'taco-preview');
+
+                                        console.log(arguments);
+                                    }
+                                }, defaults));
+                                
+                                liveAction.menu.add(Ext.applyIf({
+                                    text: site.name,
+                                    menuColumnHandler: function (item, eventData) {
+                                        window.open('/_gosite/' + site.id + '?environment=live&redir=' + encodeURIComponent('/product/' + eventData.record.getId()), 'taco-preview');
 
                                         console.log(arguments);
                                     }

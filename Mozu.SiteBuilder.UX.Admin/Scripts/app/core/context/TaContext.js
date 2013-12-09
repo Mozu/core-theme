@@ -116,11 +116,13 @@ Ext.define('Taco.core.context.TaContext', {
         return true;
     },
     setCookie: function () {
-        var name = 'SBCONTEXT', value = this.toCookieString(), expires = new Date(2050, 1, 1), path = '/', domain =  null, secure = false;
-        //ext excapes multi value cookies
-        //Ext.util.Cookies.set('SBCONTEXT', cookieVal, new Date(2050, 1, 1));
-        document.cookie = name + "=" + value + ((expires === null) ? "" : ("; expires=" + expires.toGMTString())) + ((path === null) ? "" : ("; path=" + path)) + ((domain === null) ? "" : ("; domain=" + domain)) + ((secure === true) ? "; secure" : "");
-        document.cookie = name + "2=" + value +((expires === null) ? "" : ("; expires=" + expires.toGMTString())) + ((path === null) ? "" : ("; path=" + path)) + ((domain === null) ? "" : ("; domain=" + domain)) + ((secure === true) ? "; secure" : "");
+        return;
+        
+        //remving cookie setting... relaying on gosite.
+        //var name = 'SBCONTEXT', value = this.toCookieString(), expires = new Date(2050, 1, 1), path = '/', domain =  null, secure = false;
+       
+        //document.cookie = name + "=" + value + ((expires === null) ? "" : ("; expires=" + expires.toGMTString())) + ((path === null) ? "" : ("; path=" + path)) + ((domain === null) ? "" : ("; domain=" + domain)) + ((secure === true) ? "; secure" : "");
+        //document.cookie = name + "2=" + value +((expires === null) ? "" : ("; expires=" + expires.toGMTString())) + ((path === null) ? "" : ("; path=" + path)) + ((domain === null) ? "" : ("; domain=" + domain)) + ((secure === true) ? "; secure" : "");
 
         
 
