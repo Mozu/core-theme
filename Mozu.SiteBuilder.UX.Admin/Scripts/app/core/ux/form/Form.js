@@ -99,7 +99,7 @@ Ext.define('Taco.core.ux.form.Form', {
 
         Ext.Array.forEach(this.items, function (item) {
             // Don't override models that have already been set manually
-            if (item.record && item.record.isModel) {
+            if (!item || (item.record && item.record.isModel)) {
                 return;
             }
 

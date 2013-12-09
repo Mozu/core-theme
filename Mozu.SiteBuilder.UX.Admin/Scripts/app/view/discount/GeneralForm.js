@@ -42,7 +42,9 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 ]
             }),
             listeners: {
-                change: this.setFieldVisibility,
+                change: function () {
+                    this.parentForm.setFieldVisibility();
+                },
                 scope: this
             }
         });
@@ -66,7 +68,9 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 ]
             }),
             listeners: {
-                change: this.setFieldVisibility,
+                change: function () {
+                    this.parentForm.setFieldVisibility();
+                },
                 scope: this
             },
             value: "Product"
@@ -89,12 +93,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
                     ["Dollar Amount", "Amount"],
                     ["Free", "Free"]
                 ]
-            }),
-            listeners: {
-                afterrender: this.setTypeFieldVisibility,
-                change: this.onAmountTypeInputChange,
-                scope: this
-            }
+            })
         });
 
         this.amountInput = Ext.create('Taco.core.ux.form.UnitField', {
@@ -137,68 +136,11 @@ Ext.define('Taco.view.discount.GeneralForm', {
         this.callParent(arguments);
     },
     
-
-    /*
-        Sets the "Applies To" combobox to "Free Shipping" when appropriate.
-    */
-    onAmountTypeInputChange: function (input, value) {
-        var me = this;
-
-        if (!me.rendered) {
-            //return;
-        }
-
-
-        // guard against this callback being called before the entire form is rendered
-        if (!me.amountInput) {
-            return;
-        }
-
-        //me.amountInput.hide();
-
-        me.setTypeFieldVisibility(me.amountTypeInput);
-
-        // calling .select() does not fire the change event, fire it manually.
-        //me.targetTypeInput.fireEvent('change', me.targetTypeInput, me.targetTypeInput.getValue());
+    isLineItem: function () {
+        return this.scopeTypeInput.getValue() === 'LineItem';
     },
 
-    setTypeFieldVisibility: function (input) {
-        var me = this,
-            value = input.getValue(),
-            amount = me.amountInput.getValue(); 
-
-        if (value === 'Free') {  
-            me.amountInput.hide();
-
-            me.amountInput.setValue(0);
-        } else {
-            me.amountInput.show();
-
-            if (me.targetTypeInput.getValue() === "Product") {
-                me.targetTypeInput.select("AllProducts");
-                me.targetTypeInput.fireEvent('change', me.targetTypeInput, me.targetTypeInput.getValue());
-            }
-
-            me.targetTypeInput.enable();
-
-            me.amountInput.setMaxValue(value === 'Percentage' ? 100 : Number.MAX_VALUE);
-            me.amountInput.unitAtEnd = (value === 'Percentage' ? true : false);
-            me.amountInput.unitString = (value === 'Percentage' ? '%' : '$');
-            me.amountInput.forcePrecision = (value === 'Amount');
-            me.amountInput.setValue(amount);
+    appliesToShipping: function () {
+        return this.targetTypeInput.getValue() === 'Shipping';
         }
-    },
-
-    setFieldVisibility: function () {
-        var me = this,
-            nonOrderScope = me.scopeTypeInput.getValue() != 'Order';
-
-        me.includeAllProductsInput.setVisible(me.targetTypeInput.getValue() != 'Shipping' && nonOrderScope);
-        me.shippingList.setVisible(me.targetTypeInput.getValue() == 'Shipping');
-        me.categoriesBox.setVisible(!me.includeAllProductsInput.getValue() && nonOrderScope);
-        me.productsBox.setVisible(!me.includeAllProductsInput.getValue() && nonOrderScope);
-        me.productsExcludeBox.setVisible(!me.includeAllProductsInput.getValue() && nonOrderScope);
-        me.exclueCategoriesBox.setVisible(!me.includeAllProductsInput.getValue() && nonOrderScope);
-        me.minimumLifetimeValueAmount.setVisible(!nonOrderScope);
-    },
 });

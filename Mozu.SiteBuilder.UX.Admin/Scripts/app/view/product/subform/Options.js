@@ -11,20 +11,9 @@ Ext.define('Taco.view.product.subform.Options', {
     title: 'Options',
     
     initComponent: function () {
-        var track = this.product.get('manageStock'),
-            manageStock,
-            outOfStockState,
-            options;
-
+        
         this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
-
         this.record = this.product;
-
-        // options = Ext.create('Taco.view.product.option.Form', {
-        //     product: this.product
-        // });
-
-        // this.items = [options];
 
         this.items = [{
             xtype: 'component',
@@ -35,6 +24,7 @@ Ext.define('Taco.view.product.subform.Options', {
             text: 'Select Values',
             scale: 'medium',
             ui: 'action',
+            width: 70,
 
             handler: function() {
                 Ext.create('Taco.view.product.variant.Modal', {
