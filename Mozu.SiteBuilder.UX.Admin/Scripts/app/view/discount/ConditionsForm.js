@@ -22,219 +22,11 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             width: 600,
             unitString: '$',
             emptyText: '0',
+            align: 'right',
             unitAtEnd: false
         });
 
-
-        this.includeAllProductsInput = Ext.widget({
-            xtype: 'checkbox',
-            name: 'includeAllProducts',
-            fieldLabel: 'Applies to All Products',
-            labelAlign: 'top',
-            width: 600,
-            value: this.record.get('includeAllProducts'),
-            listeners: {
-                change: this.setFieldVisibility,
-                change: function() { alert('implement setFieldVisibility')},
-                scope: this
-            }
-        });
-
-        var catStore = this.record.getCategoryStore();
-        // reset the list's dirty state when its store first loads
-
-        catStore.on({
-            load: function () {
-                this.categoryList.resetOriginalValue();
-            },
-            single: true,
-            scope: this
-        });
-        // MultiSelect is the most optimal Field that uses BoundList without a trigger
-        this.categoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
-            name: 'categories',
-            flex: 1,
-            store: catStore,
-            getStore: function () {
-                return catStore;
-            },
-            hideTrigger: true,
-            triggerOnClick: false,
-            forceSelection: true,
-            disableKeyFilter: true,
-            typeAhead: true,
-            displayField: 'name',
-            valueField: 'id',
-            fieldLabel: 'Select Categories'
-        });
-
-        this.categoriesBox = Ext.create('Ext.container.Container', {
-            layout: {
-                type: 'hbox',
-                align: 'bottom'
-            },
-            items: [
-                this.categoryList,
-                {
-                    xtype: 'secondarybutton',
-                    text: 'Add',
-                    click: function () {
-                        this.launchCategoryModal(this.categoryList);
-                    },
-                    scope: this
-                }
-            ]
-        });
-
-
-        this.exclueCategoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
-            name: 'excludedCategories',
-            flex: 1,
-            store: catStore,
-            getStore: function () {
-                return catStore;
-            },
-            hideTrigger: true,
-            triggerOnClick: false,
-            forceSelection: true,
-            disableKeyFilter: true,
-            typeAhead: true,
-            displayField: 'name',
-            valueField: 'id',
-            fieldLabel: 'Excluded Categories'
-        });
-
-        this.exclueCategoriesBox = Ext.create('Ext.container.Container', {
-            layout: {
-                type: 'hbox',
-                align: 'bottom'
-            },
-            items: [
-                this.exclueCategoryList,
-                {
-                    xtype: 'secondarybutton',
-                    text: 'Add',
-                    click: function () {
-                        this.launchCategoryModal(this.exclueCategoryList);
-                    },
-                    scope: this
-                }
-            ]
-        });
-
-
-        var productStore = this.record.getProductStore();
-
-        var shippingStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ConfiguredShippingRates');
-
-
-        this.shippingList = Ext.create('Ext.ux.form.field.BoxSelect', {
-            name: 'shippingMethods',
-            flex: 1,
-            store: shippingStore,
-            getStore: function () {
-                return shippingStore;
-            },
-            queryMode: 'local',
-            width: 600,
-            hidden: this.record.get('target') != 'Shipping',
-            triggerOnClick: true,
-            forceSelection: true,
-            disableKeyFilter: true,
-            typeAhead: true,
-            value: this.record.get('shippingMethods'),
-            displayField: 'Value',
-            fieldLabel: 'Select Shipping Methods',
-            valueField: 'Key'
-        });
-        productStore.on({
-            load: function () {
-                this.productList.resetOriginalValue();
-            },
-            single: true,
-            scope: this
-        });
-
-        this.productList = Ext.create('Ext.ux.form.field.BoxSelect', {
-            name: 'products',
-            flex: 1,
-            store: productStore,
-            getStore: function () {
-                return productStore;
-            },
-            hideTrigger: true,
-            triggerOnClick: false,
-            forceSelection: true,
-            disableKeyFilter: true,
-            typeAhead: false,
-            displayField: 'productName',
-            fieldLabel: 'Select Products',
-            valueField: 'productCode'
-        });
-
-
-        this.productsBox = Ext.create('Ext.container.Container', {
-            layout: {
-                type: 'hbox',
-                align: 'bottom'
-            },
-            items: [
-                this.productList,
-                {
-                    xtype: 'secondarybutton',
-                    text: 'Add',
-                    click: function () { this.launchProductModal(this.productList); },
-                    scope: this
-                }
-            ]
-        });
-
-        this.productExcludeList = Ext.create('Ext.ux.form.field.BoxSelect', {
-            name: 'excludedProducts',
-            flex: 1,
-            store: productStore,
-            getStore: function () {
-                return productStore;
-            },
-            hideTrigger: true,
-            triggerOnClick: false,
-            forceSelection: true,
-            disableKeyFilter: true,
-            typeAhead: false,
-            displayField: 'productName',
-            fieldLabel: 'Excluded Products',
-            valueField: 'productCode'
-        });
-
-
-        this.productsExcludeBox = Ext.create('Ext.container.Container', {
-            layout: {
-                type: 'hbox',
-                align: 'bottom'
-            },
-            items: [
-                this.productExcludeList,
-                {
-                    xtype: 'secondarybutton',
-                    text: 'Add',
-                    click: function () { this.launchProductModal(this.productExcludeList); },
-                    scope: this
-                }
-            ]
-        });
-
-
-        this.productCategoryContainer = Ext.create('Ext.container.Container', {
-            width: 600,
-
-            items: [
-                this.includeAllProductsInput,
-                this.categoriesBox,
-                this.productsBox,
-                this.exclueCategoriesBox,
-                this.productsExcludeBox
-            ]
-        });
+        
 
         this.datesContainer = Ext.create('Ext.container.Container', {
             layout: {
@@ -260,6 +52,11 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 }
             ]
         });
+
+        this.buildProduct();
+
+        this.buildCategory();
+
         this.requiresCouponInput = Ext.create('Ext.form.field.Checkbox', {
             name: 'requiresCoupon',
             boxLabel: "Create coupon",
@@ -310,9 +107,6 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             minValue: 0
         });
 
-        //this.redemptions = Ext.create('Ext.Component', {
-        //    html: this.record.get('currentRedemptionCount')  ? 'Current RedemptionCount:' + this.record.get('currentRedemptionCount') : ''
-        //});
         this.minimumLifetimeValueAmount = Ext.create('Taco.core.ux.form.UnitField', {
             name: 'minimumLifetimeValueAmount',
             hidden: this.record.get('scope') != 'Order',
@@ -326,12 +120,15 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             minValue: 0
         });
 
-        this.items = [
+        this.items = [{
+                xtype: 'component',
+                html: 'Choose what conditions must be met before a discount will be valid',
+                margin: '15 0 0 0'
+            },
             this.minimumOrderAmountInput,
-            this.productCategoryContainer,
-            this.minimumLifetimeValueAmount,
-            this.shippingList,
             this.datesContainer,
+            this.productsBox,
+            this.categoriesBox,
             this.redemptionLimits,
             this.requiresCouponInput,
             this.couponCodeBox
@@ -339,6 +136,102 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
 
         this.callParent(arguments);
+    },
+
+    buildProduct: function () {
+        var productStore = this.record.getProductStore();
+
+        productStore.on({
+            load: function () {
+                this.productList.resetOriginalValue();
+            },
+            single: true,
+            scope: this
+        });
+
+        this.productList = Ext.create('Ext.ux.form.field.BoxSelect', {
+            name: 'conditionalProducts',
+            flex: 1,
+            store: productStore,
+            getStore: function () {
+                return productStore;
+            },
+            hideTrigger: true,
+            triggerOnClick: false,
+            forceSelection: true,
+            disableKeyFilter: true,
+            typeAhead: false,
+            displayField: 'productName',
+            fieldLabel: 'Purchase one of the following items',
+            valueField: 'productCode'
+        });
+
+
+        this.productsBox = Ext.create('Ext.container.Container', {
+            layout: {
+                type: 'hbox',
+                align: 'bottom'
+            },
+            width: 600,
+            items: [
+                this.productList,
+                {
+                    xtype: 'secondarybutton',
+                    text: 'Add',
+                    click: function () { this.launchProductModal(this.productList); },
+                    scope: this
+                }
+            ]
+        });
+    },
+
+    buildCategory: function () {
+        var catStore = this.record.getCategoryStore();
+        // reset the list's dirty state when its store first loads
+
+        catStore.on({
+            load: function () {
+                this.categoryList.resetOriginalValue();
+            },
+            single: true,
+            scope: this
+        });
+        // MultiSelect is the most optimal Field that uses BoundList without a trigger
+        this.categoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
+            name: 'conditionalCategories',
+            flex: 1,
+            store: catStore,
+            getStore: function () {
+                return catStore;
+            },
+            hideTrigger: true,
+            triggerOnClick: false,
+            forceSelection: true,
+            disableKeyFilter: true,
+            typeAhead: true,
+            displayField: 'name',
+            valueField: 'id',
+            fieldLabel: 'Purchase an item from the following categories'
+        });
+
+        this.categoriesBox = Ext.create('Ext.container.Container', {
+            layout: {
+                type: 'hbox',
+                align: 'bottom'
+            },
+            width: 600,
+            items: [
+                this.categoryList,
+                {
+                    xtype: 'secondarybutton',
+                    text: 'Add',
+                    click: function () {
+                        this.launchCategoryModal(this.categoryList);
+                    },
+                    scope: this
+                }
+            ]
+        });
     },
     
     /**
@@ -408,5 +301,5 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             console.log(value, list.getValue());
             return false;
         }
-    }
+    },
 });

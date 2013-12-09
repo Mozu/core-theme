@@ -57,7 +57,7 @@ Ext.define('Taco.core.ux.mixins.Navigable', {
         this.nav = this.down('#navFormNav');
 
         this.on({
-            afterrender: this.onAfterRender,
+            afterrender: this.onAfterRenderNavigable,
             add: this.loadNavItems,
             remove: this.loadNavItems,
             scope: this
@@ -71,14 +71,23 @@ Ext.define('Taco.core.ux.mixins.Navigable', {
         return this.wrapper;
     },
 
-    onAfterRender: function () {
+    onAfterRenderNavigable: function () {
 
         if (!this.enableScrollSpy) return;
 
         this.getWrapper().on({
-            afterlayout: this.rebuildMap,
+            afterlayout: function () {
+                this.getWrapper().getEl().dom.scrollTop = this._scrollTop || 0;
+                this.rebuildMap();   
+            },
             scope: this
         });
+
+        this.getWrapper().on({
+            afterlayout: function () {
+                
+            }
+        })
 
         this.getWrapper().getEl().on({
             scroll: this.checkTop,

@@ -53,18 +53,20 @@ Ext.define('Taco.view.discount.Form', {
         this.conditions = this.down('#conditions');
         this.criteria = this.down('#criteria');
 
-        Ext.defer(function () {
-            this.add({
-                xtype: 'taco-discount-criteria',
-                itemId: 'criteria1',
-                parentForm: this,
-                record: this.record
-                //hidden: true
-            })
-        }, 6000, this)
+        this.on({
+            afterrender: this.onAfterRender,
+            scope: this
+        });
     },
 
-    showCriteria: function () {
-        this.criteria.show();
+    setFieldVisibility: function () {
+        var isLineItem = this.general.isLineItem(),
+            appliesToShipping  = this.general.appliesToShipping();
+
+        this.criteria.setFieldVisibility(isLineItem, appliesToShipping);
+    },
+
+    onAfterRender: function () {
+        this.setFieldVisibility();
     }
 });
