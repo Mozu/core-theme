@@ -6,6 +6,7 @@ Ext.define('Taco.view.customers.AdvancedSearchForm', {
     requires: [
         'Taco.store.CustomerGroupNames',
         'Ext.ux.form.field.BoxSelect',
+        'Taco.store.CustomerGroupNames'
     ],
 
     defaults: {
@@ -35,7 +36,7 @@ Ext.define('Taco.view.customers.AdvancedSearchForm', {
                 queryMode: 'local',
                 valueNotFoundText: 'not found',
                 editable: true,
-                forceSelection: true,
+                forceSelection: true
             },        
             {
                 xtype: 'fieldcontainer',

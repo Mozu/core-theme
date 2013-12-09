@@ -40,7 +40,7 @@ Ext.define('Taco.store.Navigation', {
         },*/ {
                 "id": "customers",
                 "label": "Customers",
-                "address": "customers",
+                "address": "customer",
                 "icon": "nav-customers",
                 "behaviorIds": [41],
                 "items": [/*{
