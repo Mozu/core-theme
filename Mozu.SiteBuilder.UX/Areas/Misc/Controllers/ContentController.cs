@@ -14,6 +14,7 @@ using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
@@ -195,6 +196,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         }
 
+        [ClientCacheHeaders(ConfigKey = "images" )]
         [System.Web.Http.HttpGet]
         public ActionResult Index(int tenant, int mastercat, int site, string collection, string documentId, int size = 0, int max = 0)
         {
