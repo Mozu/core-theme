@@ -1,8 +1,9 @@
 Ext.define('Taco.store.Capability', {
     extend: 'Ext.data.Store',
     model: 'Taco.model.Capability',
-    remoteFilter: true,
-    remoteSort: true,
+    remoteFilter: false,
+    remoteSort: false,
+    remoteGroup: false,
     pageSize: 25,
     groupField: "capabilityName",
     storeManagerConfig: {
