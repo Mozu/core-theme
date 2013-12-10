@@ -35,6 +35,11 @@ var errors = (function () {
             obj.fire('error', error);
             obj.api.fire('error', error, obj);
             throw error;
+        },
+        passFrom: function (from, to) {
+            from.on('error', function () {
+                to.fire.apply(to, ['error'].concat(utils.slice(arguments)));
+            });
         }
     };
 }());

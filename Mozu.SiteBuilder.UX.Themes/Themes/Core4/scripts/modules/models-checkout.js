@@ -391,7 +391,10 @@
             },
             toJSON: function () {
                 var j = Backbone.MozuModel.prototype.toJSON.apply(this);
-                delete j.password;
+                if (!options || !options.helpers) {
+                    delete j.password;
+                    delete j.confirmPassword;
+                }
                 return j;
             }
         });

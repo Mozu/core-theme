@@ -31,6 +31,7 @@
         },
         "CreditCard": function (order, billingInfo) {
             var card = order.api.createSync('creditcard', billingInfo.card);
+            errors.passFrom(card, this);
             return card.save().then(function(card) {
                 billingInfo.card = card.getOrderData();
                 order.prop('billingInfo', billingInfo);

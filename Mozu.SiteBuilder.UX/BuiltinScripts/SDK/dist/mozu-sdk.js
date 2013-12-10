@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-12-09
+ * Mozu JavaScript SDK - v0.2.0 - 2013-12-10
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1476,6 +1476,11 @@
                         obj.fire("error", error);
                         obj.api.fire("error", error, obj);
                         throw error;
+                    },
+                    passFrom: function(from, to) {
+                        from.on("error", function() {
+                            to.fire.apply(to, [ "error" ].concat(utils.slice(arguments)));
+                        });
                     }
                 };
             }();
@@ -2383,9 +2388,11 @@
                         var self = this;
                         return this.save().then(function(cardId) {
                             cardId = cardId || self.prop("id");
-                            return self.api.createSync("customer", {
+                            var customer = self.api.createSync("customer", {
                                 id: customerId
-                            }).addCard(self.data);
+                            });
+                            errors.passFrom(customer, this);
+                            return customer.addCard(self.data);
                         });
                     },
                     getOrderData: function() {
@@ -2415,6 +2422,7 @@
                     },
                     savePaymentCard: function(unmaskedCardData) {
                         var self = this, card = this.api.createSync("creditcard", unmaskedCardData), isUpdate = !!(unmaskedCardData.paymentServiceCardId || unmaskedCardData.id);
+                        errors.passFrom(card, this);
                         return card.save().then(function(card) {
                             var payload = utils.clone(card.data);
                             payload.cardNumberPart = payload.cardNumberPartOrMask || payload.cardNumber;
@@ -2475,6 +2483,7 @@
                     },
                     CreditCard: function(order, billingInfo) {
                         var card = order.api.createSync("creditcard", billingInfo.card);
+                        errors.passFrom(card, this);
                         return card.save().then(function(card) {
                             billingInfo.card = card.getOrderData();
                             order.prop("billingInfo", billingInfo);
@@ -2542,10 +2551,12 @@
             ApiObject.types.product = {
                 addToWishlist: function(payload) {
                     var self = this;
-                    return this.api.createSync("wishlist", {
+                    var list = this.api.createSync("wishlist", {
                         customerAccountId: payload.customerAccountId
-                    }).getOrCreate().then(function(wishlist) {
-                        return wishlist.addItem({
+                    });
+                    errors.passFrom(list, this);
+                    return list.getOrCreate().then(function() {
+                        return list.addItem({
                             quantity: payload.quantity,
                             product: self.data
                         });
