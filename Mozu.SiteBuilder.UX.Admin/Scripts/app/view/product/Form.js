@@ -291,20 +291,27 @@ Ext.define('Taco.view.product.Form', {
      * @protected
      */
     addSaveTasks: function (tasks) {
-        var recordSaveDep = 'save-product-record',
-            variantStoreTask={
-                store: this.record.getVariations()
-            };
-        
-       
-        this.addChildSaveTasks(tasks);
+        var productRecord = this.record,
+            variantStore = this.record.getVariations(false),
+            variantSaveTask;
+            
 
-        
-        if (tasks.tasks.getByKey(recordSaveDep)) {
-            variantStoreTask.dependencies = recordSaveDep;
+
+        this.callParent(arguments);
+
+        variantSaveTask =  tasks.tasks.findBy(function (innerTask) {
+            return innerTask.store == variantStore;
+        })
+        if (variantSaveTask) {
+            tasks.tasks.remove(variantSaveTask);
         }
+        tasks.add({
+            store: variantStore,
+            dependencyFilter: function (innerTask) {
+                return innerTask.saveRecord == productRecord;
+            }
+        });
         
-        tasks.add(variantStoreTask);    
 
         return tasks;
     },

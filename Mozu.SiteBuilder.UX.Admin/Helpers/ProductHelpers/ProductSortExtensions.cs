@@ -31,7 +31,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         {
             if (sortCollection == null)
                 return null;
-
+            //Mozu.ProductAdmin.Contracts.Product p;
+            //p.AuditInfo.UpdateDate 
             return string.Join(" and ", sortCollection.Select(x => GetFilter(x, useSiteContext) + (x.IsAscending ? " asc" : " desc")));
         }
 
@@ -58,6 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                     return STOCK_ON_HAND_PROPERTY;
                 case "stockavailable":
                     return STOCK_AVAILABLE_PROPERTY;
+                case "lastmodifieddate":
                 case "updatedate":
                     return UPDATE_DATE_PROPERTY;
                 case "createdate":

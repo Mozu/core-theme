@@ -5,6 +5,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.FileManagement;
 using System.Linq;
 using System.Web;
 using AutoMapper;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -25,6 +26,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.fileType, op => op.MapFrom(x => x.Extension))
                 .ForMember(x => x.id, op => op.MapFrom(x => x.Id))
                 .ForMember(x => x.name, op => op.MapFrom(x => x.Name))
+                .ForMember(x => x.tags, op => op.ResolveUsing(_ => _.Properties.Where(_p => _p.PropertyType == "tags").Select(_p =>
+                {
+                    if (_p.Value is JArray)
+                    {
+                        return ((JArray) _p.Value).ToObject<string[]>();
+                    }
+                    else
+                    {
+                        return (string[]) null;
+                    }
+                }).FirstOrDefault()))
+
                 //.ForMember(x => x.thumbnail, op => op.ResolveUsing(DoThumb))
                 .ForMember(x => x.isUploaded, op => op.ResolveUsing(x => x.ContentLength.GetValueOrDefault(0) > 0))
                 .ForMember(x => x.width, op => op.ResolveUsing(_ => _.Properties.Where(_p => _p.PropertyType == "width").Select(_p => (double)_p.Value).FirstOrDefault()))

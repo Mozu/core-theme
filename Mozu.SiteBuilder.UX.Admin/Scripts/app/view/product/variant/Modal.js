@@ -84,7 +84,8 @@ Ext.define('Taco.view.product.variant.Modal', {
     },
 
     onSave: function () {
-        this.product.getVariations().sync();
+        //saving on product form save
+       // this.product.getVariations().sync();
         this.hide();
     },
 

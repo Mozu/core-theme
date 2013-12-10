@@ -5,7 +5,7 @@
 Ext.define('Taco.view.product.subform.Inventory', {
     extend: 'Taco.view.product.subform.Subform',
     alias: 'widget.productinventorysubform',
-    requires: ['Taco.view.product.option.Form'],
+  //  requires: ['Taco.view.product.option.Form'],
 
     title: 'Inventory',
     
@@ -70,9 +70,9 @@ Ext.define('Taco.view.product.subform.Inventory', {
             name:'outOfStockBehavior'
         });
 
-        options = Ext.create('Taco.view.product.option.Form', {
-            product: this.product
-        });
+        //options = Ext.create('Taco.view.product.option.Form', {
+        //    product: this.product
+        //});
 
         this.items = [{
             xtype: 'container',

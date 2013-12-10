@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { controller = "Catalog", action = "Category" });
 
             
-
+            
 
 
 
@@ -168,6 +168,22 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "templates",
                 "templates/{templateId}",
                 new {controller = "Templates", action = "Index"});
+
+            routes.MapHttpRoute(
+                "vlegacy_product",
+                "{slug}-p/{productCode}.htm",
+                 new { controller = "Catalog", action = "ProductDetail" });
+
+            routes.MapHttpRoute(
+                "vlegacy_category",
+                "{slug}-s/{categoryId}.htm",
+                 new { controller = "Catalog", action = "Category" });
+
+  //          Premium-18-Powered-Subwoofer-Cabinets-Pair-p/magma-118s-pw-pair.htm
+
+//http://www.seismicaudiospeakers.com/Subwoofers-s/122.htm
+
+
 
             routes.MapHttpRoute(
                 "resources",
