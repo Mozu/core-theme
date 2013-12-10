@@ -11,9 +11,36 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
     scale: 'large',
     title: 'Add Payment',
-    
+    models: ['Taco.model.CheckoutSettings'],
+
     initComponent: function () {
         var me = this;
+
+        Ext.define('MyReader', {
+            extend: 'Ext.data.reader.Json',
+            alias: 'reader.cards-json',
+            read: function (object) {
+                var rep = this.callParent([object]);
+                Ext.Array.each(rep.records, function (rec, idx) {
+                    rec.set('cardName', rec.raw);
+                    rec.set('cardType', rec.raw);
+                });
+                return rep;
+            }
+        });
+
+        var store = Ext.create('Ext.data.Store', {
+            autoLoad: false,
+            fields: ['cardType', 'cardName'],
+            proxy: {
+                type: 'ajax',
+                url: '/admin/app/checkoutsettings/read',
+                reader: {
+                    type: 'cards-json',
+                    root: 'items.gateway.supportedCards',
+                }
+            }
+        });
         
         this.form = Ext.create('Taco.core.ux.form.Form', {
             layout: {
@@ -42,15 +69,14 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     xtype: 'combobox',
                     name: 'cardType',
                     itemId: 'cardType',
+                    valueField: 'cardType',
+                    displayField: 'cardName',
                     fieldLabel: 'Card Type',
                     margin: '0 0 0 0',
                     allowBlank: false,
                     editable: false,
                     forceSelection: true,
-                    store: [
-                        ['Visa', 'Visa'],
-                        ['Mastercard', 'Mastercard']
-                    ]
+                    store: store
                 }]
             }, {
                 xtype: 'container',
