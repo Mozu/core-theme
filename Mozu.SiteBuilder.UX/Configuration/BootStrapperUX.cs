@@ -1,7 +1,6 @@
 ﻿using System.Net.Http.Formatting;
 using System.Reflection;
 using System.Web.Http;
-using System.Linq;
 
 using Mozu.Core.Api;
 using Mozu.Core.Api.ErrorHandler;
@@ -41,12 +40,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
         }
         protected override void AddFilters(HttpConfiguration httpConfiguration, Core.Api.Filters.Exception.ApiExceptionFilter exceptionFilter, Core.Api.Routing.ReflectedControllerIndex controllers)
         {
-            // some snafu to get the output cache filter, which is internal to Mozu.Core.Api. We don't want the rest of their crap.
-            base.AddFilters(httpConfiguration, exceptionFilter, controllers);
-            var cacheFilter = httpConfiguration.Filters.Where(f => f.Instance.GetType().ToString().Contains("OutputCacheFilter")).Select(f => f.Instance).FirstOrDefault();
-            httpConfiguration.Filters.Clear();
-            httpConfiguration.Filters.Add(cacheFilter);
-
+         
             httpConfiguration.Filters.Add(new AnonymousShopperFilterAttribute());
             httpConfiguration.Filters.Add(new VisitTrackingFilterAttribute());
 
