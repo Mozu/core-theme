@@ -56,9 +56,9 @@ Ext.define('Taco.core.ux.window.Modal', {
     secondaryText: 'Cancel',
 
     closable: false,
+    draggable: true,
     modal: true,
     resizable: true,
-    draggable: true,
 
     bodyPadding: '11 20 0',
     ui: 'modal',
