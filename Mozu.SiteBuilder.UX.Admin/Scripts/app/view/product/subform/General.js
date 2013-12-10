@@ -110,7 +110,13 @@ Ext.define('Taco.view.product.subform.General', {
                 minLength: 3,
                 //hidden: !visable,
                 width: 200,
-                xtype: 'textfield'
+                xtype: 'textfield',
+                listeners: {
+                    change:function ( cmp, newValue) {
+                        this.record.tempProductCode = newValue;
+                    },
+                   scope:this
+                }
             });
 
 

@@ -21,7 +21,7 @@ Ext.define('Taco.view.inventory.Index', {
         type: 'Taco.store.InventoriedProducts',
         createOnly:true
     },
-    
+    enableRowEditing: true,
     
     gridHeaderLabel: 'product',
     plural: false,

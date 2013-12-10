@@ -248,8 +248,8 @@ Ext.define('Taco.Application', {
 
         Ext.override(Ext.data.proxy.Ajax, {
             constructor: function (config) {
-
                 var me = this;
+                me.timeout = 90000;
                 this.callParent([config]);
                 me.on('exception', function () {
                     console.log('ajaxproxy-exception', arguments);

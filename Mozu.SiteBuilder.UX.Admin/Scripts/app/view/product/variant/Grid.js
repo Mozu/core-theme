@@ -7,7 +7,7 @@
 Ext.define('Taco.view.product.variant.Grid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.taco-product-variant-grid',
-    requires:['Taco.view.product.variant.Modal'],
+    //requires:['Taco.view.product.variant.Modal'],
     cls: 'taco-variant-grid',
 
     disableSelection: true,
