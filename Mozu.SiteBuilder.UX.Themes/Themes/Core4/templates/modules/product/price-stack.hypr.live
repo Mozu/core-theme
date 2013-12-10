@@ -1,5 +1,5 @@
 ﻿<div itemprop="priceSpecification" itemscope itemtype="http://schema.org/PriceSpecification" class="mz-pricestack{% if model.priceRange %} mz-pricestack-range{% endif %}">
-    {% if model.priceRange and model.priceRange.lower and model.priceRange.upper %}
+    {% if model.hasPriceRange %}
     <span itemprop="minPrice" class="mz-pricestack-price-lower">
         {% include "modules/common/price" with model=model.priceRange.lower %}
     </span>
