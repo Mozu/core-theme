@@ -19,7 +19,7 @@
                 <select {% if option.isMultiValue %}multiple{% endif %} class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}">
                     {% if not option.isMultiValue %}<option></option>{% endif %}
                     {% for value in option.values %}
-                    <option {% if not value.isEnabled %} class="is-disabled" {% endif %} {% if value.isSelected %}selected="true"{% endif %} value="{{value.value}}">{{value.value}}</option>
+                    <option {% if not value.isEnabled %} class="is-disabled" {% endif %} {% if value.isSelected %}selected="true"{% endif %} value="{{value.value}}">{{value.stringValue}}</option>
                     {% endfor %}
                 </select>                
             {% endif %}
