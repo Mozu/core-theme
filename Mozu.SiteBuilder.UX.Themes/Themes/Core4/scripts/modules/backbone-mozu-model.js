@@ -269,14 +269,14 @@ define([
                 };
                 me.helpers.push('hasMessages');
                 me.on('error', function (err) {
-                    if (err.Items && err.Items.length) {
+                    if (err.items && err.items.length) {
                         me.messages.reset(err.Items);
                     } else {
                         me.messages.reset([err]);
                     }
                 });
                 me.on('sync', function (raw) {
-                    if (!raw || !raw.Messages || raw.Messages.length === 0) me.messages.reset();
+                    if (!raw || !raw.messages || raw.messages.length === 0) me.messages.reset();
                 });
                 _.each(this.relations, function (v, key) {
                     var relInstance = me.get(key);

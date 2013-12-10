@@ -389,8 +389,8 @@
             isReady: function (val) {
                 this.set("isReady", val);
             },
-            toJSON: function () {
-                var j = Backbone.MozuModel.prototype.toJSON.apply(this);
+            toJSON: function (options) {
+                var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
                 if (!options || !options.helpers) {
                     delete j.password;
                     delete j.confirmPassword;

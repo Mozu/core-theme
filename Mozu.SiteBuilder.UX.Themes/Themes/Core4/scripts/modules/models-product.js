@@ -79,7 +79,7 @@
         mozuType: 'product',
         idAttribute: 'productCode',
         handlesMessages: true,
-        helpers: ['mainImage', 'notDoneConfiguring'],
+        helpers: ['mainImage', 'notDoneConfiguring', 'hasPriceRange'],
         defaults: {
             purchasableState: {},
             quantity: 1
@@ -101,11 +101,21 @@
                 model: ProductOption
             })
         },
-        initialize: function () {
+        hasPriceRange: function() {
+            return this._hasPriceRange;
+        },
+        calculateHasPriceRange: function(json) {
+            this._hasPriceRange = json && !!json.priceRange;
+        },
+        initialize: function (conf) {
             var slug = this.get('content').get('seoFriendlyUrl');
             this.listenTo(this.get("options"), "optionchange", this.updateConfiguration, this);
             this.set({ url: slug ? "/"+ slug + "?p="+ this.get("productCode") :  "/product/" + this.get("productCode") });
             this.lastConfiguration = [];
+            var self = this;
+            _.bindAll(this, 'calculateHasPriceRange');
+            this.calculateHasPriceRange(conf);
+            this.on('sync', this.calculateHasPriceRange);
         },
         mainImage: function() {
             var imgs = this.get('content').get("productImages"),

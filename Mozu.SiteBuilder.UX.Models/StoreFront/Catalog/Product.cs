@@ -28,6 +28,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         }
 
         private string _url;
+        [DataMember]
         public string Url
         {
             get
@@ -38,6 +39,14 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 }
 
                 return _url;
+            }
+        }
+        [DataMember]
+        public bool HasPriceRange
+        {
+            get
+            {
+                return PriceRange != null;
             }
         }
 
