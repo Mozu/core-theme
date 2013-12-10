@@ -41,6 +41,8 @@ Ext.define('Taco.core.ux.window.Window', {
     autoShow: false,
     constrain: true,
     draggable: false,
+    minHeight: null,
+    minWidth: null,
     modal: false,
     resizable: false,
     shadow: false,
@@ -83,23 +85,13 @@ Ext.define('Taco.core.ux.window.Window', {
         if (Ext.Array.contains(['small', 'medium', 'large'], scale)) {
             this.width = this.width || scales[scale]['width'];
             this.height = this.height || scales[scale]['height'];
+
+            this.minWidth = Ext.isNumber(this.minWidth) ? this.minWidth : this.width;
+            this.minHeight = Ext.isNumber(this.minHeight) ? this.minHeight : this.height;
         }
 
         if (this.ghostDisabled) {
             this.ghost = false;
-        }
-
-        if (this.resizable === true) {
-            this.resizable = {
-                dynamic: true,
-                heightIncrement: 1,
-                widthIncrement: 1
-            };
-        }
-
-        if (!Ext.isEmpty(this.resizable)) {
-            this.resizable.minWidth = this.resizable.minWidth || this.width;
-            this.resizable.minHeight = this.resizable.minHeight || this.height;
         }
 
         this.callParent(arguments);
@@ -133,6 +125,28 @@ Ext.define('Taco.core.ux.window.Window', {
                 }
             }
         });
+    },
+
+    initResizable: function (resizable) {
+        var me = this;
+
+        resizable = Ext.apply({
+            constrainTo: me.constrainTo || (me.floatParent ? me.floatParent.getTargetEl() : null),
+            dynamic: true,
+            handles: me.resizeHandles,
+            heightIncrement: 1,
+            minHeight: me.minHeight,
+            minWidth: me.minWidth,
+            target: me,
+            widthIncrement: 1
+        }, resizable);
+
+        resizable.target = me;
+        me.resizer = Ext.create('Ext.resizer.Resizer', resizable);
+
+        if (me.maximized) {
+            me.resizer.disable();
+        }
     },
 
     setScale: function (scale) {

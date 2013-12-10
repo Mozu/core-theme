@@ -59,7 +59,8 @@ Ext.define('Taco.view.catalog.Index', {
     handleToggle: function (button, state) {
         if (state) {
             if (!this.dialog) {
-                this.dialog = Ext.create('Taco.view.website.widgetEditors.Image');
+                this.dialog = Ext.create('Taco.view.website.widgetEditors.Image', {
+                });
 
                 this.dialog.on({
                     close: {
