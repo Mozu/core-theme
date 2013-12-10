@@ -36,9 +36,8 @@
         ],
         initialize: function () {
             var self = this;
-            this.listenTo(this.model, 'change:acceptsMarketing', function () {
-                self.model.syncApiModel();
-                self.model.apiUpdate();
+            this.listenTo(this.model, 'change:acceptsMarketing', function (model, value) {
+                self.model.apiUpdate({ acceptsMarketing: value });
             });
         },
         startEditName: function () {
@@ -234,13 +233,14 @@
             $paymentMethodsEl = $('#account-paymentmethods'),
             $addressBookEl = $('#account-addressbook'),
             $wishListEl = $('#account-wishlist'),
+            $messagesEl = $('#account-messages'),
             orderHistory = accountModel.get('orderHistory');
 
         window.accountViews = {
             settings: new AccountSettingsView({
                 el: $accountSettingsEl,
                 model: accountModel,
-                messagesEl: $('#account-messages')
+                messagesEl: $messagesEl
             }),
             orderHistory: new OrderHistoryView({
                 el: $orderHistoryEl.find('[data-mz-orderlist]'),
@@ -256,15 +256,18 @@
             }),
             paymentMethods: new PaymentMethodsView({
                 el: $paymentMethodsEl,
-                model: accountModel
+                model: accountModel,
+                messagesEl: $messagesEl
             }),
             addressBook: new AddressBookView({
                 el: $addressBookEl,
-                model: accountModel
+                model: accountModel,
+                messagesEl: $messagesEl
             }),
             wishList: new WishListView({
                 el: $wishListEl,
-                model: accountModel.get('wishlist')
+                model: accountModel.get('wishlist'),
+                messagesEl: $messagesEl
             })
         }
 

@@ -125,7 +125,9 @@
             var self = this;
             return this.save().then(function (cardId) {
                 cardId = cardId || self.prop('id');
-                return self.api.createSync('customer', { id: customerId }).addCard(self.data);
+                var customer = self.api.createSync('customer', { id: customerId });
+                errors.passFrom(customer, this);
+                return customer.addCard(self.data);
             });
         },
         getOrderData: function () {

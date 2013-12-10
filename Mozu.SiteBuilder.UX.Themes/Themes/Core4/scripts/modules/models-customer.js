@@ -194,8 +194,11 @@
                 },
                 saveContactFirst = function () {
                     self.get('editingContact').set('isBillingContact', true);
-                    return self.saveContact().then(function (contact) {
+                    return self.get('editingContact').save().then(function (contact) {
                         editingCard.contactId = contact.prop('id');
+                        self.endEditContact();
+                        self.getContacts();
+                        return true;
                     });
                 };
             if (!editingCard.contactId || editingCard.contactId === "new") {
@@ -226,7 +229,7 @@
         },
         endEditContact: function() {
             var editingContact = this.get('editingContact');
-            editingContact.clear({ silent: true });
+            editingContact.clear();
             editingContact.set('accountId', this.get('id'));
         },
         saveContact: function () {

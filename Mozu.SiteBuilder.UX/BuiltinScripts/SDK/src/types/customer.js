@@ -12,6 +12,7 @@
         savePaymentCard: function (unmaskedCardData) {
             var self = this, card = this.api.createSync('creditcard', unmaskedCardData),
                 isUpdate = !!(unmaskedCardData.paymentServiceCardId || unmaskedCardData.id);
+            errors.passFrom(card, this);
             return card.save().then(function (card) {
                 var payload = utils.clone(card.data);
                 payload.cardNumberPart = payload.cardNumberPartOrMask || payload.cardNumber;
