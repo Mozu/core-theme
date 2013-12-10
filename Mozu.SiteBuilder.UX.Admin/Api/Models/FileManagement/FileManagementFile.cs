@@ -9,6 +9,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.FileManagement
     {
         public string  id { get; set; }
         public string name { get; set; }
+
+        public string[] tags { get; set; }
        // public string thumbnail { get; set; }
         public DateTime? dateModified { get; set; }
         public string fileType { get; set; }

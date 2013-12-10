@@ -6,7 +6,7 @@ Ext.define('Taco.view.product.subform.Options', {
     extend: 'Taco.view.product.subform.Subform',
     alias: 'widget.taco-product-options',
 
-    requires: ['Taco.view.product.option.Form'],
+  //  requires: ['Taco.view.product.option.Form'],
 
     title: 'Options',
     

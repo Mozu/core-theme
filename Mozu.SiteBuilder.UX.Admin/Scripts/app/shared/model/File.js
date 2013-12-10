@@ -63,7 +63,15 @@ Ext.define('Taco.shared.model.File', {
             type: 'auto',
             useNull: true,
             persist: false
-        },{
+        },
+    {
+        name: 'tags',
+        type: 'auto',
+        useNull: true,
+        defaultValue:[]
+    },
+
+        {
             name: 'progress',
             type: 'number',
             defaultValue: 1,

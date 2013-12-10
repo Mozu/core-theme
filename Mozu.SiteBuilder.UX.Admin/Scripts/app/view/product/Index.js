@@ -132,13 +132,31 @@ Ext.define('Taco.view.product.Index', {
                     return output;
                 }
             }, {
-                dataIndex: 'stockOnHand',
-                text: 'Stock',
-                width: 70,
-                renderer: function (value) {
-                    return Ext.isNumeric(value) ? value : '--';
-                }
-            }, {
+                dataIndex: "lastModifiedDate",
+                xtype: 'datecolumn',   
+                format:'Y-m-d',
+                text: 'Last Modified',
+                hidden:true
+            },
+             {
+                 dataIndex: "productTypeId",
+                 text: 'Product Type',
+                 hidden: true,
+                 sortable :false,
+                 renderer: function (value, metaData, record,rowIndex, colIndex, store,view) {
+                     view.productTypeStore = view.productTypeStore || Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
+                     var ptRecord = view.productTypeStore.getById(value);
+                     return ptRecord ? ptRecord.data.name : '';
+                 }
+             },
+            {
+                dataIndex: "productUsage",
+                text: 'Product usage',
+                hidden: true,
+                sortable: false,
+                
+            },
+        {
                 xtype: 'taco.menucolumn',
                 text: 'Actions',
                 menuItems: [{

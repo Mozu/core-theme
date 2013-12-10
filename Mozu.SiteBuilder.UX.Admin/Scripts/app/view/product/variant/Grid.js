@@ -7,6 +7,7 @@
 Ext.define('Taco.view.product.variant.Grid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.taco-product-variant-grid',
+    requires:['Taco.view.product.variant.Modal'],
     cls: 'taco-variant-grid',
 
     disableSelection: true,
@@ -57,19 +58,31 @@ Ext.define('Taco.view.product.variant.Grid', {
         }];
 
         this.product.getOptions().each(function (option, index) {
-            var attribute = this.findAttribute(option);
-
+            var attribute = this.findAttribute(option),
+                attributeText = attribute.get('attributeName'),
+                attributeValues = attribute.get('selectedValues'),
+                attributeId = attribute.getId();
+                
+            
             optionColumns.push({
                 flex: 1,
-                text: attribute.get('attributeName'),
+                text: attributeText,
                 dataIndex: 'options',
                 sortable: false,
-                renderer: function (value) {
-                    var attributeValue = Ext.Array.findBy(attribute.get('selectedValues'), function (item) {
-                        return typeof item.id !== 'undefined' && (item.id.toString() === value[index].value.toString());
+                renderer: function (values) {
+
+                    
+                    var value = Ext.Array.findBy(values, function (v) {
+                        return v.attributeFQN == attributeId
                     });
 
-                    if (!attributeValue) return '';
+                    var attributeValue = Ext.Array.findBy(attributeValues, function (item) {
+                        return typeof item.id !== 'undefined' && (item.id.toString() === value.value.toString());
+                    });
+
+                    if (!attributeValue) {
+                        return value.value;
+                    }
                     return attributeValue.value;
                 }
             });
@@ -78,6 +91,7 @@ Ext.define('Taco.view.product.variant.Grid', {
         this.rowEditor = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             clicksToEdit: 1,
+            autoCancel:false,
             errorSummary: false,
             listeners: {
                 edit: this.onRowEdit,
@@ -113,8 +127,21 @@ Ext.define('Taco.view.product.variant.Grid', {
     onRowCancelEdit: function (e) {
         
     },
-
+    
     findAttribute: function (record) {
         return this.productType.getOptions().findRecord('attributeFQN', record.get('attributeFQN'));
+    },
+    
+    addSaveTasks: function (tasks, updateRecord, saveRecord) {
+
+        this.callParent(arguments);
+        var storeTask = tasks.tasks.findBy(function (innerTask) {
+            return innerTask.store == this.store;
+        }, this);
+
+        storetask.dependencyFilter(function (innerTask) {
+            return innerTask.saveRecord == this.product;
+        }, this)
+        return tasks;
     },
 });

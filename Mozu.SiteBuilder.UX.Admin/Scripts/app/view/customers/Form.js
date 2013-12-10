@@ -59,6 +59,7 @@ Ext.define('Taco.view.customers.Form', {
             me.profile,
             me.billingInformation,
             me.shippingInformation,
+            me.storeCredit,
             me.orderHistory,
             me.customerAttribute/*,
             me.notes*/

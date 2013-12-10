@@ -10,6 +10,7 @@ using Mozu.Core;
 using Mozu.Core.Api.Routing;
 using Mozu.ProductAdmin.Contracts.Clients;
 using System.ServiceModel.Web;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 using DC = Mozu.Content.Contracts;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -128,9 +129,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                              PropertyType = "width",
                              Value=file.width
                          }
+                         
+
 
                      }
                  };
+                if (file.tags != null && file.tags.Length > 0)
+                {
+                    dm.Properties.Add(
+                        new DC.PropertyValue()
+                        {
+                            PropertyType = "tags",
+                            Value = file.tags
+                        });
+                }
                 //var existing = _docClient.List("files", dm.Name, null, dm.FolderId, CmsConstants.Documents.doc_state_active, null, null, null, 1, 0).Result.ReadAsSync().Items.FirstOrDefault();
                 //if (existing != null)
                 //{
@@ -278,6 +290,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 //var dm = _docClient.Get("files", file.id, null, CmsConstants.Documents.doc_state_active ).Result.ReadAsSync();
                 var dm = (await _documentWebApiClient.GetDocument(documentListName : "files", documentId: file.id)).ReadAsSync();
                 dm.Name = file.name;
+
+                dm.Set("tags", file.tags);
                // dm.FolderId = file.folderId;
                 //var ret = _docClient.Update ( "files", dm.Id,  dm).Result.ReadAsSync();
                 var ret = (await _documentWebApiClient.UpdateDocument("files", dm.Id, dm)).ReadAsSync();
