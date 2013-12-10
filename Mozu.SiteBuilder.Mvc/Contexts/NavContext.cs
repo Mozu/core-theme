@@ -150,12 +150,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     if (parent != null)
                     {
                         productNode.Parent = parent;
-                        parent.Items.Add(productNode);
+                        //parent.Items.Add(productNode);
                     }
                 }
                 else
                 {
-                    Tree.Add(productNode);
+                    //Tree.Add(productNode);
                 }
             }
 
@@ -172,7 +172,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             if (categoryNode == null)
             {
                 categoryNode = Mapper.Map<NavigationRuntimeNode>(Mapper.Map<NavigationNode>(category));
-                Tree.Add(categoryNode);
+                //Tree.Add(categoryNode);
             }
 
             CurrentNode = categoryNode;
