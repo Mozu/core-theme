@@ -6,6 +6,7 @@ using AutoMapper;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.Core.Api.Client;
+using Mozu.Core.Logging;
 
 namespace Mozu.SiteBuilder.Mvc.Catalog
 {
@@ -16,10 +17,12 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
     {
         private IProductCategoryRuntimeWebApiClient _productCategoryRuntimeWebApiClient;
         private List<Category> _categories;
+        private ILogger _logger;
 
-        public RuntimeCategoryTreeProvider(IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient)
+        public RuntimeCategoryTreeProvider(IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient, ILogger logger)
         {
             _productCategoryRuntimeWebApiClient = productCategoryRuntimeWebApiClient.CloneWithoutUserClaims();
+            _logger = logger;
         }
 
         public Task<List<Category>> GetAllCategories()
@@ -49,6 +52,11 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
                         while (treeStack.Count() > 0)
                         {
                             var catPair = treeStack.Pop();
+                            if (catPair.Item1 == null)
+                            {
+                                _logger.Error("Unexpected null returned from productCategoryRuntimeWebApiClient.GetCategoryTree().");
+                                continue;
+                            }
                             var cat = Mapper.Map<Category>(catPair.Item1);
                          //   cat.Index = catPair.Item2.IndexOf(catPair.Item1);
                             categories.Add(cat);
