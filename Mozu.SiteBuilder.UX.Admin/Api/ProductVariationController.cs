@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     for (int i = 0; i < collection.Items.Count; i++)
                     {
                         var item = collection.Items[i];
-                        item.IsActive = true;
+                       
                         if (!string.IsNullOrEmpty(tempProductCode))
                         {
                             item.VariationProductCode = tempProductCode + "-" + (i + 1).ToString("000");

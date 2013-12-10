@@ -299,7 +299,8 @@ Ext.define('Taco.view.product.Form', {
 
         this.callParent(arguments);
 
-        variantSaveTask =  tasks.tasks.findBy(function (innerTask) {
+       
+        variantSaveTask = tasks.tasks.findBy(function (innerTask) {
             return innerTask.store == variantStore;
         })
         if (variantSaveTask) {

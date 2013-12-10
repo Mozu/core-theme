@@ -512,7 +512,12 @@ Ext.define('Taco.model.Product', {
                 params.productTypeId = me.get('productTypeId');
                 params.options = Ext.JSON.encode(params.options);
                 this.load({
-                    params: params
+                    params: params,
+                    callback: function (records, operation, success) {
+                        Ext.Array.each( records, function (newRecord) {
+                            newRecord.set('isActive', true);
+                        });
+                    }
                 });
             }
         });

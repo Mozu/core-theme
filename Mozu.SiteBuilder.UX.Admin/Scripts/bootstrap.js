@@ -18,7 +18,7 @@ Ext.Loader.addClassPathMappings({
   "Taco": "app",
   "Ext.ux.layout.component.field.BoxSelectField": "ux/form/field/BoxSelect.js",
   "Taco.view.themesettings.Index": "app/view/themeSettings/Index.js",
-  "MyReader": "app/view/report/Index.js",
+  "MyReader": "app/view/order/modal/AddPayment.js",
   "Taco.view.themesettings.Group": "app/view/themeSettings/Group.js",
   "Taco.store.OrderItems": "app/store/CartItems.js",
   "Ext.ux.IFrame": "ux/IFrame.js",
@@ -600,8 +600,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ext.ux.ProgressBarPager": [],
   "Taco.store.CmsDocumentDrafts": [],
   "Taco.model.ProductComboBox": [],
-  "Taco.view.product.variant.Options": [],
   "Taco.locale.Strings": [],
+  "Taco.view.product.variant.Options": [],
   "Taco.view.capability.Edit": [],
   "Taco.model.Behavior": [],
   "Taco.model.Contact": [],
@@ -1261,7 +1261,7 @@ Ext.ClassManager.addNameAliasMappings({
     "widget.tacotabpanel"
   ],
   "MyReader": [
-    "reader.my-json"
+    "reader.cards-json"
   ],
   "Taco.view.product.subform.Inventory": [
     "widget.productinventorysubform"
@@ -1656,8 +1656,8 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.ux.ProgressBarPager": [],
   "Taco.store.CmsDocumentDrafts": [],
   "Taco.model.ProductComboBox": [],
-  "Taco.view.product.variant.Options": [],
   "Taco.locale.Strings": [],
+  "Taco.view.product.variant.Options": [],
   "Taco.view.capability.Edit": [],
   "Taco.model.Behavior": [],
   "Taco.model.Contact": [],

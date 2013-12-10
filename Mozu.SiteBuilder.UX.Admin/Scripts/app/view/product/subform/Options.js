@@ -6,48 +6,49 @@ Ext.define('Taco.view.product.subform.Options', {
     extend: 'Taco.view.product.subform.Subform',
     alias: 'widget.taco-product-options',
 
-  //  requires: ['Taco.view.product.option.Form'],
+    requires: ['Taco.view.product.variant.Modal',
+        'Taco.view.product.variant.Grid',
+        'Taco.view.product.variant.Options'],
 
     title: 'Options',
-    
+
     initComponent: function () {
-        
+
         this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
         this.record = this.product;
 
         this.items = [{
-            xtype: 'component',
-            itemId: 'list',
-            html: ''
-        }, {
-            xtype: 'button',
-            text: 'Select Values',
-            scale: 'medium',
-            ui: 'action',
-            width: 150,
+                xtype: 'component',
+                itemId: 'list',
+                html: ''
+            }, {
+                xtype: 'button',
+                text: 'Select Values',
+                scale: 'medium',
+                ui: 'action',
+                width: 150,
 
-            handler: function() {
-                if (this.product.phantom) {
-                    Taco.MessageBox.alert(
-                        'Sorry!',
-                        'You must first finish and save the Product before assigning option values.'
-                    );
-                    return;
-                }
-                Ext.create('Taco.view.product.variant.Modal', {
-                    product: this.product,
-                    productType: this.productType,
-                    listeners: {
-                        hide: function () {
-                            this.product.getVariations().whenLoaded(this.rebuild, this);
-                        },
-                        scope: this
-                    }
-                });
-            },
-            scope: this
-        }]
-
+                handler: function () {
+                    //if (this.product.phantom) {
+                    //    Taco.MessageBox.alert(
+                    //        'Sorry!',
+                    //        'You must first finish and save the Product before assigning option values.'
+                    //    );
+                    //    return;
+                    //}
+                    Ext.create('Taco.view.product.variant.Modal', {
+                        product: this.product,
+                        productType: this.productType,
+                        listeners: {
+                            hide: function () {
+                                this.product.getVariations().whenLoaded(this.rebuild, this);
+                            },
+                            scope: this
+                        }
+                    });
+                },
+                scope: this
+            }];
         this.callParent(arguments);
 
         this.list = this.down('#list');
@@ -76,8 +77,8 @@ Ext.define('Taco.view.product.subform.Options', {
 
             Ext.each(option.get('values'), function (val, i) {
                 var value = Ext.Array.findBy(attribute.get('selectedValues'), function (item) {
-                        return typeof item.id !== 'undefined' && (item.id.toString() === val.toString());
-                    });
+                    return typeof item.id !== 'undefined' && (item.id.toString() === val.toString());
+                });
 
                 if (!value) return;
 
@@ -98,13 +99,13 @@ Ext.define('Taco.view.product.subform.Options', {
 
     loadByProductTypeId: function (value) {
         var productTypeId = typeof value === 'number'
-                            ? value
-                            : this.product.get('productTypeId');
+            ? value
+            : this.product.get('productTypeId');
         this.productType = this.productTypeStore.getById(productTypeId);
         this.rebuild();
     },
 
     rebuild: function () {
         this.list.update(this.buildOptionsHtml());
-    } 
+    }
 });
