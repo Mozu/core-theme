@@ -181,8 +181,7 @@
         this.tasks.each(function (task) {
             task.status = 0;
         });
-
-        this.runTasks();
+        Ext.defer(this.runTasks,1, this);
     },
 
     runTasks: function () {

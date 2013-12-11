@@ -387,40 +387,31 @@ Ext.define('Taco.view.product.Form', {
     },
 
     onTabClose: function (tab, catalogId) {
-        this.removeCatalog(catalogId);
+        this.updateForm();
+        this.saveTasks.on('complete', function () {
+            this.removeCatalog(catalogId);
+        }, this);
     },
 
     onTabSelectionChange: function (tabPanel, values, oldValues) {
-        //console.log('tab selection changed')
-        
-        // need to persist values form the form to the record before doing the add since the forms get destroyed in the process;
-        //this.updateForm();
-        
-        
-        var addCatalogs= Ext.Array.difference(values, oldValues),
-            removeCatalogs = Ext.Array.difference(oldValues, values);
+       
 
-        Ext.each(addCatalogs, function (catalogId) {
-            this.addCatalog(catalogId, true);
+        this.updateForm();
+        this.saveTasks.on('complete', function () {
+            var addCatalogs = Ext.Array.difference(values, oldValues),
+                removeCatalogs = Ext.Array.difference(oldValues, values);
+
+            Ext.each(addCatalogs, function (catalogId) {
+                this.addCatalog(catalogId, true);
+            }, this);
+
+            Ext.each(removeCatalogs, function (catalogId) {
+                this.removeCatalog(catalogId, true);
+            }, this);
+
+            this.goGoCatalogSwitch();
         }, this);
-
-        Ext.each(removeCatalogs, function (catalogId) {
-            this.removeCatalog(catalogId, true);
-        }, this);
-
-        this.goGoCatalogSwitch();
     },
 
-    /**
-     * @private
-     * @param {Object} sites A list of all sites that are associated with this product. 
-     *                       Property names are siteIds, values are the siteNames.
-     */
-    handleSelectionChange: function (sites) {
-        //console.log( 'handleSelectionChange', sites );
-        Ext.Object.each(sites, function (siteId, siteName) {
-            // TODO
-
-        });
-    }
+   
 });
