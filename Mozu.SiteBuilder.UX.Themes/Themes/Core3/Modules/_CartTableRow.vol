@@ -4,7 +4,7 @@
         <img class="mz-cart-item-image" data-bind="attr: { src: Product.ImagePath + '?size=50' }" />
         <!-- /ko -->
         <div class="mz-cart-product-item-info-wrap">
-            <a class="mz-cart-item-title" data-bind="text: Product.Name, attr: { href: '/product/' + Product.ProductCode }"></a>
+            <a class="mz-cart-item-title" data-bind="text: Product.Name, attr: { href: '/p/' + Product.ProductCode }"></a>
             <dl class="mz-cart-item-options" data-bind="visible: Product.Options.length > 0, foreach: Product.Options">
                 <dt class="mz-option-name" data-bind="text: Name + ':'"></dt>&nbsp;
                 <dd class="mz-option-value" data-bind="text: Value"></dd>

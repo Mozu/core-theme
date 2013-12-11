@@ -114,7 +114,7 @@
     },
 
     viewInSite: function (site, env) {
-        window.open('/_gosite/' + site.id + '?environment='+ env+'&redir=' + encodeURIComponent('/product/' + this.record.getId()), 'taco-preview');
+        window.open('/_gosite/' + site.id + '?environment='+ env+'&redir=' + encodeURIComponent('/p/' + this.record.getId()), 'taco-preview');
     },
     onBeforeRender: function () {
         var me = this;

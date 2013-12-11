@@ -1,4 +1,5 @@
-﻿using System;
+﻿//#define NONAV
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,44 +26,52 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             
         }
 
-        private List<NavigationRuntimeNode> __navigationTree;
+       // private List<NavigationRuntimeNode> __navigationTree;
 
         public List<NavigationRuntimeNode> Tree
         {
             get
             {
-                var task = Init();
-                if (!task.IsCompleted)
-                {
-                    task.Wait();
-                }
-
-                return __navigationTree;
+                return ASyncGetTree().Result;
             }
         }
 
-        private Task _initTask;
-        public Task Init()
+
+        private Task<List<NavigationRuntimeNode>> _initTask;
+        public Task<List<NavigationRuntimeNode>> ASyncGetTree()
         {
             if (_initTask == null)
             {
-                if (_apiContext.SiteId == null)
-                {
-                    throw new NotSupportedException("Navigation requires a context with a siteid");
-                }
-                _initTask = _navigationGandalf.GetTreeNavigation().ContinueWith(_ =>
-                    {
-                        __navigationTree = _.Result ?? new List<NavigationRuntimeNode>();
-                    });
-                
+#if (NONAV)
+                var tcs = new TaskCompletionSource<List<NavigationRuntimeNode>>();
+                tcs.SetResult(new List<NavigationRuntimeNode>());
+                _initTask = tcs.Task;
+#else
+                _initTask = _navigationGandalf.GetTreeNavigation().ContinueWith(_ => _.Result ?? new List<NavigationRuntimeNode>());
+#endif
             }
+
+       
             return _initTask; 
         }
 
-
+        private Task<List<NavigationNode>> _bla;
         public Task<List<NavigationNode>> GetCategories()
         {
+#if (NONAV)
+            if (_bla == null)
+            {
+
+
+                TaskCompletionSource<List<NavigationNode>> tcs = new TaskCompletionSource<List<NavigationNode>>();
+                tcs.SetResult(new List<NavigationNode>());
+                _bla = tcs.Task;
+            }
+
+            return _bla;
+#else
             return _navigationGandalf.GetCategories();
+#endif
         }
 
         public List<NavigationNode> RootCategories
@@ -83,7 +92,6 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get
             {
-                Init();
                 return GetBreadcrumbs(CurrentNode);
             }
         }
@@ -96,7 +104,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get
             {
-                Init();
+             
                 if (CurrentNode.NodeType == "product")
                 {
                     // only product has multiple parents
@@ -118,7 +126,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         /// <summary>
         /// Recursively build a breadcrumbs list by traversing from the leaf given up its parents.
         /// </summary>
-        private IEnumerable<NavigationRuntimeNode> GetBreadcrumbs(NavigationRuntimeNode leaf, Stack<NavigationRuntimeNode> stack = null)
+        private static IEnumerable<NavigationRuntimeNode> GetBreadcrumbs(NavigationRuntimeNode leaf, Stack<NavigationRuntimeNode> stack = null)
         {
             // build a stack from current node up
             if (stack == null)

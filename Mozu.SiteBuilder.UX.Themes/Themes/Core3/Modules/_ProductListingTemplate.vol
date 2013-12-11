@@ -6,13 +6,13 @@
 				<li class="mz-list-item">
 					<div class="mz-product-item-wrap">
 						<div class="mz-product-image-wrap">
-							<a class="mz-product-image-link" data-bind="attr: { href: '/product/' + ProductCode }">
+							<a class="mz-product-image-link" data-bind="attr: { href: '/p/' + ProductCode }">
 								<img data-bind="attr: { src: (Content.ProductImages[0] && Content.ProductImages[0].ImageUrl || 'http://placehold.it/160&text=Missing+Photo') + '?size=160' } " class="mz-product-image">
 							</a>
 						</div>
 
 						<div class="mz-product-info-wrap">
-							<a class="mz-product-title-link" data-bind="attr: { href: '/product/' + ProductCode }, text: Content.ProductName "></a>
+							<a class="mz-product-title-link" data-bind="attr: { href: '/p/' + ProductCode }, text: Content.ProductName "></a>
 
 							<div class="mz-price-stack-wrap">       
 								<div class="mz-price-label" data-bind="text: ProductCode"></div>

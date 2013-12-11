@@ -4,7 +4,7 @@
       <span class="mz-cart-item-image-wrap">
         <img class="mz-cart-item-image" data-bind="visible: Product.ImagePath, attr: { src: Product.ImagePath + '?size=50' }" />
       </span>
-      <a class="mz-cart-item-title" data-bind="text: Product.Name, attr: { href: '/product/' + Product.ProductCode }"></a>
+      <a class="mz-cart-item-title" data-bind="text: Product.Name, attr: { href: '/p/' + Product.ProductCode }"></a>
       <span class="mz-cart-item-code">
         Code: <strong data-bind="text: Product.ProductCode"></strong>
       </span>
