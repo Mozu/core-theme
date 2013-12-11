@@ -89,8 +89,8 @@
                 this.lastRequest = conf;
                 this.isLoading(true);
                 // wipe current data set, since the server will give us our entire state
-                this.get('facets').reset({ silent: true });
-                this.get('items').reset({ silent: true });
+                this.get('facets').reset(null, { silent: true });
+                this.get('items').reset(null, { silent: true });
                 this.apiModel.get(conf).then(function() {
                     me.trigger("facetchange");
                 }).ensure(function () {
