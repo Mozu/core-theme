@@ -62,7 +62,7 @@ Ext.define('Taco.view.website.settings.General', {
         this.getForm().setValues(values);
     },
     persistFormValues: function () {
-        var values = this.getValues();
+        var values = this.getValues(false, false, false, true);//this.getValues();
         
 
         Ext.Object.each(values, function (key, value) {

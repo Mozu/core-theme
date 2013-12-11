@@ -52,7 +52,7 @@ Ext.define('Taco.view.website.settings.EmailTemplate', {
     },
 
     persistFormValues: function () {
-        var values = this.getValues();
+        var values = this.getValues(false, false, false, true);
 
         Ext.Object.each(values, function (key, value) {
             if (!values[key] && !this.record.get(key)) {
