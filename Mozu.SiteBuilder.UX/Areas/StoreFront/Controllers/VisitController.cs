@@ -76,6 +76,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     VisitId = _pageContext.Visit.VisitId,
                     VisitType = "Website",
                     WebSiteId = _apiContext.SiteId,
+                    Date = DateTime.Now,
                     WebUserAgent = _httpContext.Request.UserAgent,
                     BrowserLocationCode = null, // location on mobile devices.
                     BrowserPlatform = _httpContext.Request.Browser != null ? _httpContext.Request.Browser.Platform : null,
