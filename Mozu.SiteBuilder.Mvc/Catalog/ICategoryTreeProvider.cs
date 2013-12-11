@@ -10,6 +10,6 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
     /// </summary>
     public interface ICategoryTreeProvider
     {
-        Task<List<Category>> GetAllCategories();
+        Task<CategoryTree> GetAllCategories();
     }
 }

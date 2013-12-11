@@ -10,7 +10,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
     public class NavigationNodeCollection
     {
         public List<NavigationNode> Nodes { get; set; }
-
+        public string ETag { get; set; }
     }
 
     /// <summary>

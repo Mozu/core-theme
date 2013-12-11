@@ -1,5 +1,4 @@
-﻿//#define NONAV
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,36 +41,17 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             if (_initTask == null)
             {
-#if (NONAV)
-                var tcs = new TaskCompletionSource<List<NavigationRuntimeNode>>();
-                tcs.SetResult(new List<NavigationRuntimeNode>());
-                _initTask = tcs.Task;
-#else
-                _initTask = _navigationGandalf.GetTreeNavigation().ContinueWith(_ => _.Result ?? new List<NavigationRuntimeNode>());
-#endif
+                _initTask = _navigationGandalf.GetTreeNavigation().ContinueWith(_ => {
+                    return _.Result ?? new List<NavigationRuntimeNode>();
+                });
             }
-
-       
             return _initTask; 
         }
 
-        private Task<List<NavigationNode>> _bla;
         public Task<List<NavigationNode>> GetCategories()
         {
-#if (NONAV)
-            if (_bla == null)
-            {
-
-
-                TaskCompletionSource<List<NavigationNode>> tcs = new TaskCompletionSource<List<NavigationNode>>();
-                tcs.SetResult(new List<NavigationNode>());
-                _bla = tcs.Task;
-            }
-
-            return _bla;
-#else
-            return _navigationGandalf.GetCategories();
-#endif
+            return _navigationGandalf.GetCategories()
+                .ContinueWith(catTask => catTask.Result.Nodes);
         }
 
         public List<NavigationNode> RootCategories

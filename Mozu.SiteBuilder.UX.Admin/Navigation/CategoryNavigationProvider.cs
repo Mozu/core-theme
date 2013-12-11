@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Mozu.ProductAdmin.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using DC = Mozu.ProductAdmin.Contracts;
@@ -29,14 +30,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Navigation
         /// Retrieves categories from the Admin category client and
         /// returns a list of NavigationTreeNodes.
         /// </summary>
-        public Task<List<NavigationNode>> GetCategories()
+        public Task<NavigationNodeCollection> GetCategories()
         {
             return _catClient.GetCategories()
                 .ContinueWith(t =>
                 {
                     DC.CategoryPagedCollection cats = t.Result.ReadAsSync();
 
-                    return Mapper.Map<List<NavigationNode>>(cats.Items);
+                    return new NavigationNodeCollection { ETag = t.Result.ETag(), Nodes = Mapper.Map<List<NavigationNode>>(cats.Items) };
                 });
         }
     }

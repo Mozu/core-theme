@@ -28,14 +28,14 @@ namespace Mozu.SiteBuilder.UX.Navigation
         /// Retrieves categories from the Runtime category client and
         /// returns a list of NavigationTreeNodes.
         /// </summary>
-        public Task<List<NavigationNode>> GetCategories()
+        public Task<NavigationNodeCollection> GetCategories()
         {
             return _categoryTreeProvider.GetAllCategories()
                 .ContinueWith(t =>
                 {
-                    var cats = t.Result;
+                    var cats = t.Result.Items;
                     var nodes = Mapper.Map<List<NavigationNode>>(cats);
-                    return nodes;
+                    return new NavigationNodeCollection { Nodes = nodes, ETag = t.Result.ETag };
                 });
         }
     }
