@@ -11,9 +11,11 @@ using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Handlers.Message;
 using Mozu.Core.Behaviors;
 using Mozu.Core.Configuration;
+using Mozu.Core.Logging;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Catalog;
+using Mozu.SiteBuilder.Mvc.Logging;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
@@ -24,6 +26,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 {
     public class ConfigurationModule : Module
     {
+        private const string APPLICATION_NAME = "Mozu.SiteBuilder.UX.Admin";
+
         protected override void Load(ContainerBuilder builder)
         {
             RegisterServiceContracts(builder);
@@ -99,8 +103,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
             builder.RegisterType<AdminCategoryTreeProvider>().As<ICategoryTreeProvider>();
             builder.RegisterType<CategoryNavigationProvider>().As<ICategoryNavigationProvider>();
-           
 
+            builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", APPLICATION_NAME).InstancePerLifetimeScope();
             // TODO: This binding will be unnecessary once the DocumentWebApiClient works better.
             //builder.RegisterType<InSessionDocumentWebApiClient>().As<IMoreAwesomeDocumentWebApiClient>();
 

@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 {
     public class BootStrapperAdmin : AbstractWebApiBootstrapper
     {
-        private const string APPLICATION_NAME = "Mozu.SiteBuilder.Admin";
+        private const string APPLICATION_NAME = "Mozu.SiteBuilder.UX.Admin";
      
         protected override void AddMessageHandlers(HttpConfiguration httpConfiguration, IHttpMessageHandlerErrorHandler messageErrorHandler)
         {
