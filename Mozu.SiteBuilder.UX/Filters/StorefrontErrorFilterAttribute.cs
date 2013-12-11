@@ -1,7 +1,11 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Net.Http;
+using System.Web.Http;
 using Mozu.Core.Api.Filters.Exception;
 using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 
 namespace Mozu.SiteBuilder.UX.Filters
@@ -23,7 +27,15 @@ namespace Mozu.SiteBuilder.UX.Filters
             var controller =  actionExecutedContext.ActionContext.ControllerContext.Controller as BaseApiController;
             if (controller != null )
             {
-                var view = new ViewResult() {Model = actionExecutedContext.Exception, ViewName = "error"};
+                var model = new HttpError(actionExecutedContext.Exception, true);
+                model["activityId"] = Trace.CorrelationManager.ActivityId;
+                var pageContext = actionExecutedContext.Request.Resolve<PageContext>();
+                if (pageContext != null && pageContext.Visit != null)
+                {
+                    model["visitId"] = pageContext.Visit.VisitId;
+                }
+
+                var view = new ViewResult() {Model = model, ViewName = "error"};
                 actionExecutedContext.ActionContext.Response = actionExecutedContext.ActionContext.Request.CreateResponse(HttpStatusCode.InternalServerError, view);
             }
         }
