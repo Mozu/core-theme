@@ -400,6 +400,7 @@ Ext.define('Taco.core.ux.form.Form', {
     },
 
     save: function () {
+        //todo ? clear save tasks?
         if (this.beforeSave() !== false) {
             this.addSaveTasks(this.saveTasks);
             this.saveTasks.execute();
@@ -467,8 +468,18 @@ Ext.define('Taco.core.ux.form.Form', {
     },
 
     updateForm: function () {
+        var remTasks = [];
         if (this.beforeSave() !== false) {
+            
+            //todo ? clear save tasks?
             this.addSaveTasks(this.saveTasks, true, false);
+            
+            this.saveTasks.tasks.each(function (task) {
+                if (!task.updateForm) {
+                    remTasks.push(task);
+                }
+            });
+            this.saveTasks.tasks.removeAll(remTasks);
             this.saveTasks.execute();
         }
     },
