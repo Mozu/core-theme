@@ -10,6 +10,7 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
     title: 'Store Credit',
     formCfg: null,
     closable: true,
+    closeAction: 'destroy',
     actions: [{
         xtype: 'button',
         itemId: 'primaryAction',
@@ -24,23 +25,11 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
     initComponent: function () {
         var me = this;
         me.cls += ' ' + Taco.baseCSSPrefix + 'address-editor';
+        
+        this.storeCredits = this.record.getStoreCredits();
 
-        me.storeCreditStore = Ext.clone(Taco.core.data.StoreManager.getOrCreate('Taco.store.StoreCredits'));
-        me.storeCreditStore.removeAll();
-
-        Ext.Ajax.request({
-            url: '/admin/app/customer/credits/list?customerId=' + this.record.get('id'),
-             method: 'GET',
-             success: function (response) {
-                 var json = Ext.JSON.decode(response.responseText);
-                 me.storeCreditStore.loadData(json.items);
-             },
-             failure: function (response) {
-         	}
-         });
-
-        me.wishlistGrid = Ext.create('Ext.grid.Panel', {
-            store: this.storeCreditStore,
+        me.grid = Ext.create('Ext.grid.Panel', {
+            store: this.storeCredits ,
             selType: 'cellmodel',
             plugins: [
                 Ext.create('Ext.grid.plugin.CellEditing', {
@@ -81,7 +70,7 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
         });
 
         this.items = [
-            me.wishlistGrid,
+            me.grid,
             {
                 xtype: 'checkboxfield',
                 boxLabel: 'Notify customer of changes in their Store Credit'

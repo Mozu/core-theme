@@ -12,7 +12,8 @@ Ext.define('Taco.model.CustomerAccount', {
     requires: [
         'Taco.model.Contact',
         'Taco.model.Order',
-        'Taco.store.Orders'
+        'Taco.store.Orders',
+        'Taco.store.StoreCredits'
     ],
     fields: [
         {
@@ -106,7 +107,18 @@ Ext.define('Taco.model.CustomerAccount', {
             foreignProperty: 'account'
         });
     },
+    
+    getStoreCredits: function (config ) {
+        if (this.storeCreditsStore) {
+            return this.storeCreditsStore;
+        }
+        this.storeCreditsStore = Ext.create('Taco.store.StoreCredits', { autoLoad: false });
+        this.storeCreditsStore.getProxy().params = this.storeCreditsStore.getProxy().params || {};
+        this.storeCreditsStore.getProxy().params.customerId = this.getId();
+        this.storeCreditsStore.load(config);
+        return this.storeCreditsStore;
 
+    },
     proxy: {
         type: 'ajaxproxy',
         api: {
