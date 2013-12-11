@@ -15,5 +15,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         [DataMember(Name = "nodes", EmitDefaultValue = false)]
         public List<NavigationNode> Nodes { get; set; }
 
+        [IgnoreDataMember]
+        public string ETag { get; set; }
     }
 }

@@ -181,14 +181,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<ActionResult> Store()
         {
-            List<Category> catList = await _categoryTreeProvider.GetAllCategories();
+            CategoryTree catList = await _categoryTreeProvider.GetAllCategories();
             var cat = new Category
                           {
                               Content = new CategoryContent {Name = "Store"}
                           };
             PageContext.PageType = "category";
             PageContext.CategoryId = -1;
-            cat.ChildrenCategories = catList.Where(x => x.ParentCategory == null).ToList();
+            cat.ChildrenCategories = catList.Items.Where(x => x.ParentCategory == null).ToList();
             return View("Category", cat);
         }
 
@@ -205,7 +205,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.FeedUrl = "/feeds/category/" + categoryId;
 
 
-            List<Category> catList = await _categoryTreeProvider.GetAllCategories();
+            List<Category> catList = (await _categoryTreeProvider.GetAllCategories()).Items;
 
 
             Category cat = catList.Where(x => x.CategoryId == categoryId.GetValueOrDefault(-1)).FirstOrDefault();
@@ -277,7 +277,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             // TODO: Sort by Date Last Modified DESC
             string sortBy = null; // "CreateDate DESC";
 
-            List<Category> catList = await _categoryTreeProvider.GetAllCategories();
+            List<Category> catList = (await _categoryTreeProvider.GetAllCategories()).Items;
             Category cat = catList.Where(x => x.CategoryId == categoryId.GetValueOrDefault(-1)).FirstOrDefault();
             if (cat == null)
             {

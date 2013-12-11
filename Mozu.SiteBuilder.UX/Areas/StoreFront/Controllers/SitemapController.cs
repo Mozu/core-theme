@@ -38,8 +38,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         // GET: /sitemap.xml
         public async Task<ActionResult> Index()
         {
-            var primaryNav = _gandalf.GetTreeNavigation().Result;
-            string domain = (await GetSitePrimaryDomain()).TrimEnd('/');
+            var primaryNavTask = _gandalf.GetTreeNavigation();
+            var domainTask = GetSitePrimaryDomain();
+            await Task.WhenAll(primaryNavTask, domainTask);
+
+            var primaryNav = primaryNavTask.Result;
+            var domain = domainTask.Result.TrimEnd('/');
 
             //SiteBuilderContext.Current.PageContext.CanonicalUrl
 

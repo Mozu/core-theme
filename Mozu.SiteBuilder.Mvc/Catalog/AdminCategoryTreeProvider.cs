@@ -20,9 +20,9 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
         {
         }
 
-        public Task<List<Category>> GetAllCategories()
+        public Task<CategoryTree> GetAllCategories()
         {
-            return new Task<List<Category>>(() => null);
+            throw new NotImplementedException();
         }
     }
 }

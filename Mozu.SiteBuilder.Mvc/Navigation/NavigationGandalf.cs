@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using AutoMapper;
-using Mozu.ProductAdmin.Contracts.Clients;
+using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Models.Navigation;
-using DC = Mozu.ProductAdmin.Contracts;
 using DCC = Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
@@ -32,18 +36,26 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         private INavigationRepository _navRepo;
         private ICategoryNavigationProvider _catClient;
         private ICmsServiceWrapper _cmsService;
-        private Task<List<NavigationNode>> _getCategoriesTask;
+        private Task<NavigationNodeCollection> _getCategoriesTask;
+        private System.Web.Caching.Cache _navCache;
+        private MD5 _md5;
+
+        private ILogger _logger;
+
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public NavigationGandalf(INavigationRepository navRepo, ICategoryNavigationProvider catClient, ICmsServiceWrapper cmsService)
+        public NavigationGandalf(INavigationRepository navRepo, ICategoryNavigationProvider catClient, ICmsServiceWrapper cmsService, HttpContextBase httpContext, ILogger logger)
         {
             _navRepo = navRepo;
             _catClient = catClient;
             _cmsService = cmsService;
+            _logger = logger;
+            _navCache = httpContext.Cache;
+            _md5 = MD5.Create();
         }
 
-        public Task<List<NavigationNode>> GetCategories()
+        public Task<NavigationNodeCollection> GetCategories()
         {
             if (_getCategoriesTask == null)
             {
@@ -56,7 +68,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// Build a flat list of NavigationNodes (which can have a ParentId to imply a hiearchy)
         /// This list can then be transformed to a List<NavigationRuntimeNode> or List<NavigationTreeNode>
         /// </summary>
-        private Task<List<NavigationNode>> GetListInternal()
+        private Task<NavigationNodeCollection> GetListInternal()
         {
             var masterList = new List<NavigationNode>();
 
@@ -85,21 +97,36 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             var pageTask = _cmsService.GetList2(contentCollection: "pages", pageSize: 100);
 
             // get the list of blogs
-            var blogTask = _cmsService.GetList2(contentCollection: "blogs", pageSize: 1, filter: "DocumentType eq blog" );
+            // var blogTask = _cmsService.GetList2(contentCollection: "blogs", pageSize: 1, filter: "DocumentType eq blog" );
 
             // get our navigation data authority
             var navTask = _navRepo.GetSetAsync();
 
-            return Task.WhenAll(catTask, pageTask, blogTask, navTask)
+            return Task.WhenAll(catTask, pageTask, /*blogTask,*/ navTask)
                 .ContinueWith(_ =>
                 {
-                    List<NavigationNode> cats = catTask.Result;
-                    DCC.DocumentCollection  pages = pageTask.Result.ReadAsSync();
-                    DCC.DocumentCollection blogs = blogTask.Result.ReadAsSync();
+                    NavigationNodeCollection cats = catTask.Result;
+                    ServiceClientResponse<DCC.DocumentCollection> pagesRes = pageTask.Result;
+                    //ServiceClientResponse<DCC.DocumentCollection> blogsRes = blogTask.Result;
                     NavigationSet navSet = navTask.Result;
 
+                    string etag = CompositeETag(categoriesEtag: cats.ETag, pagesEtag: pagesRes.ETag(), navsetEtag: navSet.ETag);
+                    List<NavigationNode> cachedResult = GetCachedNavigationList(etag);
+                    Debug.WriteLine("Building list");
+                    if (cachedResult != null)
+                    {
+                        return new NavigationNodeCollection {
+                            ETag = etag,
+                            Nodes = cachedResult
+                        };
+                    }
+
+                    DCC.DocumentCollection pages = pagesRes.ReadAsSync();
+                    //DCC.DocumentCollection blogs = blogsRes.ReadAsSync();
+                    //pageTask.Result.ResponseMessage.Headers.ETag
+
                     // build the masterlist. Step 1: put the top level categories in.
-                    var sortedCats = cats.OrderBy(node => node.ParentId).ThenBy(node => node.Index).ToList();
+                    var sortedCats = cats.Nodes.OrderBy(node => node.ParentId).ThenBy(node => node.Index).ToList();
 
                     // categories with a null ParentCategoryId should belong to the top level.
                     sortedCats.ForEach(n => n.ParentId = n.ParentId ?? NAV_ROOT_NODE_NAME);
@@ -176,7 +203,13 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     allUnassigned.Each(n => n.ParentId = UNLINKED_PAGES_NODE_ID);
                     masterList.AddRange(allUnassigned);
 
-                    return masterList.OrderBy(n => n.ParentId).ThenBy(n => n.Index).ToList();
+                    var nodes = masterList.OrderBy(n => n.ParentId).ThenBy(n => n.Index).ToList();
+                    if (etag != null)
+                        SaveCachedNavigationList(etag, nodes);
+                    return new NavigationNodeCollection {
+                        ETag = etag,
+                        Nodes = nodes
+                    };
                 });
         }
 
@@ -210,10 +243,14 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             return GetListInternal()
                 .ContinueWith(res =>
                 {
-                    var flatlist = res.Result;
+                    var nodeCollection = res.Result;
+
+                    var cachedTree = GetCachedTree(nodeCollection.ETag);
+                    if (cachedTree != null)
+                        return cachedTree;
 
                     var grouped =
-                        from node in flatlist
+                        from node in nodeCollection.Nodes
                         where node.Id != UNLINKED_PAGES_NODE_ID
                         where node.ParentId != UNLINKED_PAGES_NODE_ID
                         group node by node.ParentId into g
@@ -222,15 +259,22 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     var rootLevel = grouped.FirstOrDefault(g => g.Key == NAV_ROOT_NODE_NAME);
                     if (rootLevel == null)
                         return null;
-
                     var rootLevelMapped = Mapper.Map<List<NavigationRuntimeNode>>(rootLevel.ToList());
-                    BuildTree(rootLevelMapped, grouped);
+                    int entries = 0, counter = 0;
+
+                    Stopwatch stopwatch = Stopwatch.StartNew();
+                    BuildTree(rootLevelMapped, grouped, ref entries, ref counter);
+                    stopwatch.Stop();
+                    _logger.Debug(String.Format("Navigation: Built tree. {0} entries. {1} loops. {1} ms elapsed.", entries, counter, stopwatch.ElapsedMilliseconds));
 
                     if (rootLevelMapped != null)
                     {
                         var homePage = rootLevelMapped.FirstOrDefault(node => !node.NodeType.IsLink && !String.IsNullOrEmpty(node.Url));
                         if (homePage != null)
                             homePage.IsHomePage = true;
+
+                        if (nodeCollection.ETag != null)
+                            SaveCachedTree(nodeCollection.ETag, rootLevelMapped);
                     }
                     return rootLevelMapped;
                 });
@@ -239,21 +283,79 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// <summary>
         /// Recursively build the navigation tree top-down.
         /// </summary>
-        private void BuildTree(List<NavigationRuntimeNode> rootLevel, IEnumerable<IGrouping<string, NavigationNode>> allObjects)
+        private void BuildTree(List<NavigationRuntimeNode> rootLevel, IEnumerable<IGrouping<string, NavigationNode>> allObjects, ref int entries, ref int counter)
         {
             if (rootLevel == null || rootLevel.Count == 0)
                 return;
 
+            entries++;
             foreach (var node in rootLevel)
             {
+                counter++;
+
                 var childItems = allObjects.FirstOrDefault(g => g.Key == node.Id);
                 if (childItems != null)
                 {
-                    node.Items = Mapper.Map<List<NavigationRuntimeNode>>(childItems.ToList());
-                    node.Items.ForEach(n => n.Parent = node);
-                    BuildTree(node.Items, allObjects);
+                    node.Items = childItems.Select(child => new NavigationRuntimeNode
+                    {
+                        Id = child.Id,
+                        Parent = node,
+                        Url = child.Url,
+                        Name = child.Name,
+                        Index = child.Index,
+                        NodeType = child.NodeType,
+                        IsHomePage = false
+                    }).ToList();
+                    BuildTree(node.Items, allObjects, ref entries, ref counter);
                 }
             }
+        }
+
+        private string CompositeETag(string categoriesEtag, string pagesEtag, string navsetEtag)
+        {
+            // if any service didn't give us an etag, we can't depend on this cache.
+            if (String.IsNullOrEmpty(categoriesEtag) || String.IsNullOrEmpty(pagesEtag) || String.IsNullOrEmpty(navsetEtag))
+                return null;
+
+            // smoosh all the etags together in one glorious byte array and then MD5 that byte array.
+            byte[] allTheBytes = ASCIIEncoding.ASCII.GetBytes(categoriesEtag + pagesEtag + navsetEtag);
+            string cacheKey = BitConverter.ToString(_md5.ComputeHash(allTheBytes));
+            return cacheKey;
+        }
+
+        /// <summary>
+        /// Retrieve a built navigation tree from local cache. Uses the ETags from all the services 
+        /// that contribute data to ensure that the tree is fresh.
+        /// </summary>
+        private List<NavigationNode> GetCachedNavigationList(string cacheKey)
+        {
+            return cacheKey != null ? _navCache[cacheKey] as List<NavigationNode> : null;
+        }
+
+        /// <summary>
+        /// Retrieve a built navigation tree from local cache. Uses the ETags from all the services 
+        /// that contribute data to ensure that the tree is fresh.
+        /// </summary>
+        private void SaveCachedNavigationList(string etag, List<NavigationNode> nodes)
+        {
+            if (String.IsNullOrEmpty(etag))
+                throw new ArgumentException("Cannot cache navigation set without an etag.");
+
+            _navCache[etag] = nodes;
+        }
+
+        private List<NavigationRuntimeNode> GetCachedTree(string etag)
+        {
+            string cacheKey = etag != null ? String.Format("{0}.tree", etag) : null;
+            return cacheKey != null ? _navCache[cacheKey] as List<NavigationRuntimeNode> : null;
+        }
+
+        private void SaveCachedTree(string etag, List<NavigationRuntimeNode> tree)
+        {
+            if (String.IsNullOrEmpty(etag))
+                throw new ArgumentException("Cannot cache navigation set without an etag.");
+            string cacheKey = String.Format("{0}.tree", etag);
+            _navCache[cacheKey] = tree;
         }
     }
 }

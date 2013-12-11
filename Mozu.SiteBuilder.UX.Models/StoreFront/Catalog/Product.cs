@@ -511,6 +511,12 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
     {
         
     }
+    public class CategoryTree
+    {
+        public string ETag { get; set; }
+        public List<Category> Items { get; set; }
+    }
+
     [DataContract]
     public class Category : Mozu.ProductRuntime.Contracts.Category
     {

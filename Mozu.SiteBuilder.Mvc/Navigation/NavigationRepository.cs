@@ -64,16 +64,16 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 .Unwrap()
                 .ContinueWith(docResult =>
                 {
-                    var doc = docResult.Result.ReadAsSync();
+                    var res = docResult.Result;
+                    string etag = res.ETag();
+                    var doc = res.ReadAsSync();
                     var jsonString = doc.Get<string>("data");
                     if (!string.IsNullOrEmpty(jsonString))
                     {
-                        return Newtonsoft.Json.JsonConvert.DeserializeObject<NavigationSet>(jsonString);
+                        var navset = Newtonsoft.Json.JsonConvert.DeserializeObject<NavigationSet>(jsonString);
+                        navset.ETag = etag;
                     }
-                    return new NavigationSet();
-                    // retrieve the document content
-                    //return _docWebApiClient.GetDocumentContent(doc.DocumentListName, doc.Id);
-
+                    return new NavigationSet() { ETag = etag };
                 });
         }
 

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Mozu.ProductRuntime.Contracts.Clients;
-using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.Core.Api.Client;
+using Mozu.ProductRuntime.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.Core.Logging;
 
 namespace Mozu.SiteBuilder.Mvc.Catalog
@@ -16,7 +17,7 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
     public class RuntimeCategoryTreeProvider : ICategoryTreeProvider
     {
         private IProductCategoryRuntimeWebApiClient _productCategoryRuntimeWebApiClient;
-        private List<Category> _categories;
+        private CategoryTree _categories;
         private ILogger _logger;
 
         public RuntimeCategoryTreeProvider(IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient, ILogger logger)
@@ -25,22 +26,28 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
             _logger = logger;
         }
 
-        public Task<List<Category>> GetAllCategories()
+        public Task<CategoryTree> GetAllCategories()
         {
             if (_categories != null)
-                return Task.Run<List<Category>>(() => _categories);
-
+            {
+                var t = new TaskCompletionSource<CategoryTree>();
+                t.SetResult(_categories);
+            }
             lock (this)
             {
                 if (_categories != null)
-                    return Task.Run<List<Category>>(() => _categories);
-
+                {
+                    var t = new TaskCompletionSource<CategoryTree>();
+                    t.SetResult(_categories);
+                }
                 var categories = new List<Category>();
 
                 return _productCategoryRuntimeWebApiClient.GetCategoryTree()
                     .ContinueWith(t =>
                     {
-                        var srvTree = t.Result.ReadAsSync();
+                        var res = t.Result;
+                        var etag = res.ETag();
+                        var srvTree = res.ReadAsSync();
                         // var srvTree = new CategoryCollection() { Items = new List<ProductRuntime.Contracts.Category>() };
 
                         var treeStack =
@@ -75,8 +82,8 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
                         //  _cats = AutoMapper.Mapper.Map<List<Category>>(client.GetCategories(null,  0, int.MaxValue, null).Result.ReadAsSync().Items);
                       //  categories.ForEach(x => x.ChildrenCategories = (categories.Where(_ => _.ParentCategoryId == null).ToList()) );
 
-                        _categories = categories;
-                        return categories;
+                        _categories = new CategoryTree { Items = categories, ETag = etag };
+                        return _categories;
                     });
             }
         }
