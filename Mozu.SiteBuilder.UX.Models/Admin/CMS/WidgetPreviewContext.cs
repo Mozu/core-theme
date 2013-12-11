@@ -56,12 +56,25 @@ using System.Runtime.Serialization;
     //     public string DocumentId { get; set; }
     //}
     [DataContract()]
-    public class WidgetPreviewData:WidgetRuntimeData
+    public class WidgetPreviewData : ZoneWidgetRuntimeData
     {
         [DataMember(Name = "context")]
         public CmsPageContext Context { get; set; }
         [DataMember(Name = "output")]
         public string Output { get; set; }
+     
+        public WidgetDefinition Definition { get; set; }
+
+        public bool IsPreview { get; set; }
+
+        [DataMember(Name = "source")]
+        public DocumentRequest Source { get; set; }
+         [DataMember(Name = "zoneScope")]
+        public string ZoneScope { get; set; }
+
+
+        
+   
     }
 
 
@@ -88,6 +101,7 @@ using System.Runtime.Serialization;
          
 
     }
+    [DataContract]
     public class ZoneWidgetRuntimeData
     {
 
@@ -95,145 +109,147 @@ using System.Runtime.Serialization;
         {
             Id = Guid.NewGuid().ToString();
         }
-       
+          [DataMember(Name = "definitionId")]
         public string DefinitionId { get; set; }
 
-
+          [DataMember(Name = "isRichText")]
         public bool isRichText { get; set; }
+          [DataMember(Name = "config")]
         public object Config { get; set; }
+          [DataMember(Name = "id")]
         public string Id { get; set; }
     }
 
 
-    [DataContract()]
-    public class WidgetRuntimeData : WidgetInstanceData, IModelMetadataParentContainer, IModelMetadataContainer, ICmsMetaDataExtrator
-    {
+    //[DataContract()]
+    //public class WidgetRuntimeData : WidgetInstanceData, IModelMetadataParentContainer, IModelMetadataContainer, ICmsMetaDataExtrator
+    //{
 
-        public WidgetDefinition Definition { get; set; }
+    //    public WidgetDefinition Definition { get; set; }
 
-        public Dictionary<string,object > GetModelMetadata()
-        {
+    //    public Dictionary<string,object > GetModelMetadata()
+    //    {
            
-            var mmd  = GetModelMetadata("___");
-            //return mmd;
-           // var wid = this.TypeHelper.GetWidgetDefintion(this.DefinitionId.ToString());
-            var jobj = Newtonsoft.Json.Linq.JObject.FromObject(this);
-          //  jobj["editView"] = wid.EditView;
+    //        var mmd  = GetModelMetadata("___");
+    //        //return mmd;
+    //       // var wid = this.TypeHelper.GetWidgetDefintion(this.DefinitionId.ToString());
+    //        var jobj = Newtonsoft.Json.Linq.JObject.FromObject(this);
+    //      //  jobj["editView"] = wid.EditView;
 
-            mmd["data-attribute-name"] = "data-editing-widget";
-            mmd["data-editing"] = jobj;
+    //        mmd["data-attribute-name"] = "data-editing-widget";
+    //        mmd["data-editing"] = jobj;
             
 
-            return mmd;
-        }
+    //        return mmd;
+    //    }
 
-        ICmsTypeHelper TypeHelper
-        {
-            get
-            {
-                throw new NotImplementedException("return AutofacDependencyResolver.Current.RequestLifetimeScope.Resolve<ICmsTypeHelper>();");
+    //    ICmsTypeHelper TypeHelper
+    //    {
+    //        get
+    //        {
+    //            throw new NotImplementedException("return AutofacDependencyResolver.Current.RequestLifetimeScope.Resolve<ICmsTypeHelper>();");
                 
-            }
-        }
-        public Dictionary<string,object > GetModelMetadata(string property)
-        {
-            var mmd = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-            return mmd;
-        }
+    //        }
+    //    }
+    //    public Dictionary<string,object > GetModelMetadata(string property)
+    //    {
+    //        var mmd = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+    //        return mmd;
+    //    }
 
-        public bool IsPreview { get; set; }
+    //    public bool IsPreview { get; set; }
 
         
-        public virtual Object this[string key]
-        {
-            get
-            {
-                return this.Config[key];
-            }
-        }
+    //    public virtual Object this[string key]
+    //    {
+    //        get
+    //        {
+    //            return this.Config[key];
+    //        }
+    //    }
 
-        public Dictionary<string,object > GetCmsModelMetadata(string expression)
-        {
-            var parts = expression.Split('.');
-            if (parts.Length < 2 && !string.Equals( parts[2] , "config", StringComparison.OrdinalIgnoreCase ))
-            {
-                return null;
-            }
-            var mmd = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+    //    public Dictionary<string,object > GetCmsModelMetadata(string expression)
+    //    {
+    //        var parts = expression.Split('.');
+    //        if (parts.Length < 2 && !string.Equals( parts[2] , "config", StringComparison.OrdinalIgnoreCase ))
+    //        {
+    //            return null;
+    //        }
+    //        var mmd = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             
-            mmd["data-attribute-name"] = "data-editing-element";
+    //        mmd["data-attribute-name"] = "data-editing-element";
 
-            mmd["id"] = this.Id ;
-            mmd["entityType"] = "widget";
-            mmd["fieldName"] = expression.Split('.').Last();
+    //        mmd["id"] = this.Id ;
+    //        mmd["entityType"] = "widget";
+    //        mmd["fieldName"] = expression.Split('.').Last();
             
-            // mmd["data-editing"] = jobj;
+    //        // mmd["data-editing"] = jobj;
             
             
 
 
-            return mmd;
+    //        return mmd;
 
-        }
-    }
-    [DataContract()]
-    public class WidgetInstanceData 
-    {
-        public WidgetInstanceData()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
-        [DataMember(Name = "definitionId")]
-        public string DefinitionId { get; set; }
+    //    }
+    //}
+    //[DataContract()]
+    //public class WidgetInstanceData 
+    //{
+    //    public WidgetInstanceData()
+    //    {
+    //        Id = Guid.NewGuid().ToString();
+    //    }
+    //    [DataMember(Name = "definitionId")]
+    //    public string DefinitionId { get; set; }
 
-        //[DataMember(Name = "zoneId")]
-        [JsonProperty(PropertyName = "zoneId")]
-        public string ZoneId { get; set; }
+    //    //[DataMember(Name = "zoneId")]
+    //    [JsonProperty(PropertyName = "zoneId")]
+    //    public string ZoneId { get; set; }
 
-        [DataMember(Name = "index")]
-        public int? Index { get; set; }
+    //    [DataMember(Name = "index")]
+    //    public int? Index { get; set; }
 
-        [DataMember(Name = "configuration")]
-        public string ConfigurationData { get; set; }
+    //    [DataMember(Name = "configuration")]
+    //    public string ConfigurationData { get; set; }
 
-        private Newtonsoft.Json.Linq.JObject _config;
+    //    private Newtonsoft.Json.Linq.JObject _config;
 
-        [DataMember(Name = "config")]
-        public Newtonsoft.Json.Linq.JObject Config
-        {
-            get
-            {
-                if (_config == null && !string.IsNullOrEmpty(this.ConfigurationData))
-                {
-                    _config = Newtonsoft.Json.Linq.JObject.Parse(this.ConfigurationData);
-                }
-                if (_config == null)
-                {
-                    _config = new JObject();
-                }
-                return _config;
-            }
-            set
-            {
-                _config = value;
-                if (value == null)
-                {
-                    this.ConfigurationData = null;
-                    return;
-                }
-                this.ConfigurationData = _config.ToString(Formatting.None);
+    //    [DataMember(Name = "config")]
+    //    public Newtonsoft.Json.Linq.JObject Config
+    //    {
+    //        get
+    //        {
+    //            if (_config == null && !string.IsNullOrEmpty(this.ConfigurationData))
+    //            {
+    //                _config = Newtonsoft.Json.Linq.JObject.Parse(this.ConfigurationData);
+    //            }
+    //            if (_config == null)
+    //            {
+    //                _config = new JObject();
+    //            }
+    //            return _config;
+    //        }
+    //        set
+    //        {
+    //            _config = value;
+    //            if (value == null)
+    //            {
+    //                this.ConfigurationData = null;
+    //                return;
+    //            }
+    //            this.ConfigurationData = _config.ToString(Formatting.None);
 
-            }
-        }
+    //        }
+    //    }
 
-        [DataMember(Name = "zoneScope")]
-        public string ZoneScope { get; set; }
+    //    [DataMember(Name = "zoneScope")]
+    //    public string ZoneScope { get; set; }
        
-        [DataMember(Name = "source")]
-        public DocumentRequest Source { get; set; }
+    //    [DataMember(Name = "source")]
+    //    public DocumentRequest Source { get; set; }
 
-        [DataMember(Name = "id")]
-        public string Id { get; set; }
-    }
+    //    [DataMember(Name = "id")]
+    //    public string Id { get; set; }
+    //}
     
 }

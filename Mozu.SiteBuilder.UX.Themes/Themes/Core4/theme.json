@@ -119,15 +119,46 @@
             "documentType": "web_page",
             "template": "about-us",
             "userCreatable": true,
-            /* list of widgets attached to this type of page by default */
-            "widgets": [{
-                "definitionId": "content",
-                "zoneId": "body",
-                "index": 0,
-                "config": {
-                    "body": "<p>About Us</p>"
-                }
-            }]
+            /* list of zone widgetes attached to this type of page by default */
+            "zones":[
+			  {
+				"Id": "body",
+				"Rows": [
+				  {
+					"Columns": [
+					  {
+						"Span": 12,
+						"Widgets": [
+						  {
+							"definitionId": "cms-image",
+							"config": {
+							  "height": 206,
+							  "imageHeight": "400",
+							  "imageSource": "externalUrl",
+							  "imageExternalUrl": "http://www.fabifirm.com/wp-content/uploads/2013/05/about-us-banner.jpg",
+							  "borderWidth": "1px",
+							  "borderStyle": "Solid",
+							  "borderColor": "rgba(0,0,0,1)",
+							  "imageSize": "Stretch",
+							  "linkSource": "External URL"
+							}
+						  },
+						  {
+							"definitionId": "content",
+							"isRichText": true,
+							"config": {
+							  "body": "<h2>Insert Title</h2><p>Insert Content</p>"
+							}
+						  }
+						],
+						"Rows": null
+					  }
+					]
+				  }
+				]
+			  }
+			]
+            
         }, {
             "id": "blank-page",
             "title": "Blank Page",

@@ -110,7 +110,15 @@ Ext.define('Taco.view.website.Index', {
                     plain: true,
                     shadow: false,
                     items: [{
-                        text: 'preview',
+                        text: 'Live Version',
+                        handler: function (menuItem) {
+                            //scope is set to index on all action buttons by container.
+                            var url = menuItem.up('button').scope.url;
+                            window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=live&redir=' + encodeURIComponent(url), 'taco-preview');
+                        }
+                    },
+                    {
+                        text: 'Staging Version',
                         handler: function (menuItem) {
                             //scope is set to index on all action buttons by container.
                             var url = menuItem.up('button').scope.url;

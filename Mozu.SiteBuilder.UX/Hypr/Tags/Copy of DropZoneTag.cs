@@ -154,7 +154,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             isEditmode = isEditmode && string.Equals(scope, pageContext.EditMode.GetValueOrDefault(EditModes.page ).ToString(), StringComparison.OrdinalIgnoreCase);
 
-            var zoneRuntimeData = (pageContext.CmsContext == null || pageContext.CmsContext.RuntimeData2 == null) ? null : pageContext.CmsContext.RuntimeData2.FirstOrDefault(x => string.Equals(x.Id, zoneId, StringComparison.OrdinalIgnoreCase));
+            var zoneRuntimeData = (pageContext.CmsContext == null || pageContext.CmsContext.RuntimeData == null) ? null : pageContext.CmsContext.RuntimeData.FirstOrDefault(x => string.Equals(x.Id, zoneId, StringComparison.OrdinalIgnoreCase));
             bool useDefaultId = true;
             var sb = new StringBuilder();
             sb.Append("<div class=\"mz-drop-zone");
