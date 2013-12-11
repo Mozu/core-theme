@@ -10,6 +10,7 @@ using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.Mvc.Customers;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Customers;
+using Mozu.Tenant.Contracts.Clients;
 using Mozu.Customer.Contracts.Clients;
 using AutoMapper;
 
@@ -20,10 +21,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly IAccountContactRepository _accountContactRepository;
         private readonly IAddressValidationWebApiClient _addressValidationWebApiClient;
+        private readonly ITenantsWebApiClient _tenantsWebApiClient;
 
-        public AddressController(IAccountContactRepository accountContactRepository, IAddressValidationWebApiClient addressValidationWebApiClient)
+        public AddressController(IAccountContactRepository accountContactRepository, IAddressValidationWebApiClient addressValidationWebApiClient, ITenantsWebApiClient tenantsWebApiClient)
         {
             _accountContactRepository = accountContactRepository;
+
+            _tenantsWebApiClient = tenantsWebApiClient;
             _addressValidationWebApiClient = addressValidationWebApiClient.CloneWithApiContext(ctx => { ctx.MasterCatalogId = null; ctx.SiteId = null; }).CloneWithoutUserClaims();
         }
 
@@ -86,11 +90,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Address = Mapper.Map<Core.Api.Contracts.Address>(contact)
             };
 
-            var list = (await _addressValidationWebApiClient.ValidateAddress(req))
+            var tenant = (await _tenantsWebApiClient.GetTenantInternal(SbApiContext.TenantId, false)).ReadAsSync();
+            var svc = _addressValidationWebApiClient.CloneWithApiContext(ctx => ctx.SiteId = tenant.Sites.FirstOrDefault().Id);
+
+            var list = (await svc.ValidateAddress(req))
                 .ReadAsSync()
                 .AddressCandidates.Select(x => Mapper.Map<Models.Contact>(x))
                 .ToList();
-            
+
+            list.Each(addr =>
+            {
+                if (addr.Address2 == null) addr.Address2 = "";
+                if (addr.Address3 == null) addr.Address3 = "";
+                if (addr.Address4 == null) addr.Address4 = "";
+            });
+ 
             return List2(list);
         }
     }
