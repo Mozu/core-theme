@@ -193,7 +193,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var fileinfo = new FileInfo(streamProvider.FileData.SingleOrDefault().LocalFileName);
 
 
-            HttpResponseMessage result = null;
+            ServiceClientResponse<StreamContent> result = null;
 
             using(var fs = fileinfo.OpenRead())
             {
@@ -211,10 +211,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 
 
                 //result = _docClient.UpdateDocumentContent("files", docid , fs).Result.ResponseMessage;                
-                result = (await client.UpdateDocumentContent("files", docid, fs)).ResponseMessage;                
+                result = (await client.UpdateDocumentContent("files", docid, fs));                
             }
 
-            return Message3<string>(result.IsSuccessStatusCode, "File uploaded");
+            if (!result.ResponseMessage .IsSuccessStatusCode )
+            {
+                throw result.ReadException();
+            }
+
+            return Message3<string>(true, "File uploaded");
         }
 
         //public class MyServiceClientMessageHandler : ServiceClientMessageHandler, IServiceClientMessageHandler

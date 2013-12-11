@@ -154,11 +154,21 @@ Ext.define('Taco.core.util.UploadManager', function () {
                     // Step 1: create the CMS document
                     document.save({
                         success: function (se) {
+                            var options = {};
+                            Taco.app.context.onBeforeAjaxRequest( null, options);
+                           
                             console.log("Document ID: " + document.getId() + " created for file " + file.name);
                             me.fireEvent('modelsavesuccess', { document: document, file: file });
                             // Step 2: upload the image.
                             xhr.open("POST", url.replace("{docid}", document.getId()));
                             xhr.responseType = 'text';
+
+                            Ext.Object.each(options.headers, function (key, value) {
+                                xhr.setRequestHeader(key, value);
+                            });
+                                
+                           
+
                             xhr.onload = function (e) {
 
                                 // Step 3: signal completion
