@@ -1,8 +1,12 @@
-﻿<h2>hello</h2>
-
-{% if not Model.config  %}
+﻿{% if not Model.config  %}
     <div class="mz-cms-image-cover" style="background-image: url('/admin/scripts/resources/images/legacy/AddPhotos.png');"></div>
 {% else %}
-    <div class="mz-cms-image-cover" style="background-image: url('/files/6005/1/{{Model.config.imageFileId}}');"></div>
+{% if  Model.config.imageSource = "externalUrl"  %}
+<div class="mz-cms-image-cover" style="background-image: url('{{Model.config.imageExternalUrl}}');"></div>
+{%endif%}
+{% if   Model.config.imageSource = "file"   %}
+<div class="mz-cms-image-cover" style="background-image: url('/cms/files/{{Model.config.imageFileId}}');"></div>
+    {% endif %}
+
 {% endif %}
 

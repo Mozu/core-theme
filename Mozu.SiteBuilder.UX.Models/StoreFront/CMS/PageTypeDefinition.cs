@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 
@@ -33,8 +34,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
         [DataMember(Name = "properties")]
         public Newtonsoft.Json.Linq.JObject  Properties { get; set; }
 
-        [DataMember(Name = "widgets")]
-        public WidgetInstanceData[] Widgets { get; set; }
+        [DataMember(Name = "zones")]
+        public List<ZoneRuntimeData> Zones { get; set; }
 
         public string FullPath { get; set; }
     }

@@ -443,7 +443,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Hypr\Tags\Copy of DropZoneTag.cs" />
-    <Compile Include="Hypr\Tags\DropZoneTag.cs" />
     <Compile Include="Hypr\Tags\IncludeProductsTag.cs" />
     <Compile Include="Hypr\Tags\VisitTrackingPixelTag.cs">
       <SubType>Code</SubType>

@@ -92,21 +92,24 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                     items: [{
                         xtype: 'combobox',
                         name: 'imageSource',
-                        value: 'File',
+                        value: 'file',
                         width: 170,
                         editable: false,
                         forceSelection: true,
-                        store: ['File', 'External URL'],
+                        store: [
+                            ['file', 'File'],
+                            ['externalUrl', 'External URL']
+                        ],
                         listeners: {
                             change: {
                                 scope: this,
                                 fn: function (field, newValue, oldValue) {
-                                    var isFile = newValue === 'File',
+                                    var isFile = newValue === 'file',
                                         cardIndex = isFile ? 0 : 1;
-
+                                    
                                     field.nextSibling('#imageAssociatorButton').setVisible(isFile);
                                     field.nextSibling('#imageUploadButton').setVisible(isFile);
-                                    field.nextSibling('[name=imageExternalUrl]').setVisible(newValue === 'External URL');
+                                    field.nextSibling('[name=imageExternalUrl]').setVisible(newValue === 'externalUrl');
                                     this.down('#imageSelectors').getLayout().setActiveItem(cardIndex);
                                 }
                             }

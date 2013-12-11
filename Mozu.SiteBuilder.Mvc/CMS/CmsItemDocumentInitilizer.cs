@@ -118,66 +118,66 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                         }
                     }
 
-                    cmsPageContext.RuntimeData = new List<WidgetRuntimeData>();
-                    cmsPageContext.RuntimeData2 = new List<ZoneRuntimeData>();
+               
+                    cmsPageContext.RuntimeData = new List<ZoneRuntimeData>();
                    
 
                     if (cmsPageContext.Page.Document != null)
                     {
                         var widgetRaw = (string) cmsPageContext.Page.Document.Get(CmsConstants.Documents.widget_prop);
-                        List<WidgetRuntimeData> existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
+                        
                         var src = new DocumentRequest
                                       {
                                           Id = cmsPageContext.Page.Document.Id,
                                           Collection = cmsPageContext.Page.Document.DocumentListName
                                       };
-                        existingWidgets.ForEach(x => x.Source = src);
-                        cmsPageContext.RuntimeData.AddRange(existingWidgets);
+                        
+                    
 
 
                         List<ZoneRuntimeData> zoneData = string.IsNullOrEmpty(widgetRaw) ? null : JsonConvert.DeserializeObject<List<ZoneRuntimeData>>(widgetRaw);
                         if (zoneData != null)
                         {
                             zoneData.ForEach(x => x.Source = src);
-                            cmsPageContext.RuntimeData2.AddRange(zoneData);
+                            cmsPageContext.RuntimeData.AddRange(zoneData);
                         }
                     }
                     if (cmsPageContext.Template.Document != null)
                     {
                         var widgetRaw = (string) cmsPageContext.Template.Document.Get(CmsConstants.Documents.widget_prop);
-                        List<WidgetRuntimeData> existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
+                        
                         var src = new DocumentRequest
                                       {
                                           Id = cmsPageContext.Template.Document.Id,
                                           Collection = cmsPageContext.Template.Document.DocumentListName
                                       };
-                        existingWidgets.ForEach(x => x.Source = src);
-                        cmsPageContext.RuntimeData.AddRange(existingWidgets);
+                        
+                       
 
                         List<ZoneRuntimeData> zoneData = string.IsNullOrEmpty(widgetRaw) ? null : JsonConvert.DeserializeObject<List<ZoneRuntimeData>>(widgetRaw);
                         if (zoneData != null)
                         {
                             zoneData.ForEach(x => x.Source = src);
-                            cmsPageContext.RuntimeData2.AddRange(zoneData);
+                            cmsPageContext.RuntimeData.AddRange(zoneData);
                         }
                     }
                     if (cmsPageContext.SiteTemplate.Document != null)
                     {
                         var widgetRaw = (string) cmsPageContext.SiteTemplate.Document.Get(CmsConstants.Documents.widget_prop);
-                        List<WidgetRuntimeData> existingWidgets = string.IsNullOrEmpty(widgetRaw) ? new List<WidgetRuntimeData>() : JsonConvert.DeserializeObject<List<WidgetRuntimeData>>(widgetRaw);
+                        
                         var src = new DocumentRequest
                                       {
                                           Id = cmsPageContext.SiteTemplate.Document.Id,
                                           Collection = cmsPageContext.SiteTemplate.Document.DocumentListName
                                       };
-                        existingWidgets.ForEach(x => x.Source = src);
-                        cmsPageContext.RuntimeData.AddRange(existingWidgets);
+                        
+                        
 
                         List<ZoneRuntimeData> zoneData = string.IsNullOrEmpty(widgetRaw) ? null : JsonConvert.DeserializeObject<List<ZoneRuntimeData>>(widgetRaw);
                         if (zoneData != null)
                         {
                             zoneData.ForEach(x => x.Source = src);
-                            cmsPageContext.RuntimeData2.AddRange(zoneData);
+                            cmsPageContext.RuntimeData.AddRange(zoneData);
                         }
                     }
 

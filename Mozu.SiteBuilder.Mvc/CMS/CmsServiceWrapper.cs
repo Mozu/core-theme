@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web.UI;
 using Autofac;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Client;
@@ -80,9 +81,9 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
             d.DocumentListName = string.IsNullOrEmpty(d.DocumentListName) ? CmsConstants.Documents.default_collection_name : d.DocumentListName;
 
-            if (pageTypeDef.Widgets != null)
+            if (pageTypeDef.Zones != null && pageTypeDef.Zones.Count> 0)
             {
-                var widgetPropVal = Newtonsoft.Json.JsonConvert.SerializeObject(pageTypeDef.Widgets);
+                var widgetPropVal = Newtonsoft.Json.JsonConvert.SerializeObject(pageTypeDef.Zones);
                 d.Set(CmsConstants.Documents.widget_prop, widgetPropVal);
             }
 
