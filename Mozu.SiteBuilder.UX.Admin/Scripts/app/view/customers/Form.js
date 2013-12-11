@@ -3,7 +3,14 @@
  */
 Ext.define('Taco.view.customers.Form', {
     extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.store.CustomerGroups', 'Taco.view.order.Index', 'Taco.shared.view.form.ExtensibleAttribute'],
+    requires: ['Taco.store.CustomerGroups',
+        'Taco.view.order.Index',
+        'Taco.shared.view.form.ExtensibleAttribute',
+        'Taco.view.customers.subform.Information',
+        'Taco.view.customers.subform.BillingInformation',
+        'Taco.view.customers.subform.ShippingInformation',
+        'Taco.view.customers.subform.OrderHistory',
+        'Taco.view.customers.subform.Notes'],
     // enableStoreSyncTasks:true,
     initComponent: function () {
         var data = this.record.getData(),
@@ -25,7 +32,7 @@ Ext.define('Taco.view.customers.Form', {
         });
 
         this.cls = this.cls + ' ' + Taco.baseCSSPrefix + 'customer-editor';
-        
+
         me.profile = Ext.create('Taco.view.customers.subform.Information', {
             record: this.record,
             tagStore: this.tagStore
@@ -34,7 +41,7 @@ Ext.define('Taco.view.customers.Form', {
         me.billingInformation = Ext.create('Taco.view.customers.subform.BillingInformation', {
             record: contactsStore
         });
-        
+
         me.shippingInformation = Ext.create('Taco.view.customers.subform.ShippingInformation', {
             record: contactsStore
         });
@@ -44,7 +51,7 @@ Ext.define('Taco.view.customers.Form', {
         me.orderHistory = Ext.create('Taco.view.customers.subform.OrderHistory', {
             record: orders
         });
-       
+
         me.notes = Ext.create('Taco.view.customers.subform.Notes', {
             record: orders
         });
@@ -86,8 +93,6 @@ Ext.define('Taco.view.customers.Form', {
             });
 
             if (me.tagStore.isDirty()) {
-                
-                
 
 
                 tasks.add({
@@ -115,8 +120,8 @@ Ext.define('Taco.view.customers.Form', {
                         gfutasks.callback();
 
                     },
-                    dependencyFilter:function (task) {
-                        return task.store == me.tagStore
+                    dependencyFilter: function (task) {
+                        return task.store == me.tagStore;
                     }
                 });
             }

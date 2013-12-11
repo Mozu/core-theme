@@ -21,13 +21,23 @@ Ext.define('Taco.model.CustomerAccount', {
         }, {
             name: 'userId',
             type: 'string'
+        },        
+        {
+            name: 'firstName',
+            type: 'string'        
         },
-        //removed with omni-channel
-        //{
-        //    name: 'siteId',
-        //    type: 'int'
-        //},
-
+        {
+            name: 'lastName',
+            type: 'string'
+        },
+        {
+            name: 'emailAddress',
+            type: 'string'
+        },
+        {
+            name: 'userName',
+            type: 'string'
+        },
         {
             name: 'companyOrOrganization',
             type: 'string'
@@ -65,11 +75,10 @@ Ext.define('Taco.model.CustomerAccount', {
             name: 'createDate',
             type: 'date'
         }
-    ],
-    
+    ],    
    
-    getOrders:function () {
-        
+    getOrders: function () {
+
         if (!this.orders) {
             this.orders = Ext.create('Taco.store.Orders', {
                 filters: [
@@ -111,95 +120,7 @@ Ext.define('Taco.model.CustomerAccount', {
             root: 'items',
             successProperty: 'success',
             messageProperty: 'message',
-            read: function (response) {
-                var data;
-                this.initContactFields();
-                if (response) {
-                    data = response.responseText ? this.getResponseData(response) : this.readRecords(response);
-                }
-
-                return data || this.nullResultSet;
-            },
-            initContactFields:function () {
-                var contactFields = Taco.model.Contact.getFields(),
-                    newFields = [
-                        {
-                            name: 'id',
-                            type: 'int'
-                        }, {
-                            name: 'attributes',
-                            type: 'auto',
-                            defaultValue: []
-                        }, {
-                            name: 'userId',
-                            type: 'string'
-                        }, {
-                            name: 'siteId',
-                            type: 'int'
-                        }, {
-                            name: 'companyOrOrganization',
-                            type: 'string'
-                        }, {
-                            name: 'acceptsMarketing',
-                            type: 'boolean'
-                        }, {
-                            name: 'groups',
-                            type: 'auto',
-                            defaultValue: []
-                        }, {
-                            name: 'contacts',
-                            type: 'auto',
-                            defaultValue: []
-                        }, {
-                            name: 'totalSpent',
-                            type: 'float',
-                            defaultValue: 0
-                        }, {
-                            name: 'orderCount',
-                            type: 'int',
-                            defaultValue: 0
-                        }, {
-                            name: 'visitCount',
-                            type: 'int',
-                            defaultValue: 0
-                        }, {
-                            name: 'lastOrderDate',
-                            type: 'date'
-                        }, {
-                            name: 'createDate',
-                            type: 'date'
-                        }, {
-                            name: 'taxExempt',
-                            type: 'boolean',
-                            defaultValue:false
-                        }, {
-                            name: 'taxId',
-                            type: 'string',
-                            defaultValue:""
-                        }
-                    ];
-                
-                if (!Taco.model.CustomerAccount.contactFieldsAdded) {
-                    Taco.model.CustomerAccount.contactFieldsAdded = true;
-
-                    Ext.each(contactFields, function (contactField) {
-                        newFields.push({
-                            name: 'primary' + Ext.String.capitalize(contactField.name),
-                            type: contactField.type.type,
-                            convert: function location(v, record) {
-
-                                if (record.raw && record.raw.contacts && record.raw.contacts.length) {
-                                    return contactField.convert(record.raw.contacts[0][contactField.name]);
-                                }
-                                return contactField.convert(null);
-                            }
-                        }
-                        );
-
-                    });
-                    Taco.model.CustomerAccount.setFields(newFields);
-                }
-            }
+           
         },
         writer: {
             allowSingle: false,

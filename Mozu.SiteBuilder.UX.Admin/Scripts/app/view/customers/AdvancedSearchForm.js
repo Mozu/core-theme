@@ -6,7 +6,6 @@ Ext.define('Taco.view.customers.AdvancedSearchForm', {
     requires: [
         'Taco.store.CustomerGroupNames',
         'Ext.ux.form.field.BoxSelect',
-        'Taco.store.CustomerGroupNames'
     ],
 
     defaults: {

@@ -1861,7 +1861,6 @@
     <Content Include="Scripts\app\view\customers\GroupsForm.js" />
     <Content Include="Scripts\app\view\customers\Index.js" />
     <Content Include="Scripts\app\core\ux\modal\Helper.js" />
-    <Content Include="Scripts\app\view\customers\ItemBrowser.js" />
     <Content Include="Scripts\app\view\customers\SearchForm.js" />
     <Content Include="Scripts\app\view\inventory\QuantityEdit.js" />
     <Content Include="Scripts\app\view\order\Grid.js" />
