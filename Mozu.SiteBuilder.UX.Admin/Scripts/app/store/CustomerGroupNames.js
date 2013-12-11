@@ -16,7 +16,7 @@ Ext.define('Taco.store.CustomerGroupNames', {
         if (this.customerGroups.isLoading()) {
             this.mon(this.customerGroups, 'load', this.copyStoreData, this);
         } else {
-            this.copyStoreData();
+            Ext.defer(this.copyStoreData, 100, this);
         }
         return this.callParent(arguments);
     },

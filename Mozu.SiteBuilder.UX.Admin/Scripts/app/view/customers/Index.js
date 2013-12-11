@@ -18,53 +18,7 @@ Ext.define('Taco.view.customers.Index', {
     editorName: 'Taco.view.customer.Edit',
     useTilePanel: false,
     
-    gridPanelConf: {
-        columns: [{
-            dataIndex: 'primaryFirstName',
-            text: 'First Name',
-            width: 130
-        }, {
-            dataIndex: 'primaryLastName',
-            text: 'Last Name',
-            width: 130
-        }, {
-            dataIndex: 'primaryEmail',
-            text: 'Email',
-            width: 200
-        }, {
-            dataIndex: 'primaryCityOrTown',
-            text: 'Location',
-            width: 150,
-            renderer: function (value, metaData, record) {
-                return value ? [Ext.String.capitalize(value), record.get('primaryState')].join(', ') : '';
-            }
-        }, {
-            dataIndex: 'orderCount',
-            text: 'Total Orders',
-            width: 100
-        }, {
-            dataIndex: 'visitCount',
-            text: 'Total Visits',
-            width: 100
-        }, {
-            dataIndex: 'totalSpent',
-            text: 'Spent 2',
-            width: 100,
-            renderer: function (value, metaData, record) {
-                return Ext.util.Format.usMoney(value);
-            }
-        }, {
-            dataIndex: 'groups',
-            text: 'Groups',
-            renderer: function (value, metaData, record) {
-                if (value && value.length) {
-                    return value.join(',');
-                }
-            },
-            minWidth: 100,
-            flex: 1
-        }]
-    },
+  
     initComponent: function () {
         var me = this;
 
@@ -75,24 +29,46 @@ Ext.define('Taco.view.customers.Index', {
         this.tagStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerGroups');
 
         this.gridPanelConf = {
-            columns: [{
-                dataIndex: 'primaryFirstName',
-                text: 'First Name',
+            columns: [ {
+                dataIndex: 'id',
+                text: 'Customer Number',
                 width: 130
+            },{
+                dataIndex: 'firstName',
+                text: 'First Names',
+                width: 130,
+                renderer: function (value, metaData, record) {
+                    if (value)
+                        return value;
+                    if (!Ext.isEmpty(record.data.contacts)) {
+                        return record.data.contacts[0].firstName;
+                    }
+                    return null;
+                }
+                
             }, {
-                dataIndex: 'primaryLastName',
+                dataIndex: 'lastName',
                 text: 'Last Name',
-                width: 130
+                width: 130,
+                renderer: function (value, metaData, record) {
+                    if (value)
+                        return value;
+                    if (!Ext.isEmpty(record.data.contacts)) {
+                        return record.data.contacts[0].lastName;
+                    }
+                    return null;
+                }
             }, {
-                dataIndex: 'primaryEmail',
+                dataIndex: 'emailAddress',
                 text: 'Email',
-                width: 200
-            }, {
-                dataIndex: 'primaryCityOrTown',
-                text: 'Location',
-                width: 150,
-                renderer: function(value, metaData, record) {
-                    return value ? [Ext.String.capitalize(value), record.get('primaryStateOrProvince')].join(', ') : '';
+                width: 200,
+                renderer: function (value, metaData, record) {
+                    if (value)
+                        return value;
+                    if (!Ext.isEmpty(record.data.contacts)) {
+                        return record.data.contacts[0].emailAddress;
+                    }
+                    return null;
                 }
             }, {
                 dataIndex: 'orderCount',
@@ -105,11 +81,7 @@ Ext.define('Taco.view.customers.Index', {
                 renderer: function (value, metaData, record) {
                     return Ext.util.Format.usMoney(value);
                 }
-            }, {
-                dataIndex: 'visitCount',
-                text: 'Total Visits',
-                width: 100
-            }, {
+            },  {
                 dataIndex: 'groups',
                 text: 'Groups',
                     width: 300,

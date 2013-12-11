@@ -122,7 +122,7 @@ Ext.define('Taco.view.channel.Index', {
                 queryMode: 'local',
                 displayField: 'name',
                 valueField: 'code',
-                store: Taco.core.data.StoreManager.getOrCreate('Taco.store.Countries') ,
+                store: 'Taco.store.Countries' ,
                 emptyText: "Country",
                 msgTarget: "qtip",
                 selectOnFocus: true,

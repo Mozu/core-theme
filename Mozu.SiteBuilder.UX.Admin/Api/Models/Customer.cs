@@ -20,6 +20,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         [DataMember(Name="userId")]
         public string UserId { get; set; }
 
+
+
+
+        [DataMember(EmitDefaultValue = false, Name = "userName")]
+        public string UserName { get; set; }
+
+        [DataMember(EmitDefaultValue = false, Name = "firstName")]
+        public string FirstName { get; set; }
+
+        [DataMember(EmitDefaultValue = false, Name = "lastName")]
+        public string LastName { get; set; }
+        [DataMember(EmitDefaultValue = false, Name = "emailAddress")]
+        public string EmailAddress { get; set; }
+
+
         /// <summary>
         /// List of contacts for this customer account. A customer account can have multiple contacts for billing and shipping addresses.
         /// </summary>
@@ -102,5 +117,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         public DateTime? CreateDate { get; set; }
 
         #endregion
+
+        
     }
 }

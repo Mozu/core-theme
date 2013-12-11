@@ -18,8 +18,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             Mapper.CreateMap<DC.CustomerAccount, ApiCustomer>()
             .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
-            .ForMember(x => x.UserId, op => op.MapFrom(dc => dc.UserId))
-            
+            .ForMember(x => x.UserId, op => op.MapFrom(dc => string.IsNullOrWhiteSpace( dc.UserId) ? null : dc.UserId))
+            .ForMember(x => x.EmailAddress, op => op.MapFrom(dc => dc.EmailAddress))
+            .ForMember(x => x.UserName, op => op.MapFrom(dc => dc.UserName))
+            .ForMember(x => x.FirstName, op => op.MapFrom(dc => dc.FirstName))
+            .ForMember(x => x.LastName, op => op.MapFrom(dc => dc.LastName))
             .ForMember(x => x.Contacts, op => op.MapFrom(dc => dc.Contacts))
             .ForMember(x => x.CompanyOrOrganization, op => op.MapFrom(dc => dc.CompanyOrOrganization))
             .ForMember(x => x.AcceptsMarketing, op => op.MapFrom(dc => dc.AcceptsMarketing))
@@ -36,8 +39,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<ApiCustomer, DC.CustomerAccount>()
             .ForMember(dc => dc.Id, op => op.MapFrom(x => x.Id))
+            .ForMember(x => x.UserId, op => op.MapFrom(dc => string.IsNullOrWhiteSpace(dc.UserId) ? null : dc.UserId))
+            .ForMember(x => x.EmailAddress, op => op.MapFrom(dc => dc.EmailAddress))
+            .ForMember(x => x.UserName, op => op.MapFrom(dc => dc.UserName))
             
-            .ForMember(dc => dc.UserId, op => op.MapFrom(x => x.UserId))
+            .ForMember(x => x.FirstName, op => op.MapFrom(dc => dc.FirstName))
+            .ForMember(x => x.LastName, op => op.MapFrom(dc => dc.LastName))
+            .ForMember(x => x.Contacts, op => op.MapFrom(dc => dc.Contacts))
+            
             .ForMember(dc => dc.Contacts, op => op.MapFrom(x => x.Contacts))
             .ForMember(dc => dc.CompanyOrOrganization, op => op.MapFrom(x => x.CompanyOrOrganization))
             .ForMember(dc => dc.AcceptsMarketing, op => op.MapFrom(x => x.AcceptsMarketing))
