@@ -38,7 +38,7 @@ Ext.define('Taco.view.website.settings.CatalogSeo', {
         this.callParent(arguments);
     },
     persistFormValues: function () {
-        var values = this.getValues();
+        var values = this.getValues(false, false, false, true);
         
         Ext.Object.each(values, function(key, value, myself) {
             if (!values[key] && !this.record.get(key)) {
