@@ -581,7 +581,7 @@ Ext.define('Taco.view.website.Index', {
 
     onGridProductItemClick: function (grid, record) {
         this.navigate({
-            url: '/product/' + record.getId()
+            url: '/p/' + record.getId()
         });
     },
 

@@ -14,34 +14,41 @@ namespace Mozu.SiteBuilder.UX.Configuration
         {
             routes.MapHttpRoute(
                 "StoreFront_productDetails_SEO",
-                "{slug}",
-                new {controller = "Catalog", action = "ProductDetail"},
-                new {productCode = new QuseryStringConstraint("p")});
+                "{slug}/p/{productCode}",
+                new {controller = "Catalog", action = "ProductDetail"});
 
             routes.MapHttpRoute(
                "StoreFront_productDetails",
                "product/{productCode}",
                new { controller = "Catalog", action = "ProductDetail" });
 
-
+            routes.MapHttpRoute(
+               "StoreFront_productDetailsShort",
+               "p/{productCode}",
+               new { controller = "Catalog", action = "ProductDetail" });
 
             routes.MapHttpRoute(
                "StoreFront_pages",
-               "pages/{pageName}",
+               "pages/{pageName}", 
                new { controller = "cmspages", action = "Page", collection = "pages" });
 
 
 
             routes.MapHttpRoute(
                 "StoreFront_categories_SEO",
-                "{slug}",
-                new { controller = "Catalog", action = "Category" },
-                new { categoryId = new QuseryStringConstraint("c") });
+                "{slug}/c/{categoryId}",
+                new { controller = "Catalog", action = "Category" }
+                );
 
 
             routes.MapHttpRoute(
                 "StoreFront_categories",
                 "category/{categoryId}",
+                new { controller = "Catalog", action = "Category" });
+
+            routes.MapHttpRoute(
+                "StoreFront_categories_short",
+                "c/{categoryId}",
                 new { controller = "Catalog", action = "Category" });
 
             
