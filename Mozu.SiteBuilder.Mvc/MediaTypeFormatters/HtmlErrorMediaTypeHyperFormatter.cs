@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using Autofac;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Newtonsoft.Json;
 
@@ -71,10 +70,14 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 }
             }
 
-                
 
 
-
+            model["activityId"] = Trace.CorrelationManager.ActivityId;
+            var pageContext = LifetimeScope.Resolve<PageContext>();
+            if (pageContext != null && pageContext.Visit != null)
+            {
+                model["visitId"] = pageContext.Visit.VisitId;
+            }
 
 
             var viewDataDictionary = new ViewDataDictionary()

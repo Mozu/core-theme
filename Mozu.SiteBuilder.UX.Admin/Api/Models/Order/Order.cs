@@ -34,6 +34,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "createDate")]
         public DateTime CreateDate { get; set; }
 
+        [DataMember(Name = "updateDate")]
+        public DateTime UpdateDate { get; set; }
+
         [DataMember(Name="customerId")]
         public int? CustomerId { get; set; }
 
