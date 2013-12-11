@@ -1061,7 +1061,6 @@
     <Folder Include="Themes\Core3\Templates\Documentation\" />
     <Folder Include="Themes\Core3\Templates\Pages\" />
     <Folder Include="Themes\Core4\compiled\" />
-    <Folder Include="ThemeTemplates\ExtendsCore4\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core3\Modules\_Archive.vol" />
@@ -1267,6 +1266,7 @@
     <Content Include="Themes\Core4\stylesheets\modules\common\payment-method.less" />
     <None Include="Themes\Core4\templates\modules\product\product-instock-request.hypr.live" />
     <Content Include="Themes\Core4\templates\Widgets\cms\image2.hypr" />
+    <Content Include="ThemeTemplates\ExtendsCore4\theme.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core4\templates\Widgets\misc\instock-request.hypr" />
