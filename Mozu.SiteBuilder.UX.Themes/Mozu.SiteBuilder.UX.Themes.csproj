@@ -1061,6 +1061,7 @@
     <Folder Include="Themes\Core3\Templates\Documentation\" />
     <Folder Include="Themes\Core3\Templates\Pages\" />
     <Folder Include="Themes\Core4\compiled\" />
+    <Folder Include="ThemeTemplates\ExtendsCore4\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core3\Modules\_Archive.vol" />
