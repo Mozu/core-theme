@@ -232,6 +232,9 @@
   /* Faceting labels */
   "clearAllFilters"      : "Clear All Filters",
 
+  /* Product Listing labels */
+  "productImagePlaceholder" : "[no image]",
+
   /* Product Detail labels */
   "shortDesc"            : "Summary",
   "options"              : "Options",
