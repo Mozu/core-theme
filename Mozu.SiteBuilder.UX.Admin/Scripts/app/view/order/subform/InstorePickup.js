@@ -1,9 +1,9 @@
 ﻿/**
- * @class Taco.view.order.subform.Shipping
+ * @class Taco.view.order.subform.InstorePickup
  */
 
 // todos extend base class for the subform
-Ext.define('Taco.view.order.subform.Shipping', {
+Ext.define('Taco.view.order.subform.InstorePickup', {
     extend: 'Taco.view.order.subform.Subform',
     requires: [
         'Taco.view.order.widget.ShippingItemGrid',
@@ -12,7 +12,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
         'Taco.store.PackagingTypes'
     ],
     
-    title: 'Shipping',
+    title: 'In Store Pickup',
 
     tools: null,
 
@@ -26,7 +26,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
         // width of the actionColumn. used to align the grid total container
         actionColumnWidth: 60,
         
-        itemId:"orderShipping"
+        itemId:"orderInstorePickup"
     },
     
     initComponent: function (eOpts) {
@@ -75,8 +75,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
             items: [
                 me.unpackagedItems,
                 me.unShippedPackages,
-                me.shippedPackages,
-                me.instorePackages
+                me.shippedPackages
             ]
         });
 
@@ -85,8 +84,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
     initUI: function () {
         this.initUnpackagedItems();
         this.initUnshippedPackages();
-        this.initShippedPackages();
-        this.initInstorePackages();
+        this.initShippedPackages()
     },
     initUnpackagedItems: function () {
         var me = this,
@@ -266,90 +264,6 @@ Ext.define('Taco.view.order.subform.Shipping', {
         });
     },
     
-    initInstorePackages: function () {
-        var me = this,
-            data = [],
-            packages = [];
-
-        //data = this.record.get("shippedPackages");
-        data = this.record.get("instorePackages");
-
-        for (var i = 0; i < data.length; i++) {
-
-            var dataItem = data[i];
-            var billingContact = me.record.get("billingContact");
-            var packagingType = dataItem.packagingType;
-            var packagingTypeText = me.packagingTypeStore.getById(packagingType).get("text");
-            
-
-            packages.push(Ext.create('Taco.view.order.widget.Package', {
-                record: this.record,
-                gridHidden: true,
-
-                editMode: false,
-
-                enableCellEditing: false,
-
-                enableCheckBoxSelection: false,
-
-                enableActionColumn: false,
-
-                enableToobar: true,
-
-                isShippedPackage: true,
-
-                enableMoveMenu: false,
-
-                enableShippingMethodMenu: false,
-
-                enableShippingLabelButton: true,
-
-                enabledPackingSlipButton: true,
-
-                enabledRemoveButton: false,
-
-                enabledMarkAsShippedButton: false,
-
-
-                packageData: dataItem,
-                headerData: {
-                    // ui controls
-                    showVisibilityToggle: true,
-
-                    // order info
-                    title: "Package",
-                    fulfillmentStatus: dataItem.status,
-                    itemTotal: dataItem.totalQuantity,
-                    weight: dataItem.weight,
-                    shippingMethod: dataItem.shippingMethod,
-                    trackingNumber: dataItem.trackingNumber,
-                    shipDate: dataItem.shipDate,
-                    packagingType: packagingTypeText,
-
-                    // billing contact info
-                    firstName: billingContact.firstName,
-                    lastName: billingContact.lastName,
-                    cityOrTown: billingContact.cityOrTown,
-                    address1: billingContact.address1,
-                    postalOrZipCode: billingContact.postalOrZipCode,
-                    stateOrProvince: billingContact.stateOrProvince,
-                    phoneNumber: billingContact.phoneNumber,
-                    email: billingContact.email
-                }
-            })
-            );
-        }
-
-        //me.packagedItemsGrid.loadData(this.record.get("packages"));
-
-        me.instorePackages = Ext.create('Taco.core.ux.EditContainer', {
-            header: true,
-            title: "Instore Pickup",
-            cls: "package-container",
-            items: packages
-        });
-    },
-
     onRecordChange: function () {
         var me = this;
         
@@ -359,7 +273,6 @@ Ext.define('Taco.view.order.subform.Shipping', {
         me.unpackagedItems.destroy();
         me.unShippedPackages.destroy();
         me.shippedPackages.destroy();
-        me.instorePackages.destroy();
 
         //re-build the ui components
         me.initUI();
@@ -368,8 +281,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
         me.add(
             me.unpackagedItems,
             me.unShippedPackages,
-            me.shippedPackages,
-            me.instorePackages
+            me.shippedPackages
         );
         
         Ext.resumeLayouts(true);

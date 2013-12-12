@@ -139,6 +139,21 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
                         '</tpl>',
                         '<tpl if="values.showChangeLink">',
                             '<span class="seperator">|</span>',
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                             '<a class="shipmentAction" shipmentAction="changeShipTo">Change</a>',
                         '</tpl>',
                     '</div>',

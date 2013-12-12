@@ -14,6 +14,7 @@ Ext.define('Taco.view.order.Form', {
         'Taco.view.order.subform.Detail',
         'Taco.view.order.subform.Payment',
         'Taco.view.order.subform.Shipping',
+        'Taco.view.order.subform.InstorePickup',
         'Taco.view.order.subform.Return',
         'Taco.shared.view.form.ExtensibleAttribute'
     ],
@@ -27,14 +28,16 @@ Ext.define('Taco.view.order.Form', {
     editTitle: [
         'Order No. {number}',
         '<span class="taco-order-status {status}">',
-            '{status}',
+            //'{status}',
+            'Site: {siteName}',
         '</span>'
     ],
 
     createTitle: [
         'Create Order No. {number}',
         '<span class="taco-order-status">',
-            '{status}',
+            //'{status}',
+            'Site: {siteName}',
         '</span>'
     ],
 
@@ -79,7 +82,8 @@ Ext.define('Taco.view.order.Form', {
     updateTitleData: function () {
         this.titleData = {
             number: this.record.get('orderNumber'),
-            status: this.record.get('orderStatus')
+            status: this.record.get('orderStatus'),
+            siteName: this.record.get('siteName')
         };
     },
 
@@ -123,23 +127,12 @@ Ext.define('Taco.view.order.Form', {
 
         items.push(Ext.create('Taco.view.order.subform.Detail', subformCfg));
 
-        if (!this.isEdit()) {
-            items.push(Ext.create('Taco.view.order.subform.ShippingSimple', subformCfg));
-        }
-      
-        items.push(Ext.create('Taco.view.order.subform.Payment', subformCfg));
-      
-        if (this.isEdit()) {
-            items.push(Ext.create('Taco.view.order.subform.Shipping', subformCfg));
-            items.push(Ext.create('Taco.view.order.subform.Return', subformCfg)); 
-        }
-
         this.orderAttr = Ext.create('Taco.shared.view.form.ExtensibleAttribute', {
-            title: 'Order Attributes',
+            title: 'Attributes',
             record: this.record,
             attributeDefinitionStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.OrderAttributes')
         });
-
+        
         this.orderAttr.tools = [{
             type: 'gear',
             menu: {
@@ -147,7 +140,7 @@ Ext.define('Taco.view.order.Form', {
                 shadow: false,
                 items: [{
                     text: 'Save Attributes',
-                    handler: function() {
+                    handler: function () {
                         var me = this;
                         me.setLoading(true, this.body);
 
@@ -155,8 +148,8 @@ Ext.define('Taco.view.order.Form', {
                         me.orderAttr.beforeSave();
 
                         me.record.saveAttributes({
-                            success: function() { 
-                                me.setLoading(false, this.body); 
+                            success: function () {
+                                me.setLoading(false, this.body);
                             }
                         });
                     },
@@ -165,6 +158,24 @@ Ext.define('Taco.view.order.Form', {
             }
         }];
         items.push(this.orderAttr);
+
+
+
+        if (!this.isEdit()) {
+            items.push(Ext.create('Taco.view.order.subform.ShippingSimple', subformCfg));
+        }
+      
+        items.push(Ext.create('Taco.view.order.subform.Payment', subformCfg));
+      
+        if (this.isEdit()) {
+            items.push(Ext.create('Taco.view.order.subform.Shipping', subformCfg));
+            items.push(Ext.create('Taco.view.order.subform.InstorePickup', subformCfg));
+            items.push(Ext.create('Taco.view.order.subform.Return', subformCfg)); 
+        }
+
+        
+
+        
 
         this.items = items;
 

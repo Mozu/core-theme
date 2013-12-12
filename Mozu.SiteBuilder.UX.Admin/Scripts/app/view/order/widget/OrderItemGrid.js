@@ -11,7 +11,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         'Taco.view.order.widget.DiscountRowBody',
         'Taco.core.ux.grid.Pager',
         'Taco.core.ux.modal.Confirmation',
-        'Taco.core.ux.grid.ActionColumn'
+        'Taco.core.ux.grid.ActionColumn',
+        'Taco.view.order.modal.FulfillmentMethod'
     ],
     
     config: {
@@ -52,7 +53,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     initComponent: function(eOpts) {
         var me = this,
             siteContext,
-            editModeCls = (this.getEditMode()) ? " orderEditable " : "";
+            editModeCls = (this.getEditMode()) ? " order-editable " : "";
         
         this.addEvents('save','saveFailure','saveSuccess');
         
@@ -188,25 +189,45 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     '<span class="product-link-disabled">{productName}</span>',
                     '</tpl>',
                     '<div class="product-options">',
-                    '<tpl for="options">',
-                    '<span class="option"><tpl if="xindex &gt; 1">, </tpl>{Name}',
-                    ': {Value}',
-                    '</span>',
-                    '</tpl>',
-                    ' Fulfillment Method: {fulfillmentMethod}',
-                    '<tpl for="bundledProducts">',
-                        '<div class="bundledProduct">',
-                            '{productCode} - {name} (Qty. {quantity})',
-                        '</div>',
-                    '</tpl>',
-                    '</div>'
+                        '<tpl for="options">',
+                        '<span class="option"><tpl if="xindex &gt; 1">, </tpl>{Name}',
+                        ': {Value}',
+                        '</span>',
+                        '</tpl>',
+                        '<tpl for="bundledProducts">',
+                            '<div class="bundledProduct">',
+                                '{productCode} - {name} (Qty. {quantity})',
+                            '</div>',
+                        '</tpl>',
+                    
+                        // if order item supports instore pickup and user is currently editing the order. make the fulfillment method a link;
+                        '<tpl if="this.isEditable() && supportsInStorePickup">',
+                            'Fulfillment Method: <a class="fulfillment-link" href="#" fulfillmentMethod="{fulfillmentMethod}">{fulfillmentMethod}</a>',
+                        '<tpl else>',
+                            'Fulfillment Method: {fulfillmentMethod}',
+                        '</tpl>',
+                    '</div>',
+                    {
+                        isEditable: function (values) {
+                            return true;
+                            return me.getEditMode();
+                        }
+                    }
                     ),
                     dataIndex: 'productName',
                     listeners: {
                         click: {
                             fn: function (view, cell, cellIndex, rowIndex, e, record, row, eOpt) {
+
                                 
-                                var editMode = view.ownerCt.editMode;
+                                var editMode = view.ownerCt.editMode,
+                                    fulfillmentMethod = e.target.getAttribute("fulfillmentMethod")
+
+                                // if user clicks the fulfillment method link. open the fulfillment Method Selector;
+                                //if (editMode && fulfillmentMethod) {
+                                    me.editFulfillmentMethod(record);
+                                //}
+
                                 if (!editMode || e.target.tagName != "A") {
                                     return;
                                 }
@@ -1242,5 +1263,21 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             },
             scope: this
         });
-    }
+    },
+    
+    editFulfillmentMethod: function(record) {
+        var me = this,
+            editor;
+        editor = Ext.create('Taco.view.order.modal.FulfillmentMethod', {
+            record: record,
+            listeners: {
+                save: {
+                    fn: function(data) {
+                        debugger;
+                    },
+                    scope:me
+                }
+            }
+        });
+}
 });
