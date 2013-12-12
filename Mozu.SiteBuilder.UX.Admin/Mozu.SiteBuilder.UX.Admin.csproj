@@ -660,6 +660,7 @@
     <Content Include="Scripts\app\model\CheckoutSettings.js" />
     <Content Include="Scripts\app\model\Capability.js" />
     <Content Include="Scripts\app\model\BundledProduct.js" />
+    <Content Include="Scripts\app\model\LocationPickup.js" />
     <Content Include="Scripts\app\model\RedirectEntry.js" />
     <Content Include="Scripts\app\model\StoreCredit.js" />
     <Content Include="Scripts\app\model\WishlistItem.js" />
@@ -695,6 +696,7 @@
     <Content Include="Scripts\app\store\Capability.js" />
     <Content Include="Scripts\app\store\ChannelPicker.js" />
     <Content Include="Scripts\app\store\Channels.js" />
+    <Content Include="Scripts\app\store\LocationPickup.js" />
     <Content Include="Scripts\app\store\InventoriedProducts.js" />
     <Content Include="Scripts\app\store\ProductBundlePicker.js" />
     <Content Include="Scripts\app\store\RedirectEntries.js" />
@@ -718,6 +720,9 @@
     <Content Include="Scripts\app\view\discount\GeneralForm.js" />
     <Content Include="Scripts\app\view\fileManager\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\order\modal\FulfillmentMethod.js" />
+    <Content Include="Scripts\app\view\order\subform\InstorePickup.js" />
+    <Content Include="Scripts\app\view\order\widget\LocationPickupGrid.js" />
     <Content Include="Scripts\app\view\redirects\Index.js" />
     <Content Include="Scripts\app\view\customerAttribute\Edit.js" />
     <Content Include="Scripts\app\view\customerAttribute\Form.js" />
@@ -1097,6 +1102,7 @@
     <Content Include="Scripts\sass\src\view\product\variant\Grid.scss" />
     <Content Include="PreDeploy.ps1" />
     <Content Include="PostDeploy.ps1" />
+    <Content Include="Scripts\app\mocks\locationPickup.json" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />

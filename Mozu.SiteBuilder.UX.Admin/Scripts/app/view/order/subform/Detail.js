@@ -151,8 +151,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         Ext.apply(this, {
             items: [
                 me.detailGrid,
-                this.totalRow,
-                this.customerNoteRow
+                this.totalRow
             ]
         });
 

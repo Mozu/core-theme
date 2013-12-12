@@ -47,6 +47,21 @@
 }
 
 
+
+.order-editable{
+	// enables link to the order fullfilment in the order item;
+	.fulfillment-link{
+		color:$color-theme-blue;
+		white-space: normal;
+
+		&:hover{
+			text-decoration:underline;
+        }
+	}
+}
+
+
+
 // this is the default readonly grid;
 .taco-orderform-orderitemgrid{
     
@@ -73,6 +88,9 @@
         color:#990000
     } 
 
+	
+
+
     // link to the product in the order detail product column
     .product-link{   
         color:$color-action-link;
@@ -91,7 +109,7 @@
     } 
 
 	.bundledProduct{
-		padding-left:40px;
+		padding-left:20px;
 	}
 
     // border that matches background color to keep the container height from changing on mouseover 
@@ -118,6 +136,10 @@
 
 //this is the overrides of the default read only grid. ie the editor version
 .#{$vprefix}orderform-editor {  
+
+	
+
+
 
     // the remove icon in the right hand action column
     .taco-grid-row-action-trigger-remove{

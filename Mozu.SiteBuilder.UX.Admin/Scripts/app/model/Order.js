@@ -98,6 +98,11 @@ Ext.define('Taco.model.Order', {
             "useNull": true
         },
         {
+            "name": "updateDate",
+            "type": "date",
+            "useNull": true
+        },
+        {
             "name": "customerId",
             "type": "int",
             "useNull": true
@@ -345,6 +350,23 @@ Ext.define('Taco.model.Order', {
                 var packages = record.get("packages");
                 var retVal = [];
                 
+                for (var i = 0; i < packages.length; i++) {
+                    if (packages[i].status == "Fulfilled") {
+                        retVal.push(packages[i]);
+                    }
+                }
+                return retVal;
+            }
+        },
+        
+        {
+            "name": "instorePackages",
+            "type": "array",
+            persist: false,
+            convert: function (v, record) {
+                var packages = record.get("packages");
+                var retVal = [];
+
                 for (var i = 0; i < packages.length; i++) {
                     if (packages[i].status == "Fulfilled") {
                         retVal.push(packages[i]);

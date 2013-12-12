@@ -11,7 +11,7 @@ Ext.define('Taco.view.order.Header', {
 
     tpl: [
         '<div class="taco-order-detail-header-section order-data">',
-            '<label>Order Total</label>',
+            '<label>Order Amount</label>',
             '<h2>{total:usMoney}</h2>',
             '<div class="status">{orderStatus}</div>',
         '</div>',
@@ -20,18 +20,21 @@ Ext.define('Taco.view.order.Header', {
             '<h2><a href="\#customers/edit/{customerId}\">{billingContact.firstName} {billingContact.lastName}</a></h2>',
             '<div class="company">{billingContact.companyName}</div>',
         '<tpl if="billingContact.address1">',
-            '<div class="address">{billingContact.address1} {billingContact.address2} {billingContact.cityOrTown}, {billingContact.stateOrProvince} {billingContact.postalOrZipCode} {billingContact.countryCode}</div>',
+            '<div class="address">{billingContact.address1} {billingContact.address2} {billingContact.address3} {billingContact.address4} {billingContact.cityOrTown}, {billingContact.stateOrProvince} {billingContact.postalOrZipCode} {billingContact.countryCode}</div>',
         '</tpl>',
         '</div>',
         '<div class="taco-order-detail-header-section history-data">',
             '<label>Customer Profile</label>',
             '<div>Customer since: <strong>{[Ext.util.Format.date(values.createDate)]}</strong></div>',
-            '<div>Total orders: <strong>{orderCount}</strong></div>',
-            '<div>Total spent: <strong>{[Ext.util.Format.usMoney(values.totalSpent || 0)]}</strong></div>',
+            '<div>Orders Placed: <strong>{orderCount}</strong></div>',
+            '<div>Lifetime Value: <strong>{[Ext.util.Format.usMoney(values.totalSpent || 0)]}</strong></div>',
         '</div>',
         '<div class="taco-order-detail-header-section origin-data">',
-            '{createDate:date("F j, Y  g:i a")}',
-
+            'created: {createDate:date("F j, Y  g:i a")}',
+        
+            '<tpl if="updateDate">',
+                '| {updated: updateDate:date("F j, Y  g:i a")}',
+            '</tpl>',
             '<tpl if="ipAddress">',
                 ' | IP address: {ipAddress}',
             '</tpl>',
@@ -44,7 +47,13 @@ Ext.define('Taco.view.order.Header', {
                 ' | <span class="origin-data-item"> Site: {siteName}</span>',
             '</tpl>',
             
-        '</div>', {
+        '</div>',
+        '<tpl if="customerNote">',
+            '<div class="taco-order-detail-header-section customer-note  origin-data" style="float:none;border-top:1px solid #ccc;">',
+                '<span class="label">Customer Note:</span> {customerNote}',
+            '</div>',
+        '</tpl>',
+        {
             convertDate: function(date) {
                 return Ext.Date.format(date, 'F j, Y, g:i a');
             }
