@@ -57,8 +57,6 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "c/{categoryId}",
                 new { controller = "Catalog", action = "Category" });
 
-            
-            
 
 
 
@@ -85,6 +83,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "hyprlivecontext",
                 "hyprlivecontext",
                 new {controller = "Resource", action = "hyprcontextaction"});
+
+            routes.MapHttpRoute(
+                "storefront_navigation",
+                "nav",
+                new {controller = "Resource", action = "AjaxNavigation"});
 
             routes.MapHttpRoute(
                 "Visit_Tracking_Pixel",

@@ -31,6 +31,8 @@ using dotless.Core.Parser.Infrastructure;
 using dotless.Core.Parser.Infrastructure.Nodes;
 using dotless.Core.Parser.Tree;
 using dotless.Core.Plugins;
+using Mozu.SiteBuilder.Mvc.Navigation;
+using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
@@ -218,11 +220,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         
         private readonly IThemeSettingsRepository _themeSettingsRepository;
 
+        private readonly NavigationGandalf _navGandalf;
 
-        public ResourceController( IThemeSettingsRepository themeSettingsRepository,   MozuVirtualPathProvider pathProvider)
+        public ResourceController( IThemeSettingsRepository themeSettingsRepository,   MozuVirtualPathProvider pathProvider, NavigationGandalf navGandalf)
         {
             _themeSettingsRepository = themeSettingsRepository;
-            
+            _navGandalf = navGandalf;
             _pathProvider = pathProvider;
         }
 
@@ -286,6 +289,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         public HttpResponseMessage  ScriptsBuilt(string pathinfo)
         {
             return Content("scripts-built/" + pathinfo, "text/javascript");
+        }
+
+
+        [ClientCacheHeaders(ConfigKey = "navigation")]
+        [System.Web.Http.HttpGet]
+        public JArray AjaxNavigation()
+        {
+            var nav = _navGandalf.GetTreeNavigation().Result;
+            return JArray.FromObject(nav);
         }
 
 
