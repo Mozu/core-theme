@@ -444,7 +444,9 @@
     <Content Include="Themes\Core4\scripts\vendor\bootstrap-scrollspy.js" />
     <Content Include="Themes\Core4\scripts\vendor\isotope.min.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery-scrollto.js" />
+    <Content Include="Themes\Core4\scripts\vendor\jquery.colorbox-min.js" />
     <Content Include="Themes\Core4\scripts\vendor\placeholder_polyfill.jquery.amd.js" />
+    <Content Include="Themes\Core4\scripts\widgets\image.js" />
     <Content Include="Themes\Core4\scripts\widgets\instock-request.js" />
     <Content Include="Themes\Core4\scripts\widgets\related-products.js" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-container.less" />

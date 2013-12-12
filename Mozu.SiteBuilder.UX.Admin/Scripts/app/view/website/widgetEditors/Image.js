@@ -107,10 +107,12 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                                     var isFile = newValue === 'file',
                                         cardIndex = isFile ? 0 : 1;
                                     
-                                    field.nextSibling('#imageAssociatorButton').setVisible(isFile);
-                                    field.nextSibling('#imageUploadButton').setVisible(isFile);
-                                    field.nextSibling('[name=imageExternalUrl]').setVisible(newValue === 'externalUrl');
-                                    this.down('#imageSelectors').getLayout().setActiveItem(cardIndex);
+                                    if (this && this.rendered) {
+                                        field.nextSibling('#imageAssociatorButton').setVisible(isFile);
+                                        field.nextSibling('#imageUploadButton').setVisible(isFile);
+                                        field.nextSibling('[name=imageExternalUrl]').setVisible(newValue === 'externalUrl');
+                                        this.down('#imageSelectors').getLayout().setActiveItem(cardIndex);
+                                    }
                                 }
                             }
                         }
@@ -235,14 +237,20 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         width: 260,
                         editable: false,
                         forceSelection: true,
-                        value: 'Stretch',
-                        store: ['Stretch', 'Fill', 'Maintain Aspect Ratio', 'Specific Size'],
+                        value: 'stretch',
+                        store: [
+                            ['stretch', 'Stretch'],
+                            ['maintainAspectRatio', 'Maintain Aspect Ratio'],
+                            ['specificSize', 'Specific Size']
+                        ],
                         listeners: {
                             change: {
                                 scope: this,
                                 fn: function (field, newValue, oldValue) {
-                                    this.down('[name=imageWidth]').setVisible(newValue === 'Specific Size');
-                                    this.down('[name=imageHeight]').setVisible(newValue === 'Specific Size');
+                                    if (this && this.rendered) {
+                                        this.down('[name=imageWidth]').setVisible(newValue === 'specificSize');
+                                        this.down('[name=imageHeight]').setVisible(newValue === 'specificSize');
+                                    }
                                 }
                             }
                         }
@@ -281,8 +289,10 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                             fn: function (fieldgroup, newValue, oldValue) {
                                 var isUrl = newValue.imageClickAction === 'url';
 
-                                this.down('#linkFields').setVisible(isUrl);
-                                this.down('#linkSelectors').setVisible(isUrl);
+                                if (this && this.rendered) {
+                                    this.down('#linkFields').setVisible(isUrl);
+                                    this.down('#linkSelectors').setVisible(isUrl);
+                                }
                             }
                         }
                     }
@@ -300,22 +310,28 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         width: 170,
                         editable: false,
                         forceSelection: true,
-                        value: 'External URL',
-                        store: ['External URL', 'Internal URL', 'File'],
+                        value: 'externalUrl',
+                        store: [
+                            ['externalUrl', 'External URL'],
+                            ['internalUrl', 'Internal URL'],
+                            ['file', 'File']
+                        ],
                         listeners: {
                             change: {
                                 scope: this,
                                 fn: function (field, newValue, oldValue) {
-                                    var isFile = newValue === 'File';
+                                    var isFile = newValue === 'file';
                                     var cardIndex = isFile ? 2 : 0;
 
-                                    if (newValue === 'Internal URL') cardIndex = 1;
+                                    if (this && this.rendered) {
+                                        if (newValue === 'internalUrl') cardIndex = 1;
 
-                                    field.nextSibling('#linkAssociatorButton').setVisible(isFile);
-                                    field.nextSibling('#linkUploadButton').setVisible(isFile);
-                                    field.nextSibling('[name=linkInternalUrl]').setVisible(newValue === 'Internal URL');
-                                    field.nextSibling('[name=linkExternalUrl]').setVisible(newValue === 'External URL');
-                                    this.down('#linkSelectors').getLayout().setActiveItem(cardIndex);
+                                        field.nextSibling('#linkAssociatorButton').setVisible(isFile);
+                                        field.nextSibling('#linkUploadButton').setVisible(isFile);
+                                        field.nextSibling('[name=linkInternalUrl]').setVisible(newValue === 'internalUrl');
+                                        field.nextSibling('[name=linkExternalUrl]').setVisible(newValue === 'externalUrl');
+                                        this.down('#linkSelectors').getLayout().setActiveItem(cardIndex);
+                                    }
                                 }
                             }
                         }
