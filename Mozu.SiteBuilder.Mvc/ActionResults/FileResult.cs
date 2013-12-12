@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
             WriteFile(response);
         }
 
-        public new Task ExecuteResultAsync(HttpRequestMessage requestMessage)
+        public  Task ExecuteResultAsync(HttpRequestMessage requestMessage)
         {
             HttpResponseBase response = requestMessage.HttpContext().Response;
             response.ContentType = ContentType;

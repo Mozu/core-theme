@@ -6,6 +6,7 @@ using System.Web;
 using AutoMapper;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Themes;
@@ -24,6 +25,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private readonly ICookieProvider _cookieProvider;
         private readonly ISiteBuilderApiContext _siteBuilderApiContext;
         private readonly IStorefrontCache _cache;
+        private readonly ISettings _settings;
         private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
         private readonly IGeneralSettingsWebApiClient _generalSettingsWebApiClient;
         private readonly IMobileDetectionProvider _mobileDetectionProvider;
@@ -40,7 +42,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         private Dictionary<string, string> _labels;
 
-        public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, IStorefrontCache cache)
+        public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, IStorefrontCache cache , ISettings settings , ISiteBuilderApiContext apiContext)
         {
             _generalSettingsWebApiClient = generalSettingsWebApiClient.CloneWithoutUserClaims();
             _themeSettingsRepository = themeSettingsRepository;
@@ -49,7 +51,13 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _cookieProvider = cookieProvider;
             _siteBuilderApiContext = siteBuilderApiContext;
             _cache = cache;
+            _settings = settings;
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient.CloneWithoutUserClaims();
+            this.CdnPrefix = settings.AppSettings("CdnHost");
+            if (!string.IsNullOrEmpty(CdnPrefix))
+            {
+                this.CdnPrefix = "//" + this.CdnPrefix + "/" + siteBuilderApiContext.TenantId + "-" + siteBuilderApiContext.SiteId;
+            }
         }
 
         internal const string COOKIENAME = "SBCONTEXT";
@@ -250,5 +258,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         }
 
         public bool IsEditMode { get; set; }
+
+        public string CdnPrefix { get; set; }
     }
 }

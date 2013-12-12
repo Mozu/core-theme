@@ -429,6 +429,7 @@
     <Compile Include="CMS\WidgetProvider.cs" />
     <Compile Include="Configuration\AutofacModule.cs" />
     <Compile Include="Contexts\ClientApiContext.cs" />
+    <Compile Include="Contexts\SearchContext.cs" />
     <Compile Include="Contexts\NavContext.cs" />
     <Compile Include="Contexts\PageContext.cs" />
     <Compile Include="Contexts\SiteContext.cs" />

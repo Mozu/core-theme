@@ -63,13 +63,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _locationSettingsWebApiClient = locationSettingsWebApiClient;
 
 
-            // _siteShippingSettingsClient.UpdateSiteShippingSettings(new SiteSettings.Shipping.Contracts.SiteShippingSettings())
-
-            Mozu.ShippingAdmin.Contracts.Clients.ICarrierConfigurationGlobalWebApiClient global;
-            Mozu.ShippingAdmin.Contracts.Clients.ICarrierConfigurationWebApiClient  reg;
-
-            //Contact
-            
+         
 
         }
         //public class CarrierConfig

@@ -13,21 +13,21 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         more: false
     },
 
-    constructor: function(config) {
+    constructor: function (config) {
         this.callParent(arguments);
         this.manager.entitypeTypeHandler = this;
         this.load();
         this.initPublishableState();
     },
 
-    deleteRecord:function(){
+    deleteRecord: function () {
         var me = this,
             model = this.get();
 
         if (me.fireEvent('destroy', model) != false) {
             if (model) {
                 model.destroy({
-                    callback:function(){
+                    callback: function () {
                         me.fireEvent('destroy', model);
                     }
                 });
@@ -35,10 +35,10 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         }
     },
 
-    get:function () {
+    get: function () {
         return this.model;
     },
-     
+
     getSaveTask: function () {
         var me = this,
             tasks = Ext.create('Taco.core.ux.form.Tasks'),
@@ -46,7 +46,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
             source,
             json;
         //hack travis to fix.
-        me.editor.dirtyStateCheck()
+        me.editor.dirtyStateCheck();
         if (me.editor.isDirty()) {
             if ((me.pageContext.editMode || "").toLowerCase() == 'template') {
                 source = me.pageContext.cmsContext.template;
@@ -69,9 +69,9 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
                     this.editor.resetDirtyState();
                     this.manager.setPublishable(true);
                 }
-                
+
             }, this);
-            
+
             tasks.add({
                 fn: function (t) {
 
@@ -92,14 +92,14 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
                 }
             });
         }
-        
+
 
         this.addSaveTasks(tasks);
 
         return tasks;
     },
 
-    initPublishableState:function () {
+    initPublishableState: function () {
         if (!this.pageContext || !this.pageContext.cmsContext) {
             return;
         }
@@ -108,26 +108,26 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
                 this.manager.setPublishable(true);
             }
         }, this);
-       
+
     },
 
-    publish:function () {
+    publish: function () {
         if (!this.pageContext || !this.pageContext.cmsContext) {
             return;
         }
         var store = Ext.create('Taco.store.CmsDocumentDrafts');
-        
+
         Ext.Object.each(this.pageContext.cmsContext, function (key, value, myself) {
             if (value.id) {
                 var doc = store.add({ id: value.id })[0];
                 doc.set('isPublished', true);
             }
         }, this);
-        store.sync({            
-           success:function () {
-               this.manager.setPublishable(false);
-           },
-           scope:this
+        store.sync({
+            success: function () {
+                this.manager.setPublishable(false);
+            },
+            scope: this
         });
     },
 
@@ -139,12 +139,12 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         return false;
     },
 
-    load: function() {
+    load: function () {
         var me = this,
             key = this.getId(),
             modelFactory = Ext.ModelManager.getModel(this.modelName),
             store = this.getStore();
-        
+
         me.model = store.getById(key);
         if (me.model === null) {
             me.isLoading = true;
@@ -158,8 +158,8 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         }
     },
 
-    set:function(model, add) {
-        this.isLoading= false;
+    set: function (model, add) {
+        this.isLoading = false;
         this.model = model;
         if (add) {
             this.getStore().add(this.model);
@@ -172,6 +172,6 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
     },
     getId: Ext.emptyFn,
     getStore: Ext.emptyFn,
-    setHidden:Ext.emptyFn,
+    setHidden: Ext.emptyFn,
     unload: Ext.emptyFn
 });

@@ -72,6 +72,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             }
 
 
+
             requestContext["SiteContext"] = requestContext["siteContext"] = siteContext;
             requestContext["ThemeSettings"] = requestContext["themeSettings"] = siteContext.ThemeSettings;
             requestContext["Labels"] = requestContext["labels"] = siteContext.Labels;
@@ -83,6 +84,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             requestContext["false"] = false;
             requestContext["viewPath"] = _virtualPath;
             requestContext["ViewData"] = viewContext.ViewData;
+            
 
          
             return requestContext;

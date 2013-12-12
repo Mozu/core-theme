@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -74,9 +75,13 @@ namespace Mozu.SiteBuilder.Mvc
 
             //todo check refreshToken Loc
             string accessToken = null;
+            string adminAccessToken = null;
             if (this.ScopeType == UserScopeType.Shopper)
             {
                 accessToken = _authenticationHelper.GetStoreFrontAccessToken();
+
+                adminAccessToken = _authenticationHelper.GetAdminAccessToken();
+
             }
             else
             {
@@ -95,7 +100,10 @@ namespace Mozu.SiteBuilder.Mvc
                 //todo validate tenant and site 
                 this.UserClaims = claims;
             }
-
+            if (!string.IsNullOrEmpty(adminAccessToken) && LightweightUserClaims.TryParse(accessToken, out claims))
+            {
+                this.AdminUserClaim = claims;
+            }
             
 
 
@@ -109,6 +117,13 @@ namespace Mozu.SiteBuilder.Mvc
             {
                 return;
             }
+            //if (this.AdminUserClaim == null)
+            //{
+            //    throw new System.Web.Http.HttpResponseException(new HttpResponseMessage(HttpStatusCode.Unauthorized)
+            //                                                    {
+            //                                                        ReasonPhrase = "Unauthorized to preview site.  Must be logged in as admin"
+            //                                                    });
+            //}
              if (this.UserClaims == null)
              {
                  return;
@@ -314,9 +329,11 @@ namespace Mozu.SiteBuilder.Mvc
 
         public bool HasInvalidCredentials { get; set; }
 
-        public object Clone()
+        public new object Clone()
         {
             return this.MemberwiseClone();
         }
+
+        public LightweightUserClaims AdminUserClaim { get; set; }
     }
 }
