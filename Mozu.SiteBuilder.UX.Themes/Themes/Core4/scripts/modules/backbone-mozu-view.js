@@ -76,7 +76,7 @@ define([
             },
             
             render: function () {
-                var thenFocus = this.el && document.activeElement && $.contains(this.el, document.activeElement) && {
+                var thenFocus = this.el && document.activeElement && document.activeElement.type !== "radio" && document.activeElement.type !== "checkbox" && $.contains(this.el, document.activeElement) && {
                     'id': document.activeElement.id,
                     'mzvalue': document.activeElement.getAttribute('data-mz-value'),
                     'value': document.activeElement.value
@@ -99,7 +99,8 @@ define([
         Backbone.MozuView.extend = function (conf, statics) {
             if (conf.autoUpdate) {
                 _.each(conf.autoUpdate, function (prop) {
-                    conf['update' + prop.charAt(0).toUpperCase() + prop.substring(1)] = _.debounce(function (e) {
+                    var methodName = 'update' + prop.charAt(0).toUpperCase() + prop.substring(1);
+                    conf[methodName] = _.debounce(conf[methodName] || function (e) {
                         var attrs = {},
                             $target = $(e.currentTarget),
                             checked = $target.prop('checked'),

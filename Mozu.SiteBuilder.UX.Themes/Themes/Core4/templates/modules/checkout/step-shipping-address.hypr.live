@@ -3,19 +3,21 @@
         <button class="mz-button mz-button-small mz-formstep-edit" data-mz-action="edit">{{ labels.edit }}</button>
     </h3>
     <div class="mz-formstep-body">
-      {% if model.address.candidateValidatedAddresses == null %}
+      {% if not model.address.candidateValidatedAddresses %}
       <div class="mz-formstep-summary mz-addresssummary">
             {% include "modules/common/address-summary" %}
         </div>
       <div class="mz-formstep-fields mz-l-formfieldgroup">
+        {% if model.contacts %}
+        {% include "modules/checkout/checkout-shipping-contact-selector" with editingContact=model %}
+        {% else %}
         {% include "modules/common/address-form" %}
+        {% endif %}
       </div>
       <div class="mz-formstep-next">
         <button class="mz-button" data-mz-action="next">{{ labels.next }}</button>
       </div>
-      {% endif %}
-
-      {% if model.address.candidateValidatedAddresses != null %}
+      {% else %}
 
       <div class="mz-formstep-fields mz-l-formfieldgroup">
         Select an address from these alternatives:

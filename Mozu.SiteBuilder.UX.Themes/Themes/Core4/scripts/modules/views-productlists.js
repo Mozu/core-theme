@@ -56,11 +56,35 @@
 
             this.previousItems.models = newItems.models.slice();
         }
+    }),
+
+    FacetingPanel = Backbone.MozuView.extend({
+        additionalEvents: {
+            "change [data-mz-facet-value]": "setFacetValue"
+        },
+        templateName: "modules/product/faceting-form",
+        initialize: function () {
+            this.listenTo(this.model, 'loadingchange', function (isLoading) {
+                this.$el.find('input').prop('disabled', isLoading);
+            });
+        },
+        clearFacets: function () {
+            this.model.clearAllFacets();
+        },
+        clearFacet: function (e) {
+            this.model.get("facets").findWhere({ field: $(e.currentTarget).data('mz-facet') }).empty();
+        },
+        setFacetValue: function (e) {
+            var $box = $(e.currentTarget);
+            this.model.setFacetValue($box.data('mz-facet'), $box.data('mz-facet-value'), $box.is(':checked'));
+        }
     });
+
 
 
     return {
         List: ProductListView,
-        AnimatedList: AnimatedProductListView
+        AnimatedList: AnimatedProductListView,
+        FacetingPanel: FacetingPanel
     };
 });

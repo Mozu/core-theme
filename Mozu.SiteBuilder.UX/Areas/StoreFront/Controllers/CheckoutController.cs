@@ -7,12 +7,15 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Web.Http;
 
+using Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Client;
 using Mozu.Location.Contracts.Clients;
 using Mozu.ShippingRuntime.Contracts.Clients;
+using Mozu.Customer.Contracts;
+using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
@@ -24,9 +27,9 @@ using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.Checkout;
 using Mozu.SiteSettings.Shipping.Contracts.Clients;
-using System.Linq;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Mozu.CommerceRuntime.Contracts.Orders;
+using Newtonsoft.Json.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -38,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
        
         private readonly IAuthenticationHelper _authHelper;
         private readonly ICookieProvider _cookieProvider;
-   
+        private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
         private readonly IOrderWebApiClient _orderWebApiClient;
         private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private readonly IShippingWebApiClient _shippingWebApiClient;
@@ -48,14 +51,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //private static string _merchantId;
         private const string CookieName = "order";
 
-        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider,  IOrderWebApiClient orderWebApiClient, Mozu.ShippingRuntime.Contracts.Clients.IShippingWebApiClient shippingWebApiClient , Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient )
+        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, Mozu.ShippingRuntime.Contracts.Clients.IShippingWebApiClient shippingWebApiClient , Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient )
         {
           
             _authHelper = authHelper;
             _cookieProvider = cookieProvider;
             
             _orderWebApiClient = orderWebApiClient;
-
+            _customerAccountWebApiClient = customerAccountWebApiClient;
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
             _shippingWebApiClient = shippingWebApiClient.CloneWithoutUserClaims();
            
@@ -105,6 +108,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var id = orderId;
             if (string.IsNullOrWhiteSpace(id)) return Redirect("/cart");
             Order model;
+            Customer.Contracts.CustomerAccount account = null;
+            CardCollection cards = null;
+
             try
             {
 
@@ -117,14 +123,61 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             if (model == null) return Redirect("/cart");
             if (CompletedOrderStates.Contains(model.Status)) return Redirect("/checkout/" + model.Id + "/confirmation");
-
-            var jSerializer = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
-            var jOrder = Newtonsoft.Json.Linq.JObject.FromObject(model, jSerializer);
+            bool addedPrimaryShippingContactToOrderJustNow = false;
 
            // dynamic dOrder = jOrder;
 
+
+            if (!this.PageContext.User.IsAnonymous)
+            {
+                account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId)).ReadAsSync();
+                cards = (await _customerAccountWebApiClient.GetAccountCards(this.PageContext.User.AccountId)).ReadAsSync();
+                CustomerContact primaryShippingContact = null;
+                //CustomerContact primaryBillingContact = null;
+
+                try
+                {
+                    primaryShippingContact = account.Contacts.Find(x => x.Types.Exists(y => y.Name == ContactTypeConst.SHIPPING && y.IsPrimary));
+                    //primaryBillingContact = account.Contacts.Find(x => x.Types.Exists(y => y.Name == ContactTypeConst.BILLING && y.IsPrimary));
+                }
+                catch (NullReferenceException ex)
+                {
+                }
+
+                if (primaryShippingContact != null)
+                {
+                    if (model.FulfillmentInfo == null)
+                    {
+                        model.FulfillmentInfo = new FulfillmentInfo()
+                        {
+                            FulfillmentContact = primaryShippingContact
+                        };
+                        addedPrimaryShippingContactToOrderJustNow = true;
+                    }
+                    if (model.FulfillmentInfo.FulfillmentContact == null)
+                    {
+                        model.FulfillmentInfo.FulfillmentContact = primaryShippingContact;
+                    }
+                    addedPrimaryShippingContactToOrderJustNow = true;
+                }
+
+            }
+
+            var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
+            var jOrder = JObject.FromObject(model, jSerializer);
+            if (account != null)
+            {
+                JObject accountJson = JObject.FromObject(account, jSerializer);
+                accountJson.Add("cards", JArray.FromObject(cards.Items, jSerializer));
+                jOrder.Add("customer", accountJson);
+            }
+
             if (model.FulfillmentInfo != null && model.FulfillmentInfo.FulfillmentContact != null && model.FulfillmentInfo.FulfillmentContact.Address != null)
             {
+                if (addedPrimaryShippingContactToOrderJustNow)
+                {
+                    model = (await _orderWebApiClient.UpdateOrder(id, model)).ReadAsSync();
+                }
                 var methods = (await _orderWebApiClient.GetAvailableShipmentMethods(id)).ReadAsSync();
                 var asm = JArray.FromObject(methods, jSerializer);
                 JObject si = (JObject)jOrder["fulfillmentInfo"];
@@ -147,10 +200,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 //}
             }
                 
-            
-
-
-
 
 
 

@@ -4,7 +4,7 @@
 {% block body-tag-classes %} mz-search-results {% endblock body-tag-classes %}
 
 {% block body-content %}
-{% require_script "pages/category" %}
+{% require_script "pages/search" %}
 
 <div class="mz-search-results">
     <h2 class="mz-search-restults-title mz-page-title">Search Results</h2>
