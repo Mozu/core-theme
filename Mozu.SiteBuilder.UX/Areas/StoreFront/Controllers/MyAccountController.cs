@@ -17,6 +17,9 @@ using Mozu.SiteBuilder.Mvc.Customers;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Customers;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 using PasswordInfo = Mozu.SiteBuilder.UX.Models.Customers.PasswordInfo;
 
@@ -37,8 +40,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ISiteBuilderApiContext _apiContext;
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
         private readonly IWishlistWebApiClient _wishlistApiClient;
+        private readonly ICreditWebApiClient _creditApiClient;
 
-        public MyAccountController(ICustomerRepository customerRepository, ICustomerAccountWebApiClient customerAccountWebApiClient, IAccountContactRepository accountContactRepository,  IOrderWebApiClient orderWebApiClient, IWishlistWebApiClient wishlistWebApiClient, IAuthenticationHelper authenticationHelper, ISiteBuilderApiContext apiContext)
+        public MyAccountController(ICustomerRepository customerRepository, ICustomerAccountWebApiClient customerAccountWebApiClient, IAccountContactRepository accountContactRepository,  IOrderWebApiClient orderWebApiClient, IWishlistWebApiClient wishlistWebApiClient, ICreditWebApiClient creditWebApiClient, IAuthenticationHelper authenticationHelper, ISiteBuilderApiContext apiContext)
         {
             _customerRepository = customerRepository;
             _customerAccountWebApiClient = customerAccountWebApiClient.CloneWithoutUserClaims();
@@ -46,6 +50,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
             _wishlistApiClient = wishlistWebApiClient.CloneWithoutUserClaims();
+            _creditApiClient = creditWebApiClient.CloneWithoutUserClaims();
             _authenticationHelper = authenticationHelper;
             _apiContext = apiContext;
         }
@@ -76,6 +81,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var cardsTask = _customerAccountWebApiClient.GetAccountCards(account.Id);
             var openOrdersTask = _orderWebApiClient.GetOrders(0, 25, null, BuildOpenOrdersFilter(account.Id));
             var orderHistoryTask = _orderWebApiClient.GetOrders(0, 25, null, BuildOrderHistoryFilter(account.Id));
+            var storeCreditsTask = _creditApiClient.GetCredits(0, 25, null, String.Format("CustomerId eq \"{0}\"", account.Id));
             var wishlistTask = _wishlistApiClient.GetWishlistByName(account.Id, DEFAULT_WISHLIST_NAME);            
             CommerceRuntime.Contracts.Wishlists.Wishlist wishlist = null;
             try {
@@ -89,22 +95,24 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var cards = cardsTask.Result.ReadAsSync();
             var openOrders = openOrdersTask.Result.ReadAsSync();
             var orderHistory = orderHistoryTask.Result.ReadAsSync();
+            var credits = storeCreditsTask.Result.ReadAsSync();
             if (wishlist != null) {
                 var wishlistItemsTask = _wishlistApiClient.GetWishlistItemsByWishlistName(account.Id, DEFAULT_WISHLIST_NAME, null, null, "UpdateDate asc");
                 wishlist.Items = wishlistItemsTask.Result.ReadAsSync().Items;
             }
 
-            var jSerializer = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
-            var jAccount = Newtonsoft.Json.Linq.JObject.FromObject(account, jSerializer);
+            var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
+            var jAccount = JObject.FromObject(account, jSerializer);
 
-            jAccount.Add("openOrders", Newtonsoft.Json.Linq.JObject.FromObject(openOrders, jSerializer));
-            jAccount.Add("orderHistory", Newtonsoft.Json.Linq.JObject.FromObject(orderHistory, jSerializer));
-            jAccount.Add("hasSavedCards", (Newtonsoft.Json.Linq.JValue)(cards.Items.Count > 0));
-            jAccount.Add("hasSavedContacts", (Newtonsoft.Json.Linq.JValue)(account.Contacts.Count > 0));
-            jAccount.Add("cards", Newtonsoft.Json.Linq.JArray.FromObject(cards.Items, jSerializer));
+            jAccount.Add("openOrders", JObject.FromObject(openOrders, jSerializer));
+            jAccount.Add("orderHistory", JObject.FromObject(orderHistory, jSerializer));
+            jAccount.Add("hasSavedCards", cards.Items.Count > 0);
+            jAccount.Add("hasSavedContacts", account.Contacts.Count > 0);
+            jAccount.Add("cards", JArray.FromObject(cards.Items, jSerializer));
+            jAccount.Add("credits", JArray.FromObject(credits.Items, jSerializer));
 
             if (wishlist != null) {
-                var wishlistObj = Newtonsoft.Json.Linq.JObject.FromObject(wishlist, jSerializer);
+                var wishlistObj = JObject.FromObject(wishlist, jSerializer);
                 wishlistObj.Add("hasItems", wishlist.Items.Count() > 0);
                 jAccount.Add("wishlist", wishlistObj);
             }

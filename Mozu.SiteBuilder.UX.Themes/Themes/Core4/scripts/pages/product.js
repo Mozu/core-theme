@@ -42,7 +42,7 @@
             this.$('[data-mz-product-option]').each(function () {
                 var $this = $(this), isChecked, wasChecked;
                 if ($this.val()) {
-                    switch ($this.type()) {
+                    switch ($this.attr('type')) {
                         case "checkbox":
                         case "radio":
                             isChecked = $this.prop('checked');

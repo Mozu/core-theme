@@ -60,6 +60,24 @@
         FulfillmentContact = CheckoutStep.extend({
             relations: CustomerModels.Contact.prototype.relations,
             validation: CustomerModels.Contact.prototype.validation,
+            helpers: ['contacts'],
+            contacts: function() {
+                var contacts = this.getOrder().get('customer').get('contacts').toJSON();
+                return contacts && contacts.length > 0 && contacts;
+            },
+            initialize: function() {
+                var self = this;
+                this.on('change:contactId', function (model, newContactId) {
+                    if (!newContactId || newContactId === "new") {
+                        model.get('address').clear();
+                        model.get('phoneNumbers').clear();
+                        model.unset('firstName');
+                        model.unset('lastNameOrSurname');
+                    } else {
+                        model.set(model.getOrder().get('customer').get('contacts').get(newContactId).toJSON());
+                    }
+                });
+            },
             getOrder: function () {
                 // since this is one step further away from the order, it has to be accessed differently
                 return this.parent.parent;
@@ -217,6 +235,11 @@
                 card: PaymentMethods.CreditCard,
                 check: PaymentMethods.Check
             },
+            helpers: ['savedPaymentMethods'],
+            savedPaymentMethods: function() {
+                var cards = this.getOrder().get('customer').get('cards').toJSON();
+                return cards && cards.length > 0 && cards;
+            },
             initialize: function() {
                 var me = this;
                 this.on('change:paymentType', function (model, newPaymentType) {
@@ -228,11 +251,27 @@
                         this.get('billingContact').set(this.parent.get('fulfillmentInfo').get('fulfillmentContact').toJSON(), { silent: true });
                     }
                 });
+                this.on('change:savedPaymentMethodId', function (me, newId) {
+                    if (!newId || newId === "new") {
+                        me.get('billingContact').clear();
+                        me.get('card').clear();
+                        me.get('check').clear();
+                        me.unset('paymentType');
+                    } else {
+                        var customer = me.getOrder().get('customer'),
+                            card = customer.get('cards').get(newId),
+                            cardBillingContact = card && customer.get('contacts').get(card.get('contactId'));
+                        if (card) {
+                            me.get('billingContact').set(cardBillingContact.toJSON());
+                            me.get('card').set(card.toJSON());
+                            me.set('paymentType', 'CreditCard');
+                        }
+                    }
+                });
             },
             selectPaymentType: function(newPaymentType) {
                 this.get('check').selected = newPaymentType == "Check";
                 this.get('card').selected = newPaymentType == "CreditCard";
-                this.trigger('paymentchange');
             },
             calculateStepStatus: function() {
                 this.stepStatus(!!this.parent.get('fulfillmentInfo').get('shippingMethodCode') ? (
@@ -247,26 +286,25 @@
                 }
             },
             submit: function () {
-                var self = this, order = self.getOrder();
-                if (self.validate()) return false;
+                if (!this.validate()) {
+                    this.stepStatus("complete");
+                    this.getOrder().isReady(true);
+                }
+            },
+            applyPayment: function() {
+                var order = this.getOrder();
                 if (this.get("paymentType") === "PaypalExpress") {
                     this.set(this.getPaypalUrls());
                 } else {
                     this.unset('paypalReturnUrl');
                     this.unset('paypalCancelUrl');
                 }
-                this.isLoading(true);
-                order.apiAddPayment().then(function () {
+                return order.apiAddPayment().then(function() {
                     var payment = order.apiModel.getActivePayment();
                     if (payment.paymentType !== "PaypalExpress") {
-                        self.stepStatus("complete");
-                        self.isLoading(false);
                         order.isReady(true);
                     }
-                }, function () {
-                    self.isLoading(false);
-                    self.stepStatus("invalid");
-                }).done();
+                });
             }
         });
 
@@ -305,7 +343,8 @@
             relations: {
                 fulfillmentInfo: FulfillmentInfo,
                 billingInfo: BillingInfo,
-                shopperNotes: ShopperNotes
+                shopperNotes: ShopperNotes,
+                customer: CustomerModels.Customer
             },
             validation: checkoutPageValidation,
             dataTypes: {
@@ -369,18 +408,20 @@
                     self.trigger('sync', self);
                 });
             },
-            submit: function() {
+            submit: function () {
                 var order = this,
-                    process = [];
+                    operation;
+
                 if (this.validate()) return false;
                 this.isLoading(true);
+                operation = this.get('billingInfo').applyPayment();
                 if (this.get("createAccount") && !this.customerCreated) {
-                    process.push(this.addNewCustomer);
+                    operation = operation.then(this.addNewCustomer);
                 } 
                 if (this.get('shopperNotes').has('comments')) {
-                    process.push(this.update);
+                    operation = operation.then(this.update);
                 }
-                api.steps(process).then(this.apiCheckout).then(this.onCheckoutSuccess, this.onCheckoutError).done();
+                operation.then(this.apiCheckout).then(this.onCheckoutSuccess, this.onCheckoutError).done();
 
             },
             update: function() {

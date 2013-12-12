@@ -3,102 +3,122 @@
         <button type="button" class="mz-button mz-button-small mz-formstep-edit" data-mz-action="edit">{{ labels.edit }}</button>
     </h3>
     <div class="mz-formstep-body">
-            <div class="mz-formstep-summary">
-                <h4>{{ model.paymentType }}</h4>
-                {% if model.paymentType == "Check" %}
-                    <span>{{ model.check.checkNumber }}</span>
-                {% endif %}
-                {% if model.paymentType == "CreditCard" %}
-                    <span>{{ model.card.cardNumberPartOrMask }}</span>
-                {% endif %}
-                {% if model.paymentType == "PaypalExpress" %}
-                    <span>{{ labels.paypalExpressSummary }}</span>
-                {% endif %}
+        <div class="mz-formstep-summary">
+            <h4>{{ model.paymentType }}</h4>
+            {% if model.paymentType == "Check" %}
+                <span>{{ model.check.checkNumber }}</span>
+            {% endif %}
+            {% if model.paymentType == "CreditCard" %}
+                <span>{{ model.card.cardNumberPartOrMask }}</span>
+            {% endif %}
+            {% if model.paymentType == "PaypalExpress" %}
+                <span>{{ labels.paypalExpressSummary }}</span>
+            {% endif %}
 
-                <h4>{{ labels.billingAddress }}</h4>
-              <div class="mz-addresssummary">
-                {% include "modules/common/address-summary" with model=model.billingContact %}
-              </div>
+            <h4>{{ labels.billingAddress }}</h4>
+          <div class="mz-addresssummary">
+            {% include "modules/common/address-summary" with model=model.billingContact %}
+          </div>
 
-                <h4>{{ labels.billingContact }}</h4>
-                <p>{{ labels.phone }}: <strong>{{ model.billingContact.phoneNumbers.home }}</strong></p>
-                <p>{{ labels.email }}: <strong>{{ model.billingContact.email }}</strong></p>
-            </div>
+            <h4>{{ labels.billingContact }}</h4>
+            <p>{{ labels.phone }}: <strong>{{ model.billingContact.phoneNumbers.home }}</strong></p>
+            <p>{{ labels.email }}: <strong>{{ model.billingContact.email }}</strong></p>
+        </div>
 
-            <div class="mz-formstep-fields mz-l-formfieldgroup">
-                    <div class="mz-l-formfieldgroup-row">
-                        <div class="mz-l-formfieldgroup-cell">
-                            <label>{{ labels.paymentType }}<span class="is-required"> *</span>:</label>
-                        </div>
-                        <div class="mz-l-formfieldgroup-cell">
-                            {% if siteContext.checkoutSettings.isPayPalEnabled %}
-                            <label class="mz-paymenttype mz-paymenttype-paypal">
-                                <span class="mz-paymenttype-label">{{ labels.payPal }}</span>
-                                <input data-mz-value="paymentType" name="paymentType" type="radio" class="mz-paymenttype-input" value="PaypalExpress" {% if model.paymentType == "PaypalExpress" %}checked="checked"{% endif %} />
-                            </label>
-                            {% endif %}
-                            <label class="mz-paymenttype mz-paymenttype-creditcard">
-                                <span class="mz-paymenttype-label">{{ labels.creditCard }}</span>
-                                <input data-mz-value="paymentType" name="paymentType" type="radio" class="mz-paymenttype-input" value="CreditCard" {% if model.paymentType == "CreditCard" %}checked="checked"{% endif %} />
-                            </label>
-                          {% if siteContext.checkoutSettings.payByMail %}
-                            <label class="mz-paymenttype mz-paymenttype-check">
-                                <span class="mz-paymenttype-label">{{ labels.checkByMail }}</span>
-                                <input data-mz-value="paymentType" name="paymentType" type="radio" class="mz-paymenttype-input" value="Check" {% if model.paymentType == "Check" %}checked="checked"{% endif %} />
-                            </label>
-                          {% endif %}
-                          <span class="mz-validationmessage" data-mz-validationmessage-for="paymentType"></span>
-                        </div>
-                     </div>
-              </div>
-      <div class="mz-formstep-fields mz-l-formfieldgroup">
-
-                {% if model.paymentType == "CreditCard" %}
-                    {% include "modules/checkout/billing-credit-card-form" with model=model.card %}
-                {% endif %}
-
-                {% if model.paymentType == "Check" %}
-                    <div class="mz-l-formfieldgroup">
-                        {% include "modules/checkout/checking-account-form" %}
+        <div class="mz-formstep-fields mz-l-formfieldgroup">
+            {% if model.savedPaymentMethods %}
+            <div class="mz-l-formfieldgroup-row">
+          <div class="mz-l-formfieldgroup-cell">
+            <label>{{ labels.savedPaymentMethods }}:</label>
+          </div>
+          <div class="mz-l-formfieldgroup-cell">
+            <select name="savedPaymentMethods" class="mz-payment-select-saved-payments" data-mz-value="savedPaymentMethodId">
+              <option value="" {% if not model.savedPaymentMethodId %} selected="selected" {% endif %}>{{ labels.selectSavedPaymentMethod }}</option>
+              {% for card in model.savedPaymentMethods %}
+              <option value="{{ card.id }}" {% if model.savedPaymentMethodId == card.id %} selected="selected" {% endif %}>{{ card.cardType }} {{ card.cardNumberPartOrMask }}</option>
+              {% endfor %}
+              <!--<option value="new" {% if model.savedPaymentMethodId == "new" %} selected="selected" {% endif %}>{{ labels.enterNewPaymentMethod }}</option>-->
+            </select>
+          </div>
+        </div>
+          {% endif %}
+                <div class="mz-l-formfieldgroup-row">
+                    <div class="mz-l-formfieldgroup-cell">
+                        <label>{{ labels.paymentType }}<span class="is-required"> *</span>:</label>
                     </div>
-                {% endif %}
-                
-                {% if model.paymentType == "PaypalExpress" %}
-                    <p>{{ labels.paypalExpressInfo }}</p>
-                {% endif %}
-
-                <h4>{{ labels.billingAddress }}</h4>
-                <div class="mz-l-formfieldgroup mz-l-formfieldgroup-norows"><label><input type="checkbox" data-mz-value="isSameBillingShippingAddress" value="true" {% if model.isSameBillingShippingAddress %}checked="checked"{% endif %}> {{ labels.useShippingAddress }}</label></div>
-                {% if model.isSameBillingShippingAddress %}
-                    <div class="mz-addresssummary mz-same-as-shipping-summary" id="mz-same-as-shipping-summary">
-                        {% include "modules/common/address-summary" with model=model.billingContact %}
+                    <div class="mz-l-formfieldgroup-cell mz-paymenttypes">
+                        <label class="mz-paymenttype mz-paymenttype-creditcard">
+                            <input data-mz-value="paymentType" name="paymentType" type="radio" class="mz-paymenttype-input" value="CreditCard" {% if model.paymentType == "CreditCard" %}checked="checked"{% endif %} />
+                            <span class="mz-paymenttype-label mz-paymenttype-label-creditcard">{{ labels.creditCard }}</span>
+                        </label>
+                      {% if siteContext.checkoutSettings.payByMail %}
+                        <label class="mz-paymenttype mz-paymenttype-check">
+                            <input data-mz-value="paymentType" name="paymentType" type="radio" class="mz-paymenttype-input" value="Check" {% if model.paymentType == "Check" %}checked="checked"{% endif %} />
+                            <span class="mz-paymenttype-label mz-paymenttype-label-check">{{ labels.checkByMail }}</span>
+                        </label>
+                      {% endif %}
+                        {% if siteContext.checkoutSettings.isPayPalEnabled %}
+                        <label class="mz-paymenttype mz-paymenttype-paypal">
+                            <input data-mz-value="paymentType" name="paymentType" type="radio" class="mz-paymenttype-input" value="PaypalExpress" {% if model.paymentType == "PaypalExpress" %}checked="checked"{% endif %} />
+                          <span class="mz-paymenttype-label mz-paymenttype-label-paypal">
+                            <img src="https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif" alt="{{ labels.payPal }}" align="left" style="margin-right:7px;">
+                              {{ labels.payPal }}
+                           </span>
+                        </label>
+                        {% endif %}
+                      <span class="mz-validationmessage" data-mz-validationmessage-for="paymentType"></span>
                     </div>
-                {% else %}
-                <div class="mz-l-formfieldgroup mz-l-formfieldgroup-address">
-                    {% include "modules/checkout/billing-address-form" with model=model.billingContact %}
-                </div>
-                {% endif %}
-                <h4>{{ labels.billingContact }}</h4>
+                 </div>
+          </div>
+  <div class="mz-formstep-fields mz-l-formfieldgroup">
+
+
+            {% if model.paymentType == "CreditCard" %}
+                {% include "modules/checkout/billing-credit-card-form" with model=model.card %}
+            {% endif %}
+
+            {% if model.paymentType == "Check" %}
                 <div class="mz-l-formfieldgroup">
-                    <div class="mz-l-formfieldgroup-row">
-                        <div class="mz-l-formfieldgroup-cell">
-                            <label for="billing-email">{{ labels.email }}<span class="is-required"> *</span>:</label>
-                        </div>
-                        <div class="mz-l-formfieldgroup-cell">
-                            <input type="text" id="billing-email" name="billing-email" data-mz-value="billingContact.email" value="{{ model.billingContact.email }}">
-                            <span class="mz-validationmessage" data-mz-validationmessage-for="billingContact.email"></span>
-                        </div>
+                    {% include "modules/checkout/checking-account-form" %}
+                </div>
+            {% endif %}
+            
+            {% if model.paymentType == "PaypalExpress" %}
+                <p>{{ labels.paypalExpressInfo }}</p>
+            {% endif %}
+
+            <h4>{{ labels.billingAddress }}</h4>
+            <div class="mz-l-formfieldgroup mz-l-formfieldgroup-norows"><label><input type="checkbox" data-mz-value="isSameBillingShippingAddress" value="true" {% if model.isSameBillingShippingAddress %}checked="checked"{% endif %}> {{ labels.useShippingAddress }}</label></div>
+            {% if model.isSameBillingShippingAddress %}
+                <div class="mz-addresssummary mz-same-as-shipping-summary" id="mz-same-as-shipping-summary">
+                    {% include "modules/common/address-summary" with model=model.billingContact %}
+                </div>
+            {% else %}
+            <div class="mz-l-formfieldgroup mz-l-formfieldgroup-address">
+                {% include "modules/checkout/billing-address-form" with model=model.billingContact %}
+            </div>
+            {% endif %}
+            <h4>{{ labels.billingContact }}</h4>
+            <div class="mz-l-formfieldgroup">
+                <div class="mz-l-formfieldgroup-row">
+                    <div class="mz-l-formfieldgroup-cell">
+                        <label for="billing-email">{{ labels.email }}<span class="is-required"> *</span>:</label>
                     </div>
-                    <div class="mz-l-formfieldgroup-row">
-                        <div class="mz-l-formfieldgroup-cell"></div>
-                        <div class="mz-l-formfieldgroup-cell">
-                            <label class="mz-inline"><input type="checkbox" name="special-offers" checked="checked" class="mz-checkout-optin" > {{ labels.optIn|string_format(siteContext.generalSettings.websiteName) }}</label>
-                        </div>
+                    <div class="mz-l-formfieldgroup-cell">
+                        <input type="text" id="billing-email" name="billing-email" data-mz-value="billingContact.email" value="{{ model.billingContact.email }}">
+                        <span class="mz-validationmessage" data-mz-validationmessage-for="billingContact.email"></span>
                     </div>
                 </div>
-
-                <div class="mz-formstep-next">
-                    <button class="mz-button" data-mz-action="next">{{ labels.next }}</button>
+                <div class="mz-l-formfieldgroup-row">
+                    <div class="mz-l-formfieldgroup-cell"></div>
+                    <div class="mz-l-formfieldgroup-cell">
+                        <label class="mz-inline"><input type="checkbox" name="special-offers" checked="checked" class="mz-checkout-optin" > {{ labels.optIn|string_format(siteContext.generalSettings.websiteName) }}</label>
+                    </div>
                 </div>
             </div>
+
+            <div class="mz-formstep-next">
+                <button class="mz-button" data-mz-action="next">{{ labels.next }}</button>
+            </div>
+        </div>
     </div><!-- .mz-panel-wrap -->

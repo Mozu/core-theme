@@ -266,12 +266,25 @@
                 lastName: this.get('lastName')
             });
         },
-        toJSON: function () {
+        toJSON: function (options) {
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
+            if (!options || !options.helpers)
+                delete j.customer;
             delete j.password;
             delete j.confirmPassword;
             delete j.oldPassword;
             return j;
+        },
+        getPrimaryContactOfType: function(typeName) {
+            return this.get('contacts').find(function (contact) {
+                return !!_.findWhere(contact.get('types'), { name: typeName, isPrimary: true });
+            });
+        },
+        getPrimaryBillingContact: function () {
+            return this.getPrimaryContactOfType("Billing");
+        },
+        getPrimaryShippingContact: function () {
+            return this.getPrimaryContactOfType("Shipping");
         }
     });
 

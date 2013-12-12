@@ -67,10 +67,12 @@
             'address.countryCode',
             'address.stateOrProvince',
             'address.postalOrZipCode',
-            'phoneNumbers.home'
+            'phoneNumbers.home',
+            'contactId'
         ],
         renderOnChange: [
-            'address.countryCode'
+            'address.countryCode',
+            'contactId'
         ]
     });
 
@@ -90,6 +92,7 @@
     var BillingInfoView = CheckoutStepView.extend({
         templateName: 'modules/checkout/step-payment-info',
         autoUpdate: [
+            'savedPaymentMethodId',
             'paymentType',
             'card.paymentOrCardType',
             'card.cardNumberPartOrMask',
@@ -115,6 +118,7 @@
             'billingContact.email'
         ],
         renderOnChange: [
+            'savedPaymentMethodId',
             'billingContact.address.countryCode',
             'paymentType',
             'isSameBillingShippingAddress',
@@ -201,7 +205,7 @@
         var $checkoutView = $('#checkout-form'),
             checkoutData = require.mozuData('checkout');
 
-        var checkoutModel = new CheckoutModels.CheckoutPage(checkoutData),
+        var checkoutModel = window.order = new CheckoutModels.CheckoutPage(checkoutData),
             checkoutViews = {
                 steps: {
                     shippingAddress: new ShippingAddressView({

@@ -6,7 +6,6 @@
         <div class="mz-l-formfieldgroup-cell">
 			<select id="mz-payment-credit-card-type" data-mz-value="{{ cardcontext }}paymentOrCardType">
 				<option></option>
-
 				{% if siteContext.checkoutSettings.supportedCards.visa %}
 				<option value="VISA" {% if model.paymentOrCardType == "VISA" %}selected="selected"{% endif %}>Visa</option>
 				{% endif %}
