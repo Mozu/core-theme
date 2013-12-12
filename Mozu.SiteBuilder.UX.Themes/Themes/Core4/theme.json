@@ -276,12 +276,20 @@
         "validPageTypes":["*"]
 
     }, {
+        "id": "video",
+        "displayName": "Video",
+        "displayTemplate": "cms/video",
+        "editViewFields": [{
+
+        }],
+        "defaultConfig": {},
+        "icon": "/resources/admin/widgets/08_video.png",
+        "validPageTypes":["*"]
+    }, {
         "id": "crosssells",
         "displayName": "Cross Sells",
         "displayTemplate": "catalog/related-products",
-        "editViewFields": [
-
-            {
+        "editViewFields": [{
                 "fieldLabel": "title",
 				"name": "title",
                 "xtype": "textfield",
@@ -296,8 +304,7 @@
                     ["modules/product/product-list-tiled", "tiled"],
                     ["modules/product/product-list", "list"]
                 ]
-            },
-			{
+            }, {
                 "fieldLabel": "count",
 				"name": "count",
                 "xtype": "spinnerfield",
