@@ -45,6 +45,8 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
             zoneData = [],
             source,
             json;
+        //hack travis to fix.
+        me.editor.dirtyStateCheck()
         if (me.editor.isDirty()) {
             if ((me.pageContext.editMode || "").toLowerCase() == 'template') {
                 source = me.pageContext.cmsContext.template;
