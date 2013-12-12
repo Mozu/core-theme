@@ -1,0 +1,5 @@
+﻿{% if not Model.config.video %} 
+    <div class="mz-cms-image-cover" style="background-image: url('/admin/scripts/resources/images/legacy/AddPhotos.png');"></div>
+{% else %}
+    <iframe src="http://www.youtube.com/embed/sZ9TqgO06UU" frameborder="0" allowfullscreen></iframe>
+{% endif %}
