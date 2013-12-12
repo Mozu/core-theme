@@ -480,7 +480,7 @@
         "validPageTypes":["*"]
     }, {
         "id": "addthis",
-        "displayName": "AddThis",
+        "displayName": "Add This",
         "displayTemplate": "social/addthis",
         "editViewFields": [{
             "xtype": "fieldcontainer",
@@ -491,20 +491,25 @@
             },
             "layout": "vbox",
             "items": [{
-                "boxLabel": "16 pixel icons",
+                "boxLabel": "small",
                 "name": "style",
                 "inputValue": "1",
                 "id": "style1"
             }, {
-                "boxLabel": "32 pixel icons",
+                "boxLabel": "medium",
                 "name": "style",
                 "inputValue": "2",
                 "id": "style2"
             }, {
-                "boxLabel": "16 pixel icons with counts",
+                "boxLabel": "large",
                 "name": "style",
                 "inputValue": "3",
                 "id": "style3"
+            }, {
+                "boxLabel": "compact",
+                "name": "style",
+                "inputValue": "4",
+                "id": "style4"
             }]
         }, {
             "xtype": "box",
