@@ -280,7 +280,8 @@
         "displayName": "Video",
         "displayTemplate": "cms/video",
         "editViewFields": [{
-
+            "name": "url",
+            "fieldLabel": "Video URL"
         }],
         "defaultConfig": {},
         "icon": "/resources/admin/widgets/08_video.png",

@@ -432,6 +432,7 @@
     <Content Include="Themes\Core4\resources\admin\widgets\21_rss.png" />
     <Content Include="Themes\Core4\resources\images\button-loading-small.gif" />
     <Content Include="Themes\Core4\resources\images\button-loading.gif" />
+    <Content Include="Themes\Core4\scripts\modules\jquery-fitvids.js" />
     <Content Include="Themes\Core4\scripts\modules\models-orders.js" />
     <Content Include="Themes\Core4\scripts\modules\jquery-dateinput-localized.js" />
     <Content Include="Themes\Core4\scripts\modules\models-paymentmethods.js" />
@@ -450,6 +451,7 @@
     <Content Include="Themes\Core4\scripts\widgets\image.js" />
     <Content Include="Themes\Core4\scripts\widgets\instock-request.js" />
     <Content Include="Themes\Core4\scripts\widgets\related-products.js" />
+    <Content Include="Themes\Core4\scripts\widgets\video.js" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-container.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-sidebar.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-slidebox.less" />
