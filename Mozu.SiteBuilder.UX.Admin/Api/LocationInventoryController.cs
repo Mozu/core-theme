@@ -57,6 +57,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<HttpResponseMessage> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             DC.LocationInventoryCollection inventories = null;
+            if (extFilter.ContainsProperty("locationcode") && extFilter.ContainsProperty("productcode"))
+            {
+                var inventory = (await _locationInventoryClient.GetLocationInventory(extFilter.PopValue<string>("locationcode"), extFilter.PopValue<string>("productcode"))).ReadAsSync();
+                return this.Request.CreateResponse(HttpStatusCode.OK, List2<DC.LocationInventory>(inventory), LowerCaseJsonMediaTypeFormatter.Default);
+            }
             if (extFilter.ContainsProperty("locationcode"))
             {
                 string locationCode = extFilter.PopValue<string>("locationcode");
