@@ -2,19 +2,13 @@
  * @class Taco.view.themesettings.Index
  */
 Ext.define('Taco.view.themesettings.Index', {
-    extend: 'Taco.core.ux.content.Container',
-    alias: 'widget.themesettingseditor',
+    extend: 'Taco.core.ux.form.FullEditor',
     requires: [
         'Taco.core.ux.form.SelectField',
         'Taco.core.ux.form.ColorField',
         'Taco.core.ux.form.BackgroundImageField',
-        'Taco.core.ux.form.FontField',
-        'Taco.view.themesettings.Section',
-        'Taco.view.themesettings.Group'
+        'Taco.core.ux.form.FontField'
     ],
-
-    settingsConfig: null,
-    settingsValues: null,
 
     initComponent: function () {
         var me = this,
@@ -24,10 +18,11 @@ Ext.define('Taco.view.themesettings.Index', {
         me.header = {
             title: 'Theme Settings ' + (me.theme ? ':  ' + me.theme.get('name') : ''),
             actions: [{
-                xtype: 'dirtybutton',
+                xtype: 'primaryaction',
                 intentCls: 'save',
-                text: 'Save',
-                eventName: 'save'
+                text: 'blerk',
+                handler: me.save,
+                scope: me
             }]
         };
 
@@ -53,7 +48,7 @@ Ext.define('Taco.view.themesettings.Index', {
 
     save: function () {
         var me = this,
-            values = me.form.getForm().getValues();
+            values = me.form.getForm().getValues(false, false, false, true);
 
         Ext.Ajax.request({
             url: '/admin/app/themesetting/instance/save/' + this.themeId,

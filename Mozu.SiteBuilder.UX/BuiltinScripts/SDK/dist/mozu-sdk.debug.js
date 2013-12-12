@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-12-10
+ * Mozu JavaScript SDK - v0.2.0 - 2013-12-12
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2891,7 +2891,7 @@ var ApiReference = (function () {
         },
         'documentbyname': {
             get: {
-                template: '{+cmsService}{documentListName}/named/{documentName}/{?folderPath,version,status}',
+                template: '{+cmsService}{documentListName}/documentTree/{documentName}/{?folderPath,version,status}',
                 shortcutParam: 'documentName',
                 defaultParams: {
                     documentListName: 'default'

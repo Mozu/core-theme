@@ -1,6 +1,0 @@
-﻿<h3 class="mz-l-stack-sectiontitle">{{ labels.openOrders }}  <a href="#orderhistory">{{ labels.viewOrderHistory }}</a></h3>
-<ul class="mz-orderlist">
-    {% for order in model.openOrders.items %}
-    <li>{% include "modules/my-account/open-order-listing" with model=order %}</li>
-    {% endfor %}
-</ul>
