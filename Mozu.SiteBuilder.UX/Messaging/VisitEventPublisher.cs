@@ -30,6 +30,9 @@ namespace Mozu.SiteBuilder.UX.Messaging
                 VisitId = _pageContext.Visit.VisitId,
                 VisitType = "Website",
                 WebSiteId = _apiContext.SiteId,
+                TenantId = _apiContext.TenantId,
+                UserId = _apiContext.UserClaims.UserId,
+                CustomerId = _pageContext.User != null && !String.IsNullOrEmpty(_pageContext.User.UserId) ? (int?)Convert.ToInt32(_pageContext.User.UserId) : null,
                 Date = DateTime.Now,
                 WebUserAgent = _httpContext.Request.UserAgent,
                 BrowserLocationCode = null, // location on mobile devices.
@@ -42,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Messaging
                     catalogId:        _apiContext.CatalogId,
                     userId:           _apiContext.UserClaims.UserId,
                     correlationId:    Trace.CorrelationManager.ActivityId.ToString("N")
-                )
+                ) { CustomerId = _pageContext.User != null ? _pageContext.User.UserId : null }
                 // TODO: would be nice to have a place to track landing page.
             };
 
