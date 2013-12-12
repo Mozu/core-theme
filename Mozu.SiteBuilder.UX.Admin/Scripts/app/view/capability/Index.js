@@ -17,7 +17,12 @@ Ext.define('Taco.view.capability.Index', {
     modelName: 'Taco.model.Capability',
     
     store: { type: 'Taco.store.Capability' },
-   
+
+    contextConfig: {
+        supportedLevels: ['t', 's'],
+        requiresContextOfType: ['t', 's']
+    },
+
     useTilePanel: false,
     //launchEditorOnClick: false,
     
