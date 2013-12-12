@@ -2,6 +2,18 @@
   "items": [
     {
       "xtype": "panel",
+      "title": "Features",
+      "collapsed": false,
+      "items": [
+        {
+          "xtype": "checkbox",
+          "name": "allowWishlist",
+          "fieldLabel": "Allow Wishlist"
+        }
+      ]
+    },
+    {
+      "xtype": "panel",
       "title": "Layout",
       "collapsed": false,
       "items": [

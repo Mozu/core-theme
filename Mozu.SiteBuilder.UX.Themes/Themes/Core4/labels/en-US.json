@@ -173,7 +173,7 @@
   "addressBook"          : "Address Book",
   "storeCredit"          : "Store Credit",
   "accountOptIn"         : "Please keep me up to date on store news and specials",    
-  "openOrders"           : "Open Orders",    
+  "recentOrders"           : "Recent Orders",    
   "viewOrderHistory"     : "View order history",    
   "changePassword"       : "Change Password",
   "shipped"              : "Shipped",

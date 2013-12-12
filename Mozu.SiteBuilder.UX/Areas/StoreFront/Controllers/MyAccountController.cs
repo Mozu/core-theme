@@ -56,12 +56,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
-        private static List<string> OpenOrderStates = new List<string>{
-            Order.OrderStatusConst.SUBMITTED,
-            Order.OrderStatusConst.ACCEPTED,
-            Order.OrderStatusConst.PENDING_REVIEW,
-            Order.OrderStatusConst.PROCESSING
-        };
+        //private static List<string> OpenOrderStates = new List<string>{
+        //    Order.OrderStatusConst.SUBMITTED,
+        //    Order.OrderStatusConst.ACCEPTED,
+        //    Order.OrderStatusConst.PENDING_REVIEW,
+        //    Order.OrderStatusConst.PROCESSING
+        //};
 
 
         //todo:hyper  remiplement auth att.
@@ -79,7 +79,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var cardsTask = _customerAccountWebApiClient.GetAccountCards(account.Id);
-            var openOrdersTask = _orderWebApiClient.GetOrders(0, 25, null, BuildOpenOrdersFilter(account.Id));
             var orderHistoryTask = _orderWebApiClient.GetOrders(0, 25, null, BuildOrderHistoryFilter(account.Id));
             var storeCreditsTask = _creditApiClient.GetCredits(0, 25, null, String.Format("CustomerId eq \"{0}\"", account.Id));
             var wishlistTask = _wishlistApiClient.GetWishlistByName(account.Id, DEFAULT_WISHLIST_NAME);            
@@ -93,8 +92,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var cards = cardsTask.Result.ReadAsSync();
-            var openOrders = openOrdersTask.Result.ReadAsSync();
+            //var openOrders = openOrdersTask.Result.ReadAsSync();
             var orderHistory = orderHistoryTask.Result.ReadAsSync();
+            var recentOrders = orderHistory.Items.Take(5).ToList();
             var credits = storeCreditsTask.Result.ReadAsSync();
             if (wishlist != null) {
                 var wishlistItemsTask = _wishlistApiClient.GetWishlistItemsByWishlistName(account.Id, DEFAULT_WISHLIST_NAME, null, null, "UpdateDate asc");
@@ -104,7 +104,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
             var jAccount = JObject.FromObject(account, jSerializer);
 
-            jAccount.Add("openOrders", JObject.FromObject(openOrders, jSerializer));
+            //jAccount.Add("openOrders", JObject.FromObject(openOrders, jSerializer));
+            var recentOrdersJson = JArray.FromObject(recentOrders, jSerializer);
+            jAccount.Add("recentOrders", JArray.FromObject(recentOrders, jSerializer));
             jAccount.Add("orderHistory", JObject.FromObject(orderHistory, jSerializer));
             jAccount.Add("hasSavedCards", cards.Items.Count > 0);
             jAccount.Add("hasSavedContacts", account.Contacts.Count > 0);
@@ -120,15 +122,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return this.Request.CreateResponse(HttpStatusCode.OK,  View("my-account", jAccount));
         }
 
-        private string BuildOpenOrdersFilter(int accountId)
-        {
-            var openOrdersSb = new StringBuilder();
-            openOrdersSb.Append(string.Join(" or ", OpenOrderStates.Select(x => string.Format("Status eq \"{0}\"", x))));
-            openOrdersSb.Append(" and CustomerAccountId eq \"");
-            openOrdersSb.Append(accountId);
-            openOrdersSb.Append("\" and OrderNumber ne null");
-            return openOrdersSb.ToString();
-        }
+        //private string BuildOpenOrdersFilter(int accountId)
+        //{
+        //    var openOrdersSb = new StringBuilder();
+        //    openOrdersSb.Append(string.Join(" or ", OpenOrderStates.Select(x => string.Format("Status eq \"{0}\"", x))));
+        //    openOrdersSb.Append(" and CustomerAccountId eq \"");
+        //    openOrdersSb.Append(accountId);
+        //    openOrdersSb.Append("\" and OrderNumber ne null");
+        //    return openOrdersSb.ToString();
+        //}
 
         private string BuildOrderHistoryFilter(int accountId)
         {

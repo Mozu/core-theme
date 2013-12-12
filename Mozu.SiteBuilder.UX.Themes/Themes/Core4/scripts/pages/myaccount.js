@@ -113,7 +113,7 @@
 
 
     var OrderHistoryView = Backbone.MozuView.extend({
-        templateName: "modules/common/order-list",
+        templateName: "modules/my-account/order-history-list",
         initialize: function () {
             this.listenTo(this.model, "change:pageSize", _.bind(this.model.changePageSize, this.model));
         }
@@ -263,13 +263,15 @@
                 el: $addressBookEl,
                 model: accountModel,
                 messagesEl: $messagesEl
-            }),
-            wishList: new WishListView({
-                el: $wishListEl,
-                model: accountModel.get('wishlist'),
-                messagesEl: $messagesEl
             })
-        }
+        };
+            
+        
+        if (Hypr.getThemeSetting('allowWishlist')) accountViews.wishList = new WishListView({
+            el: $wishListEl,
+            model: accountModel.get('wishlist'),
+            messagesEl: $messagesEl
+        });
 
         // TODO: upgrade server-side models enough that there's no delta between server output and this render,
         // thus making an up-front render unnecessary.

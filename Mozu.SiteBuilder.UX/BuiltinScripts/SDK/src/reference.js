@@ -532,7 +532,7 @@ var ApiReference = (function () {
         },
         'documentbyname': {
             get: {
-                template: '{+cmsService}{documentListName}/named/{documentName}/{?folderPath,version,status}',
+                template: '{+cmsService}{documentListName}/documentTree/{documentName}/{?folderPath,version,status}',
                 shortcutParam: 'documentName',
                 defaultParams: {
                     documentListName: 'default'

@@ -18,8 +18,9 @@
         "defaultPageSize": 15,
         "pageSizeOptions": [15, 25, 50, 100],
         "maxProductSummaryWords": 40,
+        "allowWishlist": false,
 
-        /* Common apperance settings used in the stylesheet */
+        /* Common appearance settings used in the stylesheet */
         "font": "Source Sans Pro",
         "fallbackFontFamily": "sans-serif",
         "fontSize": "14px",
