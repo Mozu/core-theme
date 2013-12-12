@@ -31,6 +31,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public CmsPageContext CmsContext {get;set;}
 
+        public SearchContext  Search
+        { get; set; }
         public Visit Visit { get; set; }
 
         public string Title { get; set; }
@@ -47,6 +49,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
 
         
+        
+
 
         private UserProfile _userProfile;
         private UX.Models.Customers.User _user;
@@ -121,6 +125,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
 
     //cms docs and template ids
+
+       
 
         public string ProductCode { get; set; }
 

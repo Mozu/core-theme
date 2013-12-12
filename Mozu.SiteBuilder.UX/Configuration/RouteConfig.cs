@@ -13,6 +13,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
         public void Register(HttpRouteCollection routes)
         {
             routes.MapHttpRoute(
+                "search",
+                "search",
+                new { controller = "Search", action = "index" });
+
+
+            routes.MapHttpRoute(
                 "StoreFront_productDetails_SEO",
                 "{slug}/p/{productCode}",
                 new {controller = "Catalog", action = "ProductDetail"});
@@ -62,10 +68,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new {controller = "MyAccount", action = "Index"});
 
 
-            routes.MapHttpRoute(
-                "StoreFront_home_pages",
-                "pages",
-                new {controller = "Home", action = "Index"});
+            
 
 
             routes.MapHttpRoute(
@@ -320,6 +323,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
                new { controller = "cmspages", action = "Page", collection = "pages" });
 
 
+
+            routes.MapHttpRoute(
+                "StoreFront_home_pages",
+                "pages",
+                new { controller = "Home", action = "Index" });
 
 
             routes.MapHttpRoute(

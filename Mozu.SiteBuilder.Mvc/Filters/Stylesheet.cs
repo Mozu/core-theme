@@ -19,7 +19,8 @@ namespace Mozu.SiteBuilder.Mvc.Filters
             var ctx = context.SiteContext()  ;
             var theme = ctx.Theme.Id;
             var ts = context.Resolve<IThemeSettingsRepository>().GetTimeStamp(theme).Result;
-            return string.Format("<link rel=\"stylesheet\" href=\"{0}?t={1}&dt={2}\"  type=\"text/css\">", value, theme, ts.Ticks .ToString( "X2"));
+            var cdn = context.Resolve<SiteContext>().CdnPrefix;
+            return string.Format("<link rel=\"stylesheet\" href=\"{3}{0}?t={1}&dt={2}\"  type=\"text/css\">", value, theme, ts.Ticks.ToString("X2"), string.IsNullOrEmpty(cdn) ? null : (cdn+"/"));
                 
             
 
