@@ -447,6 +447,7 @@
     <Compile Include="Hypr\Tags\VisitTrackingPixelTag.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Messaging\VisitEventPublisher.cs" />
     <Compile Include="Navigation\CategoryNavigationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tags\CMS\FieldTag.cs" />

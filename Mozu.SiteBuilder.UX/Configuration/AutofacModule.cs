@@ -29,6 +29,7 @@ using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.TempMocks;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.UX.Messaging;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Navigation;
 using Mozu.SiteSettings.General.Contracts.Clients;
@@ -129,6 +130,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
             // add these two logging context providers for loggers provided by the DI framework.
             builder.RegisterType<CurrentRequestLoggingContextProvider>().As<ILoggingContextProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", APPLICATION_NAME).InstancePerLifetimeScope();
+
+            builder.RegisterType<VisitEventPublisher>().As<VisitEventPublisher>().InstancePerApiRequest();
 
             // Register a MassTransit IServiceBus. This IServiceBus is picked up by Mozu.Core.Messaging.Publisher.
             // The rabbitMQ connectionstring is used to recieve control messages sent to our application by MassTransit.
