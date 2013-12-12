@@ -38,6 +38,7 @@
         "listProductShortDesc": true,
         "listProductCode": true,
         "useAnimatedProductLists": true,
+        "listProductThumbSize": 160,
 
         /* Settings specific to product pages */
         "showProductDetailShortDesc": true,
