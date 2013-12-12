@@ -5,11 +5,11 @@ using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Http;
 using Mozu.Core.Logging;
-using Mozu.Core.Messaging.Publish;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.UX.Messaging;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -27,18 +27,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private HttpContextBase _httpContext;
         private PageContext _pageContext;
         private ISiteBuilderApiContext _apiContext;
-        private IPublisher _publisher;
+        private VisitEventPublisher _publisher;
         private ILogger _logger;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public VisitController(HttpContextBase httpContext, PageContext pageContext, ISiteBuilderApiContext apiContext, IPublisher publisher, ILogger logger)
+        public VisitController(HttpContextBase httpContext, PageContext pageContext, ISiteBuilderApiContext apiContext, VisitEventPublisher publisher, ILogger logger)
         {
             _httpContext = httpContext;
             _pageContext = pageContext;
-            _publisher = publisher;
             _apiContext = apiContext;
+            _publisher = publisher;
             _logger = logger;
         }
 
@@ -72,19 +72,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (!_pageContext.Visit.IsTracked)
             {
                 // log the visit.
-                var visitTrackingEvent = new Mozu.Core.Messaging.Contracts.Visit.Commands.CreateWebsiteVisit  {
-                    VisitId = _pageContext.Visit.VisitId,
-                    VisitType = "Website",
-                    WebSiteId = _apiContext.SiteId,
-                    Date = DateTime.Now,
-                    WebUserAgent = _httpContext.Request.UserAgent,
-                    BrowserLocationCode = null, // location on mobile devices.
-                    BrowserPlatform = _httpContext.Request.Browser != null ? _httpContext.Request.Browser.Platform : null,
-                    WebReferrer = null // currently have no way to track this
-                    // TODO: would be nice to have a place to track landing page.
-                };
-                _logger.Info("I caught a visit!", visitTrackingEvent);
-                _publisher.Publish(visitTrackingEvent);
+                _publisher.PublishVisit(_pageContext.Visit);
+                _logger.Info("I caught a visit!", _pageContext.Visit);
                 _pageContext.Visit.IsTracked = true;
             }
 
