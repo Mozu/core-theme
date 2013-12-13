@@ -54,9 +54,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _settings = settings;
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient.CloneWithoutUserClaims();
             this.CdnPrefix = settings.AppSettings("CdnHost");
+          
             if (!string.IsNullOrEmpty(CdnPrefix))
             {
                 this.CdnPrefix = "//" + this.CdnPrefix + "/" + siteBuilderApiContext.TenantId + "-" + siteBuilderApiContext.SiteId;
+            }
+            if (settings.AppSettings("disableCDN") == "true")
+            {
+                this.CdnPrefix = null;
             }
         }
 
