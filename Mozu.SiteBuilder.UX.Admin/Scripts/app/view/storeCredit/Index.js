@@ -29,16 +29,24 @@ Ext.define('Taco.view.storeCredit.Index', {
             flex: 1,
             minWidth: 120
         }, {
+            dataIndex: 'creditType',
+            text: 'Type',
+            minWidth: 120
+        } ,{
             dataIndex: 'initialBalance',
             text: 'Issued Amount',
             flex: 1,
             minWidth: 120
         }, {
             dataIndex: 'customer',
-            text: 'Customer Name',
+            text: 'Customer',
             flex: 1,
             minWidth: 120,
-            renderer: function (customer) { return customer.firstName + ' ' + customer.lastName; }
+            renderer: function (customer) {
+                if (customer) {
+                    return customer.firstName + ' ' + customer.lastName + '(' + customer.id + ')';
+                }
+            }
         }, {
             dataIndex: 'activationDate',
             text: 'Date Issued',
@@ -67,6 +75,10 @@ Ext.define('Taco.view.storeCredit.Index', {
         }, {
             xtype: 'taco.menucolumn',
             text: 'Actions',
+            onMenuShow: function (menu, eventData) {
+                var customerMenu = menu.items.get('customerMenu');
+                customerMenu.setVisible(eventData.record.get('customer'));
+            },
             menuItems: [{
                 text: 'Edit',
                 menuColumnHandler: 'editMenuColumnHandler'
@@ -75,6 +87,8 @@ Ext.define('Taco.view.storeCredit.Index', {
                 menuColumnHandler: 'destroyMenuColumnHandler'
             }, {
                 text: 'Go To Customer Account',
+                itemId: 'customerMenu',
+                
                 menuColumnHandler: function (event, item) {
                     Taco.core.StateManager.attemptNavigate('customer/edit/' + item.record.get('customerId'));
                 }
