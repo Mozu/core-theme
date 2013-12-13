@@ -32,6 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Map_DcPaymentInteraction_to_PaymentInteraction();
             Map_DcPackage_to_OrderPackage();
             Map_DcPackageItem_to_OrderPackageItem();
+            Map_DcPickup_to_OrderPickup();
             Map_DcAdjustment_to_OrderAdjustment();
             Map_DcAppliedDiscount_to_OrderDiscount();
 
@@ -79,6 +80,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.PaymentStatus, op => op.MapFrom(dc => dc.PaymentStatus))
                 .ForMember(x => x.Payments, op => op.MapFrom(dc => dc.Payments.OrderByDescending(p => p.AuditInfo.CreateDate)))
                 .ForMember(x => x.Packages, op => op.MapFrom(dc => dc.Packages))
+                .ForMember(x => x.Pickups, op => op.MapFrom(dc => dc.Pickups))
 
                 .ForMember(x => x.OrderAdjustment, op => op.MapFrom(dc => dc.Adjustment))
                 .ForMember(x => x.ShippingAdjustment, op => op.MapFrom(dc => dc.ShippingAdjustment))
@@ -108,6 +110,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                     // add item name, etc to packageItems
                     order.Packages.SelectMany(p => p.Items).Each(packageItem => FillPackageItemDetails(packageItem, order));
+
+                    // add item name to pickup item
+                    order.Pickups.SelectMany(p => p.Items).Each(pickupItem => FillPickupItemDetails(pickupItem, order));
 
                     // add weight to each package
                     order.Packages.Each(p => { if (p.Weight == null) p.Weight = p.Items.Sum(i => i.Weight.HasValue ? i.Weight : 0); });
@@ -385,6 +390,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
         }
 
+        private void Map_DcPickup_to_OrderPickup()
+        {
+            Mapper.CreateMap<ShippingDC.Pickup, OrderPickup>()
+                .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
+                .ForMember(x => x.FulfillmentDate, op => op.MapFrom(dc => dc.FulfillmentDate))
+                .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
+                .ForMember(x => x.Status, op => op.MapFrom(dc => dc.Status))
+                .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
+                .ForMember(x => x.OrderId, op => op.Ignore())
+                ;
+        }
+
+        private void Map_DcPickupItem_to_OrderPickupItem()
+        {
+            Mapper.CreateMap<ShippingDC.PickupItem, OrderPickupItem>()
+                .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.ProductCode))
+                .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
+                .ForMember(x => x.ProductName, op => op.Ignore())
+                ;
+        }
+
         private void Map_Adjustment_to_DcAdjustment()
         {
             Mapper.CreateMap<CommerceDC.Adjustment, Adjustment>()
@@ -418,6 +444,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private void Map_OrderPackageItem_to_DcPackageItem()
         {
             Mapper.CreateMap<OrderPackageItem, ShippingDC.PackageItem>()
+                .ForMember(dc => dc.ProductCode, op => op.MapFrom(x => x.ProductCode))
+                .ForMember(dc => dc.Quantity, op => op.MapFrom(x => x.Quantity))
+                ;
+        }
+
+        private void Map_OrderPickup_to_DcPickup()
+        {
+            Mapper.CreateMap<OrderPickup, ShippingDC.Pickup>()
+                .ForMember(dc => dc.Id, op => op.MapFrom(x => x.Id))
+                .ForMember(dc => dc.FulfillmentDate, op => op.MapFrom(x => x.FulfillmentDate))
+                .ForMember(dc => dc.AvailableActions, op => op.MapFrom(x => x.AvailableActions))
+                .ForMember(dc => dc.Status, op => op.MapFrom(x => x.Status))
+                .ForMember(dc => dc.Items, op => op.MapFrom(x => x.Items))
+                ;
+        }
+
+        private void Map_OrderPickupItem_to_DcPickupItem()
+        {
+            Mapper.CreateMap<OrderPickupItem, ShippingDC.PickupItem>()
                 .ForMember(dc => dc.ProductCode, op => op.MapFrom(x => x.ProductCode))
                 .ForMember(dc => dc.Quantity, op => op.MapFrom(x => x.Quantity))
                 ;
@@ -526,6 +571,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             packageItem.Total = itemInOrder.Total;
             packageItem.UnitPrice = itemInOrder.UnitPrice;
             packageItem.Weight = itemInOrder.UnitWeight.HasValue ? packageItem.Quantity * itemInOrder.UnitWeight : null;
+        }
+
+        private void FillPickupItemDetails(OrderPickupItem pickupItem, Order order)
+        {
+            if (pickupItem == null || order == null || order.Items == null)
+                return;
+
+            var itemInOrder = order.Items.FirstOrDefault(i => i.ProductCode == pickupItem.ProductCode);
+
+            if (itemInOrder == null)
+                return;
+
+            pickupItem.ProductName = itemInOrder.ProductName;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -15,7 +16,7 @@ using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers;
 using DC = Mozu.ProductAdmin.Contracts;
-
+using DCloc = Mozu.Location.Contracts;
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     /// <summary>
@@ -145,6 +146,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             await Task.WhenAll(tasks);
 
             return SuccessWithTotal2<List<DC.LocationInventory>>(locationInventories.Count);
+        }
+
+        [DataContract]
+        public class LocationWithInventory : DC.LocationInventory
+        {
+            [DataMember]
+            public DCloc.Location Location;
+        }
+        [HttpGetRoute(UriTemplate = "pickup")]
+        public async Task<Response<List<DC.LocationInventory>>> GetLocationsForPickup([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        {
+            // filter should be for location type pickup
+            var productCode = extFilter.PopValue<string>("productcode");
+            if (productCode == null)
+                throw new ArgumentException("Missing product code.");
+
+            var filterString = extFilter.ToFilterString();
+            var inventories = (await _productClient.GetLocationInventories(productCode: productCode, startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filterString)).ReadAsSync();
+
+            var locationLookupTasks = inventories.Items.Select(i => i.LocationCode).Distinct().Select(lc => _locationWebApiClient.GetLocation(lc)).ToList();
+            await Task.WhenAll(locationLookupTasks);
+            var locations = locationLookupTasks.Select(t => t.Result.ReadAsSync()).ToList();
+
+            var locationsWithInventory = inventories.Items.Map<List<LocationWithInventory>>();
+            locationsWithInventory.ForEach(lwi => lwi.Location = locations.FirstOrDefault(l => l.Code == lwi.LocationCode));
+
+            return EmptyList2<DC.LocationInventory>();
+            //return List2(locationsWithInventory);
         }
     }
 }

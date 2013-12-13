@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -75,6 +76,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return Single2( dcOrder.Map<Order>() );
         }
+
+        [HttpPostRoute(UriTemplate = "items/editfulfillment")]
+        public async Task<Response<Order>> UpdateOrderItemFulfillmentMethodAndCode(UpdateOrderItemArgs args, [FromUri]bool draft = false)
+        {
+            throw new NotImplementedException();
+        }
+
 
         public class RemoveOrderItemArgs
         {

@@ -104,6 +104,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name="packages", EmitDefaultValue=true)]
         public List<OrderPackage> Packages { get; set; }
 
+        [DataMember(Name="pickups", EmitDefaultValue=true)]
+        public List<OrderPickup> Pickups { get; set; }
+
         [DataMember(Name="unpackagedItems")]
         public List<OrderPackageItem> UnpackagedItems { get; set; }
 
