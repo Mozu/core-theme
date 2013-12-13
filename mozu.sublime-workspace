@@ -1,0 +1,2429 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"mz-cms-video",
+				"mz-cms-video-player"
+			],
+			[
+				"bac",
+				"background-size"
+			],
+			[
+				"ba",
+				"background"
+			],
+			[
+				"back",
+				"background-color"
+			],
+			[
+				"default",
+				"defaultConfig"
+			],
+			[
+				"dis",
+				"displayName"
+			],
+			[
+				"tr",
+				"transactionEditor"
+			],
+			[
+				"cate",
+				"categories"
+			],
+			[
+				"categ",
+				"Categories"
+			],
+			[
+				"tran",
+				"transaction"
+			],
+			[
+				"lo",
+				"lo	console.log"
+			],
+			[
+				"for",
+				"format"
+			],
+			[
+				"va",
+				"valid"
+			],
+			[
+				"re",
+				"return"
+			],
+			[
+				"trans",
+				"transactions"
+			],
+			[
+				"check",
+				"checkTouchend"
+			],
+			[
+				"tra",
+				"Transaction"
+			],
+			[
+				"dra",
+				"draggedX"
+			],
+			[
+				"tou",
+				"touchend"
+			],
+			[
+				"getT",
+				"getTransform"
+			],
+			[
+				"tab",
+				"table-cell"
+			],
+			[
+				"color-",
+				"color-clouds"
+			],
+			[
+				"pr",
+				"preventDefault"
+			],
+			[
+				"fu",
+				"fu	function"
+			],
+			[
+				"cli",
+				"clientY"
+			],
+			[
+				"touch",
+				"touchstart"
+			],
+			[
+				"touc",
+				"touchstart"
+			],
+			[
+				"Tr",
+				"Transaction"
+			],
+			[
+				"text-",
+				"text-align"
+			],
+			[
+				"listy",
+				"list-style"
+			],
+			[
+				"scr",
+				"scrollTop"
+			],
+			[
+				"str",
+				"stringify"
+			],
+			[
+				"last",
+				"lastRequestNoPageSize"
+			],
+			[
+				"con",
+				"container"
+			],
+			[
+				"pla",
+				"playerSearch"
+			],
+			[
+				"play",
+				"player_search"
+			],
+			[
+				"new",
+				"newSpecName"
+			],
+			[
+				"spec",
+				"spec"
+			],
+			[
+				"updateP",
+				"updatePlayerData"
+			],
+			[
+				"specN",
+				"specName"
+			],
+			[
+				"Player",
+				"PlayerSummaries"
+			],
+			[
+				"update",
+				"updateSummaries"
+			],
+			[
+				"player",
+				"playerName"
+			],
+			[
+				"epee",
+				"epeenId"
+			],
+			[
+				"cal",
+				"calcDiffPercentile"
+			],
+			[
+				"spe",
+				"specDataHeroic"
+			],
+			[
+				"pKi",
+				"pKillsDiff"
+			],
+			[
+				"en",
+				"encounter"
+			],
+			[
+				"encou",
+				"encounter"
+			],
+			[
+				"upP",
+				"updatePlayer"
+			],
+			[
+				"up",
+				"updatePlayer"
+			],
+			[
+				"enc",
+				"encounters"
+			],
+			[
+				"loo",
+				"loopOnDifficulty"
+			],
+			[
+				"aver",
+				"averages"
+			],
+			[
+				"av",
+				"averages"
+			],
+			[
+				"wors",
+				"worseEncounter"
+			],
+			[
+				"n",
+				"name"
+			],
+			[
+				"best",
+				"bestEncounter"
+			],
+			[
+				"cl",
+				"clientLog"
+			],
+			[
+				"get",
+				"getEncounters"
+			],
+			[
+				"obj",
+				"object"
+			],
+			[
+				"diff",
+				"difficulty"
+			],
+			[
+				"time",
+				"timestamp"
+			],
+			[
+				"speD",
+				"specDataNormal"
+			],
+			[
+				"sp",
+				"spec"
+			],
+			[
+				"encounte",
+				"encounters"
+			],
+			[
+				"fin",
+				"findEncounter"
+			],
+			[
+				"En",
+				"Encounters"
+			],
+			[
+				"curr",
+				"currentBosses"
+			],
+			[
+				"epe",
+				"epeenId"
+			],
+			[
+				"ep",
+				"epeenId"
+			],
+			[
+				"find",
+				"findPlayer"
+			],
+			[
+				"inser",
+				"insertPlayer"
+			],
+			[
+				"winn",
+				"winner"
+			],
+			[
+				"upd",
+				"updatePlayerScore"
+			],
+			[
+				"los",
+				"loser"
+			],
+			[
+				"wCha",
+				"wChance"
+			],
+			[
+				"lol",
+				"lOldScore2"
+			],
+			[
+				"lold",
+				"lOldScore"
+			],
+			[
+				"wOld",
+				"wOldScore2"
+			],
+			[
+				"max-",
+				"max-height"
+			],
+			[
+				"color-neu",
+				"color-neutral-lightest"
+			],
+			[
+				"color-ne",
+				"color-neutral-light"
+			],
+			[
+				"color-nue",
+				"color-neutral-lightest"
+			],
+			[
+				"tex",
+				"text-decoration"
+			],
+			[
+				"co",
+				"color"
+			],
+			[
+				"eas",
+				"easing"
+			],
+			[
+				"action",
+				"actionsContainer"
+			],
+			[
+				"mar",
+				"margin"
+			],
+			[
+				"marg",
+				"margin-top"
+			],
+			[
+				"exp",
+				"expanded"
+			],
+			[
+				"coll",
+				"collapse"
+			],
+			[
+				"expa",
+				"expanded"
+			],
+			[
+				"selec",
+				"selected"
+			],
+			[
+				"sel",
+				"selected"
+			],
+			[
+				"aliT",
+				"alignToEl"
+			],
+			[
+				"hints",
+				"hintsToAdd"
+			],
+			[
+				"hin",
+				"hintsToAdd"
+			],
+			[
+				"sta",
+				"stackProtection"
+			],
+			[
+				"contain",
+				"containerWidth"
+			],
+			[
+				"form",
+				"formWidth"
+			],
+			[
+				"ifr",
+				"iframe	<iframe>"
+			],
+			[
+				"ifra",
+				"iframeWidth"
+			],
+			[
+				"findP",
+				"findParentByType"
+			],
+			[
+				"before",
+				"beforeLayout"
+			],
+			[
+				"bor",
+				"border-radius"
+			],
+			[
+				"color-h",
+				"color-highlighted-foreground"
+			],
+			[
+				"color",
+				"color-highlighted-background"
+			],
+			[
+				"color-neutr",
+				"color-neutral-mid"
+			],
+			[
+				"color-n",
+				"color-neutral-mid"
+			],
+			[
+				"impor",
+				"important"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"setAm",
+				"setAmPm"
+			],
+			[
+				"ower",
+				"ownerLayout"
+			],
+			[
+				"font-bo",
+				"font-body-copy-small"
+			],
+			[
+				"text",
+				"text-align"
+			],
+			[
+				"background",
+				"background-color"
+			],
+			[
+				"font-s",
+				"font-style"
+			],
+			[
+				"create",
+				"createContentView"
+			],
+			[
+				"tree",
+				"treelist"
+			],
+			[
+				"backg",
+				"background"
+			],
+			[
+				"conten",
+				"contentView"
+			],
+			[
+				"conte",
+				"contentView"
+			],
+			[
+				"valid",
+				"validitychange"
+			],
+			[
+				"produc",
+				"productCodes"
+			],
+			[
+				"widt",
+				"widget"
+			],
+			[
+				"displ",
+				"displayCountField"
+			],
+			[
+				"display",
+				"displayCount"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/theme.json",
+			"settings":
+			{
+				"buffer_size": 17085,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "define(['modules/jquery-mozu', 'shim!vendor/underscore>_', \"modules/api\", \"modules/backbone-mozu\", \"modules/models-product\"],\n    function ($, _, api, Backbone, ProductModels) {\n\n        var getRelatedProducts = function(pageType, codes, pageSize) {\n            var filter = _.map(codes, function (c) { return \"ProductCode eq \" + c }).join(' or ');\n            var retval = '';\n            \n            switch(pageType) {\n                case 'product': retval =api.get(\"search\", { filter: filter});\n                    break;\n                case 'cart': retval = api.get(\"search\", { filter: filter, pageSize: pageSize });\n                    debugger\n                    break;\n            }\n            \n            return retval;\n        };\n\n        \n\n        var pageContext = require.mozuData('pagecontext');\n\n        $(document).ready(function() {\n            var productCollection = [];\n\n            switch(pageContext.pageType) {\n                case 'product':\n                    productCollection.push(require.mozuData('product'));\n                    break;\n                case 'cart':\n                    var cartItems = require.mozuData('cart').items;\n                    $.each(cartItems, function(index, value) {\n                        productCollection.push(value.product);\n                    });\n                    break;\n            }\n            \n            $('[data-mz-related-products]').each(function (index, rp) {\n                rp = $(rp);\n             \n                var config = rp.data('mzRelatedProducts');\n                var attId = config.attributeId || 'tenant~product-crosssell';\n                var template = config.template || 'modules/product/product-list-carousel';\n                var title = config.title;\n                var numberToDisplay = config.count || 5;\n                var productCodes = [];// = _.pluck(currentProduct.properties[0].values, \"value\");\n                \n\n                var RelatedProductsView = Backbone.MozuView.extend({\n                    templateName: template\n                });\n                \n                for (var i = 0; i < productCollection.length; i++) {\n                    var currentProduct = productCollection[i];\n                    \n                    if (currentProduct && currentProduct.properties) {\n                        for (var x = 0; x < currentProduct.properties.length; x++) {\n                            if (currentProduct.properties[x].attributeFQN == attId) {\n                                var temp = _.pluck(curr entProduct.properties[x].values, \"value\");\n                                productCodes = productCodes.concat($.grep(temp || [], function (x) { return !!x }));\n                                \n                            }\n                        }\n                    }\n                }\n\n                if (!productCodes || !productCodes.length) {\n                    if (pageContext.isEditMode) {\n                        rp.html('<b>tbd preview content</b>');\n                    }\n                    return;\n                }\n\n                getRelatedProducts(pageContext.pageType, productCodes, numberToDisplay).then(function (collection) {\n\n                    var relatedProductsCollection = new ProductModels.ProductCollection(collection.data);\n                    var relatedProductsView = new RelatedProductsView({\n                        model: relatedProductsCollection,\n                        el: rp\n                    });\n                    relatedProductsView.render();\n                    rp.prepend('<h3>' + title + '</h3>');\n\n                });\n\n\n                \n            });\n           \n\n        });\n\n    });",
+			"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/scripts/widgets/related-products.js",
+			"file_size": 3762,
+			"file_write_time": 1386794522000000,
+			"settings":
+			{
+				"buffer_size": 3668,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/templates/Widgets/catalog/related-products.hypr",
+			"settings":
+			{
+				"buffer_size": 261,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/stylesheets/storefront.less",
+			"settings":
+			{
+				"buffer_size": 4328,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/stylesheets/widgets/video.less",
+			"settings":
+			{
+				"buffer_size": 1402,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Mozu.SiteBuilder.UX.Themes/Mozu.SiteBuilder.UX.Themes.csproj",
+			"settings":
+			{
+				"buffer_size": 89394,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/templates/Widgets/cms/image.hypr",
+			"settings":
+			{
+				"buffer_size": 292,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/templates/Widgets/cms/video.hypr",
+			"settings":
+			{
+				"buffer_size": 519,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Mozu.SiteBuilder.UX.Admin/Scripts/sass/etc/chorizo/layout.scss",
+			"settings":
+			{
+				"buffer_size": 61,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Mozu.SiteBuilder.UX.Admin/Scripts/sass/etc/chorizo/_grid.scss",
+			"settings":
+			{
+				"buffer_size": 3055,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/templates/Widgets/cms/image2.hypr",
+			"settings":
+			{
+				"buffer_size": 2635,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/scripts/widgets/video.js",
+			"settings":
+			{
+				"buffer_size": 1817,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/stylesheets/widgets/instock-request.less",
+			"settings":
+			{
+				"buffer_size": 364,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "Packages/JSHint/JSHint.sublime-build",
+	"command_palette":
+	{
+		"height": 267.0,
+		"selected_items":
+		[
+			[
+				"for",
+				"Format: Javascript"
+			],
+			[
+				"xml",
+				"Set Syntax: XML"
+			],
+			[
+				"fo",
+				"Format: Javascript"
+			],
+			[
+				"ss json",
+				"Set Syntax: SJSON"
+			],
+			[
+				"install ",
+				"Package Control: Install Package"
+			],
+			[
+				"pretty",
+				"Pretty JSON: Reformat (Pretty Print) JSON"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"ss djan",
+				"Set Syntax: HTML (Django)"
+			],
+			[
+				"ss dn",
+				"Set Syntax: Python Django"
+			],
+			[
+				"ssjs",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"form",
+				"Format: Javascript"
+			],
+			[
+				"make",
+				"SnippetMaker: Make Snippet"
+			],
+			[
+				"mak",
+				"SnippetMaker: Make Snippet"
+			],
+			[
+				"makes",
+				"SnippetMaker: Make Snippet"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"ma",
+				"Markdown Preview: preview in Browser"
+			],
+			[
+				"mpb",
+				"Markdown Preview: preview in Browser"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"mar",
+				"Markdown Preview: open Markdown Cheat sheet"
+			],
+			[
+				"previ",
+				"Markdown Preview: preview in Browser"
+			],
+			[
+				"preview",
+				"Markdown Preview: preview in Browser"
+			],
+			[
+				"markd",
+				"Markdown Preview: preview in Browser"
+			],
+			[
+				"ssmar",
+				"Set Syntax: Markdown"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"jshin",
+				"JSHint"
+			],
+			[
+				"ss js",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"ss html",
+				"Set Syntax: HTML"
+			],
+			[
+				"ssjson",
+				"Set Syntax: JSON"
+			],
+			[
+				"pack",
+				"Package Control: Disable Package"
+			],
+			[
+				"PI",
+				"Package Control: Install Package"
+			],
+			[
+				"Remove P",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control ",
+				"Package Control: Remove Package"
+			],
+			[
+				"PCIP",
+				"Package Control: Install Package"
+			],
+			[
+				"ssHTM",
+				"Set Syntax: HTML"
+			],
+			[
+				"SSJS",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"sscss",
+				"Set Syntax: CSS"
+			],
+			[
+				"st",
+				"Set Syntax: Plain Text"
+			],
+			[
+				"js",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"json",
+				"Set Syntax: JSON"
+			],
+			[
+				"list",
+				"Package Control: List Packages"
+			],
+			[
+				"packa",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: List Packages"
+			]
+		],
+		"width": 647.0
+	},
+	"console":
+	{
+		"height": 115.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Volumes/Data/Users/travis_johnson/Sites/Mozu/Mozu.SiteBuilder.UX.Themes/Themes/Core4/scripts/modules/jquery-fitvids.js",
+		"/Volumes/Data/Users/travis_johnson/Sites/Mozu/Mozu.SiteBuilder.UX.Themes/Mozu.SiteBuilder.UX.Themes.csproj",
+		"/Volumes/Data/Users/travis_johnson/Sites/Mozu/Mozu.SiteBuilder.UX.Themes/Themes/Core4/scripts/widgets/instock-request.js",
+		"/Volumes/Data/Users/travis_johnson/Sites/Mozu/Mozu.SiteBuilder.UX.Themes/Themes/Core4/scripts/widgets/video.js",
+		"/Volumes/Data/Users/travis_johnson/Sites/Mozu/Mozu.SiteBuilder.UX.Admin/Scripts/app/application.js",
+		"/Volumes/Data/Users/travis_johnson/Sites/Mozu/mozu.sublime-project",
+		"/Volumes/Data/Users/travis_johnson/Sites/Mozu/Mozu.SiteBuilder.UX.Themes/Themes/Core4/theme.json",
+		"/Volumes/Git/Mozu/Mozu.SiteBuilder.UX.Admin/Scripts/app/application.js",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/client/views/transaction.html",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/lib/collections.js",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/client/sass/_header.scss",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/client/lib/TouchEvents.js",
+		"/Volumes/Data/Users/travis_johnson/Library/Application Support/Sublime Text 2/Packages/User/lo.sublime-snippet",
+		"/Volumes/Data/Users/travis_johnson/Library/Application Support/Sublime Text 2/Packages/User/fu.sublime-snippet",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/client/sass/index.scss",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/client/sass/_main.scss",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/client/sass/font-awesome/_variables.scss",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/client/index.js",
+		"/Volumes/Data/Users/travis_johnson/.meteorite/packages/iron-router/EventedMind/iron-router/3e0e22ff85630b7503d0daa1538c6d90abb84020/examples/basic/basic.js",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/client/views/home.html",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/client/sass/_colors.scss",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/client/sass/_transactions.scss",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/client/stylesheets/flat-ui.css",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/server/application.js",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/client/views/home.js",
+		"/Volumes/Data/Users/travis_johnson/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/client/application.js",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/client/sass/font-awesome/font-awesome.scss",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/client/stylesheets/index.css",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/client/sass/screen.scss",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/client/sass/transactions.scss",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/client/sass/color.scss",
+		"/Volumes/Data/Users/travis_johnson/Sites/Farm-Books/Farm-Books.sublime-project",
+		"/Volumes/Data/Users/travis_johnson/Sites/Blog/Blog.sublime-project",
+		"/Volumes/Data/Sites/Layouts/scripts/view/Viewport.js",
+		"/Volumes/Data/Sites/Layouts/index.html",
+		"/Volumes/Data/Sites/Layouts/scripts/app.js",
+		"/Volumes/Data/Users/travis_johnson/Sites/mynewsite/index.html",
+		"/private/etc/apache2/httpd.conf",
+		"/Volumes/Data/Users/travis_johnson/Documents/Theme/Resources/Scripts/Modules/api.js",
+		"/private/etc/shells",
+		"/Volumes/Data/Users/travis_johnson/Meteor/test/README.md",
+		"/Library/Preferences/VMware Fusion/vmnet8/dhcpd.conf",
+		"/Volumes/Data/Users/travis_johnson/Documents/Interview Questions/extjs-grid.mdown",
+		"/Volumes/Data/Users/travis_johnson/Library/Application Support/Sublime Text 2/Packages/Markdown Preview/sample.md",
+		"/Volumes/Data/Users/travis_johnson/Meteor/LoTracker/client/index.html",
+		"/Volumes/Data/Users/travis_johnson/Meteor/LoTracker/.meteor/local/build/server/node_modules/connect/node_modules/formidable/test/unit/test-incoming-form.js",
+		"/Volumes/Data/Users/travis_johnson/Meteor/LoTracker/LoTracker.html",
+		"/Volumes/Data/Users/travis_johnson/Meteor/LoTracker/LoTracker.js",
+		"/Volumes/Data/Users/travis_johnson/Meteor/LoTracker/LoTracker.less",
+		"/Volumes/Data/Users/travis_johnson/Meteor/LoTracker/LoTracker.css",
+		"/Volumes/Data/Users/travis_johnson/Meteor/LoTracker/client/LoTracker.html",
+		"/Volumes/Data/Users/travis_johnson/Meteor/LoTracker/server/LoTracker.js",
+		"/Volumes/Data/Users/travis_johnson/Meteor/LoTracker/client/LoTracker.js",
+		"/Volumes/Data/Users/travis_johnson/Meteor/LoTracker/.meteor/local/build/server/server.js",
+		"/Volumes/Data/Users/travis_johnson/Meteor/LoTracker/client/client.js",
+		"/Users/travis_johnson/Desktop/travis_johnson.conf",
+		"/Users/travis_johnson/Desktop/style-refresh/popup.html",
+		"/Users/travis_johnson/Desktop/style-refresh/popup.js",
+		"/Users/travis_johnson/Desktop/Counter-Strike Global Offensive Beta.app/Contents/MacOS/run.sh",
+		"/Volumes/c$/vNext/Volusion.SiteBuilder.UX.Admin/Scripts/Taco/view/site/Toolbox.js",
+		"/Users/travis_johnson/Desktop/style-refresh/manifest.json",
+		"/private/etc/apache2/users/travis_johnson.conf",
+		"/Users/travis_johnson/Sites/Meteor/leaderboard/leaderboard.html",
+		"/Users/travis_johnson/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/travis_johnson/Downloads/colorbox/colorbox/jquery.colorbox.js",
+		"/Volumes/Themes/Core/Templates/StoreFront/Products/Detail.vol",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/fileManagement/IconPanel.js",
+		"/Users/travis_johnson/Sites/Aptana/Core/Templates/StoreFront/Products/Detail.vol",
+		"/Volumes/Macintosh SSD/Applications/Sick-Beard/autoProcessTV/autoProcessTV.cfg",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/navigation/PrimarySubMenu.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/navigation/PrimaryMenu.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/resources/scss/taco/_colors.scss",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/resources/scss/taco/_content.scss",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/resources/scss/taco/_navmenu.scss",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/core/ux/form/SelectField.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/resources/scss/taco/widgets/_form.scss",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/resources/scss/widgets/_form.scss",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/core/ux/content/Header.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/core/ux/content/Container.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/core/ux/form/Editor.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/resources/scss/taco/widgets/_actions.scss",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/site/widget/FeaturedProducts.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/resources/scss/taco/widgets/_modal.scss",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/core/ux/modal/Content.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/core/ux/modal/ContentWithActions.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/resources/scss/taco/widgets/_shim.scss",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/resources/scss/widgets/_tab.scss",
+		"/Users/travis_johnson/Library/Application Support/Sublime Text 2/Packages/JsFormat/JsFormat.sublime-settings",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/core/ux/modal/Cover.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/site/page/Edit.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/navigation/PrimaryMenuItem.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/navigation/PrimarySubMenuItem.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/core/ux/modal/Modal.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/core/ux/modal/Confirmation.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/site/page/Shim.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/core/FormPanel.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/core/ux/TabPanel.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/site/page/EditSurface.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/core/ux/picker/DateTime.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/category/Index.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/core/ux/TreeList.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/core/ux/QuickAdder.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/fileManagement/FolderTree.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/core/ux/form/DateTime.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/controller/Testing.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Ext/resources/themes/stylesheets/neptune/default/accessories/scss/_color.scss",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/site/widget/Editor.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/fileManagement/grid.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/fileManagement/Index.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/Viewport.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/resources/scss/taco/_header.scss",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/fileManagement/index.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/resources/scss/taco/widgets/_grid.scss",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/resources/scss/variables/_core.scss",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/resources/scss/widgets/_grid.scss",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/fileManagement/folderTree.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/site/widget/BlogArchive.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/site/widget/TagCollection.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/site/widget/RecentBlogPosts.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/core/ux/form/TextAlignment.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/site/widget/FacebookComments.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/image/UploadModal.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/core/ux/action/DirtyButton.js",
+		"/Users/travis_johnson/Sites/Aptana/Scripts/Taco/view/site/widget/WidgetEditor.js",
+		"/Users/travis_johnson/Library/Application Support/Sublime Text 2/Packages/SublimeCodeIntel/Default (OSX).sublime-keymap",
+		"/Users/travis_johnson/Sites/int/index.html",
+		"/Users/travis_johnson/Sites/int/index3.js"
+	],
+	"find":
+	{
+		"height": 33.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			".less",
+			"aspectRation",
+			"100%",
+			"widgets",
+			"Meteor.subscribe",
+			"entryDate",
+			"set:",
+			"get(",
+			"transition",
+			"transistion",
+			"$duration",
+			"$fa-var-angle-left",
+			"angle",
+			"data",
+			"init",
+			"Session",
+			"grid",
+			"font-size",
+			"extra",
+			"user",
+			"users",
+			"baseRequest",
+			"size",
+			"clear",
+			"PageSize",
+			"cat",
+			"PageSize",
+			"pageSize",
+			"pageSoze",
+			"lastIndex",
+			"pageSize",
+			"prompt",
+			"getFacetValueFilter",
+			"get",
+			"updateF",
+			"api",
+			"PAGESIZE",
+			"for",
+			"clientLog",
+			"limit",
+			"sort",
+			"losers",
+			"```scss",
+			"sorter",
+			"rank",
+			"ignore",
+			"Players.find",
+			"{{{",
+			"updatePlayer =",
+			"updatePlayer:",
+			"Messages",
+			"getPlayer",
+			"find",
+			"findPlayer",
+			"getEncounters",
+			"getencounters:",
+			"playerName",
+			"player",
+			"getActivePlayers =",
+			"summaries",
+			"updateSummaries",
+			"PlayerSummaries",
+			"find",
+			"Encounter",
+			"Encounters",
+			"updateSummaries",
+			"PlayerSummaries",
+			"updatePercentiles =",
+			"Avg",
+			"getEncounter",
+			"loopOnDifficulty",
+			"playerStats",
+			"epeenId",
+			"epeendId",
+			"specDataHeroicdata",
+			"25N",
+			"25H",
+			"pKillsAll",
+			"updateAverages",
+			"console.log",
+			"playerExists",
+			"Players",
+			"Players.update",
+			"playerExists(",
+			"playerExtists(",
+			"median",
+			"update",
+			"averages",
+			"update(",
+			"update",
+			"updatePercentiles1",
+			"Protectors_of_the_Endless",
+			"boss",
+			"name",
+			"CurrentBosses",
+			"Helpers.currentBosses",
+			"SpecMap[cls][specName]",
+			");\n",
+			"51618",
+			"font",
+			"colorNameLookup",
+			"colorStyleProperties",
+			"a(",
+			"a",
+			"title",
+			"instructionText",
+			"title",
+			"me",
+			"label",
+			"%;",
+			"content",
+			"cover",
+			"me",
+			"            }",
+			"me",
+			"onIframeLoad\n\n\nonIframe",
+			"onIframeLoad\n\n\nonIframeL",
+			"onIframeLoad",
+			"iframeLoad",
+			"oniframeload",
+			"iframe",
+			"setInterval",
+			"resizeInterval",
+			"resize",
+			"defer",
+			"form.getWidth()",
+			"container.getWidth()",
+			"me.tabs"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"```css",
+			"Median",
+			"n25",
+			"h25",
+			"metrics",
+			"CurrentEncounters",
+			"CurrentBosses",
+			"specId",
+			"this",
+			"formWidth",
+			"containerWidth",
+			"setPeriod",
+			"timePmEl",
+			"timeAmEl",
+			"this",
+			"me.getEl()",
+			"3px",
+			"$color-neutral-light",
+			"$color-neutral-darkest",
+			"$color-highlighted-background",
+			"http://db.mmo-champion.com/i/",
+			"http://db.mmo-champion.com/c/",
+			"http://db.mmo-champion.com/s/",
+			"myriadwebpro",
+			"myriadpro-bold-webfont",
+			"background: rgba(100, 100, 100, 0.15);",
+			"",
+			"opacity 1s ease-in-out 0"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 4,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/theme.json",
+					"settings":
+					{
+						"buffer_size": 17085,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6927,
+								6927
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3918.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/scripts/widgets/related-products.js",
+					"settings":
+					{
+						"buffer_size": 3668,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								895,
+								895
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/templates/Widgets/catalog/related-products.hypr",
+					"settings":
+					{
+						"buffer_size": 261,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								261,
+								213
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/Jinja2/Syntaxes/HTML (Jinja Templates).tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/stylesheets/storefront.less",
+					"settings":
+					{
+						"buffer_size": 4328,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4231,
+								4231
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/LESS/LESS.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 501.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/stylesheets/widgets/video.less",
+					"settings":
+					{
+						"buffer_size": 1402,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								268,
+								268
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/LESS/LESS.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "Mozu.SiteBuilder.UX.Themes/Mozu.SiteBuilder.UX.Themes.csproj",
+					"settings":
+					{
+						"buffer_size": 89394,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								28418,
+								28418
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/XML/XML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 7611.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 5,
+			"sheets":
+			[
+				{
+					"buffer": 6,
+					"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/templates/Widgets/cms/image.hypr",
+					"settings":
+					{
+						"buffer_size": 292,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								291,
+								291
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/Jinja2/Syntaxes/HTML (Jinja Templates).tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/templates/Widgets/cms/video.hypr",
+					"settings":
+					{
+						"buffer_size": 519,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								322,
+								322
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/Jinja2/Syntaxes/HTML (Jinja Templates).tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "Mozu.SiteBuilder.UX.Admin/Scripts/sass/etc/chorizo/layout.scss",
+					"settings":
+					{
+						"buffer_size": 61,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								61,
+								61
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/SCSS/SCSS.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "Mozu.SiteBuilder.UX.Admin/Scripts/sass/etc/chorizo/_grid.scss",
+					"settings":
+					{
+						"buffer_size": 3055,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								576,
+								576
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/SCSS/SCSS.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/templates/Widgets/cms/image2.hypr",
+					"settings":
+					{
+						"buffer_size": 2635,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2635,
+								2598
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/Jinja2/Syntaxes/HTML (Jinja Templates).tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 59.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/scripts/widgets/video.js",
+					"settings":
+					{
+						"buffer_size": 1817,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1764,
+								1764
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "Mozu.SiteBuilder.UX.Themes/Themes/Core4/stylesheets/widgets/instock-request.less",
+					"settings":
+					{
+						"buffer_size": 364,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								133,
+								133
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/LESS/LESS.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.511904761904,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 112.0
+	},
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"inst",
+				"Core4/stylesheets/widgets/instock-request.less"
+			],
+			[
+				"instock-",
+				"Core4/scripts/widgets/instock-request.js"
+			],
+			[
+				"store",
+				"Core4/stylesheets/storefront.less"
+			],
+			[
+				"relate-",
+				"Core4/templates/Widgets/catalog/related-products.hypr"
+			],
+			[
+				"vide",
+				"Core4/scripts/widgets/video.js"
+			],
+			[
+				"video.js",
+				"Core4/scripts/widgets/video.js"
+			],
+			[
+				"fitv",
+				"Core4/scripts/modules/jquery-fitvids.js"
+			],
+			[
+				"core4product.js",
+				"Core4/scripts/widgets/related-products.js"
+			],
+			[
+				"image2",
+				"Core4/templates/Widgets/cms/image2.hypr"
+			],
+			[
+				"ima",
+				"Core4/templates/Widgets/cms/image.hypr"
+			],
+			[
+				"them",
+				"Core4/theme.json"
+			],
+			[
+				"app",
+				"app/application.js"
+			],
+			[
+				"appli",
+				"app/application.js"
+			],
+			[
+				"video",
+				"Core4/templates/Widgets/cms/video.hypr"
+			],
+			[
+				"image.hy",
+				"Core4/templates/Widgets/cms/image.hypr"
+			],
+			[
+				"theme.js",
+				"Core4/theme.json"
+			],
+			[
+				"appl",
+				"client/application.js"
+			],
+			[
+				"lib/",
+				"lib/collections.js"
+			],
+			[
+				"_tra",
+				"client/sass/_transactions.scss"
+			],
+			[
+				"contro",
+				"client/lib/Controller.js"
+			],
+			[
+				"home.js",
+				"client/views/home.js"
+			],
+			[
+				"index.js",
+				"client/index.js"
+			],
+			[
+				"home",
+				"client/views/home.html"
+			],
+			[
+				"_var",
+				"client/sass/font-awesome/_variables.scss"
+			],
+			[
+				"trans",
+				"client/views/transaction.html"
+			],
+			[
+				"_va",
+				"client/sass/font-awesome/_variables.scss"
+			],
+			[
+				"layou",
+				"client/sass/_layout.scss"
+			],
+			[
+				".scss",
+				"client/sass/index.scss"
+			],
+			[
+				"trna",
+				"client/views/transaction.html"
+			],
+			[
+				"main",
+				"client/sass/_main.scss"
+			],
+			[
+				"index.ht",
+				"client/index.html"
+			],
+			[
+				"colo",
+				"client/sass/_colors.scss"
+			],
+			[
+				"ind",
+				"client/index.js"
+			],
+			[
+				"font",
+				"client/sass/font-awesome/font-awesome.scss"
+			],
+			[
+				"index",
+				"client/stylesheets/index.css"
+			],
+			[
+				"colors",
+				"client/sass/_colors.scss"
+			],
+			[
+				"fla",
+				"client/stylesheets/flat-ui.css"
+			],
+			[
+				"inde",
+				"client/index.js"
+			],
+			[
+				"mod",
+				"client/lib/Model.js"
+			],
+			[
+				"trjs",
+				"client/views/transaction.js"
+			],
+			[
+				"tran",
+				"client/views/transaction.html"
+			],
+			[
+				"routes",
+				"config/routes.rb"
+			],
+			[
+				"categ",
+				"Resources/Scripts/Pages/category.js"
+			],
+			[
+				"knock",
+				"Resources/Scripts/Modules/knockout-plus.js"
+			],
+			[
+				"api",
+				"Resources/Scripts/Modules/api.js"
+			],
+			[
+				"plt",
+				"Modules/_ProductListingTemplate.vol"
+			],
+			[
+				"plf",
+				"Modules/_ProductListingFaceted.vol"
+			],
+			[
+				"_productlist",
+				"Modules/_ProductListing.vol"
+			],
+			[
+				"jquery-",
+				"Resources/Scripts/Modules/jquery-plus.js"
+			],
+			[
+				"scripts/",
+				"Resources/Scripts/Pages/category.js"
+			],
+			[
+				"_cat",
+				"Templates/_Category.vol"
+			],
+			[
+				"_prod",
+				"Templates/_Product.vol"
+			],
+			[
+				"defau",
+				"Layouts/Default.vol"
+			],
+			[
+				"_home",
+				"Templates/_home.vol"
+			],
+			[
+				"serverinde",
+				"server/index.js"
+			],
+			[
+				"index.htm",
+				"client/index.html"
+			],
+			[
+				"formform",
+				".meteor/local/build/server/node_modules/connect/node_modules/formidable/test/unit/test-incoming-form.js"
+			],
+			[
+				"lotcss",
+				"LoTracker.css"
+			],
+			[
+				"lothtml",
+				"LoTracker.html"
+			],
+			[
+				"lotjs",
+				"LoTracker.js"
+			],
+			[
+				"server",
+				".meteor/local/build/server/server.js"
+			],
+			[
+				"lothm",
+				"client/LoTracker.html"
+			],
+			[
+				"pongelo",
+				"PongElo/PongElo.js"
+			],
+			[
+				"ponge",
+				"PongElo/PongElo.html"
+			],
+			[
+				"ladd",
+				"ladder/ladder.css"
+			],
+			[
+				"ladder.ht",
+				"ladder/ladder.html"
+			],
+			[
+				"detail.",
+				"Templates/StoreFront/Products/Detail.vol"
+			],
+			[
+				"header",
+				"/Volumes/Volusion.SiteBuilder/Volusion.SiteBuilder.UX.Themes/Themes/Core/Templates/Admin/shared/layouts/subelements/header.vol"
+			],
+			[
+				"s",
+				"/Volumes/Volusion.SiteBuilder/Volusion.SiteBuilder.UX.Themes/Themes/Core/Templates/Admin/Products/ContentEdit.vol"
+			],
+			[
+				"c1.",
+				"/Users/travis_johnson/Desktop/Copies/cover1.js"
+			],
+			[
+				"ih",
+				"/Users/travis_johnson/Desktop/Copies/index.html"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 312.0,
+	"status_bar_visible": true
+}

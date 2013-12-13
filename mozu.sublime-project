@@ -1,0 +1,17 @@
+{
+	"folders":
+	[
+		{
+			"path": "Mozu.SiteBuilder.UX.Themes/Themes/Core4"
+		},
+		{
+			"path": "Mozu.SiteBuilder.UX.Admin/Scripts/app"
+		},
+		{
+			"path": "Mozu.SiteBuilder.UX.Admin/Scripts/sass/src"
+		},
+		{
+			"path": "Mozu.SiteBuilder.UX.Admin/Scripts/chorizo"
+		}
+	]
+}
