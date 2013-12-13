@@ -47,7 +47,7 @@ Ext.define('Taco.view.theme.ThemeView', {
                             '<li class="actions">',
                                 '<a class="action-preview" href="#">Preview</a>',
                                 '<a class="action-settings" href="#">Settings</a>',
-                                '<a class="action-addons" href="#">Addons</a>',
+                                //'<a class="action-addons" href="#">Addons</a>'      ,
                                 '<tpl if="!values.data.isSelected">',
                                     '<a class="action-apply" href="#">Apply</a>',
                                 '</tpl>',

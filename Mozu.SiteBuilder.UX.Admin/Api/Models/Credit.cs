@@ -13,10 +13,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         public string CurrencyCode { get; set; }
         public decimal InitialBalance { get; set; }
         public decimal CurrentBalance { get; set; }
-        public int CustomerId { get; set; }
+        public int? CustomerId { get; set; }
         public DateTime? ExpirationDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public string IssuedBy { get; set; }
-        public Contact Customer { get; set; }
+        public Mozu.SiteBuilder.UX.Admin.Api.Models.Customer  Customer { get; set; }
     }
 }

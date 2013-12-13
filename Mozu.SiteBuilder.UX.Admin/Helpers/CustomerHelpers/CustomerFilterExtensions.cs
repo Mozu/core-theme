@@ -34,7 +34,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
             string allString;
             if (extFilter.TryGetValue<string>("all", out allString) && !string.IsNullOrWhiteSpace(allString))
             {
-                return string.Join(" ", allString.Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x + "*")).Trim();
+                return string.Join(" ", allString.Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(x =>
+                {
+                    int tmp;
+                    if (int.TryParse(x, out tmp))
+                    {
+                        extFilter.Add(new FilterCollectionItem()
+                                             {
+                                                 field = "id",
+                                                 property = "id",
+                                                 value = tmp
+                                             });
+                        return null;
+                    }
+                    else
+                    {
+                        return x + "*";
+                    }
+                
+                   
+                })).Trim();
             }
             return null;
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -6,6 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using MassTransit.Util;
 using Mozu.Core.Api.Routing;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.Customer.Contracts.Credit;
@@ -70,9 +72,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter)
         {
+            int customerId;
             if (pagingParameters.id != null)
             {
-                int customerId = Convert.ToInt32(pagingParameters.id);
+                customerId = Convert.ToInt32(pagingParameters.id);
 
                 var customer = (await GetAccountWithAttributes(customerId)).Map<ApiCustomer>();
                 return List2(customer);
@@ -80,6 +83,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var filter = extFilter.ToFilterString();
             var q = extFilter.ToQString();
+
+            if (extFilter.TryGetValue("id", out customerId ))
+            {
+                var dcCust  = (await GetAccountWithAttributes(customerId));
+                if (dcCust != null)
+                {
+                    var customer = dcCust.Map<ApiCustomer>();
+                    return List2(customer);
+                }
+                
+                return List2(new List<ApiCustomer>());
+            }
             int? qLimit = q == null ? (int?)null : 3;
             var sort = pagingParameters.sort.ToSortString();
             var dcCustomers = (await _customerWebApiClient.GetAccounts(
@@ -111,11 +126,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return Task.WhenAll(customerTask, attributeTask).ContinueWith<DC.CustomerAccount>(t =>
             {
-                var customer = customerTask.Result.ReadAsSync();
-                var attributes = attributeTask.Result.ReadAsSync();
+                if (customerTask.Result.ResponseMessage.IsSuccessStatusCode)
+                {
+                    var customer = customerTask.Result.ReadAsSync();
+                    var attributes = attributeTask.Result.ReadAsSync();
 
-                customer.Attributes = attributes.Items;
-                return customer;
+                    customer.Attributes = attributes.Items;
+                    return customer;
+                }
+                return null;
             });
         }
 
@@ -207,11 +226,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var dcitem = (await _creditWebApiClient.GetCredits(0, 600, filter: filter)).ReadAsSync();
             var vmitem = Mapper.Map<List<Credit>>(dcitem.Items);
-            
-            vmitem.ForEach(cred => {
-                var customer = GetAccountWithAttributes(cred.CustomerId).Result.Map<ApiCustomer>();
-                cred.Customer = customer != null && customer.Contacts != null && customer.Contacts.Count() > 0 ? customer.Contacts[0] : new Contact();
-            });
+            //todo get all ids and make one query;
+            Hashtable custLookups = new Hashtable(); 
+            foreach ( var cred in vmitem)
+            {
+                if (cred.CustomerId.HasValue)
+                {
+                    var customer = (DC.CustomerAccount )custLookups[cred.CustomerId.Value];
+                    if (customer == null)
+                    {
+                        var cres= (await _customerWebApiClient.GetAccount(cred.CustomerId));
+                        if (cres.ResponseMessage.IsSuccessStatusCode)
+                        {
+                            customer = cres.ReadAsSync();
+                        }
+                    }
+                    custLookups[cred.CustomerId] = customer;
+                    if (customer != null)
+                    {
+                        cred.Customer = Mapper.Map<Mozu.SiteBuilder.UX.Admin.Api.Models.Customer>(customer);
+                    }
+                }
+              
+            }
 
             return List2(vmitem);
         }
@@ -222,7 +259,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var dcitem = Mapper.Map<DC.Credit.Credit>(credit);
             dcitem.InitialBalance = dcitem.CurrentBalance;
             dcitem.CurrencyCode = "USD";
-            dcitem.CreditType = "StoreCredit";
             dcitem = (await _creditWebApiClient.AddCredit(dcitem)).ReadAsSync();
             return Single2(Mapper.Map<Credit>(dcitem));
         }
