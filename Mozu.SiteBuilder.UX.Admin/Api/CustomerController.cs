@@ -26,12 +26,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ICustomerAccountWebApiClient _customerWebApiClient;
         private readonly ICustomerGroupWebApiClient _customerGroupWebApiClient;
         private readonly ICreditWebApiClient _creditWebApiClient;
+        //private readonly ICustomerVisitWebApiClient _customerVisitWebApiClient;
 
-        public CustomerController(ICustomerAccountWebApiClient customerWebApiClient, Mozu.Customer.Contracts.Clients.ICustomerGroupWebApiClient customerGroupWebApiClient, ICreditWebApiClient creditWebApiClient)
+        public CustomerController(ICustomerAccountWebApiClient customerWebApiClient, Mozu.Customer.Contracts.Clients.ICustomerGroupWebApiClient customerGroupWebApiClient, ICreditWebApiClient creditWebApiClient/*, ICustomerVisitWebApiClient customerVisitWebApiClient*/)
         {
             _customerWebApiClient = customerWebApiClient;
             _customerGroupWebApiClient = customerGroupWebApiClient;
             _creditWebApiClient = creditWebApiClient;
+            //_customerVisitWebApiClient = customerVisitWebApiClient;
         }
 
         [HttpGetRoute(UriTemplate = "search")]
@@ -90,6 +92,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             )).ReadAsSync();
 
             var customers = Mapper.Map<List<ApiCustomer>>(dcCustomers.Items);
+            // get visits
+            //customers.Each(cust =>
+            //{
+            //    cust.VisitCount = _customerVisitWebApiClient.GetVisits(0, 0, null, string.Format("AccountId eq {0}", cust.Id)).Result.ReadAsSync().TotalCount;
+            //});
 
             return List2(customers, total: (int)dcCustomers.TotalCount);
         }
