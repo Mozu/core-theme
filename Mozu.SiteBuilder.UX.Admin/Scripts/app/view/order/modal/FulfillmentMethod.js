@@ -184,7 +184,7 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
         
 
         
-        this.inStorePickupPanel = Ext.create('Taco.view.order.widget.LocationPickupGrid');
+        this.inStorePickupPanel = Ext.create('Taco.view.order.widget.LocationPickupGrid', { record: me.record });
         this.inStorePickupPanel.on('selectionchange',function(grid, selected) {
             if (selected.length) {
                 me.saveButton.enable();
