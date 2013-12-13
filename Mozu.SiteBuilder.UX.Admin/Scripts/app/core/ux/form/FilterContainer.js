@@ -18,7 +18,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * @property {String} [currentFilterString={}]
      */
     currentFilterString: '{}',
-
+    initialValue: null,
     /**
      * @cfg {String} [defaultFieldName="keyword"]
      * The key or fieldName to use for textfield input without a corresponding field in the form.
@@ -26,7 +26,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * understands to be a generic or catch-all field.
      */
     defaultFieldName: 'keyword',
-
+    initFromStateManager:true,
     layout: 'hbox',
 
     initComponent: function () {
@@ -45,6 +45,10 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
              */
             'filter'
         );
+        
+        if (this.initFromStateManager) {
+            this.initialValue = (Ext.Array.findBy(Taco.core.StateManager.getCurrentState().metaData.args, function (i) { return i.q; }) || {}).q;
+        }
 
         this.items = [{
                 xtype: 'textfield',
@@ -52,6 +56,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                 margin: '0 10 20 0',
                 msgTarget: 'qtip',
                 flex: 1,
+                
                 width: 400,
                 listeners: {
                     specialkey: {
@@ -91,6 +96,13 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         }, this);
 
         this.initFilterStores();
+        this.on('boxready', function (cmp) {
+            if (cmp.initialValue) {
+                var filterField = cmp.down('#textFilter');
+                filterField.setValue(cmp.initialValue);
+                cmp.syncAndFilter(cmp.parseTextFilterValue(filterField));
+            }
+        }, this);
     },
 
     /**
@@ -99,6 +111,11 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * @param  {Object} value An object containing field keys and values.
      */
     doFilter: function (value) {
+        
+        if (this.store.isLoading()) {
+            this.store.abort();
+            
+        }
         var filterString = Ext.JSON.encodeValue(value);
 
         if (filterString === this.currentFilterString) {
@@ -115,8 +132,9 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                         advancedSearch: filterString
                     },
                     callback: function () {
-                        this.filtering = false;
+                        
                         this.fireEvent('filter', this, value);
+                        this.filtering = false;
                     },
                     scope: this
                 });

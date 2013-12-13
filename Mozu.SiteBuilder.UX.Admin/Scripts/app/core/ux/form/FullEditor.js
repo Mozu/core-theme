@@ -48,15 +48,19 @@
             Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), { record: record });
         }, this, { delay: 10, single: true, scope: this });
         
-        if (this.showIndexOnCancel) {
-            this.on('cancel', function(editor) {
-                if (editor.record) {
-                    editor.record.reject();
-                }
-                Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/index');
+       
+        this.on('cancel', function(editor) {
+            if (editor.record) {
+                editor.record.reject();
+            }
+            if (this.showIndexOnCancel) {
+                Ext.defer(function () {
+                    Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/index');
+                }, 10);
+            }
 
-            }, this, { delay: 10, single: true, scope: this });
-        }
+        }, this, { single: true, scope: this });
+        
         this.on('destroyrecord', function(editor, records, operation) {
             Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/index');
         }, this, { delay: 10, single: true, scope: this });

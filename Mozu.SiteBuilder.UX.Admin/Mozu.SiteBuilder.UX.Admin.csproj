@@ -719,6 +719,7 @@
     <Content Include="Scripts\app\view\discount\CriteriaForm.js" />
     <Content Include="Scripts\app\view\discount\GeneralForm.js" />
     <Content Include="Scripts\app\view\fileManager\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\inventory\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\modal\FulfillmentMethod.js" />
     <Content Include="Scripts\app\view\order\subform\InstorePickup.js" />
@@ -770,6 +771,8 @@
     <Content Include="Scripts\app\view\storeCredit\Index.js" />
     <Content Include="Scripts\app\view\tbd\Index.js" />
     <Content Include="Scripts\app\view\themeSettings\Addons.js" />
+    <Content Include="Scripts\app\view\themeSettings\Edit.js" />
+    <Content Include="Scripts\app\view\themeSettings\Form.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\EmailTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\SiteTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\TemplateEntityAdapter.js" />
@@ -1341,8 +1344,6 @@
     <Content Include="Scripts\app\view\settings\shipping\subform\ShippingFrom.js" />
     <Content Include="Scripts\app\view\settings\tax\Edit.js" />
     <Content Include="Scripts\app\view\settings\tax\Form.js" />
-    <Content Include="Scripts\app\view\themeSettings\Group.js" />
-    <Content Include="Scripts\app\view\themeSettings\Section.js" />
     <Content Include="Scripts\app\view\theme\ThemeView.js" />
     <Content Include="Scripts\build.xml" />
     <Content Include="Scripts\build\fonts\journal-webfont.svg" />
@@ -3103,7 +3104,6 @@
     <Content Include="Scripts\app\view\product\Index.js" />
     <Content Include="Scripts\app\view\testing\Shim.js" />
     <Content Include="Scripts\app\view\testing\StandaloneOption.js" />
-    <Content Include="Scripts\app\view\themeSettings\Index.js" />
     <Content Include="Scripts\app\view\theme\Index.js" />
     <Content Include="Scripts\app\view\Viewport.js" />
     <Content Include="Web.config">

@@ -70,6 +70,15 @@ Ext.define('Taco.view.product.subform.Inventory', {
             name:'outOfStockBehavior'
         });
 
+        this.viewStockLink = Ext.create('Taco.core.ux.action.Action',
+            {
+                text: 'View Inventory',
+                click: function () {
+                    Taco.core.StateManager.attemptNavigate('inventory?q=productCode:'+ this.record.getId());
+                },
+                scope:this
+            });
+
         //options = Ext.create('Taco.view.product.option.Form', {
         //    product: this.product
         //});
@@ -80,8 +89,10 @@ Ext.define('Taco.view.product.subform.Inventory', {
             layout: 'vbox',
             items: [
                 this.manageStock,
+                  this.viewStockLink,
              //   stockOnHand,
                 this.outOfStockState
+              
             ]
         }];
 
@@ -106,8 +117,8 @@ Ext.define('Taco.view.product.subform.Inventory', {
         this.manageStock.setVisible(value != "Bundle");
 
         var track = this.manageStock.getValue();
-        
 
+        this.viewStockLink.setVisible(track);
         // hide if the productUsage is component
         var outOfStockStateVisible = false;
             

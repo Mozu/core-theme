@@ -38,5 +38,15 @@ Ext.define('Taco.overrides.form.Basic', {
         } else {
             this.onValidityChange(!this.hasInvalidField());
         }
+    },
+    
+    getValues: function (asString, dirtyOnly, includeEmptyText, useDataValues) {
+        //changing default of useDataValues to true
+        var args = Ext.Array.clone(arguments);
+        while (args.length < 4) {
+            args.push(undefined);
+        }
+        args[3] = args[3] === false ? false : true;
+        return this.callParent(args);
     }
 });

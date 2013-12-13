@@ -371,7 +371,7 @@ Class('Siesta.Test', {
             }))
 
             if (this.harness.activateDebuggerOnFail) {
-                debugger;
+                
             }
 
             if (this.harness.breakOnFail) {
