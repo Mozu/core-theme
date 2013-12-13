@@ -5,6 +5,10 @@
 
 Ext.define('Taco.view.themesettings.Form', {
     extend: 'Taco.core.ux.form.Form',
+    mixins: {
+        navigable: 'Taco.core.ux.mixins.Navigable'
+    },
+
     requires: [
         'Taco.core.ux.form.field.MultiSelect', 
         'Taco.core.ux.BoxReorderer',
@@ -28,7 +32,12 @@ Ext.define('Taco.view.themesettings.Form', {
     //    theme: theme,
     //    settingsValues: values
     //},
+    constructor: function () {
 
+        this.callParent(arguments);
+
+        this.mixins.navigable.constructor.call(this);
+    },
     initComponent: function () {
 
         this.title = "Theme Settings";//tbd get theme name 
