@@ -85,6 +85,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         [DataMember(Name="taxId")]
         public string TaxId { get; set; }
 
+        /// <summary>
+        /// Total number of customer visits.
+        /// </summary>
+        [DataMember(Name = "visitCount")]
+        public long VisitCount { get; set; }
+
         #region Order Summary
         /// <summary>
         /// Total amount of all orders, including cancellations and refunds.

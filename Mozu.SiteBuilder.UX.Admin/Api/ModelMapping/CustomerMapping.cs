@@ -35,6 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
             .ForMember(x => x.TaxExempt, op => op.MapFrom(dc => dc.TaxExempt))
             .ForMember(x => x.TaxId, op => op.MapFrom(dc => dc.TaxId))
+            .ForMember(x => x.VisitCount, op => op.MapFrom(dc => dc.CommerceSummary.VisitsCount))
             ;
 
             Mapper.CreateMap<ApiCustomer, DC.CustomerAccount>()
