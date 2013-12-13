@@ -456,7 +456,8 @@
     }
 
     Block.create = function(widgetCfg) {
-        var $block;
+        var $block,
+            block;
 
         if (widgetCfg.block) return widgetCfg.block;
 
@@ -468,11 +469,22 @@
             .html(widgetCfg.html)
             .height(widgetCfg.data.config.height);
 
+        block = $block.mzBlock().data('mozu.mzBlock') 
 
-        return $block.mzBlock().data('mozu.mzBlock');
+        win.setTimeout(function() {
+            block.triggerDrop()
+        }, 50);
+
+        return block;
     }
 
     Block.prototype = new Target();
+
+    Block.prototype.triggerDrop = function() {
+        var evt = doc.createEvent('CustomEvent');
+        evt.initCustomEvent('mozuwidgetdrop', true, false);
+        this.element[0].dispatchEvent(evt);
+    }
 
     Block.prototype.update = function(html, data) {
         this.element.data('widget', data);
@@ -485,6 +497,10 @@
         } else {
             this.element.mzImg({isRichText: false});
         }
+
+        console.log('update block', this.element[0])
+
+        this.triggerDrop();
     }
 
     Block.prototype.create = function(widgetCfg) {

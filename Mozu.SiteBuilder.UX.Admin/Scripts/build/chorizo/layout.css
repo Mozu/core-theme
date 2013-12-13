@@ -1,4 +1,4 @@
-﻿/* line 3, ../../sass/etc/chorizo/_grid.scss */
+/* line 3, ../../sass/etc/chorizo/_grid.scss */
 .mz-cms-grid {
   -webkit-box-sizing: border-box !important;
   -moz-box-sizing: border-box !important;
@@ -41,7 +41,7 @@
   padding: 5px;
 }
 /* line 38, ../../sass/etc/chorizo/_grid.scss */
-.mz-cms-content *:first-child {
+.mz-cms-content > *:first-child {
   margin-top: 0;
 }
 /* line 42, ../../sass/etc/chorizo/_grid.scss */

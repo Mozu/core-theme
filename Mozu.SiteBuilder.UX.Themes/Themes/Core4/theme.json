@@ -282,7 +282,8 @@
         "displayTemplate": "cms/video",
         "editViewFields": [{
             "name": "url",
-            "fieldLabel": "Video URL"
+            "fieldLabel": "Video URL",
+            "anchor": "100%"
         }],
         "defaultConfig": {},
         "icon": "/resources/admin/widgets/08_video.png",
