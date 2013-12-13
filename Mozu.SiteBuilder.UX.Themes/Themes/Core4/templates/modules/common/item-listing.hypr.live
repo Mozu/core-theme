@@ -1,9 +1,13 @@
 ﻿<div class="mz-itemlisting">
+  {% block item-listing-prefix %}
+  {% endblock item-listing-prefix %}
+  {% block item-listing-image %}
   {% if model.product.imageUrl %}
   <div class="mz-itemlisting-thumb">
     <img class="mz-itemlisting-thumb-img" src="{{ model.product.imageUrl }}?max=80" />
   </div>
   {% endif %}
+  {% endblock item-listing-image %}
   {% block item-listing-details %}
   <div class="mz-itemlisting-details">
     {% block item-name %}

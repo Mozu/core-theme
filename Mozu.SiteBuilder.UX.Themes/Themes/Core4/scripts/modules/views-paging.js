@@ -17,7 +17,10 @@ define(['modules/jquery-mozu','shim!vendor/underscore>_','modules/backbone-mozu'
             _.each(pagingHelpers, function (helperName) {
                 model[helperName] = me.model[helperName]();
             });
+            this.undelegateEvents();
             this.$el.html(this.template.render({ model: model }));
+            this.delegateEvents();
+            console.log('rendered ' + this.templateName);
         }
     });
 
@@ -34,14 +37,17 @@ define(['modules/jquery-mozu','shim!vendor/underscore>_','modules/backbone-mozu'
 
     var PageNumbersView = PagingBaseView.extend({
         templateName: 'modules/common/page-numbers',
-        previous: function () {
-            this.model.previousPage();
+        previous: function (e) {
+            e.preventDefault();
+            return this.model.previousPage();
         },
-        next: function () {
-            this.model.nextPage();
+        next: function (e) {
+            e.preventDefault();
+            return this.model.nextPage();
         },
         page: function (e) {
-            this.model.setPage(parseInt($(e.currentTarget).data('mz-page-num')) || 1);
+            e.preventDefault();
+            return this.model.setPage(parseInt($(e.currentTarget).data('mz-page-num')) || 1);
         }
     });
 

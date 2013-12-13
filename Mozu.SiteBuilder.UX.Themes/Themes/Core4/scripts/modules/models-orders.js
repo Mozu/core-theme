@@ -13,6 +13,9 @@
             pageCount: { min: 1 },
             startIndex: { min: 0 }
         },
+        defaults: {
+            pageSize: 5
+        },
         dataTypes: {
             pageSize: Backbone.MozuModel.DataTypes.Int,
             pageCount: Backbone.MozuModel.DataTypes.Int,

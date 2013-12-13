@@ -153,7 +153,8 @@
         initialize: function() {
             this.get('editingContact').set('accountId', this.get('id'));
             this.get('orderHistory').lastRequest = {
-                filter: 'CustomerAccountId+eq+"' + this.get('id') + '"+and+OrderNumber+ne+null'
+                filter: 'CustomerAccountId+eq+"' + this.get('id') + '"+and+OrderNumber+ne+null',
+                pageSize: 5
             };
         },
         changePassword: function () {

@@ -30,11 +30,6 @@
             {% include "modules/my-account/my-account-settings" %}
         </div>
 
-        <a id="recentorders"></a>
-        <div class="mz-l-stack-section mz-accountrecentorders" id="account-recentorders">
-            {% include "modules/my-account/my-account-recentorders" %}
-        </div>
-
         {% if themeSettings.allowWishlist %}
         <a id="wishlist"></a>
         <div class="mz-l-stack-section mz-accountwishlist" id="account-wishlist">

@@ -79,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var cardsTask = _customerAccountWebApiClient.GetAccountCards(account.Id);
-            var orderHistoryTask = _orderWebApiClient.GetOrders(0, 25, null, BuildOrderHistoryFilter(account.Id));
+            var orderHistoryTask = _orderWebApiClient.GetOrders(0, 5, null, BuildOrderHistoryFilter(account.Id));
             var storeCreditsTask = _creditApiClient.GetCredits(0, 25, null, String.Format("CustomerId eq \"{0}\"", account.Id));
             var wishlistTask = _wishlistApiClient.GetWishlistByName(account.Id, DEFAULT_WISHLIST_NAME);            
             CommerceRuntime.Contracts.Wishlists.Wishlist wishlist = null;
@@ -94,7 +94,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var cards = cardsTask.Result.ReadAsSync();
             //var openOrders = openOrdersTask.Result.ReadAsSync();
             var orderHistory = orderHistoryTask.Result.ReadAsSync();
-            var recentOrders = orderHistory.Items.Take(5).ToList();
             var credits = storeCreditsTask.Result.ReadAsSync();
             if (wishlist != null) {
                 var wishlistItemsTask = _wishlistApiClient.GetWishlistItemsByWishlistName(account.Id, DEFAULT_WISHLIST_NAME, null, null, "UpdateDate asc");
@@ -104,9 +103,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
             var jAccount = JObject.FromObject(account, jSerializer);
 
-            //jAccount.Add("openOrders", JObject.FromObject(openOrders, jSerializer));
-            var recentOrdersJson = JArray.FromObject(recentOrders, jSerializer);
-            jAccount.Add("recentOrders", JArray.FromObject(recentOrders, jSerializer));
             jAccount.Add("orderHistory", JObject.FromObject(orderHistory, jSerializer));
             jAccount.Add("hasSavedCards", cards.Items.Count > 0);
             jAccount.Add("hasSavedContacts", account.Contacts.Count > 0);

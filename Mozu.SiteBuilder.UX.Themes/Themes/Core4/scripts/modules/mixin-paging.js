@@ -9,18 +9,18 @@ define(['jquery'], function($) {
 
         previousPage: function () {
             try {
-                this.apiModel.prevPage(this.lastRequest);
+                return this.apiModel.prevPage(this.lastRequest);
             } catch (e) { }
         },
 
         nextPage: function () {
             try {
-                this.apiModel.nextPage(this.lastRequest);
+                return this.apiModel.nextPage(this.lastRequest);
             } catch (e) { }
         },
 
         setPage: function (num) {
-            if (parseInt(num) <= parseInt(this.get('pageCount'))) this.apiGet($.extend({}, this.lastRequest, {
+            if (parseInt(num) <= parseInt(this.get('pageCount'))) return this.apiGet($.extend({}, this.lastRequest, {
                 startIndex: (num - 1) * parseInt(this.get('pageSize'))
             }));
         },
