@@ -25,26 +25,26 @@ Ext.define('Taco.core.StateManager', {
 
         me.callParent(arguments);
         me.addEvents(
-        /**
+            /**
         * @event
         * @preventable
         * Fires before the application state changes, whether by StateManager constructing a new State via {@link Taco.core.StateManager#attemptNavigate}, or by the {@link #navigate} event firing and being intercepted by a listening {@link Taco.core.util.Navigable} object.
         * Returning `false` to a handler will cancel the state change. *If you return false to this handler, you should cache the {@link Taco.core.AppState} the handler received, and then notify the user of the attempt to change state, perhaps via an "Are you sure?" dialog.
         * @param {Taco.core.AppState} state The state that is about to become active.
         */
-             'beforenavigate',
-        /**
+            'beforenavigate',
+            /**
         * @event
         * Fires when a navigation is occurring. Handlers can intercept the navigate event and handle it if they know how. If a handler has successfully handled a navigation event, it should return `false`, to prevent the controller from attempting to handle the event.
         * @param {Taco.core.AppState} state The state that is becoming active.
         */
             'navigate',
-        /**
+            /**
         * @event
         * Fires when the application state has changed. This event is not cancelable; it indicates that a state change has already taken place.
         * @param {Taco.core.AppState} state The state that is now active.
         */
-             'statechange'
+            'statechange'
         );
 
     },
@@ -85,7 +85,7 @@ Ext.define('Taco.core.StateManager', {
     * @return {Taco.core.AppState} The state provided or created.
     */
     addState: function (uriOrState, metadata, useReplace) {
-        
+
         // get current state
         var currentState = this.getCurrentState();
 
@@ -203,6 +203,15 @@ Ext.define('Taco.core.StateManager', {
 
         return me.fireEvent('statechange', newState);
     },
+
+    attemptNavigateBack:function () {
+        if (Taco.core.StateManager.stateindex == 0) {
+            return false;
+        }
+        //todo remove this from the stack?
+        return this.attemptNavigate(Taco.core.StateManager.statestack[Taco.core.StateManager.stateindex - 1]);
+    },
+
 
     /**
     * @private

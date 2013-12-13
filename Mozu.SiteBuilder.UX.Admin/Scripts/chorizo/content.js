@@ -241,7 +241,7 @@
     }
 
     Text.prototype._onSelect = function(e) {
-        debugger;
+    
     }
 
 

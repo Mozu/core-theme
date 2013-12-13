@@ -12,7 +12,8 @@ Ext.define('Taco.view.inventory.Index', {
         'Ext.grid.plugin.CellEditing', 
         'Taco.view.inventory.QuantityEdit',
         'Taco.view.location.inventory.LocationInventory',
-        'Taco.store.InventoriedProducts'
+        'Taco.store.InventoriedProducts',
+        'Taco.view.inventory.AdvancedSearchForm'
     ],
 
     typeName: 'Inventory',
@@ -21,7 +22,7 @@ Ext.define('Taco.view.inventory.Index', {
         type: 'Taco.store.InventoriedProducts',
         createOnly:true
     },
-    enableRowEditing: true,
+    enableRowEditing: false,
     
     gridHeaderLabel: 'product',
     plural: false,
@@ -35,48 +36,13 @@ Ext.define('Taco.view.inventory.Index', {
   
     useTilePanel: false,
     launchEditorOnClick: false,
-    hasSidebar:false,
-    filterFormConf: {
-        width: 600,
-        cls: Taco.baseCSSPrefix + 'combofilter-form orders',
-        items: [{
-            xtype: 'container',
-            justify: false,
-            defaults: {
-                xtype: 'textfield',
-                width: 560
-            },
-            items: [
-                {
-                    name: 'productName',
-                    fieldLabel: 'Product Name',
-                    flex: 1
-
-                }, {
-                    name: 'productCode',
-                    fieldLabel: 'Product Code',
-                    flex: 1
-                }
-            ]
-        }]
+    hasSidebar: false,
+    advancedSearchConfig: {
+        advancedFormCls: 'Taco.view.product.AdvancedSearchForm'
     },
-
-    filterProperties: [
-        {
-            property: 'all',
-            text: 'All',
-            isDefault: true
-        },
-        {
-            name: 'productName',
-            text: 'Product Name'
-        },
-        {
-            name: 'productCode',
-            text: 'Product Code'
-        }
-    ],
     
+    
+
 
     layoutItemBrowser: function () {
         
@@ -123,8 +89,7 @@ Ext.define('Taco.view.inventory.Index', {
             itemType: this.token,
             typeName: this.typeName,
             gridHeaderLabel: this.gridHeaderLabel,
-            filterFormConf: this.filterFormConf,
-            filterProperties: this.filterProperties,
+            advancedSearchConfig: this.advancedSearchConfig,
             isCollectionContext: Taco.app.context.getCurrent().contextType === "m",
             gridPanel: this.gridPanel,
             tilePanel: this.tilePanel,

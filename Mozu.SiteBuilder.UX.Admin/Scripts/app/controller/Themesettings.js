@@ -5,8 +5,8 @@
 Ext.define('Taco.controller.Themesettings', {
     extend: 'Taco.core.Controller',
     modelName: 'Taco.model.Discount',
-    requires: ['Taco.model.Discount', 'Taco.view.themesettings.Index', 'Taco.view.themesettings.Addons'],
-    views: ['themesettings.Index'],
+    requires: ['Taco.view.themesettings.Edit', 'Taco.view.themesettings.Addons'],
+    views: ['Taco.view.themesettings.Edit'],
 
     // TODO: This is temporary. Using this for the settings re-design
     index: function (params) {
@@ -29,11 +29,13 @@ Ext.define('Taco.controller.Themesettings', {
                     success: function (r) {
                         var values = Ext.JSON.decode(r.responseText);
 
-                        me.createContentView('Taco.view.themesettings.Index', {
-                            formConfig: fieldContainerCfg,
-                            themeId: id,
-                            theme: theme,
-                            settingsValues: values
+                        me.createContentView('Taco.view.themesettings.Edit', {
+                            themeInfo: {
+                                formConfig: fieldContainerCfg,
+                                themeId: id,
+                                theme: theme,
+                                settingsValues: values
+                            }
                         });
                     },
                     failure: function (r) {

@@ -203,10 +203,16 @@
             "userCreatable": false,
             "template": "product"
         }, {
-            "id": "search",
+            "id": "no-search-results",
             "title": "Search Results",
             "entityType": "searchresult",
             "template": "search-results",
+            "userCreatable": false
+        }, {
+            "id": "no-results",
+            "title": "Empty Search Results",
+            "entityType": "nosearchresult",
+            "template": "no-search-results",
             "userCreatable": false
         },
         /* system pages */

@@ -27,21 +27,24 @@
  */
 
 Ext.define('Taco.core.ux.mixins.Pageable', {
-    requires: ['Taco.core.util.ExceptionWhiner'],
-    constructor : function () {
+    requires: ['Taco.core.util.ExceptionWhiner',
+        'Ext.toolbar.Paging'],
+    constructor: function () {
         this.createGridPager();
     },
     createGridPager: function () {
         if (!this.store) {
-            console.log("the store must be defined in the class before initializing the paging toolbar;")
+            console.log("the store must be defined in the class before initializing the paging toolbar;");
             return;
         }
 
-        this.gridPager = Ext.create('Taco.core.ux.grid.Pager', {
-            store: this.store
+        this.gridPager = Ext.create('Ext.toolbar.Paging', {
+            store: this.store,
+            displayInfo: true,
+            dock: 'bottom'
         });
 
-        this.dockedItems = this.dockedItems || [];
+        this.dockedItems = Ext.Array.clone(this.dockedItems || []);
         this.dockedItems.push(this.gridPager);
 
         return this.gridPager;

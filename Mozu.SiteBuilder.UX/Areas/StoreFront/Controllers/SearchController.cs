@@ -2,12 +2,14 @@
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.UX.Controllers;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Newtonsoft.Json.Linq;
 
@@ -31,6 +33,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(string query, int? categoryId, string sortBy = null, int? page = null, int? pageSize = null, string facetValueFilter = null)
         {
+            PageContext.CmsContext = new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = "cart",
+                    DocumentType = "page_template"
+                },
+                
+            };
+            PageContext.Search  = new SearchContext
+            {
+                Query = query
+            };
+            
+            PageContext.PageType = "search";
+            PageContext.CategoryId = categoryId;
+
             ThemeRuntimeSettingsCollection themeSettings = SiteContext.ThemeSettings;
 
             page = page.GetValueOrDefault(1);
@@ -48,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             string facetHierValue = null;
             string facetHierDepth = null;
-
+            string facets = null;
 
             if (categoryId.HasValue)
             {
@@ -67,19 +86,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             int startIndex = (page.Value - 1)*pageSize.Value;
 
 
-            if (includeFacets.GetValueOrDefault(true) && categoryId.HasValue)
+            if (includeFacets.GetValueOrDefault(true) )
             {
+                facets = "categoryId";
                 facetHierDepth = "categoryId:2";
-                facetTemplate = "categoryId:" + categoryId;
-                facetHierValue = "categoryId:" + categoryId;
+                if (categoryId.HasValue)
+                {
+                    facetTemplate = "categoryId:" + categoryId;
+                    facetHierValue = "categoryId:" + categoryId;
+                }
+
                 // facetValueFilter = facetValueFilter;
             }
+            
 
-            if (categoryId != null)
-            {
-                this.PageContext.CategoryId = categoryId;
-            }
-            ProductRuntime.Contracts.ProductSearchResult res = (await _searchClient.Search(query, searchQuery.ToString(), facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: facetValueFilter, startIndex: startIndex, sortBy: sortBy, pageSize: pageSize)).ReadAsSync();
+
+            ProductRuntime.Contracts.ProductSearchResult res = (await _searchClient.Search(query, searchQuery.ToString(), facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: facetValueFilter, startIndex: startIndex, sortBy: sortBy, pageSize: pageSize, facet: facets)).ReadAsSync();
 
 
             //end paste
@@ -97,10 +119,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ViewResult view = null;
 
 
-            PageContext.Search = new SearchContext
-                                 {
-                                     Query = query
-                                 };
+            
             if (pc.TotalCount > 0)
             {
                 view = View("search-results", pc);

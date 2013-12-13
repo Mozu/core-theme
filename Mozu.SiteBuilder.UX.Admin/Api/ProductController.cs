@@ -64,13 +64,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Lists all products that are capable of managing inventory and have manageStock=true. This excludes base products and bundles.
         /// </summary>
         [HttpGetRoute(UriTemplate = "inventoriedproductlist")]
-        public async Task<Response<List<Product>>> ListInventoriedProducts([FromUri]PagingParamaters pagingParams) 
+        public async Task<Response<List<Product>>> ListInventoriedProducts([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter) 
         {
             // use a hard-coded response group and filter for this search.
             string responseGroups = "min";
-            string filter = "manageStock eq true and (isVariation eq true or productUsage eq standard or productUsage eq component)";
+            string extraFilter = extFilter.ToFilterString();
+            string q = extFilter.ToQString();
 
-            ProductCollection res = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, responseGroups: responseGroups, filter: filter)).ReadAsSync();
+            string filter = "manageStock eq true and (isVariation eq true or productUsage eq standard or productUsage eq component)";
+            if (!string.IsNullOrEmpty(extraFilter))
+            {
+                filter += "and (" + extraFilter + ")";
+            }
+            ProductCollection res = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, responseGroups: responseGroups, filter: filter, q:q )).ReadAsSync();
 
             var mapped = res.Items.Map<List<Product>>();
             return List2(mapped, (int)res.TotalCount);

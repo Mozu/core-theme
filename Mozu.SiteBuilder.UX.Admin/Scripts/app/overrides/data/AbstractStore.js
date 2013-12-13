@@ -26,7 +26,8 @@ Ext.define('Taco.overrides.data.AbstractStore', {
             datachanged: function () {
                 this.dirtyStateCheck();
             },
-            beforeload: function(store,operation) {
+            beforeload: function (store, operation) {
+                store.lastOperation = operation;
                 if (store.remoteFilter === false) {
                     operation.filters = [];
                 }
@@ -37,10 +38,23 @@ Ext.define('Taco.overrides.data.AbstractStore', {
                 }
                 
             },
+            
             scope: this
         });
     },
+    abort: function () {
+        if (this.lastOperation && this.isLoading()) {
+            Ext.Object.each( Ext.Ajax.requests, function (key, val) {
+                if (val.options == this.lastOperation.request) {
+                    this.lastOperation.request.xhr = val.xhr;
+                    this.lastOperation.request.options = this.lastOperation;
 
+                }
+            }, this);
+            Ext.Ajax.abort(this.lastOperation.request);
+        }
+        
+    },
     destroyStore: function () {
         var me = this;
         if (!me.isDestroyed) {
