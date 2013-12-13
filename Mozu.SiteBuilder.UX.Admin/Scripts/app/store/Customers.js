@@ -7,5 +7,11 @@
         model: 'Taco.model.CustomerAccount',
         pageSize: 50,
         remoteSort: true,
-        remoteFilter: true
+        remoteFilter: true,
+        storeManagerConfig: {
+            clearFilters: true,
+            clearSort: true,
+            autoLoad: true
+        },
+
     });

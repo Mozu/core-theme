@@ -23,9 +23,18 @@ Ext.define('Taco.model.StoreCredit', {
             name: 'expirationDate',
             type: 'date'
         },
+        //      public const string StoreCredit = "StoreCredit";
+    //public const string GiftCard = "GiftCard";
+        {
+            name: 'creditType',
+            type: 'string',
+            defaultValue: 'StoreCredit'
+        },
         {
             name: 'customerId',
-            type: 'int'
+            type: 'int',
+            useNull: true,
+            defaultValue: null
         },
         {
             name: 'modifiedDate',
