@@ -5,11 +5,6 @@
                 {{ labels.accountSettings }}
             </a>
         </li>
-        <li class="mz-scrollnav-item">
-            <a class="mz-scrollnav-link" href="#recentorders">
-                {{ labels.recentOrders }}
-            </a>
-        </li>
         {% if themeSettings.allowWishlist %}
         <li class="mz-scrollnav-item">
             <a class="mz-scrollnav-link" href="#wishlist">

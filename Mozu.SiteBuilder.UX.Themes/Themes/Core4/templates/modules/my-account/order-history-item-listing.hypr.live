@@ -4,5 +4,15 @@
     {% parent %}
 {% endblock item-name %}
 {% block item-listing-actions %}
-    <a class="mz-itemlisting-action" href="javascript:;" data-mz-startreturn="{{ model.id }}">{{ labels.returnOrReplace }}</a>
+    {% if returning == model.id %}
+    {% include "modules/common/item-return-form" %}
+    {% else %}
+    <a class="mz-itemlisting-action" href="javascript:;" data-mz-track-package="{{ model.id }}">{{ labels.trackPackage }}</a>
+    <a class="mz-itemlisting-action" href="javascript:;" data-mz-action="startReturnItem" data-mz-start-return="{{ model.id }}">{{ labels.returnOrReplace }}</a>
+    {% endif %}
 {% endblock item-listing-actions %}
+{% block item-listing-extras %}
+{% if returning == model.id %}
+<p class="mz-itemlisting-prompt is-warning">{{ labels.returnInfo|safe }}</p>
+{% endif %}
+{% endblock item-listing-extras %}

@@ -116,6 +116,37 @@
         templateName: "modules/my-account/order-history-list",
         initialize: function () {
             this.listenTo(this.model, "change:pageSize", _.bind(this.model.changePageSize, this.model));
+        },
+        getRenderContext: function () {
+            var context = Backbone.MozuView.prototype.getRenderContext.apply(this, arguments);
+            context.returning = this.returning;
+            return context;
+        },
+        startReturnItem: function (e) {
+            var id = $(e.currentTarget).data('mzStartReturn');
+            if (id) {
+                this.returning = id;
+            }
+            this.render();
+        }
+    });
+
+    var scrollBackUp = _.debounce(function () {
+        $('#orderhistory').ScrollTo({ axis: 'y', offsetTop: Hypr.getThemeSetting('gutterWidth') });
+        console.log('went to orderhistory');
+    }, 100);
+    var OrderHistoryPageNumbers = PagingViews.PageNumbers.extend({
+        previous: function () {
+            var op = PagingViews.PageNumbers.prototype.previous.apply(this, arguments);
+            if (op) op.then(scrollBackUp);
+        },
+        next: function () {
+            var op = PagingViews.PageNumbers.prototype.next.apply(this, arguments);
+            if (op) op.then(scrollBackUp);
+        },
+        page: function () {
+            var op = PagingViews.PageNumbers.prototype.page.apply(this, arguments);
+            if (op) op.then(scrollBackUp);
         }
     });
 
@@ -247,10 +278,11 @@
                 model: orderHistory
             }),
             orderHistoryPagingControls: new PagingViews.PagingControls({
+                templateName: 'modules/my-account/order-history-paging-controls',
                 el: $orderHistoryEl.find('[data-mz-pagingcontrols]'),
                 model: orderHistory
             }),
-            orderHistoryPageNumbers: new PagingViews.PageNumbers({
+            orderHistoryPageNumbers: new OrderHistoryPageNumbers({
                 el: $orderHistoryEl.find('[data-mz-pagenumbers]'),
                 model: orderHistory
             }),

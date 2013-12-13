@@ -1,0 +1,53 @@
+﻿<div class="mz-returnform">
+  <div class="mz-l-formfieldgroup">
+    <div class="mz-l-formfieldgroup-row mz-returnform-returntype">
+      <div class="mz-l-formfieldgroup-cell">
+        <label>{{ labels.returnType }}</label>
+      </div>
+      <div class="mz-l-formfieldgroup-cell">
+        <label>
+          <input type="radio" name="returnType" value="Return" data-mz-value="returnType" checked="checked"> {{ labels.return }} </label>
+        <label>
+          <input type="radio" name="returnType" value="Replace" data-mz-value="returnType" > {{ labels.replace }} </label>
+      </div>
+    </div>
+    <div class="mz-l-formfieldgroup-row">
+      <div class="mz-l-formfieldgroup-cell">
+        <label>{{ labels.reasonForReturn }}:</label>
+      </div>
+      <div class="mz-l-formfieldgroup-cell">
+        <select data-mz-value="reason" class="mz-returnform-reason">
+          <option>{{ labels.pleaseSelect }}</option>
+          {% for reason in themeSettings.returnReasons %}
+          <option value="{{ reason }}">{{ reason }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="mz-l-formfieldgroup-row">
+      <div class="mz-l-formfieldgroup-cell">
+        <label>{{ labels.quantityToReturn }}</label>
+      </div>
+      <div class="mz-l-formfieldgroup-cell mz-returnform-quantity">
+        <input type="number" data-mz-value="quantity" min="1" max="{{ model.quantity }}" class="mz-returnform-quantityfield" />
+        <span class="mz-returnform-quantitylabel">{{ labels.of }} {{ model.quantity }}</span>
+      </div>
+    </div>
+    <div class="mz-l-formfieldgroup-row mz-returnform-optionalcomments">
+      <div class="mz-l-formfieldgroup-cell">
+        <label>{{ labels.optionalComments }}</label>
+      </div>
+      <div class="mz-l-formfieldgroup-cell">
+        <textarea class="mz-returnform-optionalcommentsfield" data-mz-value="comments"></textarea>
+      </div>
+    </div>
+    <div class="mz-l-formfieldgroup-row mz-returnform-actions">
+      <div class="mz-l-formfieldgroup-cell">
+        <label>{{ labels.actions }}</label>
+      </div>
+      <div class="mz-l-formfieldgroup-cell">
+        <button class="mz-button" data-mz-action="finishReturnItem">{{ labels.submit }}</button>
+      </div>
+    </div>
+  </div>
+</div>

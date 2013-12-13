@@ -8,9 +8,11 @@
 <label class="mz-pagingcontrols-pagesize-label">
     {{ labels.show }}
     <select data-mz-value="PageSize" class="mz-pagingcontrols-pagesize-dropdown">
+        {% block page-sizes %}
         {% for pageSize in themeSettings.pageSizeOptions %}
         <option {% if model.pageSize == pageSize %}selected="selected"{% endif %} value="{{ pageSize }}">{{ pageSize }}</option>
         {% endfor %}
+        {% endblock page-sizes %}
     </select>
     {{ labels.resultsPerPage }}
 </label>

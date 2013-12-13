@@ -192,7 +192,7 @@ var ApiReference = (function () {
             template: '{+orderService}' + genericQueryTpt,
             defaultParams: {
                 startIndex: 0,
-                pageSize: 15
+                pageSize: 5
             },
             collectionOf: 'order',
         },
