@@ -222,7 +222,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             return GetListInternal()
                 .ContinueWith(res =>
                 {
-                    var nodelist = res.Result;
+                    var nodelist = res.Result != null ? res.Result.Nodes : new List<NavigationNode>();
 
                     var nodeTree = Mapper.Map<List<NavigationTreeNode>>(nodelist);
 
