@@ -286,7 +286,7 @@
   outline-style: solid !important;
 }
 /* line 38, ../../sass/etc/chorizo/_grid-edit.scss */
-.mz-cms-editing .mz-cms-blank-block div {
+.mz-cms-editing .mz-cms-blank-block > div {
   height: 150px;
   padding-top: 57px;
   text-align: center;

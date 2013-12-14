@@ -12,6 +12,9 @@
 		},
 		{
 			"path": "Mozu.SiteBuilder.UX.Admin/Scripts/chorizo"
+		},
+		{
+			"path": "Mozu.SiteBuilder.UX.Admin/Scripts/sass/etc/chorizo"
 		}
 	]
 }
