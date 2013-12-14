@@ -8,8 +8,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using FiftyOne.Foundation.Mobile.Detection;
 using Mozu.Core;
+using Mozu.Core.Settings;
 using Mozu.Customer.Contracts.Clients;
+
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
@@ -118,6 +122,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 
     public class HotOnlyAuthActionFilter : ActionFilterAttribute
     {
+       
         public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
         {
             var sbContext = actionContext.Request.Resolve<ISiteBuilderApiContext>();
@@ -125,10 +130,42 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             {
                 actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Redirect);
                 actionContext.Response.Headers.Location = new Uri("/user/login?returnUrl=" + System.Web.HttpUtility.UrlEncode(actionContext.Request.RequestUri.PathAndQuery), UriKind.Relative);
+            }
+        }
+    }
+
+    public class SslOnlyActionFilter : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
+        {
+            
+           
+            var sslEnabled = actionContext.Request.Resolve<ISettings>().AppSettings("sslEnabled") == "true";
+           
+            if (!sslEnabled)
+            {
+                return;
+            }
+
+            var pageContext = actionContext.Request.Resolve<PageContext>();
+            IEnumerable<string> values;
+
+
+
+
+
+            if (!string.IsNullOrEmpty(pageContext.Url) && !pageContext.IsSecure )
+            {
+                var ubilBuilder = new UriBuilder(pageContext.Url);
+                ubilBuilder.Scheme = "https";
+                actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.MovedPermanently);
+                actionContext.Response.Headers.Location = ubilBuilder.Uri;
 
             }
         }
     }
+
+
 
     public class NoWarmAuthActionFilter : ActionFilterAttribute
     {

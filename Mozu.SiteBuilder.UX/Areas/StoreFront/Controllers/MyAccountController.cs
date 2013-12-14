@@ -28,6 +28,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [InitCmsPageContextActionFilter]
     [HotOnlyAuthActionFilter]
+    [SslOnlyActionFilter]
     public class MyAccountController : BaseApiController
     {
         private const string DEFAULT_WISHLIST_NAME = "my_wishlist";

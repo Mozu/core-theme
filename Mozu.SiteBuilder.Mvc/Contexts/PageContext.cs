@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Mozu.Core;
@@ -19,12 +20,28 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private readonly ISiteBuilderApiContext _apiContext;
         private readonly IAuthenticationHelper _authenticationHelper;
 
-        public PageContext(ISiteBuilderApiContext  apiContext, IAuthenticationHelper authenticationHelper)
+        public PageContext(ISiteBuilderApiContext  apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage)
         {
             _apiContext = apiContext;
             _authenticationHelper = authenticationHelper;
             this.IsEditMode = _apiContext.IsEditMode;
+            IEnumerable<string> values;
+            HandledByProxy = requestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, out values) && values.FirstOrDefault() == "True";
+            values = null;
+            IsSecure = requestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.SSL_HANDLED, out values) && values.FirstOrDefault() == "True";
+            values = null;
+            string origionalUrl = null;
+            if (requestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.SSL_HANDLED, out values))
+            {
+                this.Url = values.FirstOrDefault();
+            }
+
+
+
         }
+        [System.Runtime.Serialization.IgnoreDataMember]   
+        public bool HandledByProxy { get; set; }
+
         public bool IsSecure { get; set; }
         public string PageType { get; set; }
         public string PageTypeId { get; set; }
@@ -139,5 +156,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public string DocumentId { get; set; }
 
         public bool IsEditMode { get; set; }
+
+        public string Url { get; set; }
     }
 }
