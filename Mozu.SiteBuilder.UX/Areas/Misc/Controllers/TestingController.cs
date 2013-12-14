@@ -1,5 +1,7 @@
 ﻿
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Web.Http;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
@@ -96,7 +98,35 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return new RedirectResult(redir ?? "/");
         }
 
-        /// <summary>
+           [System.Web.Http.HttpGet]
+        public ContentResult Echo()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("<pre>");
+            sb.AppendLine();
+            sb.AppendLine("headers");
+            sb.AppendLine("_____________");
+            foreach (var httpRequestHeader in this.Request.Headers )
+            {
+                sb.AppendFormat("{0}:{1}", httpRequestHeader.Key, string.Join(",", httpRequestHeader.Value));
+                sb.AppendLine();
+            }
+             sb.AppendLine();
+            sb.AppendLine("server vars");
+            sb.AppendFormat("{0}:{1}", "manchine name" ,this.HttpContext.Server.MachineName );
+            sb.AppendLine();
+            sb.AppendFormat("{0}:{1}", "version" ,this.GetType().Assembly.GetName().Version  );
+           
+            sb.AppendLine("</pre>");
+               return new ContentResult()
+                      {
+                          Content = sb.ToString(),
+                          ContentType ="text/html"
+                      };
+            //return this.Request.CreateResponse(HttpStatusCode.OK, sb.ToString());
+        }
+
+            /// <summary>
         /// Updates the sitebuildercontext and redirects the 
         /// GET: /_gosite/(siteid)?redir=...&environment=...
         /// </summary>

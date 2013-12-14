@@ -158,6 +158,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             {
                 var ubilBuilder = new UriBuilder(pageContext.Url);
                 ubilBuilder.Scheme = "https";
+                ubilBuilder.Port = 443;
                 actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.MovedPermanently);
                 actionContext.Response.Headers.Location = ubilBuilder.Uri;
 
