@@ -23,6 +23,8 @@
     //  GRID class
 
     Grid = function(element, options) {
+        var me = this;
+
         this.options = $.extend({}, Grid.DEFAULTS, options);
         this.element = $(element);
 
@@ -33,6 +35,12 @@
             .on({
                 drop: function() {
                     Chorizo.editor.drop();
+                },
+                mouseenter: function() {
+                    Chorizo.editor.overGrid(true);
+                },
+                mouseleave: function() {
+                    Chorizo.editor.overGrid(false);
                 }
             })
             .droppable({
@@ -46,6 +54,10 @@
         this.type('grid');
 
         this.rebase();
+    }
+
+    Grid.prototype.hover = function() {
+        return this._hover;
     }
 
     Grid.prototype.type = function(val) {
@@ -472,7 +484,7 @@
         block = $block.mzBlock().data('mozu.mzBlock') 
 
         win.setTimeout(function() {
-            block.triggerDrop()
+            block.triggerDrop();
         }, 50);
 
         return block;

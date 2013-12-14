@@ -244,10 +244,15 @@
             this._hintTarget = null;
         },
 
+        overGrid: function(val) {
+            this._overGrid = val;
+        },
+
         _onMousemove: function(e, ui) {
             var x,
                 y,
-                data;
+                data,
+                grid;
 
             // On track when tragging
             if (!this.dragging()) return;
@@ -257,6 +262,11 @@
 
             x = $doc.scrollLeft() + e.clientX;
             y = $doc.scrollTop() + e.clientY;
+
+            if (!this._overGrid) {
+                this.$hintBar.css('display', 'none');
+                return;
+            }
 
             data = this._target.hint(x, y);
 
@@ -270,7 +280,10 @@
                 y = data.top - 1;
 
             // If showing the same hint in the same location, abort hinting
-            if (this._hintTarget === data.target && this._hintQuadrant === data.quadrant) return;
+            if (this._hintTarget === data.target && this._hintQuadrant === data.quadrant) {
+                this.$hintBar.css('display', 'block');
+                return;
+            }
 
             this._hintTarget = data.target;
             this._hintQuadrant = data.quadrant;
