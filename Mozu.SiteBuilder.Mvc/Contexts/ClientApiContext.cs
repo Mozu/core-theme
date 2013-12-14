@@ -99,6 +99,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 urls["UserService"] = settings.AppSettings("service-url-UserWebApi");
                 urls["CustomerService"] = settings.AppSettings("service-url-CustomerAccountWebApi");
                 urls["OrderService"] = settings.AppSettings("service-url-OrderWebApi");
+                urls["ReturnService"] = settings.AppSettings("service-url-ReturnWebApi");
                 urls["SearchService"] = settings.AppSettings("service-url-ProductSearchWebApi");
                 urls["CmsService"] = settings.AppSettings("service-url-DocumentListWebApi");
                 urls["ReferenceService"] = settings.AppSettings("service-url-ReferenceDataWebApi");

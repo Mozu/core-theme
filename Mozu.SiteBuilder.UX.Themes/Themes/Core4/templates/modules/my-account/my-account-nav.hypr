@@ -18,6 +18,11 @@
             </a>
         </li>
         <li class="mz-scrollnav-item">
+            <a class="mz-scrollnav-link" href="#returnhistory">
+                {{ labels.returns }}
+            </a>
+        </li>
+        <li class="mz-scrollnav-item">
             <a class="mz-scrollnav-link" href="#paymentmethods">
                 {{ labels.paymentMethods }}
             </a>

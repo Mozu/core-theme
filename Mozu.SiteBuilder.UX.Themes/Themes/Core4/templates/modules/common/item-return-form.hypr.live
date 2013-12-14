@@ -6,31 +6,37 @@
       </div>
       <div class="mz-l-formfieldgroup-cell">
         <label>
-          <input type="radio" name="returnType" value="Return" data-mz-value="returnType" checked="checked"> {{ labels.return }} </label>
+          <input type="radio" name="returnType" value="Refund" data-mz-value="rma.returnType" checked="checked"> {{ labels.refund }} </label>
         <label>
-          <input type="radio" name="returnType" value="Replace" data-mz-value="returnType" > {{ labels.replace }} </label>
+          <input type="radio" name="returnType" value="Replace" data-mz-value="rma.returnType" > {{ labels.replace }} </label>
       </div>
     </div>
     <div class="mz-l-formfieldgroup-row">
       <div class="mz-l-formfieldgroup-cell">
-        <label>{{ labels.reasonForReturn }}:</label>
+        <label>{{ labels.reasonForReturn }}<span class="is-required"> *</span>:</label>
       </div>
       <div class="mz-l-formfieldgroup-cell">
-        <select data-mz-value="reason" class="mz-returnform-reason">
-          <option>{{ labels.pleaseSelect }}</option>
-          {% for reason in themeSettings.returnReasons %}
-          <option value="{{ reason }}">{{ reason }}</option>
-          {% endfor %}
+        <select data-mz-value="rma.reason" class="mz-returnform-reason">
+          <option value="">{{ labels.pleaseSelect }}</option>
+          <option value="Damaged">{{ labels.damaged }}</option>
+          <option value="Defective">{{ labels.defective }}</option>
+          <option value="DifferentExpectations">{{ labels.differentExpectations }}</option>
+          <option value="Late">{{ labels.tooLate }}</option>
+          <option value="MissingParts">{{ labels.missingParts }}</option>
+          <option value="NoLongerWanted">{{ labels.noLongerWanted }}</option>
+          <option value="Other">{{ labels.other }}</option>
         </select>
+        <span class="mz-validationmessage" data-mz-validationmessage-for="rma.reason"></span>
       </div>
     </div>
     <div class="mz-l-formfieldgroup-row">
       <div class="mz-l-formfieldgroup-cell">
-        <label>{{ labels.quantityToReturn }}</label>
+        <label>{{ labels.quantityToReturn }}<span class="is-required"> *</span>:</label>
       </div>
       <div class="mz-l-formfieldgroup-cell mz-returnform-quantity">
-        <input type="number" data-mz-value="quantity" min="1" max="{{ model.quantity }}" class="mz-returnform-quantityfield" />
+        <input type="number" data-mz-value="rma.quantity" min="1" max="{{ model.quantity }}" class="mz-returnform-quantityfield" />
         <span class="mz-returnform-quantitylabel">{{ labels.of }} {{ model.quantity }}</span>
+        <span class="mz-validationmessage" data-mz-validationmessage-for="rma.quantity"></span>
       </div>
     </div>
     <div class="mz-l-formfieldgroup-row mz-returnform-optionalcomments">
@@ -38,7 +44,7 @@
         <label>{{ labels.optionalComments }}</label>
       </div>
       <div class="mz-l-formfieldgroup-cell">
-        <textarea class="mz-returnform-optionalcommentsfield" data-mz-value="comments"></textarea>
+        <textarea class="mz-returnform-optionalcommentsfield" data-mz-value="rma.comments"></textarea>
       </div>
     </div>
     <div class="mz-l-formfieldgroup-row mz-returnform-actions">
@@ -47,6 +53,7 @@
       </div>
       <div class="mz-l-formfieldgroup-cell">
         <button class="mz-button" data-mz-action="finishReturnItem">{{ labels.submit }}</button>
+        <button class="mz-button" data-mz-action="cancelReturnItem">{{ labels.cancel }}</button>
       </div>
     </div>
   </div>

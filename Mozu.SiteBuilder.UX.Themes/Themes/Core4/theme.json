@@ -57,19 +57,6 @@
         /* Settings specific to checkout pages */
         "showCheckoutCommentsField": true,
         "requireCheckoutAgreeToTerms": true,
-
-        /* Settings specific to the My Account page */
-        "returnReasons": [
-            'Accidental order',
-            'Better price available',
-            'Missing parts or accessories',
-            'Shipping box or envelope are damaged',
-            'Different from what was ordered',
-            'Defective - does not work properly',
-            'No longer needed/wanted',
-            'Unauthorized purchase',
-            'Different from website description'
-        ]
     },
     /* Page Types: Users will be allowed to create documents of this type in the CMS */
     "emailTemplates": [

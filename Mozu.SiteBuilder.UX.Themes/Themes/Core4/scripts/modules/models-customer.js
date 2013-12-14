@@ -132,7 +132,8 @@
             wishlist: Wishlist,
             editingCard: PaymentMethods.CreditCard,
             editingContact: CustomerContact,
-            orderHistory: OrderModels.OrderCollection
+            orderHistory: OrderModels.OrderCollection,
+            returnHistory: OrderModels.RMACollection
         },
         validation: {
             password: {
@@ -151,11 +152,21 @@
             editingContact: {}
         },
         initialize: function() {
+            var self = this,
+                orderHistory = this.get('orderHistory'),
+                returnHistory = this.get('returnHistory');
             this.get('editingContact').set('accountId', this.get('id'));
-            this.get('orderHistory').lastRequest = {
-                filter: 'CustomerAccountId+eq+"' + this.get('id') + '"+and+OrderNumber+ne+null',
+            orderHistory.lastRequest = {
                 pageSize: 5
             };
+            returnHistory.lastRequest = {
+                pageSize: 5
+            };
+            orderHistory.on('returncreated', function(e, id) {
+                returnHistory.apiGet(returnHistory.lastRequest).then(function () {
+                    returnHistory.trigger('returndisplayed', id);
+                });
+            });
         },
         changePassword: function () {
             var self = this;

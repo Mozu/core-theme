@@ -8,7 +8,8 @@ define([
     "shim!vendor/underscore>_",
     "modules/api",
     "shim!vendor/backbone[shim!vendor/underscore>_=_,jquery=jQuery]>Backbone",
-    "modules/models-messages"], function ($, _, api, Backbone, MessageModels) {
+    "modules/models-messages",
+    "modules/backbone-mozu-validation"], function ($, _, api, Backbone, MessageModels) {
 
         var Model = Backbone.Model,
            Collection = Backbone.Collection;
@@ -34,7 +35,7 @@ define([
             'delete': 'del'
         };
 
-        Backbone.MozuModel = Backbone.Model.extend({
+        Backbone.MozuModel = Backbone.Model.extend(_.extend({}, Backbone.Validation.mixin, {
             constructor: function (conf) {
                 this.helpers = (this.helpers || []).concat(['isLoading', 'isValid']);
                 Backbone.Model.apply(this, arguments);
@@ -325,7 +326,7 @@ define([
 
                 return (options && options.ensureCopy) ? JSON.parse(JSON.stringify(attrs)) : attrs;
             }
-        }, {
+        }), {
             fromCurrent: function () {
                 return new this(require.mozuData(this.prototype.mozuType), { silent: true });
             },
@@ -342,8 +343,7 @@ define([
                     return typeof val === "string" ? val.toLowerCase() === "true" : !!val;
                 }
             }
-        }
-        );
+        });
 
         function flattenValidation(proto, into, prefix) {
             _.each(proto.validation, function (val, key) {

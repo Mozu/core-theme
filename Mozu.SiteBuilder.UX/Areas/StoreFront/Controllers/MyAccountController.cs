@@ -41,16 +41,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
         private readonly IWishlistWebApiClient _wishlistApiClient;
         private readonly ICreditWebApiClient _creditApiClient;
+        private readonly IReturnWebApiClient _returnApiClient;
 
-        public MyAccountController(ICustomerRepository customerRepository, ICustomerAccountWebApiClient customerAccountWebApiClient, IAccountContactRepository accountContactRepository,  IOrderWebApiClient orderWebApiClient, IWishlistWebApiClient wishlistWebApiClient, ICreditWebApiClient creditWebApiClient, IAuthenticationHelper authenticationHelper, ISiteBuilderApiContext apiContext)
+        public MyAccountController(ICustomerRepository customerRepository, ICustomerAccountWebApiClient customerAccountWebApiClient, IAccountContactRepository accountContactRepository,  IOrderWebApiClient orderWebApiClient, IWishlistWebApiClient wishlistWebApiClient, ICreditWebApiClient creditWebApiClient, IReturnWebApiClient returnApiClient, IAuthenticationHelper authenticationHelper, ISiteBuilderApiContext apiContext)
         {
             _customerRepository = customerRepository;
             _customerAccountWebApiClient = customerAccountWebApiClient.CloneWithoutUserClaims();
             _accountContactRepository = accountContactRepository;
             
-            _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
-            _wishlistApiClient = wishlistWebApiClient.CloneWithoutUserClaims();
+            _orderWebApiClient = orderWebApiClient;
+            _wishlistApiClient = wishlistWebApiClient;
             _creditApiClient = creditWebApiClient.CloneWithoutUserClaims();
+            _returnApiClient = returnApiClient;
             _authenticationHelper = authenticationHelper;
             _apiContext = apiContext;
         }
@@ -79,7 +81,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var cardsTask = _customerAccountWebApiClient.GetAccountCards(account.Id);
-            var orderHistoryTask = _orderWebApiClient.GetOrders(0, 5, null, BuildOrderHistoryFilter(account.Id));
+            var orderHistoryTask = _orderWebApiClient.GetOrders(0, 5, null, "OrderNumber ne null");
+            var returnHistoryTask = _returnApiClient.GetReturns(0, 5, null);
             var storeCreditsTask = _creditApiClient.GetCredits(0, 25, null, String.Format("CustomerId eq \"{0}\"", account.Id));
             var wishlistTask = _wishlistApiClient.GetWishlistByName(account.Id, DEFAULT_WISHLIST_NAME);            
             CommerceRuntime.Contracts.Wishlists.Wishlist wishlist = null;
@@ -94,6 +97,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var cards = cardsTask.Result.ReadAsSync();
             //var openOrders = openOrdersTask.Result.ReadAsSync();
             var orderHistory = orderHistoryTask.Result.ReadAsSync();
+            var returnHistory = returnHistoryTask.Result.ReadAsSync();
             var credits = storeCreditsTask.Result.ReadAsSync();
             if (wishlist != null) {
                 var wishlistItemsTask = _wishlistApiClient.GetWishlistItemsByWishlistName(account.Id, DEFAULT_WISHLIST_NAME, null, null, "UpdateDate asc");
@@ -104,6 +108,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var jAccount = JObject.FromObject(account, jSerializer);
 
             jAccount.Add("orderHistory", JObject.FromObject(orderHistory, jSerializer));
+            jAccount.Add("returnHistory", JObject.FromObject(returnHistory, jSerializer));
             jAccount.Add("hasSavedCards", cards.Items.Count > 0);
             jAccount.Add("hasSavedContacts", account.Contacts.Count > 0);
             jAccount.Add("cards", JArray.FromObject(cards.Items, jSerializer));
@@ -131,6 +136,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private string BuildOrderHistoryFilter(int accountId)
         {
             return String.Format("CustomerAccountId eq \"{0}\" and OrderNumber ne null", accountId);
+        }
+        private string BuildReturnHistoryFilter(int accountId)
+        {
+            return String.Format("CustomerAccountId eq \"{0}\"", accountId);
         }
 
         private string BuildWishlistFilter(int accountId)
