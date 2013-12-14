@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Configuration;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using FiftyOne.Foundation.Mobile.Detection;
 using Mozu.Core;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.Themes;
@@ -26,12 +28,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _authenticationHelper = authenticationHelper;
             this.IsEditMode = _apiContext.IsEditMode;
             IEnumerable<string> values;
-            HandledByProxy = requestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, out values) && values.FirstOrDefault() == "True";
-            values = null;
-            IsSecure = requestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.SSL_HANDLED, out values) && values.FirstOrDefault() == "True";
-            values = null;
+           
+            HandledByProxy = IsheaderTrue(Mozu.Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, requestMessage);
+           
+            IsSecure = IsheaderTrue(Mozu.Core.Api.Contracts.Constants.Headers.SSL_HANDLED, requestMessage); 
+       
             string origionalUrl = null;
-            if (requestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.SSL_HANDLED, out values))
+
+            if (requestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
             {
                 this.Url = values.FirstOrDefault();
             }
@@ -39,6 +43,27 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
 
         }
+
+        bool IsheaderTrue(string headerName, HttpRequestMessage requestMessage)
+        {
+            IEnumerable<string> values;
+            if (requestMessage.Headers.TryGetValues(headerName, out values))
+            {
+
+
+                bool ret;
+                var val = values.FirstOrDefault();
+                if (bool.TryParse(val, out ret))
+                {
+                    return ret;
+                }
+
+                return val == "1";
+            }
+            return false;
+            ;
+        }
+       
         [System.Runtime.Serialization.IgnoreDataMember]   
         public bool HandledByProxy { get; set; }
 

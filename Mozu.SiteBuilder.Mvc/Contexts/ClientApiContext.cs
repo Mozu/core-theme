@@ -64,9 +64,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 return sis.ToDictionary(x => x.Id, y => y.InternalUrl);
             }
             var uriBuilder = new UriBuilder(_pageContextLazy.Value.Url);
-            string defaultHost = uriBuilder.Uri.GetComponents(UriComponents.HostAndPort, UriFormat.Unescaped);
+            string defaultHost = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
             uriBuilder.Scheme = "https";
-            string secureHost = uriBuilder.Uri.GetComponents(UriComponents.HostAndPort, UriFormat.Unescaped);
+            uriBuilder.Port = 443;
+            string secureHost = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
             var sslEnabled = _settings.AppSettings("sslEnabled") == "true";
 
             return sis.ToDictionary(x => x.Id, y =>
