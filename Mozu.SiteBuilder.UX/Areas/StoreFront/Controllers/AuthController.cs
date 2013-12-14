@@ -13,6 +13,7 @@ using Mozu.Core.Extensions;
 using Mozu.Customer.Contracts;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
@@ -25,7 +26,7 @@ using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-  
+    [SslOnlyActionFilter]
     public class AuthController : BaseApiController
     {
         

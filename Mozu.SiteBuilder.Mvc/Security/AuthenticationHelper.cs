@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
             StoreFrontAccessTokenCookieName = "sb-sf-at-" + env;
             StoreFrontRefershCookieName = "sb-sf-rt-" + env;
             AdminRefershCookieName = "mzrt-" + env;
-            ForceSSL = settings.AppSettings("forceSSL") == "true";
+            ForceSSL = settings.AppSettings("sslEnabled") == "true";
             CookieProvider = provider;
         }
 
