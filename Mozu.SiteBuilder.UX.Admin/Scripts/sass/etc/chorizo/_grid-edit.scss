@@ -35,9 +35,9 @@
             outline-color: $hint-block-hover-color !important;
             outline-style: solid !important;
         }
-        div {
+        & > div {
             height: 150px;
-            padding-top: 57px;
+            padding-top: 68px;
             text-align: center;
         }
 
