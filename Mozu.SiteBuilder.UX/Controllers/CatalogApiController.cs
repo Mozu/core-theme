@@ -18,7 +18,7 @@ using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 namespace Mozu.SiteBuilder.UX.Controllers
 {
 
-    [InitCmsPageContext]
+    [ContextInitialization]
     [InitSettingsAttribute]
     public class APICatalogController : BaseApiController
     {

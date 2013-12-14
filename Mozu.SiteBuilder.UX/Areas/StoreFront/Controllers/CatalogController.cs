@@ -95,8 +95,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                         }
                                          };
             ViewResult result = View("product", product);
+          
+            await ContextInitilaztionTasks;
 
-            await InitCmsContext();
             var overrideTemplate = PageContext.CmsContext.Page.Document.Get<string>("template");
             if (!string.IsNullOrEmpty(overrideTemplate))
             {
@@ -248,7 +249,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ViewResult result = View(cat);
 
 
-            await InitCmsContext();
+            await ContextInitilaztionTasks;
             var overrideTemplate = PageContext.CmsContext.Page.Document.Get<string>("template");
             if (!string.IsNullOrEmpty(overrideTemplate))
             {

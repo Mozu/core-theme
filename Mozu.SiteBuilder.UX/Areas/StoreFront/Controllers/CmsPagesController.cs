@@ -94,6 +94,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var pc = this.PageContext;
 
+            
+
             pc.CmsContext = new CmsPageContext()
                                 {
                                     Page = new DocumentRequest()
@@ -104,8 +106,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                                 };
 
-            var helper = new CmsHelper(CmsService);
-            await helper.InitCmsPageContext(PageContext);
+
+            await Task.WhenAll(this.ContextInitilaztionTasks);
 
             if (pc.CmsContext.Page.Document  == null)
             {
