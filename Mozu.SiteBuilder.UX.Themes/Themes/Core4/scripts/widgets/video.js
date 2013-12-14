@@ -41,7 +41,8 @@
                 videoId: id
             });
 
-
+            if ($this.data('edit')) return;
+            
             $button = $this.find('.mz-cms-video-play').on('click', function() {
                 $player = $this.find('.mz-cms-video-player').css({
                     opacity: 1,
