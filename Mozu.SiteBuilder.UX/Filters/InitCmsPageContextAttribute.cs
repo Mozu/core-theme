@@ -1,36 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
-using Mozu.SiteBuilder.Mvc.CMS;
+using System.Web.Http.Controllers;
+using System.Web.Http.Filters;
 using Mozu.SiteBuilder.UX.Controllers;
 
 namespace Mozu.SiteBuilder.UX.Filters
 {
-    public class InitCmsPageContextAttribute : Attribute , System.Web.Http.Filters.IActionFilter
+    public class ContextInitializationAttribute : Attribute, IActionFilter
     {
-        public System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage> ExecuteActionFilterAsync(System.Web.Http.Controllers.HttpActionContext actionContext, System.Threading.CancellationToken cancellationToken, Func<System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage>> continuation)
+        public Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
-            var controller = (BaseApiController)actionContext.ControllerContext.Controller;
-            if (controller != null || controller.PageContext != null)
+            var controller = (BaseApiController) actionContext.ControllerContext.Controller;
+            if (controller != null || !controller.ContextInitilaztionTasks.IsCompleted)
             {
-
-                return continuation().ContinueWith(x =>
-                    {
-                        var helper = new CmsHelper(controller.CmsService);
-                        return helper.InitCmsPageContext(controller.PageContext).ContinueWith(y => x.Result).Result;
-
-                    });
-
-
+                return continuation().ContinueWith(x => controller.ContextInitilaztionTasks.ContinueWith(y => x.Result)).Unwrap();
             }
-            else
-            {
-                return continuation();
-            }
-
+            return continuation();
         }
 
         public bool AllowMultiple

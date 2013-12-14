@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
@@ -51,12 +52,17 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             set { _siteBuilderApiContext = value; }
         }
 
-
-        public Task<bool> InitCmsContext()
+        private Task _contextInitTasks;
+        public Task ContextInitilaztionTasks
         {
-
-            var helper = new CmsHelper(this.CmsService);
-            return helper.InitCmsPageContext(this.PageContext);
+            get
+            {
+                if (_contextInitTasks == null)
+                {
+                   _contextInitTasks = Task.WhenAll(new CmsHelper(this.CmsService).InitCmsPageContext(this.PageContext), this.SiteContext.Init(), this.NavigationContext.ASyncGetTree());
+                }
+                return _contextInitTasks;
+            }
         }
 
         private ICmsServiceWrapper _cmsService;

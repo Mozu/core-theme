@@ -190,7 +190,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             return task;
         }
 
-        public void CreateTemplate(DocumentRequest req, out Task<ServiceClientResponse<Document>> task)
+        public void CreateTemplate_deleteme(DocumentRequest req, out Task<ServiceClientResponse<Document>> task)
         {
             if (req.Path == null)
             {
