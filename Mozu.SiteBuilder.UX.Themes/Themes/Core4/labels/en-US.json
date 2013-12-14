@@ -69,7 +69,8 @@
   "edit"                 : "Edit",
   "next"                 : "Next",
   "submit"               : "Submit",
-  "action"               : "Actions",
+  "actions"              : "Actions",
+  "status"               : "Status",
   "comments"             : "Comments",
   "couponCode"           : "Coupon Code",
   "apply"                : "Apply",
@@ -184,11 +185,12 @@
   "shipped"              : "Shipped",
   "trackPackage"         : "Track Package",
   "return"               : "Return",
+  "returns"              : "Returns",
+  "refund"               : "Refund",
   "replace"              : "Replace",
   "returnOrReplace"      : "Return or Replace Items",
   "addNewCard"           : "Add new card",
   "noSavedCards"         : "You have no saved payment methods.",
-  "noPhoneNumber"        : "You have not provided a phone number yet.",
   "confirmDeleteCard"    : "Are you sure you want to delete the credit card {0}?",
   "contactType"          : "Type",
   "primary"              : "Primary",
@@ -203,9 +205,13 @@
   "enterNewAddress"      : "Enter New Address",
   "reasonForReturn"      : "Reason for Return",
   "quantityToReturn"     : "Quantity to Return",
-  "optionalComments"     : "Comments (Optional):",
+  "optionalComments"     : "Comments (Optional)",
   "returnType"           : "Return Type",
-  "returnInfo"           : "Please fill out this form to request a return. You View the <a href=\"/returnpolicy\" target=\"_blank\">Return Policy</a> to learn more.",
+  "returnInfo"           : "Please fill out this form to request a return. Returns are requested per item, rather than per order or shipment. View the <a href=\"/returnpolicy\" target=\"_blank\">Return Policy</a> to learn more.",
+  "returnTotal"          : "Return Total",
+  "returning"            : "Returning",
+  "returnDetails"        : "Return Details",
+  "returnNumber"         : "RMA #",
 
   /* Not Found labels */
   "pageNotFound"         : "Page Not Found",
@@ -244,6 +250,17 @@
   "chooseShippingMethod" : "Please select a shipping method.",
   "didNotAgreeToTerms"   : "You must agree to the terms and conditions",
   "enterProductQuantity" : "Please enter a product quantity above 0",
+  "enterReturnReason"    : "Please select a return reason.",
+  "enterReturnQuantity"  : "Please enter a quantity above 1 to return.",
+  "enterOtherComments"   : "Please enter a comment explaining the reason for this return.",
+  "other"                : "Other (please comment)",
+  "missingParts"         : "Missing parts or accessories",
+  "damaged"              : "Product, box or envelope are damaged",
+  "differentExpectations": "Different from what was expected",
+  "defective"            : "Defective - does not work properly",
+  "noLongerWanted"       : "No longer needed/wanted",
+  "tooLate"              : "Arrived too late",
+
   
   /* Faceting labels */
   "clearAllFilters"      : "Clear All Filters",
@@ -260,5 +277,6 @@
   "fullDesc"             : "Description",
   "properties"           : "Properties",
   "measurements"         : "Measurements",
-  "noImages"             : "no image"
+  "noImages"             : "no image",
+  "more"                 : "more"
 }

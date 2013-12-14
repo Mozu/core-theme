@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-12-12
+ * Mozu JavaScript SDK - v0.2.0 - 2013-12-13
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -1752,7 +1752,7 @@
                         template: "{+orderService}" + genericQueryTpt,
                         defaultParams: {
                             startIndex: 0,
-                            pageSize: 15
+                            pageSize: 5
                         },
                         collectionOf: "order"
                     },
@@ -1997,6 +1997,20 @@
                             includeSelf: true,
                             returnType: "ordernote"
                         }
+                    },
+                    rma: {
+                        create: {
+                            verb: "POST",
+                            template: "{+returnService}"
+                        }
+                    },
+                    rmas: {
+                        template: "{+returnService}" + genericQueryTpt,
+                        defaultParams: {
+                            startIndex: 0,
+                            pageSize: 5
+                        },
+                        collectionOf: "rma"
                     },
                     shipment: {
                         defaults: {

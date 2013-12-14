@@ -1,6 +1,6 @@
 ﻿{% extends "modules/common/order-listing" %}
 {% block order-items %}
         {% for item in model.items %}
-        {% include "modules/my-account/order-history-item-listing" with model=item %}
+        {% include "modules/my-account/order-history-item-listing" with model=item order=model %}
         {% endfor %}
 {% endblock order-items %}

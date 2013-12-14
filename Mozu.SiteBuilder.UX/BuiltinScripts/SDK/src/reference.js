@@ -330,13 +330,8 @@ var ApiReference = (function () {
                 template: '{+customerService}{id}/change-password',
                 includeSelf: true
             },
-            'get-open-orders': {
-                template: '{+orderService}?filter=Status eq "' + CONSTANTS.ORDER_STATUSES.SUBMITTED + '" or Status eq "' + CONSTANTS.ORDER_STATUSES.ACCEPTED + '" or Status eq "' + CONSTANTS.ORDER_STATUSES.PENDING_REVIEW + '" or Status eq "' + CONSTANTS.ORDER_STATUSES.PROCESSING + '" and CustomerAccountId eq "{id}" and OrderNumber ne null',
-                includeSelf: true,
-                returnType: 'orders'
-            },
             'get-orders': {
-                template: '{+orderService}?filter=CustomerAccountId eq "{id}" and OrderNumber ne null',
+                template: '{+orderService}?filter=OrderNumber ne null',
                 includeSelf: true,
                 returnType: 'orders'
             },
@@ -472,6 +467,20 @@ var ApiReference = (function () {
                 includeSelf: true,
                 returnType: 'ordernote'
             }
+        },
+        'rma': {
+            create: {
+                verb: 'POST',
+                template: '{+returnService}'
+            }
+        },
+        'rmas': {
+            template: '{+returnService}' + genericQueryTpt,
+            defaultParams: {
+                startIndex: 0,
+                pageSize: 5
+            },
+            collectionOf: 'rma'
         },
         'shipment': {
             defaults: {

@@ -20,7 +20,6 @@ define(['modules/jquery-mozu','shim!vendor/underscore>_','modules/backbone-mozu'
             this.undelegateEvents();
             this.$el.html(this.template.render({ model: model }));
             this.delegateEvents();
-            console.log('rendered ' + this.templateName);
         }
     });
 

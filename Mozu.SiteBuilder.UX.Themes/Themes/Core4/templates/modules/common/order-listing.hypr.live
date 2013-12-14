@@ -1,6 +1,7 @@
-﻿<div class="mz-orderlisting">
+﻿<div class="mz-orderlisting" data-mz-id="{{ model.id }}">
     <div class="mz-orderlisting-detail">
         <h3 class="mz-orderlisting-date">{{ model.auditInfo.createDate|date("F j, Y") }}</h3>
+        {% block order-details %}
         <dl class="mz-propertylist">
             <dt>{{ labels.orderNumber }}</dt>
             <dd>{{ model.orderNumber }}</dd>
@@ -13,6 +14,7 @@
             {% endif %}
             {% endblock order-shipped-to %}
         </dl>
+        {% endblock order-details %}
     </div>
     <div class="mz-orderlisting-items">
     {% block order-items %}

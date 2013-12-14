@@ -114,6 +114,12 @@
 
     var OrderHistoryView = Backbone.MozuView.extend({
         templateName: "modules/my-account/order-history-list",
+        autoUpdate: [
+            'rma.returnType',
+            'rma.reason',
+            'rma.quantity',
+            'rma.comments'
+        ],
         initialize: function () {
             this.listenTo(this.model, "change:pageSize", _.bind(this.model.changePageSize, this.model));
         },
@@ -123,11 +129,44 @@
             return context;
         },
         startReturnItem: function (e) {
-            var id = $(e.currentTarget).data('mzStartReturn');
-            if (id) {
-                this.returning = id;
+            var $target = $(e.currentTarget),
+                itemId = $target.data('mzStartReturn'),
+                orderId = $target.data('mzOrderId');
+            if (itemId && orderId) {
+                this.returning = itemId;
+                this.model.startReturn(orderId, itemId);
             }
             this.render();
+        },
+        cancelReturnItem: function () {
+            delete this.returning;
+            this.model.clearReturn();
+            this.render();
+        },
+        finishReturnItem: function () {
+            var self = this,
+                op = this.model.finishReturn();
+            if (op) {
+                self.model.isLoading(true);
+                return op.then(function () {
+                    delete self.returning;
+                    self.model.isLoading(false);
+                    self.render();
+                }, function () {
+                    self.isLoading(false);
+                });
+            }
+        }
+    }),
+
+    ReturnHistoryView = Backbone.MozuView.extend({
+        templateName: "modules/my-account/return-history-list",
+        initialize: function () {
+            var self = this;
+            this.listenTo(this.model, "change:pageSize", _.bind(this.model.changePageSize, this.model));
+            this.listenTo(this.model, 'returndisplayed', function (id) {
+                this.$('[data-mz-id="' + id + '"]').ScrollTo({ axis: 'y' });
+            });
         }
     });
 
@@ -261,11 +300,13 @@
 
         var $accountSettingsEl = $('#account-settings'),
             $orderHistoryEl = $('#account-orderhistory'),
+            $returnHistoryEl = $('#account-returnhistory'),
             $paymentMethodsEl = $('#account-paymentmethods'),
             $addressBookEl = $('#account-addressbook'),
             $wishListEl = $('#account-wishlist'),
             $messagesEl = $('#account-messages'),
-            orderHistory = accountModel.get('orderHistory');
+            orderHistory = accountModel.get('orderHistory'),
+            returnHistory = accountModel.get('returnHistory');
 
         window.accountViews = {
             settings: new AccountSettingsView({
@@ -285,6 +326,19 @@
             orderHistoryPageNumbers: new OrderHistoryPageNumbers({
                 el: $orderHistoryEl.find('[data-mz-pagenumbers]'),
                 model: orderHistory
+            }),
+            returnHistory: new ReturnHistoryView({
+                el: $returnHistoryEl.find('[data-mz-orderlist]'),
+                model: returnHistory
+            }),
+            orderHistoryPagingControls: new PagingViews.PagingControls({
+                templateName: 'modules/my-account/order-history-paging-controls',
+                el: $returnHistoryEl.find('[data-mz-pagingcontrols]'),
+                model: returnHistory
+            }),
+            orderHistoryPageNumbers: new OrderHistoryPageNumbers({
+                el: $returnHistoryEl.find('[data-mz-pagenumbers]'),
+                model: returnHistory
             }),
             paymentMethods: new PaymentMethodsView({
                 el: $paymentMethodsEl,
