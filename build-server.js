@@ -1,5 +1,6 @@
 var net = require('net')
 var exec = require('child_process').exec
+var colors = require('colors')
 
 var accept = function(socket) {
 
@@ -26,9 +27,7 @@ var accept = function(socket) {
     console.log('OPEN')
     //socket.pipe(socket)
     
-    socket.write('\nConnected')
-        
-    socket.write('\nStarting build... please wait\n\n')
+    socket.write('first connect open\n')
 }
 
 
@@ -39,7 +38,7 @@ var ops = {
 
         cmd = 'msbuild Mozu.SiteBuilder.sln /p:BuildingInsideVisualStudio=true;Configuration=Debug;Platform="Any CPU"';
 
-        socket.write('\n\t\t> ' + cmd)
+        socket.write(log(cmd))
         child = exec(cmd, {maxBuffer: 200*1024*20}, function(error, stdout, stderr) {
             if (error !== null) {
                 console.log('stderr: ' + stderr)
@@ -61,7 +60,7 @@ var ops = {
 
         cmd = 'nuget restore';
 
-        socket.write('\n\t\t> ' + cmd)
+        socket.write(log(cmd))
         child = exec(cmd, {maxBuffer: 200*1024*20}, function(error, stdout, stderr) {
             if (error !== null) {
                 console.log('stderr: ' + stderr)
@@ -77,6 +76,10 @@ var ops = {
             socket.write(data)   
         })
     }
+}
+
+var log = function(val) {
+    return '\nಠ_ಠ > '.blue + val.green + '\n'
 }
 
 var server = net.createServer(accept)
