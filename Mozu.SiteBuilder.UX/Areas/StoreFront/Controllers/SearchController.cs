@@ -15,7 +15,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    [InitCmsPageContextActionFilter]
+    [ContextInitialization]
     public class SearchController : BaseApiController
     {
         private readonly IProductCategoryRuntimeWebApiClient _catClient;

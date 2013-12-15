@@ -56,6 +56,13 @@ Ext.define('Taco.view.themesettings.Form', {
             fn:function (task) {
                var values = me.getForm().getValues();
 
+                Ext.Object.each(values, function (key, value, object) {
+                    if (Ext.isEmpty(value)) {
+                        delete values[key];
+                    }
+                });
+
+
                 Ext.Ajax.request({
  
                     url: '/admin/app/themesetting/instance/save/' + me.themeInfo.themeId,

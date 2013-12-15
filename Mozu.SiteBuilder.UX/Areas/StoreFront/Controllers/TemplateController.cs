@@ -37,7 +37,7 @@ using ProductOption = Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductOptio
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    [InitCmsPageContextActionFilter]
+    [ContextInitialization]
     public class TemplatesController : BaseApiController
     {
         

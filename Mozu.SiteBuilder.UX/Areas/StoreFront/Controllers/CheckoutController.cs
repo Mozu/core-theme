@@ -34,7 +34,7 @@ using Newtonsoft.Json.Serialization;
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [SslOnlyActionFilter]
-    [InitCmsPageContextActionFilter]
+    [ContextInitialization]
     [NoWarmAuthActionFilter]
     public class CheckoutController : BaseApiController
     {

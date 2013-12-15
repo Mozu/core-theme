@@ -27,7 +27,7 @@ using ProductSearchResult = Mozu.ProductRuntime.Contracts.ProductSearchResult;
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     
-    [InitCmsPageContextActionFilter]
+    [ContextInitialization]
     public class CatalogController : BaseApiController
     {
         private readonly ISiteBuilderApiContext _apiCtx;

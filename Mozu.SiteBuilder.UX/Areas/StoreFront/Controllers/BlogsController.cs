@@ -29,7 +29,7 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
 
-     [InitCmsPageContextActionFilter]
+     [ContextInitialization]
     public class BlogsController : BaseApiController
     {
     

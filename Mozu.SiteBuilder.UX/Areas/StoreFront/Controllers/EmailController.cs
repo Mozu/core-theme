@@ -29,7 +29,7 @@ using Mozu.Customer.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    [InitCmsPageContextActionFilter]
+    [ContextInitialization]
     public class EmailController : CmsPagesController
     {
         private static readonly List<EmailTypeInfo> g_emailTypeInfos;

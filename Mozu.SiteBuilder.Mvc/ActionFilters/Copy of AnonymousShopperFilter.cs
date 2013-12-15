@@ -3,35 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Mozu.Core;
 using Mozu.SiteBuilder.Mvc.CMS;
-
+using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
-    public class InitCmsPageContextActionFilterAttribute : System.Attribute, IActionFilter 
+    public class ContextInitializationAttribute : System.Attribute, IActionFilter 
     {
-
-        public Task<System.Net.Http.HttpResponseMessage> ExecuteActionFilterAsync(System.Web.Http.Controllers.HttpActionContext actionContext, System.Threading.CancellationToken cancellationToken, Func<Task<System.Net.Http.HttpResponseMessage>> continuation)
+        public Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
-            var tasks= continuation().ContinueWith(actionResult =>
-                {
-                    var pc = actionContext.Request.Resolve<Mozu.SiteBuilder.Mvc.Contexts.PageContext>();
-                    if (pc.CmsContext != null && !pc.CmsContext.Initialized)
-                    {
-                        var cmsHelper = actionContext.Request.Resolve<CmsHelper>();
-                        return cmsHelper.InitCmsPageContext(pc).ContinueWith(_ => actionResult.Result );
-                    }
-                    return actionResult;
-                 //   return tcs.Task;
-                });
-            return tasks.Unwrap();
-
+            var controller = (ApiControllerBase)actionContext.ControllerContext.Controller;
+            if (controller != null || !controller.ContextInitilaztionTasks.IsCompleted)
+            {
+                return continuation().ContinueWith(x => controller.ContextInitilaztionTasks.ContinueWith(y => x.Result)).Unwrap();
+            }
+            return continuation();
         }
 
         public bool AllowMultiple

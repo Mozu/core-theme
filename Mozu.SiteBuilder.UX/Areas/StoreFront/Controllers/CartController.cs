@@ -24,7 +24,7 @@ using Product = Mozu.ProductRuntime.Contracts.Product;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    [InitCmsPageContextActionFilter]
+    [ContextInitialization]
     public class CartController : BaseApiController
     {
         private readonly ICartWebApiClient _cartClient;
