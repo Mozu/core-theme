@@ -17,7 +17,7 @@ using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    [InitCmsPageContextActionFilter]
+    [ContextInitialization]
     public class HomeController : BaseApiController
     {
         // private INavigationRuntimeFactory _navigationRuntimeFactory;

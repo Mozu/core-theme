@@ -41,12 +41,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             return task != null;
         }
 
-        public Task<bool> InitCmsPageContext(PageContext  pageContext )
+        public async Task<bool> InitCmsPageContext(PageContext  pageContext )
         {
             CmsPageContext cmsPageContext = pageContext.CmsContext;
             if (cmsPageContext == null)
             {
-                return new TaskCompletionSource<bool>(true).Task;
+                return true;
             }
 
             Task<ServiceClientResponse<Document>> pageTask = null;
@@ -66,9 +66,9 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 tasks.Add(templateTask);
             }
 
-
-            Task<bool> task = Task.WhenAll(tasks.ToArray()).ContinueWith(u =>
-                {
+            await Task.WhenAll(tasks.ToArray()).ConfigureAwait(false);
+           // Task<bool> task = .ContinueWith(u =>
+           //     {
                     if (pageTask != null && pageTask.Result.ResponseMessage.IsSuccessStatusCode)
                     {
                         cmsPageContext.Page.Document = pageTask.Result.ReadAsSync();
@@ -88,7 +88,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                         cmsPageContext.SiteTemplate.PublishState = cmsPageContext.SiteTemplate.Document.PublishState;
                     }
 
-                    tasks.Clear();
+                   // tasks.Clear();
 
                     if (templateTask == null && cmsPageContext.Page.Document != null && cmsPageContext.Page.Document.Properties != null && cmsPageContext.Page.Document.Properties != null)
                     {
@@ -105,8 +105,8 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                             }
                             templateTask = _cmsServiceWrapper.GetByPath2("templates", templateName);
                             //todo....
-
-                            tasks.Add(templateTask);
+                            await templateTask.ConfigureAwait(false);
+                           // tasks.Add(templateTask);
                             //var res = await templateTask;
                             ServiceClientResponse<Document> res = templateTask.Result;
                             if (templateTask.Result.ResponseMessage.IsSuccessStatusCode)
@@ -185,9 +185,9 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
                     cmsPageContext.Initialized = true;
                     return true;
-                });
+           //     });
 
-            return task;
+           
         }
 
         public void CreateTemplate_deleteme(DocumentRequest req, out Task<ServiceClientResponse<Document>> task)

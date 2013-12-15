@@ -26,7 +26,7 @@ using PasswordInfo = Mozu.SiteBuilder.UX.Models.Customers.PasswordInfo;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    [InitCmsPageContextActionFilter]
+    [ContextInitialization]
     [HotOnlyAuthActionFilter]
     [SslOnlyActionFilter]
     public class MyAccountController : BaseApiController

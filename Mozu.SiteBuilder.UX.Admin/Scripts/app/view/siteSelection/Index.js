@@ -47,7 +47,7 @@ Ext.define('Taco.view.siteSelection.Index', {
                                         '</li>',
                                     '</ul>',
                                     '<div class="title-large">{[values.name]}</div>',
-                                    '<img class="thumbnail" src="/_gosite/{[values.id]}?redir=sitethumbnail">',
+                                    '<img class="thumbnail" src="/_gosite/{[values.id]}?transfer=sitethumbnail&environment=staging&ts={[Ext.Date.now()]}" >',
                                 '</li>',
                     '</tpl>',
                 '</ul>',

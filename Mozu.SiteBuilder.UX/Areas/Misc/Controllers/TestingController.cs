@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -126,22 +127,22 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             //return this.Request.CreateResponse(HttpStatusCode.OK, sb.ToString());
         }
 
-            /// <summary>
+        /// <summary>
         /// Updates the sitebuildercontext and redirects the 
         /// GET: /_gosite/(siteid)?redir=...&environment=...
         /// </summary>
-           [System.Web.Http.HttpGet]
-        public async Task<ActionResult> GoSite(int siteId, string redir= null, string environment= "production")
+        [System.Web.Http.HttpGet]
+        public async Task<ActionResult> GoSite(int siteId, string redir = null, string environment = "production", string transfer = null)
         {
             var res = await _wsRepo.GetSite(siteId);
             var site = res.ReadAsAsync().Result;
 
 
-            
+
             //string domainPriority = System.Configuration.ConfigurationManager.AppSettings["gositeDomainPriority"];
             IEnumerable<string> domainList;
             var viewMode = DataViewModeType.NoneSet;
-            switch ((environment??"").ToLower())
+            switch ((environment ?? "").ToLower())
             {
                 case "primary":
                     domainList = site.Domains.OrderBy(s => s.IsPrimary).Select(x => x.DomainName);
@@ -149,29 +150,49 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 case "preview":
                 case "admin-pending":
                 case "staging":
-                    {
-                        viewMode = DataViewModeType.Pending;
-                        domainList = site.Domains.Where(x => x.IsSystemAssigned).Select(x => "admin-pending-view." + x.DomainName);
-                        break;
-                    }
+                {
+                    viewMode = DataViewModeType.Pending;
+                    domainList = site.Domains.Where(x => x.IsSystemAssigned).Select(x => "admin-pending-view." + x.DomainName);
+                    break;
+                }
                 case "editing":
-                    {
-                        viewMode = DataViewModeType.Pending;
-                        domainList = Enumerable.Empty<string>();
-                        break;
-                    }
-                    
+                {
+                    viewMode = DataViewModeType.Pending;
+                    domainList = Enumerable.Empty<string>();
+                    break;
+                }
+
                 default:
                     domainList = site.Domains.Select(x => x.DomainName);
                     break;
             }
 
-        Mozu.SiteBuilder.Mvc.Contexts.SiteContext.Save(site: site.Id, masterCatalog : site.MasterCatalogId, tenant: site.TenantId, isEditMode: false, dataViewMode: viewMode, cookieProvider: _cookies);
 
-            
-            string newHostname = (domainList.FirstOrDefault()) ;
+
+            string newHostname = (domainList.FirstOrDefault());
             bool doHostnameRedirect = _settings.AppSettings("ReverseProxy") == "true" && !String.IsNullOrEmpty(newHostname);
-            
+
+            if (!String.IsNullOrEmpty(transfer))
+            {
+                var redirUrl = "~/" + Uri.UnescapeDataString(transfer).TrimStart('/');
+                
+                var writableContext =(SiteBuilderApiContext) this.SbApiContext;
+                var headers = new NameValueCollection();
+
+                headers[Mozu.Core.Api.Contracts.Constants.Headers.TENANT]=site.TenantId.ToString();
+                headers[Mozu.Core.Api.Contracts.Constants.Headers.MASTER_CATALOG ]= site.MasterCatalogId.ToString();
+                headers[Mozu.Core.Api.Contracts.Constants.Headers.SITE]= site.Id.ToString();
+                headers[Mozu.Core.Api.Contracts.Constants.Headers.DATA_VIEW_MODE]= viewMode.ToString();
+
+
+
+                return new TransferResult(redirUrl)
+                       {
+                           Headers = headers
+                       };
+            }
+            Mozu.SiteBuilder.Mvc.Contexts.SiteContext.Save(site: site.Id, masterCatalog: site.MasterCatalogId, tenant: site.TenantId, isEditMode: false, dataViewMode: viewMode, cookieProvider: _cookies);
+
             if (!String.IsNullOrEmpty(redir))
             {
                 string redirUrl = Uri.UnescapeDataString(redir).TrimStart('/');
@@ -184,7 +205,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 {
                     redirUrl = "~/" + redirUrl;
                 }
-                    
+
 
                 return new RedirectResult(redirUrl);
             }
@@ -196,7 +217,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
 
-        
+
     }
 
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -17,8 +18,10 @@ namespace Mozu.SiteBuilder.Mvc
 
         public TransferResult(string url)
         {
+            this.Method = "GET";
             this.Url = url;
         }
+        public NameValueCollection Headers { get; set; }
 
         public override void ExecuteResult(HttpRequestMessage requestMessage)
         {
@@ -28,7 +31,15 @@ namespace Mozu.SiteBuilder.Mvc
             // MVC 3 running on IIS 7+
             if (HttpRuntime.UsingIntegratedPipeline)
             {
-                httpContext.Server.TransferRequest(this.Url, true);
+                if (Headers != null)
+                {
+                    httpContext.Server.TransferRequest(this.Url, false, this.Method, this.Headers);
+                }
+                else
+                {
+                    httpContext.Server.TransferRequest(this.Url, true);    
+                }
+                
             }
             else
             {
@@ -36,5 +47,7 @@ namespace Mozu.SiteBuilder.Mvc
                 throw new NotImplementedException("doh");
             }
         }
+
+        public string Method { get; set; }
     }
 }

@@ -2,9 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.Caching;
 using System.Text;
 using System.Web;
+using Magnum.Linq;
 using Mozu.Core;
 
 namespace Mozu.SiteBuilder.Mvc
@@ -18,6 +20,12 @@ namespace Mozu.SiteBuilder.Mvc
     }
     public class StorefrontCache : IStorefrontCache
     {
+        private readonly HttpRequestMessage _httpRequestMessage;
+
+        public StorefrontCache(HttpRequestMessage httpRequestMessage)
+        {
+            _httpRequestMessage = httpRequestMessage;
+        }
 
         public object this[string key]
         {
@@ -49,14 +57,17 @@ namespace Mozu.SiteBuilder.Mvc
 
     public class DefaultStorefrontCache : IStorefrontCache
     {
+        private readonly HttpRequestMessage _httpRequestMessage;
         private readonly IApiContext _context;
-      
 
+       
+        public bool Readable { get; set; }
         private System.Collections.Hashtable _inner;
-        public DefaultStorefrontCache( Mozu.Core.IApiContext context )
+        public DefaultStorefrontCache(Mozu.Core.IApiContext context, HttpRequestMessage httpRequestMessage)
         {
             _context = context;
-          
+            _httpRequestMessage = httpRequestMessage;
+            
             var cache = System.Runtime.Caching.MemoryCache.Default;
             var key = typeof (DefaultStorefrontCache).FullName  + context.SiteId;
             _inner = (System.Collections.Hashtable )cache[key];
@@ -70,16 +81,27 @@ namespace Mozu.SiteBuilder.Mvc
                                                               AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(5)
                                                           });
             }
-
+            this.Readable = context.DataViewMode != DataViewModeType.Pending;
+            object tmp;
+            if (_httpRequestMessage.GetRouteData().Values.TryGetValue("controller", out tmp))
+            {
+                var controller = tmp.ToString();
+                this.Readable = DependantResouceControllers.Contains((string) tmp, StringComparer.OrdinalIgnoreCase);
+            }
            
         }
+        static List<string> DependantResouceControllers = new List<string>() { "content", "resource" , "script" };
 
         public object this[string key]
         {
             get
             {
-                 return _inner[key];
-               
+                if (Readable)
+                {
+                    return _inner[key];
+                }
+                return null;
+
             }
             set
             {
