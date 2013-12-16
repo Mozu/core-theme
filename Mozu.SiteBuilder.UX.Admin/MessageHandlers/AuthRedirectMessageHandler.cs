@@ -7,10 +7,30 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Mozu.Core.Settings;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.UX.Admin.MessageHandlers
 {
+    public class SslRedirectMessageHandler : DelegatingHandler
+    {
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+
+            var pc = request.Resolve<PageContext>();
+            if (pc.HandledByProxy && !pc.IsSecure)
+            {
+                var uriBuilder = new UriBuilder(pc.Url);
+                uriBuilder.Port = 443;
+                uriBuilder.Scheme = "https";
+                var message = new HttpResponseMessage(HttpStatusCode.Redirect);
+                message.Headers.Location = uriBuilder.Uri;
+                return Task<HttpResponseMessage>.FromResult(message);
+
+            }
+            return base.SendAsync(request, cancellationToken);
+        }
+    }
     public class AuthRedirectMessageHandler : DelegatingHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)

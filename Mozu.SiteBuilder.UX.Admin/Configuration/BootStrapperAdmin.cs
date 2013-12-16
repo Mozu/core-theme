@@ -36,7 +36,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             base.AddMessageHandlers(httpConfiguration, messageErrorHandler);
 
             httpConfiguration.MessageHandlers.Insert( 0,new HttpContextInjectingMessageHandler());
-            httpConfiguration.MessageHandlers.Add( new AuthRedirectMessageHandler());
+
+            if (Mozu.Core.Settings.MozuConfigurationManager.AppSettings("sslEnabled") == "true")
+            {
+                httpConfiguration.MessageHandlers.Add(new SslRedirectMessageHandler());
+            }
+
             //todo:hypr add filters back
 
             //GlobalFilters.Filters.Add(new AddCorrelationHeaderFilterAttribute());
