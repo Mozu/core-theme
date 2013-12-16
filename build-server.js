@@ -75,6 +75,51 @@ var ops = {
             if (!data) return
             socket.write(data)   
         })
+    },
+    buildSencha: function(socket) {
+                    var cmd,
+            child
+
+        cmd = 'sencha -q --cwd "Mozu.SiteBuilder.UX.Admin\\Scripts" app build';
+
+        socket.write(log(cmd))
+        child = exec(cmd, {maxBuffer: 200*1024*20}, function(error, stdout, stderr) {
+            if (error !== null) {
+                console.log('stderr: ' + stderr)
+                console.log('exec error: ' + error)
+                socket.write('\n\n======ERROR======')
+            }
+
+            socket.write('sencha build complete')
+        })
+
+        child.stdout.on('data', function(data) {
+            if (!data) return
+            socket.write(data)   
+        })
+    },
+
+    buildSass: function(socket) {
+        var cmd,
+            child
+
+        cmd = 'sencha -q --cwd "Mozu.SiteBuilder.UX.Admin\\Scripts" ant sass';
+
+        socket.write(log(cmd))
+        child = exec(cmd, {maxBuffer: 200*1024*20}, function(error, stdout, stderr) {
+            if (error !== null) {
+                console.log('stderr: ' + stderr)
+                console.log('exec error: ' + error)
+                socket.write('\n\n======ERROR======')
+            }
+
+            socket.write('sencha sass complete')
+        })
+
+        child.stdout.on('data', function(data) {
+            if (!data) return
+            socket.write(data)   
+        })
     }
 }
 
