@@ -1283,6 +1283,7 @@
     <Content Include="Themes\Core4\templates\modules\my-account\return-history-item-listing.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\my-account\return-history-return-listing.hypr.live" />
     <Content Include="Themes\Core4\stylesheets\modules\my-account\rma-item.less" />
+    <Content Include="Themes\Core4\stylesheets\widgets\image.less" />
     <None Include="Themes\Core4\templates\modules\product\product-instock-request.hypr.live" />
     <Content Include="Themes\Core4\templates\Widgets\cms\image2.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\cms\video.hypr" />
