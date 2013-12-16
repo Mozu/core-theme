@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -439,6 +439,7 @@
     <Content Include="Themes\Core4\scripts\modules\views-productimages.js" />
     <Content Include="Themes\Core4\scripts\modules\views-messages.js" />
     <Content Include="Themes\Core4\scripts\modules\views-productlists.js" />
+    <Content Include="Themes\Core4\scripts\pages\location.js" />
     <Content Include="Themes\Core4\scripts\pages\search.js" />
     <Content Include="Themes\Core4\scripts\vendor\bootstrap-affix.js" />
     <Content Include="Themes\Core4\scripts\vendor\bootstrap-popover.js" />
@@ -1284,12 +1285,15 @@
     <Content Include="Themes\Core4\templates\modules\my-account\return-history-return-listing.hypr.live" />
     <Content Include="Themes\Core4\stylesheets\modules\my-account\rma-item.less" />
     <Content Include="Themes\Core4\stylesheets\widgets\image.less" />
+    <Content Include="Themes\Core4\templates\modules\location.hypr.live" />
+    <Content Include="Themes\Core4\stylesheets\pages\location.less" />
     <None Include="Themes\Core4\templates\modules\product\product-instock-request.hypr.live" />
     <Content Include="Themes\Core4\templates\Widgets\cms\image2.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\cms\video.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\location\store-locator.hypr" />
     <Content Include="ThemeTemplates\ExtendsCore4\theme.json" />
     <Content Include="Themes\Core4\templates\pages\no-search-results.hypr" />
+    <Content Include="Themes\Core4\templates\pages\location.hypr" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core4\templates\Widgets\misc\instock-request.hypr" />

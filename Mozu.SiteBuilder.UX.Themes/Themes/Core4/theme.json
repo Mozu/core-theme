@@ -182,6 +182,13 @@
             "documentType": "web_page",
             "userCreatable": true,
             "template": "home"
+        }, {
+            "id": "location",
+            "title": "Store Locator",
+            "entityType": "webpage",
+            "documentType": "web_page",
+            "template": "location",
+            "userCreatable": true
         },
         /* catalog types */
         {
