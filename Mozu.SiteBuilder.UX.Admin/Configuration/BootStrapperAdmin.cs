@@ -37,7 +37,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
             httpConfiguration.MessageHandlers.Insert( 0,new HttpContextInjectingMessageHandler());
 
-            if (Mozu.Core.Settings.MozuConfigurationManager.AppSettings("sslEnabled") == "true")
+            httpConfiguration.MessageHandlers.Add(new AuthRedirectMessageHandler());
+            if (Mozu.Core.Settings.MozuConfigurationManager.Settings.CoreSettings.IsSSLValidationEnabled)
             {
                 httpConfiguration.MessageHandlers.Add(new SslRedirectMessageHandler());
             }

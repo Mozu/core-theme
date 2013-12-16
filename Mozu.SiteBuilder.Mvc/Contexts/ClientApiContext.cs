@@ -68,7 +68,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             uriBuilder.Scheme = "https";
             uriBuilder.Port = 443;
             string secureHost = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
-            var sslEnabled = _settings.AppSettings("sslEnabled") == "true";
+            var sslEnabled = _settings.CoreSettings.IsSSLValidationEnabled;
 
             return sis.ToDictionary(x => x.Id, y =>
             {

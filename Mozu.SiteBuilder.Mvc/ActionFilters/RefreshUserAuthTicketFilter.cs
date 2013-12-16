@@ -138,9 +138,9 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     {
         public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
         {
-            
-           
-            var sslEnabled = actionContext.Request.Resolve<ISettings>().AppSettings("sslEnabled") == "true";
+
+
+            var sslEnabled = actionContext.Request.Resolve<ISettings>().CoreSettings.IsSSLValidationEnabled;
            
             if (!sslEnabled)
             {
