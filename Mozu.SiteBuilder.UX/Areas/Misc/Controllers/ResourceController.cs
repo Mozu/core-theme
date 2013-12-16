@@ -559,20 +559,23 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
 
                 template = ProcessSettingsVariables(template, stem);
-                var factory = new EngineFactory();
+                //var factory = new EngineFactory();
 
-                factory.Configuration.Logger = typeof (LessLogger);
-                factory.Configuration.MinifyOutput = !_debug;
-                factory.Configuration.LessSource = typeof (MyLessFileReader);
-
+                //factory.Configuration.Logger = typeof (LessLogger);
+                //factory.Configuration.MinifyOutput = !_debug;
+                //factory.Configuration.LessSource = typeof (MyLessFileReader);
+                //factory.Configuration.DisableUrlRewriting = true;
                 var reader = new MyLessFileReader(this);
 
+             
 
                 var parser = new Parser
                                  {
                                      Importer =
-                                         new Importer(reader)
+                                         new Importer(reader,true, false,false )
+                                        
                                  };
+                
 
                 Ruleset tree = null;
                 try
@@ -587,6 +590,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                
 
                 var env = new Env {Compress = !_debug};
+                
                 //env.AddPlugin(new MyLessPlugin() { Env = env });
                 // var rs = new dotless.Core.Parser.Tree.Ruleset()
                 // env.Frames.Push( new dotless.Core.Parser.Tree.Ruleset);
