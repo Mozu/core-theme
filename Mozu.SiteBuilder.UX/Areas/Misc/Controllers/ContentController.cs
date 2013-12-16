@@ -7,7 +7,9 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 
 using Mozu.Content.Contracts.Clients;
@@ -208,6 +210,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             
 
 
+
             //for local dev testing...
             if (site > -1)
             {
@@ -246,13 +249,32 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                         tpl = GetFromFSCache(context, collection, documentId);
                         if (tpl == null)
                         {
-                            var docContextRes = _docRepo.CloneWithApiContext(c =>
+                          
+                            ServiceClientResponse<StreamContent> docContextRes = null;
+                            Guid guidId;
+                            if (Guid.TryParse(documentId, out guidId))
+                            {
+                                docContextRes = _docRepo.CloneWithApiContext(c =>
                                 {
                                     c.SiteId = context.SiteId;
                                     c.MasterCatalogId = context.MasterCatalogId;
                                     c.TenantId = context.TenantId;
                                     c.UserClaims = null;
                                 }).GetDocumentContent(collection, documentId).Result;
+                            }
+                            else
+                            {
+                                docContextRes = _docRepo.CloneWithApiContext(c =>
+                                {
+                                    c.SiteId = context.SiteId;
+                                    c.MasterCatalogId = context.MasterCatalogId;
+                                    c.TenantId = context.TenantId;
+                                    c.UserClaims = null;
+                                }).GetTreeDocumentContent(collection, documentId).Result;
+                            }
+                         
+
+                          
                             if (docContextRes.ResponseMessage.IsSuccessStatusCode)
                             {
                                 tpl = AddToFSCache(context, collection, documentId, docContextRes.ResponseMessage.Content);
