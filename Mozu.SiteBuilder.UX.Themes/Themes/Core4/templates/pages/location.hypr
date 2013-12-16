@@ -1,0 +1,9 @@
+{% extends "page" %}
+
+
+
+{% block body-content %}
+
+    <div>Location, Location, Location</div>
+
+{% endblock body-content %}
