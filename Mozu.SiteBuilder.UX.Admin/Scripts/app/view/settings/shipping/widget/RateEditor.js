@@ -30,6 +30,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
         }
         
         me.title = (this.isCreate) ? this.createTitle : this.editTitle;
+        me.amountField = null;
         
         this.form = Ext.create('Taco.core.ux.form.Form', {
             requireDirty: false,
@@ -49,7 +50,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
                 layout: "column",
                 items: [{
                     xtype: "radiogroup",
-                    fieldLabel: "Flat Rate",
+                    fieldLabel: "Custom Rate Type",
                     flex: 1,
                     //columnWidth: .5,
                     name: "typeGroup",
@@ -58,23 +59,30 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
                     },
                     columns: 1,
                     items: [
-                        { xtype: "radiofield", boxLabel: "Per Item", inputValue: "CUSTOM_FLAT_RATE_PER_ITEM_EXACT_AMOUNT", id: "radio1", name: "type" },
-                        { xtype: "radiofield", boxLabel: "Per Order", inputValue: "CUSTOM_FLAT_RATE_PER_ORDER_EXACT_AMOUNT", id: "radio2", name: "type" }
-                    ]
+                        { xtype: "radiofield", boxLabel: "Flat Rate Per Item", inputValue: "CUSTOM_FLAT_RATE_PER_ITEM_EXACT_AMOUNT", id: "radio1", name: "type" },
+                        { xtype: "radiofield", boxLabel: "Flat Rate Per Order", inputValue: "CUSTOM_FLAT_RATE_PER_ORDER_EXACT_AMOUNT", id: "radio2", name: "type" },
+                        { xtype: "radiofield", boxLabel: "Percentage of Order", inputValue: "CUSTOM_PERCENTAGE_PER_ORDER", id: "radio3", name: "type" }
+                    ],
+                    listeners: {
+                        change: function (field, newValue, oldValue) {
+                            //if (me.amountField) {
+                            //    me.amountField.labelEl.update(newValue);
+                            //}
+                        }
+                    }
                 }]
             }, {
-                xtype: 'currencyfield',
+                xtype: 'numberfield',
                 name: 'amount',
                 fieldLabel: 'Amount',
                 allowBlank: false,
-                selectOnFocus: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false,
                 width: 160
             }, {
                 xtype: 'taco-countryfield',
                 name: 'configuredCountries',
-                fieldLabel: 'Countries',
-                allowBlank: false,
-                anchor:"100%"
             }]
         });
 
@@ -83,7 +91,8 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
         this.form.getForm().setValues(me.record.getData());
 
         this.callParent(arguments);
-        
+        //this.amountField = this.form.findField('amount');
+        //window.amountField = this.amountField;
         this.on({
             save: {
                 scope: this,

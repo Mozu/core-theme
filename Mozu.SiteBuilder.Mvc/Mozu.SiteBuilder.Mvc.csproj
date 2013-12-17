@@ -291,9 +291,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Reference.Contracts.1.2.0.1\lib\Mozu.Reference.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ShippingAdmin.Contracts, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.ShippingAdmin.Contracts, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.2.0.1\lib\Mozu.ShippingAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.3.0-dev001\lib\Mozu.ShippingAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
