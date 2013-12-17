@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
+using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.ProductAdmin.Contracts.Clients;
@@ -49,7 +50,49 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
-     
+        class PreviewContext : NDjango.Interfaces.IContext
+        {
+
+            public bool Autoescape
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            public Microsoft.FSharp.Core.FSharpOption<Type> ModelType
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            public string Translate(string value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public NDjango.Interfaces.IContext WithAutoescape(bool value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public NDjango.Interfaces.IContext WithModelType(Type value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public NDjango.Interfaces.IContext add(Tuple<string, object> value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public NDjango.Interfaces.IContext remove(string value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Microsoft.FSharp.Core.FSharpOption<object> tryfind(string value)
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         [HttpPost()]
         public object  Preview( WidgetPreviewData wrd )
@@ -104,13 +147,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     var viewContext = new HyprViewContext(this.Request  , new ViewDataDictionary() {Model = wrd});
 
                     view.Render(viewContext, tw);
+
+                    DebugScriptsTag.RenderRequiresForWidgetPreview(tw, this.HttpContext);
+                  
                 }
                 else
                 {
                     throw new Exception("can't find template " + def.DisplayTemplate);
                 }
 
-
+                tw.Flush();
                 wrd.Output = tw.GetStringBuilder().ToString();
 
 

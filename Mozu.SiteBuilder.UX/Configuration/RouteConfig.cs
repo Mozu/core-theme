@@ -140,12 +140,15 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "product/configure",
                 new {controller = "Catalog", action = "Configure"});
 
-           
+
+            
 
             routes.MapHttpRoute(
                 "StoreFront_checkout",
                 "checkout/{orderId}/{action}",
-                new {controller = "Checkout", action = "Index"});
+                new { controller = "Checkout", action = "Index", orderId = RouteParameter.Optional });
+
+            
 
             routes.MapHttpRoute(
                 "StoreFront_cart",

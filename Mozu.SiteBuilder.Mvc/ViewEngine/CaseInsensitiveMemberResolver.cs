@@ -13,12 +13,16 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
     public class CaseInsensitiveMemberResolver : IMemberResolver
     {
-        private static ConcurrentDictionary<Type, Tuple<PropertyInfo[], Dictionary<string, MethodInfo[]>>> _lookupDic = new ConcurrentDictionary<Type, Tuple<PropertyInfo[], Dictionary<string, MethodInfo[]>>>();
+        private static ConcurrentDictionary<Type, MemberAccessors> _lookupDic = new ConcurrentDictionary<Type, MemberAccessors>();
 
 
-        private static Tuple<PropertyInfo[], Dictionary<string, MethodInfo[] >> Doit(Type t)
+        private static MemberAccessors Doit(Type t)
         {
+           
+
             var dic = new Dictionary<string, MethodInfo[]>(StringComparer.OrdinalIgnoreCase);
+
+
             var props = t.GetProperties(BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Instance).Where(x => x.CanRead );
             
             foreach (var g in props.Where(x => x.GetIndexParameters().Length == 0).GroupBy(x=> x.Name ))
@@ -27,8 +31,29 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
             }
 
-            return new Tuple<PropertyInfo[], Dictionary<string, MethodInfo[]>>(props.Where(x => x.GetIndexParameters().Length > 0).ToArray(), dic);
+
+
+
+            var containsKey = t.GetMethods(BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.Public).FirstOrDefault(x => x.Name == "ContainsKey" && x.GetParameters().Count() == 1);
+
+
             
+
+            return new MemberAccessors()
+                   {
+                       PropertyDictionary = dic,
+                       Indexers = props.Where(x => x.GetIndexParameters().Length > 0).ToArray(),
+                       ContainsKey = containsKey
+                   };
+
+            
+        }
+
+        public class MemberAccessors
+        {
+            public Dictionary<string, MethodInfo[]> PropertyDictionary { get; set; }
+            public PropertyInfo[] Indexers { get; set; }
+            public MethodInfo  ContainsKey  { get; set; }
         }
        
         public static  object CleanJson(object val)
@@ -143,7 +168,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             var lookup = _lookupDic.GetOrAdd(container.GetType(), Doit);
             MethodInfo[] mis;
-            if (lookup.Item2.TryGetValue(memberName, out mis))
+            if (lookup.PropertyDictionary.TryGetValue(memberName, out mis))
             {
                 for (int i = 0; i < mis.Length; i++)
                 {
@@ -164,11 +189,12 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 }
                 
             }
-            for (int i = 0; i < lookup.Item1.Length ; i++)
+           
+            for (int i = 0; i < lookup.Indexers.Length ; i++)
             {
                 try
                 {
-                    Type paramType = lookup.Item1[i].GetIndexParameters()[0].ParameterType;
+                    Type paramType = lookup.Indexers[i].GetIndexParameters()[0].ParameterType;
                     object param = null;
                     if (paramType == typeof (string))
                     {
@@ -189,9 +215,22 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                     {
                         throw new Exception("tell phipps 1 " + paramType);
                     }
+
+
                     if (param != null)
                     {
-                        return new FSharpOption<object>(CleanJson(lookup.Item1[i].GetMethod.Invoke(container, new object[] { param })));    
+                     //   bool contanisKey = true;
+                        if (lookup.ContainsKey != null && lookup.ContainsKey.GetParameters()[0].ParameterType == paramType)
+                        {
+                            bool containsKey = (bool) lookup.ContainsKey.Invoke(container, new object[] {param});
+                            if (!containsKey)
+                            {
+                                continue;
+                            }
+                        }
+
+
+                        return new FSharpOption<object>(CleanJson(lookup.Indexers[i].GetMethod.Invoke(container, new object[] { param })));    
                     }
                     
                 }
