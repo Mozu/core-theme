@@ -57,9 +57,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 //}
                 List<Category> categories = new List<Category>();
+                var client = _categoriesClient.CloneWithApiContext(x =>
+                {
+                    x.CatalogId = null;
+                    x.SiteId = null;
+                });
                 while (true)
                 {
-                    var cats = (await _categoriesClient.GetCategories(startIndex: start, pageSize: 600)).ReadAsSync();
+                    var cats = (await client.GetCategories(startIndex: start, pageSize: 600)).ReadAsSync();
                     categories.AddRange(Mapper.Map<List<Category>>(cats.Items));
                     start = cats.PageSize + cats.StartIndex;
                     if (cats.TotalCount <= start )

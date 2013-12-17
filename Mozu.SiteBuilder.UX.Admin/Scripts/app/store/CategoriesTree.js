@@ -33,7 +33,7 @@ Ext.define('Taco.store.CategoriesTree', {
         }
 
         options = Ext.apply({
-            siteId: me.siteId
+            catalogId: me.catalogId
         }, options);
 
         return me.callParent([options]);
@@ -52,7 +52,7 @@ Ext.define('Taco.store.CategoriesTree', {
 
 
         options = Ext.apply({
-            siteId: siteId
+            catalogId: catalogId
         }, options);
 
         return me.callParent([options]);

@@ -10,10 +10,15 @@ Ext.define('Taco.core.data.CategoryTreeProxy', {
    
     alias: 'proxy.categorytree',
     getData: function () {
-        return this.data;
+        var mcId = Taco.app.context.getMasterCatalogId() || -1;
+
+        return (this.data || {})[mcId];
     },
     setData: function (data) {
-        this.data = data;
+        var mcId = Taco.app.context.getMasterCatalogId() || -1;
+        this.data = this.data || {};
+        
+        this.data[mcId] = data;
     },
 
     read: function (operation, callback, scope) {
@@ -87,6 +92,9 @@ Ext.define('Taco.core.data.CategoryTreeProxy', {
                         if (siteId) {
                             catalogId = Taco.app.context.findSite(siteId).getCatalogId();
                         } 
+                    }
+                    if (!catalogId) {
+                        catalogId = Taco.app.context.getCatalogId();
                     }
                     if (catalogId) {
                         jsonData = Ext.JSON.decode(data);
