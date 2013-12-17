@@ -18,7 +18,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * @property {String} [currentFilterString={}]
      */
     currentFilterString: '{}',
-    initialValue: null,
+
     /**
      * @cfg {String} [defaultFieldName="keyword"]
      * The key or fieldName to use for textfield input without a corresponding field in the form.
@@ -26,8 +26,14 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * understands to be a generic or catch-all field.
      */
     defaultFieldName: 'keyword',
+
     initFromStateManager:true,
+
+    initialValue: null,
+
+    height: 30,
     layout: 'hbox',
+    msgTarget: 'qtip',
 
     initComponent: function () {
         var form;
@@ -77,10 +83,8 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             }];
 
         this.callParent(arguments);
-        
 
         form = this.getAdvancedForm();
-
 
         form.getForm().getFields().each(function (field) {
             field.on({
