@@ -16,9 +16,10 @@
                       <dl class="mz-propertylist">
                         {% for bundledProduct in item.product.bundledProducts %}
                         <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
-                        <dd>{{ bundledProduct.content.productName }} ({{ bundledProduct.quantity }})</dd>
+                        <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
                         {% endfor %}
                       </dl>
+                      {% endif %}
                     </td>
                     <td>{{ item.quantity }}</td>
                     <td><span class="mz-ordersummary-price{% if item.discountTotal > 0 %} mz-strikethrough{% endif %}">{{ item.unitPrice.baseAmount|currency }}</span></td>
