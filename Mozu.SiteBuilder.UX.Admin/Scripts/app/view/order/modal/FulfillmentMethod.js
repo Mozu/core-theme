@@ -211,36 +211,6 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
         me.saveButton.disable();
         
 
-        
-
-        /*
-        this.on({
-            save: {
-                scope: this,
-                fn: 'save'
-            }
-        });
-
-        this.storeCreditPanel.on({
-           validitychange: {
-               scope: this,
-               fn: 'checkValidity'
-           } 
-        });
-
-        this.grid.on({
-           edit: {
-                scope: this,
-                fn: 'checkValidity'
-            },
-            viewready: {
-                scope: this,
-                fn: 'checkValidity'
-            }
-        });
-    
-        this.primaryAction = this.down('#primaryAction');
-        */
     },
     
     initUI: function () {
@@ -400,38 +370,5 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
 
         
 
-
-
-        /*
-
-        if (this.creditCardRadio.getValue()) {
-            this.store.each(function (item) {
-                if (item.get('amountToRefund') > 0) {
-                    payments.push({
-                        orderId: this.order.getId(),
-                        returnId: this.record.getId(),
-                        paymentType: 'CreditCard',
-                        amount: item.get('amountToRefund'),
-                        paymentId: item.get('id')
-                    });
-                }
-            }, this);
-        } else {
-            //this.storeCreditPanel.getValues()['refundAmount']  
-            payments.push({
-                orderId: this.order.getId(),
-                returnId: this.record.getId(),
-                paymentType: 'StoreCredit',
-                amount: this.storeCreditPanel.getValues()['refundAmount']
-            });
-        }
-        
-        this.record.performPaymentAction(payments, {
-            success: function () {
-                // me.setLoading(false, me.body);
-            }
-        });
-
-        */
     }
 });
