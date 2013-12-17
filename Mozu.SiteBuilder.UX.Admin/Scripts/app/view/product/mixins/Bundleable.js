@@ -158,7 +158,7 @@ Ext.define('Taco.view.product.mixins.Bundleable', {
         
         //if there is no productUsageValue Selected need to ignore the stuff above and disable everything except general subform for the globale tab;
         
-        if(!productUsageValue || productUsageValue=="") {
+        if(!value || value=="") {
             this.disableBundling();
             viewConfig = {
                 general: true,
