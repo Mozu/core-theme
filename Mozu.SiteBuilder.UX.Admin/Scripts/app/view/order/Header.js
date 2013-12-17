@@ -33,7 +33,7 @@ Ext.define('Taco.view.order.Header', {
             'created: {createDate:date("F j, Y  g:i a")}',
         
             '<tpl if="updateDate">',
-                '| {updated: updateDate:date("F j, Y  g:i a")}',
+                '| updated: {updateDate:date("F j, Y  g:i a")}',
             '</tpl>',
             '<tpl if="ipAddress">',
                 ' | IP address: {ipAddress}',
