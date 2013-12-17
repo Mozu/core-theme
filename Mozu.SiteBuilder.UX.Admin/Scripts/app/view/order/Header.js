@@ -30,22 +30,20 @@ Ext.define('Taco.view.order.Header', {
             '<div>Lifetime Value: <strong>{[Ext.util.Format.usMoney(values.totalSpent || 0)]}</strong></div>',
         '</div>',
         '<div class="taco-order-detail-header-section origin-data">',
-            'created: {createDate:date("F j, Y  g:i a")}',
+            'Created: {createDate:date("F j, Y  g:i a")}',
         
             '<tpl if="updateDate">',
-                '| updated: {updateDate:date("F j, Y  g:i a")}',
+                ' | Updated:{updateDate:date("F j, Y  g:i a")}',
             '</tpl>',
+        
             '<tpl if="ipAddress">',
                 ' | IP address: {ipAddress}',
             '</tpl>',
         
             '<tpl if="channelName">',
-                ' | <span class="origin-data-item"> Channel: {channelName}</span>',
+                '<span style="float:right;" class="origin-data-item"> Channel: {channelName}</span>',
             '</tpl>',
         
-            '<tpl if="siteName">',
-                ' | <span class="origin-data-item"> Site: {siteName}</span>',
-            '</tpl>',
             
         '</div>',
         '<tpl if="customerNote">',

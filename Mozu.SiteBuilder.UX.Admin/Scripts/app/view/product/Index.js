@@ -7,7 +7,8 @@ Ext.define('Taco.view.product.Index', {
     requires: [
         'Taco.model.Product',
         'Taco.store.Products',
-        'Taco.view.product.AdvancedSearchForm'],
+        'Taco.view.product.AdvancedSearchForm'
+    ],
 
     typeName: 'Product',
     modelName: 'Taco.model.Product',
@@ -153,7 +154,7 @@ Ext.define('Taco.view.product.Index', {
                 dataIndex: "productUsage",
                 text: 'Product usage',
                 hidden: true,
-                sortable: false,
+                sortable: false
                 
             },
         {

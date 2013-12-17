@@ -209,7 +209,6 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     '</div>',
                     {
                         isEditable: function (values) {
-                            return true;
                             return me.getEditMode();
                         }
                     }
@@ -221,12 +220,15 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
                                 
                                 var editMode = view.ownerCt.editMode,
-                                    fulfillmentMethod = e.target.getAttribute("fulfillmentMethod")
+                                    fulfillmentMethod = e.target.getAttribute("fulfillmentMethod"),
+                                    orderRecord = me.record
+
+                                
 
                                 // if user clicks the fulfillment method link. open the fulfillment Method Selector;
-                                //if (editMode && fulfillmentMethod) {
-                                    me.editFulfillmentMethod(record);
-                                //}
+                                if (editMode && fulfillmentMethod) {
+                                    me.editFulfillmentMethod(record,orderRecord);
+                                }
 
                                 if (!editMode || e.target.tagName != "A") {
                                     return;
@@ -1265,15 +1267,18 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         });
     },
     
-    editFulfillmentMethod: function(record) {
+    editFulfillmentMethod: function(orderItemRecord, orderRecord) {
         var me = this,
             editor;
+        
         editor = Ext.create('Taco.view.order.modal.FulfillmentMethod', {
-            record: record,
+            record: orderItemRecord,
+            orderRecord: orderRecord,
             listeners: {
                 save: {
-                    fn: function(data) {
+                    fn: function(view, data) {
                         
+
                     },
                     scope:me
                 }

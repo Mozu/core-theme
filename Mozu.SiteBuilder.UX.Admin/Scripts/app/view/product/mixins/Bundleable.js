@@ -71,7 +71,7 @@ Ext.define('Taco.view.product.mixins.Bundleable', {
                 options: true,
                 properties: true,
                 extras: true,
-                shipping: true,
+                shipping: true
             });
         }
 
