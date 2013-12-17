@@ -60,7 +60,7 @@ Ext.define('Taco.model.LocationPickup', {
         type: 'ajaxproxy',
 
         api: {
-            read: '/admin/Scripts/app/mocks/locationPickup.json',
+            read: '/admin/Scripts/app/mocks/locationPickup.json'
             //read: '/admin/app/locationPickup/list'
         },
         reader: {

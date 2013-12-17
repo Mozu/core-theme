@@ -1106,6 +1106,8 @@
     <Content Include="PreDeploy.ps1" />
     <Content Include="PostDeploy.ps1" />
     <Content Include="Scripts\app\mocks\locationPickup.json" />
+    <Content Include="Scripts\sass\src\view\order\modal\FulfillmentMethod.scss" />
+    <Content Include="Scripts\sass\src\view\order\widget\LocationPickupGrid.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />

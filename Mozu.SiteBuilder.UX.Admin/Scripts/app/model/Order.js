@@ -1229,7 +1229,53 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
     
-    
+    /**
+     * service call to edit an order item. specificallly edit of fulfillmentMethod
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                orderId: "987654321",                
+                orderItems: [
+                    {
+                        ... order item entity you want to edit  ...
+                        This will typically contain modified fulfillment method
+                    }
+                ]
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     *
+     */
+    editOrderItemFulfillmentMethod: function (config) {
+        var me = this;
+
+        config.errorMsg = "Error changing fulfillment method";
+
+        me.addErrorHandling(config);
+       
+        Ext.apply(config, {
+            url: '/admin/app/order/items/editfulfillmentmethod',
+            params: { 'draft': me.get('isDraft') },
+            method: "POST"
+        });
+
+        
+        Ext.Ajax.request(config);
+    },
 
     /**
      * service call to add order items

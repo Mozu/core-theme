@@ -19,25 +19,17 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
     },
     initComponent: function () {
         var me = this;
-        
-        
 
 
+        
+        
         Taco.model.SiteShippingSettings.load(123, {
             success: function (record, o) {
-                
                 me.shippingLocationCode = record.get("shippingLocationCode");
                 me.initUI();
             },
-            failure: function () {
-
-            },
             scope: this
         });
-
-        
-        
-
 
         me.directShipRadio = Ext.create('Ext.form.field.Radio', {
             name: 'fulfillmentMethod',
@@ -50,9 +42,17 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
                     fn:function(field, newValue, oldValue, eOpts) {
                         if (newValue) {
                             me.getLayout().setActiveItem(me.directShipPanel);
-
+                            me.saveButton.enable();
                         } else {
+                            
                             me.getLayout().setActiveItem(me.inStorePickupPanel);
+                            
+                            if (me.inStorePickupPanel.getSelectionModel().getSelection().length) {
+                                me.saveButton.enable()
+                            } else {
+                                // if there is nothing currently selected then disable the save button;
+                                me.saveButton.disable();
+                            }
                         }
                     },
                     scope:me
@@ -97,33 +97,77 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
 
         this.directShipLocationPanel = Ext.create('Ext.container.Container', {
             title: "Direct Ship Location",
-            style:"border:1px solid #ccc; padding:19px",
+            
+            cls: "taco-directshiplocationpanel",
             tpl: [
-                '<div>name:{name}</div>',
-                '<div>Description:{description}</div>',
-                '<div>Code:{code}</div>',
-                '<div>Address:{address1} {address2} {address3} {address4} {cityOrTown} {stateOrProvince} {postalOrZipCode} {countryCode} </div>',
-                '<div>Phone Number:{phone}</div>',
-                '<div>Shipping Origin Contact:{shippingOriginContact}</div>'
-            ]
-            //,data: locationData
+                '<tpl if="isLoading">',
+                    'Loading...',
+                '<tpl else>',
+                    '<div>Location Name: {name}</div>',
+                    '<div>Description: {description}</div>',
+                    '<div>Code: {code}</div>',
+                    '<div>Address:', 
+                        '<div class="address">',
+                            '<tpl if="address.address1">{address.address1} <br/></tpl>',
+                            '<tpl if="address.address2">{address.address2} <br/></tpl>',
+                            '<tpl if="address.address3">{address.address3} <br/></tpl>',
+                            '<tpl if="address.address4">{address.address4} <br/></tpl>',
+                            '{address.cityOrTown} {address.stateOrProvince} {address.postalOrZipCode} {address.countryCode}',
+                        '</div>',
+                    '</div>',
+
+                    '<tpl if="phone">',
+                        '<div>Phone Number: {phone}</div>',
+                    '</tpl>',
+                
+                    '<div>Shipping Origin Contact:',
+                        '<div class="shipping-origin-contact">',
+                            '<tpl if="shippingOriginContact.comapnyOrOrganization">',
+                                '<div>Company: {shippingOriginContact.comapnyOrOrganization}</div>',
+                            '</tpl>',
+                            '<tpl if="shippingOriginContact.firstName ||shippingOriginContact.middleNameOrInitial || shippingOriginContact.lastNameOrSurname ">',
+                                '<div>Name: {shippingOriginContact.firstName} {shippingOriginContact.middleNameOrInitial} {shippingOriginContact.lastNameOrSurname}</div>',
+                            '</tpl>',
+                            '<tpl if="shippingOriginContact.email">',
+                                '<div>Email: {shippingOriginContact.email}</div>',
+                            '</tpl>',
+                            '<tpl if="shippingOriginContact.phoneNumber">',
+                                '<div>Phone Number: {shippingOriginContact.phoneNumber}</div>',
+                            '</tpl>',
+                        '</div>',
+                    '</div>',
+                '</tpl>'
+            ],
+            data: {
+                isLoading: true
+            }
         });
-        
+
+        //this.directShipLocationPanel.mask("Loading");
         
 
         this.directShipInventoryPanel = Ext.create('Ext.container.Container', {
             title: "Inventory at this location",
-            style: "border:1px solid #ccc; padding:19px;border-left-width:1px !important",
+            cls: "taco-directshipinventorypanel",
             margin:"0 0 0 19",
             width: 200,
             dock:'right',
             tpl: [
-                '<div>Available: {stockAvailable}</div>',
-                '<div>On Reserve: {stockReserved}</div>',
-                '<div>On Hand: {stockOnHand}</div>'
-            ]
-            //,data: locationInventoryData
+                '<tpl if="isLoading">',
+                    'Loading...',
+                '<tpl else>',
+                    '<div>Available: {stockAvailable}</div>',
+                    '<div>On Reserve: {stockReserved}</div>',
+                    '<div>On Hand: {stockOnHand}</div>',
+                '</tpl>'
+            ],
+            data: {
+                isLoading:true
+            }
         });
+        
+        
+
         me.layout = "card";
 
         this.directShipPanel = Ext.create('Ext.panel.Panel', {
@@ -141,6 +185,13 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
 
         
         this.inStorePickupPanel = Ext.create('Taco.view.order.widget.LocationPickupGrid');
+        this.inStorePickupPanel.on('selectionchange',function(grid, selected) {
+            if (selected.length) {
+                me.saveButton.enable();
+            } else {
+                me.saveButton.disable();
+            }
+        })
         
         me.layout = 'card';
         me.deferredRender = true
@@ -154,6 +205,11 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
         me.activeItem = (me.record.get("fulfillmentMethod") == "Ship") ? 0 : 1;
         
         me.callParent(arguments);
+        
+
+        me.saveButton = me.down('#primaryAction');
+        me.saveButton.disable();
+        
 
         
 
@@ -196,7 +252,7 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
             
             Taco.model.Location.load(me.shippingLocationCode, {
                 success: function (record, o) {
-                    me.locationData = record;
+                    me.locationData = record.data;
                     me.initUI();
                 },
                 failure: function () {
@@ -281,13 +337,71 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
             stockOnHand: 100
         };
         
-        this.directShipLocationPanel.update(locationData);
-        this.directShipInventoryPanel.update(locationInventoryData);
+        this.directShipLocationPanel.update(me.locationData);
+        this.directShipInventoryPanel.update(me.locationInventoryData);
+
+        me.saveButton.enable();
     },
     
-    save: function () {
-        var me = this
+
+    primaryHandler: function () {
+        var me = this,
+            fullfillmentLocationCode="";
         
+        if (this.fireEvent('beforesave', this) !== false) {
+
+            
+            var fulfillmentMethod = (me.inStorePickupRadio.checked) ? "Pickup" : "Ship";
+            var selectedLocation = this.inStorePickupPanel.getSelectionModel().getSelection();
+            if (me.inStorePickupRadio.checked && selectedLocation.length) {
+               
+                selectedLocation = selectedLocation[0];
+                
+                fullfillmentLocationCode = selectedLocation.get("code");
+            }            
+
+            
+            
+            
+            me.record.set("fulfillmentMethod", fulfillmentMethod);
+            me.record.set("fullfillmentLocationCode", fullfillmentLocationCode);
+
+            var orderId = me.orderRecord.get("id");
+
+
+            
+            me.orderRecord.editOrderItemFulfillmentMethod({
+                jsonData: {
+                    orderId: orderId,
+                    orderItems: [
+                        Ext.clone(me.record.data)
+                    ]
+                },
+                
+                success: function (response) {
+                    // success handling here
+                    var json = Ext.decode(response.responseText, true);
+                    if (!json || !json.success) {
+                        // service didnt' return data properly
+                        return;
+                    }
+                    
+                    this.fireEvent('save', json);
+                    this.close();
+                },
+                scope: this
+            });
+        }
+    },
+
+
+    save: function () {
+        var me = this;
+
+        
+
+
+
         /*
 
         if (this.creditCardRadio.getValue()) {

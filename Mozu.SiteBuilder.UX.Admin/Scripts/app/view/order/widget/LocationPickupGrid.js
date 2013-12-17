@@ -8,12 +8,15 @@ Ext.define('Taco.view.order.widget.LocationPickupGrid', {
         'Taco.model.LocationPickup'
     ],
     title: "",
-    //cls: Taco.baseCSSPrefix + 'searchlist',
+    cls: Taco.baseCSSPrefix + 'locationpickupgrid',
     enableSearch: false,
     enablePaging: true,
     enableRowEditing: false,
     hideSearchToolbar: true,
     selType: 'checkboxmodel',
+    selModel: {
+        mode:"SINGLE"  
+    },
     width: "100%",
     initComponent: function () {
         var me = this;        

@@ -9,7 +9,7 @@ Ext.define('Taco.view.product.Form', {
         'Taco.view.product.GlobalForm',
         'Taco.view.product.SiteForm'
     ],
-    alias: ['widget.productform', 'widget.taco-productform', ],
+    alias: ['widget.productform', 'widget.taco-productform' ],
     layout: 'fit',
     requireDirty: false,
     /**
@@ -411,7 +411,7 @@ Ext.define('Taco.view.product.Form', {
 
             this.goGoCatalogSwitch();
         }, this);
-    },
+    }
 
    
 });
