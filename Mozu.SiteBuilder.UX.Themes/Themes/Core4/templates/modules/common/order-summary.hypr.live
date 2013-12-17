@@ -10,7 +10,16 @@
         {% for item in model.items %}
             <tbody class="mz-ordersummary-lineitems">
               <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountTotal > 0 %}is-discounted{% endif %}">
-                    <td class="mz-ordersummary-item-product">{{ item.product.name }}</td>
+                    <td class="mz-ordersummary-item-product">
+                      {{ item.product.name }}
+                      {% if item.product.productUsage == 'Bundle' %}
+                      <dl class="mz-propertylist">
+                        {% for bundledProduct in item.product.bundledProducts %}
+                        <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
+                        <dd>{{ bundledProduct.content.productName }} ({{ bundledProduct.quantity }})</dd>
+                        {% endfor %}
+                      </dl>
+                    </td>
                     <td>{{ item.quantity }}</td>
                     <td><span class="mz-ordersummary-price{% if item.discountTotal > 0 %} mz-strikethrough{% endif %}">{{ item.unitPrice.baseAmount|currency }}</span></td>
                     <td><span class="mz-ordersummary-price mz-ordersummary-itemtotal{% if item.discountTotal > 0 %} mz-strikethrough{% endif %}">{{ item.subtotal|currency }}</span></td>
