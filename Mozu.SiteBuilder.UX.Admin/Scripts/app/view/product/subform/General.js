@@ -445,6 +445,7 @@ Ext.define('Taco.view.product.subform.General', {
         productUsageField = me.query("#productUsageField")[0];
         currentValue = productUsageField.getValue();
         store = productUsageField.store;
+
         
         // values could be a string if there was only one value; 
         if (values && Ext.isString(values)) {
@@ -473,7 +474,13 @@ Ext.define('Taco.view.product.subform.General', {
             }
         ]);
         
+        
         //if the current value of the field is no longer valid after the filtering then remove it;
+        if (currentValue!="" && !Ext.Array.contains(validProductUsages, currentValue)) {
+            
+            productUsageField.clearValue();
+        }
+
     },
 
     onProductTypeChange: function (selectField, value) {

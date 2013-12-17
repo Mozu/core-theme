@@ -155,9 +155,10 @@ Ext.define('Taco.view.product.mixins.Bundleable', {
                 });
                 break;
         }
-
-        //if there is no productType Selected need to ignore the stuff above and disable everything except general subform for the globale tab;
-        if (!this.product.get("productTypeId")) {
+        
+        //if there is no productUsageValue Selected need to ignore the stuff above and disable everything except general subform for the globale tab;
+        
+        if(!productUsageValue || productUsageValue=="") {
             this.disableBundling();
             viewConfig = {
                 general: true,
@@ -171,6 +172,7 @@ Ext.define('Taco.view.product.mixins.Bundleable', {
                 categories: true,
                 merchandising: true
             };
+        
         }
 
         Ext.suspendLayouts();
