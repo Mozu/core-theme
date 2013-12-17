@@ -104,6 +104,8 @@ Ext.define('Taco.core.ux.mixins.Searchable', {
             
             conf = {
                 dock: 'top',
+                height: 30,
+                margin: '0 0 10',
                 items: [
                     {
                         xtype: "tbspacer",

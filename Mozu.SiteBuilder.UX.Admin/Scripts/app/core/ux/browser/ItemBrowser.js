@@ -36,6 +36,8 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
 
         conf = {
             dock: 'top',
+            margin: '0 0 10',
+            height: 30,
             items: [
                 
                 me.sliderSpacer,
@@ -92,7 +94,7 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
             conf.items.unshift(me.searchBox);
         } else if (me.filterProperties) {
             Ext.log({
-                msg: 'filterProperties depricated',
+                msg: 'filterProperties deprecated',
                 level: 'warn'
             });
         } else {
@@ -212,6 +214,8 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
 
         conf = {
             dock: 'top',
+            margin: '0 0 10',
+            height: 30,
             border: false,
             weight: 100,
             items: []
