@@ -10,7 +10,21 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
     {
         public string Id { get; set; }
         public string Collection { get; set; }
-        public string Path { get; set; }
+        private string _path;
+        public string Path {
+            get
+            {
+                return _path;
+            }
+            set
+            {
+                _path = value;
+                if (_path != null)
+                {
+                    _path = _path.Replace("/", "-").Replace("\\", "-");
+                }
+                
+            }}
         public string DocumentType { get; set; }
         [System.Runtime.Serialization.IgnoreDataMember()]
         public Mozu.Content.Contracts.Document Document { get; set; }

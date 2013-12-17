@@ -32,6 +32,9 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
 
         public string ViewName { get; set; }
 
+        public HyprView View { get; set; }
+
+
         public object Model
         {
             get

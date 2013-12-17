@@ -40,49 +40,62 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [ContextInitialization]
     public class TemplatesController : BaseApiController
     {
-        
+        private readonly HyprViewEngine _hyprViewEngine;
 
 
-        //private ILifetimeScope _lifetimeScope;
-       // private readonly IPageTypeProvider _pageTypeProvider;
-       // private readonly IViewEngine _viewEngine;
-
-        public TemplatesController(
+        public TemplatesController(HyprViewEngine hyprViewEngine
             
            
 
             )
         {
-            
-
-            //  _viewEngine = viewEngine;
-           // _lifetimeScope = lifetimeScope;
+            _hyprViewEngine = hyprViewEngine;
         }
 
         [HttpGet]
         public async Task<HttpResponseMessage> Index(string templateId)
         {
-            this.PageContext.EditMode = EditModes.template ;
+           
             var pageType = SiteContext.Theme.PageTypes.FirstOrDefault(x => x.Id == templateId);
             if (pageType == null)
             {
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
                 
             }
+
+            var view = View(pageType.Template, GetModel(pageType));
+
+
             var pc = PageContext;
             pc.PageType = pageType.EntityType;
 
-            pc.CmsContext = new CmsPageContext()
-            {
-                Template = new DocumentRequest()
-                                  {
-                                    Path = pageType.Template     ,
-                                    Collection="templates",
-                                    DocumentType = "page_template"
-                                  }
-            };
+            pc.CmsContext = new CmsPageContext();
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, View(pageType.Template, GetModel(pageType)));
+
+           
+            if (pageType.EntityType == "siteTemplate")
+            {
+                this.PageContext.EditMode = EditModes.site ;
+                pc.CmsContext.SiteTemplate  = new DocumentRequest()
+                                         {
+                                             Path = "site/" + pageType.Template,
+                                             Collection = "templates",
+                                             DocumentType = "page_template"
+                                         };
+                view.View = _hyprViewEngine.FindView(pageType.Template, new string[] { "templates\\{0}" });
+            }
+            else
+            {
+                this.PageContext.EditMode = EditModes.template ;
+                pc.CmsContext.Template = new DocumentRequest()
+                                         {
+                                             Path = pageType.Template,
+                                             Collection = "templates",
+                                             DocumentType = "page_template"
+                                         };
+            }
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, view );
         }
 
         object GetModel(PageTypeDefinition template)

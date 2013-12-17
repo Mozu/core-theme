@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using Mozu.Core;
 using Mozu.Core.Settings;
 using APIConstants = Mozu.Core.Api.Contracts.Constants;
@@ -26,15 +27,17 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         private readonly IApiContext _apiContext;
         private readonly Lazy<PageContext> _pageContextLazy;
+        private readonly HttpRequestMessage _requestMessage;
         private readonly ISettings _settings;
         private Dictionary<string, string> _serviceMap;
 
 
-        public ClientApiContext(ISettings settings, IApiContext apiContext, Lazy<PageContext> pageContextLazy)
+        public ClientApiContext(ISettings settings, IApiContext apiContext, Lazy<PageContext> pageContextLazy, HttpRequestMessage requestMessage)
         {
             _settings = settings;
             _apiContext = apiContext;
             _pageContextLazy = pageContextLazy;
+            _requestMessage = requestMessage;
 
 
             Headers = BuildHeaders(apiContext);
@@ -59,16 +62,17 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             var urls = new Dictionary<string, string>();
             List<ServiceInfo> sis = GetServiceInfos(_settings);
-            if (!_pageContextLazy.Value.HandledByProxy)
-            {
-                return sis.ToDictionary(x => x.Id, y => y.InternalUrl);
-            }
-            var uriBuilder = new UriBuilder(_pageContextLazy.Value.Url);
-            string defaultHost = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
+            string defaultHost = string.Empty;
+            string secureHost = string.Empty;
+
+
+            var uriBuilder = new UriBuilder(_pageContextLazy.Value.Url ?? _requestMessage.RequestUri.ToString());
+            defaultHost = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
             uriBuilder.Scheme = "https";
             uriBuilder.Port = 443;
-            string secureHost = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
-            var sslEnabled = _settings.CoreSettings.IsSSLValidationEnabled;
+            secureHost = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
+
+            bool sslEnabled = _settings.CoreSettings.IsSSLValidationEnabled;
 
             return sis.ToDictionary(x => x.Id, y =>
             {
@@ -76,11 +80,26 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 {
                     return y.InternalUrl;
                 }
-                if (sslEnabled && y.RequiresSsl)
+                if (_pageContextLazy.Value.HandledByProxy)
                 {
-                    return secureHost + y.VirturalPath;
+                    if (sslEnabled && y.RequiresSsl)
+                    {
+                        return secureHost + y.VirturalPath;
+                    }
+                    return defaultHost + y.VirturalPath;
                 }
-                return defaultHost + y.VirturalPath;
+                else
+                {
+                    if (y.IsSiteBuiderRoute && sslEnabled && y.RequiresSsl)
+                    {
+                        return secureHost + y.VirturalPath;
+                        
+                    }
+
+                    return y.InternalUrl;
+                }
+                return  y.VirturalPath;
+
             });
         }
 
@@ -189,7 +208,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                             Id = "ReturnService",
                             InternalUrl = settings.AppSettings("service-url-ReturnWebApi"),
                             RequiresSsl = true
-                        },new ServiceInfo
+                        },
+                        new ServiceInfo
                         {
                             Id = "storefrontUserService",
                             InternalUrl = "/user/",
@@ -202,7 +222,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 {
                     if (string.IsNullOrEmpty(si.InternalUrl))
                     {
-                        throw new EntryPointNotFoundException("missing appsetting for " + si.Id  );
+                        throw new EntryPointNotFoundException("missing appsetting for " + si.Id);
                     }
                     int idx = si.InternalUrl.IndexOf("webapi/", StringComparison.OrdinalIgnoreCase);
                     if (idx > 0)

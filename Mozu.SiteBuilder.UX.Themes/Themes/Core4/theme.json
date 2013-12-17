@@ -162,6 +162,11 @@
 			]
             
         }, {
+            "id": "site_page",
+            "title": "Default Site Template",
+            "entityType": "siteTemplate",
+            "template": "page"
+        }, {
             "id": "blank-page",
             "title": "Blank Page",
             "entityType": "webpage",
@@ -449,7 +454,8 @@
         "defaultConfig": {
             "height": 400
         },
-        "validPageTypes":["*"]
+        "validPageTypes":["*"],
+        "enabled":false
     },
     {
       "id":"cms-image",
@@ -486,9 +492,11 @@
         "editViewFields": [{
             xtype: 'textareafield',
             grow: true,
+            flex:1,
             name: 'body',
             fieldLabel: 'HTML',
-            anchor: '100%'
+            anchor: '100%',
+            style:'resize:both'
         }],
         "defaultConfig": {
             "body": "<h2>Insert Markup</h2>"

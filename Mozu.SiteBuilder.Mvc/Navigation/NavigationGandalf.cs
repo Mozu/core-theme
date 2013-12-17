@@ -250,22 +250,27 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         return cachedTree;
 
                     var grouped =
-                        from node in nodeCollection.Nodes
-                        where node.Id != UNLINKED_PAGES_NODE_ID
-                        where node.ParentId != UNLINKED_PAGES_NODE_ID
-                        group node by node.ParentId into g
-                        select g;
+                        (from node in nodeCollection.Nodes
+                         where node.Id != UNLINKED_PAGES_NODE_ID
+                         where node.ParentId != UNLINKED_PAGES_NODE_ID
+                         group node by node.ParentId into g
+                         select g).ToDictionary(k => k.Key, k => k.ToList());
 
-                    var rootLevel = grouped.FirstOrDefault(g => g.Key == NAV_ROOT_NODE_NAME);
-                    if (rootLevel == null)
+                    List<NavigationNode> rootLevel;
+
+                    if(!grouped.TryGetValue(NAV_ROOT_NODE_NAME, out rootLevel))
                         return null;
-                    var rootLevelMapped = Mapper.Map<List<NavigationRuntimeNode>>(rootLevel.ToList());
+                    var rootLevelMapped = Mapper.Map<List<NavigationRuntimeNode>>(rootLevel);
                     int entries = 0, counter = 0;
 
                     Stopwatch stopwatch = Stopwatch.StartNew();
                     BuildTree(rootLevelMapped, grouped, ref entries, ref counter);
                     stopwatch.Stop();
-                    _logger.Debug(String.Format("Navigation: Built tree. {0} entries. {1} loops. {1} ms elapsed.", entries, counter, stopwatch.ElapsedMilliseconds));
+                    var timeMessage = String.Format("Navigation: Built tree. {0} entries. {1} loops. {1} ms elapsed.", entries, counter, stopwatch.ElapsedMilliseconds);
+                    if (stopwatch.ElapsedMilliseconds > 1000)
+                        _logger.Warn(timeMessage);
+                    else
+                        _logger.Debug(timeMessage);
 
                     if (rootLevelMapped != null)
                     {
@@ -283,7 +288,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// <summary>
         /// Recursively build the navigation tree top-down.
         /// </summary>
-        private void BuildTree(List<NavigationRuntimeNode> rootLevel, IEnumerable<IGrouping<string, NavigationNode>> allObjects, ref int entries, ref int counter)
+        private void BuildTree(List<NavigationRuntimeNode> rootLevel, Dictionary<string, List<NavigationNode>> allObjects, ref int entries, ref int counter)
         {
             if (rootLevel == null || rootLevel.Count == 0)
                 return;
@@ -293,20 +298,24 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             {
                 counter++;
 
-                var childItems = allObjects.FirstOrDefault(g => g.Key == node.Id);
-                if (childItems != null)
+                List<NavigationNode> childItems;
+
+                if (allObjects.TryGetValue(node.Id, out childItems))
                 {
-                    node.Items = childItems.Select(child => new NavigationRuntimeNode
+                    if (childItems != null)
                     {
-                        Id = child.Id,
-                        Parent = node,
-                        Url = child.Url,
-                        Name = child.Name,
-                        Index = child.Index,
-                        NodeType = child.NodeType,
-                        IsHomePage = false
-                    }).ToList();
-                    BuildTree(node.Items, allObjects, ref entries, ref counter);
+                        node.Items = childItems.Select(child => new NavigationRuntimeNode
+                        {
+                            Id = child.Id,
+                            Parent = node,
+                            Url = child.Url,
+                            Name = child.Name,
+                            Index = child.Index,
+                            NodeType = child.NodeType,
+                            IsHomePage = false
+                        }).ToList();
+                        BuildTree(node.Items, allObjects, ref entries, ref counter);
+                    }
                 }
             }
         }

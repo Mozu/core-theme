@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             {
                 
                 var viewEngine = this.RequestMessage.Resolve<HyprViewEngine>();
-                var view = viewEngine.FindPageView(vrb.ViewName);
+                var view = vrb.View ?? viewEngine.FindPageView(vrb.ViewName);
                 var hvc = new HyprViewContext(this.RequestMessage, vrb.ViewData, null);
                 var httpContext = this.RequestMessage.HttpContext();
                 httpContext.Response.Buffer = true;

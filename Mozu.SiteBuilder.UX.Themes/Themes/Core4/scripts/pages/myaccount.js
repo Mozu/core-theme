@@ -147,13 +147,9 @@
             var self = this,
                 op = this.model.finishReturn();
             if (op) {
-                self.model.isLoading(true);
                 return op.then(function () {
                     delete self.returning;
-                    self.model.isLoading(false);
                     self.render();
-                }, function () {
-                    self.isLoading(false);
                 });
             }
         }
@@ -296,7 +292,7 @@
         
     $(document).ready(function () {
 
-        var accountModel = window.accountModel =  CustomerModels.Customer.fromCurrent();
+        var accountModel = window.accountModel =  CustomerModels.EditableCustomer.fromCurrent();
 
         var $accountSettingsEl = $('#account-settings'),
             $orderHistoryEl = $('#account-orderhistory'),
@@ -331,12 +327,12 @@
                 el: $returnHistoryEl.find('[data-mz-orderlist]'),
                 model: returnHistory
             }),
-            orderHistoryPagingControls: new PagingViews.PagingControls({
+            returnHistoryPagingControls: new PagingViews.PagingControls({
                 templateName: 'modules/my-account/order-history-paging-controls',
                 el: $returnHistoryEl.find('[data-mz-pagingcontrols]'),
                 model: returnHistory
             }),
-            orderHistoryPageNumbers: new OrderHistoryPageNumbers({
+            returnHistoryPageNumbers: new OrderHistoryPageNumbers({
                 el: $returnHistoryEl.find('[data-mz-pagenumbers]'),
                 model: returnHistory
             }),
