@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-12-13
+ * Mozu JavaScript SDK - v0.2.0 - 2013-12-16
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2665,11 +2665,13 @@ var ApiReference = (function () {
                 returnType: 'login',
             },
             'login': {
+                useIframeTransport: '{+customerService}../../Assets/mozu_receiver.html',
                 verb: 'POST',
                 template: '{+customerService}../authtickets',
                 returnType: 'login'
             },
             'login-storefront': {
+                useIframeTransport: '{+storefrontUserService}../../Assets/mozu_receiver.html',
                 verb: 'POST',
                 template: '{+storefrontUserService}login',
                 returnType: 'login'
@@ -2689,13 +2691,8 @@ var ApiReference = (function () {
                 template: '{+customerService}{id}/change-password',
                 includeSelf: true
             },
-            'get-open-orders': {
-                template: '{+orderService}?filter=Status eq "' + CONSTANTS.ORDER_STATUSES.SUBMITTED + '" or Status eq "' + CONSTANTS.ORDER_STATUSES.ACCEPTED + '" or Status eq "' + CONSTANTS.ORDER_STATUSES.PENDING_REVIEW + '" or Status eq "' + CONSTANTS.ORDER_STATUSES.PROCESSING + '" and CustomerAccountId eq "{id}" and OrderNumber ne null',
-                includeSelf: true,
-                returnType: 'orders'
-            },
             'get-orders': {
-                template: '{+orderService}?filter=CustomerAccountId eq "{id}" and OrderNumber ne null',
+                template: '{+orderService}?filter=OrderNumber ne null',
                 includeSelf: true,
                 returnType: 'orders'
             },

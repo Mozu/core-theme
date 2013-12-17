@@ -23,6 +23,8 @@
             //commenting  for ssl for now...
             //this.model.toOrder();
             // return false;
+            this.model.isLoading(true);
+            // the rest is done through a regular HTTP POST
         }
     });
 

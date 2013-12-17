@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Globalization;
+using System.Net.Http;
 using System.Security.Principal;
 using System.Threading;
 using System.Web.Security;
@@ -33,7 +34,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
         //private HttpContextBase _httpContext;
         private const string AccessToken = "at";
         private const string ProfileToken = "pt";
-        public AuthenticationHelper(ICookieProvider provider, ISettings settings)
+        public AuthenticationHelper(ICookieProvider provider, ISettings settings, HttpRequestMessage httpRequestMessage)
         {
             _settings = settings;
             string env = settings.AppSettings("Environment");
@@ -42,10 +43,32 @@ namespace Mozu.SiteBuilder.Mvc.Security
             StoreFrontAccessTokenCookieName = "sb-sf-at-" + env;
             StoreFrontRefershCookieName = "sb-sf-rt-" + env;
             AdminRefershCookieName = "mzrt-" + env;
-            ForceSSL = settings.CoreSettings.IsSSLValidationEnabled;
+
+            bool handledByProxy = IsheaderTrue(Mozu.Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, httpRequestMessage);
+
+            ForceSSL = settings.CoreSettings.IsSSLValidationEnabled && handledByProxy;
             CookieProvider = provider;
         }
 
+        bool IsheaderTrue(string headerName, HttpRequestMessage requestMessage)
+        {
+            IEnumerable<string> values;
+            if (requestMessage.Headers.TryGetValues(headerName, out values))
+            {
+
+
+                bool ret;
+                var val = values.FirstOrDefault();
+                if (bool.TryParse(val, out ret))
+                {
+                    return ret;
+                }
+
+                return val == "1";
+            }
+            return false;
+            ;
+        }
 
         public string AdminAccessTokenCookieName { get; set; }
 

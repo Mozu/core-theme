@@ -3,11 +3,6 @@
  */
 define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'modules/api', 'hyprlive', 'shim!vendor/underscore>_'], function ($, api, Hypr, _) {
 
-
-    //hack for now until z adds the reciever whatever thingie.
-    if (window.location.protocol != "https:") {
-        return;
-    }
     var usePopovers = function () {
         return !Modernizr.mq('(max-width: 480px)');
     },

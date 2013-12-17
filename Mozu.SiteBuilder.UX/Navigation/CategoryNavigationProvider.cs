@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Caching;
 using System.Threading.Tasks;
 using AutoMapper;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.UX.Models.Navigation;
+using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 
 namespace Mozu.SiteBuilder.UX.Navigation
 {
@@ -33,10 +35,33 @@ namespace Mozu.SiteBuilder.UX.Navigation
             return _categoryTreeProvider.GetAllCategories()
                 .ContinueWith(t =>
                 {
-                    var cats = t.Result.Items;
-                    var nodes = Mapper.Map<List<NavigationNode>>(cats);
-                    return new NavigationNodeCollection { Nodes = nodes, ETag = t.Result.ETag };
+                    NavigationNodeCollection nnc = null;
+                    string cachekey = null;
+                    if (!string.IsNullOrEmpty(t.Result.ETag))
+                    {
+                        cachekey = t.Result.ETag + this.GetType().FullName;
+                        nnc = (NavigationNodeCollection)MemoryCache.Default[cachekey];
+                    }
+                    if (nnc == null)
+                    {
+                        nnc = NavigationNodeCollection(t);
+                        if (cachekey != null)
+                        {
+                            MemoryCache.Default.Add(new CacheItem(cachekey, nnc), new CacheItemPolicy() { AbsoluteExpiration = DateTime.Now.AddMinutes(15), Priority = CacheItemPriority.NotRemovable });
+                        }
+                    }
+                    return nnc;
+
                 });
+        }
+
+        private static NavigationNodeCollection NavigationNodeCollection(Task<CategoryTree> t)
+        {
+            NavigationNodeCollection nnc;
+            var cats = t.Result.Items;
+            var nodes = Mapper.Map<List<NavigationNode>>(cats);
+            nnc = new NavigationNodeCollection {Nodes = nodes, ETag = t.Result.ETag};
+            return nnc;
         }
     }
 }

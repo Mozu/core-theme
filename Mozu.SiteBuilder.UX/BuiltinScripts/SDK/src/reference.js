@@ -306,11 +306,13 @@ var ApiReference = (function () {
                 returnType: 'login',
             },
             'login': {
+                useIframeTransport: '{+customerService}../../Assets/mozu_receiver.html',
                 verb: 'POST',
                 template: '{+customerService}../authtickets',
                 returnType: 'login'
             },
             'login-storefront': {
+                useIframeTransport: '{+storefrontUserService}../../Assets/mozu_receiver.html',
                 verb: 'POST',
                 template: '{+storefrontUserService}login',
                 returnType: 'login'

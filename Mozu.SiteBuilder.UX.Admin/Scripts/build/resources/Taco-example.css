@@ -661,26 +661,6 @@ li {
   color: silver;
 }
 
-/* line 2, ../../sass/etc/taco/_tinymce_fixes.scss */
-.mceEditor {
-  /*
-  	@include box-sizing(content-box);
-  	* {
-  		@include box-sizing(content-box);
-  	}
-  	
-  	.mceExternalToolbar {
-  		position: fixed !important;
-  		top: 129px !important;
-  		left: 126px;
-  		border-bottom: 1px solid #bbb !important;
-  	}*/
-}
-/* line 17, ../../sass/etc/taco/_tinymce_fixes.scss */
-.mceEditor .mceExternalClose {
-  display: none !important;
-}
-
 /* including package mozuadmintheme */
 /* PANEL */
 /* PANEL HEADER */
@@ -19720,17 +19700,22 @@ h1, h2, h3, h4, h5, h6 {
 /* line 6, ../../sass/src/core/ux/form/field/EditableDisplayField.scss */
 .x-form-editable-display-field {
   color: #333333;
-  padding: 5px 10px 3px 10px;
+  padding: 6px 11px 4px 11px;
   background: white repeat-x 0 0;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #bfbfbf;
   line-height: 20px;
   min-height: 30px;
   height: "auto";
 }
 
 /* line 18, ../../sass/src/core/ux/form/field/EditableDisplayField.scss */
+.x-form-editable-display-field-border {
+  padding: 5px 10px 3px 10px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #bfbfbf;
+}
+
+/* line 25, ../../sass/src/core/ux/form/field/EditableDisplayField.scss */
 .x-form-editable-display-field.x-form-invalid-field {
   border-color: #d2463c;
 }
@@ -19738,19 +19723,6 @@ h1, h2, h3, h4, h5, h6 {
 /* line 1, ../../sass/src/core/ux/window/Modal.scss */
 .taco-window-action-toolbar {
   padding: 19px 9px 0px 0px;
-}
-
-/* line 1, ../../sass/src/core/ux/window/Drawer.scss */
-.taco-drawer {
-  -webkit-border-radius: 0px 0px 2px 2px;
-  -moz-border-radius: 0px 0px 2px 2px;
-  -ms-border-radius: 0px 0px 2px 2px;
-  -o-border-radius: 0px 0px 2px 2px;
-  border-radius: 0px 0px 2px 2px;
-}
-/* line 4, ../../sass/src/core/ux/window/Drawer.scss */
-.taco-drawer .taco-window-action-toolbar {
-  padding-right: 10px;
 }
 
 /* line 2, ../../sass/src/core/ux/TilePanel.scss */
@@ -20523,6 +20495,19 @@ h1, h2, h3, h4, h5, h6 {
   padding-right: 5px;
 }
 
+/* line 1, ../../sass/src/core/ux/window/Drawer.scss */
+.taco-drawer {
+  -webkit-border-radius: 0px 0px 2px 2px;
+  -moz-border-radius: 0px 0px 2px 2px;
+  -ms-border-radius: 0px 0px 2px 2px;
+  -o-border-radius: 0px 0px 2px 2px;
+  border-radius: 0px 0px 2px 2px;
+}
+/* line 4, ../../sass/src/core/ux/window/Drawer.scss */
+.taco-drawer .taco-window-action-toolbar {
+  padding-right: 10px;
+}
+
 /* line 2, ../../sass/src/view/product/variant/Grid.scss */
 .taco-variant-grid .check {
   display: inline-block;
@@ -20602,6 +20587,80 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-font-smoothing: antialiased;
 }
 /* line 15, ../../sass/src/view/website/widgetEditors/Image.scss */
+.taco-image-dropzone .cover {
+  background-color: white;
+  height: 100%;
+  left: 0px;
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  z-index: 2;
+}
+/* line 25, ../../sass/src/view/website/widgetEditors/Image.scss */
+.taco-image-dropzone .thumb {
+  background-position: 50% 50%;
+  background-size: cover;
+  height: 140px;
+  left: 50%;
+  margin-left: -70px;
+  overflow: hidden;
+  padding: 140px 0px 0px 140px;
+  position: absolute;
+  top: 9px;
+  width: 140px;
+  z-index: 3;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+}
+/* line 40, ../../sass/src/view/website/widgetEditors/Image.scss */
+.taco-image-dropzone .thumb:hover .controls {
+  display: block;
+}
+/* line 46, ../../sass/src/view/website/widgetEditors/Image.scss */
+.taco-image-dropzone .controls {
+  background-color: rgba(0, 0, 0, 0.75);
+  display: none;
+  height: 22px;
+  left: 0px;
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  -webkit-border-radius: 2px 2px 0px 0px;
+  -moz-border-radius: 2px 2px 0px 0px;
+  -ms-border-radius: 2px 2px 0px 0px;
+  -o-border-radius: 2px 2px 0px 0px;
+  border-radius: 2px 2px 0px 0px;
+}
+/* line 57, ../../sass/src/view/website/widgetEditors/Image.scss */
+.taco-image-dropzone .remove {
+  cursor: pointer;
+  display: block;
+  right: 3px;
+  top: 3px;
+  height: 16px;
+  position: relative;
+  width: 16px;
+  position: absolute;
+}
+/* line 72, ../../sass/etc/taco/mixins/_fonts.scss */
+.taco-image-dropzone .remove::after {
+  color: white;
+  content: "\E011";
+  display: block;
+  font-family: mozicons;
+  font-size: 16px;
+  font-weight: normal !important;
+  left: 0px;
+  line-height: 1.0;
+  position: absolute;
+  top: 0px;
+  vertical-align: baseline;
+  -webkit-font-smoothing: antialiased;
+}
+/* line 66, ../../sass/src/view/website/widgetEditors/Image.scss */
 .taco-image-dropzone::after {
   left: 50%;
   margin-left: -40px;
@@ -20619,13 +20678,23 @@ h1, h2, h3, h4, h5, h6 {
   -o-transition-timing-function: ease-in-out;
   transition-timing-function: ease-in-out;
 }
-/* line 24, ../../sass/src/view/website/widgetEditors/Image.scss */
+/* line 75, ../../sass/src/view/website/widgetEditors/Image.scss */
+.taco-image-dropzone.drag-over {
+  background-color: #e4efff;
+  border-color: #a2b9d6;
+}
+/* line 80, ../../sass/src/view/website/widgetEditors/Image.scss */
+.taco-image-dropzone.drag-and-drop-active {
+  background-color: #e4efff;
+  border-color: #a2b9d6;
+}
+/* line 85, ../../sass/src/view/website/widgetEditors/Image.scss */
 .taco-image-dropzone:hover {
   background-color: #e6e6e6;
   border-color: #b3b3b3;
   color: #b3b3b3;
 }
-/* line 29, ../../sass/src/view/website/widgetEditors/Image.scss */
+/* line 90, ../../sass/src/view/website/widgetEditors/Image.scss */
 .taco-image-dropzone:hover::after {
   color: #b3b3b3;
 }
@@ -20943,58 +21012,72 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 1.4rem;
 }
 
-/* line 51, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 53, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+.order-editable .fulfillment-link {
+  color: #2e649e;
+  white-space: normal;
+}
+/* line 57, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+.order-editable .fulfillment-link:hover {
+  text-decoration: underline;
+}
+
+/* line 66, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-orderitemgrid {
   background-color: #fff;
 }
-/* line 55, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 70, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-orderitemgrid .x-column-header-align-right .x-column-header-text {
   margin-right: 0px;
 }
-/* line 60, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 75, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-orderitemgrid .taco-grid-row-action-trigger.x-item-disabled {
   visibility: hidden;
 }
-/* line 66, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 81, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-orderitemgrid .taco-toolbar-link.x-btn-link-medium-over .x-btn-inner, .taco-orderform-orderitemgrid .taco-toolbar-link.x-btn-link-toolbar-medium-over .x-btn-inner {
   text-decoration: underline;
 }
-/* line 71, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 86, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-orderitemgrid .empty-grid-message {
   padding: 10px;
   color: #990000;
 }
-/* line 77, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 95, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-orderitemgrid .product-link {
   color: #164588;
   white-space: normal;
 }
-/* line 83, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 101, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-orderitemgrid .product-link-disabled {
   white-space: normal;
 }
-/* line 89, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 107, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-orderitemgrid .product-options {
   white-space: normal;
 }
-/* line 94, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 111, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+.taco-orderform-orderitemgrid .bundledProduct {
+  padding-left: 20px;
+}
+/* line 116, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-orderitemgrid .x-grid-cell, .taco-orderform-orderitemgrid .taco-itembrowser .x-grid-rowwrap .x-grid-subcell, .taco-itembrowser .x-grid-rowwrap .taco-orderform-orderitemgrid .x-grid-subcell {
   vertical-align: top;
 }
-/* line 97, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 119, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-orderitemgrid .x-grid-cell .x-grid-cell-inner, .taco-orderform-orderitemgrid .taco-itembrowser .x-grid-rowwrap .x-grid-subcell .x-grid-cell-inner, .taco-itembrowser .x-grid-rowwrap .taco-orderform-orderitemgrid .x-grid-subcell .x-grid-cell-inner {
   border: 1px solid transparent;
 }
-/* line 103, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 125, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-orderitemgrid .isActive {
   text-decoration: none;
 }
-/* line 108, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 130, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-orderitemgrid .isSuppressed {
   text-decoration: line-through;
 }
 
-/* line 119, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 145, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-editor .taco-grid-row-action-trigger-remove {
   height: 16px;
   position: relative;
@@ -21018,34 +21101,34 @@ h1, h2, h3, h4, h5, h6 {
   vertical-align: baseline;
   -webkit-font-smoothing: antialiased;
 }
-/* line 127, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 153, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-editor .taco-grid-row-action-trigger-remove::after {
   left: 8px;
   top: 2px;
   font-size: 1.4rem;
   line-height: 1.4rem;
 }
-/* line 134, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 160, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-editor .taco-grid-row-action-trigger-remove:hover {
   color: red !important;
 }
-/* line 142, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 168, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-editor .x-panel .x-grid-body {
   border-bottom-width: 1px;
 }
-/* line 147, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 173, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-editor .x-grid-with-row-lines .x-grid-table-over-first {
   border-top-color: #ededed;
 }
-/* line 152, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 178, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-editor .x-grid-with-row-lines .x-grid-table-selected-first {
   border-top-color: #ededed;
 }
-/* line 157, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 183, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-editor .x-grid-row-before-over .x-grid-td {
   border-bottom-color: #ededed;
 }
-/* line 165, ../../sass/src/view/order/widget/OrderItemGrid.scss */
+/* line 191, ../../sass/src/view/order/widget/OrderItemGrid.scss */
 .taco-orderform-editor .editmode-enabled .editableCell .x-grid-cell-inner:hover {
   border: 1px dashed #cccccc;
 }

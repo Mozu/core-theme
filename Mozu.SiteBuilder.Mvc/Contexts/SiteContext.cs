@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
@@ -42,7 +43,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         private Dictionary<string, string> _labels;
 
-        public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, IStorefrontCache cache , ISettings settings , ISiteBuilderApiContext apiContext)
+        public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, IStorefrontCache cache , ISettings settings , ISiteBuilderApiContext apiContext, HttpRequestMessage requestMessage)
         {
             _generalSettingsWebApiClient = generalSettingsWebApiClient.CloneWithoutUserClaims();
             _themeSettingsRepository = themeSettingsRepository;
@@ -54,6 +55,23 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _settings = settings;
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient.CloneWithoutUserClaims();
             this.CdnPrefix = settings.AppSettings("CdnHost");
+
+
+            string url = requestMessage.RequestUri.ToString();
+            IEnumerable<string> values;
+            if (requestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
+            {
+                url = values.FirstOrDefault();
+            }
+
+
+            var uriBuilder = new UriBuilder(url);
+            var unsecure = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
+            uriBuilder.Port = 443;
+            uriBuilder.Scheme = "https";
+            var secure = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
+
+            this.SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? secure : unsecure;
           
             if (!string.IsNullOrEmpty(CdnPrefix))
             {
@@ -265,5 +283,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public bool IsEditMode { get; set; }
 
         public string CdnPrefix { get; set; }
+
+        public string SecureHost { get; set; }
     }
 }

@@ -110,6 +110,7 @@
             });
         }
     }),
+
     Customer = Backbone.MozuModel.extend({
         mozuType: 'customer',
         helpers: ['hasSavedCards', 'hasSavedContacts'],
@@ -120,21 +121,37 @@
         hasSavedContacts: function() {
             var contacts = this.get('contacts');
             return contacts && contacts.length > 0;
-        },
-        handlesMessages: true,
-        relations: {
+        },        relations: {
             contacts: Backbone.Collection.extend({
                 model: CustomerContact
             }),
             cards: Backbone.Collection.extend({
                 model: PaymentMethods.CreditCard
-            }),
-            wishlist: Wishlist,
+            })
+        },
+        getPrimaryContactOfType: function (typeName) {
+            return this.get('contacts').find(function (contact) {
+                return !!_.findWhere(contact.get('types'), { name: typeName, isPrimary: true });
+            });
+        },
+        getPrimaryBillingContact: function () {
+            return this.getPrimaryContactOfType("Billing");
+        },
+        getPrimaryShippingContact: function () {
+            return this.getPrimaryContactOfType("Shipping");
+        }
+    }),
+
+    EditableCustomer = Customer.extend({
+        
+        handlesMessages: true,
+        relations: _.extend({
             editingCard: PaymentMethods.CreditCard,
             editingContact: CustomerContact,
+            wishlist: Wishlist,
             orderHistory: OrderModels.OrderCollection,
             returnHistory: OrderModels.RMACollection
-        },
+        }, Customer.prototype.relations),
         validation: {
             password: {
                 fn: function(value) {
@@ -286,22 +303,12 @@
             delete j.confirmPassword;
             delete j.oldPassword;
             return j;
-        },
-        getPrimaryContactOfType: function(typeName) {
-            return this.get('contacts').find(function (contact) {
-                return !!_.findWhere(contact.get('types'), { name: typeName, isPrimary: true });
-            });
-        },
-        getPrimaryBillingContact: function () {
-            return this.getPrimaryContactOfType("Billing");
-        },
-        getPrimaryShippingContact: function () {
-            return this.getPrimaryContactOfType("Shipping");
         }
     });
 
     return {
         Contact: CustomerContact,
-        Customer: Customer
+        Customer: Customer,
+        EditableCustomer: EditableCustomer
     };
 });

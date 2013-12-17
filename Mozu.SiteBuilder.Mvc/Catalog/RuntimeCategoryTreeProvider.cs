@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Threading.Tasks;
 using AutoMapper;
 using Mozu.Core.Api.Client;
+using Mozu.Core.Api.Contracts.Client;
+using Mozu.ProductRuntime.Contracts;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.Core.Logging;
+using Category = Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category;
 
 namespace Mozu.SiteBuilder.Mvc.Catalog
 {
@@ -17,7 +21,7 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
     public class RuntimeCategoryTreeProvider : ICategoryTreeProvider
     {
         private IProductCategoryRuntimeWebApiClient _productCategoryRuntimeWebApiClient;
-        private CategoryTree _categories;
+        private Task<CategoryTree> _categoryTreeTask;
         private ILogger _logger;
 
         public RuntimeCategoryTreeProvider(IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient, ILogger logger)
@@ -28,64 +32,82 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
 
         public Task<CategoryTree> GetAllCategories()
         {
-            if (_categories != null)
+            if (_categoryTreeTask != null)
             {
-                var t = new TaskCompletionSource<CategoryTree>();
-                t.SetResult(_categories);
+                return _categoryTreeTask;
             }
-            lock (this)
-            {
-                if (_categories != null)
+
+
+
+            var task = _productCategoryRuntimeWebApiClient.GetCategoryTree()
+                .ContinueWith(t =>
                 {
-                    var t = new TaskCompletionSource<CategoryTree>();
-                    t.SetResult(_categories);
-                }
-                var categories = new List<Category>();
-
-                return _productCategoryRuntimeWebApiClient.GetCategoryTree()
-                    .ContinueWith(t =>
+                    var etag = t.Result.ETag();
+                    string cachekey = null;
+                    CategoryTree catTree = null;
+                    if (!string.IsNullOrEmpty(etag))
                     {
-                        var res = t.Result;
-                        var etag = res.ETag();
-                        var srvTree = res.ReadAsSync();
-                        // var srvTree = new CategoryCollection() { Items = new List<ProductRuntime.Contracts.Category>() };
-
-                        var treeStack =
-                            new Stack<Tuple<Mozu.ProductRuntime.Contracts.Category, List<Mozu.ProductRuntime.Contracts.Category>>>(
-                                srvTree.Items.Select(x =>
-                                    new Tuple<Mozu.ProductRuntime.Contracts.Category, List<Mozu.ProductRuntime.Contracts.Category>>
-                                        (x, srvTree.Items)));
-
-                        while (treeStack.Count() > 0)
+                        cachekey = etag + this.GetType().FullName;
+                        catTree = (CategoryTree)MemoryCache.Default[cachekey];
+                        if (catTree != null)
                         {
-                            var catPair = treeStack.Pop();
-                            if (catPair.Item1 == null)
-                            {
-                                _logger.Error("Unexpected null returned from productCategoryRuntimeWebApiClient.GetCategoryTree().");
-                                continue;
-                            }
-                            var cat = Mapper.Map<Category>(catPair.Item1);
-                         //   cat.Index = catPair.Item2.IndexOf(catPair.Item1);
-                            categories.Add(cat);
-                            cat.ReadOnly = true;
-
-                            if (catPair.Item1.ChildrenCategories != null)
-                            {
-                                catPair.Item1.ChildrenCategories.ForEach(
-                                    x =>
-                                    treeStack.Push(
-                                        new Tuple<Mozu.ProductRuntime.Contracts.Category, List<Mozu.ProductRuntime.Contracts.Category>>(x, catPair.Item1.ChildrenCategories)))
-                                ;
-                            }
+                            return catTree;
                         }
+                    }
+                    catTree = ParseCategoryTree(t.Result);
+                    if (!string.IsNullOrEmpty(cachekey))
+                    {
+                        MemoryCache.Default.Add(new CacheItem(cachekey, catTree), new CacheItemPolicy() { AbsoluteExpiration = DateTime.Now.AddMinutes(15), Priority = CacheItemPriority.NotRemovable });
+                    }
+                    return catTree;
+                });
 
-                        //  _cats = AutoMapper.Mapper.Map<List<Category>>(client.GetCategories(null,  0, int.MaxValue, null).Result.ReadAsSync().Items);
-                      //  categories.ForEach(x => x.ChildrenCategories = (categories.Where(_ => _.ParentCategoryId == null).ToList()) );
 
-                        _categories = new CategoryTree { Items = categories, ETag = etag };
-                        return _categories;
-                    });
+            _categoryTreeTask = task;
+            return _categoryTreeTask;
+        }
+
+        private CategoryTree ParseCategoryTree(ServiceClientResponse<CategoryCollection> res)
+        {
+            var categories = new List<Category>();
+
+
+            
+            var etag = res.ETag();
+            var srvTree = res.ReadAsSync();
+
+            var treeStack =
+                new Stack<Tuple<Mozu.ProductRuntime.Contracts.Category, List<Mozu.ProductRuntime.Contracts.Category>>>(
+                    srvTree.Items.Select(x =>
+                        new Tuple<Mozu.ProductRuntime.Contracts.Category, List<Mozu.ProductRuntime.Contracts.Category>>
+                            (x, srvTree.Items)));
+
+            while (treeStack.Any())
+            {
+                var catPair = treeStack.Pop();
+                if (catPair.Item1 == null)
+                {
+                    _logger.Error("Unexpected null returned from productCategoryRuntimeWebApiClient.GetCategoryTree().");
+                    continue;
+                }
+                var cat = Mapper.Map<Category>(catPair.Item1);
+
+                categories.Add(cat);
+                cat.ReadOnly = true;
+
+                if (catPair.Item1.ChildrenCategories != null)
+                {
+                    catPair.Item1.ChildrenCategories.ForEach(
+                        x =>
+                            treeStack.Push(
+                                new Tuple<Mozu.ProductRuntime.Contracts.Category, List<Mozu.ProductRuntime.Contracts.Category>>(x, catPair.Item1.ChildrenCategories)))
+                        ;
+                }
             }
+
+
+            return new CategoryTree {Items = categories, ETag = etag};
         }
     }
+    
 }

@@ -24,7 +24,12 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         public HyprView FindPageView(string path)
         {
-            foreach (var format in g_page_formats)
+            return FindView(path, g_page_formats);
+        }
+
+        public HyprView FindView (string path, string[] formats )
+        {
+            foreach (var format in formats)
             {
                 var formattedPath = string.Format(format, path);
                 var fileInfo = _mozuVirtualPathProvider.GetThemeFileInfo(formattedPath, false);
@@ -32,7 +37,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 {
                     return new HyprView(fileInfo.FullPath, fileInfo.VirtualPath, _templateManager);
                 }
-                
+
 
             }
 
@@ -40,22 +45,10 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             return null;
         }
 
+
         public HyprView FindModuleView(string path)
         {
-            foreach (var format in g_formats)
-            {
-                var formattedPath = string.Format(format, path);
-                var fileInfo = _mozuVirtualPathProvider.GetThemeFileInfo(formattedPath, false);
-                if (fileInfo != null)
-                {
-                    return new HyprView(fileInfo.FullPath, fileInfo.VirtualPath, _templateManager);
-                }
-
-
-            }
-
-
-            return null;
+            return FindView(path, g_formats);
         }
     }
 }
