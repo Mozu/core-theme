@@ -81,7 +81,11 @@ Ext.define('Taco.view.customers.Index', {
                 renderer: function (value, metaData, record) {
                     return Ext.util.Format.usMoney(value);
                 }
-            },  {
+            }, {
+                dataIndex: 'visitCount',
+                text: 'Total Visits',
+                width: 100
+            }, {
                 dataIndex: 'groups',
                 text: 'Groups',
                     width: 300,
