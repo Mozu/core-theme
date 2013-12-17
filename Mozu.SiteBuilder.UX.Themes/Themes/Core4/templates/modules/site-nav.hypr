@@ -8,15 +8,19 @@
                         {% for sublink in link.items %}
                             <li data-mz-role="sitemenu-item" class="mz-sitenav-item">
                                 <a class="mz-sitenav-link{% if sublink.url == navigation.currentNode.url %} is-current {% endif %}" href="{{sublink.url}}">{{sublink.name}}</a>
-                                {% if sublink.items %}
-                                       <!-- <ul class="mz-sitenav-sub-sub">
+                              {% if sublink.items %}
+                              {%comment%}
+                              <!-- uncoment out  this block to get 3rd laver of nav -->
+                                       <ul class="mz-sitenav-sub-sub">
                                             {% for subsublink in sublink.items %}
                                                 <li class="mz-sitenav-item">
                                                     <a class="mz-sitenav-link" href="{{subsublink.url}}">{{subsublink.name}}</a>
                                                 </li>
                                             {% endfor %}
-                                        </ul> -->
-                                {% endif %}
+                                        </ul>
+
+                              {%endcomment%}
+                              {% endif %}
                             </li>
                         {% endfor %}
                     </ul>

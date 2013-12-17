@@ -54,9 +54,18 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 .ContinueWith(catTask => catTask.Result.Nodes);
         }
 
-        public List<NavigationNode> RootCategories
+        private List<NavigationRuntimeNode> _rootCategoryList;
+
+        public List<NavigationRuntimeNode> RootCategories
         {
-            get { return GetCategories().Result; }
+            get
+            {
+                if (_rootCategoryList == null)
+                {
+                    _rootCategoryList = Tree.OrderBy(x => x.Name).ToList();
+                }
+                return _rootCategoryList;
+            }
         }
 
 
