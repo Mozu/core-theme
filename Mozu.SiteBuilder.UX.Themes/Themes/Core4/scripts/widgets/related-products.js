@@ -9,7 +9,6 @@
                 case 'product': retval =api.get("search", { filter: filter});
                     break;
                 case 'cart': retval = api.get("search", { filter: filter, pageSize: pageSize });
-                    debugger
                     break;
             }
             
