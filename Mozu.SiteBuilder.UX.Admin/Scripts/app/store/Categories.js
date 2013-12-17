@@ -9,10 +9,7 @@ Ext.define('Taco.store.Categories', {
     extend: 'Ext.data.Store',
     model: 'Taco.model.Category',
     storeManagerConfig: {
-        clearFilters: true,
-        contextLevel: 's',
-        clearSort: true,
-        autoLoad: true
+        createOnly:true
     },
     load: function (options) {
         var me = this;
@@ -26,7 +23,7 @@ Ext.define('Taco.store.Categories', {
         }
 
         options = Ext.apply({
-            siteId:me.siteId
+            catalogId:me.catalogId
         }, options);
         
         return me.callParent([options]);
@@ -45,7 +42,7 @@ Ext.define('Taco.store.Categories', {
         
 
         options = Ext.apply({
-            siteId: siteId
+            catalogId: catalogId
         }, options);
 
         return me.callParent([options]);

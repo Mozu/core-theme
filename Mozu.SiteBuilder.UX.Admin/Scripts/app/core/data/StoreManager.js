@@ -155,7 +155,7 @@ Ext.define('Taco.core.data.StoreManager', {
             type: 'Taco.store.CategoriesTree',
             id: 'Taco.store.CategoriesTree-' + catalogId,
             createOnly: true,
-            getCatalogId: catalogId
+            catalogId: catalogId
         });
 
     }
