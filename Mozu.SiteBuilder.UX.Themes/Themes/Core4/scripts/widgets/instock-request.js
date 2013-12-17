@@ -29,9 +29,12 @@ define(['modules/jquery-mozu', 'shim!vendor/underscore>_', "modules/api", "modul
                 el: $('.mz-instock-request').parent()
             });
             
+            
             if (currentProduct.attributes.inventoryInfo && currentProduct.attributes.inventoryInfo.onlineStockAvailable < 1) {
                 //renders on store front if there is no stock
                 relatedProductsView.render();
+                //Takes away the initial flicker of showing then hiding 
+                $('.mz-instock-request').css('display', 'inherit');
             } else {
                 if (currentProduct.attributes.inventoryInfo) {
                     //removes from store front if there is stock
@@ -39,6 +42,8 @@ define(['modules/jquery-mozu', 'shim!vendor/underscore>_', "modules/api", "modul
                 } else {
                     //displays for preview in site builder
                     relatedProductsView.render();
+                    //Takes away the initial flicker of showing then hiding 
+                    $('.mz-instock-request').css('display', 'inherit');
                 }
                 
             }
