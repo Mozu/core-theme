@@ -25,6 +25,14 @@
           {% endfor %}
         </dl>
         {% endif %}
+        {% if item.product.productUsage == 'Bundle' %}
+        <dl class="mz-propertylist">
+          {% for bundledProduct in item.product.bundledProducts %}
+          <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
+          <dd>{{ bundledProduct.content.productName }} ({{ bundledProduct.quantity }})</dd>
+          {% endfor %}
+        </dl>
+        {% endif %}
         <span class="mz-carttable-item-code">
           {{ labels.productCode }}: <em>{{ item.product.productCode }}</em>
         </span>

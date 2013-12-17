@@ -50,6 +50,26 @@
   {{ model.content.productFullDescription|safe }}
 </div>
 
+{% if model.productUsage == 'Bundle' %}
+<div class="mz-productdetail-bundleitems mz-l-stack-section">
+  <h4 class="mz-l-stack-sectiontitle">{{ labels.bundleContents }}</h4>
+  <dl class="mz-propertylist mz-propertylist-justified">
+  {% for prod in model.bundledProducts %}
+	<dt>
+	  {% if prod.quantity != 1 %}{{ prod.quantity }} x {% endif %}
+	  {{ prod.content.productName }}
+	</dt>
+	<dd>
+	  {{ prod.content.productShortDescription|safe }}
+	  {% comment %}
+	    {{ prod.productCode }}
+      {% endcomment %}
+    </dd>
+  {% endfor %}
+  </dl>
+</div>
+{% endif %}
+
 {% if model.properties and themeSettings.showProductDetailProperties %}
 <div class="mz-productdetail-properties mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">{{ labels.properties }}</h4>
