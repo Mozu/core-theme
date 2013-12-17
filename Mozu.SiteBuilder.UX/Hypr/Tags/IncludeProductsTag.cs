@@ -54,6 +54,7 @@ The include_products tag is a special kind of include tag, that includes a named
             var sort = arguments.GetValueOrDefault<string>("sort");
             var productCodes = arguments.GetValueOrDefault<IEnumerable>("productCodes");
             
+
             var pageContext = context.PageContext();
             var siteContext = context.SiteContext() ;
             var searchWebApiClient = context.Resolve<IProductSearchWebApiClient>();
@@ -73,6 +74,11 @@ The include_products tag is a special kind of include tag, that includes a named
             }
             else if (productCodes != null)
             {
+                if (productCodes is string  )
+                {
+                    productCodes = ((string) productCodes).Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
+                }
+                
                 var productCodesFilters = (productCodes ?? Enumerable.Empty<object>()).Cast<object>().Where(x => x != null).Select(x => string.Format("productCode eq {0}", x)).ToArray();
 
                 if (productCodesFilters.Length == 0)

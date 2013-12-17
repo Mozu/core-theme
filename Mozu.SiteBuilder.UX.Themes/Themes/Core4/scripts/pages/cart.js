@@ -20,8 +20,9 @@
             return false;
         },
         proceedToCheckout: function () {
-            this.model.toOrder();
-            return false;
+            //commenting  for ssl for now...
+            //this.model.toOrder();
+            // return false;
         }
     });
 

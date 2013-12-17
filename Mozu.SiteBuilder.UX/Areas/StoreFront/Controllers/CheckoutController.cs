@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -12,6 +13,7 @@ using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Client;
+using Mozu.Core.Settings;
 using Mozu.Location.Contracts.Clients;
 using Mozu.ShippingRuntime.Contracts.Clients;
 using Mozu.Customer.Contracts;
@@ -43,6 +45,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ICookieProvider _cookieProvider;
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
         private readonly IOrderWebApiClient _orderWebApiClient;
+        private readonly ICartWebApiClient _cartWebApiClient;
+        private readonly ISettings _settings;
         private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private readonly IShippingWebApiClient _shippingWebApiClient;
         
@@ -51,13 +55,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //private static string _merchantId;
         private const string CookieName = "order";
 
-        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, Mozu.ShippingRuntime.Contracts.Clients.IShippingWebApiClient shippingWebApiClient , Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient )
+        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, Mozu.ShippingRuntime.Contracts.Clients.IShippingWebApiClient shippingWebApiClient , Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient , Mozu.CommerceRuntime.Contracts.Clients.ICartWebApiClient cartWebApiClient , ISettings settings)
         {
           
             _authHelper = authHelper;
             _cookieProvider = cookieProvider;
             
             _orderWebApiClient = orderWebApiClient;
+            _cartWebApiClient = cartWebApiClient;
+            _settings = settings;
             _customerAccountWebApiClient = customerAccountWebApiClient;
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
             _shippingWebApiClient = shippingWebApiClient.CloneWithoutUserClaims();
@@ -90,6 +96,40 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Order.OrderStatusConst.ACCEPTED,
             Order.OrderStatusConst.PENDING_REVIEW
         };
+
+
+         [System.Web.Http.HttpPost]
+        public async Task<HttpResponseMessage > Index(string id=null , HttpRequestMessage requestMessage = null)
+         {
+             if (id == null)
+             {
+                 var cart = (await _cartWebApiClient.GetOrCreateCart()).ReadAsSync();
+                 id = cart.Id;
+             }
+             var order = (await _orderWebApiClient.CreateOrderFromCart(id)).ReadAsSync();
+
+             var req = this.Request.CreateResponse(HttpStatusCode.Redirect);
+             Uri redirectUrl = null;
+             if ( _settings.CoreSettings.IsSSLValidationEnabled &&  this.PageContext.HandledByProxy && !this.PageContext.IsSecure)
+             {
+                 var uriBuilder = new UriBuilder(PageContext.Url);
+                 uriBuilder.Scheme = "https";
+                 uriBuilder.Port = 443;
+                 uriBuilder.Path = "/checkout/" + order.Id;
+                 redirectUrl = uriBuilder.Uri;
+                    
+             }
+             else
+             {
+                 redirectUrl  = new Uri("/checkout/" + order.Id,UriKind.Relative );
+             }
+
+             req.Headers.Location = redirectUrl;
+             return req;
+
+
+
+         }
 
 
         [System.Web.Http.HttpGet]
