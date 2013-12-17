@@ -23,37 +23,13 @@ Ext.define('Taco.model.LocationPickup', {
         // put the data from the location here
         {
             "name": "location",
-            "type": "auto",
-            "defaultValue": {
-                name: "name here",
-                description: "description here",
-                code: "code here",
-                phoneNumber: "555 555 5555",
-                shippingOriginContact: "Shipping contact",
-                "address": {
-                    "address1": "asdf 1",
-                    "address2": "asdf 2",
-                    "address3": "asdf 3",
-                    "address4": "asdf 4",
-                    "cityOrTown": "austin",
-                    "stateOrProvince": "tx",
-                    "countryCode": "us",
-                    "postalOrZipCode": "78731",
-                    "addressType": {},
-                    "addressIsValidated": false
-                }
-            }
+            "type": "auto"
         },
 
         // put the data from the locationInventory here
         {
             "name": "locationInventory",
-            "type": "auto",
-            "defaultValue": {
-                stockAvailable: 100,
-                stockReserved: 2,
-                stockOnHand: 98
-            }
+            "type": "auto"
         }
     ],
     proxy: {
