@@ -59,8 +59,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             DC.LocationInventoryCollection inventories = null;
             if (extFilter.ContainsProperty("locationcode") && extFilter.ContainsProperty("productcode"))
             {
-                var inventory = (await _locationInventoryClient.GetLocationInventory(extFilter.PopValue<string>("locationcode"), extFilter.PopValue<string>("productcode"))).ReadAsSync();
-                return this.Request.CreateResponse(HttpStatusCode.OK, List2<DC.LocationInventory>(inventory), LowerCaseJsonMediaTypeFormatter.Default);
+                var inventoryResp = await _locationInventoryClient.GetLocationInventory(extFilter.PopValue<string>("locationcode"), extFilter.PopValue<string>("productcode"));
+
+                // handle 404 by returning an empty list
+                if (inventoryResp.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                    return this.Request.CreateResponse(HttpStatusCode.OK, EmptyList2<DC.LocationInventory>(), LowerCaseJsonMediaTypeFormatter.Default);
+
+                return this.Request.CreateResponse(HttpStatusCode.OK, List2<DC.LocationInventory>(inventoryResp.ReadAsSync()), LowerCaseJsonMediaTypeFormatter.Default);
             }
             if (extFilter.ContainsProperty("locationcode"))
             {
