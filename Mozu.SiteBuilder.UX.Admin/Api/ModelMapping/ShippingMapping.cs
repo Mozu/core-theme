@@ -19,6 +19,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class ShippingMapping : Profile
     {
+        const string CUSTOM_PERCENTAGE_PER_ORDER = "CUSTOM_PERCENTAGE_PER_ORDER";
+
         public override string ProfileName
         {
             get
@@ -29,19 +31,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected override void Configure()
         {
-
+            
 
             Mapper.CreateMap<MSC.CustomTableRate, CustomTableRate>()
                   .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Content.Name))
                   .ForMember(x => x.Id, opt => opt.MapFrom(x => x.Id))
-                  .ForMember(x => x.Amount, opt => opt.MapFrom(x => x.Value))
+                  .ForMember(x => x.Amount, opt => opt.MapFrom(x => x.RateType == CUSTOM_PERCENTAGE_PER_ORDER ? (x.Value * 100) : x.Value))
                   .ForMember(x => x.RateType, opt => opt.MapFrom(x => x.RateType))
                   .ForMember(x => x.ConfiguredCountries, opt => opt.MapFrom(x => x.CountryCodes));
 
             Mapper.CreateMap<CustomTableRate, MSC.CustomTableRate>()
                .ForMember(x => x.Content, opt => opt.MapFrom(x => new MSC.CustomTableRateContent(){ LocaleCode = "en-US", Name= x.Name}))
                .ForMember(x => x.Id, opt => opt.MapFrom(x => x.Id))
-               .ForMember(x => x.Value, opt => opt.MapFrom(x => x.Amount ))
+               .ForMember(x => x.Value, opt => opt.MapFrom(x => x.RateType == CUSTOM_PERCENTAGE_PER_ORDER ? ( x.Amount / 100 ) : x.Amount ))
                .ForMember(x => x.RateType, opt => opt.MapFrom(x => x.RateType))
                .ForMember(x => x.CountryCodes, opt => opt.MapFrom(x => x.ConfiguredCountries));  
 
