@@ -1,14 +1,13 @@
-<div class="mz-categorylist" data-mz-category2="{% json_attribute Model.config %}">
-stuffa
-{{navigation|find:26.name}}
-	  {% for item in navigation.Tree %}
-	  
-	  	<div><a href="{{item.url}}">{{ item.name }}</a></div>
-		  <ul class="mz-categorylist-list {% block list-classes %}{% endblock list-classes %}">
-		    {% for subitem in item.items %}
-		    <li class="mz-categorylist-item"><a href="{{subitem.url}}">{{ subitem.name }}</a></li>
-		    {% endfor %}
-		  </ul>
+<div class="mz-categorylist" >
+  {% with  navigation|find:31 as navNode %}
+  <h4>{{navNode.name}}</h4>
+  {% for item in navNode.items %}
+        <div><a href="{{item.url}}">{{ item.name }}</a></div>
+        <ul class="mz-categorylist-list {% block list-classes %}{% endblock list-classes %}">
+        {% for subitem in item.items %}
+            <li class="mz-categorylist-item"><a href="{{subitem.url}}">{{ subitem.name }}</a></li>
+        {% endfor %}
+        </ul>
 	  {% endfor %}
-	  hello
+{% endwith %}
 </div>
