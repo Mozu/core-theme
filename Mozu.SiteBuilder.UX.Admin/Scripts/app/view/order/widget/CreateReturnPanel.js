@@ -11,11 +11,18 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
         var me = this;
         me.order = me.record;
 
+
+        var orderItemsExploded = Ext.Array.flatten(Ext.Array.map(me.order.get('items'), function(orderItem) {
+            if (!orderItem.bundledProducts || orderItem.bundledProducts.length <= 0)
+                return orderItem;
+            else
+                return Ext.Array.map(orderItem.bundledProducts, function(bundledProduct) { return Ext.apply({}, bundledProduct, { productName: bundledProduct.name, parentItemId: orderItem.id, quantity: bundledProduct.quantity * orderItem.quantity }); });
+        }));
         me.store = Ext.create('Ext.data.Store', {
             fields: [
                 'id', 'productCode', 'productName', 'quantity', 'returnQuantity'
             ],
-            data: me.order.get('items')
+            data: orderItemsExploded
         });
 
         me.grid = Ext.create('Taco.core.ux.grid.Panel', {
@@ -127,6 +134,8 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
                             returnData.items.push({
                                 orderItemId: item.getId(),
                                 quantity: item.data.returnQuantity,
+                                parentItemId: item.raw.parentItemId,
+                                productCode: item.data.productCode,
                                 reason: me.returnReason.getValue()
                             });
                         }

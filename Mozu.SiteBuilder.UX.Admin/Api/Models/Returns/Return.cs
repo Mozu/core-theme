@@ -105,6 +105,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
 
         [DataMember(EmitDefaultValue = false, Name = "quantity")]
         public int Quantity { get; set; }
+
+        /// <summary>
+        /// applicable to bundled products.
+        /// </summary>
+        [DataMember(Name = "parentItemId")]
+        public string ParentItemId { get; set; }
+
+        [DataMember(Name="productCode")]
+        public string ProductCode { get; set; }
     }
 
     [DataContract(Namespace = "Mozu.services.contracts")]
