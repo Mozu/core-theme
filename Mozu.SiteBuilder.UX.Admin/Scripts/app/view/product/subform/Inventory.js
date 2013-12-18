@@ -122,7 +122,8 @@ Ext.define('Taco.view.product.subform.Inventory', {
 
         var track = this.manageStock.getValue();
 
-        this.manageStock.setVisible(value != "Bundle" && track);
+        this.manageStock.setVisible(value != "Bundle");
+        
         //this.viewStockLink.setVisible(track);
         
         // hide if the productUsage is component
@@ -154,7 +155,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
 
         if (me.manageEnabled) {
             // hide if the productUsage is Bundle
-            this.manageInventoryButton.setVisible(value != "Bundle");
+            this.manageInventoryButton.setVisible(value != "Bundle" && track);
         }
     },
 
