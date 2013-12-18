@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-12-16
+ * Mozu JavaScript SDK - v0.2.0 - 2013-12-18
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2225,6 +2225,7 @@ var errors = (function () {
     };
 }());
 // END ERRORS
+// BEGIN IFRAMEXHR
 var IframeXHR = (function (window, document, undefined) {
 
     var hasPostMessage = window.postMessage && navigator.userAgent.indexOf("Opera") === -1,
@@ -2357,6 +2358,7 @@ var IframeXHR = (function (window, document, undefined) {
     return IframeXMLHttpRequest;
 
 }(this, this.document));
+// END IFRAMEXHR
 // BEGIN REFERENCE
 var ApiReference = (function () {
 
@@ -2614,42 +2616,6 @@ var ApiReference = (function () {
                 noBody: true
             }
         },
-        //'user': {
-        //    create: {
-        //        verb: 'POST',
-        //        template: '{+userService}'
-        //    },
-        //    update: {
-        //        verb: 'PUT',
-        //        template: '{+userService}{userId}',
-        //        includeSelf: true
-        //    },
-        //    get: {
-        //        template: '{+userService}{id}',
-        //        shortcutParam: 'id'
-        //    },
-        //    'get-by-email': {
-        //        template: '{+userService}{?emailAddress*}',
-        //        shortcutParam: 'emailAddress'
-        //    },
-        //    login: {
-        //        verb: 'POST',
-        //        template: '{+userService}login',
-        //        includeSelf: true,
-        //        returnType: 'login'
-        //    },
-        //    'change-password': {
-        //        verb: 'POST',
-        //        includeSelf: true,
-        //        template: '{+userService}{userId}/changepassword'
-        //    },
-        //    'get-customers': {
-        //        template: '{+customerService}?fields=UserId+eq+{userId}',
-        //        includeSelf: true,
-        //        returnType: 'customers'
-        //    }
-            
-        //},
         customer: {
             template: '{+customerService}{id}',
             shortcutParam: 'id',
@@ -2660,6 +2626,7 @@ var ApiReference = (function () {
                 returnType: 'login',
             },
             'create-storefront': {
+                useIframeTransport: '{+storefrontUserService}../../Assets/mozu_receiver.html',
                 verb: 'POST',
                 template: '{+storefrontUserService}create',
                 returnType: 'login',
