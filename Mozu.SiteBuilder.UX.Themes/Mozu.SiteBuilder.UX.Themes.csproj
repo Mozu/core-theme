@@ -448,7 +448,6 @@
     <Content Include="Themes\Core4\scripts\vendor\jquery-scrollto.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery.colorbox-min.js" />
     <Content Include="Themes\Core4\scripts\vendor\placeholder_polyfill.jquery.amd.js" />
-    <Content Include="Themes\Core4\scripts\widgets\category-list.js" />
     <Content Include="Themes\Core4\scripts\widgets\image.js" />
     <Content Include="Themes\Core4\scripts\widgets\instock-request.js" />
     <Content Include="Themes\Core4\scripts\widgets\related-products.js" />
@@ -1274,7 +1273,6 @@
     <Content Include="Themes\Core4\stylesheets\modules\common\contact-selector.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\payment-method.less" />
     <Content Include="Themes\Core4\templates\modules\checkout\checkout-shipping-contact-selector.hypr.live" />
-    <Content Include="Themes\Core4\templates\modules\category\category-list.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\my-account\order-history-item-listing.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\my-account\order-history-order-listing.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\my-account\order-history-list.hypr.live" />
@@ -1297,7 +1295,7 @@
     <Content Include="Themes\Core4\templates\Widgets\location\store-locator.hypr" />
     <Content Include="ThemeTemplates\ExtendsCore4\theme.json" />
     <Content Include="Themes\Core4\templates\pages\no-search-results.hypr" />
-    <Content Include="Themes\Core4\templates\Widgets\misc\category-list.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\misc\category-navigation.hypr" />
     <Content Include="Themes\Core4\templates\pages\location.hypr" />
   </ItemGroup>
   <ItemGroup>
