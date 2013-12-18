@@ -1,6 +1,7 @@
-<div class="mz-categorylist {% block module-classes %}{% endblock module-classes %}">
-  {% if model.items %}
-	  {% for item in model.items %}
+<div class="mz-categorylist" data-mz-category2="{% json_attribute Model.config %}">
+
+	  {% for item in navigation|find:Model.config.mainCategory %}
+	  xxxx
 	  	<div><a href="{{item.url}}">{{ item.name }}</a></div>
 		  <ul class="mz-categorylist-list {% block list-classes %}{% endblock list-classes %}">
 		    {% for subitem in item.items %}
@@ -8,5 +9,5 @@
 		    {% endfor %}
 		  </ul>
 	  {% endfor %}
-  {% endif %}
+
 </div>

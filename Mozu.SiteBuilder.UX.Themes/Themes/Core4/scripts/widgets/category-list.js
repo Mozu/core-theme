@@ -1,11 +1,10 @@
 define(['modules/jquery-mozu', 'hyprlive', 'shim!vendor/underscore>_', "modules/api", "modules/backbone-mozu"],
     function ($, Hypr, _, api, Backbone) {
-        
-        var categoryView = Backbone.MozuView.extend({
-                templateName: 'modules/category/category-list',
-            });
 
         $(document).ready(function () {
+            var data = $('.mz-categorylist').data('mz-category');
+            //data.mainCategory -> this gives you the selected category
+           
             $.getJSON('/nav').then(function (json) {
                 //grabs the div 
                 //creates the hyper template
