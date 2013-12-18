@@ -67,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<Product>>> ListInventoriedProducts([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter) 
         {
             // use a hard-coded response group and filter for this search.
-            string responseGroups = "min";
+            string responseGroups = extFilter.ResponseGroups ?? "Min,Price,VariationOptions";
             string extraFilter = extFilter.ToFilterString();
             string q = extFilter.ToQString();
 

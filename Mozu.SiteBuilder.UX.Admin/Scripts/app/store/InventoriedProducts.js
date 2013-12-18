@@ -22,8 +22,8 @@ Ext.define('Taco.store.InventoriedProducts', {
             read: '/admin/app/Product/inventoriedproductlist'
         },
         extraParams: {
-            responseGroups: 'Min,Price',
-            advancedSearch:Ext.JSON.encodeValue({productUsage:['Standard','Component']})
+            responseGroups: 'Min,Price,VariationOptions,Options',
+            
         },
         reader: {
             type: 'json',
