@@ -40,9 +40,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
         }
         protected override void AddFilters(HttpConfiguration httpConfiguration, Core.Api.Filters.Exception.ApiExceptionFilter exceptionFilter, Core.Api.Routing.ReflectedControllerIndex controllers)
         {
-         
+
+            httpConfiguration.Filters.Add(new EditModeCacheInvalidatorFilter());
             httpConfiguration.Filters.Add(new AnonymousShopperFilterAttribute());
             httpConfiguration.Filters.Add(new VisitTrackingFilterAttribute());
+            
 
             // handle exceptions with a pretty screen
             httpConfiguration.Filters.Add(new StorefrontErrorFilterAttribute(exceptionFilter));
@@ -57,6 +59,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
             //base.AddFilters(httpConfiguration, exceptionFilter, controllers);
+
+        
         }
         protected override void InitializeContainerFactory(Core.Configuration.AutofacContainerFactory containerFactory)
         {

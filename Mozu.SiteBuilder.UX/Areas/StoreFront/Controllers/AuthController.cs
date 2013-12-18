@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Web;
+using System.Web.Http;
 using Magnum.Extensions;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
@@ -184,9 +185,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public string returnUrl { get; set; }
         }
 
-         [System.Web.Http.HttpPost]
+       [AcceptVerbs( "POST")]
         public async Task<HttpResponseMessage> CreateAccount(CustomerAccountAndAuthInfo authInfo)
          {
+           
              var res = await DoCreateAccount(authInfo);
              if (res.ResponseMessage.IsSuccessStatusCode)
              {
@@ -209,9 +211,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
              }
          }
 
-         [System.Web.Http.HttpPost]
+         [AcceptVerbs("OPTIONS", "POST")]
          public async Task<HttpResponseMessage> AjaxCreateAccount(CustomerAccountAndAuthInfo authInfo)
          {
+             if (this.Request.Method.Method  == "OPTIONS")
+             {
+                 return this.Request.CreateResponse(HttpStatusCode.OK);
+             }
              var res= await  DoCreateAccount(authInfo);
 
              return res.ResponseMessage;

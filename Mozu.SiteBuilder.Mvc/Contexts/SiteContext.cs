@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public const string FORCE_THEME_COOKIE_NAME = "SBTHEME";
         private readonly ICookieProvider _cookieProvider;
         private readonly ISiteBuilderApiContext _siteBuilderApiContext;
-        private readonly IStorefrontCache _cache;
+       // private readonly IStorefrontCache _cache;
         private readonly ISettings _settings;
         private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
         private readonly IGeneralSettingsWebApiClient _generalSettingsWebApiClient;
@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         private Dictionary<string, string> _labels;
 
-        public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, IStorefrontCache cache , ISettings settings , ISiteBuilderApiContext apiContext, HttpRequestMessage requestMessage)
+        public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ISiteBuilderApiContext siteBuilderApiContext,  ISettings settings , ISiteBuilderApiContext apiContext, HttpRequestMessage requestMessage)
         {
             _generalSettingsWebApiClient = generalSettingsWebApiClient.CloneWithoutUserClaims();
             _themeSettingsRepository = themeSettingsRepository;
@@ -51,7 +51,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _mobileDetectionProvider = mobileDetectionProvider;
             _cookieProvider = cookieProvider;
             _siteBuilderApiContext = siteBuilderApiContext;
-            _cache = cache;
+            
             _settings = settings;
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient.CloneWithoutUserClaims();
             this.CdnPrefix = settings.AppSettings("CdnHost");
@@ -193,37 +193,40 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         Task<Mozu.SiteSettings.Order.Contracts.CheckoutSettings> GetCheckoutSettings()
         {
-            var key = typeof ( Mozu.SiteSettings.Order.Contracts.CheckoutSettings).FullName  + this._siteBuilderApiContext.SiteId;
-            var settings = (Mozu.SiteSettings.Order.Contracts.CheckoutSettings) _cache[key];
-            if (settings == null)
-            {
-                return _checkoutSettingsWebApiClient.GetCheckoutSettings().ContinueWith(x =>
-                    {
-                        settings = x.Result.ReadAsSync();
-                        _cache[key] = settings;
-                        return settings;
-                    });
-            }
-            var tcs = new TaskCompletionSource<SiteSettings.Order.Contracts.CheckoutSettings>();
-            tcs.SetResult(settings);
-            return tcs.Task;
+            return _checkoutSettingsWebApiClient.GetCheckoutSettings().ContinueWith(x => x.Result.ReadAsSync());
+              
+            //var key = typeof ( Mozu.SiteSettings.Order.Contracts.CheckoutSettings).FullName  + this._siteBuilderApiContext.SiteId;
+            //var settings = (Mozu.SiteSettings.Order.Contracts.CheckoutSettings) _cache[key];
+            //if (settings == null)
+            //{
+            //    return _checkoutSettingsWebApiClient.GetCheckoutSettings().ContinueWith(x =>
+            //        {
+            //            settings = x.Result.ReadAsSync();
+            //            _cache[key] = settings;
+            //            return settings;
+            //        });
+            //}
+            //var tcs = new TaskCompletionSource<SiteSettings.Order.Contracts.CheckoutSettings>();
+            //tcs.SetResult(settings);
+            //return tcs.Task;
         }
         Task<Mozu.SiteSettings.General.Contracts.GeneralSettings> GetGeneralSettings()
         {
-            var key = typeof(Mozu.SiteSettings.General.Contracts.GeneralSettings).FullName + this._siteBuilderApiContext.SiteId;
-            var settings = (Mozu.SiteSettings.General.Contracts.GeneralSettings)_cache[key];
-            if (settings == null)
-            {
-                return _generalSettingsWebApiClient.GetGeneralSettings().ContinueWith(x =>
-                {
-                    settings = x.Result.ReadAsSync();
-                    _cache[key] = settings;
-                    return settings;
-                });
-            }
-            var tcs = new TaskCompletionSource<Mozu.SiteSettings.General.Contracts.GeneralSettings>();
-            tcs.SetResult(settings);
-            return tcs.Task;
+            return _generalSettingsWebApiClient.GetGeneralSettings().ContinueWith(x => x.Result.ReadAsSync());
+            //var key = typeof(Mozu.SiteSettings.General.Contracts.GeneralSettings).FullName + this._siteBuilderApiContext.SiteId;
+            //var settings = (Mozu.SiteSettings.General.Contracts.GeneralSettings)_cache[key];
+            //if (settings == null)
+            //{
+            //    return _generalSettingsWebApiClient.GetGeneralSettings().ContinueWith(x =>
+            //    {
+            //        settings = x.Result.ReadAsSync();
+            //        _cache[key] = settings;
+            //        return settings;
+            //    });
+            //}
+            //var tcs = new TaskCompletionSource<Mozu.SiteSettings.General.Contracts.GeneralSettings>();
+            //tcs.SetResult(settings);
+            //return tcs.Task;
         }
 
 
