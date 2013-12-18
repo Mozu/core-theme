@@ -150,6 +150,7 @@ Ext.define('Taco.shared.view.form.Address', {
                 fieldLabel: 'First Name',
                 margin: '0 13 5 0',
                 allowBlank: false,
+                labelStyle: 'padding-top: 5px',
                 style: { 'display': 'inline-table' }
             }, {
                 xtype: 'textfield',
@@ -157,6 +158,7 @@ Ext.define('Taco.shared.view.form.Address', {
                 name: 'middleName',
                 fieldLabel: 'Middle Name',
                 margin: '0 13 5 0',
+                labelStyle: 'padding-top: 5px',
                 style: { 'display': 'inline-table' }
             }, {
                 xtype: 'textfield',
@@ -165,6 +167,7 @@ Ext.define('Taco.shared.view.form.Address', {
                 fieldLabel: 'Last Name',
                 allowBlank: false,
                 margin: '0 0 5 0',
+                labelStyle: 'padding-top: 5px',
                 style: { 'display': 'inline-table' }
             });
         }

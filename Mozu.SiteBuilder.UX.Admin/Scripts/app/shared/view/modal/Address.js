@@ -11,6 +11,7 @@ Ext.define('Taco.shared.view.modal.Address', {
 
     autoShow: true,
 
+    height: 580,
     width: 700,
     title: 'Edit Address',
 
