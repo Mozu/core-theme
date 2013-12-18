@@ -132,7 +132,7 @@ require(["modules/jquery-mozu", "hyprlive", "modules/backbone-mozu"],
         };
 
         var LocationView = Backbone.MozuView.extend({
-            templateName: 'modules/location'
+            templateName: 'modules/location/location'
         });
 
         var view = new LocationView({
