@@ -10,6 +10,23 @@ var pull = function() {
     if (argv.pull || argv.p || argv.checkin || argv.c) {
         log(cmd)
         child = exec(cmd, function(error, stdout, stderr) {
+            pullConfig()
+        })
+
+        child.stdout.on('data', function(data) {
+            process.stdout.write(data)
+        })
+
+    } else {
+        pullConfig()
+    }
+}
+
+var pullConfig = function() {
+    var cmd = 'git tf pull --rebase   # Trying to pull ../Mozu Configs'
+    if (argv.pull || argv.p || argv.checkin || argv.c) {
+        log(cmd)
+        child = exec(cmd, {cwd: '../Mozu Configs'}, function(error, stdout, stderr) {
             checkin()
         })
 
