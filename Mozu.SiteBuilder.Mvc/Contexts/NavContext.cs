@@ -22,7 +22,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             _navigationGandalf = navigationGandalf;
             _apiContext = apiContext;
-            
+            this.Category = new CategoryNodeFinder(this);
         }
 
        // private List<NavigationRuntimeNode> __navigationTree;
@@ -33,6 +33,35 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 return ASyncGetTree().Result;
             }
+        }
+
+
+        public class CategoryNodeFinder
+        {
+            private readonly NavigationContext _navigationContext;
+
+            public CategoryNodeFinder(NavigationContext navigationContext )
+            {
+                _navigationContext = navigationContext;
+            }
+            public NavigationRuntimeNode this[int i]
+            {
+                get
+                {
+                    return _navigationContext.Tree.FindByCategory(new ProductRuntime.Contracts.Category() {CategoryId = i});
+                }
+            }
+        
+        }
+
+        /// <summary>
+        /// called by django
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public CategoryNodeFinder Category
+        {
+            get; set;
         }
 
 
@@ -53,6 +82,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             return _navigationGandalf.GetCategories()
                 .ContinueWith(catTask => catTask.Result.Nodes);
         }
+
+       
 
         private List<NavigationRuntimeNode> _rootCategoryList;
 

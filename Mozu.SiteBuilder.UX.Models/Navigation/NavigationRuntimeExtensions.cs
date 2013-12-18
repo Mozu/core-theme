@@ -10,55 +10,39 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
 {
     public static class NavigationRuntimeExtensions
     {
-        public static NavigationRuntimeNode FindByCategory(this List<NavigationRuntimeNode> nodes, Category category)
+        public static NavigationRuntimeNode FindNode(this List<NavigationRuntimeNode> nodes, string nodeType, string id)
         {
-            foreach (var n in nodes)
+            var queue = new Queue<NavigationRuntimeNode>( nodes);
+            while (queue.Count > 0)
             {
-                if (n.NodeType.IsCategory && n.Id == "category^^" + category.CategoryId)
-                    return n;
-                if (n.Items != null && n.Items.Count > 0)
+                var node = queue.Dequeue();
+                if (node.NodeType == nodeType && string.Equals(node.OriginalId, id, StringComparison.OrdinalIgnoreCase))
+                    return node;
+                if (node.Items != null)
                 {
-                    NavigationRuntimeNode foundCat = FindByCategory(n.Items, category);
-                    if (foundCat != null)
-                        return foundCat;
+                    node.Items.ForEach(queue.Enqueue);
+                    
                 }
             }
 
             return null;
         }
 
+        public static NavigationRuntimeNode FindByCategory(this List<NavigationRuntimeNode> nodes, Category category)
+        {
+            return FindNode(nodes, "category", category.CategoryId.ToString());
+        }
+
+      
+
         public static NavigationRuntimeNode FindByProduct(this List<NavigationRuntimeNode> nodes, Product product)
         {
-            foreach (var n in nodes)
-            {
-                if (n.NodeType.IsProduct && n.Id == "product^^" + product.ProductCode)
-                    return n;
-                if (n.Items != null && n.Items.Count > 0)
-                {
-                    NavigationRuntimeNode foundProduct = FindByProduct(n.Items, product);
-                    if (foundProduct != null)
-                        return foundProduct;
-                }
-            }
-
-            return null;
+            return FindNode(nodes, "product", product.ProductCode);
         }
 
         public static NavigationRuntimeNode FindByDocument(this List<NavigationRuntimeNode> nodes, Document document)
         {
-            foreach (var n in nodes)
-            {
-                if (n.NodeType.IsPage && n.Id.EndsWith(document.Collection + "^^" + document.Id))
-                    return n;
-                if (n.Items != null && n.Items.Count > 0)
-                {
-                    NavigationRuntimeNode foundDocument = FindByDocument(n.Items, document);
-                    if (foundDocument != null)
-                        return foundDocument;
-                }
-            }
-
-            return null;
+            return FindNode(nodes, "page", document.Id);
         }
     }
 }
