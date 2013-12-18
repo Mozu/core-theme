@@ -143,15 +143,15 @@
     </Reference>
     <Reference Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.2.0.1\lib\FSharp.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.1.2.1\lib\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.PowerPack, Version=4.0.0.1, Culture=neutral, PublicKeyToken=f536804aa0eb945b, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.2.0.1\lib\FSharp.PowerPack.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.1.2.1\lib\FSharp.PowerPack.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.PowerPack.Compatibility, Version=4.0.0.1, Culture=neutral, PublicKeyToken=f536804aa0eb945b, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.2.0.1\lib\FSharp.PowerPack.Compatibility.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.1.2.1\lib\FSharp.PowerPack.Compatibility.dll</HintPath>
     </Reference>
     <Reference Include="Glimpse.Core, Version=0.87.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -208,9 +208,9 @@
     <Reference Include="Mozu.BuildSupport.GetAssemblyFileVersionTask">
       <HintPath>..\packages\Mozu.BuildSupport.GetAssemblyFileVersionTask.1.0.0\lib\Mozu.BuildSupport.GetAssemblyFileVersionTask.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.3.0-dev004\lib\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.2.0.5\lib\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -220,13 +220,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Core.1.2.0.1\lib\Mozu.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Api, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.Api, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Api.1.2.1.3\lib\Mozu.Core.Api.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Api.1.2.0.8\lib\Mozu.Core.Api.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Api.Client, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.Api.Client, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Api.Client.1.2.1.5\lib\Mozu.Core.Api.Client.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Api.Client.1.2.0.3\lib\Mozu.Core.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.Contracts, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -247,9 +247,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Core.Messaging.Contracts.1.2.0.2\lib\Mozu.Core.Messaging.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Mongo, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.Mongo, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Mongo.1.2.1.3\lib\Mozu.Core.Mongo.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Mongo.1.2.0.2\lib\Mozu.Core.Mongo.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.ThirdParty, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -259,9 +259,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Core.ThirdParty.Contracts.1.2.0.1\lib\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Customer.Contracts, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Customer.Contracts, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Customer.Contracts.1.2.1.3\lib\Mozu.Customer.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Customer.Contracts.1.2.0.13\lib\Mozu.Customer.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Location.Contracts, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -321,11 +321,11 @@
     </Reference>
     <Reference Include="NDjango.Core40, Version=0.0.0.0, Culture=neutral, PublicKeyToken=ac1e89aa411d579d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.2.0.1\lib\NDjango.Core40.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.1.2.1\lib\NDjango.Core40.dll</HintPath>
     </Reference>
     <Reference Include="NDjangoFilters.NDjangoExtension40, Version=0.9.9.8, Culture=neutral, PublicKeyToken=ac1e89aa411d579d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.2.0.1\lib\NDjangoFilters.NDjangoExtension40.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.1.2.1\lib\NDjangoFilters.NDjangoExtension40.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -432,6 +432,7 @@
     <Content Include="Themes\Core4\resources\admin\widgets\21_rss.png" />
     <Content Include="Themes\Core4\resources\images\button-loading-small.gif" />
     <Content Include="Themes\Core4\resources\images\button-loading.gif" />
+    <Content Include="Themes\Core4\scripts\modules\jquery-fitvids.js" />
     <Content Include="Themes\Core4\scripts\modules\models-orders.js" />
     <Content Include="Themes\Core4\scripts\modules\jquery-dateinput-localized.js" />
     <Content Include="Themes\Core4\scripts\modules\models-paymentmethods.js" />
@@ -439,7 +440,6 @@
     <Content Include="Themes\Core4\scripts\modules\views-productimages.js" />
     <Content Include="Themes\Core4\scripts\modules\views-messages.js" />
     <Content Include="Themes\Core4\scripts\modules\views-productlists.js" />
-    <Content Include="Themes\Core4\scripts\pages\location.js" />
     <Content Include="Themes\Core4\scripts\pages\search.js" />
     <Content Include="Themes\Core4\scripts\vendor\bootstrap-affix.js" />
     <Content Include="Themes\Core4\scripts\vendor\bootstrap-popover.js" />
@@ -448,11 +448,11 @@
     <Content Include="Themes\Core4\scripts\vendor\jquery-scrollto.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery.colorbox-min.js" />
     <Content Include="Themes\Core4\scripts\vendor\placeholder_polyfill.jquery.amd.js" />
+    <Content Include="Themes\Core4\scripts\widgets\category-list.js" />
     <Content Include="Themes\Core4\scripts\widgets\image.js" />
     <Content Include="Themes\Core4\scripts\widgets\instock-request.js" />
     <Content Include="Themes\Core4\scripts\widgets\related-products.js" />
     <Content Include="Themes\Core4\scripts\widgets\video.js" />
-    <Content Include="Themes\Core4\scripts\widgets\store-locator.js" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-container.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-sidebar.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-slidebox.less" />
@@ -641,12 +641,6 @@
     <Content Include="Themes\Core4\templates\modules\common\page-numbers.hypr.live" />
     <Content Include="Themes\Core4\templates\pages\blank-page.hypr" />
     <Content Include="Themes\Core4\theme-ui.json" />
-    <Content Include="ThemeTemplates\ExtendsCore4\labels\README.txt" />
-    <Content Include="ThemeTemplates\ExtendsCore4\README.txt" />
-    <Content Include="ThemeTemplates\ExtendsCore4\scripts\README.txt" />
-    <Content Include="ThemeTemplates\ExtendsCore4\resources\README.txt" />
-    <Content Include="ThemeTemplates\ExtendsCore4\stylesheets\README.txt" />
-    <Content Include="ThemeTemplates\ExtendsCore4\templates\README.txt" />
     <Content Include="Tools\Documentation\Tags.vol" />
     <Content Include="Themes\Core3\theme.xml" />
     <Content Include="Themes\Core3\MetaData\ThemeSettings.xml" />
@@ -1018,10 +1012,15 @@
     <Content Include="Themes\Core4\templates\modules\product\product-list.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\product\product-list-tiled.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\common\order-listing.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\my-account\open-order-item-listing.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\my-account\open-order-listing.hypr.live" />
     <Content Include="Themes\Core4\stylesheets\modules\common\order-listing.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\order-list.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\item-listing.less" />
     <Content Include="Themes\Core4\stylesheets\pages\category.less" />
+    <Content Include="Themes\Core4\templates\modules\my-account\my-account-openorders.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Themes\Core4\templates\modules\common\order-list.hypr.live" />
     <Content Include="Themes\Core4\templates\Widgets\catalog\related-products.hypr" />
     <Content Include="Themes\Core4\templates\modules\product\product-list-carousel.hypr.live" />
@@ -1261,7 +1260,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core4\stylesheets\widgets\instock-request.less" />
-    <Content Include="Themes\Core4\stylesheets\widgets\video.less" />
     <Content Include="Themes\Core4\templates\modules\my-account\my-account-wishlist-item-listing.hypr.live" />
     <Content Include="Themes\Core4\templates\email\product-instock.hypr" />
     <Content Include="Themes\Core4\stylesheets\state\notices.less" />
@@ -1273,27 +1271,13 @@
     <Content Include="Themes\Core4\stylesheets\modules\common\contact-selector.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\payment-method.less" />
     <Content Include="Themes\Core4\templates\modules\checkout\checkout-shipping-contact-selector.hypr.live" />
-    <Content Include="Themes\Core4\templates\modules\my-account\order-history-item-listing.hypr.live" />
-    <Content Include="Themes\Core4\templates\modules\my-account\order-history-order-listing.hypr.live" />
-    <Content Include="Themes\Core4\templates\modules\my-account\order-history-list.hypr.live" />
-    <Content Include="Themes\Core4\templates\modules\my-account\order-history-paging-controls.hypr.live" />
-    <Content Include="Themes\Core4\templates\modules\common\item-return-form.hypr.live" />
-    <Content Include="Themes\Core4\stylesheets\modules\my-account\return-form.less" />
-    <Content Include="Themes\Core4\templates\modules\my-account\my-account-returnhistory.hypr" />
-    <Content Include="Themes\Core4\templates\modules\my-account\return-history-list.hypr.live" />
-    <Content Include="Themes\Core4\templates\modules\my-account\return-history-item-listing.hypr.live" />
-    <Content Include="Themes\Core4\templates\modules\my-account\return-history-return-listing.hypr.live" />
-    <Content Include="Themes\Core4\stylesheets\modules\my-account\rma-item.less" />
-    <Content Include="Themes\Core4\stylesheets\widgets\image.less" />
-    <Content Include="Themes\Core4\templates\modules\location.hypr.live" />
-    <Content Include="Themes\Core4\stylesheets\pages\location.less" />
+    <Content Include="Themes\Core4\templates\modules\category\category-list.hypr.live" />
     <None Include="Themes\Core4\templates\modules\product\product-instock-request.hypr.live" />
     <Content Include="Themes\Core4\templates\Widgets\cms\image2.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\cms\video.hypr" />
-    <Content Include="Themes\Core4\templates\Widgets\location\store-locator.hypr" />
     <Content Include="ThemeTemplates\ExtendsCore4\theme.json" />
     <Content Include="Themes\Core4\templates\pages\no-search-results.hypr" />
-    <Content Include="Themes\Core4\templates\pages\location.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\misc\category-list.hypr" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core4\templates\Widgets\misc\instock-request.hypr" />

@@ -1,0 +1,12 @@
+<div class="mz-categorylist {% block module-classes %}{% endblock module-classes %}">
+  {% if model.items %}
+	  {% for item in model.items %}
+	  	<div><a href="{{item.url}}">{{ item.name }}</a></div>
+		  <ul class="mz-categorylist-list {% block list-classes %}{% endblock list-classes %}">
+		    {% for subitem in item.items %}
+		    <li class="mz-categorylist-item"><a href="{{subitem.url}}">{{ subitem.name }}</a></li>
+		    {% endfor %}
+		  </ul>
+	  {% endfor %}
+  {% endif %}
+</div>
