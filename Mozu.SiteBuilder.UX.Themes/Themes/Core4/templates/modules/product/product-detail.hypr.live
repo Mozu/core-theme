@@ -75,7 +75,7 @@
   <h4 class="mz-l-stack-sectiontitle">{{ labels.properties }}</h4>
   <dl class="mz-propertylist mz-propertylist-justified">
     {% for property in model.properties %}
-    {% if property.values %}
+    {% if property.values and not property.isHidden %}
     <dt>{{property.attributeDetail.name}}</dt>
     {% for v in property.values %}
     <dd>{% if v.stringValue %}{{v.stringValue}}{% else %}{{v.value}}{% endif %}</dd>
@@ -85,6 +85,8 @@
   </dl>
 </div>
 {% endif %}
+
+{% dump model %}
 
 {% if model.measurements and themeSettings.showProductDetailMeasurements %}
 <div class="mz-productdetail-measurements mz-l-stack-section">
