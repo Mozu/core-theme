@@ -3,7 +3,9 @@
  */
 Ext.define('Taco.model.Channel', {
     extend: 'Taco.core.data.Model',
-    
+    requiredStores: [
+        'Taco.store.Countries'
+    ],
     fields: [{
         "name": "code",
         "type": "string",
