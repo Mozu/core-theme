@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Mozu.SiteBuilder.Mvc.Filters;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.UX.Models.Navigation;
@@ -13,7 +14,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 {
 
 
-    public class NavigationContext 
+    public class NavigationContext : ITagFilterFindable
     {
         private readonly NavigationGandalf _navigationGandalf;
         private readonly ISiteBuilderApiContext _apiContext;
@@ -35,6 +36,17 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
         }
 
+
+        object ITagFilterFindable.Filter(IEnumerable<object> parameter)
+        {
+            var key = parameter.FirstOrDefault();
+            if (key == null)
+            {
+                return null;
+            }
+            return this.Tree.FindNode(null, key.ToString());
+        
+        }
 
         public class CategoryNodeFinder
         {
@@ -221,6 +233,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             CurrentNode = docNode;
         }
 
-      
+
+
+       
     }
 }
