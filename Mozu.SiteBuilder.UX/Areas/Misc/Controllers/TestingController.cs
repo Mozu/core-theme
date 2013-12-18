@@ -6,6 +6,7 @@ using System.Text;
 using System.Web.Http;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
+using Mozu.Core.Api.Client.Caching;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Settings;
 using Mozu.PaymentService.Contracts;
@@ -151,6 +152,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 case "admin-pending":
                 case "staging":
                 {
+                    var invalidator = Request.Resolve<IDirtyCacheInvalidator>();
+                    invalidator.Invalidate();
                     viewMode = DataViewModeType.Pending;
                     domainList = site.Domains.Where(x => x.IsSystemAssigned).Select(x => "admin-pending-view." + x.DomainName);
                     break;

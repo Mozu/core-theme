@@ -7,7 +7,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using Magnum.Reflection;
 using Mozu.Core;
+using Mozu.Core.Api.Client.Caching;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.Security;
@@ -28,9 +30,27 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             return continuation();
         }
 
-        public bool AllowMultiple
+        public  bool AllowMultiple
         {
             get { return false; }
         }
+    }
+
+    public class EditModeCacheInvalidatorFilter : System.Web.Http.Filters.ActionFilterAttribute
+    {
+        public override bool AllowMultiple
+        {
+            get { return false; }
+        }
+        public override  void OnActionExecuting(HttpActionContext actionContext)
+        {
+            var apiContext = actionContext.Request.Resolve<ISiteBuilderApiContext>();
+            if (!apiContext.IsEditMode)
+                return;
+
+            var invalidator = actionContext.Request.Resolve<IDirtyCacheInvalidator>();
+            invalidator.Invalidate();
+        }
+        
     }
 }

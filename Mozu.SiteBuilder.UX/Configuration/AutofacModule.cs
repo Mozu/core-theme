@@ -117,9 +117,16 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 		    // builder.RegisterType<MozuServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
 
-            builder.Register(BuildClient<DocumentListWebApiClient>).As<IDocumentListWebApiClient>().InstancePerApiRequest();
-            builder.Register(BuildClient<GeneralSettingsWebApiClient>).As<IGeneralSettingsWebApiClient>().InstancePerApiRequest();
+            builder.RegisterType<DocumentListWebApiClient>().As<IDocumentListWebApiClient>().InstancePerApiRequest();
+            builder.RegisterType<GeneralSettingsWebApiClient>().As<IGeneralSettingsWebApiClient>().InstancePerApiRequest();
+
+            builder.RegisterType<DocumentListWebApiClient>().As<IDocumentListWebApiClient>().InstancePerApiRequest();
+            builder.RegisterType<GeneralSettingsWebApiClient>().As<IGeneralSettingsWebApiClient>().InstancePerApiRequest();
             
+
+
+
+
             builder.RegisterType<PropertyTypeWebApiClient>().As<IPropertyTypeWebApiClient>().InstancePerApiRequest();
 		    builder.RegisterType<DocumentTypeWebApiClient>().As<IDocumentTypeWebApiClient>().InstancePerApiRequest();
 
@@ -147,13 +154,13 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 ;
 		}
 
-        object BuildClient<T>(IComponentContext c)
-        {
-            var ctx = c.Resolve<ISiteBuilderApiContext>();
-            var scmh = c.Resolve<IServiceClientMessageHandler>();
-            var client = (ServiceClientBase) Activator.CreateInstance(typeof (T), scmh);
-            client.Options.DisableCache = ctx.DataViewMode == DataViewModeType.Pending;
-            return client;
-        }
+        //object BuildClient<T>(IComponentContext c)
+        //{
+        //    var ctx = c.Resolve<ISiteBuilderApiContext>();
+        //    var scmh = c.Resolve<IServiceClientMessageHandler>();
+        //    var client = (ServiceClientBase) Activator.CreateInstance(typeof (T), scmh);
+        //    client.Options.DisableCache = ctx.DataViewMode == DataViewModeType.Pending;
+        //    return client;
+        //}
 	}
 }

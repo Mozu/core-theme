@@ -492,11 +492,10 @@
         "editViewFields": [{
             xtype: 'textareafield',
             grow: true,
-            flex:1,
             name: 'body',
             fieldLabel: 'HTML',
             anchor: '100%',
-            style:'resize:both'
+            fieldStyle:"resize:both;font-family:Monaco, Menlo, Consolas, 'Droid Sans Mono', Inconsolata, 'Courier New', monospace;height:100%"
         }],
         "defaultConfig": {
             "body": "<h2>Insert Markup</h2>"

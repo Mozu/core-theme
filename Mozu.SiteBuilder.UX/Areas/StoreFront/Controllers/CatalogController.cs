@@ -7,6 +7,7 @@ using System.ServiceModel.Syndication;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Routing;
+using System.Web.UI;
 using AutoMapper;
 using Autofac;
 using Mozu.Core;
@@ -69,10 +70,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Product not found");
                 }
             }
-            ProductRuntime.Contracts.Product prod = res.ReadAsAsync().Result;
+            ProductRuntime.Contracts.Product prod =  await res.ReadAsAsync();
             var product = Mapper.Map<Product>(prod);
 
-            SetCatalogContext(product);
+           
 
             PageContext.PageType = "product";
             PageContext.ProductCode = productCode;
@@ -96,23 +97,26 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                          };
             ViewResult result = View("product", product);
           
-            await ContextInitilaztionTasks;
-
+            
             var overrideTemplate = PageContext.CmsContext.Page.Document.Get<string>("template");
             if (!string.IsNullOrEmpty(overrideTemplate))
             {
                 var template = this.SiteContext.Theme.PageTypes.FirstOrDefault(x => string.Equals(x.Id, overrideTemplate, StringComparison.OrdinalIgnoreCase));
                 if (template != null)
                 {
-                    result.ViewName = template.Template ;    
+                    result.ViewName = template.Template ;
+                    PageContext.CmsContext.Template.Path  = overrideTemplate;
                 }
                 
             }
+
+            await ContextInitilaztionTasks;
+            SetCatalogContext(product);
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
 
         [HttpGet]
-        public ActionResult ProductListing(int? categoryId = null, string sortBy = null, int? startIdx = null, int? itemsPerPage = null, List<object> productCodes = null, bool? includeFacets = null, bool? useUrlParams = null)
+        public async Task<Models.StoreFront.Catalog.ProductCollection> ProductListing(int? categoryId = null, string sortBy = null, int? startIdx = null, int? itemsPerPage = null, List<object> productCodes = null, bool? includeFacets = null, bool? useUrlParams = null)
         {
             categoryId = categoryId.GetValueOrDefault(-1) < 1 ? null : categoryId;
             if (useUrlParams.GetValueOrDefault(false))
@@ -152,31 +156,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             //todo do i need to replace recurese
             // recurse: recurse,
-            try
-            {
+           
                 if (includeFacets.GetValueOrDefault(false) && categoryId.HasValue)
                 {
                     string facetValueFilter = HttpRequestBase.QueryString["facetValueFilter"];
-                    ProductSearchResult pcDC = _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate: "categoryId:" + categoryId, facetHierValue: "categoryId:" + categoryId, facetHierDepth: "categoryId:2", facetValueFilter: facetValueFilter).Result.ReadAsSync();
+                    ProductSearchResult pcDC = await (await _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate: "categoryId:" + categoryId, facetHierValue: "categoryId:" + categoryId, facetHierDepth: "categoryId:2", facetValueFilter: facetValueFilter)).ReadAsAsync();
                     var pc = Mapper.Map<Models.StoreFront.Catalog.ProductSearchResult>(pcDC);
-                    return PartialView(pcDC);
+                    return pc;
                 }
                 else
                 {
-                    ProductCollection pcDC = _productClient.GetProducts(filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, responseGroups: "Categories,Measurements,Properties,Options").Result.ReadAsSync();
+                    ProductCollection pcDC = await (await _productClient.GetProducts(filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, responseGroups: "Categories,Measurements,Properties,Options")).ReadAsAsync();
                     var pc = Mapper.Map<Models.StoreFront.Catalog.ProductCollection>(pcDC);
-                    return PartialView(pc);
+                    return pc;
                 }
 
-                //`
-                //pc.Paging.CurrentSort = sortBy;
-                //pc.Paging.StartIndex = startIdx;
-                //pc.Paging.UrlBase = "?";
-            }
-            catch (Exception ex)
-            {
-                return new ContentResult {Content = "[product service error]: " + ex.Message};
-            }
+            
         }
 
         [HttpGet]
@@ -244,7 +239,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             ;
 
-            SetCatalogContext(cat);
+
+
+
+
+
+            
 
             ViewResult result = View(cat);
 
@@ -256,11 +256,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var template = this.SiteContext.Theme.PageTypes.FirstOrDefault(x => string.Equals(x.Id, overrideTemplate, StringComparison.OrdinalIgnoreCase));
                 if (template != null)
                 {
-                    result.ViewName = template.Template ;    
+                    result.ViewName = template.Template ;
+                    this.PageContext.CmsContext.Template.Path = overrideTemplate;
                 }
                 
             }
 
+            await this.ContextInitilaztionTasks;
+            SetCatalogContext(cat);
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
 
@@ -290,13 +293,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             // Get Results and populate feed
 
-            ActionResult resp = ProductListing(categoryId, sortBy, startIdx, itemsPerPage, null, false, false);
-            if (!(resp is PartialViewResult))
-            {
-                return Request.CreateResponse(HttpStatusCode.OK, resp);
-            }
-
-            var result = ((PartialViewResult) resp).Model as Models.StoreFront.Catalog.ProductCollection;
+            var result = await  ProductListing(categoryId, sortBy, startIdx, itemsPerPage, null, false, false);
+            
 
             var feed = new SyndicationFeed(cat.Name, cat.Name, new Uri(feedUrl, ""));
 
