@@ -10,7 +10,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
     title: 'Inventory',
     
     // enables the manage button; This is part of future work;
-    manageEnabled: false,
+    manageEnabled: true,
     
     initComponent: function () {
         var me = this,
@@ -24,11 +24,11 @@ Ext.define('Taco.view.product.subform.Inventory', {
 
         if (this.manageEnabled) {
             this.manageInventoryButton = Ext.create('Ext.button.Button', {
-                ui: "action-primary",
+                ui: "action",
                 hidden: this.product.get("productUsage") == "Bundle",
                 scale: "medium",
                 margin: "0 0 20, 0",
-                text: "Manage",
+                text: "Manage Inventory",
                 handler: me.manageInventory,
                 scope: me
             });
@@ -70,14 +70,18 @@ Ext.define('Taco.view.product.subform.Inventory', {
             name:'outOfStockBehavior'
         });
 
-        this.viewStockLink = Ext.create('Taco.core.ux.action.Action',
-            {
+
+            /*
+            this.viewStockLink = Ext.create('Ext.button.Button', {
                 text: 'View Inventory',
-                click: function () {
+                ui: "action",
+                scale:"medium",
+                handler: function () {
                     Taco.core.StateManager.attemptNavigate('inventory?q=productCode:'+ this.record.getId());
                 },
                 scope:this
             });
+            */
 
         //options = Ext.create('Taco.view.product.option.Form', {
         //    product: this.product
@@ -89,7 +93,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
             layout: 'vbox',
             items: [
                 this.manageStock,
-                  this.viewStockLink,
+                //this.viewStockLink,
              //   stockOnHand,
                 this.outOfStockState
               
@@ -114,11 +118,13 @@ Ext.define('Taco.view.product.subform.Inventory', {
         // hide if the productUsage is Bundle
         var value = this.product.get("productUsage");
 
-        this.manageStock.setVisible(value != "Bundle");
+        
 
         var track = this.manageStock.getValue();
 
-        this.viewStockLink.setVisible(track);
+        this.manageStock.setVisible(value != "Bundle" && track);
+        //this.viewStockLink.setVisible(track);
+        
         // hide if the productUsage is component
         var outOfStockStateVisible = false;
             
@@ -180,7 +186,28 @@ Ext.define('Taco.view.product.subform.Inventory', {
     },
     
     // todo implement this feature
-    manageInventory : function () {
+    manageInventory: function () {
+        var productEditor = this.up('taco-product-editor');
+        if (productEditor.requiresSave) {
+            Ext.MessageBox.show({
+                title: 'Unsaved Changes',
+                // pushes the buttons to the right to be consistant with our dialog ux.
+                rightJustifyButtons: true,
+                // reverses the order of the buttons
+                reverseOrder: true,
+                msg: 'You have unsaved changes. Save changes now?',
+                closable: false,
+                buttons: Ext.Msg.YESNO,
+                fn: function (rec) {
+                    if (rec === 'yes') {
+                        var saveButton = productEditor.down("#save").toggle(true);
+                    }
+                }
+            });
+
+        } else {
+            Taco.core.StateManager.attemptNavigate('inventory?q=productCode:' + this.record.getId());
+        }
         
     }
 

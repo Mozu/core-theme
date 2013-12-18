@@ -5,7 +5,14 @@
         'Ext.button.Button'
     ],
     
+    alias: "widget.taco-product-editor",
+    
     formCls: 'Taco.view.product.Form',
+
+    // state property of the form that gets set to true whtn the form and its child panels get dirtied. 
+    // note that isDirty seems to always return true. Which necessitated this work around;  The manageInventory button in the inventory subform checks this value before navigating to the inventory view.
+    // Todo: figure out why the isDirty is always true and generalize the isDirty Prompt for reuse rathaer than part of the inventory subform.
+    requiresSave: false,
 
     initComponent: function () {
         var me = this;
@@ -123,24 +130,29 @@
 
         this.publishButton = this.down('button#publish');
 
-        if (me.publishButton) {
-            
-            
-
+        //if (me.publishButton) {
             // if the form becomes invalid disable the publish button
             me.mon(me.form, 'validityChange', function (view, valid) {
-                me.publishButton.setDisabled(!valid);
+                if (me.publishButton) {
+                    me.publishButton.setDisabled(!valid);
+                }
+                
             }, me);
 
             // if the form gets modified, enable the publish button, but only if its valid when it becomes dirty;
             me.mon(me.form, 'dirtychange', function () {
-                // note: I am not calling this.form.isValid() because that call causes the form error messages to appear;
-                var isValid = !me.form.hasInvalidField() && me.form.isDirty();
-                if (isValid) {
-                    me.publishButton.enable();
+                
+                me.requiresSave = me.form.isDirty();
+                
+                if (me.publishButton) {
+                    // note: I am not calling this.form.isValid() because that call causes the form error messages to appear;
+                    var isValid = !me.form.hasInvalidField() && me.form.isDirty();
+                    if (isValid) {
+                        me.publishButton.enable();
+                    }
                 }
             }, me);
-        }
+        //}
         
 
 
