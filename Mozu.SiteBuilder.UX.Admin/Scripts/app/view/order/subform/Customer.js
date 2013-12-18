@@ -33,14 +33,19 @@ Ext.define('Taco.view.order.subform.Customer', {
                 },
                 items: [{
                     emptyText: 'First Name',
-                    name: 'firstName'
+                    name: 'firstName',
+                    margin: '0 0 5',
+                    width: 200
                 }, {
                     emptyText: 'Last Name',
-                    name: 'lastName'
+                    name: 'lastName',
+                    margin: '0 0 5 10',
+                    width: 200
                 }, {
                     emptyText: 'Email Address',
                     name: 'email',
-                    flex: 1
+                    margin: '0 0 5 10',
+                    width: 300
                 }]
             }, {
                 xtype: 'checkbox',

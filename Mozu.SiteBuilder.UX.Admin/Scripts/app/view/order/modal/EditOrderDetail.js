@@ -10,30 +10,33 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     ],
 
     autoShow: true,
+    closable: true,
     // cls: Taco.baseCSSPrefix + 'orderform-editor',
     height: '95%',
+    primaryText: 'Save Changes',
+    secondaryText: 'Discard Changes',
     scale: 'large',
     title: 'Edit Order Details',
     width: '95%',
 
-    actions: [{
-        xtype: 'button',
-        itemId: 'discardAction',
-        ui: 'action',
-        scale: 'medium',
-        text: 'Discard Changes',
-        handler: function () {
-            this.removeDraftOrder();
-        }
-    }, {
-        xtype: 'tbfill'
-    }, {
-        xtype: 'button',
-        itemId: 'secondaryAction'
-    }, {
-        xtype: 'button',
-        itemId: 'primaryAction'
-    }],
+    // actions: [{
+    //     xtype: 'button',
+    //     itemId: 'discardAction',
+    //     ui: 'action',
+    //     scale: 'medium',
+    //     text: 'Discard Changes',
+    //     handler: function () {
+    //         this.removeDraftOrder();
+    //     }
+    // }, {
+    //     xtype: 'tbfill'
+    // }, {
+    //     xtype: 'button',
+    //     itemId: 'secondaryAction'
+    // }, {
+    //     xtype: 'button',
+    //     itemId: 'primaryAction'
+    // }],
 
     config: {
         record: null,
@@ -77,6 +80,10 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             save: {
                 scope: this,
                 fn: 'saveDraftOrder'
+            },
+            cancel: {
+                scope: this,
+                fn: 'removeDraftOrder'
             }
         });
     },
@@ -94,8 +101,9 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         }
 
         if (!this.isDraftMode) {
-            this.down('#discardAction').hide();
-            this.down('#primaryAction').hide();
+            // this.down('#discardAction').hide();
+            // this.down('#primaryAction').hide();
+            this.down('#actionBar').hide();
         }
     },
     
