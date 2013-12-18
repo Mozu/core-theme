@@ -16,7 +16,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
             while (queue.Count > 0)
             {
                 var node = queue.Dequeue();
-                if (node.NodeType == nodeType && string.Equals(node.OriginalId, id, StringComparison.OrdinalIgnoreCase))
+                if ((string.IsNullOrEmpty(nodeType) || node.NodeType == nodeType) && string.Equals(node.OriginalId, id, StringComparison.OrdinalIgnoreCase))
                     return node;
                 if (node.Items != null)
                 {
