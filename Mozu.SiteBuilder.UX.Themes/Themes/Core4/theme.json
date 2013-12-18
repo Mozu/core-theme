@@ -315,7 +315,7 @@
             {
                 "fieldLabel": "Main Category",
 				"name": "mainCategory",
-                "xtype": "textfield",
+                "xtype": "categorycombobox",
                 "anchor": "100%"
             }, {
                 "name": "template",
@@ -336,7 +336,7 @@
             }
         ],
         "defaultConfig": {
-            "template": "1",
+            "template": "primary",
             "mainCategory": "Category",
             "count": "4"
         },
