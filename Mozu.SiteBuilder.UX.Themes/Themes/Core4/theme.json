@@ -309,7 +309,7 @@
     }, {
         "id": "catNav",
         "displayName": "Category Navigation",
-        "displayTemplate": "misc/category-list",
+        "displayTemplate": "misc/category-navigation",
         "editViewFields": [
 
             {
