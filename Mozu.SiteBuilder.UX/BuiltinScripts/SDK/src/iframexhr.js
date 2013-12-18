@@ -1,4 +1,5 @@
-﻿var IframeXHR = (function (window, document, undefined) {
+﻿// BEGIN IFRAMEXHR
+var IframeXHR = (function (window, document, undefined) {
 
     var hasPostMessage = window.postMessage && navigator.userAgent.indexOf("Opera") === -1,
         firefoxVersion = (function () {
@@ -130,3 +131,4 @@
     return IframeXMLHttpRequest;
 
 }(this, this.document));
+// END IFRAMEXHR

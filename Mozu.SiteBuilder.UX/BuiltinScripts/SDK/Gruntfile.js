@@ -29,6 +29,9 @@ module.exports = function (grunt) {
             },
             tmp: {
                 src: ['<%= releasetemp %>']
+            },
+            test: {
+                src: ['<%= concat.test.dest %>']
             }
         },
         concat: {
@@ -40,9 +43,13 @@ module.exports = function (grunt) {
                 src: allScripts,
                 dest: '<%= releasetemp %>'
             },
+            test: {
+                src: allScripts.concat('src/init_debug.js'),
+                dest: './tests/sdk.js'
+            },
             debug: {
                 src: allScripts.concat('src/init_debug.js'),
-                dest: '<%= pkg.main %>.debug.js'
+                dest: './dist/<%= pkg.name %>.debug.js'
             }
         },
         uglify: {
@@ -51,19 +58,7 @@ module.exports = function (grunt) {
                     banner: '<%= banner %>'
                 },
                 src: '<%= concat.dist.dest %>',
-                dest: '<%= pkg.main %>.min.js'
-            },
-            beautify: {
-                options: {
-                    banner: '<%= banner %>',
-                    beautify: true,
-                    comments: true,
-                    indent_level: 2,
-                    compress: false,
-                    mangle: false
-                },
-                src: '<%= concat.dist.dest %>',
-                dest: '<%= pkg.main %>.js'
+                dest: '<%= pkg.main %>'
             }
         },
         tfscheckout: {
@@ -130,12 +125,9 @@ module.exports = function (grunt) {
         });
     });
 
-    var order = ['bower', 'clean:dist', 'concat', 'uglify', 'clean:tmp', 'tfscheckout', 'connect:server', 'mocha'];
-
-    grunt.registerTask('default', order);
-    grunt.registerTask('test', ['connect:server','mocha']);
-    grunt.registerTask('testdebug', ['connect:browser']);
-    grunt.registerTask('notest', order.slice(0, -2));
-    grunt.registerTask('debug', ['notest', 'testdebug']);
+    grunt.registerTask('test', ['concat:test', 'connect:server', 'mocha', 'clean:test']);
+    grunt.registerTask('dist', ['clean:dist', 'concat:dist', 'concat:debug', 'uglify', 'clean:tmp', 'tfscheckout']);
+    grunt.registerTask('testbrowser', ['concat:test', 'connect:browser']);
+    grunt.registerTask('default', ['test', 'dist']);
 
 };
