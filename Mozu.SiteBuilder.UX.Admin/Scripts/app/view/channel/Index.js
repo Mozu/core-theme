@@ -3,8 +3,9 @@
  */
 Ext.define('Taco.view.channel.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
-  
+    
     requires: [
+        'Taco.store.Countries',
         'Taco.store.Channels',
         'Taco.model.Channel'
     ],
@@ -122,7 +123,8 @@ Ext.define('Taco.view.channel.Index', {
                 queryMode: 'local',
                 displayField: 'name',
                 valueField: 'code',
-                store: 'Taco.store.Countries' ,
+                //store: 'Taco.store.Countries' ,
+                store : Taco.core.data.StoreManager.getOrCreate('Taco.store.Countries'),
                 emptyText: "Country",
                 msgTarget: "qtip",
                 selectOnFocus: true,
