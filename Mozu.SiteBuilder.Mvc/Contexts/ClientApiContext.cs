@@ -82,11 +82,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 }
                 if (_pageContextLazy.Value.HandledByProxy)
                 {
-                    if (sslEnabled && y.RequiresSsl)
+                    if (sslEnabled && y.RequiresSsl && !_pageContextLazy.Value.IsSecure )
                     {
                         return secureHost + y.VirturalPath;
                     }
-                    return defaultHost + y.VirturalPath;
+                    return y.VirturalPath;
                 }
                 else
                 {
