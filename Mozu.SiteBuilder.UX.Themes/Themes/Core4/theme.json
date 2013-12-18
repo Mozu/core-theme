@@ -307,6 +307,42 @@
         "icon": "/resources/admin/widgets/08_video.png",
         "validPageTypes":["*"]
     }, {
+        "id": "catNav",
+        "displayName": "Category Navigation",
+        "displayTemplate": "misc/category-list",
+        "editViewFields": [
+
+            {
+                "fieldLabel": "Main Category",
+				"name": "mainCategory",
+                "xtype": "textfield",
+                "anchor": "100%"
+            }, {
+                "name": "template",
+                "fieldLabel": "Template",
+                "xtype": "combo",
+                "anchor": "100%",
+                "store": [
+                    ["primary", "primary"],
+                    ["secondary", "secondary"],
+                    ["tertiary", "tertiary"]
+                ]
+            },
+			{
+                "fieldLabel": "count",
+				"name": "count",
+                "xtype": "spinnerfield",
+                "anchor": "100%"
+            }
+        ],
+        "defaultConfig": {
+            "template": "1",
+            "mainCategory": "Category",
+            "count": "4"
+        },
+        "icon": "/resources/admin/widgets/01_photo_text.png",
+		"validPageTypes":["*"]
+    },{
         "id": "crosssells",
         "displayName": "Cross Sells",
         "displayTemplate": "catalog/related-products",

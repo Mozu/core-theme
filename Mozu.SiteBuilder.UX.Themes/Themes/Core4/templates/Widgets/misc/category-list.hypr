@@ -1,0 +1,2 @@
+{% include "modules/category/category-list"  with  categoryConfig=Model.config as_parameter %}
+{% require_script "widgets/category-list" %}
