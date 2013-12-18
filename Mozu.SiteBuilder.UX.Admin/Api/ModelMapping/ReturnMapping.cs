@@ -39,8 +39,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<ReturnAction, ReturnsDC.ReturnAction>();
 
             Mapper.CreateMap<Return, ReturnsDC.Return>()
-                  .ForMember(x => x.Payments, opt => opt.Ignore());
-                  
+                  .ForMember(dc => dc.Payments, opt => opt.Ignore())
+                  .ForMember(dc => dc.Items, op => op.ResolveUsing(retur => {
+                      var returnBundles = 
+                          from r in retur.Items
+                          where !String.IsNullOrEmpty(r.ParentItemId)
+                          group r by r.ParentItemId into g
+                          select new ReturnsDC.ReturnItem {
+                              OrderItemId = g.Key,
+                              BundledProducts = g.Select(ri => new ReturnsDC.ReturnBundle { ProductCode = ri.ProductCode, Quantity = ri.Quantity }).ToList(),
+                              Reasons = new List<ReturnsDC.ReturnReason> { new ReturnsDC.ReturnReason { Reason = g.First().Reason, Quantity = g.Sum(ri => ri.Quantity) } }
+                          };
+
+                      var returnVanillaProducts =
+                          from r in retur.Items
+                          where String.IsNullOrEmpty(r.ParentItemId)
+                          select new ReturnsDC.ReturnItem {
+                              OrderItemId = r.OrderItemId,
+                              Reasons = new List<ReturnsDC.ReturnReason> {
+                                  new ReturnsDC.ReturnReason { Reason = r.Reason, Quantity = r.Quantity }
+                              }
+                          };
+
+                      return returnBundles.Concat(returnVanillaProducts).ToList();
+                  }))
+                  ;
+
             Mapper.CreateMap<ReturnItem, ReturnsDC.ReturnItem>()
                   .ForMember(x => x.Reasons, opt => opt.MapFrom(x => x.Reason == null ? null :
                                                                          new List<ReturnsDC.ReturnReason>() { new ReturnsDC.ReturnReason() { Reason = x.Reason, Quantity = x.Quantity } }));

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -28,7 +29,8 @@ namespace Mozu.SiteBuilder.UX.Filters
             if (controller != null )
             {
                 var model = new HttpError(actionExecutedContext.Exception, true);
-                model["activityId"] = Trace.CorrelationManager.ActivityId;
+                if (Trace.CorrelationManager.ActivityId != Guid.Empty)
+                    model["activityId"] = Trace.CorrelationManager.ActivityId;
                 var pageContext = actionExecutedContext.Request.Resolve<PageContext>();
                 if (pageContext != null && pageContext.Visit != null)
                 {

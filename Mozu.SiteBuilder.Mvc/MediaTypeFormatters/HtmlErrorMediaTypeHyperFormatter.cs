@@ -72,7 +72,8 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 
 
 
-            model["activityId"] = Trace.CorrelationManager.ActivityId;
+            if (Trace.CorrelationManager.ActivityId != Guid.Empty)
+                model["activityId"] = Trace.CorrelationManager.ActivityId;
             var pageContext = LifetimeScope.Resolve<PageContext>();
             if (pageContext != null && pageContext.Visit != null)
             {

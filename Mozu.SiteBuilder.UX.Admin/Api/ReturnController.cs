@@ -1,21 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.ServiceModel;
-using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
-using Mozu.Customer.Contracts.Clients;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Settings;
-using Mozu.SiteBuilder.Mvc.ActionFilters;
+using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Returns;
-using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
-using DCo = Mozu.CommerceRuntime.Contracts.Orders;
 using DCr = Mozu.CommerceRuntime.Contracts.Returns;
 using DCu = Mozu.Customer.Contracts;
 
@@ -65,45 +59,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
             throw new NotImplementedException();
-            //
-            //if (originalOrderId != null)
-            //{
-                
-            //}
-            //_returnWebApiClient.GetReturns()
-            //int? startIndex = pagingParams.startIndex;
-            //int? pageSize = pagingParams.pageSize ?? 20;
-            //string sort = (pagingParams != null && pagingParams.sort != null) ? pagingParams.sort.ToSortString() : null;
-
-            //DCo.OrderCollection dcOrders = null;
-            
-            //// get single order
-            //if (!string.IsNullOrEmpty(pagingParams.id))
-            //{
-            //    dcOrders = new DCo.OrderCollection() { Items = new List<DCo.Order>() };
-            //    var order = (await _orderWebApiClient.GetOrder(pagingParams.id, draft)).ReadAsSync();
-            //    if (order != null)
-            //    {
-            //        dcOrders.Items.Add(order);
-            //    }
-            //}
-            //// get list of orders
-            //else
-            //{
-            //    var filter = extFilter.ToFilterString();
-            //    try
-            //    {
-            //        dcOrders = (await _orderWebApiClient.GetOrders(startIndex, pageSize, pagingParams.sort.ToSortString(), filter)).ReadAsSync();
-            //    }
-            //    catch (Exception)
-            //    {
-            //        dcOrders = new DCo.OrderCollection { Items = new List<DCo.Order>() };
-            //    }
-            //}
-
-            //var orders = dcOrders != null ? Mapper.Map<List<Order>>(dcOrders.Items) : new List<Order>();
-
-            //return List2(orders,(int) dcOrders.TotalCount );
         }
 
 		[HttpPostRoute(UriTemplate = "create")]
