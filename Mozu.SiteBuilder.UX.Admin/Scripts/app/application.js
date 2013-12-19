@@ -74,6 +74,7 @@ Ext.define('Taco.Application', {
         'Taco.overrides.form.field.Number',
         'Taco.overrides.grid.RowEditor',
         'Taco.overrides.grid.RowEditorButtons',
+        'Taco.overrides.grid.plugin.CellEditing',
         'Taco.overrides.menu.Item',
         'Taco.overrides.menu.Menu',
         'Taco.overrides.panel.Tool',

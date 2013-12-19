@@ -38,31 +38,6 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
         });
         
         
-
-
-
-
-        // load the shipping rates data for use in the shipping packages
-        Ext.namespace('Taco.properties');
-        Taco.properties.shippingRates = Taco.core.data.StoreManager.getOrCreate({
-            model: 'Taco.model.KeyValuePair',
-            autoLoad: true,
-            pageSize: 500,
-            proxy: {
-                type: 'ajax',
-                api: {
-                    read: '/admin/app/shipping/carrierRates'
-                },
-                reader: {
-                    
-                    type: 'json',
-                    root: 'items',
-                    successProperty: 'success',
-                    messageProperty: 'message'
-                }
-            }
-        });
-
         // after the record is reloaded we will need to refresh the ui
         this.record.on("aftercommit", function () {
             this.onRecordChange();

@@ -10,6 +10,7 @@ Ext.define('Taco.overrides.form.field.Number', {
     forcePrecision: false,
 
     valueToRaw: function (value) {
+        
         var me = this, decimalSeparator = me.decimalSeparator;
         value = me.parseValue(value);
         value = me.fixPrecision(value);

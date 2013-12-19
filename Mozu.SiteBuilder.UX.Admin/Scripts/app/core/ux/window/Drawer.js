@@ -37,11 +37,8 @@ Ext.define('Taco.core.ux.window.Drawer', {
     },
 
     constructor: function (config) {
-        cfg = Ext.apply({}, config);
-
-        cfg.cls = ['taco-drawer', cfg.cls].join(' ');
-
-        this.callParent([cfg]);
+        this.cls = 'taco-drawer ' + this.cls;
+        this.callParent(arguments);
     },
 
     initComponent: function () {

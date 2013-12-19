@@ -679,6 +679,7 @@
     <Content Include="Scripts\app\overrides\form\field\Base.js" />
     <Content Include="Scripts\app\overrides\form\field\ComboBox.js" />
     <Content Include="Scripts\app\overrides\form\field\Number.js" />
+    <Content Include="Scripts\app\overrides\grid\plugin\CellEditing.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditorButtons.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditor.js" />
     <Content Include="Scripts\app\overrides\menu\Menu.js" />
@@ -1108,6 +1109,7 @@
     <Content Include="Scripts\app\mocks\locationPickup.json" />
     <Content Include="Scripts\sass\src\view\order\modal\FulfillmentMethod.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\LocationPickupGrid.scss" />
+    <Content Include="Scripts\sass\src\overrides\grid\plugin\CellEditing.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />

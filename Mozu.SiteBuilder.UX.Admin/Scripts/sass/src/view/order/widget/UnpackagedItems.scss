@@ -1,1 +1,10 @@
-﻿
+﻿.shipment-header{
+	.header-label{
+		font-size: px-to-rem(16);
+		line-height: px-to-rem(22);
+	}
+	.header-section{
+		font-size: px-to-rem(14);
+		line-height: px-to-rem(14);
+	}
+}
