@@ -126,6 +126,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 margin: '15 0 0 0'
             },
             this.minimumOrderAmountInput,
+            this.minimumLifetimeValueAmount,
             this.datesContainer,
             this.productsBox,
             this.categoriesBox,
