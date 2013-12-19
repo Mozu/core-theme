@@ -120,14 +120,7 @@ Ext.define('Taco.view.inventory.Index', {
                 renderer: function (value, metaData, record) {
                     var name = record.getContextualValue('productName');;
                     if (record.get('productUsage') == 'Configurable') {
-                        name += ' <br>(';
-                        Ext.Array.each(record.get('options'), function (opt, idx) {
-                            if (idx > 0) {
-                                name += ",";
-                            }
-                            name +=  opt.values[0];
-                        });
-                        name += ')';
+                        name += ' <br>(' + Ext.Array.pluck(record.get('variationOptions'), 'value').join() + ')';
                     }
 
 

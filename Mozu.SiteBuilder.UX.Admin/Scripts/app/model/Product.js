@@ -19,28 +19,26 @@ Ext.define('Taco.model.Product', {
     ],
     requiredStores: ['Taco.store.ProductTypes'],
     statics: {
-        
-        
         publishBulk: function (cfg) {
             this.doPublish(Ext.apply({}, {
                 url: '/admin/app/catalogpublishing/publish',
                 jsonData: cfg.data
             }, cfg));
         },
-        
+
         discardBulk: function (cfg) {
             this.doPublish(Ext.apply({}, {
                 url: '/admin/app/catalogpublishing/discard',
                 jsonData: cfg.data
             }, cfg));
         },
-        
+
         publishAll: function (cfg) {
             this.doPublish(Ext.apply({}, {
                 url: '/admin/app/catalogpublishing/publishall'
             }, cfg));
         },
-        
+
         discardAll: function (cfg) {
             this.doPublish(Ext.apply({}, {
                 url: '/admin/app/catalogpublishing/discardall'
@@ -87,6 +85,11 @@ Ext.define('Taco.model.Product', {
             name: "publishedState",
             type: "string",
             useNull: true
+        }, {
+            name: 'variationOptions',
+            type: 'auto',
+            defaultValue: [],
+            persist: false
         },
         {
             name: "lastModifiedBy",
@@ -115,7 +118,7 @@ Ext.define('Taco.model.Product', {
                 if (record.raw) {
                     // look up user id in magical site users global object.
                     var id = record.raw.lastModifiedBy;
-                    return Ext.Array.findBy(window.Taco.siteUsersRaw, function(u) { return u.Id === id })
+                    return Ext.Array.findBy(window.Taco.siteUsersRaw, function (u) { return u.Id === id; });
                 }
                 return null;
             }
@@ -127,7 +130,7 @@ Ext.define('Taco.model.Product', {
                 if (record.raw) {
                     // look up user id in magical site users global object.
                     var id = record.raw.lastPublishedBy;
-                    return Ext.Array.findBy(window.Taco.siteUsersRaw, function(u) { return u.Id === id })
+                    return Ext.Array.findBy(window.Taco.siteUsersRaw, function (u) { return u.Id === id; });
                 }
                 return null;
             }
@@ -311,7 +314,6 @@ Ext.define('Taco.model.Product', {
             name: "bundledProducts",
             type: "auto",
             defaultValue: [
-
                 /*{
                 productName: "Standard Product",
                 productCode: "test",
@@ -335,8 +337,7 @@ Ext.define('Taco.model.Product', {
             }
             */
             ]
-        }
-        
+        }        
     ],
     loadRuntimeProduct: function (cfg) {
 
@@ -383,7 +384,7 @@ Ext.define('Taco.model.Product', {
                     me.set('publishedState', 'Live');
                     Taco.core.data.StoreManager.markChanged('Taco.model.Product');
                     var res = Ext.JSON.decode(response.responseText) || {};
-                    
+
                     if (cfg.callback) cfg.callback.apply(cfg.scope || me, [res.items, response]);
                     if (cfg.success && res.success) cfg.success.apply(cfg.scope || me, [res.items, response]);
                     if (!res.success && cfg.failure) cfg.failure.apply(cfg.scope || me, [res.items, response]);
@@ -419,7 +420,7 @@ Ext.define('Taco.model.Product', {
     getContextualValue: function (fieldName) {
         var level = this, ctx = Taco.app.context.getCurrent();
         if (ctx.contextType == 's') {
-           
+
             level = this.getProductInCatalogs().getById(ctx.getCatalogId());
             if (level == null) {
                 level = this;
@@ -435,7 +436,7 @@ Ext.define('Taco.model.Product', {
         }
         return null;
     },
-    getProductInCatalog : function () {
+    getProductInCatalog: function () {
         var catalog = Taco.app.context.getCatalog();
         if (catalog) {
             return this.getProductInCatalogs().getById(catalog.getCatalogId());
@@ -514,7 +515,7 @@ Ext.define('Taco.model.Product', {
                 this.load({
                     params: params,
                     callback: function (records, operation, success) {
-                        Ext.Array.each( records, function (newRecord) {
+                        Ext.Array.each(records, function (newRecord) {
                             newRecord.set('isActive', true);
                         });
                     }
@@ -547,10 +548,10 @@ Ext.define('Taco.model.Product', {
 
 
         this.getOptions().on('update', me.productVariationStore.loadFromOptions, me.productVariationStore, { buffer: 20 });
-        
+
 
         return this.productVariationStore;
-    },    
+    },
 
     idProperty: 'productCode',
     //hasMany: [

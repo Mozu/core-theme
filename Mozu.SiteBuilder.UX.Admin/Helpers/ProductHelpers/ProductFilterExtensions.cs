@@ -52,32 +52,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
             StringBuilder sb = new StringBuilder();
             foreach (var filter in extFilter.Where(x => x.value != null && x.property != "all" && !string.IsNullOrEmpty(x.value.ToString())))
             {
-                //this was bullshitty
-                //var values = filter.value.ToString().Trim().Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
-                //if (values.Length > 1)
-                //{
-                //    if (sb.Length > 1)
-                //    {
-                //        sb.Append(" and ");
-                //    }
-                //    sb.Append("( ");
-                //    for ( int  i = 0; i < values.Length ;i++)
-                //    {
-                //        var filterString = GetFilter(values[i], filter);
-                //        if (!string.IsNullOrWhiteSpace(filterString))
-                //        {
-                //            if (i > 0)
-                //            {
-                //                sb.Append(" or ");
-                //            }
-                //            sb.Append(filterString);
-                //        }
-
-                //    }
-                //    sb.Append(" ) ");
-                //}
-              //  else
-              //  {
+               
                     var filterString = GetFilter(filter.value, filter);
                     if (!string.IsNullOrWhiteSpace(filterString))
                     {
@@ -88,8 +63,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                         sb.Append(filterString);
                         
                     }
-                    
-                //}
+               
             }
 
             return sb.ToString().Trim();
@@ -125,9 +99,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                 case "productfulldescription":
                     return string.Format("{1} cont \"{0}\"", filter.value, PRODUCT_FULL_DESCRIPTION);
                 case "productcode" :
-                    //uncomment when baseProductCode filtering is added by brit.. sprint 4.
-                    //return string.Format("(baseProductCode eq \"{0}\" or  ProductCode eq \"{0}\")", value);
-                    return string.Format("ProductCode eq \"{0}\"", value);
+                    return string.Format("(baseProductCode eq \"{0}\" or  ProductCode eq \"{0}\")", value);
+                    
                 case "producttypeid":
                 case "producttype":
                     return string.Format("productTypeId eq {0}", value);

@@ -252,6 +252,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
         #endregion
 
+        [DataMember(EmitDefaultValue = false, IsRequired = false, Name = "variationOptions")]
+        public List<ProductVariationOption> VariationOptions { get; set; }
+
         /// <summary>
         /// A collection of site-specific overrides for this product.
         /// </summary>
