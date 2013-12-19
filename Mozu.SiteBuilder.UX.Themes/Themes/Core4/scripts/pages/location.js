@@ -1,5 +1,5 @@
-require(["modules/jquery-mozu", "hyprlive", "modules/backbone-mozu"],
-    function($, Hypr, Backbone) {
+require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/api'],
+    function($, Hypr, Backbone, api) {
 
         var data = {
             "startIndex": 0,
@@ -174,13 +174,21 @@ require(["modules/jquery-mozu", "hyprlive", "modules/backbone-mozu"],
                 this.remove();
                 this.render();
             }
-        })
-
-        var view = new LocationView({
-            model: locationsModel,
-            el: $('.mz-loc .mz-loc-table')
         });
 
-        view.render();
+        $(document).ready(function() {
+            
+
+            var view = new LocationView({
+                model: locationsModel,
+                el: $('.mz-loc .mz-loc-table')
+            });
+
+            view.render();
+
+            console.log(api, Mozu)
+
+            debugger
+        })
     }
 );

@@ -13,7 +13,7 @@
             <div>{{model.address.address3}}</div>
             <div>{{model.address.address4}}</div>
             <div>
-                {{model.cityOrTown}}, {{model.stateOrProvince}}
+                {{model.address.cityOrTown}}, {{model.address.stateOrProvince}}
             </div>
 
             {% if model.phone %}

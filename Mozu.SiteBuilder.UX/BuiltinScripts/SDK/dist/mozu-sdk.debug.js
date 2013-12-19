@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-12-18
+ * Mozu JavaScript SDK - v0.2.0 - 2013-12-19
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2584,6 +2584,21 @@ var ApiReference = (function () {
                 template: '{+cartService}current/items/'
             }
         },
+        'location': {
+            get: {
+                template: '{+locationService}locationUsageTypes/SP/locations/{code}',
+                shortcutParam: 'code'
+            }
+        },
+        'locations': {
+            defaultParams: {
+                pageSize: 15
+            },
+            collectionOf: 'location',
+            get: {
+                template: '{+locationService}locationUsageTypes/SP/locations/' + genericQueryTpt
+            }
+        },
         'cart': {
             get: '{+cartService}current',
             'add-product': {
@@ -2675,7 +2690,8 @@ var ApiReference = (function () {
                     asProperty: 'customer'
                 },
                 returnType: 'accountcard'
-            },            'update-card': {
+            },
+            'update-card': {
                 verb: 'PUT',
                 template: '{+customerService}{customer.id}/cards/{id}',
                 includeSelf: {

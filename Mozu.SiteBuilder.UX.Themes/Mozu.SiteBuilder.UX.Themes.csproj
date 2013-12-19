@@ -433,6 +433,7 @@
     <Content Include="Themes\Core4\resources\images\button-loading-small.gif" />
     <Content Include="Themes\Core4\resources\images\button-loading.gif" />
     <Content Include="Themes\Core4\scripts\modules\models-orders.js" />
+    <Content Include="Themes\Core4\scripts\modules\models-location.js" />
     <Content Include="Themes\Core4\scripts\modules\jquery-dateinput-localized.js" />
     <Content Include="Themes\Core4\scripts\modules\models-paymentmethods.js" />
     <Content Include="Themes\Core4\scripts\modules\scroll-nav.js" />

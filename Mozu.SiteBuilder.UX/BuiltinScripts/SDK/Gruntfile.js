@@ -126,7 +126,7 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('test', ['concat:test', 'connect:server', 'mocha', 'clean:test']);
-    grunt.registerTask('dist', ['clean:dist', 'concat:dist', 'concat:debug', 'uglify', 'clean:tmp', 'tfscheckout']);
+    grunt.registerTask('dist', ['bower', 'clean:dist', 'concat:dist', 'concat:debug', 'uglify', 'clean:tmp', 'tfscheckout']);
     grunt.registerTask('testbrowser', ['concat:test', 'connect:browser']);
     grunt.registerTask('default', ['test', 'dist']);
 
