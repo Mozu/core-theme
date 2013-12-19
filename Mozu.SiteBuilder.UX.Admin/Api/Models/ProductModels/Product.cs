@@ -269,5 +269,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
         [DataMember(EmitDefaultValue = false, Name = "productUsage")]
         public string ProductUsage { get; set; }
+
+        [DataMember(Name = "hasConfigurableOptions")]
+        public bool HasConfigurableOptions { get; set; }
+        
+        [DataMember(Name = "hasStandaloneOptions")]
+        public bool HasStandaloneOptions { get; set; }
     }
 }
