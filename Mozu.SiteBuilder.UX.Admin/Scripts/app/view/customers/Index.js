@@ -138,6 +138,9 @@ Ext.define('Taco.view.customers.Index', {
         advancedFormCls: 'Taco.view.customers.AdvancedSearchForm'
     },
     
+    allowCreate: function() {
+        return false;
+    },
 
     launchEditor: function (record) {
         Ext.defer(function () {
