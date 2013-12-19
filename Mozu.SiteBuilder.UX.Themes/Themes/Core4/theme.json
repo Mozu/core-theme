@@ -329,16 +329,16 @@
                 ]
             },
 			{
-                "fieldLabel": "count",
-				"name": "count",
-                "xtype": "spinnerfield",
+				"xtype": "numberfield",
+                "fieldLabel": "Count",
+				"name": "numberToDisplay",
                 "anchor": "100%"
             }
         ],
         "defaultConfig": {
             "template": "primary",
             "mainCategory": "Category",
-            "count": "4"
+            "numberToDisplay": 4
         },
         "icon": "/resources/admin/widgets/01_photo_text.png",
 		"validPageTypes":["*"]
