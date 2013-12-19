@@ -359,6 +359,33 @@ Ext.define('Taco.model.Order', {
             }
         },
         
+
+        // NEW FIELD
+
+        {
+            "name": "itemsToPickup",
+            "type": "int",
+            defaultValue:0,
+            "useNull": false
+        },
+        
+        // NEW FIELD
+        {
+            "name": "itemsNotPickedup",
+            defaultValue: 0,
+            "type": "int",
+            "useNull": false
+        },
+        
+        // NEW FIELD
+        {
+            "name": "itemsPickedup",
+            defaultValue: 0,
+            "type": "int",
+            "useNull": false
+        },
+        
+        // NEW FIELD
         {
             "name": "instorePackages",
             "type": "array",
@@ -374,7 +401,42 @@ Ext.define('Taco.model.Order', {
                 }
                 return retVal;
             }
-        }
+        },
+        
+        // helper field. ui iterates on unshipped packages in multiple places
+        {
+            "name": "unPickedupPackages",
+            "type": "array",
+            persist: false,
+            convert: function (v, record) {
+                var packages = record.get("packages");
+                var retVal = [];
+
+                for (var i = 0; i < packages.length; i++) {
+                    if (packages[i].status == "NotFulfilled") {
+                        retVal.push(packages[i]);
+                    }
+                }
+                return retVal;
+            }
+        },
+        // helper field. ui iterates on shipped packages in multiple places
+        {
+            "name": "pickedupPackages",
+            "type": "array",
+            persist: false,
+            convert: function (v, record) {
+                var packages = record.get("packages");
+                var retVal = [];
+
+                for (var i = 0; i < packages.length; i++) {
+                    if (packages[i].status == "Fulfilled") {
+                        retVal.push(packages[i]);
+                    }
+                }
+                return retVal;
+            }
+        },
     ],
     
 
@@ -990,6 +1052,231 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+    ***************************
+    *  BEGIN PICKUP END POINT   
+    *****************************
+    */
+
+
+    /**
+     * service call to create a pickup
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                package: {
+                   ... package entity ...
+                    
+                    items: [],
+                    orderId: "02baa4864fdce01ec8d8cc0000000059"
+                    
+                }
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     *
+     */
+    createPickup: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/pickup/create',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+
+    /**
+     * service call to delete a pickup
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                orderId : "asdf",
+                packageIds["654"]
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     *
+     */
+    deletePickup: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/pickup/delete',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+
+    /**
+     * service call to move items into a pickup
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                orderId: "987654321",
+                sourcePackageId : "",
+                destinationPackageId : "",
+                items: [{
+                    ... order item entity ...
+                }]
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     *
+     */
+    movePickupItems: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/pickup/moveitems',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    /**
+     * service call to mark a package as shipped
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                orderId: "987654321",                
+                packageIds: ["987654"]
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     *
+     */
+    markPickupFulfilled: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/pickup/markfulfilled',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+
+
+
+    /*
+    ***************************
+    * END PICKUP END POINT   
+    *****************************
+    */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * service call to change the shipping method
      * @param {Object} config  A configuration object     

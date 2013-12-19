@@ -6,10 +6,9 @@
 Ext.define('Taco.view.order.subform.InstorePickup', {
     extend: 'Taco.view.order.subform.Subform',
     requires: [
-        'Taco.view.order.widget.ShippingItemGrid',
-        'Taco.view.order.widget.Package',
-        'Taco.view.order.widget.UnpackagedItems',
-        'Taco.store.PackagingTypes'
+        'Taco.view.order.widget.PickupItemGrid',
+        'Taco.view.order.widget.PackagePickup',
+        'Taco.view.order.widget.UnpickedupItems'
     ],
     
     title: 'In Store Pickup',
@@ -49,8 +48,8 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
         Ext.apply(this, {
             items: [
                 me.unpackagedItems,
-                me.unShippedPackages,
-                me.shippedPackages
+                me.unPickedupPackages,
+                me.pickedupPackages
             ]
         });
 
@@ -58,14 +57,14 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
     },
     initUI: function () {
         this.initUnpackagedItems();
-        this.initUnshippedPackages();
-        this.initShippedPackages()
+        this.initUnpickedupPackages();
+        this.initPickedupPackages()
     },
     initUnpackagedItems: function () {
         var me = this,
             billingContact = this.record.get("billingContact");
 
-        me.unpackagedItems = Ext.create('Taco.view.order.widget.UnpackagedItems', {
+        me.unpackagedItems = Ext.create('Taco.view.order.widget.UnpickedupItems', {
 
             record: me.record,
             
@@ -74,12 +73,17 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
                 showChangeLink: true,
 
                 // order info
-                title: "Unshipped Items",
+                title: "Pending Items",
                 fulfillmentStatus: me.record.get("fulfillmentStatus"),
                 orderTotal: me.record.get("itemsOrdered"),
-                shippedItemTotal: me.record.get("itemsShipped"),
-                pendingItemTotal: me.record.get("itemsNotShipped"),
-                shippingMethod: me.record.get("shippingMethodName") || me.record.get("shippingMethodCode"),
+                //shippedItemTotal: me.record.get("itemsShipped"),
+                //pendingItemTotal: me.record.get("itemsNotShipped"),
+                //shippingMethod: me.record.get("shippingMethodName") || me.record.get("shippingMethodCode"),
+                itemsToPickup: me.record.get("itemsToPickup"),
+                itemsPickedup: me.record.get("itemsPickedup"),
+                itemsNotPickedup: me.record.get("itemsNotPickedup"),
+                
+
                 weight: me.record.get("weight"),
 
                 // billing contact info
@@ -100,12 +104,12 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
 
     },
     
-    initUnshippedPackages:function() {
+    initUnpickedupPackages:function() {
         var me = this,
             data=[],
             packages=[];
 
-        data = this.record.get("unShippedPackages");
+        data = this.record.get("unPickedupPackages");
         
         for (var i = data.length; i > 0; i--) {
             
@@ -114,7 +118,7 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
             var packagingType = dataItem.packagingType;
             var packagingTypeText = me.packagingTypeStore.getById(packagingType).get("text");
             
-            packages.push(Ext.create('Taco.view.order.widget.Package', {
+            packages.push(Ext.create('Taco.view.order.widget.PackagePickup', {
                     record: this.record,
                     gridHidden:false,
                     packageData: dataItem,
@@ -123,13 +127,13 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
                         showVisibilityToggle: false,
                         
                         // order info
-                        title: "Package " + i,
+                        title: "Pickup " + i,
                         fulfillmentStatus: dataItem.status,
                         itemTotal: dataItem.totalQuantity,
                         packagingType: packagingTypeText,
                         weight: dataItem.weight,
-                        shippingMethod: dataItem.shippingMethodName || dataItem.ShippingMethodCode,
-                        trackingNumber: dataItem.trackingNumber,
+                        
+                        
                         
                         // billing contact info
                         firstName: billingContact.firstName,
@@ -148,21 +152,21 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
 
         //me.packagedItemsGrid.loadData(this.record.get("packages"));
         
-        me.unShippedPackages = Ext.create('Taco.core.ux.EditContainer', {
+        me.unPickedupPackages = Ext.create('Taco.core.ux.EditContainer', {
             header: true,
-            title: "Unshipped Packages",
+            title: "Packages Awaiting Pickup",
             cls:"package-container",
             items: packages
         });
 
     },
     
-    initShippedPackages: function() {
+    initPickedupPackages: function() {
         var me = this,
             data=[],
             packages=[];
 
-        data = this.record.get("shippedPackages");
+        data = this.record.get("pickedupPackages");
         
         for (var i = 0; i < data.length; i++) {
             
@@ -171,7 +175,7 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
             var packagingType = dataItem.packagingType;
             var packagingTypeText = me.packagingTypeStore.getById(packagingType).get("text");
                 
-            packages.push( Ext.create('Taco.view.order.widget.Package', {
+            packages.push( Ext.create('Taco.view.order.widget.PackagePickup', {
                 record: this.record,
                 gridHidden: true,
                     
@@ -185,7 +189,7 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
 
                 enableToobar: true,
 
-                isShippedPackage: true,
+                isPickedupPackage: true,
                     
                 enableMoveMenu: false,
 
@@ -197,7 +201,7 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
 
                 enabledRemoveButton: false,
 
-                enabledMarkAsShippedButton: false,
+                enabledMarkAsFulfilledButton: false,
 
 
                 packageData: dataItem,
@@ -206,12 +210,12 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
                     showVisibilityToggle: true,
                         
                     // order info
-                    title: "Package",
+                    title: "Pickup",
                     fulfillmentStatus: dataItem.status,
                     itemTotal: dataItem.totalQuantity,
                     weight: dataItem.weight,
-                    shippingMethod: dataItem.shippingMethod,
-                    trackingNumber: dataItem.trackingNumber,
+                    
+                    
                     shipDate: dataItem.shipDate,
                     packagingType : packagingTypeText,
                         
@@ -231,9 +235,9 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
 
         //me.packagedItemsGrid.loadData(this.record.get("packages"));
         
-        me.shippedPackages = Ext.create('Taco.core.ux.EditContainer', {
+        me.pickedupPackages = Ext.create('Taco.core.ux.EditContainer', {
             header: true,
-            title: "Shipped Packages",
+            title: "Fulfilled Pickups",
             cls: "package-container",
             items: packages
         });
@@ -246,8 +250,8 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
 
         // clear out the ui components
         me.unpackagedItems.destroy();
-        me.unShippedPackages.destroy();
-        me.shippedPackages.destroy();
+        me.unPickedupPackages.destroy();
+        me.pickedupPackages.destroy();
 
         //re-build the ui components
         me.initUI();
@@ -255,8 +259,8 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
         // add the ui components to the view
         me.add(
             me.unpackagedItems,
-            me.unShippedPackages,
-            me.shippedPackages
+            me.unPickedupPackages,
+            me.pickedupPackages
         );
         
         Ext.resumeLayouts(true);
