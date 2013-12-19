@@ -14,7 +14,7 @@
                 {{location.address.cityOrTown}},
                 {{location.address.stateOrProvince}}
             </div>
-            <a href="#">Store Details</a>
+            <a href="#" data-mz-loc-code="{{location.code}}">Store Details</a>
         </td>
     </tr>
 {% endfor %}
