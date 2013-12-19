@@ -724,6 +724,9 @@
     <Content Include="Scripts\app\view\order\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\modal\FulfillmentMethod.js" />
     <Content Include="Scripts\app\view\order\subform\InstorePickup.js" />
+    <Content Include="Scripts\app\view\order\widget\PackagePickup.js" />
+    <Content Include="Scripts\app\view\order\widget\PickupItemGrid.js" />
+    <Content Include="Scripts\app\view\order\widget\UnpickedupItems.js" />
     <Content Include="Scripts\app\view\order\widget\LocationPickupGrid.js" />
     <Content Include="Scripts\app\view\redirects\Index.js" />
     <Content Include="Scripts\app\view\customerAttribute\Edit.js" />

@@ -1,9 +1,9 @@
 ﻿/**
- * @class Taco.view.order.widget.ShippingItemGrid
+ * @class Taco.view.order.widget.PickupItemGrid
  */
 
 // todos extend base class for the subform
-Ext.define('Taco.view.order.widget.ShippingItemGrid', {
+Ext.define('Taco.view.order.widget.PickupItemGrid', {
     extend: 'Ext.grid.Panel',
     requires: [],
     
@@ -30,16 +30,10 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         
         enableMoveMenu: true,
         
-        enableShippingMethodMenu: true,
-        
-        enableShippingLabelButton: true,
-        
-        enabledPackingSlipButton: true,
         
         enabledRemoveButton: true,
         
-        enabledMarkAsShippedButton: true,
-
+        enabledMarkAsFulfilledButton: true,
         
         packageMenuPagingSize: 10,
 
@@ -172,7 +166,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         // always need to have new package
         menu.push(
             {
-                text: "New Package",
+                text: "New Pickup",
                 moveAction: "addSelectionToPackage",
                 moveTargetId: -1
             }
@@ -182,7 +176,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         if (!me.isUnShippedItems) {
             menu.push(
                 {
-                    text: "Unshipped Items",
+                    text: "Pending Items",
                     moveAction: "addSelectionToPackage",
                     moveTargetId: 0
                 }
@@ -204,7 +198,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             // only include the packages that we are not currently operating on.
             if (unshippedPackages[i - 1].id != packageId) {
                 menu.push({
-                    text: "Package " + i,
+                    text: "Pickup " + i,
                     moveAction: "addSelectionToPackage",
                     moveTargetId: unshippedPackages[i - 1].id
                 });
@@ -254,7 +248,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             var lastPackage = unShippedPackages[unShippedPackages.length - 1];
             var lastPackageId = (lastPackage) ? lastPackage.id : -1;
 
-            var moveMenuText = "Add to Package";
+            var moveMenuText = "Add to Pickup";
             var menuXtype = "Ext.button.Split";
             if (!me.isUnShippedItems) {
                 moveMenuText = "Move to";
@@ -310,72 +304,6 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
 
         }
         
-        if (me.enableShippingMethodMenu) {
-            // note: i had to use the ext split button. The Taco.core.ux.action.SplitButton doesn't responsd to .enabled(), .disable() and needs to be refactored to support the standard extjs button behaviors fully.
-            //me.moveMenuAction = Ext.create("Taco.core.ux.action.SplitButton", {
-            me.shippingMethodMenu = Ext.create("Ext.button.Button", {
-                ui: 'action',
-                margin: "0 2px 0 0",
-                scale: 'medium',
-                menuAlign: 'tr-br',
-                text: "Change Shipping Method",
-                listeners: {
-                    menushow: {
-                        fn: function (button, menu, eOpts) {
-                            var menuData = me.getShippingRatesMenu();
-                            me.shippingMethodMenu.menu.removeAll();
-                            me.shippingMethodMenu.menu.add(menuData);
-                        },
-                        scope: me
-                    }
-                },
-                menu: {
-                    plain: true,
-                    listeners: {
-                        click: {
-                            fn:me.changeShippingMethod,
-                            scope: me,
-                            delegate: "x-menu-item-link"   
-                        }
-                    },
-                    items: [{
-                        text: "loading..."
-                    }]
-                }
-            });
-
-            
-            tb.items.push(me.shippingMethodMenu);
-
-        }
-        
-        if (me.enableShippingLabelButton &&  me.packageData.shippingMethodCode) {
-            
-            me.shippingLabelButton = Ext.create("Ext.button.Button", {
-                text: 'View Shipping Label',
-                ui: 'action',
-                margin: "0 2px 0 0",
-                scale: 'medium',
-                handler: me.viewShippingLabel,
-                scope:me
-            });
-            me.shippingLabelButton.setDisabled( !me.packageData.shippingMethodCode);
-            tb.items.push(me.shippingLabelButton);
-
-        }
-        
-        if (me.enabledPackingSlipButton  &&  me.packageData.shippingMethodCode) {
-            me.packingSlipButton = Ext.create("Ext.button.Button", {
-                text: 'View Packing Slip',
-                ui: 'action',
-                margin: "0 2px 0 0",
-                scale: 'medium',
-                handler: me.viewPackingSlip,
-                scope: me
-            });
-            me.packingSlipButton.setDisabled( !me.packageData.shippingMethodCode);
-            tb.items.push(me.packingSlipButton);
-        }
         
         if (me.enabledRemoveButton) {
             me.removeButton = Ext.create("Ext.button.Button", {
@@ -390,17 +318,17 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             tb.items.push(me.removeButton);
         }
         
-        if (me.enabledMarkAsShippedButton) {
-            me.markAsShippedButton = Ext.create("Ext.button.Button", {
-                text: 'Mark As Shipped',
+        if (me.enabledMarkAsFulfilledButton) {
+            me.markAsFulfilledButton = Ext.create("Ext.button.Button", {
+                text: 'Mark As Fulfilled',
                 ui: 'action',
                 margin: "0 2px 0 0",
                 scale: 'medium',
-                handler: me.markAsShipped,
+                handler: me.markAsFulfilled,
                 scope: me
             });
 
-            tb.items.push(me.markAsShippedButton);
+            tb.items.push(me.markAsFulfilledButton);
         }
         
 
@@ -759,8 +687,8 @@ weight: 2
         }
     },
     
-    // mark package as a shipped package
-    markAsShipped: function () {
+    // mark pickup as a fulfilled;
+    markAsFulfilled: function () {
         var me = this,
             callConfig;
 
@@ -777,7 +705,7 @@ weight: 2
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', "Error marking as shipped", 'error');
+                    Taco.app.fireEvent('setmessage', "Error marking as pickedup", 'error');
                     Taco.app.viewPort.setLoading(false);
                     return;
                 }
@@ -786,7 +714,7 @@ weight: 2
             },
             failure: function (response) {
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error marking as shipped";
+                    msg = (json && json.Message) ? json.Message : "Error marking as pickedup";
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 Taco.app.viewPort.setLoading(false);
             },
@@ -794,7 +722,7 @@ weight: 2
         };
 
         Taco.app.viewPort.setLoading(true);
-        this.record.markPackagesShipped(callConfig);
+        this.record.markPickupFulfilled(callConfig);
 
     },
     
