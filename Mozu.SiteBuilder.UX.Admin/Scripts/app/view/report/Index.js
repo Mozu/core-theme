@@ -25,8 +25,8 @@ Ext.define('Taco.view.report.Index', {
     },
 
     contextConfig: {
-        supportedLevels: ['m', 'c'],
-        requiresContextOfType: ['m', 'c', 's']
+        supportedLevels: ['t', 's'],
+        requiresContextOfType: ['t', 's']
     },
 
     createStoreFromReportDefinition: function (def, criteria) {
