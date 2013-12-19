@@ -20,6 +20,21 @@ Ext.define('Taco.view.report.SidebarList', {
     
     initComponent: function () {
         var me = this;
+        var noGroupByReports = [];
+
+        me.onReportChange = function () {
+            var selectedReport = me.reportRadioGroup.getValue();
+            if (selectedReport) {
+                var supportsGroupBys = !Ext.Array.contains(noGroupByReports, selectedReport.reportKey);
+                if (supportsGroupBys) {
+                    me.groupBy.enable();
+                    me.groupBy.show();
+                } else {
+                    me.groupBy.disable();
+                    me.groupBy.hide();
+                }
+            }
+        }
 
         me.reportRadioGroup = Ext.create('Ext.form.RadioGroup', {
             allowBlank: false,
@@ -27,7 +42,10 @@ Ext.define('Taco.view.report.SidebarList', {
             autoFitErrors: false,
             columns: 1,
             defaultType: 'container',
-            items: []
+            items: [],
+            listeners: {
+                change: me.onReportChange
+            }
         });
 
         me.store.on('load', function (store, records, opts) {
@@ -40,9 +58,14 @@ Ext.define('Taco.view.report.SidebarList', {
                     });
                 }
                 items[items.length - 1].items.push({ xtype: 'radiofield', boxLabel: records[i].get('name'), name: 'reportKey', inputValue: records[i].get('key'), checked: i == 0 });
+                var groupBys = records[i].raw.availableGroupBy || [];
+                if (groupBys.length == 0) {
+                    noGroupByReports.push(records[i].get('key'));
+                }
             }
             me.reportRadioGroup.removeAll();
             me.reportRadioGroup.add(items);
+            me.onReportChange();
         });
 
         me.onDateRangeChange = function () {
