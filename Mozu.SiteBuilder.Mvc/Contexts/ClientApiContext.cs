@@ -216,6 +216,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                             IsSiteBuiderRoute = true,
                             VirturalPath = "/user/",
                             RequiresSsl = true
+                        },
+                        new ServiceInfo
+                        {
+                            Id = "locationService",
+                            InternalUrl = settings.AppSettings("service-url-LocationRuntimeWebApi")
                         }
                     };
                 foreach (ServiceInfo si in sis)

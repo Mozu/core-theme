@@ -11,6 +11,11 @@ Mozu.SiteBuilder.UX.Admin/Scripts/docs/
 Mozu.SiteBuilder.UX/App_Data/[Ll]og.txt
 Mozu.SiteBuilder.UX.Themes/Themes/**/Resources/Scripts-Built/
 
+# Mozu SDK
+Mozu.SiteBuilder.UX/BuiltinScripts/SDK/bower_components/
+Mozu.SiteBuilder.UX/BuiltinScripts/SDK/lib/
+Mozu.SiteBuilder.UX/BuiltinScripts/SDK/node_modules/
+
 # damn compass
 Mozu.SiteBuilder.UX.Admin/Scripts/resources/css/taco.css
 Mozu.SiteBuilder.UX.Admin/Scripts/resources/images/icons-*

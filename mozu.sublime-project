@@ -15,6 +15,9 @@
 		},
 		{
 			"path": "Mozu.SiteBuilder.UX.Admin/Scripts/sass/etc/chorizo"
+		},
+		{
+			"path": "Mozu.SiteBuilder.UX/BuiltinScripts/SDK"
 		}
 	]
 }
