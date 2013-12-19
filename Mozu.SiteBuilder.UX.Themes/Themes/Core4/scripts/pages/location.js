@@ -131,12 +131,53 @@ require(["modules/jquery-mozu", "hyprlive", "modules/backbone-mozu"],
             }]
         };
 
+        var locationsModel = new Backbone.Model(data);
+
         var LocationView = Backbone.MozuView.extend({
-            templateName: 'modules/location/location'
+            templateName: 'modules/location/location',
+            events: {
+                'click a': 'onClickStoreInfo'
+            },
+
+            onClickStoreInfo: function(e) {
+                var code = $(e.currentTarget).data('mz-loc-code'),
+                    $container = $('<div>').appendTo('body'),
+                    view,
+                    loc;
+
+                e.preventDefault();
+                console.log('Store Details', e, locationsModel);
+
+                loc = _.find(locationsModel.get('items'), function(item) {
+                    return code.toString() === item.code.toString();
+                });
+
+                if (!loc) return;
+
+                view = new StoreInfoView({
+                    model: new Backbone.Model(loc),
+                    el: $container
+                })
+
+                view.render();
+            }
         });
 
+        var StoreInfoView = Backbone.MozuView.extend({
+            templateName: 'modules/location/store-info',
+            events: {
+                'click .mz-loc-dialog-cover': 'onClickCover'
+            },
+
+            onClickCover: function(e) {
+                if (!$(e.target).is('.mz-loc-dialog-cover')) return;
+                this.remove();
+                this.render();
+            }
+        })
+
         var view = new LocationView({
-            model: new Backbone.Model(data),
+            model: locationsModel,
             el: $('.mz-loc .mz-loc-table')
         });
 
