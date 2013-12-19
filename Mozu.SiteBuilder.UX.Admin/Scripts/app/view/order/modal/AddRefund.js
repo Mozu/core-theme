@@ -127,10 +127,10 @@ Ext.define('Taco.view.order.modal.AddRefund', {
                 sortable: false,
                 resizable: false,
                 menuDisabled: true,
-                tdCls: 'editableCell',
                 dataIndex: 'amountToRefund',
                 editor: {
                     xtype: 'numberfield',
+                    showBorder:true,
                     hideTrigger: true,
                     selectOnFocus: true,
                     mouseWheelEnabled:false,

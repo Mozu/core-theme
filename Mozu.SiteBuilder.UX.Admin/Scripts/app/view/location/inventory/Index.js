@@ -50,17 +50,6 @@ Ext.define('Taco.view.location.inventory.Index', {
         });
 
         
-        /*
-        this.store.on({
-            load:function() {
-                debugger;
-            },
-            beforeLoad: function() {
-                debugger;
-                return true;
-            }
-        })
-        */
         
         this.callParent(arguments);
     },

@@ -11,7 +11,8 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
         
         record: null,
 
-        headerData:{
+        headerData: {
+            /*
             // ui controls
             showVisibilityToggle: false,
             showChangeLink: true,
@@ -19,24 +20,26 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
 
             // order info
             title: "Unshipped Items",
-            fulfillmentStatus: "Partially Shipped",
-            orderTotal: 65,
-            shippedItemTotal: 45,
-            pendingItemTotal: 20,
-            shippingMethod: "FedEx 2nd Day Air",
+            fulfillmentStatus: null,
+            orderTotal: null,
+            shippedItemTotal: null,
+            pendingItemTotal: null,
+            shippingMethod: null,
             
             // billing contact info
-            firstName: "John",
-            lastName: "Smith",
-            cityOrTown: "",
-            address1: "321654 horseback hollow, Austin, Tx 78954",
-            postalOrZipCode: "78757",
-            stateOrProvince: "Tx",
-            phoneNumber: "542.654.6543",
-            email: "noone@sopmwhere.com"
+            firstName: null,
+            lastName: null,
+            cityOrTown: null,
+            address1: null,
+            postalOrZipCode: null,
+            stateOrProvince: null,
+            phoneNumber: null,
+            email: null
+            */
         }
     },
     
+    //style: "border:1px solid #bfbfbf;padding:19px;",
     initComponent: function(eOpts) {
         var me = this,
             data =[],
@@ -104,6 +107,92 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
             xtype: "component",
             tpl: [
                 '<div class="shipment-header">',
+                
+                    
+
+                    '<table style="width:100%;border-bottom:1px solid #bfbfbf;"><tr><col/><col /><col  />',
+                        '<td style="width:33%;vertical-align:top;">',
+
+                            '<div class="header-section">',
+                                '<div class="header-label">Order Fulfillment Status</div>',
+                                
+                                '<tpl if="fulfillmentStatus==\'PartiallyFulfilled\'">',
+                                    "Partially Fulfilled",
+                                '<tpl elseif="fulfillmentStatus==\'NotFulfilled\'">',
+                                    "Not Fulfilled",
+                                '<tpl else>',
+                                    '{fulfillmentStatus}',
+                                '</tpl>',
+                            '</div>',
+
+                        '</td>',
+                
+                        '<td style="width:34%;vertical-align:top;padding:0 10px 0 10px ">',
+                            '<div class="header-section">',
+                                '<div class="header-label">Shipping Method</div>',
+                                '<tpl if="values.shippingMethod">',
+                                    '<div>{shippingMethod}</div>',
+                                '<tpl else>',
+                                    '<div>Uses default for order</div>',
+                                '</tpl>',
+                            '</div>',
+                        '</td>',
+                
+                        '<td style="width:33%;vertical-align:top">',
+                            '<div class="header-section">',
+                                '<div class="header-label">Ship to</div>',
+                                '<div>{firstName} {lastName}</div>',
+                                    '<tpl if="values.address1 || values.address2">',
+                                        '<div>{address1} {address2}</div>',
+                                    '</tpl>',
+                                    '<tpl if="values.address3 || values.address4">',
+                                        '<div>{address3} {address4}</div>',
+                                    '</tpl>',
+                                '<div>{cityOrTown}, {stateOrProvince} {postalOrZipCode} {countryCode}</div>',
+                                '<tpl if="values.phoneNumber">',
+                                    ' {phoneNumber} ',
+                                '</tpl>',
+                                '<tpl if="values.email">',
+                                    ' {email} ',
+                                '</tpl>',
+                                
+                            '</div>',
+                
+                            /*
+                            '<tpl if="values.showChangeLink">',
+                                '<a class="shipmentAction" shipmentAction="changeShipTo">Change</a>',
+                            '</tpl>',
+                            */
+                
+                        '</td>',
+                    '</tr></table>',
+
+
+                    
+
+                    
+
+                    '<div class="orderCountRow" style="border-bottom:1px solid #bfbfbf !important;padding:13px 0 13px 0;">',
+                        '<span class="titleRow" style="line-height1.4em">{title}</span>',
+                        '<div style="float:right;">',
+                            ' Ordered: {orderTotal} ',
+                            '<span class="seperator">|</span>',
+                            'Shipped: {shippedItemTotal} ',
+                            '<span class="seperator">|</span>',
+                            ' Pending: {pendingItemTotal} ',
+                        '</div>',
+                    '</div>',
+
+                    
+
+                    
+                '</div>'
+
+
+
+                /*
+
+                '<div class="shipment-header">',
                     '<div class="titleRow">',
                         ' {title} ',
                         '<span class="seperator">|</span>',
@@ -139,21 +228,6 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
                         '</tpl>',
                         '<tpl if="values.showChangeLink">',
                             '<span class="seperator">|</span>',
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                             '<a class="shipmentAction" shipmentAction="changeShipTo">Change</a>',
                         '</tpl>',
                     '</div>',
@@ -167,6 +241,7 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
                         '</tpl>',
                     '</div>',
                 '</div>'
+                */
             
             ],
             data: this.getHeaderData(),

@@ -178,6 +178,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 draggable: false,
                 xtype: 'templatecolumn',
                 flex: 1,
+                tdCls:"taco-product-column",
                 sortable: false,
                 resizable: false,
                 menuDisabled: true,
@@ -276,19 +277,21 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     menuDisabled: true,
                     align: "right",
                     renderer: 'usMoney',
-                    tdCls: "editableCell",  // adds the dotted line hover to the cells in the column
-                    editor: {
+                    editor: (this.getEditMode()) ? {
                         xtype: 'numberfield',
+                        showBorder:(this.getEditMode()),
                         forcePrecision: true,
+                        selectOnFocus:true,
                         hideTrigger: true,
+                        fieldStyle: "text-align:right;padding-right:4px;",
                         mouseWheelEnabled: false,
-                        selectOnFocus: true,
+                        
                         //unitString: "$",
                         //unitAtEnd: false,
                         allowBlank: true,
                         minValue: 0,
                         maxValue: 100000
-                    },
+                    } : null,
                     dataIndex: 'unitPrice'
                 },
                 {
@@ -299,9 +302,11 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     sortable: false,
                     menuDisabled: true,
                     align: "right",
-                    tdCls: "editableCell",  // adds the dotted line hover to the cells in the column
                     editor: {
                         xtype: 'textfield',
+                        showBorder: (this.getEditMode()),
+                        fieldStyle: "text-align:right;",
+                        selectOnFocus: true,
                         allowBlank: true,
                         minValue: 0,
                         maxValue: 100000
@@ -323,6 +328,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     //xtype: 'taco.menucolumn',
                     //xtype:"templatecolumn",
                     xtype: 'taco.actioncolumn',
+                    width:30,
                     disabled:(!this.getEditMode()),
                     draggable: false,
                     resizable: false,
@@ -339,19 +345,32 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     handler: function (grid, rowIndex, colIndex, header, e, record, item) {
                         // confirm the removal of the order item;
                         var order = me.record;
-                        var confirm = Ext.create('Taco.core.ux.modal.Confirmation', {
-                            text: 'Are you certain you want to delete this item?',
-                            confirm: function() {
-                                confirm.hide();
-                                me.removeOrderItem({
-                            jsonData: {
-                                orderId: order.getId(),
-                                        orderItemIds: [record.getId()]
+                        
+
+                        Ext.MessageBox.show({
+                            title: 'Delete Item',
+                            // pushes the buttons to the right to be consistant with our dialog ux.
+                            rightJustifyButtons: true,
+                            // reverses the order of the buttons
+                            reverseOrder: true,
+                            msg: "Are you certain you want to delete this item?",
+                            closable: false,
+                            buttons: Ext.Msg.YESNO,
+                            fn: function (val) {
+                                if (val === 'yes') {
+                                    
+                                    me.removeOrderItem({
+                                        jsonData: {
+                                            orderId: order.getId(),
+                                            orderItemIds: [record.getId()]
+                                        }
+                                    });
+                                    
                                 }
-                                });
-                            },
-                            autoShow: true
+                            }
                         });
+
+
                     },
                     renderer: function (value, metaData, record) {
                         // if you need to message the data or dom cls. you can do it here;
@@ -427,96 +446,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             });
         }
     },
-    /*
-    // returns the column configuration for this grid
-    getColumnConfig: function () {
-        var me = this,
-            columns = [];
-       
-        columns.push(
-            {
-                text: 'Quantity',
-                draggable: false,
-                width: 100,
-                sortable: false,
-                menuDisabled: true,
-                align: "left",
-                tdCls: "editableCell",  // adds the dotted line hover to the cells in the column
-                editor: {
-                    xtype: 'textfield',
-                    allowBlank: true,
-                    minValue: 0,
-                    maxValue: 100000
-                },
-                dataIndex: 'quantity'
-            }, {
-                text: 'Code',
-                draggable: false,
-                width: 140,
-                sortable: false,
-                menuDisabled: true,
-                align: "left",
-                dataIndex: 'productCode'
-            },
-            {
-                text: 'Products',
-                draggable: false,
-                xtype: 'templatecolumn',
-                flex: 1,
-                sortable: false,
-                menuDisabled: true,
-                tpl: [
-                    '<span class="productname" >{productName}</span>',
-                    '<span class="product-options">',
-                    '<tpl for="options">',
-                    '<span class="option">{.}, </span>',
-                    '</tpl>',
-                    '</span>'
-                ],
-                dataIndex: 'productName'
-            }, {
-                text: 'Weight (lbs)',
-                draggable: false,
-                width: 140,
-                sortable: false,
-                menuDisabled: true,
-                align: "left",
-                dataIndex: 'weight'
-            }
-        );
-
-        if (me.enableActionColumn) {
-            columns.push(
-                {
-                    xtype: 'taco.menucolumn',
-                    draggable: false,
-                    text: '',
-                    resizable:false,
-                    width: this.getActionColumnWidth(),
-                    menuDisabled: true,
-                    iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger ' + Taco.baseCSSPrefix + 'grid-row-menu-trigger-remove',
-                    menuItems: [],
-                    handler: function (grid, rowIndex, colIndex, header, e, record, item) {
-                        // tell the method that we we want to move this item back to the unshippedItems list;
-                        var dom = Ext.get(item);
-                        dom.moveTargetId = 0;
-                        grid.up('gridpanel').moveSelectedItems(null, dom);
-                    },
-                    scope:me,
-                    renderer: function (value, metaData, record) {
-
-                    },
-                    onMenuShow: function (menu, eventData) {
-                        // todos: remove item from grid
-
-                    }
-                }
-            );
-        }
-
-        return columns;
-    },
-    */
+    
     editOrder: function (animationTarget) {
         
         // to avoid duplication, bubble up the component hierarchy looking for 
@@ -565,7 +495,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     // pass focus to the active search field so the user can keep adding / searching after exiting a previous selection
     focusActiveSearchField: function () {
         if (this.activeSearchField && !this.activeSearchField.isDestroyed) {
-            this.activeSearchField.focus(true, 100);
+            // had to disable this since the focus is causing the field valiation to fire;
+            //this.activeSearchField.focus(true, 100);
         }
     },
     
@@ -716,6 +647,18 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             width: 80,
             fieldCls: "toolbar-field",
             selectOnFocus: true,
+            forcePrecision:true,
+            listeners: {
+                focus: {
+                    fn: function(field) {
+                        if (!field.getValue()) {
+                            field.setValue("-");
+                        }
+                    },
+                    scope:me
+                }
+
+            },
             hideTrigger:true,
             decimalPrecision: 2,
             value: orderAdjustmentValue
@@ -738,6 +681,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 {
                     xtype: "numberfield",
                     itemId: "shippingAdjustmentField",
+                    forcePrecision: true,
                     width: 80,
                     style: "margin:0px 10px 0px 10px;top:0px;",
                     fieldCls: "toolbar-field",

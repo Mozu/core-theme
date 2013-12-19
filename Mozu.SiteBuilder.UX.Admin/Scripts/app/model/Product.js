@@ -303,10 +303,21 @@ Ext.define('Taco.model.Product', {
             type: "auto",
             defaultValue: []
         },
+    
+    
+        {
+            name: "hasConfigurableOptions",
+            type: "boolean"
+        },
+        {
+            name: "hasStandaloneOptions",
+            type: "boolean"
+        },
         {
             name: "isConfigurable",
             type: 'boolean',
             convert: function (v, record) {
+                return (record.get("hasConfigurableOptions") || record.get("hasStandaloneOptions"));
                 return (record.get("options").length || record.get("extras").length);
             }
         },

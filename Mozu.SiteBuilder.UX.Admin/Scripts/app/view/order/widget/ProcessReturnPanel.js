@@ -101,7 +101,6 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 },
                 {
                     text: 'Quantity',
-                    tdCls: "editableCell",
                     draggable: false,
                     sortable: false,
                     resizable: false,
@@ -111,7 +110,6 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 },
                 {
                     text: 'Recieved',
-                    tdCls: "editableCell",
                     dataIndex: 'quantityReceived',
                     draggable: false,
                     sortable: false,
@@ -120,13 +118,13 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     width: 150,
                     editor: {
                         xtype: 'numberfield',
+                        showBorder:true,
                         hideTrigger: true,
                         minValue: 0
                     }
                 },
                 {
                     text: 'Restockable',
-                    tdCls: "editableCell",
                     draggable: false,
                     sortable: false,
                     resizable: false,
@@ -135,6 +133,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     dataIndex: 'quantityRestockable',
                     editor: {
                         xtype: 'numberfield',
+                        showBorder:true,
                         hideTrigger: true,
                         minValue: 0
                     }

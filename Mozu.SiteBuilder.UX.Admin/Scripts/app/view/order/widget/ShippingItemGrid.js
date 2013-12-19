@@ -239,7 +239,8 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         var me = this,
             tb = {
                 plain: true,
-                cls:"shipping-toolbar",
+                //cls:"shipping-toolbar",
+                style:"background-color:#ffffff;padding-bottom:2px;",
                 enableOverflow:true,
                 items:[]
             };
@@ -266,9 +267,10 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             // note: i had to use the ext split button. The Taco.core.ux.action.SplitButton doesn't responsd to .enabled(), .disable() and needs to be refactored to support the standard extjs button behaviors fully.
             //me.moveMenuAction = Ext.create("Taco.core.ux.action.SplitButton", {
             me.moveMenuAction = Ext.create(menuXtype, {
-                ui: 'link',
+                ui: 'action',
                 scale: 'medium',
                 menuAlign: 'tr-br',
+                margin:"0 2px 0 0",
                 text: moveMenuText,
                 itemId: 'moveMenuTrigger',
                 moveAction: "addSelectionToPackage",
@@ -312,7 +314,8 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             // note: i had to use the ext split button. The Taco.core.ux.action.SplitButton doesn't responsd to .enabled(), .disable() and needs to be refactored to support the standard extjs button behaviors fully.
             //me.moveMenuAction = Ext.create("Taco.core.ux.action.SplitButton", {
             me.shippingMethodMenu = Ext.create("Ext.button.Button", {
-                ui: 'link',
+                ui: 'action',
+                margin: "0 2px 0 0",
                 scale: 'medium',
                 menuAlign: 'tr-br',
                 text: "Change Shipping Method",
@@ -350,7 +353,8 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             
             me.shippingLabelButton = Ext.create("Ext.button.Button", {
                 text: 'View Shipping Label',
-                ui: 'link',
+                ui: 'action',
+                margin: "0 2px 0 0",
                 scale: 'medium',
                 handler: me.viewShippingLabel,
                 scope:me
@@ -363,7 +367,8 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         if (me.enabledPackingSlipButton  &&  me.packageData.shippingMethodCode) {
             me.packingSlipButton = Ext.create("Ext.button.Button", {
                 text: 'View Packing Slip',
-                ui: 'link',
+                ui: 'action',
+                margin: "0 2px 0 0",
                 scale: 'medium',
                 handler: me.viewPackingSlip,
                 scope: me
@@ -375,7 +380,8 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         if (me.enabledRemoveButton) {
             me.removeButton = Ext.create("Ext.button.Button", {
                 text: 'Remove',
-                ui: 'link',
+                ui: 'action',
+                margin: "0 2px 0 0",
                 scale: 'medium',
                 handler: me.removeSelectedItems,
                 scope: me
@@ -387,7 +393,8 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         if (me.enabledMarkAsShippedButton) {
             me.markAsShippedButton = Ext.create("Ext.button.Button", {
                 text: 'Mark As Shipped',
-                ui: 'link',
+                ui: 'action',
+                margin: "0 2px 0 0",
                 scale: 'medium',
                 handler: me.markAsShipped,
                 scope: me
@@ -407,6 +414,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             me.selModel = Ext.create('Ext.selection.CheckboxModel', {
                 selType: 'checkboxmodel',
                 checkOnly: true,
+                headerWidth: 37,
                 showHeaderCheckbox: true
             });
         } 
@@ -425,9 +433,10 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
                 sortable: false,
                 menuDisabled: true,
                 align: "left",
-                tdCls: "editableCell",  // adds the dotted line hover to the cells in the column
                 editor: {
                     xtype: 'textfield',
+                    // highlights the cell when not editing
+                    showBorder:true,
                     allowBlank: true,
                     minValue: 0,
                     maxValue: 100000

@@ -58,6 +58,10 @@
 			text-decoration:underline;
         }
 	}
+
+
+
+
 }
 
 
@@ -66,6 +70,16 @@
 .taco-orderform-orderitemgrid{
     
 	background-color:#fff;
+
+
+	.taco-product-column {
+		.x-grid-cell-inner {
+			padding-top:5px;
+			padding-bottom:5px;
+		}
+	}
+
+
 
     .x-column-header-align-right .x-column-header-text {
         margin-right: 0px;
@@ -114,12 +128,9 @@
 
     // border that matches background color to keep the container height from changing on mouseover 
     .#{$prefix}grid-cell {
-        vertical-align:top;   
-        // border that matches background color to keep the container height from changing on mouseover 
-        .#{$prefix}grid-cell-inner {
-            border: 1px solid transparent;
-        }     
+        vertical-align:top; 
     } 
+	
     
     // formatting for active discounts;
     .isActive{	
@@ -144,7 +155,7 @@
     // the remove icon in the right hand action column
     .taco-grid-row-action-trigger-remove{
         
-        @include icon-font($glyph-close);				
+        @include icon-font($glyph-close);
 
         height: 20px;
         width: 30px;
@@ -184,16 +195,7 @@
         border-bottom-color: #ededed;
     }
 
-    .editmode-enabled {
 
-        .editableCell {
-            // highlight editable cell when mouseover
-            .#{$prefix}grid-cell-inner:hover {
-                border: 1px dashed #cccccc;
-            }
-        } 
-    }
-     
     // not sure if this is still used. todo:remove after testing;      
     .x-grid-row-adjustment{
         .adjustment-cell {
