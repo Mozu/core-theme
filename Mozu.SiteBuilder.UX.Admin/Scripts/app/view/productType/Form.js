@@ -95,7 +95,8 @@ Ext.define('Taco.view.productType.Form', {
             labelSeparator: '',
             width: 700,
             emptyText: 'Enter a Product Type Name',
-            name: 'name'
+            name: 'name',
+            allowBlank: false
         }, 
         me.productUsagesCheckboxGroup,    
         {
