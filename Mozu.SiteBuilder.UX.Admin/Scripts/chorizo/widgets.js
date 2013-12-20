@@ -33,7 +33,11 @@
 
             this.$modal = this.element.find('.mz-cms-widget-modal');
 
-
+            this.element.find('.mz-cms-cover').on({
+                click: function (e) {
+                    Chorizo.widgets.hide();
+                }
+            });
 
             this.$body = this.$modal.find('.mz-cms-body');
 
@@ -64,11 +68,21 @@
         },
 
         show: function() {
-            this.$modal.show();
+            this.$modal.show({
+                duration: 0,
+                start: function () {
+                    $(this).toggleClass('hidden', false);
+                }
+            });
         },
 
         hide: function() {
-            this.$modal.hide();
+            this.$modal.hide({
+                duration: 0,
+                start: function () {
+                    $(this).toggleClass('hidden', true);
+                }
+            });
         },
 
         toggle: function() {

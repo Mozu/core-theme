@@ -63,16 +63,18 @@
 }
 
 .mz-cms-shadow {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgb(51, 51, 51);
     // display: none;
     height: 510px;
     left: 50%;
     margin-left: -255px;
     margin-top: -255px;
+    opacity: 0.9;
     position: fixed;
     top: 50%;
     width: 520px;
     z-index: 100002;
+    @include border-radius(2px);
 }
 
 .mz-cms-cover {
