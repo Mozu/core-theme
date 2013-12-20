@@ -35,7 +35,7 @@ Ext.define('Taco.view.customers.Index', {
                 width: 130
             },{
                 dataIndex: 'firstName',
-                text: 'First Names',
+                text: 'First Name',
                 width: 130,
                 renderer: function (value, metaData, record) {
                     if (value)
