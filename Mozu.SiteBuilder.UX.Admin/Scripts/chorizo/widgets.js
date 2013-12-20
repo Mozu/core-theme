@@ -8,7 +8,7 @@
     widgets = {
         _modalTpl: [
             '<div>',
-                '<div class="mz-cms-widget-modal" style="display:none">',
+                '<div class="mz-cms-widget-modal hidden">',
                     '<div class="mz-cms-header">',
                         'Widgets',
                     '</div>',
@@ -72,7 +72,12 @@
         },
 
         toggle: function() {
-            this.$modal.toggle();
+            this.$modal.toggle({
+                duration: 0,
+                start: function () {
+                    $(this).toggleClass('hidden');
+                }
+            });
         }
     };
 
