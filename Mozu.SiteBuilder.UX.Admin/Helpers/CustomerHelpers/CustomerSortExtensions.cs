@@ -30,6 +30,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
             }
             switch (item.property.ToLowerInvariant())
             {
+                case "id":
+                    return "id";
+                case "externalid":
+                    return "id";
+                case "userid":
+                    return "userid";
+                case "wishlistcount":
+                    return "wishlistcount";
+                case "ordercount":
+                    return "ordercount";
+                case "totalspent":
+                    return "totalorderamount";
+                case "createdate":
+                    return "createdate";
+                case "lastorderdate":
+                    return "lastorderdate";
+                case "firstname":
+                    return "contact.firstname";
+                case "lastname":
+                    return "contact.lastname";
+                case "emailaddress":
+                    return "contact.emailaddress";
                 default:
                     throw new InvalidOperationException("unknown sort.property " + item.property);
             }
