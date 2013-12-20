@@ -147,6 +147,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [DataMember(EmitDefaultValue = false, Name = "salePrice")]
         public decimal? SalePrice { get; set; }
 
+        /// <summary>
+        /// Is taxable
+        /// </summary>
+        [DataMember(EmitDefaultValue = false, Name = "isTaxable")]
+        public bool IsTaxable { get; set; }
         #endregion
         
         #region Inventory
