@@ -38,8 +38,9 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 {
                     double xdVal = Convert.ToDouble(x);
                     double ydVal = Convert.ToDouble(y);
-                    return xdVal == ydVal ? 0 : 1;
-                    return StringComparer.OrdinalIgnoreCase.Compare(x.ToString(), y.ToString());
+                    return  Comparer<Double>.Default.Compare(xdVal, ydVal);
+                    //return xdVal == ydVal ? 0 : 1;
+                    //return StringComparer.OrdinalIgnoreCase.Compare(x.ToString(), y.ToString());
                 }
                 if ((xtype.IsValueType || xtype == typeof(string)) && (ytype.IsValueType || ytype == typeof(string)))
                 {
