@@ -118,7 +118,11 @@ Ext.define('Taco.view.order.widget.Package', {
 
             enabledMarkAsShippedButton: me.getEnabledMarkAsShippedButton(),
 
-            enableToobar: me.getEnableToolbar()
+            enableToobar: me.getEnableToolbar(),
+            
+            showFulfillmentMethodColumn: false,
+
+            showFulfillmentLocationColumn: false
         });
 
         me.items = [

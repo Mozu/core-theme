@@ -103,7 +103,12 @@ Ext.define('Taco.view.order.widget.PackagePickup', {
 
             enabledMarkAsFulfilledButton: me.getEnabledMarkAsFulfilledButton(),
 
-            enableToobar: me.getEnableToolbar()
+            enableToobar: me.getEnableToolbar(),
+            
+            showFulfillmentMethodColumn: false,
+
+            showFulfillmentLocationColumn: false
+
         });
 
         me.items = [

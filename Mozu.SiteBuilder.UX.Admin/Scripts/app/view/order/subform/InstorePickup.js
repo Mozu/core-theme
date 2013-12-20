@@ -12,6 +12,8 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
     ],
     
     title: 'In Store Pickup',
+    // override the bodyPadding from editContainer class.
+    bodyPadding: '0 0 19 0',
 
     tools: null,
 
@@ -153,7 +155,7 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
         //me.packagedItemsGrid.loadData(this.record.get("packages"));
         
         me.unPickedupPackages = Ext.create('Taco.core.ux.EditContainer', {
-            header: true,
+            header: false,
             title: "Packages Awaiting Pickup",
             cls:"package-container",
             items: packages
@@ -236,7 +238,7 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
         //me.packagedItemsGrid.loadData(this.record.get("packages"));
         
         me.pickedupPackages = Ext.create('Taco.core.ux.EditContainer', {
-            header: true,
+            header: false,
             title: "Fulfilled Pickups",
             cls: "package-container",
             items: packages

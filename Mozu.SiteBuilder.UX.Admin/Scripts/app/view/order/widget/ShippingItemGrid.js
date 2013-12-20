@@ -45,6 +45,11 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
 
         autoHeight: true,
         
+        preselectAll: true,
+        
+        showFulfillmentMethodColumn: true,
+
+        showFulfillmentLocationColumn: true,
         
         plugins:[],
         
@@ -158,6 +163,13 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         // initialized the selection model
         me.initSelectionModel();
 
+        if (this.editMode) {
+            if (this.preselectAll) {
+                this.on('viewready', function (grid) {
+                    this.getSelectionModel().selectAll(true);
+                });
+            }
+        }
         me.callParent(arguments);
 
     },
@@ -276,7 +288,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
                 moveAction: "addSelectionToPackage",
                 moveTargetId: lastPackageId,
                 
-                disabled: true,
+                disabled: (!this.preselectAll),
                 handler: function (button, e) {
                     // only do the click to move if its in the unshipped items. for regular packages its a menu button instead of split button
                     if (me.isUnShippedItems) {
@@ -478,6 +490,36 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
                 dataIndex: 'weight'
             }
         );
+        
+
+        if (this.showFulfillmentMethodColumn) {
+            columns.push(
+                {
+                    text: 'Method',
+                    draggable: false,
+                    width: 100,
+                    sortable: false,
+                    menuDisabled: true,
+                    align: "left",
+                    dataIndex: 'fulfillmentMethod'
+                }
+            );
+        }
+
+        if (this.showFulfillmentLocationColumn) {
+            columns.push(
+                {
+                    text: 'Location',
+                    draggable: false,
+                    width: 100,
+                    sortable: false,
+                    menuDisabled: true,
+                    align: "left",
+                    dataIndex: 'fullfillmentLocationCode'
+                }
+            );
+        }
+
 
         if (me.enableActionColumn) {
             columns.push(
@@ -551,6 +593,16 @@ weight: 2
                 "type": "float",
                 "useNull": true,
                 "defaultValue": 1
+            },
+            {
+                "name": "fulfillmentMethod",
+                "type": "string",
+                "useNull": true
+            },
+            {
+                "name": "fullfillmentLocationCode",
+                "type": "string",
+                "useNull": true
             }
 
             /*

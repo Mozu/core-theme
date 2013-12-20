@@ -25,11 +25,8 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
         enableActionColumn: true,
         
         enableToolbar: true,
-
-        
         
         enableMoveMenu: true,
-        
         
         enabledRemoveButton: true,
         
@@ -39,7 +36,12 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
 
         autoHeight: true,
         
+        preselectAll:true,
         
+        showFulfillmentMethodColumn: true,
+        
+        showFulfillmentLocationColumn: true,
+
         plugins:[],
         
         // width of the actionColumn. used to align the grid total container
@@ -151,6 +153,14 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
 
         // initialized the selection model
         me.initSelectionModel();
+
+        if (this.editMode) {
+            if (this.preselectAll) {
+                this.on('viewready', function (grid) {
+                    this.getSelectionModel().selectAll(true);
+                });
+            }
+        }
 
         me.callParent(arguments);
 
@@ -270,7 +280,7 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
                 moveAction: "addSelectionToPackage",
                 moveTargetId: lastPackageId,
                 
-                disabled: true,
+                disabled:(!this.preselectAll),
                 handler: function (button, e) {
                     // only do the click to move if its in the unshipped items. for regular packages its a menu button instead of split button
                     if (me.isUnShippedItems) {
@@ -357,7 +367,7 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
             {
                 text: 'Quantity',
                 draggable: false,
-                width: 100,
+                width: 80,
                 sortable: false,
                 menuDisabled: true,
                 align: "left",
@@ -399,13 +409,43 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
             }, {
                 text: 'Weight (lbs)',
                 draggable: false,
-                width: 140,
+                width: 100,
                 sortable: false,
                 menuDisabled: true,
-                align: "left",
+                align: "center",
                 dataIndex: 'weight'
             }
         );
+        
+
+        if (this.showFulfillmentMethodColumn) {
+            columns.push(
+                {
+                    text: 'Method',
+                    draggable: false,
+                    width: 100,
+                    sortable: false,
+                    menuDisabled: true,
+                    align: "left",
+                    dataIndex: 'fulfillmentMethod'
+                }
+            );
+        }
+        
+        if (this.showFulfillmentLocationColumn) {
+            columns.push(
+                {
+                    text: 'Location',
+                    draggable: false,
+                    width: 100,
+                    sortable: false,
+                    menuDisabled: true,
+                    align: "left",
+                    dataIndex: 'fullfillmentLocationCode'
+                }
+            );
+        }
+
 
         if (me.enableActionColumn) {
             columns.push(
@@ -479,7 +519,18 @@ weight: 2
                 "type": "float",
                 "useNull": true,
                 "defaultValue": 1
+            },
+            {
+                "name": "fulfillmentMethod",
+                "type": "string",
+                "useNull": true
+            },
+            {
+                "name": "fullfillmentLocationCode",
+                "type": "string",
+                "useNull": true
             }
+
 
             /*
             ,

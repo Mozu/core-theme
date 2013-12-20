@@ -28,8 +28,9 @@ Ext.define('Taco.core.ux.EditContainer', {
                 scope: this,
                 fn: function () {
                     var header = this.getHeader();
-
-                    header.insert(1, actionBar);
+                    if (header) {
+                        header.insert(1, actionBar);
+                    }
                 }
             }
         });
