@@ -17,7 +17,8 @@
 			"path": "Mozu.SiteBuilder.UX.Admin/Scripts/sass/etc/chorizo"
 		},
 		{
-			"path": "Mozu.SiteBuilder.UX/BuiltinScripts/SDK"
+			"path": "Mozu.SiteBuilder.UX/BuiltinScripts/SDK",
+			"folder_exclude_patterns": ["bower_component", "dist", "lib", "node_modules", "tests"]
 		}
 	]
 }
