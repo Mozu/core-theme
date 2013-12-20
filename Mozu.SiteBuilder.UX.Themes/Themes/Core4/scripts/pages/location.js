@@ -1,5 +1,5 @@
-require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/api'],
-    function($, Hypr, Backbone, api) {
+require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/models-location'],
+    function($, Hypr, Backbone, LocationModels) {
 
         var data = {
             "startIndex": 0,
@@ -130,7 +130,7 @@ require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/ap
                 "tags": []
             }]
         };
-
+        
         var locationsModel = new Backbone.Model(data);
 
         var LocationView = Backbone.MozuView.extend({
@@ -186,9 +186,7 @@ require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/ap
 
             view.render();
 
-            console.log(api, Mozu)
-
-            debugger
+            window.lm = LocationModels;
         })
     }
 );

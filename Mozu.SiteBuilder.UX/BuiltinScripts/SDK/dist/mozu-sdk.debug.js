@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-12-19
+ * Mozu JavaScript SDK - v0.2.0 - 2013-12-20
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2699,7 +2699,8 @@ var ApiReference = (function () {
                     asProperty: 'customer'
                 },
                 returnType: 'accountcard'
-            },            'update-card': {
+            },
+            'update-card': {
                 verb: 'PUT',
                 template: '{+customerService}{customer.id}/cards/{id}',
                 includeSelf: {
@@ -3365,7 +3366,9 @@ ApiObject.types.order = (function() {
         'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED': 'Payment type missing or unrecognized.',
         'PAYMENT_MISSING': 'Expected a payment to exist on this order and one did not.',
         'PAYPAL_TRANSACTION_ID_MISSING': 'Expected the active payment to include a paymentServiceTransactionId and it did not.',
-        'SUBMIT_ACTION_NOT_AVAILABLE': 'Order cannot be submitted because Submit action is not present. Is order complete?'
+        'SUBMIT_ACTION_NOT_AVAILABLE': 'Order cannot be submitted because Submit action is not present. Is order complete?',
+        'ADD_COUPON_FAILED': 'Adding coupon failed for the following reason: {0}',
+        'ADD_CUSTOMER_FAILED': 'Adding customer failed for the following reason: {0}'
     });
 
     var OrderStatus2IsComplete = {};
@@ -3408,12 +3411,16 @@ ApiObject.types.order = (function() {
             var self = this;
             return this.applyCoupon(couponCode).then(function () {
                 return self.get();
+            }, function(reason) {
+                errors.throwOnObject(self, 'ADD_COUPON_FAILED', reason.message);
             });
         },
         addNewCustomer: function (newCustomerPayload) {
             var self = this;
             return self.api.action('customer', 'createStorefront', newCustomerPayload).then(function (customer) {
                 return self.setUserId();
+            }, function (reason) {
+                errors.throwOnObject(self, 'ADD_CUSTOMER_FAILED', reason.message);
             });
         },
         createPayment: function(extraProps) {
@@ -3454,7 +3461,7 @@ ApiObject.types.order = (function() {
                 if (rawJSON || rawJSON === 0 || rawJSON === false) {
                     delete rawJSON.billingInfo;
                     obj.data = utils.clone(rawJSON);
-            }
+                }
                 delete obj.unsynced;
                 obj.fire('sync', rawJSON, obj.data);
                 obj.api.fire('sync', obj, rawJSON, obj.data);
