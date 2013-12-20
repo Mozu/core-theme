@@ -57,14 +57,15 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             int duration = int.Parse(val);
 
 
+            if (actionExecutedContext.Response != null && actionExecutedContext.Response.Headers != null)
+            {
+                var cache = actionExecutedContext.Response.Headers.CacheControl = actionExecutedContext.Response.Headers.CacheControl ?? new CacheControlHeaderValue();
 
-            var cache = actionExecutedContext.Response.Headers.CacheControl = actionExecutedContext.Response.Headers.CacheControl ?? new CacheControlHeaderValue();
-           
-            TimeSpan cacheDuration = TimeSpan.FromSeconds(duration);
+                var cacheDuration = TimeSpan.FromSeconds(duration);
 
-            cache.MaxAge = cacheDuration;
-            cache.Public = true;
-           
+                cache.MaxAge = cacheDuration;
+                cache.Public = true;
+            }
             //cache.
             //cache.SetCacheability(HttpCacheability.Public);
             //cache.SetExpires(DateTime.Now.Add(cacheDuration));
