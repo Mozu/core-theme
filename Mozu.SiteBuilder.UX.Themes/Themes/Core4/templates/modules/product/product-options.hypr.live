@@ -26,7 +26,13 @@
                 {% if option.attributeDetail.inputType == "Date" %}
                     <input type="text" data-mz-is-datepicker data-mz-product-option="{{ option.attributeFQN }}" class="mz-productoptions-option" style="color:transparent" value="{{ option.shopperEnteredValue }}" data-format="mm/dd/yy" data-max="{{option.maxValue}}" data-min="{{ option.minValue }}">
                 {% endif %}
-                {% if option.values and option.values.0.deltaPrice and option.values.0.deltaPrice > 0 %} ({{ option.values.0.deltaPrice|currency }} {{ labels.more }}) {% endif %}
+                {% if option.values %}
+                  {% for value in option.values %}
+                    {% if forloop.counter0 == 0 and value.deltaPrice > 0 %}
+                      ({{ value.deltaPrice|currency }} {{ labels.more }})
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
             {% endif %}
         </div>
     </div>
