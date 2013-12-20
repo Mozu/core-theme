@@ -125,7 +125,9 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
             this.$slideboxOuter.css('left', 0);
         },
         displayLoginMessage: function (xhr) {
-            this.displayMessage(xhr.responseJSON.message);
+            this.displayMessage(xhr.message ||
+                (xhr && xhr.responseJSON && xhr.responseJSON.message) ||
+                Hypr.getLabel('unexpectedError'));
         },        login: function () {
             this.setLoading(true);
             api.action('customer', 'loginStorefront', {
@@ -137,9 +139,9 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
         },
         retrievePassword: function () {
             this.setLoading(true);
-            $.post('/resetpassword', {
+            api.action('customer', 'resetPasswordStorefront', {
                 EmailAddress: this.$parent.find('[data-mz-forgotpassword-email]').val()
-            }).always(this.displayLoginMessage);
+            }).then(this.displayLoginMessage, this.displayLoginMessage);
         }
     });
 

@@ -307,6 +307,12 @@ var ApiReference = (function () {
                 template: '{+customerService}reset-password',
                 returnType: 'string'
             },
+            'reset-password-storefront': {
+                useIframeTransport: '{+storefrontUserService}../../Assets/mozu_receiver.html',
+                verb: 'POST',
+                template: '{+storefrontUserService}resetpassword',
+                returnType: 'string'
+            },
             'change-password': {
                 verb: 'POST',
                 template: '{+customerService}{id}/change-password',
@@ -329,8 +335,7 @@ var ApiReference = (function () {
                     asProperty: 'customer'
                 },
                 returnType: 'accountcard'
-            },
-            'update-card': {
+            },            'update-card': {
                 verb: 'PUT',
                 template: '{+customerService}{customer.id}/cards/{id}',
                 includeSelf: {
@@ -412,6 +417,13 @@ var ApiReference = (function () {
                 verb: 'POST',
                 template: '{+orderService}{id}/payments/actions',
                 includeSelf: true
+            },
+            'perform-payment-action': {
+                verb: 'POST',
+                template: '{+orderService}{id}/payments/{paymentId}/actions',
+                includeSelf: true,
+                shortcutParam: 'paymentId',
+                returnType: 'string'
             },
             'apply-coupon': {
                 verb: 'PUT',

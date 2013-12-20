@@ -1932,6 +1932,9 @@ var CONSTANTS = {
     PAYMENT_STATUSES: {
         NEW: "New"
     },
+    PAYMENT_ACTIONS: {
+        VOID: "VoidPayment"
+    },
     ORDER_STATUSES: {
         ABANDONED: "Abandoned",
         ACCEPTED: "Accepted",
@@ -2668,6 +2671,12 @@ var ApiReference = (function () {
                 template: '{+customerService}reset-password',
                 returnType: 'string'
             },
+            'reset-password-storefront': {
+                useIframeTransport: '{+storefrontUserService}../../Assets/mozu_receiver.html',
+                verb: 'POST',
+                template: '{+storefrontUserService}resetpassword',
+                returnType: 'string'
+            },
             'change-password': {
                 verb: 'POST',
                 template: '{+customerService}{id}/change-password',
@@ -2690,8 +2699,7 @@ var ApiReference = (function () {
                     asProperty: 'customer'
                 },
                 returnType: 'accountcard'
-            },
-            'update-card': {
+            },            'update-card': {
                 verb: 'PUT',
                 template: '{+customerService}{customer.id}/cards/{id}',
                 includeSelf: {
@@ -2773,6 +2781,13 @@ var ApiReference = (function () {
                 verb: 'POST',
                 template: '{+orderService}{id}/payments/actions',
                 includeSelf: true
+            },
+            'perform-payment-action': {
+                verb: 'POST',
+                template: '{+orderService}{id}/payments/{paymentId}/actions',
+                includeSelf: true,
+                shortcutParam: 'paymentId',
+                returnType: 'string'
             },
             'apply-coupon': {
                 verb: 'PUT',
@@ -3368,7 +3383,7 @@ ApiObject.types.order = (function() {
                 returnUrl: billingInfo.paypalReturnUrl,
                 cancelUrl: billingInfo.paypalCancelUrl
             }).ensure(function () {
-                var payment = order.getActivePayment();
+                var payment = order.getCurrentPayment();
                 if (!payment) errors.throwOnObject(order, 'PAYMENT_MISSING');
                 if (!payment.paymentServiceTransactionId) errors.throwOnObject(order, 'PAYPAL_TRANSACTION_ID_MISSING');
                 window.location = utils.formatString(CONSTANTS.BASE_PAYPAL_URL, payment.paymentServiceTransactionId);
@@ -3414,13 +3429,37 @@ ApiObject.types.order = (function() {
             if (!billingInfo.paymentType || !(billingInfo.paymentType in PaymentStrategies)) errors.throwOnObject(this, 'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED');
             return PaymentStrategies[billingInfo.paymentType](this, billingInfo);
         },
-        getActivePayment: function() {
-            var payments = this.prop('payments');
-            if (payments.length === 0) return null;
+        getActivePayments: function() {
+            var payments = this.prop('payments'),
+                activePayments = [];
+            //if (payments.length === 0) return null;
             for (var i = payments.length -1; i >= 0; i--) {
                 if (payments[i].status === CONSTANTS.PAYMENT_STATUSES.NEW)
-                    return payments[i];
+                    activePayments.push(utils.clone(payments[i]))
             }
+            return activePayments;
+        },
+        getCurrentPayment: function() {
+            var activePayments = this.getActivePayments();
+            for (var i = activePayments.length - 1; i >= 0; i--) {
+                if (activePayments[i].paymentType !== "StoreCredit") return activePayments[i];
+            }
+        },
+        voidPayment: function (id) {
+            var obj = this;
+            return this.performPaymentAction({
+                paymentId: id,
+                actionName: CONSTANTS.PAYMENT_ACTIONS.VOID
+            }).then(function (rawJSON) {
+                if (rawJSON || rawJSON === 0 || rawJSON === false) {
+                    delete rawJSON.billingInfo;
+                    obj.data = utils.clone(rawJSON);
+            }
+                delete obj.unsynced;
+                obj.fire('sync', rawJSON, obj.data);
+                obj.api.fire('sync', obj, rawJSON, obj.data);
+                return obj;
+            });
         },
         isReadyForSubmit: function() {
             var availableActions = this.prop('availableActions');
@@ -3567,7 +3606,7 @@ var ApiInterface = (function () {
             if (requestConf.verb)
                 method = requestConf.verb;
 
-            var deferred = utils.when.defer();
+            var deferred = me.defer();
 
             var data;
             if (requestConf.overridePostData) {
@@ -3645,6 +3684,9 @@ var ApiInterface = (function () {
         steps: function () {
             var args = Object.prototype.toString.call(arguments[0]) === "[object Array]" ? arguments[0] : Array.prototype.slice.call(arguments);
             return utils.pipeline(Array.prototype.slice.call(args));
+        },
+        defer: function() {
+            return utils.when.defer();
         },
         getAvailableActionsFor: function (type) {
             return ApiReference.getActionsFor(type);

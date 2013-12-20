@@ -15,7 +15,7 @@
 	<form method="post" action="{{ siteContext.secureHost }}/checkout" id="cartform">
 		<input type="hidden" name="id" value="{{model.Id}}" />
         {% include "modules/common/message-bar" %}
-        <table class="mz-carttable" id="cart">
+        <table class="mz-table mz-table-cart" id="cart">
             {% include "modules/cart/cart-table" %}
         </table>
 	</form>

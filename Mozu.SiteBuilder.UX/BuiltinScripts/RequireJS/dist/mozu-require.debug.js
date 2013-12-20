@@ -1,5 +1,5 @@
 /*! 
- * Mozu Require - v0.2.0 - 2013-11-05
+ * Mozu Require - v0.2.0 - 2013-12-18
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -629,17 +629,6 @@ var storeMode = "debug",
         if (script) return script.textContent && JSON.parse(script.textContent);
     }
 
-    //var themeSettings;
-    //function getMozuThemeSetting(settingName) {
-    //    if (!themeSettings) themeSettings = getMozuData("themesettings");
-    //    if (!themeSettings) throw new ReferenceError('This page template fails to preload the theme settings using {% preload_json themeSettings "themesettings" %}.');
-    //    return themeSettings[settingName];
-    //}
-
-    //function getMozuLabel(labelName) {
-    //    return getMozuThemeSetting("label" + labelName.charAt(0).toUpperCase() + labelName.substring(1));
-    //}
-
     //Allow getting a global that expressed in
     //dot notation, like 'a.b.c'.
     function getGlobal(value) {
@@ -1114,7 +1103,7 @@ var storeMode = "debug",
                             // at the main module.
                             c = pkg ? getOwn(config.config, mod.map.id + '/' + pkg.main) :
                                       getOwn(config.config, mod.map.id);
-                            return c || {};
+                            return  c || {};
                         },
                         exports: defined[mod.map.id]
                     });
@@ -1969,7 +1958,7 @@ var storeMode = "debug",
                         }
 
                         return context.nameToUrl(normalize(moduleNamePlusExt,
-                                                relMap && relMap.id, true), ext, true);
+                                                relMap && relMap.id, true), ext,  true);
                     },
 
                     defined: function (id) {
@@ -2582,8 +2571,6 @@ var storeMode = "debug",
     //Set up with config info.
     req(cfg);
     req.mozuData = getMozuData;
-    //req.mozuThemeSetting = getMozuThemeSetting;
-    //req.mozuLabel = getMozuLabel;
 
 req.mixin = mixin;
 
@@ -2956,7 +2943,7 @@ define('shim',['text'], function (text) {
 
         },
 
-        namedTmpl = 'define(\'{4}\',[{0}], function({1}) { \n\n{2} ; \n\nreturn {3}; });\n\n\n//@ sourceURL={4}.js\n\n',
+        namedTmpl = 'define(\'{4}\',[{0}], function({1}) { \n\n{2} ; \n\nreturn {3}; });\n\n\n//@ sourceURL=/{4}.js\n\n',
         anonTmpl = namedTmpl.replace('\'{4}\',', ''),
         createTextModule = function (parsedConf, body, named) {
             var stringDeps = parsedConf.deps.length > 0 ? "'" + parsedConf.deps.join("','") + "'" : '';

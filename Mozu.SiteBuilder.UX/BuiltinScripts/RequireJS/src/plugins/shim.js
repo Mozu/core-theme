@@ -60,7 +60,7 @@ define('shim',['text'], function (text) {
 
         },
 
-        namedTmpl = 'define(\'{4}\',[{0}], function({1}) { \n\n{2} ; \n\nreturn {3}; });\n\n\n//@ sourceURL={4}.js\n\n',
+        namedTmpl = 'define(\'{4}\',[{0}], function({1}) { \n\n{2} ; \n\nreturn {3}; });\n\n\n//@ sourceURL=/{4}.js\n\n',
         anonTmpl = namedTmpl.replace('\'{4}\',', ''),
         createTextModule = function (parsedConf, body, named) {
             var stringDeps = parsedConf.deps.length > 0 ? "'" + parsedConf.deps.join("','") + "'" : '';

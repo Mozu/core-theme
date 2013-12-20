@@ -188,12 +188,18 @@
                     return false;
                 }
             });
-            this.model.on('passwordinvalid', function(e, message) {
-                this.$('[data-mz-validationmessage-for="password"]').text(message);
+            this.model.on('passwordinvalid', function(message) {
+                me.$('[data-mz-validationmessage-for="password"]').text(message);
+            });
+            this.model.on('userexists', function (user) {
+                me.$('[data-mz-validationmessage-for="emailAddress"]').html(Hypr.getLabel("customerAlreadyExists", user, encodeURIComponent(window.location.pathname)));
             });
         },
         submit: function () {
-            _.defer(_.bind(this.model.submit, this.model));
+            var self = this;
+            _.defer(function () {
+                self.model.submit();
+            });
         },
         handleEnterKey: function () {
             this.submit();

@@ -169,7 +169,7 @@ Ext.define('Taco.view.order.Form', {
       
         if (this.isEdit()) {
             items.push(Ext.create('Taco.view.order.subform.Shipping', subformCfg));
-            items.push(Ext.create('Taco.view.order.subform.InstorePickup', subformCfg));
+            //items.push(Ext.create('Taco.view.order.subform.InstorePickup', subformCfg));
             items.push(Ext.create('Taco.view.order.subform.Return', subformCfg)); 
         }
 

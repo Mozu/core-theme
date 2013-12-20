@@ -82,7 +82,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 }
                 if (_pageContextLazy.Value.HandledByProxy)
                 {
-                    if (sslEnabled && y.RequiresSsl && !_pageContextLazy.Value.IsSecure )
+                    if (sslEnabled && y.RequiresSsl/* && !_pageContextLazy.Value.IsSecure*/)
                     {
                         return secureHost + y.VirturalPath;
                     }
@@ -201,7 +201,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         new ServiceInfo
                         {
                             Id = "wishlistService",
-                            InternalUrl = settings.AppSettings("service-url-StorefrontCardsWebApi")
+                            InternalUrl = settings.AppSettings("service-url-WishlistWebApi")
                         },
                         new ServiceInfo
                         {

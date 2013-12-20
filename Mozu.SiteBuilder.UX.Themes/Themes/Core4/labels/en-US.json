@@ -49,6 +49,7 @@
   "of"                   : "of",
   "all"                  : "All",
   "save"                 : "Save",
+  "add"                  : "Add",
   "allRightsReserved"    : "All rights reserved.",
   "poweredBy"            : "Powered by Mozu Shopping Cart",
   "product"              : "Product",
@@ -161,6 +162,7 @@
   "shipTo"               : "Ship to",
   "shippedTo"            : "Shipped to",
   "giftMessage"          : "Gift Message",
+  "customerAlreadyExists": "A customer is already registered as {0}. <a href=\"/user/login?returnUrl={1}\">Login as this customer</a>",
 
   /* Error page labels */
   "errorApology"         : "Sorry, an error occurred.",
@@ -175,6 +177,7 @@
   "accountNoWishlists"   : "You do not have any wishlist items.",
   "accountNoOrders"      : "You have not placed any orders.",
   "accountNoReturns"     : "You have not requested any returns.",
+  "accountNoCredits"     : "You have no store credits.",
   "orderHistory"         : "Order History",
   "paymentMethods"       : "Payment Methods",
   "addressBook"          : "Address Book",
@@ -212,6 +215,11 @@
   "returning"            : "Returning",
   "returnDetails"        : "Return Details",
   "returnNumber"         : "RMA #",
+  "enterStoreCredit"     : "Enter Store Credit Number",
+  "storeCreditNumber"    : "Store Credit Number",
+  "creditDate"           : "Credit Date",
+  "creditAmount"         : "Credit Amount",
+  "remaining"            : "Remaining",
 
   /* Not Found labels */
   "pageNotFound"         : "Page Not Found",

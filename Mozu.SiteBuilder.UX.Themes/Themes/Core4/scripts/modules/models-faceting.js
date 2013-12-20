@@ -73,7 +73,7 @@
             this.updateFacets();
         },
         buildFacetRequest: function () {
-            var conf = _.extend({}, this.get('baseRequestParams'), this.get('constantParams')),
+            var conf = _.clone(this.get('baseRequestParams')),
                 pageSize = this.get("pageSize"),
                 startIndex = this.get("startIndex"),
                 filterValue = this.getFacetValueFilter();

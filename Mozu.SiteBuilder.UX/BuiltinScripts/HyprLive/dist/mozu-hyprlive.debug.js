@@ -1,5 +1,5 @@
 /*! 
- * Mozu Hypr Live - v0.2.0 - 2013-12-05
+ * Mozu Hypr Live - v0.2.0 - 2013-12-18
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -19,7 +19,7 @@
 	(function (exportFn) {
 		exportFn(['text!../hyprlivecontext'], function (HyprLiveContext) {
             
-/*! Swig v1.2.0 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! Swig v<%= pkg.version %> | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
@@ -252,7 +252,7 @@ function iterateFilter(input) {
     });
   }
 
-  if (typeof input === 'object') {
+  if (input !== null && input !== undefined && typeof input === 'object') {
     utils.each(input, function (value, key) {
       out[key] = self.apply(null, arguments);
     });
@@ -378,6 +378,10 @@ exports.escape = function (input, type) {
 
   if (out !== undefined) {
     return out;
+  }
+
+  if (input === null || input === undefined) {
+    return '';
   }
 
   if (typeof input !== 'string') {

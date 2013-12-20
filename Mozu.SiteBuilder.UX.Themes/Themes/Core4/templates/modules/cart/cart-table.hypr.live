@@ -7,7 +7,7 @@
     <th>&nbsp;</th>
   </tr>
 </thead>
-<tbody class="mz-carttable-{%if Model.IsEmpty %}isempty{% else %}items{% endif %}">
+<tbody class="mz-table-cart-{%if Model.IsEmpty %}isempty{% else %}items{% endif %}">
   {% if not model.isEmpty %}
   {% for item in model.items %}
   <tr class="mz-carttable-item">
