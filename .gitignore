@@ -6,6 +6,9 @@ packages/
 *.user
 .sass-cache/
 .DS_Store
+node_modules/
+
+
 Mozu.SiteBuilder.UX.Admin/Scripts/ext/
 Mozu.SiteBuilder.UX.Admin/Scripts/docs/
 Mozu.SiteBuilder.UX/App_Data/[Ll]og.txt
