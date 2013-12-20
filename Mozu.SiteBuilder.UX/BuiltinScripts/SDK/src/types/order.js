@@ -5,7 +5,9 @@
         'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED': 'Payment type missing or unrecognized.',
         'PAYMENT_MISSING': 'Expected a payment to exist on this order and one did not.',
         'PAYPAL_TRANSACTION_ID_MISSING': 'Expected the active payment to include a paymentServiceTransactionId and it did not.',
-        'SUBMIT_ACTION_NOT_AVAILABLE': 'Order cannot be submitted because Submit action is not present. Is order complete?'
+        'SUBMIT_ACTION_NOT_AVAILABLE': 'Order cannot be submitted because Submit action is not present. Is order complete?',
+        'ADD_COUPON_FAILED': 'Adding coupon failed for the following reason: {0}',
+        'ADD_CUSTOMER_FAILED': 'Adding customer failed for the following reason: {0}'
     });
 
     var OrderStatus2IsComplete = {};
@@ -23,7 +25,7 @@
                 returnUrl: billingInfo.paypalReturnUrl,
                 cancelUrl: billingInfo.paypalCancelUrl
             }).ensure(function () {
-                var payment = order.getActivePayment();
+                var payment = order.getCurrentPayment();
                 if (!payment) errors.throwOnObject(order, 'PAYMENT_MISSING');
                 if (!payment.paymentServiceTransactionId) errors.throwOnObject(order, 'PAYPAL_TRANSACTION_ID_MISSING');
                 window.location = utils.formatString(CONSTANTS.BASE_PAYPAL_URL, payment.paymentServiceTransactionId);
@@ -48,12 +50,16 @@
             var self = this;
             return this.applyCoupon(couponCode).then(function () {
                 return self.get();
+            }, function(reason) {
+                errors.throwOnObject(self, 'ADD_COUPON_FAILED', reason.message);
             });
         },
         addNewCustomer: function (newCustomerPayload) {
             var self = this;
             return self.api.action('customer', 'createStorefront', newCustomerPayload).then(function (customer) {
                 return self.setUserId();
+            }, function (reason) {
+                errors.throwOnObject(self, 'ADD_CUSTOMER_FAILED', reason.message);
             });
         },
         createPayment: function(extraProps) {
@@ -69,13 +75,37 @@
             if (!billingInfo.paymentType || !(billingInfo.paymentType in PaymentStrategies)) errors.throwOnObject(this, 'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED');
             return PaymentStrategies[billingInfo.paymentType](this, billingInfo);
         },
-        getActivePayment: function() {
-            var payments = this.prop('payments');
-            if (payments.length === 0) return null;
+        getActivePayments: function() {
+            var payments = this.prop('payments'),
+                activePayments = [];
+            //if (payments.length === 0) return null;
             for (var i = payments.length -1; i >= 0; i--) {
                 if (payments[i].status === CONSTANTS.PAYMENT_STATUSES.NEW)
-                    return payments[i];
+                    activePayments.push(utils.clone(payments[i]))
             }
+            return activePayments;
+        },
+        getCurrentPayment: function() {
+            var activePayments = this.getActivePayments();
+            for (var i = activePayments.length - 1; i >= 0; i--) {
+                if (activePayments[i].paymentType !== "StoreCredit") return activePayments[i];
+            }
+        },
+        voidPayment: function (id) {
+            var obj = this;
+            return this.performPaymentAction({
+                paymentId: id,
+                actionName: CONSTANTS.PAYMENT_ACTIONS.VOID
+            }).then(function (rawJSON) {
+                if (rawJSON || rawJSON === 0 || rawJSON === false) {
+                    delete rawJSON.billingInfo;
+                    obj.data = utils.clone(rawJSON);
+                }
+                delete obj.unsynced;
+                obj.fire('sync', rawJSON, obj.data);
+                obj.api.fire('sync', obj, rawJSON, obj.data);
+                return obj;
+            });
         },
         isReadyForSubmit: function() {
             var availableActions = this.prop('availableActions');

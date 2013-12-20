@@ -313,9 +313,10 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
             routes.MapHttpRoute(
-                "Reset Password",
-                "resetpassword",
-                new {controller = "Auth", action = "ResetPassword"});
+                "AjaxResetPassword",
+                "user/resetpassword",
+                new {controller = "Auth", action = "AjaxResetPassword"},
+                new {acceptConstraint = new AcceptConstraint("text/html", false)});
 
 
             routes.MapHttpRoute(

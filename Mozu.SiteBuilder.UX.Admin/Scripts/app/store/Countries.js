@@ -16,6 +16,7 @@
         remoteFilter: false,
         sorters:['name'],
         storeManagerConfig: {
+            createOnly: true,
             clearFilters: false,
             clearSort: false,
             autoLoad: true

@@ -4,6 +4,9 @@
     PAYMENT_STATUSES: {
         NEW: "New"
     },
+    PAYMENT_ACTIONS: {
+        VOID: "VoidPayment"
+    },
     ORDER_STATUSES: {
         ABANDONED: "Abandoned",
         ACCEPTED: "Accepted",

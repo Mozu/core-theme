@@ -86,8 +86,6 @@
 </div>
 {% endif %}
 
-{% dump model %}
-
 {% if model.measurements and themeSettings.showProductDetailMeasurements %}
 <div class="mz-productdetail-measurements mz-l-stack-section">
     <h4 class="mz-l-stack-sectiontitle">{{ labels.measurements }}</h4>

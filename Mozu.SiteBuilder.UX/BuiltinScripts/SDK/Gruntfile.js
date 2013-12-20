@@ -58,7 +58,7 @@ module.exports = function (grunt) {
                     banner: '<%= banner %>'
                 },
                 src: '<%= concat.dist.dest %>',
-                dest: '<%= pkg.main %>'
+                dest: '<%= pkg.main %>.js'
             }
         },
         tfscheckout: {
@@ -85,7 +85,7 @@ module.exports = function (grunt) {
         mocha: {
             test: {
                 options: {
-                    reporter: 'Nyan',
+                    reporter: 'Dot',
                     urls: [testurl],
                     run: true
                 }
@@ -126,8 +126,8 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('test', ['concat:test', 'connect:server', 'mocha', 'clean:test']);
-    grunt.registerTask('dist', ['bower', 'clean:dist', 'concat:dist', 'concat:debug', 'uglify', 'clean:tmp', 'tfscheckout']);
+    grunt.registerTask('dist', ['clean:dist', 'concat:dist', 'concat:debug', 'uglify', 'clean:tmp', 'tfscheckout']);
     grunt.registerTask('testbrowser', ['concat:test', 'connect:browser']);
-    grunt.registerTask('default', ['test', 'dist']);
+    grunt.registerTask('default', ['bower', 'test', 'dist']);
 
 };

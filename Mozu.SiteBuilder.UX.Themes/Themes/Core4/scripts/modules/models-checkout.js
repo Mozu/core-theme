@@ -37,7 +37,7 @@
             calculateStepStatus: function () {
                 // override this!
                 var newStepStatus = this.isValid(!this.stepStatus()) ? 'complete' : 'invalid';
-                this.stepStatus(newStepStatus);
+                return this.stepStatus(newStepStatus);
             },
             getOrder: function () {
                 return this.parent;
@@ -268,13 +268,14 @@
                         }
                     }
                 });
+                _.bindAll(this, 'applyPayment');
             },
             selectPaymentType: function(newPaymentType) {
                 this.get('check').selected = newPaymentType == "Check";
                 this.get('card').selected = newPaymentType == "CreditCard";
             },
             calculateStepStatus: function() {
-                this.stepStatus(!!this.parent.get('fulfillmentInfo').get('shippingMethodCode') ? (
+                return this.stepStatus(!!this.parent.get('fulfillmentInfo').get('shippingMethodCode') ? (
                     this.isValid(true) ? 'complete' : 'invalid')
                     : 'new');
             },
@@ -286,29 +287,34 @@
                 }
             },
             submit: function () {
-                if (!this.validate()) {
-                    this.stepStatus("complete");
-                    this.getOrder().isReady(true);
+                var order = this.getOrder();
+                if (this.validate()) return false;
+                var currentPayment = order.apiModel.getCurrentPayment();
+                if (currentPayment) {
+                    return order.apiVoidPayment(currentPayment.id).then(this.applyPayment);
+                } else {
+                    return this.applyPayment();
                 }
             },
-            applyPayment: function() {
-                var order = this.getOrder();
+            applyPayment: function () {
+                var self = this, order = this.getOrder();
                 if (this.get("paymentType") === "PaypalExpress") {
                     this.set(this.getPaypalUrls());
                 } else {
                     this.unset('paypalReturnUrl');
                     this.unset('paypalCancelUrl');
                 }
+                this.syncApiModel();
                 return order.apiAddPayment().then(function() {
-                    var payment = order.apiModel.getActivePayment();
+                    var payment = order.apiModel.getCurrentPayment();
                     if (payment.paymentType !== "PaypalExpress") {
+                        self.stepStatus("complete");
+                        self.isLoading(false);
                         order.isReady(true);
                     }
                 });
             }
         });
-
-
 
         var ShopperNotes = Backbone.MozuModel.extend(),
 
@@ -353,11 +359,8 @@
             initialize: function () {
                 var self = this;
                 _.defer(function () {
-                    var payment = self.apiModel.getActivePayment();
-                    if (payment) {
-                        if (payment.paymentType === "Check") self.isReady(true);
-                        if (payment.paymentType === "PaypalExpress" && window.location.href.indexOf('PaypalExpress=complete') !== -1) self.isReady(true);
-                    }
+                    var latestPayment = self.apiModel.getCurrentPayment();
+                    if (latestPayment && latestPayment.paymentType === "PaypalExpress" && window.location.href.indexOf('PaypalExpress=complete') !== -1) self.isReady(true);
                 });
                 _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'apiCheckout');
             },
@@ -370,30 +373,42 @@
                 });
             },
             onCheckoutSuccess: function () {
+                this.isLoading(true);
                 this.trigger('complete');
             },
             onCheckoutError: function (error) {
-                var order = this;
+                var order = this,
+                    errorHandled = false;
                 order.isLoading(false);
-                if (!error || !error.items) error = {
-                    items: [
-                        {
-                            message: Hypr.getLabel('unknownError')
-                        }
-                    ]
-                };
+                if (!error || !error.items || error.items.length === 0) {
+                    error = error.message ? {
+                        items: [error]
+                    } : {
+                        items: [
+                            {
+                                message: Hypr.getLabel('unknownError')
+                            }
+                        ]
+                    }
+                }
                 $.each(error.items, function (ix, errorItem) {
                     if (errorItem.errorCode === "MISSING_OR_INVALID_PARAMETER" && errorItem.additionalErrorData && errorItem.additionalErrorData[0] && errorItem.additionalErrorData[0].value === "password" && errorItem.additionalErrorData[0].name === "ParameterName") {
+                        errorHandled = true;
                         order.trigger('passwordinvalid', errorItem.message.substring(errorItem.message.indexOf('Password')));
-                    } else {
-                        order.messages.add(errorItem);
+                    }
+                    if (errorItem.errorCode === 'ITEM_ALREADY_EXISTS' && errorItem.applicationName === "Customer") {
+                        errorHandled = true;
+                        order.trigger('userexists', order.get('emailAddress'));
                     }
                 });
+                if (!errorHandled) order.messages.reset(error.items);
+                throw error;
             },
             addNewCustomer: function() {
                 var self = this,
                     billingContact = this.get('billingInfo').get('billingContact'),
                     email = this.get('emailAddress');
+                this.createdCustomer = true;
                 return this.apiAddNewCustomer({
                     account: {
                         emailAddress: email,
@@ -402,26 +417,37 @@
                         lastName: billingContact.get("lastNameOrSurname")
                     },
                     password: this.get('password')
-                }).then(function (customer) {
-                    // this should only happen once per session--if the order tries to do it again, bad things happen
-                    self.customerCreated = true;
-                    self.trigger('sync', self);
+                }).otherwise(function (error) {
+                    self.customerCreated = false;
+                    throw error;
                 });
+            },
+            syncBillingAndCustomerEmail: function() {
+                var billingEmail = this.get('billingInfo').get('billingContact').get('email'),
+                    customerEmail = this.get('emailAddress');
+                if (!customerEmail) this.set('emailAddress', billingEmail);
             },
             submit: function () {
                 var order = this,
-                    operation;
+                    process = [];
+
+                this.syncBillingAndCustomerEmail();
 
                 if (this.validate()) return false;
                 this.isLoading(true);
-                operation = this.get('billingInfo').applyPayment();
+
                 if (this.get("createAccount") && !this.customerCreated) {
-                    operation = operation.then(this.addNewCustomer);
+                    process.push(this.addNewCustomer);
                 } 
+
                 if (this.get('shopperNotes').has('comments')) {
-                    operation = operation.then(this.update);
+                    process.push(this.update);
                 }
-                operation.then(this.apiCheckout).then(this.onCheckoutSuccess, this.onCheckoutError).done();
+
+                process.push(this.apiCheckout);
+                
+                
+                api.steps(process).then(this.onCheckoutSuccess, this.onCheckoutError);
 
             },
             update: function() {

@@ -1,1 +1,31 @@
 ﻿<h3 class="mz-l-stack-sectiontitle">{{ labels.storeCredit }}</h3>
+<div class="mz-accountstorecredit-form">
+  <input type="text" placeholder="{{ labels.enterStoreCredit }}" class="mz-accountstorecredit-input" data-mz-entering-credit />
+  <button class="mz-button mz-button-small mz-accountstorecredit-add">{{ labels.add }}</button>
+</div>
+<div class="mz-accountstorecredit-table">
+{% if model.credits.length > 0 %}
+  <table class="mz-table">
+    <thead>
+      <tr>
+        <th class="mz-accountstorecredit-header-creditnumber">{{ labels.storeCreditNumber }}</th>
+        <th class="mz-accountstorecredit-header-creditdate">{{ labels.creditDate }}</th>
+        <th class="mz-accountstorecredit-header-creditamount">{{ labels.creditAmount }}</th>
+        <th class="mz-accountstorecredit-header-remaining">{{ labels.remaining }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for credit in model.credits %}
+      <tr>
+        <td class="mz-accountstorecredit-cell-storecreditnumber">{{ credit.code }}</td>
+        <td class="mz-accountstorecredit-cell-creditdate">{{ credit.activationDate }}</td>
+        <td class="mz-accountstorecredit-cell-creditamount">{{ credit.initialBalance|currency }}</td>
+        <td class="mz-accountstorecredit-cell-remaining">{{ credit.currentBalance|currency }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+{{ labels.accountNoCredits }}
+{% endif %}
+</div>

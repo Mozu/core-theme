@@ -48,6 +48,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ICartWebApiClient _cartWebApiClient;
         private readonly ISettings _settings;
         private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
+        private readonly ICreditWebApiClient _creditWebApiClient;
         private readonly IShippingWebApiClient _shippingWebApiClient;
         
         private readonly OrderStatusProvider _orderStatusProvider = new OrderStatusProvider();
@@ -55,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //private static string _merchantId;
         private const string CookieName = "order";
 
-        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, Mozu.ShippingRuntime.Contracts.Clients.IShippingWebApiClient shippingWebApiClient , Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient , Mozu.CommerceRuntime.Contracts.Clients.ICartWebApiClient cartWebApiClient , ISettings settings)
+        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, Mozu.ShippingRuntime.Contracts.Clients.IShippingWebApiClient shippingWebApiClient , Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient ,  ICreditWebApiClient creditWebApiClient, Mozu.CommerceRuntime.Contracts.Clients.ICartWebApiClient cartWebApiClient , ISettings settings)
         {
           
             _authHelper = authHelper;
@@ -65,6 +66,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _cartWebApiClient = cartWebApiClient;
             _settings = settings;
             _customerAccountWebApiClient = customerAccountWebApiClient;
+            _creditWebApiClient = creditWebApiClient;
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
             _shippingWebApiClient = shippingWebApiClient.CloneWithoutUserClaims();
            
@@ -150,6 +152,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Order model;
             Customer.Contracts.CustomerAccount account = null;
             CardCollection cards = null;
+            Customer.Contracts.Credit.CreditCollection credits = null;
 
             try
             {
@@ -172,6 +175,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId)).ReadAsSync();
                 cards = (await _customerAccountWebApiClient.GetAccountCards(this.PageContext.User.AccountId)).ReadAsSync();
+                credits = (await _creditWebApiClient.GetCredits()).ReadAsSync();
                 CustomerContact primaryShippingContact = null;
                 //CustomerContact primaryBillingContact = null;
 
@@ -209,6 +213,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 JObject accountJson = JObject.FromObject(account, jSerializer);
                 accountJson.Add("cards", JArray.FromObject(cards.Items, jSerializer));
+                accountJson.Add("credits", JArray.FromObject(credits.Items, jSerializer));
                 jOrder.Add("customer", accountJson);
             }
 

@@ -18,10 +18,6 @@ define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', "modules/mod
                 facetHierDepth: 'categoryId:2'
             };
 
-            productListData.constantParams = {
-                c: categoryId
-            };
-
             var facetingModel = new FacetingModels.FacetedProductCollection(productListData);            var facetingViews = {
                 pagingControls: new PagingViews.PagingControls({
                     el: $categoryPageBody.find('[data-mz-pagingcontrols]'),
@@ -48,7 +44,7 @@ define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', "modules/mod
                 var newURL, lrClone = JSON.parse(JSON.stringify(facetingModel.lastRequest));
                 $.each(lrClone, function (p) { if (p in productListData.baseRequestParams) delete lrClone[p] });
                 if (parseInt(lrClone.pageSize) === defaultPageSize) delete lrClone.pageSize;
-                newURL = $.isEmptyObject(lrClone) ? window.location.href.replace(window.location.search, '') : "?" + $.param(lrClone);
+                newURL = $.isEmptyObject(lrClone) ? "" : "?" + $.param(lrClone);
                 router.navigate(newURL, { replace: true });
             });
 

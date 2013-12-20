@@ -127,6 +127,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return res;
         }
 
+        protected async Task<ServiceClientResponse<System.Net.Http.StreamContent>> DoResetPassword(ResetPasswordInfo info)
+        {
+            var res = (await _customerAccountWebApiClient.ResetPassword(info));
+
+            return res;
+        }
+
         private Uri MakeRedirectUri(string returnUrl = null)
         {
             if (string.IsNullOrEmpty(returnUrl))
@@ -271,41 +278,54 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             
         }
-          [System.Web.Http.HttpPost]
-         public object  AjaxResetPassword(string email)
-        {
-            var res =  _customerAccountWebApiClient.ResetPassword( new ResetPasswordInfo()
-            {
-                UserName = email,
-                EmailAddress = email
-            }).Result;
-            if (res.ResponseMessage.IsSuccessStatusCode)
-            {
 
-                return new Response<bool>()
-                           {
-                               Data = true,
-                               Success = true
-                           };
-            }
-            else
-            {
 
-                var ex = res.ReadException();
+         [AcceptVerbs("OPTIONS", "POST")]
+         public async Task<HttpResponseMessage> AjaxResetPassword(ResetPasswordInfo info)
+         {
+             if (this.Request.Method.Method == "OPTIONS")
+             {
+                 return this.Request.CreateResponse(HttpStatusCode.OK);
+             }
+             var res = await DoResetPassword(info);
 
-                var errorCollection = ex.Data["DataContract"] as ErrorCollection;
+             return res.ResponseMessage;
+             ;
 
-                return new Response<string>()
-                           {
-                               Message = "nope you stink",
-                               ServiceErrorCollection = errorCollection,
-                               Success = false
 
-                           };
-            }
-       
-        }
+         }
+
         //  [System.Web.Http.HttpPost]
+        // public object  AjaxResetPassword(ResetPasswordInfo info)
+        //{
+        //    var res =  _customerAccountWebApiClient.ResetPassword(info).Result;
+        //    if (res.ResponseMessage.IsSuccessStatusCode)
+        //    {
+
+        //        return new Response<bool>()
+        //                   {
+        //                       Data = true,
+        //                       Success = true
+        //                   };
+        //    }
+        //    else
+        //    {
+
+        //        var ex = res.ReadException();
+
+        //        var errorCollection = ex.Data["DataContract"] as ErrorCollection;
+
+        //        return new Response<string>()
+        //                   {
+        //                       Message = "nope you stink",
+        //                       ServiceErrorCollection = errorCollection,
+        //                       Success = false
+
+        //                   };
+        //    }
+       
+        //}
+        ////  [System.Web.Http.HttpPost]
         //public object  AjaxSignIn(string email, string password)
         //{
         //    var info = new Core.Api.Contracts.UserAuthInfo { EmailAddress = email, Password = password };
