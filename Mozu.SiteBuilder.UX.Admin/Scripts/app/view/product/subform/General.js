@@ -168,6 +168,12 @@ Ext.define('Taco.view.product.subform.General', {
                 }
             });
 
+            this.isTaxableField = Ext.widget({
+                name: 'isTaxable',
+                xtype: 'checkboxfield',
+                boxLabel: 'Taxable'
+            });
+
 
         }
         
@@ -330,9 +336,8 @@ Ext.define('Taco.view.product.subform.General', {
                         }
                     ],
                     width: "100%"
-                }
-                
-                
+                },
+                this.isTaxableField
             ]
         }];
 
