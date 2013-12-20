@@ -16,7 +16,7 @@ Ext.define('Taco.view.order.widget.UnpickedupItems', {
         }
     },
     
-    //style: "border:1px solid #bfbfbf;padding:19px;",
+    
     initComponent: function(eOpts) {
         var me = this,
             data =[],
@@ -86,7 +86,7 @@ Ext.define('Taco.view.order.widget.UnpickedupItems', {
                 '<div class="shipment-header">',
                     '<div class="orderCountRow" style="border-bottom:1px solid #bfbfbf !important;padding:13px 0 13px 0;">',
                         '<span class="titleRow" style="line-height1.4em">{title}</span>',
-                        '<div style="float:right;">',
+                        '<div style="float:right;padding:4px 19px 4px 10px;">',
                             ' Total In Store Pickup Items: {itemsToPickup} ',
                             '<span class="seperator">|</span>',
                             'Fulfilled Items: {itemsPickedup} ',

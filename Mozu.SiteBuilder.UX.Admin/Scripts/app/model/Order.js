@@ -317,6 +317,7 @@ Ext.define('Taco.model.Order', {
             "name": "packages",
             "type": "array",
             convert: function (v, record) {
+                
                 if (!Ext.isArray(v)) {
                     v = [];
                 }

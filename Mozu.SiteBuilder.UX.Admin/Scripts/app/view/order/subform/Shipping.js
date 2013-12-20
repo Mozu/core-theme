@@ -174,7 +174,8 @@ Ext.define('Taco.view.order.subform.Shipping', {
         //me.packagedItemsGrid.loadData(this.record.get("packages"));
         
         me.unShippedPackages = Ext.create('Taco.core.ux.EditContainer', {
-            header: true,
+            header: false,
+            hidden:(!data.length),
             title: "Unshipped Packages",
             cls:"package-container",
             items: packages
@@ -257,7 +258,8 @@ Ext.define('Taco.view.order.subform.Shipping', {
         //me.packagedItemsGrid.loadData(this.record.get("packages"));
         
         me.shippedPackages = Ext.create('Taco.core.ux.EditContainer', {
-            header: true,
+            header: false,
+            hidden: (!data.length),
             title: "Shipped Packages",
             cls: "package-container",
             items: packages

@@ -138,7 +138,7 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
                             '</div>',
                         '</td>',
                 
-                        '<td style="width:33%;vertical-align:top">',
+                        '<td style="width:33%;vertical-align:top;padding-bottom:19px;">',
                             '<div class="header-section">',
                                 '<div class="header-label">Ship to</div>',
                                 '<div>{firstName} {lastName}</div>',
@@ -174,7 +174,7 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
 
                     '<div class="orderCountRow" style="border-bottom:1px solid #bfbfbf !important;padding:13px 0 13px 0;">',
                         '<span class="titleRow" style="line-height1.4em">{title}</span>',
-                        '<div style="float:right;">',
+                        '<div style="float:right;padding:4px 19px 4px 10px;">',
                             ' Ordered: {orderTotal} ',
                             '<span class="seperator">|</span>',
                             'Shipped: {shippedItemTotal} ',

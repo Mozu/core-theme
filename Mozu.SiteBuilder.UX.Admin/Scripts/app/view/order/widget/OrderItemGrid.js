@@ -123,6 +123,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 me.showHasDraftToolbar();
             }
         };
+
+        
    
 
         this.on('beforeedit', function(plugin, edit) {
@@ -191,8 +193,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     '</tpl>',
                     '<div class="product-options">',
                         '<tpl for="options">',
-                        '<span class="option"><tpl if="xindex &gt; 1">, </tpl>{Name}',
-                        ': {Value}',
+                            '<span class="option"><tpl if="xindex &gt; 1">, </tpl>{name}',
+                            ': {value}',
                         '</span>',
                         '</tpl>',
                         '<tpl for="bundledProducts">',
@@ -201,14 +203,24 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                             '</div>',
                         '</tpl>',
                     
-                        // if order item supports instore pickup and user is currently editing the order. make the fulfillment method a link;
-                        '<tpl if="this.isEditable() && supportsInStorePickup">',
-                            'Fulfillment Method: <a class="fulfillment-link" href="#" fulfillmentMethod="{fulfillmentMethod}">{fulfillmentMethod}</a>',
-                        '<tpl else>',
-                            'Fulfillment Method: {fulfillmentMethod}',
-                        '</tpl>',
+                        '<div>',
+                            // if order item supports instore pickup and user is currently editing the order. make the fulfillment method a link;
+                            '<tpl if="this.isEditable() && supportsInStorePickup">',
+                                'Fulfillment Method: <a class="fulfillment-link" href="#" fulfillmentMethod="{fulfillmentMethod}">{[this.getFulfillmentMethodText(values.fulfillmentMethod)]}</a>',
+                            '<tpl else>',
+                                'Fulfillment Method: {[this.getFulfillmentMethodText(values.fulfillmentMethod)]}',
+                            '</tpl>',
+                        '</div>',
                     '</div>',
                     {
+                        getFulfillmentMethodText: function (value) {
+                            if (value == "Ship") {
+                                return "Direct Ship";
+                            } else {
+                                return "In Store Pickup";
+                                
+                            }
+                        },
                         isEditable: function (values) {
                             return me.getEditMode();
                         }
