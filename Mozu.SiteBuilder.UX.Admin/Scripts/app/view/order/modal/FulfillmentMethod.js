@@ -347,7 +347,9 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
                         Ext.clone(me.record.data)
                     ]
                 },
-                
+                failure: function(response) {
+                    
+                },
                 success: function (response) {
                     // success handling here
                     var json = Ext.decode(response.responseText, true);
