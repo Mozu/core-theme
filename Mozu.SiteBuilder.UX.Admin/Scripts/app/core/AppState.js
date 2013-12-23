@@ -128,4 +128,3 @@ Ext.define('Taco.core.AppState', {
 
     }
 });
-// Copyright (c) 2012 Volusion, Inc.

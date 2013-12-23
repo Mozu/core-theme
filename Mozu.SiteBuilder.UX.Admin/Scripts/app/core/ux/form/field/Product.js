@@ -18,7 +18,7 @@ Ext.define('Taco.core.ux.form.field.Product', {
     fieldLabel: 'Select Products',
     queryMode: 'remote',
     valueField: 'productCode',
-
+    pageSize: 25,
     initComponent : function () {
         this.store = Taco.core.data.StoreManager.getOrCreate({
            type: 'Taco.store.ProductComboBox'

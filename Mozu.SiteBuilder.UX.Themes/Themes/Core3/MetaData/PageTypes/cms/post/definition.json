@@ -1,9 +1,0 @@
-{
-  "id": "post",
-  "displayName": "Post",
-  "documentType": "post",
-  "entityType": "post",
-  "pageType": "post",
-  "renderTemplate": "post",
-  "userCreatable": true
-}

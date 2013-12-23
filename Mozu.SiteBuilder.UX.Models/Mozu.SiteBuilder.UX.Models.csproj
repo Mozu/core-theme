@@ -404,11 +404,9 @@
     <Compile Include="Checkout\CheckoutActionInformation.cs" />
     <Compile Include="Checkout\CheckoutInformation.cs" />
     <Compile Include="Checkout\CheckoutModel.cs" />
-    <Compile Include="Checkout\CheckoutPage.cs" />
     <Compile Include="Checkout\CommentInformation.cs" />
     <Compile Include="Checkout\ContactInformation.cs" />
     <Compile Include="Checkout\CouponInformation.cs" />
-    <Compile Include="Checkout\OrderInformation.cs" />
     <Compile Include="Checkout\OrderItemInformation.cs" />
     <Compile Include="Checkout\OrderStatus.cs" />
     <Compile Include="Checkout\PaymentApiModel.cs" />
@@ -430,7 +428,6 @@
     <Compile Include="Customers\PasswordInfo.cs" />
     <Compile Include="Customers\Phone.cs" />
     <Compile Include="Customers\User.cs" />
-    <Compile Include="IStartUpTask.cs" />
     <Compile Include="Messages.cs" />
     <Compile Include="Navigation\NavigationNode.cs" />
     <Compile Include="Navigation\NavigationNodeType.cs" />
@@ -438,7 +435,6 @@
     <Compile Include="Navigation\NavigationRuntimeNode.cs" />
     <Compile Include="Navigation\NavigationSet.cs" />
     <Compile Include="Navigation\NavigationTreeNode.cs" />
-    <Compile Include="CmsPageContext.cs" />
     <Compile Include="ICaseInsensitiveNamingContainer.cs" />
     <Compile Include="IEditableContext.cs" />
     <Compile Include="JsonExtensions.cs" />
@@ -472,8 +468,6 @@
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\SiteBuilderWeb.cs" />
     <Compile Include="Settings\TimeZone.cs" />
-    <Compile Include="StartUpTask.cs" />
-    <Compile Include="StoreFront\Cart\Cart.cs" />
     <Compile Include="StoreFront\Cart\CartItem.cs" />
     <Compile Include="StoreFront\Cart\CartItemPrice.cs" />
     <Compile Include="StoreFront\Cart\CartSummary.cs" />

@@ -9,7 +9,8 @@ Ext.define('Taco.store.Categories', {
     extend: 'Ext.data.Store',
     model: 'Taco.model.Category',
     storeManagerConfig: {
-        createOnly:true
+        createOnly: true,
+        autoLoad:true
     },
     load: function (options) {
         var me = this;

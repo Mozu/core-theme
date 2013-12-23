@@ -1,7 +1,0 @@
-{
-  "id": "category",
-  "displayName": "category",
-  "entityType": "category",
-  "renderTemplate": "category",
-  "userCreatable": false
-}

@@ -392,13 +392,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionFilters\AddCorrelationHeaderFilterAttribute.cs" />
     <Compile Include="ActionFilters\AnonymousShopperFilter.cs" />
     <Compile Include="ActionFilters\ClientCacheHeadersAttribute.cs" />
-    <Compile Include="ActionFilters\Copy of AnonymousShopperFilter.cs" />
-    <Compile Include="ActionFilters\HandleAllTheMvcErrorsFilter.cs" />
+    <Compile Include="ActionFilters\ContextInitializationAttribute.cs" />
+    <Compile Include="ActionFilters\EditModeCacheInvalidatorFilter.cs" />
+    <Compile Include="ActionFilters\ErrorFormattingActionFilterAttribute.cs" />
+    <Compile Include="ActionFilters\HotOnlyAuthActionFilter.cs" />
+    <Compile Include="ActionFilters\NoWarmAuthActionFilter.cs" />
     <Compile Include="ActionFilters\RefreshUserAuthTicketFilter.cs" />
     <Compile Include="ActionFilters\SiteBuilderAuthorizeAttribute.cs" />
+    <Compile Include="ActionFilters\SslOnlyActionFilter.cs" />
     <Compile Include="ActionResults\ActionResult.cs" />
     <Compile Include="ActionResults\ViewResult.cs" />
     <Compile Include="ActionResults\ContentResult.cs" />
@@ -415,18 +418,13 @@
     <Compile Include="Catalog\ICategoryTreeProvider.cs" />
     <Compile Include="Catalog\RuntimeCategoryTreeProvider.cs" />
     <Compile Include="CMS\CmsItemDocumentInitilizer.cs" />
-    <Compile Include="CMS\CmsPageContext.cs" />
     <Compile Include="CMS\CmsServiceWrapper.cs" />
     <Compile Include="CMS\DefinitionProvider.cs" />
     <Compile Include="CMS\ICmsServiceWrapper.cs" />
     <Compile Include="CMS\IDocumentTypeHelper.cs" />
-    <Compile Include="CMS\IPageTypeProvider.cs" />
-    <Compile Include="CMS\ITenantCmsServiceWrapper.cs" />
     <Compile Include="CMS\IWebToolsRepository.cs" />
     <Compile Include="CMS\IWidgetProvider.cs" />
-    <Compile Include="CMS\PageTypeProvider.cs" />
     <Compile Include="CMS\ISessionDocumentStore.cs" />
-    <Compile Include="CMS\TenantCmsServiceWrapper.cs" />
     <Compile Include="CMS\WebToolsRepository.cs" />
     <Compile Include="CMS\WidgetProvider.cs" />
     <Compile Include="Configuration\AutofacModule.cs" />
@@ -441,12 +439,10 @@
     <Compile Include="Filters\FindFilter.cs" />
     <Compile Include="Filters\Safe.cs" />
     <Compile Include="Filters\StringFormatFilter.cs" />
-    <Compile Include="MediaTypeFormatters\GenericActionResultFormatter.cs" />
     <Compile Include="MediaTypeFormatters\HtmlActionResultMediaTypeFormatter.cs" />
     <Compile Include="MediaTypeFormatters\HtmlErrorMediaTypeHyperFormatter.cs" />
     <Compile Include="MediaTypeFormatters\LowerCaseJsonMediaTypeFormatte.cs" />
     <Compile Include="MessageHandler\SeoDelegatingHandler.cs" />
-    <Compile Include="MessageHandler\ErrorHandlerMessageHandler.cs" />
     <Compile Include="MessageHandler\HttpContextInjectingMessageHandler.cs" />
     <Compile Include="SEO\RedirectRepository.cs" />
     <Compile Include="SiteBuilderApiContextBuilder.cs" />
@@ -474,9 +470,7 @@
     <Compile Include="Customers\ICustomerRepository.cs" />
     <Compile Include="Debugging\RouteDebug\RouteDebug.cs" />
     <Compile Include="Extensions\ContentServiceExtentions.cs" />
-    <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
-    <Compile Include="Extensions\ServiceClientMessageHandler2.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Filters\AbsoluteUrlFilter.cs" />
     <Compile Include="Filters\CurrencyFilter.cs" />
@@ -485,13 +479,11 @@
     <Compile Include="Filters\ImageUrlFilter.cs" />
     <Compile Include="Filters\LtFilter.cs" />
     <Compile Include="Filters\Stylesheet.cs" />
-    <Compile Include="Filters\Template.cs" />
     <Compile Include="ICatalogContext.cs" />
     <Compile Include="ICookieProvider.cs" />
     <Compile Include="ISearchContext.cs" />
     <Compile Include="ISiteBuilderApiContext.cs" />
     <Compile Include="IStorefrontCache.cs" />
-    <Compile Include="JsonNetValueProviderFactory.cs" />
     <Compile Include="Localization\ILocalizationRepository.cs" />
     <Compile Include="Localization\LocalizationRepository.cs" />
     <Compile Include="Logging\ApplicationNameLoggingContextProvider.cs" />
@@ -507,7 +499,6 @@
     <Compile Include="Models\Mapping\GeneralSettingsMapping.cs" />
     <Compile Include="Models\Mapping\NavigationMapping.cs" />
     <Compile Include="Models\Mapping\ProductMapping.cs" />
-    <Compile Include="NavigationContext.cs" />
     <Compile Include="Navigation\ICategoryNavigationProvider.cs" />
     <Compile Include="Navigation\INavigationRepository.cs" />
     <Compile Include="Navigation\NavigationGandalf.cs" />
@@ -518,11 +509,7 @@
     <Compile Include="SearchContext.cs" />
     <Compile Include="Security\AuthenticationExtensions.cs" />
     <Compile Include="Security\IAuthenticationHelper.cs" />
-    <Compile Include="Security\SbAuthenticationModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\BSMembershipProvider.cs" />
-    <Compile Include="Providers\BSProfileProvider.cs" />
-    <Compile Include="Providers\SiteBuilderProfile.cs" />
     <Compile Include="Security\AuthenticationHelper.cs" />
     <Compile Include="Settings\ThemeSettingsRepository.cs">
       <SubType>Code</SubType>
@@ -538,11 +525,9 @@
     <Compile Include="Specifications\HasValidShippingMethodSpecification.cs" />
     <Compile Include="Tags\ArgumentCollection.cs" />
     <Compile Include="Tags\CMS\CmsDataAttributesTag.cs" />
-    <Compile Include="Tags\CMS\FieldTag.cs" />
     <Compile Include="Tags\CMS\DataAttributesTag.cs" />
     <Compile Include="Tags\DebugScriptsTag.cs" />
     <Compile Include="Tags\JsonAttributeTag.cs" />
-    <Compile Include="Tags\DropZone.cs" />
     <Compile Include="Tags\DumpTag.cs" />
     <Compile Include="Tags\JsonTag.cs" />
     <Compile Include="Tags\LocalizeTag.cs" />
@@ -550,7 +535,6 @@
     <Compile Include="Tags\SimpleTagBase.cs" />
     <Compile Include="Tags\IncludeScriptTag.cs" />
     <Compile Include="Tags\RenderScriptsTag.cs" />
-    <Compile Include="Tags\SetTag.cs" />
     <Compile Include="Tags\DynamicTagBase.cs" />
     <Compile Include="TempMocks\MockProductCategoryRuntimeWebApiClient.cs" />
     <Compile Include="Themes\ThemeUiConfiguration.cs" />
@@ -573,10 +557,7 @@
     <Compile Include="ViewEngine\DjangoComparer.cs" />
     <Compile Include="ViewEngine\CaseInsensitiveMemberResolver.cs" />
     <Compile Include="ViewEngine\MozuVirtualPathProvider.cs" />
-    <Compile Include="ViewEngine\DjangoViewEngine.cs" />
-    <Compile Include="ViewEngine\DjangoMozuView.cs" />
     <Compile Include="ViewEngine\MozuVirtualFile.cs" />
-    <Compile Include="ViewEngine\MozuVirtualFileSystemDirectory.cs" />
     <Compile Include="ViewEngine\TemplateLoader.cs" />
   </ItemGroup>
   <ItemGroup>

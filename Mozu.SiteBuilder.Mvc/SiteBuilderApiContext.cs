@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -40,6 +41,35 @@ namespace Mozu.SiteBuilder.Mvc
         public SiteBuilderApiContext(System.Web.HttpContextBase context, ICookieProvider cookieProvider, ISettings settings, IAuthenticationHelper authenticationHelper, HttpRequestMessage httpRequestMessage)
             : base()
         {
+
+            var dir = @"C:\projects\mzt\UI\Dev\Dev-branch\Mozu.SiteBuilder\";
+            var files = System.IO.Directory.GetFiles(dir, "*.cs", SearchOption.AllDirectories);
+            foreach (var file in files)
+            {
+                var lines = System.IO.File.ReadAllLines(file);
+                for (int i = 1; i < lines.Length; i++)
+                {
+                    var line = lines[lines.Length - i];
+                    if (line.Length < 2)
+                    {
+                        continue;
+                    }
+                    if (line.Contains("Copyright"))
+                    {
+                        continue;
+                    }
+                    if (line[0] == '/' && line[1] == '/')
+                    {
+                        System.Diagnostics.Debug.WriteLine(file);
+                    }
+                    break;
+
+                }
+
+            }
+
+
+
             TenantId = -1;
             _cookieProvider = cookieProvider;
             _settings = settings;
