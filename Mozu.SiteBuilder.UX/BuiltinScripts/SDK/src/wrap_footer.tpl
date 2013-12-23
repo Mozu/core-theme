@@ -1,4 +1,5 @@
-﻿			return <%= toExport %>;
+﻿   ;
+			return <%= toExport %>;
 		});
 		// UMD boilerplate
 	})(typeof externalDefine === "function" && externalDefine.amd

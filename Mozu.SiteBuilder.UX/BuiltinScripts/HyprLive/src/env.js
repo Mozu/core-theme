@@ -22,7 +22,7 @@ for (var lni = 0, llen = volatilelocalNames.length; lni < llen; lni++) {
 
 
 var HyprLive = {
-    engine: new swig.Swig({
+    engine: new amds[0].Swig({
         cache: false,
         cmtControls: ['{% comment %}', '{% endcomment %}'],
         locals: locals,

@@ -120,14 +120,11 @@
                 <option {% if model.address.stateOrProvince == "LA" %}selected="selected"{% endif %} value="LA">
                     Louisiana
                 </option>
-                <option {% if model.address.stateOrProvince == "MA" %}selected="selected"{% endif %} value="MA">
-                    Massachusetts
-                </option>
                 <option {% if model.address.stateOrProvince == "MD" %}selected="selected"{% endif %} value="MD">
                     Maryland
                 </option>
-                <option {% if model.address.stateOrProvince == "ME" %}selected="selected"{% endif %} value="ME">
-                    Alaska
+                <option {% if model.address.stateOrProvince == "MA" %}selected="selected"{% endif %} value="MA">
+                    Massachusetts
                 </option>
                 <option {% if model.address.stateOrProvince == "MI" %}selected="selected"{% endif %} value="MI">
                     Michigan

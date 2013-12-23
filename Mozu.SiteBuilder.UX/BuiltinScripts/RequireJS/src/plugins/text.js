@@ -255,7 +255,8 @@ define('text', ['module'], function (module) {
                         err.xhr = xhr;
                         errback(err);
                     } else {
-                        callback(xhr.responseText);
+                        if (xhr.responseText)
+                            callback(xhr.responseText);
                     }
                 }
             };

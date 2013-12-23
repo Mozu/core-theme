@@ -1,5 +1,5 @@
 /*! 
- * Mozu Require - v0.2.0 - 2013-12-18
+ * Mozu Require - v0.2.0 - 2013-12-23
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -621,7 +621,7 @@ var storeMode = "debug",
     }
 
     function defaultOnError(err) {
-        throw err;
+        console && console.warn && console.warn(err);
     }
 
     function getMozuData(name) {
@@ -2833,7 +2833,8 @@ define('text', ['module'], function (module) {
                         err.xhr = xhr;
                         errback(err);
                     } else {
-                        callback(xhr.responseText);
+                        if (xhr.responseText)
+                            callback(xhr.responseText);
                     }
                 }
             };

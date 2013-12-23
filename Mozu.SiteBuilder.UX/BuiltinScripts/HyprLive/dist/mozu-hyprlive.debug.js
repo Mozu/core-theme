@@ -1,31 +1,33 @@
 /*! 
- * Mozu Hypr Live - v0.2.0 - 2013-12-18
+ * Mozu Hypr Live - v0.2.0 - 2013-12-20
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
  */
 
- (function(root) {	// the definewrapper.tpl exists pretty much just to catch swig.js's browserified, deferred attempt to register itself with an external AMD loader.
-	var swig,
-	swigDefine = function(name, deps, fac) {
-        if (name !== "swig") return externalDefine.apply(this, arguments);
-        swig = fac();
-        root.define = externalDefine;
+ (function(root) {	// the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
+    // this allows us to cleanly vendor AMD-compatible scripts without polluting scope or registering 
+    // private scripts in the root require namespace.
+    // only downside is, you have to refer to the build script (Gruntfile) to see what order you brought them in.
+	var amds = [],
+	internalDefine = function() {
+        var fac = [].pop.apply(arguments);
+        amds.push(typeof fac == "function" ? fac() : fac);
 	};
-	swigDefine.amd = {};
+	internalDefine.amd = {};
     // only while this library is evaluating, let's replace window.define
     var externalDefine = root.define;
-    var define = root.define = swigDefine;
+    var define = root.define = internalDefine;
 	(function (exportFn) {
 		exportFn(['text!../hyprlivecontext'], function (HyprLiveContext) {
             
-/*! Swig v<%= pkg.version %> | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! Swig v1.2.7 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
 
-if (typeof window.define === 'function' && typeof window.define.amd === 'object') {
-  window.define('swig', [], function () {
+if (typeof define === 'function' && typeof define.amd === 'object') {
+  define([], function () {
     return swig;
   });
 } else {
@@ -4782,7 +4784,7 @@ for (var lni = 0, llen = volatilelocalNames.length; lni < llen; lni++) {
 
 
 var HyprLive = {
-    engine: new swig.Swig({
+    engine: new amds[0].Swig({
         cache: false,
         cmtControls: ['{% comment %}', '{% endcomment %}'],
         locals: locals,
@@ -4901,13 +4903,15 @@ HyprLive.engine.setTag("comment", function (str, line, parser, types) {
 }());
 			return HyprLive;
 		});
-		// boilerplate below makes this library compatible with AMD, CJS, and a plain browser environment
+		// UMD boilerplate
 	})(typeof externalDefine === "function" && externalDefine.amd
 		? externalDefine
-		: function (throwAwayDeps, factory) {
+		: function (factory) {
 			typeof exports === "object" && typeof module === "object"
 				? (module.exports = factory())
 				: root.Hypr = factory()
 		}
 	);
+    // put that back where you found it, young man
+    root.define = externalDefine;
 }(this));

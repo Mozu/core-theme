@@ -113,7 +113,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             jAccount.Add("hasSavedCards", cards.Items.Count > 0);
             jAccount.Add("hasSavedContacts", account.Contacts.Count > 0);
             jAccount.Add("cards", JArray.FromObject(cards.Items, jSerializer));
-            jAccount.Add("credits", JArray.FromObject(credits.Items, jSerializer));
+            if (credits.Items.Count > 0)
+            {
+                jAccount.Add("credits", JArray.FromObject(credits.Items, jSerializer));
+                jAccount.Add("totalCreditAmount", credits.Items.Select(c => c.CurrentBalance).Aggregate((x, y) => x + y));
+            }
 
             if (wishlist != null) {
                 var wishlistObj = JObject.FromObject(wishlist, jSerializer);

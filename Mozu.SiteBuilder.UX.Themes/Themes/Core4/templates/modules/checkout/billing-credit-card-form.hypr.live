@@ -1,7 +1,6 @@
 ﻿{% extends "modules/common/credit-card-form" %}
 {% block credit-card-form %}
     {% set cardcontext="card." %}
-    <div class="mz-l-formfieldgroup mz-creditcardform">
         {% parent %}
         {% comment %}
         <div class="mz-l-formfieldgroup-row">
@@ -11,5 +10,4 @@
             </div>
         </div>
         {% endcomment %}
-    </div>
 {% endblock credit-card-form %}

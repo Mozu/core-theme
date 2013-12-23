@@ -115,14 +115,38 @@
             'billingContact.address.stateOrProvince',
             'billingContact.address.postalOrZipCode',
             'billingContact.phoneNumbers.home',
-            'billingContact.email'
+            'billingContact.email',
+            'creditAmountToApply',
+            'selectedCredit'
         ],
         renderOnChange: [
+            'selectedCredit',
             'savedPaymentMethodId',
             'billingContact.address.countryCode',
             'paymentType',
             'isSameBillingShippingAddress',
-        ]
+        ],
+        beginApplyCredit: function () {
+            this.model.beginApplyCredit();
+            this.render();
+        },
+        cancelApplyCredit: function () {
+            this.model.closeApplyCredit();
+            this.render();
+        },
+        finishApplyCredit: function () {
+            var self = this;
+            this.model.finishApplyCredit().then(function() {
+                self.render();
+            });
+        },
+        removeCredit: function (e) {
+            var self = this,
+                id = $(e.currentTarget).data('mzCreditId');
+            this.model.removeCredit(id).then(function () {
+                self.render();
+            });
+        },
     });
 
     var CouponView = Backbone.MozuView.extend({

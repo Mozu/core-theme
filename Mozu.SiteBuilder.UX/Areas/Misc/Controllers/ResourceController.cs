@@ -284,6 +284,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
 
+        [System.Web.Http.HttpGet]
+        [ClientCacheHeaders(ConfigKey = "receiver")]
+        public ActionResult MozuReceiver()
+        {
+            return File("/Assets/mozu_receiver.html", "text/html");
+        }
+
+
         [ClientCacheHeaders(ConfigKey = "scripts")]
         [System.Web.Http.HttpGet]
         public HttpResponseMessage  ScriptsBuilt(string pathinfo)

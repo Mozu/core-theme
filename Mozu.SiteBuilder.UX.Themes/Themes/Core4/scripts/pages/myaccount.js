@@ -161,14 +161,15 @@
             var self = this;
             this.listenTo(this.model, "change:pageSize", _.bind(this.model.changePageSize, this.model));
             this.listenTo(this.model, 'returndisplayed', function (id) {
-                this.$('[data-mz-id="' + id + '"]').ScrollTo({ axis: 'y' });
+                var $retView = self.$('[data-mz-id="' + id + '"]');
+                if ($retView.length === 0) $retView = self.$el;
+                $retView.ScrollTo({ axis: 'y' });
             });
         }
     });
 
     var scrollBackUp = _.debounce(function () {
         $('#orderhistory').ScrollTo({ axis: 'y', offsetTop: Hypr.getThemeSetting('gutterWidth') });
-        console.log('went to orderhistory');
     }, 100);
     var OrderHistoryPageNumbers = PagingViews.PageNumbers.extend({
         previous: function () {
@@ -289,6 +290,17 @@
         }
     });
 
+    var StoreCreditView = Backbone.MozuView.extend({
+        templateName: 'modules/my-account/my-account-storecredit',
+        addStoreCredit: function (e) {
+            var self = this;
+            var id = this.$('[data-mz-entering-credit]').val();
+            if (id) return this.model.addStoreCredit(id).then(function () {
+                return self.model.getStoreCredits();
+            });
+        }
+    });
+
         
     $(document).ready(function () {
 
@@ -301,6 +313,7 @@
             $addressBookEl = $('#account-addressbook'),
             $wishListEl = $('#account-wishlist'),
             $messagesEl = $('#account-messages'),
+            $storeCreditEl = $('#account-storecredit'),
             orderHistory = accountModel.get('orderHistory'),
             returnHistory = accountModel.get('returnHistory');
 
@@ -343,6 +356,11 @@
             }),
             addressBook: new AddressBookView({
                 el: $addressBookEl,
+                model: accountModel,
+                messagesEl: $messagesEl
+            }),
+            storeCredit: new StoreCreditView({
+                el: $storeCreditEl,
                 model: accountModel,
                 messagesEl: $messagesEl
             })

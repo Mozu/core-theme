@@ -1,12 +1,14 @@
 ﻿			return HyprLive;
 		});
-		// boilerplate below makes this library compatible with AMD, CJS, and a plain browser environment
+		// UMD boilerplate
 	})(typeof externalDefine === "function" && externalDefine.amd
 		? externalDefine
-		: function (throwAwayDeps, factory) {
+		: function (factory) {
 			typeof exports === "object" && typeof module === "object"
 				? (module.exports = factory())
 				: root.Hypr = factory()
 		}
 	);
+    // put that back where you found it, young man
+    root.define = externalDefine;
 }(this));

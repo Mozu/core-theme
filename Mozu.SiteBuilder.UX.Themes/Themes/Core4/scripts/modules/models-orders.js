@@ -115,12 +115,18 @@
             var rma = this.get('rma');
             var item = this.get('items').get(orderId).get('items').get(itemId);
             if (item) {
-                rma.get('items').reset([item.toJSON()]);
-                rma.set('originalOrderId', orderId);
+                item = item.toJSON();
+                item.orderItemId = item.id;
+                rma.get('items').reset([item]);
+                rma.set({
+                    originalOrderId: orderId,
+                    returnType: 'Refund'
+                });
             }
         },
         clearReturn: function() {
-            this.get('rma').clear();
+            var rma = this.get('rma');
+            rma.clear();
         },
         finishReturn: function (id) {
             var self = this, op;
@@ -129,8 +135,8 @@
                 op = this.get('rma').apiCreate();
                 if (op) return op.then(function (rma) {
                     self.isLoading(false);
-                    self.clearReturn();
                     self.trigger('returncreated', rma.prop('id'));
+                    self.clearReturn();
                     return rma;
                 }, function () {
                     self.isLoading(false);

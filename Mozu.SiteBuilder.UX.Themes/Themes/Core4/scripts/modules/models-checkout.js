@@ -228,17 +228,98 @@
             },
             dataTypes: {
                 "isSameBillingShippingAddress": Backbone.MozuModel.DataTypes.Boolean,
-                "isCardInfoSaved": Backbone.MozuModel.DataTypes.Boolean
+                "isCardInfoSaved": Backbone.MozuModel.DataTypes.Boolean,
+                "creditAmountToApply": Backbone.MozuModel.DataTypes.Float
             },
             relations: {
                 billingContact: CustomerModels.Contact,
                 card: PaymentMethods.CreditCard,
                 check: PaymentMethods.Check
             },
-            helpers: ['savedPaymentMethods'],
+            helpers: ['savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply', 'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments'],
+            activePayments: function() {
+                return this.getOrder().apiModel.getActivePayments();
+            },
+            nonStoreCreditTotal: function() {
+                var order = this.getOrder(),
+                    total = order.get('total'),
+                    activeCredits = this.activeStoreCredits();
+                if (!activeCredits) return total;
+                return total - _.reduce(activeCredits, function (sum, credit) {
+                    return sum + credit.amountRequested;
+                }, 0);
+            },
             savedPaymentMethods: function() {
                 var cards = this.getOrder().get('customer').get('cards').toJSON();
                 return cards && cards.length > 0 && cards;
+            },
+            activeStoreCredits: function() {
+                var active = this.getOrder().apiModel.getActiveStoreCredits();
+                return active && active.length > 0 && active;
+            },
+            availableStoreCredits: function() {
+                var order = this.getOrder(),
+                    customer = order.get('customer'),
+                    credits = customer && customer.get('credits'),
+                    usedCredits = this.activeStoreCredits(),
+                    availableCredits = credits && (!usedCredits ? credits : _.compact(_.map(credits, function (credit) {
+                        credit = _.clone(credit);
+                        _.each(usedCredits, function (uc) {
+                            if (uc.billingInfo.storeCreditCode === credit.code) {
+                                credit.currentBalance -= uc.amountRequested;
+                            }
+                        });
+                        return credit.currentBalance > 0 && credit;
+                    })));
+                return availableCredits && availableCredits.length > 0 && availableCredits;
+            },
+            applyingCredit: function () {
+                return this._applyingCredit;
+            },
+            maxCreditAmountToApply: function () {
+                var order = this.getOrder(),
+                    total = order.get('total'),
+                    applyingCredit = this.applyingCredit();
+                if (applyingCredit) return Math.min(applyingCredit.currentBalance, total).toFixed(2);
+            },
+            beginApplyCredit: function() {
+                var selectedCredit = this.get('selectedCredit');
+                if (selectedCredit) {
+                    var applyingCredit = _.findWhere(this.availableStoreCredits(), { code: selectedCredit });
+                    if (applyingCredit) {
+                        this._applyingCredit = applyingCredit;
+                        this.set('creditAmountToApply', this.maxCreditAmountToApply());
+                    }
+                }
+            },
+            closeApplyCredit: function() {
+                delete this._applyingCredit;
+                this.unset('selectedCredit');
+            },
+            finishApplyCredit: function() {
+                var self = this,
+                    order = this.getOrder(),
+                    apiOrder;
+                var currentPayment = order.apiModel.getCurrentPayment();
+                if (currentPayment) {
+                    return order.apiVoidPayment(currentPayment.id).then(this.addStoreCredit);
+                } else {
+                    return this.addStoreCredit();
+                }
+            },
+            addStoreCredit: function() {
+                var self = this;
+                return self.getOrder().apiAddStoreCredit({
+                    storeCreditCode: this.get('selectedCredit'),
+                    amount: this.get('creditAmountToApply')
+                }).then(function (o) {
+                    apiOrder = o;
+                    self.closeApplyCredit();
+                    return apiOrder; // return order.get('customer').getCredits();
+                });
+            },
+            removeCredit: function(id) {
+                return this.getOrder().apiVoidPayment(id);
             },
             initialize: function() {
                 var me = this;
@@ -268,7 +349,7 @@
                         }
                     }
                 });
-                _.bindAll(this, 'applyPayment');
+                _.bindAll(this, 'applyPayment', 'addStoreCredit');
             },
             selectPaymentType: function(newPaymentType) {
                 this.get('check').selected = newPaymentType == "Check";
@@ -276,7 +357,7 @@
             },
             calculateStepStatus: function() {
                 return this.stepStatus(!!this.parent.get('fulfillmentInfo').get('shippingMethodCode') ? (
-                    this.isValid(true) ? 'complete' : 'invalid')
+                    (this.activePayments().length > 0 && (this.parent.get('amountRemainingForPayment') == 0)) ? 'complete' : 'invalid')
                     : 'new');
             },
             getPaypalUrls: function() {
@@ -354,7 +435,8 @@
             },
             validation: checkoutPageValidation,
             dataTypes: {
-                createAccount: Backbone.MozuModel.DataTypes.Boolean
+                createAccount: Backbone.MozuModel.DataTypes.Boolean,
+                amountRemainingForPayment: Backbone.MozuModel.DataTypes.Float
             },
             initialize: function () {
                 var self = this;

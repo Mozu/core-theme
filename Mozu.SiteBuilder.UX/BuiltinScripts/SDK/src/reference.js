@@ -14,8 +14,6 @@ var ApiReference = (function () {
     };
 
     var genericQueryTpt = '{?_*}';
-    var defaultHost = window.location.protocol + '//' + window.location.host + '/';
-
     var copyToConf = ['verb', 'returnType', 'noBody'],
         copyToConfLength = copyToConf.length;
     var pub = {
@@ -280,19 +278,19 @@ var ApiReference = (function () {
                 returnType: 'login',
             },
             'create-storefront': {
-                useIframeTransport: '{+storefrontUserService}../../Assets/mozu_receiver.html',
+                useIframeTransport: '{+storefrontUserService}../../receiver',
                 verb: 'POST',
                 template: '{+storefrontUserService}create',
                 returnType: 'login',
             },
             'login': {
-                useIframeTransport: '{+customerService}../../Assets/mozu_receiver.html',
+                useIframeTransport: '{+customerService}../../receiver',
                 verb: 'POST',
                 template: '{+customerService}../authtickets',
                 returnType: 'login'
             },
             'login-storefront': {
-                useIframeTransport: '{+storefrontUserService}../../Assets/mozu_receiver.html',
+                useIframeTransport: '{+storefrontUserService}../../receiver',
                 verb: 'POST',
                 template: '{+storefrontUserService}login',
                 returnType: 'login'
@@ -308,7 +306,7 @@ var ApiReference = (function () {
                 returnType: 'string'
             },
             'reset-password-storefront': {
-                useIframeTransport: '{+storefrontUserService}../../Assets/mozu_receiver.html',
+                useIframeTransport: '{+storefrontUserService}../../receiver',
                 verb: 'POST',
                 template: '{+storefrontUserService}resetpassword',
                 returnType: 'string'
@@ -335,8 +333,7 @@ var ApiReference = (function () {
                     asProperty: 'customer'
                 },
                 returnType: 'accountcard'
-            },
-            'update-card': {
+            },            'update-card': {
                 verb: 'PUT',
                 template: '{+customerService}{customer.id}/cards/{id}',
                 includeSelf: {
@@ -372,7 +369,21 @@ var ApiReference = (function () {
                     asProperty: 'customer'
                 },
                 returnType: 'contact'
+            },
+            'get-credits': {
+                template: '{+creditService}',
+                returnType: 'storecredits'
             }
+        },
+        'storecredit': {
+            update: {
+                template: '{+creditService}{code}',
+                includeSelf: true
+            }
+        },
+        'storecredits': {
+            template: '{+creditService}',
+            collectionOf: 'storecredit'
         },
         contact: {
             template: '{+customerService}{accountId}/contacts/{id}',
