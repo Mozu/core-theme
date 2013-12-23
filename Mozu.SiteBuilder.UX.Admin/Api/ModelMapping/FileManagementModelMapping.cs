@@ -22,7 +22,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             Mapper.CreateMap<Document, FileManagementFile>()
                 .ForMember(x => x.dateModified, op => op.MapFrom(x => x.UpdateDate))
-                .ForMember(x => x.folderId, op => op.MapFrom(x => x.FolderId))
+               // .ForMember(x => x.folderId, op => op.MapFrom(x => x.FolderId))
                 .ForMember(x => x.fileType, op => op.MapFrom(x => x.Extension))
                 .ForMember(x => x.id, op => op.MapFrom(x => x.Id))
                 .ForMember(x => x.name, op => op.MapFrom(x => x.Name))

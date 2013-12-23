@@ -4,7 +4,7 @@
 
 Ext.define('Taco.view.website.entityAdapters.TemplateEntityAdapter', {
     extend: 'Taco.view.website.entityAdapters.BaseEntityAdapter',
-
+    requires:['Taco.view.website.settings.Template'],
     modelName: 'Taco.model.CmsDocument',
 
     allowedActions: {
@@ -14,31 +14,49 @@ Ext.define('Taco.view.website.entityAdapters.TemplateEntityAdapter', {
         publishPage: true
     },
 
-    constructor: function () {
-        this.callParent(arguments);
-    },
+  
 
     getId: function () {
         return this.pageContext.cmsContext.template.collection + "_" + this.pageContext.cmsContext.template.id;
     },
 
-    getPageSettings: function () {
-       var me = this;
-       return [
-           { xtype: 'component', html: 'This template has no settings.' }
-       ];
-    },
+  
+    load:function () {
+        var me = this,
+          cmsDoc,
+          templReq = me.pageContext.cmsContext.template;
 
-    getSaveTask: function () {
-        return this.callParent(arguments);
+        if (templReq.id) {
+            Taco.model.CmsDocument.load(templReq.collection + '_' + templReq.id, {
+                success: function (doc) {
+                    me.set(doc);
+                }
+            });
+        } else {
+            cmsDoc = Ext.create('Taco.model.CmsDocument', {
+                documentType: templReq.documentType,
+                name: templReq.path,
+                collectionName: templReq.collection
+            });
+            me.set(cmsDoc);
+        }
     },
+    
 
    
-    load:function () {
+    
+
+   
+  
+    getPageSettings: function () {
         var me = this;
-        this.fireEvent('load', this);
-        return;
-       
-     
+
+        return [
+            
+            Ext.create('Taco.view.website.settings.Template', {
+                record: me.get()
+            })
+           
+        ];
     }
 });

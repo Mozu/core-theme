@@ -14,34 +14,43 @@ Ext.define('Taco.view.website.entityAdapters.SiteTemplateEntityAdapter', {
         publishPage: true
     },
 
-    constructor: function () {
-        this.callParent(arguments);
-    },
+
 
     getId: function () {
         return this.pageContext.cmsContext.site.collection + "_" + this.pageContext.site.template.id;
     },
 
-    getPageSettings: function () {
-       var me = this;
-
-       return [
-           { xtype: 'component', html: 'This template has no settings.' }
-       ];
-    },
-
-    getSaveTask: function () {
-        return this.callParent(arguments);
-    },
-
+  
    
-    load:function () {
+    getPageSettings: function () {
         var me = this;
-        this.fireEvent('load', this);
-        return;
-       
-     
-    },
 
-    publish: Ext.emptyFn
+        return [            
+            Ext.create('Taco.view.website.settings.Template', {
+                record: me.get()
+            })           
+        ];
+    },
+    load: function () {
+        var me = this,
+          cmsDoc,
+          siteReq = me.pageContext.cmsContext.site;
+
+        if (siteReq.id) {
+            Taco.model.CmsDocument.load(siteReq.collection + '_' + siteReq.id, {
+                success: function (doc) {
+                    me.set(doc);
+                }
+            });
+        } else {
+            cmsDoc = Ext.create('Taco.model.CmsDocument', {
+                documentType: siteReq.documentType,
+                name: siteReq.path,
+                collectionName: siteReq.collection
+            });
+            me.set(cmsDoc);
+        }
+    }
+
+    
 });

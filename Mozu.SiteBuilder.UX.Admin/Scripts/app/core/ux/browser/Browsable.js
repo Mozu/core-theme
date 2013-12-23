@@ -37,13 +37,14 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         gridPanelDefaults: {
             enableColumnHide: true,
             paged: true,
-            selModel: {
-                selType: 'checkboxmodel',
-                checkOnly: true,
-                showHeaderCheckbox: true,
-                ignoreRightMouseSelection: true,
-                headerWidth: 37
-            }
+            //none of our grids do anything with selection ... removing from default config. 
+            //selModel: {
+            //    selType: 'checkboxmodel',
+            //    checkOnly: true,
+            //    showHeaderCheckbox: true,
+            //    ignoreRightMouseSelection: true,
+            //    headerWidth: 37
+            //}
         },
 
         tilePanelDefaults: {
@@ -223,6 +224,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
             displayInfo: true,
             store: this.store
         });
+        
 
         return this.gridPager;
     },
@@ -242,6 +244,26 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         if (this.launchEditorOnClick) {
             this.gridPanel.view.on('cellclick', this.onCellClick, this);
         }
+        
+        var menuColumns = Ext.Array.filter(this.gridPanel.columns, function (col) { return col.isXType('taco.menucolumn'); });
+        if (this.disableContextMenuClick !== true && menuColumns && menuColumns.length == 1) {
+            this.gridPanel.on('itemcontextmenu', function (cmp, record, item, index, e) {
+                var eventData = {
+                    grid: cmp.ownerCt,
+                    rowIndex: index,
+                    header: menuColumns[0],
+                    e: e,
+                    record: record,
+                    item: item
+                },
+                    menu = menuColumns[0].getMenu(eventData);
+               
+                e.preventDefault();
+                menu.showAt(e.xy);
+                
+            }, this);
+        }
+
         return this.gridPanel;
     },
 

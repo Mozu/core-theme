@@ -31,19 +31,18 @@ Ext.define('Taco.view.order.widget.LocationPickupGrid', {
             columns: this.getColumnConfig()
         });
 
-        this.store = Taco.core.data.StoreManager.getOrCreate({
-            type: 'Taco.store.LocationPickup',
-            autoLoad: true,
-            listeners: {
-                load: {
-                    fn: Ext.emptyFn,
-                    single: true,
-                    scope: me
-                }
-            }
+        this.store = Ext.create('Ext.data.Store', {
+            model: 'Taco.model.LocationPickup',
         });
+        //this.store.getProxy().extraParams = { productCode: this.record.get('productCode') };
 
-
+        this.store.load(
+            {
+                params: {
+                    productCode: this.record.get('productCode')
+                }
+            });
+       
         this.callParent(arguments);
     },
     

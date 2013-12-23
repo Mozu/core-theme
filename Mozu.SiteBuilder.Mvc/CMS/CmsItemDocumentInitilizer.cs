@@ -204,7 +204,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                         DocumentListName = "templates",
                         DocumentType = "page_template",
                         Name = Path.GetFileName(req.Path),
-                        Path = Path.GetDirectoryName(req.Path)
+                      //  Path = Path.GetDirectoryName(req.Path)
                     });
             return;
         }
