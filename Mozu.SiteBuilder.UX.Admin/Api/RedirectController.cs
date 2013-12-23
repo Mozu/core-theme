@@ -76,12 +76,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
          [HttpGetRoute(UriTemplate = "export")]
-         public async Task<HttpResponseMessage> Export()
+         public async Task<HttpResponseMessage> Export(int siteid)
          {
-
+             
              var ms = new MemoryStream();
              var sw = new StreamWriter(ms);
-             var dic = await _redirectRepository.FetchRedirectEntries();
+             var dic = await _redirectRepository.FetchRedirectEntries(siteid);
         
              sw.WriteLine("source,destination,rewrite");
              EnumerableExtensions.Each(dic.Values, x =>
@@ -170,7 +170,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
          }
     
          [HttpPostRoute(UriTemplate = "import")]
-         public async Task<HttpResponseMessage> Import()
+         public async Task<HttpResponseMessage> Import(int siteId)
          {
 
              MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(System.IO.Path.GetTempPath());
@@ -210,7 +210,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                  }
              }
 
-             dic = await _redirectRepository.UpdateRedirectEntries(dic);
+             dic = await _redirectRepository.UpdateRedirectEntries(dic, siteId);
              return Request.CreateResponse(HttpStatusCode.OK, EmptySingle2<bool>());
          }
 

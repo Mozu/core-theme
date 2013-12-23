@@ -16,8 +16,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 {
      public interface  IRedirectRepository
      {
-         Task<Dictionary<string, RedirectEntry>> FetchRedirectEntries();
-         Task<Dictionary<string, RedirectEntry>> UpdateRedirectEntries(Dictionary<string, RedirectEntry> redirects);
+         Task<Dictionary<string, RedirectEntry>> FetchRedirectEntries(int? siteId= null );
+         Task<Dictionary<string, RedirectEntry>> UpdateRedirectEntries(Dictionary<string, RedirectEntry> redirects, int? siteId = null);
      }
      public class RedirectRepository : IRedirectRepository
     {
@@ -43,11 +43,12 @@ namespace Mozu.SiteBuilder.Mvc.SEO
          }
 
          private const string FileName = "redirects.1.1";
-        Task<Dictionary<string,RedirectEntry>> IRedirectRepository.FetchRedirectEntries()
+         Task<Dictionary<string, RedirectEntry>> IRedirectRepository.FetchRedirectEntries(int? siteId= null  )
         {
             if (_redirectEntryListTask == null)
             {
-                return _redirectEntryListTask = _documentListWebApiClient.GetTreeDocument("settings", FileName).ContinueWith(gdt =>
+                var client = siteId == null ? _documentListWebApiClient : _documentListWebApiClient.CloneWithApiContext(x => x.SiteId = siteId);
+                return _redirectEntryListTask = client.GetTreeDocument("settings", FileName).ContinueWith(gdt =>
                     {
                         Dictionary<string, RedirectEntry> ret = null;
                         var gtRes = gdt.Result;
@@ -66,7 +67,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                                 ret = _cache[key] as Dictionary<string, RedirectEntry>;
                                 if (ret == null)
                                 {
-                                    var res = _documentListWebApiClient.GetDocumentContent("settings", doc.Id ).Result;
+                                    var res = client.GetDocumentContent("settings", doc.Id).Result;
                                     if (res.ResponseMessage.IsSuccessStatusCode && res.ResponseMessage.Content.Headers.ContentLength > 0)
                                     {
 
@@ -101,10 +102,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return _redirectEntryListTask;
         }
 
-        Task<Dictionary<string, RedirectEntry>> IRedirectRepository.UpdateRedirectEntries(Dictionary<string, RedirectEntry> redirects)
+        Task<Dictionary<string, RedirectEntry>> IRedirectRepository.UpdateRedirectEntries(Dictionary<string, RedirectEntry> redirects,int? siteId= null)
         {
-
-            return _documentListWebApiClient.GetTreeDocument("settings", FileName).ContinueWith(gdt =>
+            var client = siteId.HasValue ? _documentListWebApiClient.CloneWithApiContext(x => x.SiteId = siteId) : _documentListWebApiClient;
+            return client.GetTreeDocument("settings", FileName).ContinueWith(gdt =>
                 {
                     bool exists = false;
                     Dictionary<string, RedirectEntry> ret = null;
@@ -115,7 +116,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     }
                     if (!exists)
                     {
-                        gtRes = _documentListWebApiClient.CreateDocument("settings", new Document() { Name = FileName, DocumentType = "document" }).Result;
+                        gtRes = client.CreateDocument("settings", new Document() { Name = FileName, DocumentType = "document" }).Result;
                         
                     }
                   
@@ -126,9 +127,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     Newtonsoft.Json.JsonSerializer.CreateDefault().Serialize(jw, redirects);
                     jw.Flush();
                     stream.Position = 0;
-                    _documentListWebApiClient.UpdateDocumentContent("settings", doc.Id, stream).Wait();
+                    client.UpdateDocumentContent("settings", doc.Id, stream).Wait();
                     doc.Set("data", DateTime.UtcNow.ToString());
-                    doc = _documentListWebApiClient.UpdateDocument("settings", doc.Id, doc).Result.ReadAsSync();
+                    doc = client.UpdateDocument("settings", doc.Id, doc).Result.ReadAsSync();
                     var key = CreateKey(doc);
                     _cache[key] = redirects;
 

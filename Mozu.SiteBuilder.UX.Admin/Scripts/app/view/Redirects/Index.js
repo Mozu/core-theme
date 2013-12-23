@@ -109,8 +109,10 @@ Ext.define('Taco.view.redirects.Index', {
         this.importForm = Ext.create('Ext.form.Panel',
             {
                 hidden: true,
-                url: '/admin/app/redirects/import',
-                items: [this.uploadButton],
+                url: '/admin/app/redirects/import?siteId='+ Taco.app.context.getSiteId(),
+                items: [this.uploadButton
+
+                ],
                 
             });
         this.header = Ext.apply({}, this.header);
@@ -166,7 +168,7 @@ Ext.define('Taco.view.redirects.Index', {
         });
     },
     onExport: function () {
-        window.location.href = '/admin/app/redirects/export';
+        window.location.href = '/admin/app/redirects/export?siteid=' + Taco.app.context.getSiteId();
 
     }
     
