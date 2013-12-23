@@ -62,6 +62,10 @@
                 model: ProductModels.Product
             })
         },
+        helpers: ['hasValueFacets'],
+        hasValueFacets: function() {
+            return !!this.get('facets').findWhere({ facetType: 'Value' });
+        },
         clearAllFacets: function () {
             this.get("facets").invoke("empty");
         },

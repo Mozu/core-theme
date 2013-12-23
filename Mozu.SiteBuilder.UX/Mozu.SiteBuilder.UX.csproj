@@ -457,8 +457,8 @@
   <ItemGroup>
     <Content Include="App_Readme\glimpse.readme.txt" />
     <Content Include="Areas\Misc\Views\Testing\SiteList.aspx" />
+    <Content Include="Assets\mozu_receiver.html" />
     <Content Include="BuiltinScripts\HyprLive\dist\mozu-hyprlive.debug.js" />
-    <Content Include="BuiltinScripts\HyprLive\dist\mozu-hyprlive.js" />
     <Content Include="BuiltinScripts\HyprLive\dist\mozu-hyprlive.min.js" />
     <Content Include="BuiltinScripts\HyprLive\Gruntfile.js" />
     <Content Include="BuiltinScripts\HyprLive\init_debug.js" />

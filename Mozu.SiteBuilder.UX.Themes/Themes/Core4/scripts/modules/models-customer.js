@@ -139,6 +139,26 @@
         },
         getPrimaryShippingContact: function () {
             return this.getPrimaryContactOfType("Shipping");
+        },
+        getContacts: function () {
+            var self = this;
+            var contactsCollection = this.get('contacts');
+            return this.apiGetContacts().then(function (cc) {
+                contactsCollection.reset(cc.data.items);
+                self.trigger('sync', cc.data);
+                return self;
+            });
+        },
+        getStoreCredits: function() {
+            var self = this;
+            return this.apiGetCredits().then(function (credits) {
+                self.set('credits', credits.data);
+                self.trigger('sync', credits);
+                return self;
+            });
+        },
+        addStoreCredit: function (id) {
+            return this.apiAddStoreCredit(id);
         }
     }),
 
@@ -179,7 +199,7 @@
             returnHistory.lastRequest = {
                 pageSize: 5
             };
-            orderHistory.on('returncreated', function(e, id) {
+            orderHistory.on('returncreated', function(id) {
                 returnHistory.apiGet(returnHistory.lastRequest).then(function () {
                     returnHistory.trigger('returndisplayed', id);
                 });
@@ -280,15 +300,7 @@
                 return self.getContacts();
             });
         },
-        getContacts: function () {
-            var self = this;
-            var contactsCollection = this.get('contacts');
-            return this.apiGetContacts().then(function (cc) {
-                contactsCollection.reset(cc.data.items);
-                self.trigger('sync', cc.data);
-                return self;
-            });
-        },
+
         updateName: function () {
             return this.apiUpdate({
                 firstName: this.get('firstName'),

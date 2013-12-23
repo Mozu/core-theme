@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _cartWebApiClient = cartWebApiClient;
             _settings = settings;
             _customerAccountWebApiClient = customerAccountWebApiClient;
-            _creditWebApiClient = creditWebApiClient;
+            _creditWebApiClient = creditWebApiClient.CloneWithoutUserClaims();
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
             _shippingWebApiClient = shippingWebApiClient.CloneWithoutUserClaims();
            
@@ -175,7 +175,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId)).ReadAsSync();
                 cards = (await _customerAccountWebApiClient.GetAccountCards(this.PageContext.User.AccountId)).ReadAsSync();
-                credits = (await _creditWebApiClient.GetCredits()).ReadAsSync();
+                credits = (await _creditWebApiClient.GetCredits(0, 25, null, String.Format("CustomerId eq {0}",this.PageContext.User.AccountId))).ReadAsSync();
                 CustomerContact primaryShippingContact = null;
                 //CustomerContact primaryBillingContact = null;
 

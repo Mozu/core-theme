@@ -65,12 +65,21 @@
         createPayment: function(extraProps) {
             return this.api.action(this, 'createPayment', utils.extend({
                 currencyCode: this.api.context.Currency().toUpperCase(),
-                amount: this.prop('total'),
+                amount: this.prop('amountRemainingForPayment'),
                 newBillingInfo: this.prop('billingInfo')
             }, extraProps || {}));
         },
+        addStoreCredit: function(payment) {
+            return this.createPayment({
+                amount: payment.amount,
+                newBillingInfo: {
+                    paymentType: 'StoreCredit',
+                    storeCreditCode: payment.storeCreditCode
+                }
+            });
+        },
         addPayment: function (payment) {
-            var billingInfo = this.prop('billingInfo');
+            var billingInfo = payment || this.prop('billingInfo');
             if (!billingInfo) errors.throwOnObject(this, 'BILLING_INFO_MISSING');
             if (!billingInfo.paymentType || !(billingInfo.paymentType in PaymentStrategies)) errors.throwOnObject(this, 'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED');
             return PaymentStrategies[billingInfo.paymentType](this, billingInfo);
@@ -78,10 +87,11 @@
         getActivePayments: function() {
             var payments = this.prop('payments'),
                 activePayments = [];
-            //if (payments.length === 0) return null;
-            for (var i = payments.length -1; i >= 0; i--) {
-                if (payments[i].status === CONSTANTS.PAYMENT_STATUSES.NEW)
-                    activePayments.push(utils.clone(payments[i]))
+            if (payments.length !== 0) {
+                for (var i = payments.length - 1; i >= 0; i--) {
+                    if (payments[i].status === CONSTANTS.PAYMENT_STATUSES.NEW)
+                        activePayments.push(utils.clone(payments[i]))
+                }
             }
             return activePayments;
         },
@@ -90,6 +100,14 @@
             for (var i = activePayments.length - 1; i >= 0; i--) {
                 if (activePayments[i].paymentType !== "StoreCredit") return activePayments[i];
             }
+        },
+        getActiveStoreCredits: function() {
+            var activePayments = this.getActivePayments(),
+                credits = [];
+            for (var i = activePayments.length - 1; i >= 0; i--) {
+                if (activePayments[i].paymentType === "StoreCredit") credits.unshift(activePayments[i]);
+            }
+            return credits;
         },
         voidPayment: function (id) {
             var obj = this;

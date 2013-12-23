@@ -28,6 +28,18 @@
             return this.deleteCard(id).then(function () {
                 return self.api.del('creditcard', id);
             });
+        },
+        getStoreCredits: function() {
+            var credits = this.api.createSync('storecredits');
+            errors.passFrom(credits, this);
+            return credits.get();
+        },
+        addStoreCredit: function (id) {
+            var credit = this.api.createSync('storecredit', { code: id });
+            errors.passFrom(credit, this);
+            return credit.update({
+                customerId: this.prop('id')
+            });
         }
     }
 }());

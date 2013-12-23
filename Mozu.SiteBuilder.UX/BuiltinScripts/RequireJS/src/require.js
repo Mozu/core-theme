@@ -124,7 +124,7 @@
     }
 
     function defaultOnError(err) {
-        throw err;
+        console && console.warn && console.warn(err);
     }
 
     function getMozuData(name) {

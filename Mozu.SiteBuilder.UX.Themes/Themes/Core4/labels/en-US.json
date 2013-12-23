@@ -47,6 +47,7 @@
   "viewCart"             : "View Cart",
   "search"               : "Search",
   "of"                   : "of",
+  "from"                 : "from",
   "all"                  : "All",
   "save"                 : "Save",
   "add"                  : "Add",
@@ -140,6 +141,7 @@
   "enterNewPaymentMethod" : "Enter a new payment method",
   "paymentType"          : "Payment Type",
   "selectPaymentType"    : "Select a payment type",
+  "paypalExpress"        : "PayPal Express",
   "payPalTagline"        : "The safer, easier way to pay.",
   "paypalExpressInfo"    : "When you click 'Next', you will be taken to PayPal to complete your transaction.",
   "paypalExpressSummary" : "This transaction will be processed by PayPal Express.",
@@ -158,11 +160,17 @@
   "billingName"          : "Billing Name",
   "billingPhone"         : "Billing Phone",
   "billingEmail"         : "Billing Email",
+  "storeCredits"         : "Store Credits",
+  "storeCreditAvailable" : "You have the following store credits available:",
+  "storeCreditApplied"   : "You have applied the following store credits to your order:",
+  "remainingTotal"       : "Your remaining total is: ",
+  "applyCredit"          : "Apply Credit",
   "mailCheckTo"          : "Mail check to",
   "shipTo"               : "Ship to",
   "shippedTo"            : "Shipped to",
   "giftMessage"          : "Gift Message",
   "customerAlreadyExists": "A customer is already registered as {0}. <a href=\"/user/login?returnUrl={1}\">Login as this customer</a>",
+  "noPaymentRequired"    : "With store credit, your total is {0}, so no payment method is required.",
 
   /* Error page labels */
   "errorApology"         : "Sorry, an error occurred.",
@@ -220,6 +228,7 @@
   "creditDate"           : "Credit Date",
   "creditAmount"         : "Credit Amount",
   "remaining"            : "Remaining",
+  "totalCreditBalance"   : "Total Credit Balance",
 
   /* Not Found labels */
   "pageNotFound"         : "Page Not Found",

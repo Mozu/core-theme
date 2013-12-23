@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-12-20
+ * Mozu JavaScript SDK - v0.2.0 - 2013-12-23
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2378,8 +2378,6 @@ var ApiReference = (function () {
     };
 
     var genericQueryTpt = '{?_*}';
-    var defaultHost = window.location.protocol + '//' + window.location.host + '/';
-
     var copyToConf = ['verb', 'returnType', 'noBody'],
         copyToConfLength = copyToConf.length;
     var pub = {
@@ -2644,19 +2642,19 @@ var ApiReference = (function () {
                 returnType: 'login',
             },
             'create-storefront': {
-                useIframeTransport: '{+storefrontUserService}../../Assets/mozu_receiver.html',
+                useIframeTransport: '{+storefrontUserService}../../receiver',
                 verb: 'POST',
                 template: '{+storefrontUserService}create',
                 returnType: 'login',
             },
             'login': {
-                useIframeTransport: '{+customerService}../../Assets/mozu_receiver.html',
+                useIframeTransport: '{+customerService}../../receiver',
                 verb: 'POST',
                 template: '{+customerService}../authtickets',
                 returnType: 'login'
             },
             'login-storefront': {
-                useIframeTransport: '{+storefrontUserService}../../Assets/mozu_receiver.html',
+                useIframeTransport: '{+storefrontUserService}../../receiver',
                 verb: 'POST',
                 template: '{+storefrontUserService}login',
                 returnType: 'login'
@@ -2672,7 +2670,7 @@ var ApiReference = (function () {
                 returnType: 'string'
             },
             'reset-password-storefront': {
-                useIframeTransport: '{+storefrontUserService}../../Assets/mozu_receiver.html',
+                useIframeTransport: '{+storefrontUserService}../../receiver',
                 verb: 'POST',
                 template: '{+storefrontUserService}resetpassword',
                 returnType: 'string'
@@ -2699,8 +2697,7 @@ var ApiReference = (function () {
                     asProperty: 'customer'
                 },
                 returnType: 'accountcard'
-            },
-            'update-card': {
+            },            'update-card': {
                 verb: 'PUT',
                 template: '{+customerService}{customer.id}/cards/{id}',
                 includeSelf: {
@@ -2736,7 +2733,21 @@ var ApiReference = (function () {
                     asProperty: 'customer'
                 },
                 returnType: 'contact'
+            },
+            'get-credits': {
+                template: '{+creditService}',
+                returnType: 'storecredits'
             }
+        },
+        'storecredit': {
+            update: {
+                template: '{+creditService}{code}',
+                includeSelf: true
+            }
+        },
+        'storecredits': {
+            template: '{+creditService}',
+            collectionOf: 'storecredit'
         },
         contact: {
             template: '{+customerService}{accountId}/contacts/{id}',
@@ -3342,6 +3353,18 @@ ApiObject.types.customer = (function () {
             return this.deleteCard(id).then(function () {
                 return self.api.del('creditcard', id);
             });
+        },
+        getStoreCredits: function() {
+            var credits = this.api.createSync('storecredits');
+            errors.passFrom(credits, this);
+            return credits.get();
+        },
+        addStoreCredit: function (id) {
+            var credit = this.api.createSync('storecredit', { code: id });
+            errors.passFrom(credit, this);
+            return credit.update({
+                customerId: this.prop('id')
+            });
         }
     }
 }());
@@ -3426,12 +3449,21 @@ ApiObject.types.order = (function() {
         createPayment: function(extraProps) {
             return this.api.action(this, 'createPayment', utils.extend({
                 currencyCode: this.api.context.Currency().toUpperCase(),
-                amount: this.prop('total'),
+                amount: this.prop('amountRemainingForPayment'),
                 newBillingInfo: this.prop('billingInfo')
             }, extraProps || {}));
         },
+        addStoreCredit: function(payment) {
+            return this.createPayment({
+                amount: payment.amount,
+                newBillingInfo: {
+                    paymentType: 'StoreCredit',
+                    storeCreditCode: payment.storeCreditCode
+                }
+            });
+        },
         addPayment: function (payment) {
-            var billingInfo = this.prop('billingInfo');
+            var billingInfo = payment || this.prop('billingInfo');
             if (!billingInfo) errors.throwOnObject(this, 'BILLING_INFO_MISSING');
             if (!billingInfo.paymentType || !(billingInfo.paymentType in PaymentStrategies)) errors.throwOnObject(this, 'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED');
             return PaymentStrategies[billingInfo.paymentType](this, billingInfo);
@@ -3439,10 +3471,11 @@ ApiObject.types.order = (function() {
         getActivePayments: function() {
             var payments = this.prop('payments'),
                 activePayments = [];
-            //if (payments.length === 0) return null;
-            for (var i = payments.length -1; i >= 0; i--) {
-                if (payments[i].status === CONSTANTS.PAYMENT_STATUSES.NEW)
-                    activePayments.push(utils.clone(payments[i]))
+            if (payments.length !== 0) {
+                for (var i = payments.length - 1; i >= 0; i--) {
+                    if (payments[i].status === CONSTANTS.PAYMENT_STATUSES.NEW)
+                        activePayments.push(utils.clone(payments[i]))
+                }
             }
             return activePayments;
         },
@@ -3451,6 +3484,14 @@ ApiObject.types.order = (function() {
             for (var i = activePayments.length - 1; i >= 0; i--) {
                 if (activePayments[i].paymentType !== "StoreCredit") return activePayments[i];
             }
+        },
+        getActiveStoreCredits: function() {
+            var activePayments = this.getActivePayments(),
+                credits = [];
+            for (var i = activePayments.length - 1; i >= 0; i--) {
+                if (activePayments[i].paymentType === "StoreCredit") credits.unshift(activePayments[i]);
+            }
+            return credits;
         },
         voidPayment: function (id) {
             var obj = this;
@@ -3806,7 +3847,8 @@ Mozu._expose = function (r) {
 
 Mozu.ApiObject.prototype.inspect = function () {
     return JSON.stringify(this.data, true, 2);
-};			return Mozu;
+};   ;
+			return Mozu;
 		});
 		// UMD boilerplate
 	})(typeof externalDefine === "function" && externalDefine.amd

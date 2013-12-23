@@ -39,27 +39,15 @@ module.exports = function (grunt) {
                 dest: '<%= pkg.main %>.debug.js'
             }
         },
-        //uglify: {
-        //    dist: {
-        //        options: {
-        //            banner: '<%= banner %>'
-        //        },
-        //        src: '<%= concat.dist.dest %>',
-        //        dest: '<%= pkg.main %>.min.js'
-        //    },
-        //    beautify: {
-        //        options: {
-        //            banner: '<%= banner %>',
-        //            beautify: true,
-        //            comments: true,
-        //            indent_level: 2,
-        //            compress: false,
-        //            mangle: false
-        //        },
-        //        src: '<%= concat.dist.dest %>',
-        //        dest: '<%= pkg.main %>.js'
-        //    }
-        //},
+        uglify: {
+            dist: {
+                options: {
+                    banner: '<%= banner %>'
+                },
+                src: '<%= concat.debug.dest %>', // <%= concat.dist.dest %> when there's a real min version with compilation
+                dest: '<%= pkg.main %>.min.js'
+            }
+        },
         tfscheckout: {
             dist: {
                 dir: 'dist'
@@ -95,7 +83,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-bower-task');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
-    //grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
     //grunt.loadNpmTasks('grunt-contrib-connect');
     //grunt.loadNpmTasks('grunt-mocha');
 
@@ -124,7 +112,7 @@ module.exports = function (grunt) {
         });
     });
 
-    var order = ['bower', 'clean:dist', 'concat', /*'uglify',*/ 'clean:tmp', 'tfscheckout' /*, 'connect:server', 'mocha' */];
+    var order = ['bower', 'clean:dist', 'concat', 'uglify', 'clean:tmp', 'tfscheckout' /*, 'connect:server', 'mocha' */];
 
     grunt.registerTask('default', order);
     //grunt.registerTask('test', ['connect:server', 'mocha']);

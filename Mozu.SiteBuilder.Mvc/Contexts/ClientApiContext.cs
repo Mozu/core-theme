@@ -221,6 +221,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         {
                             Id = "locationService",
                             InternalUrl = settings.AppSettings("service-url-LocationRuntimeWebApi")
+                        },
+                        new ServiceInfo
+                        {
+                            Id = "creditService",
+                            InternalUrl = settings.AppSettings("service-url-CreditWebApi")
                         }
                     };
                 foreach (ServiceInfo si in sis)

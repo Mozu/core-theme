@@ -1,17 +1,17 @@
 {
-    "name": "mozu-hyprlive",
-    "title": "Mozu Hypr Live",
-    "author": "Volusion, Inc.",
-    "version": "0.2.0",
-    "dependencies": {
-        "swig": "~1.0.0-rc3"
-    },
-    "devDependencies": {
-        "grunt": "~0.4.0",
-        "grunt-contrib-clean": "~0.4.0",
-        "grunt-contrib-concat": "~0.1.2",
-        "grunt-contrib-uglify": "~0.1.1",
-        "grunt-bower-task": "~0.3"
-    },
-    "main": "./dist/mozu-hyprlive"
+  "name": "mozu-hyprlive",
+  "title": "Mozu Hypr Live",
+  "author": "Volusion, Inc.",
+  "version": "0.2.0",
+  "dependencies": {
+    "swig": "~1.0.0-rc3"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.0",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-concat": "~0.1.2",
+    "grunt-contrib-uglify": "~0.2.7",
+    "grunt-bower-task": "~0.3"
+  },
+  "main": "./dist/mozu-hyprlive"
 }

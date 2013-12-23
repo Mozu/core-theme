@@ -113,6 +113,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "js/{action}-{mode}.js",
                 new {controller = "BuiltinScripts", mode = "min"});
 
+
+            routes.MapHttpRoute(
+                "mozu_receiver",
+                "receiver",
+                new { controller = "Resource", action = "MozuReceiver" });
             
             routes.MapHttpRoute(
                 "StoreFront_feeds_categories",
