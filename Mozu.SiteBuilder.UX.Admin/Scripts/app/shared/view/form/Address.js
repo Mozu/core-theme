@@ -110,7 +110,7 @@ Ext.define('Taco.shared.view.form.Address', {
             queryMode: 'local',
             displayField: 'name',
             valueField: 'code',
-            store: Taco.core.data.StoreManager.getOrCreate('Taco.store.Countries') ,
+            store: { type: 'Taco.store.Countries' },
             emptyText: "Country",
             selectOnFocus: true
 	    });

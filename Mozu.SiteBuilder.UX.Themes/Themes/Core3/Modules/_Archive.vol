@@ -1,5 +1,0 @@
-﻿<ul>
-    {% for link in Model %}
-	    <li><a class="mz-tag" href="{{link.url}}">{{link.caption}}</a></li>
-    {% endfor %}
-</ul>

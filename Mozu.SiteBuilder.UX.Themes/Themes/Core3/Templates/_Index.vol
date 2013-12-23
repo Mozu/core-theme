@@ -1,7 +1,0 @@
-﻿{% extends "layouts\default" %}
-
-{% block BodyContent %}
-
-	{% dropzone "body" %}
-
-{% endblock BodyContent%}

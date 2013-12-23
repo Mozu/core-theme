@@ -404,7 +404,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\AdminUserController.cs" />
     <Compile Include="Api\AddressController.cs" />
     <Compile Include="Api\ApiAuthorizeAttribute.cs" />
     <Compile Include="Api\AttributeController.cs" />
@@ -453,7 +452,6 @@
     <Compile Include="Api\ModelMapping\ContactMapping.cs" />
     <Compile Include="Api\ModelMapping\FacetMapping.cs" />
     <Compile Include="Api\ModelMapping\OldCustomerMapping.cs" />
-    <Compile Include="Api\ModelMapping\WidgetInstanceDataMapping.cs" />
     <Compile Include="Api\Models\Account\LoginTicket.cs" />
     <Compile Include="Api\Models\Attributes\Attribute.cs" />
     <Compile Include="Api\Models\Attributes\AttributeDataType.cs" />
@@ -498,8 +496,6 @@
     <Compile Include="Api\ProductTypeController.cs" />
     <Compile Include="Api\RefrenceController.cs" />
     <Compile Include="Api\ThemeController.cs" />
-    <Compile Include="Api\WidgetInstanceDataController.cs" />
-    <Compile Include="Api\IVolusionLoginHelper.cs" />
     <Compile Include="Api\IUserHelper.cs" />
     <Compile Include="Api\ModelMapping\TenantMapping.cs" />
     <Compile Include="Api\ProductController.cs" />
@@ -523,8 +519,6 @@
     <Compile Include="Api\Models\Account\Invitation.cs" />
     <Compile Include="Api\Models\Account\PasswordInfo.cs" />
     <Compile Include="Api\Models\Account\UserSystemData.cs" />
-    <Compile Include="Api\Models\Cms\Document.cs" />
-    <Compile Include="Api\Models\Cms\DocumentProperty.cs" />
     <Compile Include="Api\Models\Discount\CouponCode.cs" />
     <Compile Include="Api\Models\Discount\Discount.cs" />
     <Compile Include="Api\Models\Feature.cs" />
@@ -569,12 +563,10 @@
     <Compile Include="Api\TestingController.cs" />
     <Compile Include="Api\ThemeSettingController.cs" />
     <Compile Include="Api\UserHelper.cs" />
-    <Compile Include="Api\VolusionLoginHelper.cs" />
     <Compile Include="Api\WebToolsController.cs" />
     <Compile Include="Api\WidgetDefinitionController.cs" />
     <Compile Include="Api\WishlistController.cs" />
     <Compile Include="App_Start\Diagnostics.cs" />
-    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Configuration\BootStrapperAdmin.cs" />
     <Compile Include="Configuration\ConfigurationModule.cs">
       <SubType>Code</SubType>
@@ -594,7 +586,6 @@
     <Compile Include="Helpers\AttributeHelpers\AttributeFilterExtensions.cs" />
     <Compile Include="Helpers\ChannelHelpers\ChannelFilterExtensions.cs" />
     <Compile Include="Helpers\CollectionTaskUnMapper.cs" />
-    <Compile Include="Helpers\ContextSwitcher.cs" />
     <Compile Include="Helpers\CustomerHelpers\CustomerFilterExtensions.cs" />
     <Compile Include="Helpers\CustomerHelpers\CustomerSortExtensions.cs" />
     <Compile Include="Helpers\DiscountHelpers\DiscountFilterExtensions.cs" />
@@ -602,9 +593,6 @@
     <Compile Include="Helpers\LocationInventoryHelpers\LocationInventoryFilterExtensions.cs" />
     <Compile Include="Helpers\OrderHelpers\OrderFilterExtensions.cs" />
     <Compile Include="Helpers\OrderHelpers\OrderSortExtensions.cs" />
-    <Compile Include="Helpers\CurrentUserHelper.cs" />
-    <Compile Include="Helpers\IContextSwitcher.cs" />
-    <Compile Include="Helpers\ICurrentUserHelper.cs" />
     <Compile Include="Helpers\IPasswordHelper.cs" />
     <Compile Include="Helpers\IRolesHelper.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />
@@ -612,7 +600,6 @@
     <Compile Include="Helpers\FileManagerHelpers\FileManagerHelpersSortExtensions.cs" />
     <Compile Include="Helpers\ProductHelpers\ProductFilterExtensions.cs" />
     <Compile Include="Helpers\ProductHelpers\ProductSortExtensions.cs" />
-    <Compile Include="Helpers\ProductHelpers\PropertyGuy.cs" />
     <Compile Include="Helpers\ProductTypeHelpers\ProductTypeFilterExtensions.cs" />
     <Compile Include="Helpers\RolesHelper.cs" />
     <Compile Include="MessageHandlers\AuthRedirectMessageHandler.cs" />
@@ -794,7 +781,6 @@
     <Content Include="Scripts\app\view\website\entityAdapters\BaseEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\CategoryEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\DocumentEntityAdapter.js" />
-    <Content Include="Scripts\app\view\website\entityAdapters\ExternalLinkEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\ProductEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\settings\CategoryDocument.js" />
     <Content Include="Scripts\app\view\website\settings\Facets\FacetRangeQuery.js" />
@@ -1136,7 +1122,6 @@
     <Content Include="Scripts\app\core\context\MasterCatalog.js" />
     <Content Include="Scripts\app\core\data\CategoryTreeProxy.js" />
     <Content Include="Scripts\app\core\data\RemoteException.js" />
-    <Content Include="Scripts\app\core\layout\Flex.js" />
     <Content Include="Scripts\app\core\layout\Toolbar.js" />
     <Content Include="Scripts\app\core\context\TaContext.js" />
     <Content Include="Scripts\app\core\util\GetsParentPage.js" />
@@ -1144,7 +1129,6 @@
     <Content Include="Scripts\app\core\ux\action\Button.js" />
     <Content Include="Scripts\app\core\ux\action\PrimarySplitButton.js" />
     <Content Include="Scripts\app\core\ux\browser\Browsable.js" />
-    <Content Include="Scripts\app\core\ux\browser\Modal.js" />
     <Content Include="Scripts\app\core\ux\browser\BrowserPage.js" />
     <Content Include="Scripts\app\core\ux\browser\ItemBrowser.js" />
     <Content Include="Scripts\app\core\ux\browser\FilterList.js" />
@@ -1163,7 +1147,6 @@
     <Content Include="Scripts\app\core\ux\grid\MenuColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\HeaderDropZone.js" />
     <Content Include="Scripts\app\core\ux\ComboFilter.js" />
-    <Content Include="Scripts\app\core\ux\modal\BrowserModal.js" />
     <Content Include="Scripts\app\core\ux\SidebarList.js" />
     <Content Include="Scripts\app\core\ux\grid\Header.js" />
     <Content Include="Scripts\app\core\ux\grid\Panel.js" />
@@ -1174,7 +1157,6 @@
     <Content Include="Scripts\app\core\ux\form\EditorLayout.js" />
     <Content Include="Scripts\app\core\ux\form\EditorWrapper.js" />
     <Content Include="Scripts\app\core\ux\form\FullEditor.js" />
-    <Content Include="Scripts\app\core\ux\form\ModalEditor.js" />
     <Content Include="Scripts\app\core\ux\form\Tasks.js" />
     <Content Include="Scripts\app\controller\Analytics.js" />
     <Content Include="Scripts\app\core\data\AjaxProxy.js" />
@@ -1316,12 +1298,9 @@
     <Content Include="Scripts\app\view\product\Form.js" />
     <Content Include="Scripts\app\view\product\GlobalForm.js" />
     <Content Include="Scripts\app\view\product\Modal.js" />
-    <Content Include="Scripts\app\view\product\option\Modal.js" />
-    <Content Include="Scripts\app\view\product\option\VariationGrid.js" />
     <Content Include="Scripts\app\view\product\SiteForm.js" />
     <Content Include="Scripts\app\view\product\subform\Categories.js" />
     <Content Include="Scripts\app\view\product\subform\ListExtraEditor.js" />
-    <Content Include="Scripts\app\view\product\option\Form.js" />
     <Content Include="Scripts\app\view\product\subform\OverrideForm.js" />
     <Content Include="Scripts\app\view\product\subform\SEO.js" />
     <Content Include="Scripts\app\view\product\subform\Merchandising.js" />
@@ -1338,9 +1317,6 @@
     <Content Include="Scripts\app\view\error\Http404.js" />
     <Content Include="Scripts\app\view\error\Index.js" />
     <Content Include="Scripts\app\view\error\Http500.js" />
-    <Content Include="Scripts\app\view\option\Edit2.js" />
-    <Content Include="Scripts\app\view\option\EditModal.js" />
-    <Content Include="Scripts\app\view\option\Form.js" />
     <Content Include="Scripts\app\view\settings\paymentAndCheckout\Edit.js" />
     <Content Include="Scripts\app\view\settings\paymentAndCheckout\Form.js" />
     <Content Include="Scripts\app\view\settings\paymentAndCheckout\Gateway.js" />
@@ -1828,10 +1804,8 @@
     <Content Include="Scripts\resources\images\temp\image-gallery-slider.png" />
     <Content Include="Scripts\app\controller\Account.js" />
     <Content Include="Scripts\app\controller\Orders.js" />
-    <Content Include="Scripts\app\controller\PaymentAndCheckout.js" />
     <Content Include="Scripts\app\controller\Themes.js" />
     <Content Include="Scripts\app\controller\Customers.js" />
-    <Content Include="Scripts\app\core\layout\Auto.js" />
     <Content Include="Scripts\app\core\util\RangeFilter.js" />
     <Content Include="Scripts\app\core\ux\ColorPicker.js" />
     <Content Include="Scripts\app\core\ux\CustomerGroupComboBox.js" />
@@ -1870,7 +1844,6 @@
     <Content Include="Scripts\app\store\GatewayDefinitions.js" />
     <Content Include="Scripts\app\store\Roles.js" />
     <Content Include="Scripts\app\store\ThemeListing.js" />
-    <Content Include="Scripts\app\view\account\AccountInformation.js" />
     <Content Include="Scripts\app\view\account\Billing.js" />
     <Content Include="Scripts\app\view\account\Navigation.js" />
     <Content Include="Scripts\app\view\account\Overview.js" />
@@ -1879,7 +1852,6 @@
     <Content Include="Scripts\app\view\customers\Edit.js" />
     <Content Include="Scripts\app\view\customers\GroupsForm.js" />
     <Content Include="Scripts\app\view\customers\Index.js" />
-    <Content Include="Scripts\app\core\ux\modal\Helper.js" />
     <Content Include="Scripts\app\view\customers\SearchForm.js" />
     <Content Include="Scripts\app\view\inventory\QuantityEdit.js" />
     <Content Include="Scripts\app\view\order\Grid.js" />
@@ -1920,8 +1892,6 @@
     <Content Include="Scripts\resources\images\picker\date.png" />
     <Content Include="Scripts\resources\lib\pci-temp.js" />
     <Content Include="Scripts\app\controller\Discounts.js" />
-    <Content Include="Scripts\app\controller\Shipping.js" />
-    <Content Include="Scripts\app\controller\Tax.js" />
     <Content Include="Scripts\app\controller\Themesettings.js" />
     <Content Include="Scripts\app\core\ux\form\ColorField.js" />
     <Content Include="Scripts\app\core\ux\modal\Mini.js" />
@@ -3001,7 +2971,6 @@
     <Content Include="Scripts\app\core\ux\modal\Confirmation.js" />
     <Content Include="Scripts\app\core\ux\modal\Content.js" />
     <Content Include="Scripts\app\core\ux\modal\Cover.js" />
-    <Content Include="Scripts\app\core\ux\modal\Drawer.js" />
     <Content Include="Scripts\app\core\ux\modal\Modal.js" />
     <Content Include="Scripts\app\core\ux\OptionComboBox.js" />
     <Content Include="Scripts\app\core\ux\OptionValueGrid.js" />
@@ -3020,15 +2989,11 @@
     <Content Include="Scripts\app\mocks\shippingorigin.json" />
     <Content Include="Scripts\app\model\ActiveRateProvider.js" />
     <Content Include="Scripts\app\model\Category.js" />
-    <Content Include="Scripts\app\model\CategoryComboBox.js" />
-    <Content Include="Scripts\app\model\CategoryTreeNode.js" />
     <Content Include="Scripts\app\model\CmsDocument.js" />
     <Content Include="Scripts\app\model\CountryComboBox.js" />
     <Content Include="Scripts\app\model\CouponCode.js" />
     <Content Include="Scripts\app\model\Discount.js" />
     <Content Include="Scripts\app\model\DomesticShippingRate.js" />
-    <Content Include="Scripts\app\model\FileManagementFile.js" />
-    <Content Include="Scripts\app\model\FileManagementFolder.js" />
     <Content Include="Scripts\app\model\InternationalShippingRate.js" />
     <Content Include="Scripts\app\model\NavigationTreeNode.js" />
     <Content Include="Scripts\app\model\PageTypeDefinition.js" />
@@ -3059,15 +3024,12 @@
     <Content Include="Scripts\app\model\WidgetDefinition.js" />
     <Content Include="Scripts\app\store\Categories.js" />
     <Content Include="Scripts\app\store\CategoriesTree.js" />
-    <Content Include="Scripts\app\store\CategoryComboBox.js" />
     <Content Include="Scripts\app\store\CmsDocuments.js" />
     <Content Include="Scripts\app\store\NavigationTreeNodes.js" />
     <Content Include="Scripts\app\store\States.js" />
     <Content Include="Scripts\app\store\CountryComboBox.js" />
     <Content Include="Scripts\app\store\Discounts.js" />
     <Content Include="Scripts\app\store\DomesticShippingRates.js" />
-    <Content Include="Scripts\app\store\FileManagementFiles.js" />
-    <Content Include="Scripts\app\store\FileManagementFolders.js" />
     <Content Include="Scripts\app\store\InternationalShippingRates.js" />
     <Content Include="Scripts\app\store\ProductComboBox.js" />
     <Content Include="Scripts\app\store\SelectedShippingMethods.js" />
@@ -3094,7 +3056,6 @@
     <Content Include="Scripts\app\view\category\Index.js" />
     <Content Include="Scripts\app\view\image\Uploader.js" />
     <Content Include="Scripts\app\view\image\UploadItem.js" />
-    <Content Include="Scripts\app\view\image\UploadModal.js" />
     <Content Include="Scripts\app\view\NotifierBar.js" />
     <Content Include="Scripts\app\view\dashboard\Index.js" />
     <Content Include="Scripts\app\view\Header.js" />
@@ -3107,8 +3068,6 @@
     <Content Include="Scripts\app\view\option\preview\DropDown.js" />
     <Content Include="Scripts\app\view\option\preview\RadioButtons.js" />
     <Content Include="Scripts\app\view\option\preview\TextField.js" />
-    <Content Include="Scripts\app\view\option\Edit.js" />
-    <Content Include="Scripts\app\view\option\Index.js" />
     <Content Include="Scripts\app\view\option\TempValueEditor.js" />
     <Content Include="Scripts\app\view\option\valueEditor\MultiValue.js" />
     <Content Include="Scripts\app\view\option\valueEditor\TextField.js" />
@@ -3141,10 +3100,12 @@
     <Content Include="Scripts\app\mocks\themefonts.json" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Api\Models\Cms\" />
     <Folder Include="Models\" />
     <Folder Include="Modules\" />
     <Folder Include="Scripts\app\model\Context\" />
     <Folder Include="Scripts\app\view\address\" />
+    <Folder Include="Scripts\app\view\product\option\" />
     <Folder Include="Scripts\app\view\settings\publishing\" />
     <Folder Include="Scripts\packages\mozuadmintheme\sass\etc\siteBuilder\" />
     <Folder Include="Scripts\resources\scss\taco\widgets\" />

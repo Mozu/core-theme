@@ -110,21 +110,21 @@ Ext.define('Taco.view.website.Index', {
                     plain: true,
                     shadow: false,
                     items: [{
-                        text: 'Live Version',
-                        handler: function (menuItem) {
-                            //scope is set to index on all action buttons by container.
-                            var url = menuItem.up('button').scope.url;
-                            window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=live&redir=' + encodeURIComponent(url), 'taco-preview');
-                        }
-                    },
-                    {
-                        text: 'Staging Version',
-                        handler: function (menuItem) {
-                            //scope is set to index on all action buttons by container.
-                            var url = menuItem.up('button').scope.url;
-                            window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent(url), 'taco-preview');
-                        }
-                    }]
+                            text: 'Live Version',
+                            handler: function (menuItem) {
+                                //scope is set to index on all action buttons by container.
+                                var url = menuItem.up('button').scope.url;
+                                window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=live&redir=' + encodeURIComponent(url), 'taco-preview');
+                            }
+                        },
+                        {
+                            text: 'Staging Version',
+                            handler: function (menuItem) {
+                                //scope is set to index on all action buttons by container.
+                                var url = menuItem.up('button').scope.url;
+                                window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent(url), 'taco-preview');
+                            }
+                        }]
                 }
             }, {
                 xtype: 'button',
@@ -281,7 +281,7 @@ Ext.define('Taco.view.website.Index', {
                         height: 60,
                         items: [{
                             //     xtype: 'component',
-                    //     html: '',
+                            //     html: '',
                     //     cls: 'taco-collapse-handle',
                     //     width: 15,
                     //     height: 30,
@@ -409,7 +409,7 @@ Ext.define('Taco.view.website.Index', {
         this.chorizoEditor = editor;
 
         this.setPublishable(false);
-        
+
         if (this.showDropZones) {
             this.chorizoEditor.showDropZones();
         } else {
@@ -433,7 +433,8 @@ Ext.define('Taco.view.website.Index', {
                 e.stopEvent();
             }
         }, this, {
-            delegate: 'a'
+            delegate: 'a',
+            delay: 100
         });
     },
 
@@ -450,57 +451,31 @@ Ext.define('Taco.view.website.Index', {
 
         tasks.execute();
     },
-    
-    onPublish:function () {
+
+    onPublish: function () {
         this.entitypeTypeHandler.publish();
     },
 
     onWidgetDrop: function (cfg) {
         var pageContext = this.getPageContext(),
             def = this.widgetDefinitions.getById(cfg.widgetTypeId),
+            body = this.iframe.getDoc().body,
             jsonData = {
                 zoneScope: 'page',
                 source: pageContext.cmsContext.page,
                 definitionId: cfg.widgetTypeId
-            };
+            }, serverRenderFn;
 
         cfg.config = def.get('defaultConfig');
 
-        if (!Ext.isEmpty(def.get('editViewFields')) || !Ext.isEmpty(def.get('editViewConfig')) || !Ext.isEmpty(def.get('editView'))) {
-            Ext.widget(def.get('editView') || 'taco-widgeteditor', {
-                editViewFields: def.get('editViewFields'),
-                editViewConfig: def.get('editViewConfig'),
-                autoShow: true,
-                closeAction:'destroy',
-                widgetData: cfg.config,
-                title: def.get('displayName'),
-                listeners: {
-                    save: function (modal) {
-                        jsonData.config = modal.widgetData;
-
-                        Ext.Ajax.request({
-                            url: '/Widgets/preview',
-                            jsonData: jsonData,
-                            success: function (response) {
-                                var ret = Ext.JSON.decode(response.responseText);
-
-                                cfg.callback(ret.output, {
-                                    config: ret.config,
-                                    id: ret.id,
-                                    height: ret.height,
-                                    definitionId: ret.definitionId
-                                });
-                            }
-                        });
-                    }
-                }
-            });
-        } else {
-            jsonData.config = cfg.config;
-
+        serverRenderFn = function (jsonData) {
+            Ext.fly(body).setStyle('cursor', 'wait');
             Ext.Ajax.request({
                 url: '/Widgets/preview',
                 jsonData: jsonData,
+                callback: function () {
+                    Ext.fly(body).setStyle('cursor', 'auto');
+                },
                 success: function (response) {
                     var ret = Ext.JSON.decode(response.responseText);
 
@@ -513,17 +488,50 @@ Ext.define('Taco.view.website.Index', {
 
                 }
             });
+        };
+
+
+        if (!Ext.isEmpty(def.get('editViewFields')) || !Ext.isEmpty(def.get('editViewConfig')) || !Ext.isEmpty(def.get('editView'))) {
+            Ext.widget(def.get('editView') || 'taco-widgeteditor', {
+                editViewFields: def.get('editViewFields'),
+                editViewConfig: def.get('editViewConfig'),
+                autoShow: true,
+                closeAction: 'destroy',
+                widgetData: cfg.config,
+                title: def.get('displayName'),
+                listeners: {
+                    save: function (modal) {
+                        jsonData.config = modal.widgetData;
+
+                        serverRenderFn(jsonData);
+
+                    }
+                }
+            });
+        } else {
+            jsonData.config = cfg.config;
+
+            serverRenderFn(jsonData);
         }
     },
 
     onWidgetEdit: function (cfg) {
         var pageContext = this.getPageContext(),
             def = this.widgetDefinitions.getById(cfg.data.definitionId),
+            body = this.iframe.getDoc().body,
             jsonData = {
                 zoneScope: 'page',
                 source: pageContext.cmsContext.page,
                 definitionId: cfg.data.definitionId
-            };
+            }, callbackWrapper;
+
+        callbackWrapper = function (ret, cfg) {
+            cfg.callback(ret.output, {
+                config: ret.config,
+                id: ret.id,
+                definitionId: ret.definitionId
+            });
+        };            
 
 
         if (!Ext.isEmpty(def.get('editViewFields')) || !Ext.isEmpty(def.get('editViewConfig')) || !Ext.isEmpty(def.get('editView'))) {
@@ -537,30 +545,23 @@ Ext.define('Taco.view.website.Index', {
                 listeners: {
                     save: function (modal) {
                         jsonData.config = modal.widgetData;
-
+                        Ext.fly(body).setStyle('cursor', 'wait');
                         Ext.Ajax.request({
                             url: '/Widgets/preview',
                             jsonData: jsonData,
+                            callback: function () {
+                                Ext.fly(body).setStyle('cursor', 'auto');
+                            },
                             success: function (response) {
                                 var ret = Ext.JSON.decode(response.responseText);
-
-                                cfg.callback(ret.output, {
-                                    config: ret.config,
-                                    id: ret.id,
-                                    definitionId: ret.definitionId
-                                });
+                                callbackWrapper(ret, cfg);
                             }
                         });
                     }
                 }
             });
         } else {
-            cfg.callback(ret.output, {
-                config: ret.config,
-                id: ret.id,
-                height: ret.height,
-                definitionId: ret.definitionId
-            });
+            callbackWrapper(ret, cfg);
         }
     },
 

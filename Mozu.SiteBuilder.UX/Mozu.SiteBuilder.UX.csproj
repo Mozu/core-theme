@@ -394,14 +394,10 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Areas\Misc\Controllers\AccountController.cs" />
-    <Compile Include="Areas\Misc\Controllers\CacheFlushController.cs" />
     <Compile Include="Areas\Misc\Controllers\ContentController.cs" />
-    <Compile Include="Areas\Misc\Controllers\LiveTemplateController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\VisitController.cs" />
     <Compile Include="Configuration\RouteConfig.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
-    <Compile Include="Controllers\CatalogApiController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Areas\Misc\Controllers\BuiltinScriptsController.cs" />
     <Compile Include="Areas\Misc\Controllers\DeveloperDocumentationController.cs" />
@@ -428,15 +424,11 @@
     <Compile Include="Areas\StoreFront\Controllers\WidgetsController.cs" />
     <Compile Include="Areas\StoreFront\ModelMapping\CustomerMapping.cs" />
     <Compile Include="Areas\StoreFront\ModelMapping\OrderMapping.cs" />
-    <Compile Include="Areas\StoreFront\ModelMapping\ProductMapping.cs" />
-    <Compile Include="Areas\StoreFront\StoreFrontAreaRegistration.cs" />
     <Compile Include="Configuration\AutofacModule.cs" />
     <Compile Include="Configuration\BootStrapperUX.cs" />
     <Compile Include="Configuration\PciSettingsProvider.cs" />
-    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\CheckoutController.cs" />
     <Compile Include="Filters\StorefrontErrorFilterAttribute.cs" />
-    <Compile Include="Filters\InitCmsPageContextAttribute.cs" />
     <Compile Include="Filters\InitSettingsAttribute.cs" />
     <Compile Include="Filters\VisitTrackingFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -451,7 +443,6 @@
     <Compile Include="Messaging\VisitEventPublisher.cs" />
     <Compile Include="Navigation\CategoryNavigationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tags\CMS\FieldTag.cs" />
     <Compile Include="Tags\InlineStyle.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -568,6 +559,8 @@
     <Folder Include="Areas\Misc\Views\Shared\" />
     <Folder Include="Areas\StoreFront\Models\" />
     <Folder Include="Areas\StoreFront\Views\Shared\" />
+    <Folder Include="Hypr\Et\" />
+    <Folder Include="Tags\CMS\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

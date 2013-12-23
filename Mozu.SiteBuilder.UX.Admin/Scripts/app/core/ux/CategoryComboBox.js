@@ -10,12 +10,8 @@ Ext.define('Taco.core.ux.CategoryComboBox', {
     valueField: 'id',
     minChars: 1,
     queryMode: 'local',
-    store: {
-        type: 'Taco.store.Categories',
-        clearFilters: true,
-        clearSort: true,
-        autoLoad: true
-    },
+    store: { type: 'Taco.store.Categories' },
+    
 
     setValue: function (value) {
         if (value === -1) {

@@ -1,7 +1,0 @@
-{
-  "id": "cart",
-  "displayName": "Cart",
-  "entityType": "cart",
-  "renderTemplate": "cart",
-  "userCreatable": false
-}

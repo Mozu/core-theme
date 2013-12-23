@@ -109,7 +109,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
             width: 400,
             displayField: 'name',
             valueField: 'code',
-            store: Taco.core.data.StoreManager.getOrCreate('Taco.store.Countries')  
+            store: { type: 'Taco.store.Countries' }
         });
 
         this.ratesContainer = Ext.widget({
