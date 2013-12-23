@@ -14,6 +14,7 @@ using Mozu.Location.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 using Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers;
 using DC = Mozu.ProductAdmin.Contracts;
 using DCloc = Mozu.Location.Contracts;
@@ -148,17 +149,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return SuccessWithTotal2<List<DC.LocationInventory>>(locationInventories.Count);
         }
 
-        [DataContract]
-        public class LocationWithInventory : DC.LocationInventory
-        {
-            [DataMember]
-            public DCloc.Location Location;
-        }
+        
         [HttpGetRoute(UriTemplate = "pickup")]
-        public async Task<Response<List<DC.LocationInventory>>> GetLocationsForPickup([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<LocationWithInventory>>> GetLocationsForPickup([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string productCode = null)
         {
             // filter should be for location type pickup
-            var productCode = extFilter.PopValue<string>("productcode");
+            productCode = productCode ?? extFilter.PopValue<string>("productcode");
             if (productCode == null)
                 throw new ArgumentException("Missing product code.");
 
@@ -172,8 +168,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var locationsWithInventory = inventories.Items.Map<List<LocationWithInventory>>();
             locationsWithInventory.ForEach(lwi => lwi.Location = locations.FirstOrDefault(l => l.Code == lwi.LocationCode));
 
-            return EmptyList2<DC.LocationInventory>();
-            //return List2(locationsWithInventory);
+            //return EmptyList2<DC.LocationInventory>();
+            return List2(locationsWithInventory);
         }
     }
 }

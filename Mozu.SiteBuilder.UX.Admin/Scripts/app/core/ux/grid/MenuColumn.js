@@ -162,6 +162,6 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
         var menu = this.getMenu(eventData);
 
         // Ext.fly(el).addCls(Ext.baseCSSPrefix + 'menu');
-        menu.showBy(el);
+        menu.showBy(el, eventData.menuPosition, eventData.menuOffsets);
     }
 });

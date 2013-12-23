@@ -62,6 +62,12 @@
         {% include "modules/web-fonts-loader" %}
         {% endblock head-tag-scripts %}
 		{% cms_resources %}
+		
+
+		{%header_content%}
+	
+
+
     </head>
     {% endblock head-tag %}
     

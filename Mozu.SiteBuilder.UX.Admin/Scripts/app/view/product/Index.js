@@ -95,6 +95,9 @@ Ext.define('Taco.view.product.Index', {
             }, {
                 dataIndex: 'price',
                 text: 'Price',
+                
+
+
                 width: 70,
                 renderer: function (value, metaData, record) {
                     value = record.getContextualValue('price');

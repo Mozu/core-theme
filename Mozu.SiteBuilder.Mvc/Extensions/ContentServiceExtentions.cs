@@ -89,7 +89,7 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
 
         public static object Get(this Document doc, string key)
         {
-            if (doc.Properties == null)
+            if (doc == null || doc.Properties == null)
             {
                 return null;
             }

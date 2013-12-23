@@ -116,7 +116,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                  {
                      Name = file.name,
                      Id = file.id,
-                     FolderId = file.folderId == "0" ? null : file.folderId,
+                    // FolderId = file.folderId == "0" ? null : file.folderId,
                      PublishState = CmsConstants.Documents.doc_state_active,
                      DocumentType = "image", //todo: file.fileType != null && file.fileType.IndexOf("im", StringComparison.OrdinalIgnoreCase) > -1 ? "image" : "document",
                      Properties = new List<DC.PropertyValue>()

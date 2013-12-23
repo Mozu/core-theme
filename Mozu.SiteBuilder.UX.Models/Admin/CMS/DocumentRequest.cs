@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mozu.SiteBuilder.Mvc.Models.CMS;
 
 namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
 {
@@ -28,6 +29,23 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         public string DocumentType { get; set; }
         [System.Runtime.Serialization.IgnoreDataMember()]
         public Mozu.Content.Contracts.Document Document { get; set; }
+
+        public object this[string key]
+        {
+            get
+            {
+                if (this.Document == null)
+                {
+                    return null;
+                }
+                if (string.Equals(key, "name", StringComparison.OrdinalIgnoreCase))
+                {
+                    return Document.Name;
+                }
+
+                return Document.Properties.Where(x => string.Equals(x.PropertyType, key, StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
+            }
+        }
 
 
         public string PublishState { get; set; }

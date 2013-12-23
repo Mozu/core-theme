@@ -58,58 +58,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
         }
     ],
     
-    filterFormConf: {
-        width: 600,
-        cls: Taco.baseCSSPrefix + 'combofilter-form orders',
-        items: [{
-            xtype: 'container',
-            justify: false,
-            defaults: {
-                xtype: 'textfield',
-                width: 560
-            },
-            items: [
-                {
-                    name: 'locationName',
-                    fieldLabel: 'Location Name',
-                    isDefault:true,
-                    flex: 1
-                }, {
-                    name: 'locationCode',
-                    fieldLabel: 'Location Code',
-                    flex: 1
-                }
-            ]
-        }]
-    },
-
-    filterProperties : [],
-
-    /*
-    filterProperties: [
-        {
-            property: 'all',
-            text: 'All',
-            isDefault: true
-        },
-        {
-            name: 'productName',
-            text: 'Product Name'
-        },
-        {
-            name: 'productCode',
-            text: 'Product Code'
-        },
-        {
-            name: 'locationName',
-            text: 'location Name'
-        },
-        {
-            name: 'locationCode',
-            text: 'Location Code'
-        }
-    ],
-    */
+   
     
     viewConfig: {
         deferEmptyText:false,
@@ -124,6 +73,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
         this.initColumnConfig();
 
         me.callParent(arguments);
+        
     },
 
     initColumnConfig: function () {

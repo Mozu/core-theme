@@ -11,7 +11,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         
     //}
 
-
+    [DataContract]
+    public class LocationWithInventory : Mozu.ProductAdmin.Contracts.LocationInventory
+    {
+        [DataMember]
+        public Mozu.Location.Contracts.Location Location;
+    }
 
     [DataContract(Namespace = "http://admin.productservice.volusion.com")]
     public class BundledProduct

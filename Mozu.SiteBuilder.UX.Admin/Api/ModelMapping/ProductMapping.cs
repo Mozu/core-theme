@@ -399,6 +399,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
 
 
+             Mapper.CreateMap<Mozu.ProductAdmin.Contracts.LocationInventory, LocationWithInventory>();
+
+           
+
         }
 
         object OptionValuesResolver (DC.Product p)
@@ -411,4 +415,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         }
        
     }
+
+
+   
 }
