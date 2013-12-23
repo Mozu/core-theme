@@ -95,29 +95,17 @@ Ext.define('Taco.view.order.widget.LocationPickupGrid', {
                 width: 100,
                 text: "Available",
                 menuDisabled: true,
-                dataIndex: 'locationInventory',
-                xtype: "templatecolumn",
-                tpl: [
-                    '{locationInventory.stockAvailable}'
-                ]
+                dataIndex: 'stockAvailable'
             }, {
                 width: 100,
                 text: 'On Reserve',
                 menuDisabled: true,
-                dataIndex: 'locationInventory',
-                xtype: "templatecolumn",
-                tpl: [
-                    '{locationInventory.stockReserved}'
-                ]
+                dataIndex: 'stockReserved'
             }, {
                 width: 100,
                 text: 'On Hand',
                 menuDisabled: true,
-                dataIndex: 'locationInventory',
-                xtype: "templatecolumn",
-                tpl: [
-                    '{locationInventory.stockOnHand}'
-                ]
+                dataIndex: 'stockOnHand'
             }
         ];
     }

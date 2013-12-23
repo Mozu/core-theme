@@ -320,6 +320,7 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
         
         if (this.fireEvent('beforesave', this) !== false) {
 
+
             
             var fulfillmentMethod = (me.inStorePickupRadio.checked) ? "Pickup" : "Ship";
             var selectedLocation = this.inStorePickupPanel.getSelectionModel().getSelection();
@@ -327,7 +328,7 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
                
                 selectedLocation = selectedLocation[0];
                 
-                fullfillmentLocationCode = selectedLocation.get("code");
+                fullfillmentLocationCode = selectedLocation.get("locationCode");
             }            
 
             

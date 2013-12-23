@@ -16,7 +16,7 @@ Ext.define('Taco.model.LocationPickup', {
 
     fields: [
         {
-            name: "code",  // this will be the locationCode
+            name: "locationCode",  // this will be the locationCode
             type: "string"
         },
         
@@ -30,6 +30,29 @@ Ext.define('Taco.model.LocationPickup', {
         {
             "name": "locationInventory",
             "type": "auto"
+        },
+        
+        {
+            "name": "productName",
+            "type": "string"
+        },
+        
+        {
+            "name": "productCode",
+            "type": "string"
+        },
+        
+        {
+            "name": "stockAvailable",
+            "type": "int"
+        },
+        {
+            "name": "stockOnBackOrder",
+            "type": "int"
+        },
+        {
+            "name": "stockOnHand",
+            "type": "int"
         }
     ],
     proxy: {
