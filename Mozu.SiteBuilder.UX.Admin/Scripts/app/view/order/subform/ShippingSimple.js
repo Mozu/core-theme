@@ -82,12 +82,12 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
             xtype: 'selectfield',
             width: 200,
             fieldLabel: 'Shipping Methods',
-            valueField: 'ShippingMethodCode',
-            displayField: 'ShippingMethodName',
+            valueField: 'shippingMethodCode',
+            displayField: 'shippingMethodName',
             store: this.shippingMethodsStore,
             listConfig: {
                 getInnerTpl: function () {
-                    return '{ShippingMethodName} {Price:currency}';
+                    return '{shippingMethodName} {price:currency}';
                 }
             },
             listeners: {

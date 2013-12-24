@@ -153,7 +153,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
                         itemTotal: dataItem.totalQuantity,
                         packagingType: packagingTypeText,
                         weight: dataItem.weight,
-                        shippingMethod: dataItem.shippingMethodName || dataItem.ShippingMethodCode,
+                        shippingMethod: dataItem.shippingMethodName || dataItem.shippingMethodCode,
                         trackingNumber: dataItem.trackingNumber,
                         
                         // billing contact info

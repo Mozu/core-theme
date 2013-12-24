@@ -4,15 +4,15 @@
 Ext.define('Taco.model.ShippingMethod', {
     extend: 'Taco.core.data.Model',
    
-    idProperty: 'ShippingMethodCode',
+    idProperty: 'shippingMethodCode',
     fields: [{
-        name: 'ShippingMethodCode',
+        name: 'shippingMethodCode',
             type: 'string'
         }, {
-            name: 'ShippingMethodName',
+            name: 'shippingMethodName',
             type: 'string'
         }, {
-            name: 'Price',
+            name: 'price',
             type: 'number'
         }]
 });

@@ -56,10 +56,11 @@ Ext.define('Taco.view.order.subform.Customer', {
                 change: function (field, value) {
                     if (!field || !field.name) return;
 
-                    console.log('CHANGE', field.name, value);
+                    
                     this.customer[field.name] = value;
 
-                    console.log('CUSTOMER', this.customer);
+                    
+                    this.isValid();
                 },
                 scope: this
             }
@@ -71,7 +72,8 @@ Ext.define('Taco.view.order.subform.Customer', {
             listeners: {
                 change: function (field, value) {
                     this.customer.customerAccountId = field.getValue();
-                    console.log('customer', this.customer);
+                   
+                    this.isValid();
                 },
                 scope: this
             }
