@@ -42,31 +42,31 @@ namespace Mozu.SiteBuilder.Mvc
             : base()
         {
 
-            var dir = @"C:\projects\mzt\UI\Dev\Dev-branch\Mozu.SiteBuilder\";
-            var files = System.IO.Directory.GetFiles(dir, "*.cs", SearchOption.AllDirectories);
-            foreach (var file in files)
-            {
-                var lines = System.IO.File.ReadAllLines(file);
-                for (int i = 1; i < lines.Length; i++)
-                {
-                    var line = lines[lines.Length - i];
-                    if (line.Length < 2)
-                    {
-                        continue;
-                    }
-                    if (line.Contains("Copyright"))
-                    {
-                        continue;
-                    }
-                    if (line[0] == '/' && line[1] == '/')
-                    {
-                        System.Diagnostics.Debug.WriteLine(file);
-                    }
-                    break;
-
-                }
-
-            }
+//            var dir = @"C:\projects\mzt\UI\Dev\Dev-branch\Mozu.SiteBuilder\";
+//            var files = System.IO.Directory.GetFiles(dir, "*.cs", SearchOption.AllDirectories);
+//            foreach (var file in files)
+//            {
+//                var lines = System.IO.File.ReadAllLines(file);
+//                for (int i = 1; i < lines.Length; i++)
+//                {
+//                    var line = lines[lines.Length - i];
+//                    if (line.Length < 2)
+//                    {
+//                        continue;
+//                    }
+//                    if (line.Contains("Copyright"))
+//                    {
+//                        continue;
+//                    }
+//                    if (line[0] == '/' && line[1] == '/')
+//                    {
+//                        System.Diagnostics.Debug.WriteLine(file);
+//                    }
+//                    break;
+//
+//                }
+//
+//            }
 
 
 

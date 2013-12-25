@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeValue>()
                 .ForMember(dc => dc.Value, opt => opt.MapFrom(x => x.Content != null &&!string.IsNullOrEmpty( x.Content.Value)? x.Content.Value :  x.Value))
-                .ForMember(x => x.Id, op => op.MapFrom(x => (x.Value.ToString())))
+                .ForMember(x => x.Id, op => op.MapFrom(x => (x.Value != null ? x.Value.ToString() : null)))
                 ;
 
             Mapper.CreateMap<Attribute, DC.Attribute>()
@@ -47,12 +47,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x=> x.IsActive , opt => opt.MapFrom(x=> x.IsActive ))
                 .ForMember(x => x.IsVisible, opt => opt.MapFrom(x => x.IsVisible))
                 
-                .ForMember( x=> x.AttributeMetadata , opt=> opt.MapFrom(x=> x.AttributeMetadata))
-                .ForMember(x => x.Regex, opt => opt.MapFrom(x => x.Validation.RegularExpression))
-                .ForMember(x => x.Min, opt => opt.MapFrom(dc => dc.Validation.MinNumericValue ?? dc.Validation.MinStringLength))
-                .ForMember(x => x.Max, opt => opt.MapFrom(dc => dc.Validation.MaxNumericValue ?? dc.Validation.MaxStringLength))
-                .ForMember(x => x.MinDate, opt => opt.MapFrom(dc => dc.Validation.MinDateTime))
-                .ForMember(x => x.MaxDate, opt => opt.MapFrom(dc => dc.Validation.MaxDateTime))
+                .ForMember( x=> x.AttributeMetadata , opt=> opt.MapFrom(dc=> dc.AttributeMetadata))
+                .ForMember(x => x.Regex, opt => opt.MapFrom(dc => dc.Validation != null ? dc.Validation.RegularExpression : null))
+                .ForMember(x => x.Min, opt => opt.MapFrom(dc => dc.Validation != null ? dc.Validation.MinNumericValue ?? dc.Validation.MinStringLength : null))
+                .ForMember(x => x.Max, opt => opt.MapFrom(dc => dc.Validation != null ? dc.Validation.MaxNumericValue ?? dc.Validation.MaxStringLength : null))
+                .ForMember(x => x.MinDate, opt => opt.MapFrom(dc => dc.Validation != null ? dc.Validation.MinDateTime : null))
+                .ForMember(x => x.MaxDate, opt => opt.MapFrom(dc => dc.Validation != null ? dc.Validation.MaxDateTime : null))
                 ;
 
             Mapper.CreateMap<DC.AttributeMetadataItem, AttributeMetadataItem>();
