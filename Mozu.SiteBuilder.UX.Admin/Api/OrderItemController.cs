@@ -77,10 +77,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2( dcOrder.Map<Order>() );
         }
 
-        [HttpPostRoute(UriTemplate = "items/editfulfillment")]
+        [HttpPostRoute(UriTemplate = "items/editfulfillmentmethod")]
         public async Task<Response<Order>> UpdateOrderItemFulfillmentMethodAndCode(UpdateOrderItemArgs args, [FromUri]bool draft = false)
         {
-            throw new NotImplementedException();
+            DC.Order dcOrder = null;
+
+            foreach (var item in args.OrderItems)
+            {
+                dcOrder = (await _orderWebApiClient.UpdateItemFulfillment(args.OrderId, item.Id, new DC.OrderItem { FulfillmentMethod = item.FulfillmentMethod, FulfillmentLocationCode = item.FulfillmentLocationCode }, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
+            }
+
+            return Single2( dcOrder.Map<Order>() );
         }
 
 
