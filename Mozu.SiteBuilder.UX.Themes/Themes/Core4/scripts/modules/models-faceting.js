@@ -1,8 +1,10 @@
-﻿define(['shim!vendor/underscore>_', "modules/backbone-mozu", "modules/models-product", "modules/mixin-paging"], function (_, Backbone, ProductModels, PagingMixin) {
+﻿define(['modules/jquery-mozu', 'shim!vendor/underscore>_', "hyprlive", "modules/backbone-mozu", "modules/models-product", "modules/mixin-paging"], function ($, _, Hypr, Backbone, ProductModels, PagingMixin) {
 
     function sanitize(str) {
         return str ? str.replace(/[\s~'":]+/g, '-') : '';
     }
+
+    var defaultPageSize = Hypr.getThemeSetting('defaultPageSize');
 
     var FacetValue = Backbone.MozuModel.extend({
         idAttribute: 'value'
@@ -21,13 +23,13 @@
                 model: FacetValue
             })
         },
-        parse: function (raw) {
-            // trying to accommodate the shape of the Hierarchical Facet
-            if (raw.facetType === "Hierarchy") {
-                raw.values = raw.values[0] ? raw.values[0].childrenFacetValues : [];
-            }
-            return raw;
-        },
+        //parse: function (raw) {
+        //    // trying to accommodate the shape of the Hierarchical Facet
+        //    if (raw.facetType === "Hierarchy") {
+        //        raw.values = raw.values[0] ? raw.values[0].childrenFacetValues : [];
+        //    }
+        //    return raw;
+        //},
         isFaceted: function () {
             return !!this.get("values").findWhere({ "isApplied": true });
         },
@@ -63,6 +65,21 @@
             })
         },
         helpers: ['hasValueFacets'],
+        hierarchyDepth: 2,
+        setQuery: function(query) {
+            this.query = query;
+        },
+        setHierarchy: function(hierarchyField, hierarchyValue) {
+            this.hierarchyField = hierarchyField;
+            this.hierarchyValue = hierarchyValue;
+            this.baseRequestParams = (hierarchyValue !== null) && {
+                filter: hierarchyField + ' req ' + hierarchyValue,
+                facetTemplate: hierarchyField + ':' + hierarchyValue,
+                facetHierValue: hierarchyField + ':' + hierarchyValue,
+                facetHierDepth: hierarchyField + ':' + this.hierarchyDepth
+            };
+            if (this.query) this.baseRequestParams.query = this.query;
+        },
         hasValueFacets: function() {
             return !!this.get('facets').findWhere({ facetType: 'Value' });
         },
@@ -77,7 +94,7 @@
             this.updateFacets();
         },
         buildFacetRequest: function () {
-            var conf = _.clone(this.get('baseRequestParams')),
+            var conf = this.baseRequestParams ? _.clone(this.baseRequestParams) : {},
                 pageSize = this.get("pageSize"),
                 startIndex = this.get("startIndex"),
                 filterValue = this.getFacetValueFilter();
@@ -96,12 +113,22 @@
                 this.get('facets').reset(null, { silent: true });
                 this.get('items').reset(null, { silent: true });
                 this.apiModel.get(conf).then(function() {
-                    me.trigger("facetchange");
+                    me.trigger("facetchange", me.getQueryString());
                 }).ensure(function () {
                     me.isLoading(false);
                 });
             }
         }, 300),
+        getQueryString: function() {
+            var self = this, lrClone = _.clone(this.lastRequest);
+            _.each(lrClone, function (v, p) {
+                if (self.baseRequestParams && (p in self.baseRequestParams)) delete lrClone[p];
+            });
+            if (parseInt(lrClone.pageSize) === defaultPageSize) delete lrClone.pageSize;
+            if (this.hierarchyField && this.hierarchyValue) lrClone[this.hierarchyField] = this.hierarchyValue;
+            if (this.query) lrClone.query = this.query;
+            return _.isEmpty(lrClone) ? "" : "?" + $.param(lrClone);
+        },
         initialize: function () {
             this.lastRequest = this.buildFacetRequest();
         }

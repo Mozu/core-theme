@@ -7,18 +7,10 @@ define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', "modules/mod
         var $categoryPageBody = $('[data-mz-category]'),
             $facetPanel = $('[data-mz-facets]'),
             categoryId = $categoryPageBody.data('mz-category'),
-            productListData = require.mozuData('facetedproducts'),
-            defaultPageSize = Hypr.getThemeSetting('defaultPageSize');
+            productListData = require.mozuData('facetedproducts');
 
         if (productListData) {
-            productListData.baseRequestParams = {
-                filter: 'categoryId req ' + categoryId,
-                facetTemplate: 'categoryId:' + categoryId,
-                facetHierValue: 'categoryId:' + categoryId,
-                facetHierDepth: 'categoryId:2'
-            };
-
-            var facetingModel = new FacetingModels.FacetedProductCollection(productListData);            var facetingViews = {
+            var facetingModel = new FacetingModels.FacetedProductCollection(productListData);            if (categoryId) facetingModel.setHierarchy('categoryId',categoryId);            var facetingViews = {
                 pagingControls: new PagingViews.PagingControls({
                     el: $categoryPageBody.find('[data-mz-pagingcontrols]'),
                     model: facetingModel
@@ -40,12 +32,8 @@ define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', "modules/mod
             Backbone.history.start({ pushState: true, root: window.location.pathname });
             var router = new Backbone.Router();
 
-            facetingModel.on('facetchange', function () {
-                var newURL, lrClone = JSON.parse(JSON.stringify(facetingModel.lastRequest));
-                $.each(lrClone, function (p) { if (p in productListData.baseRequestParams) delete lrClone[p] });
-                if (parseInt(lrClone.pageSize) === defaultPageSize) delete lrClone.pageSize;
-                newURL = $.isEmptyObject(lrClone) ? "" : "?" + $.param(lrClone);
-                router.navigate(newURL, { replace: true });
+            facetingModel.on('facetchange', function (newQuery) {
+                router.navigate(newQuery, { replace: true });
             });
 
             facetingModel.on('change:pageSize', facetingModel.updateFacets, facetingModel);

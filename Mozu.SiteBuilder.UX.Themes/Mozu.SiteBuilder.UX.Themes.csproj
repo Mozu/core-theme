@@ -215,9 +215,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Content.Contracts.1.3.0.1\lib\Mozu.Content.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.1.3.0.1\lib\Mozu.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.1.4.0-dev002\lib\Mozu.Core.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -448,7 +448,6 @@
     <Content Include="Themes\Core4\scripts\vendor\isotope.min.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery-scrollto.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery.colorbox-min.js" />
-    <Content Include="Themes\Core4\scripts\vendor\placeholder_polyfill.jquery.amd.js" />
     <Content Include="Themes\Core4\scripts\widgets\image.js" />
     <Content Include="Themes\Core4\scripts\widgets\instock-request.js" />
     <Content Include="Themes\Core4\scripts\widgets\related-products.js" />
@@ -457,7 +456,6 @@
     <Content Include="Themes\Core4\stylesheets\layouts\l-container.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-sidebar.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-slidebox.less" />
-    <Content Include="Themes\Core4\stylesheets\base\webfonts.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\address-summary.less" />
     <Content Include="Themes\Core4\stylesheets\modules\faceting-form.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-tiles.less" />
@@ -508,10 +506,8 @@
     <Content Include="Themes\Core4\scripts\modules\models-checkout.js" />
     <Content Include="Themes\Core4\scripts\modules\models-customer.js" />
     <Content Include="Themes\Core4\scripts\modules\models-faceting.js" />
-    <Content Include="Themes\Core4\scripts\modules\models-myaccount.js" />
     <Content Include="Themes\Core4\scripts\modules\models-price.js" />
     <Content Include="Themes\Core4\scripts\modules\models-product.js" />
-    <Content Include="Themes\Core4\scripts\modules\models-user.js" />
     <Content Include="Themes\Core4\scripts\pages\cart.js" />
     <Content Include="Themes\Core4\scripts\pages\category.js" />
     <Content Include="Themes\Core4\scripts\pages\checkout.js" />
@@ -540,6 +536,7 @@
     <Content Include="Themes\Core4\stylesheets\modules\product\product-listing.less" />
     <Content Include="Themes\Core4\stylesheets\modules\product\price-stack.less" />
     <Content Include="Themes\Core4\stylesheets\storefront.less" />
+    <None Include="Themes\Core4\templates\modules\checkout\checkout-payment.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\common\price.hypr.live" />
     <Content Include="Themes\Core4\stylesheets\state\is-crossedout.less" />
     <Content Include="Themes\Core4\stylesheets\state\is-saleprice.less" />

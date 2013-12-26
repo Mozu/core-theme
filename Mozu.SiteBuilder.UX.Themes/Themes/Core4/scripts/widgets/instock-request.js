@@ -1,19 +1,19 @@
-define(['modules/jquery-mozu', 'shim!vendor/underscore>_', "modules/api", "modules/backbone-mozu", "modules/models-product", 'modules/models-user'],
+define(['modules/jquery-mozu', 'shim!vendor/underscore>_', "modules/api", "modules/backbone-mozu", "modules/models-product"],
     function ($, _, api, Backbone, ProductModels, UserModels) {
         
         var InstockReqView = Backbone.MozuView.extend({
                 templateName: 'modules/product/product-instock-request',
                 widgetNotifyUserAction: function () {
-                    var user = UserModels.User.fromCurrent();
+                    var user = require.mozuData('user');
                     var product = ProductModels.Product.fromCurrent();
                     var email = '';
                                      
-                    if (user.attributes.isAnonymous) {
+                    if (user.isAnonymous) {
                         //get email address from text box
                         email = $('.mz-intstock-request-email').val();
                     } else {
                         //get email from customer model 
-                        email = user.attributes.email;
+                        email = user.email;
                     }
                     console.log(email);
                     console.log(product.attributes.productCode);

@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
@@ -30,9 +31,28 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _searchClient = searchClient;
         }
 
+        private readonly Regex categoryIdRE = new Regex("categoryId:(?<categoryId>\\w+)");
+
         [HttpGet]
-        public async Task<ActionResult> Index(string query, int? categoryId, string sortBy = null, int? page = null, int? pageSize = null, string facetValueFilter = null)
+        public async Task<ActionResult> Index(string query, int? categoryId = null, string sortBy = null, int? page = null, int? pageSize = null, string facetValueFilter = null)
         {
+
+            int filterCatId = 0;
+            bool isCatFiltered = false;
+            Match m;
+            if (facetValueFilter != null)
+            {
+                m = categoryIdRE.Match(facetValueFilter);
+                if (m.Success) {
+                    isCatFiltered = int.TryParse(m.Groups["categoryId"].Value, out filterCatId);
+                }
+            }
+
+            if (isCatFiltered && !categoryId.HasValue)
+            {
+                categoryId = filterCatId;
+            }
+
             PageContext.CmsContext = new CmsPageContext()
             {
                 Template = new DocumentRequest()
@@ -72,7 +92,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (categoryId.HasValue)
             {
                 searchQuery.Append("categoryId req ");
-                searchQuery.Append(categoryId.Value);
+                searchQuery.Append(categoryId);
             }
 
 

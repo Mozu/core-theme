@@ -8,9 +8,9 @@
 
 {% require_script "pages/search" %}
 
-<div data-mz-search="{{ pageContext.search.query }}" class="mz-l-container">
+<div {% if pageContext.categoryId %}data-mz-category="{{ pageContext.categoryId }}" {% endif %}data-mz-search="{{ pageContext.search.query }}" class="mz-l-container">
     <h1 class="mz-pagetitle">{{ labels.searchResults }}: <span class="mz-searchresults-query">{{ pageContext.search.query }}</span></h1>
-    {% include_products "modules/product/faceted-products" with includeFacets=true and pageWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+    {% include "modules/product/faceted-products" %}
 </div>
 
 {% endblock body-content %}

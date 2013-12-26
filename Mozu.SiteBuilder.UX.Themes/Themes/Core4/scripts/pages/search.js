@@ -1,55 +1,42 @@
-define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', "modules/models-faceting", "modules/views-productlists", "modules/views-paging"], function($, Hypr, Backbone, FacetingModels, ProductListViews, PagingViews){
+define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', "modules/models-faceting", "modules/views-productlists", "modules/views-paging"], function ($, Hypr, Backbone, FacetingModels, ProductListViews, PagingViews) {
 
     var useAnimatedLists = Hypr.getThemeSetting('useAnimatedProductLists') && !Modernizr.mq('(max-width: 480px)');
 
     $(document).ready(function () {
-        
-        var $categoryPageBody = $('[data-mz-category]'),
+
+        var $searchPageBody = $('[data-mz-search]'),
             $facetPanel = $('[data-mz-facets]'),
-            categoryId = $categoryPageBody.data('mz-category'),
-            productListData = require.mozuData('facetedproducts'),
-            defaultPageSize = Hypr.getThemeSetting('defaultPageSize');
+            categoryId = $searchPageBody.data('mz-category'),
+            searchQuery = $searchPageBody.data('mz-search'),
+            productListData = require.mozuData('facetedproducts');
 
         if (productListData) {
-            productListData.baseRequestParams = {
-                filter: 'categoryId req ' + categoryId,
-                facetTemplate: 'categoryId:' + categoryId,
-                facetHierValue: 'categoryId:' + categoryId,
-                facetHierDepth: 'categoryId:2'
-            };
-
-            productListData.constantParams = {
-                c: categoryId
-            };
-
-            var facetingModel = new FacetingModels.FacetedProductCollection(productListData);            var facetingViews = {
+            var facetingModel = new FacetingModels.FacetedProductCollection(productListData);            if (searchQuery) facetingModel.setQuery(searchQuery);            if (categoryId) facetingModel.setHierarchy('categoryId', categoryId);            var facetingViews = {
                 pagingControls: new PagingViews.PagingControls({
-                    el: $categoryPageBody.find('[data-mz-pagingcontrols]'),
+                    el: $searchPageBody.find('[data-mz-pagingcontrols]'),
                     model: facetingModel
                 }),
                 pageNumbers: new PagingViews.PageNumbers({
-                    el: $categoryPageBody.find('[data-mz-pagenumbers]'),
+                    el: $searchPageBody.find('[data-mz-pagenumbers]'),
                     model: facetingModel
                 }),
-                productList: ( useAnimatedLists ? new ProductListViews.AnimatedList({
-                    el: $categoryPageBody.find('[data-mz-productlist] .mz-productlist-list'),
+                productList: (useAnimatedLists ? new ProductListViews.AnimatedList({
+                    el: $searchPageBody.find('[data-mz-productlist] .mz-productlist-list'),
                     model: facetingModel
                 }) : new ProductListViews.List({
-                    el: $categoryPageBody.find('[data-mz-productlist]'),
+                    el: $searchPageBody.find('[data-mz-productlist]'),
                     model: facetingModel
-                }) )
-            };            if ($facetPanel.length > 0) {                facetingViews.facetPanel = new ProductListViews.FacetingPanel({
+                }))
+            };            if ($facetPanel.length > 0) {
+                facetingViews.facetPanel = new ProductListViews.FacetingPanel({
                     el: $facetPanel,                    model: facetingModel
-                });            }
+                });
+            }
             Backbone.history.start({ pushState: true, root: window.location.pathname });
             var router = new Backbone.Router();
 
-            facetingModel.on('facetchange', function () {
-                var newURL, lrClone = JSON.parse(JSON.stringify(facetingModel.lastRequest));
-                $.each(lrClone, function (p) { if (p in productListData.baseRequestParams) delete lrClone[p] });
-                if (parseInt(lrClone.pageSize) === defaultPageSize) delete lrClone.pageSize;
-                newURL = $.isEmptyObject(lrClone) ? window.location.href.replace(window.location.search, '') : "?" + $.param(lrClone);
-                router.navigate(newURL, { replace: true });
+            facetingModel.on('facetchange', function (newQuery) {
+                router.navigate(newQuery, { replace: true });
             });
 
             facetingModel.on('change:pageSize', facetingModel.updateFacets, facetingModel);
@@ -58,10 +45,10 @@ define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', "modules/mod
 
         _.invoke(facetingViews, 'render');
 
-        $categoryPageBody.noFlickerFadeIn();
+        //$searchPageBody.noFlickerFadeIn();
 
         window.facetingViews = facetingViews;
 
     });
-    
+
 });
