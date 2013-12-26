@@ -152,7 +152,7 @@
         getStoreCredits: function() {
             var self = this;
             return this.apiGetCredits().then(function (credits) {
-                self.set('credits', credits.data);
+                self.set('credits', credits.data.items);
                 self.trigger('sync', credits);
                 return self;
             });

@@ -46,10 +46,7 @@
         <div class="mz-l-stack-section mz-accountreturnhistory" id="account-returnhistory">
             {% include "modules/my-account/my-account-returnhistory" with model=model.returnHistory %}
         </div>
-        
-        <div id="paymentmethods-messages">
-            {% include "modules/common/message-bar" %}
-        </div>
+
         <a id="paymentmethods"></a>
         <div class="mz-l-stack-section mz-accountpaymentmethods" id="account-paymentmethods">
             {% include "modules/my-account/my-account-paymentmethods" %}

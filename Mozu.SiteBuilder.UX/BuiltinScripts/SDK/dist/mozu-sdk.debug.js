@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-12-23
+ * Mozu JavaScript SDK - v0.2.0 - 2013-12-26
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -2740,8 +2740,9 @@ var ApiReference = (function () {
             }
         },
         'storecredit': {
-            update: {
-                template: '{+creditService}{code}',
+            'associate-to-shopper': {
+                verb: 'PUT',
+                template: '{+creditService}{code}/associate-to-shopper',
                 includeSelf: true
             }
         },
@@ -2926,11 +2927,11 @@ var ApiReference = (function () {
                 includeSelf: true
             },
             'get-by-name': {
-                template: '{+wishlistService}{customerAccountId}/{name}',
+                template: '{+wishlistService}customers/{customerAccountId}/{name}',
                 includeSelf: true,
             },
             'get-default': {
-                template: '{+wishlistService}{customerAccountId}/' + CONSTANTS.DEFAULT_WISHLIST_NAME,
+                template: '{+wishlistService}customers/{customerAccountId}/' + CONSTANTS.DEFAULT_WISHLIST_NAME,
                 includeSelf: true
             },
             'create-default': {
@@ -2969,7 +2970,7 @@ var ApiReference = (function () {
             },
             'get-items-by-name': {
                 returnType: 'wishlistitems',
-                template: '{+wishlistService}{customerAccountId}/{name}/items{?startIndex,pageSize,sortBy,filter}',
+                template: '{+wishlistService}customers/{customerAccountId}/{name}/items{?startIndex,pageSize,sortBy,filter}',
                 defaultParams: {
                     sortBy: 'UpdateDate asc'
                 },
@@ -3362,9 +3363,7 @@ ApiObject.types.customer = (function () {
         addStoreCredit: function (id) {
             var credit = this.api.createSync('storecredit', { code: id });
             errors.passFrom(credit, this);
-            return credit.update({
-                customerId: this.prop('id')
-            });
+            return credit.associateToShopper();
         }
     }
 }());
