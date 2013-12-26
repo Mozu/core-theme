@@ -145,7 +145,7 @@ Ext.define('Taco.model.OrderItem', {
             "defaultValue": "ship"
         },
         {
-            "name": "fullfillmentLocationCode",
+            "name": "fulfillmentLocationCode",
             "type": "string",
             "defaultValue": ""
         },
