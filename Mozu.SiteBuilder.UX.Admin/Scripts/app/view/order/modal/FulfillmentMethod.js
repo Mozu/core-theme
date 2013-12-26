@@ -69,7 +69,7 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
             margin: "0 0 10 40px"
         });
 
-        me.fullfillmentTypePanel = Ext.create('Ext.form.FieldContainer', {
+        me.fulfillmentTypePanel = Ext.create('Ext.form.FieldContainer', {
             dock: 'top',
             layout:"hbox",
             style: "border-bottom:1px solid #cccccc",
@@ -79,7 +79,7 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
             ]
         });
 
-        me.dockedItems.push(me.fullfillmentTypePanel);
+        me.dockedItems.push(me.fulfillmentTypePanel);
 
         
         
@@ -316,7 +316,7 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
 
     primaryHandler: function () {
         var me = this,
-            fullfillmentLocationCode="";
+            fulfillmentLocationCode="";
         
         if (this.fireEvent('beforesave', this) !== false) {
 
@@ -328,14 +328,14 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
                
                 selectedLocation = selectedLocation[0];
                 
-                fullfillmentLocationCode = selectedLocation.get("locationCode");
+                fulfillmentLocationCode = selectedLocation.get("locationCode");
             }            
 
             
             
             
             me.record.set("fulfillmentMethod", fulfillmentMethod);
-            me.record.set("fullfillmentLocationCode", fullfillmentLocationCode);
+            me.record.set("fulfillmentLocationCode", fulfillmentLocationCode);
 
             var orderId = me.orderRecord.get("id");
 

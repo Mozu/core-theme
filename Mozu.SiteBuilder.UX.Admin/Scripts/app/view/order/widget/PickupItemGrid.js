@@ -441,7 +441,7 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
                     sortable: false,
                     menuDisabled: true,
                     align: "left",
-                    dataIndex: 'fullfillmentLocationCode'
+                    dataIndex: 'fulfillmentLocationCode'
                 }
             );
         }
@@ -526,7 +526,7 @@ weight: 2
                 "useNull": true
             },
             {
-                "name": "fullfillmentLocationCode",
+                "name": "fulfillmentLocationCode",
                 "type": "string",
                 "useNull": true
             }
