@@ -376,8 +376,9 @@ var ApiReference = (function () {
             }
         },
         'storecredit': {
-            update: {
-                template: '{+creditService}{code}',
+            'associate-to-shopper': {
+                verb: 'PUT',
+                template: '{+creditService}{code}/associate-to-shopper',
                 includeSelf: true
             }
         },
@@ -562,11 +563,11 @@ var ApiReference = (function () {
                 includeSelf: true
             },
             'get-by-name': {
-                template: '{+wishlistService}{customerAccountId}/{name}',
+                template: '{+wishlistService}customers/{customerAccountId}/{name}',
                 includeSelf: true,
             },
             'get-default': {
-                template: '{+wishlistService}{customerAccountId}/' + CONSTANTS.DEFAULT_WISHLIST_NAME,
+                template: '{+wishlistService}customers/{customerAccountId}/' + CONSTANTS.DEFAULT_WISHLIST_NAME,
                 includeSelf: true
             },
             'create-default': {
@@ -605,7 +606,7 @@ var ApiReference = (function () {
             },
             'get-items-by-name': {
                 returnType: 'wishlistitems',
-                template: '{+wishlistService}{customerAccountId}/{name}/items{?startIndex,pageSize,sortBy,filter}',
+                template: '{+wishlistService}customers/{customerAccountId}/{name}/items{?startIndex,pageSize,sortBy,filter}',
                 defaultParams: {
                     sortBy: 'UpdateDate asc'
                 },

@@ -18,7 +18,7 @@
       {% for credit in model.credits %}
       <tr class="mz-accountstorecredit-row">
         <td class="mz-accountstorecredit-cell-storecreditnumber">{{ credit.code }}</td>
-        <td class="mz-accountstorecredit-cell-creditdate">{{ credit.activationDate }}</td>
+        <td class="mz-accountstorecredit-cell-creditdate">{{ credit.activationDate|date("F j, Y") }}</td>
         <td class="mz-accountstorecredit-cell-creditamount">{{ credit.initialBalance|currency }}</td>
         <td class="mz-accountstorecredit-cell-remaining">{{ credit.currentBalance|currency }}</td>
       </tr>

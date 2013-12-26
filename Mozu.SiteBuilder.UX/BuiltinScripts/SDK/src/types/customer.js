@@ -37,9 +37,7 @@
         addStoreCredit: function (id) {
             var credit = this.api.createSync('storecredit', { code: id });
             errors.passFrom(credit, this);
-            return credit.update({
-                customerId: this.prop('id')
-            });
+            return credit.associateToShopper();
         }
     }
 }());

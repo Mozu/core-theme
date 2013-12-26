@@ -119,6 +119,10 @@
   "resetEmailSent"       : "You should receive an email with instructions to reset your password shortly.",
   "unexpectedError"      : "Sorry, an unexpected error occurred. Please refresh the page and try again, or contact Support.",
 
+  /* Search labels */
+  "searchResults"        : "Search Results",
+  "searchTitle"          : "Search Results for {0}",
+
   /* Cart labels */
   "cart"                 : "Cart",
   "itemTotal"            : "Item Total", 
@@ -154,7 +158,9 @@
   "createAccount"        : "Create an account for easy checkout on future orders",
   "placeOrder"           : "Place Order",
   "orderConfirmation"    : "Order Confirmation",
-  "confirmationText"     : "Thank you for your order!  You will receive email confirmation.",
+  "confirmationText"     : "Thank you for your order!  You will receive an email confirmation.",
+  "yourOrderNumber"      : "Your order number is <strong>{0}</strong>.",
+  "payments"             : "Payments",
   "orderDetails"         : "Order Details",
   "orderNumber"          : "Order Number",
   "billingName"          : "Billing Name",

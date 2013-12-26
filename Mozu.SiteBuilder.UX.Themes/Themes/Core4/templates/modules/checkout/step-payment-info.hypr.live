@@ -13,7 +13,7 @@
                 <dt>{{ labels.billingAddress }}</dt>
                 <dd>
                     <div class="mz-addresssummary">
-                        {% include "modules/common/address-summary" with model=model.billingContact %}
+                        {% include "modules/common/address-summary" with model=payment.billingInfo.billingContact %}
                     </div>
                 </dd>
             </dl>
@@ -27,7 +27,7 @@
                 <dt>{{ labels.billingAddress }}</dt>
                 <dd>
                     <div class="mz-addresssummary">
-                        {% include "modules/common/address-summary" with model=model.billingContact %}
+                        {% include "modules/common/address-summary" with model=payment.billingInfo.billingContact %}
                     </div>
                 </dd>
             </dl>
@@ -49,7 +49,6 @@
 
         <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.billingContact }}</h4>
-            <p>{{ labels.phone }}: <strong>{{ model.billingContact.phoneNumbers.home }}</strong></p>
             <p>{{ labels.email }}: <strong>{{ model.billingContact.email }}</strong></p>
         </div>
     </div>

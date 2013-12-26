@@ -224,7 +224,11 @@
                 paymentType: {
                     required: true,
                     msg: Hypr.getLabel('paymentTypeMissing')
-                }
+                },
+                "billingContact.email": {
+                    required: true,
+                    msg: Hypr.getLabel('emailMissing')
+                } 
             },
             dataTypes: {
                 "isSameBillingShippingAddress": Backbone.MozuModel.DataTypes.Boolean,
@@ -262,15 +266,15 @@
                     customer = order.get('customer'),
                     credits = customer && customer.get('credits'),
                     usedCredits = this.activeStoreCredits(),
-                    availableCredits = credits && (!usedCredits ? credits : _.compact(_.map(credits, function (credit) {
+                    availableCredits = credits && _.compact(_.map(credits, function (credit) {
                         credit = _.clone(credit);
-                        _.each(usedCredits, function (uc) {
+                        if (usedCredits) _.each(usedCredits, function (uc) {
                             if (uc.billingInfo.storeCreditCode === credit.code) {
                                 credit.currentBalance -= uc.amountRequested;
                             }
                         });
-                        return credit.currentBalance > 0 && credit;
-                    })));
+                        return credit.currentBalance > 0 ? credit : false;
+                    }));
                 return availableCredits && availableCredits.length > 0 && availableCredits;
             },
             applyingCredit: function () {
@@ -284,6 +288,7 @@
             },
             beginApplyCredit: function() {
                 var selectedCredit = this.get('selectedCredit');
+                this._oldPaymentType = this.get('paymentType');
                 if (selectedCredit) {
                     var applyingCredit = _.findWhere(this.availableStoreCredits(), { code: selectedCredit });
                     if (applyingCredit) {
@@ -295,6 +300,7 @@
             closeApplyCredit: function() {
                 delete this._applyingCredit;
                 this.unset('selectedCredit');
+                this.set('paymentType', this._oldPaymentType);
             },
             finishApplyCredit: function() {
                 var self = this,
@@ -302,6 +308,7 @@
                     apiOrder;
                 var currentPayment = order.apiModel.getCurrentPayment();
                 if (currentPayment) {
+                    // must first void the current payment because it will no longer be the right price
                     return order.apiVoidPayment(currentPayment.id).then(this.addStoreCredit);
                 } else {
                     return this.addStoreCredit();
@@ -319,41 +326,58 @@
                 });
             },
             removeCredit: function(id) {
+                var order = this.getOrder(),
+                    currentPayment = order.apiModel.getCurrentPayment();
+                // must also, asynchronously, void the current payment because it will no longer be the right price
+                if (currentPayment) order.apiVoidPayment(currentPayment.id);
                 return this.getOrder().apiVoidPayment(id);
+            },
+            syncPaymentMethod: function(me, newId) {
+                if (!newId || newId === "new") {
+                    me.get('billingContact').clear();
+                    me.get('card').clear();
+                    me.get('check').clear();
+                    me.unset('paymentType');
+                } else {
+                    var customer = me.getOrder().get('customer'),
+                        card = customer.get('cards').get(newId),
+                        cardBillingContact = card && customer.get('contacts').get(card.get('contactId'));
+                    if (card) {
+                        me.get('billingContact').set(cardBillingContact.toJSON());
+                        me.get('card').set(card.toJSON());
+                        me.set('paymentType', 'CreditCard');
+                    }
+                }
+            },
+            getPaymentTypeFromCurrentPayment: function(me) {
+                var billingInfoPaymentType = me.get('paymentType'),
+                        currentPayment = me.getOrder().apiModel.getCurrentPayment(),
+                        currentPaymentType = currentPayment && currentPayment.billingInfo.paymentType;
+                if (currentPaymentType && currentPaymentType !== billingInfoPaymentType) {
+                    me.set('paymentType', currentPaymentType);
+                }
+            },
+            edit: function() {
+                this.getPaymentTypeFromCurrentPayment(this);
+                CheckoutStep.prototype.edit.apply(this, arguments);
             },
             initialize: function() {
                 var me = this;
-                this.on('change:paymentType', function (model, newPaymentType) {
-                    me.selectPaymentType(newPaymentType);
-                });
-                this.selectPaymentType(this.get('paymentType'));
+                _.defer(this.getPaymentTypeFromCurrentPayment, this);
+                this.on('change:paymentType', this.selectPaymentType);
+                this.selectPaymentType(this, this.get('paymentType'));
                 this.on('change:isSameBillingShippingAddress', function (model, wellIsIt) {
                     if (wellIsIt) {
                         this.get('billingContact').set(this.parent.get('fulfillmentInfo').get('fulfillmentContact').toJSON(), { silent: true });
                     }
                 });
-                this.on('change:savedPaymentMethodId', function (me, newId) {
-                    if (!newId || newId === "new") {
-                        me.get('billingContact').clear();
-                        me.get('card').clear();
-                        me.get('check').clear();
-                        me.unset('paymentType');
-                    } else {
-                        var customer = me.getOrder().get('customer'),
-                            card = customer.get('cards').get(newId),
-                            cardBillingContact = card && customer.get('contacts').get(card.get('contactId'));
-                        if (card) {
-                            me.get('billingContact').set(cardBillingContact.toJSON());
-                            me.get('card').set(card.toJSON());
-                            me.set('paymentType', 'CreditCard');
-                        }
-                    }
-                });
+                this.on('change:savedPaymentMethodId', this.syncPaymentMethod);
+                this.syncPaymentMethod(this, this.get('savedPaymentMethodId'));
                 _.bindAll(this, 'applyPayment', 'addStoreCredit');
             },
-            selectPaymentType: function(newPaymentType) {
-                this.get('check').selected = newPaymentType == "Check";
-                this.get('card').selected = newPaymentType == "CreditCard";
+            selectPaymentType: function(me, newPaymentType) {
+                me.get('check').selected = newPaymentType == "Check";
+                me.get('card').selected = newPaymentType == "CreditCard";
             },
             calculateStepStatus: function() {
                 return this.stepStatus(!!this.parent.get('fulfillmentInfo').get('shippingMethodCode') ? (
