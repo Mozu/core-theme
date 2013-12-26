@@ -74,6 +74,14 @@
         clearFacet: function (e) {
             this.model.get("facets").findWhere({ field: $(e.currentTarget).data('mz-facet') }).empty();
         },
+        drillDown: function(e) {
+            var $target = $(e.currentTarget),
+                id = $target.data('mz-hierarchy-id'),
+                field = $target.data('mz-facet');
+            this.model.setHierarchy(field, id);
+            this.model.updateFacets();
+            e.preventDefault();
+        },
         setFacetValue: function (e) {
             var $box = $(e.currentTarget);
             this.model.setFacetValue($box.data('mz-facet'), $box.data('mz-facet-value'), $box.is(':checked'));
