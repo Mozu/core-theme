@@ -20,7 +20,7 @@ Ext.define('Taco.view.order.widget.UnpickedupItems', {
     initComponent: function(eOpts) {
         var me = this,
             data =[],
-            unpackagedItems = me.record.get("unpackagedItems");        
+            unpickedupItems = me.record.get("unpickedupItems");        
         
 
 
@@ -30,8 +30,8 @@ Ext.define('Taco.view.order.widget.UnpickedupItems', {
         me.header = me.getHeaderTemplate();
 
         // data to be loaded into the store
-        if (unpackagedItems) {
-            data = unpackagedItems
+        if (unpickedupItems) {
+            data = unpickedupItems
         }
 
         

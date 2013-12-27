@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.Core.Api.Contracts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
@@ -32,6 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Map_DcPaymentInteraction_to_PaymentInteraction();
             Map_DcPackage_to_OrderPackage();
             Map_DcPackageItem_to_OrderPackageItem();
+            Map_DcPickupItem_to_OrderPickupItem();
             Map_DcPickup_to_OrderPickup();
             Map_DcAdjustment_to_OrderAdjustment();
             Map_DcAppliedDiscount_to_OrderDiscount();
@@ -40,6 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Map_OrderPackageItem_to_DcPackageItem();
             Map_OrderItem_to_DcOrderItem();
             Map_OrderItemDiscount_to_DcAppliedProductDiscount();
+            Map_OrderPickupItem_to_DcPickupItem();
             Map_ShippingDiscount_to_DcShippingDiscount();
             Map_Adjustment_to_DcAdjustment();
             Map_OrderDiscount_to_DcAppliedDiscount();
@@ -141,12 +144,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                          let remainingQuantity = orderItem.Quantity - packagedQuantity
                          where orderItem.BundledProducts == null || orderItem.BundledProducts.Count == 0
                          where remainingQuantity > 0
+                         where orderItem.FulfillmentMethod == FulfillmentMethodConst.SHIP
                          select new OrderPackageItem
                          {
                              ProductCode = orderItem.ProductCode,
                              ProductName = orderItem.ProductName,
                              Weight = orderItem.UnitWeight * remainingQuantity,
-                             Quantity = remainingQuantity
+                             Quantity = remainingQuantity,
+                             FulfillmentMethod = orderItem.FulfillmentMethod,
+                             FulfillmentLocationCode = orderItem.FulfillmentLocationCode
                          }).ToList();
                     var unpackagedBundleItems = 
                         from parentItem in order.Items
@@ -156,12 +162,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         let bundleQuantity = bundleItem.Quantity * parentItem.Quantity
                         let remainingQuantity = bundleQuantity - packagedQuantity
                         where remainingQuantity > 0
+                        where parentItem.FulfillmentMethod == FulfillmentMethodConst.SHIP
                         select new OrderPackageItem
                         {
                             ProductCode = bundleItem.ProductCode,
                             ProductName = bundleItem.Name,
                             Weight = bundleItem.UnitWeight * remainingQuantity,
-                            Quantity = remainingQuantity
+                            Quantity = remainingQuantity,
+                            FulfillmentMethod = parentItem.FulfillmentMethod,
+                            FulfillmentLocationCode = parentItem.FulfillmentLocationCode
                         };
                     // merge unpackaged bundle items into UnpackagedItems
                     foreach (var unpackagedBundleItem in unpackagedBundleItems)
@@ -175,6 +184,56 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         else
                         {
                             order.UnpackagedItems.Add(unpackagedBundleItem);
+                        }
+                    }
+                })
+                .AfterMap((dc, order) =>
+                {
+                    // fill out unpickedupItems list
+                    order.UnpickedupItems =
+                        (from orderItem in order.Items
+                         let pickupItems = order.Pickups.SelectMany(p => p.Items).Where(i => i.ProductCode  == orderItem.ProductCode )
+                         let pickupQuantity = pickupItems.Sum(i => i.Quantity)
+                         let remainingQuantity = orderItem.Quantity - pickupQuantity
+                         where orderItem.BundledProducts == null || orderItem.BundledProducts.Count == 0
+                         where remainingQuantity > 0
+                         where orderItem.FulfillmentMethod == FulfillmentMethodConst.PICKUP
+                         select new OrderPickupItem
+                         {
+                             ProductCode = orderItem.ProductCode,
+                             ProductName = orderItem.ProductName,
+                             Quantity = remainingQuantity,
+                             FulfillmentMethod = orderItem.FulfillmentMethod,
+                             FulfillmentLocationCode = orderItem.FulfillmentLocationCode
+                         }).ToList();
+                    var unpickedupBundleItems = 
+                        from parentItem in order.Items
+                        from bundleItem in parentItem.BundledProducts
+                        let pickedupItems = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == bundleItem.ProductCode)
+                        let pickupQuantity = pickedupItems.Sum(i => i.Quantity)
+                        let bundleQuantity = bundleItem.Quantity * parentItem.Quantity
+                        let remainingQuantity = bundleQuantity - pickupQuantity
+                        where remainingQuantity > 0
+                        where parentItem.FulfillmentMethod == FulfillmentMethodConst.PICKUP
+                        select new OrderPickupItem
+                        {
+                            ProductCode = bundleItem.ProductCode,
+                            ProductName = bundleItem.Name,
+                            Quantity = remainingQuantity,
+                            FulfillmentMethod = parentItem.FulfillmentMethod,
+                            FulfillmentLocationCode = parentItem.FulfillmentLocationCode
+                        };
+                    // merge unpackaged bundle items into UnpackagedItems
+                    foreach (var unpickedupBundleItem in unpickedupBundleItems)
+                    {
+                        var existingItem = order.UnpickedupItems.FirstOrDefault(upi => upi.ProductCode == unpickedupBundleItem.ProductCode);
+                        if (existingItem != null)
+                        {
+                            existingItem.Quantity += unpickedupBundleItem.Quantity;
+                        }
+                        else
+                        {
+                            order.UnpickedupItems.Add(unpickedupBundleItem);
                         }
                     }
                 })
