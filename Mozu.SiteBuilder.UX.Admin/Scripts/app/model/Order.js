@@ -1171,7 +1171,7 @@ Ext.define('Taco.model.Order', {
      */
     deletePickup: function (config) {
         Ext.apply(config, {
-            url: '/admin/app/order/shipping/pickup/delete',
+            url: '/admin/app/order/fulfillment/pickup/delete',
             method: "POST"
         });
 
@@ -1211,7 +1211,7 @@ Ext.define('Taco.model.Order', {
      */
     movePickupItems: function (config) {
         Ext.apply(config, {
-            url: '/admin/app/order/shipping/pickup/moveitems',
+            url: '/admin/app/order/fulfillment/pickup/moveitems',
             method: "POST"
         });
 
@@ -1246,7 +1246,7 @@ Ext.define('Taco.model.Order', {
      */
     markPickupFulfilled: function (config) {
         Ext.apply(config, {
-            url: '/admin/app/order/shipping/pickup/markfulfilled',
+            url: '/admin/app/order/fulfillment/pickup/markfulfilled',
             method: "POST"
         });
 

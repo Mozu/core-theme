@@ -302,7 +302,7 @@ Ext.define('Taco.view.order.widget.PackagePickup', {
         config = {
             jsonData: {
                 orderId : this.record.get("id"),
-                packageIds: [data.id]
+                pickupIds: [data.id]
             },
             success: function (response) {
                 // success handling here
