@@ -12,5 +12,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         [DataMember(Name = "productCode")]
         public string ProductCode { get; set; }
+
+        [DataMember(Name = "fulfillmentMethod")]
+        public string FulfillmentMethod { get; set; }
+
+        [DataMember(Name = "fulfillmentLocationCode")]
+        public string FulfillmentLocationCode { get; set; }
     }
 }

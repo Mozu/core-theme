@@ -481,22 +481,6 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
     // returns an array of field configs for the store of this grid
     getFields: function() {
         return [
-            
-            
-            /*
-            orderItemId: "fe629abaecb64743b82c424279f50aba"
-productCode: "uuu"
-productName: "t-shirt"
-quantity: 2
-weight: 2
-            */
-
-            //{
-            //    "name": "orderItemId",
-            //    "type": "string",
-            //    "useNull": true
-            //},
-            
             {
                 "name": "productCode",
                 "type": "string",
@@ -530,56 +514,6 @@ weight: 2
                 "type": "string",
                 "useNull": true
             }
-
-
-            /*
-            ,
-            
-            
-            
-
-            {
-                "name": "unitPrice",
-                "type": "auto",
-                "defaultValue": []
-            },
-            
-            {
-                "name": "discount",
-                "type": "auto",
-                "useNull": true
-            },
-            {
-                "name": "subtotal",
-                "type": "float",
-                "useNull": true
-            },
-            {
-                "name": "total",
-                "type": "float",
-                "useNull": true
-            },
-       
-            
-            
-
-            // not currently in json
-            {
-                "name": "options", //<== get list of options or extras
-                "type": "auto",
-                "defaultValue": []
-            },
-
-            // added this so the ui can modify its behavior when products are deleted
-            {
-                "name": "isDeleted",
-                "type": "auto",
-                "defaultValue": false
-            }
-        
-            */
-
-
         ];
     },
     
@@ -606,13 +540,13 @@ weight: 2
             callConfig;
 
         var orderId = me.record.get("id");
-        var sourcePackageId = config.sourcePackageId;
-        var destinationPackageId = config.destinationPackageId;
+        var sourcePickupId = config.sourcePickupId;
+        var destinationPickupId = config.destinationPickupId;
         var items = config.items;
 
 
         // determine if this is a create
-        if (destinationPackageId == -1) {
+        if (destinationPickupId == -1) {
             isCreate = true;
         }
         
@@ -620,8 +554,8 @@ weight: 2
             jsonData: {
                 orderId: orderId,
                 items: items,
-                sourcePackageId: sourcePackageId,
-                destinationPackageId: destinationPackageId
+                sourcePickupId: sourcePickupId,
+                destinationPickupId: destinationPickupId
             },
             
             success: function (response) {
@@ -647,9 +581,9 @@ weight: 2
         Taco.app.viewPort.setLoading(true);
         // call the model method to persist the change
         if (isCreate) {
-            this.record.createPackage(callConfig);
+            this.record.createPickup(callConfig);
         } else {
-            this.record.movePackageItems(callConfig);
+            this.record.movePickupItems(callConfig);
         }
     },
     // extract the json package data from the current grid selection and return it 
@@ -669,13 +603,13 @@ weight: 2
         
         if (item) {
             var items = me.getSelectedDataItems();
-            var sourcePackageId = (me.packageData) ? me.packageData.id : null;
-            var destinationPackageId = (item.moveTargetId) ? item.moveTargetId : null;
+            var sourcePickupId = (me.packageData) ? me.packageData.id : null;
+            var destinationPickupId = (item.moveTargetId) ? item.moveTargetId : null;
             
             // execute the call
             me.executeMoveItems({
-                sourcePackageId: sourcePackageId,
-                destinationPackageId: destinationPackageId,
+                sourcePickupId: sourcePickupId,
+                destinationPickupId: destinationPickupId,
                 items: items
             });
         }

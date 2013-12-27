@@ -110,6 +110,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name="unpackagedItems")]
         public List<OrderPackageItem> UnpackagedItems { get; set; }
 
+        [DataMember(Name = "unpickedupItems")]
+        public List<OrderPickupItem> UnpickedupItems { get; set; }
+
         [DataMember(Name = "availableActions")]
         public List<string> AvailableActions { get; set; }
         #endregion

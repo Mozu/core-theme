@@ -21,8 +21,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // optional. means we are moving things out of one package into a new one.
             public string SourcePickupId { get; set; }
         }
-        [HttpPostRoute(UriTemplate="shipping/pickup/create")]
-        public async Task<Response<OrderPickup>> CreatePickup(CreatePickupArgs args)
+        [HttpPostRoute(UriTemplate="fulfillment/pickup/create")]
+        public async Task<Response<List<OrderPickup>>> CreatePickup(CreatePickupArgs args)
         {
             // if there is a source package, remove the item from it first.
             if (!String.IsNullOrEmpty(args.SourcePickupId))
@@ -46,12 +46,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     await _orderWebApiClient.UpdatePickup(args.OrderId, args.SourcePickupId, source);
             }
 
-            var dc = new DCs.Pickup {
-                Items = Mapper.Map<List<DCs.PickupItem>>(args.Items)
-            };
-            var ret = (await _orderWebApiClient.CreatePickup(args.OrderId, dc)).ReadAsSync();
+            var createTasks = args.Items.GroupBy(i => i.FulfillmentLocationCode).Select(g => {
+                var dc = new DCs.Pickup {
+                    Items = g.ToList().Map<List<DCs.PickupItem>>(),
+                    FulfillmentLocationCode = g.Key
+                };
+                return _orderWebApiClient.CreatePickup(args.OrderId, dc);
+            }).ToList();
+            await Task.WhenAll(createTasks);
 
-            return Single2( ret.Map<OrderPickup>() );
+            return List2( createTasks.Select(t => t.Result.ReadAsSync()).Map<List<OrderPickup>>() );
         }
 
         public class DeletePickupArgs
@@ -59,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string OrderId { get; set; }
             public List<string> PackageIds { get; set; }
         }
-        [HttpPostRoute(UriTemplate = "shipping/pickup/delete")]
+        [HttpPostRoute(UriTemplate = "fulfillment/pickup/delete")]
         public async Task<Response<OrderPickup>> DeletePickup(DeletePackageArgs args)
         {
             var tasks = args.PackageIds.Select(pid => _orderWebApiClient.DeletePackage(args.OrderId, pid));

@@ -309,9 +309,6 @@ Ext.define('Taco.model.Order', {
         }, {
             "name": "unpackagedItems",
             "type": "array",
-            convert: function (v, record) {
-                return v;
-            },
             "defaultValue": []
         }, {
             "name": "packages",
@@ -323,6 +320,14 @@ Ext.define('Taco.model.Order', {
                 }
                 return v;
             }
+        }, {
+            "name": "unpickedupItems",
+            "type": "array",
+            "defaultValue": []
+        }, 
+        {
+            "name": "pickups",
+            "type": "array"
         },
         
         // helper field. ui iterates on unshipped packages in multiple places
@@ -406,11 +411,11 @@ Ext.define('Taco.model.Order', {
         
         // helper field. ui iterates on unshipped packages in multiple places
         {
-            "name": "unPickedupPackages",
+            "name": "pendingPickups",
             "type": "array",
             persist: false,
             convert: function (v, record) {
-                var packages = record.get("packages");
+                var packages = record.get("pickups");
                 var retVal = [];
 
                 for (var i = 0; i < packages.length; i++) {
@@ -427,7 +432,7 @@ Ext.define('Taco.model.Order', {
             "type": "array",
             persist: false,
             convert: function (v, record) {
-                var packages = record.get("packages");
+                var packages = record.get("pickups");
                 var retVal = [];
 
                 for (var i = 0; i < packages.length; i++) {
@@ -1130,7 +1135,7 @@ Ext.define('Taco.model.Order', {
      */
     createPickup: function (config) {
         Ext.apply(config, {
-            url: '/admin/app/order/shipping/pickup/create',
+            url: '/admin/app/order/fulfillment/pickup/create',
             method: "POST"
         });
 
