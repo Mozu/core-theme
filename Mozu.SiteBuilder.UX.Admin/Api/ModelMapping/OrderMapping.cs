@@ -457,7 +457,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
                 .ForMember(x => x.Status, op => op.MapFrom(dc => dc.Status))
                 .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
+                .ForMember(x => x.FulfillmentLocationCode, op => op.MapFrom(dc => dc.FulfillmentLocationCode))
                 .ForMember(x => x.OrderId, op => op.Ignore())
+                .AfterMap((dc, x) => {
+                    // set FulfillmentLocationCode on all items.
+                    x.Items.ForEach(pickupItem => pickupItem.FulfillmentLocationCode = x.FulfillmentLocationCode);
+                })
                 ;
         }
 
@@ -512,6 +517,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             Mapper.CreateMap<OrderPickup, ShippingDC.Pickup>()
                 .ForMember(dc => dc.Id, op => op.MapFrom(x => x.Id))
+                .ForMember(dc => dc.FulfillmentLocationCode, op => op.MapFrom(x => x.FulfillmentLocationCode))
                 .ForMember(dc => dc.FulfillmentDate, op => op.MapFrom(x => x.FulfillmentDate))
                 .ForMember(dc => dc.AvailableActions, op => op.MapFrom(x => x.AvailableActions))
                 .ForMember(dc => dc.Status, op => op.MapFrom(x => x.Status))

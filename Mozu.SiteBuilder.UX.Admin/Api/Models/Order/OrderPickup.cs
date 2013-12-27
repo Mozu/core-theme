@@ -36,6 +36,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name = "fulfillmentDate")]
         public DateTime? FulfillmentDate { get; set; }
 
+        [DataMember(Name = "fulfillmentLocationCode")]
+        public string FulfillmentLocationCode { get; set; }
+
         [DataMember(Name = "availableActions")]
         public List<string> AvailableActions { get; set; }
     }
