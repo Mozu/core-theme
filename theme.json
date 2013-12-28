@@ -1,0 +1,629 @@
+{
+    /* About: Basic Information about the theme. */
+    "about": {
+        "name": "Core4",
+        "author": "Volusion",
+        "extends": null,
+        "isDesktop": true,
+        "isMobile": false,
+        "defaultLanguage": "en-US"
+    },
+
+    /* Settings: User-configurable options for your theme. */
+    "settings": {
+
+        "internal-themeAddons": [],
+
+        /* Common settings used in templates */
+        "defaultPageSize": 15,
+        "pageSizeOptions": [15, 25, 50, 100],
+        "maxProductSummaryWords": 40,
+        "allowWishlist": false,
+
+        /* Common appearance settings used in the stylesheet */
+        "font": "Source Sans Pro",
+        "fallbackFontFamily": "sans-serif",
+        "fontSize": "14px",
+        "gutterWidth": "25px",
+        "textColor": "#444444",
+        "bodyBackgroundColor": "#FFFFFF",
+        "bannerImageEnabled": false,
+        "bannerImage": "/resources/images/banner.jpg",
+        "bannerImageRepeat": "repeat-x",
+        "itemListingThumbSize": 80,
+
+        /* Settings specific to category page display */
+        "showCategoryFacets": true,
+
+        /* Settings specific to product listing modules */
+        "listProductShortDesc": true,
+        "listProductCode": true,
+        "useAnimatedProductLists": true,
+        "listProductThumbSize": 160,
+
+        /* Settings specific to product pages */
+        "showProductDetailShortDesc": true,
+        "showProductDetailProperties": true,
+        "showProductDetailMeasurements": true,
+        "productImagesContainerWidth": 350,
+        "maxProductImageThumbnailSize": 50,
+
+        /* Settings specific to the cart */
+        "showCartItemOptions": true,
+        "showCartItemImage": true,
+        "showCartItemDimensions": true,
+        "showCartItemWeight": true,
+
+        /* Settings specific to checkout pages */
+        "showCheckoutCommentsField": true,
+        "requireCheckoutAgreeToTerms": true,
+    },
+    /* Page Types: Users will be allowed to create documents of this type in the CMS */
+    "emailTemplates": [
+	  {
+		"id": "order.shipped",
+		"title": "Order Shipped",
+		"template": "email/order-status",
+		"properties": {
+		  "subject": "You're Order Has Shipped"
+		}
+	  },
+	  {
+		"id": "order.changed",
+		"title": "Order Status",
+		"template": "email/order-status",
+		"properties": {
+		  "subject": "Order Status"
+		}
+	  },
+	  {
+		"id": "return.changed",
+		"title": "Return Status",
+		"template": "email/order-status",
+		"properties": {
+		  "subject": "Order Status #{model.orderNumber}"
+		}
+	  },
+	  {
+		"id": "user.created",
+		"title": "New Login Created",
+		"template": "email/new-user",
+		"properties": {
+		  "subject": "Welcom"
+		}
+	  },
+	  {
+		"id": "user.passwordreset",
+		"title": "Password Reset",
+		"template": "email/password-reset",
+		"properties": {
+		  "subject": "Order Status #{model.orderNumber}"
+		}
+	  },
+	  {
+		"id": "product.instock",
+		"title": "Back in Stock",
+		"template": "email/product-instock",
+		"properties": {
+		  "subject": "Back in Stock"
+		}
+	  }
+	],
+
+    /* Page Types: Users will be allowed to create documents of this type in the CMS */
+    "pageTypes": [
+
+        /* user-creatable webpages */
+        {
+            "id": "about-us",
+            "title": "About Us",
+            "entityType": "webpage",
+            "documentType": "web_page",
+            "template": "about-us",
+            "userCreatable": true,
+            /* list of zone widgetes attached to this type of page by default */
+            "zones":[
+			  {
+				"Id": "body",
+				"Rows": [
+				  {
+					"Columns": [
+					  {
+						"Span": 12,
+						"Widgets": [
+						  {
+							"definitionId": "cms-image",
+							"config": {
+							  "height": 206,
+							  "imageHeight": "400",
+							  "imageSource": "externalUrl",
+							  "imageExternalUrl": "http://www.fabifirm.com/wp-content/uploads/2013/05/about-us-banner.jpg",
+							  "borderWidth": "1px",
+							  "borderStyle": "Solid",
+							  "borderColor": "rgba(0,0,0,1)",
+							  "imageSize": "Stretch",
+							  "linkSource": "External URL"
+							}
+						  },
+						  {
+							"definitionId": "content",
+							"isRichText": true,
+							"config": {
+							  "body": "<h2>Insert Title</h2><p>Insert Content</p>"
+							}
+						  }
+						],
+						"Rows": null
+					  }
+					]
+				  }
+				]
+			  }
+			]
+            
+        }, {
+            "id": "site_page",
+            "title": "Default Site Template",
+            "entityType": "siteTemplate",
+            "template": "page"
+        }, {
+            "id": "blank-page",
+            "title": "Blank Page",
+            "entityType": "webpage",
+            "documentType": "web_page",
+            "template": "blank-page",
+            "userCreatable": true
+        }, {
+            "id": "landing",
+            "title": "Landing Page",
+            "entityType": "webpage",
+            "documentType": "web_page",
+            "userCreatable": true,
+            "template": "blank-page"
+        }, {
+            "id": "home",
+            "title": "Home Page",
+            "entityType": "webpage",
+            "documentType": "web_page",
+            "userCreatable": true,
+            "template": "home"
+        }, {
+            "id": "location",
+            "title": "Store Locator",
+            "entityType": "webpage",
+            "documentType": "web_page",
+            "template": "location",
+            "userCreatable": true
+        },
+        /* catalog types */
+        {
+            "id": "category",
+            "title": "Category",
+            "entityType": "category",
+            "userCreatable": false,
+            "template": "category"
+        }, {
+            "id": "parent-category",
+            "title": "ParentCategory",
+            "entityType": "category",
+            "userCreatable": false,
+            "template": "parent-category"
+        }, {
+            "id": "product",
+            "title": "Product",
+            "entityType": "product",
+            "userCreatable": false,
+            "template": "product"
+        }, {
+            "id": "no-search-results",
+            "title": "Search Results",
+            "entityType": "searchresult",
+            "template": "search-results",
+            "userCreatable": false
+        }, {
+            "id": "no-results",
+            "title": "Empty Search Results",
+            "entityType": "nosearchresult",
+            "template": "no-search-results",
+            "userCreatable": false
+        },
+        /* system pages */
+        {
+            "id": "404",
+            "title": "404 Not Found",
+            "entityType": "webpage",
+            "documentType": "web_page",
+            "template": "404",
+            "userCreatable": false
+        }, {
+            "id": "cart",
+            "title": "Cart",
+            "entityType": "cart",
+            "template": "cart",
+            "userCreatable": false
+        }, {
+            "id": "checkout",
+            "title": "Checkout",
+            "entityType": "order",
+            "template": "checkout",
+            "userCreatable": false
+        }, {
+            "id": "confirmation",
+            "title": "Confirmation",
+            "entityType": "order",
+            "template": "confirmation",
+            "userCreatable": false
+        }, {
+            "id": "my_account",
+            "title": "My Account",
+            "entityType": "customer",
+            "template": "my-account",
+            "userCreatable": false
+        }, {
+            "id": "login",
+            "title": "Login",
+            "entityType": "login",
+            "template": "login",
+            "userCreatable": false
+        }
+    ],
+    /* widgets */
+    "widgets": [{
+        "id": "featured_product",
+        "displayName": "Featured Products",
+        "displayTemplate": "catalog/featuredproducts",
+        "editViewFields": [{
+            "name": "productCodes",
+            "fieldLabel": "products",
+            "xtype": "taco-productfield",
+            "anchor": "100%"
+        }, {
+            "name": "template",
+            "fieldLabel": "Template",
+            "xtype": "combo",
+            "anchor": "100%",
+            "store": [
+                ["modules/product/product-list-tiled", "tiled"],
+                ["modules/product/product-list", "list"],
+                ["modules/product/product-list-carousel", "carousel"]
+            ]
+        }],
+        "defaultConfig": {
+            "template": "modules/product/product-list"
+        },
+        "icon": "/resources/admin/widgets/01_photo_text.png",
+        "validPageTypes":["*"]
+
+    }, {
+        "id": "video",
+        "displayName": "Video",
+        "displayTemplate": "cms/video",
+        "editViewFields": [{
+            "name": "url",
+            "fieldLabel": "Video URL",
+            "anchor": "100%"
+        }],
+        "defaultConfig": {},
+        "icon": "/resources/admin/widgets/08_video.png",
+        "validPageTypes":["*"]
+    }, {
+        "id": "catNav",
+        "displayName": "Category Navigation",
+        "displayTemplate": "misc/category-navigation",
+        "editViewFields": [
+
+            {
+                "fieldLabel": "Main Category",
+				"name": "mainCategory",
+                "xtype": "categorycombobox",
+                "anchor": "100%"
+            }, {
+                "name": "template",
+                "fieldLabel": "Template",
+                "xtype": "combo",
+                "anchor": "100%",
+                "store": [
+                    ["primary", "primary"],
+                    ["secondary", "secondary"],
+                    ["tertiary", "tertiary"]
+                ]
+            },
+			{
+				"xtype": "numberfield",
+                "fieldLabel": "Count",
+				"name": "numberToDisplay",
+                "anchor": "100%"
+            }
+        ],
+        "defaultConfig": {
+            "template": "primary",
+            "mainCategory": "Category",
+            "numberToDisplay": 4
+        },
+        "icon": "/resources/admin/widgets/01_photo_text.png",
+		"validPageTypes":["*"]
+    },{
+        "id": "crosssells",
+        "displayName": "Cross Sells",
+        "displayTemplate": "catalog/related-products",
+        "editViewFields": [{
+                "fieldLabel": "title",
+				"name": "title",
+                "xtype": "textfield",
+                "anchor": "100%"
+            }, {
+                "name": "template",
+                "fieldLabel": "Template",
+                "xtype": "combo",
+                "anchor": "100%",
+                "store": [
+                    ["modules/product/product-list-carousel", "carousel"],
+                    ["modules/product/product-list-tiled", "tiled"],
+                    ["modules/product/product-list", "list"]
+                ]
+            }, {
+                "fieldLabel": "count",
+				"name": "count",
+                "xtype": "spinnerfield",
+                "anchor": "100%"
+            }
+        ],
+        "defaultConfig": {
+            "template": "modules/product/product-list-carousel",
+            "attributeId": "tenant~product-crosssell",
+            "title": "Related Items",
+            "count": "4"
+        },
+        "icon": "/resources/admin/widgets/01_photo_text.png",
+		"validPageTypes":["product","cart"]
+    }, {
+        "id": "upsells",
+        "displayName": "Up Sells",
+        "displayTemplate": "catalog/related-products",
+        "editViewFields": [
+
+            {
+                "fieldLabel": "title",
+				"name": "title",
+                "xtype": "textfield",
+                "anchor": "100%"
+            }, {
+                "name": "template",
+                "fieldLabel": "Template",
+                "xtype": "combo",
+                "anchor": "100%",
+                "store": [
+                    ["modules/product/product-list-carousel", "carousel"],
+                    ["modules/product/product-list-tiled", "tiled"],
+                    ["modules/product/product-list", "list"]
+                ]
+            },
+			{
+                "fieldLabel": "count",
+				"name": "count",
+                "xtype": "spinnerfield",
+                "anchor": "100%"
+            }
+        ],
+        "defaultConfig": {
+            "template": "modules/product/product-list-carousel",
+            "attributeId": "tenant~product-upsell",
+            "title": "Other Items",
+            "count": "4"
+        },
+        "icon": "/resources/admin/widgets/01_photo_text.png",
+		"validPageTypes":["product","cart"]
+    }, {
+        "id": "relatedproducts",
+        "displayName": "Related Products",
+        "displayTemplate": "catalog/related-products",
+        "editViewFields": [
+
+            {
+                "fieldLabel": "title",
+				"name": "title",
+                "xtype": "textfield",
+                "anchor": "100%"
+            }, {
+                "name": "template",
+                "fieldLabel": "Template",
+                "xtype": "combo",
+                "anchor": "100%",
+                "store": [
+                    ["modules/product/product-list-carousel", "carousel"],
+                    ["modules/product/product-list-tiled", "tiled"],
+                    ["modules/product/product-list", "list"]
+                ]
+            },
+			{
+                "fieldLabel": "count",
+				"name": "count",
+                "xtype": "spinnerfield",
+                "anchor": "100%"
+            }
+        ],
+        "defaultConfig": {
+            "template": "modules/product/product-list-carousel",
+            "attributeId": "Tenant~product-related",
+            "title": "Other Items",
+            "count": "4"
+        },
+        "icon": "/resources/admin/widgets/01_photo_text.png",
+		"validPageTypes":["product","cart"]
+    }, 	{
+         "id": "instockrequest",
+         "displayName": "Instock Request",
+         "displayTemplate": "misc/instock-request",
+        "editViewFields":[
+
+			{
+				"fieldLabel":"title",
+				"xtype":"textfield",
+				"anchor":"100%"
+				}
+			
+         ],
+          "defaultConfig": {
+			  "title": "Related Items"
+		},
+         "icon": "/resources/admin/widgets/01_photo_text.png",
+         "validPageTypes":["product"]
+    },  {
+        "id": "content",
+        "displayName": "Content",
+        "displayTemplate": "cms/content",
+        "icon": "/resources/admin/widgets/03_heading_p.png",
+        "defaultConfig": {
+            "body": "<h2>Insert Title</h2><p>Insert Content</p>"
+        },
+        "validPageTypes":["*"]
+    }, {
+        "id": "image",
+        "displayName": "test image",
+        "displayTemplate": "cms/image",
+        "editViewFields": [{
+            "name": "image",
+            "fieldLabel": "image",
+            "xtype": "taco-singleimagefield",
+        }],
+        "icon": "/resources/admin/widgets/00_photo.png",
+        "defaultConfig": {
+            "height": 400
+        },
+        "validPageTypes":["*"],
+        "enabled":false
+    },
+    {
+      "id":"cms-image",
+      "displayName":"image",
+      "displayTemplate" :"cms/image2",
+        "icon": "/resources/admin/widgets/00_photo.png",
+      "editView": "taco-image-widgeteditor",
+        "defaultConfig": {
+            "height": 400,
+             "imageHeight": 400
+        },
+        "validPageTypes":["*"]
+    },
+		
+		{
+        "id": "horizontal_rule",
+        "displayName": "Horizontal Rule",
+        "displayTemplate": "cms/horizontalrule",
+        "icon": "/resources/admin/widgets/04_column_divider.png",
+        "editView": "taco-horizontalrule-widgeteditor",
+        "defaultConfig": {
+            "hrBorderWidth": "1px",
+            "hrBorderColor": "#000",
+            "hrBorderStyle": "solid",
+            "hrMarginTop": "None",
+            "hrMarginBottom": "None"
+        },
+        "validPageTypes":["*"]
+    }, {
+        "id": "html",
+        "displayName": "HTML",
+        "displayTemplate": "cms/content",
+        "icon": "/resources/admin/widgets/07_code.png",
+        "editViewFields": [{
+            xtype: 'textareafield',
+            grow: true,
+            name: 'body',
+            fieldLabel: 'HTML',
+            anchor: '100%',
+            fieldStyle:"resize:both;font-family:Monaco, Menlo, Consolas, 'Droid Sans Mono', Inconsolata, 'Courier New', monospace;height:100%"
+        }],
+        "defaultConfig": {
+            "body": "<h2>Insert Markup</h2>"
+        },
+        "validPageTypes":["*"]
+    }, {
+        "id": "addthis",
+        "displayName": "Add This",
+        "displayTemplate": "social/addthis",
+        "editViewFields": [{
+            "xtype": "fieldcontainer",
+            "fieldLabel": "Style",
+            "defaultType": "radiofield",
+            "defaults": {
+                "flex": 1
+            },
+            "layout": "vbox",
+            "items": [{
+                "boxLabel": "small",
+                "name": "style",
+                "inputValue": "1",
+                "id": "style1"
+            }, {
+                "boxLabel": "medium",
+                "name": "style",
+                "inputValue": "2",
+                "id": "style2"
+            }, {
+                "boxLabel": "large",
+                "name": "style",
+                "inputValue": "3",
+                "id": "style3"
+            }, {
+                "boxLabel": "compact",
+                "name": "style",
+                "inputValue": "4",
+                "id": "style4"
+            }]
+        }, {
+            "xtype": "box",
+            "html": "Register with <a target=\"_blank\" href=\"https://www.addthis.com\">AddThis</a> for a free in-depth analytics reports and better understand your site's social traffic."
+        }, {
+            "xtype": "textfield",
+            "name": "profileId",
+            "fieldLabel": "AddThis<br/> profile ID",
+            "allowBlank": true
+        }],
+        "defaultConfig": {
+            "style": 1
+        },
+        "category": "social",
+        "icon": "/resources/admin/widgets/13_social.png",
+        "validPageTypes":["*"]
+    }, {
+        "id": "facebook_comments",
+        "displayName": "Facebook Comments",
+        "displayTemplate": "social/facebookComments",
+        "icon": "/resources/admin/widgets/13_social.png",
+        "editViewFields": [{
+            "xtype": "slider",
+            "fieldLabel": "Number of posts to display",
+            "labelSeparator": "",
+            "labelAlign": "top",
+            "name": "count",
+            "value": 2,
+            "width": 250,
+            "increment": 1,
+            "minValue": 1,
+            "maxValue": 10
+        }, {
+            "xtype": "fieldcontainer",
+            "fieldLabel": "Color scheme",
+            "labelSeparator": "",
+            "labelAlign": "top",
+            "defaultType": "radiofield",
+            "defaults": {
+                "flex": 1,
+                "name": "theme"
+            },
+            "items": [{
+                "boxLabel": "Light",
+                "inputValue": "light"
+            }, {
+                "boxLabel": "Dark",
+                "inputValue": "dark"
+            }]
+        }],
+        "defaultConfig": {
+            "count": 5,
+            "theme": "light"
+        },
+        "category": "social",
+        "validPageTypes":["*"]
+    }]
+}

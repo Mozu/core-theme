@@ -1,0 +1,18 @@
+﻿{% if model.totalCount %}
+{% if model.totalCount != 1 %}
+{{ labels.pageStatePlural|string_format(model.firstIndex,model.lastIndex,model.totalCount) }}
+{% else %}
+{{ labels.pageStateSingular }}
+{% endif %}
+{% endif %}
+<label class="mz-pagingcontrols-pagesize-label">
+    {{ labels.show }}
+    <select data-mz-value="PageSize" class="mz-pagingcontrols-pagesize-dropdown">
+        {% block page-sizes %}
+        {% for pageSize in themeSettings.pageSizeOptions %}
+        <option {% if model.pageSize == pageSize %}selected="selected"{% endif %} value="{{ pageSize }}">{{ pageSize }}</option>
+        {% endfor %}
+        {% endblock page-sizes %}
+    </select>
+    {{ labels.resultsPerPage }}
+</label>

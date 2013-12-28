@@ -1,0 +1,5 @@
+﻿<a class="mz-pagenumbers-prev{% if not model.hasPreviousPage %} is-disabled{% endif %}" href="#" data-mz-action="previous">{{ labels.previousPage }}</a>
+{% for pageNumber in model.pageNumbers %}
+<a class="mz-pagenumbers-number" href="#" data-mz-action="page" data-mz-page-num="{{ pageNumber }}">{{ pageNumber }}</a>
+{% endfor %}
+<a class="mz-pagenumbers-next{% if not model.hasNextPage %} is-disabled{% endif %}" href="#" data-mz-action="next">{{ labels.nextPage }}</a>

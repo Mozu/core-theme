@@ -1,0 +1,16 @@
+﻿.notice(@textColor, @backgroundColor, @borderColor) {
+    color: @textColor;
+    padding: 2px 5px;
+    background-color: @backgroundColor;
+    border: 1px solid @borderColor;
+}
+
+.is-error {
+    .notice(@errorText, @errorBackground, @errorBorder);
+}
+.is-warning {
+    .notice(@warningText, @warningBackground, @warningBorder);
+}
+.is-success {
+    .notice(@successText, @successBackground, @successBorder);
+}

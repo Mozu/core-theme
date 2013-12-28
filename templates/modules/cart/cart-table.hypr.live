@@ -1,0 +1,104 @@
+﻿<thead>
+  <tr>
+    <th class="mz-carttable-header-product">{{ labels.product }}</th>
+    <th class="mz-carttable-header-price">{{ labels.price }}</th>
+    <th class="mz-carttable-header-qty">{{ labels.qty }}</th>
+    <th class="mz-carttable-header-total">{{ labels.itemTotal }}</th>
+    <th>&nbsp;</th>
+  </tr>
+</thead>
+<tbody class="mz-table-cart-{%if Model.IsEmpty %}isempty{% else %}items{% endif %}">
+  {% if not model.isEmpty %}
+  {% for item in model.items %}
+  <tr class="mz-carttable-item">
+    <td class="mz-carttable-item-product">
+      {% if item.product.imageUrl and themeSettings.showCartItemImage %}
+          <img class="mz-carttable-item-image" src="{{ item.product.imageUrl }}?max=80" />
+      {% endif %}
+      <div class="mz-carttable-item-info-wrap{% if not item.product.imageUrl %} mz-no-image{% endif %}">
+        <a class="mz-carttable-item-title" href="{{item.product.url}}">{{ item.product.name }}</a>
+        {% if item.product.options and themeSettings.showCartItemOptions %}
+        <dl class="mz-propertylist">
+          {% for option in item.product.options %}
+          <dt>{{ option.name }}</dt>&nbsp;
+          <dd>{{ option.value }}</dd>
+          {% endfor %}
+        </dl>
+        {% endif %}
+        {% if item.product.productUsage == 'Bundle' %}
+        <dl class="mz-propertylist">
+          {% for bundledProduct in item.product.bundledProducts %}
+          <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
+          <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
+          {% endfor %}
+        </dl>
+        {% endif %}
+        <span class="mz-carttable-item-code">
+          {{ labels.productCode }}: <em>{{ item.product.productCode }}</em>
+        </span>
+      </div>
+    </td>
+    <td class="mz-carttable-item-price">
+      {% if item.priceIsModified %}
+      <span class="mz-carttable-price is-crossedout">{{ item.unitPrice.baseAmount|currency }}</span>
+      {% endif %}
+      <span class="mz-carttable-price{% if item.priceIsModified %} is-saleprice{% endif %}">{{ item.unitPrice.discountedAmount|currency }}</span>
+    </td>
+    <td class="mz-carttable-item-qty">
+      <input class="mz-carttable-qty-field" type="number" min="1" {% if model.isLoading %}disabled="disabled"{% endif %} data-mz-cart-item="{{ item.id }}" data-mz-value="quantity" value="{{ item.quantity }}" />
+    </td>
+    <td class="mz-carttable-item-total">
+      <span class="mz-carttable-rowtotal">{{ item.total|currency }}</span>
+    </td>
+    <td class="mz-carttable-item-remove">
+      <a href="javascript:;" data-mz-action="removeItem" data-mz-cart-item="{{ item.id }}" class="mz-icon mz-icon-close">{{ labels.remove }}</a>
+    </td>
+  </tr>
+{% endfor %}
+{% else %}
+  <tr class="mz-carttable-noitems">
+    <td colspan="5">
+        {{ labels.cartEmpty }}
+    </td>
+  </tr>
+  {% endif %}
+</tbody>
+<tfoot>
+  <tr class="mz-carttable-shipping-row">
+    <td colspan="4">
+      <em class="mz-auxiliary-text">{{ labels.taxAtCheckout }}</em>
+    </td>
+    <td></td>
+  </tr>
+
+  {% for discount in model.orderDiscounts %}
+    {% if not discount.excluded %}
+  <tr class="mz-carttable-total-row">
+    <td class="mz-carttable-total-label" colspan="3">
+        {{ discount.discount.name }}:
+    </td>
+    <td class="mz-carttable-total-wrap">
+      <span class="mz-carttable-rowtotal">- {{ discount.impact|currency }}</span>
+    </td>
+    <td></td>
+  </tr>
+    {% endif %}
+  {% endfor %}
+
+
+  <tr class="mz-carttable-total-row">
+    <td class="mz-carttable-total-wrap" colspan="4">
+      {{ labels.orderTotal }}:
+        <span id="mz-carttable-total" class="mz-carttable-total">
+          <strong>{{ model.discountedTotal|currency }}</strong>
+        </span>
+    </td>
+    <td></td>
+  </tr>
+  <tr class="mz-carttable-checkout-row">
+    <td colspan="4">
+      <button id="cart-checkout" class="mz-button mz-button-large"  {% if model.isEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">{{ labels.proceedToCheckout }}</button>
+    </td>
+    <td></td>
+  </tr>
+</tfoot>

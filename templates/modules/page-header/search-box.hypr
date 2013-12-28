@@ -1,0 +1,10 @@
+﻿<form id="searchbox" class="mz-searchbox" action="/search">
+	<input placeholder="{{ labels.search }}" type="search" class="mz-searchbox-field"  value="{{pageContext.search.query}}" name="query" />
+	<button class="mz-searchbox-button" type="submit">{{ labels.search }}</button>
+	<select class="mz-searchbox-categories" name="facetValueFilter">
+		<option value="">{{ labels.all }}</option>
+    {% for cat in navigation.rootCategories %}
+    <option value="categoryId:{{cat.originalId}}" {% if cat.originalId == pageContext.categoryId  %}selected="selected"{%endif%}>{{cat.Name}}</option>
+		{% endfor %}
+	</select>
+</form>

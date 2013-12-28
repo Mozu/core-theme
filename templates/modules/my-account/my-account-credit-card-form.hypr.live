@@ -1,0 +1,25 @@
+﻿{% extends "modules/common/credit-card-form" %}
+{% block credit-card-form %}
+    {% set cardcontext="editingCard." %}
+    <li class="mz-accountpaymentmethods-method mz-accountpaymentmethods-form">
+    <div class="mz-l-formfieldgroup mz-creditcardform">
+    {% parent %}
+    {% if model.hasSavedContacts %}
+    <div class="mz-l-formfieldgroup-row mz-creditcard-billingaddresses">
+        <div class="mz-l-formfieldgroup-cell">
+            <label>{{ labels.selectBillingAddress }} <span class="is-required">*</span></label>
+        </div>
+        <div class="mz-l-formfieldgroup-cell">
+            {% include "modules/my-account/my-account-contact-selector" %}
+        </div>
+    </div>
+    {% else %}
+        {% include "modules/common/address-form" with addresscontext="editingContact." model=editingContact %}
+    {% endif %}
+    </div>
+    <div class="mz-creditcard-actions">
+        <button class="mz-button mz-creditcard-save" data-mz-action="finishEditCard">{{ labels.save }}</button>
+        <button class="mz-button mz-creditcard-cancel" data-mz-action="cancelEditCard">{{ labels.cancel }}</button>
+    </div>
+    </li>
+{% endblock credit-card-form %}

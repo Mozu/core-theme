@@ -1,0 +1,11 @@
+﻿{% extends "page" %}
+
+{% block body-tag-classes %} mz-notfoundpage {% endblock body-tag-classes %}
+
+{% block body-content %}
+<div class="mz-l-container">
+    <h1 class="mz-pagetitle">{{ labels.pageNotFound }}</h1>
+    {% dropzone "notfound" "template" %}
+</div>
+{% endblock body-content %} 
+

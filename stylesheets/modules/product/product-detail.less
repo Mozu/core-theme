@@ -1,0 +1,38 @@
+﻿.mz-productdetail {
+    overflow: auto;
+    .mz-propertylist {
+        float: left;
+        max-width: 400px;
+    }
+
+    .mz-productdetail-qty {
+        width: 75px;
+        display: inline-block;
+        margin-right: @gutter;
+    }
+
+    .mz-price {
+        font-size: @fontSizeLarge;
+    }
+
+    .mz-productdetail-notpurchasable {
+        font-size: @fontSizeSmall;
+        margin: 5px 0;
+        color: #999;
+    }
+
+    .mz-productdetail-conversion {
+        .clearfix();
+    }
+
+    .mz-productdetail-conversion-controls,
+    .mz-productdetail-conversion-buttons {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .mz-productdetail-conversion-buttons .mz-button {
+        display: block;
+        margin: 0 0 @gutter/2;
+    }
+}

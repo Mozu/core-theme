@@ -1,0 +1,5 @@
+﻿<div {% data_attributes Model%} >
+	<h2 {% cms_data_attributes Model.config.title text %}>{{Model.config.title}}</h2>
+    <div {% cms_data_attributes Model.config.body html %}>{{Model.config.body}}</div>
+</div>
+

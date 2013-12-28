@@ -1,0 +1,11 @@
+﻿<footer class="mz-pagefooter">
+    {% dropzone "footer" scope="site" %}
+    <div class="mz-pagefooter-copyright" id="copyright">
+        <span class="mz-pagefooter-copyrighttext">
+            &copy; {% now "Y" %} {{ siteContext.generalSettings.websiteName }}. {{ labels.allRightsReserved }}
+        </span> 
+        <span class="mz-pagefooter-poweredby">
+             Powered by Mozu Shopping Cart
+        </span>
+    </div>
+</footer>

@@ -1,0 +1,32 @@
+﻿<html  lang="en">
+   
+    <head>
+
+		{%if pageContext.isEditMode %}
+		{% include "modules/json-required-for-hyprlive" %}
+		  <script src="/scripts/vendor/modernizr-respond.min.js"></script>
+		      {% include "modules/trailing-scripts" %}
+		{%endif%}
+		{%comment%}
+		{% cms_resources %}
+		{%endcomment%}
+        <style>
+            body {
+                background-color: #FFF;
+                padding: 20px;
+            }
+
+        </style>
+    </head>
+  
+  
+    <body class=""  >
+
+		{% dropzone "top" %}
+		 <div>{{ViewData.content.html_1}}</div>
+		{% block body-content %}{% endblock body-content %}
+        
+		{% dropzone "body" %}
+        <div>{{ViewData.content.html_2}}</div>
+    </body>
+</html>

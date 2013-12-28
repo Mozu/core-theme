@@ -1,0 +1,35 @@
+﻿{% if siteContext.compiledMode %}
+<script src="js/require-min.js"></script>
+<script>
+    require.config({
+        baseUrl: "/compiled/scripts",
+        paths: {
+            jquery: "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min"
+        },
+        priority: ['jquery']
+    });
+</script>
+<script type="text/javascript">
+    require(['modules/common'], function() { require([{{model}}]) } );
+</script>
+{% else %}
+<script>
+    var require = {
+        urlArgs: "theme={{siteContext.themeId}}",
+        baseUrl: "/scripts",
+        paths: {
+            jquery: "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery"
+        },
+        priority: ['jquery']
+    };
+</script>
+<script src="/js/require-debug.js"></script>
+<script type="text/javascript">
+    require([{% all_scripts %}]);
+</script>
+{% endif %}
+
+
+{% if siteContext.generalSettings.isGoogleAnalyticsEnabled %}
+{% include "modules/analytics/google-analytics-tracking-code" %}
+{% endif %}

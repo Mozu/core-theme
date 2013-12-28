@@ -1,0 +1,9 @@
+<div class="mz-instock-request">
+    <div>Notify me when this product is back in stock.</div>
+	<div>
+    {% if user.isAnonymous %}
+      Email: <input type="text" class="mz-intstock-request-email"> </input>
+    {% endif %}
+	  <button data-mz-action="widgetNotifyUserAction">Notify Me</button>
+	</div>
+</div>

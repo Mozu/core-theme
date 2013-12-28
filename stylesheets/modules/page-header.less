@@ -1,0 +1,36 @@
+﻿.mz-pageheader {
+    position: relative;
+    height: 154px;
+    background: #eee;
+    &.mz-pageheader-hasbanner {
+        background: #eee url('{{themeSettings.bannerImage}}') {{ themeSettings.bannerImageRepeat }};
+    }
+    padding: @gutter/2 @gutter 0;
+
+    .mz-storebranding {
+        float: left;
+        clear: both;
+        display: inline-block;
+        position: relative;
+        left: @gutter/2;
+    }
+
+    &.mz-pageheader-hasbanner .mz-storebranding {
+        text-indent: -9999px;
+    }
+
+    .mz-searchbox, .mz-utilitynav {
+        float: right;
+        clear: right;
+        padding-bottom: 10px;
+    }
+
+    @media only screen {
+        @media (max-width: 600px) {
+            height: auto;
+            .mz-storebranding, .mz-searchbox, .mz-utilitynav {
+                clear: both;
+            }
+        }
+    }
+}

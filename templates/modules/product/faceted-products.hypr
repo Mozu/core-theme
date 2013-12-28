@@ -1,0 +1,19 @@
+﻿{% preload_json Model "facetedproducts" %}
+
+{% if Model.Facets %}
+<div data-mz-facets class="mz-l-sidebar">
+    {% include "modules/product/faceting-form" %}
+</div>
+{% endif %}
+
+<div class="mz-l-paginatedlist">
+    <div data-mz-pagingcontrols class="mz-pagingcontrols">
+        {% include "modules/common/paging-controls" %}
+    </div>
+    <div data-mz-productlist>
+        {% include "modules/product/product-list-tiled" %}
+    </div>
+    <div data-mz-pagenumbers class="mz-pagenumbers">
+        {% include "modules/common/page-numbers" %}
+    </div>
+</div>

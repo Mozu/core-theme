@@ -1,0 +1,2 @@
+{% include_products Model.config.template|default:"modules/product/product-instock-request"  %}
+{% require_script "widgets/instock-request" %}

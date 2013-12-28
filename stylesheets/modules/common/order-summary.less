@@ -1,0 +1,50 @@
+﻿.mz-ordersummary {
+    background: #eee;
+    th {
+        text-align: right;
+        padding: @gutter/2 @gutter;
+        color: #eee;
+        background-color: #666;
+        border-bottom: 1px solid #fff;
+        &.mz-ordersummary-header-product {
+            text-align: left;
+        }
+    }
+    td {
+        text-align: right;
+        padding: @gutter/2 @gutter;
+        &.mz-ordersummary-item-product {
+            text-align: left;
+        }
+    }
+    .mz-ordersummary-lineitems tr:last-child td {
+        border-bottom: 1px solid #fff;
+    }
+    .mz-ordersummary-totals {
+        float: right;
+        td:last-child {
+            padding-right: 0;
+        }
+    }
+    .mz-ordersummary-totalname {
+        display: inline-block;
+        padding-right: @gutter;
+    }
+    .mz-ordersummary-grandtotal {
+        border-top: 1px solid #fff;
+        font-size: @fontSizeLarge;
+    }
+    .mz-ordersummary-totalvalue, .mz-ordersummary-itemtotal {
+        font-weight: bold;
+    }
+}
+
+.mz-ordersummary-checkout {
+    margin-bottom: @gutter;
+    .mz-formstep-header {
+        margin-bottom: 0;
+    }
+    .mz-formstep-body {
+        font-size: @fontSizeLarger;
+    }
+}

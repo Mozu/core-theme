@@ -1,0 +1,69 @@
+﻿  {% extends "email/email" %}
+
+  {% block body-content %}
+          <div class="mz-l-stack">
+    <h1 class="mz-pagetitle">
+        {{ labels.orderConfirmation }}
+    </h1>
+
+	
+    <div class="mz-l-stack-section">
+    <h2>{{ labels.orderDetails }}</h2>
+    <dl class="mz-propertylist">
+        <dt>{{ labels.orderNumber }}</dt>
+        <dd>{{ model.orderNumber }}</dd>
+        <dt>{{ labels.billingName }}</dt>
+        <dd>{{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}</dd>
+        <dt>{{ labels.billingAddress }}</dt>
+        <dd class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.billingInfo.billingContact %}</dd>
+        <dt>{{ labels.billingEmail }}</dt>
+        <dd>{{ model.billingInfo.billingContact.email }}</dd>
+        {% if model.billingInfo.paymentType == "CreditCard" %}
+        <dt>{{ labels.cardType }}</dt>
+        <dd>{{ model.billingInfo.card.paymentOrCardType }}</dd>
+        <dt>{{ labels.cardNumber }}</dt>
+        <dd>{{ model.billingInfo.card.cardNumberPartOrMask }}</dd>
+        {% endif %}
+        {% if model.billingInfo.paymentType == "PaypalExpress" %}
+        <dt>{{ labels.paymentType }}</dt>
+        <dd>{{ labels.payPal }}</dd>
+        {% endif %}
+        {% if model.billingInfo.paymentType == "Check" %}
+        <!--
+        <dt>{{ labels.checkNumber }}</dt>
+        <dd>{{ model.billingInfo.check.checkNumber }}</dd>
+        -->
+        <dt><strong>{{ labels.mailCheckTo }}</strong></dt>
+        <dd class="mz-addresssummary">
+            <span>{{ ViewData.mailCheckTo.shippingOriginContact.firstName}} {{ ViewData.mailCheckTo.shippingOriginContact.lastNameOrSurname }}</span>
+            <span>{{ ViewData.mailCheckTo.shippingOriginContact.companyOrOrganization }}</span>
+            {% include "modules/common/address-summary" with model=ViewData.mailCheckTo %}</dd>
+        {% endif %}
+        <dt>{{ labels.shipTo }}</dt>
+        <dd class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}</dd>
+        <dt>{{ labels.shippingMethod }}</dt>
+        <dd>{{ model.fulfillmentInfo.shippingMethodName }}</dd>
+    </dl>
+    </div>
+
+    <div class="mz-l-stack-section">
+	<h2>{{ labels.orderSummary }} </h2>
+    {% include "modules/common/order-summary" %}
+    {% if model.shopperNotes.comments %}
+    <div class="mz-ordercomments">
+        <h5 class="mz-ordercomments-header">{{ labels.comments }}</h5>
+        <p class="mz-ordercomments-body">{{ model.shopperNotes.comments }}</p>
+    </div>
+    {% endif %}
+    {% if model.shopperNotes.giftMessage %}
+    <div class="mz-ordercomments">
+        <h5 class="mz-ordercomments-header">{{ labels.giftMessage }}</h5>
+        <p class="mz-ordercomments-body">{{ model.shopperNotes.giftMessage }}</p>
+    </div>
+    {% endif %}
+    </div>
+</div><!-- #order-confirmation -->
+   
+      
+
+		{% endblock body-content %}

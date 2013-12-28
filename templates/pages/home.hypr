@@ -1,0 +1,7 @@
+﻿{% extends "page" %}
+
+{% block body-tag-classes %} mz-homepage {% endblock body-tag-classes %}
+
+{% block body-content %}
+    {% dropzone "home" %}
+{% endblock body-content %}

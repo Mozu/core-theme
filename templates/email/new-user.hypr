@@ -1,0 +1,7 @@
+﻿  {% extends "email/email" %}
+
+  {% block body-content %}
+  <H1> Welcom to {{siteContext.generalSettings.websiteName}}</H1>
+      <div>{% dump Model %}</div>
+
+{% endblock body-content %}

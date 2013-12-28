@@ -1,0 +1,4 @@
+﻿<div class="mz-related-products" data-mz-related-products ="{% json_attribute Model.config%}">
+{% include_products "modules/product/product-list" with  productCodes=Model.config.productCodes as_parameter %}
+</div>
+{% require_script "widgets/related-products" %}

@@ -1,0 +1,8 @@
+﻿<div {% data_attributes Model%} >
+  <h2 class="widget-title">Tags</h2>
+  {% if Model.widget_configuration.format == 'cloud' %}
+    {% html_action "tags" "blogs" with viewname="tagcloud" config=Model.widget_configuration as_parameter %}
+  {% else %}
+    {% html_action "tags" "blogs" with config=Model.widget_configuration as_parameter %}
+  {% endif %}
+</div>
