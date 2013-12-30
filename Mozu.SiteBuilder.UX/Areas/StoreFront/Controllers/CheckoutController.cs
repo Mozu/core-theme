@@ -149,7 +149,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //var id = OrderId;
             var id = orderId;
             if (string.IsNullOrWhiteSpace(id)) return Redirect("/cart");
-            Order model;
+            Order model = null;
             Customer.Contracts.CustomerAccount account = null;
             CardCollection cards = null;
             Customer.Contracts.Credit.CreditCollection credits = null;
@@ -159,10 +159,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 model = (await _orderWebApiClient.GetOrder(id)).ReadAsAsync().Result;
             }
-            catch (Mozu.Core.Api.Client.Exceptions.ApiWebClientException e)
+            catch
             {
-                // TODO: more granular exception handling here
-                return Redirect("/cart");
             }
             if (model == null) return Redirect("/cart");
             if (CompletedOrderStates.Contains(model.Status)) return Redirect("/checkout/" + model.Id + "/confirmation");
