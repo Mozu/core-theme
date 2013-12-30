@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _mobileDetectionProvider = mobileDetectionProvider;
             _cookieProvider = cookieProvider;
             _siteBuilderApiContext = siteBuilderApiContext;
-            _locationSettingsWebApiClient = locationSettingsWebApiClient;
+            _locationSettingsWebApiClient = locationSettingsWebApiClient.CloneWithoutUserClaims();
             _settings = settings;
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient.CloneWithoutUserClaims();
             this.CdnPrefix = settings.AppSettings("CdnHost");
@@ -297,6 +297,23 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public string SecureHost { get; set; }
 
-        public bool SupportsInStorePickup { get; set; }
+
+        private bool? _supportsInStorePickup;
+
+        public bool SupportsInStorePickup
+        {
+            get
+            {
+                if (_supportsInStorePickup == null)
+                {
+                    Init().Wait();
+                }
+                return _supportsInStorePickup.GetValueOrDefault(false);
+            }
+            set
+            {
+                _supportsInStorePickup = value;
+            }
+        }
     }
 }
