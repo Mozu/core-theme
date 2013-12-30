@@ -66,7 +66,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new {controller = "MyAccount", action = "Index"});
 
 
-            
+            routes.MapHttpRoute(
+                "Storefront_location",
+                "location/{action}/{id}",
+                new { controller = "Location", action = "Index", id = RouteParameter.Optional });
+
+          
 
 
             routes.MapHttpRoute(

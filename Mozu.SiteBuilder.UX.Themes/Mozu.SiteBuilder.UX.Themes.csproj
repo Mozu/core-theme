@@ -874,6 +874,7 @@
     <Content Include="web.SI.config">
       <DependentUpon>web.config</DependentUpon>
     </Content>
+    <Content Include="Themes\Core4\templates\pages\product-location.hypr" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mozu.SiteBuilder.UX\Mozu.SiteBuilder.UX.csproj">

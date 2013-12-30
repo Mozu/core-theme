@@ -1,0 +1,43 @@
+{% extends "page" %}
+
+
+
+{% block body-content %}
+    
+
+
+    {% require_script "pages/location" %}
+    
+
+    <section class="mz-loc">
+
+        <h1>Find it at a Local Store</h1>
+
+        <aside>
+            <h3>Check Availability</h3>
+            <p>Enter your ZIP to see where you can pick up this item</p>
+            <label for="mz-loc-zip-code">ZIP Cope</label>
+            <input id="mz-loc-zip-code" name="mz-loc-zip-code" type="text">
+            <button>Search</button>
+        </aside>
+
+        <article>
+            <div class="mz-loc-product">
+                Some awesome product
+            </div>
+
+            <div class="mz-loc-grid">
+                Some places to buy said awesome product
+                <h3>Store Pickup</h3>
+                <table class="mz-loc-table">
+
+                </table>
+            </div>
+
+        </article>
+
+
+    </section>
+
+
+{% endblock body-content %}
