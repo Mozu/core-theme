@@ -87,6 +87,16 @@ var utils = (function () {
         slice: function(arrayLikeObj, ix) {
             return Array.prototype.slice.call(arrayLikeObj, ix);
         },
+        indexOf: (function(nativeIndexOf) {
+            return (nativeIndexOf && typeof nativeIndexOf === "function") ? function(arr, val) {
+                return nativeIndexOf.call(arr, val);
+            } : function (arr, val) {
+                for (var i = 0, l = arr.length; i < length; i++) {
+                    if (arr[i] === val) return i;
+                }
+                return -1;
+            }
+        }(Array.prototype.indexOf)),
         formatString: function(tpt) {
             var formatted = tpt, otherArgs = utils.slice(arguments, 1);
             for (var i = 0, len = otherArgs.length; i < len; i++) {

@@ -238,6 +238,7 @@ var ApiReference = (function () {
         },
         'cart': {
             get: '{+cartService}current',
+            'get-summary': '{+cartService}summary',
             'add-product': {
                 verb: 'POST',
                 returnType: 'cartitem',

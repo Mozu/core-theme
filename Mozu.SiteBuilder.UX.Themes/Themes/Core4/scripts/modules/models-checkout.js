@@ -339,31 +339,38 @@
                     me.get('check').clear();
                     me.unset('paymentType');
                 } else {
-                    var customer = me.getOrder().get('customer'),
-                        card = customer.get('cards').get(newId),
-                        cardBillingContact = card && customer.get('contacts').get(card.get('contactId'));
-                    if (card) {
-                        me.get('billingContact').set(cardBillingContact.toJSON());
-                        me.get('card').set(card.toJSON());
-                        me.set('paymentType', 'CreditCard');
-                    }
+                    me.setSavedPaymentMethod(newId);
                 }
             },
-            getPaymentTypeFromCurrentPayment: function(me) {
-                var billingInfoPaymentType = me.get('paymentType'),
-                        currentPayment = me.getOrder().apiModel.getCurrentPayment(),
+            setSavedPaymentMethod: function(newId) {
+                var me = this,
+                    customer = me.getOrder().get('customer'),
+                    card = customer.get('cards').get(newId),
+                    cardBillingContact = card && customer.get('contacts').get(card.get('contactId'));
+                if (card) {
+                    me.get('billingContact').set(cardBillingContact.toJSON());
+                    me.get('card').set(card.toJSON());
+                    me.set('paymentType', 'CreditCard');
+                }
+            },
+            getPaymentTypeFromCurrentPayment: function() {
+                var billingInfoPaymentType = this.get('paymentType'),
+                        currentPayment = this.getOrder().apiModel.getCurrentPayment(),
                         currentPaymentType = currentPayment && currentPayment.billingInfo.paymentType;
                 if (currentPaymentType && currentPaymentType !== billingInfoPaymentType) {
-                    me.set('paymentType', currentPaymentType);
+                    this.set('paymentType', currentPaymentType);
                 }
             },
             edit: function() {
-                this.getPaymentTypeFromCurrentPayment(this);
+                this.getPaymentTypeFromCurrentPayment();
                 CheckoutStep.prototype.edit.apply(this, arguments);
             },
             initialize: function() {
                 var me = this;
-                _.defer(this.getPaymentTypeFromCurrentPayment, this);
+                _.defer(function () {
+                    me.getPaymentTypeFromCurrentPayment();
+                    me.setSavedPaymentMethod(me.get('savedPaymentMethodId'));
+                });
                 this.on('change:paymentType', this.selectPaymentType);
                 this.selectPaymentType(this, this.get('paymentType'));
                 this.on('change:isSameBillingShippingAddress', function (model, wellIsIt) {
@@ -372,7 +379,6 @@
                     }
                 });
                 this.on('change:savedPaymentMethodId', this.syncPaymentMethod);
-                this.syncPaymentMethod(this, this.get('savedPaymentMethodId'));
                 _.bindAll(this, 'applyPayment', 'addStoreCredit');
             },
             selectPaymentType: function(me, newPaymentType) {

@@ -2046,6 +2046,16 @@ var utils = (function () {
         slice: function(arrayLikeObj, ix) {
             return Array.prototype.slice.call(arrayLikeObj, ix);
         },
+        indexOf: (function(nativeIndexOf) {
+            return (nativeIndexOf && typeof nativeIndexOf === "function") ? function(arr, val) {
+                return nativeIndexOf.call(arr, val);
+            } : function (arr, val) {
+                for (var i = 0, l = arr.length; i < length; i++) {
+                    if (arr[i] === val) return i;
+                }
+                return -1;
+            }
+        }(Array.prototype.indexOf)),
         formatString: function(tpt) {
             var formatted = tpt, otherArgs = utils.slice(arguments, 1);
             for (var i = 0, len = otherArgs.length; i < len; i++) {
@@ -2602,6 +2612,7 @@ var ApiReference = (function () {
         },
         'cart': {
             get: '{+cartService}current',
+            'get-summary': '{+cartService}summary',
             'add-product': {
                 verb: 'POST',
                 returnType: 'cartitem',
@@ -3401,7 +3412,7 @@ ApiObject.types.order = (function() {
         'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED': 'Payment type missing or unrecognized.',
         'PAYMENT_MISSING': 'Expected a payment to exist on this order and one did not.',
         'PAYPAL_TRANSACTION_ID_MISSING': 'Expected the active payment to include a paymentServiceTransactionId and it did not.',
-        'SUBMIT_ACTION_NOT_AVAILABLE': 'Order cannot be submitted because Submit action is not present. Is order complete?',
+        'ORDER_CANNOT_SUBMIT': 'Order cannot be submitted. Is order complete?',
         'ADD_COUPON_FAILED': 'Adding coupon failed for the following reason: {0}',
         'ADD_CUSTOMER_FAILED': 'Adding customer failed for the following reason: {0}'
     });
@@ -3413,6 +3424,7 @@ ApiObject.types.order = (function() {
 
     var OrderStatus2IsReady = {};
     OrderStatus2IsReady[CONSTANTS.ORDER_ACTIONS.SUBMIT_ORDER] = true;
+    OrderStatus2IsReady[CONSTANTS.ORDER_ACTIONS.ACCEPT_ORDER] = true;
 
 
     var PaymentStrategies = {
@@ -3521,26 +3533,18 @@ ApiObject.types.order = (function() {
                 return obj;
             });
         },
-        isReadyForSubmit: function() {
+        checkout: function() {
             var availableActions = this.prop('availableActions');
-            for (var i = availableActions.length - 1; i >= 0; i--) {
-                if (availableActions[i] in OrderStatus2IsReady) return true;
+            if (!this.isComplete()) {
+                for (var i = availableActions.length - 1; i >= 0; i--) {
+                    if (availableActions[i] in OrderStatus2IsReady) return this.performOrderAction(availableActions[i]);
+                }
             }
-            return false;
+            errors.throwOnObject(this, 'ORDER_CANNOT_SUBMIT');
         },
         isComplete: function () {
             return !!OrderStatus2IsComplete[this.prop('status')];
-        },
-        submitOrder: function () {
-            return this.performOrderAction(CONSTANTS.ORDER_ACTIONS.SUBMIT_ORDER);
-        },
-        checkout: function () {
-            if (!this.isReadyForSubmit()) {
-                errors.throwOnObject(this, 'SUBMIT_ACTION_NOT_AVAILABLE');
-            }
-            return this.isComplete() || this.submitOrder();
         }
-        
     };
 }());
 ApiObject.types.product = {
