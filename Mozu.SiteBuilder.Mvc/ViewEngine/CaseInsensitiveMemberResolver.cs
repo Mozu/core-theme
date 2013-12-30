@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Magnum.Extensions;
 using Microsoft.FSharp.Core;
 using NDjango.Interfaces;
 
@@ -164,9 +165,28 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 get { throw new NotImplementedException(); }
             }
         }
+
+        private const string Length = "length";
         public FSharpOption<object> ResolveMember(object container, string memberName)
         {
             var lookup = _lookupDic.GetOrAdd(container.GetType(), Doit);
+
+            //add support for looking up stuff by Length enven if only count is available
+            if (string.Equals(memberName, Length, StringComparison.OrdinalIgnoreCase))
+            {
+                var list = container as IList;
+                if (list != null)
+                {
+                    return new FSharpOption<object>(list.Count); ;
+                }
+
+                if (!lookup.PropertyDictionary.ContainsKey(Length))
+                {
+                    memberName = "Count";
+                }
+
+            }
+            
             MethodInfo[] mis;
             if (lookup.PropertyDictionary.TryGetValue(memberName, out mis))
             {
