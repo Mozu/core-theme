@@ -12,7 +12,10 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         {
             var model = arguments[0].Value;
             var name = arguments[1].Value;
-            string json = JsonConvert.SerializeObject(model, Formatting.None, new CaseInsensitiveJsonSerializerSettings());
+            string json = JsonConvert.SerializeObject(model, Formatting.None, new CaseInsensitiveJsonSerializerSettings()
+            {
+                StringEscapeHandling = StringEscapeHandling.EscapeHtml
+            });
 
             var sb = new StringBuilder();
             sb.Append(@"<script type=""text/json"" id=""data-mz-preload-");
