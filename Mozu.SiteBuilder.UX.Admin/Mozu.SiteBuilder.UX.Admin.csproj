@@ -1897,7 +1897,6 @@
     <Content Include="Scripts\app\core\ux\TilePanel.js" />
     <Content Include="Scripts\app\core\ux\TileView.js" />
     <Content Include="Scripts\app\core\ux\form\ToggleGroup.js" />
-    <Content Include="Scripts\app\core\ux\grid\Pager.js" />
     <Content Include="Scripts\app\core\ux\FileDragDroppable.js" />
     <Content Include="Scripts\app\core\ux\form\UnitField.js" />
     <Content Include="Scripts\app\core\ux\form\DateTime.js" />

@@ -30,8 +30,10 @@ Ext.define('Taco.view.product.Modal', {
             rootVisible: false,
             store: this.store,
             selModel: this.selModel,
-            dockedItems: this.gridPager = Ext.create('Taco.core.ux.grid.Pager', {
-                store: this.store
+            dockedItems: this.gridPager = Ext.create('Ext.toolbar.Paging', {
+                store: this.store,
+                displayInfo: true,
+                dock: 'bottom'
             }),
             columns: [{
                 dataIndex: 'productCode',

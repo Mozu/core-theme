@@ -8,7 +8,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
     requires: [
         'Taco.core.ux.grid.Panel',
         'Taco.core.ux.TilePanel',
-        'Taco.core.ux.grid.Pager',
+   
         'Ext.util.Inflector',
         'Ext.form.Panel',
         'Ext.tip.QuickTipManager',

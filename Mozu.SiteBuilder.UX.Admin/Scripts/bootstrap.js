@@ -66,8 +66,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.view.website.settings.General": [],
   "Taco.view.website.Tree": [],
   "Taco.view.error.Index": [],
-  "Taco.shared.view.field.CountryField": [],
   "Taco.core.util.FileUploadEvent": [],
+  "Taco.shared.view.field.CountryField": [],
   "Taco.model.OptionValue": [],
   "Ext.ux.ajax.Simlet": [],
   "Taco.view.customers.Edit": [],
@@ -373,7 +373,6 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.view.discount.ConditionsForm": [],
   "Taco.overrides.window.Window": [],
   "Taco.view.fileManager.AdvancedSearchForm": [],
-  "Taco.core.ux.grid.Pager": [],
   "Taco.view.orderAttribute.Form": [],
   "Taco.controller.Themesettings": [],
   "Taco.model.ProductInCatalogInfo": [],
@@ -802,10 +801,10 @@ Ext.ClassManager.addNameAliasMappings({
     "widget.taco-website-tree"
   ],
   "Taco.view.error.Index": [],
+  "Taco.core.util.FileUploadEvent": [],
   "Taco.shared.view.field.CountryField": [
     "widget.taco-countryfield"
   ],
-  "Taco.core.util.FileUploadEvent": [],
   "Taco.model.OptionValue": [],
   "Ext.ux.ajax.Simlet": [
     "simlet.basic"
@@ -1296,9 +1295,6 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Taco.overrides.window.Window": [],
   "Taco.view.fileManager.AdvancedSearchForm": [],
-  "Taco.core.ux.grid.Pager": [
-    "widget.taco.pager"
-  ],
   "Taco.view.orderAttribute.Form": [],
   "Taco.controller.Themesettings": [],
   "Taco.model.ProductInCatalogInfo": [],
