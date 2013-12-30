@@ -140,6 +140,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     order.UnpackagedItems =
                         (from orderItem in order.Items
                          let packagedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode  == orderItem.ProductCode )
+                         let shippedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == orderItem.ProductCode)
                          let packagedQuantity = packagedItems.Sum(i => i.Quantity)
                          let remainingQuantity = orderItem.Quantity - packagedQuantity
                          where orderItem.BundledProducts == null || orderItem.BundledProducts.Count == 0
@@ -158,6 +159,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         from parentItem in order.Items
                         from bundleItem in parentItem.BundledProducts
                         let packagedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == bundleItem.ProductCode)
+                        let shippedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == bundleItem.ProductCode)
                         let packagedQuantity = packagedItems.Sum(i => i.Quantity)
                         let bundleQuantity = bundleItem.Quantity * parentItem.Quantity
                         let remainingQuantity = bundleQuantity - packagedQuantity
@@ -193,8 +195,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     order.UnpickedupItems =
                         (from orderItem in order.Items
                          let pickupItems = order.Pickups.SelectMany(p => p.Items).Where(i => i.ProductCode  == orderItem.ProductCode )
-                         let pickupQuantity = pickupItems.Sum(i => i.Quantity)
-                         let remainingQuantity = orderItem.Quantity - pickupQuantity
+                         let shippedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == orderItem.ProductCode)
+                         let usedQuantity = pickupItems.Sum(i => i.Quantity) + shippedItems.Sum(i => i.Quantity)
+                         let remainingQuantity = orderItem.Quantity - usedQuantity
                          where orderItem.BundledProducts == null || orderItem.BundledProducts.Count == 0
                          where remainingQuantity > 0
                          where orderItem.FulfillmentMethod == FulfillmentMethodConst.PICKUP
@@ -210,9 +213,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         from parentItem in order.Items
                         from bundleItem in parentItem.BundledProducts
                         let pickedupItems = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == bundleItem.ProductCode)
-                        let pickupQuantity = pickedupItems.Sum(i => i.Quantity)
+                        let shippedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == bundleItem.ProductCode)
+                        let usedQuantity = pickedupItems.Sum(i => i.Quantity) + shippedItems.Sum(i => i.Quantity)
                         let bundleQuantity = bundleItem.Quantity * parentItem.Quantity
-                        let remainingQuantity = bundleQuantity - pickupQuantity
+                        let remainingQuantity = bundleQuantity - usedQuantity
                         where remainingQuantity > 0
                         where parentItem.FulfillmentMethod == FulfillmentMethodConst.PICKUP
                         select new OrderPickupItem
