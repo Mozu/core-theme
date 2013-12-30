@@ -14,6 +14,8 @@
 
         "internal-themeAddons": [],
 
+        "useDebugScripts": true,
+
         /* Common settings used in templates */
         "defaultPageSize": 15,
         "pageSizeOptions": [15, 25, 50, 100],
