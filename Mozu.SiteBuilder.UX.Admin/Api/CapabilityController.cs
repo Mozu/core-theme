@@ -16,7 +16,6 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers;
 using Mozu.SiteSettings.Application.Contracts.Clients;
 using VM = Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement;
-using System.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
