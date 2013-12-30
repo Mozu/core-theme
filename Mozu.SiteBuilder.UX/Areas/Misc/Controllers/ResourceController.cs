@@ -333,6 +333,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             siteContext.Add("checkoutSettings", SiteContext.ThemeId);
             siteContext.Add("cdnPrefix", SiteContext.CdnPrefix);
             siteContext.Add("secureHost", SiteContext.SecureHost );
+            siteContext.Add("supportsInStorePickup", SiteContext.SupportsInStorePickup);
+            
 
             return Request.CreateResponse(HttpStatusCode.OK, ctx, GetJsonMediaFormatter(ctx.GetType()));
         }
