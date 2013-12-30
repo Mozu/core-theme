@@ -148,7 +148,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     {
                         source.Values.ForEach(x =>
                         {
-                            double dval;
                             if (x.Id == null)
                             {
                                 x.Id = Regex.Replace(x.Value as string ?? "", "[^a-zA-Z0-9]", "_"); ;
