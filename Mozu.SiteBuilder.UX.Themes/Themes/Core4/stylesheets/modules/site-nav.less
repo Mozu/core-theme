@@ -17,9 +17,12 @@
         display: table-cell;
         // to remove space gap
         font-size: 0.1px;
-        position: relative;
         z-index: 3;
 
+        .mz-sitenav-item-inner {
+            position: relative;
+        }
+        
         &:hover .mz-sitenav-sub {
             visibility: visible;
             .transition-delay(0s);
