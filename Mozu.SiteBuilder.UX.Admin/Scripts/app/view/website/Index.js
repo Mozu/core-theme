@@ -41,7 +41,7 @@ Ext.define('Taco.view.website.Index', {
 
     header: {
         title: false,
-        actions: [{
+        items: [{
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',
@@ -91,7 +91,8 @@ Ext.define('Taco.view.website.Index', {
                         this.chorizoEditor.hideDropZones();
                     }
                 }
-            }, {
+            }],
+        actions: [{
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',
