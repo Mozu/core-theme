@@ -5,7 +5,7 @@ Ext.define('Taco.view.report.Index', {
         'Taco.view.report.SidebarList',
         'Taco.core.ux.grid.Panel',
         'Taco.core.ux.TilePanel',
-        'Taco.core.ux.grid.Pager',
+     
         'Ext.util.Inflector',
         'Ext.form.Panel',
         'Ext.tip.QuickTipManager',
@@ -113,8 +113,10 @@ Ext.define('Taco.view.report.Index', {
             store: store,
             columns: cols,
             dockedItems: [
-                Ext.create('Taco.core.ux.grid.Pager', {
-                    store: store
+                Ext.create('Ext.toolbar.Paging', {
+                    store: this.store,
+                    displayInfo: true,
+                    dock: 'bottom'
                 })
             ]
         });

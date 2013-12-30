@@ -550,10 +550,8 @@ Ext.define('Taco.controller.Testing', {
                         scope: this
                     }
                 }
-            },
-            Ext.create('Taco.core.ux.grid.Pager', {
-                store: store
-            })],
+            }
+            ],
 
             columns: [{
                 dataIndex: 'Name',

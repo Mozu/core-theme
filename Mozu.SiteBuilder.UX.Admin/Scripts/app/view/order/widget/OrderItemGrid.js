@@ -9,7 +9,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         'Taco.shared.view.field.ProductPickerField',
         'Taco.view.order.widget.DiscountPickerField',
         'Taco.view.order.widget.DiscountRowBody',
-        'Taco.core.ux.grid.Pager',
+      
         'Taco.core.ux.modal.Confirmation',
         'Taco.core.ux.grid.ActionColumn',
         'Taco.view.order.modal.FulfillmentMethod'
