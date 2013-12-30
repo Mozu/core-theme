@@ -316,17 +316,17 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         public HttpResponseMessage HyprContextAction()
         {
             var ctx = new Dictionary<string, object>();
-            var locales = new Dictionary<string, object>();
+            var locals = new Dictionary<string, object>();
             var siteContext = new Dictionary<string, object>();
 
 
             ctx.Add("templates", LiveTemplates());
-            ctx.Add("locales", locales);
+            ctx.Add("locals", locals);
 
 
-            locales.Add("themeSettings", this.SiteContext.ThemeSettings);
-            locales.Add("labels", this.SiteContext.Labels );
-            locales.Add("siteContext", siteContext);
+            locals.Add("themeSettings", this.SiteContext.ThemeSettings);
+            locals.Add("labels", this.SiteContext.Labels);
+            locals.Add("siteContext", siteContext);
 
             siteContext.Add("themeId", SiteContext.ThemeId);
             siteContext.Add("generalSettings", SiteContext.ThemeId);
