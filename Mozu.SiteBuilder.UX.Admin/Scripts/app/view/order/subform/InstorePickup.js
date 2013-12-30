@@ -120,6 +120,8 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
 //            var packagingType = dataItem.packagingType;
 //            var packagingTypeText = me.packagingTypeStore.getById(packagingType).get("text");
             
+
+
             packages.push(Ext.create('Taco.view.order.widget.PackagePickup', {
                     record: this.record,
                     gridHidden:false,

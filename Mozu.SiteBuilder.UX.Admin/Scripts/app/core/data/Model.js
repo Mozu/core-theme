@@ -386,7 +386,10 @@ Ext.define('Taco.core.data.Model', {
     //      failure : function (response){}
     //      errorMsg : "Your error here"
     addErrorHandling: function (config) {
-        
+        if (config.showMask) {
+            Taco.app.viewPort.setLoading(true);
+        }
+
         // store the passed in success method for use after the the error check runs;
         if (config.success) {
             config.success2 = config.success;
@@ -401,13 +404,16 @@ Ext.define('Taco.core.data.Model', {
         
         // add the error check to the success fn.
         config.success = function (response) {
+            if (config.showMask) {
+                Taco.app.viewPort.setLoading(false);
+            }
+            
             var json = Ext.decode(response.responseText, true);
             if (!json || !json.success) {
                 var msg = (config.errorMsg) ? config.errorMsg : "Error";
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 return;
             }
-            
             // call the passed in success method after having passed the error validation messaging
             if (config.success2) {
                 config.success2.apply(config.scope2 || me, arguments);
@@ -415,7 +421,11 @@ Ext.define('Taco.core.data.Model', {
         };
         
         // add the error check to the failure fn.
-        config.failure = function(response) {
+        config.failure = function (response) {
+            if (config.showMask) {
+                Taco.app.viewPort.setLoading(false);
+            }
+            
             var json = Ext.decode(response.responseText, true),
                 msg = (json && json.Message) ? json.Message : (config.errorMsg) ? config.errorMsg : "Error";
             Taco.app.fireEvent('setmessage', msg, 'error');

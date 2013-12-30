@@ -32,9 +32,20 @@ Ext.define('Taco.view.order.widget.LocationPickupGrid', {
         });
 
         this.store = Ext.create('Ext.data.Store', {
-            model: 'Taco.model.LocationPickup',
+            model: 'Taco.model.LocationPickup'
         });
-        //this.store.getProxy().extraParams = { productCode: this.record.get('productCode') };
+
+        this.store.on('load', function() {
+            var code = this.record.data.fulfillmentLocationCode;
+            var selModel = this.getSelectionModel();
+            var record = this.store.getById(code);
+            if (!record) {
+                // if no selection found, select the first rrecord;
+                record = 0;
+            }
+            selModel.select(record);
+        }, me);
+       
 
         this.store.load(
             {

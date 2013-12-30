@@ -279,7 +279,7 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
             return
         }
 
-        
+        /*
 
         var locationData = {
             name: "name here",
@@ -306,6 +306,8 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
             stockReserved: 100,
             stockOnHand: 100
         };
+
+        */
         
         this.directShipLocationPanel.update(me.locationData);
         this.directShipInventoryPanel.update(me.locationInventoryData);
@@ -319,17 +321,21 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
             fulfillmentLocationCode="";
         
         if (this.fireEvent('beforesave', this) !== false) {
-
-
+            
+            var mask = me.setLoading({
+                msg: "Saving"
+            }, me.body);
             
             var fulfillmentMethod = (me.inStorePickupRadio.checked) ? "Pickup" : "Ship";
             var selectedLocation = this.inStorePickupPanel.getSelectionModel().getSelection();
             if (me.inStorePickupRadio.checked && selectedLocation.length) {
-               
+
                 selectedLocation = selectedLocation[0];
-                
+
                 fulfillmentLocationCode = selectedLocation.get("locationCode");
-            }            
+            } else {
+                fulfillmentLocationCode = me.locationData.code;
+            }
 
             
             
@@ -349,9 +355,11 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
                     ]
                 },
                 failure: function(response) {
-                    
+                    me.setLoading(false, me.body);
                 },
                 success: function (response) {
+                    me.setLoading(false, me.body);
+                    
                     // success handling here
                     var json = Ext.decode(response.responseText, true);
                     if (!json || !json.success) {

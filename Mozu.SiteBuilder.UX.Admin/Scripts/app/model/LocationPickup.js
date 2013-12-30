@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.model.LocationPickup', {
     extend: 'Taco.core.data.Model',
-    idProperty: "code",
+    idProperty: "locationCode",
 
     /*
     behaviors: {
