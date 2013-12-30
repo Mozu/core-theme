@@ -30,6 +30,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.ExcludedProducts, opt => opt.MapFrom(x => (x.Target.ExcludedProducts ?? Enumerable.Empty<DC.TargetedProduct>()).Select(_ => _.ProductCode ).ToList()))
                   .ForMember(x => x.ShippingMethods, opt => opt.MapFrom(x => (x.Target.ShippingMethods ?? Enumerable.Empty<DC.TargetedShippingMethod>()).Select(_ => _.Code).ToList()))
                   .ForMember(x => x.MinimumOrderAmount, opt => opt.MapFrom(x => x.Conditions.MinimumOrderAmount))
+                  .ForMember(x => x.MaxRedemptionCount, opt => opt.MapFrom(x => x.Conditions.MaxRedemptionCount))
+                  .ForMember(x => x.StartDate, opt => opt.MapFrom(x => x.Conditions.StartDate))
+                  .ForMember(x => x.ExpirationDate, opt => opt.MapFrom(x => x.Conditions.ExpirationDate))
+                  .ForMember(x => x.RequiresCoupon, opt => opt.MapFrom(x => x.Conditions.RequiresCoupon))
+                  .ForMember(x => x.CouponCode, opt => opt.MapFrom(x => x.Conditions.CouponCode))
 
 
 
@@ -53,7 +58,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                             IncludedProducts = (x.DiscountConditionProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.ProductDiscountCondition() { ProductCode = _ }).ToList(),
                                                                             ExcludedProducts = (x.DiscountConditionExcludedProducts  ?? Enumerable.Empty<string>()).Select(_ => new DC.ProductDiscountCondition() { ProductCode  = _ }).ToList(),
                                                                             MinimumOrderAmount = x.MinimumOrderAmount,
-                                                                            MinimumLifetimeValueAmount = x.MinimumLifetimeValueAmount
+                                                                            MinimumLifetimeValueAmount = x.MinimumLifetimeValueAmount,
+                                                                            MaxRedemptionCount = x.MaxRedemptionCount,
+                                                                            StartDate = x.StartDate,
+                                                                            ExpirationDate = x.ExpirationDate,
+                                                                            RequiresCoupon = x.RequiresCoupon,
+                                                                            CouponCode = x.CouponCode
                                                                         }))
                   .ForMember(x => x.Target, opt => opt.MapFrom(x => new DC.DiscountTarget()
                                                                         {
@@ -63,7 +73,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                             ExcludedProducts = (x.ExcludedProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedProduct() { ProductCode = _ }).ToList(),
                                                                             Products = (x.Products ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedProduct() {ProductCode  = _}).ToList(),
                                                                             ShippingMethods = (x.ShippingMethods ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedShippingMethod() {Code = _}).ToList(),
-                                                                           IncludeAllProducts = x.IncludeAllProducts
+                                                                           IncludeAllProducts = x.IncludeAllProducts,
                                                                         }))
                   .AfterMap((s, d) =>
                       {
