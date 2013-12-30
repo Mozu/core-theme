@@ -6,6 +6,7 @@
  * @description Discount Conditions Editor
  */
 Ext.define('Taco.view.discount.ConditionsForm', {
+    requires:['Ext.data.UuidGenerator'],
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-conditions',
     ui: 'subform',
