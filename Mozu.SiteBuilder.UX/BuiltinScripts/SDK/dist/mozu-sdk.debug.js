@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-12-26
+ * Mozu JavaScript SDK - v0.2.0 - 2013-12-30
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -3364,6 +3364,19 @@ ApiObject.types.customer = (function () {
             var credit = this.api.createSync('storecredit', { code: id });
             errors.passFrom(credit, this);
             return credit.associateToShopper();
+        },
+        // as of 12/30/2013 partial updates on customer will
+        // blank out these values unless they are included
+        // TODO: remove as soon as TFS#21775 is fixed
+        getMinimumPartial: function () {
+            return {
+                firstName: this.prop('firstName'),
+                lastName: this.prop('lastName'),
+                emailAddress: this.prop('emailAddress')
+            };
+        },
+        update: function (data) {
+            return this.api.action(this, 'update', utils.extend(this.getMinimumPartial(), utils.clone(data)));
         }
     }
 }());

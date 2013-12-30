@@ -122,6 +122,9 @@
   /* Search labels */
   "searchResults"        : "Search Results",
   "searchTitle"          : "Search Results for {0}",
+  "noResultsTitle"       : "No results for {0}",
+  "noResults"            : "No Results",
+  "noResultsText"        : "We're sorry! No results were found matching your query.",
 
   /* Cart labels */
   "cart"                 : "Cart",

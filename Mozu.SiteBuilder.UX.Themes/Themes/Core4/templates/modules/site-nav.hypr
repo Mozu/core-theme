@@ -2,8 +2,9 @@
     <ul class="mz-sitenav-list">
         {%for link in navigation.tree %}
             <li class="mz-sitenav-item">
-                <a class="mz-sitenav-link{% if link.url == navigation.currentNode.url %} is-current {% endif %}" href="{{link.url}}">{{link.name}}</a>
-                {% if link.items %}
+                <div class="mz-sitenav-item-inner">
+                    <a class="mz-sitenav-link{% if link.url == navigation.currentNode.url %} is-current {% endif %}" href="{{link.url}}">{{link.name}}</a>
+                    {% if link.items %}
                     <ul class="mz-sitenav-sub">
                         {% for sublink in link.items %}
                             <li data-mz-role="sitemenu-item" class="mz-sitenav-item">
@@ -24,7 +25,8 @@
                             </li>
                         {% endfor %}
                     </ul>
-                {% endif %}
+                    {% endif %}
+                </div>
             </li>
         {%endfor%}
     </ul>

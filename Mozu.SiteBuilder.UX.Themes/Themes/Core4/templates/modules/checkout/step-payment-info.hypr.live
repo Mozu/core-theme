@@ -114,7 +114,12 @@
                 {% endif %}
             
                 {% if model.paymentType == "PaypalExpress" %}
-                    <p>{{ labels.paypalExpressInfo }}</p>
+                <div class="mz-l-formfieldgroup-row">
+                    <div class="mz-l-formfieldgroup-cell"></div>
+                    <div class="mz-l-formfieldgroup-cell">
+                        <p>{{ labels.paypalExpressInfo }}</p>
+                    </div>
+                </div>
                 {% endif %}
 
             </div>

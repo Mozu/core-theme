@@ -34,11 +34,10 @@
             'confirmPassword',
             'acceptsMarketing'
         ],
-        initialize: function () {
-            var self = this;
-            this.listenTo(this.model, 'change:acceptsMarketing', function (model, value) {
-                self.model.apiUpdate({ acceptsMarketing: value });
-            });
+        updateAcceptsMarketing: function(e) {
+            var yes = $(e.currentTarget).prop('checked');
+            this.model.set('acceptsMarketing', yes);
+            this.model.updateAcceptsMarketing(yes);
         },
         startEditName: function () {
             this.editing.name = true;

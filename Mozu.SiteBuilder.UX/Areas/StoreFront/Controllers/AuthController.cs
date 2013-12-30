@@ -245,6 +245,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
                 var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
+                if (String.IsNullOrEmpty(returnUrl))
+                {
+                    returnUrl = "/myaccount";
+                }
                 redir.Headers.Location = MakeRedirectUri(returnUrl);
                 return redir;
                 
