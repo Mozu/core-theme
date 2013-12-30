@@ -440,6 +440,7 @@
     <Compile Include="Filters\StringFormatFilter.cs" />
     <Compile Include="MediaTypeFormatters\HtmlActionResultMediaTypeFormatter.cs" />
     <Compile Include="MediaTypeFormatters\HtmlErrorMediaTypeHyperFormatter.cs" />
+    <Compile Include="MediaTypeFormatters\JsonpMediaTypeFormatter.cs" />
     <Compile Include="MediaTypeFormatters\LowerCaseJsonMediaTypeFormatte.cs" />
     <Compile Include="MessageHandler\SeoDelegatingHandler.cs" />
     <Compile Include="MessageHandler\HttpContextInjectingMessageHandler.cs" />
