@@ -77,11 +77,11 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
                 // order info
                 title: "Pending Items",
                 fulfillmentStatus: me.record.get("fulfillmentStatus"),
-                orderTotal: me.record.get("itemsOrdered"),
+                orderTotal: me.record.get("totalPickupItems"),
                 //shippedItemTotal: me.record.get("itemsShipped"),
                 //pendingItemTotal: me.record.get("itemsNotShipped"),
                 //shippingMethod: me.record.get("shippingMethodName") || me.record.get("shippingMethodCode"),
-                itemsToPickup: me.record.get("itemsToPickup"),
+                totalPickupItems: me.record.get("totalPickupItems"),
                 itemsPickedup: me.record.get("itemsPickedup"),
                 itemsNotPickedup: me.record.get("itemsNotPickedup"),
                 

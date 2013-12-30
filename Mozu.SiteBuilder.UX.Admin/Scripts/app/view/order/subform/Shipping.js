@@ -101,7 +101,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
                 // order info
                 title: "Pending Items",
                 fulfillmentStatus: me.record.get("fulfillmentStatus"),
-                orderTotal: me.record.get("itemsOrdered"),
+                orderTotal: me.record.get("totalDirectShipItems"),
                 shippedItemTotal: me.record.get("itemsShipped"),
                 pendingItemTotal: me.record.get("itemsNotShipped"),
                 shippingMethod: me.record.get("shippingMethodName") || me.record.get("shippingMethodCode"),

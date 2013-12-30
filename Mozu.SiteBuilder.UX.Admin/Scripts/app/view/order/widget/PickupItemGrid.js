@@ -230,6 +230,7 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
                 items:[]
             };
 
+        
         if (me.packageData) {
             availableActions = me.packageData.availableActions;
         }
@@ -325,7 +326,7 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
         }
 
 
-        if (me.enabledMarkAsFulfilledButton && Ext.Array.contains(availableActions, "Ship")) {
+        if (me.enabledMarkAsFulfilledButton && Ext.Array.contains(availableActions, "PickUp")) {
             me.markAsFulfilledButton = Ext.create("Ext.button.Button", {
                 text: 'Mark As Fulfilled',
                 ui: 'action',
@@ -567,7 +568,6 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
     // process the grid selections and call the exectueMove
     moveSelectedItems: function (menu, item, e, eOpts) {
         var me = this;
-        
         if (item) {
             var items = me.getSelectedDataItems();
             var sourcePickupId = (me.packageData) ? me.packageData.id : null;
@@ -586,11 +586,11 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
     removeSelectedItems: function () {
         var me = this,
             items = me.getSelectedDataItems(),
-            sourcePackageId = (me.packageData) ? me.packageData.id : null;
-        if (sourcePackageId && items.length) {
+            sourcePickupId = (me.packageData) ? me.packageData.id : null;
+        if (sourcePickupId && items.length) {
             me.executeMoveItems({
-                sourcePackageId: sourcePackageId,
-                destinationPackageId: null,
+                sourcePickupId: sourcePickupId,
+                destinationPickupId: null,
                 items: items
             });
         }

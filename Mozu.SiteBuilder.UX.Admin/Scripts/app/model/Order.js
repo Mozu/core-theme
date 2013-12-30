@@ -258,6 +258,19 @@ Ext.define('Taco.model.Order', {
             "type": "int",
             "useNull": false
         },
+        
+
+        // the total number of items that will be fulfilled via direct ship
+        {
+            "name": "totalDirectShipItems",
+            "type": "int",
+            "useNull": false,
+            convert: function (v, record) {
+                var itemsNotShipped = record.get("itemsNotShipped") || 0;
+                var itemsShipped = record.get("itemsShipped")|| 0;
+                return itemsNotShipped + itemsShipped
+            }
+        },
         {
             "name": "itemsNotShipped",
             "type": "int",
@@ -310,7 +323,9 @@ Ext.define('Taco.model.Order', {
             "name": "unpackagedItems",
             "type": "array",
             "defaultValue": []
-        }, {
+        },
+
+        {
             "name": "packages",
             "type": "array",
             convert: function (v, record) {
@@ -319,11 +334,16 @@ Ext.define('Taco.model.Order', {
                 }
                 return v;
             }
-        }, {
+        },
+
+        // array of items that are pending in the pickup Instore pickup section and have not been added to a pickup yet;
+        {
             "name": "unpickedupItems",
             "type": "array",
             "defaultValue": []
-        }, 
+        },
+        
+        // like a package but for people that can't wait a few days for direct ship. 
         {
             "name": "pickups",
             "type": "array"
@@ -366,11 +386,16 @@ Ext.define('Taco.model.Order', {
 
         // NEW FIELD
 
+        // the total number of items that will be fulfilled via in store pickup
         {
-            "name": "itemsToPickup",
+            "name": "totalPickupItems",
             "type": "int",
-            defaultValue:0,
-            "useNull": false
+            "useNull": false,
+            convert: function (v, record) {
+                var itemsNotPickedup = record.get("itemsNotPickedup") || 0;
+                var itemsPickedup = record.get("itemsPickedup") || 0;
+                return itemsNotPickedup + itemsPickedup;
+            }
         },
         
         // NEW FIELD
@@ -426,6 +451,8 @@ Ext.define('Taco.model.Order', {
                 return retVal;
             }
         },
+        
+
         // helper field. ui iterates on shipped packages in multiple places
         {
             "name": "pickedupPackages",

@@ -152,7 +152,7 @@ Ext.define('Taco.view.order.widget.Package', {
                         '<span class="titleRow" style="line-height1.4em">{title}</span>',
                         /*
                         '<div style="float:right;padding:4px 19px 4px 10px;">',
-                            ' Ordered: {orderTotal} ',
+                            ' Total Direct Ship Items: {orderTotal} ',
                             '<span class="seperator">|</span>',
                             'Shipped: {shippedItemTotal} ',
                             '<span class="seperator">|</span>',
