@@ -8,6 +8,7 @@ using AutoMapper;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Settings;
+using Mozu.Location.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Themes;
@@ -29,6 +30,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private readonly ISettings _settings;
         private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
         private readonly IGeneralSettingsWebApiClient _generalSettingsWebApiClient;
+        private readonly ILocationSettingsWebApiClient _locationSettingsWebApiClient;
         private readonly IMobileDetectionProvider _mobileDetectionProvider;
         private readonly IThemeRepository _themeRepository;
         private readonly Lazy<IThemeSettingsRepository> _themeSettingsRepository;
@@ -43,7 +45,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         private Dictionary<string, string> _labels;
 
-        public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ISiteBuilderApiContext siteBuilderApiContext,  ISettings settings , ISiteBuilderApiContext apiContext, HttpRequestMessage requestMessage)
+        public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, ISettings settings, ISiteBuilderApiContext apiContext, ILocationSettingsWebApiClient locationSettingsWebApiClient ,HttpRequestMessage requestMessage)
         {
             _generalSettingsWebApiClient = generalSettingsWebApiClient.CloneWithoutUserClaims();
             _themeSettingsRepository = themeSettingsRepository;
@@ -51,7 +53,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _mobileDetectionProvider = mobileDetectionProvider;
             _cookieProvider = cookieProvider;
             _siteBuilderApiContext = siteBuilderApiContext;
-            
+            _locationSettingsWebApiClient = locationSettingsWebApiClient;
             _settings = settings;
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient.CloneWithoutUserClaims();
             this.CdnPrefix = settings.AppSettings("CdnHost");
@@ -236,11 +238,17 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 var genSettingsTask = GetGeneralSettings();
                 var checkoutSettingsTask = GetCheckoutSettings();
-                var settingsServiceTasks = Task.WhenAll(genSettingsTask, checkoutSettingsTask);
+                var locSettingsTask = _locationSettingsWebApiClient.GetLocationUsages();
+                var settingsServiceTasks = Task.WhenAll(genSettingsTask, checkoutSettingsTask, locSettingsTask);
                 var initTask = settingsServiceTasks.ContinueWith(task =>
                     {
                         _generalSettings = Mapper.Map<GeneralSettings>(genSettingsTask.Result);
                         _checkoutSettings = Mapper.Map<CheckoutSettings>(checkoutSettingsTask.Result);
+                        if (locSettingsTask.Result.ResponseMessage.IsSuccessStatusCode)
+                        {
+                            this.SupportsInStorePickup = locSettingsTask.Result.ReadAsSync().Items.Any(x => x.LocationUsageTypeCode == "SP");
+                        }
+
                         HttpCookie cookie = _cookieProvider.GetRequestCookie(FORCE_THEME_COOKIE_NAME);
 
                         if (cookie != null && !string.IsNullOrEmpty(cookie.Value))
@@ -288,5 +296,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public string CdnPrefix { get; set; }
 
         public string SecureHost { get; set; }
+
+        public bool SupportsInStorePickup { get; set; }
     }
 }
