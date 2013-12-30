@@ -23,7 +23,8 @@ Ext.define('Taco.view.website.Tree', {
     viewConfig: {
         stripeRows: true,
         plugins: {
-            ptype: 'treeviewdragdrop'
+            ptype: 'treeviewdragdrop',
+
         }
     },
 
@@ -60,7 +61,8 @@ Ext.define('Taco.view.website.Tree', {
                 allowBlank: false
             }
         }];
-
+        
+   
 
         this.mon(this.store,
             {
