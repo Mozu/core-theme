@@ -4,10 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-
+using System.Web.Http;
 using Microsoft.Win32;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
@@ -311,27 +313,41 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "siteContext")]
         [System.Web.Http.HttpGet]
-        public JObject HyprContextAction()
+        public HttpResponseMessage HyprContextAction()
         {
-            var ctx = new JObject();
-            var serializer = new JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
-            var siteContext = JObject.FromObject(this.SiteContext, serializer);
-            var themeSettings = siteContext.GetValue("themeSettings");
-            var labels = siteContext.GetValue("labels");
+            var ctx = new Dictionary<string, object>();
+            var locales = new Dictionary<string, object>();
+            var siteContext = new Dictionary<string, object>();
 
-
-            var locals = new JObject();
-            locals.Add("themeSettings", themeSettings);
-            siteContext.Remove("themeSettings");
-            locals.Add("labels", labels);
-            siteContext.Remove("labels");
-            locals.Add("siteContext", siteContext);
 
             ctx.Add("templates", LiveTemplates());
-            ctx.Add("locals", locals);
-            return ctx;
+            ctx.Add("locales", locales);
+
+
+            locales.Add("themeSettings", this.SiteContext.ThemeSettings);
+            locales.Add("labels", this.SiteContext.Labels );
+            locales.Add("siteContext", siteContext);
+
+            siteContext.Add("themeId", SiteContext.ThemeId);
+            siteContext.Add("generalSettings", SiteContext.ThemeId);
+            siteContext.Add("checkoutSettings", SiteContext.ThemeId);
+            siteContext.Add("cdnPrefix", SiteContext.CdnPrefix);
+            siteContext.Add("secureHost", SiteContext.SecureHost );
+
+            return Request.CreateResponse(HttpStatusCode.OK, ctx, GetJsonMediaFormatter(ctx.GetType()));
         }
 
+        static JsonpMediaTypeFormatter _jmtf;
+
+         MediaTypeFormatter GetJsonMediaFormatter(Type t  )
+        {
+            if (_jmtf == null)
+            {
+                _jmtf = new JsonpMediaTypeFormatter(System.Web.Http.GlobalConfiguration.Configuration.Formatters.JsonFormatter);
+            }
+             return _jmtf.GetPerRequestFormatterInstance(t, this.Request, new MediaTypeHeaderValue("text/json"));
+
+        }
 
 
 
