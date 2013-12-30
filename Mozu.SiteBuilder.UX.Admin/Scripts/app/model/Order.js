@@ -314,7 +314,6 @@ Ext.define('Taco.model.Order', {
             "name": "packages",
             "type": "array",
             convert: function (v, record) {
-                
                 if (!Ext.isArray(v)) {
                     v = [];
                 }
@@ -355,7 +354,6 @@ Ext.define('Taco.model.Order', {
             convert: function (v, record) {
                 var packages = record.get("packages");
                 var retVal = [];
-                
                 for (var i = 0; i < packages.length; i++) {
                     if (packages[i].status == "Fulfilled") {
                         retVal.push(packages[i]);
@@ -397,7 +395,9 @@ Ext.define('Taco.model.Order', {
             "type": "array",
             persist: false,
             convert: function (v, record) {
-                var packages = record.get("packages");
+
+
+                var packages = record.get("pickups");
                 var retVal = [];
 
                 for (var i = 0; i < packages.length; i++) {
@@ -1134,6 +1134,12 @@ Ext.define('Taco.model.Order', {
      *
      */
     createPickup: function (config) {
+        var me = this;
+        
+        config.errorMsg = "Error creating pickup";
+
+        me.addErrorHandling(config);
+        
         Ext.apply(config, {
             url: '/admin/app/order/fulfillment/pickup/create',
             method: "POST"
@@ -1170,6 +1176,11 @@ Ext.define('Taco.model.Order', {
      *
      */
     deletePickup: function (config) {
+        var me = this;
+        config.errorMsg = "Error deleting pickup";
+
+        me.addErrorHandling(config);
+        
         Ext.apply(config, {
             url: '/admin/app/order/fulfillment/pickup/delete',
             method: "POST"
@@ -1210,6 +1221,11 @@ Ext.define('Taco.model.Order', {
      *
      */
     movePickupItems: function (config) {
+        var me = this;
+        config.errorMsg = "Error moving pickup items";
+
+        me.addErrorHandling(config);
+
         Ext.apply(config, {
             url: '/admin/app/order/fulfillment/pickup/moveitems',
             method: "POST"
@@ -1245,6 +1261,11 @@ Ext.define('Taco.model.Order', {
      *
      */
     markPickupFulfilled: function (config) {
+        var me = this;
+        config.errorMsg = "Error marking pickup fulfilled";
+
+        me.addErrorHandling(config);
+
         Ext.apply(config, {
             url: '/admin/app/order/fulfillment/pickup/markfulfilled',
             method: "POST"
@@ -1254,6 +1275,45 @@ Ext.define('Taco.model.Order', {
     },
 
 
+    /**
+     * service call to mark a package as ready
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                orderId: "987654321",                
+                packageIds: ["987654"]
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+            },
+            failure: function (response) {
+                // error handling here
+            },
+            scope: this
+        }
+
+     *
+     */
+    markPickupReady: function (config) {
+        var me = this;
+        config.errorMsg = "Error marking pickup ready";
+
+        me.addErrorHandling(config);
+
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/pickup/markready',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
 
 
     /*
@@ -1581,7 +1641,7 @@ Ext.define('Taco.model.Order', {
                 ]
             },
             success: function (response) {
-                // success handling here
+                // success handlin,g here
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly

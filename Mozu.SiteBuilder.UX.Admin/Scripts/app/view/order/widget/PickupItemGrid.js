@@ -194,7 +194,7 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
         }
         
         
-        var unshippedPackages = this.record.get("unShippedPackages");
+        var unshippedPackages = this.record.get("pendingPickups");
 
         // loop on the packages adding them as addTo Targets;
         var packageLength = unshippedPackages.length;
@@ -215,32 +215,13 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
             }
         }
         
-        
-        
-        
-        
-        //todo: need some paging solution for adding support to have many packages
-        /*
-        if (packageLength > packageMenuPagingSize) {
-            menu.push(
-             {
-                 text: "Add to Package",
-                 menu: {
-                     plain: true,
-                     items: specificPackages
-                 }
-             }
-         );
-        }
-        */
-
-
 
         return menu;
     },
 
     getToolBarConfig : function() {
         var me = this,
+            availableActions=[],
             tb = {
                 plain: true,
                 //cls:"shipping-toolbar",
@@ -248,12 +229,14 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
                 enableOverflow:true,
                 items:[]
             };
-       
-        
+
+        if (me.packageData) {
+            availableActions = me.packageData.availableActions;
+        }
         
         if (me.getEnableMoveMenu()) {
 
-            var unShippedPackages = this.record.get("unShippedPackages");
+            var unShippedPackages = this.record.get("pendingPickups");
             // if there is a last package use its id, otherwise make the target a new package
             var lastPackage = unShippedPackages[unShippedPackages.length - 1];
             var lastPackageId = (lastPackage) ? lastPackage.id : -1;
@@ -328,7 +311,21 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
             tb.items.push(me.removeButton);
         }
         
-        if (me.enabledMarkAsFulfilledButton) {
+        if (Ext.Array.contains(availableActions, "Ready")) {
+            me.markAsReadyButton = Ext.create("Ext.button.Button", {
+                text: 'Mark As Ready',
+                ui: 'action',
+                margin: "0 2px 0 0",
+                scale: 'medium',
+                handler: me.markAsReady,
+                scope: me
+            });
+
+            tb.items.push(me.markAsReadyButton);
+        }
+
+
+        if (me.enabledMarkAsFulfilledButton && Ext.Array.contains(availableActions, "Ship")) {
             me.markAsFulfilledButton = Ext.create("Ext.button.Button", {
                 text: 'Mark As Fulfilled',
                 ui: 'action',
@@ -516,22 +513,6 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
             }
         ];
     },
-    
-    getShippingRatesMenu : function () {
-        var allRatesMenuData = [],
-            store = Taco.properties.shippingRates;
-        
-        if (store) {
-            store.each(function (record) {
-                allRatesMenuData.push({
-                    text: record.get("Value"),
-                    key: record.get("Key")
-                });
-            });
-        }
-        return allRatesMenuData;
-    },
-    
 
 
     executeMoveItems: function (config) {
@@ -557,23 +538,9 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
                 sourcePickupId: sourcePickupId,
                 destinationPickupId: destinationPickupId
             },
-            
+            showMask: true,
             success: function (response) {
-                var json = Ext.decode(response.responseText, true);
-                if (!json || !json.success) {
-                    // service didnt' return data properly
-                    Taco.app.fireEvent('setmessage', "Error moving items", 'error');
-                    Taco.app.viewPort.setLoading(false);
-                    return;
-                }
-                // reload the record
                 this.record.reload();
-            },
-            failure: function (response) {
-                var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error moving items";
-                Taco.app.fireEvent('setmessage', msg, 'error');
-                Taco.app.viewPort.setLoading(false);
             },
             scope: this
         };
@@ -615,49 +582,6 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
         }
     },
     
-    changeShippingMethod: function (menu, item, e, eOpts) {
-        
-        if (item) {
-            
-            var grid = item.up("gridpanel");
-            // get package json
-            data = grid.packageData;
-            // update the shipping code
-            data.shippingMethodCode = item.key;
-            data.shippingMethodName = item.text;
-            
-            config = {
-                jsonData: [data],
-                success: function (response) {
-                    // success handling here
-                    Taco.app.viewPort.setLoading(false);
-                    var json = Ext.decode(response.responseText, true);
-                    if (!json || !json.success) {
-                        Taco.app.fireEvent('setmessage', "Error changing shipping method", 'error');
-                        return;
-                    }
-                    // reload the record
-                    this.record.reload();
-                },
-                failure: function (response) {
-                    var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error changing shipping method";
-                    Taco.app.fireEvent('setmessage', msg, 'error');
-                    Taco.app.viewPort.setLoading(false);
-                },
-                scope: this
-            };
-
-            Taco.app.viewPort.setLoading(true);
-            
-            // call the model method to persist the change
-            this.record.changeShippingMethod(config);
-            
-            
-
-        }
-    },
-    
     // move the currently selected items and move them to the unshipped items 
     removeSelectedItems: function () {
         var me = this,
@@ -685,23 +609,9 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
                 orderId: orderId,
                 packageIds: [sourcePackageId]
             },
-
+            showMask: true,
             success: function (response) {
-                // success handling here
-                var json = Ext.decode(response.responseText, true);
-                if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', "Error marking as pickedup", 'error');
-                    Taco.app.viewPort.setLoading(false);
-                    return;
-                }
-                // reload the record
                 this.record.reload();
-            },
-            failure: function (response) {
-                var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error marking as pickedup";
-                Taco.app.fireEvent('setmessage', msg, 'error');
-                Taco.app.viewPort.setLoading(false);
             },
             scope: this
         };
@@ -711,63 +621,30 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
 
     },
     
-    viewShippingLabel: function (button, e) {
-        
-        
-        // view shipping label. open in new tab. this initiates a work flow that makes the package uneditable.
-        // subsequent edits to a package with a shipping label will need to be confirmed with a ui that tells the user 
-        // to destroy the shipping label. and should probably remove the tracking number from the package as well.
+    // mark pickup as a ready;
+    markAsReady: function () {
+        var me = this,
+            callConfig;
 
-        
-        var newWindow,
-            me = this,
-            grid = button.up("gridpanel"),
-            data = grid.packageData,
-            labelUrl = '/admin/app/order/shipping/package/label?orderId=' + data.orderId + '&packageId=' + data.id,
-            windowName = "shippingLabel-" + data.orderId + "-" + data.id;
-       
-        if (data.shipmentId === null || data.shipmentId === undefined)
-        {
-            // need to open the window immediately after the click so the popup blocker doesn't suppress it. 
-            //newWindow = window.open('/admin/Scripts/resources/images/legacy/loading.gif');
-            
-            newWindow = window.open('/admin/Scripts/build/resources/images/loading-shipping-label-m.gif', windowName);
-            var errorIcon = "/admin/Scripts/build/resources/images/error-shipping-label.gif";
+        var orderId = me.record.get("id");
+        var sourcePackageId = me.packageData.id;
 
-            me.setLoading(true);
-            Ext.Ajax.request( {
-                url: '/admin/app/order/shipping/package/prepareshipment',
-                method: 'POST',
-                jsonData: {
-                    orderId: data.orderId,
-                    packageIds: [ data.id ]
-                },
-                success: function (response) {
-                    me.setLoading(false);
-                    
-                    var json = Ext.decode(response.responseText, true);
-                    if (!json || !json.success) {
-                        Taco.app.fireEvent('setmessage', "Error viweing shipping label", 'error');
-                        newWindow.location = errorIcon;
-                        return;
-                    }
-                    newWindow.location = labelUrl;
-                    me.record.reload();
-                },
-                failure: function (response) {
-                    var json = Ext.decode(response.responseText, true),
-                      msg = (json && json.Message) ? json.Message : "Error moving items";
-                    Taco.app.fireEvent('setmessage', msg, 'error');
-                    newWindow.location = errorIcon;
-                    me.setLoading(false);
-                }
-            });
-      
-        }
-        else {
-            window.open(labelUrl, windowName);
-        }
+        callConfig = {
+            jsonData: {
+                orderId: orderId,
+                packageIds: [sourcePackageId]
+            },
+            showMask: true,
+            success: function (response) {
+                this.record.reload();
+            },
+            scope: this
+        };
+        
+        this.record.markPickupReady(callConfig);
+
     },
+
 
     viewPackingSlip: function (button, e) {
         var grid = button.up("gridpanel"),

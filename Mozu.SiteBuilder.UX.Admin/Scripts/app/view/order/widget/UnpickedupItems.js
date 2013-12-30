@@ -33,7 +33,6 @@ Ext.define('Taco.view.order.widget.UnpickedupItems', {
         if (unpickedupItems) {
             data = unpickedupItems
         }
-
         
         me.grid = Ext.create('Taco.view.order.widget.PickupItemGrid', {
             
