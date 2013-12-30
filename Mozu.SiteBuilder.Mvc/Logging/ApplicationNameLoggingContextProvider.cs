@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Mozu.Core.Logging;
 
@@ -20,12 +21,11 @@ namespace Mozu.SiteBuilder.Mvc.Logging
             _applicationName = applicationName;
         }
 
-        /// <summary>
-        /// Implements ILoggingContextProvider.
-        /// </summary>
-        public IDictionary<string, object> GetProperties()
+
+        IEnumerable<KeyValuePair<string, object>> ILoggingContextProvider.GetProperties()
         {
-            return new Dictionary<string, object> {{ "ApplicationName", _applicationName }};
+             return new Dictionary<string, object> {{ "ApplicationName", _applicationName }};
         }
+        
     }
 }

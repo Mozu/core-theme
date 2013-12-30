@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.Mvc.Logging
             _pageContext = pageContext;
         }
 
-        public IDictionary<string, object> GetProperties()
+        IEnumerable<KeyValuePair<string, object>> ILoggingContextProvider.GetProperties()
         {
             var dict = new Dictionary<string, object>(4);
 
