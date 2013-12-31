@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
@@ -9,6 +11,7 @@ using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Settings;
 using Mozu.Location.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Themes;
@@ -87,6 +90,37 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         internal const string COOKIENAME = "SBCONTEXT";
 
+        private byte[] _hash;
+        public byte[] Hash
+        {
+            get
+            {
+                var task = this.Init();
+                if (!task.IsCompleted)
+                {
+                    task.Wait();
+                }
+                return _hash;
+            }
+            set
+            {
+                _hash = value;
+            }
+        }
+
+        private string _hashString;
+        public string HashString
+        {
+            get
+            {
+                if (_hashString == null)
+                {
+                    var hash = this.Hash;
+                    _hashString = System.Convert.ToBase64String(hash);
+                }
+                return _hashString;
+            }
+        }
 
         public static void Save(int? site, int? masterCatalog, int tenant, bool isEditMode, DataViewModeType dataViewMode, ICookieProvider cookieProvider)
         {
@@ -193,60 +227,36 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             set { _theme = value; }
         }
 
-        Task<Mozu.SiteSettings.Order.Contracts.CheckoutSettings> GetCheckoutSettings()
-        {
-            return _checkoutSettingsWebApiClient.GetCheckoutSettings().ContinueWith(x => x.Result.ReadAsSync());
-              
-            //var key = typeof ( Mozu.SiteSettings.Order.Contracts.CheckoutSettings).FullName  + this._siteBuilderApiContext.SiteId;
-            //var settings = (Mozu.SiteSettings.Order.Contracts.CheckoutSettings) _cache[key];
-            //if (settings == null)
-            //{
-            //    return _checkoutSettingsWebApiClient.GetCheckoutSettings().ContinueWith(x =>
-            //        {
-            //            settings = x.Result.ReadAsSync();
-            //            _cache[key] = settings;
-            //            return settings;
-            //        });
-            //}
-            //var tcs = new TaskCompletionSource<SiteSettings.Order.Contracts.CheckoutSettings>();
-            //tcs.SetResult(settings);
-            //return tcs.Task;
-        }
-        Task<Mozu.SiteSettings.General.Contracts.GeneralSettings> GetGeneralSettings()
-        {
-            return _generalSettingsWebApiClient.GetGeneralSettings().ContinueWith(x => x.Result.ReadAsSync());
-            //var key = typeof(Mozu.SiteSettings.General.Contracts.GeneralSettings).FullName + this._siteBuilderApiContext.SiteId;
-            //var settings = (Mozu.SiteSettings.General.Contracts.GeneralSettings)_cache[key];
-            //if (settings == null)
-            //{
-            //    return _generalSettingsWebApiClient.GetGeneralSettings().ContinueWith(x =>
-            //    {
-            //        settings = x.Result.ReadAsSync();
-            //        _cache[key] = settings;
-            //        return settings;
-            //    });
-            //}
-            //var tcs = new TaskCompletionSource<Mozu.SiteSettings.General.Contracts.GeneralSettings>();
-            //tcs.SetResult(settings);
-            //return tcs.Task;
-        }
+        //Task<Mozu.SiteSettings.Order.Contracts.CheckoutSettings> GetCheckoutSettings()
+        //{
+        //    return _checkoutSettingsWebApiClient.GetCheckoutSettings().ContinueWith(x => x.Result.ReadAsSync());
+        //}
+        //Task<Mozu.SiteSettings.General.Contracts.GeneralSettings> GetGeneralSettings()
+        //{
+        //    return _generalSettingsWebApiClient.GetGeneralSettings().ContinueWith(x => x.Result.ReadAsSync());
+        //}
 
 
         public Task Init()
         {
             if (_initTask == null)
             {
-                var genSettingsTask = GetGeneralSettings();
-                var checkoutSettingsTask = GetCheckoutSettings();
+                var genSettingsTask = _generalSettingsWebApiClient.GetGeneralSettings();
+                var checkoutSettingsTask = _checkoutSettingsWebApiClient.GetCheckoutSettings();
                 var locSettingsTask = _locationSettingsWebApiClient.GetLocationUsages();
                 var settingsServiceTasks = Task.WhenAll(genSettingsTask, checkoutSettingsTask, locSettingsTask);
                 var initTask = settingsServiceTasks.ContinueWith(task =>
-                    {
-                        _generalSettings = Mapper.Map<GeneralSettings>(genSettingsTask.Result);
-                        _checkoutSettings = Mapper.Map<CheckoutSettings>(checkoutSettingsTask.Result);
+                {
+                    
+                    MD5 md5 = new MD5CryptoServiceProvider();
+                    
+
+                    
+                        _generalSettings = Mapper.Map<GeneralSettings>(genSettingsTask.Result.HashEtag(md5).ReadAsSync());
+                        _checkoutSettings = Mapper.Map<CheckoutSettings>(checkoutSettingsTask.Result.HashEtag(md5).ReadAsSync());
                         if (locSettingsTask.Result.ResponseMessage.IsSuccessStatusCode)
                         {
-                            this.SupportsInStorePickup = locSettingsTask.Result.ReadAsSync().Items.Any(x => x.LocationUsageTypeCode == "SP");
+                            this.SupportsInStorePickup = locSettingsTask.Result.HashEtag(md5).ReadAsSync().Items.Any(x => x.LocationUsageTypeCode == "SP");
                         }
 
                         HttpCookie cookie = _cookieProvider.GetRequestCookie(FORCE_THEME_COOKIE_NAME);
@@ -268,8 +278,13 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
                         return _themeSettingsRepository.Value.GetRuntimeValues(_theme.Id).ContinueWith(task2 =>
                             {
-
+                               
                                 _themeRuntimeSettingsCollection = task2.Result;
+                                var themeEtag = _themeRuntimeSettingsCollection.Etag;
+                               // haherAlgorithm.TransformBlock(etag, 0, etag.Length, etag, 0);
+                                md5.TransformBlock(themeEtag, 0, themeEtag.Length, themeEtag ,0);
+                                var tid = System.Text.Encoding.UTF8.GetBytes(_themeId);
+                                this.Hash = md5.TransformFinalBlock(tid, 0, tid.Length );
                                 //not ready for prime time
                                 //var tmp = ThemeSettings[ThemeSettingsRepository.ADDONKEY] as IEnumerable;
                                 //if (tmp != null)
