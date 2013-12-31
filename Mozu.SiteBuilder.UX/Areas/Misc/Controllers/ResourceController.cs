@@ -351,6 +351,18 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         }
 
+        private readonly string AMDTemplate = @"
+            define([{0}], function({1}) {{
+
+                {2}
+                
+                ; return {3};
+
+            }});
+
+            //@sourceUrl={4}.js
+
+        ";
 
 
         [ClientCacheHeaders(ConfigKey = "scripts")]
@@ -358,6 +370,38 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         public HttpResponseMessage  Scripts(string pathinfo)
         {
             return Content("scripts/" + pathinfo, "text/javascript");
+        }
+
+        [ClientCacheHeaders(ConfigKey = "scripts")]
+        [System.Web.Http.HttpGet]
+        public HttpResponseMessage Scripts(string pathinfo, bool makeAMD, string shimExport = "", string shimRequire = "")
+        {
+            var file = _pathProvider.GetThemeFileInfo( "scripts/" + pathinfo) ;
+            if (file == null)
+            {
+                return this.Request.CreateResponse(HttpStatusCode.NotFound, "not found");
+            }
+            StreamReader sr = new StreamReader(file.OpenRead());
+            string contents = sr.ReadToEnd();
+            List<string> deps = new List<string>();
+            List<string> args = new List<string>();
+
+
+            string[] dep;
+            if (!string.IsNullOrEmpty(shimRequire)) {
+                string[] shimRequireArr = shimRequire.Split(',');
+                for (int i = 0; i < shimRequireArr.Length; i++)
+			    {
+                    dep = shimRequireArr[i].Split('=');
+                    deps.Add("\"" + dep[1] + "\"");
+                    args.Add(dep[0]);
+			    }
+            }
+
+            string module = String.Format(AMDTemplate, string.Join(",", deps.ToArray()), string.Join(",", args.ToArray()), contents, shimExport, pathinfo);
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, module);
+
         }
 
         //[ClientCacheHeaders(ConfigKey = "images")]
