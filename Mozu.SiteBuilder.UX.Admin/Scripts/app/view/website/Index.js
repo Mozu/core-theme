@@ -21,7 +21,7 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.website.entityAdapters.EmailTemplateEntityAdapter',
         'Ext.ux.IFrame'
     ],
-
+    itemId: 'websiteIndex',
     contextConfig: {
         supportedLevels: ['s'],
         requiresContextOfType: ['s'],
@@ -37,130 +37,136 @@ Ext.define('Taco.view.website.Index', {
         email: 'Taco.view.website.entityAdapters.EmailTemplateEntityAdapter'
     },
 
-    options: {},
-
-    header: {
-        title: false,
-        items: [{
-                xtype: 'button',
-                ui: 'action',
-                scale: 'medium',
-                text: 'Page Editor',
-                toggleGroup: 'websiteEditorTabs',
-                allowDepress: false,
-                enableToggle: true,
-                pressed: true,
-                style: {
-                    borderRadius: '2px 0px 0px 2px'
-                },
-                handler: function () {
-                    var cardpanel = this.down('#editorCardPanel');
-
-                    cardpanel.getLayout().setActiveItem(0);
-                }
-            }, {
-                xtype: 'button',
-                ui: 'action',
-                scale: 'medium',
-                text: 'Page Settings',
-                toggleGroup: 'websiteEditorTabs',
-                allowDepress: false,
-                enableToggle: true,
-                style: {
-                    borderRadius: '0px 2px 2px 0px'
-                },
-                handler: function () {
-                    var cardpanel = this.down('#editorCardPanel');
-
-                    cardpanel.getLayout().setActiveItem(1);
-                },
-                toggleHandler: function (cmp, isPressed) {
-                    cmp.nextSibling('checkboxfield').setDisabled(isPressed);
-                    cmp.nextSibling('button[text="Widgets"]').setDisabled(isPressed);
-                }
-            }, {
-                xtype: 'checkboxfield',
-                boxLabel: 'View dropzones',
-                margin: '0 0 0 25',
-                flex: 1,
-                handler: function (checkbox, checked) {
-                    this.showDropZones = checked;
-                    if (checked) {
-                        this.chorizoEditor.showDropZones();
-                    } else {
-                        this.chorizoEditor.hideDropZones();
-                    }
-                }
-            }],
-        actions: [{
-                xtype: 'button',
-                ui: 'action',
-                scale: 'medium',
-                text: 'Widgets',
-                margin: '0 0 0 10',
-                handler: function () {
-                    this.chorizoEditor.widgets().toggle();
-                }
-            }, {
-                xtype: 'button',
-                ui: 'action',
-                scale: 'medium',
-                text: 'More',
-                margin: '0 0 0 10',
-                menu: {
-                    plain: true,
-                    shadow: false,
-                    items: [{
-                            text: 'Live Version',
-                            handler: function (menuItem) {
-                                //scope is set to index on all action buttons by container.
-                                var url = menuItem.up('button').scope.url;
-                                window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=live&redir=' + encodeURIComponent(url), 'taco-preview');
-                            }
-                        },
-                        {
-                            text: 'Staging Version',
-                            handler: function (menuItem) {
-                                //scope is set to index on all action buttons by container.
-                                var url = menuItem.up('button').scope.url;
-                                window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent(url), 'taco-preview');
-                            }
-                        }]
-                }
-            }, {
-                xtype: 'button',
-                ui: 'action',
-                scale: 'medium',
-                text: 'Cancel',
-                margin: '0 0 0 10'
-            }, {
-                xtype: 'button',
-                itemId: 'primaryAction',
-                ui: 'action-primary',
-                scale: 'medium',
-                text: 'Save',
-                margin: '0 0 0 10'
-            },
-            {
-                xtype: 'button',
-                itemId: 'publishAction',
-                ui: 'action-primary',
-                scale: 'medium',
-                text: 'Publish',
-                margin: '0 0 0 10',
-                hidden: true,
-                disabled: true,
-                handler: function () {
-                    this.onPublish();
-                }
-            }]
-    },
+    options: {},   
 
     initComponent: function () {
         var navStore,
             items,
             gridStore;
+        this.header = {
+            title: false,
+            items: [{
+                    xtype: 'button',
+                    ui: 'action',
+                    scale: 'medium',
+                    text: 'Page Editor',
+                    toggleGroup: 'websiteEditorTabs',
+                    allowDepress: false,
+                    enableToggle: true,
+                    pressed: true,
+                    style: {
+                        borderRadius: '2px 0px 0px 2px'
+                    },
+                    scope: this,
+                    handler: function () {
+                        var cardpanel = this.down('#editorCardPanel');
 
+                        cardpanel.getLayout().setActiveItem(0);
+                    }
+                }, {
+                    xtype: 'button',
+                    ui: 'action',
+                    scale: 'medium',
+                    text: 'Page Settings',
+                    toggleGroup: 'websiteEditorTabs',
+                    allowDepress: false,
+                    enableToggle: true,
+                    scope: this,
+                    style: {
+                        borderRadius: '0px 2px 2px 0px'
+                    },
+                    handler: function () {
+                        var cardpanel = this.down('#editorCardPanel');
+
+                        cardpanel.getLayout().setActiveItem(1);
+                    },
+                    toggleHandler: function (cmp, isPressed) {
+                        this.down('#dropZonesCB').setDisabled(isPressed);
+                        this.down('#widgetsButton').setDisabled(isPressed);
+                    }
+                }, {
+                    xtype: 'checkboxfield',
+                    itemId: 'dropZonesCB',
+                    boxLabel: 'View dropzones',
+                    margin: '0 0 0 25',
+                    flex: 1,
+                    scope: this,
+                    handler: function (checkbox, checked) {
+                        this.showDropZones = checked;
+                        if (checked) {
+                            this.chorizoEditor.showDropZones();
+                        } else {
+                            this.chorizoEditor.hideDropZones();
+                        }
+                    }
+                }],
+            actions: [{
+                    xtype: 'button',
+                    ui: 'action',
+                    scale: 'medium',
+                    itemId: 'widgetsButton',
+                    text: 'Widgets',
+                    margin: '0 0 0 10',
+                    scope: this,
+                    handler: function () {
+                        this.chorizoEditor.widgets().toggle();
+                    }
+                }, {
+                    xtype: 'button',
+                    ui: 'action',
+                    scale: 'medium',
+                    text: 'More',
+                    margin: '0 0 0 10',
+                    scope: this,
+                    menu: {
+                        plain: true,
+                        shadow: false,
+                        items: [{
+                                text: 'Live Version',
+                                handler: function (menuItem) {
+                                    //scope is set to index on all action buttons by container.
+                                    var url = menuItem.up('button').scope.url;
+                                    window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=live&redir=' + encodeURIComponent(url), 'taco-preview');
+                                }
+                            },
+                            {
+                                text: 'Staging Version',
+                                handler: function (menuItem) {
+                                    //scope is set to index on all action buttons by container.
+                                    var url = menuItem.up('button').scope.url;
+                                    window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent(url), 'taco-preview');
+                                }
+                            }]
+                    }
+                }, {
+                    xtype: 'button',
+                    ui: 'action',
+                    scale: 'medium',
+                    text: 'Cancel',
+                    margin: '0 0 0 10'
+                }, {
+                    xtype: 'button',
+                    itemId: 'primaryAction',
+                    ui: 'action-primary',
+                    scale: 'medium',
+                    text: 'Save',
+                    margin: '0 0 0 10'
+                },
+                {
+                    xtype: 'button',
+                    itemId: 'publishAction',
+                    ui: 'action-primary',
+                    scale: 'medium',
+                    text: 'Publish',
+                    margin: '0 0 0 10',
+                    hidden: true,
+                    disabled: true,
+                    scope: this,
+                    handler: function () {
+                        this.onPublish();
+                    }
+                }]
+        };
         this.controller = Taco.app.controllers.get('Website');
         this.url = this.options && this.options.startUrl ? this.options.startUrl : '/';
         this.widgetDefinitions = Taco.core.data.StoreManager.getOrCreate("Taco.store.WidgetDefinitions");
@@ -283,7 +289,7 @@ Ext.define('Taco.view.website.Index', {
                         items: [{
                             //     xtype: 'component',
                             //     html: '',
-                    //     cls: 'taco-collapse-handle',
+                            //     cls: 'taco-collapse-handle',
                     //     width: 15,
                     //     height: 30,
                     //     listeners: {
@@ -532,7 +538,7 @@ Ext.define('Taco.view.website.Index', {
                 id: ret.id,
                 definitionId: ret.definitionId
             });
-        };            
+        };
 
 
         if (!Ext.isEmpty(def.get('editViewFields')) || !Ext.isEmpty(def.get('editViewConfig')) || !Ext.isEmpty(def.get('editView'))) {
