@@ -1,5 +1,8 @@
 Ext.define('Taco.overrides.window.MessageBox', {
     override: 'Ext.window.MessageBox',
+
+    ui: 'modal',
+    cls: ['x-hide-offsets'],
     
     // set the default to false for this config; Will hide the close x in the upper right corner
     
@@ -33,7 +36,7 @@ Ext.define('Taco.overrides.window.MessageBox', {
     initComponent: function () {
         var me = this;
         // add a css class to distinguish this from the default Ext.MessageBox
-        me.cls += " taco-messagebox";
+        // me.cls += " taco-messagebox";
         me.callParent(arguments);
     },
 
