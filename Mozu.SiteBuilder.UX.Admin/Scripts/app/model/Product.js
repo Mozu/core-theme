@@ -266,16 +266,19 @@ Ext.define('Taco.model.Product', {
         {
             "name": "packageLength",
             "type": "float",
+            "defaultValue": 1,
             "useNull": true
         },
         {
             "name": "packageWidth",
             "type": "float",
+            "defaultValue": 1,
             "useNull": true
         },
         {
             "name": "packageHeight",
             "type": "float",
+            "defaultValue": 1,
             "useNull": true
         },
         {
