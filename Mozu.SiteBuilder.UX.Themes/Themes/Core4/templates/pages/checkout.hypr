@@ -22,7 +22,7 @@
 
     <form id="checkout-form" class="mz-checkoutform mz-l-2column mz-l-2column-right fades-in" method="post" onsubmit="return false;">
 
-    {% include "modules/common/message-bar" %}
+    {% include "modules/common/message-bar" with model=model.messages %}
 
     <div class="mz-l-column" id="checkout-rightcol">
         

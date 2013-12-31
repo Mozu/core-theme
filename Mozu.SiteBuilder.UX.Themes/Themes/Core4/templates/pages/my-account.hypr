@@ -22,7 +22,7 @@
     <div id="account-panels" class="mz-myaccount-panels mz-l-stack mz-l-stack-large">
 
         <div id="account-messages">
-            {% include "modules/common/message-bar" %}
+            {% include "modules/common/message-bar" with model=model.messages %}
         </div>
 
         <a id="settings"></a>
