@@ -116,9 +116,10 @@ namespace Mozu.SiteBuilder.Mvc.Localization
 
         private void LoadStrings(string language)
         {
-            
+
 
             // Walk the theme hierarchy and merge the localization strings down to the currently applied theme
+#pragma warning disable 612
             foreach (var theme in _siteContext.Theme.Stack.Reverse())
             {
                 var pp = _mozuVirtualPathProvider;

@@ -28,12 +28,10 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
             HttpResponseBase repsonse = requestMessage.HttpContext().Response;
             if (Permanent)
             {
-                bool endResponse = false;
                 repsonse.RedirectPermanent(Url, false);
             }
             else
             {
-                bool flag2 = false;
                 repsonse.Redirect(Url, false);
             }
         }

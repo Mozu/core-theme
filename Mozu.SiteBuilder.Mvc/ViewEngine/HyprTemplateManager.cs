@@ -9,7 +9,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
     public class HyprTemplateManager : ITemplateManager
     {
         private readonly ITemplateManager _innerTemplateManager;
-        private readonly ITemplateManagerProvider _templateManagerProvider;
+     
         private readonly MozuVirtualPathProvider _virtualPathProvider;
     //    private readonly ISiteBuilderContext _siteBuilderContext;
      //   private readonly string _themeId;

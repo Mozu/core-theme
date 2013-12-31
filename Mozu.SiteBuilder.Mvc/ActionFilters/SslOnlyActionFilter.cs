@@ -23,8 +23,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             }
 
             var pageContext = actionContext.Request.Resolve<PageContext>();
-            IEnumerable<string> values;
-
+         
 
 
 
