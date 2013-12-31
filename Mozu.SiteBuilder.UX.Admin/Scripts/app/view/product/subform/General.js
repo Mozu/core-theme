@@ -211,7 +211,7 @@ Ext.define('Taco.view.product.subform.General', {
                     forceSelection: true,
                     listConfig: { shadow: false },
                     shrinkWrap: 3,
-                    store: [[false, 'Hide in website'], [true, 'Show on website']],
+                    store: [[false, 'Disable'], [true, 'Active']],
                     value: this.productInCatalogInfo ? this.productInCatalogInfo .get('isActive') : false
                 }
             ]
