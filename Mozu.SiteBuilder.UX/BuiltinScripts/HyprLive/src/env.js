@@ -9,7 +9,7 @@ function formatString(str, arr) {
 }
 
 if (!HyprLiveContext) throw new ReferenceError("If no AMD loader is present, there must be a global variable named HyprLiveContext for HyprLive to function.");
-HyprLiveContext = JSON.parse(HyprLiveContext);
+//HyprLiveContext = JSON.parse(HyprLiveContext);
 
 var locals = HyprLiveContext.locals,
     volatilelocalNames = ['pageContext', 'user']; // 'navigation'];

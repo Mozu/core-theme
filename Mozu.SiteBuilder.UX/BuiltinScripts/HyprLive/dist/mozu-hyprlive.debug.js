@@ -1,5 +1,5 @@
 /*! 
- * Mozu Hypr Live - v0.2.0 - 2013-12-20
+ * Mozu Hypr Live - v0.2.0 - 2013-12-31
  *
  * Copyright (c) 2013 Volusion, Inc.
  *
@@ -19,7 +19,7 @@
     var externalDefine = root.define;
     var define = root.define = internalDefine;
 	(function (exportFn) {
-		exportFn(['text!../hyprlivecontext'], function (HyprLiveContext) {
+		exportFn(['hyprlivecontext'], function (HyprLiveContext) {
             
 /*! Swig v1.2.7 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
@@ -4771,7 +4771,7 @@ function formatString(str, arr) {
 }
 
 if (!HyprLiveContext) throw new ReferenceError("If no AMD loader is present, there must be a global variable named HyprLiveContext for HyprLive to function.");
-HyprLiveContext = JSON.parse(HyprLiveContext);
+//HyprLiveContext = JSON.parse(HyprLiveContext);
 
 var locals = HyprLiveContext.locals,
     volatilelocalNames = ['pageContext', 'user']; // 'navigation'];

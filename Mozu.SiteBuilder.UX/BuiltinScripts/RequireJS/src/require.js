@@ -164,8 +164,10 @@
     }
 
 
-    var mozuBuiltins = {},
-        builtinRoot = window.location.protocol + "//" + window.location.host + "/js/";
+    var mozuBuiltins = {
+        hyprlivecontext: "/hyprlivecontext?callback=define"
+    },
+        builtinRoot = "/js/";
     each(['sdk', 'hyprlive'], function (modName) {
         mozuBuiltins[modName] = builtinRoot + modName + "-" + storeMode + ".js";
     });
@@ -262,7 +264,9 @@
         function notSpecial(moduleName) {
             return (moduleName &&
                 typeof moduleName === "string" &&
-                !moduleName.match(SPECIAL_CHARS_RE)
+                !moduleName.match(SPECIAL_CHARS_RE) &&
+                moduleName.indexOf('shimRequire') === -1 &&
+                moduleName.indexOf('shimExport') === -1
                 );
         }
 
@@ -1585,7 +1589,8 @@
                     parentPath;
 
                 // short circuit for mozu builtins
-                if (moduleName in mozuBuiltins) return mozuBuiltins[moduleName];
+                if (moduleName in mozuBuiltins)
+                    return (config.cdnPrefix || ("//" + window.location.host)) + mozuBuiltins[moduleName] + (mozuBuiltins[moduleName].indexOf('?') === -1 ? '?' : '&') + "cacheKey=" + encodeURIComponent(config.cacheKey);
 
                     //If a colon is in the URL, it indicates a protocol is used and it is just
                     //an URL to a file, or if it starts with a slash, contains a query arg (i.e. ?)

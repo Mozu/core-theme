@@ -462,6 +462,7 @@
     <Content Include="BuiltinScripts\RequireJS\dist\mozu-require.min.js" />
     <Content Include="BuiltinScripts\RequireJS\Gruntfile.js" />
     <Content Include="BuiltinScripts\RequireJS\lib\json2.js" />
+    <Content Include="BuiltinScripts\RequireJS\src\plugins\shim-browser.js" />
     <Content Include="BuiltinScripts\RequireJS\src\vars-min.js" />
     <Content Include="BuiltinScripts\RequireJS\src\plugins\shim.js" />
     <Content Include="BuiltinScripts\RequireJS\src\plugins\text.js" />
