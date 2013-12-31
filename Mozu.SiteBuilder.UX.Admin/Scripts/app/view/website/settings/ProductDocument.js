@@ -18,6 +18,11 @@ Ext.define('Taco.view.website.settings.ProductDocument', {
             fieldLabel: 'Page Template',
             entityType: 'product',
             emptyText:'[default]'
+        }, {
+            xtype: 'textareafield',
+            name: 'extended_header_content',
+            fieldLabel: 'Additional Header Tags',
+            emptyText: '[none]'
         }];
 
         this.callParent(arguments);
