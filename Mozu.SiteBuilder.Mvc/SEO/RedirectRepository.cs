@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
          }
 
          private const string FileName = "redirects.1.1";
-         Task<Dictionary<string, RedirectEntry>> IRedirectRepository.FetchRedirectEntries(int? siteId= null  )
+         Task<Dictionary<string, RedirectEntry>> IRedirectRepository.FetchRedirectEntries(int? siteId  )
         {
             if (_redirectEntryListTask == null)
             {
@@ -102,13 +102,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return _redirectEntryListTask;
         }
 
-        Task<Dictionary<string, RedirectEntry>> IRedirectRepository.UpdateRedirectEntries(Dictionary<string, RedirectEntry> redirects,int? siteId= null)
+        Task<Dictionary<string, RedirectEntry>> IRedirectRepository.UpdateRedirectEntries(Dictionary<string, RedirectEntry> redirects,int? siteId)
         {
             var client = siteId.HasValue ? _documentListWebApiClient.CloneWithApiContext(x => x.SiteId = siteId) : _documentListWebApiClient;
             return client.GetTreeDocument("settings", FileName).ContinueWith(gdt =>
                 {
                     bool exists = false;
-                    Dictionary<string, RedirectEntry> ret = null;
+                   
                     var gtRes = gdt.Result;
                     if (gtRes.ResponseMessage.IsSuccessStatusCode)
                     {

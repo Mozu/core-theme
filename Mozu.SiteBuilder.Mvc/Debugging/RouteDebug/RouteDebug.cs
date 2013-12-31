@@ -21,16 +21,16 @@ namespace Mozu.SiteBuilder.Mvc.Debugging.RouteDebug
         string str = string.Empty;
       
         return string.Join( "<br>", values.Keys.Select(str2 => string.Format("{0} = {1}", str2, ObjectFormat(values[str2]))).ToArray());
-        foreach (string str2 in values.Keys)
-        {
+        //foreach (string str2 in values.Keys)
+        //{
 
-            str = str + string.Format("{0} = {1}<br/> ", str2, ObjectFormat(values[str2]));
-        }
-        if (str.EndsWith(", "))
-        {
-            str = str.Substring(0, str.Length - 2);
-        }
-        return str;
+        //    str = str + string.Format("{0} = {1}<br/> ", str2, ObjectFormat(values[str2]));
+        //}
+        //if (str.EndsWith(", "))
+        //{
+        //    str = str.Substring(0, str.Length - 2);
+        //}
+        //return str;
     }
     static string ObjectFormat(object obj)
     {

@@ -117,7 +117,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public string FavIconPath { get; set; }
 
         [DataMember(Name = "theme")]
-        [Obsolete("Theme doesn't mean what it used to mean. You probably want DesktopTheme.")]
+       // [Obsolete("Theme doesn't mean what it used to mean. You probably want DesktopTheme.")]
         public string Theme
         {
             get { return _theme; }

@@ -10,18 +10,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 {
     public class ClientApiContext
     {
-        private static List<ServiceInfo> _serviceInfos;
+     
 
 
         private readonly Lazy<string> _apiClaims = new Lazy<string>(() =>
         {
             LightweightAppClaims claim = LightweightAppClaims.CreateForPublicStorefront();
-            //var list = claim.BehaviorIds.ToList();
-            //list.Add(new WishlistCreateBehavior().Id);
-            //list.Add(new WishlistDeleteBehavior().Id);
-            //list.Add(new WishlistReadBehavior().Id);
-            //list.Add(new WishlistUpdateBehavior().Id);
-            //claim.BehaviorIds = list.ToArray();
             return claim.ToAccessToken();
         });
 
@@ -98,7 +92,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
                     return y.InternalUrl;
                 }
-                return  y.VirturalPath;
+             
 
             });
         }
@@ -120,27 +114,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
 
 
-            ///*************************************************88
-            // * REMOVE AFTER CUSTOMER IS FIXED
-            // * 
-            // * **********************************************/
-
-            //var appClaim  =LightweightAppClaims.CreateForSystemApp("food", false);
-
-            //apiContext.UserClaims.BehaviorIds = appClaim.BehaviorIds;
-
-            //header[APIConstants.Headers.APP_CLAIMS] = appClaim.ToAccessToken();
-            //header[APIConstants.Headers.USER_CLAIMS] = apiContext.UserClaims.ToAccessToken();
-
-            ///*************************************************88
-            // * REMOVE AFTER CUSTOMER IS FIXED
-            // * 
-            // * **********************************************/
-
 
             return header;
         }
 
+        private static List<ServiceInfo> _serviceInfos = null;
 
         private static List<ServiceInfo> GetServiceInfos(ISettings settings)
         {
@@ -241,7 +219,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     }
                 }
                 return sis;
-                _serviceInfos = sis;
+                
             }
             return _serviceInfos;
         }

@@ -33,8 +33,6 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
            
             IsSecure = IsheaderTrue(Mozu.Core.Api.Contracts.Constants.Headers.SSL_HANDLED, requestMessage); 
        
-            string origionalUrl = null;
-
             if (requestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
             {
                 this.Url = values.FirstOrDefault();
@@ -124,7 +122,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                                          AccountId = accountId > 0 ? (int?) accountId : (int?) null,
 
 
-                                         IsAuthenticated = !_apiContext.UserClaims.IsAnonymous && _apiContext.UserClaims.IsAuthenticated, //!gcu.IsAnonymous && gcu.IsAuthenticated,
+                                         IsAuthenticated = !_apiContext.UserClaims.IsAnonymous && _apiContext.UserClaims.IsAuthenticationHot, //!gcu.IsAnonymous && gcu.IsAuthenticated,
                                          IsAnonymous = _apiContext.UserClaims.IsAnonymous
                                      };
                 }

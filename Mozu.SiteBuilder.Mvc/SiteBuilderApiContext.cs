@@ -235,8 +235,7 @@ namespace Mozu.SiteBuilder.Mvc
             }
             else
             {
-                DataViewModeType dmt;
-
+                
                 if (_httpRequestMessage.Headers.TryGetValues(Constants.Headers.DATA_VIEW_MODE, out values))
                 {
                     this.DataViewMode = (DataViewModeType)Enum.Parse(typeof(DataViewModeType), values.First());

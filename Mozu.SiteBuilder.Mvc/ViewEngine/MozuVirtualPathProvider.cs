@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             get
             {
 
-
+#pragma warning disable 612
                 return (_siteContext).Theme.Stack;
             }
         }

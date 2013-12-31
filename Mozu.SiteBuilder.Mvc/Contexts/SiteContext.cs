@@ -271,6 +271,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         }
                         else
                         {
+                            #pragma warning disable 612
                             _themeId = _generalSettings.Theme;
                         }
 
