@@ -335,8 +335,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             locals.Add("siteContext", siteContext);
 
             siteContext.Add("themeId", SiteContext.ThemeId);
-            siteContext.Add("generalSettings", SiteContext.ThemeId);
-            siteContext.Add("checkoutSettings", SiteContext.ThemeId);
+            siteContext.Add("generalSettings", SiteContext.GeneralSettings);
+            siteContext.Add("checkoutSettings", SiteContext.CheckoutSettings);
             siteContext.Add("cdnPrefix", SiteContext.CdnPrefix);
             siteContext.Add("secureHost", SiteContext.SecureHost );
             siteContext.Add("supportsInStorePickup", SiteContext.SupportsInStorePickup);
