@@ -59,13 +59,19 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
         public ThemeRuntimeSettingsCollection() { }
 
-        /// <summary>
-        /// Public constructor
-        /// </summary>
-        public ThemeRuntimeSettingsCollection(  Dictionary<string, ThemeRuntimeSetting> dictionary , byte[] etagBytes)
-        {
-            InnerDictionary  = dictionary;
-            this.Etag = etagBytes;
+         /// <summary>
+         /// Public constructor
+         /// </summary>
+         public ThemeRuntimeSettingsCollection(Dictionary<string, ThemeRuntimeSetting> dictionary, byte[] etagBytes)
+         {
+             InnerDictionary = dictionary;
+             if (etagBytes == null)
+             {
+                 int f = 0;
+
+             }
+
+    this.Etag = etagBytes;
 
         }
 

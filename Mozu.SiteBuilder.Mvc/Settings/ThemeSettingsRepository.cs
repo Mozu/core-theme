@@ -182,7 +182,8 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                         else
                         {
                             _ts = DateTime.Today;
-                            _cache[key] = new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, new byte[0]);
+                            this.Etag = new byte[0];
+                            _cache[key] = new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, this.Etag);
 
                         }
                         return value ?? new JObject();

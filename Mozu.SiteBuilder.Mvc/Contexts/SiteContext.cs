@@ -283,7 +283,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                                 var themeEtag = _themeRuntimeSettingsCollection.Etag;
                                // haherAlgorithm.TransformBlock(etag, 0, etag.Length, etag, 0);
                                 md5.TransformBlock(themeEtag, 0, themeEtag.Length, themeEtag ,0);
-                                var tid = System.Text.Encoding.UTF8.GetBytes(_themeId);
+                                var tid = System.Text.Encoding.UTF8.GetBytes(_themeId??"");
                                 this.Hash = md5.TransformFinalBlock(tid, 0, tid.Length );
                                 //not ready for prime time
                                 //var tmp = ThemeSettings[ThemeSettingsRepository.ADDONKEY] as IEnumerable;
