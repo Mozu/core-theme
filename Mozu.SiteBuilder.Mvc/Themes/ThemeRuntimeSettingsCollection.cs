@@ -65,19 +65,15 @@ namespace Mozu.SiteBuilder.Mvc.Themes
          public ThemeRuntimeSettingsCollection(Dictionary<string, ThemeRuntimeSetting> dictionary, byte[] etagBytes)
          {
              InnerDictionary = dictionary;
-             if (etagBytes == null)
-             {
-                 int f = 0;
 
-             }
 
-    this.Etag = etagBytes;
+             this.Etag = etagBytes;
 
-        }
+         }
 
 
 
-        public byte[] Etag { get; set; }
+         public byte[] Etag { get; set; }
 
         public Dictionary<string, ThemeRuntimeSetting> InnerDictionary { get; set; }
     }
