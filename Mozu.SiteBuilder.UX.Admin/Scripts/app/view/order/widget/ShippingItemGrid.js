@@ -122,7 +122,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             );
         }
         
-        if (me.getEnableToolbar()) {
+        if (me.getEnableToolbar() && data.length) {
             this.tbar = Ext.create('Ext.toolbar.Toolbar', this.getToolBarConfig()); 
         }
 

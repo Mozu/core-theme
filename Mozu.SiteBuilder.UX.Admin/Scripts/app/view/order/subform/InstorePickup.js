@@ -47,6 +47,10 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
         // load up the ui sub components; wlll be called every time the record changes
         this.initUI();
         
+
+
+        
+
         Ext.apply(this, {
             items: [
                 me.unpackagedItems,
@@ -54,6 +58,8 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
                 me.pickedupPackages
             ]
         });
+        
+        this.items = Taco.core.util.Common.filterNulls(this.items);
 
         this.callParent(arguments);
     },
@@ -113,56 +119,61 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
 
         data = this.record.get("pendingPickups");
         
-        for (var i = data.length; i > 0; i--) {
+        if (data.length) {
             
-            var dataItem = data[i-1];
-            var billingContact = me.record.get("billingContact");
-//            var packagingType = dataItem.packagingType;
-//            var packagingTypeText = me.packagingTypeStore.getById(packagingType).get("text");
-            
-
-
-            packages.push(Ext.create('Taco.view.order.widget.PackagePickup', {
-                    record: this.record,
-                    gridHidden:false,
-                    packageData: dataItem,
-                    headerData: {
-                        // ui controls
-                        showVisibilityToggle: false,
-                        
-                        // order info
-                        title: "Pickup " + i,
-                        fulfillmentStatus: dataItem.status,
-                        itemTotal: dataItem.totalQuantity,
-//                        packagingType: packagingTypeText,
-                        weight: dataItem.weight,
-                        
-                        
-                        
-                        // billing contact info
-                        firstName: billingContact.firstName,
-                        lastName: billingContact.lastName,
-                        address1: billingContact.address1,
-                        
-                        cityOrTown: billingContact.cityOrTown,
-                        postalOrZipCode: billingContact.postalOrZipCode,
-                        stateOrProvince: billingContact.stateOrProvince,
-                        phoneNumber: billingContact.phoneNumber,
-                        email: billingContact.email
-                    }
-                })
-            );
-        }
-
-        //me.packagedItemsGrid.loadData(this.record.get("packages"));
         
-        me.pendingPickups = Ext.create('Taco.core.ux.EditContainer', {
-            header: false,
-            title: "Packages Awaiting Pickup",
-            cls:"package-container",
-            items: packages
-        });
 
+            for (var i = data.length; i > 0; i--) {
+            
+                var dataItem = data[i-1];
+                var billingContact = me.record.get("billingContact");
+    //            var packagingType = dataItem.packagingType;
+    //            var packagingTypeText = me.packagingTypeStore.getById(packagingType).get("text");
+            
+
+
+                packages.push(Ext.create('Taco.view.order.widget.PackagePickup', {
+                        record: this.record,
+                        gridHidden:false,
+                        packageData: dataItem,
+                        headerData: {
+                            // ui controls
+                            showVisibilityToggle: false,
+                        
+                            // order info
+                            title: "Pickup " + i,
+                            fulfillmentStatus: dataItem.status,
+                            itemTotal: dataItem.totalQuantity,
+    //                        packagingType: packagingTypeText,
+                            weight: dataItem.weight,
+                        
+                        
+                        
+                            // billing contact info
+                            firstName: billingContact.firstName,
+                            lastName: billingContact.lastName,
+                            address1: billingContact.address1,
+                        
+                            cityOrTown: billingContact.cityOrTown,
+                            postalOrZipCode: billingContact.postalOrZipCode,
+                            stateOrProvince: billingContact.stateOrProvince,
+                            phoneNumber: billingContact.phoneNumber,
+                            email: billingContact.email
+                        }
+                    })
+                );
+            }
+
+            //me.packagedItemsGrid.loadData(this.record.get("packages"));
+        
+            me.pendingPickups = Ext.create('Taco.core.ux.EditContainer', {
+                header: false,
+                title: "Packages Awaiting Pickup",
+                cls:"package-container",
+                items: packages
+            });
+            
+        }
     },
     
     initPickedupPackages: function() {
@@ -172,79 +183,86 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
 
         data = this.record.get("pickedupPackages");
         
-        for (var i = 0; i < data.length; i++) {
+        if (data.length) {
             
-            var dataItem = data[i];
-            var billingContact = me.record.get("billingContact");
-//            var packagingType = dataItem.packagingType;
-//            var packagingTypeText = me.packagingTypeStore.getById(packagingType).get("text");
+
+
+
+            for (var i = 0; i < data.length; i++) {
+            
+                var dataItem = data[i];
+                var billingContact = me.record.get("billingContact");
+    //            var packagingType = dataItem.packagingType;
+    //            var packagingTypeText = me.packagingTypeStore.getById(packagingType).get("text");
                 
-            packages.push( Ext.create('Taco.view.order.widget.PackagePickup', {
-                record: this.record,
-                gridHidden: true,
+                packages.push( Ext.create('Taco.view.order.widget.PackagePickup', {
+                    record: this.record,
+                    gridHidden: true,
                     
-                editMode: false,
+                    editMode: false,
 
-                enableCellEditing: false,
+                    enableCellEditing: false,
 
-                enableCheckBoxSelection: false,
+                    enableCheckBoxSelection: false,
 
-                enableActionColumn: false,
+                    enableActionColumn: false,
 
-                enableToobar: true,
+                    enableToobar: true,
 
-                isPickedupPackage: true,
+                    isPickedupPackage: true,
                     
-                enableMoveMenu: false,
+                    enableMoveMenu: false,
 
-                enableShippingMethodMenu: false,
+                    enableShippingMethodMenu: false,
 
-                enableShippingLabelButton: true,
+                    enableShippingLabelButton: true,
 
-                enabledPackingSlipButton: true,
+                    enabledPackingSlipButton: true,
 
-                enabledRemoveButton: false,
+                    enabledRemoveButton: false,
 
-                enabledMarkAsFulfilledButton: false,
+                    enabledMarkAsFulfilledButton: false,
 
 
-                packageData: dataItem,
-                headerData: {
-                    // ui controls
-                    showVisibilityToggle: true,
+                    packageData: dataItem,
+                    headerData: {
+                        // ui controls
+                        showVisibilityToggle: true,
                         
-                    // order info
-                    title: "Pickup",
-                    fulfillmentStatus: dataItem.status,
-                    itemTotal: dataItem.totalQuantity,
-                    weight: dataItem.weight,
+                        // order info
+                        title: "Pickup",
+                        fulfillmentStatus: dataItem.status,
+                        itemTotal: dataItem.totalQuantity,
+                        weight: dataItem.weight,
                     
                     
-                    shipDate: dataItem.shipDate,
-                    packagingType : packagingTypeText,
+                        shipDate: dataItem.shipDate,
+                        packagingType : packagingTypeText,
                         
-                    // billing contact info
-                    firstName: billingContact.firstName,
-                    lastName: billingContact.lastName,
-                    cityOrTown: billingContact.cityOrTown,
-                    address1: billingContact.address1,
-                    postalOrZipCode: billingContact.postalOrZipCode,
-                    stateOrProvince: billingContact.stateOrProvince,
-                    phoneNumber: billingContact.phoneNumber,
-                    email: billingContact.email
-                }
-            })
-            );
-        }
+                        // billing contact info
+                        firstName: billingContact.firstName,
+                        lastName: billingContact.lastName,
+                        cityOrTown: billingContact.cityOrTown,
+                        address1: billingContact.address1,
+                        postalOrZipCode: billingContact.postalOrZipCode,
+                        stateOrProvince: billingContact.stateOrProvince,
+                        phoneNumber: billingContact.phoneNumber,
+                        email: billingContact.email
+                    }
+                })
+                );
+            }
 
-        //me.packagedItemsGrid.loadData(this.record.get("packages"));
+            //me.packagedItemsGrid.loadData(this.record.get("packages"));
         
-        me.pickedupPackages = Ext.create('Taco.core.ux.EditContainer', {
-            header: false,
-            title: "Fulfilled Pickups",
-            cls: "package-container",
-            items: packages
-        });
+            me.pickedupPackages = Ext.create('Taco.core.ux.EditContainer', {
+                header: false,
+                title: "Fulfilled Pickups",
+                cls: "package-container",
+                items: packages
+            });
+            
+        }
     },
     
     onRecordChange: function () {
@@ -253,19 +271,31 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
         Ext.suspendLayouts();
 
         // clear out the ui components
-        me.unpackagedItems.destroy();
-        me.pendingPickups.destroy();
-        me.pickedupPackages.destroy();
+        if (me.unpackagedItems) {
+            me.unpackagedItems.destroy();
+        }
+
+        if (me.pendingPickups) {
+            me.pendingPickups.destroy();
+        }
+
+        if (me.pickedupPackages) {
+            me.pickedupPackages.destroy();
+        }
 
         //re-build the ui components
         me.initUI();
 
         // add the ui components to the view
         me.add(
-            me.unpackagedItems,
-            me.pendingPickups,
-            me.pickedupPackages
+            Taco.core.util.Common.filterNulls([
+                me.unpackagedItems,
+                me.pendingPickups,
+                me.pickedupPackages
+            ])
         );
+
+
         
         Ext.resumeLayouts(true);
         Taco.app.viewPort.setLoading(false);
