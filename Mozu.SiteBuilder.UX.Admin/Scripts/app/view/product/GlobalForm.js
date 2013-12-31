@@ -92,7 +92,7 @@ Ext.define('Taco.view.product.GlobalForm', {
 
         Ext.Array.push(items, [
             Ext.create('Taco.view.product.subform.Shipping', subFormCfg),
-            Ext.create('Taco.view.product.subform.Merchandising', subFormCfg),
+           // Ext.create('Taco.view.product.subform.Merchandising', subFormCfg),
             Ext.create('Taco.view.product.subform.SEO', subFormCfg)
             //,
            // Ext.create('Taco.view.product.subform.CrossSale', subFormCfg)
