@@ -222,14 +222,14 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
         };
 
         if (this.isCollectionContext && this.gridPanel && this.useGridPanel && this.gridPanel.useMultiGrid) {
-            conf.items.push({
+            /*conf.items.push({
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',
                 disabled: true,
                 text: 'Bulk Actions',
                 handler: function () { console.log('do bulk actions'); }
-            }, '->', me.createExpanderCollapser());
+            }, '->', me.createExpanderCollapser());*/
         }
         
         if (this.secondToolbarItems && this.secondToolbarItems.length > 0) {
