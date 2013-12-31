@@ -1,47 +1,18 @@
 ﻿{% extends "page" %}
 
-{% block body-tag-classes %} mz-search-results {% endblock body-tag-classes %}
+{% block title-tag-content %}{{ labels.noResultsTitle|string_format(pageContext.search.query) }}  - {% parent %}{% endblock title-tag-content %}
 
-
+{% block body-tag-classes %} mz-searchresults mz-noresults {% endblock body-tag-classes %}
 
 {% block body-content %}
 
-{% require_script "pages/category" %}
-<div class="mz-search-results">
-    <h2 class="mz-search-restults-title mz-page-title">No Results Found</h2>
+<div class="mz-l-container">
+    <h1 class="mz-pagetitle">{{ labels.noResults }}: <span class="mz-searchresults-query">{{ pageContext.search.query }}</span></h1>
 
-    <div class="mz-side-rail">
-        <nav class="mz-sr-category-wrap">
+    <p class="mz-searchresults-noresultstext">{{ labels.noResultsText }}</p>
 
-            <h4 class="mz-sr-category-title">Category</h4>
-            <ul class="mz-sr-categories mz-sc-list">
-                {%for link in Model.categoryFacet.items %}
-                <li class="mz-sc-item">
-                    <a class="mz-sc-link" href="{{link.url}}">
-                        {{link.name}} <span class="count">({{link.count}})</span>
-                    </a>
-                    <ul class="mz-sc-list">
-                        {%for subLink in link.items %}
-                        <li  class="mz-sc-item">
-                            <a class="mz-sc-link" href="{{subLink.url}}">
-                                {{subLink.name}}<span class="count">({{link.count}})</span>
-                            </a>
-                        </li>
-                        {%endfor%}
-                    </ul>
-                </li>
-                {% endfor %}
-            </ul>
+    {% dropzone "no-results" scope="template" %}
 
-        </nav>
-    </div>
-
-    <div class="mz-sr-listing-wrap mz-list-control-wrap">
-
-        
-       {% include "modules/product/faceted-products" %}
-
-    </div>
 </div>
 
 

@@ -11,6 +11,7 @@
 <div {% if pageContext.categoryId %}data-mz-category="{{ pageContext.categoryId }}" {% endif %}data-mz-search="{{ pageContext.search.query }}" class="mz-l-container">
     <h1 class="mz-pagetitle">{{ labels.searchResults }}: <span class="mz-searchresults-query">{{ pageContext.search.query }}</span></h1>
     {% include "modules/product/faceted-products" %}
+    {% dropzone "search-results" scope="template" %}
 </div>
 
 {% endblock body-content %}

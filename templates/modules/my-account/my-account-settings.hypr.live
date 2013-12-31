@@ -19,7 +19,7 @@
     <button class="mz-button mz-button-small mz-accountsettings-emailcancel" data-mz-action="cancelEditEmail">{{ labels.cancel }}</button>
     <span class="mz-validationmessage" data-mz-validationmessage-for="emailAddress"></span>
     {% else %}
-    <div class="mz-accountsettings-displayemail">{{ model.emailAddress }}</div>
+    <div class="mz-accountsettings-displayemail">{{ model.emailAddress|default(model.userName) }}</div>
     <!--<button class="mz-button mz-button-small mz-accountsettings-emailedit" data-mz-action="startEditEmail">{{ labels.edit }}</button>-->
     {% endif %}
 </div>

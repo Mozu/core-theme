@@ -300,11 +300,15 @@
                 return self.getContacts();
             });
         },
-
         updateName: function () {
             return this.apiUpdate({
                 firstName: this.get('firstName'),
                 lastName: this.get('lastName')
+            });
+        },
+        updateAcceptsMarketing: function(yes) {
+            return this.apiUpdate({
+                acceptsMarketing: yes
             });
         },
         toJSON: function (options) {

@@ -14,6 +14,8 @@
 
         "internal-themeAddons": [],
 
+        "useDebugScripts": true,
+
         /* Common settings used in templates */
         "defaultPageSize": 15,
         "pageSizeOptions": [15, 25, 50, 100],
@@ -477,7 +479,7 @@
             "body": "<h2>Insert Title</h2><p>Insert Content</p>"
         },
         "validPageTypes":["*"]
-    }, {
+    },/* {
         "id": "image",
         "displayName": "test image",
         "displayTemplate": "cms/image",
@@ -492,7 +494,7 @@
         },
         "validPageTypes":["*"],
         "enabled":false
-    },
+    },*/
     {
       "id":"cms-image",
       "displayName":"image",
@@ -510,7 +512,7 @@
         "id": "horizontal_rule",
         "displayName": "Horizontal Rule",
         "displayTemplate": "cms/horizontalrule",
-        "icon": "/resources/admin/widgets/04_column_divider.png",
+        "icon": "/resources/admin/widgets/05_horizontal_divider.png",
         "editView": "taco-horizontalrule-widgeteditor",
         "defaultConfig": {
             "hrBorderWidth": "1px",
