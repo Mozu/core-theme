@@ -25,6 +25,9 @@
     .#{$vprefix}orderform-shipping-package{
 
         margin-bottom:40px;
+		&:last-child{
+			margin-bottom:0px;
+		}
 
         .shipment-header{
             font-size: 1.5rem;
