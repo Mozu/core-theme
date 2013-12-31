@@ -224,11 +224,17 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         private readonly NavigationGandalf _navGandalf;
 
+        private AMDModuleProvider _moduleProvider;
+
         public ResourceController( IThemeSettingsRepository themeSettingsRepository,   MozuVirtualPathProvider pathProvider, NavigationGandalf navGandalf)
         {
             _themeSettingsRepository = themeSettingsRepository;
             _navGandalf = navGandalf;
             _pathProvider = pathProvider;
+            _moduleProvider = new AMDModuleProvider()
+            {
+                _pathProvider = pathProvider
+            };
         }
 
         //
@@ -351,58 +357,135 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         }
 
-        private readonly string AMDTemplate = @"
-            define([{0}], function({1}) {{
-
-                {2}
-                
-                ; return {3};
-
-            }});
-
-            //@sourceUrl={4}.js
-
-        ";
-
-
-        [ClientCacheHeaders(ConfigKey = "scripts")]
-        [System.Web.Http.HttpGet]
-        public HttpResponseMessage  Scripts(string pathinfo)
+        private class AMDModuleProvider
         {
-            return Content("scripts/" + pathinfo, "text/javascript");
-        }
 
-        [ClientCacheHeaders(ConfigKey = "scripts")]
-        [System.Web.Http.HttpGet]
-        public HttpResponseMessage Scripts(string pathinfo, bool makeAMD, string shimExport = "", string shimRequire = "")
-        {
-            var file = _pathProvider.GetThemeFileInfo( "scripts/" + pathinfo) ;
-            if (file == null)
+            public AMDModuleProvider() { }
+
+            public MozuVirtualPathProvider _pathProvider;
+
+            private static class ModuleParts
             {
-                return this.Request.CreateResponse(HttpStatusCode.NotFound, "not found");
-            }
-            StreamReader sr = new StreamReader(file.OpenRead());
-            string contents = sr.ReadToEnd();
-            List<string> deps = new List<string>();
-            List<string> args = new List<string>();
-
-
-            string[] dep;
-            if (!string.IsNullOrEmpty(shimRequire)) {
-                string[] shimRequireArr = shimRequire.Split(',');
-                for (int i = 0; i < shimRequireArr.Length; i++)
-			    {
-                    dep = shimRequireArr[i].Split('=');
-                    deps.Add("\"" + dep[1] + "\"");
-                    args.Add(dep[0]);
-			    }
+                public const string DEFINE = "define([";
+                public const string FUNCTION = "], function(";
+                public const string OPEN = ") {\r\n\r\n";
+                public const string RETURN = "\r\n; return ";
+                public const string CLOSE = ";\r\n\r\n});\r\n\r\n//@sourceUrl=";
+                public const string LAST = "\r\n";
             }
 
-            string module = String.Format(AMDTemplate, string.Join(",", deps.ToArray()), string.Join(",", args.ToArray()), contents, shimExport, pathinfo);
+            public string FormatModule(string deps, string args, string contents, string toExport, string path)
+            {
+                StringBuilder sb = new StringBuilder(ModuleParts.DEFINE);
+                sb.Append(deps);
+                sb.Append(ModuleParts.FUNCTION);
+                sb.Append(args);
+                sb.Append(ModuleParts.OPEN);
+                sb.AppendLine(contents);
+                sb.Append(ModuleParts.RETURN);
+                sb.Append(toExport);
+                sb.Append(ModuleParts.CLOSE);
+                sb.Append(path);
+                sb.Append(ModuleParts.LAST);
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, module);
+                return sb.ToString();
+            }
 
+
+            public string GetScriptFileContents(string pathinfo)
+            {
+                var file = _pathProvider.GetThemeFileInfo("scripts/" + pathinfo);
+                if (file == null)
+                {
+                    return null;
+                }
+                StreamReader sr = new StreamReader(file.OpenRead());
+                return sr.ReadToEnd();
+            }
+
+            private Regex DepNameRE = new Regex("(.+)=([a-zA-Z_$][0-9a-zA-Z_$]*)$");
+
+            public Tuple<string, string> GetAMDDeps(string requireString)
+            {
+                if (string.IsNullOrEmpty(requireString))
+                {
+                    return new Tuple<string, string>(string.Empty, string.Empty);
+                }
+                List<string> namedDeps = new List<string>();
+                List<string> anonDeps = new List<string>();
+                List<string> args = new List<string>();
+
+                //string[] dep;
+
+                int nestingLevel = 0;
+                int lastCommaIndex = -1;
+                bool isComma = false;
+                char chr;
+                string depName;
+                Match depMatch;
+                char[] requireCharArray = requireString.ToCharArray();
+                for (int i = 0; i < requireCharArray.Length; i++)
+                {
+                    chr = requireCharArray[i];
+                    if (chr == '[') nestingLevel++;
+                    if (chr == ']') nestingLevel--;
+                    isComma = (chr == ',');
+                    if (nestingLevel < 0) throw new Exception("Cannot parse AMD dependency array.");
+                    if ((isComma || i + 1 == requireCharArray.Length) && nestingLevel == 0)
+                    {
+                        depName = requireString.Substring(lastCommaIndex + 1, ((isComma ? i : i + 1) - lastCommaIndex - 1));
+                        depMatch = DepNameRE.Match(depName);
+                        if (depMatch.Success)
+                        {
+                            namedDeps.Add("\"" + depMatch.Groups[1].Captures[0].Value + "\"");
+                            args.Add(depMatch.Groups[2].Captures[0].Value);
+                        }
+                        else
+                        {
+                            anonDeps.Add(depName);
+                        }
+                        lastCommaIndex = i;
+                    }
+                }
+
+
+                namedDeps.AddRange(anonDeps);
+
+                //string[] shimRequireArr = requireString.Split(',');
+                //for (int i = 0; i < shimRequireArr.Length; i++)
+                //{
+                //    dep = shimRequireArr[i].Split('=');
+                //    deps.Add("\"" + dep[1] + "\"");
+                //    args.Add(dep[0]);
+                //}
+
+                return new Tuple<string, string>(string.Join(",", namedDeps.ToArray()), string.Join(",", args.ToArray()));
+            }
+
+            public HttpResponseMessage CreateModule(HttpRequestMessage req, string pathinfo, string shimRequire, string shimExport)
+            {
+                string contents = GetScriptFileContents(pathinfo);
+                Tuple<string, string> deps = GetAMDDeps(shimRequire);
+                string module = FormatModule(deps.Item1, deps.Item2, contents, shimExport, "scripts/" + pathinfo);
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    RequestMessage = req,
+                    Content = new StringContent(module, Encoding.Unicode, "text/javascript")
+                };
+            }
         }
+
+        [ClientCacheHeaders(ConfigKey = "scripts")]
+        [System.Web.Http.HttpGet]
+        public HttpResponseMessage Scripts(string pathinfo, string shimRequire = "", string shimExport = "")
+        {
+            if (String.IsNullOrEmpty(shimRequire) && String.IsNullOrEmpty(shimExport))
+            {
+                return Content("scripts/" + pathinfo, "text/javascript");
+            }
+            return _moduleProvider.CreateModule(Request, pathinfo, shimRequire, shimExport);
+        }
+
 
         //[ClientCacheHeaders(ConfigKey = "images")]
         //[System.Web.Http.HttpGet]

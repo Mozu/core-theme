@@ -69,7 +69,6 @@ define('shim',['text'], function (text) {
                     .split('{1}').join(parsedConf.args.join(","))
                     .split('{3}').join(parsedConf.toExport)
                     .split('{4}').join(parsedConf.name)
-
                     .split('{2}').join(body);
         };
 

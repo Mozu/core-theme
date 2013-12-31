@@ -12,5 +12,5 @@
     var externalDefine = root.define;
     var define = root.define = internalDefine;
 	(function (exportFn) {
-		exportFn(['text!../hyprlivecontext'], function (HyprLiveContext) {
+		exportFn(['hyprlivecontext'], function (HyprLiveContext) {
             
