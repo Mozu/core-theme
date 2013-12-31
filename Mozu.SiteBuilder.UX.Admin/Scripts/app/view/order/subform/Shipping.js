@@ -78,6 +78,8 @@ Ext.define('Taco.view.order.subform.Shipping', {
                 me.shippedPackages
             ]
         });
+        
+        this.items = Taco.core.util.Common.filterNulls(this.items);
 
         this.callParent(arguments);
     },
@@ -272,18 +274,28 @@ Ext.define('Taco.view.order.subform.Shipping', {
         Ext.suspendLayouts();
 
         // clear out the ui components
-        me.unpackagedItems.destroy();
-        me.unShippedPackages.destroy();
-        me.shippedPackages.destroy();
+        if (me.unpackagedItems) {
+            me.unpackagedItems.destroy();
+        }
+
+        if (me.unShippedPackages) {
+            me.unShippedPackages.destroy();
+        }
+
+        if (me.shippedPackages) {
+            me.shippedPackages.destroy();
+        }
 
         //re-build the ui components
         me.initUI();
 
-        // add the ui components to the view
+        // add the ui components to the view after filtering out any that are null;
         me.add(
-            me.unpackagedItems,
-            me.unShippedPackages,
-            me.shippedPackages
+            Taco.core.util.Common.filterNulls([
+                me.unpackagedItems,
+                me.unShippedPackages,
+                me.shippedPackages
+            ])
         );
         
         Ext.resumeLayouts(true);

@@ -113,7 +113,8 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
             );
         }
         
-        if (me.getEnableToolbar()) {
+        // if toolbar is enabled and there is data to display show the toolbar
+        if (me.getEnableToolbar() && data.length) {
             this.tbar = Ext.create('Ext.toolbar.Toolbar', this.getToolBarConfig()); 
         }
 
