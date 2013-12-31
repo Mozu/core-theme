@@ -142,10 +142,11 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 
             var key = typeof(List<ThemeRuntimeSetting>) + themeId;
 
-            var cachedResult = _cache[key] as Tuple<DateTime, JObject>;
+            var cachedResult = _cache[key] as Tuple<DateTime, JObject, byte[]>;
             if (cachedResult != null )
             {
                 var tcs = new TaskCompletionSource<JObject>();
+                this.Etag = cachedResult.Item3;
                 tcs.SetResult(cachedResult.Item2 ?? new JObject());
                 _ts = cachedResult.Item1;
                 return tcs.Task  ;
@@ -159,6 +160,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                         JObject value = null;
                         if (res.Result.ResponseMessage.IsSuccessStatusCode)
                         {
+                            this.Etag = res.Result.ETagBytes();
                             var doc = res.Result.ReadAsSync();
 
                             _ts = doc.UpdateDate.GetValueOrDefault(DateTime.Today);
@@ -175,12 +177,12 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                                 }
                             }
 
-                            _cache[key] = new Tuple<DateTime, JObject>(_ts.Value, value);
+                            _cache[key] = new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, this.Etag );
                         }
                         else
                         {
                             _ts = DateTime.Today;
-                            _cache[key] = new Tuple<DateTime, JObject>(_ts.Value, value);
+                            _cache[key] = new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, new byte[0]);
 
                         }
                         return value ?? new JObject();
@@ -217,7 +219,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                             dic.Add(setting.Id, new ThemeRuntimeSetting(setting, val));
                         }
 
-                        _runtimeValues = new ThemeRuntimeSettingsCollection(dic.Values.ToList());
+                        _runtimeValues = new ThemeRuntimeSettingsCollection(dic,  this.Etag );
                         return _runtimeValues;
 
                     });
@@ -241,5 +243,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             }
             return _getTimeStamp;
         }
+
+        public byte[] Etag { get; set; }
     }
 }

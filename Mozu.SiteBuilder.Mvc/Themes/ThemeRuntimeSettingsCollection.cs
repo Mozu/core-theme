@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using Magnum.Extensions;
 using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
@@ -25,31 +26,33 @@ namespace Mozu.SiteBuilder.Mvc.Themes
              {
                  var themeSettings = (ThemeRuntimeSettingsCollection) value;
                  writer.WriteStartObject();
-                 foreach (var item in themeSettings.Settings)
+                 foreach (var item in themeSettings.InnerDictionary)
                  {
-                     writer.WritePropertyName(item.Setting.Id);
-                     serializer.Serialize(writer, item.Value);
+                     writer.WritePropertyName(item.Key );
+                     serializer.Serialize(writer, item.Value.Value );
                  }
                  writer.WriteEndObject();
 
              }
          }
 
-        public List<ThemeRuntimeSetting> Settings { get; set; }
+        
+
 
         public object this[string id]
         {
             get
             {
-                if (Settings == null)
-                    return null;
 
-                if (Settings.Any(s => s.Setting.Id == id))
-                    return Settings.First(s => s.Setting.Id == id).Value;
-
+                ThemeRuntimeSetting value;
+                if (InnerDictionary.TryGetValue(id, out value))
+                {
+                    return value.Value;
+                }
                 return null;
             }
         }
+
 
         /// <summary>
         /// Public constructor
@@ -59,11 +62,17 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// <summary>
         /// Public constructor
         /// </summary>
-        public ThemeRuntimeSettingsCollection(List<ThemeRuntimeSetting> collection)
+        public ThemeRuntimeSettingsCollection(  Dictionary<string, ThemeRuntimeSetting> dictionary , byte[] etagBytes)
         {
-            Settings = collection;
+            InnerDictionary  = dictionary;
+            this.Etag = etagBytes;
+
         }
 
-      
+
+
+        public byte[] Etag { get; set; }
+
+        public Dictionary<string, ThemeRuntimeSetting> InnerDictionary { get; set; }
     }
 }
