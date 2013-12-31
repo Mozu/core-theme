@@ -48,7 +48,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                     name: this.getFieldName(ptAttribute),
                     fieldLabel: ptAttribute.get('attributeName'),
                     allowBlank: ptAttribute.get('isRequired') === true ? false : true,
-                    value:(values && values.length) ? values[0] : null
+                    checked:(values && values.length) ? values[0] : null
                 }];
             },
             'List': function (ptAttribute, values) {
