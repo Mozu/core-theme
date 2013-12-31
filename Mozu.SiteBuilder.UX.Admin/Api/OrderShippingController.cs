@@ -35,7 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string SourcePackageId { get; set; }
         }
         [HttpPostRoute(UriTemplate="shipping/package/create")]
-        public async Task<Response<OrderPackage>> CreatePackage(CreatePackageArgs args)
+        public async Task<Response<List<OrderPackage>>> CreatePackage(CreatePackageArgs args)
         {
             // if there is a source package, remove the item from it first.
             if (!String.IsNullOrEmpty(args.SourcePackageId))
@@ -59,12 +59,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     await _orderWebApiClient.UpdatePackage(args.OrderId, args.SourcePackageId, source);
             }
 
-            var dc = new DCs.Package {
-                Items = Mapper.Map<List<DCs.PackageItem>>(args.Items)
-            };
-            var ret = (await _orderWebApiClient.CreatePackage(args.OrderId, dc)).ReadAsSync();
+            var packages = args.Items.GroupBy(oi => oi.FulfillmentLocationCode).Select(g => new DCs.Package { FulfillmentLocationCode = g.Key, Items = Mapper.Map<List<DCs.PackageItem>>(g.ToList()) });
+            var tasks = packages.Select(p => _orderWebApiClient.CreatePackage(args.OrderId, p)).ToList();
+            await Task.WhenAll(tasks);
 
-            return Single2( ret.Map<OrderPackage>() );
+            var results = tasks.Select(t => t.Result.ReadAsSync());
+
+            return List2( Mapper.Map<List<OrderPackage>>(results) );
         }
 
         public class DeletePackageArgs

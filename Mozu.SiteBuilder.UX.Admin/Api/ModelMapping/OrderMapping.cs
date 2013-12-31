@@ -270,7 +270,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         Mapper.CreateMap<OrdersDC.OrderItem, OrderItem>()
                    .ForMember(x => x.BundledProducts , op => op.MapFrom(dc => dc.Product.BundledProducts ))
                   .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
-                  .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.Product.ProductCode))
+                  .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.Product.VariationProductCode ?? dc.Product.ProductCode))
                   .ForMember(x => x.ProductName, op => op.MapFrom(dc => dc.Product.Name))
                   .ForMember(x => x.UnitPrice, op => op.MapFrom(dc => dc.UnitPrice.ExtendedAmount))
                   .ForMember(x => x.SalePrice, op => op.MapFrom(dc => dc.UnitPrice.SaleAmount))
