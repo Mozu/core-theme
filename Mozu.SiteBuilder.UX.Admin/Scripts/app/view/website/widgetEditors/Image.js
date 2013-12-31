@@ -182,10 +182,10 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         }]
                     }]
                 }, {
-                    xtype: 'textarea',
-                    name: 'imageCaption',
-                    fieldLabel: 'Image Caption'
-                }, {
+                //     xtype: 'textarea',
+                //     name: 'imageCaption',
+                //     fieldLabel: 'Image Caption'
+                // }, {
                     xtype: 'textarea',
                     name: 'imageAltText',
                     fieldLabel: 'Alt Text'
@@ -270,7 +270,7 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         hidden: true
                     }]
                 }, {
-                    xtype: 'radiogroup',
+                    xtype: 'checkboxgroup',
                     fieldLabel: 'Choose one of the following:',
                     columns: 1,
                     vertical: true,
@@ -287,7 +287,18 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         change: {
                             scope: this,
                             fn: function (fieldgroup, newValue, oldValue) {
-                                var isUrl = newValue.imageClickAction === 'url';
+                                var isUrl,
+                                    nextValue;
+
+                                if (Ext.isArray(newValue.imageClickAction)) {
+                                    nextValue = {
+                                        imageClickAction: Ext.Array.difference(newValue.imageClickAction, [oldValue.imageClickAction]).pop()
+                                    };
+
+                                    fieldgroup.setValue(nextValue).checkChange();
+                                }
+
+                                isUrl = (nextValue ? nextValue.imageClickAction : newValue.imageClickAction) === 'url';
 
                                 if (this && this.rendered) {
                                     this.down('#linkFields').setVisible(isUrl);

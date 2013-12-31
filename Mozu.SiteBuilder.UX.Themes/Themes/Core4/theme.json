@@ -497,7 +497,7 @@
     },*/
     {
       "id":"cms-image",
-      "displayName":"image",
+      "displayName":"Image",
       "displayTemplate" :"cms/image2",
         "icon": "/resources/admin/widgets/00_photo.png",
       "editView": "taco-image-widgeteditor",
