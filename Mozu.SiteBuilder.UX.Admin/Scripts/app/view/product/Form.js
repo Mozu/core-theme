@@ -230,8 +230,10 @@ Ext.define('Taco.view.product.Form', {
         this.globalForm.hidden = true;
         // END HACK
         
-        this.tabPanel.setActiveItemAt(this.tabPanel.items.length - 1);
-       
+        // this.tabPanel.setActiveItemAt(this.tabPanel.items.length - 1);
+        //I am defaulting this to the first tab to get around a werid validation issue
+        //Note: this is kinda parta Thoms voodo stuff so yea............................
+        this.tabPanel.setActiveItemAt(0);
     },
     
     savableStateCheck: function () {
