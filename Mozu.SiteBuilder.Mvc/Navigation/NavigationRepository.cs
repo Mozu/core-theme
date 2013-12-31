@@ -72,6 +72,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     {
                         var navset = Newtonsoft.Json.JsonConvert.DeserializeObject<NavigationSet>(jsonString);
                         navset.ETag = etag;
+                        return navset;
                     }
                     return new NavigationSet() { ETag = etag };
                 });
