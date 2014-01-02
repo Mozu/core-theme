@@ -941,6 +941,8 @@
     <Content Include="Themes\Core4\templates\modules\location\location-list-for-product.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\location\location-listing-for-product.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\location\location-listing.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\location\location-product-listing.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\location\locations.hypr.live" />
     <None Include="Themes\Core4\templates\modules\product\product-instock-request.hypr.live" />
     <Content Include="Themes\Core4\templates\Widgets\cms\video.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\location\store-locator.hypr" />

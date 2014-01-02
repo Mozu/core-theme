@@ -46,8 +46,8 @@ require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mo
         //    }
         //});
 
-        var LocationSearchView = Backbone.MozuView.extend({
-            templateName: 'modules/location/location-search',
+        var LocationsView = Backbone.MozuView.extend({
+            templateName: 'modules/location/locations',
             initialize: function () {
                 var self = this;
                 if (navigator.geolocation) {
@@ -62,6 +62,18 @@ require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mo
                     this.populate();
                 }
             },
+            populate: function() {
+                var self = this;
+                this.model.apiGet().then(function() {
+                    self.render();
+                    $('.mz-locationsearch-pleasewait').fadeOut();
+                    self.$el.noFlickerFadeIn();
+                });
+            }
+        }),
+
+        LocationsSearchView = LocationsView.extend({
+            templateName: 'modules/location/location-search',
             populate: function (location) {
                 var self = this;
                 this.model.apiGetForProduct({
@@ -69,24 +81,29 @@ require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mo
                     location: location
                 }).then(function () {
                     self.render();
+                    $('.mz-locationsearch-pleasewait').fadeOut();
                     self.$el.noFlickerFadeIn();
                 });
             },
             addToCartForPickup: function (e) {
-                var $target = $(e.currentTarget),
+                var self = this,
+                    $target = $(e.currentTarget),
                     loc = $target.data('mzLocation');
+                $target.parent().addClass('is-loading');
                 this.product.addToCartForPickup(loc).then(function (cartItem) {
                     window.location.href = "/cart";
+                }).ensure(function () {
+                    $target.parent().removeClass('is-loading');
                 });
             }
         });
 
         $(document).ready(function() {
             
-            var $locationSearch = $('#location-search');
+            var $locationSearch = $('#location-list'),
                 product = ProductModels.Product.fromCurrent(),
                 locationsCollection = new LocationModels.LocationCollection(),
-                view = new LocationSearchView({
+                view = new (product.get('productCode') ? LocationsSearchView : LocationsView)({
                     model: locationsCollection,
                     el: $locationSearch
                 });

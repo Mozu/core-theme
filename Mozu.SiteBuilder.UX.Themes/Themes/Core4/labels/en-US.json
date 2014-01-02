@@ -293,6 +293,7 @@
 
   /* Product Listing labels */
   "productImagePlaceholder" : "[no image]",
+  "packageWeight"        : "Package Weight",
 
   /* Product Detail labels */
   "shortDesc"            : "Summary",
@@ -306,5 +307,17 @@
   "measurements"         : "Measurements",
   "noImages"             : "no image",
   "more"                 : "more",
-  "checkLocalStores"     : "Check Local Stores"
+  "checkLocalStores"     : "Check Local Stores",
+
+  /* Locations labels */
+  "localStores"          : "Local Stores",
+  "findAtLocalStore"     : "Find it at a Local Store",
+  "locationWait"         : "We're searching for local stores. Your browser may ask for permission to use your location. Click \"Allow\" to sort the search results by distance.",
+  "locationWaitProd"     : "We're searching local stores for <strong>{0}</strong>. Your browser may ask for permission to use your location. Click \"Allow\" to sort the search results by distance.",
+  "storePickup"          : "Store Pickup",
+  "outOfStock"           : "Out of stock",
+  "availableNow"         : "Available Now",
+  "noNearbyLocations"    : "No nearby locations could be found.",
+  "noNearbyLocationsProd": "No nearby locations could be found for this product."
+
 }

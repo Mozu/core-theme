@@ -1,0 +1,9 @@
+﻿<div class="mz-locationsearch-list mz-l-paginatedlist">
+    {% if model.items and model.items.length > 0 %}
+    <div class="mz-l-paginatedlist-list">
+      {% include "modules/location/location-list" with model=model.items %}
+    </div>
+  {% else %}
+   {{ labels.noNearbyLocations }}
+  {% endif %}
+</div>

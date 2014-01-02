@@ -1,6 +1,6 @@
 {% extends "page" %}
 
-{% block title-tag-content %}{% if pageContext.metaTitle %}{{ pageContext.metaTitle }}{% else %}Find it at a Local Store  - {% parent %}{% endif %}{% endblock title-tag-content %}
+{% block title-tag-content %}{% if pageContext.metaTitle %}{{ pageContext.metaTitle }}{% else %}{{ labels.findAtLocalStore }}  - {% parent %}{% endif %}{% endblock title-tag-content %}
 
 {% block body-tag-classes %} mz-locations {% endblock body-tag-classes %}
 
@@ -11,13 +11,16 @@
     {% preload_json model "product" %}
 
     <div class="mz-l-container">
-        <h1 class="mz-pagetitle">Find it at a Local Store</h1>
+        <h1 class="mz-pagetitle">{{ labels.findAtLocalStore }}</h1>
         <div class="mz-l-stack">
             <div class="mz-l-stack-section mz-locationproduct">
                 <h4 class="mz-l-stack-sectiontitle">{{ labels.product }}</h4>
-                {% include "modules/product/product-listing" %}
+                {% include "modules/location/location-product-listing" %}
             </div>
-            <div class="mz-l-stack-section mz-locationsearch fades-in" id="location-search">
+            <p class="mz-locationsearch-pleasewait">
+                {{ labels.locationWaitProd|string_format(model.content.productName)|safe }}
+             </p> 
+            <div class="mz-l-stack-section mz-locationsearch fades-in" id="location-list">
                 {% include "modules/location/location-search" with model=model.locations %}
             </div>
         </div>
