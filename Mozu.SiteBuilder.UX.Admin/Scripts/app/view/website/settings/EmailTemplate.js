@@ -10,7 +10,7 @@ Ext.define('Taco.view.website.settings.EmailTemplate', {
 
     title: 'UI',
  
-
+  
     initComponent: function () {
         this.items = [{
             name: 'subject',
@@ -18,15 +18,27 @@ Ext.define('Taco.view.website.settings.EmailTemplate', {
             fieldLabel: 'Subject Line'
         }, {
             name: 'html_1',
+            xtype: 'htmleditor',
+            width: '95%',
+            enableFont: false,
             fieldLabel: 'Html block 1'
         }, {
             name: 'html_2',
-            fieldLabel: 'Html block 2'
+            fieldLabel: 'Html block 2',
+            xtype: 'htmleditor',
+        width: '95%',
+        enableFont: false,
         }, {
+            xtype: 'htmleditor',
+            width: '95%',
+            enableFont: false,
             name: 'html_3',
             fieldLabel: 'Html block 3'
         }, {
             name: 'html_4',
+            xtype: 'htmleditor',
+            width: '95%',
+            enableFont: false,
             fieldLabel: 'Html block 4'
         }];
 
