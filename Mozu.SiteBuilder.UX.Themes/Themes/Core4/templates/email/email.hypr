@@ -2,21 +2,28 @@
    
     <head>
 
-		
+		{%if pageContext.isEditMode %}
+		    {% include "modules/json-required-for-hyprlive" %}
+		    {% include "modules/trailing-scripts" %}
+		    {% cms_resources %}
+		{%endif%}
+	
+
+
         <style>
             {%inline_style "storefront.less" %}
-
         </style>
     </head>
   
   
-    <body class=""  >
+    <body class="mz-blankpage"  >
 
-	
+	<div role="main" id="page-content" class="mz-l-pagecontent">
 		 <div>{{ViewData.content.html_1}}</div>
 		{% block body-content %}{% endblock body-content %}
         
-
+	
         <div>{{ViewData.content.html_2}}</div>
+		</div>
     </body>
 </html>
