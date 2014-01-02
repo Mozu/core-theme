@@ -231,9 +231,9 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         forceSelection: true,
                         value: 'stretch',
                         store: [
-                            ['stretch', 'Stretch'],
-                            ['maintainAspectRatio', 'Maintain Aspect Ratio'],
-                            ['specificSize', 'Specific Size']
+                            ['stretch', 'Stretch']
+                            // ['maintainAspectRatio', 'Maintain Aspect Ratio'],
+                            // ['specificSize', 'Specific Size']
                         ],
                         listeners: {
                             change: {
@@ -538,6 +538,8 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
         }
 
         this.handleImageClickActionChange(data);
+        this.handleImageSizeChange(data.imageSize);
+        this.handleImageSourceChange(data.imageSource);
         this.handleLinkSourceChange(data.linkSource);
     },
 
