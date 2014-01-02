@@ -81,8 +81,14 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
             foreach (string localeCode in themeValues.Keys.Concat(parentValues.Keys).Distinct())
             {
                 mergedDictionary[localeCode] = new ThemeLabelCollection();
-                themeValues[localeCode].Each(lb => mergedDictionary[localeCode].Add(lb));
-                parentValues[localeCode].Where(lb => !mergedDictionary[localeCode].Contains(lb.Id)).Each(lb => mergedDictionary[localeCode].Add(lb));
+                if (themeValues.ContainsKey(localeCode))
+                {
+                    themeValues[localeCode].Each(lb => mergedDictionary[localeCode].Add(lb));
+                }
+                if (parentValues.ContainsKey(localeCode))
+                {
+                    parentValues[localeCode].Where(lb => !mergedDictionary[localeCode].Contains(lb.Id)).Each(lb => mergedDictionary[localeCode].Add(lb));
+                }
             }
 
             return mergedDictionary;
