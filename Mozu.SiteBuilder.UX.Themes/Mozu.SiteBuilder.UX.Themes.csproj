@@ -536,7 +536,7 @@
     <Content Include="Themes\Core4\stylesheets\modules\product\product-listing.less" />
     <Content Include="Themes\Core4\stylesheets\modules\product\price-stack.less" />
     <Content Include="Themes\Core4\stylesheets\storefront.less" />
-    <None Include="Themes\Core4\templates\modules\checkout\checkout-payment.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\checkout\checkout-payment.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\common\price.hypr.live" />
     <Content Include="Themes\Core4\stylesheets\state\is-crossedout.less" />
     <Content Include="Themes\Core4\stylesheets\state\is-saleprice.less" />
