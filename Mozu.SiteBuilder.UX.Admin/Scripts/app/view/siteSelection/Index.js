@@ -43,7 +43,7 @@ Ext.define('Taco.view.siteSelection.Index', {
                                             '<div><a  data-siteId="{[values.id]}" data-url="website" href="/admin/{[values.urlToken]}/website">Edit</a></div>',
                                             '<div><a  data-siteId="{[values.id]}" data-url="redirects" href="/admin/{[values.urlToken]}/redirects">Redirects</a></div>',
                                             '<div><a  data-siteId="{[values.id]}" target="_blank" href="/_gosite/{[values.id]}">View Live Site</a></div>',
-                                            '<div><a  data-siteId="{[values.id]}" target="_blank" href="/_gosite/{[values.id]}?environment=preview">View Preview Site</a></div>',
+                                            '<div><a  data-siteId="{[values.id]}" target="_blank" href="/_gosite/{[values.id]}?environment=preview">View Staged Site</a></div>',
                                         '</li>',
                                     '</ul>',
                                     '<div class="title-large">{[values.name]}</div>',

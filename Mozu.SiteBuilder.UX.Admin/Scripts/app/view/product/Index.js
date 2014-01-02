@@ -165,7 +165,7 @@ Ext.define('Taco.view.product.Index', {
                 text: 'Actions',
                 menuItems: [{
                     itemId: 'live',
-                    text: 'View in',
+                    text: 'View Live',
                     hideOnClick: false,
                     menu: {
                         plain: true,
@@ -175,7 +175,7 @@ Ext.define('Taco.view.product.Index', {
                     }
                 }, {
                         itemId: 'preview',
-                        text: 'Preview in',
+                        text: 'View Staged',
                         hideOnClick: false,
                         menu: {
                             plain: true,
