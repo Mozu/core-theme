@@ -46,7 +46,7 @@ define(['jquery'], function($) {
         },
 
         currentPage: function() {
-            return Math.ceil(this.firstIndex() / this.get('pageSize')) || 1;
+            return Math.ceil(this.firstIndex() / (this.get('pageSize') || 1));
         },
 
         middlePageNumbers: function () {
