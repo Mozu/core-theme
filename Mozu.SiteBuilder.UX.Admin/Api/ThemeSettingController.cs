@@ -55,6 +55,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<HttpResponseMessage> ReadInstance(string themeId)
         {
             var values = await _themeSettingsRepository.GetInstanceValues(themeId);
+            var configSettings = this.ReadConfiguration(themeId);
+            foreach (var setting in configSettings.Items)
+            {
+                JToken o = null;
+                if (!values.TryGetValue(setting.Id, out o))
+                {
+                    values.Add(setting.Id, setting.DefaultValue.ToString());
+                }
+            }
 
             return this.Request.CreateResponse(HttpStatusCode.OK, values);
         }
