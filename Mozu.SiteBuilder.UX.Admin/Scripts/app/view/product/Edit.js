@@ -44,7 +44,7 @@
                 shadow: false,
                 items: [{
                     itemId: 'live',
-                    text: 'View in',
+                    text: 'View Live',
                     menu: {
                         plain: true,
                         shadow: false,
@@ -55,7 +55,7 @@
                     }
                 },{
                     itemId: 'preview',
-                    text: 'Preview in',
+                    text: 'View Staged',
                     menu: {
                         plain: true,
                         shadow: false,
