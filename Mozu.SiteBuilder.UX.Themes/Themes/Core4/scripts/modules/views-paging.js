@@ -3,7 +3,7 @@
  */
 define(['modules/jquery-mozu','shim!vendor/underscore>_','modules/backbone-mozu'], function($, _, Backbone) {
 
-    var pagingHelpers = ['firstIndex', 'lastIndex', 'pageNumbers', 'hasPreviousPage', 'hasNextPage'];
+    var pagingHelpers = ['firstIndex', 'lastIndex', 'middlePageNumbers', 'hasPreviousPage', 'hasNextPage', 'currentPage'];
 
     var PagingBaseView = Backbone.MozuView.extend({
         initialize: function() {
