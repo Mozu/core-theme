@@ -479,26 +479,11 @@
             "body": "<h2>Insert Title</h2><p>Insert Content</p>"
         },
         "validPageTypes":["*"]
-    },/* {
-        "id": "image",
-        "displayName": "test image",
-        "displayTemplate": "cms/image",
-        "editViewFields": [{
-            "name": "image",
-            "fieldLabel": "image",
-            "xtype": "taco-singleimagefield",
-        }],
-        "icon": "/resources/admin/widgets/00_photo.png",
-        "defaultConfig": {
-            "height": 400
-        },
-        "validPageTypes":["*"],
-        "enabled":false
-    },*/
+    },
     {
       "id":"cms-image",
       "displayName":"Image",
-      "displayTemplate" :"cms/image2",
+      "displayTemplate" :"cms/image",
         "icon": "/resources/admin/widgets/00_photo.png",
       "editView": "taco-image-widgeteditor",
         "defaultConfig": {

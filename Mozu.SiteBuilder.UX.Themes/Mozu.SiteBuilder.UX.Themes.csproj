@@ -935,7 +935,6 @@
     <Content Include="Themes\Core4\stylesheets\modules\checkout\checkout-store-credit.less" />
     <Content Include="Themes\Core4\stylesheets\modules\checkout\checkout-payment.less" />
     <None Include="Themes\Core4\templates\modules\product\product-instock-request.hypr.live" />
-    <Content Include="Themes\Core4\templates\Widgets\cms\image2.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\cms\video.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\location\store-locator.hypr" />
     <Content Include="ThemeTemplates\ExtendsCore4\theme.json" />
