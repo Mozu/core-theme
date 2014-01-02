@@ -130,16 +130,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (notification.MessagePublishingContext != null && !string.IsNullOrEmpty(notification.MessagePublishingContext.CustomerId ))
             {
-                var dcUser = (await _customerAccountWebApiClient.GetAccount(int.Parse(notification.MessagePublishingContext.CustomerId))).ReadAsSync();
-                
-                user = new UX.Models.Customers.User
-                                     {
-                                         Email = dcUser.EmailAddress,
-                                         FirstName = dcUser.FirstName,
-                                         LastName = dcUser.LastName,
-                                         UserId = dcUser.UserId,
-                                         AccountId = dcUser.Id 
-                                     };
+                try
+                {
+                    var dcUser = (await _customerAccountWebApiClient.GetAccount(int.Parse(notification.MessagePublishingContext.CustomerId))).ReadAsSync();
+
+                    user = new UX.Models.Customers.User
+                                         {
+                                             Email = dcUser.EmailAddress,
+                                             FirstName = dcUser.FirstName,
+                                             LastName = dcUser.LastName,
+                                             UserId = dcUser.UserId,
+                                             AccountId = dcUser.Id
+                                         };
+                }
+                catch (Mozu.Core.Api.Client.Exceptions.ApiWebClientException)
+                {
+                }
             }
 
             
