@@ -62,10 +62,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes
          /// <summary>
          /// Public constructor
          /// </summary>
-         public ThemeRuntimeSettingsCollection(Dictionary<string, ThemeRuntimeSetting> dictionary, byte[] etagBytes)
+         public ThemeRuntimeSettingsCollection(Dictionary<string, ThemeRuntimeSetting> dictionary, byte[] etagBytes, DateTime timeStamp )
          {
              InnerDictionary = dictionary;
 
+             this.TimeStamp = timeStamp;
 
              this.Etag = etagBytes;
 
@@ -76,5 +77,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
          public byte[] Etag { get; set; }
 
         public Dictionary<string, ThemeRuntimeSetting> InnerDictionary { get; set; }
+
+        public DateTime TimeStamp { get; set; }
     }
 }

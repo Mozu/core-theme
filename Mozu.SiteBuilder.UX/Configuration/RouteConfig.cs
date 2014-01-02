@@ -230,8 +230,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
             //removing default... add a matching route above
             routes.MapHttpRoute(
                 "StoreFront_default",
-                "{controller}/{action}",
-                new {action = "Index"},
+                "{controller}/{action}/{id}",
+                new { action = "Index", id = RouteParameter.Optional },
                 new {controller = @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget|testing"}
                 );
 

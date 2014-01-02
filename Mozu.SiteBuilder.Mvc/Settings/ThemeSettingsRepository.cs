@@ -220,7 +220,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                             dic.Add(setting.Id, new ThemeRuntimeSetting(setting, val));
                         }
 
-                        _runtimeValues = new ThemeRuntimeSettingsCollection(dic,  this.Etag );
+                        _runtimeValues = new ThemeRuntimeSettingsCollection(dic,  this.Etag , _ts.Value  );
                         return _runtimeValues;
 
                     });
