@@ -1,6 +1,7 @@
 var net = require('net')
 var argv = require('optimist').argv
 var exec = require('child_process').exec
+var spawn = require('child_process').spawn
 var colors = require('colors')
 
 var start = new Date()
@@ -9,7 +10,7 @@ var pull = function() {
     var cmd = 'git tf pull --rebase'
     if (argv.pull || argv.p || argv.checkin || argv.c) {
         log(cmd)
-        child = exec(cmd, function(error, stdout, stderr) {
+        child = exec(cmd, {maxBuffer: 200*1024*50}, function(error, stdout, stderr) {
             pullConfig()
         })
 
@@ -26,7 +27,7 @@ var pullConfig = function() {
     var cmd = 'git tf pull --rebase   # Trying to pull ../Mozu Configs'
     if (argv.pull || argv.p || argv.checkin || argv.c) {
         log(cmd)
-        child = exec(cmd, {cwd: '../Mozu Configs'}, function(error, stdout, stderr) {
+        child = exec(cmd, {cwd: '../Mozu Configs', maxBuffer: 200*1024*20}, function(error, stdout, stderr) {
             checkin()
         })
 
