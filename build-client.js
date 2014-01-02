@@ -44,7 +44,7 @@ var checkin = function() {
     var cmd = 'git tf checkin --no-lock --no-metadata'
     if (argv.checkin || argv.c) {
         log(cmd)
-        child = exec(cmd, function(error, stdout, stderr) {
+        child = exec(cmd, {maxBuffer: 200*1024*20}, function(error, stdout, stderr) {
             senchaBuild()
         })
 
