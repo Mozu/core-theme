@@ -45,10 +45,22 @@ define(['jquery'], function($) {
             return this.lastIndex() < this.get("totalCount");
         },
 
-        pageNumbers: function () {
-            var nums = this.get("pageCount"), ret = [];
-            for (var i = 1; i <= nums; i++) {
-                ret.push(i);
+        currentPage: function() {
+            return Math.ceil(this.firstIndex() / this.get('pageSize')) || 1;
+        },
+
+        middlePageNumbers: function () {
+
+            var current = this.currentPage(),
+                ret = [],
+                startMiddle = Math.max(current-2, 2),
+                i = startMiddle,
+                pageCount = this.get('pageCount');
+
+            if (pageCount > 2) {
+                while ((i < startMiddle + 5) && i < pageCount) {
+                    ret.push(i++);
+                }
             }
             return ret;
         }

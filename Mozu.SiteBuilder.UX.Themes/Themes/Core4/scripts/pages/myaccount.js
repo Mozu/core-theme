@@ -167,23 +167,23 @@
         }
     });
 
-    var scrollBackUp = _.debounce(function () {
-        $('#orderhistory').ScrollTo({ axis: 'y', offsetTop: Hypr.getThemeSetting('gutterWidth') });
-    }, 100);
-    var OrderHistoryPageNumbers = PagingViews.PageNumbers.extend({
-        previous: function () {
-            var op = PagingViews.PageNumbers.prototype.previous.apply(this, arguments);
-            if (op) op.then(scrollBackUp);
-        },
-        next: function () {
-            var op = PagingViews.PageNumbers.prototype.next.apply(this, arguments);
-            if (op) op.then(scrollBackUp);
-        },
-        page: function () {
-            var op = PagingViews.PageNumbers.prototype.page.apply(this, arguments);
-            if (op) op.then(scrollBackUp);
-        }
-    });
+    //var scrollBackUp = _.debounce(function () {
+    //    $('#orderhistory').ScrollTo({ axis: 'y', offsetTop: Hypr.getThemeSetting('gutterWidth') });
+    //}, 100);
+    //var OrderHistoryPageNumbers = PagingViews.PageNumbers.extend({
+    //    previous: function () {
+    //        var op = PagingViews.PageNumbers.prototype.previous.apply(this, arguments);
+    //        if (op) op.then(scrollBackUp);
+    //    },
+    //    next: function () {
+    //        var op = PagingViews.PageNumbers.prototype.next.apply(this, arguments);
+    //        if (op) op.then(scrollBackUp);
+    //    },
+    //    page: function () {
+    //        var op = PagingViews.PageNumbers.prototype.page.apply(this, arguments);
+    //        if (op) op.then(scrollBackUp);
+    //    }
+    //});
 
     var PaymentMethodsView = EditableView.extend({
         templateName: "modules/my-account/my-account-paymentmethods",
@@ -331,7 +331,7 @@
                 el: $orderHistoryEl.find('[data-mz-pagingcontrols]'),
                 model: orderHistory
             }),
-            orderHistoryPageNumbers: new OrderHistoryPageNumbers({
+            orderHistoryPageNumbers: new PagingViews.PageNumbers({
                 el: $orderHistoryEl.find('[data-mz-pagenumbers]'),
                 model: orderHistory
             }),
@@ -344,7 +344,7 @@
                 el: $returnHistoryEl.find('[data-mz-pagingcontrols]'),
                 model: returnHistory
             }),
-            returnHistoryPageNumbers: new OrderHistoryPageNumbers({
+            returnHistoryPageNumbers: new PagingViews.PageNumbers({
                 el: $returnHistoryEl.find('[data-mz-pagenumbers]'),
                 model: returnHistory
             }),
