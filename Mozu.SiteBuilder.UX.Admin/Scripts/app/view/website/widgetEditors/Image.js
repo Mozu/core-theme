@@ -104,15 +104,7 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                             change: {
                                 scope: this,
                                 fn: function (field, newValue, oldValue) {
-                                    var isFile = newValue === 'file',
-                                        cardIndex = isFile ? 0 : 1;
-                                    
-                                    if (this && this.rendered) {
-                                        field.nextSibling('#imageAssociatorButton').setVisible(isFile);
-                                        field.nextSibling('#imageUploadButton').setVisible(isFile);
-                                        field.nextSibling('[name=imageExternalUrl]').setVisible(newValue === 'externalUrl');
-                                        this.down('#imageSelectors').getLayout().setActiveItem(cardIndex);
-                                    }
+                                    this.handleImageSourceChange(newValue);
                                 }
                             }
                         }
@@ -247,10 +239,7 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                             change: {
                                 scope: this,
                                 fn: function (field, newValue, oldValue) {
-                                    if (this && this.rendered) {
-                                        this.down('[name=imageWidth]').setVisible(newValue === 'specificSize');
-                                        this.down('[name=imageHeight]').setVisible(newValue === 'specificSize');
-                                    }
+                                    this.handleImageSizeChange(newValue);
                                 }
                             }
                         }
@@ -272,42 +261,26 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                 }, {
                     xtype: 'radiogroup',
                     fieldLabel: 'Choose one of the following:',
-                    columns: 1,
+                    columns: 2,
                     vertical: true,
                     items: [{
-                        name: 'imageClickAction',
-                        inputValue: '',
-                        boxLabel: 'Do nothing'
-                    }, {
                         name: 'imageClickAction',
                         inputValue: 'lightbox',
                         boxLabel: 'Open larger image in a lightbox'
                     }, {
                         name: 'imageClickAction',
                         inputValue: 'url',
-                        boxLabel: 'Click-through URL'
+                        boxLabel: 'Navigate to a click-through URL'
+                    }, {
+                        name: 'imageClickAction',
+                        inputValue: '',
+                        boxLabel: 'Do nothing'
                     }],
                     listeners: {
                         change: {
                             scope: this,
                             fn: function (fieldgroup, newValue, oldValue) {
-                                var isUrl,
-                                    nextValue;
-
-                                if (Ext.isArray(newValue.imageClickAction)) {
-                                    nextValue = {
-                                        imageClickAction: Ext.Array.difference(newValue.imageClickAction, [oldValue.imageClickAction]).pop()
-                                    };
-
-                                    fieldgroup.setValue(nextValue).checkChange();
-                                }
-
-                                isUrl = (nextValue ? nextValue.imageClickAction : newValue.imageClickAction) === 'url';
-
-                                if (this && this.rendered) {
-                                    this.down('#linkFields').setVisible(isUrl);
-                                    this.down('#linkSelectors').setVisible(isUrl);
-                                }
+                                this.handleImageClickActionChange(newValue);
                             }
                         }
                     }
@@ -335,18 +308,7 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                             change: {
                                 scope: this,
                                 fn: function (field, newValue, oldValue) {
-                                    var isFile = newValue === 'file';
-                                    var cardIndex = isFile ? 2 : 0;
-
-                                    if (this && this.rendered) {
-                                        if (newValue === 'internalUrl') cardIndex = 1;
-
-                                        field.nextSibling('#linkAssociatorButton').setVisible(isFile);
-                                        field.nextSibling('#linkUploadButton').setVisible(isFile);
-                                        field.nextSibling('[name=linkInternalUrl]').setVisible(newValue === 'internalUrl');
-                                        field.nextSibling('[name=linkExternalUrl]').setVisible(newValue === 'externalUrl');
-                                        this.down('#linkSelectors').getLayout().setActiveItem(cardIndex);
-                                    }
+                                    this.handleLinkSourceChange(newValue);
                                 }
                             }
                         }
@@ -488,6 +450,42 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
         });
     },
 
+    handleImageClickActionChange: function (newValue) {
+        var isUrl = newValue.imageClickAction === 'url';
+
+        console.log(isUrl ? 'url' : 'not url');
+        this.down('#linkFields').setVisible(isUrl);
+        this.down('#linkSelectors').setVisible(isUrl);
+    },
+
+    handleImageSizeChange: function (newValue) {
+        this.down('[name=imageWidth]').setVisible(newValue === 'specificSize');
+        this.down('[name=imageHeight]').setVisible(newValue === 'specificSize');
+    },
+
+    handleImageSourceChange: function (newValue) {
+        var isFile = newValue === 'file',
+            cardIndex = isFile ? 0 : 1;
+
+        this.down('#imageAssociatorButton').setVisible(isFile);
+        this.down('#imageUploadButton').setVisible(isFile);
+        this.down('[name=imageExternalUrl]').setVisible(newValue === 'externalUrl');
+        this.down('#imageSelectors').getLayout().setActiveItem(cardIndex);
+    },
+
+    handleLinkSourceChange: function (newValue) {
+        var isFile = newValue === 'file',
+            cardIndex = isFile ? 2 : 0;
+
+        if (newValue === 'internalUrl') cardIndex = 1;
+
+        this.down('#linkAssociatorButton').setVisible(isFile);
+        this.down('#linkUploadButton').setVisible(isFile);
+        this.down('[name=linkInternalUrl]').setVisible(newValue === 'internalUrl');
+        this.down('[name=linkExternalUrl]').setVisible(newValue === 'externalUrl');
+        this.down('#linkSelectors').getLayout().setActiveItem(cardIndex);
+    },
+
     toggleAssociator: function (state, button, store) {
         if (state) {
             if (!this.associator) {
@@ -523,6 +521,24 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
         } else if (this.associator) {
             this.associator.hide();
         }
+    },
+
+    setValues: function () {
+        var data;
+
+        this.callParent(arguments);
+
+        data = this.widgetData;
+
+        if (data.imageSource === 'file' && data.imageFileId) {
+            this.imageStore.add({
+                id: data.imageFileId,
+                url: ['/cms/', Taco.app.context.currentCtx.id, '/files/', data.imageFileId].join('')
+            });
+        }
+
+        this.handleImageClickActionChange(data);
+        this.handleLinkSourceChange(data.linkSource);
     },
 
     /**

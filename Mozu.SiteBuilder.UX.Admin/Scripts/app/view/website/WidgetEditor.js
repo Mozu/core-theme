@@ -28,10 +28,14 @@ Ext.define('Taco.view.website.WidgetEditor', {
         
         this.callParent(arguments);
 
-        this.form.getForm().setValues(this.widgetData);
+        this.setValues();
         
         this.on('beforesave', function () {
             me.widgetData = Ext.apply(me.widgetData, me.form.getForm().getValues(false, false, false, true));
         });
+    },
+
+    setValues: function () {
+        this.form.getForm().setValues(this.widgetData);
     }
 });
