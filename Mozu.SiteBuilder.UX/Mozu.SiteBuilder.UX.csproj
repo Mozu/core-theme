@@ -471,6 +471,7 @@
     <Content Include="BuiltinScripts\SDK\src\errors.js" />
     <Content Include="BuiltinScripts\SDK\src\iframexhr.js" />
     <Content Include="BuiltinScripts\SDK\src\types\cart.js" />
+    <Content Include="BuiltinScripts\SDK\src\types\locations.js" />
     <Content Include="BuiltinScripts\SDK\src\types\wishlist.js" />
     <Content Include="BuiltinScripts\SDK\src\types\product.js" />
     <Content Include="BuiltinScripts\SDK\src\types\creditcard.js" />

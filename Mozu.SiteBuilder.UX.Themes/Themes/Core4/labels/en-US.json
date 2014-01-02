@@ -305,5 +305,6 @@
   "properties"           : "Properties",
   "measurements"         : "Measurements",
   "noImages"             : "no image",
-  "more"                 : "more"
+  "more"                 : "more",
+  "checkLocalStores"     : "Check Local Stores"
 }

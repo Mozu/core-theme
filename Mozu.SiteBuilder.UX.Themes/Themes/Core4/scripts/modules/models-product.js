@@ -152,6 +152,9 @@
                 });
             }
         },
+        addToCartForPickup: function (locationCode) {
+            return this.apiAddToCartForPickup(locationCode);
+        },
         updateConfiguration: _.debounce(function() {
             var newConfiguration = this.getConfiguredOptions();
             if (JSON.stringify(this.lastConfiguration) !== JSON.stringify(newConfiguration)) {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using System.Net.Http;
 using Mozu.CommerceRuntime.Contracts.Carts;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
@@ -12,11 +13,10 @@ using Newtonsoft.Json.Linq;
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
 
-    
+
     [ContextInitialization]
     [ErrorFormattingActionFilter]
     public class LocationController : BaseApiController
-   
     {
         //
         // GET: /StoreFront/Locations/
@@ -34,10 +34,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
-         [HttpPost]
-        public ActionResult Product(JObject   cartItem )
+        [HttpPost]
+        public ActionResult Product()
         {
-            return View("product-location", cartItem);
+            var form = this.Request.Content.ReadAsFormDataAsync().Result;
+            var prod = JObject.Parse(form["item"]);
+            return View("product-location", prod);
         }
 
     }

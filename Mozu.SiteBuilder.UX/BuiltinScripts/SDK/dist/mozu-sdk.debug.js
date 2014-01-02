@@ -1,7 +1,7 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2013-12-30
+ * Mozu JavaScript SDK - v0.2.0 - 2014-01-02
  *
- * Copyright (c) 2013 Volusion, Inc.
+ * Copyright (c) 2014 Volusion, Inc.
  *
  */
 
@@ -2593,6 +2593,12 @@ var ApiReference = (function () {
                 shortcutParam: 'quantity',
                 returnType: 'cartitem',
                 template: '{+cartService}current/items/'
+            },
+            'get-inventory': {
+                template: '{+productService}{productCode}/locationinventory{?locationCodes}',
+                includeSelf: true,
+                shortcutParam: 'locationcodes',
+                returnType: 'string'
             }
         },
         'location': {
@@ -2607,8 +2613,12 @@ var ApiReference = (function () {
             },
             collectionOf: 'location',
             get: {
-                template: '{+locationService}locationUsageTypes/SP/locations/' + genericQueryTpt
+                template: '{+locationService}locationUsageTypes/SP/locations/{?startIndex,sortBy,pageSize,filter}'
+            },
+            'get-by-lat-long': {
+                template: '{+locationService}locationUsageTypes/SP/locations/?filter=geo near({latitude},{longitude}){&startIndex,sortBy,pageSize}'
             }
+            
         },
         'cart': {
             get: '{+cartService}current',
@@ -3103,13 +3113,17 @@ var ApiCollection = (function () {
                 this.prop("items", rawItems.concat(newItems));
             }
         },
-        remove: function(indexOrItem) {
-
+        remove: function (indexOrItem) {
+            var index = indexOrItem;
+            if (typeof indexOrItem !== "number") {
+                index = utils.indexOf(this, indexOrItem);
+            }
+            Array.prototype.splice.call(this, index, 1);
         },
         replace: function(newItems, noUpdate) {
-            Array.prototype.splice.call(this, 0, this.length, utils.map(newItems, convertItem, this));
+            Array.prototype.splice.apply(this, [0, this.length].concat(utils.map(newItems, convertItem, this)));
             if (!noUpdate) {
-                this.prop("items", rawItems);
+                this.prop("items", newItems);
             }
         },
         removeAll: function(noUpdate) {
@@ -3390,6 +3404,53 @@ ApiObject.types.customer = (function () {
             return this.api.action(this, 'update', utils.extend(this.getMinimumPartial(), utils.clone(data)));
         }
     }
+}());
+ApiCollection.types.locations = (function () {
+
+    return {
+        getForProduct: function (opts) {
+            var self = this,
+                coll,
+                // not running the method on self since it shouldn't sync until it's been processed!
+                operation = opts.location ?
+                this.api.action('locations', 'get-by-lat-long', {
+                    latitude: opts.location.coords.latitude,
+                    longitude: opts.location.coords.longitude
+                }) :
+                this.api.get('locations');
+            return operation.then(function (c) {
+                coll = c;
+                var codes = utils.map(coll.data.items, function (loc) {
+                    return loc.code;
+                }).join(',');
+                return self.api.action('product', 'getInventory', {
+                    productCode: opts.productCode,
+                    locationCodes: codes
+                });
+            }).then(function (inventory) {
+                var j,
+                    ilen,
+                    locations = coll.data.items,
+                    inventories = inventory.items,
+                    validLocations = [];
+                for (var i = 0, len = locations.length; i < len; i++) {
+                    for (j = 0, ilen = inventories.length; j < ilen; j++) {
+                        if (inventories[j].locationCode === locations[i].code) {
+                            locations[i].quantity = inventories[j].stockAvailable;
+                            validLocations.push(locations[i]);
+                            inventories.splice(j, 1);
+                            break;
+                        }
+                    }
+                }
+                //self.replace(utils.clone(validLocations));
+                var data = { items: utils.clone(validLocations) };
+                self.fire('sync', data, data);
+                return self;
+            });
+        }
+    }
+
 }());
 ApiObject.types.login = {
     postconstruct: function (type, json) {
