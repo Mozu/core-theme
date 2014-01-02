@@ -45,7 +45,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
         Ext.Array.each(credFieldDefs, function (fieldDef) {
             var value = '';
             Ext.each(credOriginalValues, function (item) {
-                if (item.APIName == fieldDef.APIName) {
+                if (item.apiName == fieldDef.apiName) {
                     value = item['value'];
                 }
             });
@@ -54,7 +54,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
                 {
                     xtype: 'textfield',
                     fieldLabel: fieldDef.displayName,
-                    name: fieldDef.apiname,
+                    name: fieldDef.apiName,
                     inputType: 'password',
                     value: value
                 });
