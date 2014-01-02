@@ -24,6 +24,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name="status", EmitDefaultValue = true)]
         public string Status { get; set; }
 
+        [DataMember(Name="fulfillmentMethodCode")]
+        public string FulfillmentMethodCode { get; set; }
+
         [DataMember(Name="shippingMethodCode", EmitDefaultValue = true)]
         public string ShippingMethodCode { get; set; }
 
