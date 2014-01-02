@@ -60,8 +60,8 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
 
             title: 'FedEx',
             providerId: 'fedex',
-            configureCopy: '<img src="http://images.fedex.com/images/c/t1/gh/logo-header-fedex.png"/> <div>Please provide your FedEx account credentials.</div>',
-            ratesCopy: '<img src="http://images.fedex.com/images/c/t1/gh/logo-header-fedex.png"/> <div>Please provide your FedEx account credentials.</div>',
+            configureCopy: '<img src="http://images.fedex.com/images/c/t1/gh/logo-header-fedex.png"/> <div>Please provide your FedEx account credentials.</div><div style="margin-top:50px; font-size: 85%">The FedEx service marks are owned by Federal Express Corporation and are used by permission.</div>',
+            ratesCopy: '<img src="http://images.fedex.com/images/c/t1/gh/logo-header-fedex.png"/> <div>Please provide your FedEx account credentials.</div><div style="margin-top:50px; font-size: 85%">The FedEx service marks are owned by Federal Express Corporation and are used by permission.</div>',
             customFileds: [
                 {
                     xtype: 'textfield',
