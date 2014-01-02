@@ -80,14 +80,25 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     {
                         return secureHost + y.VirturalPath;
                     }
+                    else if (y.IsSiteBuiderRoute)
+                    {
+                        return defaultHost + y.VirturalPath;
+                    }
                     return y.VirturalPath;
                 }
                 else
                 {
-                    if (y.IsSiteBuiderRoute && sslEnabled && y.RequiresSsl)
+                    if (y.IsSiteBuiderRoute)
                     {
-                        return secureHost + y.VirturalPath;
-                        
+                        if (sslEnabled && y.RequiresSsl)
+                        {
+                            return secureHost + y.VirturalPath;
+                        }
+                        else
+                        {
+                            return defaultHost + y.VirturalPath;
+                        }
+
                     }
 
                     return y.InternalUrl;
