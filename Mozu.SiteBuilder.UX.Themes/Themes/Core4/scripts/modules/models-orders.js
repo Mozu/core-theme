@@ -80,7 +80,7 @@
                 model: RMA
             })
         }
-    }, PagingMixin));
+    }, PagingMixin)),
 
     Order = Backbone.MozuModel.extend({
         mozuType: 'order',

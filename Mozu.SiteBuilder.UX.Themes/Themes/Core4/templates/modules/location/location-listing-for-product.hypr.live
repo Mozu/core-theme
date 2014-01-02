@@ -8,9 +8,9 @@
     <div class="mz-locationlisting-inventory">
         <p class="mz-locationlisting-inventorystatus">
             {% if model.quantity == 0 %}
-            Out of stock
+            {{ labels.outOfStock }}
             {% else %}
-            Available Now
+            {{ labels.availableNow }}
             {% endif %}
         </p>
     </div>

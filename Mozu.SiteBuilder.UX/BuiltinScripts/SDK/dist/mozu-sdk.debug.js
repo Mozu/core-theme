@@ -1955,6 +1955,10 @@ var CONSTANTS = {
         COMPLETE_ORDER: "CompleteOrder",
         CANCEL_ORDER: "CancelOrder",
         REOPEN_ORDER: "ReopenOrder"
+    },
+    FULFILLMENT_METHODS: {
+        SHIP: "Ship",
+        PICKUP: "Pickup"
     }
 };
 // BEGIN UTILS
@@ -2589,7 +2593,7 @@ var ApiReference = (function () {
                 includeSelf: {
                     asProperty: 'product'
                 },
-                overridePostData: true,
+                overridePostData: ['product','quantity','fulfillmentLocationCode','fulfillmentMethod'],
                 shortcutParam: 'quantity',
                 returnType: 'cartitem',
                 template: '{+cartService}current/items/'
@@ -3443,7 +3447,6 @@ ApiCollection.types.locations = (function () {
                         }
                     }
                 }
-                //self.replace(utils.clone(validLocations));
                 var data = { items: utils.clone(validLocations) };
                 self.fire('sync', data, data);
                 return self;
@@ -3616,6 +3619,11 @@ ApiObject.types.product = {
         return list.getOrCreate().then(function () {
             return list.addItem({ quantity: payload.quantity, product: self.data });
         });
+    },
+    addToCartForPickup: function (opts) {
+        return this.addToCart(utils.extend({}, this.data, {
+            fulfillmentMethod: CONSTANTS.FULFILLMENT_METHODS.PICKUP
+        }, opts));
     }
 };
 ApiObject.types.shipment = {

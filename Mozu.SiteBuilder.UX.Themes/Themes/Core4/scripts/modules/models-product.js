@@ -152,8 +152,11 @@
                 });
             }
         },
-        addToCartForPickup: function (locationCode) {
-            return this.apiAddToCartForPickup(locationCode);
+        addToCartForPickup: function (locationCode, quantity) {
+            return this.apiAddToCartForPickup({
+                fulfillmentLocationCode: locationCode,
+                quantity: quantity || 1
+            });
         },
         updateConfiguration: _.debounce(function() {
             var newConfiguration = this.getConfiguredOptions();

@@ -215,7 +215,7 @@ var ApiReference = (function () {
                 includeSelf: {
                     asProperty: 'product'
                 },
-                overridePostData: ['quantity','fulfillmentLocationCode','fulfillmentMethod'],
+                overridePostData: ['product','quantity','fulfillmentLocationCode','fulfillmentMethod'],
                 shortcutParam: 'quantity',
                 returnType: 'cartitem',
                 template: '{+cartService}current/items/'
