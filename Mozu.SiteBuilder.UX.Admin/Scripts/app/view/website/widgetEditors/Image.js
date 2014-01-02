@@ -270,11 +270,15 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         hidden: true
                     }]
                 }, {
-                    xtype: 'checkboxgroup',
+                    xtype: 'radiogroup',
                     fieldLabel: 'Choose one of the following:',
                     columns: 1,
                     vertical: true,
                     items: [{
+                        name: 'imageClickAction',
+                        inputValue: '',
+                        boxLabel: 'Do nothing'
+                    }, {
                         name: 'imageClickAction',
                         inputValue: 'lightbox',
                         boxLabel: 'Open larger image in a lightbox'
