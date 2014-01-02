@@ -21,6 +21,7 @@
         "pageSizeOptions": [15, 25, 50, 100],
         "maxProductSummaryWords": 40,
         "allowWishlist": false,
+        "showBreadcrumbs": true,
 
         /* Common appearance settings used in the stylesheet */
         "font": "Source Sans Pro",
@@ -479,7 +480,7 @@
             "body": "<h2>Insert Title</h2><p>Insert Content</p>"
         },
         "validPageTypes":["*"]
-    },
+        },
     {
       "id":"cms-image",
       "displayName":"Image",

@@ -31,13 +31,17 @@ var ApiCollection = (function () {
                 this.prop("items", rawItems.concat(newItems));
             }
         },
-        remove: function(indexOrItem) {
-
+        remove: function (indexOrItem) {
+            var index = indexOrItem;
+            if (typeof indexOrItem !== "number") {
+                index = utils.indexOf(this, indexOrItem);
+            }
+            Array.prototype.splice.call(this, index, 1);
         },
         replace: function(newItems, noUpdate) {
-            Array.prototype.splice.call(this, 0, this.length, utils.map(newItems, convertItem, this));
+            Array.prototype.splice.apply(this, [0, this.length].concat(utils.map(newItems, convertItem, this)));
             if (!noUpdate) {
-                this.prop("items", rawItems);
+                this.prop("items", newItems);
             }
         },
         removeAll: function(noUpdate) {

@@ -35,7 +35,16 @@
         addToWishlist: function () {
             this.model.addToWishlist();
         },
+        checkLocalStores: function(e) {
+            e.preventDefault();
+            var $localStoresForm = $(e.currentTarget).parents('[data-mz-localstoresform]'),
+                $input = $localStoresForm.find('[data-mz-localstoresform-input]');
+            if ($input.length > 0) {
+                $input.val(JSON.stringify(this.model.toJSON()));
+                $localStoresForm[0].submit();
+            }
 
+        },
         initialize: function () {
             // handle preset selects, etc
             var me = this;

@@ -27,5 +27,9 @@
         COMPLETE_ORDER: "CompleteOrder",
         CANCEL_ORDER: "CancelOrder",
         REOPEN_ORDER: "ReopenOrder"
+    },
+    FULFILLMENT_METHODS: {
+        SHIP: "Ship",
+        PICKUP: "Pickup"
     }
 };

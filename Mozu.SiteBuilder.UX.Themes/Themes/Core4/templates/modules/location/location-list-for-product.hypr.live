@@ -1,0 +1,5 @@
+﻿<ul class="mz-locationlist mz-locationlist-forproduct">
+    {% for location in model %}
+        <li>{% include "modules/location/location-listing-for-product" with model=location %}</li>
+    {% endfor %}
+</ul>

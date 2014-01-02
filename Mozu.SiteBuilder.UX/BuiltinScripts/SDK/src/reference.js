@@ -215,10 +215,16 @@ var ApiReference = (function () {
                 includeSelf: {
                     asProperty: 'product'
                 },
-                overridePostData: true,
+                overridePostData: ['quantity','fulfillmentLocationCode','fulfillmentMethod'],
                 shortcutParam: 'quantity',
                 returnType: 'cartitem',
                 template: '{+cartService}current/items/'
+            },
+            'get-inventory': {
+                template: '{+productService}{productCode}/locationinventory{?locationCodes}',
+                includeSelf: true,
+                shortcutParam: 'locationcodes',
+                returnType: 'string'
             }
         },
         'location': {
@@ -233,8 +239,12 @@ var ApiReference = (function () {
             },
             collectionOf: 'location',
             get: {
-                template: '{+locationService}locationUsageTypes/SP/locations/' + genericQueryTpt
+                template: '{+locationService}locationUsageTypes/SP/locations/{?startIndex,sortBy,pageSize,filter}'
+            },
+            'get-by-lat-long': {
+                template: '{+locationService}locationUsageTypes/SP/locations/?filter=geo near({latitude},{longitude}){&startIndex,sortBy,pageSize}'
             }
+            
         },
         'cart': {
             get: '{+cartService}current',

@@ -6,5 +6,10 @@
         return list.getOrCreate().then(function () {
             return list.addItem({ quantity: payload.quantity, product: self.data });
         });
+    },
+    addToCartForPickup: function (opts) {
+        return this.addToCart(utils.extend({}, this.data, {
+            fulfillmentMethod: CONSTANTS.FULFILLMENT_METHODS.PICKUP
+        }, opts));
     }
 };
