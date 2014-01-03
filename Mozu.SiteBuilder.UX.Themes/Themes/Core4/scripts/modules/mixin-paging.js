@@ -20,7 +20,8 @@ define(['jquery'], function($) {
         },
 
         setPage: function (num) {
-            if (parseInt(num) <= parseInt(this.get('pageCount'))) return this.apiGet($.extend({}, this.lastRequest, {
+            num = parseInt(num);
+            if (num != this.currentPage() && num <= parseInt(this.get('pageCount'))) return this.apiGet($.extend({}, this.lastRequest, {
                 startIndex: (num - 1) * parseInt(this.get('pageSize'))
             }));
         },
@@ -50,18 +51,12 @@ define(['jquery'], function($) {
         },
 
         middlePageNumbers: function () {
-
             var current = this.currentPage(),
                 ret = [],
-                startMiddle = Math.max(current-2, 2),
-                i = startMiddle,
-                pageCount = this.get('pageCount');
-
-            if (pageCount > 2) {
-                while ((i < startMiddle + 5) && i < pageCount) {
-                    ret.push(i++);
-                }
-            }
+                pageCount = this.get('pageCount'),
+                i = Math.max(Math.min(current - 2, pageCount - 4), 2),
+                last = Math.min(i + 5, pageCount);
+            while (i < last) ret.push(i++);
             return ret;
         }
     };
