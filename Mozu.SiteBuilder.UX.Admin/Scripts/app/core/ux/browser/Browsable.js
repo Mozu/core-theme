@@ -95,6 +95,9 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
         if (!this.header) {
             this.header = {};
+        } else {
+            //if header was defined in config and therefore existing on the prototype. then the destroyed objectes would stick around... badness would prevail
+            this.header = Ext.clone(this.header);
         }
         
         if (this.enableRowEditing) {
