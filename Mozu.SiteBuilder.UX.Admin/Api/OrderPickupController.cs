@@ -199,5 +199,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(newPickups);
         }
 
+        public class MarkPickupsFulfilledArgs
+        {
+            public string OrderId { get; set; }
+            public List<string> PickupIds { get; set; }
+        }
+        [HttpPostRoute(UriTemplate = "fulfillment/pickup/markfulfilled")]
+        public async Task<Response<Order>> MarkPickupsFulfilled(MarkPickupsFulfilledArgs args)
+        {
+            var dcOrder = (await _orderWebApiClient.PerformFulfillmentAction(args.OrderId, new DCs.FulfillmentAction() { ActionName = DCs.FulfillmentMethodConst.PICKUP, PickupIds = args.PickupIds, PackageIds = new List<string>() })).ReadAsSync();
+
+            return Single2(dcOrder.Map<Order>());
+        }
     }
 }
