@@ -17,5 +17,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
      
 
         public ThemeFileSystemInfo[] FileListing { get; set; }
+
+        public DateTime TimeStamp { get; set; }
     }
 }

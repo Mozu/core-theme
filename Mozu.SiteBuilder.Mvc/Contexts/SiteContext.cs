@@ -302,9 +302,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     return _themeSettingsRepository.Value.GetRuntimeValues(_theme.Id).ContinueWith(task2 =>
                     {
                         _themeRuntimeSettingsCollection = task2.Result;
-                        var timeStamp = BitConverter.GetBytes(_themeRuntimeSettingsCollection.TimeStamp.Ticks);
-
-                        md5.TransformBlock(timeStamp, 0, timeStamp.Length, timeStamp, 0);
+                        var themeSettingsTimeStamp = BitConverter.GetBytes(_themeRuntimeSettingsCollection.TimeStamp.Ticks);
+                        md5.TransformBlock(themeSettingsTimeStamp, 0, themeSettingsTimeStamp.Length, themeSettingsTimeStamp, 0);
+                        var themeTimeStamp = BitConverter.GetBytes(_theme.TimeStamp.Ticks);
+                        md5.TransformBlock(themeTimeStamp, 0, themeTimeStamp.Length, themeTimeStamp, 0);
                         byte[] tid = Encoding.UTF8.GetBytes(_themeId ?? "");
                         Hash = md5.TransformFinalBlock(tid, 0, tid.Length);
                         //not ready for prime time

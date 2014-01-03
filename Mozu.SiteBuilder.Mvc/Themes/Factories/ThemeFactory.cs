@@ -28,6 +28,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                 IsMobile = tmd.Configuration.About.IsMobile,
                 Thumbnail = tmd.Thumbnail,
                 ThemePath = tmd.ThemePath ,
+                TimeStamp = tmd.TimeStamp,
                 Parent = parent
             };
 
@@ -38,6 +39,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                 theme.EmailTemplates = tmd.Configuration.EmailTemplates;
                 theme.Widgets = tmd.Configuration.Widgets;
                 theme.MergedLabels = tmd.Labels;
+
             }
             else
             {
@@ -46,6 +48,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                 theme.EmailTemplates = Merge<PageTypeDefinition>(tmd.Configuration.EmailTemplates, parent.EmailTemplates, pt => pt.Id);
                 theme.Widgets = Merge<WidgetDefinition>(tmd.Configuration.Widgets, parent.Widgets, widget => widget.Id);
                 theme.MergedLabels = MergeLabels(tmd.Labels, parent.MergedLabels);
+                theme.TimeStamp = parent.TimeStamp > theme.TimeStamp ? parent.TimeStamp : theme.TimeStamp;
             }
 
             theme.FileListing = tmd.FileListing;
