@@ -64,6 +64,7 @@ Ext.define('Taco.view.discount.Form', {
             appliesToShipping  = this.general.appliesToShipping();
 
         this.criteria.setFieldVisibility(isLineItem, appliesToShipping);
+        this.conditions.setFieldVisibility(isLineItem, appliesToShipping);
     },
 
     onAfterRender: function () {
