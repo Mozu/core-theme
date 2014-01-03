@@ -107,6 +107,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                 cmp.syncAndFilter(cmp.parseTextFilterValue(filterField));
             }
         }, this);
+        this.on('destroy', this.onDestoryFilterContainser, this);
     },
 
     /**
@@ -128,13 +129,17 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
         if (this.fireEvent('beforefilter', this, value) !== false) {
             if (this.store.remoteFilter) {
+
+                var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
+                this.store.currentPage = 1;
                 this.filtering = true;
                 this.currentFilterString = filterString;
 
+                params.advancedSearch = filterString;
                 this.store.load({
-                    params: {
-                        advancedSearch: filterString
-                    },
+                    //params: {
+                    //    advancedSearch: filterString
+                    //},
                     callback: function () {
                         
                         this.fireEvent('filter', this, value);
@@ -145,7 +150,13 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             }
         }
     },
-
+    onDestoryFilterContainser:function (cmp) {
+        if (!cmp.store || !this.store.getProxy()) {
+            return;
+        }
+        var params =  this.store.getProxy().extraParams  = this.store.getProxy().extraParams || {};
+        delete params.advancedSearch;
+    },
     /**
      * Search a store for a record matching the provided value.
      * This method matches string-based user input to a record in the store.
