@@ -33,25 +33,41 @@ var accept = function(socket) {
 
 var ops = { 
     msbuild: function(socket) {
-        var cmd,
+        var errors = 0,
+            warnings = 0,
+            cmd,
             child
 
-        cmd = 'msbuild Mozu.SiteBuilder.sln /p:BuildingInsideVisualStudio=true;Configuration=Debug;Platform="Any CPU"';
+        cmd = 'msbuild Mozu.SiteBuilder.sln /p:BuildingInsideVisualStudio=true;Configuration=Debug;Platform="Any CPU" /v:q';
 
         socket.write(log(cmd))
         child = exec(cmd, {maxBuffer: 200*1024*20}, function(error, stdout, stderr) {
             if (error !== null) {
                 console.log('stderr: ' + stderr)
                 console.log('exec error: ' + error)
-                socket.write('\n\n======ERROR======')
+                socket.write('\n======ERROR======'.red)
             }
+
+            socket.write('\n\n  Errors:   ' + errors.toString().red)
+            socket.write('\n  Warnings: ' + warnings.toString().yellow + '\n\n')
 
             socket.write('msbuild complete')
         })
 
         child.stdout.on('data', function(data) {
             if (!data) return
-            socket.write(data)   
+            var str = data.toString()
+            if (str.indexOf(': warning ') > 0) {
+                warnings++
+                socket.write(str.yellow)
+                return
+            }
+            if (str.indexOf(': error ') > 0) {
+                errors++
+                socket.write(str.red)
+                return
+            }
+            socket.write(str)   
         })
     },
     restoreNuget: function(socket) {
@@ -65,7 +81,7 @@ var ops = {
             if (error !== null) {
                 console.log('stderr: ' + stderr)
                 console.log('exec error: ' + error)
-                socket.write('\n\n======ERROR======')
+                socket.write('\n======ERROR======\n'.red)
             }
 
             socket.write('nuget complete')
@@ -77,7 +93,9 @@ var ops = {
         })
     },
     buildSencha: function(socket) {
-                    var cmd,
+        var errors = 0,
+            warnings = 0,
+            cmd,
             child
 
         cmd = 'sencha -q --cwd "Mozu.SiteBuilder.UX.Admin\\Scripts" app build';
@@ -87,15 +105,29 @@ var ops = {
             if (error !== null) {
                 console.log('stderr: ' + stderr)
                 console.log('exec error: ' + error)
-                socket.write('\n\n======ERROR======')
+                socket.write('\n======ERROR======'.red)
             }
+
+            socket.write('\n\n  Errors:   ' + errors.toString().red)
+            socket.write('\n  Warnings: ' + warnings.toString().yellow + '\n\n')
 
             socket.write('sencha build complete')
         })
 
         child.stdout.on('data', function(data) {
             if (!data) return
-            socket.write(data)   
+            var str = data.toString()
+            if (str.indexOf('[WRN]') > -1) {
+                warnings++
+                socket.write(str.yellow)
+                return
+            }
+            if (str.indexOf('[ERR]') > -1) {
+                errors++
+                socket.write(str.red)
+                return
+            }
+            socket.write(str)
         })
     },
 
@@ -110,7 +142,7 @@ var ops = {
             if (error !== null) {
                 console.log('stderr: ' + stderr)
                 console.log('exec error: ' + error)
-                socket.write('\n\n======ERROR======')
+                socket.write('\n======ERROR======\n'.red)
             }
 
             socket.write('sencha sass complete')
