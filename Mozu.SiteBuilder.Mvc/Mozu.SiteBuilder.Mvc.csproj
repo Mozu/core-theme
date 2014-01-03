@@ -435,6 +435,7 @@
     <Compile Include="Controllers\ApiControllerBase.cs" />
     <Compile Include="Extensions\GuidExtensions.cs" />
     <Compile Include="Extensions\ServiceClientResponseExtensions.cs" />
+    <Compile Include="Filters\TruncateCharsFilter.cs" />
     <Compile Include="Filters\FindFilter.cs" />
     <Compile Include="Filters\Safe.cs" />
     <Compile Include="Filters\StringFormatFilter.cs" />

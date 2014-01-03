@@ -22,6 +22,7 @@
         "maxProductSummaryWords": 40,
         "allowWishlist": false,
         "showBreadcrumbs": true,
+        "showBreadcrumbs": true,
 
         /* Common appearance settings used in the stylesheet */
         "font": "Source Sans Pro",
@@ -34,6 +35,8 @@
         "bannerImage": "/resources/images/banner.jpg",
         "bannerImageRepeat": "repeat-x",
         "itemListingThumbSize": 80,
+        "maxTopLevelNavItems": 8,
+        "maxTopLevelNavLabelLength": 50,
 
         /* Settings specific to category page display */
         "showCategoryFacets": true,

@@ -118,6 +118,7 @@
   "resetPassword"        : "Reset Password",
   "resetEmailSent"       : "You should receive an email with instructions to reset your password shortly.",
   "unexpectedError"      : "Sorry, an unexpected error occurred. Please refresh the page and try again, or contact Support.",
+  "navMore"              : "More...",
 
   /* Search labels */
   "searchResults"        : "Search Results",
@@ -319,6 +320,7 @@
   "availableNow"         : "Available Now",
   "noNearbyLocations"    : "No nearby locations could be found.",
   "noNearbyLocationsProd": "No nearby locations could be found for this product.",
-  "milesAway"            : "{0} miles away"
+  "milesAway"            : "{0} miles away",
+  "positionError"        : "Your position could not be determined. Displaying stores out of order."
 
 }
