@@ -704,7 +704,8 @@
     </Content>
     <Content Include="Themes\Core4\stylesheets\modules\common\datepicker.less" />
     <Content Include="Themes\Core4\templates\email\new-user.hypr" />
-    <Content Include="Themes\Core4\templates\email\order-status.hypr" />
+    <Content Include="Themes\Core4\templates\email\order-confirmation.hypr" />
+    <Content Include="Themes\Core4\templates\email\order-shipped.hypr" />
     <Content Include="Themes\Core4\templates\email\password-reset.hypr" />
     <Content Include="Themes\Core4\templates\email\email.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\social\addthis.hypr" />
