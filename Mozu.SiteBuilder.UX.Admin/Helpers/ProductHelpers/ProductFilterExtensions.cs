@@ -99,7 +99,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                 case "productfulldescription":
                     return string.Format("{1} cont \"{0}\"", filter.value, PRODUCT_FULL_DESCRIPTION);
                 case "productcode" :
-                    return string.Format("(baseProductCode eq \"{0}\" or  ProductCode eq \"{0}\")", value);
+                    return "(IsVariation eq true or IsVariation eq false) and (" +
+                        (value.ToString().Split(',')
+                        .Select(code => string.Format("(baseProductCode eq \"{0}\" or  ProductCode eq \"{0}\")", code))
+                        .Aggregate((comp, next) => comp + " or " + next)) + ")";
                     
                 case "producttypeid":
                 case "producttype":
