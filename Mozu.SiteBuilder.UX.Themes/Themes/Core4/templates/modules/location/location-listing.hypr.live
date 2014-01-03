@@ -5,4 +5,9 @@
             {% include "modules/common/address-summary" %}
         </div>
     </div>
+    {% if location.distance %}
+    <div class="mz-locationlisting-distance">
+        {{ labels.milesAway|string_format(location.distance) }}
+    </div>
+    {% endif %}
 </div>
