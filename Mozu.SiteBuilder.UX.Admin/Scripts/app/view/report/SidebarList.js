@@ -20,15 +20,22 @@ Ext.define('Taco.view.report.SidebarList', {
     
     initComponent: function () {
         var me = this;
-        var noGroupByReports = [];
+        var reportGroupByConfigs = {};
 
         me.onReportChange = function () {
             var selectedReport = me.reportRadioGroup.getValue();
             if (selectedReport) {
-                var supportsGroupBys = !Ext.Array.contains(noGroupByReports, selectedReport.reportKey);
-                if (supportsGroupBys) {
+                var selectedGroupBy = me.groupBy.getValue();
+                var groupByConfig = reportGroupByConfigs[selectedReport.reportKey];
+                if (groupByConfig.data.length) {
+                    var store =  Ext.create('Ext.data.ArrayStore', groupByConfig);
+                    me.groupBy.bindStore(store);
                     me.groupBy.enable();
                     me.groupBy.show();
+                    me.groupBy.setValue(selectedGroupBy);
+                    var val = me.groupBy.getValue();
+                    if (val === null)
+                        me.groupBy.setValue(groupByConfig.data[0][0]);
                 } else {
                     me.groupBy.disable();
                     me.groupBy.hide();
@@ -58,10 +65,16 @@ Ext.define('Taco.view.report.SidebarList', {
                     });
                 }
                 items[items.length - 1].items.push({ xtype: 'radiofield', boxLabel: records[i].get('name'), name: 'reportKey', inputValue: records[i].get('key'), checked: i == 0 });
-                var groupBys = records[i].raw.availableGroupBy || [];
-                if (groupBys.length == 0) {
-                    noGroupByReports.push(records[i].get('key'));
-                }
+                reportGroupByConfigs[records[i].get('key')] = {
+                    fields: ['value', 'text'],
+                    data: Ext.Array.map(records[i].raw.availableGroupBy || [], function (groupByValue) {
+                        var matchingFields = Ext.Array.filter(records[i].raw.availableFields, function (field) {
+                            return field.key == groupByValue;
+                        });
+                        var text = matchingFields.length ? matchingFields[0].name : groupByValue;
+                        return [groupByValue, text];
+                    })
+                };
             }
             me.reportRadioGroup.removeAll();
             me.reportRadioGroup.add(items);
@@ -97,19 +110,33 @@ Ext.define('Taco.view.report.SidebarList', {
 
             var lastDayOfLastMonth = new Date(now);
             lastDayOfLastMonth.setDate(0);
-            var firstDayOfLastMonth = new Date(lastDayOfLastMonth);
+            var firstDayOfLastMonth = new Date(lastDayOfLastMonth);     
             firstDayOfLastMonth.setDate(1);
+
+            var firstDayOfYear = new Date(now);
+            firstDayOfYear.setMonth(0);
+
+            var firstDayOfLastYear = new Date(now);
+            firstDayOfLastYear.setYear(firstDayOfLastYear.getFullYear() - 1);
+            firstDayOfLastYear.setMonth(0);
+            firstDayOfLastYear.setDate(1);
+            var lastDayOfLastYear = new Date(firstDayOfLastYear);
+            lastDayOfLastYear.setMonth(11);
+            lastDayOfLastYear.setDate(31);
 
             appendDate('Today', now, now);
             appendDate('Yesterday', yday, yday);
             appendDate('Last Week', startOfLastWeek, lastSunday);
             appendDate('Last Month', firstDayOfLastMonth, lastDayOfLastMonth);
-            dateArr.push(['Custom','-']);
+            appendDate('This Year', firstDayOfYear, now);
+            appendDate('Last Year', firstDayOfLastYear, lastDayOfLastYear);
+            dateArr.push(['Custom', '-']);
         })(dateData);
 
         me.dateRange = Ext.create('Ext.form.ComboBox', {
             fieldLabel: 'Date Range',
             allowBlank: false,
+            value: dateData[0][1],
             valueField: 'value',
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: ['text', 'value'],
@@ -127,16 +154,9 @@ Ext.define('Taco.view.report.SidebarList', {
         me.groupBy = Ext.create('Ext.form.ComboBox', {
             fieldLabel: 'Group Rows By',
             allowBlank: false,
-            store: Ext.create('Ext.data.ArrayStore', {
-                fields: ['text', 'value'],
-                data: [
-                    ['Days', 'Days'],
-                    ['Weeks', 'Weeks'],
-                    ['Months', 'Months'],
-                    ['Quarters', 'Quarters'],
-                    ['Years', 'Years']
-                ]
-            }),
+            value: 'Days',
+            valueField: 'value',
+            textField: 'text',
             forceSelection: true,
             emptyText: 'Select one...'
         });
@@ -267,5 +287,6 @@ Ext.define('Taco.view.report.SidebarList', {
             }*/
         ];
         this.callParent(arguments);
+        this.onDateRangeChange();
     }
 });
