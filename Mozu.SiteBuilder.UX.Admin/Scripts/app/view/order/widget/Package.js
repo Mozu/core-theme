@@ -141,264 +141,192 @@ Ext.define('Taco.view.order.widget.Package', {
 
     getHeaderTemplate: function () {
         
+
+        var titleRow = {
+            xtype: "container",
+            layout: "hbox",
+            cls: "package-header-title-row",
+            items: [
+                {
+                    html: this.headerData.title
+                },
+                { xtype: 'tbfill' }
+            ]
+        }
+
+        if (this.headerData.fulfillmentStatus == "NotFulfilled") {
+            titleRow.items.push(
+                {
+                    xtype: "button",
+                    ui: "action",
+                    scale: "medium",
+                    text: "Cancel Shipment",
+                    handler: function () {                        
+                        this.deletePackage()
+                    },
+                    scope: this
+                }
+            )
+        }
+
+        
         return {
-            xtype: "component",
-            tpl: [
+            xtype: "container",
+            items: [
+
+                titleRow,     
+        
+        
+                {
+                    xtype: "component",
+                    tpl: [
                 
 
-                '<div class="shipment-header">',
+                        '<div class="shipment-header">',
+
+                            '<table style="width:100%;border-bottom:1px solid #bfbfbf;"><tr><col/><col /><col  />',
+                                '<td style="width:33%;vertical-align:top;">',
+
+                                    '<div class="header-section">',
+                                        '<div class="header-label">Order Fulfillment Status</div>',
+
+                                        '<tpl if="fulfillmentStatus==\'PartiallyFulfilled\'">',
+                                            "Partially Fulfilled",
+                                        '<tpl elseif="fulfillmentStatus==\'NotFulfilled\'">',
+                                            "Not Fulfilled",
+                                        '<tpl else>',
+                                            '{fulfillmentStatus}',
+                                        '</tpl>',
+                                    '</div>',
                 
-
-                    '<div class="orderCountRow" style="border-bottom:1px solid #bfbfbf !important;border-top:1px solid #bfbfbf !important;padding:13px 0 13px 0;margin-bottom:19px;">',
-                        '<span class="titleRow" style="line-height1.4em">{title}</span>',                        
-                    '</div>',
-
-
-
-                    '<table style="width:100%;border-bottom:1px solid #bfbfbf;"><tr><col/><col /><col  />',
-                        '<td style="width:33%;vertical-align:top;">',
-
-                            '<div class="header-section">',
-                                '<div class="header-label">Order Fulfillment Status</div>',
-
-                                '<tpl if="fulfillmentStatus==\'PartiallyFulfilled\'">',
-                                    "Partially Fulfilled",
-                                '<tpl elseif="fulfillmentStatus==\'NotFulfilled\'">',
-                                    "Not Fulfilled",
-                                '<tpl else>',
-                                    '{fulfillmentStatus}',
-                                '</tpl>',
-                            '</div>',
-                
-                            '<tpl if="values.itemTotal">',
-                                '<div class="header-section">',
-                                    'Package Item Count: {itemTotal}',
-                                '</div>',
-                            '</tpl>',
-                
-                            '<div class="header-section">',
-                                'Packaging Type: ',
-                                '<tpl if="values.fulfillmentStatus==\'Fulfilled\'">',                
-                                    '{packagingType}',
-                                '<tpl else>',
-                                    '<a class="shipmentAction" shipmentAction="packagingType">{packagingType}</a>',
-                                '</tpl>',
-                            '</div>',
-
-
-
-
-
-                        '</td>',
-
-                        '<td style="width:34%;vertical-align:top;padding:0 10px 0 10px ">',
-                
-                            '<div class="header-section">',
-                                '<div class="header-label">Shipping Method</div>',
-                                '<tpl if="values.shippingMethod">',
-                                    '<div>{shippingMethod}</div>',
-                                '<tpl else>',
-                                    '<div>Uses default for order</div>',
-                                '</tpl>',
-                            '</div>',
-                
-                            '<div class="header-section">',
-                                'Weight: {weight} lbs',
-                            '</div>',
-
-                            '<div class="header-section">',
-                                ' Tracking: ',
-                                /*
-                                '<tpl if="values.fulfillmentStatus==\'fulfilled\'">',
-                                    '<tpl if="values.trackingNumber">',
-                                        '<span>{trackingNumber}</span>',
-                                    '<tpl else>',
-                                        '<span>No tracking number</span>',
+                                    '<tpl if="values.itemTotal">',
+                                        '<div class="header-section">',
+                                            'Package Item Count: {itemTotal}',
+                                        '</div>',
                                     '</tpl>',
-                                '<tpl else>',
-                                */
-                                    '<tpl if="values.trackingNumber">',
-                                        '<a class="shipmentAction" shipmentAction="addTrackingNumber">{trackingNumber}</a>',
-                                    '<tpl else>',
-                                        '<a class="shipmentAction" shipmentAction="addTrackingNumber">Add Tracking Number</a>',
-                                    '</tpl>',
-                                //'</tpl>',
+                
+                                    '<div class="header-section">',
+                                        'Packaging Type: ',
+                                        '<tpl if="values.fulfillmentStatus==\'Fulfilled\'">',                
+                                            '{packagingType}',
+                                        '<tpl else>',
+                                            '<a class="shipmentAction" shipmentAction="packagingType">{packagingType}</a>',
+                                        '</tpl>',
+                                    '</div>',
+
+
+
+
+
+                                '</td>',
+
+                                '<td style="width:34%;vertical-align:top;padding:0 10px 0 10px ">',
+                
+                                    '<div class="header-section">',
+                                        '<div class="header-label">Shipping Method</div>',
+                                        '<tpl if="values.shippingMethod">',
+                                            '<div>{shippingMethod}</div>',
+                                        '<tpl else>',
+                                            '<div>Uses default for order</div>',
+                                        '</tpl>',
+                                    '</div>',
+                
+                                    '<div class="header-section">',
+                                        'Weight: {weight} lbs',
+                                    '</div>',
+
+                                    '<div class="header-section">',
+                                        ' Tracking: ',
+                                        /*
+                                        '<tpl if="values.fulfillmentStatus==\'fulfilled\'">',
+                                            '<tpl if="values.trackingNumber">',
+                                                '<span>{trackingNumber}</span>',
+                                            '<tpl else>',
+                                                '<span>No tracking number</span>',
+                                            '</tpl>',
+                                        '<tpl else>',
+                                        */
+                                            '<tpl if="values.trackingNumber">',
+                                                '<a class="shipmentAction" shipmentAction="addTrackingNumber">{trackingNumber}</a>',
+                                            '<tpl else>',
+                                                '<a class="shipmentAction" shipmentAction="addTrackingNumber">Add Tracking Number</a>',
+                                            '</tpl>',
+                                        //'</tpl>',
                 
                                 
-                            '</div>',
+                                    '</div>',
 
 
 
-                        '</td>',
+                                '</td>',
 
-                        '<td style="width:33%;vertical-align:top;padding-bottom:19px;">',
-                            '<div class="header-section">',
-                                '<div class="header-label">Ship to</div>',
-                                '<div>{firstName} {lastName}</div>',
-                                    '<tpl if="values.address1 || values.address2">',
-                                        '<div>{address1} {address2}</div>',
-                                    '</tpl>',
-                                    '<tpl if="values.address3 || values.address4">',
-                                        '<div>{address3} {address4}</div>',
-                                    '</tpl>',
-                                '<div>{cityOrTown}, {stateOrProvince} {postalOrZipCode} {countryCode}</div>',
-                                '<tpl if="values.phoneNumber">',
-                                    ' {phoneNumber} ',
-                                '</tpl>',
-                                '<tpl if="values.email">',
-                                    ' {email} ',
-                                '</tpl>',
+                                '<td style="width:33%;vertical-align:top;padding-bottom:19px;">',
+                                    '<div class="header-section">',
+                                        '<div class="header-label">Ship to</div>',
+                                        '<div>{firstName} {lastName}</div>',
+                                            '<tpl if="values.address1 || values.address2">',
+                                                '<div>{address1} {address2}</div>',
+                                            '</tpl>',
+                                            '<tpl if="values.address3 || values.address4">',
+                                                '<div>{address3} {address4}</div>',
+                                            '</tpl>',
+                                        '<div>{cityOrTown}, {stateOrProvince} {postalOrZipCode} {countryCode}</div>',
+                                        '<tpl if="values.phoneNumber">',
+                                            ' {phoneNumber} ',
+                                        '</tpl>',
+                                        '<tpl if="values.email">',
+                                            ' {email} ',
+                                        '</tpl>',
 
-                            '</div>',
-                        '</td>',
+                                    '</div>',
+                                '</td>',
                 
-                    '</tr></table>',
+                            '</tr></table>',
 
 
 
-                    '<tpl if="values.showVisibilityToggle">',
-                        '<div class="visibilityToggle">',
-                            '<a class="shipmentAction expanded" shipmentAction="toggleVisibility">Click for more details</a>',
-                        '</div>',
-                    '</tpl>',
-
-
-
-                '</div>',
-
-
-
-
-
-
-                /*
-
-                
-
-
-                '<div class="shipment-header">',
-                    '<div class="titleRow">',
-                        ' {title} ',
-                        '<span class="seperator">|</span>',
-                        '<tpl if="values.fulfillmentStatus==\'NotFulfilled\'">',
-                            "Not Shipped",
-                        '<tpl else>',
-                            "Shipped",
-                        '</tpl>',
-                        '<tpl if="values.fulfillmentStatus==\'Fulfilled\'">',
-                            '<span class="seperator">|</span>',
-                            'Shipped Date: {shipDate:date("F d Y g:ia")}',
-                        '<tpl else>',
-                            '<span class="seperator">|</span>',
-                            '<a class="shipmentAction" shipmentAction="deletePackage">Delete</a>',
-                        '</tpl>',
-                        
-                
-
-                    '</div>',
-                
-
-                    '<div class="trackingNumberRow">',
-                        ' Tracking Number: ',
-                
-                        '<tpl if="values.fulfillmentStatus==\'Shipped\'">',
-                            '<tpl if="values.trackingNumber">',
-                                '<span>{trackingNumber}</span>',
-                            '<tpl else>',
-                                '<span>No tracking number</span>',
+                            '<tpl if="values.showVisibilityToggle">',
+                                '<div class="visibilityToggle">',
+                                    '<a class="shipmentAction expanded" shipmentAction="toggleVisibility">Click for more details</a>',
+                                '</div>',
                             '</tpl>',
-                        '<tpl else>',
-                            '<tpl if="values.trackingNumber">',
-                                '<a class="shipmentAction" shipmentAction="addTrackingNumber">{trackingNumber}</a>',
-                            '<tpl else>',
-                                '<a class="shipmentAction" shipmentAction="addTrackingNumber">Add Tracking Number</a>',
-                            '</tpl>',
-                        '</tpl>',
 
 
 
-
-
-                    '</div>',
-                    '<div class="orderCountRow">',
-                        '<tpl if="values.itemTotal">',
-                            ' Products: {itemTotal} ',
-                            '<span class="seperator">|</span>',
-                        '</tpl>',
-                        'Weight: {weight} lbs',
-                    '</div>',
-                    '<div class="shipTo">',
-                        'Ship to:  {firstName} {lastName} ',
-                        '<span class="seperator">|</span>',
-                        '{address1} {cityOrTown} {postalOrZipCode} {stateOrProvince} {countryCode}',
-                        '<tpl if="values.phoneNumber">',
-                            '<span class="seperator">|</span>',
-                            ' {phoneNumber} ',
-                        '</tpl>',
-                        '<tpl if="values.email">',
-                            '<span class="seperator">|</span>',
-                            ' {email} ',
-                        '</tpl>',
-                    '</div>',
-                    '<div class="shippingMethodRow">',
-                        ' Shipping Method: ',
-                        '<tpl if="values.shippingMethod">',
-                            '{shippingMethod}',
-                        '<tpl else>',
-                            'Order default',
-                        '</tpl>',
-                        '<span class="seperator">|</span>',
-                        'Packaging Type: ',
+                        '</div>',               
                 
-                        '<tpl if="values.fulfillmentStatus==\'Fulfilled\'">',
-                            '{packagingType}',
-                        '<tpl else>',
-                            '<a class="shipmentAction" shipmentAction="packagingType">{packagingType}</a>',
-                        '</tpl>',
-                    '</div>',
-
-
-                    
-
-
-
-                '<tpl if="values.showVisibilityToggle">',
-                    '<div class="visibilityToggle">',
-                        '<a class="shipmentAction expanded" shipmentAction="toggleVisibility">Click for more details</a>',
-                    '</div>',
-                '</tpl>',
-                '</div>'
-            
-            */
-
-                
-                
-            ],
-            data: this.getHeaderData(),
-            listeners: {
-                el: {
-                    click: {
-                        fn: function (e, dom, eOpt) {
-                            var action = dom.getAttribute("shipmentAction");
-                            switch (action) {
-                                case "toggleVisibility":
-                                    this.toggleVisibility(dom)
-                                    break;
-                                case "addTrackingNumber":
-                                    this.addTrackingNumber()
-                                    break;
-                                case "deletePackage":
-                                    this.deletePackage()
-                                    break;
-                                case "packagingType":
-                                    this.showPackagingTypeMenu(e, dom, eOpt);
-                                    break;
+                    ],
+                    data: this.getHeaderData(),
+                    listeners: {
+                        el: {
+                            click: {
+                                fn: function (e, dom, eOpt) {
+                                    var action = dom.getAttribute("shipmentAction");
+                                    switch (action) {
+                                        case "toggleVisibility":
+                                            this.toggleVisibility(dom)
+                                            break;
+                                        case "addTrackingNumber":
+                                            this.addTrackingNumber()
+                                            break;
+                                        case "deletePackage":
+                                            this.deletePackage()
+                                            break;
+                                        case "packagingType":
+                                            this.showPackagingTypeMenu(e, dom, eOpt);
+                                            break;
+                                    }
+                                },
+                                scope: this
                             }
-                        },
-                        scope: this
+                        }
                     }
+            
                 }
-            }
+
+
+            ]
+        
         };
     },
     

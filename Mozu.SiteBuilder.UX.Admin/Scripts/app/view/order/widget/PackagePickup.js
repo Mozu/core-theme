@@ -132,7 +132,7 @@ Ext.define('Taco.view.order.widget.PackagePickup', {
             cls: "package-header-title-row",
             items: [
                 {
-                    html: this.headerData.title
+                    html: this.headerData.title + '<span class="seperator">|</span> Fulfillment Location Code: ' + this.headerData.fulfillmentLocationCode
                 },
                 { xtype: 'tbfill' }
             ]
@@ -186,12 +186,8 @@ Ext.define('Taco.view.order.widget.PackagePickup', {
                                 '</td>',
 
                                 '<td style="width:34%;vertical-align:top;padding:0 10px 0 10px ">',
-                                    '<div class="header-section">',
-
-                                    
-                                        '<tpl if="values.fulfillmentLocationCode">',
-                                            '<div><span class="header-label">Fulfillment Location Code:</span>{fulfillmentLocationCode}</div>',
-                                        '</tpl>',
+                                    '<div class="header-section">',                                    
+                                        
                                         '<tpl if="values.fulfillmentDate">',
                                             '<div><span class="header-label">Fulfilled Date:</span>{fulfillmentDate:date("F d Y g:ia")}</div>',
                                         '</tpl>',
