@@ -6,12 +6,17 @@ var colors = require('colors')
 
 var start = new Date()
 
+var done = 0
+
 var pull = function() {
     var cmd = 'git tf pull --rebase'
     if (argv.pull || argv.p || argv.checkin || argv.c) {
+        pullConfig()
         log(cmd)
         child = exec(cmd, {maxBuffer: 200*1024*50}, function(error, stdout, stderr) {
-            pullConfig()
+            if (++done > 1)checkin()
+
+            //pullConfig()
         })
 
         child.stdout.on('data', function(data) {
@@ -19,7 +24,7 @@ var pull = function() {
         })
 
     } else {
-        pullConfig()
+        restoreNuget()
     }
 }
 
@@ -28,22 +33,39 @@ var pullConfig = function() {
     if (argv.pull || argv.p || argv.checkin || argv.c) {
         log(cmd)
         child = exec(cmd, {cwd: '../Mozu Configs', maxBuffer: 200*1024*20}, function(error, stdout, stderr) {
-            checkin()
+            if (++done > 1) checkin()
         })
 
         child.stdout.on('data', function(data) {
-            process.stdout.write(data)
+            //process.stdout.write(data)
         })
 
     } else {
-        checkin()
+        restoreNuget()
     }
 }
 
 var checkin = function() {
-    var cmd = 'git tf checkin --no-lock --no-metadata'
+    var cmd = 'git tf checkin --no-lock --no-metadata',
+        split,
+        i
+
     if (argv.checkin || argv.c) {
+
+        if (argv.associate) {
+            split = argv.associate.toString().split(',')
+            for(i = 0; i < split.length; i++)
+                cmd += ' --associate=' + split[i]
+        }
+
+        if (argv.resolve) {
+            split = argv.resolve.toString().split(',')
+            for(i = 0; i < split.length; i++)
+                cmd += ' --resolve=' + split[i]
+        }
+
         log(cmd)
+
         child = exec(cmd, {maxBuffer: 200*1024*20}, function(error, stdout, stderr) {
             restoreNuget()
         })
@@ -135,6 +157,8 @@ if (argv.help || argv.h) {
     console.log('    (no arguments)   '.blue + 'Run Nuget Restore and then run MSBuild on the solution')
     console.log('    --pull       -p  '.blue + 'Pull from TFS before running NugetRestore and MSBuild')
     console.log('    --checkin    -c  '.blue + 'Pull and Checkin code from TFS before running NugetRestore and MSBuild')
+    console.log('    --associate   #  '.blue + 'Associate a work item or a list of work items to a checkin (e.g. --associate 1234,1235)')
+    console.log('    --resolve     #  '.blue + 'Resolve a work item or a list of work items to a checkin (e.g. --resolve 1234,1235)')
     console.log('    --javascript -j  '.blue + 'Sencha build JS and SASS')
     console.log('    --sass       -s  '.blue + 'Compile the SASS')
     console.log('    --nuget      -n  '.blue + 'Restore Nuget')

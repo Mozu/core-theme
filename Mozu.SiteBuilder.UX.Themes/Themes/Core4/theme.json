@@ -69,17 +69,17 @@
 	  {
 		"id": "order.shipped",
 		"title": "Order Shipped",
-		"template": "email/order-status",
+		"template": "email/order-shipped",
 		"properties": {
-		  "subject": "You're Order Has Shipped"
+		  "subject": "You're Order Has Shipped #{model.orderNumber}"
 		}
 	  },
 	  {
 		"id": "order.changed",
-		"title": "Order Status",
-		"template": "email/order-status",
+		"title": "Order Confirmation",
+		"template": "email/order-confirmation",
 		"properties": {
-		  "subject": "Order Status"
+		  "subject": "Order Confirmation #{model.orderNumber}"
 		}
 	  },
 	  {
