@@ -152,6 +152,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
                         // order info
                         title: "Package " + i,
                         fulfillmentStatus: dataItem.status,
+                        fulfillmentLocationCode: dataItem.fulfillmentLocationCode,
                         itemTotal: dataItem.totalQuantity,
                         packagingType: packagingTypeText,
                         weight: dataItem.weight,
@@ -239,6 +240,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
                     itemTotal: dataItem.totalQuantity,
                     weight: dataItem.weight,
                     shippingMethod: dataItem.shippingMethod,
+                    fulfillmentLocationCode: dataItem.fulfillmentLocationCode,
                     trackingNumber: dataItem.trackingNumber,
                     shipDate: dataItem.shipDate,
                     packagingType : packagingTypeText,

@@ -53,7 +53,7 @@ Ext.define('Taco.view.order.widget.PackagePickup', {
             itemTotal: 0,
             weight: 0,
             
-            shipDate: "",
+            fulfillmentDate: "",
             
             packagingType: "",
             
@@ -125,83 +125,140 @@ Ext.define('Taco.view.order.widget.PackagePickup', {
     
 
     getHeaderTemplate: function () {
-        
+    
+        var titleRow = {
+            xtype: "container",
+            layout: "hbox",
+            cls: "package-header-title-row",
+            items: [
+                {
+                    html: this.headerData.title
+                },
+                { xtype: 'tbfill' }
+            ]
+        }
+
+        if (this.headerData.fulfillmentStatus == "NotFulfilled") {
+            titleRow.items.push(
+                {
+                    xtype: "button",
+                    ui: "action",
+                    scale: "medium",
+                    text: "Cancel Pickup",
+                    handler: function () {                        
+                        this.deletePickup()
+                    },
+                    scope: this
+                }
+            )
+        }
+
         return {
-            xtype: "component",
-            tpl: [
-                '<div class="shipment-header">',
-                    '<div class="titleRow">',
-                        ' {title} ',
-                        '<span class="seperator">|</span>',
-                        '<tpl if="values.fulfillmentStatus==\'NotFulfilled\'">',
-                            "Not Fulfilled",
-                        '<tpl else>',
-                            "Fulfilled",
-                        '</tpl>',
-                        '<tpl if="values.fulfillmentStatus==\'Fulfilled\'">',
-                            '<span class="seperator">|</span>',
-                            'Fulfilled Date: {fulfillmentDate:date("F d Y g:ia")}',
-                        '<tpl else>',
-                            '<span class="seperator">|</span>',
-                            '<a class="shipmentAction" shipmentAction="deletePickup">Delete</a>',
-                        '</tpl>',
-                        
-                
+            xtype: "container",
+            items: [
+                titleRow,
+                {
+                    xtype: "component",
+                    tpl: [
 
-                    '</div>',
-                
 
-                    '<div class="orderCountRow">',
-                        '<tpl if="values.itemTotal">',
-                            ' Package Item Count: {itemTotal} ',
-                            '<span class="seperator">|</span>',
-                        '</tpl>',
-                    '</div>',
-                    '<div class="shipTo">',
-                        'Fulfillment Contact:  {firstName} {lastName} ',
-                        '<tpl if="values.phoneNumber">',
-                            '<span class="seperator">|</span>',
-                            ' {phoneNumber} ',
-                        '</tpl>',
-                        '<tpl if="values.email">',
-                            '<span class="seperator">|</span>',
-                            ' {email} ',
-                        '</tpl>',
-                    '</div>',
-                    
+                        '<div class="shipment-header">',
+                            '<table style="width:100%;border-bottom:1px solid #bfbfbf;"><tr><col/><col /><col  />',
+                                '<td style="width:33%;vertical-align:top;">',
 
-                '<tpl if="values.showVisibilityToggle">',
-                    '<div class="visibilityToggle">',
-                        '<a class="shipmentAction expanded" shipmentAction="toggleVisibility">Click for more details</a>',
-                    '</div>',
-                '</tpl>',
-                '</div>'
-                
-            ],
-            data: this.getHeaderData(),
-            listeners: {
-                el: {
-                    click: {
-                        fn: function (e, dom, eOpt) {
-                            var action = dom.getAttribute("shipmentAction");
-                            switch (action) {
-                                case "toggleVisibility":
-                                    this.toggleVisibility(dom)
-                                    break;
+                                    '<div class="header-section">',
+                                        '<div class="header-label">Order Fulfillment Status</div>',
+                                        '<tpl if="fulfillmentStatus==\'PartiallyFulfilled\'">',
+                                            "Partially Fulfilled",
+                                        '<tpl elseif="fulfillmentStatus==\'NotFulfilled\'">',
+                                            "Not Fulfilled",
+                                        '<tpl else>',
+                                            '{fulfillmentStatus}',
+                                        '</tpl>',
+                                    '</div>',
+
+                                    '<tpl if="values.itemTotal">',
+                                        '<div class="header-section">',
+                                            'Package Item Count: {itemTotal}',
+                                        '</div>',
+                                    '</tpl>',                       
+
+                                '</td>',
+
+                                '<td style="width:34%;vertical-align:top;padding:0 10px 0 10px ">',
+                                    '<div class="header-section">',
+
+                                    
+                                        '<tpl if="values.fulfillmentLocationCode">',
+                                            '<div><span class="header-label">Fulfillment Location Code:</span>{fulfillmentLocationCode}</div>',
+                                        '</tpl>',
+                                        '<tpl if="values.fulfillmentDate">',
+                                            '<div><span class="header-label">Fulfilled Date:</span>{fulfillmentDate:date("F d Y g:ia")}</div>',
+                                        '</tpl>',
+
+                                        '<tpl if="values.weight">',
+                                            '<div><span class="header-label">Weight:</span> {weight} lbs</div>',
+                                        '</tpl>',
+
                                 
-                                case "deletePickup":
-                                    this.deletePickup()
-                                    break;
-                                case "packagingType":
-                                    this.showPackagingTypeMenu(e, dom, eOpt);
-                                    break;
+                                    '</div>',                          
+
+                                '</td>',
+
+                                '<td style="width:33%;vertical-align:top;padding-bottom:19px;">',
+                                    '<div class="header-section">',
+
+
+                                    '<div class="shipTo">',
+                                        '<div class="header-label">Fulfillment Contact</div>',
+                                        '<div>{firstName} {lastName}</div>',
+                                        '<tpl if="values.phoneNumber">',
+                                            '<div>{phoneNumber}</div>',                                    
+                                        '</tpl>',
+                                        '<tpl if="values.email">',                                                                        
+                                            '<div>{email}</div>',
+                                        '</tpl>',
+                                    '</div>',
+                            
+                                '</td>',
+
+                            '</tr></table>',
+
+
+
+                            '<tpl if="values.showVisibilityToggle">',
+                                '<div class="visibilityToggle">',
+                                    '<a class="shipmentAction expanded" shipmentAction="toggleVisibility">Click for more details</a>',
+                                '</div>',
+                            '</tpl>',
+
+                        '</div>'             
+
+
+
+
+                    ],
+                    data: this.getHeaderData(),
+                    listeners: {
+                        el: {
+                            click: {
+                                fn: function (e, dom, eOpt) {
+                                    var action = dom.getAttribute("shipmentAction");
+                                    switch (action) {
+                                        case "toggleVisibility":
+                                            this.toggleVisibility(dom)
+                                            break;
+
+                                        
+                                    }
+                                },
+                                scope: this
                             }
-                        },
-                        scope: this
+                        }
                     }
                 }
-            }
-        };
+            ]
+        }
     },
     
     loadData: function (data) {
