@@ -192,8 +192,8 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
                     break;
                 case 'Taco.model.CustomerAccount':
                     data.controller = 'customers';
-                    data.name = record.data.primaryFirstName + ' ' + record.data.primaryLastName;
-                    data.itemId = record.data.primaryEmail;
+                    data.name = record.data.firstName + ' ' + record.data.lastName ;
+                    data.itemId = record.data.id;
                     if (header) {
                         header.name = 'CUSTOMERS';
                         header.controller = data.controller;

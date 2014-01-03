@@ -95,7 +95,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 
                 return List2(new List<ApiCustomer>());
             }
-            int? qLimit = q == null ? (int?)null : 3;
+            int? qLimit = (!string.IsNullOrEmpty(q) && extFilter.SearchType == "global") ? (int?)3 : (int?)null;
             var sort = pagingParameters.sort.ToSortString();
             var dcCustomers = (await _customerWebApiClient.GetAccounts(
                                 startIndex: pagingParameters.startIndex,
