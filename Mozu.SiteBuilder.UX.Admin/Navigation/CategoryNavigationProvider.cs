@@ -32,12 +32,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Navigation
         /// </summary>
         public Task<NavigationNodeCollection> GetCategories()
         {
-            return _catClient.GetCategories()
+            return _catClient.GetCategories(0,pageSize:2000)
                 .ContinueWith(t =>
                 {
-                    DC.CategoryPagedCollection cats = t.Result.ReadAsSync();
 
-                    return new NavigationNodeCollection { ETag = t.Result.ETag(), Nodes = Mapper.Map<List<NavigationNode>>(cats.Items) };
+
+                  
+
+
+
+                    DC.CategoryPagedCollection cats = t.Result.ReadAsSync();
+                    var allCats = new List<DC.Category>(cats.Items );
+                    var startIndex = cats.Items.Count;
+                    var pageSize = startIndex;
+                    int page = 1;
+
+                    //tbd: either async all of them or get service team to redo
+                    while (startIndex<cats.TotalCount )
+                    {
+                        var iterRes=_catClient.GetCategories(startIndex = startIndex, pageSize: pageSize).Result.ReadAsSync();
+                        startIndex += pageSize;
+                        allCats.AddRange(iterRes.Items );
+                    }
+
+                    return new NavigationNodeCollection { ETag = t.Result.ETag(), Nodes = Mapper.Map<List<NavigationNode>>(allCats) };
                 });
         }
     }
