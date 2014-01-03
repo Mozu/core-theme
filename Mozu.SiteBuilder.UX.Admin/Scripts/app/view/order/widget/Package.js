@@ -58,6 +58,7 @@ Ext.define('Taco.view.order.widget.Package', {
             // order info
             title: "Package #",
             fulfillmentStatus: "Not Shipped",
+            fulfillmentLocationCode: "",
             itemTotal: 0,
             weight: 0,
             shippingMethod: "",
@@ -149,16 +150,7 @@ Ext.define('Taco.view.order.widget.Package', {
                 
 
                     '<div class="orderCountRow" style="border-bottom:1px solid #bfbfbf !important;border-top:1px solid #bfbfbf !important;padding:13px 0 13px 0;margin-bottom:19px;">',
-                        '<span class="titleRow" style="line-height1.4em">{title}</span>',
-                        /*
-                        '<div style="float:right;padding:4px 19px 4px 10px;">',
-                            ' Total Direct Ship Items: {orderTotal} ',
-                            '<span class="seperator">|</span>',
-                            'Shipped: {shippedItemTotal} ',
-                            '<span class="seperator">|</span>',
-                            ' Pending: {pendingItemTotal} ',
-                        '</div>',
-                        */
+                        '<span class="titleRow" style="line-height1.4em">{title}</span>',                        
                     '</div>',
 
 
@@ -186,8 +178,7 @@ Ext.define('Taco.view.order.widget.Package', {
                 
                             '<div class="header-section">',
                                 'Packaging Type: ',
-                                '<tpl if="values.fulfillmentStatus==\'Fulfilled\'">',
-                
+                                '<tpl if="values.fulfillmentStatus==\'Fulfilled\'">',                
                                     '{packagingType}',
                                 '<tpl else>',
                                     '<a class="shipmentAction" shipmentAction="packagingType">{packagingType}</a>',

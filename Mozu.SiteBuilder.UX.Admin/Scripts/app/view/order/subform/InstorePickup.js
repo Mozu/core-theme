@@ -83,10 +83,7 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
                 // order info
                 title: "Pending Items",
                 fulfillmentStatus: me.record.get("fulfillmentStatus"),
-                orderTotal: me.record.get("totalPickupItems"),
-                //shippedItemTotal: me.record.get("itemsShipped"),
-                //pendingItemTotal: me.record.get("itemsNotShipped"),
-                //shippingMethod: me.record.get("shippingMethodName") || me.record.get("shippingMethodCode"),
+                orderTotal: me.record.get("totalPickupItems"),                
                 totalPickupItems: me.record.get("totalPickupItems"),
                 itemsPickedup: me.record.get("itemsPickedup"),
                 itemsNotPickedup: me.record.get("itemsNotPickedup"),
@@ -106,10 +103,7 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
             }
         });
         
-        // load data;
-        //var data = this.record.get("unpackagedItems");
-        //me.unpackagedItems.loadData(data);
-
+        
     },
     
     initPendingPickups:function() {
@@ -127,11 +121,7 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
             
                 var dataItem = data[i-1];
                 var billingContact = me.record.get("billingContact");
-    //            var packagingType = dataItem.packagingType;
-    //            var packagingTypeText = me.packagingTypeStore.getById(packagingType).get("text");
-            
-
-
+    
                 packages.push(Ext.create('Taco.view.order.widget.PackagePickup', {
                         record: this.record,
                         gridHidden:false,
@@ -143,8 +133,8 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
                             // order info
                             title: "Pickup " + i,
                             fulfillmentStatus: dataItem.status,
-                            itemTotal: dataItem.totalQuantity,
-    //                        packagingType: packagingTypeText,
+                            fulfillmentLocationCode: dataItem.fulfillmentLocationCode,
+                            itemTotal: dataItem.totalQuantity,    
                             weight: dataItem.weight,
                         
                         
@@ -192,9 +182,8 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
             
                 var dataItem = data[i];
                 var billingContact = me.record.get("billingContact");
-    //            var packagingType = dataItem.packagingType;
-    //            var packagingTypeText = me.packagingTypeStore.getById(packagingType).get("text");
-                
+    
+               
                 packages.push( Ext.create('Taco.view.order.widget.PackagePickup', {
                     record: this.record,
                     gridHidden: true,
@@ -233,13 +222,10 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
                         title: "Pickup",
                         fulfillmentStatus: dataItem.status,
                         fulfillmentDate: dataItem.fulfillmentDate,
+                        fulfillmentLocationCode: dataItem.fulfillmentLocationCode,
                         itemTotal: dataItem.totalQuantity,
                         weight: dataItem.weight,
-                    
-                    
-                        shipDate: dataItem.shipDate,
-//                        packagingType : packagingTypeText,
-                        
+
                         // billing contact info
                         firstName: billingContact.firstName,
                         lastName: billingContact.lastName,
@@ -252,9 +238,7 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
                     }
                 })
                 );
-            }
-
-            //me.packagedItemsGrid.loadData(this.record.get("packages"));
+            }           
         
             me.pickedupPackages = Ext.create('Taco.core.ux.EditContainer', {
                 header: false,

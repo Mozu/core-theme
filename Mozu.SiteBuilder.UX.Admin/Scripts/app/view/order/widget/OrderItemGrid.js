@@ -206,19 +206,20 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         '<div>',
                             // if order item supports instore pickup and user is currently editing the order. make the fulfillment method a link;
                             '<tpl if="this.isEditable() && supportsInStorePickup">',
-                                'Fulfillment Method: <a class="fulfillment-link" href="#" fulfillmentMethod="{fulfillmentMethod}">{[this.getFulfillmentMethodText(values.fulfillmentMethod)]}</a>',
+                                'Fulfillment Method: <a class="fulfillment-link" href="#" fulfillmentMethod="{fulfillmentMethod}">{[this.getFulfillmentMethodText(values)]}</a>',
                             '<tpl else>',
-                                'Fulfillment Method: {[this.getFulfillmentMethodText(values.fulfillmentMethod)]}',
+                                'Fulfillment Method: {[this.getFulfillmentMethodText(values)]}',
                             '</tpl>',
                         '</div>',
                     '</div>',
                     {
-                        getFulfillmentMethodText: function (value) {
-                            if (value == "Ship") {
-                                return "Direct Ship";
+                        getFulfillmentMethodText: function (record) {                            
+                            var fulfillmentMethod = record.fulfillmentMethod;
+                            var fulfillmentLocation = " (" + record.fulfillmentLocationCode + ")";
+                            if (fulfillmentMethod == "Ship") {
+                                return "Direct Ship" + fulfillmentLocation;
                             } else {
-                                return "In Store Pickup";
-                                
+                                return "In Store Pickup" + fulfillmentLocation;                                
                             }
                         },
                         isEditable: function (values) {
