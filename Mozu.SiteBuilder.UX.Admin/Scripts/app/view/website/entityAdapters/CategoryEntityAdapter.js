@@ -30,11 +30,18 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
 
         if (me.model === null) {
             me.isLoading = true;
-            modelFactory.load(key, {
-                success: function (record) {
-                    me.set(record, true);
-                }
-            });
+
+            if (store.isLoading()) {
+                store.on('load', function () {
+                    me.isLoading = false;
+                    me.model = store.getById(key);
+                    me.set(me.model);
+                    
+                }, me, { single: true });
+            } else {
+                Ext.log({ msg: 'unknonw cat id ' + key, level: 'warn' });
+                
+            }
         } else {
             this.set(this.model);
         }
