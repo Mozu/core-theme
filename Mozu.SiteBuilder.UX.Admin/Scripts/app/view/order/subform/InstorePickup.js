@@ -232,12 +232,13 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
                         // order info
                         title: "Pickup",
                         fulfillmentStatus: dataItem.status,
+                        fulfillmentDate: dataItem.fulfillmentDate,
                         itemTotal: dataItem.totalQuantity,
                         weight: dataItem.weight,
                     
                     
                         shipDate: dataItem.shipDate,
-                        packagingType : packagingTypeText,
+//                        packagingType : packagingTypeText,
                         
                         // billing contact info
                         firstName: billingContact.firstName,

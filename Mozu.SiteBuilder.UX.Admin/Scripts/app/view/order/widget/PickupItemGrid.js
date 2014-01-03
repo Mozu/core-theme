@@ -603,12 +603,11 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
             callConfig;
 
         var orderId = me.record.get("id");
-        var sourcePackageId = me.packageData.id;
-
+        var sourcePickupId = me.packageData.id;
         callConfig = {
             jsonData: {
                 orderId: orderId,
-                packageIds: [sourcePackageId]
+                pickupIds: [sourcePickupId]
             },
             showMask: true,
             success: function (response) {
@@ -628,12 +627,12 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
             callConfig;
 
         var orderId = me.record.get("id");
-        var sourcePackageId = me.packageData.id;
+        var sourcePickupId = me.packageData.id;
 
         callConfig = {
             jsonData: {
                 orderId: orderId,
-                packageIds: [sourcePackageId]
+                pickupIds: [sourcePickupId]
             },
             showMask: true,
             success: function (response) {
