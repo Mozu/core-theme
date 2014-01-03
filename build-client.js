@@ -45,7 +45,7 @@ var checkin = function() {
     if (argv.checkin || argv.c) {
         log(cmd)
         child = exec(cmd, {maxBuffer: 200*1024*20}, function(error, stdout, stderr) {
-            senchaBuild()
+            restoreNuget()
         })
 
         child.stdout.on('data', function(data) {
@@ -53,34 +53,9 @@ var checkin = function() {
         })
 
     } else {
-        senchaBuild()
-    }
-}
-
-var senchaBuild = function() {
-    if (argv.javascript || argv.j) {
-        connection.write('buildSencha')
-        connection.on('data', function(data) {
-            if (data.toString().indexOf('sencha build complete') < 0) return
-            restoreNuget()
-        })
-    } else {
-        sassBuild()
-    }
-}
-
-var sassBuild = function() {
-    if (!(argv.javascript || argv.j) && (argv.sass || argv.s)) {
-        connection.write('buildSass')
-        connection.on('data', function(data) {
-            if (data.toString().indexOf('sencha sass complete') < 0) return
-            restoreNuget()
-        })
-    } else {
         restoreNuget()
     }
 }
-
 
 var restoreNuget = function() {
     if (!(argv.ignore || argv.i) || argv.nuget || argv.n) {
@@ -98,7 +73,32 @@ var msbuild = function() {
     if (!argv.ignore && !argv.i) {
         connection.write('msbuild')
         connection.on('data', function(data) {
-            if (data.toString().indexOf('msbuild complete') < 0) return
+            var str = data.toString()
+            if (str.indexOf('msbuild complete') < 0) return
+            senchaBuild()
+        })
+    } else {
+        senchaBuild()
+    }
+}
+
+var senchaBuild = function() {
+    if (argv.javascript || argv.j) {
+        connection.write('buildSencha')
+        connection.on('data', function(data) {
+            if (data.toString().indexOf('sencha build complete') < 0) return
+            connection.end()
+        })
+    } else {
+        sassBuild()
+    }
+}
+
+var sassBuild = function() {
+    if (!(argv.javascript || argv.j) && (argv.sass || argv.s)) {
+        connection.write('buildSass')
+        connection.on('data', function(data) {
+            if (data.toString().indexOf('sencha sass complete') < 0) return
             connection.end()
         })
     } else {
