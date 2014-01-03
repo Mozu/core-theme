@@ -258,14 +258,17 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
         // clear out the ui components
         if (me.unpackagedItems) {
             me.unpackagedItems.destroy();
+            me.unpackagedItems = null;
         }
 
         if (me.pendingPickups) {
             me.pendingPickups.destroy();
+            me.pendingPickups = null
         }
 
         if (me.pickedupPackages) {
             me.pickedupPackages.destroy();
+            me.pickedupPackages = null
         }
 
         //re-build the ui components

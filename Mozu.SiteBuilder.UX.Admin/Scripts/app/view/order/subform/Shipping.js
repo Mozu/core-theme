@@ -278,14 +278,17 @@ Ext.define('Taco.view.order.subform.Shipping', {
         // clear out the ui components
         if (me.unpackagedItems) {
             me.unpackagedItems.destroy();
+            me.unpackagedItems = null;
         }
 
         if (me.unShippedPackages) {
             me.unShippedPackages.destroy();
+            me.unShippedPackages = null;
         }
 
         if (me.shippedPackages) {
             me.shippedPackages.destroy();
+            me.shippedPackages = null;
         }
 
         //re-build the ui components
