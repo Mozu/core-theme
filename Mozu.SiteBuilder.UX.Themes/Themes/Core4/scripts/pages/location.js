@@ -62,13 +62,18 @@ require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mo
                     this.populate();
                 }
             },
-            populate: function() {
+            populate: function(location) {
                 var self = this;
-                this.model.apiGet().then(function() {
+                var show = function() {
                     self.render();
                     $('.mz-locationsearch-pleasewait').fadeOut();
                     self.$el.noFlickerFadeIn();
-                });
+                };
+                if (location) {
+                    this.model.apiGetByLatLong({ location: location }).then(show);
+                } else {
+                    this.model.apiGet().then(show);
+                }
             }
         }),
 

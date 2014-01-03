@@ -318,6 +318,7 @@
   "outOfStock"           : "Out of stock",
   "availableNow"         : "Available Now",
   "noNearbyLocations"    : "No nearby locations could be found.",
-  "noNearbyLocationsProd": "No nearby locations could be found for this product."
+  "noNearbyLocationsProd": "No nearby locations could be found for this product.",
+  "milesAway"            : "{0} miles away"
 
 }
