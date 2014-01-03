@@ -29,6 +29,8 @@ Ext.define('Taco.view.report.Index', {
         requiresContextOfType: ['t', 's']
     },
 
+    grid: null,
+
     createStoreFromReportDefinition: function (def, criteria) {
         var me = this;
         Ext.define('MyReader', {
@@ -90,8 +92,10 @@ Ext.define('Taco.view.report.Index', {
     loadReport: function (req) {
         var me = this;
 
-
-        me.body.items.items[0].remove(1);
+        if (me.grid) {
+            me.grid.up().remove(me.grid).destroy();
+            //me.body.items.items[0].items.removeAt(1).destroy()
+        }
 
         var report = req.reportRecord.raw;
         var store = this.createStoreFromReportDefinition(report, req.criteria);
@@ -107,7 +111,7 @@ Ext.define('Taco.view.report.Index', {
             cols[cols.length - 1].flex = 1;
         }
 
-        var newGrid = Ext.create('Ext.grid.Panel', {
+        me.grid = Ext.create('Ext.grid.Panel', {
             title: req.reportRecord.get('name'),
             style: { 'padding': '0 10px' },
             store: store,
@@ -121,8 +125,7 @@ Ext.define('Taco.view.report.Index', {
             ]
         });
 
-        me.body.items.items[0].add(newGrid);
-
+        me.body.items.items[0].add(me.grid);
     },
 
     initComponent: function () {
@@ -228,7 +231,33 @@ Ext.define('Taco.view.report.Index', {
                     'border-width': '0px 1px 0px 0px'
                 },
                 autoScroll: true,
-                items: [this.summaryPanel],
+                items: [
+
+
+
+                    {
+                        xtype: 'panel',
+                        bodyStyle: {
+                            'border-width': '0px 1px 0px 0px'
+                        },
+                        layout: {
+                            type: 'border'
+                        },
+                        items: [],
+                        dockedItems: [
+                           {
+                               xtype: 'container',
+                               dock: 'top',
+                               style: { 'background-color': 'white' },
+                               items: [this.summaryPanel]
+                           }
+                        //    this.summaryPanel
+                        ]}
+
+
+
+
+                ],
                 dockedItems: [
                    {
                        xtype: 'container',
@@ -243,5 +272,6 @@ Ext.define('Taco.view.report.Index', {
         });
 
         this.callParent(arguments);
+        window.me = me;
     }
 })
