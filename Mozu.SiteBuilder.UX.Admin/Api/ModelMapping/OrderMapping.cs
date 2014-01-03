@@ -246,7 +246,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // fill out number of items ordered, shipped, unshipped
                     order.ItemsOrdered = order.Items.Sum(i => i.Quantity);
                     order.ItemsNotShipped = order.UnpackagedItems.Sum(i => i.Quantity);
+                    order.ItemsNotPickedup = order.UnpickedupItems.Sum(i => i.Quantity);
                     order.ItemsShipped = order.Packages == null || order.Packages.Count == 0 ? 0 : order.Packages.SelectMany(p => p.Items).Sum(i => i.Quantity);
+                    order.ItemsPickedup = order.Pickups == null || order.Pickups.Count == 0 ? 0 : order.Pickups.SelectMany(p => p.Items).Sum(i => i.Quantity);
                 })
                 ;
         }
@@ -463,6 +465,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Status, op => op.MapFrom(dc => dc.Status))
                 .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
                 .ForMember(x => x.FulfillmentLocationCode, op => op.MapFrom(dc => dc.FulfillmentLocationCode))
+                .ForMember(x => x.TotalQuantity, op => op.MapFrom(dc => dc.Items.Sum(i => i.Quantity)))
                 .ForMember(x => x.OrderId, op => op.Ignore())
                 .AfterMap((dc, x) => {
                     // set FulfillmentLocationCode on all items.

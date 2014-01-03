@@ -142,6 +142,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public int ItemsShipped { get; set; }
 
         /// <summary>
+        /// Total quantity of things unpicked.
+        /// </summary>
+        [DataMember(Name = "itemsNotPickedup", EmitDefaultValue = false)]
+        public int ItemsNotPickedup { get; set; }
+
+        /// <summary>
+        /// Total quantity of things picked.
+        /// </summary>
+        [DataMember(Name = "itemsPickedup", EmitDefaultValue = false)]
+        public int ItemsPickedup { get; set; }
+
+        /// <summary>
         /// An optional order-level adjustment.
         /// </summary>
         [DataMember(Name = "orderAdjustment", EmitDefaultValue = false)]

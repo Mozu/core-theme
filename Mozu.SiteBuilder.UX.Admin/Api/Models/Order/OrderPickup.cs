@@ -41,5 +41,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         [DataMember(Name = "availableActions")]
         public List<string> AvailableActions { get; set; }
+
+        [DataMember(Name = "totalQuantity", EmitDefaultValue = true)]
+        public int TotalQuantity { get; set; }
     }
 }
