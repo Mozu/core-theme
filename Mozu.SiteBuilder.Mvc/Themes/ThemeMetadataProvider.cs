@@ -73,7 +73,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             tmd.FileListing = LoadThemeFileListing(tmd.ThemePath);
             tmd.Thumbnail = LoadThemeThumbnail(tmd.ThemePath);
             tmd.Labels = LoadThemeLabels(tmd.ThemePath);
-           
+            tmd.TimeStamp = tmd.FileListing.Max(x => x.TimsStamp);
 
             if (tmd.Configuration == null)
                 return null;
@@ -203,6 +203,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 {
                     Name = x.Name,
                     FullPath = x.FullName,
+                    TimsStamp = x.LastWriteTimeUtc,
                     RootPath = themePath,
                     VirtualPathNoExt = relPathNoExt,
                     VirtualPath = relPath,

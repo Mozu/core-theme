@@ -115,6 +115,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public string ThemePath { get; set; }
 
         internal ThemeMetaData Source { get; set; }
+
+        public DateTime TimeStamp { get; set; }
     }
 
     public class ThemeFileSystemInfo
@@ -125,6 +127,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public string RootPath { get; set; }
         public string VirtualPath { get; set; }
         public string VirtualPathNoExt { get; set; }
+        public DateTime TimsStamp { get; set; }
 
         public System.IO.Stream  OpenRead()
         {
