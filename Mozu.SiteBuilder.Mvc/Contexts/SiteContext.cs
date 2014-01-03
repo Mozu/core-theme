@@ -275,10 +275,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     {
                         LocationUsageCollection locSettingsDc = locSettingsTask.Result.ReadAsSync();
                         //todo hash audit info.
-                        var block = BitConverter.GetBytes(locSettingsTask.Result.ResponseMessage.Content.Headers.ContentLength.GetValueOrDefault(0));
+                        if (locSettingsDc.Items != null)
+                        {
+                            locSettingsDc.Items.ForEach(x => md5.HashAuditInfo(x.AuditInfo));
+                           
+                            SupportsInStorePickup = locSettingsDc.Items.Any(x => x.LocationUsageTypeCode == "SP");
+                        }
+                        
 
-                        md5.TransformBlock(block, 0, block.Length, block, 0);
-                        SupportsInStorePickup = locSettingsDc.Items.Any(x => x.LocationUsageTypeCode == "SP");
+                        
                     }
 
                     HttpCookie cookie = _cookieProvider.GetRequestCookie(FORCE_THEME_COOKIE_NAME);
