@@ -101,7 +101,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                 case "productcode" :
                     return "(IsVariation eq true or IsVariation eq false) and (" +
                         (value.ToString().Split(',')
-                        .Select(code => string.Format("(baseProductCode eq \"{0}\" or  ProductCode eq \"{0}\")", code))
+                        .Select(code => string.Format("(baseProductCode eq \"{0}\" or  ProductCode eq \"{0}\")", code.Trim()))
                         .Aggregate((comp, next) => comp + " or " + next)) + ")";
                     
                 case "producttypeid":
