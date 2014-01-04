@@ -10,6 +10,7 @@ using System.Web.Http;
 using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Logging;
 using Mozu.Core.Messaging.Contracts.Notification;
 using Mozu.Customer.Contracts;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
@@ -19,7 +20,7 @@ using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
-
+using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using DC = Mozu.Content.Contracts;
@@ -32,6 +33,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [ContextInitialization]
     public class EmailController : CmsPagesController
     {
+        private readonly ISitesWebApiClient _sitesWebApiClient;
+        private readonly ILogger _logger;
         private static readonly List<EmailTypeInfo> g_emailTypeInfos;
 
         static EmailController()
@@ -66,9 +69,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                ICmsServiceWrapper cmsService,
                                ICmsTypeHelper cmsTypeHelper,
                                ICustomerAccountWebApiClient customerAccountWebApiClient,
-                               HyprViewEngine hyprViewEngine)
+                               HyprViewEngine hyprViewEngine,
+                                Mozu.Tenant.Contracts.Clients.ISitesWebApiClient sitesWebApiClient,
+                                ILogger logger 
+
+            )
             : base(docRepo, docTypeRepo, cmsService, cmsTypeHelper, customerAccountWebApiClient, hyprViewEngine)
         {
+            _sitesWebApiClient = sitesWebApiClient;
+            _logger = logger;
         }
 
         //
@@ -86,7 +95,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 model = JsonConvert.DeserializeObject<Order>(_mockOrder);
             }
-
+            var site = (await _sitesWebApiClient.GetSite(this.SbApiContext.SiteId)).ReadAsSync();
             HttpResponseMessage res = await Page("email", GetCmsPage(emailTempalte));
             if (res.StatusCode == HttpStatusCode.NotFound)
             {
@@ -119,7 +128,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var vr = ((ObjectContent) res.Content).Value as ViewResult;
             vr.ViewName = emailTempalte.Template;
             ViewData["content"] = vr.Model;
-
+            ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
 
 
 
@@ -141,35 +150,35 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
 
-            if (notification.MessagePublishingContext != null && !string.IsNullOrEmpty(notification.MessagePublishingContext.CustomerId ))
+            if (notification.MessagePublishingContext != null && !string.IsNullOrEmpty(notification.MessagePublishingContext.CustomerId))
             {
                 try
                 {
                     var dcUser = (await _customerAccountWebApiClient.GetAccount(int.Parse(notification.MessagePublishingContext.CustomerId))).ReadAsSync();
 
                     user = new UX.Models.Customers.User
-                                         {
-                                             Email = dcUser.EmailAddress,
-                                             FirstName = dcUser.FirstName,
-                                             LastName = dcUser.LastName,
-                                             UserId = dcUser.UserId,
-                                             AccountId = dcUser.Id
-                                         };
+                           {
+                               Email = dcUser.EmailAddress,
+                               FirstName = dcUser.FirstName,
+                               LastName = dcUser.LastName,
+                               UserId = dcUser.UserId,
+                               AccountId = dcUser.Id
+                           };
                 }
                 catch (Mozu.Core.Api.Client.Exceptions.ApiWebClientException)
                 {
                 }
             }
 
-            
-            
+
+
 
             //if (topic.StartsWith(EmailNotification.PrimaryTopic))
             //{
             //    topic = topic.Substring(EmailNotification.PrimaryTopic.Length + 1);
             //}
 
-            EmailTypeInfo emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic, notification.Topic , StringComparison.OrdinalIgnoreCase));
+            EmailTypeInfo emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic, notification.Topic, StringComparison.OrdinalIgnoreCase));
 
             VM.PageTypeDefinition emailTempalte = SiteContext.Theme.EmailTemplates.FirstOrDefault(x => string.Equals(x.Id, notification.Topic, StringComparison.OrdinalIgnoreCase));
 
@@ -178,7 +187,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "no templates defined for  topic " + notification.Topic);
             }
 
-
+            var site = (await _sitesWebApiClient.GetSite(this.SbApiContext.SiteId)).ReadAsSync();
             HttpResponseMessage v = await Page("email", GetCmsPage(emailTempalte));
             object cmdContent = null;
             var vr = ((ObjectContent) v.Content).Value as ViewResult;
@@ -192,17 +201,28 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //vr.ViewName = "email/" + emailTypeInfo.Template;
 
 
-            object model = Convert(notification.Payload , emailTypeInfo);
+            _logger.Info(string.Format("raw payload for topic:{0} messageId:{1}", notification.MessageId, notification.Topic), notification.Payload);
 
 
+            object model = Convert(notification.Payload, emailTypeInfo);
 
+            try
+            {
+                var txt = JsonConvert.SerializeObject(model);
+                _logger.Info(string.Format("de-serialized payload for topic:{0} messageId:{1}", notification.MessageId, notification.Topic),txt);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
 
-            var viewEngine = Request.Resolve<HyprViewEngine>();
+        var viewEngine = Request.Resolve<HyprViewEngine>();
             var view = viewEngine.FindPageView(emailTempalte.Template);
             var vdd = new ViewDataDictionary();
             vdd["model"] = model;
             vdd["content"] = cmdContent;
             vdd["User"] = user;
+            ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
 
             var hvc = new HyprViewContext(this.Request , vdd, null);
             var stringWriter = new StringWriter();
