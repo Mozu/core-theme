@@ -96,10 +96,25 @@
 {% if model.measurements and themeSettings.showProductDetailMeasurements %}
 <div class="mz-productdetail-measurements mz-l-stack-section">
     <h4 class="mz-l-stack-sectiontitle">{{ labels.measurements }}</h4>
-    <dl class="mz-propertylist mz-propertylist-justified">
+    <dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
       <dt>Weight</dt>
       <dd itemprop="weight" itemscope itemtype="http://schema.org/QuantitativeValue">
         <span itemprop="value">{{ model.measurements.packageWeight.value }}</span> <span itemprop="unitCode">{{ model.measurements.packageWeight.unit }}</span></dd>
+    </dl>
+	<dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
+      <dt>Length</dt>
+      <dd itemprop="length" itemscope itemtype="http://schema.org/QuantitativeValue">
+        <span itemprop="value">{{ model.measurements.packageLength.value }}</span> <span itemprop="unitCode">{{ model.measurements.packageLength.unit }}</span></dd>
+    </dl>
+	<dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
+      <dt>Width</dt>
+      <dd itemprop="width" itemscope itemtype="http://schema.org/QuantitativeValue">
+        <span itemprop="value">{{ model.measurements.packageWidth.value }}</span> <span itemprop="unitCode">{{ model.measurements.packageWidth.unit }}</span></dd>
+    </dl>
+	<dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
+      <dt>Height</dt>
+      <dd itemprop="height" itemscope itemtype="http://schema.org/QuantitativeValue">
+        <span itemprop="value">{{ model.measurements.packageHeight.value }}</span> <span itemprop="unitCode">{{ model.measurements.packageHeight.unit }}</span></dd>
     </dl>
 </div>
 {% endif %}
