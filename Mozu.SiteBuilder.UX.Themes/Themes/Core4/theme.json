@@ -103,7 +103,7 @@
 		"title": "Password Reset",
 		"template": "email/password-reset",
 		"properties": {
-		  "subject": "Order Status #{model.orderNumber}"
+		  "subject": "Reset Your Password"
 		}
 	  },
 	  {
