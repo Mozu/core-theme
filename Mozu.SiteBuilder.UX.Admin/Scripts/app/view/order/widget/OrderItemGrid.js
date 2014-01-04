@@ -864,7 +864,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     // accepts an array of orderItem configuration data objects and calls the service to persist it.
     addConfiguredProduct: function (orderItems) {
         var me = this;
-        
+
         me.fireEvent('save');
         me.record.addOrderItem({
             jsonData: {
@@ -877,6 +877,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 if (!json || !json.success) {
                     // service didnt' return data properly
                     me.fireEvent('saveFailure');
+                    
                     Taco.app.fireEvent('setmessage', "Error adding order item.", 'error');
                     return;
                 }
@@ -888,7 +889,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error adding order item.";
+                    msg = (json && json.message) ? json.message : "Error adding order item.";
 
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 me.fireEvent('saveFailure');
