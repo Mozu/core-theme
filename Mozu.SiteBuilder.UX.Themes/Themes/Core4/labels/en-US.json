@@ -139,6 +139,8 @@
   "checkout"             : "Checkout",
   "orderSummary"         : "Order Summary",
   "shippingInformation"  : "Shipping Information",
+  "selectValidAddress"   : "Select an address from these alternatives:",
+  "suggestionNum"        : "Suggestion #{0}",
   "shippingMethod"       : "Shipping Method",
   "noShippingMethods"    : "Sorry, no shipping methods are available.",
   "paymentInformation"   : "Payment Information",
@@ -295,6 +297,7 @@
   "defective"            : "Defective - does not work properly",
   "noLongerWanted"       : "No longer needed/wanted",
   "tooLate"              : "Arrived too late",
+  "wrongCountryForType"  : "Please select a country supported for this contact type",
 
   
   /* Faceting labels */

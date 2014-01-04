@@ -133,7 +133,7 @@
                 </div>
             {% else %}
             <div class="mz-l-formfieldgroup mz-l-formfieldgroup-address">
-                {% include "modules/checkout/billing-address-form" with model=model.billingContact %}
+                {% include "modules/checkout/billing-address-form" with model=model.billingContact countries=pageContext.billingCountries %}
             </div>
             {% endif %}
         </div>
