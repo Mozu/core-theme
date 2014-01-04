@@ -17,12 +17,18 @@
          this.reset();
          this.hide();
      },
-     beforeSaveMe:function () {
+     
+     persistFormValues: function () {
+         var me = this;
          Ext.iterate(me.rangeQueryForms, function (sourceId, form) {
-                         form.updateForm();
-                     });
+             form.persistFormValues();
+         });
+
+         this.callParent(arguments);
+
      },
-    
+     
+
 
      createRangeQueryForm: function(record, isShowing) {
          var me = this,
