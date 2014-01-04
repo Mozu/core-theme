@@ -347,7 +347,6 @@
             "mainCategory": "Category",
             "numberToDisplay": 4
         },
-        "icon": "/resources/admin/widgets/01_photo_text.png",
 		"validPageTypes":["*"]
     },{
         "id": "crosssells",
@@ -382,7 +381,6 @@
             "title": "Related Items",
             "count": "4"
         },
-        "icon": "/resources/admin/widgets/01_photo_text.png",
 		"validPageTypes":["product","cart"]
     }, {
         "id": "upsells",
@@ -420,7 +418,6 @@
             "title": "Other Items",
             "count": "4"
         },
-        "icon": "/resources/admin/widgets/01_photo_text.png",
 		"validPageTypes":["product","cart"]
     }, {
         "id": "relatedproducts",
@@ -458,7 +455,6 @@
             "title": "Other Items",
             "count": "4"
         },
-        "icon": "/resources/admin/widgets/01_photo_text.png",
 		"validPageTypes":["product","cart"]
     }, 	{
          "id": "instockrequest",
@@ -477,7 +473,6 @@
           "defaultConfig": {
 			  "title": "Related Items"
 		},
-         "icon": "/resources/admin/widgets/01_photo_text.png",
          "validPageTypes":["product"]
     },  {
         "id": "content",
