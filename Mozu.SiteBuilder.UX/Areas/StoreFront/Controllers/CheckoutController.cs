@@ -49,14 +49,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ISettings _settings;
         private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private readonly ICreditWebApiClient _creditWebApiClient;
-        private readonly IShippingWebApiClient _shippingWebApiClient;
+  
         
         private readonly OrderStatusProvider _orderStatusProvider = new OrderStatusProvider();
 
         //private static string _merchantId;
         private const string CookieName = "order";
 
-        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, Mozu.ShippingRuntime.Contracts.Clients.IShippingWebApiClient shippingWebApiClient , Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient ,  ICreditWebApiClient creditWebApiClient, Mozu.CommerceRuntime.Contracts.Clients.ICartWebApiClient cartWebApiClient , ISettings settings)
+        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient ,  ICreditWebApiClient creditWebApiClient, Mozu.CommerceRuntime.Contracts.Clients.ICartWebApiClient cartWebApiClient , ISettings settings)
         {
           
             _authHelper = authHelper;
@@ -68,8 +68,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _customerAccountWebApiClient = customerAccountWebApiClient;
             _creditWebApiClient = creditWebApiClient.CloneWithoutUserClaims();
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
-            _shippingWebApiClient = shippingWebApiClient.CloneWithoutUserClaims();
-           
+            
 
         }
 
@@ -80,19 +79,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             get { return _merchantId ?? (_merchantId = _orderService.GetMerchantId()); }
         }*/
 
-        public async Task<List<KeyValuePair<string, string>>> GetShippableCountries()
-        {
-
-            var result = (await _shippingWebApiClient.GetShippableCountries()).ReadAsSync().Items;
-
-            var res = result.Select(x => new KeyValuePair<string, string>(x.Name , x.Code )).ToList();
-            if (res.Count == 0)
-            {
-                res.Add( new KeyValuePair<string, string>("us","us"));
-            }
-            return res;
-        }
-
+       
         private static List<string> CompletedOrderStates = new List<string>{
             Order.OrderStatusConst.SUBMITTED,
             Order.OrderStatusConst.ACCEPTED,
@@ -153,11 +140,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Customer.Contracts.CustomerAccount account = null;
             CardCollection cards = null;
             Customer.Contracts.Credit.CreditCollection credits = null;
+            var shipTask = GetShippableCountries();
+            var billTask = GetBillingCountries();
+            var orderTask = _orderWebApiClient.GetOrder(id);
+            await Task.WhenAll(shipTask, billTask, orderTask);
 
             try
             {
-
-                model = (await _orderWebApiClient.GetOrder(id)).ReadAsAsync().Result;
+                 model = orderTask.Result.ReadAsAsync().Result;
+                
             }
             catch
             {
@@ -167,6 +158,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             bool addedPrimaryShippingContactToOrderJustNow = false;
 
            // dynamic dOrder = jOrder;
+            this.PageContext.BillingCountries = billTask.Result;
+            this.PageContext.ShippingCountries = shipTask.Result;
+
 
 
             if (!this.PageContext.User.IsAnonymous)
@@ -228,21 +222,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 //jOrder.Add("AvailableShippingMethods", asm);
                 //ViewData["availableShippingMethods"] = _orderWebApiClient.GetAvailableShipmentMethods(id).Result.ReadAsSync();
             }
-            else
-            {
-                var countries = (await GetShippableCountries());
-                if (countries.Count > 0)
-                {
-                    var ac = new JArray(countries.Select(x => new JObject {new JProperty("code", x.Key), new JProperty("name", x.Value)}).ToArray());
+           
 
-                    jOrder.Add("availableCountries", ac);
-                }
-                //else
-                //{
-                //    jOrder.Add("AvailableShippingMethods", new JArray(new int[0]));
-                //}
-            }
-                
+
+               
 
 
 
