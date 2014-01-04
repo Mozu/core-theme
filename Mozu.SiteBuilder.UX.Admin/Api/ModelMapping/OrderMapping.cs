@@ -204,15 +204,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                             if (desiredPickupQuantity - pickedQuantity < 0)
                                 remainingQuantity += desiredPickupQuantity - pickedQuantity;
 
-                            order.UnpackagedItems.Add(new OrderPackageItem
-                                {
-                                    ProductCode = productCode,
-                                    ProductName = GetProductName(productCode),
-                                    Weight = GetUnitWeight(productCode) * remainingQuantity,
-                                    Quantity = remainingQuantity,
-                                    FulfillmentMethod = FulfillmentMethodConst.SHIP,
-                                    FulfillmentLocationCode = GetFulfillmentLocationCode(productCode)
-                                });
+                            if (remainingQuantity > 0)
+                            {
+                                order.UnpackagedItems.Add(new OrderPackageItem
+                                    {
+                                        ProductCode = productCode,
+                                        ProductName = GetProductName(productCode),
+                                        Weight = GetUnitWeight(productCode) * remainingQuantity,
+                                        Quantity = remainingQuantity,
+                                        FulfillmentMethod = FulfillmentMethodConst.SHIP,
+                                        FulfillmentLocationCode = GetFulfillmentLocationCode(productCode)
+                                    });
+                            }
                         }
 
                         // if there are more desired products than created pickups contain, add this product to unpickedupItems.
@@ -224,14 +227,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                             if (desiredPackageQuantity - packagedQuantity < 0)
                                 remainingQuantity += desiredPackageQuantity - packagedQuantity;
 
-                            order.UnpickedupItems.Add(new OrderPickupItem
-                                {
-                                    ProductCode = productCode,
-                                    ProductName = GetProductName(productCode),
-                                    Quantity = remainingQuantity,
-                                    FulfillmentMethod = FulfillmentMethodConst.PICKUP,
-                                    FulfillmentLocationCode = GetFulfillmentLocationCode(productCode)
-                                });
+                            if (remainingQuantity > 0)
+                            {
+                                order.UnpickedupItems.Add(new OrderPickupItem
+                                    {
+                                        ProductCode = productCode,
+                                        ProductName = GetProductName(productCode),
+                                        Quantity = remainingQuantity,
+                                        FulfillmentMethod = FulfillmentMethodConst.PICKUP,
+                                        FulfillmentLocationCode = GetFulfillmentLocationCode(productCode)
+                                    });
+                            }
                         }
                     }
                 })
