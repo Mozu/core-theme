@@ -61,10 +61,13 @@ require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mo
                     $target = $(e.currentTarget),
                     loc = $target.data('mzLocation');
                 $target.parent().addClass('is-loading');
-                this.product.addToCartForPickup(loc).then(function (cartItem) {
+                this.product.addToCartForPickup(loc);
+            },
+            setProduct: function (product) {
+                var me = this;
+                me.product = product;
+                this.listenTo(me.product, 'addedtocart', function () {
                     window.location.href = "/cart";
-                }).ensure(function () {
-                    $target.parent().removeClass('is-loading');
                 });
             }
         });
@@ -73,13 +76,14 @@ require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mo
             
             var $locationSearch = $('#location-list'),
                 product = ProductModels.Product.fromCurrent(),
+                productPresent = !!product.get('productCode'),
                 locationsCollection = new LocationModels.LocationCollection(),
-                view = new (product.get('productCode') ? LocationsSearchView : LocationsView)({
+                view = new (productPresent ? LocationsSearchView : LocationsView)({
                     model: locationsCollection,
                     el: $locationSearch
                 });
 
-            view.product = product;
+            if (productPresent) view.setProduct(product);
             window.lv = view;
         })
     }

@@ -40,7 +40,6 @@
         checkLocalStores: function (e) {
             var me = this;
             e.preventDefault();
-            this.completeAllConfigurations();
             this.model.whenReady(function () {
                 var $localStoresForm = $(e.currentTarget).parents('[data-mz-localstoresform]'),
                     $input = $localStoresForm.find('[data-mz-localstoresform-input]');
