@@ -85,7 +85,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var orderHistoryTask = _orderWebApiClient.GetOrders(0, 5, null, "OrderNumber ne null");
             var returnHistoryTask = _returnApiClient.GetReturns(0, 5, null);
             var storeCreditsTask = _creditApiClient.GetCredits(0, 25, null, String.Format("CustomerId eq \"{0}\"", account.Id));
-            var wishlistTask = _wishlistApiClient.GetWishlistByName(account.Id, DEFAULT_WISHLIST_NAME);            
+            var wishlistTask = _wishlistApiClient.GetWishlistByName(account.Id, DEFAULT_WISHLIST_NAME);
+
+            var shipTask = GetShippableCountries();
+            var billTask = GetBillingCountries();
+
+            await Task.WhenAll(cardsTask, orderHistoryTask, returnHistoryTask, storeCreditsTask, wishlistTask);
+
+            this.PageContext.ShippingCountries = shipTask.Result;
+            this.PageContext.BillingCountries  = billTask.Result;
+
+            
             CommerceRuntime.Contracts.Wishlists.Wishlist wishlist = null;
             try {
                 wishlist = wishlistTask.Result.ReadAsSync();

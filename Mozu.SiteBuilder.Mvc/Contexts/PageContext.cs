@@ -69,6 +69,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public string PageType { get; set; }
         public string PageTypeId { get; set; }
 
+        public List<KeyValuePair<string, string>> ShippingCountries { get; set; }
+        public List<KeyValuePair<string, string>> BillingCountries { get; set; }
+
+
         public CmsPageContext CmsContext {get;set;}
 
         public SearchContext  Search
