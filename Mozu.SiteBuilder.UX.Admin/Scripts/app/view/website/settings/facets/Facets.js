@@ -29,7 +29,7 @@
              rId = record.get('sourceId'),
              rangeQueryForm = me.rangeQueryForms[rId];
 
-         rangeQueryForm = me.rangeQueryForms[rId] = Ext.widget('taco.rangequeryform', {
+         rangeQueryForm = me.rangeQueryForms[rId] = Ext.create('Taco.view.website.settings.facets.FacetRangeQueryForm', {
              record: record,
              renderTo: Ext.dom.Query.selectNode('[data-for-sourceid="' + rId + '"]'),
              hidden: !isShowing,
