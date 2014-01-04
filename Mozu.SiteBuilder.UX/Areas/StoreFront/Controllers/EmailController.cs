@@ -223,7 +223,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             vdd["model"] = model;
             vdd["content"] = cmdContent;
             vdd["User"] = user;
-            ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
+            vdd["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
 
             var hvc = new HyprViewContext(this.Request , vdd, null);
             var stringWriter = new StringWriter();
