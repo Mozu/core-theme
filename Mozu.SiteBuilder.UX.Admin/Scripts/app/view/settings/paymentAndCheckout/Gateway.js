@@ -80,21 +80,18 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
     persistFormValues:function() {
         var me = this;
         var gateway = Ext.clone(me.record.get('gateway'));
-        var isDirty = false, val = {};
+        var hasCredentialsChanged = false, val = {};
 
         Ext.each(me.credFields, function (field) {
             if (field.isDirty()) {
-                isDirty = true;
+                hasCredentialsChanged = true;
             }
             val[field.name] = field.getValue();
         });
 
-        gateway['credentialsSet'] = false;
-        // if (isDirty) {
+        gateway['credentialsSet'] = hasCredentialsChanged;
         gateway['credentials'] = val;
-        gateway['credentialsSet'] = true;
         gateway['gatewayDefinitionId'] = this.gatewayDefinition.get('id');
-        // }
 
         gateway['supportedCards'] = me.supportedCardsCbg.getValue().cards;
 
