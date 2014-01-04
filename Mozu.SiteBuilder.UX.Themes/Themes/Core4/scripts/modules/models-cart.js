@@ -26,6 +26,7 @@
         },
         mozuType: 'cartitem',
         handlesMessages: true,
+        helpers: ['priceIsModified'],
         priceIsModified: function() {
             var price = this.get('unitPrice');
             return price.baseAmount != price.discountedAmount;
