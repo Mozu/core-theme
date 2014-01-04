@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2014-01-03
+ * Mozu JavaScript SDK - v0.2.0 - 2014-01-04
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -3559,7 +3559,7 @@ ApiObject.types.order = (function() {
         },
         "CreditCard": function (order, billingInfo) {
             var card = order.api.createSync('creditcard', billingInfo.card);
-            errors.passFrom(card, this);
+            errors.passFrom(card, order);
             return card.save().then(function(card) {
                 billingInfo.card = card.getOrderData();
                 order.prop('billingInfo', billingInfo);
