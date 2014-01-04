@@ -89,6 +89,28 @@
           "queryMode": "local"
         }
       ]
-    }
+    },
+    {
+        "xtype": "panel",
+        "title": "Navigation",
+        "collapsed": false,
+        "items": [
+            {
+                "fieldLabel": "Maximum Items In Main Nav",
+                "xtype": "numberfield",
+                "name": "maxTopLevelNavItems",
+                "hideTrigger": false,
+                "allowDecimal": false,
+                "minValue": 1
+            },
+            {
+                "fieldLabel": "Maximum Nav Item Label Length",
+                "xtype": "numberfield",
+                "name": "maxTopLevelNavLabelLength",
+                "hideTrigger": false,
+                "allowDecimal": false,
+                "minValue": 1
+            }
+        ]
   ]
 }
