@@ -202,15 +202,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //vr.ViewName = "email/" + emailTypeInfo.Template;
 
 
-            _logger.Info(string.Format("raw payload for topic:{0} messageId:{1}", notification.MessageId, notification.Topic), notification.Payload);
+            _logger.Info(string.Format("raw payload for topic:{0} messageId:{1}", notification.MessageId, notification.Topic), notification);
 
 
             object model = Convert(notification.Payload, emailTypeInfo);
 
             try
             {
-                var txt = JsonConvert.SerializeObject(model);
-                _logger.Info(string.Format("de-serialized payload for topic:{0} messageId:{1}", notification.MessageId, notification.Topic),txt);
+                //model var txt = JsonConvert.SerializeObject(model);
+                _logger.Info(string.Format("de-serialized payload for topic:{0} messageId:{1}", notification.MessageId, notification.Topic), model);
             }
             catch (Exception ex)
             {
