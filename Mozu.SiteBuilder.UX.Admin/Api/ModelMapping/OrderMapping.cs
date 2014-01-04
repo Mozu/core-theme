@@ -129,7 +129,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     order.AuthorizationInfo = new OrderAuthorizationInfo
                     {
                         TotalAmount = order.Total,
-                        AmountCollected = order.Payments.Sum(p => p.AmountCollected),
+                        AmountCollected = order.Payments.Sum(p => p.AmountCollected) - order.Payments.Sum(p => p.AmountCredited),
                     };
                     order.AuthorizationInfo.CaptureAmount = order.AuthorizationInfo.TotalAmount - order.AuthorizationInfo.AmountCollected;
 
