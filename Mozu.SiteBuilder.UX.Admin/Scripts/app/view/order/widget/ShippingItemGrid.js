@@ -123,7 +123,8 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         }
         
         if (me.getEnableToolbar() && data.length) {
-            this.tbar = Ext.create('Ext.toolbar.Toolbar', this.getToolBarConfig()); 
+            this.tbar = Ext.create('Ext.toolbar.Toolbar', this.getToolBarConfig());
+
         }
 
         Ext.apply(this, {
@@ -181,11 +182,18 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
 
         var specificPackages = [];
 
+        // if the package already has a shipmentId that means the user has clicked the viewShippingLabel buttona and the package can no longer be modified. It can only be deleted;
+        
+        var isDisabled = (this.packageData && this.packageData.shipmentId);
+
+        
+
         // always need to have new package
         menu.push(
             {
                 text: "New Package",
                 moveAction: "addSelectionToPackage",
+                disabled:isDisabled,
                 moveTargetId: -1
             }
         );
@@ -194,8 +202,9 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         if (!me.isUnShippedItems) {
             menu.push(
                 {
-                    text: "Unshipped Items",
+                    text: "Pending Items",
                     moveAction: "addSelectionToPackage",
+                    disabled: isDisabled,
                     moveTargetId: 0
                 }
             );
@@ -218,6 +227,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
                 menu.push({
                     text: "Package " + i,
                     moveAction: "addSelectionToPackage",
+                    disabled: isDisabled,
                     moveTargetId: unshippedPackages[i - 1].id
                 });
             }
@@ -258,8 +268,10 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             };
        
         
+
         
-        if (me.getEnableMoveMenu()) {
+        
+        if (me.getEnableMoveMenu() && me.isUnShippedItems) {
 
             var unShippedPackages = this.record.get("unShippedPackages");
             // if there is a last package use its id, otherwise make the target a new package
@@ -273,8 +285,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
                 menuXtype = "Ext.button.Button";
                 // note that the taco button doesn't support being enabled and disabled
             }
-            
-            
+
 
             // note: i had to use the ext split button. The Taco.core.ux.action.SplitButton doesn't responsd to .enabled(), .disable() and needs to be refactored to support the standard extjs button behaviors fully.
             //me.moveMenuAction = Ext.create("Taco.core.ux.action.SplitButton", {
@@ -322,7 +333,8 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
 
         }
         
-        if (me.enableShippingMethodMenu) {
+        // disabling this ui
+        if (me.enableShippingMethodMenu && false) {
             // note: i had to use the ext split button. The Taco.core.ux.action.SplitButton doesn't responsd to .enabled(), .disable() and needs to be refactored to support the standard extjs button behaviors fully.
             //me.moveMenuAction = Ext.create("Taco.core.ux.action.SplitButton", {
             me.shippingMethodMenu = Ext.create("Ext.button.Button", {
@@ -361,7 +373,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
 
         }
         
-        if (me.enableShippingLabelButton &&  me.packageData.shippingMethodCode) {
+        if (me.enableShippingLabelButton &&  me.packageData.shippingMethodCode && false) {
             
             me.shippingLabelButton = Ext.create("Ext.button.Button", {
                 text: 'View Shipping Label',
@@ -376,7 +388,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
 
         }
         
-        if (me.enabledPackingSlipButton  &&  me.packageData.shippingMethodCode) {
+        if (me.enabledPackingSlipButton  &&  me.packageData.shippingMethodCode && false) {
             me.packingSlipButton = Ext.create("Ext.button.Button", {
                 text: 'View Packing Slip',
                 ui: 'action',
@@ -389,7 +401,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             tb.items.push(me.packingSlipButton);
         }
         
-        if (me.enabledRemoveButton) {
+        if (me.enabledRemoveButton && false) {
             me.removeButton = Ext.create("Ext.button.Button", {
                 text: 'Remove',
                 ui: 'action',
@@ -402,7 +414,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             tb.items.push(me.removeButton);
         }
         
-        if (me.enabledMarkAsShippedButton) {
+        if (me.enabledMarkAsShippedButton && false) {
             me.markAsShippedButton = Ext.create("Ext.button.Button", {
                 text: 'Mark As Shipped',
                 ui: 'action',
@@ -426,6 +438,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             me.selModel = Ext.create('Ext.selection.CheckboxModel', {
                 selType: 'checkboxmodel',
                 checkOnly: true,
+                //toggleOnClick: false,
                 headerWidth: 37,
                 showHeaderCheckbox: true
             });
@@ -526,25 +539,29 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
                 {
                     xtype: 'taco.menucolumn',
                     draggable: false,
-                    text: '',
-                    width: this.getActionColumnWidth(),
+                    text: 'Actions',
                     menuDisabled: true,
-                    iconCls: Taco.baseCSSPrefix + 'grid-row-menu-trigger ' + Taco.baseCSSPrefix + 'grid-row-menu-trigger-remove',
-                    menuItems: [],
-                    handler: function (grid, rowIndex, colIndex, header, e, record, item) {
-                        // tell the method that we we want to move this item back to the unshippedItems list;
-                        var dom = Ext.get(item);
-                        dom.moveTargetId = 0;
-                        grid.up('gridpanel').moveSelectedItems(null, dom);
-                    },
-                    scope:me,
-                    renderer: function (value, metaData, record) {
-
-                    },
-                    onMenuShow: function (menu, eventData) {
-                        // todos: remove item from grid
-
-                    }
+                    width: this.getActionColumnWidth(),
+                    menu: Ext.create('Ext.menu.Menu',{
+                        plain: true,
+                        listeners: {
+                            click: {
+                                fn: me.moveSelectedItems,
+                                scope: me,
+                                delegate: "x-menu-item-link"   
+                            }
+                        },
+                        items: [{
+                            text: "loading..."
+                        }]
+                    }),
+                    menuItems: [],                    
+                    onMenuShow: function (menu, eventData) {                                                
+                        var extraMenu = eventData.grid.getMenuActions();
+                        menu.removeAll();
+                        menu.add(extraMenu);                        
+                    }                    
+                     
                 }
             );
         }

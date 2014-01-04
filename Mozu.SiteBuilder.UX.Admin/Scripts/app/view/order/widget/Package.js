@@ -82,10 +82,8 @@ Ext.define('Taco.view.order.widget.Package', {
     initComponent: function(eOpts) {
         var me = this;        
         
-        me.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-shipping-package'].join(' ');
+        me.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-shipping-package'].join(' ');       
         
-        // initialize the header;
-        me.header = me.getHeaderTemplate();
         
         me.grid = Ext.create('Taco.view.order.widget.ShippingItemGrid', {
             record: this.record,
@@ -126,6 +124,10 @@ Ext.define('Taco.view.order.widget.Package', {
             showFulfillmentLocationColumn: false
         });
 
+        // initialize the header;
+        me.header = me.getHeaderTemplate();
+
+
         me.items = [
             me.grid
         ];
@@ -139,20 +141,134 @@ Ext.define('Taco.view.order.widget.Package', {
     },
     
 
-    getHeaderTemplate: function () {
-        
-
-        var titleRow = {
-            xtype: "container",
-            layout: "hbox",
+    getToolBarConfig : function () {        
+        tb = {
+            plain: true,
             cls: "package-header-title-row",
-            items: [
-                {
-                    html: this.headerData.title
-                },
-                { xtype: 'tbfill' }
-            ]
+            style: "background-color:#ffffff;",            
+            enableOverflow: true,
+            items: []
+        };
+
+        return tb
+
+    },
+
+    getHeaderTemplate: function () {
+        var me = this;
+
+        var toolbarConfig = this.getToolBarConfig();
+
+        toolbarConfig.cls = "package-header-title-row";
+
+        var titleRow = toolbarConfig;
+
+        titleRow.items.push(
+            {
+                html: this.headerData.title,
+                style:"margin-right:20px;",
+                xtype:"component"
+            },
+            { xtype: 'tbfill' }
+        );
+
+
+        if (me.enabledMarkAsShippedButton) {
+
+            me.markAsShippedButton = Ext.create("Ext.button.Button", {
+                text: 'Mark As Shipped',
+                ui: 'action',
+                margin: "0 2px 0 0",
+                scale: 'medium',
+                handler: me.grid.markAsShipped,
+                scope: me
+            });
+        
+            titleRow.items.push(me.markAsShippedButton);
         }
+
+
+
+
+
+        if (me.enableShippingMethodMenu) {
+
+
+            // note: left this behavior in the grid to minimize bugs considering the late movement of this button to the outer class;
+            // todo: move this behavior into the outer class and remove from grid;
+            me.shippingMethodMenu = Ext.create("Ext.button.Button", {
+                ui: 'action',
+                margin: "0 2px 0 0",
+                scale: 'medium',
+                menuAlign: 'tr-br',
+                text: "Shipping Method",
+                listeners: {
+                    menushow: {
+                        fn: function (button, menu, eOpts) {
+                            var menuData = me.grid.getShippingRatesMenu();
+                            me.shippingMethodMenu.menu.removeAll();                            
+                            me.shippingMethodMenu.menu.add(menuData);
+                        },
+                        scope: me
+                    }
+                },
+                menu: {
+                    plain: true,
+                    listeners: {
+                        click: {
+                            fn: me.changeShippingMethod,
+                            scope: me,
+                            delegate: "x-menu-item-link"   
+                        }
+                    },
+                    items: [{
+                        text: "loading..."
+                    }]
+                }
+            });
+
+            titleRow.items.push(me.shippingMethodMenu);
+
+        }
+
+               
+        if (me.enableShippingLabelButton && me.grid.packageData.shippingMethodCode) {
+
+            me.shippingLabelButton = Ext.create("Ext.button.Button", {
+                text: 'View Shipping Label',
+                ui: 'action',
+                margin: "0 2px 0 0",
+                scale: 'medium',
+                handler: function () {
+                    
+                    me.viewShippingLabel()
+                },
+                scope: me
+            });
+            me.shippingLabelButton.setDisabled(!me.grid.packageData.shippingMethodCode);
+            titleRow.items.push(me.shippingLabelButton);
+
+        }
+
+        if (me.enabledPackingSlipButton && me.grid.packageData.shippingMethodCode) {
+            me.packingSlipButton = Ext.create("Ext.button.Button", {
+                text: 'View Packing Slip',
+                ui: 'action',
+                margin: "0 2px 0 0",
+                scale: 'medium',
+                handler: function () {
+                    
+                    me.viewPackingSlip()
+                },
+                scope: me
+            });
+            me.packingSlipButton.setDisabled(!me.grid.packageData.shippingMethodCode);
+            titleRow.items.push(me.packingSlipButton);
+        }
+
+
+
+
 
         if (this.headerData.fulfillmentStatus == "NotFulfilled") {
             titleRow.items.push(
@@ -160,8 +276,9 @@ Ext.define('Taco.view.order.widget.Package', {
                     xtype: "button",
                     ui: "action",
                     scale: "medium",
+                    //margin: "0 2px 0 0",
                     text: "Cancel Shipment",
-                    handler: function () {                        
+                    handler: function () {
                         this.deletePackage()
                     },
                     scope: this
@@ -169,12 +286,14 @@ Ext.define('Taco.view.order.widget.Package', {
             )
         }
 
+
+        var tb = Ext.create('Ext.toolbar.Toolbar', toolbarConfig);
         
         return {
             xtype: "container",
             items: [
 
-                titleRow,     
+                tb,     
         
         
                 {
@@ -188,8 +307,7 @@ Ext.define('Taco.view.order.widget.Package', {
                                 '<td style="width:33%;vertical-align:top;">',
 
                                     '<div class="header-section">',
-                                        '<div class="header-label">Order Fulfillment Status</div>',
-
+                                        '<span class="header-label">Order Fulfillment Status:</span>',
                                         '<tpl if="fulfillmentStatus==\'PartiallyFulfilled\'">',
                                             "Partially Fulfilled",
                                         '<tpl elseif="fulfillmentStatus==\'NotFulfilled\'">',
@@ -197,16 +315,17 @@ Ext.define('Taco.view.order.widget.Package', {
                                         '<tpl else>',
                                             '{fulfillmentStatus}',
                                         '</tpl>',
+                                        
                                     '</div>',
                 
                                     '<tpl if="values.itemTotal">',
                                         '<div class="header-section">',
-                                            'Package Item Count: {itemTotal}',
+                                            '<span class="header-label">Package Item Count:</span> {itemTotal}',
                                         '</div>',
                                     '</tpl>',
                 
                                     '<div class="header-section">',
-                                        'Packaging Type: ',
+                                        '<span class="header-label">Packaging Type:</span> ',
                                         '<tpl if="values.fulfillmentStatus==\'Fulfilled\'">',                
                                             '{packagingType}',
                                         '<tpl else>',
@@ -223,7 +342,7 @@ Ext.define('Taco.view.order.widget.Package', {
                                 '<td style="width:34%;vertical-align:top;padding:0 10px 0 10px ">',
                 
                                     '<div class="header-section">',
-                                        '<div class="header-label">Shipping Method</div>',
+                                        '<span class="header-label">Shipping Method</span>',
                                         '<tpl if="values.shippingMethod">',
                                             '<div>{shippingMethod}</div>',
                                         '<tpl else>',
@@ -232,11 +351,11 @@ Ext.define('Taco.view.order.widget.Package', {
                                     '</div>',
                 
                                     '<div class="header-section">',
-                                        'Weight: {weight} lbs',
+                                        '<span class="header-label">Weight:</span> {weight} lbs',
                                     '</div>',
 
                                     '<div class="header-section">',
-                                        ' Tracking: ',
+                                        ' <span class="header-label">Tracking:</span> ',
                                         /*
                                         '<tpl if="values.fulfillmentStatus==\'fulfilled\'">',
                                             '<tpl if="values.trackingNumber">',
@@ -328,6 +447,53 @@ Ext.define('Taco.view.order.widget.Package', {
             ]
         
         };
+    },
+
+
+
+    changeShippingMethod: function (menu, item, e, eOpts) {
+
+
+        
+
+        if (item) {
+
+            
+            data = this.grid.packageData;
+            // update the shipping code
+            data.shippingMethodCode = item.key;
+            data.shippingMethodName = item.text;
+
+            config = {
+                jsonData: [data],
+                success: function (response) {
+                    // success handling here
+                    Taco.app.viewPort.setLoading(false);
+                    var json = Ext.decode(response.responseText, true);
+                    if (!json || !json.success) {
+                        Taco.app.fireEvent('setmessage', "Error changing shipping method", 'error');
+                        return;
+                    }
+                    // reload the record
+                    this.record.reload();
+                },
+                failure: function (response) {
+                    var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.Message) ? json.Message : "Error changing shipping method";
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+                    Taco.app.viewPort.setLoading(false);
+                },
+                scope: this
+            };
+
+            Taco.app.viewPort.setLoading(true);
+
+            // call the model method to persist the change
+            this.record.changeShippingMethod(config);
+
+
+
+        }
     },
     
     loadData: function (data) {
@@ -422,7 +588,7 @@ Ext.define('Taco.view.order.widget.Package', {
     deletePackage: function() {
         var me = this;
         // get package json
-        var data = me.packageData;
+        var data = me.packageData;        
 
         config = {
             jsonData: {
@@ -465,6 +631,159 @@ Ext.define('Taco.view.order.widget.Package', {
         });
 
         modal.show();
+    },
+    
+    
+    viewShippingLabel: function (button, e) {
+        
+        
+        // view shipping label. open in new tab. this initiates a work flow that makes the package uneditable.
+        // subsequent edits to a package with a shipping label will need to be confirmed with a ui that tells the user 
+        // to destroy the shipping label. and should probably remove the tracking number from the package as well.
+
+        
+        var newWindow,
+            me = this,
+            grid = this.grid,
+            data = grid.packageData,
+            labelUrl = '/admin/app/order/shipping/package/label?orderId=' + data.orderId + '&packageId=' + data.id,
+            windowName = "shippingLabel-" + data.orderId + "-" + data.id;
+       
+        if (data.shipmentId === null || data.shipmentId === undefined)
+        {
+            // need to open the window immediately after the click so the popup blocker doesn't suppress it. 
+            //newWindow = window.open('/admin/Scripts/resources/images/legacy/loading.gif');
+            
+            newWindow = window.open('/admin/Scripts/build/resources/images/loading-shipping-label-m.gif', windowName);
+            var errorIcon = "/admin/Scripts/build/resources/images/error-shipping-label.gif";
+
+            me.setLoading(true);
+            Ext.Ajax.request( {
+                url: '/admin/app/order/shipping/package/prepareshipment',
+                method: 'POST',
+                jsonData: {
+                    orderId: data.orderId,
+                    packageIds: [ data.id ]
+                },
+                success: function (response) {
+                    me.setLoading(false);
+                    
+                    var json = Ext.decode(response.responseText, true);
+                    if (!json || !json.success) {
+                        Taco.app.fireEvent('setmessage', "Error viweing shipping label", 'error');
+                        newWindow.location = errorIcon;
+                        return;
+                    }
+                    newWindow.location = labelUrl;
+                    me.record.reload();
+                },
+                failure: function (response) {
+                    var json = Ext.decode(response.responseText, true),
+                      msg = (json && json.Message) ? json.Message : "Error viweing shipping label";
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+                    newWindow.location = errorIcon;
+                    me.setLoading(false);
+                }
+            });
+      
+        }
+        else {
+            window.open(labelUrl, windowName);
+        }
+    },
+
+    viewPackingSlip: function (button, e) {
+        var me = this,
+            grid = this.grid,
+            data = {
+                shippingMethodName: grid.packageData.shippingMethodName,
+                items: grid.packageData.items,
+                billingContact: this.record.data.billingContact,
+                fulfillmentContact: this.record.data.fulfillmentContact,
+                payment: this.record.data.payments[0],
+                order: this.record.data,
+                siteName: Taco.app.context.getSite().name
+            },
+            win = window.open(),
+            tpl;
+
+
+
+        tpl = new Ext.XTemplate(
+            '<div style="font: 14px/1.5 sans-serif;">',
+                '<table style="border-collapse: collapse; border-spacing: 0px; width: 100%;"><tbody><tr>',
+                    '<td style="padding: 4px 30px 20px 4px; width: 100%;">',
+                        '<h1 style="margin: 0px;">{siteName}</h1>',
+                    '</td>',
+                    '<td style="padding: 4px 30px 20px 4px;">',
+                        '<h2 style="margin: 0px; white-space: nowrap;">PACKING SLIP</h2>',
+                        '<table style="border-collapse: collapse; border-spacing: 0px;"><tbody><tr>',
+                            '<td style="padding: 4px 30px 4px 4px;">',
+                                '<div style="font-weight: bold; white-space: nowrap;">Date:</div>',
+                                '<div style="white-space: nowrap;">{order.createDate:date("M d g:ia")}</div>',
+                            '</td>',
+                            '<td style="padding: 4px 30px 4px 4px;">',
+                                '<div style="font-weight: bold; white-space: nowrap;">Order #:</div>',
+                                '<div style="font-weight: bold; white-space: nowrap;">{order.orderNumber}</div>',
+                            '</td>',
+                        '</tr></tbody></table>',
+                    '</td>',
+                '</tr></tbody></table>',
+                '<table style="border-collapse: collapse; border-spacing: 0px; width: 100%;"><tbody>',
+                    '<tr>',
+                        '<td style="font-weight: bold;">Bill To: (Customer ID #1)</td>',
+                        '<td style="font-weight: bold;">Ship To:</td>',
+                    '</tr>',
+                    '<tr>',
+                        '<td style="border-top: 2px solid black; padding: 4px 30px 20px 4px;">',
+                            '<div>{billingContact.firstName} {billingContact.lastName}</div>',
+                            '<div>{billingContact.address1}</div>',
+                            '<div>{billingContact.cityOrTown}, {billingContact.stateOrProvince} {billingContact.postalOrZipCode}</div>',
+                            '<div>{billingContact.countryCode}</div>',
+                            '<div>{billingContact.homePhone}</div>',
+                            '<div>{billingContact.email}</div>',
+                        '</td>',
+                        '<td style="border-top: 2px solid black; font-size: 16px; font-weight: bold; padding: 4px 30px 20px 4px;">',
+                            '<div>{fulfillmentContact.firstName} {fulfillmentContact.lastName}</div>',
+                            '<div>{fulfillmentContact.address1}</div>',
+                            '<div>{fulfillmentContact.cityOrTown}, {fulfillmentContact.stateOrProvince} {fulfillmentContact.postalOrZipCode}</div>',
+                            '<div>{fulfillmentContact.countryCode}</div>',
+                            '<div>{fulfillmentContact.homePhone}</div>',
+                            '<div>{fulfillmentContact.email}</div>',
+                        '</td>',
+                    '</tr>',
+                    '<tr>',
+                        '<td style="font-weight: bold;">Payment Method:</td>',
+                        '<td style="font-weight: bold;">Shipping Method:</td>',
+                    '</tr>',
+                    '<tr>',
+                        '<td style="border-top: 2px solid black; font-weight: bold; padding: 4px 30px 20px 4px;">{payment.paymentType}</td>',
+                        '<td style="border-top: 2px solid black; padding: 4px 30px 20px 4px;">{shippingMethodName}</td>',
+                    '</tr>',
+                '</tbody></table>',
+                '<table style="border-collapse: collapse; border-spacing: 0px; width: 100%;"><tbody>',
+                    '<tr>',
+                        '<td style="font-weight: bold; white-space: nowrap;">Code</td>',
+                        '<td style="font-weight: bold; white-space: nowrap;">Name</td>',
+                        '<td style="font-weight: bold; white-space: nowrap;">Qty</td>',
+                        '<td style="font-weight: bold; white-space: nowrap;">Price</td>',
+                        '<td style="font-weight: bold; white-space: nowrap;">Total</td>',
+                    '</tr>',
+                    '<tpl for="items"><tr>',
+                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{productCode}</td>',
+                        '<td style="border-top: 2px solid black; font-weight: bold; padding: 4px 30px 15px 4px; width: 100%;">{productName}</td>',
+                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{quantity}</td>',
+                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{unitPrice:usMoney}</td>',
+                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{total:usMoney}</td>',
+                    '</tr></tpl>',
+                '</tbody></table>',
+            '</div>'
+        );
+
+        //console.log(data, this.data);
+        Ext.fly(win.document.body).setHTML(tpl.apply(data));
     }
+    
+
     
 });
