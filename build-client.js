@@ -20,7 +20,11 @@ var pull = function() {
         })
 
         child.stdout.on('data', function(data) {
-            process.stdout.write(data)
+            var str = data.toString()
+
+            if (str.indexOf('git-tf: Checkout conflict with files:') > -1) str = str.red
+
+            process.stdout.write(str)
         })
 
     } else {
