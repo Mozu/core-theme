@@ -207,7 +207,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "fulfillment/pickup/markfulfilled")]
         public async Task<Response<Order>> MarkPickupsFulfilled(MarkPickupsFulfilledArgs args)
         {
-            var dcOrder = (await _orderWebApiClient.PerformFulfillmentAction(args.OrderId, new DCs.FulfillmentAction() { ActionName = DCs.FulfillmentMethodConst.PICKUP, PickupIds = args.PickupIds, PackageIds = new List<string>() })).ReadAsSync();
+            var dcOrder = (await _orderWebApiClient.PerformFulfillmentAction(args.OrderId, new DCs.FulfillmentAction() { ActionName = DCs.FulfillmentAction.FulfillmentActionNameConst.PICK_UP, PickupIds = args.PickupIds, PackageIds = new List<string>() })).ReadAsSync();
 
             return Single2(dcOrder.Map<Order>());
         }

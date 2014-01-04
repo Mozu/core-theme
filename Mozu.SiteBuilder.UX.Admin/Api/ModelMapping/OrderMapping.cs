@@ -136,108 +136,102 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 })
                 .AfterMap((dc, order) =>
                 {
-                    // fill out UnpackagedItems list
-                    order.UnpackagedItems =
-                        (from orderItem in order.Items
-                         let packagedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode  == orderItem.ProductCode )
-                         let shippedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == orderItem.ProductCode)
-                         let packagedQuantity = packagedItems.Sum(i => i.Quantity)
-                         let remainingQuantity = orderItem.Quantity - packagedQuantity
-                         where orderItem.BundledProducts == null || orderItem.BundledProducts.Count == 0
-                         where remainingQuantity > 0
-                         where orderItem.FulfillmentMethod == FulfillmentMethodConst.SHIP
-                         select new OrderPackageItem
-                         {
-                             ProductCode = orderItem.ProductCode,
-                             ProductName = orderItem.ProductName,
-                             Weight = orderItem.UnitWeight * remainingQuantity,
-                             Quantity = remainingQuantity,
-                             FulfillmentMethod = orderItem.FulfillmentMethod,
-                             FulfillmentLocationCode = orderItem.FulfillmentLocationCode
-                         }).ToList();
-                    var unpackagedBundleItems = 
-                        from parentItem in order.Items
-                        from bundleItem in parentItem.BundledProducts
-                        let packagedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == bundleItem.ProductCode)
-                        let shippedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == bundleItem.ProductCode)
-                        let packagedQuantity = packagedItems.Sum(i => i.Quantity)
-                        let bundleQuantity = bundleItem.Quantity * parentItem.Quantity
-                        let remainingQuantity = bundleQuantity - packagedQuantity
-                        where remainingQuantity > 0
-                        where parentItem.FulfillmentMethod == FulfillmentMethodConst.SHIP
-                        select new OrderPackageItem
-                        {
-                            ProductCode = bundleItem.ProductCode,
-                            ProductName = bundleItem.Name,
-                            Weight = bundleItem.UnitWeight * remainingQuantity,
-                            Quantity = remainingQuantity,
-                            FulfillmentMethod = parentItem.FulfillmentMethod,
-                            FulfillmentLocationCode = parentItem.FulfillmentLocationCode
-                        };
-                    // merge unpackaged bundle items into UnpackagedItems
-                    foreach (var unpackagedBundleItem in unpackagedBundleItems)
+                    // fill out UnpackagedItems and UnpickedupItems lists
+
+                    // get all the product codes in the order.
+                    var productCodes = order.Items.Where(item => item.BundledProducts == null || item.BundledProducts.Count == 0).Select(item => item.ProductCode).ToList();
+                    productCodes.AddRange(order.Items.SelectMany(i => i.BundledProducts).Select(bundledItem => bundledItem.ProductCode));
+                    productCodes = productCodes.Distinct().ToList();
+
+                    order.UnpackagedItems = new List<OrderPackageItem>();
+                    order.UnpickedupItems = new List<OrderPickupItem>();
+
+                    var GetDesiredQuantityByPickupMethod = new Func<string, string, int>((productCode, fulfillmentMethod) => {
+                        int unbundledQuantity =
+                            (from orderItem in order.Items
+                             where orderItem.ProductCode == productCode
+                             where orderItem.FulfillmentMethod == fulfillmentMethod
+                             select orderItem.Quantity
+                            ).Sum();
+
+                        int bundledQuantity = 
+                            (from parentItem in order.Items
+                             from bundleItem in parentItem.BundledProducts
+                             where bundleItem.ProductCode == productCode
+                             where parentItem.FulfillmentMethod == fulfillmentMethod
+                             select parentItem.Quantity * bundleItem.Quantity
+                            ).Sum();
+
+                        return unbundledQuantity + bundledQuantity;
+                    });
+
+                    var GetProductName = new Func<string, string>(productCode => {
+                        var item = order.Items.FirstOrDefault(i => i.ProductCode == productCode);
+                        if (item != null)
+                            return item.ProductName;
+
+                        var bundleItem = order.Items.SelectMany(i => i.BundledProducts).FirstOrDefault(bi => bi.ProductCode == productCode);
+                        return bundleItem.Name;
+                    });
+
+                    var GetUnitWeight = new Func<string, decimal?>(productCode => {
+                        var item = order.Items.FirstOrDefault(i => i.ProductCode == productCode);
+                        if (item != null)
+                            return item.UnitWeight;
+
+                        var bundleItem = order.Items.SelectMany(i => i.BundledProducts).FirstOrDefault(bi => bi.ProductCode == productCode);
+                        return bundleItem.UnitWeight;
+                    });
+
+                    var GetFulfillmentLocationCode = new Func<string, string>(productCode => {
+                        return order.Items.First(i => i.ProductCode == productCode || (i.BundledProducts != null && i.BundledProducts.Any(bi => bi.ProductCode == productCode))).FulfillmentLocationCode;
+                    });
+
+                    foreach (var productCode in productCodes)
                     {
-                        var existingItem = order.UnpackagedItems.FirstOrDefault(upi => upi.ProductCode == unpackagedBundleItem.ProductCode);
-                        if (existingItem != null)
+                        var productName = GetProductName(productCode);
+                        var desiredPackageQuantity = GetDesiredQuantityByPickupMethod(productCode, FulfillmentMethodConst.SHIP);
+                        var desiredPickupQuantity = GetDesiredQuantityByPickupMethod(productCode, FulfillmentMethodConst.PICKUP);
+                        var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
+                        var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
+
+                        // if there are more desired products than created packages contain, add this product to unpackagedItems.
+                        if ((desiredPackageQuantity > packagedQuantity))
                         {
-                            existingItem.Quantity += unpackagedBundleItem.Quantity;
-                            existingItem.Weight += unpackagedBundleItem.Weight;
+                            int remainingQuantity = desiredPackageQuantity - packagedQuantity;
+
+                            // if more items have already been picked up than were intended for pickup, we have to subtract those items from potential shipping items.
+                            if (desiredPickupQuantity - pickedQuantity < 0)
+                                remainingQuantity += desiredPickupQuantity - pickedQuantity;
+
+                            order.UnpackagedItems.Add(new OrderPackageItem
+                                {
+                                    ProductCode = productCode,
+                                    ProductName = GetProductName(productCode),
+                                    Weight = GetUnitWeight(productCode) * remainingQuantity,
+                                    Quantity = remainingQuantity,
+                                    FulfillmentMethod = FulfillmentMethodConst.SHIP,
+                                    FulfillmentLocationCode = GetFulfillmentLocationCode(productCode)
+                                });
                         }
-                        else
+
+                        // if there are more desired products than created pickups contain, add this product to unpickedupItems.
+                        if ((desiredPickupQuantity > pickedQuantity))
                         {
-                            order.UnpackagedItems.Add(unpackagedBundleItem);
-                        }
-                    }
-                })
-                .AfterMap((dc, order) =>
-                {
-                    // fill out unpickedupItems list
-                    order.UnpickedupItems =
-                        (from orderItem in order.Items
-                         let pickupItems = order.Pickups.SelectMany(p => p.Items).Where(i => i.ProductCode  == orderItem.ProductCode )
-                         let shippedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == orderItem.ProductCode)
-                         let usedQuantity = pickupItems.Sum(i => i.Quantity) + shippedItems.Sum(i => i.Quantity)
-                         let remainingQuantity = orderItem.Quantity - usedQuantity
-                         where orderItem.BundledProducts == null || orderItem.BundledProducts.Count == 0
-                         where remainingQuantity > 0
-                         where orderItem.FulfillmentMethod == FulfillmentMethodConst.PICKUP
-                         select new OrderPickupItem
-                         {
-                             ProductCode = orderItem.ProductCode,
-                             ProductName = orderItem.ProductName,
-                             Quantity = remainingQuantity,
-                             FulfillmentMethod = orderItem.FulfillmentMethod,
-                             FulfillmentLocationCode = orderItem.FulfillmentLocationCode
-                         }).ToList();
-                    var unpickedupBundleItems = 
-                        from parentItem in order.Items
-                        from bundleItem in parentItem.BundledProducts
-                        let pickedupItems = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == bundleItem.ProductCode)
-                        let shippedItems = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == bundleItem.ProductCode)
-                        let usedQuantity = pickedupItems.Sum(i => i.Quantity) + shippedItems.Sum(i => i.Quantity)
-                        let bundleQuantity = bundleItem.Quantity * parentItem.Quantity
-                        let remainingQuantity = bundleQuantity - usedQuantity
-                        where remainingQuantity > 0
-                        where parentItem.FulfillmentMethod == FulfillmentMethodConst.PICKUP
-                        select new OrderPickupItem
-                        {
-                            ProductCode = bundleItem.ProductCode,
-                            ProductName = bundleItem.Name,
-                            Quantity = remainingQuantity,
-                            FulfillmentMethod = parentItem.FulfillmentMethod,
-                            FulfillmentLocationCode = parentItem.FulfillmentLocationCode
-                        };
-                    // merge unpackaged bundle items into UnpackagedItems
-                    foreach (var unpickedupBundleItem in unpickedupBundleItems)
-                    {
-                        var existingItem = order.UnpickedupItems.FirstOrDefault(upi => upi.ProductCode == unpickedupBundleItem.ProductCode);
-                        if (existingItem != null)
-                        {
-                            existingItem.Quantity += unpickedupBundleItem.Quantity;
-                        }
-                        else
-                        {
-                            order.UnpickedupItems.Add(unpickedupBundleItem);
+                            int remainingQuantity = desiredPickupQuantity - pickedQuantity;
+
+                            // if more items have already been picked up than were intended for pickup, we have to subtract those items from potential shipping items.
+                            if (desiredPackageQuantity - packagedQuantity < 0)
+                                remainingQuantity += desiredPackageQuantity - packagedQuantity;
+
+                            order.UnpickedupItems.Add(new OrderPickupItem
+                                {
+                                    ProductCode = productCode,
+                                    ProductName = GetProductName(productCode),
+                                    Quantity = remainingQuantity,
+                                    FulfillmentMethod = FulfillmentMethodConst.PICKUP,
+                                    FulfillmentLocationCode = GetFulfillmentLocationCode(productCode)
+                                });
                         }
                     }
                 })
