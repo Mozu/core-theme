@@ -5,37 +5,44 @@ Ext.define('Taco.view.website.settings.facets.FacetRangeQueryForm', {
     extend: 'Taco.core.ux.form.Form',
     requires: ['Taco.view.website.settings.facets.FacetRangeQueryGroup'],
     //cls: Taco.baseCSSPrefix + 'rangequeryform',
-    xtype: 'taco.rangequeryform',
+    alias: 'taco.rangequeryform',
+
     header: false,
     hidden: true,
+    manageHeight: true,
+    padding: '0 4',
     trackResetOnLoad: true,
+
     initComponent: function () {
         var me = this;
+
         me.displayStyle = Ext.widget('radiogroup', {
             fieldLabel: 'Display Style',
-            labelAlign: 'left',
+            labelAlign: 'top',
+            labelStyle: 'padding-top: 5px;',
             columns: 2,
-            items: [
-                {
-                    boxLabel: 'Values',
-                    name: 'facetType',
-                    inputValue: 'Value'
-                },
-                {
-                    boxLabel: 'Range',
-                    name: 'facetType',
-                    inputValue: 'RangeQuery'
-                }
-            ]
+            height: 50,
+            items: [{
+                boxLabel: 'Values',
+                name: 'facetType',
+                inputValue: 'Value'
+            }, {
+                boxLabel: 'Range',
+                name: 'facetType',
+                inputValue: 'RangeQuery'
+            }]
         });
+
         me.numRanges = Ext.widget('selectfield', {
             forceSelection: true,
+            height: 50,
             fieldLabel: 'Number of ranges',
-            labelAlign: 'left',
+            labelAlign: 'top',
+            labelStyle: 'padding-top: 5px;',
             hidden: true,
-            isDirty: function() {
-                return false;
-            },
+            // isDirty: function() {
+            //     return false;
+            // },
             store: [
                 3,
                 4,
@@ -55,29 +62,52 @@ Ext.define('Taco.view.website.settings.facets.FacetRangeQueryForm', {
                 
             }
         });
+
         me.rangeQueries = Ext.widget('taco.rangequerygroup', {
             xtype: 'taco.rangequerygroup',
             name: 'ranges',
-            hidden: true
+            hidden: true,
+            listeners: {
+                show: {
+                    scope: this,
+                    fn: function () {
+                        this.fireEvent('facetchange');
+                    }
+                },
+                afterlayout: {
+                    scope: this,
+                    fn: function () {
+                        this.fireEvent('facetchange');
+                    }
+                }
+            }
         });
+
         this.items = [
             me.displayStyle,
             me.numRanges,
             me.rangeQueries
         ];
+
         me.displayStyle.on('change', function (rg, newValue) {
             me.displayRangeQueryFields(newValue.facetType !== "Value");
         });
+
         me.rangeQueries.relayEvents(me.numRanges, ['select']);
+
         me.rangeQueries.on({
             change: function (rqs, nV) {
                 me.numRanges.setValue(nV && Ext.isArray(nV) && nV.length);
             }
         });
+
         this.callParent(arguments);
+
         me.loadRecord(me.record);
         // me.resetSavableState();
+
         var displayStyleValue = me.displayStyle.getValue();
+
         if (!displayStyleValue || !displayStyleValue.facetType) {
             // the radiogroup appears to not be super amazing at keeping only one radio selected at a time
             // TODO: find a better way of getting a default value into a radiogroup
@@ -86,6 +116,7 @@ Ext.define('Taco.view.website.settings.facets.FacetRangeQueryForm', {
             me.displayRangeQueryFields(displayStyleValue.facetType !== "Value");
         }
     },
+
     displayRangeQueryFields: function(yes) {
         if (yes) {
             this.numRanges.show();
@@ -101,10 +132,5 @@ Ext.define('Taco.view.website.settings.facets.FacetRangeQueryForm', {
             this.rangeQueries.setValue([]);
         }
         this.fireEvent('heightchange');
-    },
-    listeners: {
-        destroy: function () {
-            if (this.eventRelayer) this.eventRelayer.destroy();
-        }
     }
 });
