@@ -50,13 +50,27 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             'ManualCapturePayment': 'Capture Payment (Manual)',
             'ManualCreditPayment': 'Credit Payment (Manual)',
             'ManualVoidPayment': 'Void Payment (Manual)',
-            'ManualDeclinePayment': 'Decline Payment (Manual)'
+            'ManualDeclinePayment': 'Decline Payment (Manual)',
+            _createFromAction: function (action) {
+                var label = '';
+                for (var i = 0; i < action.length; i++) {
+                    c = action[i];
+                    if (c == c.toUpperCase() && i > 0)
+                        c = ' ' + c;
+                    label += c;
+                }
+                return label;
+            }
         };
 
         var actionsWithLabels = Ext.Array.map(me.record.data.availableActions, function (action) {
-            if (!labels[action] && console && console.error)
-                console.error("unmapped action: " + action);
-            return { "val": action, "lbl": labels[action] || action };
+            var label = labels[action];
+            if (!label) {
+                label = labels._createFromAction(action);
+                if (console && console.error)
+                    console.error("unmapped action: " + action);
+            }
+            return { "val": action, "lbl": label };
         });
 
         return Ext.create('Ext.data.Store', {
