@@ -61,7 +61,10 @@ Ext.define('Taco.view.order.widget.Package', {
             fulfillmentLocationCode: "",
             itemTotal: 0,
             weight: 0,
-            shippingMethod: "",
+            shippingMethod: "",            
+            shippingMethodCode: "",
+            shippingMethodName: "",
+
             trackingNumber: null,
             shipDate: "",
             
@@ -342,7 +345,8 @@ Ext.define('Taco.view.order.widget.Package', {
                                 '<td style="width:34%;vertical-align:top;padding:0 10px 0 10px ">',
                 
                                     '<div class="header-section">',
-                                        '<span class="header-label">Shipping Method</span>',
+                                        '<span class="header-label">Shipping Method</span>',                                       
+
                                         '<tpl if="values.shippingMethod">',
                                             '<div>{shippingMethod}</div>',
                                         '<tpl else>',

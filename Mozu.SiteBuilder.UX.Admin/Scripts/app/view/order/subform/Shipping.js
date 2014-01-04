@@ -107,6 +107,8 @@ Ext.define('Taco.view.order.subform.Shipping', {
                 shippedItemTotal: me.record.get("itemsShipped"),
                 pendingItemTotal: me.record.get("itemsNotShipped"),
                 shippingMethod: me.record.get("shippingMethodName") || me.record.get("shippingMethodCode"),
+                shippingMethodCode: me.record.get("shippingMethodCode"),
+                shippingMethodName: me.record.get("shippingMethodName"),
                 weight: me.record.get("weight"),
 
                 // billing contact info
@@ -156,7 +158,9 @@ Ext.define('Taco.view.order.subform.Shipping', {
                         itemTotal: dataItem.totalQuantity,
                         packagingType: packagingTypeText,
                         weight: dataItem.weight,
-                        shippingMethod: dataItem.shippingMethodName || dataItem.shippingMethodCode,
+                        shippingMethod: dataItem.shippingMethodName || dataItem.shippingMethodCode,                        
+                        shippingMethodCode: dataItem.shippingMethodCode,
+                        shippingMethodName: dataItem.shippingMethodName,
                         trackingNumber: dataItem.trackingNumber,
                         
                         // billing contact info
@@ -239,7 +243,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
                     fulfillmentStatus: dataItem.status,
                     itemTotal: dataItem.totalQuantity,
                     weight: dataItem.weight,
-                    shippingMethod: dataItem.shippingMethod,
+                    shippingMethod: dataItem.shippingMethodName || dataItem.shippingMethodCode,
                     fulfillmentLocationCode: dataItem.fulfillmentLocationCode,
                     trackingNumber: dataItem.trackingNumber,
                     shipDate: dataItem.shipDate,
