@@ -297,12 +297,11 @@ Ext.define('Taco.view.location.inventory.Index', {
                         },
                         */
                         menuColumnHandler: function(item, eventData) {
-                            var record = eventData.record;
-                            
-                            Ext.defer(function () {
-                                Taco.core.StateManager.attemptNavigate('product/edit/' + record.get("productCode"));
+                            var record = eventData.record;                            
+                            var code = record.get("parentProductCode") || record.get("productCode")
+                            Ext.defer(function () {                                
+                                Taco.core.StateManager.attemptNavigate('products/edit/' + code);
                             }, 1, this);
-
                         }
                     }
                 ]
