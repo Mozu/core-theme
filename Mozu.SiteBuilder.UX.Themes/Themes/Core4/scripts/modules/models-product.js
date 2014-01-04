@@ -173,6 +173,8 @@
                 return me.apiAddToCartForPickup({
                     fulfillmentLocationCode: locationCode,
                     quantity: quantity || 1
+                }).then(function (item) {
+                    me.trigger('addedtocart', item);
                 });
             });
         },
