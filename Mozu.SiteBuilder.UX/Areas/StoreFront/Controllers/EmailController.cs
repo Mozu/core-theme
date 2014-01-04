@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Http;
 using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Logging;
 using Mozu.Core.Messaging.Contracts.Notification;
@@ -76,7 +77,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             )
             : base(docRepo, docTypeRepo, cmsService, cmsTypeHelper, customerAccountWebApiClient, hyprViewEngine)
         {
-            _sitesWebApiClient = sitesWebApiClient;
+            _sitesWebApiClient = sitesWebApiClient.CloneWithoutUserClaims();
             _logger = logger;
         }
 
