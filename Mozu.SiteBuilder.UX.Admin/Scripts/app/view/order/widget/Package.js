@@ -253,7 +253,7 @@ Ext.define('Taco.view.order.widget.Package', {
 
         }
 
-        if (me.enabledPackingSlipButton && me.grid.packageData.shippingMethodCode) {
+        if (me.enabledPackingSlipButton) {
             me.packingSlipButton = Ext.create("Ext.button.Button", {
                 text: 'View Packing Slip',
                 ui: 'action',
@@ -264,8 +264,7 @@ Ext.define('Taco.view.order.widget.Package', {
                     me.viewPackingSlip()
                 },
                 scope: me
-            });
-            me.packingSlipButton.setDisabled(!me.grid.packageData.shippingMethodCode);
+            });            
             titleRow.items.push(me.packingSlipButton);
         }
 
