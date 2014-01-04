@@ -27,12 +27,14 @@
                     msg: Hypr.getLabel("countryMissing")
                 },
                 postalOrZipCode: {
-                    required: true,
-                    msg: Hypr.getLabel("postalCodeMissing")
+                    fn: function (value) {
+                        if (this.attributes.countryCode === "US" && !value) return Hypr.getLabel("postalCodeMissing")
+                    }
                 }
             },
             defaults: {
-                candidateValidatedAddresses: null
+                candidateValidatedAddresses: null,
+                countryCode: Hypr.getThemeSetting('preselectCountryCode') || ''
             }
         });
 

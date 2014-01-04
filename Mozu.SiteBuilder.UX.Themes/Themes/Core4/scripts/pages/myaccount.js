@@ -16,8 +16,9 @@
                     self.render();
                 };
             var operation = this.model[action](payload);
-            if (operation.then) {
+            if (operation && operation.then) {
                 operation.then(renderAlways,renderAlways);
+                return operation;
             }
         }
     });
@@ -220,8 +221,7 @@
             this.render();
         },
         finishEditCard: function () {
-            this.doModelAction('saveCard');
-            this.editing.card = false;
+            if (this.doModelAction('saveCard')) this.editing.card = false;
         },
         cancelEditCard: function () {
             this.editing.card = false;
@@ -271,8 +271,7 @@
             this.render();
         },
         finishEditContact: function () {
-            this.doModelAction('saveContact');
-            this.editing.contact = false;
+            if (this.doModelAction('saveContact')) this.editing.contact = false;
         },
         cancelEditContact: function () {
             this.editing.contact = false;

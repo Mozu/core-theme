@@ -77,7 +77,7 @@
         },
         toJSON: function (options) {
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
-            if (j.attributeDetail.inputType !== "List" && this.isConfigured()) {
+            if (j && j.attributeDetail && j.attributeDetail.inputType !== "List" && this.isConfigured()) {
                 var val = j.value || j.shopperEnteredValue;
                 if (j.attributeDetail.dataType === "Number") val = parseFloat(val);
                 j.shopperEnteredValue = j.value = val;

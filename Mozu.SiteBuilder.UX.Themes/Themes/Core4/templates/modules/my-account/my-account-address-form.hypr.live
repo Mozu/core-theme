@@ -1,6 +1,9 @@
 ﻿{% extends "modules/common/address-form" %}
 {% block address-form %}
     {% set addresscontext="editingContact." %}
+    {% if model.isShippingContact %}
+    {% set countries=pageContext.shippingCountries %}
+    {% endif %}
     <li class="mz-accountaddressbook-contact mz-accountaddressbook-form">
     {% parent %}
 <div class="mz-contacttypes">
