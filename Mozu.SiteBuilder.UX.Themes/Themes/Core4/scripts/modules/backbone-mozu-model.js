@@ -319,6 +319,18 @@ define([
             getHelpers: function () {
                 return this.helpers;
             },
+            whenReady: function(cb) {
+                var me = this,
+                    isLoading = this.isLoading();
+                if (!isLoading) return cb();
+                var handler = function(yes) {
+                    if (!yes) {
+                        me.off('loadingchange', handler);
+                        cb();
+                    }
+                }
+                me.on('loadingchange', handler);
+            },
             toJSON: function (options) {
                 var attrs = _.clone(this.attributes);
                 if (options && options.helpers) {
