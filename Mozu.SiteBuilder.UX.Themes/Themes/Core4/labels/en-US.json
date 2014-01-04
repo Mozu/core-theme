@@ -170,6 +170,8 @@
   "orderNo"               : "Order No.",
   "orderWelcome"         : "Hello",
   "orderConfirmationBlob1": "Thank you for shopping with us. We'd like to let you know that we have received your order, and are preparing it for shipment.",
+  "orderShipped"          : "Your Order Has Shipped",
+  "orderShipmentComplete": "Thank you for shopping with us. We thought you'd like to know that we shipped your items, and that this completes your order. Your order is on its way, and can no longer be changed. If you need to return an item from this shipment or manage other orders, please visit My Account.",
   "billingName"          : "Billing Name",
   "billingPhone"         : "Billing Phone",
   "billingEmail"         : "Billing Email",
