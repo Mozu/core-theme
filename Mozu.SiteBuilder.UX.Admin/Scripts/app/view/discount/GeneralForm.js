@@ -93,7 +93,20 @@ Ext.define('Taco.view.discount.GeneralForm', {
                     ["Dollar Amount", "Amount"],
                     ["Free", "Free"]
                 ]
-            })
+            }),
+            listeners: {
+                change: function (me, newV, oldV) {
+                    if (newV == 'Percentage') {
+                        this.amountInput.unitString = '%';
+                        this.amountInput.unitAtEnd = true;
+                    } else {
+                        this.amountInput.unitString = '$';
+                        this.amountInput.unitAtEnd = false;
+                    }
+                    this.amountInput.setValue(this.amountInput.value);
+                },
+                scope: this
+            }
         });
 
         this.amountInput = Ext.create('Taco.core.ux.form.UnitField', {
