@@ -151,21 +151,21 @@
       }
     }
 
-    .#{$prefix}panel-body{
-      overflow-y: scroll;
-      padding-top: px-to-rem(6);
-      padding-left: px-to-rem(8);
-      hr{
-        border: 0 none;
-        border-bottom-width: px-to-rem(1);
-        border-style: solid;
-        border-color: lightgray;
-      }
-      .#{$prefix}form-item-label-top {
-        margin-top: px-to-rem(4);
-        padding-bottom: 3px;
-      }
-    }
+    // .#{$prefix}panel-body{
+    //   overflow-y: scroll;
+    //   padding-top: px-to-rem(6);
+    //   padding-left: px-to-rem(8);
+    //   hr{
+    //     border: 0 none;
+    //     border-bottom-width: px-to-rem(1);
+    //     border-style: solid;
+    //     border-color: lightgray;
+    //   }
+    //   .#{$prefix}form-item-label-top {
+    //     margin-top: px-to-rem(4);
+    //     padding-bottom: 3px;
+    //   }
+    // }
     
    .#{$vprefix}sidebar-submenu {
       border: 0px;

@@ -4,6 +4,7 @@
  Ext.define('Taco.view.website.settings.facets.Facets', {
      extend: 'Taco.core.ux.form.Form',
      requires: ['Taco.core.ux.form.field.MultiSelect', 'Taco.view.website.settings.facets.FacetRangeQueryForm'],
+
      title: "Facets",
      ui: "subform",
      layout: 'vbox',
@@ -27,13 +28,21 @@
          var me = this,
              rId = record.get('sourceId'),
              rangeQueryForm = me.rangeQueryForms[rId];
+
          rangeQueryForm = me.rangeQueryForms[rId] = Ext.widget('taco.rangequeryform', {
              record: record,
              renderTo: Ext.dom.Query.selectNode('[data-for-sourceid="' + rId + '"]'),
-             hidden: !isShowing
+             hidden: !isShowing,
+             listeners: {
+                facetchange: {
+                    scope: this,
+                    fn: function () {
+                        this.doComponentLayout();
+                    }
+                }
+             }
          });
          me.updateLayout();
-         rangeQueryForm.eventRelayer = me.relayEvents(rangeQueryForm, ['heightchange']);
          return rangeQueryForm;
      },
 
