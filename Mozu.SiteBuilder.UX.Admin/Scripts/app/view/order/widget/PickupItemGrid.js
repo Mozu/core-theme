@@ -113,8 +113,8 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
             );
         }
         
-        // if toolbar is enabled and there is data to display show the toolbar
-        if (me.getEnableToolbar() && data.length) {
+        // if toolbar is enabled and there is data to display show the toolbar and this is the unshipped items then show the toolbar.
+        if (me.getEnableToolbar() && data.length && me.isUnShippedItems) {
             this.tbar = Ext.create('Ext.toolbar.Toolbar', this.getToolBarConfig()); 
         }
 
@@ -300,7 +300,7 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
         }
         
         
-        if (me.enabledRemoveButton) {
+        if (me.enabledRemoveButton && false) {
             me.removeButton = Ext.create("Ext.button.Button", {
                 text: 'Remove',
                 ui: 'action',
@@ -311,23 +311,10 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
             });
 
             tb.items.push(me.removeButton);
-        }
+        }       
         
-        if (Ext.Array.contains(availableActions, "Ready")) {
-            me.markAsReadyButton = Ext.create("Ext.button.Button", {
-                text: 'Mark As Ready',
-                ui: 'action',
-                margin: "0 2px 0 0",
-                scale: 'medium',
-                handler: me.markAsReady,
-                scope: me
-            });
 
-            tb.items.push(me.markAsReadyButton);
-        }
-
-
-        if (me.enabledMarkAsFulfilledButton && Ext.Array.contains(availableActions, "PickUp")) {
+        if (me.enabledMarkAsFulfilledButton && Ext.Array.contains(availableActions, "PickUp") && false) {
             me.markAsFulfilledButton = Ext.create("Ext.button.Button", {
                 text: 'Mark As Fulfilled',
                 ui: 'action',
@@ -445,7 +432,7 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
             );
         }
 
-
+        /*
         if (me.enableActionColumn) {
             columns.push(
                 {
@@ -469,6 +456,37 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
                     onMenuShow: function (menu, eventData) {
                         // todos: remove item from grid
 
+                    }
+                }
+            );
+        }*/
+
+        if (me.enableActionColumn) {
+            columns.push(
+                {
+                    xtype: 'taco.menucolumn',
+                    draggable: false,
+                    text: 'Actions',
+                    menuDisabled: true,
+                    width: this.getActionColumnWidth(),
+                    menu: Ext.create('Ext.menu.Menu', {
+                        plain: true,
+                        listeners: {
+                            click: {
+                                fn: me.moveSelectedItems,
+                                scope: me,
+                                delegate: "x-menu-item-link"
+                            }
+                        },
+                        items: [{
+                            text: "loading..."
+                        }]
+                    }),
+                    menuItems: [],
+                    onMenuShow: function (menu, eventData) {
+                        var extraMenu = eventData.grid.getMenuActions();
+                        menu.removeAll();
+                        menu.add(extraMenu);
                     }
                 }
             );

@@ -72,10 +72,8 @@ Ext.define('Taco.view.order.widget.PackagePickup', {
     initComponent: function(eOpts) {
         var me = this;        
         
-        me.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-shipping-package'].join(' ');
+        me.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-shipping-package'].join(' ');      
         
-        // initialize the header;
-        me.header = me.getHeaderTemplate();
         
         me.grid = Ext.create('Taco.view.order.widget.PickupItemGrid', {
             record: this.record,
@@ -111,6 +109,9 @@ Ext.define('Taco.view.order.widget.PackagePickup', {
 
         });
 
+        // initialize the header;
+        me.header = me.getHeaderTemplate();
+
         me.items = [
             me.grid
         ];
@@ -122,20 +123,51 @@ Ext.define('Taco.view.order.widget.PackagePickup', {
         
         me.callParent(arguments);
     },
-    
+
+    getToolBarConfig: function () {
+        tb = {
+            plain: true,
+            cls: "package-header-title-row",
+            style: "background-color:#ffffff;",
+            enableOverflow: true,
+            items: []
+        };
+
+        return tb
+
+    },
 
     getHeaderTemplate: function () {
     
-        var titleRow = {
-            xtype: "container",
-            layout: "hbox",
-            cls: "package-header-title-row",
-            items: [
-                {
-                    html: this.headerData.title + '<span class="seperator">|</span> Fulfillment Location Code: ' + this.headerData.fulfillmentLocationCode
-                },
-                { xtype: 'tbfill' }
-            ]
+        var me = this;
+
+        var toolbarConfig = this.getToolBarConfig();
+
+        toolbarConfig.cls = "package-header-title-row";
+
+        var titleRow = toolbarConfig;
+
+        titleRow.items.push(
+            {
+                html: this.headerData.title,
+                style: "margin-right:20px;",
+                xtype: "component"
+            },
+            { xtype: 'tbfill' }
+        );
+
+
+        if (me.enabledMarkAsFulfilledButton && Ext.Array.contains(this.packageData.availableActions, "PickUp")) {
+            me.markAsFulfilledButton = Ext.create("Ext.button.Button", {
+                text: 'Mark As Fulfilled',
+                ui: 'action',
+                margin: "0 2px 0 0",
+                scale: 'medium',
+                handler: me.grid.markAsFulfilled,
+                scope: me
+            });
+
+            titleRow.items.push(me.markAsFulfilledButton);
         }
 
         if (this.headerData.fulfillmentStatus == "NotFulfilled") {
@@ -153,10 +185,13 @@ Ext.define('Taco.view.order.widget.PackagePickup', {
             )
         }
 
+        var tb = Ext.create('Ext.toolbar.Toolbar', toolbarConfig);
+
         return {
             xtype: "container",
             items: [
-                titleRow,
+                tb,
+
                 {
                     xtype: "component",
                     tpl: [
@@ -167,7 +202,7 @@ Ext.define('Taco.view.order.widget.PackagePickup', {
                                 '<td style="width:33%;vertical-align:top;">',
 
                                     '<div class="header-section">',
-                                        '<div class="header-label">Order Fulfillment Status</div>',
+                                        '<span class="header-label">Order Fulfillment Status</span>',
                                         '<tpl if="fulfillmentStatus==\'PartiallyFulfilled\'">',
                                             "Partially Fulfilled",
                                         '<tpl elseif="fulfillmentStatus==\'NotFulfilled\'">',
@@ -179,15 +214,17 @@ Ext.define('Taco.view.order.widget.PackagePickup', {
 
                                     '<tpl if="values.itemTotal">',
                                         '<div class="header-section">',
-                                            'Package Item Count: {itemTotal}',
+                                            '<span class="header-label">Package Item Count:</span> {itemTotal}',
                                         '</div>',
                                     '</tpl>',                       
 
                                 '</td>',
 
                                 '<td style="width:34%;vertical-align:top;padding:0 10px 0 10px ">',
-                                    '<div class="header-section">',                                    
-                                        
+                                    '<div class="header-section">',                                                                            
+
+                                        '<div><span class="header-label">Fulfillment Location Code:</span>{fulfillmentLocationCode}</div>',
+
                                         '<tpl if="values.fulfillmentDate">',
                                             '<div><span class="header-label">Fulfilled Date:</span>{fulfillmentDate:date("F d Y g:ia")}</div>',
                                         '</tpl>',

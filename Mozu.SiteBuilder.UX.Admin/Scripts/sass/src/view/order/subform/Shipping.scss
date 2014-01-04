@@ -4,6 +4,11 @@
 // order shipping 
 .#{$vprefix}orderform-shipping {  
 
+	// need to force the actions column icons to become visible when the grid row is selected; currently only shows when the row is focused;
+	.x-grid-row-selected .taco-grid-row-menu-trigger {
+	  visibility: visible !important;
+	}
+	
 	// used to contain multiple shipped and unshipped packages
 	.package-container {
 	    padding:0px;
