@@ -316,6 +316,7 @@
         "id": "catNav",
         "displayName": "Category Navigation",
         "displayTemplate": "misc/category-navigation",
+        "icon": "/resources/admin/widgets/22_category_navigation.png",
         "editViewFields": [
 
             {
@@ -352,6 +353,7 @@
         "id": "crosssells",
         "displayName": "Cross Sells",
         "displayTemplate": "catalog/related-products",
+        "icon": "/resources/admin/widgets/23_cross_sells.png",
         "editViewFields": [{
                 "fieldLabel": "title",
 				"name": "title",
@@ -386,6 +388,7 @@
         "id": "upsells",
         "displayName": "Up Sells",
         "displayTemplate": "catalog/related-products",
+        "icon": "/resources/admin/widgets/27_up_sells.png",
         "editViewFields": [
 
             {
@@ -423,6 +426,7 @@
         "id": "relatedproducts",
         "displayName": "Related Products",
         "displayTemplate": "catalog/related-products",
+        "icon": "/resources/admin/widgets/26_related_products.png",
         "editViewFields": [
 
             {
@@ -460,6 +464,7 @@
          "id": "instockrequest",
          "displayName": "Instock Request",
          "displayTemplate": "misc/instock-request",
+         "icon": "/resources/admin/widgets/25_instock_requests.png",
         "editViewFields":[
 
 			{
@@ -580,7 +585,7 @@
         "id": "facebook_comments",
         "displayName": "Facebook Comments",
         "displayTemplate": "social/facebookComments",
-        "icon": "/resources/admin/widgets/13_social.png",
+        "icon": "/resources/admin/widgets/24_facebook_comments.png",
         "editViewFields": [{
             "xtype": "slider",
             "fieldLabel": "Number of posts to display",

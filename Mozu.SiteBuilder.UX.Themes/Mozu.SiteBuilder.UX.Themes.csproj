@@ -430,6 +430,12 @@
     <Content Include="Themes\Core4\resources\admin\widgets\19_tags.png" />
     <Content Include="Themes\Core4\resources\admin\widgets\20_recent_posts.png" />
     <Content Include="Themes\Core4\resources\admin\widgets\21_rss.png" />
+    <Content Include="Themes\Core4\resources\admin\widgets\22_category_navigation.png" />
+    <Content Include="Themes\Core4\resources\admin\widgets\23_cross_sells.png" />
+    <Content Include="Themes\Core4\resources\admin\widgets\24_facebook_comments.png" />
+    <Content Include="Themes\Core4\resources\admin\widgets\25_instock_requests.png" />
+    <Content Include="Themes\Core4\resources\admin\widgets\26_related_products.png" />
+    <Content Include="Themes\Core4\resources\admin\widgets\27_up_sells.png" />
     <Content Include="Themes\Core4\resources\images\button-loading-small.gif" />
     <Content Include="Themes\Core4\resources\images\button-loading.gif" />
     <Content Include="Themes\Core4\scripts\modules\models-orders.js" />
