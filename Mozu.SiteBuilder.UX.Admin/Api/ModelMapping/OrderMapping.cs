@@ -64,7 +64,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
                 .ForMember(x => x.UpdateDate, op => op.MapFrom(dc => dc.AuditInfo.UpdateDate))
                 .ForMember(x => x.CustomerId, op => op.MapFrom(dc => dc.CustomerAccountId))
-                .ForMember(x => x.BillingContact, op => op.MapFrom(dc => dc.BillingInfo.BillingContact))
+                // TODO: this is a workaround for now. Between storefront & Mozu Admin order creation, we should always ensure we have a BillingContact
+                .ForMember(x => x.BillingContact, op => op.MapFrom(dc => dc.BillingInfo.BillingContact!= null ? dc.BillingInfo.BillingContact : dc.FulfillmentInfo.FulfillmentContact))
                 .ForMember(x => x.FulfillmentContact, op => op.MapFrom(dc => dc.FulfillmentInfo .FulfillmentContact ))
                 .ForMember(x => x.ShippingMethodCode, op => op.MapFrom(dc => dc.FulfillmentInfo.ShippingMethodCode))
                 .ForMember(x => x.ShippingMethodName, op => op.MapFrom(dc => dc.FulfillmentInfo.ShippingMethodName))
