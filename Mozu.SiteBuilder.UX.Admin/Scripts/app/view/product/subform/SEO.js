@@ -25,7 +25,7 @@ Ext.define('Taco.view.product.subform.SEO', {
                     name: 'metaTitle'
                 }, {
                     fieldLabel: 'Slug',
-                    xtype:'taco-slugfield',
+                    xtype: 'taco-slugfield',
                     name: 'slug'
                 }, {
                     fieldLabel: 'Meta Description',
@@ -35,30 +35,41 @@ Ext.define('Taco.view.product.subform.SEO', {
         }];
 
         this.callParent(arguments);
-        
-        if (Ext.isEmpty((this.productInCatalogInfo || this.product).get('slug'))) {
-            this.on('boxready', function () {
-                this.productForm = this.up('productform');
-                this.slugField = this.down('taco-slugfield');
-                this.mon(this.productForm, 'productnamechange', this.onNameChange, this);
-            });
-        }
+
+
+        this.on('boxready', function () {
+            this.productForm = this.up('productform');
+            this.slugField = this.getForm().findField('slug');
+            this.metaTitle = this.getForm().findField('metaTitle');
+            this.metaDescription = this.getForm().findField('metaDescription');
+            this.mon(this.productForm, 'productnamechange', this.onNameChange, this);
+            this.mon(this.productForm, 'productshortdescriptionchange', this.onProductShortDescriptionChange, this);
+        });
+
 
     },
-    onNameChange: function (record, name) {
-        if ( (this.productInCatalogInfo || this.product )  != record) {
+    onProductShortDescriptionChange: function (record, value) {
+        if ((this.productInCatalogInfo || this.product) != record) {
             return;
         }
+        
+        this.metaDescription.setValue(Ext.util.Format.stripTags(value));
+    },
+    onNameChange: function (record, name) {
+        if ((this.productInCatalogInfo || this.product) != record) {
+            return;
+        }
+        this.metaTitle.setValue(name);
         var previous = this.slugField.onNameChangeValue,
             current = this.slugField.getValue(),
             newValue;
         if (current && previous != current) {
             return;
         }
-        
-        
+
+
         this.slugField.setValue(name);
-        this.slugField.onNameChangeValue =  this.slugField.getValue();
+        this.slugField.onNameChangeValue = this.slugField.getValue();
 
     }
 });

@@ -233,7 +233,7 @@ Ext.define('Taco.view.product.subform.General', {
                 listeners: {
                     change: function (cmp, newValue ) {
                         cmp.productForm = cmp.productForm || cmp.up('productform');
-                        me.up("productform").fireEvent('productnamechange', this.productInCatalogInfo || this.product, newValue);
+                        cmp.productForm.fireEvent('productnamechange', this.productInCatalogInfo || this.product, newValue);
                     },
                     scope:this
                 }
@@ -244,7 +244,11 @@ Ext.define('Taco.view.product.subform.General', {
                 name: 'productShortDescription',
                 emptyText: 'Words',
                 listeners: {
-                    editmodechange: htmlEditorEditModeChangeHandler
+                    editmodechange: htmlEditorEditModeChangeHandler,
+                    change: function (cmp, newValue) {
+                        cmp.productForm = cmp.productForm || cmp.up('productform');
+                        cmp.productForm.fireEvent('productshortdescriptionchange', me.productInCatalogInfo || me.product, newValue);
+                    }
                 },
                 width: '100%'
                 //fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
