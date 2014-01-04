@@ -79,6 +79,7 @@ define([
                 var thenFocus = this.el && document.activeElement && document.activeElement.type !== "radio" && document.activeElement.type !== "checkbox" && $.contains(this.el, document.activeElement) && {
                     'id': document.activeElement.id,
                     'mzvalue': document.activeElement.getAttribute('data-mz-value'),
+                    'mzFocusBookmark': document.activeElement.getAttribute('data-mz-focus-bookmark'),
                     'value': document.activeElement.value
                 };
                 Backbone.Validation.unbind(this);
@@ -89,7 +90,9 @@ define([
                 if (thenFocus) {
                     if (thenFocus.id) {
                         $(document.getElementById(thenFocus.id)).focus();
-                    } else {
+                    } else if (thenFocus.mzFocusBookmark) {
+                        this.$('[data-mz-focus-bookmark="' + thenFocus.mzFocusBookmark + '"]').focus();
+                    } else if (thenFocus.mzvalue) {
                         this.$('[data-mz-value="' + thenFocus.mzvalue + '"]').focus();
                     }
                 }
