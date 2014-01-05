@@ -116,20 +116,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 dcPaymentAction.ReferenceSourcePaymentId = action.paymentId;
             }
-            else if (action.paymentType == "StoreCredit") {
-                var order = (await _orderWebApiClient.GetOrder(action.orderId)).ReadAsSync();
-                
-                var storeCredit = (await _creditWebApiClient.AddCredit(new DCu.Credit.Credit()
-                {
-                    InitialBalance = action.amount,
-                    CurrentBalance = action.amount,
-                    ActivationDate = DateTime.UtcNow,
-                    CreditType = "StoreCredit",
-                    CurrencyCode = "USD",
-                    CustomerId = order.CustomerAccountId
-                })).ReadAsSync();
-
-                dcPaymentAction.NewBillingInfo.StoreCreditCode = storeCredit.Code;
+            else if (action.paymentType == "StoreCredit")
+            {
+                dcPaymentAction.NewBillingInfo = new CommerceRuntime.Contracts.Payments.BillingInfo() { PaymentType = "StoreCredit" };
             }
 
             var dcRma = (await _returnWebApiClient.CreatePaymentActionForReturn(action.returnId, dcPaymentAction)).ReadAsSync();
@@ -159,23 +148,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 else if (action.paymentType == "StoreCredit")
                 {
-                    var order = (await _orderWebApiClient.GetOrder(action.orderId)).ReadAsSync();
-
-                    var storeCredit = (await _creditWebApiClient.AddCredit(new DCu.Credit.Credit()
-                    {
-                        InitialBalance = action.amount,
-                        CurrentBalance = action.amount,
-                        ActivationDate = DateTime.UtcNow,
-                        CreditType = "StoreCredit",
-                        CurrencyCode = "USD",
-                        CustomerId = order.CustomerAccountId
-                    })).ReadAsSync();
-
-                    dcPaymentAction.NewBillingInfo = new CommerceRuntime.Contracts.Payments.BillingInfo()
-                        {
-                            PaymentType = "StoreCredit",
-                            StoreCreditCode = storeCredit.Code
-                        };
+                    dcPaymentAction.NewBillingInfo = new CommerceRuntime.Contracts.Payments.BillingInfo() { PaymentType = "StoreCredit" };
                 }
 
                 var dcRma = (await _returnWebApiClient.CreatePaymentActionForReturn(action.returnId, dcPaymentAction)).ReadAsSync();
