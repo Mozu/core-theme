@@ -85,7 +85,6 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         this.callParent(arguments);
 
         form = this.getAdvancedForm();
-
         form.getForm().getFields().each(function (field) {
             field.on({
                 specialkey: {
@@ -100,14 +99,25 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         }, this);
 
         this.initFilterStores();
-        this.on('boxready', function (cmp) {
-            if (cmp.initialValue) {
-                var filterField = cmp.down('#textFilter');
-                filterField.setValue(cmp.initialValue);
-                cmp.syncAndFilter(cmp.parseTextFilterValue(filterField));
+
+        this.on({
+            beforerender: {
+                scope: this,
+                fn: function (cmp) {
+                    this.store.reload();
+                }
+            },
+            boxready: {
+                scope: this,
+                fn: function (cmp) {
+                    if (cmp.initialValue) {
+                        var filterField = cmp.down('#textFilter');
+                        filterField.setValue(cmp.initialValue);
+                        cmp.syncAndFilter(cmp.parseTextFilterValue(filterField));
+                    }
+                }
             }
-        }, this);
-        this.on('destroy', this.onDestoryFilterContainser, this);
+        });
     },
 
     /**
@@ -150,13 +160,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             }
         }
     },
-    onDestoryFilterContainser:function (cmp) {
-        if (!cmp.store || !this.store.getProxy()) {
-            return;
-        }
-        var params =  this.store.getProxy().extraParams  = this.store.getProxy().extraParams || {};
-        delete params.advancedSearch;
-    },
+
     /**
      * Search a store for a record matching the provided value.
      * This method matches string-based user input to a record in the store.
@@ -405,7 +409,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
             if (Ext.isEmpty(rawValue)) {
                 delete syncedValues['json'][fieldName];
-                delete syncedValues['json'][fieldName];
+                delete syncedValues['text'][fieldName];
             }
 
             if (stores.containsKey(fieldName)) {
@@ -427,5 +431,15 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         this.doFilter(syncedValues['json']);
 
         return syncedValues;
-    }
+    },
+
+    onDestroy: function () {
+        if (this.store && this.store.getProxy()) {
+            var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
+            
+            delete params.advancedSearch;
+        }
+
+        this.callParent(arguments);
+    },
 });
