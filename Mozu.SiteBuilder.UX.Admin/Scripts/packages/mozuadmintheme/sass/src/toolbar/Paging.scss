@@ -1,0 +1,10 @@
+.#{$prefix}tbar-page-number {
+    width: 45px;
+
+    .#{$prefix}form-trigger-input-cell {
+        .#{$prefix}form-text {
+            padding-left: 2px;
+            text-align: center;
+        }
+    }
+}
