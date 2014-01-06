@@ -21,6 +21,10 @@ using VM=Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using System.Linq;
 using IOrderWebApiClient = Mozu.CommerceRuntime.Contracts.Clients.IOrderWebApiClient ;
 using Product = Mozu.ProductRuntime.Contracts.Product;
+using Mozu.Location.Contracts.Clients;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -30,9 +34,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ICartWebApiClient _cartClient;
         IOrderWebApiClient _orderWebApiClient;
         private readonly ICookieProvider _cookieProvider;
+        private readonly ILocationRuntimeWebApiClient _locationClient;
         
 
-        public CartController(ICartWebApiClient cartClient, IOrderWebApiClient orderWebApiClient, ICookieProvider cookieProvider)
+        public CartController(ICartWebApiClient cartClient, IOrderWebApiClient orderWebApiClient, ICookieProvider cookieProvider, ILocationRuntimeWebApiClient locationClient)
         {
             if(cartClient == null)
             {
@@ -43,6 +48,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             
             _orderWebApiClient = orderWebApiClient;
             _cookieProvider = cookieProvider;
+            _locationClient = locationClient;
+        }
+
+        private string BuildLocationsFilter(List<string> locationCodes)
+        {
+            return string.Join(" or ", locationCodes.Select(x => "Code eq " + x));
         }
 
         [System.Web.Http.HttpGet]
@@ -63,11 +74,24 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
            
             
             var cart = (await _cartClient.GetOrCreateCart() ).ReadAsAsync().Result;
+            var locations = (await _locationClient.GetInStorePickupLocations(0, null, null, BuildLocationsFilter(cart.Items.Select(x => x.FulfillmentLocationCode).Distinct().ToList()))).ReadAsSync();
 
             var cartVM = Mapper.Map<Mozu.SiteBuilder.UX.Models.StoreFront.Commerce.Cart>(cart);
-          
+
+            var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
+            var jCart = JObject.FromObject(cartVM, jSerializer);
+
+            var jItems = (JArray)jCart["items"];
+
+            for (int i = 0; i < cartVM.Items.Count; i++)
+            {
+                if (cartVM.Items[i].FulfillmentLocationCode != null)
+                {
+                    ((JObject)jItems[i]).Add("fulfillmentLocationName", locations.Items.Find(x => x.Code == cartVM.Items[i].FulfillmentLocationCode).Name);
+                }
+            }
             
-            return View( "cart", cartVM); // Mapper.Map<VMCart>(cart));
+            return View( "cart", jCart); // Mapper.Map<VMCart>(cart));
         }
 
        
