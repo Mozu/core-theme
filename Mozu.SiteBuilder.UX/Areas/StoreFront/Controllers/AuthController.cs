@@ -24,6 +24,8 @@ using Mozu.SiteBuilder.UX.Models;
 using VMUser = Mozu.SiteBuilder.UX.Models.Customers.User;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.UX.Messaging;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -36,8 +38,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private IAuthenticationHelper _authenticationHelper;
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
         private readonly IAuthTicketWebApiClient _authTicketWebApiClient;
+        private PageContext _pageContext;
+        private VisitEventPublisher _visitPublisher;
 
-        public AuthController(IAuthenticationHelper authenticationHelper, Mozu.Customer.Contracts.Clients.ICustomerAccountWebApiClient   customerAccountWebApiClient, Mozu.Customer.Contracts.Clients.IAuthTicketWebApiClient authTicketWebApiClient, ICookieProvider cookieProvider, ISiteBuilderApiContext  apiContext)
+        public AuthController(IAuthenticationHelper authenticationHelper, Mozu.Customer.Contracts.Clients.ICustomerAccountWebApiClient   customerAccountWebApiClient, Mozu.Customer.Contracts.Clients.IAuthTicketWebApiClient authTicketWebApiClient, ICookieProvider cookieProvider, ISiteBuilderApiContext  apiContext, PageContext pageContext, VisitEventPublisher visitPublisher)
         {
             if (customerAccountWebApiClient == null) throw new ArgumentNullException("customerAccountWebApiClient");
             if (authTicketWebApiClient == null) throw new ArgumentNullException("authTicketWebApiClient");
@@ -47,6 +51,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
          
             _cookieProvider = cookieProvider;
             _apiContext = apiContext;
+            _pageContext = pageContext;
+            _visitPublisher = visitPublisher;
         }
         //
         // GET: /StoreFront/Auth/
@@ -120,8 +126,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 _authenticationHelper.SaveStoreFrontAccessToken(authTicket.AccessToken , profile.ToToken());
                 _authenticationHelper.SaveStoreFrontRefreshToken(authTicket.RefreshToken, authTicket.RefreshTokenExpiration);
-                _apiContext.SetUser(LightweightUserClaims.Parse(authTicket.AccessToken));
+                var userClaim = LightweightUserClaims.Parse(authTicket.AccessToken);
+                _apiContext.SetUser(userClaim);
 
+                // iff the visit is already tracked, update the visit with the new page
+                if (_pageContext.Visit.IsTracked)
+                {
+                    _pageContext.Visit.UserId = userClaim.UserId;
+                    _pageContext.Visit.IsUserTracked = true;
+                    _visitPublisher.PublishVisit(_pageContext.Visit);
+                }
             }
             
             return res;

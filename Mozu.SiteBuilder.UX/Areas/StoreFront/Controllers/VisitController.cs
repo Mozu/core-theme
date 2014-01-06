@@ -69,12 +69,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             // only log the visit if it wasn't already tracked.
-            if (!_pageContext.Visit.IsTracked)
+            bool isAlreadyTracked = _pageContext.Visit.IsTracked && (String.IsNullOrEmpty(_pageContext.Visit.UserId) || _pageContext.Visit.IsUserTracked);
+            if (!isAlreadyTracked)
             {
                 // log the visit.
                 _publisher.PublishVisit(_pageContext.Visit);
                 _logger.Info("I caught a visit!", _pageContext.Visit);
                 _pageContext.Visit.IsTracked = true;
+                _pageContext.Visit.IsUserTracked = !String.IsNullOrEmpty(_pageContext.Visit.UserId);
             }
 
             return Pixel();
