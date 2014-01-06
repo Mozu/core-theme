@@ -162,7 +162,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             this.PageContext.ShippingCountries = shipTask.Result;
 
 
-
             if (!this.PageContext.User.IsAnonymous)
             {
                 account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId)).ReadAsSync();
@@ -201,6 +200,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
             var jOrder = JObject.FromObject(model, jSerializer);
+
+            jOrder.Add("requiresFulfillmentInfo", model.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Fulfillment.FulfillmentMethodConst.SHIP));
+
             if (account != null)
             {
                 JObject accountJson = JObject.FromObject(account, jSerializer);
@@ -245,15 +247,37 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var locTask = _locationRuntimeWebApiClient.GetDirectShipLocation();
             var orderTask = _orderWebApiClient.GetOrder(orderId);
+            var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
             await Task.WhenAll(locTask, orderTask);
             var order = orderTask.Result.ReadAsSync();
             if (order == null)
                 return Redirect("/cart");
+            Mozu.Location.Contracts.LocationCollection locations = null;
 
+            if (order.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Fulfillment.FulfillmentMethodConst.PICKUP))
+            {
+                var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", order.Items.Select(x => "Code eq " + x.FulfillmentLocationCode).Distinct().ToList())));
+                locations = locationsTask.ReadAsSync();
+            }
 
+            JObject jOrder = JObject.FromObject(order, jSerializer);
 
+            jOrder.Add("hasDirectShip", order.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Fulfillment.FulfillmentMethodConst.SHIP));
+
+            if (locations != null)
+            {
+                var jItems = (JArray)jOrder["items"];
+
+                for (int i = 0; i < order.Items.Count; i++)
+                {
+                    if (order.Items[i].FulfillmentLocationCode != null)
+                    {
+                        ((JObject)jItems[i]).Add("fulfillmentLocationName", locations.Items.Find(x => x.Code == order.Items[i].FulfillmentLocationCode).Name);
+                    }
+                }
+            }
             this.ViewData["mailCheckTo"] = locTask.Result.ReadAsSync();
-            return View("confirmation", order);
+            return View("confirmation", jOrder);
         }
 
        

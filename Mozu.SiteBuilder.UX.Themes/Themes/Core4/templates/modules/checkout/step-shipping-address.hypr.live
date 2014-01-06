@@ -1,11 +1,17 @@
 ﻿    <h3 class="mz-formstep-header">
         {{ labels.shippingInformation }}
+        {% if model.requiresFulfillmentInfo %}
         <button class="mz-button mz-button-small mz-formstep-edit" data-mz-action="edit">{{ labels.edit }}</button>
+        {% endif %}
     </h3>
     <div class="mz-formstep-body">
       {% if not model.address.candidateValidatedAddresses %}
       <div class="mz-formstep-summary mz-addresssummary">
+            {% if model.requiresFulfillmentInfo %}
             {% include "modules/common/address-summary" %}
+            {% else %}
+            {{ labels.noFulfillmentInfoRequired }}
+            {% endif %}
         </div>
       <div class="mz-formstep-fields mz-l-formfieldgroup">
         {% if model.contacts %}

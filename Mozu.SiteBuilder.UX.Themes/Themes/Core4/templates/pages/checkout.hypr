@@ -49,7 +49,7 @@
             {% include "modules/checkout/step-shipping-address" %}
         </div>
 
-        <div class="mz-formstep mz-checkoutform-shippingmethod" id="step-shipping-method">
+        <div class="mz-formstep mz-checkoutform-shippingmethod" id="step-shipping-method" {% if not model.requiresFulfillmentInfo %}style="display:none"{% endif %}>
             {% include "modules/checkout/step-shipping-method" %}
         </div>
 

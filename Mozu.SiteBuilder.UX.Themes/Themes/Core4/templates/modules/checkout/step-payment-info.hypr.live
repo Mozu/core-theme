@@ -126,7 +126,9 @@
         </div>
         <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.billingAddress }}</h4>
+            {% if model.requiresFulfillmentInfo %}
             <div class="mz-l-formfieldgroup mz-l-formfieldgroup-norows"><label><input type="checkbox" data-mz-value="isSameBillingShippingAddress" value="true" {% if model.isSameBillingShippingAddress %}checked="checked"{% endif %}> {{ labels.useShippingAddress }}</label></div>
+            {% endif %}
             {% if model.isSameBillingShippingAddress %}
                 <div class="mz-addresssummary mz-same-as-shipping-summary" id="mz-same-as-shipping-summary">
                     {% include "modules/common/address-summary" with model=model.billingContact %}
