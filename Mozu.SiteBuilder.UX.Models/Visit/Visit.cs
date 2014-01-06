@@ -12,6 +12,9 @@ namespace Mozu.SiteBuilder.UX.Models.Visit
         public string VisitorId { get; set; }
 
         [DataMember]
+        public string UserId { get; set; }
+
+        [DataMember]
         public string UserAgent { get; set; }
 
         [DataMember]
@@ -19,6 +22,9 @@ namespace Mozu.SiteBuilder.UX.Models.Visit
 
         [DataMember]
         public bool IsTracked { get; set; }
+
+        [DataMember]
+        public bool IsUserTracked { get; set; }
 
         [IgnoreDataMember]
         public bool IsLanding { get; set; }

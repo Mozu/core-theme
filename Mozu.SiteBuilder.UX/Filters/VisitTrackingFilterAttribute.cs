@@ -5,10 +5,12 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using System.Xml;
 using Mozu.Core.Logging;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
@@ -56,9 +58,10 @@ namespace Mozu.SiteBuilder.UX.Filters
                 responseHeaders.SetVisitorCookie(pageContext.Visit.VisitorId);
             }
             var sessionCookie = requestHeaders.GetSessionCookie();
-            if (sessionCookie == null || (pageContext.Visit.IsTracked && sessionCookie.Value != "t"))
+            string sessionCookieExpectedValue = (pageContext.Visit.IsTracked ? "y" : "n") + (pageContext.Visit.IsUserTracked ? "y" : "n");
+            if (sessionCookie == null || (pageContext.Visit.IsTracked && sessionCookie.Value != sessionCookieExpectedValue))
             {
-                responseHeaders.SetSessionCookie(pageContext.Visit.IsTracked ? "t" : "f");
+                responseHeaders.SetSessionCookie(sessionCookieExpectedValue);
             }
 
             // always send visit cookie, setting expiration to 30 minutes from now.
@@ -72,13 +75,17 @@ namespace Mozu.SiteBuilder.UX.Filters
             var visitCookie = request.Headers.GetVisitCookie();
             var visitorCookie = request.Headers.GetVisitorCookie();
             var sessionCookie = request.Headers.GetSessionCookie();
+            var apiContext = request.Resolve<ISiteBuilderApiContext>();
+
             if (visitCookie != null && visitorCookie != null && sessionCookie != null)
             {
                 // visit cookie is fresh.
                 return new Visit {
                     VisitId = visitCookie.Value,
                     VisitorId = visitorCookie.Value,
-                    IsTracked = sessionCookie.Value == "t" ? true : false,
+                    UserId = apiContext.UserClaims != null && !apiContext.UserClaims.IsAnonymous ? apiContext.UserClaims.UserId : null,
+                    IsTracked = sessionCookie.Value == "yy" || sessionCookie.Value == "yn" ? true : false,
+                    IsUserTracked = sessionCookie.Value == "yy" || sessionCookie.Value == "ny" ? true : false,
                     IsLanding = false
                 };
             }
@@ -102,10 +109,13 @@ namespace Mozu.SiteBuilder.UX.Filters
 
             string visitorId = visitorIdFromCookie.ToUrlSafeString();
 
+            var apiContext = request.Resolve<ISiteBuilderApiContext>();
+
             return new Visit
             {
                 VisitId = Guid.NewGuid().ToUrlSafeString(),
                 VisitorId = visitorId,
+                UserId = apiContext.UserClaims != null && !apiContext.UserClaims.IsAnonymous ? apiContext.UserClaims.UserId : null,
                 IsLanding = true
             };
         }
