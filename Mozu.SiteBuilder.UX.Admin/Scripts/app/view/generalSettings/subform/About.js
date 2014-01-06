@@ -190,7 +190,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
                     {
                         xtype: "editabledisplayfield",
                         //name:"isWebSite",
-                        fieldLabel: "Is Mozu Hosted Store Front",
+                        fieldLabel: "Mozu Hosted Store Front",
                         margin: "0 4 0 0",
                         columnWidth: .5,
                         value: me.record.get('isMozuWebSite') ? 'Yes' : 'No',
