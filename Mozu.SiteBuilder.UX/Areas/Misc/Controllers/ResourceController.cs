@@ -399,8 +399,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 {
                     return null;
                 }
-                StreamReader sr = new StreamReader(file.OpenRead());
-                return sr.ReadToEnd();
+                return System.IO.File.ReadAllText(file.FullPath);
             }
 
             private Regex DepNameRE = new Regex("(.+)=([a-zA-Z_$][0-9a-zA-Z_$]*)$");
