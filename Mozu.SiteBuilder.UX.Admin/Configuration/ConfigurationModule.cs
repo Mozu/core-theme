@@ -69,6 +69,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             //builder.RegisterClassesMatchingInterfaceName(typeof(PlatformService.Contracts.Clients.ReferenceDataWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Shipping.Contracts.Clients.ShippingSettingsWebApiClient ).Assembly);
 
+           
+            
+
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Order.Contracts.Clients.CheckoutSettingsWebApiClient).Assembly);
             
 
@@ -105,6 +108,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             builder.RegisterType<CategoryNavigationProvider>().As<ICategoryNavigationProvider>();
 
             builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", APPLICATION_NAME).InstancePerLifetimeScope();
+
+
+            builder.RegisterType<ProductCategoryRuntimeWebApiClient>();
+            builder.Register(c =>
+            {
+                var pcrc = c.Resolve<ProductCategoryRuntimeWebApiClient>();
+                pcrc.Options.EnableDirtyCacheRead = false;
+                return pcrc;
+            }).As<IProductCategoryRuntimeWebApiClient>();
+
             // TODO: This binding will be unnecessary once the DocumentWebApiClient works better.
             //builder.RegisterType<InSessionDocumentWebApiClient>().As<IMoreAwesomeDocumentWebApiClient>();
 

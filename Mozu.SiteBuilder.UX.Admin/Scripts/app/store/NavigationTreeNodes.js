@@ -16,7 +16,7 @@ Ext.define('Taco.store.NavigationTreeNodes', {
     // remoteSort: true
         storeManagerConfig: {
             createOnly: true,
-            autoLoad: true
+            autoLoad: false
         }
     });
 
