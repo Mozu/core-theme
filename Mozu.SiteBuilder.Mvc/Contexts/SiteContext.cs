@@ -312,7 +312,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         var themeTimeStamp = BitConverter.GetBytes(_theme.TimeStamp.Ticks);
                         md5.TransformBlock(themeTimeStamp, 0, themeTimeStamp.Length, themeTimeStamp, 0);
                         byte[] tid = Encoding.UTF8.GetBytes(_themeId ?? "");
-                        Hash = md5.TransformFinalBlock(tid, 0, tid.Length);
+                        md5.TransformFinalBlock(tid, 0, tid.Length);
+                        Hash = md5.Hash;
                         //not ready for prime time
                         //var tmp = ThemeSettings[ThemeSettingsRepository.ADDONKEY] as IEnumerable;
                         //if (tmp != null)
