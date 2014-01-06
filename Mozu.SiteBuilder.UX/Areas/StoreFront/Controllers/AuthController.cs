@@ -90,8 +90,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 _authenticationHelper.SaveStoreFrontAccessToken(authTicket.AccessToken, profile.ToToken());
                 _authenticationHelper.SaveStoreFrontRefreshToken(authTicket.RefreshToken, authTicket.RefreshTokenExpiration);
-                _apiContext.SetUser(LightweightUserClaims.Parse(authTicket.AccessToken));
+                var userClaim = LightweightUserClaims.Parse(authTicket.AccessToken);
+                _apiContext.SetUser(userClaim);
 
+                // iff the visit is already tracked, update the visit with the new page
+                if (_pageContext.Visit.IsTracked)
+                {
+                    _pageContext.Visit.UserId = userClaim.UserId;
+                    _pageContext.Visit.IsUserTracked = true;
+                    _visitPublisher.PublishVisit(_pageContext.Visit);
+                }
             }
 
             return res;
