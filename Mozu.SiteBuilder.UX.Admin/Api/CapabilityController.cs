@@ -8,6 +8,7 @@ using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.ErrorHandling;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -71,6 +72,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             foreach (var cap in capabilities)
             {
                 var app = (await _applicationsWebApiClient.GetApplication(cap.AppId)).ReadAsSync();
+                var client = _applicationsWebApiClient;
 
                 if (cap.AppId == cap.Id)
                 {
@@ -82,11 +84,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     var index = app.Capabilities.FindIndex(_ => _.Id == cap.Id);
                     var editCap = app.Capabilities[index];
                     AutoMapper.Mapper.Map(cap, editCap);
+
+                    // scope to site, if needed
+                    app.Capabilities = app.Capabilities.Where(x => x.ScopeId == editCap.ScopeId).ToList();
+                    client = _applicationsWebApiClient.CloneWithApiContext(x => x.SiteId = editCap.ScopeId);
                     // var newDmCap = Mapper.Map<Mozu.Core.ThirdParty.Contracts.Capability>(cap);
                 }
             
                 //todo other stuff
-                _applicationsWebApiClient.UpsertApplication(app.AppId, app).Wait();
+                client.UpsertApplication(app.AppId, app).Wait();
             }
             return await this.CapList(null, null);
         }
