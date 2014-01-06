@@ -1103,6 +1103,7 @@
     <Content Include="Scripts\sass\src\view\order\modal\FulfillmentMethod.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\LocationPickupGrid.scss" />
     <Content Include="Scripts\sass\src\overrides\grid\plugin\CellEditing.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\src\toolbar\Paging.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />

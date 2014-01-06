@@ -225,7 +225,8 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         this.gridPager = Ext.create('Ext.toolbar.Paging', {
             dock: 'bottom',
             displayInfo: true,
-            store: this.store
+            store: this.store,
+            inputItemWidth: 45
         });
         
 
