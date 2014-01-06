@@ -29,6 +29,7 @@ Ext.define('Taco.view.website.Tree', {
     },
 
     initComponent: function () {
+        var me = this;
         this.addEvents('urlclick', 'additemclick');
 
         this.cellEditor = Ext.create('Ext.grid.plugin.CellEditing', {
@@ -61,8 +62,24 @@ Ext.define('Taco.view.website.Tree', {
                 allowBlank: false
             }
         }];
-        
-   
+
+        this.store.load({
+            callback:function (records, operation) {
+                if (operation && operation.response && operation.response.getResponseHeader("needsFixup")=='true') {
+                    Ext.Ajax.request(
+                        {
+                            url: '/admin/app/navigation/fixup',
+                            method: 'POST',
+                            success: function (response) {
+                                if (response.responseText == "true") {
+                                    me.store.load();
+                                }
+                            }
+                        }
+                    );
+                }
+            }
+        });
 
         this.mon(this.store,
             {

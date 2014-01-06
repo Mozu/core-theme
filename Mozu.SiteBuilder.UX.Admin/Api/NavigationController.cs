@@ -2,10 +2,17 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Runtime.InteropServices;
+using System.Security.Policy;
 using System.Threading.Tasks;
+using AutoMapper;
+using MongoDB.Driver.Builders;
+using Mozu.CommerceRuntime.Contracts.Products;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
+using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.CMS;
@@ -13,6 +20,7 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Navigation;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using DC = Mozu.ProductAdmin.Contracts;
@@ -56,12 +64,103 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         ///     Returns the combined navigation tree.
         /// </summary>
         [HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<NavigationTreeNode>>> List()
+        public async Task<HttpResponseMessage > List()
         {
             _log.Debug("Generating list.");
             List<NavigationTreeNode> list = await GetFlatList();
+            bool needsFixup = false;
+            foreach (var sibblingNodes in list.GroupBy(x => x.ParentId))
+            {
+                var hasDups = sibblingNodes.Where(x=> x.NodeType =="category").GroupBy(x => x.Index).Where(g => g.Count() > 1).Any();
+                if (hasDups)
+                {
+                    needsFixup = true;
+                    break;
+                }
+            }
+            var resp = Request.CreateResponse(HttpStatusCode.OK, List2(list));
 
-            return List2(list);
+            resp.Headers.Add("needsFixup", needsFixup.ToString().ToLower());
+
+            return resp;
+        }
+
+        class CatCompare : IEqualityComparer<Mozu.ProductAdmin.Contracts.Category>
+        {
+
+            bool IEqualityComparer<DC.Category>.Equals(DC.Category x, DC.Category y)
+            {
+                if (x == null && y == null)
+                {
+                    return true;
+                }
+                if (x == null || y == null)
+                {
+                    return false;
+                }
+                return x.Id == y.Id;
+            }
+
+            int IEqualityComparer<DC.Category>.GetHashCode(DC.Category obj)
+            {
+                if (obj == null)
+                {
+                    return 0;
+                }
+                return obj.Id.GetValueOrDefault(0).GetHashCode();
+            }
+        }
+            
+            
+            [HttpPostRoute(UriTemplate = "fixup")]
+        public async Task<HttpResponseMessage> Fixup()
+        {
+            var categories = new List<Mozu.ProductAdmin.Contracts.Category >();
+
+            int start = 0;
+
+            while (true)
+            {
+                var cats = (await _catClient.GetCategories(startIndex: start, pageSize: 600)).ReadAsSync();
+                categories.AddRange(cats.Items);
+                start = cats.PageSize + cats.StartIndex;
+                if (cats.TotalCount <= start)
+                {
+                    break;
+                }
+            }
+
+
+                var updatedCats = new HashSet<Mozu.ProductAdmin.Contracts.Category>(new CatCompare());
+
+
+            foreach (var parentGroup in categories.GroupBy(x => x.ParentCategoryId))
+            {
+                var duplicates = parentGroup.GroupBy(i => i.Sequence ).Where(g => g.Count() > 1).Select(g => g.Key);
+
+                if (!duplicates.Any())
+                {
+                    continue;
+                }
+
+                var sortedItems = parentGroup.OrderBy(x => x.Sequence.GetValueOrDefault(int.MaxValue)).ToList();
+
+                var seed = 0;
+
+                sortedItems.ForEach(x=> x.Sequence = ++seed );
+
+                updatedCats.AddRange(sortedItems);
+
+           
+            }
+            if (updatedCats.Count > 0)
+            {
+                var updateTasks = updatedCats.Select(x => _catClient.UpdateCategory(x, x.Id )).ToList();
+                await Task.WhenAll(updateTasks);
+                return this.Request.CreateResponse(HttpStatusCode.OK, true);
+            }
+            return this.Request.CreateResponse(HttpStatusCode.OK, false);
+
         }
 
         public async Task<List<NavigationTreeNode>> GetFlatList()
@@ -464,8 +563,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                     newSequence = originalCat.Sequence = Math.Min(change.Index, Math.Abs(originalCat.Sequence.GetValueOrDefault(0) - catIds.Count()));
                                 }
 
-                                if (newSequence.HasValue && oldSequence != newSequence)
+                                if (  oldSequence != newSequence)
+                                {
+                                    if (!newSequence.HasValue)
+                                    {
+                                        originalCat.Sequence = originalCat.Sequence.GetValueOrDefault(0) + 1;
+                                    }
                                     updateTasks.Add(_catClient.UpdateCategory(originalCat, originalCat.Id));
+                                    
+                                }
+                               
                                 updateTasks.Add(_navRepo.SaveSetAsync(navSet));
                             }
                                 // change of parent
