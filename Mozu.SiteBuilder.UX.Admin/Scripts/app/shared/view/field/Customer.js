@@ -16,13 +16,21 @@ Ext.define('Taco.shared.view.field.Customer', {
    
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">',
-            '<div class="x-boundlist-item">{lastName}, {firstName} - ({id})</div>',
+            '<tpl if="lastName">',
+                '<div class="x-boundlist-item">{lastName}, {firstName} - ({id})</div>',
+            '<tpl else>',
+                '<div class="x-boundlist-item">Customer {id}</div>',
+            '</tpl>',
         '</tpl>'
     ),
     
     displayTpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">',
-            '{lastName}, {firstName} - ({id})',
+            '<tpl if="lastName">',
+                '{lastName}, {firstName} - ({id})',
+            '<tpl else>',
+                'Customer {id}',
+            '</tpl>',
         '</tpl>'
     ),
     listConfig: {
