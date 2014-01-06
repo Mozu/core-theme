@@ -39,10 +39,10 @@
       </div>
     </td>
     <td class="mz-carttable-item-price">
-      {% if item.priceIsModified %}
+      {% if item.unitPrice.discountAmount > 0 %}
       <span class="mz-carttable-price is-crossedout">{{ item.unitPrice.baseAmount|currency }}</span>
       {% endif %}
-      <span class="mz-carttable-price{% if item.priceIsModified %} is-saleprice{% endif %}">{{ item.unitPrice.discountedAmount|currency }}</span>
+      <span class="mz-carttable-price{% if item.unitPrice.discountAmount %} is-saleprice{% endif %}">{{ item.unitPrice.discountedAmount|currency }}</span>
     </td>
     <td class="mz-carttable-item-qty">
       <input class="mz-carttable-qty-field" type="number" min="1" {% if model.isLoading %}disabled="disabled"{% endif %} data-mz-cart-item="{{ item.id }}" data-mz-value="quantity" value="{{ item.quantity }}" />

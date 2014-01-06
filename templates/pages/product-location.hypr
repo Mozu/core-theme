@@ -1,43 +1,29 @@
 {% extends "page" %}
 
+{% block title-tag-content %}{% if pageContext.metaTitle %}{{ pageContext.metaTitle }}{% else %}{{ labels.findAtLocalStore }}  - {% parent %}{% endif %}{% endblock title-tag-content %}
 
+{% block body-tag-classes %} mz-locations {% endblock body-tag-classes %}
 
 {% block body-content %}
-    
-
 
     {% require_script "pages/location" %}
     
+    {% preload_json model "product" %}
 
-    <section class="mz-loc">
-
-        <h1>Find it at a Local Store</h1>
-
-        <aside>
-            <h3>Check Availability</h3>
-            <p>Enter your ZIP to see where you can pick up this item</p>
-            <label for="mz-loc-zip-code">ZIP Cope</label>
-            <input id="mz-loc-zip-code" name="mz-loc-zip-code" type="text">
-            <button>Search</button>
-        </aside>
-
-        <article>
-            <div class="mz-loc-product">
-                Some awesome product
+    <div class="mz-l-container">
+        <h1 class="mz-pagetitle">{{ labels.findAtLocalStore }}</h1>
+        <div class="mz-l-stack">
+            <div class="mz-l-stack-section mz-locationproduct">
+                <h4 class="mz-l-stack-sectiontitle">{{ labels.product }}</h4>
+                {% include "modules/location/location-product-listing" %}
             </div>
-
-            <div class="mz-loc-grid">
-                Some places to buy said awesome product
-                <h3>Store Pickup</h3>
-                <table class="mz-loc-table">
-
-                </table>
+            <p class="mz-locationsearch-pleasewait">
+                {{ labels.locationWaitProd|string_format(model.content.productName)|safe }}
+             </p> 
+            <div class="mz-l-stack-section mz-locationsearch fades-in" id="location-list">
+                {% include "modules/location/location-search" with model=model.locations %}
             </div>
-
-        </article>
-
-
-    </section>
-
+        </div>
+    </div>
 
 {% endblock body-content %}

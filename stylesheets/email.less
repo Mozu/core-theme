@@ -1,0 +1,127 @@
+﻿/*!
+ * Core Theme v0.4
+ * 
+ * Copyright 2013 Volusion, Inc
+ * All rights are reserved.
+ */
+
+// Non-outputting utilities
+@import "/stylesheets/base/variables.less";
+@import "/stylesheets/base/mixins.less";
+
+// Base
+@import "/stylesheets/base/normalize.less";
+@import "/stylesheets/base/global.less";
+
+// Layouts
+@import "/stylesheets/layouts/l-container.less";
+@import "/stylesheets/layouts/l-formfieldgroup.less";
+@import "/stylesheets/layouts/l-pagecontent.less";
+@import "/stylesheets/layouts/l-pagewrapper.less";
+@import "/stylesheets/layouts/l-paginatedlist.less";
+@import "/stylesheets/layouts/l-2column.less";
+@import "/stylesheets/layouts/l-sidebar.less";
+@import "/stylesheets/layouts/l-tiles.less";
+@import "/stylesheets/layouts/l-stack.less";
+
+// Modules
+// Common
+@import "/stylesheets/modules/common/address-summary.less";
+@import "/stylesheets/modules/common/button.less";
+@import "/stylesheets/modules/common/icon.less";
+@import "/stylesheets/modules/common/item-listing.less";
+@import "/stylesheets/modules/common/message-bar.less";
+@import "/stylesheets/modules/common/order-list.less";
+@import "/stylesheets/modules/common/order-listing.less";
+@import "/stylesheets/modules/common/order-summary.less";
+@import "/stylesheets/modules/common/price.less";
+@import "/stylesheets/modules/common/page-title.less";
+@import "/stylesheets/modules/common/property-list.less";
+@import "/stylesheets/modules/common/table.less";
+// Locations
+@import "/stylesheets/modules/location/location-list.less";
+// Page Header
+@import "/stylesheets/modules/page-header/store-branding.less";
+// Product
+@import "/stylesheets/modules/product/price-stack.less";
+@import "/stylesheets/modules/product/product-list.less";
+@import "/stylesheets/modules/product/product-listing.less";
+@import "/stylesheets/modules/product/product-images.less";
+@import "/stylesheets/modules/product/product-detail.less";
+// State
+@import "/stylesheets/state/is-disabled.less";
+@import "/stylesheets/state/is-required.less";
+@import "/stylesheets/state/is-crossedout.less";
+@import "/stylesheets/state/is-saleprice.less";
+@import "/stylesheets/state/notices.less";
+
+
+
+#backgroundTable td {
+    padding: 15px;
+}
+
+.mz-email-header {
+    background: #eee;
+
+    th {
+        background-color: #666;
+        color: #eee;
+        padding: @gutter/2 @gutter;
+    }
+
+    td {
+        padding: @gutter/2 @gutter;
+    }
+}
+
+.mz-ordersummary {
+    background: #eee;
+    th {
+        text-align: right;
+        padding: @gutter/2 @gutter;
+        color: #eee;
+        background-color: #666;
+        border-bottom: 1px solid #fff;
+        &.mz-ordersummary-header-product {
+            text-align: left;
+        }
+    }
+    td {
+        text-align: right;
+        padding: @gutter/2 @gutter;
+        &.mz-ordersummary-item-product {
+            text-align: left;
+        }
+    }
+    .mz-ordersummary-lineitems tr:last-child td {
+        border-bottom: 1px solid #fff;
+    }
+    .mz-ordersummary-totals {
+        float: right;
+        td:last-child {
+            padding-right: 0;
+        }
+    }
+    .mz-ordersummary-totalname {
+        display: inline-block;
+        padding-right: @gutter;
+    }
+    .mz-ordersummary-grandtotal {
+        border-top: 1px solid #fff;
+        font-size: @fontSizeLarge;
+    }
+    .mz-ordersummary-totalvalue, .mz-ordersummary-itemtotal {
+        font-weight: bold;
+    }
+}
+
+.mz-ordersummary-checkout {
+    margin-bottom: @gutter;
+    .mz-formstep-header {
+        margin-bottom: 0;
+    }
+    .mz-formstep-body {
+        font-size: @fontSizeLarger;
+    }
+}

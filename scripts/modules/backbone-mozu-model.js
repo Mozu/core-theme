@@ -245,7 +245,11 @@ define([
                 });
                 this.apiModel.on('sync', function (rawJSON) {
                     me.isLoading(false);
-                    if (rawJSON) me.set(rawJSON);
+                    if (rawJSON) {
+                        me._isSyncing = true;
+                        me.set(rawJSON);
+                        me._isSyncing = false;
+                    }
                     me.trigger('sync', rawJSON);
                 });
                 this.apiModel.on('spawn', function (rawJSON) {
@@ -256,7 +260,14 @@ define([
                     me.trigger('error', err);
                 });
                 this.on('change', function () {
-                    me.apiModel.prop(me.changedAttributes());
+                    if (!me._isSyncing) {
+                        var changedAttributes = me.changedAttributes();
+                        _.each(changedAttributes, function (v, k, l) {
+                            if (v && typeof v.toJSON === "function")
+                                l[k] = v.toJSON();
+                        });
+                        me.apiModel.prop(changedAttributes);
+                    }
                 });
             },
             syncApiModel: function() {
@@ -307,6 +318,18 @@ define([
             },
             getHelpers: function () {
                 return this.helpers;
+            },
+            whenReady: function(cb) {
+                var me = this,
+                    isLoading = this.isLoading();
+                if (!isLoading) return cb();
+                var handler = function(yes) {
+                    if (!yes) {
+                        me.off('loadingchange', handler);
+                        cb();
+                    }
+                }
+                me.on('loadingchange', handler);
             },
             toJSON: function (options) {
                 var attrs = _.clone(this.attributes);

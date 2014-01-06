@@ -1,6 +1,17 @@
 ﻿define(['modules/backbone-mozu', 'shim!vendor/underscore>_', 'modules/models-address', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'hyprlive'], function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, Hypr) {
 
 
+    var pageContext = require.mozuData('pagecontext'),
+        validShippingCountryCodes,
+        validBillingCountryCodes,
+        validShippingAndBillingCountryCodes;
+    if (pageContext && pageContext.shippingCountries && pageContext.billingCountries) {
+        validShippingCountryCodes = _.pluck(pageContext.shippingCountries, 'value');
+        validBillingCountryCodes = _.pluck(pageContext.billingCountries, 'value');
+        validShippingAndBillingCountryCodes = _.intersection(validShippingCountryCodes, validBillingCountryCodes);
+    }
+
+
     var contactTypes = ["Billing", "Shipping"],
         contactTypeListeners = {};
     _.each(contactTypes, function(contactType) {
@@ -44,6 +55,17 @@
             lastNameOrSurname: {
                 required: true,
                 msg: Hypr.getLabel('lastNameMissing')
+            },
+            "address.countryCode": {
+                fn: function (value) {
+                    if (!validShippingCountryCodes) return undefined;
+                    var isBillingContact = this.attributes.isBillingContact || this.attributes.editingContact.attributes.isBillingContact,
+                        isShippingContact = this.attributes.isShippingContact || this.attributes.editingContact.attributes.isShippingContact,
+                        validCodes = ((isBillingContact && isShippingContact && validShippingAndBillingCountryCodes) ||
+                                      (isBillingContact && validBillingCountryCodes) ||
+                                      (isShippingContact && validShippingCountryCodes));
+                    if (validCodes && !_.contains(validCodes, value)) return Hypr.getLabel("wrongCountryForType");
+                }
             }
         },
 
@@ -57,10 +79,12 @@
             }
             return j;
         },
-        save: function() {
-            var id = this.get('id');
-            if (!id) return this.apiCreate();
-            return this.apiUpdate();
+        save: function () {
+            if (!this.parent.validate("editingContact")) {
+                var id = this.get('id');
+                if (!id) return this.apiCreate();
+                return this.apiUpdate();
+            }
         },
         setTypeHelpers: function(model, types) {
             var self = this;
@@ -243,7 +267,9 @@
                 },
                 saveContactFirst = function () {
                     self.get('editingContact').set('isBillingContact', true);
-                    return self.get('editingContact').save().then(function (contact) {
+                    var op = self.get('editingContact').save();
+                    if (!op) throw new Error("Could not save contact!");
+                    return op.then(function (contact) {
                         editingCard.contactId = contact.prop('id');
                         self.endEditContact();
                         self.getContacts();
@@ -286,7 +312,8 @@
                 editingContact = this.get('editingContact'),
                 apiContact;
             
-            return editingContact.save().then(function (contact) {
+            var op = editingContact.save();
+            if (op) return op.then(function (contact) {
                 apiContact = contact;
                 self.endEditContact();
                 return self.getContacts();

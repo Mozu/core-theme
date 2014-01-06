@@ -229,9 +229,19 @@ define(["shim!vendor/underscore>_", "shim!vendor/backbone[shim!vendor/underscore
                             validateAll = !attrs,
                             opt = _.extend({}, options, setOptions),
                             validatedAttrs = getValidatedAttrs(model),
-                            allAttrs = _.extend({}, validatedAttrs, model.attributes, attrs),
-                            changedAttrs = flatten(attrs || allAttrs),
+                            selectedAttrs = attrs;
 
+                        if (typeof attrs == "string") {
+                            selectedAttrs = {};
+                            _.each(validatedAttrs, function (v, k) {
+                                if (k.indexOf(attrs) === 0) {
+                                    selectedAttrs[k] = v;
+                                }
+                            });
+                        }
+
+                        var allAttrs = _.extend({}, validatedAttrs, model.attributes, selectedAttrs),
+                            changedAttrs = flatten(selectedAttrs || allAttrs),
                             result = validateModel(model, allAttrs);
 
                         model._isValid = result.isValid;

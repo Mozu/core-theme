@@ -20,7 +20,8 @@ define(['jquery'], function($) {
         },
 
         setPage: function (num) {
-            if (parseInt(num) <= parseInt(this.get('pageCount'))) return this.apiGet($.extend({}, this.lastRequest, {
+            num = parseInt(num);
+            if (num != this.currentPage() && num <= parseInt(this.get('pageCount'))) return this.apiGet($.extend({}, this.lastRequest, {
                 startIndex: (num - 1) * parseInt(this.get('pageSize'))
             }));
         },
@@ -45,11 +46,17 @@ define(['jquery'], function($) {
             return this.lastIndex() < this.get("totalCount");
         },
 
-        pageNumbers: function () {
-            var nums = this.get("pageCount"), ret = [];
-            for (var i = 1; i <= nums; i++) {
-                ret.push(i);
-            }
+        currentPage: function() {
+            return Math.ceil(this.firstIndex() / (this.get('pageSize') || 1));
+        },
+
+        middlePageNumbers: function () {
+            var current = this.currentPage(),
+                ret = [],
+                pageCount = this.get('pageCount'),
+                i = Math.max(Math.min(current - 2, pageCount - 4), 2),
+                last = Math.min(i + 5, pageCount);
+            while (i < last) ret.push(i++);
             return ret;
         }
     };

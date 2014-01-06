@@ -53,8 +53,15 @@
         <div class="mz-l-formfieldgroup-cell">
             <select data-mz-value="{{ addresscontext }}address.countryCode">
                 <option></option>
-                    <option {% if model.address.countryCode == "US" %}selected="selected"{% endif %} value="US">United States</option>
-                    <option {% if model.address.countryCode == "UK" %}selected="selected"{% endif %} value="UK">United Kingdom</option>
+                {% if countries && countries.length > 0 %}
+                {% for country in countries %}
+                    <option {% if model.address.countryCode == country.value %}selected="selected" {% endif %}value="{{ country.value }}">{{ country.key }}</option>
+                {% endfor %}
+                {% else %}
+                {% for country in pageContext.billingCountries %}
+                    <option {% if model.address.countryCode == country.value %}selected="selected" {% endif %}value="{{ country.value }}">{{ country.key }}</option>
+                {% endfor %}
+                {% endif %}
             </select>
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}address.countryCode"></span>
         </div>

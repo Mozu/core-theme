@@ -1,0 +1,76 @@
+﻿  {% extends "email/email" %}
+
+  {% block body-content %}
+
+    <h1 class="mz-pagetitle">
+        {{ labels.orderConfirmation }}
+    </h1>
+
+    <br>
+	
+    <h2>{{ labels.orderNo }} <a href="#">{{ model.orderNumber }}</a></h2>
+
+    <br>
+
+    <h3>{{ labels.orderWelcome }} {{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }},</h3>
+
+    <p>{{ labels.orderConfirmationBlob1 }}</p>
+
+    <table cellpadding="0" cellspacing="0" border="0" class="mz-email-header">
+        <thead>
+            <tr>
+                <th>
+                    {{ labels.billing }}
+                </th>
+                <th>
+                    {{ labels.shippedTo }}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="mz-addresssummary">
+                    {% include "modules/common/address-summary" with model=model.billingInfo.billingContact %}
+                    </div>
+                </td>
+                <td class="mz-addresssummary">
+                    {% include "modules/common/address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}
+                    <br><br>
+                    {{ model.fulfillmentInfo.shippingMethodName }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if model.billingInfo.paymentType == "CreditCard" %}
+        <dt>{{ labels.cardType }}</dt>
+        <dd>{{ model.billingInfo.card.paymentOrCardType }}</dd>
+        <dt>{{ labels.cardNumber }}</dt>
+        <dd>{{ model.billingInfo.card.cardNumberPartOrMask }}</dd>
+    {% endif %}
+    {% if model.billingInfo.paymentType == "PaypalExpress" %}
+        <dt>{{ labels.paymentType }}</dt>
+        <dd>{{ labels.payPal }}</dd>
+    {% endif %}
+
+
+    <h2>{{ labels.orderSummary }}</h2>
+
+    {% include "modules/common/order-summary" %}
+    
+    {% if model.shopperNotes.comments %}
+        <div class="mz-ordercomments">
+            <h5 class="mz-ordercomments-header">{{ labels.comments }}</h5>
+            <p class="mz-ordercomments-body">{{ model.shopperNotes.comments }}</p>
+        </div>
+    {% endif %}
+    
+    {% if model.shopperNotes.giftMessage %}
+        <div class="mz-ordercomments">
+            <h5 class="mz-ordercomments-header">{{ labels.giftMessage }}</h5>
+            <p class="mz-ordercomments-body">{{ model.shopperNotes.giftMessage }}</p>
+        </div>
+    {% endif %}
+
+{% endblock body-content %}

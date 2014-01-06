@@ -91,34 +91,26 @@
       ]
     },
     {
-      "xtype": "panel",
-      "title": "Banner",
-      "collapsible": false,
-      "items": [
-        {
-          "xtype": "checkbox",
-          "name": "bannerImageEnabled",
-          "fieldLabel": "Enable Banner Image"
-        },
-        {
-          "xtype": "textfield",
-          "name": "bannerImage",
-          "fieldLabel": "Banner Image"
-        },
-        {
-          "xtype": "combo",
-          "name": "bannerImageRepeat",
-          "fieldLabel": "Repeat Banner Image",
-          "valueField": "value",
-          "displayField": "text",
-          "store": [
-            ["no-repeat","No"],
-            ["repeat-x","Horizontally"],
-            ["repeat-y","Vertically"],
-            ["repeat","Tile"]
-          ]
-        }
-      ]
-    }
+        "xtype": "panel",
+        "title": "Navigation",
+        "collapsed": false,
+        "items": [
+            {
+                "fieldLabel": "Maximum Items In Main Nav",
+                "xtype": "numberfield",
+                "name": "maxTopLevelNavItems",
+                "hideTrigger": false,
+                "allowDecimal": false,
+                "minValue": 1
+            },
+            {
+                "fieldLabel": "Maximum Nav Item Label Length",
+                "xtype": "numberfield",
+                "name": "maxTopLevelNavLabelLength",
+                "hideTrigger": false,
+                "allowDecimal": false,
+                "minValue": 1
+            }
+        ]
   ]
 }

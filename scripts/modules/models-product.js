@@ -18,7 +18,7 @@
             _.defer(function() {
                 me.listenTo(me.collection, 'invalidoptionselected', me.handleInvalid, me);
             });
-            me.on("change:value", _.debounce(function(model, newVal) {
+            me.on("change:value", function(model, newVal) {
                 var newValObj, values = me.get("values");
                 newVal = $.trim(newVal);
                 if (newVal) {
@@ -32,16 +32,16 @@
                         }
                     });
                     me.set("values", values);
-                    if (me.get("attributeDetail").inputType !== "List") {
-                        me.set("shopperEnteredValue", newVal);
-                    }
+                    //if (me.get("attributeDetail").inputType !== "List") {
+                    //    me.set("shopperEnteredValue", newVal);
+                    //}
                 } else {
                     me.unset('value');
                     me.unset("shopperEnteredValue");
                 }
                 if (newValObj && !newValObj.isEnabled) me.collection.trigger('invalidoptionselected', newValObj, me);
                 me.trigger('optionchange', newVal, me);
-            }, 300));
+            });
         },
         handleInvalid: function(newValObj, opt) {
             if (!(this === opt)) {
@@ -70,6 +70,19 @@
                 raw.maxDate = formatDate(this.attributeDetail.validation.maxDateValue);
             }
             return raw;
+        },
+        isConfigured: function () {
+            var value = this.get('value') || this.get('shopperEnteredValue');
+            return value !== undefined && value !== '';
+        },
+        toJSON: function (options) {
+            var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
+            if (j && j.attributeDetail && j.attributeDetail.inputType !== "List" && this.isConfigured()) {
+                var val = j.value || j.shopperEnteredValue;
+                if (j.attributeDetail.dataType === "Number") val = parseFloat(val);
+                j.shopperEnteredValue = j.value = val;
+            }
+            return j;
         }
     }),
 
@@ -109,11 +122,11 @@
         },
         initialize: function (conf) {
             var slug = this.get('content').get('seoFriendlyUrl');
-            this.listenTo(this.get("options"), "optionchange", this.updateConfiguration, this);
+            _.bindAll(this, 'calculateHasPriceRange', 'onOptionChange');
+            this.listenTo(this.get("options"), "optionchange", this.onOptionChange);
+            this.updateConfiguration = _.debounce(this.updateConfiguration, 300);
             this.set({ url: slug ? "/"+ slug + "/p/"+ this.get("productCode") :  "/p/" + this.get("productCode") });
             this.lastConfiguration = [];
-            var self = this;
-            _.bindAll(this, 'calculateHasPriceRange');
             this.calculateHasPriceRange(conf);
             this.on('sync', this.calculateHasPriceRange);
         },
@@ -128,37 +141,56 @@
         },
         getConfiguredOptions: function() {
             return _.invoke(this.get("options").filter(function(opt) {
-                var value = opt.get('value'),
-                    shopperEnteredValue = opt.get('shopperEnteredValue');
-                return (value !== undefined && value !== '') || (shopperEnteredValue !== undefined && shopperEnteredValue !== '');
+                return opt.isConfigured();
             }), 'toJSON');
         },
         addToCart: function() {
             var me = this;
-            if (!this.validate()) {
-                this.apiAddToCart(this.get("quantity")).then(function(item) {
-                    me.trigger('addedtocart', item);
-                });
-            }
+            this.whenReady(function () {
+                if (!me.validate()) {
+                    me.apiAddToCart(me.get("quantity")).then(function (item) {
+                        me.trigger('addedtocart', item);
+                    });
+                }
+            });
         },
         addToWishlist: function () {
             var me = this;
-            if (!this.validate()) {
-                this.apiAddToWishlist({
-                    customerAccountId: require.mozuData('user').accountId,
-                    quantity: this.get("quantity")
-                }).then(function (item) {
-                    me.trigger('addedtowishlist', item);
-                });
-            }
+            this.whenReady(function () {
+                if (!me.validate()) {
+                    me.apiAddToWishlist({
+                        customerAccountId: require.mozuData('user').accountId,
+                        quantity: me.get("quantity")
+                    }).then(function (item) {
+                        me.trigger('addedtowishlist', item);
+                    });
+                }
+            });
         },
-        updateConfiguration: _.debounce(function() {
+        addToCartForPickup: function (locationCode, quantity) {
+            var me = this;
+            this.whenReady(function () {
+                return me.apiAddToCartForPickup({
+                    fulfillmentLocationCode: locationCode,
+                    quantity: quantity || 1
+                }).then(function (item) {
+                    me.trigger('addedtocart', item);
+                });
+            });
+        },
+        onOptionChange: function() {
+            this.isLoading(true);
+            this.updateConfiguration();
+        },
+        updateConfiguration: function() {
             var newConfiguration = this.getConfiguredOptions();
             if (JSON.stringify(this.lastConfiguration) !== JSON.stringify(newConfiguration)) {
                 this.lastConfiguration = newConfiguration;
                 this.apiConfigure({ options: newConfiguration });
+            } else {
+                this.isLoading(false);
             }
-        }, 400),
+        },
         toJSON: function (options) {
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
             if (!options || !options.helpers) j.options = this.getConfiguredOptions();

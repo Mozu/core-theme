@@ -118,6 +118,7 @@
   "resetPassword"        : "Reset Password",
   "resetEmailSent"       : "You should receive an email with instructions to reset your password shortly.",
   "unexpectedError"      : "Sorry, an unexpected error occurred. Please refresh the page and try again, or contact Support.",
+  "navMore"              : "More...",
 
   /* Search labels */
   "searchResults"        : "Search Results",
@@ -138,6 +139,8 @@
   "checkout"             : "Checkout",
   "orderSummary"         : "Order Summary",
   "shippingInformation"  : "Shipping Information",
+  "selectValidAddress"   : "Select an address from these alternatives:",
+  "suggestionNum"        : "Suggestion #{0}",
   "shippingMethod"       : "Shipping Method",
   "noShippingMethods"    : "Sorry, no shipping methods are available.",
   "paymentInformation"   : "Payment Information",
@@ -166,9 +169,17 @@
   "payments"             : "Payments",
   "orderDetails"         : "Order Details",
   "orderNumber"          : "Order Number",
+  "orderNo"              : "Order No.",
+  "orderWelcome"         : "Hello",
+  "orderConfirmationBlob1": "Thank you for shopping with us. We'd like to let you know that we have received your order, and are preparing it for shipment.",
+  "orderShipped"         : "Your Order Has Shipped",
+  "orderShipmentComplete": "Thank you for shopping with us. We thought you'd like to know that we shipped your items, and that this completes your order. Your order is on its way, and can no longer be changed. If you need to return an item from this shipment or manage other orders, please visit My Account.",
+  "emailPasswordTop"     : "<p>We received a request to reset the password associated with this e-mail address. If you made this request, please follow the instructions below.</p><p>Click the link below to reset your password using our secure server:</p>",
+  "emailPasswordBottom"  : "<p>If you did not request to have your password reset you can safely ignore this email. Rest assured your customer account is safe.</p><p>If clicking the link doesn't seem to work, you can copy and paste the link into your browser's address window, or retype it there. Once you have returned to the site, we will give instructions for resetting your password.</p><p>We will never e-mail you and ask you to disclose or verify your password, credit card, or banking account number. If you receive a suspicious e-mail with a link to update your account information, do not click on the link--instead, report the e-mail to us for investigation. Thanks for visiting!</p>",
   "billingName"          : "Billing Name",
   "billingPhone"         : "Billing Phone",
   "billingEmail"         : "Billing Email",
+  "billing"              : "Billing",
   "storeCredits"         : "Store Credits",
   "storeCreditAvailable" : "You have the following store credits available:",
   "storeCreditApplied"   : "You have applied the following store credits to your order:",
@@ -286,6 +297,7 @@
   "defective"            : "Defective - does not work properly",
   "noLongerWanted"       : "No longer needed/wanted",
   "tooLate"              : "Arrived too late",
+  "wrongCountryForType"  : "Please select a country supported for this contact type",
 
   
   /* Faceting labels */
@@ -293,6 +305,7 @@
 
   /* Product Listing labels */
   "productImagePlaceholder" : "[no image]",
+  "packageWeight"        : "Package Weight",
 
   /* Product Detail labels */
   "shortDesc"            : "Summary",
@@ -305,5 +318,20 @@
   "properties"           : "Properties",
   "measurements"         : "Measurements",
   "noImages"             : "no image",
-  "more"                 : "more"
+  "more"                 : "more",
+  "checkLocalStores"     : "Check Local Stores",
+
+  /* Locations labels */
+  "localStores"          : "Local Stores",
+  "findAtLocalStore"     : "Find it at a Local Store",
+  "locationWait"         : "We're searching for local stores. Your browser may ask for permission to use your location. Click \"Allow\" to sort the search results by distance.",
+  "locationWaitProd"     : "We're searching local stores for <strong>{0}</strong>. Your browser may ask for permission to use your location. Click \"Allow\" to sort the search results by distance.",
+  "storePickup"          : "Store Pickup",
+  "outOfStock"           : "Out of stock",
+  "availableNow"         : "Available Now",
+  "noNearbyLocations"    : "No nearby locations could be found.",
+  "noNearbyLocationsProd": "No nearby locations could be found for this product.",
+  "milesAway"            : "{0} miles away",
+  "positionError"        : "Your position could not be determined. Displaying stores out of order."
+
 }

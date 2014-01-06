@@ -21,6 +21,9 @@
         "pageSizeOptions": [15, 25, 50, 100],
         "maxProductSummaryWords": 40,
         "allowWishlist": false,
+        "showBreadcrumbs": true,
+        "showBreadcrumbs": true,
+        "preselectCountryCode": "US",
 
         /* Common appearance settings used in the stylesheet */
         "font": "Source Sans Pro",
@@ -33,6 +36,8 @@
         "bannerImage": "/resources/images/banner.jpg",
         "bannerImageRepeat": "repeat-x",
         "itemListingThumbSize": 80,
+        "maxTopLevelNavItems": 8,
+        "maxTopLevelNavLabelLength": 50,
 
         /* Settings specific to category page display */
         "showCategoryFacets": true,
@@ -65,17 +70,17 @@
 	  {
 		"id": "order.shipped",
 		"title": "Order Shipped",
-		"template": "email/order-status",
+		"template": "email/order-shipped",
 		"properties": {
-		  "subject": "You're Order Has Shipped"
+		  "subject": "You're Order Has Shipped #{model.orderNumber}"
 		}
 	  },
 	  {
 		"id": "order.changed",
-		"title": "Order Status",
-		"template": "email/order-status",
+		"title": "Order Confirmation",
+		"template": "email/order-confirmation",
 		"properties": {
-		  "subject": "Order Status"
+		  "subject": "Order Confirmation #{model.orderNumber}"
 		}
 	  },
 	  {
@@ -99,7 +104,7 @@
 		"title": "Password Reset",
 		"template": "email/password-reset",
 		"properties": {
-		  "subject": "Order Status #{model.orderNumber}"
+		  "subject": "Reset Your Password"
 		}
 	  },
 	  {
@@ -312,6 +317,7 @@
         "id": "catNav",
         "displayName": "Category Navigation",
         "displayTemplate": "misc/category-navigation",
+        "icon": "/resources/admin/widgets/22_category_navigation.png",
         "editViewFields": [
 
             {
@@ -342,12 +348,12 @@
             "mainCategory": "Category",
             "numberToDisplay": 4
         },
-        "icon": "/resources/admin/widgets/01_photo_text.png",
 		"validPageTypes":["*"]
     },{
         "id": "crosssells",
         "displayName": "Cross Sells",
         "displayTemplate": "catalog/related-products",
+        "icon": "/resources/admin/widgets/23_cross_sells.png",
         "editViewFields": [{
                 "fieldLabel": "title",
 				"name": "title",
@@ -376,12 +382,12 @@
             "title": "Related Items",
             "count": "4"
         },
-        "icon": "/resources/admin/widgets/01_photo_text.png",
 		"validPageTypes":["product","cart"]
     }, {
         "id": "upsells",
         "displayName": "Up Sells",
         "displayTemplate": "catalog/related-products",
+        "icon": "/resources/admin/widgets/27_up_sells.png",
         "editViewFields": [
 
             {
@@ -413,12 +419,12 @@
             "title": "Other Items",
             "count": "4"
         },
-        "icon": "/resources/admin/widgets/01_photo_text.png",
 		"validPageTypes":["product","cart"]
     }, {
         "id": "relatedproducts",
         "displayName": "Related Products",
         "displayTemplate": "catalog/related-products",
+        "icon": "/resources/admin/widgets/26_related_products.png",
         "editViewFields": [
 
             {
@@ -450,12 +456,12 @@
             "title": "Other Items",
             "count": "4"
         },
-        "icon": "/resources/admin/widgets/01_photo_text.png",
 		"validPageTypes":["product","cart"]
     }, 	{
          "id": "instockrequest",
          "displayName": "Instock Request",
          "displayTemplate": "misc/instock-request",
+         "icon": "/resources/admin/widgets/25_instock_requests.png",
         "editViewFields":[
 
 			{
@@ -468,7 +474,6 @@
           "defaultConfig": {
 			  "title": "Related Items"
 		},
-         "icon": "/resources/admin/widgets/01_photo_text.png",
          "validPageTypes":["product"]
     },  {
         "id": "content",
@@ -479,26 +484,11 @@
             "body": "<h2>Insert Title</h2><p>Insert Content</p>"
         },
         "validPageTypes":["*"]
-    },/* {
-        "id": "image",
-        "displayName": "test image",
-        "displayTemplate": "cms/image",
-        "editViewFields": [{
-            "name": "image",
-            "fieldLabel": "image",
-            "xtype": "taco-singleimagefield",
-        }],
-        "icon": "/resources/admin/widgets/00_photo.png",
-        "defaultConfig": {
-            "height": 400
         },
-        "validPageTypes":["*"],
-        "enabled":false
-    },*/
     {
       "id":"cms-image",
-      "displayName":"image",
-      "displayTemplate" :"cms/image2",
+      "displayName":"Image",
+      "displayTemplate" :"cms/image",
         "icon": "/resources/admin/widgets/00_photo.png",
       "editView": "taco-image-widgeteditor",
         "defaultConfig": {
@@ -591,7 +581,7 @@
         "id": "facebook_comments",
         "displayName": "Facebook Comments",
         "displayTemplate": "social/facebookComments",
-        "icon": "/resources/admin/widgets/13_social.png",
+        "icon": "/resources/admin/widgets/24_facebook_comments.png",
         "editViewFields": [{
             "xtype": "slider",
             "fieldLabel": "Number of posts to display",

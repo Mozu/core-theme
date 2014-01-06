@@ -163,7 +163,7 @@
                                 $('.mz-messagebar').html('');
                                 completeStep();
                             } else {
-                                //$('.mz-messagebar').html('The address you entered could not be validated. Please check your address and try again.');
+                                $('.mz-messagebar').html('<ul class="is-showing mz-errors"><li>We could not validate this address. Please check the address you entered and try again.</li></ul>');
                             }
                         });
                     } else {

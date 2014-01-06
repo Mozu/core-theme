@@ -5,7 +5,7 @@
         autoUpdate: ['quantity'],
         additionalEvents: {
             "change [data-mz-product-option]": "onOptionChange",
-            "blur [data-mz-product-option]": "onOptionChange"
+            "blur [data-mz-product-option]": "onOptionChange",
         },
         render: function () {
             var me = this;
@@ -21,8 +21,10 @@
             var newValue = $optionEl.val(),
                 oldValue,
                 id = $optionEl.data('mz-product-option'),
+                optionEl = $optionEl[0],
+                isPicked = (optionEl.type !== "checkbox" && optionEl.type !== "radio") || optionEl.checked,
                 option = this.model.get('options').get(id);
-            if (option) {
+            if (option && isPicked) {
                 oldValue = option.get('value');
                 if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
                     option.set('value', newValue);
@@ -35,7 +37,19 @@
         addToWishlist: function () {
             this.model.addToWishlist();
         },
+        checkLocalStores: function (e) {
+            var me = this;
+            e.preventDefault();
+            this.model.whenReady(function () {
+                var $localStoresForm = $(e.currentTarget).parents('[data-mz-localstoresform]'),
+                    $input = $localStoresForm.find('[data-mz-localstoresform-input]');
+                if ($input.length > 0) {
+                    $input.val(JSON.stringify(me.model.toJSON()));
+                    $localStoresForm[0].submit();
+                }
+            });
 
+        },
         initialize: function () {
             // handle preset selects, etc
             var me = this;
