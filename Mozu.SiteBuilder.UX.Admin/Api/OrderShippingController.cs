@@ -30,6 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             public string OrderId { get; set; }
             public List<OrderPackageItem> Items { get; set; }
+            public string ShippingMethodCode { get; set; }
 
             // optional. means we are moving things out of one package into a new one.
             public string SourcePackageId { get; set; }
@@ -37,6 +38,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate="shipping/package/create")]
         public async Task<Response<List<OrderPackage>>> CreatePackage(CreatePackageArgs args)
         {
+            var order = (await _orderWebApiClient.GetOrder(args.OrderId)).ReadAsSync();
+
             // if there is a source package, remove the item from it first.
             if (!String.IsNullOrEmpty(args.SourcePackageId))
             {
@@ -59,7 +62,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     await _orderWebApiClient.UpdatePackage(args.OrderId, args.SourcePackageId, source);
             }
 
-            var packages = args.Items.GroupBy(oi => oi.FulfillmentLocationCode).Select(g => new DCs.Package { FulfillmentLocationCode = g.Key, Items = Mapper.Map<List<DCs.PackageItem>>(g.ToList()) });
+            var shipMethodCode = !String.IsNullOrEmpty(args.ShippingMethodCode) ? args.ShippingMethodCode : (order.FulfillmentInfo != null ? order.FulfillmentInfo.ShippingMethodCode : null);
+            var packages = args.Items.GroupBy(oi => oi.FulfillmentLocationCode).Select(g => new DCs.Package { ShippingMethodCode = shipMethodCode, FulfillmentLocationCode = g.Key, Items = Mapper.Map<List<DCs.PackageItem>>(g.ToList()) });
             var tasks = packages.Select(p => _orderWebApiClient.CreatePackage(args.OrderId, p)).ToList();
             await Task.WhenAll(tasks);
 

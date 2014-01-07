@@ -190,20 +190,41 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var configuration = configurations.Items.FirstOrDefault(conf => conf.Id == key);
                 var cConfig = (await _carrierConfigurationGlobalWebApiClient.GetServiceTypes(key, "en-US")).ReadAsSync();
 
-                var cheese =
-                    from st in cConfig
-                    let isConfigured = configuration.ConfiguredServiceTypes.Any(other => other.Code == st.Code)
-                    select new {
-                        Code = st.Code,
-                        Name = st.Content != null ? st.Content.Name : st.Code,
-                        RateProvider = key,
-                        IsActive = st.IsActive,
-                        IsInternational = st.IsInternational,
-                        Sequence = st.Sequence,
-                        IsConfigured = isConfigured
-                    };
-
-                ret.AddRange(cheese);
+                if (key == "custom")
+                {
+                    var cheese =
+                        from customRate in configuration.CustomTableRates
+                        select new
+                        {
+                            Code = customRate.Id,
+                            Name = customRate.Content != null ? customRate.Content.Name : customRate.Id,
+                            IsProvider = false,
+                            RateProvider = key,
+                            IsActive = true,
+                            RateType = customRate.RateType,
+                            IsConfigured = true,
+                            CustomValue = customRate.Value
+                        };
+                    ret.AddRange(cheese);
+                }
+                else
+                {
+                    var cheese =
+                        from st in cConfig
+                        let isConfigured = configuration.ConfiguredServiceTypes.Any(other => other.Code == st.Code)
+                        select new
+                        {
+                            Code = st.Code,
+                            Name = st.Content != null ? st.Content.Name : st.Code,
+                            IsProvider = true,
+                            RateProvider = key,
+                            IsActive = st.IsActive,
+                            IsInternational = st.IsInternational,
+                            Sequence = st.Sequence,
+                            IsConfigured = isConfigured
+                        };
+                    ret.AddRange(cheese);
+                }
             }
 
             return List2(ret);
