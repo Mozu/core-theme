@@ -70,8 +70,8 @@ Ext.define('Taco.view.customers.subform.Information', {
                         cls: 'customer-history',
                         renderData: data,
                         renderTpl: [
-                            '<div class="total-spent"><label>Total Spent</label><h2>{[Ext.util.Format.usMoney(values.totalSpent || 0)]}</h2></div>',
-                            '<div class="total-orders"><label>Total Orders</label><h2>{[values.orderCount || 0]}</h2></div>',
+                            '<div class="total-spent"><label>Lifetime Value</label><h2>{[Ext.util.Format.usMoney(values.totalSpent || 0)]}</h2></div>',
+                            '<div class="total-orders"><label>Fulfilled Orders</label><h2>{[values.orderCount || 0]}</h2></div>',
                             '<div class="total-visits"><label>Total Visits</label><h2>{[values.visitCount || 0]}</h2></div>',
                             '<div class="total-orders"><span>Customer Since: </span><span>{[Ext.util.Format.date(values.createDate, "m/d/Y")]}</span></div>'
                         ]
