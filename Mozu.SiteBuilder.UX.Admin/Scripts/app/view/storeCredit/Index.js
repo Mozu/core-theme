@@ -36,6 +36,9 @@ Ext.define('Taco.view.storeCredit.Index', {
             dataIndex: 'initialBalance',
             text: 'Issued Amount',
             flex: 1,
+            renderer: function (value, metaData, record) {
+                return Ext.util.Format.usMoney(value);
+            },
             minWidth: 120
         }, {
             dataIndex: 'customer',
@@ -58,6 +61,9 @@ Ext.define('Taco.view.storeCredit.Index', {
             dataIndex: 'currentBalance',
             text: 'Current Balance',
             flex: 1,
+            renderer: function (value, metaData, record) {
+                return Ext.util.Format.usMoney(value);
+            },
             minWidth: 120
         }, {
             dataIndex: 'customerId',

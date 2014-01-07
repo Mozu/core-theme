@@ -41,7 +41,7 @@ Ext.define('Taco.view.storeCredit.Form', {
         });
 
         me.orginalAmount = Ext.widget({
-            xtype: 'textfield',
+            xtype: 'currencyfield',
             name: 'initialBalance',
             fieldLabel: 'Original Amount',
             // allowBlank: false,
@@ -50,7 +50,7 @@ Ext.define('Taco.view.storeCredit.Form', {
         });
 
         me.amount = Ext.widget({
-            xtype: 'textfield',
+            xtype: 'currencyfield',
             name: 'currentBalance',
             fieldLabel: 'Amount',
             allowBlank: false
