@@ -531,7 +531,9 @@
                         order.trigger('userexists', order.get('emailAddress'));
                     }
                 });
+                this.trigger('error');
                 if (!errorHandled) order.messages.reset(error.items);
+                order.isSubmitting = false;
                 throw error;
             },
             addNewCustomer: function() {
@@ -561,9 +563,16 @@
                 var order = this,
                     process = [];
 
+                if (this.isSubmitting) return;
+
+                this.isSubmitting = true;
+
                 this.syncBillingAndCustomerEmail();
 
-                if (this.validate()) return false;
+                if (this.validate()) {
+                    this.isSubmitting = false;
+                    return false;
+                }
                 this.isLoading(true);
 
                 if (this.get("createAccount") && !this.customerCreated) {
