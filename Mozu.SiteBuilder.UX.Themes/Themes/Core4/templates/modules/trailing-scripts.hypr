@@ -15,7 +15,7 @@
         cdnPrefix: "{{ siteContext.cdnPrefix }}",
         {% endif %}
         cacheKey: "{{ siteContext.hashString }}",
-        urlArgs: "theme={{siteContext.themeId}}",
+        urlArgs: "theme={{siteContext.themeId}}&cacheKey={{ siteContext.hashString }}",
         baseUrl: "{% if siteContext.cdnPrefix %}{{ siteContext.cdnPrefix }}{% endif %}/scripts",
         paths: {
             jquery: "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery{% if not themeSettings.useDebugScripts %}.min{% endif %}"
