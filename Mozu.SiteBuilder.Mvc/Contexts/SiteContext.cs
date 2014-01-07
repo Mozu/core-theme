@@ -278,8 +278,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         if (locSettingsDc.Items != null)
                         {
                             locSettingsDc.Items.ForEach(x => md5.HashAuditInfo(x.AuditInfo));
-                           
-                            SupportsInStorePickup = locSettingsDc.Items.Any(x => x.LocationUsageTypeCode == "SP");
+
+                            SupportsInStorePickup = locSettingsDc.Items.Any(x => x.LocationUsageTypeCode == "SP" && x.LocationTypeCodes != null && x.LocationTypeCodes.Any());
                         }
                         
 
