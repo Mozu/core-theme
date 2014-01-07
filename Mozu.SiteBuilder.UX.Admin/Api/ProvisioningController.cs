@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public ProvisioningController(Mozu.Provisioning.Contracts.Clients.IProvisioningWebApiClient provisioningWebApiClient, Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient tenantsWebApiClient)
         {
             _provisioningWebApiClient = provisioningWebApiClient;
-            BehaviorDefinition
+            
             _tenantsWebApiClient = tenantsWebApiClient.CloneWithoutUserClaims();
         }
         //137
