@@ -270,9 +270,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 for (int i = 0; i < order.Items.Count; i++)
                 {
-                    if (order.Items[i].FulfillmentLocationCode != null)
+                    if (order.Items[i].FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Fulfillment.FulfillmentMethodConst.SHIP)
                     {
-                        ((JObject)jItems[i]).Add("fulfillmentLocationName", locations.Items.Find(x => x.Code == order.Items[i].FulfillmentLocationCode).Name);
+                        var location = locations.Items.Find(x => x.Code == order.Items[i].FulfillmentLocationCode);
+                        if (location != null)
+                        {
+                            ((JObject) jItems[i]).Add("fulfillmentLocationName", location.Name);
+                        }
                     }
                 }
             }
