@@ -90,7 +90,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
             builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
 
-
+            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Provisioning.Contracts.Clients.IProvisioningWebApiClient).Assembly);
             
 
 

@@ -442,6 +442,7 @@
     <Compile Include="Api\OrderDiscountController.cs" />
     <Compile Include="Api\PublishingSettingsController.cs" />
     <Compile Include="Api\RedirectController.cs" />
+    <Compile Include="Api\ProvisioningController.cs" />
     <Compile Include="Api\ReportController.cs" />
     <Compile Include="Api\ReturnController.cs" />
     <Compile Include="Api\CustomerController.cs" />
@@ -717,6 +718,7 @@
     <Content Include="Scripts\app\view\order\widget\PickupItemGrid.js" />
     <Content Include="Scripts\app\view\order\widget\UnpickedupItems.js" />
     <Content Include="Scripts\app\view\order\widget\LocationPickupGrid.js" />
+    <Content Include="Scripts\app\view\provisioning\ProvisionerModal.js" />
     <Content Include="Scripts\app\view\redirects\Index.js" />
     <Content Include="Scripts\app\view\customerAttribute\Edit.js" />
     <Content Include="Scripts\app\view\customerAttribute\Form.js" />
