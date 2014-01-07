@@ -8,6 +8,7 @@ using System.Web;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Carts;
 using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.Location.Contracts;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
@@ -74,7 +75,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
            
             
             var cart = (await _cartClient.GetOrCreateCart() ).ReadAsAsync().Result;
-            var locations = (await _locationClient.GetInStorePickupLocations(0, null, null, BuildLocationsFilter(cart.Items.Select(x => x.FulfillmentLocationCode).Distinct().ToList()))).ReadAsSync();
+            LocationCollection locations = null;
+            if (cart.Items != null && cart.Items.Any(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Fulfillment.FulfillmentMethodConst.PICKUP))
+            {
+                locations = (await _locationClient.GetInStorePickupLocations(0, null, null, BuildLocationsFilter(cart.Items.Select(x => x.FulfillmentLocationCode).Distinct().ToList()))).ReadAsSync();
+            }
+
+           
 
             var cartVM = Mapper.Map<Mozu.SiteBuilder.UX.Models.StoreFront.Commerce.Cart>(cart);
 
@@ -82,15 +89,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var jCart = JObject.FromObject(cartVM, jSerializer);
 
             var jItems = (JArray)jCart["items"];
-
-            for (int i = 0; i < cartVM.Items.Count; i++)
+            if (locations != null)
             {
-                if (cartVM.Items[i].FulfillmentLocationCode != null)
+                for (int i = 0; i < cartVM.Items.Count; i++)
                 {
-                    ((JObject)jItems[i]).Add("fulfillmentLocationName", locations.Items.Find(x => x.Code == cartVM.Items[i].FulfillmentLocationCode).Name);
+                    if (cartVM.Items[i].FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Fulfillment.FulfillmentMethodConst.PICKUP)
+                    {
+                        var location = locations.Items.Find(x => x.Code == cartVM.Items[i].FulfillmentLocationCode);
+                        if (location != null)
+                        {
+                            ((JObject) jItems[i]).Add("fulfillmentLocationName", location.Name);
+                        }
+                    }
                 }
             }
-            
+
             return View( "cart", jCart); // Mapper.Map<VMCart>(cart));
         }
 
