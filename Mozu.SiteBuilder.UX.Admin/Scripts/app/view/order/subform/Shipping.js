@@ -51,7 +51,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
             proxy: {
                 type: 'ajax',
                 api: {
-                    read: '/admin/app/shipping/carrierRates'
+                    read: '/admin/app/shipping/carrierRatesWithConfigured'
                 },
                 reader: {
                     

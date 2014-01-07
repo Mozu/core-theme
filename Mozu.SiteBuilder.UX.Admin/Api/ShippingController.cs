@@ -16,7 +16,7 @@ using Mozu.Location.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts.Clients;
 //using Mozu.ShippingAdmin.Contracts;
 using Mozu.ShippingAdmin.Contracts.Clients;
-using MSC = Mozu.ShippingAdmin.Contracts;
+using DC = Mozu.ShippingAdmin.Contracts;
 //using Mozu.SiteSettings.Shipping.Contracts.Clients;
 //using Mozu.UspsShippingAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -133,7 +133,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var carrierConfiguration = (await _carrierConfigurationWebApiClient.GetConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId)).ReadAsSync();
 
-			carrierConfiguration.CustomTableRates = Mapper.Map<List<MSC.CustomTableRate>>(settings.CustomRates);
+			carrierConfiguration.CustomTableRates = Mapper.Map<List<DC.CustomTableRate>>(settings.CustomRates);
 
             var res = await _carrierConfigurationWebApiClient.UpdateConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId, carrierConfiguration);
             if (res.HasException)
@@ -173,8 +173,42 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                return List2(ret);
             }
-
         }
+
+        /// <summary>
+        /// Gets a list of configured carrier rates. This is used to build the "available shipment methods" for orders.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGetRoute(UriTemplate = "carrierRatesWithConfigured")]
+        public async Task<Response<List<object>>> GetAllCarrierRatesWithConfiguredInfo()
+        {
+            var configurations = (await _carrierConfigurationWebApiClient.GetConfigurations(startIndex: 0, pageSize: 600)).ReadAsSync();
+            var ret = new List<object>();
+            foreach (var rp in Mozu.SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.GetAll())
+            {
+                var key = FeatureDic.Where(x => string.Equals(x.Value, rp, StringComparison.OrdinalIgnoreCase)).Select(x => x.Key).First();
+                var configuration = configurations.Items.FirstOrDefault(conf => conf.Id == key);
+                var cConfig = (await _carrierConfigurationGlobalWebApiClient.GetServiceTypes(key, "en-US")).ReadAsSync();
+
+                var cheese =
+                    from st in cConfig
+                    let isConfigured = configuration.ConfiguredServiceTypes.Any(other => other.Code == st.Code)
+                    select new {
+                        Code = st.Code,
+                        Name = st.Content != null ? st.Content.Name : st.Code,
+                        RateProvider = key,
+                        IsActive = st.IsActive,
+                        IsInternational = st.IsInternational,
+                        Sequence = st.Sequence,
+                        IsConfigured = isConfigured
+                    };
+
+                ret.AddRange(cheese);
+            }
+
+            return List2(ret);
+        }
+    
 
 		[HttpGetRoute(UriTemplate = "configuredRates")]
         public async Task<Response<List<KeyValuePair<string, string>>>> GetConfiguredRates()
