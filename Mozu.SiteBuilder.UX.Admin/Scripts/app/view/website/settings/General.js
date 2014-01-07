@@ -14,7 +14,7 @@ Ext.define('Taco.view.website.settings.General', {
         this.items = [{
                 xtype: 'checkboxfield',
                 name: 'hidden',
-                boxLabel: 'Show in website'
+                boxLabel: 'Hide in website'
             }, {
                 xtype: 'label',
                 text: 'Navigation'
