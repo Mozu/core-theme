@@ -30,7 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
             // if (!string.IsNullOrEmpty(extFilter.query))
             //     extFilter.Add(new FilterCollectionItem { comparison = "cont", field = PropertyGuy.Convert(x => x.Content.ProductName), value = extFilter.query });
 
-            IEnumerable<string> stateMents = extFilter.Where(x => x.property != "all").Select(GetFilter);
+            IEnumerable<string> stateMents = extFilter.Where(x => x.property != "all").Select(GetFilter).Where(x => !string.IsNullOrWhiteSpace(x));
             if (!extFilter.Any(x => string.Equals(x.property, "status", StringComparison.OrdinalIgnoreCase)))
             {
                 stateMents = stateMents.Concat(new[] {"Status ne \"Created\""});
@@ -55,7 +55,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                 case "channel":
                     return "channelcode eq " + filter.value;
                 case "site":
+                {
+                    if (filter.value == null || string.IsNullOrEmpty(filter.value.ToString()))
+                    {
+                        return "";
+                    }
                     return "siteid eq " + filter.value;
+                }
                 case "mintotal":
                     return "total GE " + filter.value;
                 case "maxtotal":
