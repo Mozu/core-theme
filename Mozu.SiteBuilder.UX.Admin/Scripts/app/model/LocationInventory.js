@@ -39,7 +39,14 @@ Ext.define('Taco.model.LocationInventory', {
         "defaultValue": 0,
         "type": "int",
         "useNull": true,
-        persist: false
+        persist: false,
+        "convert": function (value, record) {
+            if (record.raw) {
+                return (record.raw.stockOnHand - record.raw.stockAvailable) + record.raw.stockOnBackOrder;
+            }
+            return 0;
+
+        },
     }, {
         "name": "stockOnHand",
         "defaultValue": 0,
