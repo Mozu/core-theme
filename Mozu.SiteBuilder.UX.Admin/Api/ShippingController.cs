@@ -188,6 +188,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var key = FeatureDic.Where(x => string.Equals(x.Value, rp, StringComparison.OrdinalIgnoreCase)).Select(x => x.Key).First();
                 var configuration = configurations.Items.FirstOrDefault(conf => conf.Id == key);
+                if (configuration == null)
+                    continue;
                 var cConfig = (await _carrierConfigurationGlobalWebApiClient.GetServiceTypes(key, "en-US")).ReadAsSync();
 
                 if (key == "custom")
@@ -211,7 +213,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     var cheese =
                         from st in cConfig
-                        let isConfigured = configuration.ConfiguredServiceTypes.Any(other => other.Code == st.Code)
+                        let isConfigured = configuration.ConfiguredServiceTypes != null && configuration.ConfiguredServiceTypes.Any(other => other.Code == st.Code)
                         select new
                         {
                             Code = st.Code,
