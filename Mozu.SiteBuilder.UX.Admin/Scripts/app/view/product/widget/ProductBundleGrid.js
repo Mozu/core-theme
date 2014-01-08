@@ -67,6 +67,31 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
         this.store = this.product.getBundledProducts();
 
         this.callParent(arguments);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     },
     
     getColumnConfig: function () {
@@ -82,6 +107,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 editor: {
                     // defaults to textfield if no xtype is supplied
                     xtype: "numberfield",
+                    showBorder:true,
                     hideTrigger: true,
                     mouseWheelEnabled: false,
                     emptyText: "quantity",

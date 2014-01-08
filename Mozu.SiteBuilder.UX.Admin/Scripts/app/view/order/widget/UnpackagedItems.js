@@ -102,7 +102,8 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
     },
     
    
-    getHeaderTemplate : function() {
+    getHeaderTemplate: function () {
+        
         return {
             xtype: "component",
             tpl: [
@@ -130,7 +131,7 @@ Ext.define('Taco.view.order.widget.UnpackagedItems', {
                         '<td style="width:34%;vertical-align:top;padding:0 10px 0 10px ">',
                             '<div class="header-section">',
                                 '<div class="header-label">Shipping Method</div>',
-                                '<tpl if="values.shippingMethod">',
+                                '<tpl if="values.shippingMethodCode">',
                                     '<div>{shippingMethod}</div>',
                                 '<tpl else>',
                                     '<div>Uses default for order</div>',

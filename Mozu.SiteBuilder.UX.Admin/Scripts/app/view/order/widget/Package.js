@@ -157,6 +157,126 @@ Ext.define('Taco.view.order.widget.Package', {
 
     },
 
+
+    getShippingRatesMenu: function () {
+        var me = this,            
+            configuredRatesMenuData = [],
+            customConfiguredRatesMenuData = [],
+            rateProviders = {
+                fedex: [],
+                usps: [],
+                ups:[]
+            },            
+            store = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingMethods');
+
+
+
+        /*
+        code: "custom_FLAT_RATE_PER_ITEM_EXACT_AMOUNT"
+isActive: true
+isConfigured: false
+isInternational: false
+name: "Flat Rate Per Item"
+rateProvider: "custom"
+sequence: 1
+        */
+
+        
+        if (store) {
+            store.each(function (record) {
+
+                if (record.get("rateProvider") == 'custom') {
+                    customConfiguredRatesMenuData.push({
+                        text: record.get("name"),
+                        key: record.get("code")
+                    })
+                } else if (record.get("isConfigured")) {
+                    configuredRatesMenuData.push({
+                        text: record.get("name"),
+                        key: record.get("code")
+                    })
+                } else {
+                    var rateProvider = record.get("rateProvider");                    
+                    rateProviders[rateProvider].push({
+                        text: record.get("name"),
+                        key: record.get("code")
+                    })
+                }
+            });
+        }
+
+
+        
+            
+            return Ext.Array.union(                
+                configuredRatesMenuData,
+                customConfiguredRatesMenuData,
+                {
+                    xtype: "menuseparator",                    
+                    disabled:true
+                }, [
+                    {
+                        xtype: 'menuitem',
+                        menu: {
+                            plain: true,
+                            showSeparator:false,                            
+                            listeners: {
+                                click: {
+                                    fn: me.changeShippingMethod,
+                                    scope: me,
+                                    delegate: "x-menu-item-link"
+                                }
+                            },
+                            items: rateProviders["fedex"]
+                        },
+                        text: "FedEx"
+                    }
+                ], [
+                    {
+                        xtype: 'menuitem',                        
+                        menu: {
+                            plain: true,
+                            showSeparator: false,
+                            listeners: {
+                                click: {
+                                    fn: me.changeShippingMethod,
+                                    scope: me,
+                                    delegate: "x-menu-item-link"
+                                }
+                            },
+                            items: rateProviders["ups"]
+                        },
+                        text: "UPS"
+                    }
+                ], [
+                    {
+                        xtype: 'menuitem',                        
+                        menu: {
+                            plain: true,
+                            showSeparator:false,                            
+                            listeners: {
+                                click: {
+                                    fn: me.changeShippingMethod,
+                                    scope: me,
+                                    delegate: "x-menu-item-link"
+                                }
+                            },
+                            items: rateProviders["usps"]
+                        },
+                        text: "USPS"
+                    }
+                ]
+            )
+
+
+
+        
+
+    },
+
+
+
+
     getHeaderTemplate: function () {
         var me = this;
 
@@ -165,6 +285,8 @@ Ext.define('Taco.view.order.widget.Package', {
         toolbarConfig.cls = "package-header-title-row";
 
         var titleRow = toolbarConfig;
+
+        
 
         titleRow.items.push(
             {
@@ -203,25 +325,27 @@ Ext.define('Taco.view.order.widget.Package', {
                 ui: 'action',
                 margin: "0 2px 0 0",
                 scale: 'medium',
-                menuAlign: 'tr-br',
+                //menuAlign: 'tr-br',
                 text: "Shipping Method",
                 listeners: {
                     menushow: {
                         fn: function (button, menu, eOpts) {
-                            var menuData = me.grid.getShippingRatesMenu();
+                            var menuData = me.getShippingRatesMenu();
                             me.shippingMethodMenu.menu.removeAll();                            
-                            me.shippingMethodMenu.menu.add(menuData);
+                            me.shippingMethodMenu.menu.add(menuData);                            
                         },
                         scope: me
                     }
                 },
                 menu: {
                     plain: true,
+                    showSeparator:false,
+                    //maxHeight:600,
                     listeners: {
                         click: {
                             fn: me.changeShippingMethod,
                             scope: me,
-                            delegate: "x-menu-item-link"   
+                            delegate: "x-menu-item-link"
                         }
                     },
                     items: [{
@@ -234,8 +358,13 @@ Ext.define('Taco.view.order.widget.Package', {
 
         }
 
-               
-        if (me.enableShippingLabelButton && me.grid.packageData.shippingMethodCode) {
+        
+        // need to lookup the shipping method to see if its a custom rate. if so, dont show the shipping label button.
+        var shippingMethodStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingMethods');
+        var shippingMethodRecord = shippingMethodStore.getById(me.packageData.shippingMethodCode);
+
+
+        if (me.enableShippingLabelButton && shippingMethodRecord && shippingMethodRecord.get("rateProvider")!="custom") {
 
             me.shippingLabelButton = Ext.create("Ext.button.Button", {
                 text: 'View Shipping Label',
@@ -344,12 +473,12 @@ Ext.define('Taco.view.order.widget.Package', {
                                 '<td style="width:34%;vertical-align:top;padding:0 10px 0 10px ">',
                 
                                     '<div class="header-section">',
-                                        '<span class="header-label">Shipping Method</span>',                                       
+                                        '<span class="header-label">Shipping Method: </span>',
 
                                         '<tpl if="values.shippingMethod">',
-                                            '<div>{shippingMethod}</div>',
+                                            '<span>{shippingMethod}</span>',
                                         '<tpl else>',
-                                            '<div>Uses default for order</div>',
+                                            '<span>Uses default for order</span>',
                                         '</tpl>',
                                     '</div>',
                 

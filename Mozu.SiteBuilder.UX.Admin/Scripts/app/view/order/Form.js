@@ -155,7 +155,7 @@ Ext.define('Taco.view.order.Form', {
                                 me.setLoading(false, this.body);
                                 
                                 var res = Ext.JSON.decode(msg.responseText);
-                               //S debugger
+                               
                                 Taco.app.fireEvent('setmessage', res.items[0].message, 'error', me);
                             }
                         });

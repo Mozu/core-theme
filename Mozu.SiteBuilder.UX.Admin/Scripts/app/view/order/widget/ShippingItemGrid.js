@@ -334,6 +334,8 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         }
         
         // disabling this ui
+        /*
+
         if (me.enableShippingMethodMenu && false) {
             // note: i had to use the ext split button. The Taco.core.ux.action.SplitButton doesn't responsd to .enabled(), .disable() and needs to be refactored to support the standard extjs button behaviors fully.
             //me.moveMenuAction = Ext.create("Taco.core.ux.action.SplitButton", {
@@ -355,9 +357,15 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
                 },
                 menu: {
                     plain: true,
+                    height:200,
                     listeners: {
                         click: {
-                            fn:me.changeShippingMethod,
+                            fn: function () {
+                                
+
+                                me.changeShippingMethod(arguments)
+
+                            },
                             scope: me,
                             delegate: "x-menu-item-link"   
                         }
@@ -372,7 +380,10 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             tb.items.push(me.shippingMethodMenu);
 
         }
+        */
         
+
+        /*
         if (me.enableShippingLabelButton &&  me.packageData.shippingMethodCode && false) {
             
             me.shippingLabelButton = Ext.create("Ext.button.Button", {
@@ -387,7 +398,10 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             tb.items.push(me.shippingLabelButton);
 
         }
+        */
         
+
+        /*
         if (me.enabledPackingSlipButton  &&  me.packageData.shippingMethodCode && false) {
             me.packingSlipButton = Ext.create("Ext.button.Button", {
                 text: 'View Packing Slip',
@@ -400,7 +414,9 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
             me.packingSlipButton.setDisabled( !me.packageData.shippingMethodCode);
             tb.items.push(me.packingSlipButton);
         }
+        */
         
+        /*
         if (me.enabledRemoveButton && false) {
             me.removeButton = Ext.create("Ext.button.Button", {
                 text: 'Remove',
@@ -413,7 +429,10 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
 
             tb.items.push(me.removeButton);
         }
+        */
         
+
+        /*
         if (me.enabledMarkAsShippedButton && false) {
             me.markAsShippedButton = Ext.create("Ext.button.Button", {
                 text: 'Mark As Shipped',
@@ -426,6 +445,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
 
             tb.items.push(me.markAsShippedButton);
         }
+        */
         
 
         return tb;
@@ -580,13 +600,7 @@ productCode: "uuu"
 productName: "t-shirt"
 quantity: 2
 weight: 2
-            */
-
-            //{
-            //    "name": "orderItemId",
-            //    "type": "string",
-            //    "useNull": true
-            //},
+            */            
             
             {
                 "name": "productCode",
@@ -609,7 +623,7 @@ weight: 2
                 "name": "weight",
                 "type": "float",
                 "useNull": true,
-                "defaultValue": 1
+                "defaultValue": 0
             },
             {
                 "name": "fulfillmentMethod",
@@ -673,22 +687,7 @@ weight: 2
         ];
     },
     
-    getShippingRatesMenu : function () {
-        var allRatesMenuData = [],
-            store = Taco.properties.shippingRates;
-        
-        if (store) {
-            store.each(function (record) {
-                allRatesMenuData.push({
-                    text: record.get("Value"),
-                    key: record.get("Key")
-                });
-            });
-        }
-        return allRatesMenuData;
-    },
     
-
 
     executeMoveItems: function (config) {
         var me = this,
