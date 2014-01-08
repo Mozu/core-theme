@@ -1,15 +1,18 @@
-﻿/**
- * Extends the BackboneJS Model object to create a Backbone.MozuModel with extra
- * features for model nesting, error handling, validation, and connection to the
- * JavaScript SDK.
- */
-define([
+﻿define([
     "modules/jquery-mozu",
     "shim!vendor/underscore>_",
     "modules/api",
     "shim!vendor/backbone[shim!vendor/underscore>_=_,jquery=jQuery]>Backbone",
     "modules/models-messages",
     "modules/backbone-mozu-validation"], function ($, _, api, Backbone, MessageModels) {
+
+
+        /**
+         * The Backbone library.
+         * @external Backbone
+         * @see {@link http://backbonejs.org}
+         */
+
 
         var Model = Backbone.Model,
            Collection = Backbone.Collection;
@@ -35,7 +38,17 @@ define([
             'delete': 'del'
         };
 
-        Backbone.MozuModel = Backbone.Model.extend(_.extend({}, Backbone.Validation.mixin, {
+        var MozuModel = Backbone.MozuModel = Backbone.Model.extend(_.extend({}, Backbone.Validation.mixin,
+
+            /** @lends MozuModel.prototype */
+        {
+            /**
+             * Extends the BackboneJS Model object to create a Backbone.MozuModel with extra features for model nesting, error handling, validation, and connection to the JavaScript SDK.
+             * @class MozuModel
+             * @augments Backbone.Model
+             */
+
+            /** constructs */
             constructor: function (conf) {
                 this.helpers = (this.helpers || []).concat(['isLoading', 'isValid']);
                 Backbone.Model.apply(this, arguments);
@@ -46,6 +59,10 @@ define([
                     this.passErrors();
                 }
             },
+            /**
+             * Find the nearest parent model that handles error messages and pass all subsequent errors thrown on this model to that model. Run on contruct.
+             * @private
+             */
             passErrors: function() {
                 var self = this;
                 _.defer(function() {
@@ -60,6 +77,14 @@ define([
                     }
                 }, 300);
             },
+            /**
+             * Get the value of an attribute. Unlike the `get()` method on he plain `Backbone.Model`, this method accepts a dot-separated path to a property on a child model (child models are defined on {@link Backbone.MozuModel#relations)).
+             * @example
+             * // returns the value of Product.ProductContent.ProductName
+             * productModel.get('content.productName');
+             * @param {string} propName The name, or dot-separated path, of the property to return.
+             * @returns {Object} Returns the value of the named attribute, and `undefined` if it was never set.
+             */
             get: function (propName) {
                 var prop = propName.split('.'), ret = this, level;
                 while (ret && (level = prop.shift())) ret = Backbone.Model.prototype.get.call(ret, level);
@@ -69,6 +94,7 @@ define([
                 }
                 return ret;
             },
+            /** @private */
             setRelation: function (attr, val, options) {
                 var relation = this.attributes[attr],
                     id = this.idAttribute || "id",
@@ -108,7 +134,7 @@ define([
 
                                     // Remove the model from the incoming list because all remaining models
                                     // will be added to the relation
-                                    modelsToAdd.splice(i, 1);
+                                    modelsToAdd = _.without(modelsToAdd, rModel);
                                 } else {
                                     modelsToRemove.push(model);
                                 }
@@ -158,7 +184,14 @@ define([
 
                 return val;
             },
-            // Preprocess attributes to set data types before they're stored in the attrs hash.
+            /**
+             * Set the value of an attribute or a hash of attributes. Unlike the `set()` method on he plain `Backbone.Model`, this method accepts a dot-separated path to a property on a child model (child models are defined on {@link Backbone.MozuModel#relations)).
+             * @example
+             * // sets the value of Customer.EditingContact.FirstName
+             * customerModel.set('editingContact.firstName');
+             * @param {string} propName The name, or dot-separated path, of the property to return.
+             * @returns {Object} Returns the value of the named attribute, and `undefined` if it was never set.
+             */
             set: function (key, val, options) {
                 var attr, attrs, unset, changes, silent, changing, prev, current;
                 if (key == null) return this;
@@ -237,7 +270,7 @@ define([
             },
             initApiModel: function (conf) {
                 var me = this;
-                this.apiModel = api.createSync(this.mozuType, conf);
+                this.apiModel = api.createSync(this.mozuType, _.extend({}, _.result(this, 'defaults') || {}, conf));
                 if (!this.apiModel || !this.apiModel.on) return;
                 this.apiModel.on('action', function () {
                     me.isLoading(true);
