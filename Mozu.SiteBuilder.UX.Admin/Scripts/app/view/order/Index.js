@@ -18,10 +18,10 @@ Ext.define('Taco.view.order.Index', {
     store: { type: 'Taco.store.Orders' },
     editorName: 'Taco.view.order.Edit',
     
-    contextConfig: {
-        supportedLevels: ['t','s'],
-        requiresContextOfType: ['t', 'm', 'c', 's']
-    },
+    //contextConfig: {
+    //    supportedLevels: ['t','s'],
+    //    requiresContextOfType: ['t', 'm', 'c', 's']
+    //},
 
 
 

@@ -12,105 +12,132 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
         width: 480,
         xtype: 'textfield'
     },
-    items: [{
-            name: 'keyword',
-            fieldLabel: 'Keyword Search'
-        }, {
-            xtype: 'combobox',
-            name: 'orderStatus',
-            fieldLabel: 'Order Status',
-            valueField: 'id',
-            displayField: 'name',
-            queryMode: 'local',
-            valueNotFoundText: 'not found',
-            editable: true,
-            forceSelection: true,
-            store: Ext.create('Ext.data.Store', {
-                fields: ['id', "name"],
-                data: [
-                    {
-                        name: "Submitted ",
-                        id: "Submitted "
-                    }, {
-                        name: "Processing ",
-                        id: "Processing "
-                    }, {
-                        name: 'Accepted',
-                        id: 'Accepted'
-                    }, {
-                        name: "Completed",
-                        id: "Completed "
-                    }, {
-                        name: "Cancelled ",
-                        id: "Cancelled "
-                    }
-                ]
-            })
-        }, {
-            xtype: 'combobox',
-            name: 'channel',
-            fieldLabel: 'Channel',
-            valueField: 'code',
-            displayField: 'name',
-            queryMode: 'local',
-            valueNotFoundText: 'not found',
-            editable: true,
-            forceSelection: true,
-            store: { type: 'Taco.store.ChannelPicker' }
-        },
-        {
-            xtype: 'fieldcontainer',
-            fieldLabel: 'Total Price Range',
-            layout: {
-                type: 'hbox',
-                align: 'middle'
+    initComponent: function () {
+        var me = this,
+            data = [{id:null,name:'All'}],
+            sites;
+        
+        Ext.each(Taco.app.context.masterCatalogs, function (mc) {
+            Ext.Array.push(data,mc.sites);
+        });
+        
+        sites = Ext.create('Ext.data.Store', {
+            fields: ['id', 'name'],
+            data:data
+        }),
+
+        this.items = [{
+                name: 'keyword',
+                fieldLabel: 'Keyword Search'
             },
-            items: [{
-                    xtype: 'numberfield',
-                    name: 'minTotal',
-                    hideTrigger: true,
-                    keyNavEnabled: false,
-                    mouseWheelEnabled: false,
-                    width: 200
-                }, {
-                    xtype: 'component',
-                    html: 'to',
-                    margin: '0 10'
-                }, {
-                    xtype: 'numberfield',
-                    name: 'maxTotal',
-                    hideTrigger: true,
-                    keyNavEnabled: false,
-                    mouseWheelEnabled: false,
-                    width: 200
-                }]
-        },
-        {
-            xtype: 'taco-adminuserfield',
-            name: 'modifiedBy',
-            fieldLabel: 'Modified By',               
-        },
-        {
-            xtype: 'fieldcontainer',
-            fieldLabel: 'Modfied Range',
-            layout: {
-                type: 'hbox',
-                align: 'middle'
+            {
+                xtype: 'combobox',
+                name: 'site',
+                allowBlank: true,
+                editable: false,
+                store: sites,
+                valueField: 'id',
+                displayField: 'name',
+                fieldLabel: 'Site'
             },
-            items: [{
-                    xtype: 'datefield',
-                    name: 'modifiedFrom',
-                    //                    fieldLabel: 'Modified From',
-                    width: 200
-                }, {
-                    xtype: 'component',
-                    html: 'to',
-                    margin: '0 10'
-                }, {
-                    xtype: 'datefield',
-                    name: 'modifiedTo',
-                    //fieldLabel: 'Modified To',
-                    width: 200
-                }]
-        }]
+            {
+                xtype: 'combobox',
+                name: 'orderStatus',
+                fieldLabel: 'Order Status',
+                valueField: 'id',
+                displayField: 'name',
+                queryMode: 'local',
+                valueNotFoundText: 'not found',
+                editable: true,
+                forceSelection: true,
+                store: Ext.create('Ext.data.Store', {
+                    fields: ['id', "name"],
+                    data: [
+                        {
+                            name: "Submitted ",
+                            id: "Submitted "
+                        }, {
+                            name: "Processing ",
+                            id: "Processing "
+                        }, {
+                            name: 'Accepted',
+                            id: 'Accepted'
+                        }, {
+                            name: "Completed",
+                            id: "Completed "
+                        }, {
+                            name: "Cancelled ",
+                            id: "Cancelled "
+                        }
+                    ]
+                })
+            }, {
+                xtype: 'combobox',
+                name: 'channel',
+                fieldLabel: 'Channel',
+                valueField: 'code',
+                displayField: 'name',
+                queryMode: 'local',
+                valueNotFoundText: 'not found',
+                editable: true,
+                forceSelection: true,
+                store: { type: 'Taco.store.ChannelPicker' }
+            },
+            {
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Total Price Range',
+                layout: {
+                    type: 'hbox',
+                    align: 'middle'
+                },
+                items: [{
+                        xtype: 'numberfield',
+                        name: 'minTotal',
+                        hideTrigger: true,
+                        keyNavEnabled: false,
+                        mouseWheelEnabled: false,
+                        width: 200
+                    }, {
+                        xtype: 'component',
+                        html: 'to',
+                        margin: '0 10'
+                    }, {
+                        xtype: 'numberfield',
+                        name: 'maxTotal',
+                        hideTrigger: true,
+                        keyNavEnabled: false,
+                        mouseWheelEnabled: false,
+                        width: 200
+                    }]
+            },
+            {
+                xtype: 'taco-adminuserfield',
+                name: 'modifiedBy',
+                fieldLabel: 'Modified By',
+            },
+            {
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Modfied Range',
+                layout: {
+                    type: 'hbox',
+                    align: 'middle'
+                },
+                items: [{
+                        xtype: 'datefield',
+                        name: 'modifiedFrom',
+                        //                    fieldLabel: 'Modified From',
+                        width: 200
+                    }, {
+                        xtype: 'component',
+                        html: 'to',
+                        margin: '0 10'
+                    }, {
+                        xtype: 'datefield',
+                        name: 'modifiedTo',
+                        //fieldLabel: 'Modified To',
+                        width: 200
+                    }]
+            }];
+        this.callParent(arguments);
+    }
 });
