@@ -39,7 +39,7 @@ Ext.define('Taco.view.dashboard.Index', {
         });
        
         me.header = {
-            title: 'Dashboard'
+            hidden: true
         };
         
         Ext.apply(me.body, {
