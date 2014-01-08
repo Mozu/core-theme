@@ -244,11 +244,7 @@ Ext.define('Taco.view.product.subform.General', {
                 name: 'productShortDescription',
                 emptyText: 'Words',
                 listeners: {
-                    editmodechange: htmlEditorEditModeChangeHandler,
-                    change: function (cmp, newValue) {
-                        cmp.productForm = cmp.productForm || cmp.up('productform');
-                        cmp.productForm.fireEvent('productshortdescriptionchange', me.productInCatalogInfo || me.product, newValue);
-                    }
+                    editmodechange: htmlEditorEditModeChangeHandler
                 },
                 width: '100%'
                 //fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
@@ -260,7 +256,11 @@ Ext.define('Taco.view.product.subform.General', {
                 emptyText: 'Words, words, and more words.  Also, with lists.',
                 //fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
                 listeners: {
-                    editmodechange: htmlEditorEditModeChangeHandler
+                    editmodechange: htmlEditorEditModeChangeHandler,
+                    change: function (cmp, newValue) {
+                        cmp.productForm = cmp.productForm || cmp.up('productform');
+                        cmp.productForm.fireEvent('productfulldescriptionchange', me.productInCatalogInfo || me.product, newValue);
+                    }
                 },
                 width: '100%'
             },

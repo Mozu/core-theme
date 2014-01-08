@@ -43,17 +43,19 @@ Ext.define('Taco.view.product.subform.SEO', {
             this.metaTitle = this.getForm().findField('metaTitle');
             this.metaDescription = this.getForm().findField('metaDescription');
             this.mon(this.productForm, 'productnamechange', this.onNameChange, this);
-            this.mon(this.productForm, 'productshortdescriptionchange', this.onProductShortDescriptionChange, this);
+            this.mon(this.productForm, 'productfulldescriptionchange', this.onProductLongDescriptionChange, this);
         });
 
 
     },
-    onProductShortDescriptionChange: function (record, value) {
+    onProductLongDescriptionChange: function (record, value) {
         if ((this.productInCatalogInfo || this.product) != record) {
             return;
         }
+        var shadow = document.createElement('span');
+        shadow.innerHTML = value;
         
-        this.metaDescription.setValue(Ext.util.Format.stripTags(value));
+        this.metaDescription.setValue((shadow.innerText || '').trim());
     },
     onNameChange: function (record, name) {
         if ((this.productInCatalogInfo || this.product) != record) {
