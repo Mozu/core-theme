@@ -140,12 +140,12 @@ Ext.define('Taco.view.order.subform.Return', {
                     me.addProcessReturnPanel(record);
                 },
                 failure: function (batch) {
+                    me.returnsStore.remove(record);
+
                     var msg = batch.exceptions && batch.exceptions.length && batch.exceptions[0].error && batch.exceptions[0].error.remoteException ? batch.exceptions[0].error.remoteException.data.message : 'Error Creating the Return';
                     Taco.app.fireEvent('setmessage',  msg ,'error');
                  }
-            });
-            
-            
+            }, this);
         });
 
     },
