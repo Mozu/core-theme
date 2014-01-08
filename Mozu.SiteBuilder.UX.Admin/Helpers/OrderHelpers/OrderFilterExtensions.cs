@@ -54,6 +54,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
             {
                 case "channel":
                     return "channelcode eq " + filter.value;
+                case "site":
+                    return "siteid eq " + filter.value;
                 case "mintotal":
                     return "total GE " + filter.value;
                 case "maxtotal":

@@ -3,7 +3,7 @@
     Layout = "";
     var assFile = typeof(Mozu.SiteBuilder.UX.Admin.Api.AccountController ).Assembly.Location;
     var ver = System.Diagnostics.FileVersionInfo.GetVersionInfo(assFile);
-    var cdn = @ConfigurationManager.AppSettings["admin.cdn"];
+    var cdn = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("disableCDN") == "true" ? "" : ("//"+ Mozu.Core.Settings.MozuConfigurationManager.AppSettings("CdnHost") +"/common");
 }
 <!DOCTYPE html>
 <html>
