@@ -3,6 +3,7 @@
  */
 Ext.define('Taco.model.Discount', {
     extend: 'Taco.core.data.Model',
+    requiredStores: ['Taco.store.ShippingMethods'],
     behaviors: {
         read: 24,
         create: 25,

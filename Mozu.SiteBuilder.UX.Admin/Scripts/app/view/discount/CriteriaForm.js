@@ -12,7 +12,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
     title: 'Target Criteria',
 
     initComponent: function () {
-        
+        var me  = this;
 
         this.includeAllProductsInput = Ext.widget({
             xtype: 'checkbox',
@@ -202,8 +202,11 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             ]
         });
 
-        var shippingStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ConfiguredShippingRates');
-
+        
+        var shippingStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingMethods');        
+        shippingStore.filter(function (record) {            
+            return (record.get('isConfigured') ||  record.get("rateProvider")=="custom");
+        });
 
         this.shippingList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'shippingMethods',
@@ -220,9 +223,10 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             disableKeyFilter: true,
             typeAhead: true,
             value: this.record.get('shippingMethods'),
-            displayField: 'Value',
+            //displayField: 'Value',
+            displayField: 'name',
             fieldLabel: 'Select Shipping Methods',
-            valueField: 'Key'
+            valueField: 'code'
         });
 
         this.items = [{
