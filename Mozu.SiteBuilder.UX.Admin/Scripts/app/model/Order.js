@@ -2,7 +2,7 @@
  * @class Taco.model.Order
  */
 Ext.define('Taco.model.Order', {
-    requires: ['Taco.model.Return', 'Taco.model.ShippingMethod', 'Taco.store.ShippingMethod'],
+    requires: ['Taco.model.Return', 'Taco.model.ShippingMethod', 'Taco.store.ShippingMethods'],
     
     extend: 'Taco.core.data.Model',
     /**********************************************************    
