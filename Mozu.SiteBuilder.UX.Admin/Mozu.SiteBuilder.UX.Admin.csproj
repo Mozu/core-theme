@@ -627,6 +627,7 @@
     <Content Include="Scripts\app\controller\SiteSelection.js" />
     <Content Include="Scripts\app\controller\Tbd.js" />
     <Content Include="Scripts\app\core\context\Catalog.js" />
+    <Content Include="Scripts\app\core\DataCache.js" />
     <Content Include="Scripts\app\core\util\Common.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
     <Content Include="Scripts\app\core\ux\browser\SearchList.js" />
@@ -687,6 +688,7 @@
     <Content Include="Scripts\app\store\Capability.js" />
     <Content Include="Scripts\app\store\ChannelPicker.js" />
     <Content Include="Scripts\app\store\Channels.js" />
+    <Content Include="Scripts\app\store\ShippingMethods.js" />
     <Content Include="Scripts\app\store\LocationPickup.js" />
     <Content Include="Scripts\app\store\InventoriedProducts.js" />
     <Content Include="Scripts\app\store\ProductBundlePicker.js" />

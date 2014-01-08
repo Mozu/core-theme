@@ -5,7 +5,7 @@
 // todos extend base class for the subform
 Ext.define('Taco.view.order.subform.Shipping', {
     extend: 'Taco.view.order.subform.Subform',
-    requires: [
+    requires: [        
         'Taco.view.order.widget.ShippingItemGrid',
         'Taco.view.order.widget.Package',
         'Taco.view.order.widget.UnpackagedItems',
@@ -36,32 +36,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
         me.packagingTypeStore = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.PackagingTypes'
         });
-        
-        
-
-
-
-
-        // load the shipping rates data for use in the shipping packages
-        Ext.namespace('Taco.properties');
-        Taco.properties.shippingRates = Taco.core.data.StoreManager.getOrCreate({
-            model: 'Taco.model.KeyValuePair',
-            autoLoad: true,
-            pageSize: 500,
-            proxy: {
-                type: 'ajax',
-                api: {
-                    read: '/admin/app/shipping/carrierRatesWithConfigured'
-                },
-                reader: {
-                    
-                    type: 'json',
-                    root: 'items',
-                    successProperty: 'success',
-                    messageProperty: 'message'
-                }
-            }
-        });
+                
 
         // after the record is reloaded we will need to refresh the ui
         this.record.on("aftercommit", function () {
@@ -91,6 +66,9 @@ Ext.define('Taco.view.order.subform.Shipping', {
     initUnpackagedItems: function () {
         var me = this,
             billingContact = this.record.get("billingContact");
+
+
+        
 
         me.unpackagedItems = Ext.create('Taco.view.order.widget.UnpackagedItems', {
 
@@ -244,6 +222,8 @@ Ext.define('Taco.view.order.subform.Shipping', {
                     itemTotal: dataItem.totalQuantity,
                     weight: dataItem.weight,
                     shippingMethod: dataItem.shippingMethodName || dataItem.shippingMethodCode,
+                    shippingMethodName: dataItem.shippingMethodName,
+                    shippingMethodCode: dataItem.shippingMethodCode,
                     fulfillmentLocationCode: dataItem.fulfillmentLocationCode,
                     trackingNumber: dataItem.trackingNumber,
                     shipDate: dataItem.shipDate,

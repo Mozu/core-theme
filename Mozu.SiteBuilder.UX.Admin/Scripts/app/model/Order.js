@@ -17,7 +17,8 @@ Ext.define('Taco.model.Order', {
         destroy: 76
     },
     requiredStores: [
-        'Taco.store.Channels'
+        'Taco.store.ShippingMethods',
+        'Taco.store.Channels'        
     ],
     fields: [
         {
@@ -470,6 +471,20 @@ Ext.define('Taco.model.Order', {
                 return retVal;
             }
         },
+
+        {
+            "name": "shippingMethodName",
+            "type": "string",
+            persist: false
+        },
+        {
+            "name": "shippingMethodCode",
+            "type": "string",
+            persist: false
+        }
+
+        
+
     ],
     
 
