@@ -406,7 +406,9 @@ define([
                 });
 
             }
-            return Backbone.Model.extend.call(this, conf, statics);
+            var ret = Backbone.Model.extend.call(this, conf, statics);
+            if (conf && conf.helpers && conf.helpers.length > 0 && this.prototype.helpers && this.prototype.helpers.length > 0) ret.prototype.helpers = _.union(this.prototype.helpers, conf.helpers);
+            return ret;
         };
 
         Backbone.Collection.prototype.resetRelations = function (options) {

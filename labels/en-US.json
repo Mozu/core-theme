@@ -134,11 +134,13 @@
   "taxAtCheckout"        : "Tax & Shipping Calculated at Checkout", 
   "orderTotal"           : "Order Total", 
   "proceedToCheckout"    : "Proceed to Checkout",
+  "storePickupAt"        : "In-Store Pickup at <strong>{0}</strong>",
   
   /* Checkout labels */
   "checkout"             : "Checkout",
   "orderSummary"         : "Order Summary",
   "shippingInformation"  : "Shipping Information",
+  "noFulfillmentInfoRequired" : "Because all items in this order will be picked up in-store, no shipping information is required.",
   "selectValidAddress"   : "Select an address from these alternatives:",
   "suggestionNum"        : "Suggestion #{0}",
   "shippingMethod"       : "Shipping Method",
@@ -171,6 +173,8 @@
   "orderNumber"          : "Order Number",
   "orderNo"              : "Order No.",
   "orderWelcome"         : "Hello",
+  "storePickupFor"       : "Store Pickup for <strong>{0}</strong>",
+  "storeName"            : "Store Name",
   "orderConfirmationBlob1": "Thank you for shopping with us. We'd like to let you know that we have received your order, and are preparing it for shipment.",
   "orderShipped"         : "Your Order Has Shipped",
   "orderShipmentComplete": "Thank you for shopping with us. We thought you'd like to know that we shipped your items, and that this completes your order. Your order is on its way, and can no longer be changed. If you need to return an item from this shipment or manage other orders, please visit My Account.",
@@ -190,7 +194,7 @@
   "shippedTo"            : "Shipped to",
   "giftMessage"          : "Gift Message",
   "customerAlreadyExists": "A customer is already registered as {0}. <a href=\"/user/login?returnUrl={1}\">Login as this customer</a>",
-  "noPaymentRequired"    : "With store credit, your total is {0}, so no payment method is required.",
+  "noPaymentRequired"    : "Your total is {0}, so no payment method is required.",
 
   /* Error page labels */
   "errorApology"         : "Sorry, an error occurred.",

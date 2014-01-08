@@ -36,6 +36,11 @@
         <span class="mz-carttable-item-code">
           {{ labels.productCode }}: <em>{{ item.product.productCode }}</em>
         </span>
+        {% if item.fulfillmentMethod == 'Pickup' %}
+        <span class="mz-carttable-item-pickuplocation">
+            {{ labels.storePickupAt|string_format(item.fulfillmentLocationName)|safe }}
+        </span>
+        {% endif %}
       </div>
     </td>
     <td class="mz-carttable-item-price">

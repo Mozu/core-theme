@@ -68,6 +68,7 @@
         hierarchyDepth: 2,
         setQuery: function(query) {
             this.query = query;
+            this.lastRequest = this.buildFacetRequest();
         },
         setHierarchy: function(hierarchyField, hierarchyValue) {
             this.hierarchyField = hierarchyField;
@@ -79,6 +80,7 @@
                 facetHierDepth: hierarchyField + ':' + this.hierarchyDepth
             };
             if (this.query) this.baseRequestParams.query = this.query;
+            this.lastRequest = this.buildFacetRequest();
         },
         hasValueFacets: function() {
             return !!this.get('facets').findWhere({ facetType: 'Value' });

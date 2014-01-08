@@ -11,7 +11,7 @@
     function ($, _, Hypr, Backbone, api, CustomerModels, AddressModels, PaymentMethods) {
 
         var CheckoutStep = Backbone.MozuModel.extend({
-            helpers: ['stepStatus'],
+            helpers: ['stepStatus', 'requiresFulfillmentInfo'],
             // instead of overriding constructor, we are creating
             // a method that only the CheckoutStepView knows to
             // run, so it can run late enough for the parent
@@ -49,6 +49,9 @@
                 }
                 return this._stepStatus;
             },
+            requiresFulfillmentInfo: function() {
+                return this.getOrder().get('requiresFulfillmentInfo');
+            },
             edit: function () {
                 this.stepStatus("incomplete")
             },
@@ -77,6 +80,10 @@
                         model.set(model.getOrder().get('customer').get('contacts').get(newContactId).toJSON());
                     }
                 });
+            },
+            calculateStepStatus: function() {
+                if (!this.requiresFulfillmentInfo()) return this.stepStatus("complete");
+                return CheckoutStep.prototype.calculateStepStatus.apply(this);
             },
             getOrder: function () {
                 // since this is one step further away from the order, it has to be accessed differently
@@ -190,6 +197,7 @@
             },
             calculateStepStatus: function () {
                 var st = "new", available;
+                if (!this.requiresFulfillmentInfo()) return this.stepStatus("complete");
                 if (this.get("fulfillmentContact").stepStatus() !== "complete") {
                     return this.stepStatus("new");
                 }
@@ -386,7 +394,7 @@
                 me.get('card').selected = newPaymentType == "CreditCard";
             },
             calculateStepStatus: function() {
-                return this.stepStatus(!!this.parent.get('fulfillmentInfo').get('shippingMethodCode') ? (
+                return this.stepStatus(this.parent.get('fulfillmentInfo').stepStatus() === "complete" ? (
                     (this.activePayments().length > 0 && (this.parent.get('amountRemainingForPayment') == 0)) ? 'complete' : 'invalid')
                     : 'new');
             },
@@ -471,8 +479,18 @@
             initialize: function () {
                 var self = this;
                 _.defer(function () {
-                    var latestPayment = self.apiModel.getCurrentPayment();
-                    if (latestPayment && latestPayment.paymentType === "PaypalExpress" && window.location.href.indexOf('PaypalExpress=complete') !== -1) self.isReady(true);
+                    var latestPayment = self.apiModel.getCurrentPayment(),
+                        fulfillmentInfo = self.get('fulfillmentInfo'),
+                        fulfillmentContact = fulfillmentInfo.get('fulfillmentContact'),
+                        billingInfo = self.get('billingInfo'),
+                        isReady = ((fulfillmentInfo.stepStatus() + fulfillmentContact.stepStatus() + billingInfo.stepStatus()) === "completecompletecomplete") || 
+                                  (latestPayment && latestPayment.paymentType === "PaypalExpress" && window.location.href.indexOf('PaypalExpress=complete') !== -1);
+                    self.isReady(isReady);
+
+                    if (!self.get("requiresFulfillmentInfo")) {
+                        self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function (k) { return k.indexOf("fulfillment") === -1 }));
+                    }
+
                 });
                 _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'apiCheckout');
             },
@@ -513,7 +531,9 @@
                         order.trigger('userexists', order.get('emailAddress'));
                     }
                 });
+                this.trigger('error');
                 if (!errorHandled) order.messages.reset(error.items);
+                order.isSubmitting = false;
                 throw error;
             },
             addNewCustomer: function() {
@@ -543,9 +563,16 @@
                 var order = this,
                     process = [];
 
+                if (this.isSubmitting) return;
+
+                this.isSubmitting = true;
+
                 this.syncBillingAndCustomerEmail();
 
-                if (this.validate()) return false;
+                if (this.validate()) {
+                    this.isSubmitting = false;
+                    return false;
+                }
                 this.isLoading(true);
 
                 if (this.get("createAccount") && !this.customerCreated) {

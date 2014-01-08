@@ -24,6 +24,7 @@
             {% endif %}
             {% endfor %}
         </div>
+        {% if model.hasDirectShip %}
         <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.shippingInformation }}</h4>
             <dl class="mz-propertylist">
@@ -33,6 +34,19 @@
                 <dd>{{ model.fulfillmentInfo.shippingMethodName }}</dd>
             </dl>
         </div>
+        {% endif %}
+        {% for item in model.items %}
+        {% if item.fulfillmentMethod == "Pickup" %}
+        <div class="mz-l-stack-section">
+            <h4 class="mz-l-stack-sectiontitle">{{ labels.storePickupFor|string_format(item.product.name)|safe }}</h4>
+            <dl class="mz-propertylist">
+                <dt>{{ labels.storeName }}</dt>
+                <dd>{{ item.fulfillmentLocationName }}</dd>
+            </dl>
+        </div>
+        {% endif %}
+        {% endfor %}
+
 
         <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.orderSummary }} </h4>
