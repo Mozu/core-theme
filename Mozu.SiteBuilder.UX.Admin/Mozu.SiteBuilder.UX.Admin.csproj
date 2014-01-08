@@ -717,6 +717,7 @@
     <Content Include="Scripts\app\view\fileManager\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\inventory\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\order\modal\ApplyStoreCredit.js" />
     <Content Include="Scripts\app\view\order\modal\FulfillmentMethod.js" />
     <Content Include="Scripts\app\view\order\subform\InstorePickup.js" />
     <Content Include="Scripts\app\view\order\widget\PackagePickup.js" />

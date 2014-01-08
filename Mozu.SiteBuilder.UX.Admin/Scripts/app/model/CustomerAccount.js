@@ -112,9 +112,7 @@ Ext.define('Taco.model.CustomerAccount', {
         if (this.storeCreditsStore) {
             return this.storeCreditsStore;
         }
-        this.storeCreditsStore = Ext.create('Taco.store.StoreCredits', { autoLoad: false });
-        this.storeCreditsStore.getProxy().extraParams = this.storeCreditsStore.getProxy().extraParams || {};
-        this.storeCreditsStore.getProxy().extraParams.customerId = this.getId();
+        this.storeCreditsStore = Taco.store.StoreCredits.createForCustomer(this.getId());
         this.storeCreditsStore.load(config);
         return this.storeCreditsStore;
 

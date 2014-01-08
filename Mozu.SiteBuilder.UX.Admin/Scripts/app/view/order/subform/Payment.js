@@ -7,9 +7,11 @@ Ext.define('Taco.view.order.subform.Payment', {
         'Taco.view.order.modal.IssueCredit',
         'Taco.view.order.modal.RequestCheck',
         'Taco.view.order.modal.CheckPayment',
+        'Taco.view.order.modal.ApplyStoreCredit',
         'Taco.view.order.widget.PaymentPanel',
         'Taco.view.order.modal.AddPayment',
-        'Taco.view.order.modal.AddPaymentManual'
+        'Taco.view.order.modal.AddPaymentManual',
+        'Taco.store.StoreCredits'
     ],
 
     title: 'Payment & Billing Information',
@@ -55,25 +57,31 @@ Ext.define('Taco.view.order.subform.Payment', {
         });
         me.initUI();
         
+        if (me.record.get('paymentStatus') !== 'Fulfilled') {
+            this.storeCreditsStore = Taco.store.StoreCredits.createForCustomer(this.record.get('customerId'));
+            this.storeCreditsStore.load({
+                callback: function (records) {
+                    me.availableCredits = Ext.Array.filter(records, function(credit) { return credit.get('currentBalance') > 0 });
+                    if (me.availableCredits.length > 0) {
+                        me.onRecordChange();
+                    }
+                },
+                scope: me
+            });
+        }
 
         Ext.apply(me, {
             items: [
                 me.bodyCont
             ]
         });
-        this.callParent(arguments);
+        this.callParent(arguments); 
     },
     
     getMenuActions: function () {
         var me = this,
-            canVoidPayment = false,
-            canApplyCheck = false,
-            canCapture = false,
-            canAppPayment = false,
-            canCreditPayment = false,
-            data = this.record.getData(),
-            authPayment = data.payments[0],
-            availableActions;
+            actions = [],
+            canUseStoreCredit = me.availableCredits && me.availableCredits.length;
         
         me.addPaymentAction = new Ext.Action({
             text: 'Add Payment',
@@ -89,6 +97,7 @@ Ext.define('Taco.view.order.subform.Payment', {
             },
             scope: this
         });
+        actions.push(me.addPaymentAction);
 
         me.requestCheckAction = new Ext.Action({
             text: 'Request Check',
@@ -103,6 +112,8 @@ Ext.define('Taco.view.order.subform.Payment', {
             },
             scope: this
         });
+        actions.push(me.requestCheckAction);
+
         me.applyManualPayment = new Ext.Action({
             text: 'Add Manual Payment',
             handler: function () {
@@ -116,17 +127,26 @@ Ext.define('Taco.view.order.subform.Payment', {
             },
             scope: this
         });
+        actions.push(me.applyManualPayment);
 
-        // add the tools the header using the pre defined actions above;
+        me.applyStoreCredit = new Ext.Action({
+            text: 'Apply Store Credit',
+            handler: function() {
+                var me = this;
 
-        return [
-            me.addPaymentAction,
-            //me.issueCreditAction,
-            //me.voidTransactionAction,
-            //me.issueCreditPaymentAction,
-            me.requestCheckAction,
-            me.applyManualPayment
-        ];
+                var modal = Ext.create('Taco.view.order.modal.ApplyStoreCredit', {
+                    record: me.record
+                });
+
+                modal.show();
+            },
+            scope: this
+        });
+        // 'Apply Store Credit' should NEVER show up as a menu option.
+        if (false && canUseStoreCredit)
+            actions.push(me.applyStoreCredit);
+
+        return actions;
     },
     
     // initialize the views and actions menu
