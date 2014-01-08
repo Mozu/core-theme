@@ -637,15 +637,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 return;
 
             var itemInOrder = order.Items.FirstOrDefault(i => i.ProductCode == packageItem.ProductCode);
+            var itemInBundle = order.Items.SelectMany(i => i.BundledProducts).FirstOrDefault(i => i.ProductCode == packageItem.ProductCode);
 
-            if (itemInOrder == null)
-                return;
-
-            packageItem.ProductCode = itemInOrder.ProductCode;
-            packageItem.ProductName = itemInOrder.ProductName;
-            packageItem.Total = itemInOrder.Total;
-            packageItem.UnitPrice = itemInOrder.UnitPrice;
-            packageItem.Weight = itemInOrder.UnitWeight.HasValue ? packageItem.Quantity * itemInOrder.UnitWeight : null;
+            if (itemInOrder != null)
+            {
+                packageItem.ProductCode = itemInOrder.ProductCode;
+                packageItem.ProductName = itemInOrder.ProductName;
+                packageItem.Total = itemInOrder.Total;
+                packageItem.UnitPrice = itemInOrder.UnitPrice;
+                packageItem.Weight = itemInOrder.UnitWeight.HasValue ? packageItem.Quantity * itemInOrder.UnitWeight : null;
+            }
+            else if (itemInBundle != null)
+            {
+                packageItem.ProductCode = itemInBundle.ProductCode;
+                packageItem.ProductName = itemInBundle.Name;
+                packageItem.Total = 0;
+                packageItem.UnitPrice = 0;
+                packageItem.Weight = itemInBundle.UnitWeight.HasValue ? packageItem.Quantity * itemInBundle.UnitWeight : null;
+            }
         }
 
         private void FillPickupItemDetails(OrderPickupItem pickupItem, Order order)
