@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2014-01-04
+ * Mozu JavaScript SDK - v0.2.0 - 2014-01-09
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -3554,8 +3554,8 @@ ApiObject.types.order = (function() {
                 var payment = order.getCurrentPayment();
                 if (!payment) errors.throwOnObject(order, 'PAYMENT_MISSING');
                 if (!payment.paymentServiceTransactionId) errors.throwOnObject(order, 'PAYPAL_TRANSACTION_ID_MISSING');
-                window.location = utils.formatString(CONSTANTS.BASE_PAYPAL_URL, payment.paymentServiceTransactionId);
-            });
+                window.location = ApiReference.urls.paypalExpress + (ApiReference.urls.paypalExpress.indexOf('?') === -1 ? '?' : '&') + "token=" + payment.paymentServiceTransactionId; //utils.formatString(CONSTANTS.BASE_PAYPAL_URL, payment.paymentServiceTransactionId);
+                });
         },
         "CreditCard": function (order, billingInfo) {
             var card = order.api.createSync('creditcard', billingInfo.card);
@@ -3779,7 +3779,22 @@ ApiObject.types.wishlist = (function() {
         }
     };
 }());
+/**
+ * @external Promise
+ * @see {@link https://github.com/cujojs/when/blob/master/docs/api.md#promise WhenJS/Promise}
+ */
+
+/**
+ * Attach handlers to and transform the promise.
+ * @function external:Promise#then
+ * @returns external:Promise#
+ */
+
 // BEGIN INTERFACE
+/**
+ * @class
+ * @classdesc The interface object makes requests to the API and returns API object. You can use it to make raw requests using the ApiInterface#request method, but you're more likely to use the ApiInterface#action method to create a external:Promise# that returns an ApiObject#.
+ */
 var ApiInterface = (function () {
     var errorMessage = "No {0} was specified. Run Mozu.Tenant(tenantId).MasterCatalog(masterCatalogId).Site(siteId).",
         requiredContextValues = ['Tenant', 'MasterCatalog', 'Site'];
@@ -3792,6 +3807,11 @@ var ApiInterface = (function () {
 
     ApiInterfaceConstructor.prototype = {
         constructor: ApiInterfaceConstructor,
+        /**
+         * @public
+         * @memberof ApiInterface#
+         * @returns {external:Promise#}
+         */
         request: function (method, requestConf, conf) {
             var me = this,
                 url = typeof requestConf === "string" ? requestConf : requestConf.url;
@@ -3837,6 +3857,11 @@ var ApiInterface = (function () {
             
             return deferred.promise;
         },
+        /**
+         * @public
+         * @memberof ApiInterface#
+         * @returns external:Promise#
+         */
         action: function (instanceOrType, actionName, data) {
             var me = this,
                 obj = instanceOrType instanceof ApiObject ? instanceOrType : me.createSync(instanceOrType),
@@ -3910,7 +3935,14 @@ var ApiInterface = (function () {
 
 /*********/
 // BEGIN CONTEXT
+/**
+ * @class
+ * @classdesc The context object helps you configure the SDK to connect to a particular Mozu site. Supply it with tenant, site, mastercatalog, currency code, locale code, app claims, and user claims, and  it will produce for you an ApiInterface object.
+ */
 var ApiContext = (function () {
+    /**
+     * @private 
+     */
     var ApiContextConstructor = function (conf) {
         utils.extend(this, conf);
     },
@@ -3940,6 +3972,18 @@ var ApiContext = (function () {
 
     ApiContextConstructor.prototype = {
         constructor: ApiContextConstructor,
+
+        /**
+         * Gets or creates the `ApiInterface` for this context that will do all the real work.
+         * Call this method only when you've built a complete context including tenant, site, master catalog,
+         * locale, currency code, app claims, and user claims. Assign its return value to a local variable.
+         * You'll use this interface object to create your `ApiObject`s and do API requests!
+         * 
+         * @public
+         * @memberof ApiContext#
+         * @returns {ApiInterface} The single `ApiInterface` for this context.
+         * @throws {ReferenceError} if the context is not yet complete.
+         */
         api: function () {
             return this._apiInstance || (this._apiInstance = new ApiInterface(this));
         },

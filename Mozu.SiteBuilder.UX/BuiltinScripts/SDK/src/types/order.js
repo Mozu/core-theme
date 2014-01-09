@@ -29,8 +29,8 @@
                 var payment = order.getCurrentPayment();
                 if (!payment) errors.throwOnObject(order, 'PAYMENT_MISSING');
                 if (!payment.paymentServiceTransactionId) errors.throwOnObject(order, 'PAYPAL_TRANSACTION_ID_MISSING');
-                window.location = utils.formatString(CONSTANTS.BASE_PAYPAL_URL, payment.paymentServiceTransactionId);
-            });
+                window.location = ApiReference.urls.paypalExpress + (ApiReference.urls.paypalExpress.indexOf('?') === -1 ? '?' : '&') + "token=" + payment.paymentServiceTransactionId; //utils.formatString(CONSTANTS.BASE_PAYPAL_URL, payment.paymentServiceTransactionId);
+                });
         },
         "CreditCard": function (order, billingInfo) {
             var card = order.api.createSync('creditcard', billingInfo.card);
