@@ -125,6 +125,7 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
 
     launchEditor: function () {
         Ext.create('Taco.shared.view.modal.Address', {
+            singlePhoneRequired:true,
             record: this.contact,
             listeners: {
                 savesuccess: function (modal, record) {

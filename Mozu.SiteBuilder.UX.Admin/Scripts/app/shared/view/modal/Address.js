@@ -20,6 +20,9 @@ Ext.define('Taco.shared.view.modal.Address', {
     showEmail: true,
     showPhoneNumbers: true,
     
+    // force user to enter at least one phone number
+    singlePhoneRequired : false,
+
     validateAddress: false,
 
     title:"Edit Address",
@@ -150,6 +153,18 @@ Ext.define('Taco.shared.view.modal.Address', {
      */
     validateAndPrompt: function (onDemandMode, callback) {
         var me = this;
+
+        // before making the server side validation, need to do pseudo check for at least one phone number field
+        if (this.singlePhoneRequired) {
+            var homePhone = this.form.findField("homePhone").getValue();
+            var workPhone = this.form.findField("workPhone").getValue();
+            var mobilePhone = this.form.findField("mobilePhone").getValue();
+            
+            if (!(homePhone.length || workPhone.length || mobilePhone.length)) {
+                Taco.app.fireEvent('setmessage', 'Validation error. At least one of the phone numbers is required', 'error');
+                return
+            }            
+        }
 
         // skip address validation for now
         if (!me.validateAddress) {
