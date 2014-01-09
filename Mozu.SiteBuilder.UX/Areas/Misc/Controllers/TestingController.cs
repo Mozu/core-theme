@@ -26,6 +26,7 @@ using System.Net;
 using System.Web;
 using System.Collections.Generic;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.Mvc.Security;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
@@ -34,6 +35,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         ISitesWebApiClient _wsRepo;
         ITenantsWebApiClient _tRepo;
         ICookieProvider _cookies;
+        IAuthenticationHelper _authenticationHelper;
         private readonly ISettings _settings;
         private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
 
@@ -46,14 +48,28 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             Auto
         }
 
-        public TestingController(ISitesWebApiClient  wsRepo, ITenantsWebApiClient tRepo, ICookieProvider cookies, ISettings settings , Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient )
+        public TestingController(ISitesWebApiClient  wsRepo, ITenantsWebApiClient tRepo, ICookieProvider cookies, ISettings settings , Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, IAuthenticationHelper authenticationHelper)
         {
             _wsRepo = wsRepo.CloneWithoutUserClaims();
             _tRepo = tRepo.CloneWithoutUserClaims();
             _cookies = cookies;
             _settings = settings;
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
+            _authenticationHelper = authenticationHelper;
 //            SuppressMissingContextRedirect = true;
+        }
+
+
+        [AcceptVerbs("GET")]
+        public HttpResponseMessage CoolDownUser()
+        {
+            this.SbApiContext.UserClaims.Expiration = DateTime.Now.AddDays(-1);
+            _authenticationHelper.SaveStoreFrontAccessToken(this.SbApiContext.UserClaims.ToAccessToken(), this.PageContext.UserProfile.ToToken());
+            _authenticationHelper.SaveStoreFrontRefreshToken(null, DateTime.Now.AddDays(-1));
+            return this.Request.CreateResponse(HttpStatusCode.OK, new
+            {
+                Message = "Cool."
+            });
         }
 
 
