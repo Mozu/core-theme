@@ -216,6 +216,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                             Id = "creditService",
                             InternalUrl = settings.AppSettings("service-url-CreditWebApi")
                         }
+                        ,new ServiceInfo
+                        {
+                             Id = "paypalExpress",
+                             SkipRename= true,
+                            InternalUrl = settings.AppSettings("paypalExpressUrl")
+                        }
+
+
+                        
                     };
                 foreach (ServiceInfo si in sis)
                 {
