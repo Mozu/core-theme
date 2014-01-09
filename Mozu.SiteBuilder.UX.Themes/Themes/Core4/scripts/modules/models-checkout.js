@@ -290,7 +290,7 @@
             },
             maxCreditAmountToApply: function () {
                 var order = this.getOrder(),
-                    total = order.get('total'),
+                    total = order.get('amountRemainingForPayment'),
                     applyingCredit = this.applyingCredit();
                 if (applyingCredit) return Math.min(applyingCredit.currentBalance, total).toFixed(2);
             },
