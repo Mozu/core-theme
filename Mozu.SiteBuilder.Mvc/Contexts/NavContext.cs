@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             _navigationGandalf = navigationGandalf;
             _apiContext = apiContext;
-            this.Category = new CategoryNodeFinder(this);
+            //this.Category = new CategoryNodeFinder(this);
         }
 
        // private List<NavigationRuntimeNode> __navigationTree;
@@ -39,42 +39,57 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         object ITagFilterFindable.Filter(IEnumerable<object> parameter)
         {
-            var key = parameter.FirstOrDefault();
-            if (key == null)
+            var count = parameter == null ? 0 : parameter.Count();
+            if (count == 0)
             {
                 return null;
             }
-            return this.Tree.FindNode(null, key.ToString());
-        
-        }
-
-        public class CategoryNodeFinder
-        {
-            private readonly NavigationContext _navigationContext;
-
-            public CategoryNodeFinder(NavigationContext navigationContext )
+            if (count == 1)
             {
-                _navigationContext = navigationContext;
-            }
-            public NavigationRuntimeNode this[int i]
-            {
-                get
+                var key = parameter.FirstOrDefault();
+                if (key == null)
                 {
-                    return _navigationContext.Tree.FindByCategory(new ProductRuntime.Contracts.Category() {CategoryId = i});
+                    return null;
                 }
+                return this.Tree.FindNode(null, key.ToString());
             }
-        
+            else
+            {
+                return parameter.Where(x => x != null).Select(key => this.Tree.FindNode(null, key.ToString())).ToList();
+            }
+
         }
 
-        /// <summary>
-        /// called by django
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public CategoryNodeFinder Category
-        {
-            get; set;
-        }
+        //public class CategoryNodeFinder : ITagFilterFindable
+        //{
+        //    private readonly NavigationContext _navigationContext;
+
+        //    public CategoryNodeFinder(NavigationContext navigationContext )
+        //    {
+        //        _navigationContext = navigationContext;
+        //    }
+         
+
+        //    public object Filter(IEnumerable<object> parameter)
+        //    {
+        //        if (parameter.Count() == 0)
+        //        {
+        //            return null;
+        //        }
+                
+        //        throw new NotImplementedException();
+        //    }
+        //}
+
+        ///// <summary>
+        ///// called by django
+        ///// </summary>
+        ///// <param name="id"></param>
+        ///// <returns></returns>
+        //public CategoryNodeFinder Category
+        //{
+        //    get; set;
+        //}
 
 
         private Task<List<NavigationRuntimeNode>> _initTask;
@@ -105,7 +120,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 if (_rootCategoryList == null)
                 {
-                    _rootCategoryList = Tree.OrderBy(x => x.Name).ToList();
+                    _rootCategoryList = Tree.OrderBy(x => x.Name).Where( x=> x.NodeType ==NavigationNodeType.Category ).ToList();
                 }
                 return _rootCategoryList;
             }
