@@ -407,7 +407,7 @@
             },
             submit: function () {
                 var order = this.getOrder();
-                if (this.validate()) return false;
+                if (this.nonStoreCreditTotal() > 0 && this.validate()) return false;
                 var currentPayment = order.apiModel.getCurrentPayment();
                 if (currentPayment) {
                     return order.apiVoidPayment(currentPayment.id).then(this.applyPayment);
