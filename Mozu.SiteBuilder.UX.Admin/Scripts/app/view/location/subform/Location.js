@@ -9,7 +9,8 @@ Ext.define('Taco.view.location.subform.Location', {
         'Ext.ux.form.field.BoxSelect',
         'Taco.shared.view.modal.Address',
         'Taco.shared.view.field.Address',
-        'Taco.core.ux.form.field.EditableDisplayField'
+        'Taco.core.ux.form.field.EditableDisplayField',
+        'Taco.core.ux.form.PhoneNumberField'
     ],
 
     ui: 'subform', // gives the form the correct ux    
@@ -101,6 +102,7 @@ Ext.define('Taco.view.location.subform.Location', {
                                 allowBlank: false,
                                 fieldLabel: 'Company Name'
                             }, {
+                                xtype: 'phonefield',
                                 name: 'phoneNumber',
                                 fieldLabel: 'Phone Number',
                                 allowBlank: false
@@ -233,13 +235,13 @@ Ext.define('Taco.view.location.subform.Location', {
                     flex: 1
                 }]
             }, {
-                xtype: "textfield",
+                xtype: "phonefield",
                 name: "phone",
                 width: 200,
                 fieldLabel: 'Phone',
                 allowBlank: true
             }, {
-                xtype: "textfield",
+                xtype: "phonefield",
                 name: "fax",
                 width: 200,
                 fieldLabel: 'Fax',

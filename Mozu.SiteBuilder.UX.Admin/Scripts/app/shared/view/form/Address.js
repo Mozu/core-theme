@@ -9,7 +9,8 @@ Ext.define('Taco.shared.view.form.Address', {
 
 	requires: [
 		'Taco.model.Contact',
-		'Taco.core.ux.form.SelectField'
+		'Taco.core.ux.form.SelectField',
+        'Taco.core.ux.form.PhoneNumberField'
 	],
 
 	title: 'Edit Address',
@@ -117,21 +118,21 @@ Ext.define('Taco.shared.view.form.Address', {
 	    
         if (this.showPhoneNumbers) {
             fields.push({
-                    xtype: 'textfield',
+                    xtype: 'phonefield',
                     width: 206,
                     name: 'homePhone',
                     fieldLabel: 'Home Phone',
                     margin: '0 13 5 0',
                     style: { 'display': 'inline-table' }
                 }, {
-                    xtype: 'textfield',
+                    xtype: 'phonefield',
                     width: 206,
                     name: 'workPhone',
                     fieldLabel: 'Work Phone',
                     margin: '0 13 5 0',
                     style: { 'display': 'inline-table' }
                 }, {
-                    xtype: 'textfield',
+                    xtype: 'phonefield',
                     width: 206,
                     name: 'mobilePhone',
                     fieldLabel: 'Mobile Phone',
