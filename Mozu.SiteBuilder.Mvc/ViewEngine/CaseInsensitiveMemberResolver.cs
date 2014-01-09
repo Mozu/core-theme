@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Magnum.Extensions;
 using Microsoft.FSharp.Core;
+using Mozu.Reference.Contracts;
 using NDjango.Interfaces;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
@@ -31,7 +32,14 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 dic[g.Key] = g.Select(x=> x.GetMethod ).ToArray();
 
             }
+            Dictionary<string, FieldInfo> fields = null;
+            if ( t.FullName.StartsWith( "NDjango"))
+            {
+                fields = t.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).ToDictionary(x => x.Name.Replace("@",""), StringComparer.OrdinalIgnoreCase);
 
+
+
+            }
 
 
 
@@ -42,6 +50,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
             return new MemberAccessors()
                    {
+                       Fields = fields,
                        PropertyDictionary = dic,
                        Indexers = props.Where(x => x.GetIndexParameters().Length > 0).ToArray(),
                        ContainsKey = containsKey
@@ -53,7 +62,12 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         public class MemberAccessors
         {
             public Dictionary<string, MethodInfo[]> PropertyDictionary { get; set; }
+
             public PropertyInfo[] Indexers { get; set; }
+
+            public Dictionary<string, FieldInfo > Fields { get; set; }
+
+
             public MethodInfo  ContainsKey  { get; set; }
         }
        
@@ -260,9 +274,19 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                     
                 }
             }
-
-
-
+            FieldInfo fi;
+            if (lookup.Fields != null && lookup.Fields.TryGetValue(memberName, out fi))
+            {
+                try
+                {
+                    return new FSharpOption<object>(CleanJson(fi.GetValue(container)));
+                }
+                catch
+                {
+                }
+               
+            }
+          
             return null;
         }
     }

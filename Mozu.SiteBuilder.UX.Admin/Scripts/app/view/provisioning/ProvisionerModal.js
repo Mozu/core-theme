@@ -63,8 +63,10 @@ Ext.define('Taco.view.provisioning.ProvisionerModal', {
                            success: function (response) {
                                me.setLoading(false);
                                if (response.responseText == "true") {
-                                   this.close();
-                                   this.fireEvent('save', this);
+                                   window.location.href = "/admin";
+                                   me.close();
+                                   me.fireEvent('save', this);
+                                  
                                } else {
                                    console.log(response.responseText);
                                    Taco.app.fireEvent('setmessage', 'Error Provisioning Site', 'error');
