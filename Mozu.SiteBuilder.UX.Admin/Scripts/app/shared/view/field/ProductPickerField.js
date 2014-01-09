@@ -27,9 +27,7 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
         emptyText: 'No matching products found.',
         // Custom rendering template for each item
         getInnerTpl: function () {
-            return "<span class='product-name'>Name: {productName}, </span>" +
-                " <span class='product-name'>Product Code: {productCode}<tpl if='outOfStockBehavior'>, </tpl></span> " +
-                "<tpl if='outOfStockBehavior'><span class='product-code'>Out of Stock</span></tpl>"
+            return "<span class='product-name'>{productName}</span> <span class='product-code'>{productCode}</span>"
         },
 
         // this is an override that hides the paging toolbar when the list only contains a single page of results;
