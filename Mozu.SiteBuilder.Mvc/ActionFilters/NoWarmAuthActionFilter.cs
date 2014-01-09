@@ -9,13 +9,18 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     public class NoWarmAuthActionFilter : ActionFilterAttribute
     {
 
+        public string ReturnUrl
+        {
+            get; set;
+        }
         public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
         {
             var sbContext = actionContext.Request.Resolve<ISiteBuilderApiContext>();
             if (!sbContext.UserClaims.IsAnonymous && !sbContext.UserClaims.IsAuthenticationHot)
             {
                 actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Redirect);
-                actionContext.Response.Headers.Location = new Uri("/user/login?returnUrl=" + System.Web.HttpUtility.UrlEncode(actionContext.Request.RequestUri.PathAndQuery), UriKind.Relative);
+                var returnUrl = ReturnUrl ?? actionContext.Request.RequestUri.PathAndQuery;
+                actionContext.Response.Headers.Location = new Uri("/user/login?returnUrl=" + System.Web.HttpUtility.UrlEncode(returnUrl), UriKind.Relative);
 
             }
 
