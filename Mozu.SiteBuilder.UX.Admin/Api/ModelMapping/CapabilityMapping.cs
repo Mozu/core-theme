@@ -82,6 +82,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                             //ScopeId = cap.ScopeId ,
                             //ScopeType = cap.ScopeType ,
                             //Initialized = cap.Initialized,
+                            Initialized = app.Initialized,
                             LicenseType = app.Entitlement.LicenseType,
                             Enabled = app.Enabled,
                             EntitlementId = app.Entitlement.Id,

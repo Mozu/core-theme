@@ -89,6 +89,13 @@ Ext.define('Taco.view.capability.Index', {
                 width: 200,
                 dataIndex: "developerAccountName"
             }, {
+                text: 'Initialized',
+                width: 80,
+                dataIndex: "initialized",
+                renderer: function (value) {
+                    return (value) ? 'Yes' : 'No';
+                }
+            }, {
                 text: 'Enabled',
                 width: 80,
                 dataIndex: "enabled",
