@@ -424,14 +424,19 @@
                     this.unset('paypalCancelUrl');
                 }
                 this.syncApiModel();
-                return order.apiAddPayment().then(function() {
-                    var payment = order.apiModel.getCurrentPayment();
-                    if (payment.paymentType !== "PaypalExpress") {
-                        self.stepStatus("complete");
-                        self.isLoading(false);
-                        order.isReady(true);
-                    }
-                });
+                if (this.nonStoreCreditTotal() > 0) {
+                    return order.apiAddPayment().then(function () {
+                        var payment = order.apiModel.getCurrentPayment();
+                        if (payment && payment.paymentType !== "PaypalExpress") self.markComplete();
+                    });
+                } else {
+                    this.markComplete();
+                }
+            },
+            markComplete: function () {
+                this.stepStatus("complete");
+                this.isLoading(false);
+                this.getOrder().isReady(true);
             }
         });
 
@@ -569,7 +574,7 @@
 
                 this.syncBillingAndCustomerEmail();
 
-                if (this.validate()) {
+                if (this.get('billingInfo').nonStoreCreditTotal() > 0 && this.validate()) {
                     this.isSubmitting = false;
                     return false;
                 }
