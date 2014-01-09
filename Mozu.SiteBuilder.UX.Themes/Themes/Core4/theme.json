@@ -96,7 +96,7 @@
 		"title": "New Login Created",
 		"template": "email/new-user",
 		"properties": {
-		  "subject": "Welcom"
+		  "subject": "Welcome"
 		}
 	  },
 	  {
