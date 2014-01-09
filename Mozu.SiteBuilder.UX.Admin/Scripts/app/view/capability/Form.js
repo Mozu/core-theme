@@ -37,6 +37,7 @@ Ext.define('Taco.view.capability.Form', {
             //this.shippingCountry.hide();  
             this.enableBtn.disable();
         }
+        this.enableBtn.toggle(this.record.get('enabled'));
 
     },
     buildFormComponents: function () {

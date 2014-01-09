@@ -69,6 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "edit")]
         public async Task<HttpResponseMessage>  Edit(List<VM.Capability >capabilities )
         {
+            List<SiteSettings.Application.Contracts.Application> apps = new List<SiteSettings.Application.Contracts.Application>();
             foreach (var cap in capabilities)
             {
                 var app = (await _applicationsWebApiClient.GetApplication(cap.AppId)).ReadAsSync();
@@ -86,15 +87,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     AutoMapper.Mapper.Map(cap, editCap);
 
                     // scope to site, if needed
-                    app.Capabilities = app.Capabilities.Where(x => x.ScopeId == editCap.ScopeId).ToList();
-                    client = _applicationsWebApiClient.CloneWithApiContext(x => x.SiteId = editCap.ScopeId);
-                    // var newDmCap = Mapper.Map<Mozu.Core.ThirdParty.Contracts.Capability>(cap);
+                    // wut? OJP 2014.01.09 - apparently i don't have to do this any more? not sure why
+                    //app.Capabilities = app.Capabilities.Where(x => x.ScopeId == editCap.ScopeId).ToList();
+                    //client = _applicationsWebApiClient.CloneWithApiContext(x => x.SiteId = editCap.ScopeId);
                 }
             
-                //todo other stuff
-                client.UpsertApplication(app.AppId, app).Wait();
+                // this is so bad, but we need to clean up all of capabilities / application mgmt
+                try
+                {
+                    app = (await client.UpsertApplication(app.AppId, app)).ReadAsSync();
+                }
+                catch {
+                    app = null;
+                }
+                if (app == null)
+                {
+                    app = (await _applicationsWebApiClient.GetApplication(cap.AppId)).ReadAsSync();
+                }
+                apps.Add(app);
             }
-            return await this.CapList(null, null);
+
+            var vmApps = Mapper.Map<List<VM.Application>>(apps);
+            List<VM.Capability> list = vmApps.SelectMany(x => x.Capabilities).ToList();
+            var ret = this.List2<VM.Capability>(list);
+            return this.Request.CreateResponse(HttpStatusCode.OK, ret, LowerCaseJsonMediaTypeFormatter.Default);
         }
 
       
