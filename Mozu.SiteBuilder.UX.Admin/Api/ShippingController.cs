@@ -213,7 +213,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     var cheese =
                         from st in cConfig
-                        let isConfigured = configuration.ConfiguredServiceTypes != null && configuration.ConfiguredServiceTypes.Any(other => other.Code == st.Code)
+                        let isConfigured = configuration.ConfiguredServiceTypes != null && configuration.ConfiguredServiceTypes.Any(other => other.Code == st.Code && other.IsActive.GetValueOrDefault())
                         select new
                         {
                             Code = st.Code,
