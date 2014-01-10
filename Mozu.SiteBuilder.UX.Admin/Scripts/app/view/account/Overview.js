@@ -116,11 +116,7 @@ Ext.define('Taco.view.account.Overview', {
                         Ext.Ajax.request({
                             url: '/admin/app/account/information/update',
                             method: 'POST',
-                            success: function (response) {
-                                Taco.app.signalCacheFlush({
-                                    model: 'Taco.model.AccountInformation'
-                                });
-                            },
+                            success: Ext.emptyFn,
                             failure: Ext.emptyFn,
                             jsonData: me.getValues()
                         });

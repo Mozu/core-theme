@@ -160,8 +160,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
         }
     },
     beforeSave: function () {
-        if (this.configFields.isDirty() || this.ratesSelect.isDirty() || this.countrySelector.isDirty()) {
-
+        if (this.configFields.isDirty() || this.ratesSelect.isDirty() || this.countrySelector.isDirty()) {            
             var settings = this.configFields.getForm().getValues(false, false, false, true),
                 rates = this.ratesSelect.getValue();
             this.record.set('settings', settings);

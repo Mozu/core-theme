@@ -111,7 +111,46 @@ Ext.define('Taco.core.data.StoreManager', {
         }
         return store;
     },
+
+    invalidateCachedStores: function (invalidStores) {
+        var me = this;
+
+        if (invalidStores.length) {
+            // clear out any dependent or related stores that were invalidated by the store updates
+            Ext.Array.each(invalidStores, function (key) {
+                var contextId = Taco.app.context.getCurrent().id;
+                var removedStore1 = this.stores.removeAtKey(key);
+                // remove any site context scoped variants of the store;
+                if (contextId) {
+                    var removedStore2 = this.stores.removeAtKey(key + "-s=" + contextId);
+                }
+            }, me);
+        }
+    },
+
     afterProxyRequest: function (request, success, model) {
+        var me = this,
+            invalidStores = [];
+
+
+        // helper method for accepting string or array values for invalidateCachedStores configurations;
+        function updateInvalidStores(val) {
+            // check to see if changes to this store should invalidate related stores;
+            if (val) {
+                if (Ext.isString(val)) {
+                    invalidStores.push(val);
+                } else {
+                    invalidStores = Ext.Array.merge(val);
+                }
+            }
+        }
+        
+        // need to check the request.records for any records(model) that will invalidate stores; 
+        // This is the use casew where you are persisting a model seperate from a store;
+        var record = request.records[0];
+        if (record && record.invalidateCachedStores) {
+            updateInvalidStores(record.invalidateCachedStores)
+        }
 
         this.stores.each(function (store) {
             if (model.$className != store.model.$className) {
@@ -124,8 +163,16 @@ Ext.define('Taco.core.data.StoreManager', {
             store.hasUpdates = true;
             store.lastUpdate = request.action;
             store.fireEvent('afterproxyrequest', store, request, success, model);
+
+            // check store for related stores that need to be invalidated
+            updateInvalidStores(store.invalidateCachedStores);
+
             return true;
         });
+
+        // remove any cached stores that were invalidated by this call;
+        me.invalidateCachedStores(invalidStores);
+
     },
     markChanged: function (selector, isChanged) {
         var fn;

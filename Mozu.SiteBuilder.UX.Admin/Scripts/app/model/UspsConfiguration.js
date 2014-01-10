@@ -1,6 +1,11 @@
 ﻿/**
  * @class Taco.model.UspsConfiguration
  */
+
+/*
+// queued up to be deprecated on 1/9/2014 by simeon due to no used;
+
+
 Ext.define('Taco.model.UspsConfiguration', {
     extend: 'Taco.core.data.Model',
     fields: [
@@ -28,3 +33,5 @@ Ext.define('Taco.model.UspsConfiguration', {
         }
     }
 });
+
+*/

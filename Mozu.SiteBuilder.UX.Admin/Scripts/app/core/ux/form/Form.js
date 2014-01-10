@@ -402,7 +402,8 @@ Ext.define('Taco.core.ux.form.Form', {
     save: function () {
         //todo ? clear save tasks?
         if (this.beforeSave() !== false) {
-            this.addSaveTasks(this.saveTasks);
+            this.addSaveTasks(this.saveTasks);            
+            this.fireEvent('beforesaveexecute', this);
             this.saveTasks.execute();
         }
     },

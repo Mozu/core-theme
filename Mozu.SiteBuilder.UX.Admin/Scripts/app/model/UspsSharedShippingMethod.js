@@ -1,6 +1,11 @@
 ﻿/**
  * @class Taco.model.UspsSharedShippingMethod
  */
+
+
+/*
+// queued up to be deprecated on 1/9/2014 by simeon due to no used;
+
 Ext.define('Taco.model.UspsSharedShippingMethod', {
     extend: 'Taco.core.data.Model',
     fields: [
@@ -27,3 +32,5 @@ Ext.define('Taco.model.UspsSharedShippingMethod', {
         }
     }
 });
+
+*/

@@ -157,7 +157,9 @@ Ext.define('Taco.view.order.widget.Package', {
 
     },
 
-
+    /*
+    * populates a menu with configured shipping rates and secondary menus for all available rates by provider
+    */ 
     getShippingRatesMenu: function () {
         var me = this,            
             configuredRatesMenuData = [],
@@ -167,115 +169,102 @@ Ext.define('Taco.view.order.widget.Package', {
                 usps: [],
                 ups:[]
             },            
-            store = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingMethods');
+            store = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingMethods');     
 
-
-
-        /*
-        code: "custom_FLAT_RATE_PER_ITEM_EXACT_AMOUNT"
-isActive: true
-isConfigured: false
-isInternational: false
-name: "Flat Rate Per Item"
-rateProvider: "custom"
-sequence: 1
-        */
-
-        
         if (store) {
             store.each(function (record) {
+                var isConfigured = record.get("isConfigured"),
+                    itemConfig = Ext.clone(record.data);                
+                    itemConfig.text = Ext.clone(itemConfig.name);
+
+                // remove the id from the data as it will cause conflicts between the duplicated items when they are configured;
+                delete itemConfig.id;
 
                 if (record.get("rateProvider") == 'custom') {
-                    customConfiguredRatesMenuData.push({
-                        text: record.get("name"),
-                        key: record.get("code")
-                    })
-                } else if (record.get("isConfigured")) {
-                    configuredRatesMenuData.push({
-                        text: record.get("name"),
-                        key: record.get("code")
-                    })
+                    customConfiguredRatesMenuData.push(itemConfig)
                 } else {
-                    var rateProvider = record.get("rateProvider");                    
-                    rateProviders[rateProvider].push({
-                        text: record.get("name"),
-                        key: record.get("code")
-                    })
+                    
+                    if (isConfigured) {
+                        // clone the config so that any subsequent changes dont' leak in to the configured config                        
+                        configuredRatesMenuData.push(Ext.clone(itemConfig));
+
+                        // tack on the text "configured" to the text description only in the secondary flyout menus
+                        itemConfig.text += " (Configured)";
+                    }
+                    // populate secondary flyouts
+                    rateProviders[itemConfig.rateProvider].push(itemConfig)
                 }
             });
         }
-
-
-        
+                    
+        return Ext.Array.union(                
+            configuredRatesMenuData,
+            customConfiguredRatesMenuData,
+            {
+                xtype: "menuseparator",                    
+                disabled:true
+            }, 
             
-            return Ext.Array.union(                
-                configuredRatesMenuData,
-                customConfiguredRatesMenuData,
+            {
+                xtype: 'menuitem',
+                menu: {
+                    plain: true,
+                    showSeparator: false,
+                    listeners: {
+                        click: {
+                            fn: me.changeShippingMethod,
+                            scope: me,
+                            delegate: "x-menu-item-link"
+                        }
+                    },
+                    items: rateProviders["fedex"]
+                },
+                // dont' allow the menu to flyout if there is no content in the list; This happens when the rate provider is unconfigured
+                disabled: !rateProviders["fedex"].length,
+                text: (rateProviders["fedex"].length) ? "FedEx" : "FedEx (Not Configured)"
+            },
+            
+            
+            [
                 {
-                    xtype: "menuseparator",                    
-                    disabled:true
-                }, [
-                    {
-                        xtype: 'menuitem',
-                        menu: {
-                            plain: true,
-                            showSeparator:false,                            
-                            listeners: {
-                                click: {
-                                    fn: me.changeShippingMethod,
-                                    scope: me,
-                                    delegate: "x-menu-item-link"
-                                }
-                            },
-                            items: rateProviders["fedex"]
+                    xtype: 'menuitem',                        
+                    menu: {
+                        plain: true,
+                        showSeparator: false,
+                        listeners: {
+                            click: {
+                                fn: me.changeShippingMethod,
+                                scope: me,
+                                delegate: "x-menu-item-link"
+                            }
                         },
-                        text: "FedEx"
-                    }
-                ], [
-                    {
-                        xtype: 'menuitem',                        
-                        menu: {
-                            plain: true,
-                            showSeparator: false,
-                            listeners: {
-                                click: {
-                                    fn: me.changeShippingMethod,
-                                    scope: me,
-                                    delegate: "x-menu-item-link"
-                                }
-                            },
-                            items: rateProviders["ups"]
+                        items: rateProviders["ups"]
+                    },
+                    disabled: !rateProviders["ups"].length,
+                    text: (rateProviders["ups"].length) ? "UPS" : "UPS (Not Configured)"
+                }
+            ], [
+                {
+                    xtype: 'menuitem',                        
+                    menu: {
+                        plain: true,
+                        showSeparator:false,                            
+                        listeners: {
+                            click: {
+                                fn: me.changeShippingMethod,
+                                scope: me,
+                                delegate: "x-menu-item-link"
+                            }
                         },
-                        text: "UPS"
-                    }
-                ], [
-                    {
-                        xtype: 'menuitem',                        
-                        menu: {
-                            plain: true,
-                            showSeparator:false,                            
-                            listeners: {
-                                click: {
-                                    fn: me.changeShippingMethod,
-                                    scope: me,
-                                    delegate: "x-menu-item-link"
-                                }
-                            },
-                            items: rateProviders["usps"]
-                        },
-                        text: "USPS"
-                    }
-                ]
-            )
-
-
-
-        
+                        items: rateProviders["usps"]
+                    },
+                    disabled: !rateProviders["usps"].length,
+                    text: (rateProviders["usps"].length) ? "USPS" : "USPS (Not Configured)"
+                }
+            ]
+        )       
 
     },
-
-
-
 
     getHeaderTemplate: function () {
         var me = this;
@@ -593,8 +582,8 @@ sequence: 1
             
             data = this.grid.packageData;
             // update the shipping code
-            data.shippingMethodCode = item.key;
-            data.shippingMethodName = item.text;
+            data.shippingMethodCode = item.code;
+            data.shippingMethodName = item.name;
 
             config = {
                 jsonData: [data],

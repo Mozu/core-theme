@@ -267,12 +267,11 @@ Ext.define('Taco.Application', {
                     remoteException: Ext.create('Taco.core.data.RemoteException', { response: response })
                 });
             },
-            afterRequest: function (request, success) {
+            afterRequest: function (request, success) {                
                 var me = this;
                 this.callParent(arguments);
                 if (success && request && request.action !== 'read' && this.model && this.model.$className) {
-                    Taco.app.signalCacheFlush({ model: this.model.$className });
-                    Taco.core.data.StoreManager.fireEvent('afterproxyrequest', request, success, this.model);
+                    Taco.core.data.StoreManager.fireEvent('afterproxyrequest', request, success, this.model);                
                 }
 
             },
@@ -463,17 +462,7 @@ Ext.define('Taco.Application', {
 
     },
 
-    signalCacheFlush: function (data) {
-        return;
-        //depricating gheto flush of cache
-        //Ext.Ajax.request({
-        //    jsonData: data,
-        //    disableCaching: true,
-        //    method: 'POST',
-        //    url: '/misc/cacheflush/index',
-        //    timeout: 5000
-        //});
-    },
+    
     launch: function () {
 
         //Taco.baseCSSPrefix = 'taco-';
