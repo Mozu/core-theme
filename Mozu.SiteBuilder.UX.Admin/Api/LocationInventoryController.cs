@@ -149,7 +149,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return SuccessWithTotal2<List<DC.LocationInventory>>(locationInventories.Count);
         }
 
-        
+        /// <summary>
+        /// Merge the LocationInventory list returned by ProductAdmin with the Location information returned by Location and filter for locations that support in-store pickup.
+        /// </summary>
         [HttpGetRoute(UriTemplate = "pickup")]
         public async Task<Response<List<LocationWithInventory>>> GetLocationsForPickup([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string productCode = null)
         {
@@ -169,7 +171,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             locationsWithInventory.ForEach(lwi => lwi.Location = locations.FirstOrDefault(l => l.Code == lwi.LocationCode));
 
             //return EmptyList2<DC.LocationInventory>();
-            return List2(locationsWithInventory);
+            return List2(locationsWithInventory.Where(lwi => lwi.Location.FulfillmentTypes.Any(ft => ft.Code == "SP")).ToList());
         }
     }
 }
