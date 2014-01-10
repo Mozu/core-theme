@@ -45,6 +45,8 @@
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <meta name="description" content="{{ PageContext.MetaDescription }}">
 		<meta name="keywords" content="{{ PageContext.MetaKeywords }}">
+		<meta name="correlationId" content="{{ pageContext.correlationId }}">
+
         {% endblock meta-tags %}
 
         <title>{% block title-tag-content %}{{ siteContext.generalSettings.websiteName }} {% endblock title-tag-content %}</title>

@@ -290,7 +290,7 @@
             },
             maxCreditAmountToApply: function () {
                 var order = this.getOrder(),
-                    total = order.get('total'),
+                    total = order.get('amountRemainingForPayment'),
                     applyingCredit = this.applyingCredit();
                 if (applyingCredit) return Math.min(applyingCredit.currentBalance, total).toFixed(2);
             },
@@ -407,7 +407,7 @@
             },
             submit: function () {
                 var order = this.getOrder();
-                if (this.validate()) return false;
+                if (this.nonStoreCreditTotal() > 0 && this.validate()) return false;
                 var currentPayment = order.apiModel.getCurrentPayment();
                 if (currentPayment) {
                     return order.apiVoidPayment(currentPayment.id).then(this.applyPayment);
