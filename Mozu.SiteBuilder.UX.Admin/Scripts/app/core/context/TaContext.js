@@ -28,6 +28,16 @@ Ext.define('Taco.core.context.TaContext', {
         Taco.core.StateManager.on('navigate', me.onNavigate, this);
         me.init(config);
         Ext.Ajax.on('beforerequest', me.onBeforeAjaxRequest, me);
+        Ext.Ajax.on('requestexception', function (conn, resp, opts) {
+            var corId = resp.getResponseHeader('x-vol-correlation');
+            // TODO pull in this environment's logzu url...
+            var logzuUrl = 'http://zukeeper.mozu-qa.com/mozu.logzu/';
+            var url = null;
+            if (corId != undefined) {
+                url = logzuUrl + '#trace/' + corId;
+            }
+            console.log('AJAX Exception', 'View in Logzu', url);
+        }, this);
 
     },
     isMultiSite:function() {
