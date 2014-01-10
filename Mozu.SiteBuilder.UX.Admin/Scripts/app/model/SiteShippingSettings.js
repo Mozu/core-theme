@@ -30,6 +30,14 @@ Ext.define('Taco.model.SiteShippingSettings', {
         { name: 'customRates', type: 'auto', defaultValue: [] }
     ],
 
+
+
+    
+    // when this store has an update operation, we need to get the storeManager to clear the following stores since their data is no longer valid
+    invalidateCachedStores: [
+        'Taco.store.ShippingMethods'
+    ],
+    
     proxy: {
         type: 'ajaxproxy',
         api: {
