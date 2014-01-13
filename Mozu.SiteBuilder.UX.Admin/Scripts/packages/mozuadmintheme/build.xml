@@ -7,23 +7,7 @@
     -->
     <import file="${basedir}/.sencha/package/build-impl.xml"/>
 
-        <target name="-before-sass">
-            <local name="build.imagepath" />
-            <property name="build.imagepath" location="${build.dir}/images" />
-            <echo>Until Sencha bug SDKTOOLS-509 is fixed, we have to copy images manually into the default image path.</echo>
-            <mkdir dir="${build.imagepath}" />
-            <copy todir="${build.imagepath}" overwrite="true">
-                <fileset dir="${basedir}/resources/images" includes="**/*"/>
-            </copy>
-            <echo>Running compass sprite as a separate task, to break it off in anticipation of replacing it with another, more scalable sprite generation system.</echo>
-            <exec executable="cmd" searchpath="true" dir="${build.dir}">
-              <arg value="/c" />
-              <arg value="compass" />
-              <arg value="sprite" />
-              <arg value="icons/*.png" />
-            </exec>
-        </target>
-
+        
     <!--
     The following targets can be provided to inject logic before and/or after key steps
     of the build process:

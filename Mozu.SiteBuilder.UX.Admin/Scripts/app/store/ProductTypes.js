@@ -13,9 +13,7 @@ Ext.define('Taco.store.ProductTypes', {
     remoteSort: false,
     remoteFilter: false,
     storeManagerConfig: {
-        contextLevel:'c',
-        clearFilters: true,
-        clearSort: true,
-        autoLoad: true
+        createOnly: true,
+        autoLoad:true
     }
 });

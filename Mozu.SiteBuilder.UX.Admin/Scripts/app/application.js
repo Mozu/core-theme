@@ -304,6 +304,17 @@ Ext.define('Taco.Application', {
             }
         });
 
+        Ext.override(Ext.toolbar.Paging, {            
+            doRefresh: function () {
+                var me = this,
+                    current = me.store.currentPage;
+
+                if (me.fireEvent('beforechange', me, current) !== false) {
+                    me.store.loadPage(current, { refresh: true });
+                }
+            },
+        });
+
         Ext.override(Ext.data.StoreManager, {
             lookup: function (cfg) {
                 if (cfg && !cfg.isStore && (cfg.type || cfg.model)) {

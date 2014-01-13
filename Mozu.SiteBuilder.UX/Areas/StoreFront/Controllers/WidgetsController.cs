@@ -50,49 +50,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
-        class PreviewContext : NDjango.Interfaces.IContext
-        {
-
-            public bool Autoescape
-            {
-                get { throw new NotImplementedException(); }
-            }
-
-            public Microsoft.FSharp.Core.FSharpOption<Type> ModelType
-            {
-                get { throw new NotImplementedException(); }
-            }
-
-            public string Translate(string value)
-            {
-                throw new NotImplementedException();
-            }
-
-            public NDjango.Interfaces.IContext WithAutoescape(bool value)
-            {
-                throw new NotImplementedException();
-            }
-
-            public NDjango.Interfaces.IContext WithModelType(Type value)
-            {
-                throw new NotImplementedException();
-            }
-
-            public NDjango.Interfaces.IContext add(Tuple<string, object> value)
-            {
-                throw new NotImplementedException();
-            }
-
-            public NDjango.Interfaces.IContext remove(string value)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Microsoft.FSharp.Core.FSharpOption<object> tryfind(string value)
-            {
-                throw new NotImplementedException();
-            }
-        }
+      
 
         [HttpPost()]
         public object  Preview( WidgetPreviewData wrd )

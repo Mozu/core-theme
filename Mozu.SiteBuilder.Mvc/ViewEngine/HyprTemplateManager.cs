@@ -101,5 +101,11 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             return ((ITemplateManager)this).GetTemplate(path).Walk(this, context);
 
         }
+
+
+        public object Provider
+        {
+            get { return _innerTemplateManager.Provider; }
+        }
     }
 }
