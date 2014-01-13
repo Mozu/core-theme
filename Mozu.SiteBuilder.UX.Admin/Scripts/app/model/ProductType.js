@@ -58,8 +58,9 @@ Ext.define('Taco.model.ProductType', {
      { type: 'length', name: 'name', min: 3, max: 100 },
      { type: 'presence', name: 'name' }
     ],
-    proxy: {
-        type: 'taco-ajaxCacheProxy',
+    proxy: {     
+     //   type: 'taco-ajaxCacheProxy',
+        type: 'ajaxproxy',
         contextLevel: 'm',
         deferCacheCallback:false,
         // api: {
