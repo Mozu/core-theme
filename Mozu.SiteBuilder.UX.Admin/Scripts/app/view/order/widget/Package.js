@@ -821,13 +821,14 @@ Ext.define('Taco.view.order.widget.Package', {
                 items: grid.packageData.items,
                 billingContact: this.record.data.billingContact,
                 fulfillmentContact: this.record.data.fulfillmentContact,
-                payment: this.record.data.payments[0],
+                payments: this.record.data.payments,
                 order: this.record.data,
                 siteName: Taco.app.context.getSite().name
             },
             win = window.open(),
             tpl;
 
+        
 
 
         tpl = new Ext.XTemplate(
@@ -873,14 +874,23 @@ Ext.define('Taco.view.order.widget.Package', {
                             '<div>{fulfillmentContact.email}</div>',
                         '</td>',
                     '</tr>',
+                    
+                    
                     '<tr>',
                         '<td style="font-weight: bold;">Payment Method:</td>',
                         '<td style="font-weight: bold;">Shipping Method:</td>',
                     '</tr>',
-                    '<tr>',
-                        '<td style="border-top: 2px solid black; font-weight: bold; padding: 4px 30px 20px 4px;">{payment.paymentType}</td>',
+                    '<tr>',                
+                        '<td style="border-top: 2px solid black; font-weight: bold; padding: 4px 30px 20px 4px;">',
+                            '<tpl for="payments">',                                
+                                '<tpl if="values.status!=\'Voided\'">',
+                                    '<div>{paymentType}<div>',
+                                '</tpl>',
+                            '</tpl>',
+                        '</td>',
                         '<td style="border-top: 2px solid black; padding: 4px 30px 20px 4px;">{shippingMethodName}</td>',
                     '</tr>',
+                    
                 '</tbody></table>',
                 '<table style="border-collapse: collapse; border-spacing: 0px; width: 100%;"><tbody>',
                     '<tr>',
