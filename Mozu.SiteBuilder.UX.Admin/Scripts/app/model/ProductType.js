@@ -3,7 +3,10 @@
  */
 Ext.define('Taco.model.ProductType', {
     extend: 'Taco.core.data.Model',
-    requires: ['Taco.model.ProductTypeAttribute'],
+    requires: [
+        'Taco.model.ProductTypeAttribute',
+        'Taco.core.data.cache.ProxyCache'
+    ],
     fields: [
         { name: 'id', type: 'auto' },
         { name: 'name', type: 'string' },
@@ -56,7 +59,9 @@ Ext.define('Taco.model.ProductType', {
      { type: 'presence', name: 'name' }
     ],
     proxy: {
-        type: 'ajaxproxy',
+        type: 'taco-ajaxCacheProxy',
+        contextLevel: 'm',
+        deferCacheCallback:false,
         // api: {
         //     create: '/admin/app/Testing/testCreate',
         //     read: '/admin/Scripts/app/mocks/producttypes.json',

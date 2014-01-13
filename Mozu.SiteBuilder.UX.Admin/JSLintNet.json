@@ -1,0 +1,16 @@
+﻿{
+  "output": "Warning",
+  "runOnSave": false,
+  "runOnBuild": false,
+  "cancelBuild": false,
+  "ignore": [
+    "\\Scripts\\.sencha\\app\\codegen.json"
+  ],
+  "options": {
+    "predef": {
+      "Ext": false,
+      "Taco": false
+    },
+    "sloppy": true
+  }
+}

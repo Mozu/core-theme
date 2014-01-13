@@ -1,39 +1,34 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.FSharp.Core;
 using Mozu.SiteBuilder.Mvc.Contexts;
-using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
-using Mozu.SiteBuilder.Mvc.Themes;
+using Mozu.SiteBuilder.UX.Models.Customers;
 using NDjango.Interfaces;
+using NDjango.Misc;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
     public class HyprView
     {
-     
         private readonly string _mappedPath;
         private readonly string _virtualPath;
-       // private readonly ITemplateManager _templateManager;
-       
+        // private readonly ITemplateManager _templateManager;
 
-        public HyprView(string mappedPath, string virtualPath , ITemplateManager templateManager)
+
+        public HyprView(string mappedPath, string virtualPath, ITemplateManager templateManager)
         {
-      
             _mappedPath = mappedPath;
             _virtualPath = virtualPath;
-       //     _templateManager = templateManager;
-          
+            //     _templateManager = templateManager;
         }
-    
 
 
-      
-
-        Dictionary<string, object> CreateRequestContext(HyprViewContext viewContext, System.IO.TextWriter writer)
+        private Dictionary<string, object> CreateRequestContext(HyprViewContext viewContext, TextWriter writer)
         {
-
             var clientApiContext = viewContext.LifetimeScope.Resolve<ClientApiContext>();
 
 
@@ -41,99 +36,88 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
             var pageContext = viewContext.LifetimeScope.Resolve<PageContext>();
             var siteContext = viewContext.LifetimeScope.Resolve<SiteContext>();
-            
 
 
+            var requestContext = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
-
-
-            
-            var requestContext = new Dictionary<string, object>(viewContext.ViewData);
-
-
-            var user = pageContext.User;
-            if (viewContext.HttpContext.Items["templateVariables"] == null)
+            foreach (var kvp in viewContext.ViewData)
             {
-                viewContext.HttpContext.Items["templateVariables"] = new System.Collections.Hashtable(StringComparer.OrdinalIgnoreCase);
+                requestContext[kvp.Key] = kvp.Value;
             }
 
-            
+
+            User user = pageContext.User;
+            if (viewContext.HttpContext.Items["templateVariables"] == null)
+            {
+                viewContext.HttpContext.Items["templateVariables"] = new Hashtable(StringComparer.OrdinalIgnoreCase);
+            }
+
+
             requestContext["templateVariables"] = viewContext.HttpContext.Items["templateVariables"];
             requestContext["_vc"] = viewContext;
 
             requestContext["model"] = viewContext.ViewData.Model;
             if (viewContext.ParentActionViewContext != null)
             {
-                requestContext["PageModel"] = requestContext["pageModel"] = viewContext.ParentActionViewContext.ViewData.Model;
+                requestContext["pageModel"] = viewContext.ParentActionViewContext.ViewData.Model;
             }
             else
             {
-                requestContext["PageModel"] = requestContext["pageModel"] = viewContext.ViewData.Model;
+                requestContext["pageModel"] = viewContext.ViewData.Model;
             }
 
 
-
-            requestContext["SiteContext"] = requestContext["siteContext"] = siteContext;
-            requestContext["ThemeSettings"] = requestContext["themeSettings"] = siteContext.ThemeSettings;
-            requestContext["Labels"] = requestContext["labels"] = siteContext.Labels;
-            requestContext["PageContext"] = requestContext["pageContext"] = pageContext;
-            requestContext["Navigation"] = requestContext["navigation"] = navigationContext;
-            requestContext["ApiContext"] = requestContext["apiContext"] = clientApiContext;
-            requestContext["User"] = requestContext["user"] = user;
+            requestContext["siteContext"] = siteContext;
+            requestContext["themeSettings"] = siteContext.ThemeSettings;
+            requestContext["labels"] = siteContext.Labels;
+            requestContext["pageContext"] = pageContext;
+            requestContext["navigation"] = navigationContext;
+            requestContext["apiContext"] = clientApiContext;
+            requestContext["user"] = user;
             requestContext["true"] = true;
             requestContext["false"] = false;
             requestContext["viewPath"] = _virtualPath;
             requestContext["ViewData"] = viewContext.ViewData;
-            
 
-         
+
             return requestContext;
         }
-        public async Task<bool> AsyncRender(HyprViewContext viewContext, System.IO.TextWriter writer)
+
+        public async Task<bool> AsyncRender(HyprViewContext viewContext, TextWriter writer)
         {
-            var requestContext = CreateRequestContext(viewContext, writer);
+            Dictionary<string, object> requestContext = CreateRequestContext(viewContext, writer);
             try
             {
                 var templateManager = viewContext.RequestMessage.Resolve<ITemplateManager>();
-                var reader = templateManager.RenderTemplate(_mappedPath, requestContext);
-                var buffer = new char[4096];
-                int count = 0;
+                ITemplate template = templateManager.GetTemplate(_mappedPath);
+                var renderer = new TemplateRenderer(templateManager, template, requestContext);
 
-                while ((count = (await reader.ReadAsync(buffer, 0, buffer.Length))) > 0)
-                {
-                    writer.Write(buffer, 0, count);
-                }
+                await renderer.AsyncRender(writer);
             }
             catch (Exception ex)
             {
-                throw new NDjango.Interfaces.RenderingError(  string.Format( "error in template [{0}]" ,this._virtualPath) , new FSharpOption<Exception>(ex));
+                throw new RenderingError(string.Format("error in template [{0}]", _virtualPath), new FSharpOption<Exception>(ex));
             }
             await writer.FlushAsync();
             return true;
         }
-        public void Render(HyprViewContext viewContext, System.IO.TextWriter writer)
+
+        public void Render(HyprViewContext viewContext, TextWriter writer)
         {
-
-
             var templateManager = viewContext.RequestMessage.Resolve<ITemplateManager>();
-            var requestContext = CreateRequestContext(viewContext, writer);
+            Dictionary<string, object> requestContext = CreateRequestContext(viewContext, writer);
             try
             {
+                ITemplate template = templateManager.GetTemplate(_mappedPath);
+                var renderer = new TemplateRenderer(templateManager, template, requestContext);
 
-                var reader = templateManager.RenderTemplate(_mappedPath, requestContext);
-                var buffer = new char[4096];
-                int count = 0;
-                
-                while ((count = reader.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    writer.Write(buffer, 0, count);
-                }
+                renderer.Render(writer);
+                //var reader = templateManager.RenderTemplate(_mappedPath, requestContext);
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException("error in template " + this._virtualPath, ex);
+                throw new InvalidOperationException("error in template " + _virtualPath, ex);
             }
         }
-
     }
 }

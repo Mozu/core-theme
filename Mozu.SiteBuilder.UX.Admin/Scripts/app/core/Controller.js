@@ -25,32 +25,33 @@ Ext.define('Taco.core.Controller', {
             Ext.each(model.prototype.requiredStores, function (storeCfg) {
 
                 var store = Taco.core.data.StoreManager.getOrCreate(storeCfg);
-                if (store.storeManagerConfig && store.storeManagerConfig.createOnly) {
+                if (store.storeManagerConfig && store.storeManagerConfig.createOnly && !store.proxy.isCacheProxy) {
                     Ext.global.console.warn('cant use store ' + store.$className + ' ad requiredStore');
 
                 } else if (!store.hasCompletedLoading()) {
 
-                    requiredStoresLoading = true;
+                    if (!store.isLoading()) {
+                        store.load();
+                    }
+                    if (!store.hasCompletedLoading()) {
 
-                    if (Ext.Array.indexOf(options.loadingStores, storeCfg) === -1) {
 
-                        options.loadingStores.push(storeCfg);
+                        requiredStoresLoading = true;
 
-                        if (!store.isLoading()) {
-                            store.load({
-                                callback: function () {
-                                    me.ensureRequiredStores(options);
-                                }
-                            });
-                        } else {
+                        if (Ext.Array.indexOf(options.loadingStores, storeCfg) === -1) {
+
+                            options.loadingStores.push(storeCfg);
+
+
                             store.on({
-                                load: {
-                                    fn: function () {
-                                        me.ensureRequiredStores(options);
-                                    },
-                                    single: true
-                                }
-                            });
+                                    load: {
+                                        fn: function () {
+                                            me.ensureRequiredStores(options);
+                                        },
+                                        single: true
+                                    }
+                                });
+                            
                         }
                     }
                 }
