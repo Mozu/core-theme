@@ -162,7 +162,7 @@ Ext.define('Taco.model.Product', {
         {
             "name": "isTaxable",
             "type": "boolean",
-            defaultValue: false,
+            defaultValue: true,
             "useNull": true
         },
         {
