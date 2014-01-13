@@ -90,6 +90,12 @@ module.exports = function (grunt) {
                     run: true
                 }
             }
+        },
+        jsdoc: {
+            src: ['src/context.js', 'readme.md'],
+            options: {
+                destination: 'docs',
+            }
         }
     });
 
@@ -99,6 +105,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-mocha');
+    grunt.loadNpmTasks('grunt-jsdoc');
 
     grunt.registerMultiTask('tfscheckout', 'Using Team Foundation Server, checks out the files that will be modified, so TFS is aware that changes were made.', function () {
         var done = this.async(),

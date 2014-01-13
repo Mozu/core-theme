@@ -1,4 +1,19 @@
-﻿// BEGIN INTERFACE
+﻿/**
+ * @external Promise
+ * @see {@link https://github.com/cujojs/when/blob/master/docs/api.md#promise WhenJS/Promise}
+ */
+
+/**
+ * Attach handlers to and transform the promise.
+ * @function external:Promise#then
+ * @returns external:Promise#
+ */
+
+// BEGIN INTERFACE
+/**
+ * @class
+ * @classdesc The interface object makes requests to the API and returns API object. You can use it to make raw requests using the ApiInterface#request method, but you're more likely to use the ApiInterface#action method to create a external:Promise# that returns an ApiObject#.
+ */
 var ApiInterface = (function () {
     var errorMessage = "No {0} was specified. Run Mozu.Tenant(tenantId).MasterCatalog(masterCatalogId).Site(siteId).",
         requiredContextValues = ['Tenant', 'MasterCatalog', 'Site'];
@@ -11,6 +26,11 @@ var ApiInterface = (function () {
 
     ApiInterfaceConstructor.prototype = {
         constructor: ApiInterfaceConstructor,
+        /**
+         * @public
+         * @memberof ApiInterface#
+         * @returns {external:Promise#}
+         */
         request: function (method, requestConf, conf) {
             var me = this,
                 url = typeof requestConf === "string" ? requestConf : requestConf.url;
@@ -56,6 +76,11 @@ var ApiInterface = (function () {
             
             return deferred.promise;
         },
+        /**
+         * @public
+         * @memberof ApiInterface#
+         * @returns external:Promise#
+         */
         action: function (instanceOrType, actionName, data) {
             var me = this,
                 obj = instanceOrType instanceof ApiObject ? instanceOrType : me.createSync(instanceOrType),

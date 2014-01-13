@@ -1,5 +1,12 @@
 ﻿// BEGIN CONTEXT
+/**
+ * @class
+ * @classdesc The context object helps you configure the SDK to connect to a particular Mozu site. Supply it with tenant, site, mastercatalog, currency code, locale code, app claims, and user claims, and  it will produce for you an ApiInterface object.
+ */
 var ApiContext = (function () {
+    /**
+     * @private 
+     */
     var ApiContextConstructor = function (conf) {
         utils.extend(this, conf);
     },
@@ -29,6 +36,18 @@ var ApiContext = (function () {
 
     ApiContextConstructor.prototype = {
         constructor: ApiContextConstructor,
+
+        /**
+         * Gets or creates the `ApiInterface` for this context that will do all the real work.
+         * Call this method only when you've built a complete context including tenant, site, master catalog,
+         * locale, currency code, app claims, and user claims. Assign its return value to a local variable.
+         * You'll use this interface object to create your `ApiObject`s and do API requests!
+         * 
+         * @public
+         * @memberof ApiContext#
+         * @returns {ApiInterface} The single `ApiInterface` for this context.
+         * @throws {ReferenceError} if the context is not yet complete.
+         */
         api: function () {
             return this._apiInstance || (this._apiInstance = new ApiInterface(this));
         },

@@ -34,13 +34,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             string fileName;
             switch(mode) {
                 case "debug":
-                    fileName = "mozu-sdk.debug.js";
+                    fileName = "mozu-javascript-sdk.debug.js";
                     break;
-                case "min":
-                    fileName = "mozu-sdk.min.js";
-                    break;
-                default: 
-                    fileName = "mozu-sdk.js";
+                default:
+                    fileName = "mozu-javascript-sdk.min.js";
                     break;
             }
             return File(System.IO.Path.Combine(MozuConfigurationManager.AppSettings("js-sdk-build-dir"),fileName), "text/javascript");

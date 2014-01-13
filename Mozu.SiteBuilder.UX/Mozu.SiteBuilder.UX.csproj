@@ -467,6 +467,8 @@
     <Content Include="BuiltinScripts\RequireJS\src\plugins\shim.js" />
     <Content Include="BuiltinScripts\RequireJS\src\plugins\text.js" />
     <Content Include="BuiltinScripts\RequireJS\src\vars-debug.js" />
+    <Content Include="BuiltinScripts\SDK\dist\mozu-javascript-sdk.debug.js" />
+    <Content Include="BuiltinScripts\SDK\dist\mozu-javascript-sdk.min.js" />
     <Content Include="BuiltinScripts\SDK\src\constants\default.js" />
     <Content Include="BuiltinScripts\SDK\src\errors.js" />
     <Content Include="BuiltinScripts\SDK\src\iframexhr.js" />
@@ -487,8 +489,6 @@
     </Content>
     <Content Include="BuiltinScripts\HyprLive\package.json" />
     <Content Include="BuiltinScripts\RequireJS\src\require.js" />
-    <Content Include="BuiltinScripts\SDK\dist\mozu-sdk.debug.js" />
-    <Content Include="BuiltinScripts\SDK\dist\mozu-sdk.min.js" />
     <Content Include="BuiltinScripts\SDK\Gruntfile.js" />
     <Content Include="BuiltinScripts\SDK\src\init_debug.js" />
     <Content Include="BuiltinScripts\SDK\docs\SDK_README.html" />
