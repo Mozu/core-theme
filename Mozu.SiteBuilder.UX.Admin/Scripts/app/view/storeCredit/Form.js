@@ -8,10 +8,15 @@ Ext.define('Taco.view.storeCredit.Form', {
         'Taco.shared.view.field.Customer'
     ],
     ui: 'subform',
-    title: 'Store Credit',
+    createTitle: 'Create New Store Credit',
     layout: 'fit',
     initComponent: function () {
         this.buildFormComponents();
+        
+        if (!this.isCreate) {
+            this.title = 'Edit Store Credit: ' + this.record.data.code;
+        }
+        
 
         this.callParent(arguments);
     },
