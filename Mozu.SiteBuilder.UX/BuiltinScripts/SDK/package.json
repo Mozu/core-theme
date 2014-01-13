@@ -1,8 +1,20 @@
 {
-  "name": "mozu-sdk",
+  "name": "mozu-javascript-sdk",
   "title": "Mozu JavaScript SDK",
   "author": "Volusion, Inc.",
+  "contributors": [{
+    "name": "James Zetlen",
+    "email": "james_zetlen@volusion.com"
+  }],
   "version": "0.2.0",
+  "scripts": {
+    "make": "grunt",
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mozu/mozu-javascript-sdk.git"
+  },
   "devDependencies": {
     "grunt": "~0.4.0",
     "grunt-bower-task": "~0.3.2",
@@ -15,7 +27,8 @@
     "sinon": "~1.7.3",
     "chai": "~1.7.2",
     "sinon-chai": "~2.4.0",
-    "chai-as-promised": "~3.3.1"
+    "chai-as-promised": "~3.3.1",
+    "grunt-jsdoc": "~0.5.1"
   },
-  "main": "./dist/mozu-sdk.min"
+  "main": "./dist/mozu-javascript-sdk.min"
 }

@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2014-01-09
+ * Mozu JavaScript SDK - v0.2.0 - 2014-01-13
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -1927,7 +1927,6 @@ if( typeof define !== "undefined"){
 }
 
 var CONSTANTS = {
-    BASE_PAYPAL_URL: 'https://sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token={0}',
     DEFAULT_WISHLIST_NAME: 'my_wishlist',
     PAYMENT_STATUSES: {
         NEW: "New"
