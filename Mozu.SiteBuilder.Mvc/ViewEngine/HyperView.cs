@@ -92,7 +92,8 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 ITemplate template = templateManager.GetTemplate(_mappedPath);
                 var renderer = new TemplateRenderer(templateManager, template, requestContext);
 
-                await renderer.AsyncRender(writer);
+                //await renderer.AsyncRender(writer);
+                renderer.Render(writer);
             }
             catch (Exception ex)
             {
