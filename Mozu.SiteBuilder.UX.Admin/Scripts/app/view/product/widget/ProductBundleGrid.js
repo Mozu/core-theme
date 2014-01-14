@@ -31,14 +31,15 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 deferEmptyText: false,
                 emptyText: "No items in this bundle",
                 plugins: [
-                    { ptype: 'gridviewdragdrop' }
+                    {
+                        ptype: 'gridviewdragdrop'
+                    }
                 ]
             },
-            listeners: {
+            listeners: {                
                 'edit': {
                     fn: function(editor, column, e) {
-                        column.record.commit();
-                        
+                        column.record.commit();                        
                         column.record.save();
                     }
                 }
@@ -51,46 +52,14 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
             columns: this.getColumnConfig()
         });
 
-
-        
-
-        //var data = Ext.clone(me.product.get("bundledProducts")) 
-        
-
-        /*
-        this.store = Ext.create('Ext.data.Store', {
-            model: "Taco.model.BundledProduct",
-            data: data
-        });
-        */
-
         this.store = this.product.getBundledProducts();
 
         this.callParent(arguments);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        this.mon(this.view, 'drop', function (node, data, overModel, dropPosition, eOpts) {            
+            // need top set a model member to dirty the record so that the store will persist the change; the value you set isn't persisted;
+            data.records[0].set('index', 1);
+        }, this)
 
     },
     
