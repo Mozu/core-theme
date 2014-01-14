@@ -2,6 +2,7 @@
 using System.Net;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 using NSubstitute;
 using NUnit.Framework;
 using Should;
@@ -11,16 +12,15 @@ namespace Mozu.SiteBuilder.IntegrationTests
     [TestFixture]
     public class UserHelperTests
     {
-        private IMultiScopeAdminUserWebApiClient _userWebApiClient;
-
         [SetUp]
         public void SetUp()
         {
-            var client = Substitute.For<IMultiScopeAdminUserWebApiClient, ICloneable>();
+            IMultiScopeAdminUserWebApiClient client = Substitute.For<IMultiScopeAdminUserWebApiClient, ICloneable>();
             _userWebApiClient = client;
             ((ICloneable) client).Clone().Returns(_userWebApiClient);
-       
         }
+
+        private IMultiScopeAdminUserWebApiClient _userWebApiClient;
 
         //[Test]
         //public void GetUser_by_id_should_return_mapped_user()
@@ -34,21 +34,21 @@ namespace Mozu.SiteBuilder.IntegrationTests
         //    user.Id.ShouldEqual(id);
         //}
 
+        private UserHelper GetHelper()
+        {
+            return new UserHelper(_userWebApiClient);
+        }
+
         [Test]
         public void GetUser_should_return_null_if_response_is_not_successful()
         {
             _userWebApiClient.WithAny(x => x.GetUser(null, null), null, msg => msg.StatusCode = HttpStatusCode.NotFound);
 
-            var api = GetHelper();
+            UserHelper api = GetHelper();
 
-            var user = api.GetUser("whatever");
+            User user = api.GetUser("whatever");
 
             user.ShouldBeNull();
-        }
-
-        private UserHelper GetHelper()
-        {
-            return new UserHelper(_userWebApiClient);
         }
     }
 }

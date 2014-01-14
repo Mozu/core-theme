@@ -133,9 +133,9 @@
 //                    new Product { ProductCode = "123", ProductName = "The Zetlen Accordian" },
 //                    new Product { ProductCode = "456", ProductName = "4 hour loko" },
 //                };
-        
+
 //            var response = _testedController.EditProduct(products).Result;
-        
+
 //            response.Success.ShouldBeTrue();
 //            response.Total.ShouldEqual(products.Count);
 //            response.Items.First().ProductCode.ShouldEqual(products.First().ProductCode);
@@ -145,3 +145,4 @@
 //        // TODO: some more testing
 //    }
 //}
+

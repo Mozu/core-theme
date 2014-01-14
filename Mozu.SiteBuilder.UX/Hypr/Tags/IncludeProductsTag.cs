@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
 using AutoMapper;
+using MassTransit;
+using Mozu.Core.Api.Client;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
@@ -16,6 +20,8 @@ using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Bson;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -42,11 +48,11 @@ The include_products tag is a special kind of include tag, that includes a named
         /// <param name="context"></param>
         /// <param name="buffer"></param>
         /// <param name="templateName"></param>
-        protected async override Task<SimpleTagBaseAsync.ProcessTagResult > ProcessTagAsync(Mvc.Tags.ArgumentCollection arguments,  NDjango.Interfaces.IContext context)
+        protected override async Task<SimpleTagBaseAsync.ProcessTagResult> ProcessTagAsync(Mvc.Tags.ArgumentCollection arguments, NDjango.Interfaces.IContext context)
         {
             var result = new SimpleTagBaseAsync.ProcessTagResult(context);
-            
-            var template = arguments.GetValueOrDefault<string>("viewName") ?? (string)arguments[0].Value;
+
+            var template = arguments.GetValueOrDefault<string>("viewName") ?? (string) arguments[0].Value;
             var includeFacets = arguments.GetValueOrDefault<bool>("includeFacets", false);
             var pageWithUrl = arguments.GetValueOrDefault<bool>("pageWithUrl", false);
             var sortWithUrl = arguments.GetValueOrDefault<bool>("sortWithUrl", false);
@@ -55,10 +61,10 @@ The include_products tag is a special kind of include tag, that includes a named
             var query = arguments.GetValueOrDefault<string>("query");
             var sort = arguments.GetValueOrDefault<string>("sort");
             var productCodes = arguments.GetValueOrDefault<IEnumerable>("productCodes");
-            
+
 
             var pageContext = context.PageContext();
-            var siteContext = context.SiteContext() ;
+            var siteContext = context.SiteContext();
             var searchWebApiClient = context.Resolve<IProductSearchWebApiClient>();
             var request = context.HttpContext().Request;
             var searchQuery = new StringBuilder();
@@ -76,16 +82,16 @@ The include_products tag is a special kind of include tag, that includes a named
             }
             else if (productCodes != null)
             {
-                if (productCodes is string  )
+                if (productCodes is string)
                 {
                     productCodes = ((string) productCodes).Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
                 }
-                
+
                 var productCodesFilters = (productCodes ?? Enumerable.Empty<object>()).Cast<object>().Where(x => x != null).Select(x => string.Format("productCode eq {0}", x)).ToArray();
 
                 if (productCodesFilters.Length == 0)
                 {
-                    result.Template  = null;
+                    result.Template = null;
                     return result;
                 }
                 else
@@ -95,10 +101,10 @@ The include_products tag is a special kind of include tag, that includes a named
             }
             else
             {
-                if ( categoryId.HasValue )
+                if (categoryId.HasValue)
                 {
                     searchQuery.Append("categoryId req ");
-                    searchQuery.Append( categoryId.Value );
+                    searchQuery.Append(categoryId.Value);
                 }
             }
 
@@ -109,7 +115,7 @@ The include_products tag is a special kind of include tag, that includes a named
                 {
                     pageSize = tmp;
                 }
-                else if (int.TryParse( (siteContext.ThemeSettings["defaultPageSize"] ?? new object()).ToString() , out tmp))
+                else if (int.TryParse((siteContext.ThemeSettings["defaultPageSize"] ?? new object()).ToString(), out tmp))
                 {
                     pageSize = tmp;
                 }
@@ -118,37 +124,50 @@ The include_products tag is a special kind of include tag, that includes a named
                     pageSize = 15;
                 }
 
-               if (int.TryParse(request["startIndex"], out tmp))
-               {
-                   startIndex = startIndex;
-               }
-               
+                if (int.TryParse(request["startIndex"], out tmp))
+                {
+                    startIndex = startIndex;
+                }
+
             }
 
 
-            if (includeFacets && categoryId.HasValue )
+            if (includeFacets && categoryId.HasValue)
             {
                 facetHierDepth = "categoryId:2";
-                facetTemplate= "categoryId:" + categoryId;
+                facetTemplate = "categoryId:" + categoryId;
                 facetHierValue = "categoryId:" + categoryId;
                 facetValueFilter = request.QueryString["facetValueFilter"];
             }
             string sortBy = null;
+            ProductSearchResult pc;
+            //searchWebApiClient = searchWebApiClient.CloneWithConfigOptions(x => x.HttpCompletionOption = HttpCompletionOption.ResponseHeadersRead);
 
             var res = await searchWebApiClient.Search(query: qurey, filter: searchQuery.ToString(), facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: facetValueFilter, startIndex: startIndex, sortBy: sortBy, pageSize: pageSize).ConfigureAwait(false);
 
+            using (var stream = await res.ResponseMessage.Content.ReadAsStreamAsync())
+            {
+                using (var sr = new StreamReader(stream))
+                {
+                    var rdr = new JsonTextReader(sr);
+                    var ser = JsonSerializer.CreateDefault();
 
-            var pcDC = await  res.ReadAsAsync();
-            var pc = Mapper.Map<ProductSearchResult>(pcDC);
-            result.Template  = template;
-            context=context.remove("Model").remove("model").add(new Tuple<string, object>("Model", pc)).add(new Tuple<string, object>("model", pc));
+                    pc = ser.Deserialize<ProductSearchResult>(rdr);
+                }
+            }
+            //    var pcDC = await  res.ReadAsAsync();
+            //     var pc = Mapper.Map<ProductSearchResult>(pcDC);
+            result.Template = template;
 
-            result.Context = context;
+
+            result.Context = context.add(new Tuple<string, object>("model", pc));
+            ;
             return result;
+
 
         }
 
-      
+
 
         //public string ProductListing( HttpRequestBase request , ISiteBuilderContext siteBuilderContext , int? categoryId = null, string sortBy = null, int? startIdx = null, int? itemsPerPage = null, IEnumerable productCodes = null, bool? includeFacets = null, bool? useUrlParams = null)
         //{

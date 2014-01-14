@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using Mozu.Core.Api.Contracts;
 using Mozu.Reference.Contracts;
 using Mozu.Reference.Contracts.Clients;
+using Mozu.SiteBuilder.UX.Admin;
+using Mozu.SiteBuilder.UX.Models.Settings;
+using Mozu.SiteSettings.General.Contracts.Clients;
 using NSubstitute;
 using NUnit.Framework;
-using Should;
-using Mozu.SiteBuilder.UX.Admin;
-using Mozu.SiteSettings.General.Contracts;
-using Mozu.SiteSettings.General.Contracts.Clients;
-using GeneralSettings = Mozu.SiteBuilder.UX.Models.Settings.GeneralSettings;
 using MozuGeneralSettings = Mozu.SiteSettings.General.Contracts.GeneralSettings;
-using IPBlock = Mozu.SiteSettings.General.Contracts.IPBlock;
 using TimeZone = Mozu.Reference.Contracts.TimeZone;
 
 namespace Mozu.SiteBuilder.IntegrationTests.Admin
@@ -23,16 +15,21 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin
     [TestFixture]
     public class GeneralSettingsWrapperTests
     {
-        private IReferenceDataWebApiClient _referenceDataWebApiClient;
-        private IGeneralSettingsWebApiClient _generalSettingsWebApiClient;
-        private IProvisioningWebApiClient _provisioningWebApiClient;
-
         [SetUp]
         public void SetUp()
         {
             _referenceDataWebApiClient = Substitute.For<IReferenceDataWebApiClient>();
             _generalSettingsWebApiClient = Substitute.For<IGeneralSettingsWebApiClient>();
             _provisioningWebApiClient = Substitute.For<IProvisioningWebApiClient>();
+        }
+
+        private IReferenceDataWebApiClient _referenceDataWebApiClient;
+        private IGeneralSettingsWebApiClient _generalSettingsWebApiClient;
+        private IProvisioningWebApiClient _provisioningWebApiClient;
+
+        private GeneralSettingWrapper GetWrapper()
+        {
+            return new GeneralSettingWrapper(_referenceDataWebApiClient, _generalSettingsWebApiClient, _provisioningWebApiClient);
         }
 
         //[Test]
@@ -49,10 +46,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin
         //    _generalSettingsWebApiClient.DidNotReceive().DeleteIPBlock(default(int?));
         //}
 
-       
 
-
-        
         //[Test]
         //public void ReadSettings_should_create_when_response_has_exception_and_no_settings_found()
         //{
@@ -83,17 +77,17 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin
         [Test]
         public void GetTimesZones_should_return_mapped_values_from_service()
         {
-            var wrapper = GetWrapper();
+            GeneralSettingWrapper wrapper = GetWrapper();
             var zones = new List<TimeZone>
-                {
-                    new TimeZone { IsDaylightSavingsTime = true, Offset = 5d, Id = "Central Standard" },
-                    new TimeZone { IsDaylightSavingsTime = true, Offset = 6d, Id = "Mountain Daylight" },
-                };
-            var timeZoneCollection = new TimeZoneCollection { Items = zones.ToList() };
+                        {
+                            new TimeZone {IsDaylightSavingsTime = true, Offset = 5d, Id = "Central Standard"},
+                            new TimeZone {IsDaylightSavingsTime = true, Offset = 6d, Id = "Mountain Daylight"},
+                        };
+            var timeZoneCollection = new TimeZoneCollection {Items = zones.ToList()};
 
             _referenceDataWebApiClient.With(x => x.GetTimeZones(), timeZoneCollection);
 
-            var timeZones = wrapper.GetTimeZones();
+            IEnumerable<UX.Models.Settings.TimeZone> timeZones = wrapper.GetTimeZones();
 
             CollectionAssert.AreEqual(timeZones.Select(x => x.Id), zones.Select(x => x.Id));
         }
@@ -101,22 +95,17 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin
         [Test]
         public void UpdateGeneralSettings_should_update_and_return_mapped()
         {
-            var wrapper = GetWrapper();
-            var websiteName = "¡Mexipani Candy Bueno 感嘆符!";
-            var serviceSettings = new MozuGeneralSettings { WebsiteName = websiteName };
+            GeneralSettingWrapper wrapper = GetWrapper();
+            string websiteName = "¡Mexipani Candy Bueno 感嘆符!";
+            var serviceSettings = new MozuGeneralSettings {WebsiteName = websiteName};
 
             _generalSettingsWebApiClient.WithAny(x => x.UpdateGeneralSettings(null), serviceSettings);
 
-            var generalSettings = new GeneralSettings { WebsiteName = websiteName };
+            var generalSettings = new GeneralSettings {WebsiteName = websiteName};
 
-            var settings = wrapper.UpdateGeneralSettings(generalSettings);
+            GeneralSettings settings = wrapper.UpdateGeneralSettings(generalSettings);
 
             Assert.NotNull(settings);
-        }
-
-        private GeneralSettingWrapper GetWrapper()
-        {
-            return new GeneralSettingWrapper(_referenceDataWebApiClient, _generalSettingsWebApiClient, _provisioningWebApiClient);
         }
     }
 }

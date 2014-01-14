@@ -1,27 +1,22 @@
-﻿using System.Net;
-using Mozu.AdminUser.Contracts.Clients;
-using Mozu.Core;
+﻿using Mozu.AdminUser.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Security;
-using Mozu.SiteBuilder.UX.Admin;
-using Mozu.SiteBuilder.UX.Admin.Helpers;
 using NSubstitute;
 using NUnit.Framework;
-using Should;
 
 namespace Mozu.SiteBuilder.IntegrationTests.Admin
 {
     [TestFixture]
     public class CurrentUserProviderTests
     {
-        private IAuthenticationHelper _authenticationHelper;
-        private IMultiScopeAdminUserWebApiClient _adminUserWebApiClient;
-
         [SetUp]
         public void SetUp()
         {
             _authenticationHelper = Substitute.For<IAuthenticationHelper>();
             _adminUserWebApiClient = Substitute.For<IMultiScopeAdminUserWebApiClient>();
         }
+
+        private IAuthenticationHelper _authenticationHelper;
+        private IMultiScopeAdminUserWebApiClient _adminUserWebApiClient;
 
         //[Test]
         //public void GetCurrentUser_should_return_user_if_found_by_token_UserId()

@@ -79,12 +79,12 @@
 //                category.ShouldNotBeNull();
 //        }*/
 //    }
-	
+
 
 //    [TestFixture]
 //    public class RestServiceClientWithAutofacTests
 //    {
-		
+
 //        [Test]
 //        public void GetTest()
 //        {
@@ -95,7 +95,7 @@
 //                        .UsingAssembly(Assembly.GetExecutingAssembly())
 //                        .UsingBuildAction(b => b.Register(c=> new SiteBuilderContext{Id = "1"}).As<ISiteBuilderContext>())
 //                        .Build();
-			
+
 //            var restclientFactory = container.Resolve<Func<Func<Category, object>, IServiceClient<Category>>>();
 //            var restclient = restclientFactory(d => d.CategoryId);
 //            var category = restclient.Get(140);
@@ -147,3 +147,4 @@
 //        }
 //    }
 //}
+

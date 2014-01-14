@@ -21,7 +21,7 @@
 //    [TestFixture]
 //    public class NavigationControllerTests
 //    {
-        
+
 //        private ICategoryWebApiClient _categoryWebApiClient;
 //        private ICmsServiceWrapper _cmsServiceWrapper;
 //        private INavigationRepository _navigationRepository;
@@ -119,7 +119,7 @@
 //        [SetUp]
 //        public void SetUp()
 //        {
-            
+
 //            _logger = Substitute.For<ILogger>();
 //        }
 
@@ -335,7 +335,7 @@
 //            int catId = Convert.ToInt32(cat.OriginalId);
 
 //            var res = controller.Edit(new List<NavigationTreeNode> { cat }).Result;
-            
+
 //            _categoryWebApiClient
 //                .Received()
 //                .UpdateCategory(Arg.Is<Category>(c => c.Id == catId && c.Content.Name == newName), Arg.Is<int?>(catId), Arg.Any<bool?>());
@@ -414,3 +414,4 @@
 //        }
 //    }
 //}
+
