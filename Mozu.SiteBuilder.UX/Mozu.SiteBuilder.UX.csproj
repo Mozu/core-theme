@@ -397,6 +397,7 @@
     <Compile Include="Areas\Misc\Controllers\ContentController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\LocationController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\VisitController.cs" />
+    <Compile Include="Configuration\ApplicationConstants.cs" />
     <Compile Include="Configuration\RouteConfig.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />

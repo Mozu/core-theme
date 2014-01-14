@@ -7,7 +7,6 @@ using System.ServiceModel.Web;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
-
 using System.Web.Routing;
 using Autofac.Integration.WebApi;
 using Mozu.Core.Api;
@@ -28,8 +27,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 {
     public class BootStrapperAdmin : AbstractWebApiBootstrapper
     {
-        private const string APPLICATION_NAME = "Mozu.SiteBuilder.UX.Admin";
-     
         protected override void AddMessageHandlers(HttpConfiguration httpConfiguration, IHttpMessageHandlerErrorHandler messageErrorHandler)
         {
             
@@ -105,13 +102,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             if (fac != null)
             {
                 fac.AddContextProvider(new CurrentRequestLoggingContextProvider());
-                fac.AddContextProvider(new ApplicationNameLoggingContextProvider(APPLICATION_NAME));
+                fac.AddContextProvider(new ApplicationNameLoggingContextProvider(ApplicationConstants.APPLICATION_NAME));
             }
         }
 
         protected override void PreApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)
         {
-            LogStartupMessage<MvcApplication>(APPLICATION_NAME);
+            LogStartupMessage<MvcApplication>(ApplicationConstants.APPLICATION_NAME);
         }
 
 

@@ -1,9 +1,7 @@
 ﻿using System.Linq;
 using System.ServiceModel;
-//
 using System.Web.Http;
 using Autofac;
-//using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
@@ -26,8 +24,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 {
     public class ConfigurationModule : Module
     {
-        private const string APPLICATION_NAME = "Mozu.SiteBuilder.UX.Admin";
-
         protected override void Load(ContainerBuilder builder)
         {
             RegisterServiceContracts(builder);
@@ -107,7 +103,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             builder.RegisterType<AdminCategoryTreeProvider>().As<ICategoryTreeProvider>();
             builder.RegisterType<CategoryNavigationProvider>().As<ICategoryNavigationProvider>();
 
-            builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", APPLICATION_NAME).InstancePerLifetimeScope();
+            builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", ApplicationConstants.APPLICATION_NAME).InstancePerLifetimeScope();
 
 
             builder.RegisterType<ProductCategoryRuntimeWebApiClient>();

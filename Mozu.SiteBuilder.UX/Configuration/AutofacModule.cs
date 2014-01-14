@@ -42,8 +42,6 @@ namespace Mozu.SiteBuilder.UX.Configuration
 {
 	public class AutofacModule : Module
 	{
-        private const string APPLICATION_NAME = "Mozu.SiteBuilder.UX";
-
 		public string ApiBaseUri { get; set; }
         class SbApiContextBuilder : IApiContextBuilder
         {
@@ -136,7 +134,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             // add these two logging context providers for loggers provided by the DI framework.
             builder.RegisterType<CurrentRequestLoggingContextProvider>().As<ILoggingContextProvider>().InstancePerLifetimeScope();
-            builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", APPLICATION_NAME).InstancePerLifetimeScope();
+            builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", ApplicationConstants.APPLICATION_NAME).InstancePerLifetimeScope();
 
             builder.RegisterType<VisitEventPublisher>().As<VisitEventPublisher>().InstancePerApiRequest();
 
@@ -145,7 +143,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.Register<IServiceBus>(c => ServiceBusFactory.New(sbc =>
                 {
                     sbc.ReceiveFrom(c.Resolve<ISettings>().ConnectionStrings("SiteBuilderMessageQueue").Value);
-                    sbc.UseRabbitWithPublisherConfirms(c, APPLICATION_NAME).WithFileBackingStore();
+                    sbc.UseRabbitWithPublisherConfirms(c, ApplicationConstants.APPLICATION_NAME).WithFileBackingStore();
                     sbc.UseControlBus();
                     // sbc.UseLog4Net();
                 }))
