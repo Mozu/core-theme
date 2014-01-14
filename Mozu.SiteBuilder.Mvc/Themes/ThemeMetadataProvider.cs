@@ -54,6 +54,16 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         }
 
 
+        string EscapeThemeId(string id)
+        {
+            return (id ?? "").Replace("/", "*").Replace("\\", "*");
+        }
+        string UnEscapeThemeId(string id)
+        {
+            return (id ?? "").Replace("*", "\\");
+        }
+
+
         /// <summary>
         /// Gets a theme by name or id.
         /// </summary>
@@ -61,10 +71,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             if (String.IsNullOrWhiteSpace(id))
                 return null;
-
+            id = EscapeThemeId(id);
             var tmd = new ThemeMetaData { Id = id };
 
-            tmd.ThemePath = ThemePaths.Select(p => Path.GetFullPath(p + "//" + id)).FirstOrDefault(p => Directory.Exists(p));
+            tmd.ThemePath = ThemePaths.Select(p => Path.GetFullPath(p + "//" + UnEscapeThemeId(id))).FirstOrDefault(p => Directory.Exists(p));
 
             if (!Directory.Exists(tmd.ThemePath))
                 return null;
@@ -73,7 +83,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             tmd.FileListing = LoadThemeFileListing(tmd.ThemePath);
             tmd.Thumbnail = LoadThemeThumbnail(tmd.ThemePath);
             tmd.Labels = LoadThemeLabels(tmd.ThemePath);
-            tmd.TimeStamp = tmd.FileListing.Max(x => x.TimsStamp);
+            tmd.TimeStamp = tmd.FileListing.Length == 0 ? DateTime.MaxValue : tmd.FileListing.Max(x => x.TimsStamp);
 
             if (tmd.Configuration == null)
                 return null;
@@ -89,7 +99,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             if (String.IsNullOrWhiteSpace(id))
                 return null;
-
+            id = EscapeThemeId(id);
             var tmd = new ThemeMetaData { Id = id };
 
             int intId;
@@ -99,7 +109,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             if (int.TryParse(id, out intId))
                 tmd.ThemePath = Path.GetFullPath(DevAddonPath + id);
             else
-                tmd.ThemePath = Path.GetFullPath(LocalAddonPath + "//" + id);
+                tmd.ThemePath = Path.GetFullPath(LocalAddonPath + "//" + UnEscapeThemeId(id));
 
             if (!Directory.Exists(tmd.ThemePath))
                 return null;
