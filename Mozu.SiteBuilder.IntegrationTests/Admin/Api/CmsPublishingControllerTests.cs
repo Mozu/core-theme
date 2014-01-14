@@ -22,13 +22,13 @@
 //        CmsPublishingController _testedController;
 //        private readonly DC.DocumentDraftSummaryPagedCollection  _mocks = new DC.DocumentDraftSummaryPagedCollection()
 //        {
-        
+
 //            Items = new List<DC.DocumentDraftSummary > {
 //                new DC.DocumentDraftSummary {
 //                    Id = Guid.NewGuid(),
 //                    Name = "Test Document 1",
 //                    DocumentListName = "Pages1"
-                    
+
 //                },
 //                new DC.DocumentDraftSummary {
 //                    Id = Guid.NewGuid(),
@@ -43,7 +43,7 @@
 //        {
 //            _documentClient = Substitute.For<IMoreAwesomeDocumentWebApiClient>();
 //            _testedController = new CmsPublishingController((IMoreAwesomeDocumentWebApiClient)_documentClient);
-            
+
 //            // set up GetDrafts mock.
 //            _documentClient.GetDrafts().Returns(
 //                args => new TestResponse<DC.DocumentDraftSummaryPagedCollection >(_mocks).Task
@@ -133,3 +133,4 @@
 //        // TODO: some more testing
 //    }
 //}
+

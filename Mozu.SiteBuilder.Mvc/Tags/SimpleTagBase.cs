@@ -119,7 +119,8 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 bool walked = false;
                 if (!string.IsNullOrEmpty(buffer))
                 {
-                    walker = new Walker(walker.parent, walker.nodes, walker.buffer + buffer, walker.bufferIndex, ctx);
+                    buffer = string.IsNullOrEmpty(walker.buffer) ? buffer : walker.buffer + buffer;
+                    walker = new Walker(walker.parent, walker.nodes, buffer, walker.bufferIndex, ctx);
                     walker = TagBase.Walk(arguments, ctx, manager, walker, this);
                     walked = true;
                 }
@@ -327,7 +328,8 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 bool walked = false;
                 if (!string.IsNullOrEmpty(buffer))
                 {
-                    walker = new Walker(walker.parent, walker.nodes, walker.buffer + buffer, walker.bufferIndex, ctx);
+                    buffer = string.IsNullOrEmpty(walker.buffer) ? buffer : walker.buffer + buffer;
+                    walker = new Walker(walker.parent, walker.nodes, buffer, walker.bufferIndex, ctx);
                     walker = TagBase.Walk(arguments, ctx, manager, walker, this);
                     walked = true;
                 }

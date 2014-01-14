@@ -11,7 +11,7 @@
 //        public void Everything_should_be_New_when_created()
 //        {
 //            var provider = GetProvider();
-            
+
 //            var model = new CheckoutModel{ShippingAddress = new ShipmentInformation(), ShippingMethod = new ShippingMethodInformation(), PaymentSection = new PaymentInformation()};
 //            var page = new CheckoutPage(model).WithOrder(new OrderInformation { Shipment = new ShipmentInformation() });
 
@@ -69,3 +69,4 @@
 //        }
 //    }
 //}
+

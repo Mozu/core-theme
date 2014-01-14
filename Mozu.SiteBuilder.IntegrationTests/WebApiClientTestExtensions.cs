@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.IntegrationTests
 
         public static IEnumerable<TEntity> With<TClient, TEntity>(this TClient self, Func<TClient, Task<ServiceClientResponse<TEntity>>> func, params TEntity[] entities)
         {
-            var tasks = entities.Select(e => new TestResponse<TEntity>(e).Task).ToArray();
+            Task<ServiceClientResponse<TEntity>>[] tasks = entities.Select(e => new TestResponse<TEntity>(e).Task).ToArray();
             func(self).Returns(tasks.First(), tasks.Skip(1).ToArray());
             return entities;
         }
@@ -50,10 +50,10 @@ namespace Mozu.SiteBuilder.IntegrationTests
         public static TException WithException<TClient, TEntity, TException>(this TClient self, Func<TClient, Task<ServiceClientResponse<TEntity>>> func, TException exception, Action<HttpResponseMessage> responseMessageAction = null) where TException : Exception
         {
             var testResponse = new TestResponse<TEntity>(default(TEntity))
-                {
-                    ReadException = () => exception,
-                    HasException = exception != null
-                };
+                               {
+                                   ReadException = () => exception,
+                                   HasException = exception != null
+                               };
             if (responseMessageAction != null)
             {
                 responseMessageAction(testResponse.ResponseMessage);

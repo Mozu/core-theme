@@ -1,29 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autofac;
-using Mozu.CommerceRuntime.Contracts.Clients;
+﻿using Autofac;
+using Mozu.Core;
 using Mozu.SiteBuilder.Mvc;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace Mozu.SiteBuilder.IntegrationTests.Hypr
 {
-     [TestFixture]
+    [TestFixture]
     public class IncludeContext
-     {
-         private ILifetimeScope _lifetimeScope;
-         [TestFixtureSetUp]
-          public void TestFixtureSetUp()
-         {
-             Autofac.ContainerBuilder builder = new ContainerBuilder();
+    {
+        private ILifetimeScope _lifetimeScope;
 
-             builder.RegisterType<SiteBuilderApiContext>().As<Mozu.Core.IApiContext>().As<ISiteBuilderApiContext>().InstancePerLifetimeScope();
+        [TestFixtureSetUp]
+        public void TestFixtureSetUp()
+        {
+            var builder = new ContainerBuilder();
+
+            builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>().As<ISiteBuilderApiContext>().InstancePerLifetimeScope();
 
             // _cartWebApiClient = Substitute.For<ICartWebApiClient>();
-         }
-
+        }
     }
 }

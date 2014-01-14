@@ -22,7 +22,7 @@
 //            _documentWebApiClient = Substitute.For<IDocumentListWebApiClient>();
 //            _apiContext = Substitute.For<ISiteBuilderApiContext>();
 //            _cmsTypeHelper = Substitute.For<ICmsTypeHelper>();
-     
+
 //        }
 
 //        [Test, Ignore("TODO: Write tests for this fixture")]
@@ -37,3 +37,4 @@
 //        }
 //    }
 //}
+

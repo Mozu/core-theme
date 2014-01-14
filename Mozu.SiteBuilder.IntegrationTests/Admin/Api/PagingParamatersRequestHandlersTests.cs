@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Controllers;
-using System.Web.Http.ModelBinding;
-using NSubstitute;
-using NUnit.Framework;
-using Should;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers;
+using NUnit.Framework;
+using Should;
 
 namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
 {
@@ -17,9 +13,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         public void PagingParameters_should_have_sensible_defaults()
         {
             var handler = new PagingParamatersRequestHandlers();
-            var message = new HttpRequestMessage { RequestUri = new Uri("http://localhost:8080") };
+            var message = new HttpRequestMessage {RequestUri = new Uri("http://localhost:8080")};
 
-            var pagingParameters = handler.BuildPagingParameters(message.RequestUri);
+            PagingParamaters pagingParameters = handler.BuildPagingParameters(message.RequestUri);
 
             pagingParameters.pageIndex.ShouldEqual(1);
             pagingParameters.pageSize.ShouldEqual(25);
@@ -30,10 +26,10 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         public void PagingParameters_should_assign_QueryString_values()
         {
             var handler = new PagingParamatersRequestHandlers();
-            var qs = "?id=234&productCode=abc&page=2&start=3&limit=4&sort=[{ \"property\": \"name\", \"direction\": \"DESC\" }]";
-            var message = new HttpRequestMessage { RequestUri = new Uri("http://localhost:8080" + qs) };
+            string qs = "?id=234&productCode=abc&page=2&start=3&limit=4&sort=[{ \"property\": \"name\", \"direction\": \"DESC\" }]";
+            var message = new HttpRequestMessage {RequestUri = new Uri("http://localhost:8080" + qs)};
 
-            var pagingParameters = handler.BuildPagingParameters(message.RequestUri);
+            PagingParamaters pagingParameters = handler.BuildPagingParameters(message.RequestUri);
 
             pagingParameters.id.ShouldEqual("234");
             pagingParameters.productCode.ShouldEqual("abc");

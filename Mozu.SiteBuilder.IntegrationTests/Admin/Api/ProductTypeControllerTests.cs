@@ -53,7 +53,7 @@
 //                    return new TestResponse<DC.ProductType>(mock).Task;
 //                }
 //            );
-                    
+
 //            // set up GetProductTypes mock.
 //            _productTypeClient.GetProductTypes(Arg.Any<int?>(), Arg.Any<int?>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(
 //                args => new TestResponse<DC.ProductTypeCollection>(_mocks).Task
@@ -83,7 +83,7 @@
 //        public void ListProductTypes_should_return_a_single_when_id_is_specified()
 //        {
 //            int? requestedId = _mocks.Items.Last().Id;
-            
+
 //            var pagingParams = new PagingParamaters { id = Convert.ToString(requestedId) };
 //            var filterParams = new FilterCollection();
 
@@ -105,7 +105,7 @@
 //            r.Total.ShouldEqual(_mocks.Items.Count);
 //            IEnumerable<int?> mockIds = _mocks.Items.Select(m => m.Id);
 //            IEnumerable<int?> returnedIds = r.Items.Select(pt => pt.Id);
-            
+
 //            // there shouldn't be any ids that exist in one list but not the other.
 //            mockIds.Except(returnedIds).ShouldBeEmpty();
 //        }
@@ -162,3 +162,4 @@
 //        // TODO: some more testing
 //    }
 //}
+

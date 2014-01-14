@@ -42,7 +42,7 @@
 //            _customerAccountWebApiClient = Substitute.For<ICustomerAccountWebApiClient>();
 
 //            _lightweightUser = LightweightUserClaims.CreateForAnonymousShopper(1, 2);
-            
+
 
 //            _user = new Mozu.Core.Api.Contracts.User();
 //            _userWebApiClient.With(x => x.GetUser(_lightweightUser.UserId), _user);
@@ -174,3 +174,4 @@
 //        }
 //    }
 //}
+

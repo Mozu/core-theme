@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Mozu.Core.Api.Contracts.Client;
@@ -25,13 +23,15 @@ namespace Mozu.SiteBuilder.IntegrationTests
         {
             Result = entity;
 
-            ReadAsAsync = () => {
+            ReadAsAsync = () =>
+            {
                 var task = new Task<T>(() => Result);
                 task.Start(_testTaskScheduler);
                 return task;
             };
 
-            ReadAsSync = () => {
+            ReadAsSync = () =>
+            {
                 return Result;
                 // throw new Exception("You probably want to use ReadAsAsync here... Just sayin.");
             };
@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.IntegrationTests
 
         protected T Result { get; private set; }
 
-        public Task<ServiceClientResponse<T>>  Task
+        public Task<ServiceClientResponse<T>> Task
         {
             get
             {
