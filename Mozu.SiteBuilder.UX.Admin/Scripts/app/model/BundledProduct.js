@@ -8,6 +8,11 @@ Ext.define('Taco.model.BundledProduct', {
     requires: [],
     fields: [
         {
+            // this is a helper field for triggering a persistance when the order of the grid items gets changed. this value is not persisted;
+            name: 'index',
+            type: 'int'
+        },
+        {
             "name": "productCode",
             "type": "string",
             "useNull": true
