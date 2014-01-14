@@ -5,6 +5,7 @@ using System.Web.Http;
 using Mozu.Core.Api;
 using Mozu.Core.Api.ErrorHandler;
 using Mozu.Core.Logging;
+using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.Logging;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
@@ -32,6 +33,16 @@ namespace Mozu.SiteBuilder.UX.Configuration
         {
             this.AddFormatters(httpConfiguration.Formatters);
             new RouteConfig().Register(httpConfiguration.Routes);
+
+
+            var settings = Mozu.Core.Settings.MozuConfigurationManager.Settings;
+
+            var minThreadIO = settings.AppSettingsAsNullableInt("MinThreadIO");
+            var minThreadWorker = settings.AppSettingsAsNullableInt("MinThreadWorker");
+            if (minThreadIO != null && minThreadWorker != null && minThreadIO > 0 && minThreadWorker > 0)
+                System.Threading.ThreadPool.SetMinThreads(minThreadWorker.Value, minThreadIO.Value);
+
+
             
         }
         public override void InitializeAutoMapperProfiles(System.Web.Http.HttpConfiguration httpConfiguration)
