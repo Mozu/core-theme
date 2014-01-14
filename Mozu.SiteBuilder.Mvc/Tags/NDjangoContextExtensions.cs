@@ -72,6 +72,30 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             return writer.GetStringBuilder().ToString();
         }
 
+        public static Task AsyncRender(this NDjango.Interfaces.IContext context, string viewName, object model, TextWriter writer)
+        {
+
+            var viewContext = context.ViewContext();
+
+            var viewEngine = viewContext.LifetimeScope.Resolve<HyprViewEngine>();
+
+
+            var view = viewEngine.FindModuleView(viewName);
+            var viewData = new ViewDataDictionary()
+            {
+                Model = model
+            };
+            var hvc = new HyprViewContext(viewContext.RequestMessage, viewData, viewContext);
+            if (view == null)
+            {
+                writer.Write("view not found: (" + viewName + ")");
+            }
+
+            return view.AsyncRender(hvc, writer);
+
+
+
+        }
         public static void Render(this NDjango.Interfaces.IContext context, string viewName, object model, TextWriter writer )
         {
           

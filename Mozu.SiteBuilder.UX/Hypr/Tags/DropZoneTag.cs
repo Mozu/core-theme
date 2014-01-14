@@ -88,7 +88,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
     [NDjango.ParserNodes.Description("tbd")]
     [NDjango.Interfaces.Name("dropzone")]
-    public class DropZoneTag2 : SimpleTagBase
+    public class DropZoneTag2 : SimpleTagBaseAsync
     {
 
         public static object HTTPCONTEXTKEY = new object();
@@ -98,10 +98,10 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             public string id { get; set; }
             public string scope { get; set; }
         }
-
-        protected override void ProcessTag(Mvc.Tags.ArgumentCollection arguments, ref IContext context, out string buffer, out string templateName)
+        protected override async System.Threading.Tasks.Task<Mvc.Tags.SimpleTagBaseAsync.ProcessTagResult> ProcessTagAsync(Mvc.Tags.ArgumentCollection arguments, IContext context)
         {
-            buffer = templateName = null;
+            var processResult = new Mvc.Tags.SimpleTagBaseAsync.ProcessTagResult(context);
+            
             var httpContext = context.HttpContext();
             var themeEntityDefinitionProvider = context.Resolve<IThemeEntityDefinitionProvider>();
             var scope = arguments.GetValueOrDefault<string>("scope", null);
@@ -261,10 +261,13 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                                 StringWriter sw1 = new StringWriter();
                                 try
                                 {
-                                    context.Render("widgets/" + widgetDefinition.DisplayTemplate, widget, sw1);
+                                    await context.AsyncRender("widgets/" + widgetDefinition.DisplayTemplate, widget, sw1).ConfigureAwait(false);
+
+                                    sw1.Flush();
                                     sb.Append(sw1.GetStringBuilder().ToString());
+
                                 }
-                                catch(Exception ex)
+                                catch (Exception ex)
                                 {
                                     if (isEditmode)
                                     {
@@ -309,7 +312,10 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 //}
             }
             sb.Append("</div>");
-            buffer = sb.ToString();
+            //buffer = sb.ToString();
+            processResult.Buffer = sb.ToString();
+            processResult.Context = context;
+            return processResult;
         }
 
 
@@ -336,5 +342,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
 
         }
+
+        
     }
 }
