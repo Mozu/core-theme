@@ -92,14 +92,14 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 ITemplate template = templateManager.GetTemplate(_mappedPath);
                 var renderer = new TemplateRenderer(templateManager, template, requestContext);
 
-                //await renderer.AsyncRender(writer);
-                renderer.Render(writer);
+                await renderer.AsyncRender(writer);
+                //renderer.Render(writer);
             }
             catch (Exception ex)
             {
                 throw new RenderingError(string.Format("error in template [{0}]", _virtualPath), new FSharpOption<Exception>(ex));
             }
-            await writer.FlushAsync();
+            writer.Flush();
             return true;
         }
 

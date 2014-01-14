@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 
 using AutoMapper;
@@ -20,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
     [NDjango.ParserNodes.Description("tbd")]
     [NDjango.Interfaces.Name("include_products")]
-    public class IncludeProductsTag:SimpleTagBase 
+    public class IncludeProductsTag:SimpleTagBaseAsync
     {
 
 
@@ -41,9 +42,10 @@ The include_products tag is a special kind of include tag, that includes a named
         /// <param name="context"></param>
         /// <param name="buffer"></param>
         /// <param name="templateName"></param>
-        protected override void ProcessTag(Mvc.Tags.ArgumentCollection arguments, ref NDjango.Interfaces.IContext context, out string buffer, out string templateName)
+        protected async override Task<SimpleTagBaseAsync.ProcessTagResult > ProcessTagAsync(Mvc.Tags.ArgumentCollection arguments,  NDjango.Interfaces.IContext context)
         {
-            templateName = buffer = null;
+            var result = new SimpleTagBaseAsync.ProcessTagResult(context);
+            
             var template = arguments.GetValueOrDefault<string>("viewName") ?? (string)arguments[0].Value;
             var includeFacets = arguments.GetValueOrDefault<bool>("includeFacets", false);
             var pageWithUrl = arguments.GetValueOrDefault<bool>("pageWithUrl", false);
@@ -83,8 +85,8 @@ The include_products tag is a special kind of include tag, that includes a named
 
                 if (productCodesFilters.Length == 0)
                 {
-                    templateName = null;
-                    return;
+                    result.Template  = null;
+                    return result;
                 }
                 else
                 {
@@ -132,17 +134,17 @@ The include_products tag is a special kind of include tag, that includes a named
                 facetValueFilter = request.QueryString["facetValueFilter"];
             }
             string sortBy = null;
-             
-            var res = searchWebApiClient.Search(query:qurey,   filter: searchQuery.ToString(),  facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: facetValueFilter, startIndex: startIndex, sortBy: sortBy, pageSize: pageSize).Result;
+
+            var res = await searchWebApiClient.Search(query: qurey, filter: searchQuery.ToString(), facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: facetValueFilter, startIndex: startIndex, sortBy: sortBy, pageSize: pageSize).ConfigureAwait(false);
 
 
-            var pcDC = res.ReadAsSync();
+            var pcDC = await  res.ReadAsAsync();
             var pc = Mapper.Map<ProductSearchResult>(pcDC);
-            templateName = template;
+            result.Template  = template;
             context=context.remove("Model").remove("model").add(new Tuple<string, object>("Model", pc)).add(new Tuple<string, object>("model", pc));
-           
 
-
+            result.Context = context;
+            return result;
 
         }
 
@@ -226,6 +228,8 @@ The include_products tag is a special kind of include tag, that includes a named
         //        return new ContentResult() { Content = "[product service error]: " + ex.Message };
         //    }
         //}
+
+
 
 
         
