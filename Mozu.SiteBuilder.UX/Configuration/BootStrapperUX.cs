@@ -19,8 +19,6 @@ namespace Mozu.SiteBuilder.UX.Configuration
 {
     public  class BootStrapperUX : AbstractWebApiBootstrapper
     {
-        private const string APPLICATION_NAME = "Mozu.SiteBuilder.UX";
-
         protected override void AddMessageHandlers(HttpConfiguration httpConfiguration, IHttpMessageHandlerErrorHandler messageErrorHandler)
         {
             base.AddMessageHandlers(httpConfiguration, messageErrorHandler);
@@ -96,13 +94,13 @@ namespace Mozu.SiteBuilder.UX.Configuration
             if (fac != null)
             {
                 fac.AddContextProvider(new CurrentRequestLoggingContextProvider());
-                fac.AddContextProvider(new ApplicationNameLoggingContextProvider(APPLICATION_NAME));
+                fac.AddContextProvider(new ApplicationNameLoggingContextProvider(ApplicationConstants.APPLICATION_NAME));
             }
         }
 
         protected override void PreApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)
         {
-            LogStartupMessage<MvcApplication>(APPLICATION_NAME);
+            LogStartupMessage<MvcApplication>(ApplicationConstants.APPLICATION_NAME);
         }
 
 

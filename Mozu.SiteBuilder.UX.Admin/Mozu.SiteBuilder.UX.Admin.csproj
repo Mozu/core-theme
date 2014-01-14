@@ -570,6 +570,7 @@
     <Compile Include="Api\WidgetDefinitionController.cs" />
     <Compile Include="Api\WishlistController.cs" />
     <Compile Include="App_Start\Diagnostics.cs" />
+    <Compile Include="Configuration\ApplicationConstants.cs" />
     <Compile Include="Configuration\BootStrapperAdmin.cs" />
     <Compile Include="Configuration\ConfigurationModule.cs">
       <SubType>Code</SubType>
