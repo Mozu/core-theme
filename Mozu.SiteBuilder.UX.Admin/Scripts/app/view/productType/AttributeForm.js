@@ -272,7 +272,8 @@
             items: [{
                 name: 'isRequired',
                 checked: this.record.get('isRequired'),
-                boxLabel: 'Required by admin'
+                boxLabel: 'Required by admin',
+                hidden: (this.type === 'extras')
             }]
         });
 
