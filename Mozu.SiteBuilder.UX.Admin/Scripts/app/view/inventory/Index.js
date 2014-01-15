@@ -106,6 +106,10 @@ Ext.define('Taco.view.inventory.Index', {
             ignoreRightMouseSelection: false,
             headerWidth: 37
         },
+        viewConfig: {
+            deferEmptyText: false,
+            emptyText: "No products to display."
+        },
         columns: [
             {
                 dataIndex: 'productCode',
@@ -179,7 +183,7 @@ Ext.define('Taco.view.inventory.Index', {
         
         // auto select the first record in the grid so the location grid can get loaded;
         this.store.on('load', function (store, records, success, eOpts) {
-                if (records.length) {
+            if (records && records.length) {
                     this.gridPanel.selModel.select(records[0], false);
                 }
             }, this, {
