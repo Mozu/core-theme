@@ -34,19 +34,23 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 type: 'hbox',
                 align: 'bottom'
             },
-            width: 600,
+            //width: 600,
             defaults: {
                 xtype: 'datetime',
                 labelAlign: 'top',
                 labelSeparator: ''
             },
-            items: [{
+            items: [
+                {
                     name: 'startDate',
+                    width: 200,
+                    margin: "0px 2px 0px 0px",
                     fieldLabel: "Starts",
                     emptyText: 'Now',
                     value: this.record.get('startDate')
                 }, {
                     name: 'expirationDate',
+                    width: 200,
                     fieldLabel: "Ends",
                     emptyText: 'Never',
                     value: this.record.get('expirationDate')
