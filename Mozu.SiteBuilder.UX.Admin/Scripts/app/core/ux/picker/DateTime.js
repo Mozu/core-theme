@@ -6,69 +6,20 @@
 Ext.define('Taco.core.ux.picker.DateTime', {
     extend: 'Ext.picker.Date',
     alias: 'widget.datetimepicker',
-   
+    requires: [
+        'Ext.form.field.Time',
+        'Ext.container.Container',
+    ],   
     childEls: [
         'innerEl', 'eventEl', 'prevEl', 'nextEl', 'middleBtnEl', 'footerEl'
     ],
     
-    border: false,
-    hideOnSelect: false,
+    cls:"taco-datetime-picker-wrapper",
 
-    renderTpl: [
-        '<div class="taco-pointer-before">&nbsp;</div>',
-        '<div class="taco-pointer-after">&nbsp;</div>',
-        '<div id="{id}-innerEl" role="grid">',
-            '<div role="presentation" class="{baseCls}-header">',
-                '<div class="{baseCls}-prev"><a id="{id}-prevEl" href="#" role="button" title="{prevText}"></a></div>',
-                '<div class="{baseCls}-month" id="{id}-middleBtnEl">{%this.renderMonthBtn(values, out)%}</div>',
-                '<div class="{baseCls}-next"><a id="{id}-nextEl" href="#" role="button" title="{nextText}"></a></div>',
-            '</div>',
-            '<table id="{id}-eventEl" class="{baseCls}-inner" cellspacing="0" role="presentation">',
-                '<thead role="presentation"><tr role="presentation">',
-                    '<tpl for="dayNames">',
-                        '<th role="columnheader" title="{.}"><span>{.:this.firstInitial}</span></th>',
-                    '</tpl>',
-                '</tr></thead>',
-                '<tbody role="presentation"><tr role="presentation">',
-                    '<tpl for="days">',
-                        '{#:this.isEndOfWeek}',
-                        '<td role="gridcell" id="{[Ext.id()]}">',
-                            '<a role="presentation" href="#" hidefocus="on" class="{parent.baseCls}-date" tabIndex="1">',
-                                '<em role="presentation"><span role="presentation"></span></em>',
-                            '</a>',
-                        '</td>',
-                    '</tpl>',
-                '</tr></tbody>',
-            '</table>',
-            '<div class="taco-datepicker-time">',
-                'Time {%this.renderTimeCmp(values, out)%} <span class="taco-time-am">am</span> <span class="taco-time-pm">pm</span>',
-            '</div>',
-            '<tpl if="showToday">',
-                '<div id="{id}-footerEl" role="presentation" class="{baseCls}-footer">{%this.renderTodayBtn(values, out)%}</div>',
-            '</tpl>',
-        '</div>',
-        {
-            firstInitial: function(value) {
-                return Ext.picker.Date.prototype.getDayInitial(value);
-            },
-            isEndOfWeek: function(value) {
-                // convert from 1 based index to 0 based
-                // by decrementing value once.
-                value--;
-                var end = value % 7 === 0 && value !== 0;
-                return end ? '</tr><tr role="row">' : '';
-            },
-            renderTimeCmp: function(values, out) {
-                Ext.DomHelper.generateMarkup(values.$comp.timeCmp.getRenderTree(), out);
-            },
-            renderTodayBtn: function(values, out) {
-                Ext.DomHelper.generateMarkup(values.$comp.todayBtn.getRenderTree(), out);
-            },
-            renderMonthBtn: function(values, out) {
-                Ext.DomHelper.generateMarkup(values.$comp.monthBtn.getRenderTree(), out);
-            }
-        }
-    ],
+    border: false,
+    hideOnSelect: false,    
+
+    enableTimeRow:true,
 
     initComponent: function () {
         this.timeValue = this.value;
@@ -79,29 +30,11 @@ Ext.define('Taco.core.ux.picker.DateTime', {
     },
 
     beforeRender: function () {
-        this.callParent(arguments);
-
-        this.monthBtn = Ext.create('Ext.Component', {
-            ownerCt: this,
-            ownerLayout: this.getComponentLayout(),
-            cls: 'taco-datepicker-month',
-            setText: function(text) {
-                this.update(text);
-            }
-        });
-
-        this.timeCmp = Ext.create('Ext.Component', {
-            autoEl: {
-                tag: 'input',
-                type: 'text',
-                value: Ext.Date.format(this.timeValue, 'g:i')
-            },
-            ownerCt: this,
-            ownerLayout: this.getComponentLayout()
-        });
-
+        this.callParent(arguments);        
         if (this.showToday && this.todayBtn) {
-            this.todayBtn = Ext.create('Taco.core.ux.action.Action', {
+            this.todayBtn = Ext.create('Ext.button.Button', {
+                ui: "link",
+                scale:"medium",
                 ownerCt: this,
                 ownerLayout: this.getComponentLayout(),
                 text: 'Current date/time',
@@ -114,28 +47,101 @@ Ext.define('Taco.core.ux.picker.DateTime', {
     },
 
     afterRender: function () {
-        this.timeAmEl = this.getEl().down('.taco-time-am');
-        this.timePmEl = this.getEl().down('.taco-time-pm');
-        this.timeInputEl = this.getEl().down('.taco-datepicker-time input');
-
-        this.timeAmEl.on('click', function () {
-            this.setPeriod('am');
-        }, this);
-        
-        this.timePmEl.on('click', function () {
-            this.setPeriod('pm');
-        }, this);
-
-        this.timeInputEl.on('focus', function () {
-            this.oldTime = this.timeInputEl.dom.value;
-            Ext.defer(function () {
-                this.timeInputEl.dom.select();
-            }, 10, this);
-        }, this).on('blur', this.validateTime, this);
-
+        var me = this;
+        me.initTimeRow();        
         this.callParent(arguments);
     },
 
+    initTimeRow: function () {
+        var me = this;
+        if (me.enableTimeRow) {        
+
+            var dh = Ext.DomHelper;
+
+            this.tableGrid = this.getEl().down('.x-datepicker-inner');
+
+            this.timeRow = dh.insertAfter(this.tableGrid, {
+                cls: "taco-datepicker-timerow",
+                children: [
+                    { tag: "span", cls: "taco-label", html: "Time" }
+                ]
+            })
+
+            this.timeCmp = Ext.create('Ext.Component', {
+                autoEl: {
+                    tag: 'input',
+                    type: 'text',
+                    style: "width:50px;margin-right:10px;",
+                    cls: "x-form-field x-form-text taco-datetime-time-input ",
+                    value: Ext.Date.format(this.timeValue, 'g:i')
+                },
+                renderTo: this.timeRow
+            });
+
+            this.timeInputEl = this.getEl().down('.taco-datetime-time-input');
+
+            this.timeInputEl.on('focus', function () {
+                this.oldTime = this.timeInputEl.dom.value;
+                Ext.defer(function () {
+                    this.timeInputEl.dom.select();
+                }, 10, this);
+            }, this).on('blur', this.validateTime, this);
+
+            
+            this.amContainer = this.getEl().down('.taco-am-btn');
+
+            this.amCmp = Ext.create('Ext.button.Button', {
+                ui: "action",
+                scale: "medium",
+                cls: "taco-togglebtn-left",
+                text: "AM",
+                ownerCt: this,
+                ownerLayout: this.getComponentLayout(),                
+                allowDepress:false,
+                pressed:true,
+                toggleGroup: "ampm",
+                renderTo: this.timeRow
+            });
+
+            this.amCmp.on('click', function (button, evt, eOpts) {                
+                this.onAmPmToggle(button, true)
+            }, this)
+
+            this.pmContainer = this.getEl().down('.taco-pm-btn');
+
+            this.pmCmp = Ext.create('Ext.button.Button', {
+                ui: "action",
+                scale: "medium",
+                cls: "taco-togglebtn-right",                
+                ownerCt: this,
+                ownerLayout: this.getComponentLayout(),
+                text: "PM",
+                allowDepress: true,
+                toggleGroup: "ampm",
+                renderTo: this.timeRow
+            });
+
+            this.pmCmp.on('click', function (button, evt, eOpts) {                
+                this.onAmPmToggle(button,false)
+            }, this)
+        }
+    },
+
+
+    // on toggle of the AM PM buttons
+    onAmPmToggle: function (button, state) {
+        // prevent a `pressed button from being un-depressed. 
+        this.pmCmp.allowDepress = state;
+        this.amCmp.allowDepress = !state;
+
+        // update the time;
+        if (state) {
+            this.setPeriod('am');
+        } else {
+            this.setPeriod('pm');
+        }
+    },
+ 
     validateTime: function () {
         var newTime = this.timeInputEl.dom.value.trim(),
             forcePeriod;
@@ -178,7 +184,8 @@ Ext.define('Taco.core.ux.picker.DateTime', {
         this.onSelect();
     },
 
-    setValue: function(value) {
+    setValue: function (value) {
+        
         this.timeValue = value;
         this.callParent(arguments);
     },
@@ -196,7 +203,7 @@ Ext.define('Taco.core.ux.picker.DateTime', {
 
     update: function(value) {
         this.callParent(arguments);
-
+        
         if (this.rendered) {
             this.getEl().down('input[type=text]').set({value: Ext.Date.format(this.timeValue, 'g:i')});
             this.setPeriod(Ext.Date.format(this.timeValue, 'a'));
@@ -204,23 +211,15 @@ Ext.define('Taco.core.ux.picker.DateTime', {
     },
 
     setPeriod: function (mode, suppress) {
-        var timeString = Ext.Date.format(this.timeValue, 'm/d/Y g:i '),
-            selectedEl,
-            toBeSelectEl = this.getEl().down('.taco-time-' + mode);
-
+        var timeString = Ext.Date.format(this.timeValue, 'm/d/Y g:i ');
         this.timeValue = new Date(timeString + mode);
 
-        selectedEl = this.getEl().down('.taco-selected');
 
-        if (selectedEl) {
-            selectedEl.removeCls('taco-selected');
-        }
+        
+        this.amCmp.toggle((mode == "am"), true);
+        this.pmCmp.toggle((mode == "pm"), true);
 
-        if (toBeSelectEl) {
-            toBeSelectEl.addCls('taco-selected');
-        }
-
-
+        
 
         this.onSelect();
     },
@@ -263,9 +262,28 @@ Ext.define('Taco.core.ux.picker.DateTime', {
         }
     },
 
+    // copied from the base class to correct the stupid setPosition(-1,-1)
+    showMonthPicker: function (animate) {
+        var me = this,
+            picker;
+
+        if (me.rendered && !me.disabled) {
+            picker = me.createMonthPicker();
+            picker.setValue(me.getActive());
+            picker.setSize(me.getSize());
+            picker.setPosition(0, 0);
+            if (me.shouldAnimate(animate)) {
+                me.runAnimation(false);
+            } else {
+                picker.show();
+            }
+        }
+        return me;
+    },
+
     beforeDestroy: function () {
         if (this.rendered) {
-            Ext.destroy(this.timeCmp);
+            Ext.destroy(this.timeCmp);            
         }
         this.callParent(arguments);
     }

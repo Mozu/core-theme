@@ -67,6 +67,7 @@ Ext.define('Taco.Application', {
     autoCreateViewport: false,
     requires: [
         'Taco.core.util.Common',
+        'Taco.overrides.picker.Month',
         'Taco.overrides.data.AbstractStore',
         'Taco.overrides.form.Basic',
         'Taco.overrides.form.field.Base',

@@ -19,7 +19,9 @@ Ext.define('Taco.core.ux.form.DateTime', {
         this.addCls('taco-date-field');
     },
 
-
+    expand: function () {        
+        this.callParent(arguments);
+    },
 
     createPicker: function() {
         var format = Ext.String.format;
@@ -38,11 +40,12 @@ Ext.define('Taco.core.ux.form.DateTime', {
             disabledDays: this.disabledDays,
             disabledDaysText: this.disabledDaysText,
             format: this.format,
+            value:this.getValue(),
             showToday: this.showToday,
             startDay: this.startDay,
             minText: format(this.minText, this.formatDate(this.minValue)),
             maxText: format(this.maxText, this.formatDate(this.maxValue)),
-            border: false,
+            //border: false,
             shadow: false,
             width: 230,
             listeners: {
