@@ -452,7 +452,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         var me = this;
         
         if (e.record && e.record.dirty) {
-            me.editOrderItem(e.field, {
+            me.editOrderItem(e, {
                 data: [
                     e.record.getData()
                 ]
@@ -852,7 +852,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error adding coupon.";
+                    msg = (json && json.message) ? json.message : "Error adding coupon.";
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('saveFailure');
             },
@@ -900,8 +900,9 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     },
     
     // accepts an array of orderItem data objects and calls the service to persist it.
-    editOrderItem: function (field, config) {
+    editOrderItem: function (e, config) {
         var me = this,
+            field = e.field,
             fieldsToMethod = {
                 'quantity': 'editOrderItemQuantity',
                 'unitPrice': 'editOrderItemPrice'
@@ -913,7 +914,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             };
 
 //        
-
+        
         if (!config.data) {
             return;
         }
@@ -926,6 +927,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
         this.fireEvent('save');
 
+
         
         this.record[updateMethodName]({
             jsonData: jsonData,
@@ -935,9 +937,12 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
-                    this.fireEvent('saveFailure');
-
+                    this.fireEvent('saveFailure');                    
                     Taco.app.fireEvent('setmessage', "Error editing order item.", 'error');
+                    // reset the value to its default
+                    var evt = e;
+                    e.record.set(e.field, e.record.raw[e.field]);
+
                     return;
                 }
                 this.fireEvent('saveSuccess', json);
@@ -945,8 +950,12 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error editing order item.";
+                    msg = (json && json.message) ? json.message : "Error editing order item.";
                 
+                // reset the value to its default
+                var evt = e;
+                e.record.set(e.field, e.record.raw[e.field]);
+
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('saveFailure');
             },
@@ -995,7 +1004,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             },
             failure: function (response) {
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error adding adjustments.";
+                    msg = (json && json.message) ? json.message : "Error adding adjustments.";
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('saveFailure');
             },
@@ -1024,7 +1033,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error deleting order item";
+                    msg = (json && json.message) ? json.message : "Error deleting order item";
 
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('saveFailure');
@@ -1076,7 +1085,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                             me.setLoading(false);
                             // error handling here
                             var json = Ext.decode(response.responseText, true),
-                                msg = (json && json.Message) ? json.Message : "Error canceling order";
+                                msg = (json && json.message) ? json.message : "Error canceling order";
                             Taco.app.fireEvent('setmessage', msg, 'error');
                             me.ownerCt.setLoading(false);
                             me.fireEvent('saveFailure');
@@ -1118,7 +1127,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error suppressing order item discount";
+                    msg = (json && json.message) ? json.message : "Error suppressing order item discount";
 
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('saveFailure');
@@ -1149,7 +1158,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error activating order item discount";
+                    msg = (json && json.message) ? json.message : "Error activating order item discount";
 
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('saveFailure');
@@ -1182,7 +1191,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error cancelling changes";
+                    msg = (json && json.message) ? json.message : "Error cancelling changes";
 
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 
@@ -1215,7 +1224,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             failure: function(response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error saving changes";
+                    msg = (json && json.message) ? json.message : "Error saving changes";
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 
                 this.fireEvent('saveFailure');
