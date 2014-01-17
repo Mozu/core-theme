@@ -171,6 +171,23 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
                 });
             }
         }
+
+
+        
+        // make sure the value that the user enters is appropriate;
+        // if the user clears the value or enters text or a number greater then what's available then reset it to the maximum;
+        this.on('edit', function (editor, e) {            
+            if (e.field == "quantity") {
+                // make sure the quantity does not exceed the maximum available;
+                var maxAllowed = e.record.raw.quantity;
+                var newValue = parseInt(e.value);
+                // tring to move more then are available;
+                if (!newValue || newValue > maxAllowed) {                    
+                    e.record.set(e.field, maxAllowed);
+                }
+            }
+        });
+
         me.callParent(arguments);
 
     },
