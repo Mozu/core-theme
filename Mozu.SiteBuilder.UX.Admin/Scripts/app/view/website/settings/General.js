@@ -25,7 +25,7 @@ Ext.define('Taco.view.website.settings.General', {
                 fieldLabel: 'Navigation Link Name'
             }, {
                 xtype: 'taco.field.pagetemplate',
-                name: 'template',
+                name: 'page_type_definition',
                 fieldLabel: 'Page Template',
                 entityType: 'webpage'
             },

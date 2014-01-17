@@ -146,14 +146,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var result = View("blank-page", vm);
-          
-            var overrideTemplate = PageContext.CmsContext.Page.Document.Get<string>("template");
-            if (!string.IsNullOrEmpty(overrideTemplate))
+
+            var pageTypeDefinition = PageContext.CmsContext.Page.Document.Get<string>("page_type_definition");
+            if (!string.IsNullOrEmpty(pageTypeDefinition))
             {
-                var template = this.SiteContext.Theme.PageTypes.FirstOrDefault(x => string.Equals(x.Id, overrideTemplate, StringComparison.OrdinalIgnoreCase));
+                var template = this.SiteContext.Theme.PageTypes.FirstOrDefault(x => string.Equals(x.Id, pageTypeDefinition, StringComparison.OrdinalIgnoreCase));
                 if (template != null)
                 {
-                    result.ViewName  = template.Template ;    
+                    result.ViewName  = template.Template ;
                 }
                 
             }
