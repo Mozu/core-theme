@@ -79,7 +79,7 @@
                 id = $target.data('mz-hierarchy-id'),
                 field = $target.data('mz-facet');
             this.model.setHierarchy(field, id);
-            this.model.updateFacets();
+            this.model.updateFacets({ force: true, resetIndex: true });
             e.preventDefault();
         },
         setFacetValue: function (e) {
