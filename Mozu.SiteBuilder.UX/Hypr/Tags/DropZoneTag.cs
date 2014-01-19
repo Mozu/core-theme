@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     /// <summary>
     /// adds the necessary scripts and styles for page editing.
     /// 
-    /// </code>
+    /// 
     /// </summary>
     [NDjango.Interfaces.Name("cms_resources")]
     public class EditResourcesTag : SimpleTagBase
