@@ -79,10 +79,7 @@
     <body class="{% block body-tag-classes %}{% endblock body-tag-classes %}">
     {% endblock open-body-tag %}
 
-	   <b>bing</b>
-	    {%for link in navigation.tree|collection_filter:"CategoryId eq 31"%}
-		<div>{{link.name}}</div>
-		{%endfor%}
+	   
         <div id="page-wrapper" class="mz-l-pagewrapper">
     
             {% block page-header %}
