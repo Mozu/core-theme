@@ -51,8 +51,11 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
     }
 
-
-    [NDjango.ParserNodes.Description("tbd")]
+    /// <summary>
+    /// adds the necessary scripts and styles for page editing.
+    /// 
+    /// </code>
+    /// </summary>
     [NDjango.Interfaces.Name("cms_resources")]
     public class EditResourcesTag : SimpleTagBase
     {
@@ -86,7 +89,29 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         }
     }
 
-    [NDjango.ParserNodes.Description("tbd")]
+
+    /// <summary>
+    /// creates a dropzone for the page.
+    /// 
+    /// takes 2 paramaters
+    /// 
+    /// [required]
+    /// zoneId: unique identifier for the template
+    /// designeates the id of the zone.  Zone ids need to be uninqe in the template or extended template or included template(s)
+    /// 
+    /// 
+    /// [optional]
+    /// scope:  either Page|Template|Site
+    /// scope denotes the editing context for the zone.
+    /// if omitted Page scope is assumed
+    /// 
+    /// Page = content is only managed for this page.
+    /// Template = content is shared for all pages using this template
+    /// Site = content is shared for all templates that extend this site template
+    /// 
+    /// <code>{%dropzone zoneId="bodybottom" scope="template" %}</code>
+    /// </summary>
+   
     [NDjango.Interfaces.Name("dropzone")]
     public class DropZoneTag2 : SimpleTagBaseAsync
     {

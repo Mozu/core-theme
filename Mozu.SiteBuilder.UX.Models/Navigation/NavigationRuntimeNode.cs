@@ -37,6 +37,18 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
             }
         }
 
+        public int CategoryId
+        {
+            get
+            {
+                if (this.NodeType == NavigationNodeType.Category)
+                {
+                    return int.Parse(this.OriginalId);
+                }
+                return -1;
+            }
+        }
+
 
 
         [DataMember(Name = "originalId")]

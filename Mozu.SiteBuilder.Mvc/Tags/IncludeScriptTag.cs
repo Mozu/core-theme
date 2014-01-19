@@ -15,7 +15,9 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     
 
     /// <summary>
-    /// TODO: Update summary.
+    /// adds a script to be requested by require.js 
+    /// example
+    /// {% require_script "modules/login-links" %}
     /// </summary>
     /// 
     [NDjango.ParserNodes.Description("tbd")]

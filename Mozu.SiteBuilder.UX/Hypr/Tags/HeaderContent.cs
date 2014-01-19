@@ -28,7 +28,10 @@ using Mozu.SiteBuilder.Mvc.Models.CMS;
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
 
-
+    /// <summary>
+    /// outputs the additional content managed in either the page/template/sitetemplate extended header content section of the properties editor.
+    /// used for adhoc style and script tags.
+    /// </summary>
     [NDjango.ParserNodes.Description("tbd")]
     [NDjango.Interfaces.Name("header_content")]
     public class HeaderContent : SimpleTagBase

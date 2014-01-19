@@ -3,6 +3,10 @@
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
+    /// <summary>
+    ///
+    /// </summary>
+    [Obsolete]
     [NDjango.ParserNodes.Description("tbd")]
     [NDjango.Interfaces.Name("set")]
     public class SetTemplateVariablesTag : SimpleTagBase

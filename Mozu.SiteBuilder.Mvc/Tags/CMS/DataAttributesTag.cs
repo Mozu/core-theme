@@ -24,6 +24,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags.Data
     using System.Xml;
     using Mozu.SiteBuilder.UX.Models.ModelMetaData;
 
+    [Obsolete]
     [NDjango.ParserNodes.Description("wrapper of MVC HTML ActionLink Extension")]
     [NDjango.Interfaces.Name("data_attributes")]
     public class DataAttributesTag : SimpleTagBase

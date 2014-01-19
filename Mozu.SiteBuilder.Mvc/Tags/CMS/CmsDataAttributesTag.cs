@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags.Data
     using System.Xml;
     using Mozu.SiteBuilder.UX.Models.ModelMetaData;
 
-
+    [Obsolete]
     [NDjango.Interfaces.Name("cms_data_attributes")]
     public class CmsDataAttributesTag : SimpleTagBase
     {

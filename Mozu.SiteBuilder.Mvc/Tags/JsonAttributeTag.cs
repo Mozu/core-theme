@@ -15,6 +15,9 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     using System.Web;
 
     
+    /// <summary>
+    /// serializes an object to json and encodes it using html attribute encoding
+    /// </summary>
     [NDjango.Interfaces.Name("json_attribute")]
     public class JsonAttributeTag : DynamicTagBase
     {
