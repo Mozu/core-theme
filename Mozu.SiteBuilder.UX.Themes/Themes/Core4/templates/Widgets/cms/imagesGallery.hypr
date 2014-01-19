@@ -1,6 +1,6 @@
 ﻿{% require_script "modules/images-gallery" %}
 
-<div {% data_attributes Model %} class="mz-image-gallery mz-{{Model.config.type}} mz-align-{{Model.config.alignment}}"
+<div class="mz-image-gallery mz-{{Model.config.type}} mz-align-{{Model.config.alignment}}"
     
     {% if Model.config.type == "carousel" %}
         data-autoplay="{{Model.config.autoplayCarousel}}" data-delay="{{Model.config.delay}}"

@@ -5,6 +5,19 @@ using Newtonsoft.Json.Serialization;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
+    /// <summary>
+    /// used to serialize an object to a script tag to be used by hyprlive
+    /// takes 2 indexed paramaters
+    /// 1=object
+    /// (the object to be serilized)
+    /// 2=name
+    /// (name of the script id outputted)
+    /// example
+    /// <code>
+    /// {% preload_json model "product" %}
+    /// </code>
+    /// 
+    /// </summary>
     [NDjango.Interfaces.Name("preload_json")]
     public class PreloadJsonTag : SimpleTagBase
     {

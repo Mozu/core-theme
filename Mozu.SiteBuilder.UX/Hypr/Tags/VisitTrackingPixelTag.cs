@@ -6,6 +6,9 @@ using Mozu.SiteBuilder.Mvc.Tags;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
+    /// <summary>
+    /// Includes an invisible 1-pixel image. When the browser renders the page, the HTTP request for that image will be used to track the visitor.
+    /// </summary>
     [NDjango.ParserNodes.Description("Includes an invisible 1-pixel image. When the browser renders the page, the HTTP request for that image will be used to track the visitor.")]
     [NDjango.Interfaces.Name("visitor_tracking_pixel")]
     public class VisitorTrackingPixelTag : SimpleTagBase

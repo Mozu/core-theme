@@ -1,0 +1,99 @@
+﻿@using Mozu.SiteBuilder.UX.Areas.Misc.Controllers
+@inherits System.Web.Mvc.WebViewPage<List<Mozu.SiteBuilder.UX.Areas.Misc.Controllers.DeveloperDocumentationController.DjangoItemInfo>>
+@{
+
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>docs</title>
+        <style>
+            body { font-family: sans-serif }
+
+            a { color: #666666 }
+
+            pre {
+                white-space: pre-wrap; /* css-3 */
+                white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+                white-space: -pre-wrap; /* Opera 4-6 */
+                white-space: -o-pre-wrap; /* Opera 7 */
+                word-wrap: break-word; /* Internet Explorer 5.5+ */
+            }
+
+            .hyperitem { color: black }
+
+            .hyperitem .name { font-weight: bold; }
+
+            .hyperitem .summary {
+           
+            }
+
+            .code {
+                background: #eeeeee;
+                margin: 1em 0;
+                padding: .3em .4em;
+            }
+            .topnav {
+                margin: 0 auto;
+                width: 400px;
+                font-size: x-large;
+                font-weight:bold
+
+            }
+            .leftnav {
+                float: left;
+                width: 200px;
+                border-width: 1px;
+                border-color: #666666;
+                border-style: solid;
+                padding-left: 10px;
+            }
+            .content {
+                float: left;
+                width: 800px;
+                margin: 10px;
+            }
+
+        </style>
+    </head>
+    <body>
+      
+            <div class="topnav" >
+                
+                    <a href="tags">All Tags</a> | <a href="filters">All Filters</a>
+                
+            </div>
+           
+        
+
+        <div >
+            <div class="leftnav">
+
+                @foreach (DeveloperDocumentationController.DjangoItemInfo item in Model)
+                {
+                    <div class="hyperitem">
+                        <div class="name"><a href="#@item.TagName">@item.TagName</a> </div>
+
+
+                    </div>
+                }
+            </div>
+            <div class="content" >
+
+                @foreach (DeveloperDocumentationController.DjangoItemInfo item in Model)
+                {
+                    <a name="@item.TagName" />
+                    <div class="hyperitem">
+                        <div class="name">@item.TagName</div>
+                        <div class="summary"><pre>@Html.Raw(@item.Summary)</pre></div>
+
+                    </div>
+                }
+            </div>
+        </div>
+    </body>
+</html>

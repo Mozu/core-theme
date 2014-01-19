@@ -281,6 +281,14 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new {action = "widgettest", controller = "Testing"}
                 );
 
+            routes.MapHttpRoute(
+                "DevDocs",
+                "devdocs/{action}/{id}",
+                new { action = "Index", 
+                    id = RouteParameter.Optional ,
+                    controller = "DeveloperDocumentation" }
+                );
+
 
             //routes.MapHttpRoute("resources",
             //   "resources/{action}/{*pathInfo}",

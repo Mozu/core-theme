@@ -8,6 +8,32 @@ using System.Collections.Generic;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
+   
+    /// <summary>
+    /// Loads a template and renders it with the current context. This is a way of &quot;including&quot; other templates within a template.
+    ///
+    /// The template name can either be a variable or a hard-coded (quoted) string, in either single or double quotes.
+    ///
+    /// This example includes the contents of the template &quot;foo/bar.html&quot;:
+    ///
+    /// <code>
+    /// {% include &quot;foo/bar.html&quot; %}
+    /// </code>
+    /// This example includes the contents of the template whose name is contained in the variable template_name:
+    ///
+    /// {% include template_name %}
+    /// An included template is rendered with the context of the template that&quot;s including it. This example produces the output &quot;Hello, John&quot;:
+    ///
+    /// Context: variable person is set to &quot;john&quot;.
+    ///
+    /// Template:
+    ///
+    /// <code>
+    /// {% include &quot;name_snippet.html&quot; %}
+    /// </code>
+    /// The name_snippet.html template:
+    ///
+    /// </summary>
     [NDjango.ParserNodes.Description("tbd")]
     [NDjango.Interfaces.Name("include")]
     public class IncludeTag : SimpleTagBase

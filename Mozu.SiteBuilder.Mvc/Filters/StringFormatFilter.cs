@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.Mvc.Filters
 {
+    /// <summary>
+    /// formats object(s) given a string format using {0} ,{1},..{n} place holders
+    /// 
+    /// <code>"the {0} fox jumped over the {2} {1}"("brown","dog","lazy")</code>
+    /// </summary>
     [NDjango.Interfaces.Name("string_format")]
     public class StringFormatFilter: NDjango.Interfaces.IFilterWithContext
     {

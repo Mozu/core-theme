@@ -15,7 +15,7 @@ using Mozu.SiteBuilder.Mvc.Security;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
-    public class StoreFrontAuthorizeAttribute : AuthorizeAttribute
+    public class StoreFrontAuthorizeAttribute : System.Web.Http.AuthorizeAttribute
 
     {
       

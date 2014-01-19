@@ -9,6 +9,9 @@ using Mozu.SiteBuilder.UX.Areas.Misc.Controllers;
 
 namespace Mozu.SiteBuilder.UX.Tags
 {
+    /// <summary>
+    /// simular to the style filter although instead outputs all the css rules inline.   Used primarily for email templates
+    /// </summary>
     [NDjango.Interfaces.Name("inline_style")]
     public class InlineStyle : SimpleTagBase
     {

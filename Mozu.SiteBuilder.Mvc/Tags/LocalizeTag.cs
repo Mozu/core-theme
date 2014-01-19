@@ -1,10 +1,12 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 
 using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.Mvc.Localization;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
+    [Obsolete]
     [NDjango.Interfaces.Name("localize")]
     public class LocalizeTag: SimpleTagBase 
     {

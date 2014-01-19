@@ -33,7 +33,9 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
 
     /// <summary>
-    ///     TODO: Update summary.
+    ///    retnrns the output of the parent template block.
+    ///     equal to {{ block.super }} 
+    ///     needed to support parity with hyperlive templates
     /// </summary>
     [ParserNodes.DescriptionAttribute("tbd")]
     [Name("parent")]

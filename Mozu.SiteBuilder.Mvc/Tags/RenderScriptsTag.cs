@@ -18,6 +18,8 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     /// TODO: Update summary.
     /// </summary>
     /// 
+    /// 
+    [Obsolete]
     [NDjango.ParserNodes.Description("tbd")]
     [NDjango.Interfaces.Name("load_all_scripts")]
     public class RenderScriptsTag : DynamicTagBase

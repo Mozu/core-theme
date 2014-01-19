@@ -13,6 +13,23 @@ using System.Threading;
 
 namespace Mozu.SiteBuilder.Mvc.Filters
 {
+    /// <summary>
+    /// filters a collection given a string predicate
+    /// example
+    /// given collection foo =
+    /// [
+    ///     {'name': 'zed', 'age': 19},
+    ///     {'name': 'amy', 'age': 22},
+    ///     {'name': 'joe', 'age': 31},
+    /// ]
+    /// <code>
+    ///     {%foreach item in foo|collection_filter:"age gt 20" %}
+    ///         ....
+    ///     
+    ///     {% endfor %}
+    /// 
+    /// </code>
+    /// </summary>
     [NDjango.Interfaces.Name("collection_filter")]
     public class CollectionFilter :NDjango.Interfaces.IFilter
     {
@@ -43,6 +60,23 @@ namespace Mozu.SiteBuilder.Mvc.Filters
         }
     }
 
+    /// <summary>
+    /// orders a collection given a string ordering
+    /// example
+    /// given collection foo =
+    /// [
+    ///     {'name': 'zed', 'age': 19},
+    ///     {'name': 'amy', 'age': 22},
+    ///     {'name': 'joe', 'age': 31},
+    /// ]
+    /// <code>
+    ///     {%foreach item in foo|collection_sort:"age desc" %}
+    ///         ....
+    ///     
+    ///     {% endfor %}
+    /// 
+    /// </code>
+    /// </summary>
     [NDjango.Interfaces.Name("collection_sort")]
     public class CollectionSort : NDjango.Interfaces.IFilter
     {

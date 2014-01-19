@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.Mvc.Filters
 {
-
+    /// <summary>
+    /// divides a number by another.
+    /// <code>foo|divide:4</code>
+    /// </summary>
     [NDjango.Interfaces.Name("divide")]
     public class DivideFilter : NDjango.Interfaces.IFilter 
     {

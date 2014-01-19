@@ -8,7 +8,11 @@ using Mozu.SiteBuilder.Mvc.Tags;
 
 namespace Mozu.SiteBuilder.Mvc.Filters
 {
-    [NDjango.ParserNodes.Description("converts a string into an ITemplate")]
+    /// <summary>
+    /// formats a stylshee link given a styleshee name accounting for cdn
+    /// <code> {{ "/stylesheets/storefront.less"|stylesheet_tag:"default" }}</code>
+    /// </summary>
+   
     [NDjango.Interfaces.Name("stylesheet_tag")]
     public class Stylesheet:  NDjango.Interfaces.IFilterWithContext 
     {

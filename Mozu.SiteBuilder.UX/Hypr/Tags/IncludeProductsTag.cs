@@ -25,30 +25,46 @@ using Newtonsoft.Json.Bson;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
+    /// <summary>
+    /// The include_products tag is a special kind of include tag, that includes a named template, 
+    /// but also sets that template's Model to be a list of products. 
+    /// This is useful on category pages, featured products widgets, 
+    /// and any number of other uses. 
+    /// 
+    /// It has a number of extra argumentss:
+    /// 
+    /// 
+    /// viewName=the path to the template
+    /// 
+    /// includeFacets=Set this to true to add a list of available Facets to the Model, 
+    /// which is necessary when building a faceted, drill-down UI. 
+    /// The Model will have a Facets list. Default false.
+    /// 
+    /// pageWithUrl=Set this to true to use URL parameters for paging. 
+    /// If this is true then the list will use StartIndex and PageSize parameters in the URL if they exist. 
+    /// Default false.
+    /// 
+    /// sortWithUrl=Set this to true to use URL parameters for sorting. 
+    /// If this is true then the list will use SortAsc or SortDesc parameters in the URL if they exist.
+    /// 
+    /// startIndex=refer to product api documentation
+    /// 
+    /// pageSize=refer to product api documentation
+    /// 
+    /// query=refer to product api documentation
+    /// 
+    /// sort=refer to product api documentation
+    /// 
+    /// productCodes=alternate to query.  An array of product codes
+    /// </summary>
     [NDjango.ParserNodes.Description("tbd")]
     [NDjango.Interfaces.Name("include_products")]
     public class IncludeProductsTag:SimpleTagBaseAsync
     {
 
 
-        /*
-          include_products tag
-The include_products tag is a special kind of include tag, that includes a named template, but also sets that template's Model to be a list of products. This is useful on category pages, featured products widgets, and any number of other uses. It has a number of extra argumentss:
-•	includeFacets: Set this to true to add a list of available Facets to the Model, which is necessary when building a faceted, drill-down UI. The Model will have a Facets list. Default false.
-•	pageWithUrl: Set this to true to use URL parameters for paging. If this is true then the list will use StartIndex and PageSize parameters in the URL if they exist. Default false.
-•	sortWithUrl: Set this to true to use URL parameters for sorting. If this is true then the list will use SortAsc or SortDesc parameters in the URL if they exist.
-•	startIndex: The initial record to show from the list. It's unusual to set this in the tag, since it should be dynamic and controllable by the user. Default 0.
-•	pageSize: The size of each page of the list, i.e. the maximum number of products to return. Default 15.
-•	query: You can write a custom query to the product service, e.g. query="StockAvailable < 5". Use context variables from the current Model with the string_format filter, e.g. query="StockAvailable < 5 and categoryId req {0}"|string_format(Model.Id).
-•	sort: Thom I don't know how sort works yet
-         */
-
-        /// </summary>
-        /// <param name="arguments"></param>
-        /// <param name="context"></param>
-        /// <param name="buffer"></param>
-        /// <param name="templateName"></param>
-        protected override async Task<SimpleTagBaseAsync.ProcessTagResult> ProcessTagAsync(Mvc.Tags.ArgumentCollection arguments, NDjango.Interfaces.IContext context)
+    
+       protected override async Task<SimpleTagBaseAsync.ProcessTagResult> ProcessTagAsync(Mvc.Tags.ArgumentCollection arguments, NDjango.Interfaces.IContext context)
         {
             var result = new SimpleTagBaseAsync.ProcessTagResult(context);
 

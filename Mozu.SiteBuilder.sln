@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozu.SiteBuilder.Mvc", "Mozu.SiteBuilder.Mvc\Mozu.SiteBuilder.Mvc.csproj", "{BFF6E39B-C66A-4D99-8B72-934BEEA4906B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozu.SiteBuilder.UX", "Mozu.SiteBuilder.UX\Mozu.SiteBuilder.UX.csproj", "{64E108C3-DDB5-4FA8-8C17-778F64B028BA}"
@@ -15,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozu.SiteBuilder.UX.Models"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{16F8C4B3-4E6C-4E3F-B622-A005349EC397}"
 	ProjectSection(SolutionItems) = preProject
+		Performance4.psess = Performance4.psess
+		Performance5.psess = Performance5.psess
 		WE-Markdown.css = WE-Markdown.css
 		WE-settings.xml = WE-settings.xml
 	EndProjectSection
@@ -23,7 +27,7 @@ Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 7
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://tfs2012.corp.volusion.com:8080/tfs/vnext
+		SccTeamFoundationServer = http://tfs.corp.volusion.com:8080/tfs/vnext
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = Mozu.SiteBuilder.Mvc\\Mozu.SiteBuilder.Mvc.csproj
 		SccProjectName1 = Mozu.SiteBuilder.Mvc

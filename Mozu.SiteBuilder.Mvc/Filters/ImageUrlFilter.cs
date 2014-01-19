@@ -11,7 +11,7 @@ namespace Mozu.SiteBuilder.Mvc.Filters
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-
+    [Obsolete]
     [NDjango.Interfaces.Name("image_url")]
     public class ImageUrlFilter : NDjango.Interfaces.IFilterWithContext
     {

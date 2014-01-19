@@ -15,7 +15,10 @@ namespace Mozu.SiteBuilder.Mvc.Tags
   
     using Newtonsoft.Json;
 
-    
+    /// <summary>
+    /// outputs a pre tag around an objects type name and indent formatted json  represention of the value.
+    /// <code>{%dump foo %}</code>
+    /// </summary>
     [NDjango.Interfaces.Name("dump")]
     public class DumpTag : DynamicTagBase
     {
