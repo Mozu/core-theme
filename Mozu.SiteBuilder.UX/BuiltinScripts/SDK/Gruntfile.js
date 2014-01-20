@@ -1,8 +1,6 @@
 ﻿// SDK Gruntfile
 'use strict';
 
-var allScripts = ['lib/when/when.js', 'lib/uritemplate/bin/uritemplate.js', 'lib/microevent/microevent.js', 'src/constants/default.js', 'src/utils.js', 'src/errors.js', 'src/iframexhr.js', 'src/reference.js', 'src/object.js', 'src/collection.js', 'src/types/*.js', 'src/interface.js', 'src/context.js', 'src/init.js'];
-
 var port = 9001,
     testurl = "http://127.0.0.1:" + port + "/tests/SpecRunner.html";
 
@@ -11,18 +9,14 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
-        toExport: 'Mozu',
-        exportAs: 'Mozu',
-
         releasetemp: '<%= pkg.name %>.tmp',
 
         banner: grunt.file.read("src/banner.tpl"),
-        
-        bower: {
-            install: {
-                cleanup: true
-            }
-        },
+
+        toExport: "MozuSDK",
+
+        testPlatform: './tests/sdk.js',
+       
         clean: {
             dist: {
                 src: ['dist']
@@ -31,24 +25,38 @@ module.exports = function (grunt) {
                 src: ['<%= releasetemp %>']
             },
             test: {
-                src: ['<%= concat.test.dest %>']
+                src: ['<%= testPlatform %>']
+            }
+        },
+        browserify: {
+            debug: {
+                files: {
+                    '<%= testPlatform %>': ['./src/init_debug.js']
+                },
+                options: {
+                    debug: true,
+                    standalone: "<%= toExport %>",
+                    bare: true,
+                    external: ["xmlhttprequest"]
+                }
+            },
+            dist: {
+                files: {
+                    '<%= releasetemp %>': ['./src/init.js']
+                },
+                options: {
+                    standalone: '<%= toExport %>',
+                    bare: true,
+                    external: ["xmlhttprequest"]
+                }
             }
         },
         concat: {
             options: {
-                banner: '<%= banner %>' + grunt.file.read('src/wrap_header.tpl'),
-                footer: grunt.file.read('src/wrap_footer.tpl')
-            },
-            dist: {
-                src: allScripts,
-                dest: '<%= releasetemp %>'
-            },
-            test: {
-                src: allScripts.concat('src/init_debug.js'),
-                dest: './tests/sdk.js'
+                banner: '<%= banner %>'
             },
             debug: {
-                src: allScripts.concat('src/init_debug.js'),
+                src: '<%= testPlatform %>',
                 dest: './dist/<%= pkg.name %>.debug.js'
             }
         },
@@ -57,13 +65,8 @@ module.exports = function (grunt) {
                 options: {
                     banner: '<%= banner %>'
                 },
-                src: '<%= concat.dist.dest %>',
+                src: '<%= releasetemp %>',
                 dest: '<%= pkg.main %>.js'
-            }
-        },
-        tfscheckout: {
-            dist: {
-                dir: 'dist'
             }
         },
         connect: {
@@ -101,40 +104,16 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-bower-task');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-mocha');
     grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.loadNpmTasks('grunt-browserify');
 
-    grunt.registerMultiTask('tfscheckout', 'Using Team Foundation Server, checks out the files that will be modified, so TFS is aware that changes were made.', function () {
-        var done = this.async(),
-            spawn = require('child_process').spawn,
-            child,
-            self = this;
 
-        grunt.log.writeln('Checking directory \'' + this.data.dir + '\' out from tfs');
-
-        child = spawn("C:\\Program Files\ (x86)\\Microsoft\ Visual\ Studio\ 11.0\\Common7\\IDE\\TF.exe", ["checkout", this.data.dir + "\\*"]);
-
-        child.stderr.on('data', function (data) {
-            grunt.log.error(data);
-        });
-
-        child.on('close', function (code) {
-            if (code !== 0) {
-                grunt.log.error("Could not check files out of TFS.") && grunt.fatal("TFS checkout failed.");
-                done(false);
-            } else {
-                grunt.log.ok("Checked out contents of " + self.data.dir);
-                done(true);
-            }
-        });
-    });
-
-    grunt.registerTask('test', ['concat:test', 'connect:server', 'mocha', 'clean:test']);
-    grunt.registerTask('dist', ['clean:dist', 'concat:dist', 'concat:debug', 'uglify', 'clean:tmp', 'tfscheckout']);
-    grunt.registerTask('testbrowser', ['concat:test', 'connect:browser']);
-    grunt.registerTask('default', ['bower', 'test', 'dist']);
+    grunt.registerTask('test', ['browserify:debug', 'connect:server', 'mocha']);
+    grunt.registerTask('dist', ['clean:dist', 'browserify:dist', 'concat:debug', 'uglify', 'clean:tmp']);
+    grunt.registerTask('testbrowser', ['browserify:debug', 'connect:browser']);
+    grunt.registerTask('default', ['test', 'dist', 'clean:test']);
 
 };
