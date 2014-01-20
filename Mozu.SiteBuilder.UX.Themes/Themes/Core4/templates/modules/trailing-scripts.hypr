@@ -23,7 +23,7 @@
         priority: ['jquery']
     };
 </script>
-<script src="/js/require-{% if themeSettings.useDebugScripts %}debug{% else %}min{% endif %}.js"></script>
+<script src="{{siteContext.cdnPrefix}}/js/require-{% if themeSettings.useDebugScripts %}debug{% else %}min{% endif %}.js"></script>
 <script type="text/javascript">
     require([{% all_scripts %}]);
 </script>

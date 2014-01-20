@@ -60,7 +60,7 @@
         {% endblock stylesheets %}
         
         {% block head-tag-scripts %}
-        <script src="/scripts/vendor/modernizr-respond.min.js"></script>
+        <script src="{{siteContext.cdnPrefix}}/scripts/vendor/modernizr-respond.min.js"></script>
         {% include "modules/web-fonts-loader" %}
         {% endblock head-tag-scripts %}
 		{% cms_resources %}

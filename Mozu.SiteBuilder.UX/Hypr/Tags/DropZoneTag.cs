@@ -11,6 +11,7 @@ using AutoMapper;
 using Microsoft.FSharp.Collections;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.CMS;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.Mvc.Tags;
@@ -59,14 +60,16 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     [NDjango.Interfaces.Name("cms_resources")]
     public class EditResourcesTag : SimpleTagBase
     {
-
+        const string  Format = "\t\t<script type=\"text/javascript\" src=\"{1}/admin/scripts/chorizo/{0}.js\"></script>\r\n";
         protected override void ProcessTag(Mvc.Tags.ArgumentCollection arguments, ref IContext context, out string buffer, out string templateName)
         {
             buffer = templateName = null;
             var pageContext = context.PageContext();
+            
             var isEditmode = pageContext.IsEditMode;
             var sb = new StringBuilder();
-            sb.AppendLine("\t\t<link rel=\"stylesheet\" href=\"/resources/cms/layout.css\">");
+            var cdn = context.Resolve<SiteContext>().CdnPrefix;
+            sb.AppendFormat("\t\t<link rel=\"stylesheet\" href=\"{0}/resources/cms/layout.css\">\r", cdn);
             if (!isEditmode)
             {
                 
@@ -77,14 +80,14 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             sb.AppendLine( "\r\n\t\t<link rel=\"stylesheet\" href=\"/admin/scripts/build/chorizo/chorizo.css\">");
             sb.AppendLine("\t\t<link rel=\"stylesheet\" href=\"//netdna.bootstrapcdn.com/font-awesome/4.0.2/css/font-awesome.min.css\">");
             sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js\"></script>");
-            sb.AppendLine("\t\t<script src=\"//code.jquery.com/ui/1.10.3/jquery-ui.js\"></script>");
-            var format = "\t\t<script type=\"text/javascript\" src=\"/admin/scripts/chorizo/{0}.js\"></script>\r\n";
-            sb.AppendFormat(format,"_classfactory");
-            sb.AppendFormat(format, "format");
-            sb.AppendFormat(format,"content");
-            sb.AppendFormat(format,"targets");
-            sb.AppendFormat(format, "widgets");
-            sb.AppendFormat(format, "editor");
+            sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js\"></script>");
+
+            sb.AppendFormat(Format, "_classfactory", cdn);
+            sb.AppendFormat(Format, "format", cdn);
+            sb.AppendFormat(Format, "content", cdn);
+            sb.AppendFormat(Format, "targets", cdn);
+            sb.AppendFormat(Format, "widgets", cdn);
+            sb.AppendFormat(Format, "editor", cdn);
             buffer = sb.ToString();
         }
     }
