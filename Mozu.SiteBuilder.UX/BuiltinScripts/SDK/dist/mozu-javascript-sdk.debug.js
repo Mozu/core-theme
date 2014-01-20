@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.2.0 - 2014-01-13
+ * Mozu JavaScript SDK - v0.2.0 - 2014-01-20
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -2623,9 +2623,9 @@ var ApiReference = (function () {
             }
             
         },
+        'cartsummary': '{+cartService}summary',
         'cart': {
             get: '{+cartService}current',
-            'get-summary': '{+cartService}summary',
             'add-product': {
                 verb: 'POST',
                 returnType: 'cartitem',
@@ -3203,6 +3203,11 @@ ApiObject.types.cart = {
         var items = this.prop('items');
         if (!items || !items.length) return 0;
         return utils.reduce(items, function (total, item) { return total + item.quantity; }, 0);
+    }
+};
+ApiObject.types.cartsummary = {
+    count: function () {
+        return this.data.totalQuantity || 0;
     }
 };
 ApiObject.types.creditcard = (function() {
