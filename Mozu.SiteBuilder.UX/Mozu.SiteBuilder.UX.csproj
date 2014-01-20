@@ -553,9 +553,6 @@
     </Content>
     <Content Include="BuiltinScripts\SDK\package.json" />
     <Content Include="BuiltinScripts\SDK\docs\getting_started.md" />
-    <Content Include="BuiltinScripts\SDK\bower.json" />
-    <Content Include="BuiltinScripts\SDK\src\wrap_footer.tpl" />
-    <Content Include="BuiltinScripts\SDK\src\wrap_header.tpl" />
     <Content Include="BuiltinScripts\SDK\src\banner.tpl" />
     <Content Include="BuiltinScripts\HyprLive\src\wrap_footer.tpl" />
     <Content Include="BuiltinScripts\HyprLive\src\wrap_header.tpl" />
@@ -608,6 +605,9 @@
     <Content Include="PreDeploy.ps1" />
     <Content Include="PostDeploy.ps1" />
     <Content Include="BuiltinScripts\SDK\README.md" />
+    <Content Include="BuiltinScripts\SDK\src\methods.json" />
+    <Content Include="BuiltinScripts\SDK\HISTORY.md" />
+    <Content Include="BuiltinScripts\SDK\LICENSE" />
     <None Include="Properties\PublishProfiles\demo.pubxml" />
     <Content Include="Web.SI.config">
       <DependentUpon>Web.config</DependentUpon>

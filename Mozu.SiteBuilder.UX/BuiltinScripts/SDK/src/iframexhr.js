@@ -1,5 +1,6 @@
 ﻿// BEGIN IFRAMEXHR
-var IframeXHR = (function (window, document, undefined) {
+var utils = require('./utils');
+module.exports = (function (window, document, undefined) {
 
     var hasPostMessage = window.postMessage && navigator.userAgent.indexOf("Opera") === -1,
         firefoxVersion = (function () {
@@ -23,6 +24,7 @@ var IframeXHR = (function (window, document, undefined) {
                 var self = this;
                 this.messageListener = function (e) {
                     if (!e) e = window.event;
+                    if (e && e.data === "process-tick") return; // browserify clogs up this channel
                     if (!validateOrigin(self, e.origin)) throw new Error("Origin " + e.origin + " does not match required origin " + self.frameOrigin);
                     if (e.data === "ready") return self.postMessage();
                     self.update(e.data);
@@ -130,5 +132,5 @@ var IframeXHR = (function (window, document, undefined) {
 
     return IframeXMLHttpRequest;
 
-}(this, this.document));
+}(window, document));
 // END IFRAMEXHR
