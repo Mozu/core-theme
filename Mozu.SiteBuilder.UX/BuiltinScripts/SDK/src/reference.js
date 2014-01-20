@@ -246,9 +246,9 @@ var ApiReference = (function () {
             }
             
         },
+        'cartsummary': '{+cartService}summary',
         'cart': {
             get: '{+cartService}current',
-            'get-summary': '{+cartService}summary',
             'add-product': {
                 verb: 'POST',
                 returnType: 'cartitem',
