@@ -4,7 +4,7 @@
 	<select class="mz-searchbox-categories" name="facetValueFilter">
 		<option value="">{{ labels.all }}</option>
     {% for cat in navigation.rootCategories %}
-    <option value="categoryId:{{cat.originalId}}" {% if cat.originalId == pageContext.categoryId  %}selected="selected"{%endif%}>{{cat.Name}}</option>
+    <option value="categoryId:{{cat.originalId}}" {% if cat.originalId == pageContext.categoryId and not navigation.currentNode.isHomePage  %}selected="selected"{%endif%}>{{cat.Name}}</option>
 		{% endfor %}
 	</select>
 </form>
