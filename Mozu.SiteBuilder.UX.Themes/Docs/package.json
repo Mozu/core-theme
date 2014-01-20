@@ -1,0 +1,10 @@
+﻿{
+    "name": "mozu-core4-docs",
+    "title": "Mozu Core4 Theme Documentation",
+    "author": "Volusion, Inc.",
+    "version": "0.1.0",
+    "devDependencies": {
+        "jsdoc": "<=3.3.0",
+        "ink-docstrap": "~0.3.0"
+    }
+}

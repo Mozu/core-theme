@@ -390,6 +390,7 @@
     <Content Include="buildcore.bat" />
     <Content Include="Addons\Blue\addon.json" />
     <Content Include="Addons\Orange\addon.json" />
+    <Content Include="Docs\externals\backbone.jsdoc.js" />
     <Content Include="Docs\Mozu_Themeing_Concepts.md" />
     <Content Include="Morrissey\src\plugins\i18n.js" />
     <Content Include="Morrissey\src\plugins\node_i18n.js" />
@@ -437,7 +438,9 @@
     <Content Include="Themes\Core4\resources\admin\widgets\26_related_products.png" />
     <Content Include="Themes\Core4\resources\admin\widgets\27_up_sells.png" />
     <Content Include="Themes\Core4\resources\images\button-loading-small.gif" />
-    <Content Include="Themes\Core4\resources\images\button-loading.gif" />
+    <Content Include="Themes\Core4\resources\images\button-loading.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Themes\Core4\scripts\modules\models-orders.js" />
     <Content Include="Themes\Core4\scripts\modules\models-location.js" />
     <Content Include="Themes\Core4\scripts\modules\jquery-dateinput-localized.js" />
@@ -500,7 +503,9 @@
     <Content Include="Themes\Core4\resources\admin\widgets\_0004_html.png" />
     <Content Include="Themes\Core4\resources\admin\widgets\_0005_horizontal-divider.png" />
     <Content Include="Themes\Core4\resources\admin\widgets\_0008_share.png" />
-    <Content Include="Themes\Core4\resources\images\error-exclamation.png" />
+    <Content Include="Themes\Core4\resources\images\error-exclamation.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Themes\Core4\scripts\modules\api.js" />
     <Content Include="Themes\Core4\scripts\modules\cart-monitor.js" />
     <Content Include="Themes\Core4\scripts\modules\common.js" />
@@ -773,7 +778,9 @@
     <Content Include="Themes\Core4\templates\modules\checkout\billing-credit-card-form.hypr.live">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Themes\Core4\templates\modules\product\faceting-form.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\product\faceting-form.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Themes\Core4\templates\modules\analytics\google-analytics-tracking-code.hypr">
       <SubType>Designer</SubType>
     </Content>
@@ -950,7 +957,13 @@
     <Content Include="Themes\Core4\templates\modules\location\location-listing.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\location\location-product-listing.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\location\locations.hypr.live" />
-    <None Include="Themes\Core4\templates\modules\product\product-instock-request.hypr.live" />
+    <Content Include="Docs\jsdoc_conf.json" />
+    <Content Include="Docs\package.json" />
+    <Content Include="Docs\make.bat" />
+    <Content Include="Docs\README.md" />
+    <Content Include="Docs\Customization_Layers.md" />
+    <Content Include="Docs\Page_Lifecycle.md" />
+    <Content Include="Themes\Core4\templates\modules\product\product-instock-request.hypr.live" />
     <Content Include="Themes\Core4\templates\Widgets\cms\video.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\location\store-locator.hypr" />
     <Content Include="ThemeTemplates\ExtendsCore4\theme.json" />

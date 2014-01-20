@@ -7,13 +7,6 @@
     "modules/backbone-mozu-validation"], function ($, _, api, Backbone, MessageModels) {
 
 
-        /**
-         * The Backbone library.
-         * @external Backbone
-         * @see {@link http://backbonejs.org}
-         */
-
-
         var Model = Backbone.Model,
            Collection = Backbone.Collection;
 
@@ -45,7 +38,7 @@
             /**
              * Extends the BackboneJS Model object to create a Backbone.MozuModel with extra features for model nesting, error handling, validation, and connection to the JavaScript SDK.
              * @class MozuModel
-             * @augments Backbone.Model
+             * @augments external:Backbone.Model
              */
 
             /** constructs */
@@ -77,20 +70,40 @@
                     }
                 }, 300);
             },
+
+
             /**
-             * Get the value of an attribute. Unlike the `get()` method on he plain `Backbone.Model`, this method accepts a dot-separated path to a property on a child model (child models are defined on {@link Backbone.MozuModel#relations)).
+             * Dictionary of related models or collections.
+             * @member {object} relations
+             * @memberof MozuModel.prototype
+             * @public
+             * @example
+             * var Product = Backbone.MozuModel.extend({
+             *   relations: {
+             *     content: ProductContent, // another Backbone.MozuModel or Backbone.Model class
+             *     options: Backbone.Collection.extend(
+             *       model: ProductOption
+             *     }), // a "has many" relationship
+             *   }
+             * });
+             *
+             * new Product(someJSON).get('content') // --> an instance of ProductContent
+             */
+
+            /**
+             * Get the value of an attribute. Unlike the `get()` method on the plain `Backbone.Model`, this method accepts a dot-separated path to a property on a child model (child models are defined on {@link Backbone.MozuModel#relations}).
              * @example
              * // returns the value of Product.ProductContent.ProductName
              * productModel.get('content.productName');
-             * @param {string} propName The name, or dot-separated path, of the property to return.
-             * @returns {Object} Returns the value of the named attribute, and `undefined` if it was never set.
+             * @param {string} attr The name, or dot-separated path, of the property to return.
+             * @returns {Object} The value of the named attribute, and `undefined` if it was never set.
              */
-            get: function (propName) {
-                var prop = propName.split('.'), ret = this, level;
+            get: function (attr) {
+                var prop = attr.split('.'), ret = this, level;
                 while (ret && (level = prop.shift())) ret = Backbone.Model.prototype.get.call(ret, level);
-                if (!ret && this.relations && (propName in this.relations)) {
-                    ret = this.setRelation(propName, null, { silent: true });
-                    this.attributes[propName] = ret;
+                if (!ret && this.relations && (attr in this.relations)) {
+                    ret = this.setRelation(attr, null, { silent: true });
+                    this.attributes[attr] = ret;
                 }
                 return ret;
             },
@@ -185,7 +198,7 @@
                 return val;
             },
             /**
-             * Set the value of an attribute or a hash of attributes. Unlike the `set()` method on he plain `Backbone.Model`, this method accepts a dot-separated path to a property on a child model (child models are defined on {@link Backbone.MozuModel#relations)).
+             * Set the value of an attribute or a hash of attributes. Unlike the `set()` method on he plain `Backbone.Model`, this method accepts a dot-separated path to a property on a child model (child models are defined on {@link Backbone.MozuModel#relations}).
              * @example
              * // sets the value of Customer.EditingContact.FirstName
              * customerModel.set('editingContact.firstName');
