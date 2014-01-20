@@ -17,7 +17,7 @@ using Newtonsoft.Json.Bson;
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
     /// <summary>
-    ///     TODO: Update summary.
+    ///     returns an array of previously requrired scripts.
     /// </summary>
     [ParserNodes.DescriptionAttribute("tbd")]
     [Name("all_scripts")]
