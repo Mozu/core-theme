@@ -504,7 +504,7 @@
     <Content Include="BuiltinScripts\RequireJS\src\require.js" />
     <Content Include="BuiltinScripts\SDK\Gruntfile.js" />
     <Content Include="BuiltinScripts\SDK\src\init_debug.js" />
-    <Content Include="BuiltinScripts\SDK\docs\SDK_README.html" />
+    <Content Include="BuiltinScripts\SDK\docs\getting_started.html" />
     <Content Include="BuiltinScripts\SDK\src\collection.js" />
     <Content Include="BuiltinScripts\SDK\src\context.js" />
     <Content Include="BuiltinScripts\SDK\src\init.js" />
@@ -551,7 +551,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="BuiltinScripts\SDK\package.json" />
-    <Content Include="BuiltinScripts\SDK\README.md" />
+    <Content Include="BuiltinScripts\SDK\docs\getting_started.md" />
     <Content Include="BuiltinScripts\SDK\bower.json" />
     <Content Include="BuiltinScripts\SDK\src\wrap_footer.tpl" />
     <Content Include="BuiltinScripts\SDK\src\wrap_header.tpl" />
@@ -606,6 +606,7 @@
     <Content Include="App_Data\51Degrees.mobi-Lite-2012.12.04.dat" />
     <Content Include="PreDeploy.ps1" />
     <Content Include="PostDeploy.ps1" />
+    <Content Include="BuiltinScripts\SDK\README.md" />
     <None Include="Properties\PublishProfiles\demo.pubxml" />
     <Content Include="Web.SI.config">
       <DependentUpon>Web.config</DependentUpon>
