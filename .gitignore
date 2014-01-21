@@ -7,6 +7,8 @@ packages/
 .sass-cache/
 .DS_Store
 node_modules/
+*.sublime-project
+*.sublime-workspace
 
 
 Mozu.SiteBuilder.UX.Admin/Scripts/ext/
