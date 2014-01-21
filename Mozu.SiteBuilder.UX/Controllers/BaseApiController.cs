@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
         {
             var shippingWebApiClient = this.Request.Resolve<IShippingWebApiClient>().CloneWithoutUserClaims();
 
-            var result = (await shippingWebApiClient.GetShippableCountries()).ReadAsSync().Items;
+            var result = (await (await shippingWebApiClient.GetShippableCountries().ConfigureAwait(false)).ReadAsAsync().ConfigureAwait(false)).Items;
 
             var res = result.Select(x => new KeyValuePair<string, string>(x.Name, x.Code)).ToList();
             if (res.Count == 0)
