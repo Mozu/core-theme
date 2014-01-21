@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
@@ -20,10 +21,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
             if (extFilter == null || extFilter.Count == 0)
                 return null;
 
-            return String.Join(" and ", extFilter./*.Where(f => !String.Equals(f.property, "validondate", StringComparison.InvariantCultureIgnoreCase)).*/Select(GetFilter));
+
+            StringBuilder sb = new StringBuilder();
+            foreach (var filter in extFilter.Where(x => x.value != null && x.property != "all" && !string.IsNullOrEmpty(x.value.ToString())))
+            {
+
+                var filterString = GetFilter(filter.value, filter);
+                if (!string.IsNullOrWhiteSpace(filterString))
+                {
+                    if (sb.Length > 1)
+                    {
+                        sb.Append(" and ");
+                    }
+                    sb.Append(filterString);
+
+                }
+
+            }
+
+            return sb.ToString().Trim();
+
+
+            //return String.Join(" and ", extFilter./*.Where(f => !String.Equals(f.property, "validondate", StringComparison.InvariantCultureIgnoreCase)).*/Select(GetFilter));
         }
 
-        private static string GetFilter(FilterCollectionItem filter)
+        private static string GetFilter(object value, FilterCollectionItem filter)
         {
             switch (filter.property.ToLowerInvariant())
             {
