@@ -16,6 +16,7 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.website.WidgetEditor',
         'Taco.view.website.widgetEditors.HorizontalRule',
         'Taco.view.website.widgetEditors.Image',
+        'Taco.view.website.widgetEditors.DealOfTheDay',
         'Taco.view.website.entityAdapters.SiteTemplateEntityAdapter',
         'Taco.view.website.entityAdapters.TemplateEntityAdapter',
         'Taco.view.website.entityAdapters.EmailTemplateEntityAdapter',

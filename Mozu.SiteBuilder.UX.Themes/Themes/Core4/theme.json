@@ -486,19 +486,17 @@
         "validPageTypes":["*"]
         },
     {
-      "id":"cms-image",
-      "displayName":"Image",
-      "displayTemplate" :"cms/image",
+        "id":"cms-image",
+        "displayName":"Image",
+        "displayTemplate" :"cms/image",
         "icon": "/resources/admin/widgets/00_photo.png",
-      "editView": "taco-image-widgeteditor",
+        "editView": "taco-image-widgeteditor",
         "defaultConfig": {
             "height": 400,
              "imageHeight": 400
         },
         "validPageTypes":["*"]
-    },
-		
-		{
+    }, {
         "id": "horizontal_rule",
         "displayName": "Horizontal Rule",
         "displayTemplate": "cms/horizontalrule",
@@ -518,12 +516,12 @@
         "displayTemplate": "cms/content",
         "icon": "/resources/admin/widgets/07_code.png",
         "editViewFields": [{
-            xtype: 'textareafield',
-            grow: true,
-            name: 'body',
-            fieldLabel: 'HTML',
-            anchor: '100%',
-            fieldStyle:"resize:both;font-family:Monaco, Menlo, Consolas, 'Droid Sans Mono', Inconsolata, 'Courier New', monospace;height:100%"
+            "xtype": "textareafield",
+            "grow": true,
+            "name": "body",
+            "fieldLabel": "HTML",
+            "anchor": "100%",
+            "fieldStyle": "resize:both;font-family:Monaco, Menlo, Consolas, 'Droid Sans Mono', Inconsolata, 'Courier New', monospace;height:100%"
         }],
         "defaultConfig": {
             "body": "<h2>Insert Markup</h2>"
@@ -617,5 +615,13 @@
         },
         "category": "social",
         "validPageTypes":["*"]
+    }, {
+        "id": "deal-of-the-day",
+        "category": "catalog",
+        "displayName": "Deal of the Day",
+        "displayTemplate": "catalog/deal-of-the-day",
+        "icon": "/resources/admin/widgets/26_related_products.png",
+        "validPageTypes": ["*"],
+        "editView": "taco-dealoftheday-widgeteditor"
     }]
 }
