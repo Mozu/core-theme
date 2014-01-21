@@ -13,6 +13,24 @@
     "settings": {
 
         "internal-themeAddons": [],
+		"cmsTextStyles": [
+			{
+			  "label": "Heading 1",
+			  "tagName": "h1",
+			  "className": "mz-style-1",
+			  "attributes": {
+				"data-role": "{theNeedful: true}"
+			  }
+			},
+			{
+			  "label": "Heading 2",
+			  "tagName": "h2"
+			},
+			{
+			  "label": "Paragraph",
+			  "tagName": "p"
+			}
+		  ],
 
         "useDebugScripts": true,
 

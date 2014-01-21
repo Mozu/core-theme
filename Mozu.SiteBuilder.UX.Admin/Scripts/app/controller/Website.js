@@ -25,6 +25,25 @@ Ext.define('Taco.controller.Website', {
             this.buildIndex(null, { startUrl: url } );
         });
     },
+    /************************************
+   *  
+   * PUBLIC METHODS ON THE sitebuilderEditor
+   * accesed by : Taco.app.controllers.get('sitebuilder')
+   *
+   *************************************/
+    //returns an array of cms text styles
+    getCmsTextStyles:function (win, callback) {
+        var defaultStyles = [
+            {
+                "label": "Heading 1",
+                "tagName": "h1"
+            }
+        ];
+        
+        win.require(["hyprlivecontext"], function (hyperContext) {
+            callback(hyperContext.locals.themeSettings.cmsTextStyles || defaultStyles);
+        });
+    },
 
     /************************************
     *  

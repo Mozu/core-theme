@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         }
 
 
-         public static string ToQString(this FilterCollection extFilter, bool? withVariations = null)
+        public static string ToQString(this FilterCollection extFilter, bool? withVariations = null)
          {
              string allString;
              if (extFilter.TryGetValue<string>("all", out allString) && !string.IsNullOrWhiteSpace(allString))

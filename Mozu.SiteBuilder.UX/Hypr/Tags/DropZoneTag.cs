@@ -286,19 +286,22 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                             }
                             else
                             {
-                                StringWriter sw1 = new StringWriter();
+                                var pos = sb.Length;
+
+                                var sw1 = new StringWriter(sb);
                                 try
                                 {
                                     await context.AsyncRender("widgets/" + widgetDefinition.DisplayTemplate, widget, sw1).ConfigureAwait(false);
 
                                     sw1.Flush();
-                                    sb.Append(sw1.GetStringBuilder().ToString());
+                                    //sb.Append(sw1.GetStringBuilder().ToString());
 
                                 }
                                 catch (Exception ex)
                                 {
                                     if (isEditmode)
                                     {
+                                        sb.Remove(pos, sb.Length - pos);
                                         sb.Append(ex.ToString());
                                     }
                                 }
@@ -340,6 +343,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 //}
             }
             sb.Append("</div>");
+            
             //buffer = sb.ToString();
             processResult.Buffer = sb.ToString();
             processResult.Context = context;
