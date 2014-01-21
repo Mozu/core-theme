@@ -974,6 +974,9 @@
   <ItemGroup>
     <Content Include="Themes\Core4\templates\Widgets\misc\instock-request.hypr" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core4\templates\Widgets\catalog\deal-of-the-day.hypr" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

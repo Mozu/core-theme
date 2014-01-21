@@ -802,6 +802,7 @@
     <Content Include="Scripts\app\view\website\Tree.js" />
     <Content Include="Scripts\app\view\website\Index.js" />
     <Content Include="Scripts\app\view\website\widgetEditors\AddThis.js" />
+    <Content Include="Scripts\app\view\website\widgetEditors\DealOfTheDay.js" />
     <Content Include="Scripts\app\view\website\widgetEditors\Image.js" />
     <Content Include="Scripts\app\view\website\widgetEditors\FeaturedProducts.js" />
     <Content Include="Scripts\app\view\website\widgetEditors\HorizontalRule.js" />

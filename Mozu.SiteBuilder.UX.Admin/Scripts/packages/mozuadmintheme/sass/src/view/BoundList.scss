@@ -32,6 +32,14 @@
 /* MULTISELECT LISTS */
 
 .#{$prefix}multiselectfield {
+    .#{$prefix}form-item-label-top {
+        overflow: hidden;
+        padding-right: 100%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 0px;
+    }
+
     &.#{$prefix}form-invalid {
         .#{$prefix}boundlist-item {
             border-bottom-color: $color-theme-red;
