@@ -3,14 +3,34 @@
     'use strict';
 
     var $doc = $(doc),
-        bar;
+        bar,
+        styles;
+
+    styles = [{
+        label: 'Heading 1',
+        tagName: 'h1'
+    }, {
+        label: 'Heading 2',
+        tagName: 'h2'
+    }, {
+        label: 'Normal',
+        tagName: 'p'
+    }, {
+        label: 'Special',
+        tagName: 'div',
+        className: 'special'
+    }];
 
     bar = {
         init: function() {
             this.element = $([
                 '<div class="mz-cms-format-bar">',
                     '<ul>',
-                        '<li class="mz-cms-styles">Styles</li>',
+                        '<li data-role="styles" class="mz-cms-styles">',
+                            '<span>Styles</span>',
+                            '<i class="fa fa-caret-down"></i>',
+                            '<ul></ul>',
+                        '</li>',
                         '<li data-role="bold"><i class="fa fa-bold"></i></li>',
                         '<li data-role="italic"><i class="fa fa-italic"></i></li>',
                         '<li data-role="underline"><i class="fa fa-underline"></i></li>',
@@ -44,6 +64,15 @@
                                         blur: $.proxy(this._onBlurUrl, this)
                                     });
 
+            this.$styles = this.element.find('[data-role="styles"] ul');
+
+            $.each(styles, $.proxy(function (index, style) {
+                $('<li data-role="style"></li>')
+                    .text(style.label)
+                    .data('style', style)
+                    .appendTo(this.$styles);
+            }, this));
+
             return this;
         },
 
@@ -58,6 +87,7 @@
         hide: function() {
             var proxy = $.proxy(function() {
                 this.element.removeClass('mz-cms-active')
+                this.$styles.hide();
             }, this);
             if (!this.element.length) return;
             this._hideTimeout = win.setTimeout(proxy, 150);
@@ -77,6 +107,12 @@
                 case 'createLink':
                     this.createLink();
                     break;
+                case 'style':
+                    this.customStyle($item);
+                    break;
+                case 'styles':
+                    this.$styles.toggle();
+                    break;
                 default:
                     console.log('doing command', role);
                     doc.execCommand(role, false, null);
@@ -94,6 +130,27 @@
             if (this._range) this.range(this._range);
             
             delete this._range;
+        },
+
+        customStyle: function($item) {
+            var style = $item.data('style'),
+                element;
+
+            console.log('customStyle', style);
+            this.$styles.hide();
+            doc.execCommand('formatBlock', false, style.tagName);
+
+            if (!style.className) return;
+
+            element = this.range().container;
+
+            console.log('element', element);
+
+            while (element.nodeName.toLowerCase() !== style.tagName.toLowerCase() && element.parentElement) {
+                element = element.parentElement;
+            }
+
+            $(element).attr('class', style.className);
         },
 
         createLink: function() {
