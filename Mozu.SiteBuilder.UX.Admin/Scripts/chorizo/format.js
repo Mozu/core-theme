@@ -66,12 +66,13 @@
 
             this.$styles = this.element.find('[data-role="styles"] ul');
 
-            $.each(styles, $.proxy(function (index, style) {
-                $('<li data-role="style"></li>')
-                    .text(style.label)
-                    .data('style', style)
-                    .appendTo(this.$styles);
-            }, this));
+            if (win.parent.Taco) {
+                win.parent.Taco.app.controllers
+                    .get('Website')
+                    .getCmsTextStyles(win, $.proxy(this._buildStyles, this));
+            } else {
+                this._buildStyles(styles);
+            }
 
             return this;
         },
@@ -213,6 +214,15 @@
             selection = win.getSelection();
             selection.removeAllRanges();
             selection.addRange(range);
+        },
+
+        _buildStyles: function(styles) {
+            $.each(styles, $.proxy(function (index, style) {
+                $('<li data-role="style"></li>')
+                    .text(style.label)
+                    .data('style', style)
+                    .appendTo(this.$styles);
+            }, this));
         }
     };
 

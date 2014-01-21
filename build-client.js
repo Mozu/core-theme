@@ -8,6 +8,23 @@ var start = new Date()
 
 var done = 0
 
+var commit = function() {
+    var cmd = 'git commit -am '
+    if (argv.commit) {
+        cmd += '"' + argv.commit + '"'
+        log(cmd)
+        child = exec(cmd, function(error, stdout, stderrr) {
+            pull();
+        })
+
+        child.stdout.on('data', function(data) {
+            process.stdout.write(data)
+        })
+    } else {
+        pull();
+    }
+}
+
 var pull = function() {
     var cmd = 'git tf pull --rebase'
     if (argv.pull || argv.p || argv.checkin || argv.c) {
@@ -161,6 +178,7 @@ if (argv.help || argv.h) {
     console.log('    (no arguments)   '.blue + 'Run Nuget Restore and then run MSBuild on the solution')
     console.log('    --pull       -p  '.blue + 'Pull from TFS before running NugetRestore and MSBuild')
     console.log('    --checkin    -c  '.blue + 'Pull and Checkin code from TFS before running NugetRestore and MSBuild')
+    console.log('    --commit     msg '.blue + 'Commit files, Pull, and Checkin')
     console.log('    --associate   #  '.blue + 'Associate a work item or a list of work items to a checkin (e.g. --associate 1234,1235)')
     console.log('    --resolve     #  '.blue + 'Resolve a work item or a list of work items to a checkin (e.g. --resolve 1234,1235)')
     console.log('    --javascript -j  '.blue + 'Sencha build JS and SASS')
@@ -174,7 +192,7 @@ if (argv.help || argv.h) {
         socket.setKeepAlive(true)
         socket.on('data', function(data) {
             process.stdout.write(data)
-            if (data.toString().indexOf('first connect open') > -1) pull()
+            if (data.toString().indexOf('first connect open') > -1) commit()
         })
         socket.on('error', function(e) {
             console.log('error')
