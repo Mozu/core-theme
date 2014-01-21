@@ -119,7 +119,7 @@
 .mz-cms-format-bar ul {
   background-color: #DFDFDF;
   border: 1px solid #bfbfbf;
-  border-top: 0;
+  border-top-width: 0;
   cursor: default;
   display: inline-block;
   font-family: Helvetica;
@@ -149,10 +149,35 @@
 .mz-cms-format-bar .mz-cms-styles {
   padding-left: 8px;
   padding-right: 8px;
+  position: relative;
+  width: auto;
+}
+/* line 48, ../../sass/etc/chorizo/_format-bar.scss */
+.mz-cms-format-bar .mz-cms-styles span {
+  margin-right: 5px;
+}
+/* line 52, ../../sass/etc/chorizo/_format-bar.scss */
+.mz-cms-format-bar .mz-cms-styles ul {
+  border-top-width: 1px;
+  display: none;
+  left: 0;
+  padding: 5px;
+  position: absolute;
+  top: 27px;
+}
+/* line 60, ../../sass/etc/chorizo/_format-bar.scss */
+.mz-cms-format-bar .mz-cms-styles ul li {
+  cursor: pointer;
+  display: block;
+  height: auto;
+  margin: 0;
+  padding: 3px 8px;
+  text-align: left;
+  white-space: nowrap;
   width: auto;
 }
 
-/* line 49, ../../sass/etc/chorizo/_format-bar.scss */
+/* line 74, ../../sass/etc/chorizo/_format-bar.scss */
 .mz-cms-tooltip {
   background-color: black;
   display: none;
@@ -161,9 +186,15 @@
   position: absolute;
   top: 0;
 }
-/* line 57, ../../sass/etc/chorizo/_format-bar.scss */
+/* line 82, ../../sass/etc/chorizo/_format-bar.scss */
 .mz-cms-tooltip input[type="text"] {
   width: 300px;
+}
+
+/* line 87, ../../sass/etc/chorizo/_format-bar.scss */
+.special {
+  color: green;
+  font-style: italic;
 }
 
 /* line 2, ../../sass/etc/chorizo/_widgets.scss */
