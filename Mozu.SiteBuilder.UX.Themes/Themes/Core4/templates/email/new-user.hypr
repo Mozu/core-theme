@@ -2,6 +2,6 @@
 
   {% block body-content %}
   <H1> Welcome to {{siteContext.generalSettings.websiteName}}</H1>
-      <div>{% dump Model %}</div>
+      <div>{% dump model %}</div>
 
 {% endblock body-content %}
