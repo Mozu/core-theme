@@ -122,6 +122,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         [DataMember(Name = "createDate")]
         public DateTime? CreateDate { get; set; }
 
+        [DataMember(Name="paymentCards")]
+        public List<DC.Card> PaymentCards { get; set; }
+
         #endregion
 
         

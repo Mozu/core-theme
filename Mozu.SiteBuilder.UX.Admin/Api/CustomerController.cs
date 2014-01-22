@@ -77,6 +77,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 customerId = Convert.ToInt32(pagingParameters.id);
 
                 var customer = (await GetAccountWithAttributes(customerId)).Map<ApiCustomer>();
+
+                customer.PaymentCards = (await _customerWebApiClient.GetAccountCards(customer.Id.Value)).ReadAsSync();
+
                 return List2(customer);
             }
 
