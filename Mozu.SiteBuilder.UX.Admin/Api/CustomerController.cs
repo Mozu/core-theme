@@ -7,17 +7,16 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
-using MassTransit.Util;
 using Mozu.Core.Api.Routing;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.Customer.Contracts.Credit;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers;
 using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
 using Credit = Mozu.SiteBuilder.UX.Admin.Api.Models.Credit;
 using DC = Mozu.Customer.Contracts;
-using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -151,6 +150,43 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(retList);
             
         }
+
+        public class CreateCustomerArgs
+        {
+            public List<ApiCustomer> Customers;
+            public bool CreateAccount;
+        }
+        /// <summary>
+        /// Create a new customer.
+        /// </summary>
+        [HttpPostRoute(UriTemplate = "create")]
+        public async Task<Response<List<ApiCustomer>>> CreateCustomer(CreateCustomerArgs args)
+        {
+            var createTasks = args.Customers.Select(c => _customerWebApiClient.AddAccount( c.Map<DC.CustomerAccount>() ));
+            await Task.WhenAll(createTasks);
+            var results = createTasks.Select(t => t.Result.Map<ApiCustomer>()).ToList();
+
+            List<Task> loginTasks = new List<Task>();
+            if (args.CreateAccount)
+            {
+                foreach (var customer in results)
+                {
+                    var loginInfo = new DC.CustomerLoginInfo { 
+                        Username = customer.EmailAddress,
+                        EmailAddress = customer.UserName,
+                        Password = System.Web.Security.Membership.GeneratePassword(8, 3)
+                    };
+
+                    loginTasks.Add( _customerWebApiClient.AddLoginToExistingCustomer(customer.Id, loginInfo) );
+                }
+            }
+
+            if (loginTasks.Any())
+                await Task.WhenAll(loginTasks);
+
+            return List2(results);
+        }
+
 
         /// <summary>
         /// Add/remove customer group subroutine for EditCustomers. Yes, a subroutine.
