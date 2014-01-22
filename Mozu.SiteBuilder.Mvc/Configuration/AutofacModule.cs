@@ -24,6 +24,7 @@ using NDjango;
 using NDjango.FiltersCS;
 using NDjango.Interfaces;
 using Module = Autofac.Module;
+using Mozu.SiteBuilder.Mvc.Logging;
 
 namespace Mozu.SiteBuilder.Mvc.Configuration
 {
@@ -120,6 +121,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<CmsTypeHelper>().As<ICmsTypeHelper>().InstancePerDependency();
             builder.RegisterType<ThemeEntityDefinitionProvider>().As<IThemeEntityDefinitionProvider>().InstancePerDependency();
 
+            builder.RegisterType<ExceptionContextLogWrapper>();
         }
     }
 }

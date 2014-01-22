@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Autofac;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.Logging;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Newtonsoft.Json;
 
@@ -71,9 +72,11 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             }
 
 
-
-            if (Trace.CorrelationManager.ActivityId != Guid.Empty)
-                model["activityId"] = Trace.CorrelationManager.ActivityId;
+            string correlationId = this.LifetimeScope.Resolve<ExceptionContextLogWrapper>().GetCorrelationId();
+            if (!String.IsNullOrEmpty(correlationId))
+            {
+                model["correlationId"] = correlationId;
+            }
             var pageContext = LifetimeScope.Resolve<PageContext>();
             if (pageContext != null && pageContext.Visit != null)
             {
