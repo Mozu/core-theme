@@ -39,8 +39,6 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 this.Url = values.FirstOrDefault();
             }
 
-            this.CorrelationId = Trace.CorrelationManager.ActivityId.ToString("N");
-
         }
 
         bool IsheaderTrue(string headerName, HttpRequestMessage requestMessage)
@@ -69,7 +67,6 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public bool IsSecure { get; set; }
         public string PageType { get; set; }
         public string PageTypeId { get; set; }
-        public string CorrelationId { get; set; }   //Trace.CorrelationManager.ActivityId
         public List<KeyValuePair<string, string>> ShippingCountries { get; set; }
         public List<KeyValuePair<string, string>> BillingCountries { get; set; }
 

@@ -460,6 +460,7 @@
     <Compile Include="Filters\FindFilter.cs" />
     <Compile Include="Filters\Safe.cs" />
     <Compile Include="Filters\StringFormatFilter.cs" />
+    <Compile Include="Logging\ExceptionContextLogWrapper.cs" />
     <Compile Include="MediaTypeFormatters\HtmlActionResultMediaTypeFormatter.cs" />
     <Compile Include="MediaTypeFormatters\HtmlErrorMediaTypeHyperFormatter.cs" />
     <Compile Include="MediaTypeFormatters\JsonpMediaTypeFormatter.cs" />
@@ -508,10 +509,7 @@
     <Compile Include="Localization\ILocalizationRepository.cs" />
     <Compile Include="Localization\LocalizationRepository.cs" />
     <Compile Include="Logging\ApplicationNameLoggingContextProvider.cs" />
-    <Compile Include="Logging\BestLog4NetLayoutInTheWorld.cs" />
     <Compile Include="Logging\CurrentRequestLoggingContextProvider.cs" />
-    <Compile Include="Logging\NullLogger.cs" />
-    <Compile Include="Logging\NullLoggingService.cs" />
     <Compile Include="Mobile\FiftyOneDegreesMobileDetectionProvider.cs" />
     <Compile Include="Mobile\IMobileDetectionProvider.cs" />
     <Compile Include="Mobile\NoOpMobileDetectionProvider.cs" />

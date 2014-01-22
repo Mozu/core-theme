@@ -6,6 +6,7 @@ using System.Web.Http;
 using Mozu.Core.Api.Filters.Exception;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.Logging;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 
@@ -28,9 +29,13 @@ namespace Mozu.SiteBuilder.UX.Filters
             var controller =  actionExecutedContext.ActionContext.ControllerContext.Controller as BaseApiController;
             if (controller != null )
             {
+                string correlationId = actionExecutedContext.Request.Resolve<ExceptionContextLogWrapper>().GetCorrelationId();
+
                 var model = new HttpError(actionExecutedContext.Exception, true);
-                if (Trace.CorrelationManager.ActivityId != Guid.Empty)
-                    model["activityId"] = Trace.CorrelationManager.ActivityId;
+                if (!String.IsNullOrEmpty(correlationId))
+                {
+                    model["correlationId"] = correlationId;
+                }
                 var pageContext = actionExecutedContext.Request.Resolve<PageContext>();
                 if (pageContext != null && pageContext.Visit != null)
                 {

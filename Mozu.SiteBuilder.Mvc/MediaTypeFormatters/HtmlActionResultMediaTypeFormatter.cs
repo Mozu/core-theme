@@ -13,6 +13,7 @@ using System.Web.Http;
 using Autofac;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.Logging;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
@@ -27,6 +28,8 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
         }
         private ILifetimeScope LifetimeScope { get; set; }
         private ILogger _logger;
+        private string _correlationId;
+
         public override MediaTypeFormatter GetPerRequestFormatterInstance(Type type, System.Net.Http.HttpRequestMessage request, MediaTypeHeaderValue mediaType)
         {
             var apiContext = request.Resolve<ISiteBuilderApiContext>();
@@ -40,7 +43,11 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 formatter.RequestMessage = request;
                 formatter.LifetimeScope = (ILifetimeScope)request.GetDependencyScope().GetService(typeof(ILifetimeScope));
                 formatter.MediaType = mediaType;
-                formatter._logger = formatter.LifetimeScope.ResolveOptional<ILogger>() ?? LoggingService.LoggerFor<HtmlActionResultMediaTypeFormatter>();
+
+                var exceptionLogWrapper = formatter.LifetimeScope.Resolve<ExceptionContextLogWrapper>();
+                formatter._logger = exceptionLogWrapper.GetLogger();
+                formatter._correlationId = exceptionLogWrapper.GetCorrelationId();
+
                 return formatter;
             }
             return this;
