@@ -302,9 +302,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "scripts")]
         [System.Web.Http.HttpGet]
-        public HttpResponseMessage  ScriptsBuilt(string pathinfo)
+        public HttpResponseMessage  CompiledScripts(string pathinfo)
         {
-            return Content("scripts-built/" + pathinfo, "text/javascript");
+            return Content("compiled/scripts/" + pathinfo, "text/javascript");
         }
 
 

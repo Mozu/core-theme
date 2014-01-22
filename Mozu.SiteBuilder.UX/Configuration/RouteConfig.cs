@@ -104,6 +104,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "scripts/{*pathInfo}",
                 new {controller = "Resource", action = "Scripts"});
 
+
+            routes.MapHttpRoute(
+                "compiledscripts",
+                "compiled/scripts/{*pathInfo}",
+                new { controller = "Resource", action = "CompiledScripts" });
+
             routes.MapHttpRoute(
                 "stylesheets",
                 "stylesheets/{*pathInfo}",

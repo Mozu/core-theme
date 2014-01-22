@@ -1,0 +1,22 @@
+{
+  "name": "compozu",
+  "version": "0.1.0",
+  "author": "James Zetlen <james_zetlen@volusion.com>",
+  "description": "JavaScript compiler for Mozu",
+  "bin": {
+    "moz": "./bin/compozu"
+  },
+  "main": "./src/compozu.js",
+  "dependencies": {
+    "async": "~0.2",
+    "commander": "~1.0",
+    "cli-color": "~0.2",
+    "walk": "~2.2",
+    "mozu-require-compiler": "git://github.com/zetlen/mozu-require-compiler.git#master",
+    "ncp": "~0.5"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": "~0.10"
+  }
+}
