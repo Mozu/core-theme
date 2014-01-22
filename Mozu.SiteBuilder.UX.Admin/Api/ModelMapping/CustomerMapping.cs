@@ -58,15 +58,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(dc => dc.Notes, op => op.Ignore())
             .ForMember(dc => dc.TaxExempt, op => op.MapFrom(x => x.TaxExempt))
             .ForMember(dc => dc.TaxId, op => op.MapFrom(x => x.TaxId))
-
-                // add AccountId to all the contacts
-            .AfterMap((x, dc) => dc.Contacts.ForEach(con => con.AccountId = dc.Id))
-            ;
-
-
-            Mapper.CreateMap<Contact, DC.CustomerContact>()
-            // DC.CustomerContact is a subclass of DC.Contact, so use the parent class mapping
-            .BeforeMap((x, dc) => { Mapper.Map<Contact, Mozu.Core.Api.Contracts.Contact>(x, dc); })
             ;
         }
     }

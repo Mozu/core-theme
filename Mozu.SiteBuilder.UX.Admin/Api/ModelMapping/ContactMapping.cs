@@ -62,9 +62,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 Mobile = x.MobilePhone
             }))
             ;
-
-            Mapper.CreateMap<DC.Address, Contact>();
-            Mapper.CreateMap<Contact, DC.Address>();
         }
     }
 }

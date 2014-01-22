@@ -39,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         /// List of contacts for this customer account. A customer account can have multiple contacts for billing and shipping addresses.
         /// </summary>
         [DataMember(Name = "contacts")]
-        public List<Contact> Contacts { get; set; }
+        public List<CustomerContact> Contacts { get; set; }
         
         /// <summary>
         /// The company or organization name for a customer account
