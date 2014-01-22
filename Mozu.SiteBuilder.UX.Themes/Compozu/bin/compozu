@@ -1,0 +1,8 @@
+﻿#!/usr/bin/env node
+
+var path = require('path');
+var fs   = require('fs');
+var root  = path.join(path.dirname(fs.realpathSync(__filename)), '../');
+
+var m = require(root + 'src/cli');
+m.run();
