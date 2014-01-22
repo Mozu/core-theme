@@ -12,7 +12,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         /// Unique identifier of the customer account, also known as a customer number.
         /// </summary>
         [DataMember(Name = "id")]
-        public string Id { get; set; }
+        public int? Id { get; set; }
 
         /// <summary>
         /// Unique identifier of the storefront user account associated with this customer.
