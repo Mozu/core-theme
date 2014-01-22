@@ -107,11 +107,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             )).ReadAsSync();
 
             var customers = Mapper.Map<List<ApiCustomer>>(dcCustomers.Items);
-            // get visits
-            //customers.Each(cust =>
-            //{
-            //    cust.VisitCount = _customerVisitWebApiClient.GetVisits(0, 0, null, string.Format("AccountId eq {0}", cust.Id)).Result.ReadAsSync().TotalCount;
-            //});
 
             return List2(customers, total: (int)dcCustomers.TotalCount);
         }
@@ -214,6 +209,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return Task.WhenAll(attributeTasks);
         }
+
+
+        [HttpGetRoute(UriTemplate = "cards/list")]
+        public async Task<Response<List<DC.Card>>> GetCards([FromUri]int? customerId = null)
+        {
+            if (!customerId.HasValue)
+                throw new ArgumentException("No customerId provided.");
+
+            var result = (await _customerWebApiClient.GetAccountCards(customerId.Value)).ReadAsSync();
+
+            var x = result.Items;
+            return List2(x, (int)result.TotalCount);
+        }
+
 
         [HttpGetRoute(UriTemplate = "credits/list")]
         public async Task<Response<List<Credit>>> GetCredits([FromUri]string id = null, [FromUri]int? customerId = null)

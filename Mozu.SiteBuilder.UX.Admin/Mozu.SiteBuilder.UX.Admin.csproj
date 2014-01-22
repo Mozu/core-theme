@@ -418,6 +418,8 @@
     <Compile Include="Api\CmsDocumentController.cs" />
     <Compile Include="Api\CmsPublishingController.cs" />
     <Compile Include="Api\CapabilityController.cs" />
+    <Compile Include="Api\ModelMapping\CustomerContactMapping.cs" />
+    <Compile Include="Api\Models\CustomerContact.cs" />
     <Compile Include="Api\Models\Order\OrderPickup.cs" />
     <Compile Include="Api\Models\Order\OrderPickupItem.cs" />
     <Compile Include="Api\OrderPickupController.cs" />
