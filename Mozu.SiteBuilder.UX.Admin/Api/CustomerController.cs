@@ -78,7 +78,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 var customer = (await GetAccountWithAttributes(customerId)).Map<ApiCustomer>();
 
-                customer.PaymentCards = (await _customerWebApiClient.GetAccountCards(customer.Id.Value)).ReadAsSync();
+                customer.PaymentCards = (await _customerWebApiClient.GetAccountCards(customer.Id.Value)).ReadAsSync().Items;
 
                 return List2(customer);
             }
