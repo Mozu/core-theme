@@ -20,7 +20,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         [DataMember(Name="userId")]
         public string UserId { get; set; }
 
-
+        [DataMember(Name="isAnonymous")]
+        public bool IsAnonymous { get; set; }
 
 
         [DataMember(EmitDefaultValue = false, Name = "userName")]

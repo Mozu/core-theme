@@ -154,38 +154,33 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             
         }
 
-        public class CreateCustomerArgs
-        {
-            public List<ApiCustomer> Customers;
-            public bool CreateAccount;
-        }
         /// <summary>
         /// Create a new customer.
         /// </summary>
         [HttpPostRoute(UriTemplate = "create")]
-        public async Task<Response<List<ApiCustomer>>> CreateCustomer(CreateCustomerArgs args)
+        public async Task<Response<List<ApiCustomer>>> CreateCustomer(List<ApiCustomer> customers)
         {
-            var createTasks = args.Customers.Select(c => _customerWebApiClient.AddAccount( c.Map<DC.CustomerAccount>() ));
-            await Task.WhenAll(createTasks);
-            var results = createTasks.Select(t => t.Result.Map<ApiCustomer>()).ToList();
-
-            List<Task> loginTasks = new List<Task>();
-            if (args.CreateAccount)
+            List<Task<DC.CustomerAccount>> tasks = new List<Task<DC.CustomerAccount>>();
+            foreach (var customer in customers)
             {
-                foreach (var customer in results)
+                if (customer.IsAnonymous)
                 {
-                    var loginInfo = new DC.CustomerLoginInfo { 
-                        Username = customer.EmailAddress,
-                        EmailAddress = customer.UserName,
+                    // anonymous customer: AddAccount
+                    tasks.Add( _customerWebApiClient.AddAccount( customer.Map<DC.CustomerAccount>()).ContinueWith(t => t.Result.ReadAsSync()) );
+                }
+                else
+                {
+                    // anonymous customer: AddAccount
+                    var dc = new DC.CustomerAccountAndAuthInfo {
+                        Account = customer.Map<DC.CustomerAccount>(),
+                        IsImport = false,
                         Password = System.Web.Security.Membership.GeneratePassword(8, 3)
                     };
-
-                    loginTasks.Add( _customerWebApiClient.AddLoginToExistingCustomer(customer.Id, loginInfo) );
+                    tasks.Add( _customerWebApiClient.AddAccountAndLogin(dc).ContinueWith(t => t.Result.ReadAsSync().CustomerAccount) );
                 }
             }
-
-            if (loginTasks.Any())
-                await Task.WhenAll(loginTasks);
+            await Task.WhenAll(tasks);
+            var results = tasks.Select(t => t.Result.Map<ApiCustomer>()).ToList();
 
             return List2(results);
         }
