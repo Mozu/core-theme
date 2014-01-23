@@ -65,6 +65,12 @@ Ext.define('Taco.view.order.Form', {
         
         this.shippingForm = this.down('taco-ordershippingsimple');
         this.customerForm = this.down('taco-ordercustomer');
+
+        if (this.customerForm) {
+            this.mon(this.customerForm, "customerChange", this.onCustomerChange, this);
+        }
+
+
         this.orderDetail = this.down('taco-orderdetail');
 
         this.loadNavItems();
@@ -72,6 +78,12 @@ Ext.define('Taco.view.order.Form', {
         
     },
     
+    onCustomerChange : function (view, customerRecord){        
+        this.customerRecord = customerRecord;
+        this.shippingForm.setCustomer(this.customerRecord);
+
+    },
+
     onBeforeReload : function() {
         //save the scrollTop position so that the main form container will be able to restore the scroll position
         var scrollPanel = this.el.up(".taco-content-body").el.dom;
@@ -109,6 +121,7 @@ Ext.define('Taco.view.order.Form', {
                 listeners: {
                     orderchange: function () {
                         if (this.shippingForm) {
+                            // hmm 
                             this.shippingForm.loadShippingMethods();
                         }
                     },
@@ -124,6 +137,11 @@ Ext.define('Taco.view.order.Form', {
         if (!this.isEdit()) {
             items.push(Ext.create('Taco.view.order.subform.Customer', subformCfg));
         }
+
+        if (!this.isEdit()) {
+            items.push(Ext.create('Taco.view.order.subform.ShippingSimple', subformCfg));
+        }
+
 
         items.push(Ext.create('Taco.view.order.subform.Detail', subformCfg));
 
@@ -168,9 +186,7 @@ Ext.define('Taco.view.order.Form', {
 
 
 
-        if (!this.isEdit()) {
-            items.push(Ext.create('Taco.view.order.subform.ShippingSimple', subformCfg));
-        }
+        
       
         items.push(Ext.create('Taco.view.order.subform.Payment', subformCfg));
       
@@ -180,16 +196,7 @@ Ext.define('Taco.view.order.Form', {
             items.push(Ext.create('Taco.view.order.subform.Return', subformCfg)); 
         }
 
-        
-
-        
-
         this.items = items;
-
-        
-
-        
-
     },
 
     isEdit: function () {

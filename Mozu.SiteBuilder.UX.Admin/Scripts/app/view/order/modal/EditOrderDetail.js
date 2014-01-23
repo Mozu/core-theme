@@ -9,6 +9,9 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         'Taco.view.order.widget.OrderTotalPanel'
     ],
 
+    // this should really be the default;
+    closeAction: 'destroy',
+
     autoShow: true,
     closable: true,
     cls: Taco.baseCSSPrefix + 'orderform-editor',

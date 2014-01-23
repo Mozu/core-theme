@@ -1,1 +1,20 @@
-﻿
+﻿.taco-addresses{
+    .address{
+        border:1px solid #fff;
+        padding:10px;
+        float:left;
+    }
+
+
+    .shipToLabel{visibility:hidden}
+	
+    .x-item-selected{
+        border:1px solid #ccc;
+        background-color:#eee;
+        
+        .shipToLabel{
+            font-wight:bold;
+            visibility:visible
+        }
+    }
+}

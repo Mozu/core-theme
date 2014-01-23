@@ -1,5 +1,5 @@
 /**
- * @class Taco.core.Controller
+ * @class
  * @author Jason Cochran
  * The controller base class
  */

@@ -8,7 +8,16 @@
     background-image: none;
 }
 
-.#{$prefix}form-item-required {
+// adding the hidden option for fields that are required when shown and not required when hidden;
+.#{$prefix}form-item-required,.#{$prefix}form-item-required-hidden {
+    &::before {
+        color: $color-theme-red;
+        content: "* ";
+    }
+}
+
+
+.#{$prefix}form-item-required-hidden {
     &::before {
         color: $color-theme-red;
         content: "* ";

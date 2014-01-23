@@ -4,11 +4,62 @@
 Ext.define('Taco.model.Contact', {
     extend: 'Taco.core.data.Model',
 
+    /*
+    address 3 and address 4 missing;
+
+
+
+accountId: 1000
+isBilling: true
+isPrimaryBilling: true
+isPrimaryShipping: false
+isShipping: false
+
+
+    address1: "2301 S 5TH ST APT 27"
+    address2: ""
+    addressIsValidated: true
+    cityOrTown: "AUSTIN"
+    countryCode: "US"
+    email: "ojas_patel@volusion.com"
+    firstName: "ojas"
+    homePhone: "1231231231"
+    id: 1000
+
+    lastName: "patel"
+    postalOrZipCode: "78704-5188"
+    stateOrProvince: "TX"
+    
+    
+    */
+
     fields: [
+
         {
             "name": "id",
-            "type": "string",
+            "type": "int",
             "useNull": true
+        },
+        {
+            "name": "accountId",
+            "type": "int",
+            "useNull": true
+        },
+        {
+            "name": "isBilling",
+            "type": "boolean"
+        },
+        {
+            "name": "isPrimaryBilling",
+            "type": "boolean"
+        },
+        {
+            "name": "isPrimaryShipping",
+            "type": "boolean"
+        },
+        {
+            "name": "isShipping",
+            "type": "boolean"
         },
         {
             "name": "email",

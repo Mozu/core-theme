@@ -17,7 +17,7 @@ Ext.define('Taco.model.CustomerAccount', {
     ],
     fields: [
         {
-            name: 'id',
+            name: 'id',            
             type: 'int'
         }, {
             name: 'userId',
@@ -45,6 +45,10 @@ Ext.define('Taco.model.CustomerAccount', {
         }, {
             name: 'acceptsMarketing',
             type: 'boolean'
+        }, {
+            name: 'isAnonymous',
+            type: 'boolean',
+            defaultValue:true
         }, {
             name: 'groups',
             type: 'auto',
