@@ -40,11 +40,17 @@ Ext.define('Taco.controller.Orders', {
         record = Ext.create('Taco.model.Order');
 
         record.save({
-            callback: function (records, operation, success) {
+            callback: function (records, operation, success) {               
+
+                //changing the path to be edit instead of create so that the user can refresh the page and get back to it if they accidently navigate away;
+                Taco.core.StateManager.attemptNavigate('s-' + record.data.siteId + '/orders/edit/' + record.data.id);
+
+                /*
                 this.createContentView(this.getEditorView(), {
                     record: record
                 });
                 Taco.app.setLoading(false);
+                */
             },
             scope: this
         });
