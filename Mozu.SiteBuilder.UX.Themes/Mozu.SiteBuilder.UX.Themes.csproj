@@ -727,7 +727,6 @@
     <Content Include="Themes\MobileCore\Modules\MessageBar.vol">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Morrissey\README.md" />
     <Content Include="Zubat\README.md" />
     <Content Include="SampleThemes\helloWorld\Layouts\default.vol" />
     <Content Include="SampleThemes\helloWorld\MetaData\PageTypes\cms\hello_world\definition.json" />
