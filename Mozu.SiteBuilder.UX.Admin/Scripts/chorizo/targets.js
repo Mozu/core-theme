@@ -36,11 +36,11 @@
                 drop: function (event) {
                     Chorizo.editor.drop();
                     event.stopPropagation();
+                }, 
                 mouseenter: function() {
-                mouseenter: function(e) {
                     Chorizo.editor.overGrid(true);
+                },
                 mouseleave: function() {
-                mouseleave: function(e) {
                     Chorizo.editor.overGrid(false);
                 }
             })
