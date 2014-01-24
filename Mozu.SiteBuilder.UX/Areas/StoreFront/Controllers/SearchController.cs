@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -36,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(string query, int? categoryId = null, string sortBy = null, int? page = null, int? pageSize = null, string facetValueFilter = null)
         {
-
+          
             int filterCatId = 0;
             bool isCatFiltered = false;
             Match m;

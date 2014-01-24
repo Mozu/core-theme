@@ -13,7 +13,7 @@ using System.Web.Http.Controllers;
 
 using System.Web.Routing;
 using Autofac;
-
+using Microsoft.FSharp.Core;
 using Mozu.Core.Api;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
@@ -38,7 +38,10 @@ namespace Mozu.SiteBuilder.UX
             }
             _bs =  new BootStrapperUX();
             _bs.Bootstrap(  GlobalConfiguration.Configuration );
-             NDjango.Utilities.Comparer = new DjangoComparer();
+             NDjango.Utilities.UtilConfig.Comparer  = new DjangoComparer();
+
+            NDjango.Utilities.UtilConfig.VirtualPathFunc = new DjangoUtilHelper();
+
        
             if (ConfigurationManager.AppSettings["routeDebug"] == "true")
             {

@@ -746,8 +746,22 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 //env.AddPlugin(new MyLessPlugin() { Env = env });
                 // var rs = new dotless.Core.Parser.Tree.Ruleset()
                 // env.Frames.Push( new dotless.Core.Parser.Tree.Ruleset);
+                try
+                {
+                    env.Output.Push().Append(tree);
+                }
+                catch(Exception ex)
+                {
 
-                env.Output.Push().Append(tree);
+                    if (ex.GetType().FullName.Contains("dotless"))
+                    {
+                        throw ex;
+                    }
+                    else
+                    {
+                        throw new Exception("error parsing less file " + _path, ex);
+                    }
+                }
                 StringBuilder sb = env.Output.Pop();
                 var ms = new MemoryStream(Encoding.UTF8.GetBytes(sb.ToString()));
                 ms.Position = 0;

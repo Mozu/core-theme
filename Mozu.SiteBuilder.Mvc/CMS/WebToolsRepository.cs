@@ -29,11 +29,11 @@ Disallow: /admin/";
         public async Task<bool> SaveWebmasterToolsFile(string localFileName, string fileName)
         {
 
-            var documentId = await GetOrCreateDocumentId(fileName, "text/html");
+            var documentId = await GetOrCreateDocumentId(fileName, "text/html").ConfigureAwait(false);
          
             using (var stream = File.OpenRead(localFileName))
             {
-                var result  = await _documentWebApiClient.UpdateDocumentContent(ContentCollection, documentId, stream);
+                var result = await _documentWebApiClient.UpdateDocumentContent(ContentCollection, documentId, stream).ConfigureAwait(false);
                 if (result.HasException)
                 {
                     throw result.ReadException();
@@ -91,7 +91,7 @@ Disallow: /admin/";
         {
             var documentId = await GetOrCreateDocumentId(fileName, "text/html");
 
-            var blah = await _documentWebApiClient.GetDocumentContent(ContentCollection, documentId);
+            var blah = await _documentWebApiClient.GetDocumentContent(ContentCollection, documentId).ConfigureAwait(false);
 
             var stream = blah.ResponseMessage.Content.ReadAsStreamAsync().Result;
 
@@ -100,11 +100,11 @@ Disallow: /admin/";
 
         public async Task<bool> SaveRobotsContent(RobotsTxtSettings settings)
         {
-            var documentId = await  GetOrCreateDocumentId("robots.txt", "text/plain");
+            var documentId = await GetOrCreateDocumentId("robots.txt", "text/plain").ConfigureAwait(false);
             var content = Encoding.ASCII.GetBytes(settings.Content);
             var stream = new MemoryStream(content);
 
-            var task = await _documentWebApiClient.UpdateDocumentContent(ContentCollection, documentId, stream);
+            var task = await _documentWebApiClient.UpdateDocumentContent(ContentCollection, documentId, stream).ConfigureAwait(false);
 
             if (task.HasException)
             {
@@ -116,8 +116,8 @@ Disallow: /admin/";
 
         public async Task<string> GetRobotsContent()
         {
-            var documentId = await GetOrCreateDocumentId("robots.txt", "text/plain");
-            var result = await _documentWebApiClient.GetDocumentContent(ContentCollection, documentId);
+            var documentId = await GetOrCreateDocumentId("robots.txt", "text/plain").ConfigureAwait(false);
+            var result = await _documentWebApiClient.GetDocumentContent(ContentCollection, documentId).ConfigureAwait(false);
 
             if (result.HasException || !result.ResponseMessage.IsSuccessStatusCode)
                 return DefaultRobotsTxt;
@@ -135,7 +135,7 @@ Disallow: /admin/";
 
             if (task.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
             {
-                return await CreateDocument(name, mimeType);
+                return await CreateDocument(name, mimeType).ConfigureAwait(false);
             }
             return task.ReadAsSync().Id;
         }
@@ -150,7 +150,7 @@ Disallow: /admin/";
                 DocumentListName = ContentCollection,
             };
 
-            var response = await _documentWebApiClient.CreateDocument(ContentCollection, document);
+            var response = await _documentWebApiClient.CreateDocument(ContentCollection, document).ConfigureAwait(false);
 
            
 

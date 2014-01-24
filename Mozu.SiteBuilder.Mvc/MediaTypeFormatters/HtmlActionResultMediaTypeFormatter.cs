@@ -54,6 +54,41 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 
         }
 
+        private HttpResponseException CreateandLogFormattingException(Exception ex, System.Net.Http.HttpContent content)
+        {
+            _logger.Error("An unhandled exception occured in the HtmlActionResultMediaTypeFormatter.", ex);
+
+
+            HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
+            object controller;
+            this.RequestMessage.GetRouteData().Values.TryGetValue("controller", out controller);
+
+
+
+            if (string.Equals((string)controller,"resource",StringComparison.OrdinalIgnoreCase)||
+                (content != null
+             && content.Headers.ContentType != null
+             && !string.IsNullOrEmpty(content.Headers.ContentType.MediaType)
+             && !string.Equals(content.Headers.ContentType.MediaType, "text/html")))
+            {
+                //pushes thru the rp.
+                statusCode = HttpStatusCode.UnsupportedMediaType;
+            }
+
+
+       
+            AggregateException aggregateException = ex as AggregateException;
+            if (aggregateException != null && aggregateException.InnerExceptions.Count ==1)
+            {
+                ex = aggregateException.InnerExceptions.First();
+            }
+
+            var errorResp = this.RequestMessage.CreateErrorResponse(statusCode, ex);
+
+            ((HttpError) ((ObjectContent) errorResp.Content).Value)["_ex"] = ex;
+            return new HttpResponseException(errorResp);
+        }
+
         public override Task WriteToStreamAsync(Type type, object value, Stream writeStream, System.Net.Http.HttpContent content, System.Net.TransportContext transportContext)
         {
             var vrb = value as ViewResultBase;
@@ -67,19 +102,16 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 var httpContext = this.RequestMessage.HttpContext();
                 httpContext.Response.Buffer = true;
                 var sw = new StreamWriter(writeStream);
-                //view.Render(hvc, sw );
-                //var tsc2 = new TaskCompletionSource<bool>();
-                //tsc2.SetResult(true);
-                //return tsc2.Task;
+            
                 if (view == null)
                 {
-                    throw new FileNotFoundException("cant find view " + vrb.ViewName);
+                    throw CreateandLogFormattingException(new FileNotFoundException("cant find view " + vrb.ViewName), content);
                 }
                 return view.AsyncRender(hvc, sw).ContinueWith(_ =>
                 {
                     if (_.IsFaulted)
                     {
-                        _logger.Error("An unhandled exception occured in the HtmlActionResultMediaTypeFormatter.", _.Exception);
+                        throw CreateandLogFormattingException(_.Exception, content);
                     }
                     return _.Result;
                 });
@@ -90,24 +122,37 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 var iAsyncActoin = value as IActionResultAsync;
                 if (iAsyncActoin != null)
                 {
-                    return iAsyncActoin.ExecuteResultAsync(this.RequestMessage);
-                }
+                    var task = iAsyncActoin.ExecuteResultAsync(this.RequestMessage);
 
-                var tsc = new TaskCompletionSource<bool>();
-                try
-                {
-                    action.ExecuteResult(this.RequestMessage);
-                    tsc.SetResult(false);
+                    return task.ContinueWith(_ =>
+                    {
+                        if (_.IsFaulted)
+                        {
+                            throw CreateandLogFormattingException(_.Exception, content);
+
+                        }
+                        return _;
+                    }, TaskContinuationOptions.ExecuteSynchronously);
+                    //return task;
                 }
-                catch (Exception ex)
+                else
                 {
-                    _logger.Error("An unhandled exception occured in the HtmlActionResultMediaTypeFormatter.", ex);
-                    tsc.SetException(new HtmlMediaTypeFormattingException(ex));
-                  
+                    var tsc = new TaskCompletionSource<bool>();
+                    try
+                    {
+                        action.ExecuteResult(this.RequestMessage);
+                        tsc.SetResult(false);
+                    }
+                    catch (Exception ex)
+                    {
+
+                        tsc.SetException(CreateandLogFormattingException(ex, content));
+
+                    }
+
+
+                    return tsc.Task;
                 }
-               
-                
-                return tsc.Task;
             }
         }
 

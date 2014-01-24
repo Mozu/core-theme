@@ -81,7 +81,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             {
                 streamWriter.Write(this._callback + "(");
                 streamWriter.Flush();
-                await this._jsonMediaTypeFormatter.WriteToStreamAsync(type, value, stream, content, transportContext);
+                await this._jsonMediaTypeFormatter.WriteToStreamAsync(type, value, stream, content, transportContext).ConfigureAwait(false);
                 streamWriter.Write(");");
                 streamWriter.Flush();
             }

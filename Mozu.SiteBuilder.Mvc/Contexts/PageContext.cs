@@ -6,8 +6,10 @@ using System.Net.Configuration;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using FiftyOne.Foundation.Mobile.Detection;
 using Mozu.Core;
+using Mozu.Core.Api.Contracts.Provisioning;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.UX.Models;
@@ -18,6 +20,76 @@ using Newtonsoft.Json.Converters;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
+
+
+    public class PagingParmaters
+    {
+        public string FacetValueFilter { get; set; }
+        public int? PageSize { get; set; }
+        public int? StartIndex { get; set; }
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            if (!string.IsNullOrEmpty(FacetValueFilter))
+            {
+                sb.Append("facetValueFilter=").Append(HttpUtility.UrlEncode(FacetValueFilter));
+            }
+            if (PageSize.HasValue)
+            {
+                if (sb.Length > 0)
+                {
+                    sb.Append("&");
+                }
+                sb.Append("pageSize=").Append(PageSize.Value);
+            }
+            if (StartIndex.HasValue)
+            {
+                if (sb.Length > 0)
+                {
+                    sb.Append("&");
+                }
+                sb.Append("startIndex=").Append(StartIndex.Value);
+            }
+            return sb.ToString();
+        }
+
+        public static PagingParmaters Create(HttpRequestMessage request)
+        {
+            PagingParmaters sp;
+            if (!request.RequestUri.TryReadQueryAs<PagingParmaters>(out sp))
+            {
+                sp = new PagingParmaters();
+            }
+            return sp;
+        }
+    }
+
+    public class SortingParamaters
+    {
+        public string Sort { get; set; }
+        public static SortingParamaters Create(HttpRequestMessage request)
+        {
+            SortingParamaters sp;
+            if (!request.RequestUri.TryReadQueryAs<SortingParamaters>(out sp))
+            {
+                sp = new SortingParamaters();
+            }
+            return sp;
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            if (!string.IsNullOrEmpty(Sort))
+            {
+                sb.Append("sort=").Append(HttpUtility.UrlEncode(Sort));
+            }
+            
+            return sb.ToString();
+        }
+
+    }
+
     public class PageContext : Mozu.SiteBuilder.UX.Models.IEditableContext
     {
         private readonly ISiteBuilderApiContext _apiContext;
@@ -38,7 +110,18 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 this.Url = values.FirstOrDefault();
             }
+            Sorting = SortingParamaters.Create(requestMessage);
+            Pagination = PagingParmaters.Create(requestMessage);
+        }
 
+        public SortingParamaters Sorting
+        {
+            get; set;
+        }
+
+        public PagingParmaters Pagination
+        {
+            get; set;
         }
 
         bool IsheaderTrue(string headerName, HttpRequestMessage requestMessage)
@@ -61,6 +144,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             ;
         }
        
+
         [System.Runtime.Serialization.IgnoreDataMember]   
         public bool HandledByProxy { get; set; }
 
@@ -75,7 +159,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public SearchContext  Search
         { get; set; }
-        public Visit Visit { get; set; }
+
+
+       
+        public Visit Visit {
+            get; set;
+        }
 
         public string Title { get; set; }
 
@@ -91,6 +180,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
 
         
+
         
 
 

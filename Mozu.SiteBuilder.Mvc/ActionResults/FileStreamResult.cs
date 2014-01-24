@@ -57,7 +57,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
                     {
                         return;
                     }
-                    await outputStream.WriteAsync( buffer, 0, count);
+                    outputStream.Write( buffer, 0, count);
                 }
             }
         }

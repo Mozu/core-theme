@@ -26,7 +26,10 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         {
             model = model ?? "null";
 
-            string json =  JsonConvert.SerializeObject(model, Formatting.None, new CaseInsensitiveJsonSerializerSettings());
+            var ss = new CaseInsensitiveJsonSerializerSettings();
+            ss.StringEscapeHandling = StringEscapeHandling.EscapeHtml;
+            ;
+            string json = JsonConvert.SerializeObject(model, Formatting.None, ss);
 
             return ("<pre>" + model.GetType ().FullName +"\r\n" + json + "</pre>");
         }

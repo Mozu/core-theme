@@ -39,9 +39,11 @@
         "pageSizeOptions": [15, 25, 50, 100],
         "maxProductSummaryWords": 40,
         "allowWishlist": false,
+        "enablePartialCaching":true,
         "showBreadcrumbs": true,
         "showBreadcrumbs": true,
         "preselectCountryCode": "US",
+
 
         /* Common appearance settings used in the stylesheet */
         "font": "Source Sans Pro",

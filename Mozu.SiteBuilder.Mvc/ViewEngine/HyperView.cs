@@ -92,8 +92,16 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 ITemplate template = templateManager.GetTemplate(_mappedPath);
                 var renderer = new TemplateRenderer(templateManager, template, requestContext);
 
-                await renderer.AsyncRender(writer);
+                await renderer.AsyncRender(writer).ConfigureAwait(false);
                 //renderer.Render(writer);
+            }
+            catch (NDjango.Interfaces.RenderingException)
+            {
+                throw;
+            }    
+            catch (NDjango.Interfaces.SyntaxException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -115,9 +123,17 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 renderer.Render(writer);
                 //var reader = templateManager.RenderTemplate(_mappedPath, requestContext);
             }
+            catch (NDjango.Interfaces.RenderingException)
+            {
+                throw;
+            }
+            catch (NDjango.Interfaces.SyntaxException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
-                throw new InvalidOperationException("error in template " + _virtualPath, ex);
+                throw new RenderingError(string.Format("error in template [{0}]", _virtualPath), new FSharpOption<Exception>(ex));
             }
         }
     }

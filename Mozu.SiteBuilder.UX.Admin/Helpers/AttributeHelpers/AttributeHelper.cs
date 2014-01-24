@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
 
         public async Task<Attribute> GetAttribute(string attributeFQN)
         {
-            var result = await _attributeWebApiClient.GetAttribute(attributeFQN);
+            var result = await _attributeWebApiClient.GetAttribute(attributeFQN).ConfigureAwait(false);
             var res = result.ReadAsAsync().Result;
 
             return Mapper.Map<Attribute>(res);
@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
                 /* sortBy:         */ sort,
                 /* filter:         */ filter,
                 /* responseGroups: */ null
-                );
+                ).ConfigureAwait(false);
             var res = result.ReadAsAsync().Result;
 
             return res.Items.Select(Mapper.Map<Attribute>);
@@ -74,12 +74,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
 
         public async Task<IEnumerable<Attribute>> EditAttributes(List<Attribute> attributes)
         {
-            return await _attributeMapper.PerformAction(attributes, a => _attributeWebApiClient.UpdateAttribute(a, a.AttributeFQN));
+            return await _attributeMapper.PerformAction(attributes, a => _attributeWebApiClient.UpdateAttribute(a, a.AttributeFQN)).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<Attribute>> DeleteAttributes(List<Attribute> attributes)
         {
-            return await _attributeMapper.PerformVoidAction(attributes, a => _attributeWebApiClient.DeleteAttribute(a.AttributeFQN));
+            return await _attributeMapper.PerformVoidAction(attributes, a => _attributeWebApiClient.DeleteAttribute(a.AttributeFQN)).ConfigureAwait(false);
         }
     }
 }
