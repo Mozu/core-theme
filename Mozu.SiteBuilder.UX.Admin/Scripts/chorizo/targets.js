@@ -33,8 +33,9 @@
 
         this.element
             .on({
-                drop: function() {
+                drop: function (event) {
                     Chorizo.editor.drop();
+                    event.stopPropagation();
                 },
                 mouseenter: function() {
                     Chorizo.editor.overGrid(true);
@@ -44,7 +45,8 @@
                 }
             })
             .droppable({
-                accept: '.mz-cms-block, .mz-cms-widget'
+                accept: '.mz-cms-block, .mz-cms-widget',
+                tolerance :'pointer'
             })
             .find('.mz-cms-row')
             .mzRow({
