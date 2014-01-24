@@ -1,8 +1,7 @@
 ﻿// Mozu-Require Gruntfile
 'use strict';
 
-var port = 9001,
-    testurl = "http://127.0.0.1:" + port + "/tests/SpecRunner.html";
+var fs = require('fs');
 
 module.exports = function (grunt) {
 
@@ -26,12 +25,16 @@ module.exports = function (grunt) {
                 banner: '<%= banner %>',
             },
             min: {
-                src: ['src/wrap_header.tpl', 'lib/json2.js', 'src/vars-min.js', 'src/require.js', 'src/plugins/shim-browser.js', 'src/wrap_footer.tpl'],
+                src: ['src/wrap_header.tpl', 'lib/json2.js', 'src/vars-min.js', 'src/mozu-require.js', 'src/plugins/shim-browser.js', 'src/wrap_footer.tpl'],
                 dest: "<%= releasetemp %>"
             },
             debug: {
-                src: ['src/wrap_header.tpl', 'lib/json2.js', 'src/vars-debug.js', 'src/require.js', 'src/plugins/shim-browser.js', 'src/wrap_footer.tpl'],
-                dest: '<%= pkg.main %>.debug.js'
+                src: ['src/wrap_header.tpl', 'lib/json2.js', 'src/vars-debug.js', 'src/mozu-require.js', 'src/plugins/shim-browser.js', 'src/wrap_footer.tpl'],
+                dest: './dist/<%= pkg.name %>.debug.js'
+            },
+            compiler: {
+                src: ['src/wrap_header.tpl', 'src/vars-min.js', 'src/mozu-require.js', 'src/wrap_footer.tpl'],
+                dest: './dist/<%= pkg.name %>.compiler.js'
             }
         },
         uglify: {
@@ -40,7 +43,7 @@ module.exports = function (grunt) {
                     banner: '<%= banner %>'
                 },
                 src: '<%= concat.min.dest %>',
-                dest: '<%= pkg.main %>.min.js'
+                dest: './dist/<%= pkg.name %>.min.js'
             }
         },
         tfscheckout: {
@@ -48,39 +51,13 @@ module.exports = function (grunt) {
                 dir: 'dist'
             }
         }
-        //connect: {
-        //    server: {
-        //        options: {
-        //            port: port,
-        //            base: '.'
-        //        }
-        //    },
-        //    browser: {
-        //        options: {
-        //            port: port,
-        //            base: '.',
-        //            keepalive: true,
-        //            open: testurl
-        //        }
-        //    }
-        //},
-        //mocha: {
-        //    test: {
-        //        options: {
-        //            reporter: 'Nyan',
-        //            urls: [testurl],
-        //            run: true
-        //        }
-        //    }
-        //}
     });
 
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    //grunt.loadNpmTasks('grunt-contrib-connect');
-    //grunt.loadNpmTasks('grunt-mocha');
 
+    var tfsloc = "C:\\Program Files\ (x86)\\Microsoft\ Visual\ Studio\ 11.0\\Common7\\IDE\\TF.exe";
     grunt.registerMultiTask('tfscheckout', 'Using Team Foundation Server, checks out the files that will be modified, so TFS is aware that changes were made.', function () {
         var done = this.async(),
             spawn = require('child_process').spawn,
@@ -89,7 +66,12 @@ module.exports = function (grunt) {
 
         grunt.log.writeln('Checking directory \'' + this.data.dir + '\' out from tfs');
 
-        child = spawn("C:\\Program Files\ (x86)\\Microsoft\ Visual\ Studio\ 11.0\\Common7\\IDE\\TF.exe", ["checkout", this.data.dir + "\\*"]);
+        if (process.platform !== "win32" || !fs.existsSync(tfsloc)) {
+            grunt.log.warn("No TFS present.")
+            done(true);
+        }
+
+        child = spawn(tfsloc, ["checkout", this.data.dir + "\\*"]);
 
         child.stderr.on('data', function (data) {
             grunt.log.error(data);
@@ -106,12 +88,8 @@ module.exports = function (grunt) {
         });
     });
 
-    var order = ['clean:dist', 'concat', 'uglify', 'clean:tmp', 'tfscheckout' /*, 'connect:server', 'mocha' */];
+    var order = ['clean:dist', 'concat', 'uglify', 'clean:tmp', 'tfscheckout'];
 
     grunt.registerTask('default', order);
-    //grunt.registerTask('test', ['connect:server', 'mocha']);
-    //grunt.registerTask('testdebug', ['connect:browser']);
-    //grunt.registerTask('notest', order.slice(0, -2));
-    //grunt.registerTask('debug', ['notest', 'testdebug']);
 
 };
