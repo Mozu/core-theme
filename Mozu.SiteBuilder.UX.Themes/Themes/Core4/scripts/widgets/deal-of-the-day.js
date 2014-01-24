@@ -9,7 +9,7 @@
                     products, DealView;
 
                 products = api.get('search', {
-                    // filter: 'discountId eq ' + config.discount
+                    filter: 'discountId eq ' + config.discountId
                 });
 
                 DealView = Backbone.MozuView.extend({
@@ -26,6 +26,9 @@
                 products.then(function (collection) {
                     var productCollection = new ProductModels.ProductCollection(collection.data),
                         dealView;
+
+                    // if (config.displayStyle === 'product')
+                    //   randomly select one product from the collection
 
                     dealView = new DealView({
                         model: productCollection,
