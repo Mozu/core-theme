@@ -21,7 +21,10 @@
         {% endblock product-code %}
         {% include "modules/product/price-stack" %}
         {% block product-extrainfo %}
+        {% if dealOfTheDay %}
+        <p class="mz-productlisting-savings">Percent Savings</p>
+        <p class="mz-productlisting-expirationdate">Expiration Date</p>
+        {% endif %}
         {% endblock product-extrainfo %}
     </div>
 </div>
-

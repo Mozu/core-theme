@@ -41,6 +41,8 @@
   }
 
   .#{$prefix}grid-cell-draghandlecolumn {
+    vertical-align: middle;
+
     .#{$prefix}grid-cell-inner {
       padding: 0px;
     }

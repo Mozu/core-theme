@@ -457,6 +457,7 @@
     <Content Include="Themes\Core4\scripts\vendor\isotope.min.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery-scrollto.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery.colorbox-min.js" />
+    <Content Include="Themes\Core4\scripts\widgets\deal-of-the-day.js" />
     <Content Include="Themes\Core4\scripts\widgets\image.js" />
     <Content Include="Themes\Core4\scripts\widgets\instock-request.js" />
     <Content Include="Themes\Core4\scripts\widgets\related-products.js" />
@@ -974,7 +975,9 @@
     <Content Include="Themes\Core4\templates\Widgets\misc\instock-request.hypr" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core4\templates\Widgets\catalog\deal-of-the-day.hypr" />
+    <Content Include="Themes\Core4\templates\Widgets\catalog\deal-of-the-day.hypr">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
