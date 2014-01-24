@@ -328,7 +328,7 @@
             "fieldLabel": "Video URL",
             "anchor": "100%"
         }],
-        "defaultConfig": {},
+        "defaultConfig": { "heightResizable" : false },
         "icon": "/resources/admin/widgets/08_video.png",
         "validPageTypes":["*"]
     }, {
@@ -511,7 +511,8 @@
         "editView": "taco-image-widgeteditor",
         "defaultConfig": {
             "height": 400,
-             "imageHeight": 400
+            "imageHeight": 400,
+            "heightResizable" : true
         },
         "validPageTypes":["*"]
     }, {

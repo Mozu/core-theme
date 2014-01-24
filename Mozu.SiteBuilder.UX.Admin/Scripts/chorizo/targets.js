@@ -36,11 +36,11 @@
                 drop: function (event) {
                     Chorizo.editor.drop();
                     event.stopPropagation();
-                },
                 mouseenter: function() {
+                mouseenter: function(e) {
                     Chorizo.editor.overGrid(true);
-                },
                 mouseleave: function() {
+                mouseleave: function(e) {
                     Chorizo.editor.overGrid(false);
                 }
             })
@@ -372,6 +372,8 @@
     }
 
     Col.prototype._onStart = function(e, ui) {
+        win.clearTimeout(this._resizeTimeout);
+        Chorizo.editor.columnResizing(true);
         this.$resizer.addClass('active');
         this._moveHander = $.proxy(this._onMousemove, this);
         this.offset = this.element.offset();
@@ -388,6 +390,7 @@
         Chorizo.editor.cursor('auto');
         this.$resizer.removeClass('active');
         $doc.off('mousemove', this._moveHander);
+        this._resizeTimeout = setTimeout(function () { Chorizo.editor.columnResizing(false); }, 100);
     }
 
     Col.prototype._onMousemove = function(e, ui) {

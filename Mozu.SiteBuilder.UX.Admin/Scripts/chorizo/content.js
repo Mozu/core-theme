@@ -42,7 +42,7 @@
                 if (!item.test()) return;
                 
                 $tar = $(e.target);
-                if (!$tar.is(item.selector) && !$tar.parents(item.selector).length) item.action();
+                if ((!$tar.is(item.selector) && !$tar.parents(item.selector).length) || $tar.parents(item.selector)[0] !== item.element[0]) item.action();
             })
         }
     }
@@ -152,6 +152,8 @@
 
         this.element.addClass(statePrefix + state);
         this._state = state;
+
+
     }
 
 
@@ -188,6 +190,7 @@
     }
 
     Text.prototype._onMouseup = function(e) {
+        if (Chorizo.editor.columnResizing()) return;
         if (this.state() === 'default') this.state('editing');
     }
 
@@ -252,8 +255,8 @@
         Content.call(this, element, options);
 
         this.on({
-            'click': 'default > selected',
-            'clickaway .mz-cms-state-selected': 'selected > default',
+            'click': 'default editing > selected',
+            'clickaway .mz-cms-state-selected': 'selected editing > default',
             'dblclick': '* > editing',
             'blur': 'editing > default'
         });
@@ -271,6 +274,8 @@
             });
 
         this.widgetData = this.element.data('widget');
+
+        if (!this.widgetData.config.heightResizable) this.$bottom.hide();
     }
 
     Img.prototype = new Content();

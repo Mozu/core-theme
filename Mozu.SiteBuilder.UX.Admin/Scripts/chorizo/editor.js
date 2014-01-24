@@ -10,7 +10,11 @@
 
         init: function() {
 
-            this.$hintBar = $('<div class="mz-cms-hint-bar" style="display:none"><div class="mz-cms-hint-message"></div></div>').appendTo('body');
+            this.$hintBar = $([
+                '<div class="mz-cms-hint-bar" style="display:none">',
+                    '<div class="mz-cms-hint-message"></div>',
+                '</div>'
+            ].join('')).appendTo('body');
 
             $doc.on({
                 mousemove: $.proxy(this._onMousemove, this)
@@ -111,6 +115,11 @@
                 };
             }
             return this._controller = win.parent.Taco.app.controllers.get('Website');
+        },
+
+        columnResizing: function(val) {
+            if (val !== undefined) this._columnResizing = val;
+            return this._columnResizing;
         },
 
         dragging: function(val) {
