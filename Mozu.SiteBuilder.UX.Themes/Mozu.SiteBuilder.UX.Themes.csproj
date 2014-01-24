@@ -390,6 +390,13 @@
     <Content Include="buildcore.bat" />
     <Content Include="Addons\Blue\addon.json" />
     <Content Include="Addons\Orange\addon.json" />
+    <Content Include="Zubat\src\cli.js" />
+    <Content Include="Zubat\src\compile.js" />
+    <Content Include="Zubat\src\logger.js" />
+    <Content Include="Zubat\src\zubat.js" />
+    <Content Include="Zubat\src\constants.js" />
+    <Content Include="Zubat\src\themes.js" />
+    <Content Include="Zubat\testme.js" />
     <Content Include="Docs\externals\backbone.jsdoc.js" />
     <Content Include="Docs\Mozu_Themeing_Concepts.md" />
     <Content Include="Morrissey\src\plugins\i18n.js" />
@@ -695,6 +702,8 @@
     <Content Include="Themes\MobileCore\Modules\MessageBar.vol">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Morrissey\README.md" />
+    <Content Include="Zubat\README.md" />
     <Content Include="SampleThemes\helloWorld\Layouts\default.vol" />
     <Content Include="SampleThemes\helloWorld\MetaData\PageTypes\cms\hello_world\definition.json" />
     <Content Include="SampleThemes\helloWorld\MetaData\Widgets\cms\hello_world\definition.json" />
@@ -978,6 +987,12 @@
     <Content Include="Themes\Core4\templates\Widgets\catalog\deal-of-the-day.hypr">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Zubat\bin\zubat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Zubat\package.json" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
