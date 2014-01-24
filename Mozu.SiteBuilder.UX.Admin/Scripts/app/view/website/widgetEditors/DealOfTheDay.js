@@ -24,12 +24,12 @@ Ext.define('Taco.view.website.widgetEditors.DealOfTheDay', {
                 layout: 'hbox',
                 items: [{
                     xtype: 'combobox',
-                    name: 'discount',
+                    name: 'discountId',
                     fieldLabel: 'Discount',
                     queryMode: 'local',
                     displayField: 'name',
                     valueField: 'id',
-                    width: 200,
+                    width: 400,
                     store: this.discountStore,
                     listeners: {
                         change: {
