@@ -144,7 +144,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var dcExistingCustomer = await GetAccountWithAttributes(dcCust.Id);
 
-                await Task.WhenAll( ManageGroups(dcCust, dcExistingCustomer), ManageContacts(dcCust), ManageAttributes(dcCust, dcExistingCustomer) );
+                await Task.WhenAll( ManageGroups(dcCust, dcExistingCustomer), ManageContacts(dcCust, dcExistingCustomer), ManageAttributes(dcCust, dcExistingCustomer) );
                 await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id);
 
                 var updatedCustomer = await GetAccountWithAttributes(dcCust.Id);
@@ -205,15 +205,35 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Task.WhenAll(groupManagementTasks);
         }
 
+        private class ContactIdEqualityComparer : IEqualityComparer<DC.CustomerContact> 
+        {
+            public bool Equals(DC.CustomerContact c1, DC.CustomerContact c2)
+            {
+             	return c1 != null && c2 != null && c1.AccountId == c2.AccountId && c1.Id == c2.Id;
+            }
+
+            public int GetHashCode(DC.CustomerContact c)
+            {
+             	return c.Id;
+            }
+        }
+
         /// <summary>
         /// Update contacts subroutine for EditCustomers. Yes, a subroutine.
         /// </summary>
-        private Task ManageContacts(DC.CustomerAccount dcCustomer)
+        private Task ManageContacts(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
         {
             List<Task> contactManagementTasks = new List<Task>();
-            if (dcCustomer != null && dcCustomer.Contacts != null)
+            if (dcCustomer != null && dcCustomer.Contacts != null && dcExistingCustomer != null && dcExistingCustomer != null)
             {
-                contactManagementTasks.AddRange( dcCustomer.Contacts.Select(con => _customerWebApiClient.UpdateAccountContact(con, dcCustomer.Id, con.Id)) );
+                var comparer = new ContactIdEqualityComparer();
+                var contactsToUpdate = dcCustomer.Contacts.Intersect(dcExistingCustomer.Contacts, comparer).ToList();
+                var contactsToAdd = dcCustomer.Contacts.Except(dcExistingCustomer.Contacts, comparer).ToList();
+                var contactsToDel = dcExistingCustomer.Contacts.Except(dcCustomer.Contacts, comparer).ToList();
+
+                contactManagementTasks.AddRange( contactsToUpdate.Select(con => _customerWebApiClient.UpdateAccountContact(con, con.AccountId, con.Id) ));
+                contactManagementTasks.AddRange( contactsToAdd.Select(con => _customerWebApiClient.AddAccountContact(con, con.AccountId )) );
+                contactManagementTasks.AddRange( contactsToDel.Select(con => _customerWebApiClient.DeleteAccountContact(con.AccountId, con.Id )) );
             }
 
             return Task.WhenAll(contactManagementTasks);

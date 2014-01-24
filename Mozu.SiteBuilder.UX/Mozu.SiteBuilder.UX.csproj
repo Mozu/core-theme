@@ -271,9 +271,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Core.ThirdParty.Contracts.1.3.0.1\lib\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Customer.Contracts, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Customer.Contracts, Version=1.3.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Customer.Contracts.1.3.0.2\lib\Mozu.Customer.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Customer.Contracts.1.3.3.2\lib\Mozu.Customer.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Location.Contracts, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

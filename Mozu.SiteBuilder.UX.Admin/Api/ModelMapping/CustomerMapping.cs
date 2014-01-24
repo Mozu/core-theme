@@ -36,6 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.TaxExempt, op => op.MapFrom(dc => dc.TaxExempt))
             .ForMember(x => x.TaxId, op => op.MapFrom(dc => dc.TaxId))
             .ForMember(x => x.VisitCount, op => op.MapFrom(dc => dc.CommerceSummary.VisitsCount))
+            .ForMember(x => x.IsAnonymous, op => op.MapFrom(dc => dc.IsAnonymous))
             ;
 
             Mapper.CreateMap<ApiCustomer, DC.CustomerAccount>()
@@ -58,6 +59,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(dc => dc.Notes, op => op.Ignore())
             .ForMember(dc => dc.TaxExempt, op => op.MapFrom(x => x.TaxExempt))
             .ForMember(dc => dc.TaxId, op => op.MapFrom(x => x.TaxId))
+            .ForMember(dc => dc.IsAnonymous, op => op.MapFrom(x => x.IsAnonymous))
+
             ;
         }
     }
