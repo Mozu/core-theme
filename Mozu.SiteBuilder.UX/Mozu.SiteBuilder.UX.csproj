@@ -471,14 +471,14 @@
     <Content Include="BuiltinScripts\HyprLive\src\tags.js" />
     <Content Include="BuiltinScripts\HyprLive\src\loader.js" />
     <Content Include="BuiltinScripts\HyprLive\src\env.js" />
+    <Content Include="BuiltinScripts\RequireJS\dist\mozu-require.compiler.js" />
     <Content Include="BuiltinScripts\RequireJS\dist\mozu-require.debug.js" />
     <Content Include="BuiltinScripts\RequireJS\dist\mozu-require.min.js" />
     <Content Include="BuiltinScripts\RequireJS\Gruntfile.js" />
     <Content Include="BuiltinScripts\RequireJS\lib\json2.js" />
+    <Content Include="BuiltinScripts\RequireJS\src\mozu-require.js" />
     <Content Include="BuiltinScripts\RequireJS\src\plugins\shim-browser.js" />
     <Content Include="BuiltinScripts\RequireJS\src\vars-min.js" />
-    <Content Include="BuiltinScripts\RequireJS\src\plugins\shim.js" />
-    <Content Include="BuiltinScripts\RequireJS\src\plugins\text.js" />
     <Content Include="BuiltinScripts\RequireJS\src\vars-debug.js" />
     <Content Include="BuiltinScripts\SDK\dist\mozu-javascript-sdk.debug.js" />
     <Content Include="BuiltinScripts\SDK\dist\mozu-javascript-sdk.min.js" />
@@ -502,7 +502,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="BuiltinScripts\HyprLive\package.json" />
-    <Content Include="BuiltinScripts\RequireJS\src\require.js" />
     <Content Include="BuiltinScripts\SDK\Gruntfile.js" />
     <Content Include="BuiltinScripts\SDK\src\init_debug.js" />
     <Content Include="BuiltinScripts\SDK\docs\getting_started.html" />
@@ -608,6 +607,8 @@
     <Content Include="BuiltinScripts\SDK\src\methods.json" />
     <Content Include="BuiltinScripts\SDK\HISTORY.md" />
     <Content Include="BuiltinScripts\SDK\LICENSE" />
+    <Content Include="BuiltinScripts\RequireJS\LICENSE" />
+    <Content Include="BuiltinScripts\RequireJS\README.md" />
     <None Include="Properties\PublishProfiles\demo.pubxml" />
     <Content Include="Web.SI.config">
       <DependentUpon>Web.config</DependentUpon>
