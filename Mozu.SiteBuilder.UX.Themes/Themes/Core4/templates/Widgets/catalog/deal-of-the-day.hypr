@@ -1,3 +1,7 @@
-﻿<div class="mz-related-products" data-mz-related-products ="{% json_attribute Model.config%}">
+﻿<div class="mz-deal-of-the-day" data-mz-deal-of-the-day ="{% json_attribute Model.config %}">
 hello world
+<pre>
+  <code>{% dump Model %}</code>
+</pre>
 </div>
+{% require_script "widgets/deal-of-the-day" %}
