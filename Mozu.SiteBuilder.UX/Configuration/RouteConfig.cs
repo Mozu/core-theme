@@ -59,6 +59,10 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
 
+            routes.MapHttpRoute(
+                "Storefront_User_ResetPAssword",
+                "user/resetpasswordconfirm",
+                new { controller = "Auth", action = "ResetPassword" });
 
             routes.MapHttpRoute(
                 "Storefront_MyAccount2",

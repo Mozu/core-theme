@@ -156,6 +156,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return res;
         }
 
+        protected async Task<ServiceClientResponse<System.Net.Http.StreamContent>> DoResetPasswordConfirm(ResetPasswordConfirmDetails info)
+        {
+            var res = (await _customerAccountWebApiClient.UpdateForgottenPassword(new ConfirmationInfo()
+            {
+                UserName = info.username,
+                NewPassword = info.password,
+                ConfirmationCode = info.validationToken,
+            }));
+
+            return res;
+        }
+
         private Uri MakeRedirectUri(string returnUrl = null)
         {
             if (string.IsNullOrEmpty(returnUrl))
@@ -320,6 +332,54 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
          }
+
+         [HttpGet]
+         public async Task<ActionResult> ResetPassword(string t, string u)
+         {
+
+             var task = _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccounts(filter: "UserId eq " + u);
+             string email = await task.ContinueWith<string>(x =>
+             {
+                 var res = x.Result;
+                 if (res.ResponseMessage.IsSuccessStatusCode)
+                 {
+                     var account = res.ReadAsSync().Items.FirstOrDefault();
+                     if (account != null)
+                         return account.EmailAddress;
+                 }
+                 return null;
+             });
+
+             var model = new ResetPasswordConfirmDetails()
+             {
+                 username = email,
+                 validationToken = t,
+             };
+             return View("Reset-Password", model);
+         }
+
+         public class ResetPasswordConfirmDetails
+         {
+             public bool done { get; set; }
+             public string username { get; set; }
+             public string validationToken { get; set; }
+             public string password { get; set; }
+             public string passwordConfirm { get; set; }
+             public object[] messages { get; set; }
+         }
+
+         [HttpPost]
+         public async Task<HttpResponseMessage> ResetPassword(ResetPasswordConfirmDetails info)
+         {
+             var res = await DoResetPasswordConfirm(info);
+             var ex = res.ReadException();
+             info.done = res.ResponseMessage.IsSuccessStatusCode;
+             info.messages = ex== null ? new object[0] : new object[] { new { message = ex.Message } };
+             return this.Request.CreateResponse(HttpStatusCode.OK, View("Reset-Password", info));
+         }
+
+
+
 
         //  [System.Web.Http.HttpPost]
         // public object  AjaxResetPassword(ResetPasswordInfo info)

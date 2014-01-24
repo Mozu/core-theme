@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.Mvc.Customers
 
         public Task<CustomerAccount> GetByUserId(string userId)
         {
-            var task = _customerAccountWebApiClient.GetAccounts(null, null, null, null, "UserId eq " + userId);
+            var task = _customerAccountWebApiClient.GetAccounts(filter: "UserId eq " + userId);
             return task.ContinueWith<CustomerAccount>(x =>
             {
                 var res = x.Result;
