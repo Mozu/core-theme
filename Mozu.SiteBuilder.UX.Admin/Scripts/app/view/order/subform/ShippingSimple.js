@@ -68,6 +68,8 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
 
         if (primaryShipping) {
             this.addresses.getSelectionModel().select(primaryShipping);
+
+            this.contactData = primaryShipping.data;
             this.setShippingInfo();
             this.fireEvent('orderchange');
         }        
@@ -192,7 +194,7 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
                     this.addresses.getSelectionModel().select(record);
 
                     // store the selection ;
-                    //this.contactData = record.data;
+                    this.contactData = record.data;
 
                     this.setShippingInfo();
                     this.fireEvent('orderchange');
@@ -219,6 +221,7 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
             },
             success: function (record, operation) {
                 
+
                 if (this.shippingMethodField) {
                     this.loadShippingMethods();
                 } else {
@@ -234,11 +237,17 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
         });
     },
 
+
+    // this will be called after each change, to see if all the requirements are met
     initShippingMethodField: function () {
         var me = this;
-
         if (!this.shippingMethodField) {
 
+            // need a contact and order items;
+            if (!this.contactData || !this.record.data.items.length) {
+                return
+            }
+            
             this.shippingMethodsStore = Ext.create('Ext.data.Store', {
                 model: 'Taco.model.ShippingMethod',
                 autoLoad: false,

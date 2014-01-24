@@ -86,7 +86,7 @@ Ext.define('Taco.view.order.subform.Customer', {
                         this.customerRecord = selectedRecord;
 
                         // perisist the assignment of this customer to this order;
-                        this.assignCustomer;
+                        this.assignCustomer();
 
                         // notifiy the other subforms of the change;
                         this.updateCustomerInformation()
@@ -218,10 +218,28 @@ Ext.define('Taco.view.order.subform.Customer', {
     },
 
     selectExisting: function () {
-        //this.customer = {};
-        //this.customerField.reset();
-        //this.customerField.show();
-        //this.newCustomer.hide();
+        
+        var customerId = this.record.customerId;
+        if (customerId) {
+            // update this json. its used to persist the assignement;
+            this.customer.customerAccountId = customerId;
+
+            // cache the customer record;
+            this.customerRecord = selectedRecord;
+
+            // perisist the assignment of this customer to this order;
+            this.assignCustomer;
+
+            // notifiy the other subforms of the change;
+            this.updateCustomerInformation()
+
+            //this.customer = {};
+            //this.customerField.reset();
+            //this.customerField.show();
+            //this.newCustomer.hide();
+        }
+
+        
 
 
     },
@@ -246,7 +264,6 @@ Ext.define('Taco.view.order.subform.Customer', {
     assignCustomer: function () {
         this.customer.orderId = this.record.getId();
         
-
         //this.newCustomer.getForm().reset();
 
         Ext.Ajax.request({
