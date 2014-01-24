@@ -114,7 +114,7 @@
   "register"             : "Register",
   "stackTrace"           : "Details",
   "pleaseSelect"         : "Please Select",
-  "forgotPasswordLink"   : "forgot email or password?",
+  "forgotPasswordLink"   : "forgot password?",
   "resetPassword"        : "Reset Password",
   "resetEmailSent"       : "You should receive an email with instructions to reset your password shortly.",
   "unexpectedError"      : "Sorry, an unexpected error occurred. Please refresh the page and try again, or contact Support.",

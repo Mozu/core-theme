@@ -368,7 +368,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
                 }
                 if (this.TypeInfo.PropertyValueType.Name == "text" || this.TypeInfo.PropertyValueType.Name == "html")
                 {
-                    return "Click here to edit.";
+                    return "";
+                    //return "Click here to edit.";
                 }
 
                 if (this.RawValue is string && this.TypeInfo.PropertyValueType.Name == "image" || this.TypeInfo.PropertyValueType.Name == "json")
