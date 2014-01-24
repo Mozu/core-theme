@@ -65,10 +65,12 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         {
             buffer = templateName = null;
             var pageContext = context.PageContext();
+            var cdnHost = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("CdnHost");
+            var cdn = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("disableCDN") == "true" || string.IsNullOrEmpty(cdnHost) ? "" : ("//" + cdnHost + "/common");
             
             var isEditmode = pageContext.IsEditMode;
             var sb = new StringBuilder();
-            var cdn = context.Resolve<SiteContext>().CdnPrefix;
+            //var cdn = context.Resolve<SiteContext>().CdnPrefix;
             sb.AppendFormat("\t\t<link rel=\"stylesheet\" href=\"{0}/resources/cms/layout.css\">\r", cdn);
             if (!isEditmode)
             {
@@ -80,8 +82,11 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             sb.AppendLine( "\r\n\t\t<link rel=\"stylesheet\" href=\"/admin/scripts/build/chorizo/chorizo.css\">");
             sb.AppendLine("\t\t<link rel=\"stylesheet\" href=\"//netdna.bootstrapcdn.com/font-awesome/4.0.2/css/font-awesome.min.css\">");
             sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js\"></script>");
+#if DEBUG
+            sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js\"></script>");
+#else
             sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js\"></script>");
-
+#endif
             sb.AppendFormat(Format, "_classfactory", cdn);
             sb.AppendFormat(Format, "format", cdn);
             sb.AppendFormat(Format, "content", cdn);
