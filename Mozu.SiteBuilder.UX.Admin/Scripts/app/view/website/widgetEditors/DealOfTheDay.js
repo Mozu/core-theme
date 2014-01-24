@@ -37,14 +37,6 @@ Ext.define('Taco.view.website.widgetEditors.DealOfTheDay', {
                             fn: 'handleDiscountChange'
                         }
                     }
-                }, {
-                    xtype: 'numberfield',
-                    name: 'productCount',
-                    fieldLabel: 'Number of products',
-                    margin: '0 0 5 20',
-                    width: 200,
-                    hideTrigger: true,
-                    mouseWheelEnabled: false
                 }]
             }, {
                 xtype: 'radiogroup',
@@ -66,25 +58,11 @@ Ext.define('Taco.view.website.widgetEditors.DealOfTheDay', {
                 vertical: true,
                 columns: 2,
                 items: [{
-                    name: 'price',
-                    boxLabel: 'Regular price'
-                    // inputValue: 'price'
-                }, {
                     name: 'savings',
                     boxLabel: '% of savings'
-                    // inputValue: 'savings'
                 }, {
                     name: 'expirationDate',
                     boxLabel: 'Expiration date'
-                    // inputValue: 'expirationDate'
-                }, {
-                    name: 'shortDescription',
-                    boxLabel: 'Short description'
-                    // inputValue: 'shortDescription'
-                }, {
-                    name: 'longDescription',
-                    boxLabel: 'Long description'
-                    // inputValue: 'longDescription'
                 }]
             }]
         });
