@@ -34,6 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public ProductController(IProductWebApiClient productClient, IProductTypeWebApiClient productTypeWebApiClient)
         {
             _productClient = productClient;
+            
             _productTypeWebApiClient = productTypeWebApiClient;
         }
 

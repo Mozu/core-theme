@@ -5,6 +5,7 @@ namespace Mozu.SiteBuilder.UX.Models.Visit
     [DataContract]
     public class Visit
     {
+        
         [DataMember]
         public string VisitId { get; set; }
 
@@ -28,5 +29,10 @@ namespace Mozu.SiteBuilder.UX.Models.Visit
 
         [IgnoreDataMember]
         public bool IsLanding { get; set; }
+
+        public object IsEmpty()
+        {
+            return VisitId = "_null";
+        }
     }
 }

@@ -17,10 +17,12 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         {
             buffer = templateName = null;
             var visit = context.PageContext().Visit;
-
-            var urlHelper = new System.Web.Http.Routing.UrlHelper(context.ViewContext().RequestMessage);
-            var tpUrl = urlHelper.Route("Visit_Tracking_Pixel", new { r = visit.VisitId });
-            buffer = String.Format("<img src=\"{0}\" />", tpUrl);
+            if (visit == null)
+            {
+                return;
+            }
+     
+            buffer = String.Format("<img src=\"/_mzblank.gif?r={0}\" />",  visit.VisitId);
         }
     }
 }

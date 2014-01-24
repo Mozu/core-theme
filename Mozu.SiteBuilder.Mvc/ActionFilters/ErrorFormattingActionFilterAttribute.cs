@@ -18,7 +18,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 
         async Task<HttpResponseMessage> IActionFilter.ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
-            var response = await continuation();
+            var response = await continuation().ConfigureAwait(false);
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
                 var request = actionContext.Request;
@@ -34,7 +34,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                                                             Path = "404"
                                                         }
                                          };
-                await cmsHelper.InitCmsPageContext(pageContext);
+                await cmsHelper.InitCmsPageContext(pageContext).ConfigureAwait(false);
                 var viewResult = new ViewResult()
                                  {
                                      Model = null,

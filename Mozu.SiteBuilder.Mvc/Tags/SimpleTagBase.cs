@@ -362,7 +362,11 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
             public override Walker walk(ITemplateManager manager, Walker walker)
             {
-                return this.asyncWalk(manager, walker).Result;
+                var res = this.asyncWalk(manager, walker).ConfigureAwait(false).GetAwaiter().GetResult();
+              //  task.Wait();
+                return res;
+
+
             }
 
             static string[] g_emptyStringArray = new string[0];

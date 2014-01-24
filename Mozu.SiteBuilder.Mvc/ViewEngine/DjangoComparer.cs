@@ -2,10 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Runtime.Caching;
 using System.Web;
 
 using Autofac;
+using Microsoft.FSharp.Core;
+using Mozu.Core.Extensions;
+using Mozu.SiteBuilder.Mvc.Themes;
 using NDjango;
 using NDjango.Interfaces;
 using Mozu.SiteBuilder.Mvc.Security;
@@ -57,6 +61,30 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 //todo: handle valid use cases
                 throw new Exception("tell phipps", ex);
             }
+        }
+    }
+
+    public class DjangoUtilHelper : FSharpFunc<string,string>
+    {
+        private string[] _paths;
+
+        public override string Invoke(string fullPath)
+        {
+            var paths = _paths;
+            if (paths == null)
+            {
+                var tr = new ThemeMetadataProvider(Mozu.Core.Settings.MozuConfigurationManager.Settings);
+                paths = _paths = tr.ThemePaths.Union(tr.AddonPaths).ToArray();
+
+            }
+            if (!string.IsNullOrEmpty(fullPath))
+            {
+                var root = paths.FirstOrDefault(x => fullPath.StartsWith(x, StringComparison.OrdinalIgnoreCase));
+                return fullPath.Substring(root.Length);
+            }
+
+
+            return "n/a";
         }
     }
 }

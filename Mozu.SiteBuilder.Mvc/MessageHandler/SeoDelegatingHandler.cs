@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             CancellationToken cancellationToken)
         {
             var repo = request.Resolve<IRedirectRepository>();
-            var redirects = await repo.FetchRedirectEntries();
+            var redirects = await repo.FetchRedirectEntries().ConfigureAwait(false);
             string stem = request.RequestUri.AbsolutePath;
             stem = stem.Length > 0 && stem[0] == '/' ? stem.Substring(1) : stem;
             RedirectEntry redir;
