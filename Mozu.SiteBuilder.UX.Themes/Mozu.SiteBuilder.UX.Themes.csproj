@@ -390,6 +390,31 @@
     <Content Include="buildcore.bat" />
     <Content Include="Addons\Blue\addon.json" />
     <Content Include="Addons\Orange\addon.json" />
+    <Content Include="Themes\Core4\compiled\scripts\build.txt" />
+    <Content Include="Themes\Core4\compiled\scripts\modules\common.js" />
+    <Content Include="Themes\Core4\compiled\scripts\pages\cart.js" />
+    <Content Include="Themes\Core4\compiled\scripts\pages\category.js" />
+    <Content Include="Themes\Core4\compiled\scripts\pages\checkout.js" />
+    <Content Include="Themes\Core4\compiled\scripts\pages\error.js" />
+    <Content Include="Themes\Core4\compiled\scripts\pages\location.js" />
+    <Content Include="Themes\Core4\compiled\scripts\pages\myaccount.js" />
+    <Content Include="Themes\Core4\compiled\scripts\pages\product.js" />
+    <Content Include="Themes\Core4\compiled\scripts\pages\search.js" />
+    <Content Include="Themes\Core4\compiled\scripts\vendor\backbone.js" />
+    <Content Include="Themes\Core4\compiled\scripts\vendor\bootstrap-affix.js" />
+    <Content Include="Themes\Core4\compiled\scripts\vendor\bootstrap-popover.js" />
+    <Content Include="Themes\Core4\compiled\scripts\vendor\bootstrap-scrollspy.js" />
+    <Content Include="Themes\Core4\compiled\scripts\vendor\isotope.min.js" />
+    <Content Include="Themes\Core4\compiled\scripts\vendor\jquery-cookie.js" />
+    <Content Include="Themes\Core4\compiled\scripts\vendor\jquery.colorbox-min.js" />
+    <Content Include="Themes\Core4\compiled\scripts\vendor\jquery.tools.dateinput.js" />
+    <Content Include="Themes\Core4\compiled\scripts\vendor\modernizr-respond.min.js" />
+    <Content Include="Themes\Core4\compiled\scripts\vendor\underscore.js" />
+    <Content Include="Themes\Core4\compiled\scripts\widgets\image.js" />
+    <Content Include="Themes\Core4\compiled\scripts\widgets\instock-request.js" />
+    <Content Include="Themes\Core4\compiled\scripts\widgets\related-products.js" />
+    <Content Include="Themes\Core4\compiled\scripts\widgets\store-locator.js" />
+    <Content Include="Themes\Core4\compiled\scripts\widgets\video.js" />
     <Content Include="Zubat\src\cli.js" />
     <Content Include="Zubat\src\compile.js" />
     <Content Include="Zubat\src\logger.js" />
@@ -913,7 +938,6 @@
     <Folder Include="SampleThemes\helloWorld\Modules\" />
     <Folder Include="SampleThemes\helloWorld\Resources\Fonts\" />
     <Folder Include="SampleThemes\helloWorld\Resources\Scripts\Pages\" />
-    <Folder Include="Themes\Core4\compiled\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
