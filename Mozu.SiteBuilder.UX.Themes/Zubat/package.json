@@ -1,19 +1,19 @@
 {
-  "name": "compozu",
+  "name": "zubat",
   "version": "0.1.0",
   "author": "James Zetlen <james_zetlen@volusion.com>",
   "description": "JavaScript compiler for Mozu",
   "bin": {
-    "moz": "./bin/compozu"
+    "zubat": "./bin/zubat"
   },
-  "main": "./src/compozu.js",
+  "main": "./src/zubat.js",
   "dependencies": {
-    "async": "~0.2",
-    "commander": "~1.0",
-    "cli-color": "~0.2",
-    "walk": "~2.2",
     "mozu-require-compiler": "git://github.com/zetlen/mozu-require-compiler.git#master",
-    "ncp": "~0.5"
+    "ncp": "~0.5",
+    "async": "~0.2",
+    "cli-color": "~0.2",
+    "optimist": "~0.6",
+    "rimraf": "~2.2"
   },
   "license": "MIT",
   "engines": {

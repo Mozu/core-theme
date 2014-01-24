@@ -72,6 +72,7 @@ module.exports = {
         });
     },
     getThemeFromId: function(id, program, cb) {
-        throw new Error(arguments.callee.caller + ' unimplemented');
+        program.log(0, constants.LOG_SEV_ERROR, "Theme inheritance without manual ancestry is not yet supported. Please specify manual ancestry at the command line using -m.");
+        process.exit(1);
     }
 }

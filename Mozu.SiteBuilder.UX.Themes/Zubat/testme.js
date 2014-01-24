@@ -1,6 +1,6 @@
-﻿var compozu = require('./src/compozu'),
+﻿var zubat = require('./src/zubat'),
     color = require('cli-color'),
-    compozer = compozu(process.argv[process.argv.length - 1], { logLevel: 2 }, function () {
+    bat = zubat(process.argv[process.argv.length - 1], { logLevel: 2 }, function () {
         console.log('cb called, it worked');
         process.exit();
     }),
@@ -9,6 +9,6 @@
         info: color.bold,
         success: color.green.bold
     };
-compozer.on('log', function (str, sev, level) {
+bat.on('log', function (str, sev, level) {
     console.log(fmts[sev]('[' + sev.toUpperCase() + ']') + ' ' + str + ' level:' + level);
 });
