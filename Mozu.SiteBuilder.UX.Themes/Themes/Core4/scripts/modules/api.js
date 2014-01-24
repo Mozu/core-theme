@@ -17,7 +17,7 @@ define(['sdk', 'jquery'], function (Mozu, $) {
     api.on('error', function (badPromise, xhr, requestConf) {
         var e = "Error communicating with Mozu API";
         if (requestConf && requestConf.url) e += (" at " + requestConf.url);
-        window.console && console.error(e, badPromise, xhr);
+        window && window.console && console.error(e, badPromise, xhr);
     });
 
     return api;

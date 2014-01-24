@@ -32,7 +32,7 @@
 			}
 		  ],
 
-        "useDebugScripts": true,
+        "useDebugScripts": false,
 
         /* Common settings used in templates */
         "defaultPageSize": 15,
@@ -40,7 +40,6 @@
         "maxProductSummaryWords": 40,
         "allowWishlist": false,
         "enablePartialCaching":true,
-        "showBreadcrumbs": true,
         "showBreadcrumbs": true,
         "preselectCountryCode": "US",
 
