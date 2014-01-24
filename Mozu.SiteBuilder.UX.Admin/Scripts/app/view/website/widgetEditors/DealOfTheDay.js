@@ -66,25 +66,25 @@ Ext.define('Taco.view.website.widgetEditors.DealOfTheDay', {
                 vertical: true,
                 columns: 2,
                 items: [{
-                    name: 'displayOptions',
-                    boxLabel: 'Regular price',
-                    inputValue: 'price'
+                    name: 'price',
+                    boxLabel: 'Regular price'
+                    // inputValue: 'price'
                 }, {
-                    name: 'displayOptions',
-                    boxLabel: '% of savings',
-                    inputValue: 'savings'
+                    name: 'savings',
+                    boxLabel: '% of savings'
+                    // inputValue: 'savings'
                 }, {
-                    name: 'displayOptions',
-                    boxLabel: 'Expiration date',
-                    inputValue: 'expirationDate'
+                    name: 'expirationDate',
+                    boxLabel: 'Expiration date'
+                    // inputValue: 'expirationDate'
                 }, {
-                    name: 'displayOptions',
-                    boxLabel: 'Short description',
-                    inputValue: 'shortDescription'
+                    name: 'shortDescription',
+                    boxLabel: 'Short description'
+                    // inputValue: 'shortDescription'
                 }, {
-                    name: 'displayOptions',
-                    boxLabel: 'Long description',
-                    inputValue: 'longDescription'
+                    name: 'longDescription',
+                    boxLabel: 'Long description'
+                    // inputValue: 'longDescription'
                 }]
             }]
         });

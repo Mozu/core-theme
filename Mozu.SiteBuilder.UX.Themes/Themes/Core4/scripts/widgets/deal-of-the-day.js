@@ -33,7 +33,6 @@
                     });
 
                     dealView.render();
-                    deal.prepend('<h3>' + 'food' + '</h3>');
                 });
             });
         });
