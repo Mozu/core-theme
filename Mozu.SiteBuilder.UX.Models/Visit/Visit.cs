@@ -29,10 +29,5 @@ namespace Mozu.SiteBuilder.UX.Models.Visit
 
         [IgnoreDataMember]
         public bool IsLanding { get; set; }
-
-        public object IsEmpty()
-        {
-            return VisitId = "_null";
-        }
     }
 }

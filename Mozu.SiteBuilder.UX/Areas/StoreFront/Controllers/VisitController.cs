@@ -58,7 +58,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             // if the Visit thinks this is the landing page, cookies must be disabled.
-            if (_pageContext.Visit == null  || _pageContext.Visit.IsEmpty() == null || _pageContext.Visit.IsLanding)
+            if (_pageContext.Visit == null  || _pageContext.Visit.IsLanding)
                 return Pixel();
 
             // make sure the cookie id and the query string id match
