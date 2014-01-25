@@ -61,6 +61,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(dc => dc.TaxId, op => op.MapFrom(x => x.TaxId))
             .ForMember(dc => dc.IsAnonymous, op => op.MapFrom(x => x.IsAnonymous))
 
+            .AfterMap((x, dc) => {
+                // ensure that all contacts have the appropriate AccountId set
+                if (dc.Contacts != null && dc.Contacts.Any())
+                    dc.Contacts.Each(c => c.AccountId = dc.Id);
+            })
             ;
         }
     }
