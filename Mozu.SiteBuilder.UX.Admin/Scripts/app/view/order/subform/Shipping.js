@@ -65,7 +65,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
     },
     initUnpackagedItems: function () {
         var me = this,
-            billingContact = this.record.get("billingContact");
+            contact = this.record.get("fulfillmentContact");
 
 
         
@@ -90,14 +90,14 @@ Ext.define('Taco.view.order.subform.Shipping', {
                 weight: me.record.get("weight"),
 
                 // billing contact info
-                firstName: billingContact.firstName,
-                lastName: billingContact.lastName,
-                cityOrTown: billingContact.cityOrTown,
-                address1: billingContact.address1,
-                postalOrZipCode: billingContact.postalOrZipCode,
-                stateOrProvince: billingContact.stateOrProvince,
-                phoneNumber: billingContact.phoneNumber,
-                email: billingContact.email
+                firstName: contact.firstName,
+                lastName: contact.lastName,
+                cityOrTown: contact.cityOrTown,
+                address1: contact.address1,
+                postalOrZipCode: contact.postalOrZipCode,
+                stateOrProvince: contact.stateOrProvince,
+                phoneNumber: contact.phoneNumber,
+                email: contact.email
             }
         });
         
@@ -117,7 +117,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
         for (var i = data.length; i > 0; i--) {
             
             var dataItem = data[i-1];
-            var billingContact = me.record.get("billingContact");
+            var contact = me.record.get("fulfillmentContact");
             var packagingType = dataItem.packagingType;
             var packagingTypeText = me.packagingTypeStore.getById(packagingType).get("text");
             
@@ -142,15 +142,15 @@ Ext.define('Taco.view.order.subform.Shipping', {
                         trackingNumber: dataItem.trackingNumber,
                         
                         // billing contact info
-                        firstName: billingContact.firstName,
-                        lastName: billingContact.lastName,
-                        address1: billingContact.address1,
+                        firstName: contact.firstName,
+                        lastName: contact.lastName,
+                        address1: contact.address1,
                         
-                        cityOrTown: billingContact.cityOrTown,
-                        postalOrZipCode: billingContact.postalOrZipCode,
-                        stateOrProvince: billingContact.stateOrProvince,
-                        phoneNumber: billingContact.phoneNumber,
-                        email: billingContact.email
+                        cityOrTown: contact.cityOrTown,
+                        postalOrZipCode: contact.postalOrZipCode,
+                        stateOrProvince: contact.stateOrProvince,
+                        phoneNumber: contact.phoneNumber,
+                        email: contact.email
                     }
                 })
             );
@@ -178,7 +178,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
         for (var i = 0; i < data.length; i++) {
             
             var dataItem = data[i];
-            var billingContact = me.record.get("billingContact");
+            var contact = me.record.get("fulfillmentContact");
             var packagingType = dataItem.packagingType;
             var packagingTypeText = me.packagingTypeStore.getById(packagingType).get("text");
                 
@@ -230,14 +230,14 @@ Ext.define('Taco.view.order.subform.Shipping', {
                     packagingType : packagingTypeText,
                         
                     // billing contact info
-                    firstName: billingContact.firstName,
-                    lastName: billingContact.lastName,
-                    cityOrTown: billingContact.cityOrTown,
-                    address1: billingContact.address1,
-                    postalOrZipCode: billingContact.postalOrZipCode,
-                    stateOrProvince: billingContact.stateOrProvince,
-                    phoneNumber: billingContact.phoneNumber,
-                    email: billingContact.email
+                    firstName: contact.firstName,
+                    lastName: contact.lastName,
+                    cityOrTown: contact.cityOrTown,
+                    address1: contact.address1,
+                    postalOrZipCode: contact.postalOrZipCode,
+                    stateOrProvince: contact.stateOrProvince,
+                    phoneNumber: contact.phoneNumber,
+                    email: contact.email
                 }
             })
             );

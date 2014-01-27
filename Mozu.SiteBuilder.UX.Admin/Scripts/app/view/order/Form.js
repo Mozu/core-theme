@@ -51,7 +51,7 @@ Ext.define('Taco.view.order.Form', {
         }, this);
         
         // after the record is reloaded we will need to refresh the ui
-        me.record.on("reload", function () {
+        me.record.on("reload", function () {            
             me.onBeforeReload();
         }, this);
         

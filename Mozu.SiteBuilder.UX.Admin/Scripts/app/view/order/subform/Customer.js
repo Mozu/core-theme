@@ -19,7 +19,7 @@ Ext.define('Taco.view.order.subform.Customer', {
     },
 
     initComponent: function () {
-
+        var me = this;
         
 
         this.customer = {};
@@ -71,6 +71,23 @@ Ext.define('Taco.view.order.subform.Customer', {
         });
         */
 
+        this.customerDetail = Ext.widget({
+            xtype: "editabledisplayfield",
+            margin: "10px 0px 0px 0px",
+            border: false,
+            tpl: [
+                '<tpl if="firstName">',
+
+                    '{firstName} {lastName} {emailAddress}',
+
+                '<tpl else>',
+                    'Select or Create a Customer',
+                '</tpl>'
+            ]
+        })
+
+
+
         this.customerField = Ext.widget({
             xtype: 'taco-customerfield',            
             flex: 1,
@@ -79,6 +96,8 @@ Ext.define('Taco.view.order.subform.Customer', {
                 select : function (combo,records, eOpts){                    
                     var selectedRecord = records[0];
                     if (selectedRecord) {
+                        me.onCustomerChange(selectedRecord);
+                        /*
                         // update this json. its used to persist the assignement;
                         this.customer.customerAccountId = selectedRecord.get("id");
 
@@ -90,6 +109,7 @@ Ext.define('Taco.view.order.subform.Customer', {
 
                         // notifiy the other subforms of the change;
                         this.updateCustomerInformation()
+                        */
                     }
                 },
                 scope:this                
@@ -152,7 +172,9 @@ Ext.define('Taco.view.order.subform.Customer', {
                         scope:this
                     }
                 ]
-            }
+            },
+
+            this.customerDetail
 
             //,this.setCustomer
         ]
@@ -163,20 +185,22 @@ Ext.define('Taco.view.order.subform.Customer', {
     },
 
     createCustomer: function () {
+        var me = this;
+
         var win = Ext.create('Taco.view.customers.modal.CreateCustomer',{
             listeners:{
-                scope:this,
-                save: function (view){
-                    
-                },
-                savesuccess: function (view, data) {
-                    
+                scope:me,                
+                savesuccess: function (view, record) {                
+                    me.onCustomerChange(record);
                 }
             }        
         });
     },
 
     updateCustomerInformation: function () {
+
+        this.customerField.clearValue();
+
         // fire event for the other sub panels to react to.
         this.fireEvent('customerChange', this, this.customerRecord);
 
@@ -217,33 +241,32 @@ Ext.define('Taco.view.order.subform.Customer', {
 
     },
 
-    selectExisting: function () {
-        
-        var customerId = this.record.customerId;
+    selectExisting: function () {        
+        var customerId = this.record.get("customerId");
         if (customerId) {
             // update this json. its used to persist the assignement;
             this.customer.customerAccountId = customerId;
 
-            // cache the customer record;
-            this.customerRecord = selectedRecord;
+            Taco.model.CustomerAccount.load(customerId, {
+                scope: this,
+                failure: function (record, operation) {
+                    
+                },
+                success: function (record, operation) {
+                    // cache the customer record;
+                    this.customerRecord = record;
 
-            // perisist the assignment of this customer to this order;
-            this.assignCustomer;
+                    this.customerDetail.update(this.customerRecord.data);
 
-            // notifiy the other subforms of the change;
-            this.updateCustomerInformation()
 
-            //this.customer = {};
-            //this.customerField.reset();
-            //this.customerField.show();
-            //this.newCustomer.hide();
+                    // notifiy the other subforms that the customer record has loaded;
+                    // todo: look into preloading the customerRecord for this order;
+                    this.updateCustomerInformation()
+                }
+            });            
         }
-
-        
-
-
     },
-
+    /*
     createNew: function () {
         this.customer = {};
         this.newCustomer.getForm().reset();
@@ -252,6 +275,8 @@ Ext.define('Taco.view.order.subform.Customer', {
         this.newCustomer.show();
     },
     
+    */
+    /*
     isValid: function () {
         var valid = this.customer.customerAccountId
             || (this.customer.firstName && this.customer.lastName && this.customer.email);
@@ -261,10 +286,25 @@ Ext.define('Taco.view.order.subform.Customer', {
         return valid;
     },
 
+    */
+    onCustomerChange : function (customerRecord) {
+        // update this json. its used to persist the assignement;
+        this.customer.customerAccountId = customerRecord.get("id");
+
+        // cache the customer record;
+        this.customerRecord = customerRecord;
+
+        this.customerDetail.update(this.customerRecord.data);
+
+        // perisist the assignment of this customer to this order;
+        this.assignCustomer();
+
+        // notifiy the other subforms of the change;
+        this.updateCustomerInformation()
+    },
+
     assignCustomer: function () {
-        this.customer.orderId = this.record.getId();
-        
-        //this.newCustomer.getForm().reset();
+        this.customer.orderId = this.record.getId();        
 
         Ext.Ajax.request({
             url: '/admin/app/order/setcustomer',
