@@ -18,7 +18,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             Mapper.CreateMap<DC.CustomerAccount, ApiCustomer>()
             .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
-            .ForMember(x => x.UserId, op => op.MapFrom(dc => string.IsNullOrWhiteSpace( dc.UserId) ? null : dc.UserId))
+            .ForMember(x => x.UserId, op => op.MapFrom(dc => string.IsNullOrWhiteSpace(dc.UserId) ? null : dc.UserId))
             .ForMember(x => x.EmailAddress, op => op.MapFrom(dc => dc.EmailAddress))
             .ForMember(x => x.UserName, op => op.MapFrom(dc => dc.UserName))
             .ForMember(x => x.FirstName, op => op.MapFrom(dc => dc.FirstName))
@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(dc => dc.Id, op => op.MapFrom(x => x.Id))
             .ForMember(x => x.UserId, op => op.MapFrom(dc => string.IsNullOrWhiteSpace(dc.UserId) ? null : dc.UserId))
             .ForMember(x => x.EmailAddress, op => op.MapFrom(dc => dc.EmailAddress))
-            .ForMember(x => x.UserName, op => op.MapFrom(dc => dc.UserName))
+            .ForMember(x => x.UserName, op => op.MapFrom(dc => !String.IsNullOrEmpty(dc.UserName) ? dc.UserName : (!dc.IsAnonymous ? dc.EmailAddress : null)))
             
             .ForMember(x => x.FirstName, op => op.MapFrom(dc => dc.FirstName))
             .ForMember(x => x.LastName, op => op.MapFrom(dc => dc.LastName))
