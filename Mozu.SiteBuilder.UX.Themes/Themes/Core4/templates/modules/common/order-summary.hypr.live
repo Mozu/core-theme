@@ -99,6 +99,3 @@
             </tr>
         </tbody>
     </table>
-
-
-<pre>{% dump model %}</pre>
