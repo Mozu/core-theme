@@ -919,7 +919,7 @@ weight: 2
                     
                     var json = Ext.decode(response.responseText, true);
                     if (!json || !json.success) {
-                        Taco.app.fireEvent('setmessage', "Error viweing shipping label", 'error');
+                        Taco.app.fireEvent('setmessage', "Error viewing shipping label", 'error');
                         newWindow.location = errorIcon;
                         return;
                     }

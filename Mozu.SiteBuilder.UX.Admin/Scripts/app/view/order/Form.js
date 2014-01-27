@@ -138,12 +138,12 @@ Ext.define('Taco.view.order.Form', {
             items.push(Ext.create('Taco.view.order.subform.Customer', subformCfg));
         }
 
+        
+        items.push(Ext.create('Taco.view.order.subform.Detail', subformCfg));
+
         if (!this.isEdit()) {
             items.push(Ext.create('Taco.view.order.subform.ShippingSimple', subformCfg));
         }
-
-
-        items.push(Ext.create('Taco.view.order.subform.Detail', subformCfg));
 
         this.orderAttr = Ext.create('Taco.shared.view.form.ExtensibleAttribute', {
             title: 'Attributes',
