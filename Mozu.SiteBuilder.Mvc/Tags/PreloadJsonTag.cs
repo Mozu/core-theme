@@ -1,5 +1,7 @@
 
+using System.IO;
 using System.Text;
+using Mozu.SiteBuilder.Mvc.ObjectPools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -25,19 +27,28 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         {
             var model = arguments[0].Value;
             var name = arguments[1].Value;
-            string json = JsonConvert.SerializeObject(model, Formatting.None, new CaseInsensitiveJsonSerializerSettings()
+            using (var container = StringBuilderPool.Default.GetContainer())
             {
-                StringEscapeHandling = StringEscapeHandling.EscapeHtml
-            });
+                var sb = container.Item;
 
-            var sb = new StringBuilder();
-            sb.Append(@"<script type=""text/json"" id=""data-mz-preload-");
-            sb.Append(name);
-            sb.Append( @""">");
-            sb.Append(json);
-            sb.Append("</script>");
-            buffer = sb.ToString();
-            templateName = null;
+
+              
+                sb.Append(@"<script type=""text/json"" id=""data-mz-preload-");
+                sb.Append(name);
+                sb.Append(@""">");
+
+                var serSettings = new CaseInsensitiveJsonSerializerSettings();
+                serSettings.StringEscapeHandling = StringEscapeHandling.EscapeHtml;
+                var ser = Newtonsoft.Json.JsonSerializer.Create(serSettings);
+                var writer = new JsonTextWriter(new StringWriter(sb));
+               
+                ser.Serialize(writer, model );
+                writer.Flush();;
+                sb.Append("</script>");
+                buffer = sb.ToString();
+                templateName = null;
+            }
+            
         }
     }
 }

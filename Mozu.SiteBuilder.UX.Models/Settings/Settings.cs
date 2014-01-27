@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
+using Mozu.Core.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Models.Settings
 {
@@ -29,6 +31,67 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public List<KeyValuePair<string, string>> SupportedCards { get; set; }
     }
 
+    public class SiteDomains
+    {
+        private SiteDomain _primary;
+        private SiteDomain _current;
+        private string _currenthostAndPrefix;
+
+
+        public SiteDomains(string currenthostAndPrefix, List<SiteDomain> all)
+        {
+         
+            this._currenthostAndPrefix = currenthostAndPrefix;
+            this.All = all;
+        }
+
+        public SiteDomain Current
+        {
+            get
+            {
+                if (_current == null)
+                {
+                    var currentHost = new Uri(_currenthostAndPrefix).Host;
+                    _current = All.FirstOrDefault(x => string.Equals(_currenthostAndPrefix, x.DomainName , StringComparison.OrdinalIgnoreCase ));
+                    if (_current == null)
+                    {
+                        _current = Primary;
+                    }
+                }
+                return _current;
+            }
+        }
+        public SiteDomain Primary
+        {
+            get
+            {
+                if (_primary == null)
+                {
+                    _primary = All.FirstOrDefault(x => x.IsPrimary);
+                    if (_primary == null)
+                    {
+                        _primary = All.FirstOrDefault();
+                    }
+                }
+                return _primary;
+            }
+        }
+        public List<SiteDomain> All { get; set; } 
+    }
+    public class SiteDomain
+    {
+        public string DomainName { get; set; }
+
+
+        public bool IsPrimary { get; set; }
+
+
+
+        public bool IsSystemAssigned { get; set; }
+
+        public bool IsDomainManaged { get; set; }
+
+    }
    
     public class CheckoutSettings
     {

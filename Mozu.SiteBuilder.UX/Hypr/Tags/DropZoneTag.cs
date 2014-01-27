@@ -14,6 +14,7 @@ using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
+using Mozu.SiteBuilder.Mvc.ObjectPools;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
@@ -69,31 +70,34 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var cdn = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("disableCDN") == "true" || string.IsNullOrEmpty(cdnHost) ? "" : ("//" + cdnHost + "/common");
             
             var isEditmode = pageContext.IsEditMode;
-            var sb = new StringBuilder();
-            //var cdn = context.Resolve<SiteContext>().CdnPrefix;
-            sb.AppendFormat("\t\t<link rel=\"stylesheet\" href=\"{0}/resources/cms/layout.css\">\r", cdn);
-            if (!isEditmode)
+            using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
             {
-                
-                buffer = sb.ToString();
-                return;
-            }
-           
-            sb.AppendLine( "\r\n\t\t<link rel=\"stylesheet\" href=\"/admin/scripts/build/chorizo/chorizo.css\">");
-            sb.AppendLine("\t\t<link rel=\"stylesheet\" href=\"//netdna.bootstrapcdn.com/font-awesome/4.0.2/css/font-awesome.min.css\">");
-            sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js\"></script>");
+                var sb = sbItemDisposer.Item;
+                //var cdn = context.Resolve<SiteContext>().CdnPrefix;
+                sb.AppendFormat("\t\t<link rel=\"stylesheet\" href=\"{0}/resources/cms/layout.css\">\r", cdn);
+                if (!isEditmode)
+                {
+
+                    buffer = sb.ToString();
+                    return;
+                }
+
+                sb.AppendLine("\r\n\t\t<link rel=\"stylesheet\" href=\"/admin/scripts/build/chorizo/chorizo.css\">");
+                sb.AppendLine("\t\t<link rel=\"stylesheet\" href=\"//netdna.bootstrapcdn.com/font-awesome/4.0.2/css/font-awesome.min.css\">");
+                sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js\"></script>");
 #if DEBUG
-            sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js\"></script>");
+                sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js\"></script>");
 #else
             sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js\"></script>");
 #endif
-            sb.AppendFormat(Format, "_classfactory", cdn);
-            sb.AppendFormat(Format, "format", cdn);
-            sb.AppendFormat(Format, "content", cdn);
-            sb.AppendFormat(Format, "targets", cdn);
-            sb.AppendFormat(Format, "widgets", cdn);
-            sb.AppendFormat(Format, "editor", cdn);
-            buffer = sb.ToString();
+                sb.AppendFormat(Format, "_classfactory", cdn);
+                sb.AppendFormat(Format, "format", cdn);
+                sb.AppendFormat(Format, "content", cdn);
+                sb.AppendFormat(Format, "targets", cdn);
+                sb.AppendFormat(Format, "widgets", cdn);
+                sb.AppendFormat(Format, "editor", cdn);
+                buffer = sb.ToString();
+            }
         }
     }
 
@@ -189,12 +193,14 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             var zoneRuntimeData = (pageContext.CmsContext == null || pageContext.CmsContext.RuntimeData == null) ? null : pageContext.CmsContext.RuntimeData.FirstOrDefault(x => string.Equals(x.Id, zoneId, StringComparison.OrdinalIgnoreCase));
             bool useDefaultId = true;
-            var sb = new StringBuilder();
-            sb.Append("<div class=\"mz-drop-zone");
-            if (isEditmode)
+            using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
             {
-                sb.Append(" mz-cms-editing mz-cms-grid\" ");
-                sb.AppendJsonHtmlAttribute(new
+                var sb = sbItemDisposer.Item;
+                sb.Append("<div class=\"mz-drop-zone");
+                if (isEditmode)
+                {
+                    sb.Append(" mz-cms-editing mz-cms-grid\" ");
+                    sb.AppendJsonHtmlAttribute(new
                                                {
                                                    id = zoneId,
                                                    scope = scope,
@@ -203,155 +209,156 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                                                }, "drop-zone");
 
 
-            }
-            else
-            {
-                sb.Append("\" ");
-            }
-
-
-
-
-            sb.Append(">");
-            
-            var sw = new StringWriter(sb);  
-
-            if (zoneRuntimeData != null && zoneRuntimeData.Rows != null && zoneRuntimeData.Rows.Count > 0)
-            {
-
-                foreach (var row in zoneRuntimeData.Rows)
+                }
+                else
                 {
-                    sb.Append("<div class=\"mz-cms-row\">");
-                    if (row.Columns == null || row.Columns.Count == 0)
-                    {
-                        continue;
-                    }
+                    sb.Append("\" ");
+                }
 
-                    foreach (var column in row.Columns)
+
+
+
+                sb.Append(">");
+
+                var sw = new StringWriter(sb);
+
+                if (zoneRuntimeData != null && zoneRuntimeData.Rows != null && zoneRuntimeData.Rows.Count > 0)
+                {
+
+                    foreach (var row in zoneRuntimeData.Rows)
                     {
-                        if (column.Widgets == null || column.Widgets.Count == 0)
+                        sb.Append("<div class=\"mz-cms-row\">");
+                        if (row.Columns == null || row.Columns.Count == 0)
                         {
                             continue;
                         }
-                        sb.AppendFormat("<div class=\"mz-cms-col-{0}-{1}\">", column.Span, zoneSpan);
 
-                        foreach (var widget in column.Widgets)
+                        foreach (var column in row.Columns)
                         {
-                            bool isContent = widget.DefinitionId == "content";
-                            widget.isRichText = isContent;
-                            
-                            WidgetDefinition widgetDefinition = null;
-                            widgetDefinition = themeEntityDefinitionProvider.GetWidgetDefintion(widget.DefinitionId);
-                            if (widgetDefinition == null)
+                            if (column.Widgets == null || column.Widgets.Count == 0)
                             {
-                                if (isEditmode)
-                                {
-                                    sb.Append("<div class=\"mz-cms-block\" ");
-                                    sb.AppendJsonHtmlAttribute(widget, "widget");
-                                    sb.Append(">");
-                                    sb.Append("<div class=\"mz-cms-content\"");
-                                    sb.Append(">");
-                                    sb.Append("<b> missing widget type id=[");
-                                    sb.Append(widget.DefinitionId );
-                                    sb.Append("]");
-
-                                    sb.Append("</div>");
-                                    sb.Append("</div>");
-                                   
-                                }
                                 continue;
                             }
+                            sb.AppendFormat("<div class=\"mz-cms-col-{0}-{1}\">", column.Span, zoneSpan);
 
-
-
-                            sb.Append("<div class=\"mz-cms-block\" ");
-
-                            if (isEditmode)
+                            foreach (var widget in column.Widgets)
                             {
-                                sb.AppendJsonHtmlAttribute(widget, "widget");
-                            }
-                            
-                            sb.Append(">");
-                            sb.Append("<div class=\"mz-cms-content\"");
+                                bool isContent = widget.DefinitionId == "content";
+                                widget.isRichText = isContent;
 
-                            var height = ((Newtonsoft.Json.Linq.JObject)widget.Config)["height"];
-
-                            if (height != null)
-                            {
-                                sb.Append(" style=\"height:");
-                                sb.Append(height);
-                                sb.Append("px;\"");
-                            }
-                            sb.Append(">");
-
-                            if (isContent)
-                            {
-
-                                sb.Append((string)((Newtonsoft.Json.Linq.JObject ) widget.Config)["body"]);
-                            }
-                            else
-                            {
-                                var pos = sb.Length;
-
-                                var sw1 = new StringWriter(sb);
-                                try
-                                {
-                                    await context.AsyncRender("widgets/" + widgetDefinition.DisplayTemplate, widget, sw1).ConfigureAwait(false);
-
-                                    sw1.Flush();
-                                    //sb.Append(sw1.GetStringBuilder().ToString());
-
-                                }
-                                catch (Exception ex)
+                                WidgetDefinition widgetDefinition = null;
+                                widgetDefinition = themeEntityDefinitionProvider.GetWidgetDefintion(widget.DefinitionId);
+                                if (widgetDefinition == null)
                                 {
                                     if (isEditmode)
                                     {
-                                        sb.Remove(pos, sb.Length - pos);
-                                        sb.Append(ex.ToString());
+                                        sb.Append("<div class=\"mz-cms-block\" ");
+                                        sb.AppendJsonHtmlAttribute(widget, "widget");
+                                        sb.Append(">");
+                                        sb.Append("<div class=\"mz-cms-content\"");
+                                        sb.Append(">");
+                                        sb.Append("<b> missing widget type id=[");
+                                        sb.Append(widget.DefinitionId);
+                                        sb.Append("]");
+
+                                        sb.Append("</div>");
+                                        sb.Append("</div>");
+
+                                    }
+                                    continue;
+                                }
+
+
+
+                                sb.Append("<div class=\"mz-cms-block\" ");
+
+                                if (isEditmode)
+                                {
+                                    sb.AppendJsonHtmlAttribute(widget, "widget");
+                                }
+
+                                sb.Append(">");
+                                sb.Append("<div class=\"mz-cms-content\"");
+
+                                var height = ((Newtonsoft.Json.Linq.JObject) widget.Config)["height"];
+
+                                if (height != null)
+                                {
+                                    sb.Append(" style=\"height:");
+                                    sb.Append(height);
+                                    sb.Append("px;\"");
+                                }
+                                sb.Append(">");
+
+                                if (isContent)
+                                {
+
+                                    sb.Append((string) ((Newtonsoft.Json.Linq.JObject) widget.Config)["body"]);
+                                }
+                                else
+                                {
+                                    var pos = sb.Length;
+
+                                    var sw1 = new StringWriter(sb);
+                                    try
+                                    {
+                                        await context.AsyncRender("widgets/" + widgetDefinition.DisplayTemplate, widget, sw1).ConfigureAwait(false);
+
+                                        sw1.Flush();
+                                        //sb.Append(sw1.GetStringBuilder().ToString());
+
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        if (isEditmode)
+                                        {
+                                            sb.Remove(pos, sb.Length - pos);
+                                            sb.Append(ex.ToString());
+                                        }
                                     }
                                 }
-                            }
 
+                                sb.Append("</div>");
+                                sb.Append("</div>");
+                            }
                             sb.Append("</div>");
-                            sb.Append("</div>");
+
+
                         }
                         sb.Append("</div>");
-
-
                     }
-                    sb.Append("</div>");
+
+
+
                 }
-               
+                else
+                {
+                    //if (isEditmode)
+                    //{
+                    //    sb.Append("<div class=\"mz-cms-row\">");
 
+                    //    sb.AppendFormat("<div class=\"mz-cms-col-{0}-{1}\">", zoneSpan,12);
+                    //    sb.Append("<div class=\"mz-cms-block\" ");
+                    //    sb.AppendJsonHtmlAttribute(new ZoneWidgetRuntimeData()
+                    //    {
 
+                    //    }, "widget");
+
+                    //    sb.Append(">");
+                    //    sb.Append("<div class=\"mz-cms-content\">");
+                    //    sb.Append("</div>");
+                    //    sb.Append("</div>");
+                    //    sb.Append("</div>");
+                    //    sb.Append("</div>");
+                    //    sb.Append("<br><br>");
+                    //}
+                }
+                sb.Append("</div>");
+
+                //buffer = sb.ToString();
+                processResult.Buffer = sb.ToString();
+                processResult.Context = context;
             }
-            else
-            {
-                //if (isEditmode)
-                //{
-                //    sb.Append("<div class=\"mz-cms-row\">");
-                   
-                //    sb.AppendFormat("<div class=\"mz-cms-col-{0}-{1}\">", zoneSpan,12);
-                //    sb.Append("<div class=\"mz-cms-block\" ");
-                //    sb.AppendJsonHtmlAttribute(new ZoneWidgetRuntimeData()
-                //    {
-
-                //    }, "widget");
-                    
-                //    sb.Append(">");
-                //    sb.Append("<div class=\"mz-cms-content\">");
-                //    sb.Append("</div>");
-                //    sb.Append("</div>");
-                //    sb.Append("</div>");
-                //    sb.Append("</div>");
-                //    sb.Append("<br><br>");
-                //}
-            }
-            sb.Append("</div>");
-            
-            //buffer = sb.ToString();
-            processResult.Buffer = sb.ToString();
-            processResult.Context = context;
             return processResult;
         }
 

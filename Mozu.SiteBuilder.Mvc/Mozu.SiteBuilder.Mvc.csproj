@@ -277,7 +277,7 @@
     </Reference>
     <Reference Include="Mozu.Customer.Contracts, Version=1.3.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Customer.Contracts.1.3.3.2\lib\Mozu.Customer.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Customer.Contracts.1.3.3.3\lib\Mozu.Customer.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Location.Contracts, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -335,9 +335,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.SiteSettings.Shipping.Contracts.1.1.0.3\lib\Mozu.SiteSettings.Shipping.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Tenant.Contracts, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Tenant.Contracts, Version=1.3.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Tenant.Contracts.1.3.0.2\lib\Mozu.Tenant.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Tenant.Contracts.1.3.3.2\lib\Mozu.Tenant.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="NDjango.Core40, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -430,7 +430,6 @@
     <Compile Include="ActionResults\RedirectResult.cs" />
     <Compile Include="ActionResults\ViewResultBase.cs" />
     <Compile Include="CaseInsensitiveJsonSerializerSettings.cs" />
-    <Compile Include="CatalogContext.cs" />
     <Compile Include="Catalog\AdminCategoryTreeProvider.cs" />
     <Compile Include="Catalog\ICategoryTreeProvider.cs" />
     <Compile Include="Catalog\RuntimeCategoryTreeProvider.cs" />
@@ -451,6 +450,7 @@
     <Compile Include="Contexts\PageContext.cs" />
     <Compile Include="Contexts\SiteContext.cs" />
     <Compile Include="Controllers\ApiControllerBase.cs" />
+    <Compile Include="Extensions\FSharpExtensions.cs" />
     <Compile Include="Extensions\GuidExtensions.cs" />
     <Compile Include="Extensions\ServiceClientResponseExtensions.cs" />
     <Compile Include="Filters\CollectionFilter.cs" />
@@ -467,6 +467,9 @@
     <Compile Include="MediaTypeFormatters\LowerCaseJsonMediaTypeFormatte.cs" />
     <Compile Include="MessageHandler\SeoDelegatingHandler.cs" />
     <Compile Include="MessageHandler\HttpContextInjectingMessageHandler.cs" />
+    <Compile Include="ObjectPools\StringBuilderPool.cs" />
+    <Compile Include="ObjectPools\CharBufferPool.cs" />
+    <Compile Include="ObjectPools\ObjectPool.cs" />
     <Compile Include="SEO\RedirectRepository.cs" />
     <Compile Include="SiteBuilderApiContextBuilder.cs" />
     <Compile Include="Tags\PreloadJsonTag.cs" />
@@ -475,7 +478,6 @@
     <Compile Include="Tags\NDjangoContextExtensions.cs" />
     <Compile Include="Tags\SetTemplateVariablesTag.cs" />
     <Compile Include="Tags\PartialOutputCaching.cs" />
-    <Compile Include="TemplateContext.cs" />
     <Compile Include="Themes\ThemeLabel.cs" />
     <Compile Include="Themes\ThemeSetting.cs" />
     <Compile Include="Themes\ThemeMetaData.cs" />
@@ -502,9 +504,7 @@
     <Compile Include="Filters\ImageUrlFilter.cs" />
     <Compile Include="Filters\LtFilter.cs" />
     <Compile Include="Filters\Stylesheet.cs" />
-    <Compile Include="ICatalogContext.cs" />
     <Compile Include="ICookieProvider.cs" />
-    <Compile Include="ISearchContext.cs" />
     <Compile Include="ISiteBuilderApiContext.cs" />
     <Compile Include="IStorefrontCache.cs" />
     <Compile Include="Localization\ILocalizationRepository.cs" />
@@ -523,10 +523,7 @@
     <Compile Include="Navigation\INavigationRepository.cs" />
     <Compile Include="Navigation\NavigationGandalf.cs" />
     <Compile Include="Navigation\NavigationRepository.cs" />
-    <Compile Include="Orders\IPciSettingsProvider.cs" />
-    <Compile Include="Orders\OrderStatusProvider.cs" />
     <Compile Include="RssActionResult.cs" />
-    <Compile Include="SearchContext.cs" />
     <Compile Include="Security\AuthenticationExtensions.cs" />
     <Compile Include="Security\IAuthenticationHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -535,14 +532,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SiteBuilderApiContext.cs" />
-    <Compile Include="Specifications\CanCheckForAvailableShippingSpecification.cs" />
-    <Compile Include="Specifications\HasNameOrCompanySpecification.cs" />
-    <Compile Include="Specifications\HasShippableDomesticAddressSpecification.cs" />
-    <Compile Include="Specifications\HasShippableInternationalAddressSpecification.cs" />
-    <Compile Include="Specifications\HasValidCheckPaymentSpecification.cs" />
-    <Compile Include="Specifications\HasValidCreditCardPaymentSpecification.cs" />
-    <Compile Include="Specifications\HasValidPaymentSpecification.cs" />
-    <Compile Include="Specifications\HasValidShippingMethodSpecification.cs" />
     <Compile Include="Tags\ArgumentCollection.cs" />
     <Compile Include="Tags\CMS\CmsDataAttributesTag.cs" />
     <Compile Include="Tags\CMS\DataAttributesTag.cs" />
@@ -571,7 +560,6 @@
     <Compile Include="Themes\ThemeConfiguration.cs" />
     <Compile Include="Themes\Thumbnail.cs" />
     <Compile Include="TransferResult.cs" />
-    <Compile Include="UniversalSiteApiClient.cs" />
     <Compile Include="Users\IPermissionsRepository.cs" />
     <Compile Include="Users\PermissionsRepository.cs" />
     <Compile Include="ViewEngine\DjangoComparer.cs" />

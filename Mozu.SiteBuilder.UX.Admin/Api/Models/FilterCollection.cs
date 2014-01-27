@@ -80,6 +80,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
                         return true;
                     }
                 }
+                if (typeof(T) == typeof(bool?))
+                {
+                    if (val is bool)
+                    {
+                        outValue = (T)val;
+                        return true;
+                    }
+                    bool res;
+                    if (bool.TryParse(val.ToString(), out res))
+                    {
+                        outValue = (T)(object)res;
+                        return true;
+                    }
+                }
             }
             outValue = default(T);
             return false;

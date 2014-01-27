@@ -18,7 +18,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
            
           
             Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.GeneralSettings, UX.Models.Settings.GeneralSettings>();
-
+            Mapper.CreateMap<Mozu.Tenant.Contracts.Domain , SiteDomain>();
+            
             Mapper.CreateMap<Mozu.SiteSettings.Order.Contracts.CheckoutSettings, UX.Models.Settings.CheckoutSettings>()
                   .ForMember(x => x.CustomerCheckoutType, opt => opt.ResolveUsing(x => x.CustomerCheckoutSettings.CustomerCheckoutType))
                   .ForMember(x => x.IsPayPalEnabled, opt => opt.ResolveUsing(x => x.PaymentSettings.ExternalPaymentWorkflowDefinitions != null && x.PaymentSettings.ExternalPaymentWorkflowDefinitions.Count > 0 && x.PaymentSettings.ExternalPaymentWorkflowDefinitions.FirstOrDefault().IsEnabled))

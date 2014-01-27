@@ -22,7 +22,7 @@ using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Extensions;
-using Mozu.SiteBuilder.Mvc.Orders;
+
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
@@ -51,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ICreditWebApiClient _creditWebApiClient;
   
         
-        private readonly OrderStatusProvider _orderStatusProvider = new OrderStatusProvider();
+        
 
         //private static string _merchantId;
         private const string CookieName = "order";
