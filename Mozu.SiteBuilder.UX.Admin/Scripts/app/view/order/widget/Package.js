@@ -791,7 +791,7 @@ Ext.define('Taco.view.order.widget.Package', {
                     
                     var json = Ext.decode(response.responseText, true);
                     if (!json || !json.success) {
-                        Taco.app.fireEvent('setmessage', "Error viweing shipping label", 'error');
+                        Taco.app.fireEvent('setmessage', "Error viewing shipping label", 'error');
                         newWindow.location = errorIcon;
                         return;
                     }
@@ -800,7 +800,7 @@ Ext.define('Taco.view.order.widget.Package', {
                 },
                 failure: function (response) {
                     var json = Ext.decode(response.responseText, true),
-                      msg = (json && json.Message) ? json.Message : "Error viweing shipping label";
+                      msg = (json && json.Message) ? json.Message : "Error viewing shipping label";
                     Taco.app.fireEvent('setmessage', msg, 'error');
                     newWindow.location = errorIcon;
                     me.setLoading(false);

@@ -4,7 +4,7 @@
  */
 Ext.define('Taco.core.ux.browser.ItemBrowser', {
     extend: 'Taco.core.ux.BaseCardPanel',
-    requires: ['Taco.core.ux.form.ToggleGroup', 'Ext.toolbar.Spacer', 'Taco.core.ux.ComboFilter'],
+    requires: ['Taco.core.ux.form.ToggleGroup', 'Ext.toolbar.Spacer', 'Taco.core.ux.ComboFilter', 'Taco.core.ux.form.FilterContainer'],
     alias: 'widget.itembrowser',
     cls: Taco.baseCSSPrefix + 'itembrowser',
     toolbar:null,

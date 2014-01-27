@@ -81,7 +81,7 @@ Ext.define('Taco.view.customers.modal.CreateCustomer', {
                     xtype: 'checkbox',                    
                     boxLabel: 'Create an Account',
                     checked:true,
-                    name: 'isAnonymous'
+                    name: 'createAccount'
                 }
             ]
         });
@@ -102,10 +102,12 @@ Ext.define('Taco.view.customers.modal.CreateCustomer', {
     primaryHandler: function () {
         var me = this,
         data = this.form.getValues();
-            
-        // udpate the record with the form data;
+        
+        data.isAnonymous = !data.createAccount                
 
+        // udpate the record with the form data;
         this.record.setRawData(data);
+
         if (this.fireEvent('beforesave', this) !== false) {
             this.record.save({                
                 success: function (record, operation) {                    
