@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web;
@@ -31,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly ICookieProvider _cookieProvider;
         private ILogger _log;
 
-        public AuthController( IAuthenticationHelper authHelper, IUserHelper userHelper, IPasswordHelper passwordHelper,ISettings settings , ISiteBuilderApiContext  apiContext, ICookieProvider cookieProvider)
+        public AuthController( IAuthenticationHelper authHelper, IUserHelper userHelper, IPasswordHelper passwordHelper,ISettings settings , ISiteBuilderApiContext  apiContext, ICookieProvider cookieProvider, HttpRequestMessage request)
         {
             _authenticationHelper = authHelper;
             
@@ -45,6 +46,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             _cookieProvider = cookieProvider;
 
             _log = LoggingService.LoggerFor<AuthController>();
+            IEnumerable<string> values;
+            if (request.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
+            {
+                this._handledByRP = true;
+            }
         }
 
 
@@ -53,9 +59,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         {
 
             var redir = _settings.LoginPath + "/to?scopeType=Tenant&redirectUrl=" + returnUrl;
-            if (_settings.AppSettings("useTenantDomainNames") != "true")
+            if (!_handledByRP)
             {
-                redir += "&PostbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants";
+                redir += "&PostbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants&showdev=true";
             }
 
             var message = new System.Net.Http.HttpResponseMessage(HttpStatusCode.Redirect);
@@ -90,9 +96,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         public HttpResponseMessage  Launchpad()
           {
               var redir = _settings.LoginPath;
-            if (_settings.AppSettings("useTenantDomainNames") != "true")
+
+
+              if (!_handledByRP)
             {
-                redir += "?postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants&scopeType=tenant";
+                redir += "?postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants&scopeType=tenant&showdev=true";
             }
             
 
@@ -112,13 +120,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         {
          
             var redir = _settings.LoginPath + "/home/Logout";
-            if (_settings.AppSettings("ReverseProxy") != "true")
+            if (!_handledByRP)
             {
-                redir += "?PostbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants&scopeType=tenant";
+                redir += "?PostbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants&scopeType=tenant&showdev=true";
             }
             var resp = new HttpResponseMessage(HttpStatusCode.Redirect );
             resp.Headers.Location = new Uri(redir);
             return resp;
         }
+
+        public bool _handledByRP { get; set; }
     }
 }
