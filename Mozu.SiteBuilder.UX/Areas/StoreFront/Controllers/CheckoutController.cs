@@ -248,10 +248,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var locTask = _locationRuntimeWebApiClient.GetDirectShipLocation();
             var orderTask = _orderWebApiClient.GetOrder(orderId);
             var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
+            Order order = null;
             await Task.WhenAll(locTask, orderTask);
-            var order = orderTask.Result.ReadAsSync();
+            try
+            {
+                order = orderTask.Result.ReadAsSync();
+            }
+            catch
+            {
+            } 
             if (order == null)
-                return Redirect("/cart");
+                return Redirect("/");
             Mozu.Location.Contracts.LocationCollection locations = null;
 
             if (order.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Fulfillment.FulfillmentMethodConst.PICKUP))
