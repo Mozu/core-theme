@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.PageContext>().As<IEditableContext>().InstancePerApiRequest();
         
             // builder.RegisterType<AuthenticationHelper>().InstancePerLifetimeScope();
-            builder.RegisterType<CatalogContext>().As<ICatalogContext>().InstancePerApiRequest();
+            
 
             builder.RegisterType<ThemeMetadataProvider>().As<IThemeMetaDataProvider>().SingleInstance();
             builder.RegisterType<ThemeRepository>().As<IThemeRepository>().SingleInstance();

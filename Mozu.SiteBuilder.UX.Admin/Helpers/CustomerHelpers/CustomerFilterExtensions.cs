@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
@@ -16,18 +17,43 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
         /// </summary>
         public static string ToFilterString(this FilterCollection extFilter, bool? withVariations = null)
         {
-            if (extFilter == null || extFilter.Count == 0)
-                return null;
-
+            if (extFilter == null)
+            {
+                extFilter = new FilterCollection();
+            }
+            if (string.IsNullOrEmpty(extFilter.GetValue<string>("showanonymous", null)))
+            {
+                extFilter.Add(new FilterCollectionItem()
+                              {
+                                  field = "showanonymous",
+                                  property = "showanonymous",
+                                  value = false
+                              });
+            }
             // TODO: If the filter needs to include products with variations, do something with 'withVariations'
             // Note: this could change, we're waiting on changes to be applied from the services team and/or Britt G.
 
             // TODO: commenting out this next part. I can't find any way from EXT to make "query" happen.
             // if (!string.IsNullOrEmpty(extFilter.query))
             //     extFilter.Add(new FilterCollectionItem { comparison = "cont", field = PropertyGuy.Convert(x => x.Content.ProductName), value = extFilter.query });
-            var stateMents = extFilter.Where( x=> x.value != null && x.property != "all").Where( x=>!String.IsNullOrEmpty( x.value.ToString()) ).SelectMany(x=>  x.value.ToString().Split( ' ' ).Select( _=> GetFilter( _, x)) );
-           
-            return string.Join(" and ", stateMents);
+            StringBuilder sb = new StringBuilder();
+            foreach (var filter in extFilter.Where(x => x.value != null && x.property != "all" && !string.IsNullOrEmpty(x.value.ToString())))
+            {
+
+                var filterString = GetFilter(filter.value, filter);
+                if (!string.IsNullOrWhiteSpace(filterString))
+                {
+                    if (sb.Length > 1)
+                    {
+                        sb.Append(" and ");
+                    }
+                    sb.Append(filterString);
+
+                }
+
+            }
+
+            return sb.ToString().Trim();
         }
         public static string ToQString(this FilterCollection extFilter, bool? withVariations = null)
         {
@@ -57,11 +83,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
             }
             return null;
         }
-        private static string GetFilter(string value, FilterCollectionItem filter)
+        private static string GetFilter(object value, FilterCollectionItem filter)
         {
             
             switch (filter.property.ToLowerInvariant())
             {
+                case "showanonymous":
+                    return string.Empty;
+                   // return string.Format("isanonymous eq {0}", filter.value);
                 case "groups":
                     return string.Format("groups eq {0}", filter.value);
                 default:

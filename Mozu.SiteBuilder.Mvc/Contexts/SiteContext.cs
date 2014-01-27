@@ -22,6 +22,7 @@ using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteSettings.Order.Contracts.Clients;
+using Mozu.Tenant.Contracts.Clients;
 using Constants = Mozu.Core.Api.Contracts.Constants;
 using Theme = Mozu.SiteBuilder.Mvc.Themes.Theme;
 
@@ -37,6 +38,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private readonly ILocationSettingsWebApiClient _locationSettingsWebApiClient;
         private readonly IMobileDetectionProvider _mobileDetectionProvider;
         private readonly ISettings _settings;
+        private readonly ISitesWebApiClient _sitesWebApiClient;
         private readonly ISiteBuilderApiContext _siteBuilderApiContext;
         private readonly IThemeRepository _themeRepository;
         private readonly Lazy<IThemeSettingsRepository> _themeSettingsRepository;
@@ -49,11 +51,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private Dictionary<string, string> _labels;
         private bool? _supportsInStorePickup;
         private Theme _theme;
-
+        private string _currentHost;
         private string _themeId;
         private ThemeRuntimeSettingsCollection _themeRuntimeSettingsCollection;
 
-        public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, ISettings settings, ISiteBuilderApiContext apiContext, ILocationSettingsWebApiClient locationSettingsWebApiClient, HttpRequestMessage requestMessage)
+        public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, ISettings settings, ISiteBuilderApiContext apiContext, ILocationSettingsWebApiClient locationSettingsWebApiClient, Mozu.Tenant.Contracts.Clients.ISitesWebApiClient sitesWebApiClient,  HttpRequestMessage requestMessage)
         {
             _generalSettingsWebApiClient = generalSettingsWebApiClient.CloneWithoutUserClaims();
             _themeSettingsRepository = themeSettingsRepository;
@@ -63,6 +65,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _siteBuilderApiContext = siteBuilderApiContext;
             _locationSettingsWebApiClient = locationSettingsWebApiClient.CloneWithoutUserClaims();
             _settings = settings;
+            _sitesWebApiClient = sitesWebApiClient.CloneWithoutUserClaims();
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient.CloneWithoutUserClaims();
             CdnPrefix = settings.AppSettings("CdnHost");
 
@@ -76,12 +79,13 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
 
             var uriBuilder = new UriBuilder(url);
-            string unsecure = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
+
+            _currentHost = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
             uriBuilder.Port = 443;
             uriBuilder.Scheme = "https";
             string secure = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
 
-            SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? secure : unsecure;
+            SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? secure : _currentHost;
 
             if (!string.IsNullOrEmpty(CdnPrefix))
             {
@@ -233,6 +237,19 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             set { _supportsInStorePickup = value; }
         }
+        SiteDomains _domains;
+        public SiteDomains Domains
+        {
+            get
+            {
+                if (_domains == null)
+                {
+                    Init().Wait();
+                }
+                return _domains;
+            }
+            set { _domains = value; }
+        } 
 
         public static void Save(int? site, int? masterCatalog, int tenant, bool isEditMode, DataViewModeType dataViewMode, ICookieProvider cookieProvider)
         {
@@ -253,14 +270,18 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             if (_initTask == null)
             {
-                Task<ServiceClientResponse<SiteSettings.General.Contracts.GeneralSettings>> genSettingsTask = _generalSettingsWebApiClient.GetGeneralSettings();
-                Task<ServiceClientResponse<SiteSettings.Order.Contracts.CheckoutSettings>> checkoutSettingsTask = _checkoutSettingsWebApiClient.GetCheckoutSettings();
-                Task<ServiceClientResponse<LocationUsageCollection>> locSettingsTask = _locationSettingsWebApiClient.GetLocationUsages();
-                Task settingsServiceTasks = Task.WhenAll(genSettingsTask, checkoutSettingsTask, locSettingsTask);
+                var genSettingsTask = _generalSettingsWebApiClient.GetGeneralSettings();
+                var checkoutSettingsTask = _checkoutSettingsWebApiClient.GetCheckoutSettings();
+                var locSettingsTask = _locationSettingsWebApiClient.GetLocationUsages();
+                var siteTask = _sitesWebApiClient.GetSite(_siteBuilderApiContext.SiteId, false);
+                Task settingsServiceTasks = Task.WhenAll(genSettingsTask, checkoutSettingsTask, locSettingsTask, siteTask);
+
                 Task<Task<SiteContext>> initTask = settingsServiceTasks.ContinueWith(task =>
                 {
                     MD5 md5 = new MD5CryptoServiceProvider();
-
+                    var sitesDc = siteTask.Result.ReadAsSync();
+                    this.Domains = new SiteDomains(_currentHost, Mapper.Map<List<SiteDomain>>(sitesDc.Domains));
+                
                     SiteSettings.General.Contracts.GeneralSettings genSettingsDC = genSettingsTask.Result.ReadAsSync();
                     SiteSettings.Order.Contracts.CheckoutSettings checkoutSettingsDC = checkoutSettingsTask.Result.ReadAsSync();
                     _generalSettings = Mapper.Map<GeneralSettings>(genSettingsDC);
@@ -269,7 +290,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         HashAuditInfo(checkoutSettingsDC.CustomerCheckoutSettings.AuditInfo).
                         HashAuditInfo(checkoutSettingsDC.OrderProcessingSettings.AuditInfo).
                         HashAuditInfo(checkoutSettingsDC.PaymentSettings.AuditInfo);
-
+                        //HashAuditInfo(sitesDc.Domains);
 
                     if (locSettingsTask.Result.ResponseMessage.IsSuccessStatusCode)
                     {
@@ -334,5 +355,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
             return _initTask;
         }
+
+       
     }
 }

@@ -24,6 +24,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         public bool IsAnonymous { get; set; }
 
 
+
+
         [DataMember(EmitDefaultValue = false, Name = "userName")]
         public string UserName { get; set; }
 

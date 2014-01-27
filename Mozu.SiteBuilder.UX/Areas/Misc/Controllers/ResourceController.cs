@@ -17,6 +17,7 @@ using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
+using Mozu.SiteBuilder.Mvc.ObjectPools;
 using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
@@ -376,19 +377,23 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             public string FormatModule(string deps, string args, string contents, string toExport, string path)
             {
-                StringBuilder sb = new StringBuilder(ModuleParts.DEFINE);
-                sb.Append(deps);
-                sb.Append(ModuleParts.FUNCTION);
-                sb.Append(args);
-                sb.Append(ModuleParts.OPEN);
-                sb.AppendLine(contents);
-                sb.Append(ModuleParts.RETURN);
-                sb.Append(toExport);
-                sb.Append(ModuleParts.CLOSE);
-                sb.Append(path);
-                sb.Append(ModuleParts.LAST);
+                using (var container = StringBuilderPool.Default.GetContainer())
+                {
+                    StringBuilder sb = container.Item;
+                    sb.Append(ModuleParts.DEFINE);
+                    sb.Append(deps);
+                    sb.Append(ModuleParts.FUNCTION);
+                    sb.Append(args);
+                    sb.Append(ModuleParts.OPEN);
+                    sb.AppendLine(contents);
+                    sb.Append(ModuleParts.RETURN);
+                    sb.Append(toExport);
+                    sb.Append(ModuleParts.CLOSE);
+                    sb.Append(path);
+                    sb.Append(ModuleParts.LAST);
 
-                return sb.ToString();
+                    return sb.ToString();
+                }
             }
 
 

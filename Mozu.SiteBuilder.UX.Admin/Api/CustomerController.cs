@@ -85,10 +85,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var filter = extFilter.ToFilterString();
             var q = extFilter.ToQString();
-
+           
             if (extFilter.TryGetValue("id", out customerId ))
             {
                 var dcCust  = (await GetAccountWithAttributes(customerId));
+                
                 if (dcCust != null)
                 {
                     var customer = dcCust.Map<ApiCustomer>();
@@ -97,6 +98,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 
                 return List2(new List<ApiCustomer>());
             }
+
+            bool? isAnonymous = extFilter.GetValue<bool?>("showanonymous", null);
+
             int? qLimit = (!string.IsNullOrEmpty(q) && extFilter.SearchType == "global") ? (int?)3 : (int?)null;
             var sort = pagingParameters.sort.ToSortString();
             var dcCustomers = (await _customerWebApiClient.GetAccounts(
@@ -105,7 +109,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                 sortBy: sort,
                                 qLimit :qLimit,
                                 q:q ,
-                                filter: filter
+                                filter: filter,
+                                isAnonymous: isAnonymous
                             )).ReadAsSync();
 
             var customers = Mapper.Map<List<ApiCustomer>>(dcCustomers.Items);

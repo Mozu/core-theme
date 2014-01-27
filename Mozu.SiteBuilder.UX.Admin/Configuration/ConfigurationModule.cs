@@ -52,7 +52,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
           //  builder.RegisterType<Mozu.SiteBuilder.Mvc.Security.AuthenticationHelper>().InstancePerLifetimeScope();
             builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>().InstancePerDependency();
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductAdmin.Contracts.Category  ).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteBuilder.Mvc.CatalogContext).Assembly);
+            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteBuilder.Mvc.ISiteBuilderApiContext ).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.AdminUser.Contracts.Clients.IMultiScopeInvitationWebApiClient ).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Content.Contracts.Clients.DocumentListWebApiClient  ).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ShippingAdmin.Contracts.CarrierConfiguration).Assembly);
