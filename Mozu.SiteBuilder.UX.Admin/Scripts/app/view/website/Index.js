@@ -22,7 +22,9 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.website.entityAdapters.EmailTemplateEntityAdapter',
         'Ext.ux.IFrame'
     ],
+
     itemId: 'websiteIndex',
+
     contextConfig: {
         supportedLevels: ['s'],
         requiresContextOfType: ['s'],
@@ -39,6 +41,13 @@ Ext.define('Taco.view.website.Index', {
     },
 
     options: {},
+
+    body: {
+        layout: {
+            type: 'fit'
+        },
+        padding: '0 0 0 0'
+    },
 
     initComponent: function () {
         var navStore,
@@ -317,8 +326,6 @@ Ext.define('Taco.view.website.Index', {
         }];
 
         Ext.apply(this.body, {
-            layout: 'fit',
-            padding: '0 0 0 0',
             items: items
         });
 
