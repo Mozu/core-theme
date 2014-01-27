@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -44,12 +45,18 @@ namespace Mozu.SiteBuilder.UX.Admin.MessageHandlers
                     if (x.Result.StatusCode == HttpStatusCode.Unauthorized)
                     {
                         var res = new HttpResponseMessage(HttpStatusCode.Redirect);
+                        var handledByRp = false;
+                        IEnumerable<string> values;
+                        if (request.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
+                        {
+                            handledByRp = true;
+                        }
                         var settings = request.Resolve<ISettings>();
                         string returnUrl = "";
                         string redir = settings.LoginPath + "/to?scopeType=Tenant&redirectUrl=" + HttpUtility.UrlEncode(request.RequestUri.PathAndQuery);
-                        if (settings.AppSettings("useTenantDomainNames") != "true")
+                        if (!handledByRp)
                         {
-                            redir += "&postbackUrl=http://" + request.Headers.GetValues("host").First() + "/admin/auth/pants";
+                            redir += "&postbackUrl=http://" + request.Headers.GetValues("host").First() + "/admin/auth/pants&showdev=true";
                         }
 
                         var message = new HttpResponseMessage(HttpStatusCode.Redirect);
