@@ -29,7 +29,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.ExcludedCategories, opt => opt.MapFrom(x => (x.Target.ExcludedCategories ?? Enumerable.Empty<DC.TargetedCategory>()).Select(_ => _.Id).ToList()))
                   .ForMember(x => x.ExcludedProducts, opt => opt.MapFrom(x => (x.Target.ExcludedProducts ?? Enumerable.Empty<DC.TargetedProduct>()).Select(_ => _.ProductCode ).ToList()))
                   .ForMember(x => x.ShippingMethods, opt => opt.MapFrom(x => (x.Target.ShippingMethods ?? Enumerable.Empty<DC.TargetedShippingMethod>()).Select(_ => _.Code).ToList()))
-                  .ForMember(x => x.MinimumOrderAmount, opt => opt.MapFrom(x => x.Conditions.MinimumOrderAmount))
+                  
+                  //setting min amount to null if zero .. 0 triggers the discount only to work in cart/order.
+                  .ForMember(x => x.MinimumOrderAmount, opt => opt.ResolveUsing(x => (x.Conditions.MinimumOrderAmount.HasValue && x.Conditions.MinimumOrderAmount.Value > 0) ? x.Conditions.MinimumOrderAmount: null ))
                   .ForMember(x => x.MaxRedemptionCount, opt => opt.MapFrom(x => x.Conditions.MaxRedemptionCount))
                   .ForMember(x => x.StartDate, opt => opt.MapFrom(x => x.Conditions.StartDate))
                   .ForMember(x => x.ExpirationDate, opt => opt.MapFrom(x => x.Conditions.ExpirationDate))
