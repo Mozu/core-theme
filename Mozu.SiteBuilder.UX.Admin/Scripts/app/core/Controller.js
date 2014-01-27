@@ -125,6 +125,9 @@ Ext.define('Taco.core.Controller', {
         var record = appState ? appState.record : null,
             options = appState ? appState.options : null;
         if (record) {
+            if (record.dirty) {
+                record.reject();
+            }
             this.ensureRequiredStores(function () {
                 this.createContentView(this.getEditorView(), {
                     record: record,
