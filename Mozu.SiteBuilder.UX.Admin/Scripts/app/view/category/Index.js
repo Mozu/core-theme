@@ -13,23 +13,6 @@ Ext.define('Taco.view.category.Index', {
         supportedLevels: ['c'],
         requiresContextOfType: [ 'c', 's']
     },
-    
-    
-    setHidden: function (records) {
-        var me = this;
-
-        Ext.each(records, function (item, index, list) {
-            var hiddenCls = '';
-            if (item.get("isHidden")) {
-                hiddenCls = "taco-row-hidden";
-            }
-            item.set("cls", item.get("cls") == hiddenCls ? '' : hiddenCls);
-
-            if (item.childNodes.length > 0) {
-                me.setHidden(item.childNodes);
-            }
-        });
-    },
 
     initComponent: function () {
         var me = this;
@@ -46,11 +29,16 @@ Ext.define('Taco.view.category.Index', {
             }]
         };
 
-        
         me.store = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
 
         me.treelist = Ext.create('Taco.core.ux.TreeList', {
+            animate: false,
             store: me.store,
+            viewConfig: {
+                animate: false,
+                stripeRows: true,
+                onExpand: Ext.emptyFn
+            },
             columns: [{
                 xtype: 'treecolumn',
                 text: 'Name',
@@ -87,36 +75,41 @@ Ext.define('Taco.view.category.Index', {
                 }]
                 
             }],
-            dockedItems: [
-                //{
-                //xtype: 'quickadder',
-                //helperText: 'Click to add a new category'
-                //},
-            {
+            dockedItems: [{
                 xtype: 'container',
                 dock: 'top',
-                height: 30,
+                padding: '0 0 10',
                 cls: 'taco-secondary-actions',
                 layout: {
                     type: 'hbox',
                     align: 'middle',
                     pack: 'end'
                 },
-                items: [this.notifier, {
-                    xtype: 'action',
+                items: [{
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
                     text: 'Expand All',
-                    click: function () {
-                        this.findParentByType('treelist').expandAll();
+                    allowDepress: false,
+                    enableToggle: true,
+                    scope: this,
+                    toggleHandler: function (button, nextState) {
+                        this.treelist.expandAll(function () {
+                            button.toggle(false);
+                        });
                     }
                 }, {
-                    xtype: 'action',
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
                     text: 'Collapse All',
-                    click: function () {
-                        this.findParentByType('treelist').collapseAll();
+                    margin: '0 0 0 10',
+                    scope: this,
+                    handler: function () {
+                        this.treelist.collapseAll();
                     }
                 }]
             }],
-            viewConfig: { stripeRows: true },
             listeners: {
                 cellclick: me.onCellClick,
                 itemmove: me.onItemMove,
@@ -130,46 +123,8 @@ Ext.define('Taco.view.category.Index', {
         });
 
         me.callParent(arguments);
-
-        //this.down('quickadder').on({
-        //    commit: function (quickAdder, newCategoryName) {
-        //        var newNode, root = this.getRootNode();
-
-        //        newNode = root.insertBefore({
-        //            name: newCategoryName
-        //        }, root.firstChild);
-
-        //        this.setLoading(true);
-
-        //        if (this.autoSync) {
-        //            this.store.sync({
-        //                callback: function () {
-        //                    this.setLoading(false);
-        //                },
-        //                success: function () {
-        //                    this.fireEvent('setmessage', 'category created', 'status');
-        //                },
-        //                failure: function (batch) {
-        //                    newNode.remove();
-        //                    if (batch.exceptions && batch.exceptions.length > 0) {
-        //                        this.fireEvent('setmessage', batch.exceptions[0].error, 'error');
-        //                    }
-        //                    else {
-        //                        this.fireEvent('setmessage', 'failed to add category', 'error');
-        //                    }
-        //                },
-        //                scope: this
-        //            });
-        //        }
-        //        this.view.el.scrollTo('top', 0, true);
-        //    },
-        //    scope: this.treelist
-        //});
-
-        var treeview = me.treelist.down('treeview');
-       // treeview.mon(treeview, 'itemclick', me.onItemClick, me);
-
     },
+
     onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
         var target= Ext.fly(e.getTarget()),
             metaData = { id: record.getId() },
@@ -178,16 +133,22 @@ Ext.define('Taco.view.category.Index', {
         if (target.hasCls('x-tree-expander')) {
             return;
         }
-        if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation !== false && this.allowNavigation !== false) {
 
+        if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation !== false && this.allowNavigation !== false) {
             e.preventDefault();
+
             if (e.target) {
                 metaData = Ext.apply(metaData, e.target.dataset);
             }
+
             this.launchEditor(record, metaData);
         }
-
     },
+
+    onItemClick: function (view, record, elm, index, e) {
+        this.launchEditor(record);
+    },
+
     onItemMove: function (node, oldParent, newParent, index, options) {
         var me = this,
             store = me.store;
@@ -206,8 +167,8 @@ Ext.define('Taco.view.category.Index', {
                 me.fireEvent('setmessage', 'Item move failed', 'error', m);
             }
         });
-       
     },
+
     destroyMenuColumnHandler: function (item, eventData) {
         var grid = eventData.grid,
             record = eventData.record,
@@ -248,9 +209,19 @@ Ext.define('Taco.view.category.Index', {
         return;
     },
 
-    onItemClick: function (view, record, elm, index, e) {
-        this.launchEditor(record);
+    setHidden: function (records) {
+        var me = this;
+
+        Ext.each(records, function (item, index, list) {
+            var hiddenCls = '';
+            if (item.get("isHidden")) {
+                hiddenCls = "taco-row-hidden";
+            }
+            item.set("cls", item.get("cls") == hiddenCls ? '' : hiddenCls);
+
+            if (item.childNodes.length > 0) {
+                me.setHidden(item.childNodes);
+            }
+        });
     }
-
 });
-

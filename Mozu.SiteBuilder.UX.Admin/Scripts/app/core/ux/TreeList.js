@@ -5,7 +5,9 @@ Ext.define('Taco.core.ux.TreeList', {
     extend: 'Ext.tree.Panel',
     requires: ["Ext.grid.column.Action", "Taco.core.ux.DragHandleColumn", "Taco.core.ux.QuickAdder", "Taco.core.ux.ClassHandledDragDrop", "Taco.core.ux.action.TreeListAction"],
     alias: 'widget.treelist',
+
     cls: 'taco-treelist',
+    animate: false,
     collapsible: false,
     useArrows: true,
     lines: false,
