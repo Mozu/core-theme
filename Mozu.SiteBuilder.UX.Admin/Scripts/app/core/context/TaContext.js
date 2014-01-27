@@ -29,10 +29,18 @@ Ext.define('Taco.core.context.TaContext', {
         me.init(config);
         Ext.Ajax.on('beforerequest', me.onBeforeAjaxRequest, me);
         Ext.Ajax.on('requestexception', function (conn, resp, opts) {
-            var corId = resp.getResponseHeader('x-vol-correlation');
+            var corId,
+                logzuUrl,
+                url;
+            
+            //occurs on abort of xhr
+            if (!resp || !resp.getResponseHeader) {
+                return;
+            }
+            corId = resp.getResponseHeader('x-vol-correlation');
             // TODO pull in this environment's logzu url...
-            var logzuUrl = 'http://zukeeper.mozu-qa.com/mozu.logzu/';
-            var url = null;
+            logzuUrl = 'http://zukeeper.mozu-qa.com/mozu.logzu/';
+            
             if (corId != undefined) {
                 url = logzuUrl + '#trace/' + corId;
             }
