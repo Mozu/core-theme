@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
+using DCpay = Mozu.CommerceRuntime.Contracts.Payments;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
@@ -42,6 +43,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         [DataMember(Name="billingContact")]
         public Contact BillingContact { get; set; }
+
+        [DataMember(Name="billingCard")]
+        public DCpay.PaymentCard BillingCard { get; set; }
 
         [DataMember(Name = "fulfillmentContact")]
         public Contact FulfillmentContact { get; set; }
