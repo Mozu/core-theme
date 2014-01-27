@@ -32,7 +32,7 @@
 			}
 		  ],
 
-        "useDebugScripts": false,
+        "useDebugScripts": true,
 
         /* Common settings used in templates */
         "defaultPageSize": 15,

@@ -9,7 +9,8 @@
                     products, DealView;
 
                 products = api.get('search', {
-                    filter: 'discountId eq ' + config.discountId
+                    filter: 'discountId eq ' + config.discountId,
+                    pageSize: (config.displayStyle === 'product' ? 1 : 20)
                 });
 
                 DealView = Backbone.MozuView.extend({
@@ -41,3 +42,5 @@
         });
     }
 );
+
+// http://services-sandbox-mozu-qa.dev.volusion.com/mozu.ProductRuntime.WebApi/commerce/catalog/storefront/productsearch/search/?query={query}&filter={filter}&facetTemplate={facetTemplate}&facetTemplateSubset={facetTemplateSubset}&facet={facet}&facetFieldRangeQuery={facetFieldRangeQuery}&facetHierPrefix={facetHierPrefix}&facetHierValue={facetHierValue}&facetHierDepth={facetHierDepth}&facetStartIndex={facetStartIndex}&facetPageSize={facetPageSize}&facetSettings={facetSettings}&facetValueFilter={facetValueFilter}&sortBy={sortBy}&pageSize={pageSize}&startIndex={startIndex}

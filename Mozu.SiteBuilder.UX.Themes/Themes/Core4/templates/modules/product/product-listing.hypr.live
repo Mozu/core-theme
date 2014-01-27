@@ -23,10 +23,14 @@
         {% block product-extrainfo %}
         {% if dealOfTheDay %}
           {% if dealOfTheDay.savings %}
-          <p class="mz-productlisting-savings">Percent Savings</p>
+            {% if model.price.discount.impact %}
+              <p class="mz-productlisting-savings">You save: {{ model.price.discount.impact|currency }}</p>
+            {% endif %}
           {% endif %}
           {% if dealOfTheDay.expirationDate %}
-          <p class="mz-productlisting-expirationdate">Expiration Date</p>
+            {% if model.price.discount.discount.expirationDate %}
+              <p class="mz-productlisting-expirationdate">Expires: {{ model.price.discount.discount.expirationDate.createDate|date("F j, Y") }}</p>
+            {% endif %}
           {% endif %}
         {% endif %}
         {% endblock product-extrainfo %}

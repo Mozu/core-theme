@@ -55,8 +55,6 @@ Ext.define('Taco.core.ux.content.Container', {
         var me = this;
 
         me.header = (me.header || {});
-        
-        
         me.header = Ext.create(me.headerCls, Ext.apply(me.header, { region: 'north', contextConfig: this.contextConfig  }));
 
         me.body = Ext.create(me.bodyCls, Ext.apply(me.body || {}, { region: 'center' }));
@@ -69,15 +67,6 @@ Ext.define('Taco.core.ux.content.Container', {
         });
 
         me.items = [me.main];
-
-        // if (me.sidebar || me.hasSidebar) {
-        //     me.sidebar = me.sidebar || {};
-
-        //     // create the sidebar unless some subclass has created it!
-        //     if (!me.sidebar.$className) me.sidebar = Ext.widget('sidebar', Ext.applyIf(me.sidebar, { region: 'east' }));
-
-        //     me.items.push(me.sidebar);
-        // }
     },
 
     subscribeEvents: function () {
@@ -126,7 +115,7 @@ Ext.define('Taco.core.ux.content.Container', {
     },
 
     onAppear: function () {
-        if (this.ownerCt.destroyEverythingBut) this.ownerCt.destroyEverythingBut(this)
+        if (this.ownerCt.destroyEverythingBut) this.ownerCt.destroyEverythingBut(this);
     },
 
     onAddToContentView: function () {
