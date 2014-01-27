@@ -107,10 +107,10 @@ Ext.define('Taco.view.customers.modal.CreateCustomer', {
 
         this.record.setRawData(data);
         if (this.fireEvent('beforesave', this) !== false) {
-            this.record.save({
+            this.record.save({                
                 success: function (record, operation) {                    
                     me.record.commit();
-                    me.fireEvent('savesuccess', me, this.record);
+                    me.fireEvent('savesuccess', me, record);
                     me.close();
                 },
                 failure: function (record, operation) {

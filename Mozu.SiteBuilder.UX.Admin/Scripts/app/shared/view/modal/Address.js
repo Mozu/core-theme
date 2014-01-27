@@ -38,9 +38,13 @@ Ext.define('Taco.shared.view.modal.Address', {
             itemId: 'primaryAction',
             handler: function () {
                 var me = this;
-                this.validateAndPrompt(false, function () {
+                this.validateAndPrompt(false, function () {                    
                     me.form.save();
-                    me.close();
+
+
+                    // this class no longer fires save or savesuccess events;
+                    // removing this close call and listening to the form savesuccess event to close;
+                    //me.close();
                 });
             },
             formBind: true
@@ -71,8 +75,7 @@ Ext.define('Taco.shared.view.modal.Address', {
         if (!this.record || !this.record.isModel) {
             this.record = Ext.create('Taco.model.Contact', this.record);
         }
-
-        
+                
         this.form = Ext.widget(Ext.apply({
             xtype: 'taco-addressform',
             header:false,
@@ -81,8 +84,19 @@ Ext.define('Taco.shared.view.modal.Address', {
             showCompanyName: this.showCompanyName,
             showEmail: this.showEmail,
             showPhoneNumbers: this.showPhoneNumbers,
-            manageHeight: false
+            manageHeight: false,
+            listeners: {                
+                savesuccess: {
+                    fn: function () {
+                        // need to wait for the form to finish saving before closing or the events won't fire.
+                        me.close();                        
+                    },
+                    scope: me
+                }
+            }
         }, this.formCfg));
+
+        
 
         this.items = [this.form];
         
