@@ -81,7 +81,9 @@ Ext.define('Taco.model.Discount', {
         },
         {
             name: 'minimumOrderAmount',
-            type: 'float'
+            type: 'float',
+            useNull: true,
+            defaultValue: null
         },
         {
             name: 'maxRedemptionCount',

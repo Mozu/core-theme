@@ -15,26 +15,23 @@ Ext.define('Taco.view.discount.ConditionsForm', {
     title: 'Discount Conditions',
 
     initComponent: function () {
-        this.minimumOrderAmountInput = Ext.create('Taco.core.ux.form.UnitField' /*'Taco.core.ux.form.CurrencyField'*/, {
+        this.minimumOrderAmountInput = Ext.create('Taco.core.ux.form.UnitField', {
             name: 'minimumOrderAmount',
             fieldLabel: "Minimum Order Amount",
-            forcePrecision:true,
+            forcePrecision: true,
             labelAlign: 'top',
             width: 600,
             unitString: '$',
-            emptyText: '0',
+            emptyText: 'Not Applicable',
             align: 'right',
             unitAtEnd: false
-        });
-
-        
+        });        
 
         this.datesContainer = Ext.create('Ext.container.Container', {
             layout: {
                 type: 'hbox',
                 align: 'bottom'
             },
-            //width: 600,
             defaults: {
                 xtype: 'datetime',
                 labelAlign: 'top',
