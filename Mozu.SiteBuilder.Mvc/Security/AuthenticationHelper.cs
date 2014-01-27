@@ -97,6 +97,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
            
             cookie[AccessToken] = accessToken;
             cookie.Secure = this.ForceSSL;
+            cookie.HttpOnly = true;
             CookieProvider.SaveResponseCookie(AdminAccessTokenCookieName, cookie);
            
         }
@@ -143,6 +144,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
             cookie.Value = token;
             cookie.Expires = expiryTime.HasValue ? expiryTime.Value.ToLocalTime() : DateTime.Now.AddDays(1);
             cookie.Secure = this.ForceSSL;
+            cookie.HttpOnly = true;
             CookieProvider.SaveResponseCookie(StoreFrontRefershCookieName, cookie);
         }
 
