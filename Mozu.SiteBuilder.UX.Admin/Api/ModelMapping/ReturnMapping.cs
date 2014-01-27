@@ -54,12 +54,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       var returnVanillaProducts =
                           from r in retur.Items
                           where String.IsNullOrEmpty(r.ParentItemId)
-                          select new ReturnsDC.ReturnItem {
+                          select Mapper.Map<ReturnItem, ReturnsDC.ReturnItem>(r, new ReturnsDC.ReturnItem {
                               OrderItemId = r.OrderItemId,
                               Reasons = new List<ReturnsDC.ReturnReason> {
                                   new ReturnsDC.ReturnReason { Reason = r.Reason, Quantity = r.Quantity }
                               }
-                          };
+                          });
 
                       return returnBundles.Concat(returnVanillaProducts).ToList();
                   }))
