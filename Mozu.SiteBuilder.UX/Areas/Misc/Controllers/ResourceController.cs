@@ -305,7 +305,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [System.Web.Http.HttpGet]
         public HttpResponseMessage  CompiledScripts(string pathinfo)
         {
-            return Content("compiled/scripts/" + pathinfo, "text/javascript");
+            var resp =  Content("compiled/scripts/" + pathinfo, "text/javascript");
+            if (resp.StatusCode == HttpStatusCode.NotFound)
+            {
+                resp =  Scripts(pathinfo);
+            }
+            return resp;
         }
 
 
