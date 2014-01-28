@@ -17,7 +17,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
             var ctx = Substitute.For<IApiContext>();
             var cache = new MemoryCache("derp");
             var attributeWebApiClient = new InMemoryAttributeWebApiClient(ctx, cache);
-            _attributeController = new AttributeController(new AttributeHelper(attributeWebApiClient));
+            //_attributeController = new AttributeController(new AttributeHelper(attributeWebApiClient));
         }
 
         private AttributeController _attributeController;
