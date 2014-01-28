@@ -151,7 +151,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get
             {
-             
+
+                if (CurrentNode == null)
+                {
+                    yield break; 
+                }
                 if (CurrentNode.NodeType == "product")
                 {
                     // only product has multiple parents
