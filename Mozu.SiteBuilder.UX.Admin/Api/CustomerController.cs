@@ -179,7 +179,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     var dc = new DC.CustomerAccountAndAuthInfo {
                         Account = customer.Map<DC.CustomerAccount>(),
                         IsImport = false,
-                        Password = System.Web.Security.Membership.GeneratePassword(8, 3)
+                        Password = "a" + System.Web.Security.Membership.GeneratePassword(8, 3) + "1"
                     };
                     tasks.Add( _customerWebApiClient.AddAccountAndLogin(dc).ContinueWith(t => t.Result.ReadAsSync().CustomerAccount) );
                 }
