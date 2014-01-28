@@ -157,30 +157,34 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
         private void InitializeFilesystemWatcher()
         {
-            lock (_themes)
+            if (_watchers == null)
             {
-                if (_watchers == null)
+                lock (_themes)
                 {
-                    _watchers = new List<FileSystemWatcher>();
-                    foreach (string dir in _themeMetaDataProvider.ThemePaths)
+                    if (_watchers == null)
                     {
-                        if (Directory.Exists(dir))
+                        var watchers = new List<FileSystemWatcher>();
+                        foreach (string dir in _themeMetaDataProvider.ThemePaths)
                         {
-                            _watchers.Add(CreateWatcher(dir));
+                            if (Directory.Exists(dir))
+                            {
+                                watchers.Add(CreateWatcher(dir));
+                            }
+                            else
+                            {
+                                throw new FileNotFoundException(String.Format("Cannot create watcher for theme path: \"{0}\" make sure it exists and the web process has access to it", dir));
+                            }
                         }
-                        else
-                        {
-                            var log = LoggingService.LoggerFor<ThemeRepository>();
-                            log.Error(String.Format("Cannot create watcher for invalid path: \"{0}\"", dir));
-                        }
-                    }
-                    foreach (var dir in _themeMetaDataProvider.AddonPaths)
-                    {
-                        if (Directory.Exists(dir))
-                        {
-                            _watchers.Add(CreateWatcher(dir));          
-                        }
-                        
+                        System.Threading.Thread.MemoryBarrier();
+                        _watchers = watchers;
+                        //foreach (var dir in _themeMetaDataProvider.AddonPaths)
+                        //{
+                        //    if (Directory.Exists(dir))
+                        //    {
+                        //        _watchers.Add(CreateWatcher(dir));          
+                        //    }
+
+                        //}
                     }
                 }
             }
