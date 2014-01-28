@@ -17,19 +17,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
         /// </summary>
         public static string ToFilterString(this FilterCollection extFilter, bool? withVariations = null)
         {
-            if (extFilter == null)
+            if (extFilter == null || extFilter.Count ==0 )
             {
-                extFilter = new FilterCollection();
+                return null;
             }
-            if (string.IsNullOrEmpty(extFilter.GetValue<string>("showanonymous", null)))
-            {
-                extFilter.Add(new FilterCollectionItem()
-                              {
-                                  field = "showanonymous",
-                                  property = "showanonymous",
-                                  value = false
-                              });
-            }
+          
             // TODO: If the filter needs to include products with variations, do something with 'withVariations'
             // Note: this could change, we're waiting on changes to be applied from the services team and/or Britt G.
 
