@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
@@ -16,7 +16,7 @@ using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
 using DCcore = Mozu.Core.Api.Contracts;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
 using DCp = Mozu.CommerceRuntime.Contracts.Payments;
-using DCs = Mozu.CommerceRuntime.Contracts.Fulfillment ;
+using DCs = Mozu.CommerceRuntime.Contracts.Fulfillment;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -78,12 +78,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<Order>> CreateOrder()
         {
-            var emptyOrder = new DCo.Order();
-            
-            var order = (await _orderWebApiClient.CreateOrder(emptyOrder)).ReadAsSync();
+            var emptyOrder = new DCo.Order {
+                TenantId = _ctx.TenantId,
+                SiteId = _ctx.SiteId,
+                BillingInfo = new DCp.BillingInfo {
+                    IsSameBillingShippingAddress = true
+                }
+            };
 
-            order.TenantId = _ctx.TenantId;
-            order.SiteId = _ctx.SiteId;
+            var order = (await _orderWebApiClient.CreateOrder(emptyOrder)).ReadAsSync();
 
             return Single2( order.Map<Order>() );
         }
