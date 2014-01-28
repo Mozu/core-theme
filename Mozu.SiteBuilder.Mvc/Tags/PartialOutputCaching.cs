@@ -13,6 +13,7 @@ using Magnum.Extensions;
 using Microsoft.FSharp.Collections;
 using Microsoft.FSharp.Core;
 using Mozu.Core;
+using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.ObjectPools;
@@ -104,7 +105,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             {
                 var apiCtx = walker.context.Resolve<ISiteBuilderApiContext>();
                 var sc = walker.context.Resolve<SiteContext>();
-           
+                
                 var pc = walker.context.Resolve<PageContext>();
 
                 object epc = sc.ThemeSettings["enablePartialCaching"];
@@ -114,12 +115,27 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     return new Walker(parent, _childNodes, string.Empty, 0, walker.context);
                 }
 
+                
+
                 ArgumentCollection arguments = ProcessArguments(walker);
                 if (TagBase.ArguemntParserStrategy != null)
                 {
                     arguments = TagBase.ArguemntParserStrategy(arguments);
                 }
-                
+                int configDuration = 0;
+                if (!int.TryParse(walker.context.Resolve<ISettings>().AppSettings("partial_caching_default_duration"), out configDuration))
+                {
+                    configDuration = 0;
+                }
+
+
+                var duration = arguments.GetValueOrDefault("duration", configDuration);
+
+                if (duration == 0)
+                {
+                    var parent = new FSharpOption<Walker>(walker);
+                    return new Walker(parent, _childNodes, string.Empty, 0, walker.context);
+                }
 
                 string viewPath = BlockToken.Location.TemplateName;
                 int loc = BlockToken.Location.Offset;
@@ -157,8 +173,8 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                         output = new string[1] {sb.ToString()};
                     }
                     StringBuilderPool.Default.Put(sb);
-                    
-                    MemoryCache.Default.Set(new CacheItem(key, output), new CacheItemPolicy() {AbsoluteExpiration = DateTime.Now.AddMinutes(5), Priority=CacheItemPriority.Default});
+
+                    MemoryCache.Default.Set(new CacheItem(key, output), new CacheItemPolicy() { AbsoluteExpiration = DateTime.Now.AddSeconds(duration), Priority = CacheItemPriority.Default });
 
                 }
                 if (output.Length == 1)
