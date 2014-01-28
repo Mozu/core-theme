@@ -182,15 +182,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             billingInfo.BillingContact = args.BillingContact.Map<DCcore.Contact>();
-            billingInfo.Card = new DCp.PaymentCard
-            {
-                CardNumberPartOrMask = args.BillingInfo.CardNumber,
-                ExpireMonth = args.BillingInfo.ExpireMonth,
-                ExpireYear = args.BillingInfo.ExpireYear,
-                NameOnCard = args.BillingInfo.NameOnCard,
-                PaymentOrCardType = args.BillingInfo.CardType,
-                PaymentServiceCardId = args.BillingInfo.PaymentServiceCardId
-            };
+            //billingInfo.Card = new DCp.PaymentCard
+            //{
+            //    CardNumberPartOrMask = args.BillingInfo.CardNumber,
+            //    ExpireMonth = args.BillingInfo.ExpireMonth,
+            //    ExpireYear = args.BillingInfo.ExpireYear,
+            //    NameOnCard = args.BillingInfo.NameOnCard,
+            //    PaymentOrCardType = args.BillingInfo.CardType,
+            //    PaymentServiceCardId = args.BillingInfo.PaymentServiceCardId
+            //};
             billingInfo.IsSameBillingShippingAddress = args.BillingInfo.IsSameBillingShippingAddress;
 
             await _orderWebApiClient.SetBillingInfo(args.OrderId, billingInfo);
