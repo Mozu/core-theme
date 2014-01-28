@@ -12,6 +12,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers;
 using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
+using Mozu.ProductAdmin.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -19,11 +20,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [WebApi("app/attribute", SuppressDescriptorGeneration = true)]
     public class AttributeController : BaseController
     {
+        private readonly IAttributeWebApiClient _attributeWebApiClient;
         private readonly IAttributeHelper _attributeHelper;
 
-        public AttributeController(IAttributeHelper attributeHelper)
+        public AttributeController(IAttributeHelper attributeHelper, IAttributeWebApiClient attributeWebApiClient)
         {
             _attributeHelper = attributeHelper;
+            _attributeWebApiClient = attributeWebApiClient;
         }
 
         [HttpGetRoute(UriTemplate = "read")]
@@ -37,8 +40,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
-                var items = await _attributeHelper.GetAttributes(pagingParams, extFilter);
-                return List2(items.ToList());
+                string filter = extFilter.ToFilterString();
+                string sort = null;   // pagingParams.sort.ToSortString();
+
+                var result = await _attributeWebApiClient.GetAttributes(
+                    /* startIndex:     */ pagingParams.startIndex,
+                    /* pageSize:       */ pagingParams.pageSize,
+                    /* sortBy:         */ sort,
+                    /* filter:         */ filter,
+                    /* responseGroups: */ null
+                    ).ConfigureAwait(false);
+                var res = result.ReadAsAsync().Result;
+                var mapped = res.Items.Map<List<Attribute>>();
+
+                return List2(mapped.ToList(), (int)res.TotalCount);
             }
         }
 
