@@ -99,7 +99,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(new List<ApiCustomer>());
             }
 
-            bool? isAnonymous = extFilter.GetValue<bool?>("showanonymous", null);
+            bool isAnonymous = extFilter.GetValue<bool>("showanonymous", false);
 
             int? qLimit = (!string.IsNullOrEmpty(q) && extFilter.SearchType == "global") ? (int?)3 : (int?)null;
             var sort = pagingParameters.sort.ToSortString();
@@ -110,7 +110,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                 qLimit :qLimit,
                                 q:q ,
                                 filter: filter,
-                                isAnonymous: isAnonymous
+                                isAnonymous: isAnonymous == true ? (bool?)null : false 
                             )).ReadAsSync();
 
             var customers = Mapper.Map<List<ApiCustomer>>(dcCustomers.Items);
