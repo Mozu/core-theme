@@ -124,13 +124,14 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 }, {
                     xtype: 'fieldcontainer',
                     fieldLabel: 'Package Dimensions',
-                    width: 320,
+                    labelClsExtra : 'x-form-item-required',
+                    width: 480,
                     layout: {
                         type: 'hbox',
-                        align: 'bottom'
+                        align: 'top'
                     },
                     defaults: {
-                        width: 100,
+                        width: 120,
                         margin: '0 0 0 10',
                         selectOnFocus: true,
                         xtype: 'unitfield',
@@ -139,6 +140,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
                         hideTrigger: true,
                         keyNavEnabled: false,
                         readOnly: (isBundle),
+                        allowBlank: (isBundle),
                         mouseWheelEnabled: false
                     },
                     items: [
