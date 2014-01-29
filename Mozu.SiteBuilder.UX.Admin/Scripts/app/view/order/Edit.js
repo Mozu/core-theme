@@ -18,7 +18,9 @@ Ext.define('Taco.view.order.Edit', {
         this.callParent(arguments);
 
         this.form.on('savesuccess', function() {
-            alert('yay');
+            //alert('yay');
+            
+            Taco.core.StateManager.attemptNavigate('s-' + this.record.data.siteId + '/orders/edit/' + this.record.data.id);
         });
     }
 });
