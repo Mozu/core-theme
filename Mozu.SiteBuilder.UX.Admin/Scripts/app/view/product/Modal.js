@@ -6,7 +6,9 @@ Ext.define('Taco.view.product.Modal', {
     extend: 'Taco.core.ux.window.Modal',
     requires: [
         'Ext.grid.Panel',
-        'Ext.selection.CheckboxModel'
+        'Ext.selection.CheckboxModel',
+        'Taco.view.product.AdvancedSearchForm',
+        'Taco.core.ux.form.FilterContainer'
     ],
 
     autoShow: true,
@@ -26,15 +28,33 @@ Ext.define('Taco.view.product.Modal', {
             showHeaderCheckbox: true
         });
 
+        this.advancedSearchForm = Ext.create('Taco.view.product.AdvancedSearchForm');
+
+
+        this.searchBox = Ext.widget({
+            xtype: 'taco-filtercontainer',
+            width: '100%',
+            flex: 1,
+            advancedForm: this.advancedSearchForm,
+           // advancedFormCls: me.advancedSearchConfig.advancedFormCls,
+            store: this.store,
+            filterStores: this.advancedSearchForm.stores,
+            doc:'top'
+        });
+        this.gridPager = Ext.create('Ext.toolbar.Paging', {
+            store: this.store,
+            displayInfo: true,
+            dock: 'bottom'
+        });
+
         this.grid = Ext.create('Ext.grid.Panel', {
             rootVisible: false,
             store: this.store,
             selModel: this.selModel,
-            dockedItems: this.gridPager = Ext.create('Ext.toolbar.Paging', {
-                store: this.store,
-                displayInfo: true,
-                dock: 'bottom'
-            }),
+            dockedItems: [
+                this.searchBox,
+                this.gridPager
+            ],
             columns: [{
                 dataIndex: 'productCode',
                 text: 'Code',
