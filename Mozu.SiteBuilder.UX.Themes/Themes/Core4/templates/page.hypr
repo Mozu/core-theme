@@ -83,9 +83,7 @@
         <div id="page-wrapper" class="mz-l-pagewrapper">
     
             {% block page-header %}
-			{%partial_cache%}
             {% include "modules/page-header" %}
-            {%endpartial_cache%}
             {% endblock page-header %}
 
             {% block site-nav %}

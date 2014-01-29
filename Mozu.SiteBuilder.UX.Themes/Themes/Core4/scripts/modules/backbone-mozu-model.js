@@ -83,7 +83,7 @@
              *     content: ProductContent, // another Backbone.MozuModel or Backbone.Model class
              *     options: Backbone.Collection.extend(
              *       model: ProductOption
-             *     }), // a "has many" relationship
+             *     }) // a "has many" relationship
              *   }
              * });
              *
@@ -316,6 +316,20 @@
                     }
                 });
             },
+
+            /**
+             * The underlying SDK object created if you specified a MozuModel#mozuType.
+             * Does stuff
+             * @member apiModel
+             */
+
+            /**
+             * Ensure that the underlying SDK object has exactly the same data as the live Backbone model. In conflicts, Backbone always wins.
+             * The underlying SDK object has event hooks into changes to the Backbone model, but under some circumstances a change may be unnoticed and they'll get out of sync.
+             * For instance, if models are nested several layers deep, or if you changed a model attribute with `{ silent: true }` set. Run this method prior to doing any API action
+             * to ensure that the SDK object is up to date.
+             * @returns {null}
+             */
             syncApiModel: function() {
                 this.apiModel.prop(this.toJSON());
             },

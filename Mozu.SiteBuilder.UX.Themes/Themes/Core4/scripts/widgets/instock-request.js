@@ -1,23 +1,30 @@
-define(['modules/jquery-mozu', 'shim!vendor/underscore>_', "modules/api", "modules/backbone-mozu", "modules/models-product"],
-    function ($, _, api, Backbone, ProductModels, UserModels) {
+define(['modules/jquery-mozu', 'hyprlive', 'shim!vendor/underscore>_', "modules/api", "modules/backbone-mozu", "modules/models-product"],
+    function ($, Hypr, _, api, Backbone, ProductModels, UserModels) {
         
-        var InstockReqView = Backbone.MozuView.extend({
+        var user = require.mozuData('user'),
+            InstockReqView = Backbone.MozuView.extend({
                 templateName: 'modules/product/product-instock-request',
+                clearError: function() {
+                    this.setError('');
+                },
+                setError: function(txt) {
+                    this.$('[data-mz-validationmessage-for]').text(txt);
+                },
                 widgetNotifyUserAction: function () {
-                    var user = require.mozuData('user');
-                    var product = ProductModels.Product.fromCurrent();
-                    var email = '';
-                                     
-                    if (user.isAnonymous) {
-                        //get email address from text box
-                        email = $('.mz-intstock-request-email').val();
-                    } else {
-                        //get email from customer model 
-                        email = user.email;
+                    this.clearError();
+                    var email = user.isAnonymous ? this.$('[data-mz-role="email"]').val() : user.email;
+                    if (!email) {
+                        this.setError(Hypr.getLabel('emailMissing'));
+                        return false;
                     }
-                    console.log(email);
-                    console.log(product.attributes.productCode);
-                   
+                    api.create('instockrequest', {
+                        email: email,
+                        customerId: user.accountId,
+                        productCode: this.model.get('productCode'),
+                        locationCode: this.model.get('inventoryInfo').onlineLocationCode
+                    }).then(function () {
+                        this.$('[data-mz-action="widgetNotifyUserAction"]').text(Hypr.getLabel('subscribed')).prop('disabled', true);
+                    });
                 }
             });
         
