@@ -341,13 +341,25 @@ Ext.define('Taco.view.attribute.Form', {
                         cls: 'taco-date-value-input',
                         items: [{
                                 xtype: 'datefield',
-                                name: 'minDate'
+                                name: 'minDate',
+                                listeners: {
+                                    change: {
+                                        scope: this,
+                                        fn: 'onDateChange'
+                                    }
+                                }
                             }, {
                                 xtype: 'label',
                                 text: 'to'
                             }, {
                                 xtype: 'datefield',
-                                name: 'maxDate'
+                                name: 'maxDate',
+                                listeners: {
+                                    change: {
+                                        scope: this,
+                                        fn: 'onDateChange'
+                                    }
+                                }
                             }],
                         listeners: {
                             boxready: function () {
@@ -488,9 +500,27 @@ Ext.define('Taco.view.attribute.Form', {
 
 
     },
+
+    /**
+     * Make sure minDate is not greater than maxDate.
+     */
+    onDateChange: function (field, newValue, oldValue) {
+        var isMax = field.getName() === 'maxDate',
+            otherField = isMax ? field.previousSibling('[name="minDate"]') : field.nextSibling('[name="maxDate"]'),
+            otherValue = otherField.getValue(),
+            minValue = isMax ? otherValue : newValue,
+            maxValue = isMax ? newValue : otherValue;
+
+        if (otherValue && minValue > maxValue) {
+            field.setValue(otherValue);
+            otherField.setValue(newValue);
+        }
+    },
+
     onInputTypeChange: function (input, value) {
         this.setAttributeInputType(value);
     },
+
     setAttributeInputType: function (inputType) {
         var buildForms = this.statics().subformCfg[inputType],
             form;
