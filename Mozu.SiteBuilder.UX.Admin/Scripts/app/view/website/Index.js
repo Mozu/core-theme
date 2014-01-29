@@ -156,26 +156,25 @@ Ext.define('Taco.view.website.Index', {
                 margin: '0 0 0 10'
             }, {
                 xtype: 'button',
-                itemId: 'primaryAction',
+                itemId: 'save',
                 ui: 'action-primary',
                 scale: 'medium',
                 text: 'Save',
                 margin: '0 0 0 10'
-            },
-                {
-                    xtype: 'button',
-                    itemId: 'publishAction',
-                    ui: 'action-primary',
-                    scale: 'medium',
-                    text: 'Publish',
-                    margin: '0 0 0 10',
-                    hidden: true,
-                    disabled: true,
-                    scope: this,
-                    handler: function () {
-                        this.onPublish();
-                    }
-                }]
+            }, {
+                xtype: 'button',
+                itemId: 'publishAction',
+                ui: 'action-primary',
+                scale: 'medium',
+                text: 'Publish',
+                margin: '0 0 0 10',
+                hidden: true,
+                disabled: true,
+                scope: this,
+                handler: function () {
+                    this.onPublish();
+                }
+            }]
         };
         this.controller = Taco.app.controllers.get('Website');
         this.url = this.options && this.options.startUrl ? this.options.startUrl : '/';
@@ -357,7 +356,7 @@ Ext.define('Taco.view.website.Index', {
     },
 
     bindToForm: function () {
-        var primaryAction = this.down('#primaryAction');
+        var primaryAction = this.down('#save');
 
         this.down('#pageSettings').getForm().getBoundItems().add(primaryAction);
 
@@ -456,11 +455,17 @@ Ext.define('Taco.view.website.Index', {
     onSave: function (button) {
         var tasks = this.entitypeTypeHandler.getSaveTask();
 
-        button.setDisabled(true);
+        // button.setDisabled(true);
+        button.addCls('taco-button-processing');
+        button.setText('Saving...');
 
         tasks.on({
             complete: function () {
-                button.setDisabled(false);
+                // button.setDisabled(false);
+                if (button) {
+                    button.removeCls('taco-button-processing');
+                    button.setText('Save');
+                }
             }
         });
 
