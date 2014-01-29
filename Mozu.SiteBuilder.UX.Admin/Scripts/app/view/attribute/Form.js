@@ -416,6 +416,7 @@ Ext.define('Taco.view.attribute.Form', {
                 allowBlank: false,
                 emptyText: 'Enter an attribute name',
                 width: 300,
+                maxLength: 30,
                 enableKeyEvents: true,
                 listeners: {
                     keyup: function (field, e, eOpts) {
