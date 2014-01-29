@@ -98,7 +98,10 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
             }, {
                 width: 100,
                 text: 'On Reserve',
-                dataIndex: 'stockReserved'
+                dataIndex: 'stockReserved',
+                renderer: function (value) {
+                    return value || 0;
+                }
                 /*,
             editor: {
                 emptyText: "On Reserve",
