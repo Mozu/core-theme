@@ -15,6 +15,7 @@ modules/views-messages.js
 modules/backbone-mozu-view.js
 modules/backbone-mozu.js
 modules/cart-monitor.js
+modules/contextify.js
 shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery
 modules/login-links.js
 modules/mixin-paging.js
