@@ -6,6 +6,7 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
     extend: 'Taco.view.order.subform.Subform',
     alias: 'widget.taco-ordershippingsimple',
     requires: [
+        'Taco.store.StatesStatic',
         'Taco.model.Contact',
         'Taco.shared.view.form.Address',
         'Taco.shared.view.modal.Address'
@@ -29,15 +30,15 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
         }
     }],
 
-    config: {
+    config: {        
         record: null
     },
 
     initComponent: function () {
-
-        
-
-        this.callParent(arguments);
+        var me = this;        
+        me.items = [];
+        me.initShippingMethodField();
+        me.callParent(arguments);
     },
 
 
@@ -53,7 +54,8 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
         return [action];
     },
 
-    setCustomer: function (customer) {
+    onCustomerChange: function (customer) {        
+
         var isCustomerChange = (customer.getId() != this.record.get("customerId"));
 
         this.customerRecord = customer;
@@ -63,16 +65,16 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
             this.addresses.bindStore(this.contactsStore);
         } else {
             this.initContacts();
-        }
-        
-        
+        }        
 
         var fulfillmentContact = this.record.get("fulfillmentContact");
         //select existing contact if this is the inital load and not a change from one customer to another;
         if (!isCustomerChange && fulfillmentContact && fulfillmentContact.id) {
             var selectedContact = this.addresses.store.getById(fulfillmentContact.id)
-            this.contactData = selectedContact.data;
-            this.addresses.getSelectionModel().select(selectedContact);
+            if (selectedContact) {
+                this.contactData = selectedContact.data;
+                this.addresses.getSelectionModel().select(selectedContact);
+            }
         } else {
             // select primary if one exists;
             var primaryShipping = this.addresses.store.findRecord("isPrimaryShipping", true);
@@ -80,15 +82,12 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
                 this.addresses.getSelectionModel().select(primaryShipping);
                 this.contactData = primaryShipping.data;
                 this.setShippingInfo();
-                this.fireEvent('orderchange');
+                //this.fireEvent('orderchange');
             }
         }
 
-        if (this.shippingMethodField) {
-            this.loadShippingMethods();
-        } else {
-            this.initShippingMethodField();
-        }
+        
+        this.loadShippingMethods();
     },
 
     initContacts: function () {
@@ -126,7 +125,40 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
 
             ],
             listeners: {
-                
+
+                beforeitemclick: {
+                    fn: function (view, record, item, index, e) {
+                        
+                        var selectItem = function (){
+                            view.getSelectionModel().select(record);
+                        }
+
+                        this.validateContact(
+                            Ext.clone(record.data),
+                            Ext.Function.bind(function (contact, email) {
+
+                                if (!contact.email) {
+                                    // if the selected contact doesn't have an email and the user didn't enter one when prompted. throw and error
+                                    if (!email) {
+                                        Taco.app.fireEvent('setmessage', "The ship to contact must have an email address to proceed", 'error');
+                                        return
+                                    }
+                                    // use the promped email for this contact;
+                                    contact.email = email;
+                                }
+                                
+                                this.addresses.getSelectionModel().select(record)
+                                this.contactData = contact;
+                                this.setShippingInfo();
+                                //this.fireEvent('orderchange');
+                            }, this)
+                        );
+
+                        // cancel the event. will do selection after validation;
+                        return false
+                    },
+                    scope: me
+                },
                 containerclick: {
                     fn: function (view, evt) {
 
@@ -139,37 +171,82 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
 
                     },
                     scope: me
-                },
+                }
+                
+                /*
+                ,
                 itemclick: {
                     fn: function (view, record, item, index, e) {
-                        //shipping address selected;
+      
+                        // validate the shipping address that was selected to make sure it meets the minimum requirements for shipping;
+                        this.validateContact(
+                            Ext.clone(record.data),
+                            Ext.Function.bind(function (contact) {
+                                
+                                this.contactData = contact;
+                                this.setShippingInfo();
+                                this.fireEvent('orderchange');
+                            }, this)
+                        );
                         
-
-                        this.contactData = record.data;
-
-                        
-
-                        // show the shipping methods field;
-                        //this.initShippingMethodField();
-                        //update the order record;
-
-                        this.setShippingInfo();
-
-                        this.fireEvent('orderchange');
-
-
                     },
                     scope: me
                 }
+                */
                 
             }
         });
         
         
-        this.add(this.addresses);
+        this.insert(0,this.addresses);
     },
 
+    validateContact: function (contact, callback) {
+        // convert state to 2 digit value if the countryCode is US
+        var me = this,
+            countryCode = contact.countryCode,
+            stateCode = contact.stateOrProvince;
+	    
+        // only do the conversion if the country is the US
+        if (countryCode == "US") {
+            // only convert if the value isn't a 2 character code;
+            if (stateCode.length != 2){
+                var stateStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.StatesStatic'),
+                    stateRecord = stateStore.findRecord("value", stateCode, 0, true, false, false);
 
+                if (stateRecord) {
+                    stateCode = stateRecord.get("code");
+                    // overwrite the user entered value with a usps code version;
+                    contact.stateOrProvince = stateCode;
+                }
+            }	        
+        }
+
+        // prompt for email if there isn't one;
+        if (!contact.email) {
+            Ext.MessageBox.prompt({
+                title: 'Email Address is Required',
+                // pushes the buttons to the right to be consistant with our dialog ux.
+                rightJustifyButtons: true,
+                // reverses the order of the buttons
+                reverseOrder: true,
+                msg: "Please enter an email address for this shipping address",
+                closable: false,
+                prompt: true,
+                width: 400,
+                buttons: Ext.Msg.OKCANCEL,
+                fn: function (val, email) {
+                    if (val === 'ok') {                        
+                        callback(contact,email);
+                    }
+                }
+            });
+
+        } else {
+            callback(contact);
+        }
+    },
+    
     launchEditor: function () {
         // todo: add support for edit by passing in the contact;
         var contact = null,
@@ -187,9 +264,9 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
             address1: "5844 westslope drive",
             address1: "5844 westslope drive",
             "cityOrTown": "austin",
-            "countryCode": "US",
+            //"countryCode": "US",
             "postalOrZipCode": "78731",
-            "stateOrProvince":"texas",
+            //"stateOrProvince":"TX",
             "homePhone": "5125556666"
             */
         });
@@ -197,7 +274,8 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
 
 
         Ext.create('Taco.shared.view.modal.Address', {
-            singlePhoneRequired:true,
+            singlePhoneRequired: true,
+            emailRequired:true,
             record: contactRecord,
             listeners: {
                 savesuccess: function (modal, contactRecord) {
@@ -239,7 +317,7 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
                     this.contactData = contactRecord.data;
 
                     this.setShippingInfo();
-                    this.fireEvent('orderchange');
+                    //this.fireEvent('orderchange');
 
                     
                 },
@@ -265,15 +343,12 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
                 shippingMethodCode: shippingMethodCode
             },
             success: function (record, operation) {                
-
+                
                 // when the shipping method changes we need to reload the order record to pickup the changes;
-                this.record.reload();
-            
-                if (this.shippingMethodField) {
-                    this.loadShippingMethods();
-                } else {
-                    this.initShippingMethodField();
-                }
+                this.record.reload();            
+                
+                this.loadShippingMethods();
+                
             },
             failure: function () {
                 
@@ -285,74 +360,73 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
     
     // this will be called after each change, to see if all the requirements are met
     initShippingMethodField: function () {
-        var me = this;
+        var me = this,
+            isDisabled = false;
 
-
-        if (!this.shippingMethodField) {
-
-            
-            // need a contact and order items;
-            if (!this.contactData || !this.record.itemsStore.count()) {
-                return
-            }
-            
-            this.shippingMethodsStore = Ext.create('Ext.data.Store', {
-                model: 'Taco.model.ShippingMethod',
-                autoLoad: false,
-                proxy: {
-                    type: 'ajax',
-                    url: '/admin/app/order/shipping/runtimemethods?orderId=' + me.record.getId(),
-                    reader: {
-                        type: 'json',
-                        root: 'items',
-                        successProperty: 'success'
-                    }
-                }
-            });
-
-            
-
-            this.shippingMethodField = Ext.widget({
-                //xtype: 'selectfield',
-                xtype:"combo",
-                style:"clear:both",
-                width: 200,
-                fieldLabel: 'Shipping Methods',
-                valueField: 'shippingMethodCode',
-                displayField: 'shippingMethodName',
-                value:this.record.get("shippingMethodCode"),
-                store: this.shippingMethodsStore,
-                listConfig: {
-                    getInnerTpl: function () {
-                        return '{shippingMethodName} {price:currency}';
-                    }
-                },
-                listeners: {
-                    select: function () {                        
-                        this.setShippingInfo();                        
-                    },
-                    scope: this
-                }
-            });
-
-            this.add(this.shippingMethodField);
+        // need a contact and order items otherwise the shipping methods option is disabled;
+        if (!this.contactData || !this.record.itemsStore.count()) {
+            isDisabled = true
         }
-    },
 
-    loadShippingMethods: function () {
-        
-        
+        this.shippingMethodsStore = Ext.create('Ext.data.Store', {
+            model: 'Taco.model.ShippingMethod',
+            autoLoad: false,
+            proxy: {
+                type: 'ajax',
+                url: '/admin/app/order/shipping/runtimemethods?orderId=' + me.record.getId(),
+                reader: {
+                    type: 'json',
+                    root: 'items',
+                    successProperty: 'success'
+                }
+            }
+        });
 
-        // only load the shipping methods if the field has been initialized; Need to wait until the minimum requirements are met;
-
-        if(this.shippingMethodField){
-            this.shippingMethodsStore.load({
-                callback: function () {
-                    console.log('store', this.shippingMethodsStore.count());
+        this.shippingMethodField = Ext.widget({
+            //xtype: 'selectfield',
+            xtype:"combo",
+            style:"clear:both",
+            width: 200,
+            disabled: isDisabled,
+            fieldLabel: 'Shipping Methods',
+            valueField: 'shippingMethodCode',
+            allowBlank:false,
+            displayField: 'shippingMethodName',
+            value:this.record.get("shippingMethodCode"),
+            store: this.shippingMethodsStore,
+            listConfig: {
+                getInnerTpl: function () {
+                    return '{shippingMethodName} {price:currency}';
+                }
+            },
+            listeners: {
+                select: function () {                        
+                    this.setShippingInfo();                        
                 },
                 scope: this
-            });
+            }
+        });
+
+        this.items.push(this.shippingMethodField);
+    },
+    // called every time there is a change to the order record, customer, or contact selection; will automatically enable the combo when the necessary pre requirements are met;
+    loadShippingMethods: function () {
+        var me = this;
+        
+        
+        // need a contact and order items in order to set the shipping method; wait to enable and load the data until these two data points are set;
+        if (!this.contactData || !this.record.itemsStore.count()) {
+            return
+        } else if (this.shippingMethodField.isDisabled()) {            
+            this.shippingMethodField.enable();
         }
+
+        this.shippingMethodsStore.load({
+            callback: function () {                
+                console.log('shipping method store loaded count =', this.shippingMethodsStore.count());
+            },
+            scope: this
+        });        
     },
 
     isValid: function () {

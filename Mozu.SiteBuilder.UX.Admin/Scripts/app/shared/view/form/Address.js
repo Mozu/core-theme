@@ -8,6 +8,8 @@ Ext.define('Taco.shared.view.form.Address', {
 	alias: 'widget.taco-addressform',
 
 	requires: [
+        //'Taco.store.StateComboBox',
+        'Taco.store.StatesStatic',
 		'Taco.model.Contact',
 		'Taco.core.ux.form.SelectField',
         'Taco.core.ux.form.PhoneNumberField'
@@ -21,12 +23,27 @@ Ext.define('Taco.shared.view.form.Address', {
 	showEmail: true,
 	showPhoneNumbers: true,
 
+    emailRequired: false,
+
+    // wether to default the country code field to the default country code
+	useDefaultCountryCode: true,
+
+    // the default country code to use;
+	defaultCountryCode: "US",
 
 	initComponent: function () {
 	    var me = this,
 	        fields = [];
         
 		this.cls += ' ' + Taco.baseCSSPrefix + 'address-editor-fields';
+
+		
+        // default the country code if one is not provided;
+		var countryCode = this.record.get("countryCodecountryCode");
+		if (!countryCode && this.useDefaultCountryCode) {
+		    this.record.set("countryCode", this.defaultCountryCode);
+		}
+	    
 
 
         if (me.showCompanyName) {
@@ -44,6 +61,7 @@ Ext.define('Taco.shared.view.form.Address', {
             fields.push({
                 xtype: 'textfield',
                 width: 315,
+                allowBlank: !this.emailRequired,
                 name: 'email',
                 fieldLabel: 'Email',
                 margin: '0 0 5 0',
@@ -90,7 +108,9 @@ Ext.define('Taco.shared.view.form.Address', {
         }, {
             xtype: 'textfield',
             name: 'stateOrProvince',
+            fieldStyle: 'text-transform:uppercase',
             fieldLabel: 'State',
+            minLength:2,
             margin: '0 14 5 0',
             allowBlank: false,
             style: { 'display': 'inline-table' }
@@ -110,12 +130,14 @@ Ext.define('Taco.shared.view.form.Address', {
             allowBlank: false,
             queryMode: 'local',
             displayField: 'name',
-            valueField: 'code',
+            valueField: 'code',            
             store: { type: 'Taco.store.Countries' },
             emptyText: "Country",
             selectOnFocus: true
 	    });
 	    
+		
+
         if (this.showPhoneNumbers) {
             fields.push({
                     xtype: 'phonefield',
@@ -176,6 +198,31 @@ Ext.define('Taco.shared.view.form.Address', {
         this.items = fields;
 
 		this.callParent(arguments);
+	},
+
+	beforeSave: function (){
+	    var me = this;
+	    
+	    // convert state to 2 digit value if the countryCode is US
+	    var countryCode = me.form.findField("countryCode").getValue();
+        // only do the conversion if the country is the US
+	    if (countryCode == "US") {
+	        var stateField = me.form.findField("stateOrProvince"),
+	            stateCode = stateField.getValue();
+
+            // only convert if the value isn't a 2 character code;
+	        if (stateField.getValue().length != 2){	            
+	            var stateStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.StatesStatic');
+	            var stateRecord = stateStore.findRecord("value", stateField.getValue(), 0, true, false, false);
+	            if (stateRecord) {
+	                stateCode = stateRecord.get("code");
+	                // overwrite the user entered value with a usps code version;
+	                stateField.setValue(stateCode);
+	            }
+	        }	        
+	    }
+        
+        return true
 	},
 
     addSaveTasks: function (tasks) {

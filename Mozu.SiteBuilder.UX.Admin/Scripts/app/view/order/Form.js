@@ -44,7 +44,6 @@ Ext.define('Taco.view.order.Form', {
     initComponent: function () {
         var me = this;
 
-        
         // after the record is reloaded we will need to refresh the ui
         me.record.on("aftercommit", function () {
             me.onRecordChange();
@@ -56,6 +55,8 @@ Ext.define('Taco.view.order.Form', {
         }, this);
         
         this.customer = {};
+        // todo: get the customer record right away if an id exists;
+
 
         this.updateTitleData();
 
@@ -65,6 +66,7 @@ Ext.define('Taco.view.order.Form', {
         
         this.shippingForm = this.down('taco-ordershippingsimple');
         this.customerForm = this.down('taco-ordercustomer');
+        this.paymentForm = this.down('taco-orderpayment');
 
         if (this.customerForm) {
             this.mon(this.customerForm, "customerChange", this.onCustomerChange, this);
@@ -80,8 +82,9 @@ Ext.define('Taco.view.order.Form', {
     
     onCustomerChange : function (view, customerRecord){        
         this.customerRecord = customerRecord;
-        this.shippingForm.setCustomer(this.customerRecord);
-
+        //this.record.set("customerId", customerRecord.get("id"));        
+        //this.shippingForm.onCustomerChange();
+        this.shippingForm.onCustomerChange(this.customerRecord);
     },
 
     onBeforeReload : function() {
@@ -117,16 +120,7 @@ Ext.define('Taco.view.order.Form', {
     buildForm: function () {
         var subformCfg = {
                 record: this.record,
-                orderForm: this,
-                listeners: {
-                    orderchange: function () {
-                        if (this.shippingForm) {
-                            // hmm 
-                            this.shippingForm.loadShippingMethods();
-                        }
-                    },
-                    scope: this
-                }
+                orderForm: this                
             },
             items = [];
 
@@ -138,8 +132,17 @@ Ext.define('Taco.view.order.Form', {
             items.push(Ext.create('Taco.view.order.subform.Customer', subformCfg));
         }
 
-        
-        items.push(Ext.create('Taco.view.order.subform.Detail', subformCfg));
+        items.push(Ext.create('Taco.view.order.subform.Detail', Ext.apply({
+            listeners: {
+                orderchange: function () {
+                    if (this.shippingForm) {
+                        // when the order editor closes we need to notify the shipping subform to update since the record may have changed;                                                
+                        this.shippingForm.loadShippingMethods();
+                    }
+                },
+                scope: this
+            }
+        },subformCfg)));
 
         if (!this.isEdit()) {
             items.push(Ext.create('Taco.view.order.subform.ShippingSimple', subformCfg));
@@ -183,14 +186,9 @@ Ext.define('Taco.view.order.Form', {
             }
         }];
         items.push(this.orderAttr);
-
-
-
-        
-      
-        items.push(Ext.create('Taco.view.order.subform.Payment', subformCfg));
       
         if (this.isEdit()) {
+            items.push(Ext.create('Taco.view.order.subform.Payment', subformCfg));
             items.push(Ext.create('Taco.view.order.subform.Shipping', subformCfg));
             items.push(Ext.create('Taco.view.order.subform.InstorePickup', subformCfg));
             items.push(Ext.create('Taco.view.order.subform.Return', subformCfg)); 
@@ -206,18 +204,44 @@ Ext.define('Taco.view.order.Form', {
         return this._isEdit;
     },
 
-    isValid: function () {
+    isValid: function () {        
+        var me = this,
+            isValid = true,
+            errors= [];
+
         // Only validate when in create mode
-        if (this.isEdit()) return false;
+        if (this.isEdit()) isValid = false;        
+
+        if (!this.record.get("customerId")) {
+            isValid = false;
+            errors.push("A customer must be created or selected before saving this order");
+        }  else if (!this.record.itemsStore.count()) {
+            isValid = false;
+            errors.push("Products must be added before saving this order. Click the gear icon and select \"Edit Details\" to add products.");
+        } else if (!this.record.get("fulfillmentContact")) {
+            isValid = false;
+            errors.push("A ship to address must be created or selected before saving this order");
+        } else if (!this.record.get("shippingMethodCode")) {
+            isValid = false;
+            errors.push("A shipping method must be selected before saving this order");
+        }
         
+        if (errors.length) {
+            Taco.app.fireEvent('setmessage', errors.join("<br/>"), 'error', me);
+        }
+
+        // fire an event so that the editor wrapper can reenable the save button;
+        this.fireEvent('beforesavefailure', me, errors);
+
+
         // Check basic form fields
-        if (!this.callParent(arguments)) return false;
+        //if (!this.callParent(arguments)) return false;
 
         // Is customer valid?
-        if (!this.customerForm.isValid()) return false;
+        //if (!this.customerForm.isValid()) return false;
 
         // Is Shipping Valid?
-        if (!this.shippingForm.isValid()) return false;
+        //if (!this.shippingForm.isValid()) return false;
 
         // Is Payment valid?
         // if (!this.paymentForm.isValid()) return false;
@@ -225,7 +249,12 @@ Ext.define('Taco.view.order.Form', {
         // Is Order Item valid?
         // if (!this.orderDetail.isValid()) return false;
 
-        return true;
+        return isValid;
+    },
+
+    beforeSave: function () {        
+        var retVal = this.isValid();        
+        return retVal
     },
 
     addSaveTasks: function(tasks) {
@@ -238,9 +267,10 @@ Ext.define('Taco.view.order.Form', {
                     url: '/admin/app/order/submit',
                     method: 'POST',
                     jsonData: { orderId: me.record.getId() },
-                    success: function() {
-                        alert("Your order was created! Yay! You should probably close this window now.");
+                    success: function () {
+                        //alert("Your order was created! Yay! You should probably close this window now.");
                         task.callback();
+                        Taco.core.StateManager.attemptNavigate('s-' + this.record.data.siteId + '/orders/edit/' + this.record.data.id);
                     },
                     failure: function() {
                         task.callback(true);
