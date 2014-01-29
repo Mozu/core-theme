@@ -267,10 +267,9 @@ Ext.define('Taco.view.order.Form', {
                     url: '/admin/app/order/submit',
                     method: 'POST',
                     jsonData: { orderId: me.record.getId() },
-                    success: function () {
+                    success: function () {                        
                         //alert("Your order was created! Yay! You should probably close this window now.");
-                        task.callback();
-                        Taco.core.StateManager.attemptNavigate('s-' + this.record.data.siteId + '/orders/edit/' + this.record.data.id);
+                        task.callback();                        
                     },
                     failure: function() {
                         task.callback(true);
