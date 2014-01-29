@@ -299,8 +299,7 @@ Ext.define('Taco.view.order.subform.Customer', {
         // perisist the assignment of this customer to this order;
         this.assignCustomer();
 
-        // notifiy the other subforms of the change;
-        this.updateCustomerInformation()
+        
     },
 
     assignCustomer: function () {
@@ -313,6 +312,13 @@ Ext.define('Taco.view.order.subform.Customer', {
             success: function (record) {
                 //this.setCustomer.setDirty(false);
                 console.log('setcustomer - success', record);
+
+                // need to make sure that any customer related members get reset when the customer changes
+
+
+
+                // notifiy the other subforms of the change;
+                this.updateCustomerInformation()
             },
             failure: function () {
                 alert('ooops - setCustomer');

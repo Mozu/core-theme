@@ -3,6 +3,7 @@
  */
 Ext.define('Taco.view.order.subform.Payment', {
     extend: 'Taco.view.order.subform.Subform',
+    alias: 'widget.taco-orderpayment',
     requires: [
         'Taco.view.order.modal.IssueCredit',
         'Taco.view.order.modal.RequestCheck',
@@ -247,7 +248,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         me.destroyPaymentsUI();
         me.initPaymentsUI();
         Ext.resumeLayouts(true);
-        this.fireEvent('orderchange');
+        //this.fireEvent('orderchange');
     },
 
     /*

@@ -68,29 +68,29 @@
 
         if (!this.actions) {
             this.actions = [{
-                    xtype: 'button',
-                    itemId: 'cancel',
-                    ui: 'action',
-                    scale: 'medium',
-                    text: this.cancelText,
-                    margin: '0 0 0 10',
-                    hidden: this.cancelHidden || !this.allowCreate(),
-                    scope: this,
-                    handler: this.cancel
-                }, {
-                    xtype: 'button',
-                    itemId: 'save',
-                    ui: 'action-primary',
-                    scale: 'medium',
-                    text: this.saveText,
-                    margin: '0 0 0 10',
-                    allowDepress: false,
-                    enableToggle: this.enableSaveActionToggle,
-                    formBind: true,
-                    hidden: this.saveHidden || !this.allowCreate(),
-                    scope: this,
-                    toggleHandler: this.save
-                }];
+                xtype: 'button',
+                itemId: 'cancel',
+                ui: 'action',
+                scale: 'medium',
+                text: this.cancelText,
+                margin: '0 0 0 10',
+                hidden: this.cancelHidden || !this.allowCreate(),
+                scope: this,
+                handler: this.cancel
+            }, {
+                xtype: 'button',
+                itemId: 'save',
+                ui: 'action-primary',
+                scale: 'medium',
+                text: this.saveText,
+                margin: '0 0 0 10',
+                allowDepress: false,
+                enableToggle: this.enableSaveActionToggle,
+                formBind: true,
+                hidden: this.saveHidden || !this.allowCreate(),
+                scope: this,
+                toggleHandler: this.save
+            }];
         }
 
         Ext.each(this.additionalActions, function (additionalAction) {
@@ -179,12 +179,18 @@
                 }
 
             },
+            // fire when the client code cancels save during a call to the beforeSave method on the form class;
+            // Typically this is a client side validation error; 
+            // The form is responsible to call setMessage to display the errors or update the form fields with error messaging where appropriate;
+            beforesavefailure: function (view, errors) {                
+                this.resetDirtyButton()
+            },
+            // fire when a service returns an error saving the record;
+            savefailure: function (view, errors) {                
+                this.resetDirtyButton()
+            },
             savecomplete: function () {
-                if (this.dirtybutton) {
-                    this.dirtybutton.toggle(false);
-                    this.dirtybutton.removeCls('taco-button-processing');
-                    this.dirtybutton.setText('Save');
-                }
+                this.resetDirtyButton()
             },
             titlechange: function (panel, newTitle) {
                 this.updateTitle(newTitle);
@@ -199,6 +205,14 @@
         });
 
         this.updateTitle(this.form.title);
+    },
+
+    resetDirtyButton :function (){
+        if (this.dirtybutton) {
+            this.dirtybutton.toggle(false);
+            this.dirtybutton.removeCls('taco-button-processing');
+            this.dirtybutton.setText('Save');
+        }
     },
 
     checkSavable: function (isSavable) {

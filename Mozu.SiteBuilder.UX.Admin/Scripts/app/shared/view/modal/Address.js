@@ -22,6 +22,7 @@ Ext.define('Taco.shared.view.modal.Address', {
     
     // force user to enter at least one phone number
     singlePhoneRequired : false,
+    emailRequired:true,
 
     validateAddress: false,
 
@@ -80,6 +81,7 @@ Ext.define('Taco.shared.view.modal.Address', {
             xtype: 'taco-addressform',
             header:false,
             record: this.record,
+            emailRequired:true,
             addressHasNames: this.addressHasNames,
             showCompanyName: this.showCompanyName,
             showEmail: this.showEmail,
