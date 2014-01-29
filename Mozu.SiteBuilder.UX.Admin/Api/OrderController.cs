@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -225,8 +226,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             shippingInfo.FulfillmentContact = args.Contact.Map<DCcore.Contact>();
-            shippingInfo.ShippingMethodName = args.ShippingMethodName;
-            shippingInfo.ShippingMethodCode = args.ShippingMethodCode;
+            shippingInfo.ShippingMethodName = !String.IsNullOrWhiteSpace(args.ShippingMethodName) ? args.ShippingMethodName : null;
+            shippingInfo.ShippingMethodCode = !String.IsNullOrWhiteSpace(args.ShippingMethodCode) ? args.ShippingMethodCode : null;
 
             await _orderWebApiClient.SetFulFillmentInfo( args.OrderId, shippingInfo);
 
