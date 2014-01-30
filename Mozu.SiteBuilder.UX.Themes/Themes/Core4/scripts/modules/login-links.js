@@ -129,13 +129,13 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
                 password: this.$parent.find('[data-mz-login-password]').val()
             }).then(function (res) {
                 window.location.reload();
-            }, this.displayLoginMessage);
+            }, this.displayApiMessage);
         },
         retrievePassword: function () {
             this.setLoading(true);
             api.action('customer', 'resetPasswordStorefront', {
                 EmailAddress: this.$parent.find('[data-mz-forgotpassword-email]').val()
-            }).then(this.displayLoginMessage, this.displayLoginMessage);
+            }).then(this.displayApiMessage, this.displayApiMessage);
         }
     });
 
