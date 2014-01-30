@@ -79,14 +79,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<Order>> CreateOrder()
         {
-            var emptyOrder = new DCo.Order {
-                TenantId = _ctx.TenantId,
-                SiteId = _ctx.SiteId,
-                BillingInfo = new DCp.BillingInfo {
-                    IsSameBillingShippingAddress = true
-                }
-            };
-
+            var emptyOrder = new DCo.Order();
             var order = (await _orderWebApiClient.CreateOrder(emptyOrder)).ReadAsSync();
 
             return Single2( order.Map<Order>() );
@@ -203,7 +196,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2( dcOrder.Map<Order>() );
         }
 
-        public class SetShippingContactArgs
+        public class SetShippingInfoArgs
         {
             public string OrderId { get; set; }
             public Contact Contact { get; set; }
@@ -211,7 +204,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string ShippingMethodCode { get; set; }
         }
         [HttpPostRoute(UriTemplate = "setshippinginfo")]
-        public async Task<Response<Order>> SetShippingInfo(SetShippingContactArgs args)
+        public async Task<Response<Order>> SetShippingInfo(SetShippingInfoArgs args)
         {
             DCs.FulfillmentInfo  shippingInfo;
 
@@ -229,9 +222,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             shippingInfo.ShippingMethodName = !String.IsNullOrWhiteSpace(args.ShippingMethodName) ? args.ShippingMethodName : null;
             shippingInfo.ShippingMethodCode = !String.IsNullOrWhiteSpace(args.ShippingMethodCode) ? args.ShippingMethodCode : null;
 
-            await _orderWebApiClient.SetFulFillmentInfo( args.OrderId, shippingInfo);
+            await _orderWebApiClient.SetFulFillmentInfo( args.OrderId, shippingInfo, APPLY_TO_ORIGINAL);
 
             DCo.Order dcOrder = (await _orderWebApiClient.GetOrder(args.OrderId)).ReadAsSync();
+            if (dcOrder.BillingInfo == null || dcOrder.BillingInfo.IsSameBillingShippingAddress)
+            {
+                dcOrder.BillingInfo = new DCp.BillingInfo { BillingContact = null, IsSameBillingShippingAddress = true };
+                await _orderWebApiClient.SetBillingInfo(args.OrderId, dcOrder.BillingInfo, APPLY_TO_ORIGINAL);
+            }
 
             return Single2(dcOrder.Map<Order>());
         }

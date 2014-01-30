@@ -44,6 +44,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [DataMember(Name="billingContact")]
         public Contact BillingContact { get; set; }
 
+        [DataMember(Name = "isSameBillingShippingAddress")]
+        public bool? IsSameBillingShippingAddress { get; set; }
+
         [DataMember(Name="billingCard")]
         public DCpay.PaymentCard BillingCard { get; set; }
 
