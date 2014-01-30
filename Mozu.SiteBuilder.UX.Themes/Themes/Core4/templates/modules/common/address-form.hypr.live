@@ -66,6 +66,15 @@
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}address.countryCode"></span>
         </div>
     </div>
+    <div class="mz-l-formfieldgroup-row" {% if model.address.countryCode != "CA" %}style="display: none"{% endif %}>
+        <div class="mz-l-formfieldgroup-cell">
+            <label for="city">{{ labels.province }}<span class="is-required"> *</span>:</label>
+        </div>
+        <div class="mz-l-formfieldgroup-cell">
+            <input type="text" name="province" data-mz-value="{{ addresscontext }}address.stateOrProvince" value="{{ model.address.stateOrProvince }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}address.stateOrProvince"></span>
+        </div>
+    </div>
     <div class="mz-l-formfieldgroup-row" {% if model.address.countryCode != "US" %}style="display: none"{% endif %}>
         <div class="mz-l-formfieldgroup-cell">
             <label for="stateprov">{{ labels.state }}<span class="is-required"> *</span>:</label>
@@ -224,7 +233,7 @@
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}address.stateOrProvince"></span>
         </div>
     </div>
-    <div {% if model.address.countryCode != "US" %}style="display: none"{% endif %} class="mz-l-formfieldgroup-row">
+    <div class="mz-l-formfieldgroup-row">
         <div class="mz-l-formfieldgroup-cell">
             <label for="postal-code">{{ labels.postalCode }}<span class="is-required"> *</span>:</label>
         </div>
