@@ -65,6 +65,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.UpdateDate, op => op.MapFrom(dc => dc.AuditInfo.UpdateDate))
                 .ForMember(x => x.CustomerId, op => op.MapFrom(dc => dc.CustomerAccountId))
                 .ForMember(x => x.BillingContact, op => op.ResolveUsing(dc => (dc.BillingInfo != null ? dc.BillingInfo.BillingContact : null) ?? (dc.FulfillmentInfo != null ? dc.FulfillmentInfo.FulfillmentContact : null)))
+                .ForMember(x => x.IsSameBillingShippingAddress, op => op.ResolveUsing(dc => dc.BillingInfo != null ? (bool?)dc.BillingInfo.IsSameBillingShippingAddress : null))
                 .ForMember(x => x.BillingCard, op => op.ResolveUsing(dc => dc.BillingInfo != null ? dc.BillingInfo.Card : null))
                 .ForMember(x => x.FulfillmentContact, op => op.MapFrom(dc => dc.FulfillmentInfo != null ? dc.FulfillmentInfo.FulfillmentContact : null ))
                 .ForMember(x => x.ShippingMethodCode, op => op.MapFrom(dc => dc.FulfillmentInfo != null ? dc.FulfillmentInfo.ShippingMethodCode : null))
