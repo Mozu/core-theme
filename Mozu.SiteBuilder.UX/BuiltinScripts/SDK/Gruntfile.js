@@ -125,7 +125,7 @@ module.exports = function (grunt) {
 
         grunt.log.writeln('Checking directory \'' + this.data.dir + '\' out from tfs');
 
-        if (process.platform !== "win32" || !fs.existsSync(tfsloc)) {
+        if (process.platform !== "win32" || !require('fs').existsSync(tfsloc)) {
             grunt.log.warn("No TFS present.")
             done(true);
         }

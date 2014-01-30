@@ -484,5 +484,11 @@
   },
   "wishlists": {
     "collectionOf": "wishlist"
+  },
+  "instockrequest": {
+    "create": {
+        "verb": "POST",
+        "template": "{+customerService}../../instocknotifications"
+    }
   }
 }
