@@ -39,7 +39,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.TaxId, op => op.ResolveUsing(dc => dc.TaxId))
             //todo: confirm default of 0 Greg Murray on 2014-01-27 (ordercount defaults to 0 above so should be ok)
             .ForMember(x => x.VisitCount, op => op.ResolveUsing(dc => (dc.CommerceSummary != null) ? dc.CommerceSummary.VisitsCount : 0))
+            //ignores
             .ForMember(x => x.WishlistCount, op => op.Ignore())
+            .ForMember(x => x.PaymentCards, op => op.Ignore())
             ;
 
             //todo: Greg Murray on 2014-01-23 redundant mappings, ex FirstName => FirstName, Remove?
