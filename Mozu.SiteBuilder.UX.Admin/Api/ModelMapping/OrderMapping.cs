@@ -116,6 +116,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                 .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))
 
+                //todo: confirm 2 mappings - Greg Murray on 2014-01-31 
+                .ForMember(x => x.IsSameBillingShippingAddress, op => op.ResolveUsing(dc => (dc.BillingInfo != null) 
+                    ? dc.BillingInfo.IsSameBillingShippingAddress : false))
+                .ForMember(x => x.BillingCard, op => op.ResolveUsing(dc => (dc.BillingInfo != null) ? dc.BillingInfo.Card : null))
+
+
                 //ignores, handled in aftermap
                 .ForMember(x => x.UnpackagedItems, op => op.Ignore())
                 .ForMember(x => x.UnpickedupItems, op => op.Ignore())
@@ -125,7 +131,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ItemsShipped, op => op.Ignore())
                 .ForMember(x => x.ItemsNotPickedup, op => op.Ignore())
                 .ForMember(x => x.ItemsPickedup, op => op.Ignore())
-
+                
                 .AfterMap((dc, order) =>
                 {
                     if (order.Packages == null)

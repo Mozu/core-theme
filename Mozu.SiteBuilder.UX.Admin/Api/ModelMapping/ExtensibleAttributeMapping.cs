@@ -29,6 +29,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Id ))
                 // TODO: do not hard code this.
                 .ForMember(dc => dc.Sequence, opt => opt.ResolveUsing(x => 0))
+                // ignores
+                .ForMember(dc => dc.IsHidden, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeValue>()
@@ -76,7 +78,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<AttributeVocabularyValue, DC.AttributeVocabularyValue>()
                 //todo: confirm sequence Greg Murray on 2014-01-24
-                .ForMember(dc => dc.Sequence, op => op.ResolveUsing(x => x.ValueSequence));
+                .ForMember(dc => dc.Sequence, op => op.ResolveUsing(x => x.ValueSequence))
+                .ForMember(dc => dc.IsHidden, op => op.Ignore())
+                ;
 
             Mapper.CreateMap<AttributeVocabularyValueLocalizedContent, DC.AttributeValueLocalizedContent>()
                 //todo: confirm stringValue -> value Greg Murray on 2014-01-24
