@@ -90,7 +90,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 x.EnablePublishing = site.PublishingEnabled ;
                 return client.UpdateDocumentList(x.Name, x);
             }).ToArray();
-            Task.WhenAll(updateTasks);
+           await Task.WhenAll(updateTasks);
            return  this.SuccessWithTotal2<bool>(0);
 
         }
