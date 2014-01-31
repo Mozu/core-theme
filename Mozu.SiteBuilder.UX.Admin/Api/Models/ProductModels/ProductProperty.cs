@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [DataMember(EmitDefaultValue = false, Name = "values")]
         public List<object> Values { get; set; }
 
-
+        //todo: confirm this is still used as only only ignored in automapper? Greg Murray on 2014-01-24
         [DataMember(EmitDefaultValue = false, Name = "exists")]
         public bool? VariationExists { get; set; }
     }

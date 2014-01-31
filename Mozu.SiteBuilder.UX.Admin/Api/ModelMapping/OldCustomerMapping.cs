@@ -11,6 +11,7 @@ using AP = Mozu.Core.Api.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
+    //todo: Greg Murray on 2014-01-27 is this still needed?
     public class OldCustomerMapping : Profile
     {
         public override string ProfileName
@@ -50,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
           //  Mapper.CreateMap<AC.AccountInformation, US.PasswordInfo>();
 
             Mapper.CreateMap<AP.User, AC.AccountInformation>()
-                .ForMember(x => x.Email, m => m.MapFrom(x => x.EmailAddress));
+                .ForMember(x => x.Email, m => m.ResolveUsing(x => x.EmailAddress));
 
             Mapper.CreateMap<AP.User, AC.User>();
             Mapper.CreateMap<AC.User, AP.User>();

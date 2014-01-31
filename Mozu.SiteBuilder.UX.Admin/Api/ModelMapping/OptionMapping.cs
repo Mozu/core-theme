@@ -8,6 +8,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Options;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
+    //todo: Greg Murray on 2014-01-27 should this be removed?
     public class OptionMapping : Profile
     {
         public override string ProfileName
@@ -41,25 +42,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //Mapper.CreateMap<DC.AttributeValue, OptionValue>();
 
             //Mapper.CreateMap<DC.ProductOption, ProductOption>()
-            //    .ForMember(x => x.InternalName, op => op.MapFrom(x => x.InternalName))
-            //    .ForMember(x => x.IsRequired, op => op.MapFrom(x => x.AttributeDetail.IsRequired))
-            //    .ForMember(x => x.StandardInputTypeIntention, op => op.MapFrom(x => x.AttributeDetail.StandardInputTypeIntention.ToString()))
+            //    .ForMember(x => x.InternalName, op => op.ResolveUsing(x => x.InternalName))
+            //    .ForMember(x => x.IsRequired, op => op.ResolveUsing(x => x.AttributeDetail.IsRequired))
+            //    .ForMember(x => x.StandardInputTypeIntention, op => op.ResolveUsing(x => x.AttributeDetail.StandardInputTypeIntention.ToString()))
             //    .ForMember (x=> x.StringValidationMaxLength , op=> op.MapFrom (x=> x.AttributeDetail.StringValidation.MaxLength))
-            //    .ForMember(x => x.StringValidationMinLength , op => op.MapFrom(x => x.AttributeDetail.StringValidation.MaxLength ))
+            //    .ForMember(x => x.StringValidationMinLength , op => op.ResolveUsing(x => x.AttributeDetail.StringValidation.MaxLength ))
 
-            //    .ForMember(x => x.ContentName, op => op.MapFrom(x => x.AttributeDetail.Content.Name));
+            //    .ForMember(x => x.ContentName, op => op.ResolveUsing(x => x.AttributeDetail.Content.Name));
                 
 
             //Mapper.CreateMap<ProductOption, DC.ProductOption>();
             //Mapper.CreateMap<DC.ProductOptionValue, ProductOptionValue>()
-            //    .ForMember(x => x.StringValueContentValue, op => op.MapFrom(x => x.AttributeValueDetail.StringValue.Content.Value))
-            //    .ForMember(x => x.StringValueInternalValue, op => op.MapFrom(x => x.InternalValue ));
+            //    .ForMember(x => x.StringValueContentValue, op => op.ResolveUsing(x => x.AttributeValueDetail.StringValue.Content.Value))
+            //    .ForMember(x => x.StringValueInternalValue, op => op.ResolveUsing(x => x.InternalValue ));
 
             //    .ForMember(x=> x.string , op=> op.MapFrom ( x=> x.InternalValue !! x.AttributeValueDetail.StringValue.Content.Value ))
             //Mapper.CreateMap<ProductOptionValue, DC.ProductOptionValue>()
-            //    .ForMember(x => x.InternalValue, op => op.MapFrom(x => string.IsNullOrEmpty(x.StringValueInternalValue) ? x.StringValueContentValue : x.StringValueInternalValue))
-            //    .ForMember(x => x.DeltaWeight, op => op.MapFrom(x => x.DeltaWeight))
-            //    .ForMember(x => x.DeltaPrice , op => op.MapFrom(x => x.DeltaPriceValue .GetValueOrDefault (0) > 0 ? new DC.ProductOptionValueDeltaPrice(){ Value = x.DeltaPriceValue.GetValueOrDefault (), CurrencyCode = "USD" } : null));
+            //    .ForMember(x => x.InternalValue, op => op.ResolveUsing(x => string.IsNullOrEmpty(x.StringValueInternalValue) ? x.StringValueContentValue : x.StringValueInternalValue))
+            //    .ForMember(x => x.DeltaWeight, op => op.ResolveUsing(x => x.DeltaWeight))
+            //    .ForMember(x => x.DeltaPrice , op => op.ResolveUsing(x => x.DeltaPriceValue .GetValueOrDefault (0) > 0 ? new DC.ProductOptionValueDeltaPrice(){ Value = x.DeltaPriceValue.GetValueOrDefault (), CurrencyCode = "USD" } : null));
 
 
             //Mapper.CreateMap<ProductVariation, DC.ProductVariation>()

@@ -1,40 +1,63 @@
-﻿using AutoMapper;
-//using Volusion.ProductAdmin.Contracts;
-//using DC = Volusion.ProductAdmin.Contracts;
-using Microsoft.FSharp.Math;
-using Mozu.Core.Api.Contracts;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using DC = Mozu.ProductAdmin.Contracts;
-using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
-using ProductProperty = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductProperty ;
+using AutoMapper;
+using Mozu.Core.Api.Contracts;
+using Mozu.SiteBuilder.UX.Admin.Api.ModelMapping;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
+using DC = Mozu.ProductAdmin.Contracts;
+using NUnit.Framework;
 
-namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
+namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping.Perf
 {
-    //todo: what if we split into methods like Order mapping? Greg Murray on 2014-01-28 
-    public class ProductMapping : Profile
+    [TestFixture]
+    public class AutomapperResolveUsingPerfTest
     {
         private const int MAX_ATTRIBUTE_VALUE_LENGTH = 50;
 
-        public override string ProfileName
-        {
-            get
-            {
-                return this.GetType().FullName;
-            }
-        }
-        protected override void Configure()
-        {
+        #region setup & teardown
 
+        [TearDown]
+        public void TearDown()
+        {
+            Mapper.Reset();
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
             var NULLCONTENT = new DC.ProductLocalizedContent();
             var NULLPRICE = new DC.ProductPrice();
             var NULLPUB = new DC.ProductPublishingInfo();
 
+            Mapper.AddProfile<AttributeMapping>();
+            Mapper.AddProfile<CapabilityMapping>();
+            Mapper.AddProfile<CategoryMapping>();
+            Mapper.AddProfile<CheckoutMapping>();
+            Mapper.AddProfile<ContactMapping>();
+            Mapper.AddProfile<CreditMapping>();
+            Mapper.AddProfile<CustomerMapping>();
+            Mapper.AddProfile<DiscountMapping>();
+            Mapper.AddProfile<ExtensibleAttributeMapping>();
+            Mapper.AddProfile<FacetMapping>();
+            Mapper.AddProfile<FileManagementModelMapping>();
+            Mapper.AddProfile<GeneralSettingsMapping>();
+            Mapper.AddProfile<OptionMapping>();
+            Mapper.AddProfile<OrderMapping>();
+            //Mapper.AddProfile<ProductMapping>();
+            Mapper.AddProfile<ReturnMapping>();
+            Mapper.AddProfile<RuntimeProductMapping>();
+            Mapper.AddProfile<ShippingMapping>();
+            Mapper.AddProfile<TaxMapping>();
+            Mapper.AddProfile<TenantMapping>();
+            Mapper.AddProfile<UserMapping>();
+
+
+
+
             Mapper.CreateMap<DC.BundledProduct, BundledProduct>()
-                  .ForMember(x => x.SalePrice, opt => opt.ResolveUsing(x => (x.Price != null) ? x.Price.SalePrice : null))
-                  .ForMember(x => x.Price, opt => opt.ResolveUsing(x => (x.Price != null) ? x.Price.Price : null))
+                  .ForMember(x => x.SalePrice, opt => opt.ResolveUsing(x => x.Price.SalePrice))
+                  .ForMember(x => x.Price, opt => opt.ResolveUsing(x => x.Price.Price))
                   .ForMember(x => x.PackageWeight, op => op.ResolveUsing(dc => dc.PackageWeight == null ? null : dc.PackageWeight.Value))
                   .ForMember(x => x.PackageHeight, op => op.ResolveUsing(dc => dc.PackageHeight == null ? null : dc.PackageHeight.Value))
                   .ForMember(x => x.PackageLength, op => op.ResolveUsing(dc => dc.PackageLength == null ? null : dc.PackageLength.Value))
@@ -47,7 +70,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductCode, opt => opt.ResolveUsing(x => x.ProductCode))
                 .ForMember(x => x.Quantity, opt => opt.ResolveUsing(x => x.Quantity))
                 .ForMember(x => x.ProductName, opt => opt.ResolveUsing(x => x.ProductName))
-                //ignores
                 .ForMember(x => x.Price, opt => opt.Ignore())
                 .ForMember(x => x.PackageWeight, opt => opt.Ignore())
                 .ForMember(x => x.PackageHeight, opt => opt.Ignore())
@@ -56,21 +78,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
 
             Mapper.CreateMap<DC.Product, Product>()
-                .ForMember(x => x.BundledProducts, opt => opt.ResolveUsing(x=>x.BundledProducts))
-                .ForMember(x => x.OutOfStockBehavior , op=> op.ResolveUsing(dc => (dc.InventoryInfo ?? new DC.ProductInventoryInfo()).OutOfStockBehavior  ))
-                .ForMember(x => x.ManageStock, op => op.ResolveUsing(dc => (dc.InventoryInfo ?? new DC.ProductInventoryInfo()).ManageStock ))
+                .ForMember(x => x.BundledProducts, opt => opt.ResolveUsing(x => x.BundledProducts))
+                .ForMember(x => x.OutOfStockBehavior, op => op.ResolveUsing(dc => (dc.InventoryInfo ?? new DC.ProductInventoryInfo()).OutOfStockBehavior))
+                .ForMember(x => x.ManageStock, op => op.ResolveUsing(dc => (dc.InventoryInfo ?? new DC.ProductInventoryInfo()).ManageStock))
                 .ForMember(x => x.ProductUsage, op => op.ResolveUsing(x => x.ProductUsage))
-                .ForMember(x => x.PublishedState, op => op.ResolveUsing(dc => (dc.PublishingInfo?? NULLPUB).PublishedState ))
-                .ForMember(x => x.LastModifiedBy, op => op.ResolveUsing(dc => (dc.AuditInfo != null) 
-                    ? dc.AuditInfo.UpdateBy : null))
-                .ForMember(x => x.LastModifiedDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) 
-                    ? dc.AuditInfo.UpdateDate : null))
+                .ForMember(x => x.PublishedState, op => op.ResolveUsing(dc => (dc.PublishingInfo ?? NULLPUB).PublishedState))
+                .ForMember(x => x.LastModifiedBy, op => op.ResolveUsing(dc => dc.AuditInfo.UpdateBy))
+                .ForMember(x => x.LastModifiedDate, op => op.ResolveUsing(dc => dc.AuditInfo.UpdateDate))
                 .ForMember(x => x.LastPublishedBy, op => op.ResolveUsing(dc => (dc.PublishingInfo ?? NULLPUB).LastPublishedBy))
                 .ForMember(x => x.LastPublishedDate, op => op.ResolveUsing(dc => (dc.PublishingInfo ?? NULLPUB).LastPublishedDate))
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
                 .ForMember(x => x.BaseProductCode, op => op.ResolveUsing(dc => dc.BaseProductCode))
-                .ForMember(x => x.Extras , op => op.ResolveUsing(dc => dc.Extras == null 
-                    ? null : dc.Extras.Where( x=> x.Values != null && x.Values.Count >  0).ToList()))
+                .ForMember(x => x.Extras, op => op.ResolveUsing(dc => dc.Extras == null ? null : dc.Extras.Where(x => x.Values != null && x.Values.Count > 0).ToList()))
 
                 .ForMember(x => x.HasConfigurableOptions, op => op.ResolveUsing(dc => dc.HasConfigurableOptions))
                 .ForMember(x => x.HasStandaloneOptions, op => op.ResolveUsing(dc => dc.HasStandAloneOptions))
@@ -78,15 +97,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => (dc.Content ?? NULLCONTENT).ProductName))
                 .ForMember(x => x.ProductShortDescription, op => op.ResolveUsing(dc => (dc.Content ?? NULLCONTENT).ProductShortDescription))
                 .ForMember(x => x.ProductFullDescription, op => op.ResolveUsing(dc => (dc.Content ?? NULLCONTENT).ProductFullDescription))
-           
+
                 .ForMember(x => x.Price, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).Price))
                 .ForMember(x => x.SalePrice, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).SalePrice))
                 //todo:what?
-               // .ForMember(x => x.IsHiddenWhenOutOfStock, op => op.ResolveUsing(dc => dc.i))
+                // .ForMember(x => x.IsHiddenWhenOutOfStock, op => op.ResolveUsing(dc => dc.i))
                 .ForMember(x => x.ProductTypeId, op => op.ResolveUsing(dc => dc.ProductTypeId))
                 .ForMember(x => x.MasterCatalogId, op => op.ResolveUsing(x => x.MasterCatalogId))
                 //todo:what?
-              //  .ForMember(x => x.IsBackOrderAllowed, op => op.ResolveUsing(dc => dc.IsBackOrderAllowed))
+                //  .ForMember(x => x.IsBackOrderAllowed, op => op.ResolveUsing(dc => dc.IsBackOrderAllowed))
                 .ForMember(x => x.PackageWeight, op => op.ResolveUsing(dc => dc.PackageWeight == null ? null : dc.PackageWeight.Value))
                 .ForMember(x => x.PackageHeight, op => op.ResolveUsing(dc => dc.PackageHeight == null ? null : dc.PackageHeight.Value))
                 .ForMember(x => x.PackageLength, op => op.ResolveUsing(dc => dc.PackageLength == null ? null : dc.PackageLength.Value))
@@ -95,8 +114,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.MetaTagDescription, op => op.ResolveUsing(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagDescription))
                 .ForMember(x => x.MetaTagKeywords, op => op.ResolveUsing(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagKeywords))
                 .ForMember(x => x.SEOFriendlyUrl, op => op.ResolveUsing(dc => dc.SEOContent == null ? null : dc.SEOContent.SEOFriendlyUrl))
-                .ForMember(x => x.ProductInCatalogs, op => op.ResolveUsing(dc => dc.ProductInCatalogs ))
-                .ForMember( x=> x.Properties , op=> op.ResolveUsing(dc=> dc.Properties ))
+                .ForMember(x => x.ProductInCatalogs, op => op.ResolveUsing(dc => dc.ProductInCatalogs))
+                .ForMember(x => x.Properties, op => op.ResolveUsing(dc => dc.Properties))
                 .ForMember(x => x.Options, op => op.ResolveUsing(dc => dc.Options))
                 .ForMember(x => x.ProductImages, op => op.ResolveUsing(dc => (dc.Content ?? NULLCONTENT).ProductImages))
 
@@ -108,34 +127,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(m => m.IsBackOrderAllowed, op => op.Ignore())
 
                 .AfterMap((x, y) =>
+                {
+                    if (y.ProductInCatalogs != null)
                     {
-                        if (y.ProductInCatalogs != null)
-                        {
-                            y.ProductInCatalogs.Each(p => p.ProductCode = y.ProductCode);
-                        }
-                    })
+                        y.ProductInCatalogs.Each(p => p.ProductCode = y.ProductCode);
+                    }
+                })
                 ;
 
             Mapper.CreateMap<Product, DC.Product>()
                 .ForMember(x => x.BundledProducts, opt => opt.ResolveUsing(x => x.BundledProducts))
-                .ForMember(dc => dc.InventoryInfo, op => op.ResolveUsing(p => 
-                    new DC.ProductInventoryInfo() 
-                    { 
-                        ManageStock = p.ManageStock, 
-                        OutOfStockBehavior = string.IsNullOrEmpty( p.OutOfStockBehavior) 
-                        ? "DisplayMessage" : p.OutOfStockBehavior 
-                    }))
+                .ForMember(dc => dc.InventoryInfo, op => op.ResolveUsing(p => new DC.ProductInventoryInfo() { ManageStock = p.ManageStock, OutOfStockBehavior = string.IsNullOrEmpty(p.OutOfStockBehavior) ? "DisplayMessage" : p.OutOfStockBehavior }))
                 .ForMember(dc => dc.ProductCode, op => op.ResolveUsing(p => p.ProductCode))
                  .ForMember(x => x.ProductUsage, op => op.ResolveUsing(x => x.ProductUsage))
                 .ForMember(dc => dc.Properties, op => op.ResolveUsing(p => p.Properties))
                 .ForMember(dc => dc.Options, op => op.ResolveUsing(p => p.Options))
-                .ForMember(x => x.Extras, op => op.ResolveUsing(dc => dc.Extras == null 
-                    ? null : dc.Extras.Where(x => x.Values != null && x.Values.Count > 0).ToList()))
+                .ForMember(x => x.Extras, op => op.ResolveUsing(dc => dc.Extras == null ? null : dc.Extras.Where(x => x.Values != null && x.Values.Count > 0).ToList()))
                 .ForMember(dc => dc.BaseProductCode, op => op.ResolveUsing(p => p.BaseProductCode))
                 .ForMember(dc => dc.ProductTypeId, op => op.ResolveUsing(dc => dc.ProductTypeId))
                 .ForMember(dc => dc.Content, op => op.ResolveUsing(p =>
                 {
-                    var images = Mapper.Map<List<DC.ProductLocalizedImage>>(p.ProductImages );
+                    var images = Mapper.Map<List<DC.ProductLocalizedImage>>(p.ProductImages);
                     return new DC.ProductLocalizedContent
                     {
                         ProductName = p.ProductName,
@@ -144,14 +156,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         ProductImages = images
                     };
                 }))
-                 .ForMember(dc => dc.SEOContent , op => op.ResolveUsing(p =>
+                 .ForMember(dc => dc.SEOContent, op => op.ResolveUsing(p =>
                  {
-                     return new DC.ProductLocalizedSEOContent() 
+                     return new DC.ProductLocalizedSEOContent()
                      {
-                         MetaTagDescription = p.MetaTagDescription ,
+                         MetaTagDescription = p.MetaTagDescription,
                          MetaTagKeywords = p.MetaTagKeywords,
-                         MetaTagTitle = p.MetaTagTitle ,
-                         SEOFriendlyUrl = p.SEOFriendlyUrl 
+                         MetaTagTitle = p.MetaTagTitle,
+                         SEOFriendlyUrl = p.SEOFriendlyUrl
                      };
                  }))
                 .ForMember(dc => dc.Price, op => op.ResolveUsing(p =>
@@ -163,33 +175,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         SalePrice = p.SalePrice
                     }
                 ))
-                .ForMember(x => x.PackageHeight, op => op.ResolveUsing(x => x.PackageHeight == null 
-                    ? null: new Measurement { Unit = "in", Value = x.PackageHeight }))
-                .ForMember(x => x.PackageLength, op => op.ResolveUsing(x => x.PackageLength == null 
-                    ? null : new Measurement { Unit = "in", Value = x.PackageLength }))
-                .ForMember(x => x.PackageWidth, op => op.ResolveUsing(x => x.PackageWidth == null 
-                    ? null : new Measurement { Unit = "in", Value = x.PackageWidth }))
-                .ForMember(x => x.PackageWeight, op => op.ResolveUsing(x => x.PackageWeight == null 
-                    ? new Measurement { Unit = "lbs", Value = 0} : new Measurement { Unit = "lbs", Value = x.PackageWeight }))
-                //ignores
-                .ForMember(x => x.ProductSequence, op => op.Ignore())
-                .ForMember(dc => dc.IsValidForProductType, op => op.Ignore())
-                .ForMember(dc => dc.ShippingClassId, op => op.Ignore())
-                .ForMember(dc => dc.IsRecurring, op => op.Ignore())
-                .ForMember(dc => dc.UPC, op => op.Ignore())
-                .ForMember(dc => dc.IsPackagedStandAlone, op => op.Ignore())
-                .ForMember(dc => dc.StandAlonePackageType, op => op.Ignore())
-                .ForMember(dc => dc.ApplicableDiscounts, op => op.Ignore())
-                .ForMember(dc => dc.IsVariation, op => op.Ignore())
-                .ForMember(dc => dc.VariationKey, op => op.Ignore())
-                .ForMember(dc => dc.PublishingInfo, op => op.Ignore())
-                .ForMember(dc => dc.AuditInfo, op => op.Ignore())
-
-                .AfterMap((x, y) =>
+                .ForMember(x => x.PackageHeight, op => op.ResolveUsing(x => x.PackageHeight == null ? null : new Measurement { Unit = "in", Value = x.PackageHeight }))
+                .ForMember(x => x.PackageLength, op => op.ResolveUsing(x => x.PackageLength == null ? null : new Measurement { Unit = "in", Value = x.PackageLength }))
+                .ForMember(x => x.PackageWidth, op => op.ResolveUsing(x => x.PackageWidth == null ? null : new Measurement { Unit = "in", Value = x.PackageWidth }))
+                .ForMember(x => x.PackageWeight, op => op.ResolveUsing(x => x.PackageWeight == null ? new Measurement { Unit = "lbs", Value = 0 } : new Measurement { Unit = "lbs", Value = x.PackageWeight }))
+                 .AfterMap((x, y) =>
                  {
-                     if (y.Properties  != null)
+                     if (y.Properties != null)
                      {
-                         y.Properties = y.Properties.Where(p => p.Values != null && p.Values.Count > 0 && p.Values.Any( v=> v.Value != null )).ToList();
+                         y.Properties = y.Properties.Where(p => p.Values != null && p.Values.Count > 0 && p.Values.Any(v => v.Value != null)).ToList();
 
                      }
                  })
@@ -198,61 +192,60 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<DC.ProductProperty, ProductProperty>()
                   .ForMember(x => x.AttributeFQN, op => op.ResolveUsing(x => x.AttributeFQN))
-                  .ForMember(x => x.Values, op => op.ResolveUsing( x =>
+                  .ForMember(x => x.Values, op => op.ResolveUsing(x =>
+                  {
+                      if (x.Values == null)
                       {
-                          if (x.Values  == null)
+                          return null;
+                      }
+                      return x.Values.Select(v =>
+                      {
+                          if (v.Content != null && !string.IsNullOrWhiteSpace(v.Content.StringValue))
                           {
-                              return null;
+                              return v.Content.StringValue;
                           }
-                          return x.Values.Select(v =>
-                              {
-                                  if (v.Content != null && !string.IsNullOrWhiteSpace(v.Content.StringValue ))
-                                  {
-                                      return v.Content.StringValue;
-                                  }
-                                  return v.Value;
-                              }).ToList();
-                      }))
+                          return v.Value;
+                      }).ToList();
+                  }));
 
-                   .ForMember(x => x.VariationExists, op => op.Ignore())
-                      ;
+
 
 
             Mapper.CreateMap<ProductProperty, DC.ProductProperty>()
-                  //.ForMember(x => x., op => op.Ignore())
+                //.ForMember(x => x., op => op.Ignore())
                   .ForMember(x => x.AttributeFQN, op => op.ResolveUsing(x => x.AttributeFQN))
                   .ForMember(x => x.Values, op => op.ResolveUsing(x =>
-                   {
-                       if (x.Values == null)
-                       {
-                           return null;
-                       }
-                       return x.Values.Select(v =>
-                           {
-                               var ppv = new DC.ProductPropertyValue()
-                                             {
-                                                 Value = v
+                  {
+                      if (x.Values == null)
+                      {
+                          return null;
+                      }
+                      return x.Values.Select(v =>
+                      {
+                          var ppv = new DC.ProductPropertyValue()
+                          {
+                              Value = v
 
-                                             };
-                               if (v != null && v is string)
-                               {
-                                   var vStr = (string)v;
-                                   ppv.Content = new DC.ProductPropertyValueLocalizedContent()
-                                                     {
-                                                         StringValue = vStr
-                                                     };
-                                   // value can't be longer than 50 chars
-                                   if (vStr.Length > MAX_ATTRIBUTE_VALUE_LENGTH)
-                                   {
-                                       ppv.Value = vStr.Substring(0, MAX_ATTRIBUTE_VALUE_LENGTH);
-                                   }
-                               }
-                               return ppv;
-                           }).ToList();
-                   }));
+                          };
+                          if (v != null && v is string)
+                          {
+                              var vStr = (string)v;
+                              ppv.Content = new DC.ProductPropertyValueLocalizedContent()
+                              {
+                                  StringValue = vStr
+                              };
+                              // value can't be longer than 50 chars
+                              if (vStr.Length > MAX_ATTRIBUTE_VALUE_LENGTH)
+                              {
+                                  ppv.Value = vStr.Substring(0, MAX_ATTRIBUTE_VALUE_LENGTH);
+                              }
+                          }
+                          return ppv;
+                      }).ToList();
+                  }));
 
 
-            Mapper.CreateMap<DC.ProductOption , ProductProperty>()
+            Mapper.CreateMap<DC.ProductOption, ProductProperty>()
                   .ForMember(x => x.AttributeFQN, op => op.ResolveUsing(x => x.AttributeFQN))
                   .ForMember(x => x.Values, op => op.ResolveUsing(x =>
                   {
@@ -268,9 +261,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                           //}
                           return v.Value;
                       }).ToList();
-                  }))
-                .ForMember(x => x.VariationExists, op => op.Ignore())
-                  ;
+                  }));
 
 
 
@@ -286,29 +277,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       }
                       return x.Values.Select(v =>
                       {
-                          var ppv = new DC.ProductOptionValue() 
+                          var ppv = new DC.ProductOptionValue()
                           {
                               Value = v
 
                           };
-                          
+
                           return ppv;
                       }).ToList();
                   }));
 
 
             Mapper.CreateMap<ProductVariation, DC.ProductVariation>();
-            Mapper.CreateMap<DC.ProductVariation, ProductVariation>()
-                //todo: confirm as only referenced by ignores Greg Murray on 2014-01-24 Do we need to remove from contracts?
-                .ForMember(x => x.StockOnHand, op => op.Ignore())
-                .ForMember(x => x.StockOnOrder, op => op.Ignore())
-                ;
+            Mapper.CreateMap<DC.ProductVariation, ProductVariation>();
 
 
-            Mapper.CreateMap<ProductVariationOption, DC.ProductVariationOption>()
-                //todo: confirm if need to add Content (AttributeVocabularyValueLocalizedContent) Greg Murray on 2014-01-24 
-                .ForMember(dc => dc.Content, op => op.Ignore())
-                ;
+            Mapper.CreateMap<ProductVariationOption, DC.ProductVariationOption>();
             Mapper.CreateMap<DC.ProductVariationOption, ProductVariationOption>();
 
 
@@ -338,14 +322,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             //              }
             //              return null;
             //          }));
-            
 
 
-            Mapper.CreateMap<DC.ProductInCatalogInfo , ProductInCatalogInfo>()
-                .ForMember(x => x.CatalogId, op => op.ResolveUsing(dc => dc.CatalogId ))
-                .ForMember( x=> x.ProductCategories, op=> op.ResolveUsing( dc=> dc.ProductCategories != null 
-                    ? dc.ProductCategories.Select( x=> x.CategoryId ).ToList() : null))
-                .ForMember(x => x.IsPriceOverridden , op => op.ResolveUsing(dc => dc.IsContentOverridden))
+
+            Mapper.CreateMap<DC.ProductInCatalogInfo, ProductInCatalogInfo>()
+                .ForMember(x => x.CatalogId, op => op.ResolveUsing(dc => dc.CatalogId))
+                .ForMember(x => x.ProductCategories, op => op.ResolveUsing(dc => dc.ProductCategories != null ? dc.ProductCategories.Select(x => x.CategoryId).ToList() : null))
+                .ForMember(x => x.IsPriceOverridden, op => op.ResolveUsing(dc => dc.IsContentOverridden))
                 .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => (dc.Content ?? NULLCONTENT).ProductName))
                 .ForMember(x => x.ProductShortDescription, op => op.ResolveUsing(dc => (dc.Content ?? NULLCONTENT).ProductShortDescription))
                 .ForMember(x => x.ProductFullDescription, op => op.ResolveUsing(dc => (dc.Content ?? NULLCONTENT).ProductFullDescription))
@@ -358,21 +341,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.MetaTagKeywords, op => op.ResolveUsing(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagKeywords))
                 .ForMember(x => x.SEOFriendlyUrl, op => op.ResolveUsing(dc => dc.SEOContent == null ? null : dc.SEOContent.SEOFriendlyUrl))
                 .ForMember(x => x.ProductImages, op => op.ResolveUsing(dc => (dc.Content ?? NULLCONTENT).ProductImages))
-                //ignores
-                .ForMember(x => x.ProductCode, op => op.Ignore())
-                .ForMember(x => x.ListPrice, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<ProductInCatalogInfo, DC.ProductInCatalogInfo>()
                 .ForMember(dc => dc.CatalogId, op => op.ResolveUsing(pisi => pisi.CatalogId))
-                .ForMember(x => x.ProductCategories, op => op.ResolveUsing(pisi => pisi.ProductCategories != null 
-                    ? pisi.ProductCategories.Select(catid => new DC.ProductCategory() { CategoryId = catid }).ToArray()  
-                    : null))
+                .ForMember(x => x.ProductCategories, op => op.ResolveUsing(pisi => pisi.ProductCategories != null ? pisi.ProductCategories.Select(catid => new DC.ProductCategory() { CategoryId = catid }).ToArray() : null))
                 .ForMember(dc => dc.IsContentOverridden, op => op.ResolveUsing(pisi => pisi.IsContentOverridden))
                 .ForMember(dc => dc.IsPriceOverridden, op => op.ResolveUsing(pisi => pisi.IsPriceOverridden))
                 .ForMember(dc => dc.IsSEOContentOverridden, op => op.ResolveUsing(pisi => pisi.IsSEOContentOverridden))
-                .ForMember(dc => dc.Content, op => op.ResolveUsing(pisi => {
-                    List<DC.ProductLocalizedImage> images = Mapper.Map<List<DC.ProductLocalizedImage>>(pisi.ProductImages );
+                .ForMember(dc => dc.Content, op => op.ResolveUsing(pisi =>
+                {
+                    List<DC.ProductLocalizedImage> images = Mapper.Map<List<DC.ProductLocalizedImage>>(pisi.ProductImages);
                     return new DC.ProductLocalizedContent
                     {
                         ProductName = pisi.ProductName,
@@ -398,9 +377,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         MetaTagKeywords = piso.MetaTagKeywords,
                         SEOFriendlyUrl = piso.SEOFriendlyUrl
                     }
-                ))
-                .ForMember(dc => dc.AuditInfo, op => op.Ignore())
-                .AfterMap((info, catalogInfo) =>
+                )).AfterMap((info, catalogInfo) =>
                 {
                     if (catalogInfo != null && catalogInfo.Content != null && catalogInfo.Content.ProductImages != null)
                     {
@@ -415,91 +392,64 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 })
                 ;
 
-            Mapper.CreateMap<Models.ProductModels.ProductLocalizedImage, DC.ProductLocalizedImage>()
+            Mapper.CreateMap<ProductLocalizedImage, DC.ProductLocalizedImage>()
                 .ForMember(x => x.CmsId, opt => opt.ResolveUsing(x => x.CmsId))
-                .ForMember(x => x.ImageUrl, opt => opt.ResolveUsing(x => string.IsNullOrEmpty(x.CmsId) 
-                    ? x.ImageUrl : null))
-                
-                //todo: confirm 3 new mappings Greg Murray on 2014-01-24 
-                .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.ImageId))
-                .ForMember(dc => dc.LocaleCode, op => op.ResolveUsing(x => x.ISOCultureCode))
-                .ForMember(dc => dc.ImageLabel, op => op.ResolveUsing(x => x.AltText))
-                //ignore
                 .ForMember(x => x.Sequence, op => op.Ignore())
-                .ForMember(dc => dc.MediaType, op => op.Ignore())
+                .ForMember(x => x.ImageUrl, opt => opt.ResolveUsing(x => string.IsNullOrEmpty(x.CmsId) ? x.ImageUrl : null));
 
-                ;
+            Mapper.CreateMap<DC.ProductLocalizedImage, ProductLocalizedImage>()
+                .ForMember(x => x.CmsId, opt => opt.ResolveUsing(x => x.CmsId));
 
-            Mapper.CreateMap<DC.ProductLocalizedImage, Models.ProductModels.ProductLocalizedImage>()
-                .ForMember(x => x.CmsId, opt => opt.ResolveUsing(x => x.CmsId))                
-                //todo: confirm 3 new mappings Greg Murray on 2014-01-24
-                .ForMember(x => x.ISOCultureCode, op => op.ResolveUsing(dc => dc.LocaleCode))
-                .ForMember(x => x.ImageId, op => op.ResolveUsing(dc => dc.Id))
-                .ForMember(x => x.AltText, op => op.ResolveUsing(dc => dc.ImageLabel))
-                //ignores
-                .ForMember(x => x.ProductCode, op => op.Ignore())
-                ;
-                
 
-            Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, UnitOfMeasure>()                
-                //todo: confirm unit -> symbol mappings Greg Murray on 2014-01-24 
-                .ForMember(x => x.Symbol, op => op.ResolveUsing(dc => dc.Unit))
-                .ForMember(x => x.Val, op => op.ResolveUsing(dc => dc.Value))
-                ;
-            Mapper.CreateMap<UnitOfMeasure, Mozu.Core.Api.Contracts.Measurement>()
-                //todo: confirm Symbol -> unit mapping Greg Murray on 2014-01-24 
-                .ForMember(dc => dc.Unit, op => op.ResolveUsing(x => x.Symbol))
-                .ForMember(dc => dc.Value, op => op.ResolveUsing(x => x.Val))
-                ;
+            Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, UnitOfMeasure>();
+            Mapper.CreateMap<UnitOfMeasure, Mozu.Core.Api.Contracts.Measurement>();
 
             Mapper.CreateMap<ProductExtra, DC.ProductExtra>();
-            Mapper.CreateMap<DC.ProductExtra, ProductExtra>()
-                .ForMember(x => x.AttributeDetail, op => op.Ignore())
-                ;
+            Mapper.CreateMap<DC.ProductExtra, ProductExtra>();
 
             Mapper.CreateMap<ProductExtraValue, DC.ProductExtraValue>()
                   .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => new DC.ProductExtraValueDeltaPrice()
-                                                                               {
-                                                                                   CurrencyCode = "usd",
-                                                                                   DeltaPrice = x.DeltaPrice
-                                                                               }));
+                  {
+                      CurrencyCode = "usd",
+                      DeltaPrice = x.DeltaPrice
+                  }));
 
             Mapper.CreateMap<DC.ProductExtraValue, ProductExtraValue>()
-                  .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => x.DeltaPrice != null 
-                      ? x.DeltaPrice.DeltaPrice : 0));
+                  .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => x.DeltaPrice != null ? x.DeltaPrice.DeltaPrice : 0));
 
 
 
 
             Mapper.CreateMap<DC.ProductVariation, ProductVariation>()
-                  //.ForMember(x => x.Options, op => op.ResolveUsing(x => x.Options))
-                  .ForMember(x => x.DeltaPriceValue, op => op.ResolveUsing(x => x.DeltaPrice != null 
-                      ? x.DeltaPrice.Value : null));
+                //.ForMember(x => x.Options, op => op.ResolveUsing(x => x.Options))
+                  .ForMember(x => x.DeltaPriceValue, op => op.ResolveUsing(x => x.DeltaPrice != null ? x.DeltaPrice.Value : null));
             Mapper.CreateMap<ProductVariation, DC.ProductVariation>()
-                .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => x.DeltaPriceValue.HasValue 
-                    ? new DC.ProductVariationDeltaPrice() {CurrencyCode = "usd", Value = x.DeltaPriceValue} : null));
+                .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => x.DeltaPriceValue.HasValue ? new DC.ProductVariationDeltaPrice() { CurrencyCode = "usd", Value = x.DeltaPriceValue } : null));
 
             Mapper.CreateMap<DC.ProductVariationOption, ProductVariationOption>();
             Mapper.CreateMap<ProductVariationOption, DC.ProductVariationOption>();
 
 
-             Mapper.CreateMap<Mozu.ProductAdmin.Contracts.LocationInventory, LocationWithInventory>()
-                 .ForMember(x => x.Location, op => op.Ignore())
-                 ;
 
+
+            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.LocationInventory, LocationWithInventory>();
         }
 
-        object OptionValuesResolver (DC.Product p)
+        #endregion setup
+
+        [Test]
+        public void ResolveUsing_With_Complex_Object_Perf_Test()
         {
-            if (p.VariationOptions != null && p.VariationOptions.Count > 0)
-            {
-                return string.Join(", ", p.VariationOptions.Where( x=> x.Value != null).Select(x =>  x.Value.ToString()  ));
-            }
-            return null;
+            //arrange
+            var domainProduct = PerfUtil.CreateDomainProduct();
+
+            //act
+            var st = PerfUtil.ExecuteTimeMapping(domainProduct);
+
+            //anaylyze
+            PerfUtil.WriteSummary(PerfUtil.MaxTimes, st);
+
         }
-       
+
     }
-
-
-   
 }

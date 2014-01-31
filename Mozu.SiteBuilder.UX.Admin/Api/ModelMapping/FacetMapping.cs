@@ -7,7 +7,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Facets;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
-    public class FascetMapping : Profile
+    public class FacetMapping : Profile
     {
         public override string ProfileName
         {
@@ -20,7 +20,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         protected override void Configure()
         {
             // To model
-            Mapper.CreateMap<DC.FacetSet, FacetSet>();
+            Mapper.CreateMap<DC.FacetSet, FacetSet>()
+                .ForMember(x => x.CategoryId, op => op.Ignore())
+                ;
 
             // To data contract
             Mapper.CreateMap<FacetSet, DC.FacetSet>();
@@ -28,22 +30,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             // To model
             Mapper.CreateMap<DC.Facet, Facet>()
-                  .ForMember(x => x.SourceId, op => op.MapFrom(x => x.Source.Id))
-                  .ForMember(x => x.SourceName, op => op.MapFrom(x => x.Source.Name))
-                  .ForMember(x => x.SourceType, op => op.MapFrom(x => x.Source.Type))
-                  .ForMember(x => x.ValidityIsValid, op => op.MapFrom(x => x.Validity.IsValid))
-                  .ForMember(x => x.AllowsRangeQuery, op => op.MapFrom(x => x.Source.AllowsRangeQuery))
-                  
-                  .ForMember(x => x.ValidityReasonCode, op => op.MapFrom(x => x.Validity.ReasonCode));
+                  .ForMember(x => x.SourceId, op => op.ResolveUsing(x => (x.Source != null) ? x.Source.Id : null))
+                  .ForMember(x => x.SourceName, op => op.ResolveUsing(x => (x.Source != null) ? x.Source.Name : null))
+                  .ForMember(x => x.SourceType, op => op.ResolveUsing(x => (x.Source != null) ? x.Source.Type : null))
+                  .ForMember(x => x.ValidityIsValid, op => op.ResolveUsing(x => (x.Validity != null && x.Validity.IsValid) ))
+                  .ForMember(x => x.AllowsRangeQuery, op => op.ResolveUsing(x =>(x.Source != null && x.Source.AllowsRangeQuery) ))
+                  .ForMember(x => x.ValidityReasonCode, op => op.ResolveUsing(dc => (dc.Validity != null) ? dc.Validity.ReasonCode : null)) 
+                  ;
 
            
-
             // To data contract
             Mapper.CreateMap<Facet, DC.Facet>()
                   .ForMember(x => x.Source, op => op.ResolveUsing(x => new DC.FacetSource {Id = x.SourceId, Name = x.SourceName, Type = x.SourceType}))
-                  .ForMember(x => x.FacetType, op => op.ResolveUsing(x => x.RangeQueries != null && x.RangeQueries.Count > 0 ? "RangeQuery" : "Value"));
+                  .ForMember(x => x.FacetType, op => op.ResolveUsing(x => x.RangeQueries != null && x.RangeQueries.Count > 0 ? "RangeQuery" : "Value"))
+                 //todo: confirm FacetValidity mapping Greg Murray on 2014-01-24
+                  .ForMember(dc => dc.Validity, op => op.ResolveUsing(x => new DC.FacetValidity()
+                      {
+                          IsValid = x.ValidityIsValid, ReasonCode = x.ValidityReasonCode
+                      }))
+                  //ignores
+                  .ForMember(dc => dc.AuditInfo, op => op.Ignore())
+                  ;
                   
-
             // To model
             Mapper.CreateMap<DC.FacetRangeQuery, FacetRangeQuery>();
 
@@ -54,7 +62,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<DC.FacetSource, FacetSource>();
 
             // To data contract
-            Mapper.CreateMap<FacetSource, DC.FacetSource>();
+            Mapper.CreateMap<FacetSource, DC.FacetSource>()
+                .ForMember(dc => dc.DataType, op => op.Ignore());
 
 
         }

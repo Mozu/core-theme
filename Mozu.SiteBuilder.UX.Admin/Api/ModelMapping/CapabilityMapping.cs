@@ -102,7 +102,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 });
 
             Mapper.CreateMap<Capability, Mozu.Core.ThirdParty.Contracts.Capability>()
-                  .ForMember(x => x.SupportedShoppingCountries, opt => opt.Ignore());
+                //ignores
+                .ForMember(x => x.SupportedShoppingCountries, opt => opt.Ignore())
+                .ForMember(x => x.AppHashKey, op => op.Ignore())
+                .ForMember(x => x.OperationUrls, op => op.Ignore())
+                .ForMember(x => x.AuditInfo, op => op.Ignore())
+                  ;
 
             // Mapper.CreateMap<Mozu.Core.ThirdParty.Contracts.Capability,Capability>();
         }

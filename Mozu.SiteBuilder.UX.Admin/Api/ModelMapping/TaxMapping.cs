@@ -8,7 +8,6 @@ using Mozu.SiteSettings.General.Contracts;
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
 
-
     public class TaxMapping : Profile
     {
         public override string ProfileName
@@ -22,9 +21,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         protected override void Configure()
         {
             AutoMapper.Mapper.CreateMap<Mozu.SiteBuilder.UX.Admin.Api.Models.Tax.TaxRate, TaxableTerritory>()
-                      .ForMember(x => x.StateOrProvinceCode, opt => opt.MapFrom(x => x.StateCode));
+                      .ForMember(x => x.StateOrProvinceCode, opt => opt.ResolveUsing(x => x.StateCode))
+                      .ForMember(dc => dc.IsShippingTaxable, op => op.Ignore())
+                      ;
             AutoMapper.Mapper.CreateMap<TaxableTerritory, Mozu.SiteBuilder.UX.Admin.Api.Models.Tax.TaxRate>()
-                .ForMember(x => x.StateCode, opt => opt.MapFrom(x => x.StateOrProvinceCode));
+                .ForMember(x => x.StateCode, opt => opt.ResolveUsing(x => x.StateOrProvinceCode))
+                .ForMember(x => x.id, op => op.Ignore())
+                ;
         }
     }
 }

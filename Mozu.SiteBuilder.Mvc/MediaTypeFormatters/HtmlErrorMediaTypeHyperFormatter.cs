@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Autofac;
 using Magnum.Extensions;
-using MassTransit;
+
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Logging;
