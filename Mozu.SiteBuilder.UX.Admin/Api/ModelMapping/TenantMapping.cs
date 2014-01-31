@@ -18,9 +18,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         protected override void Configure()
         {
             AutoMapper.Mapper.CreateMap<DC.Tenant, TaContext>()
-                      .ForMember(x => x.Id, op => op.MapFrom(x => x.Id))
-                      .ForMember(x => x.Name, op => op.MapFrom(x => x.Name))
-                      .ForMember(x => x.MasterCatalogs, op => op.MapFrom(x => x.MasterCatalogs))
+                      .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
+                      .ForMember(x => x.Name, op => op.ResolveUsing(x => x.Name))
+                      .ForMember(x => x.MasterCatalogs, op => op.ResolveUsing(x => x.MasterCatalogs))
                       .AfterMap((tenant, context) =>
                           {
                               foreach (var site in tenant.Sites)
@@ -40,21 +40,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
 
             AutoMapper.Mapper.CreateMap<DC.MasterCatalog , MasterCatalog >()
-                .ForMember(x => x.Id, op => op.MapFrom(x => x.Id))
-                .ForMember(x => x.Name, op => op.MapFrom(x => x.Name))
-                .ForMember(x => x.Catalogs, op => op.MapFrom(x => x.Catalogs ))
+                .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
+                .ForMember(x => x.Name, op => op.ResolveUsing(x => x.Name))
+                .ForMember(x => x.Catalogs, op => op.ResolveUsing(x => x.Catalogs ))
+                //ignores
+                .ForMember(x => x.ProductPublishingMode, op => op.Ignore())
+                .ForMember(x => x.Sites, op => op.Ignore())
                 ;
             AutoMapper.Mapper.CreateMap<DC.Catalog, TaContextCatalog>()
-                      .ForMember(x => x.Id, op => op.MapFrom(x => x.Id))
-                      .ForMember(x => x.Name, op => op.MapFrom(x => x.Name));
-              //.ForMember(x => x.StagingHost, op => op.MapFrom(x => x.Domains == null ? null : x.Domains.Where(d => d.IsSystemAssigned).Select(d => d.DomainName).FirstOrDefault()));
+                      .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
+                      .ForMember(x => x.Name, op => op.ResolveUsing(x => x.Name));
+              //.ForMember(x => x.StagingHost, op => op.ResolveUsing(x => x.Domains == null ? null : x.Domains.Where(d => d.IsSystemAssigned).Select(d => d.DomainName).FirstOrDefault()));
 
 
             AutoMapper.Mapper.CreateMap<DC.Site, TaContextSite>()
-                .ForMember(x => x.Id, op => op.MapFrom(x => x.Id))
-                .ForMember(x => x.Name, op => op.MapFrom(x => x.Name))
-                .ForMember(x => x.StagingHost, op => op.MapFrom(x => x.Domains == null ? null : x.Domains.Where(d => d.IsSystemAssigned).Select(d => d.DomainName).FirstOrDefault()));
-
+                .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
+                .ForMember(x => x.Name, op => op.ResolveUsing(x => x.Name))
+                .ForMember(x => x.StagingHost, op => op.ResolveUsing(x => x.Domains == null 
+                    ? null : 
+                    x.Domains.Where(d => d.IsSystemAssigned).Select(d => d.DomainName).FirstOrDefault()))
+                //ignores
+                .ForMember(x => x.DefaultHost, op => op.Ignore())
+                .ForMember(x => x.PublishingEnabled, op => op.Ignore())
+                ;
 
             AutoMapper.Mapper.CreateMap<Mozu.ProductAdmin.Contracts.MasterCatalogCollection , TaContext>()
                 .AfterMap((dc, tacontext) => {
@@ -67,7 +75,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     }
 
                     // TODO: hard-coding a default value for now, in case the service doesn't always return a value.
-                    tacontext.MasterCatalogs.Each(sc => { if (sc.ProductPublishingMode == null) sc.ProductPublishingMode = Mozu.ProductAdmin.Contracts.MasterCatalog .ProductPublishingModeConst.Live; });
+                    tacontext.MasterCatalogs.Each(sc =>
+                        {
+                            if (sc.ProductPublishingMode == null) 
+                                sc.ProductPublishingMode = Mozu.ProductAdmin.Contracts.MasterCatalog.ProductPublishingModeConst.Live;
+                        });
 
                 })
                 .ForAllMembers(op => op.Ignore())

@@ -55,58 +55,82 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private void Map_DcOrder_to_Order()
         {
             Mapper.CreateMap<OrdersDC.Order, Order>()
-                .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
-                .ForMember(x => x.SiteId, op => op.MapFrom(dc => dc.SiteId))
-                .ForMember(x => x.ChannelCode, op => op.MapFrom(dc => dc.ChannelCode))
-                .ForMember(x => x.TenantId, op => op.MapFrom(dc => dc.TenantId))
+                .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
+                .ForMember(x => x.SiteId, op => op.ResolveUsing(dc => dc.SiteId))
+                .ForMember(x => x.ChannelCode, op => op.ResolveUsing(dc => dc.ChannelCode))
+                .ForMember(x => x.TenantId, op => op.ResolveUsing(dc => dc.TenantId))
 
-                .ForMember(x => x.OrderNumber, op => op.MapFrom(dc => dc.OrderNumber))
-                .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
-                .ForMember(x => x.UpdateDate, op => op.MapFrom(dc => dc.AuditInfo.UpdateDate))
-                .ForMember(x => x.CustomerId, op => op.MapFrom(dc => dc.CustomerAccountId))
-                .ForMember(x => x.BillingContact, op => op.ResolveUsing(dc => (dc.BillingInfo != null ? dc.BillingInfo.BillingContact : null) ?? (dc.FulfillmentInfo != null ? dc.FulfillmentInfo.FulfillmentContact : null)))
-                .ForMember(x => x.IsSameBillingShippingAddress, op => op.ResolveUsing(dc => dc.BillingInfo != null ? (bool?)dc.BillingInfo.IsSameBillingShippingAddress : null))
-                .ForMember(x => x.BillingCard, op => op.ResolveUsing(dc => dc.BillingInfo != null ? dc.BillingInfo.Card : null))
-                .ForMember(x => x.FulfillmentContact, op => op.MapFrom(dc => dc.FulfillmentInfo != null ? dc.FulfillmentInfo.FulfillmentContact : null ))
-                .ForMember(x => x.ShippingMethodCode, op => op.MapFrom(dc => dc.FulfillmentInfo != null ? dc.FulfillmentInfo.ShippingMethodCode : null))
-                .ForMember(x => x.ShippingMethodName, op => op.MapFrom(dc => dc.FulfillmentInfo != null ? dc.FulfillmentInfo.ShippingMethodName : null))
-                .ForMember(x => x.IpAddress, op => op.MapFrom(dc => dc.IPAddress))
-                .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
-                .ForMember(x => x.ActiveOrderDiscount, op => op.MapFrom(dc => dc.OrderDiscounts != null ? dc.OrderDiscounts.FirstOrDefault(d => d.Excluded.HasValue && !d.Excluded.Value) : null))
-                .ForMember(x => x.OrderDiscounts, op => op.MapFrom(dc => dc.OrderDiscounts))
+                .ForMember(x => x.OrderNumber, op => op.ResolveUsing(dc => dc.OrderNumber))
+                .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.CreateDate : null))
+                .ForMember(x => x.UpdateDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.UpdateDate : null))
+                .ForMember(x => x.CustomerId, op => op.ResolveUsing(dc => dc.CustomerAccountId))
+                // TODO: this is a workaround for now. Between storefront & Mozu Admin order creation, we should always ensure we have a BillingContact
+                .ForMember(x => x.BillingContact, op => op.ResolveUsing(dc => dc.BillingInfo != null && dc.BillingInfo.BillingContact != null 
+                    ? dc.BillingInfo.BillingContact 
+                    : (dc.FulfillmentInfo != null) 
+                        ? dc.FulfillmentInfo.FulfillmentContact 
+                        : null))
+                .ForMember(x => x.FulfillmentContact, op => op.ResolveUsing(dc => (dc.FulfillmentInfo != null) 
+                    ? dc.FulfillmentInfo.FulfillmentContact : null))
+                .ForMember(x => x.ShippingMethodCode, op => op.ResolveUsing(dc => (dc.FulfillmentInfo != null) 
+                    ? dc.FulfillmentInfo.ShippingMethodCode : null))
+                .ForMember(x => x.ShippingMethodName, op => op.ResolveUsing(dc => (dc.FulfillmentInfo != null) 
+                    ? dc.FulfillmentInfo.ShippingMethodName : null))
+                .ForMember(x => x.IpAddress, op => op.ResolveUsing(dc => dc.IPAddress))
+                .ForMember(x => x.Items, op => op.ResolveUsing(dc => dc.Items))
+                .ForMember(x => x.ActiveOrderDiscount, op => op.ResolveUsing(dc => dc.OrderDiscounts != null 
+                    ? dc.OrderDiscounts.FirstOrDefault(d => d.Excluded.HasValue && !d.Excluded.Value) : null))
+                .ForMember(x => x.OrderDiscounts, op => op.ResolveUsing(dc => dc.OrderDiscounts))
 
-                .ForMember(x => x.Attributes, op => op.MapFrom(dc => dc.Attributes))
+                .ForMember(x => x.Attributes, op => op.ResolveUsing(dc => dc.Attributes))
 
-                .ForMember(x => x.ActiveShippingDiscount, op => op.MapFrom(dc => dc.ShippingDiscounts != null ? dc.ShippingDiscounts.FirstOrDefault(d => d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value) : null))
-                .ForMember(x => x.ShippingDiscounts, op => op.MapFrom(dc => dc.ShippingDiscounts))
-                .ForMember(x => x.CustomerNote, op => op.MapFrom(dc => dc.ShopperNotes != null ? dc.ShopperNotes.Comments : null))
-                .ForMember(x => x.OrderStatus, op => op.MapFrom(dc => dc.Status))
-                .ForMember(x => x.FulfillmentStatus, op => op.MapFrom(dc => dc.FulfillmentStatus ))
-                .ForMember(x => x.PaymentStatus, op => op.MapFrom(dc => dc.PaymentStatus))
-                .ForMember(x => x.Payments, op => op.MapFrom(dc => dc.Payments.OrderByDescending(p => p.AuditInfo.CreateDate)))
-                .ForMember(x => x.Packages, op => op.MapFrom(dc => dc.Packages))
-                .ForMember(x => x.Pickups, op => op.MapFrom(dc => dc.Pickups))
+                .ForMember(x => x.ActiveShippingDiscount, op => op.ResolveUsing(dc => dc.ShippingDiscounts != null 
+                    ? dc.ShippingDiscounts.FirstOrDefault(d => d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value) : null))
+                .ForMember(x => x.ShippingDiscounts, op => op.ResolveUsing(dc => dc.ShippingDiscounts))
+                .ForMember(x => x.CustomerNote, op => op.ResolveUsing(dc => dc.ShopperNotes != null ? dc.ShopperNotes.Comments : null))
+                .ForMember(x => x.OrderStatus, op => op.ResolveUsing(dc => dc.Status))
+                .ForMember(x => x.FulfillmentStatus, op => op.ResolveUsing(dc => dc.FulfillmentStatus ))
+                .ForMember(x => x.PaymentStatus, op => op.ResolveUsing(dc => dc.PaymentStatus))
+                .ForMember(x => x.Payments, op => op.ResolveUsing(dc => (dc.Payments != null) 
+                    ? dc.Payments.OrderByDescending(p => p.AuditInfo.CreateDate) 
+                    : null))
+                .ForMember(x => x.Packages, op => op.ResolveUsing(dc => dc.Packages))
+                .ForMember(x => x.Pickups, op => op.ResolveUsing(dc => dc.Pickups))
 
-                .ForMember(x => x.OrderAdjustment, op => op.MapFrom(dc => dc.Adjustment))
-                .ForMember(x => x.ShippingAdjustment, op => op.MapFrom(dc => dc.ShippingAdjustment))
+                .ForMember(x => x.OrderAdjustment, op => op.ResolveUsing(dc => dc.Adjustment))
+                .ForMember(x => x.ShippingAdjustment, op => op.ResolveUsing(dc => dc.ShippingAdjustment))
 
-                .ForMember(x => x.Subtotal, op => op.MapFrom(dc => dc.Subtotal))
-                .ForMember(x => x.DiscountedSubtotal, op => op.MapFrom(dc => dc.DiscountedSubtotal))
-                .ForMember(x => x.DiscountTotal, op => op.MapFrom(dc => dc.DiscountTotal))
-                .ForMember(x => x.DiscountedTotal, op => op.MapFrom(dc => dc.DiscountedTotal))
-                .ForMember(x => x.HandlingTotal, op => op.MapFrom(dc => dc.HandlingAmount))
-                .ForMember(x => x.FeeTotal, op => op.MapFrom(dc => dc.FeeTotal))
-                .ForMember(x => x.ShippingSubtotal, op => op.MapFrom(dc => dc.ShippingSubTotal))
-                .ForMember(x => x.ShippingTotal, op => op.MapFrom(dc => dc.ShippingTotal))
-                .ForMember(x => x.TaxTotal, op => op.MapFrom(dc => dc.TaxTotal))
-                .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Total))
+                .ForMember(x => x.Subtotal, op => op.ResolveUsing(dc => dc.Subtotal))
+                .ForMember(x => x.DiscountedSubtotal, op => op.ResolveUsing(dc => dc.DiscountedSubtotal))
+                .ForMember(x => x.DiscountTotal, op => op.ResolveUsing(dc => dc.DiscountTotal))
+                .ForMember(x => x.DiscountedTotal, op => op.ResolveUsing(dc => dc.DiscountedTotal))
+                .ForMember(x => x.HandlingTotal, op => op.ResolveUsing(dc => dc.HandlingAmount))
+                .ForMember(x => x.FeeTotal, op => op.ResolveUsing(dc => dc.FeeTotal))
+                .ForMember(x => x.ShippingSubtotal, op => op.ResolveUsing(dc => dc.ShippingSubTotal))
+                .ForMember(x => x.ShippingTotal, op => op.ResolveUsing(dc => dc.ShippingTotal))
+                .ForMember(x => x.TaxTotal, op => op.ResolveUsing(dc => dc.TaxTotal))
+                .ForMember(x => x.Total, op => op.ResolveUsing(dc => dc.Total))
 
-                .ForMember(x => x.IsDraft, op => op.MapFrom(dc => dc.IsDraft.HasValue ? dc.IsDraft.Value : false))
-                .ForMember(x => x.HasDraft, op => op.MapFrom(dc => dc.HasDraft.HasValue ? dc.HasDraft.Value : false))
+                .ForMember(x => x.IsDraft, op => op.ResolveUsing(dc => dc.IsDraft ?? false ))
+                .ForMember(x => x.HasDraft, op => op.ResolveUsing(dc => dc.HasDraft ?? false))
 
-                .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
+                .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))
+
+                //ignores, handled in aftermap
+                .ForMember(x => x.UnpackagedItems, op => op.Ignore())
+                .ForMember(x => x.UnpickedupItems, op => op.Ignore())
+                .ForMember(x => x.AuthorizationInfo, op => op.Ignore())
+                .ForMember(x => x.ItemsOrdered, op => op.Ignore())
+                .ForMember(x => x.ItemsNotShipped, op => op.Ignore())
+                .ForMember(x => x.ItemsShipped, op => op.Ignore())
+                .ForMember(x => x.ItemsNotPickedup, op => op.Ignore())
+                .ForMember(x => x.ItemsPickedup, op => op.Ignore())
+
                 .AfterMap((dc, order) =>
                 {
+                    if (order.Packages == null)
+                        return;
+
                     // sort order packages by create date (for consistent ordering in UI)
                     order.Packages = order.Packages.OrderBy(p => p.CreateDate).ToList();
 
@@ -249,8 +273,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     order.ItemsOrdered = order.Items.Sum(i => i.Quantity);
                     order.ItemsNotShipped = order.UnpackagedItems.Sum(i => i.Quantity);
                     order.ItemsNotPickedup = order.UnpickedupItems.Sum(i => i.Quantity);
-                    order.ItemsShipped = order.Packages == null || order.Packages.Count == 0 ? 0 : order.Packages.SelectMany(p => p.Items).Sum(i => i.Quantity);
-                    order.ItemsPickedup = order.Pickups == null || order.Pickups.Count == 0 ? 0 : order.Pickups.SelectMany(p => p.Items).Sum(i => i.Quantity);
+                    order.ItemsShipped = order.Packages == null || order.Packages.Count == 0 
+                        ? 0 
+                        : order.Packages.SelectMany(p => p.Items).Sum(i => i.Quantity);
+                    order.ItemsPickedup = order.Pickups == null || order.Pickups.Count == 0 
+                        ? 0 
+                        : order.Pickups.SelectMany(p => p.Items).Sum(i => i.Quantity);
                 })
                 ;
         }
@@ -258,10 +286,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private void Map_DcOrderItem_to_OrderItem()
         {
             Mapper.CreateMap<ProductsDC.BundledProduct, BundledProduct>()
-                .ForMember(x => x.UnitWeight, opt => opt.MapFrom(x => x.Measurements.Weight.Value));
+                .ForMember(x => x.UnitWeight, opt => opt.ResolveUsing(x => (x.Measurements != null && x.Measurements.Weight != null) 
+                    ? x.Measurements.Weight.Value : null));
 
             Mapper.CreateMap<BundledProduct, ProductsDC.BundledProduct>()
-                .ForMember(x => x.Measurements, opt => opt.MapFrom(x => new CommerceDC.PackageMeasurements()
+                .ForMember(x => x.Measurements, opt => opt.ResolveUsing(x => new CommerceDC.PackageMeasurements()
                                                                         {
                                                                             Weight = new Measurement()
                                                                                      {
@@ -272,30 +301,47 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         
 
         Mapper.CreateMap<OrdersDC.OrderItem, OrderItem>()
-                   .ForMember(x => x.BundledProducts , op => op.MapFrom(dc => dc.Product.BundledProducts ))
-                  .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
-                  .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.Product.VariationProductCode ?? dc.Product.ProductCode))
-                  .ForMember(x => x.ProductName, op => op.MapFrom(dc => dc.Product.Name))
-                  .ForMember(x => x.UnitPrice, op => op.MapFrom(dc => dc.UnitPrice.ExtendedAmount))
-                  .ForMember(x => x.SalePrice, op => op.MapFrom(dc => dc.UnitPrice.SaleAmount))
-                  .ForMember(x => x.ListPrice, op => op.MapFrom(dc => dc.UnitPrice.ListAmount))
-                  .ForMember(x => x.UnitWeight, op => op.MapFrom(dc => dc.Product.Measurements != null && dc.Product.Measurements != null ? dc.Product.Measurements.Weight : null))
-                  .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
-                  .ForMember(x => x.ActiveDiscount, op => op.MapFrom(dc => dc.ProductDiscounts != null ? dc.ProductDiscounts.FirstOrDefault(d => d.Excluded.HasValue && !d.Excluded.Value) : null))
-                  .ForMember(x => x.Discounts, op => op.MapFrom(dc => dc.ProductDiscounts))
-                  .ForMember(x => x.ActiveShippingDiscount, op => op.MapFrom(dc => dc.ShippingDiscounts != null ? dc.ShippingDiscounts.FirstOrDefault(d => d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value) : null))
-                  .ForMember(x => x.ShippingDiscounts, op => op.MapFrom(dc => dc.ShippingDiscounts))
-                  .ForMember(x => x.Options, op => op.MapFrom(dc => dc.Product.Options))
-                  .ForMember(x => x.Subtotal, op => op.MapFrom(dc => dc.Subtotal))
-                  .ForMember(x => x.DisplaySubtotal, op => op.MapFrom(dc => dc.ExtendedTotal))
-                  .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Total))
-                  .ForMember(x => x.FulfillmentLocationCode, op => op.MapFrom(dc => dc.FulfillmentLocationCode))
-                  .ForMember(x => x.FulfillmentMethod, op => op.MapFrom(dc => dc.FulfillmentMethod))
+                  .ForMember(x => x.BundledProducts , op => op.ResolveUsing(dc => (dc.Product != null) 
+                      ? dc.Product.BundledProducts : null))
+                  .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
+                  .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => (dc.Product != null) 
+                      ? (dc.Product.VariationProductCode ?? dc.Product.ProductCode) 
+                      : null))
+                  .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => (dc.Product != null) 
+                      ? dc.Product.Name : null))
+                  .ForMember(x => x.UnitPrice, op => op.ResolveUsing(dc => (dc.UnitPrice != null) 
+                      ? dc.UnitPrice.ExtendedAmount : null))
+                  .ForMember(x => x.SalePrice, op => op.ResolveUsing(dc => (dc.UnitPrice != null) 
+                      ? dc.UnitPrice.SaleAmount : null))
+                  .ForMember(x => x.ListPrice, op => op.ResolveUsing(dc => (dc.UnitPrice != null) 
+                      ? dc.UnitPrice.ListAmount : null))
+                  .ForMember(x => x.UnitWeight, op => op.ResolveUsing(dc => dc.Product != null && dc.Product.Measurements != null 
+                      ? dc.Product.Measurements.Weight : null))
+                  .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
+                  .ForMember(x => x.ActiveDiscount, op => op.ResolveUsing(dc => dc.ProductDiscounts != null 
+                      ? dc.ProductDiscounts.FirstOrDefault(d => d.Excluded.HasValue && !d.Excluded.Value) 
+                      : null))
+                  .ForMember(x => x.Discounts, op => op.ResolveUsing(dc => dc.ProductDiscounts))
+                  .ForMember(x => x.ActiveShippingDiscount, op => op.ResolveUsing(dc => dc.ShippingDiscounts != null 
+                      ? dc.ShippingDiscounts.FirstOrDefault(d => d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value) 
+                      : null))
+                  .ForMember(x => x.ShippingDiscounts, op => op.ResolveUsing(dc => dc.ShippingDiscounts))
+                  .ForMember(x => x.Options, op => op.ResolveUsing(dc => (dc.Product != null) 
+                      ? dc.Product.Options : null))
+                  .ForMember(x => x.Subtotal, op => op.ResolveUsing(dc => dc.Subtotal))
+                  .ForMember(x => x.DisplaySubtotal, op => op.ResolveUsing(dc => dc.ExtendedTotal))
+                  .ForMember(x => x.Total, op => op.ResolveUsing(dc => dc.Total))
+                  .ForMember(x => x.FulfillmentLocationCode, op => op.ResolveUsing(dc => dc.FulfillmentLocationCode))
+                  .ForMember(x => x.FulfillmentMethod, op => op.ResolveUsing(dc => dc.FulfillmentMethod))
+
+                  .ForMember(x => x.FulfillmentStatus, op => op.Ignore())
+
                   .AfterMap((dc, orderItem) =>
                   {
                       if (orderItem.Discounts != null)
                       {
-                          orderItem.Discounts.Each(d => d.Quantity = d.Quantity == 0 ? orderItem.Quantity : d.Quantity);
+                          orderItem.Discounts.Each(d => d.Quantity = (d.Quantity == 0) 
+                              ? orderItem.Quantity : d.Quantity);
                       }
                   });
             // TODO: shopper entered value
@@ -309,11 +355,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private void Map_BundledProduct_to_OrderItem()
         {
             Mapper.CreateMap<BundledProduct, OrderItem>()
+                .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
+                .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => dc.Name))
+                .ForMember(x => x.UnitWeight, op => op.ResolveUsing(dc => dc.UnitWeight))
+                .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
+
+                //ignores
                 .ForMember(x => x.BundledProducts, op => op.Ignore())
-                .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.ProductCode))
-                .ForMember(x => x.ProductName, op => op.MapFrom(dc => dc.Name))
-                .ForMember(x => x.UnitWeight, op => op.MapFrom(dc => dc.UnitWeight))
-                .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
+                .ForMember(x => x.Id, op => op.Ignore())
+                .ForMember(x => x.Options, op => op.Ignore())
+                .ForMember(x => x.UnitPrice, op => op.Ignore())
+                .ForMember(x => x.ListPrice, op => op.Ignore())
+                .ForMember(x => x.SalePrice, op => op.Ignore())
+                .ForMember(x => x.ActiveDiscount, op => op.Ignore())
+                .ForMember(x => x.Discounts, op => op.Ignore())
+                .ForMember(x => x.ActiveShippingDiscount, op => op.Ignore())
+                .ForMember(x => x.ShippingDiscounts, op => op.Ignore())
+                .ForMember(x => x.Subtotal, op => op.Ignore())
+                .ForMember(x => x.DisplaySubtotal, op => op.Ignore())
+                .ForMember(x => x.Total, op => op.Ignore())
+                .ForMember(x => x.FulfillmentLocationCode, op => op.Ignore())
+                .ForMember(x => x.FulfillmentMethod, op => op.Ignore())
+                .ForMember(x => x.FulfillmentStatus, op => op.Ignore())
+
 //                             ProductCode = orderItem.ProductCode,
 //                             ProductName = orderItem.ProductName,
 //                             Weight = orderItem.UnitWeight * remainingQuantity,
@@ -324,49 +388,60 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private void Map_DcAppliedProductDiscount_to_OrderItemDiscount()
         {
             Mapper.CreateMap<DiscountDC.AppliedProductDiscount, OrderItemDiscount>()
-                .ForMember(x => x.DiscountId, op => op.MapFrom(dc => dc.Discount.Id))
-                .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.ProductQuantity))
-                .ForMember(x => x.Description, op => op.MapFrom(dc => dc.Discount.Name))
-                .ForMember(x => x.UnitPrice, op => op.MapFrom(dc => dc.ImpactPerUnit))
-                .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Impact))
-                .ForMember(x => x.CouponCode, op => op.MapFrom(dc => dc.CouponCode))
-                .ForMember(x => x.IsActive, op => op.MapFrom(dc => dc.Excluded.HasValue && !dc.Excluded.Value))
+                //todo: confirm default 0 when null Greg Murray on 2014-01-28 
+                .ForMember(x => x.DiscountId, op => op.ResolveUsing(dc => (dc.Discount != null) 
+                    ? dc.Discount.Id : 0))
+                .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.ProductQuantity))
+                .ForMember(x => x.Description, op => op.ResolveUsing(dc => (dc.Discount != null) 
+                    ? dc.Discount.Name : null))
+                .ForMember(x => x.UnitPrice, op => op.ResolveUsing(dc => dc.ImpactPerUnit))
+                .ForMember(x => x.Total, op => op.ResolveUsing(dc => dc.Impact))
+                .ForMember(x => x.CouponCode, op => op.ResolveUsing(dc => dc.CouponCode))
+                .ForMember(x => x.IsActive, op => op.ResolveUsing(dc => dc.Excluded.HasValue && !dc.Excluded.Value))
                 ;
         }
 
         private void Map_DcAppliedDiscount_to_OrderDiscount()
         {
             Mapper.CreateMap<DiscountDC.AppliedDiscount, OrderDiscount>()
-                .ForMember(x => x.DiscountId, op => op.MapFrom(dc => dc.Discount.Id))
-                .ForMember(x => x.Description, op => op.MapFrom(dc => dc.Discount.Name))
-                .ForMember(x => x.ExpirationDate, op => op.MapFrom(dc => dc.Discount.ExpirationDate))
-                .ForMember(x => x.CouponCode, op => op.MapFrom(dc => dc.CouponCode))
-                .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Impact))
-                .ForMember(x => x.IsActive, op => op.MapFrom(dc => dc.Excluded.HasValue && !dc.Excluded.Value))
+                //todo: confirm 0 default when null Greg Murray on 2014-01-28 
+                .ForMember(x => x.DiscountId, op => op.ResolveUsing(dc => (dc.Discount != null) 
+                    ? dc.Discount.Id : 0))
+                .ForMember(x => x.Description, op => op.ResolveUsing(dc => (dc.Discount != null) 
+                    ? dc.Discount.Name : null))
+                .ForMember(x => x.ExpirationDate, op => op.ResolveUsing(dc => (dc.Discount != null) 
+                    ? dc.Discount.ExpirationDate : null))
+                .ForMember(x => x.CouponCode, op => op.ResolveUsing(dc => dc.CouponCode))
+                .ForMember(x => x.Total, op => op.ResolveUsing(dc => dc.Impact))
+                .ForMember(x => x.IsActive, op => op.ResolveUsing(dc => dc.Excluded.HasValue && !dc.Excluded.Value))
                 ;
         }
 
         private void Map_DcShippingDiscount_to_ShippingDiscount()
         {
             Mapper.CreateMap<DiscountDC.ShippingDiscount, ShippingDiscount>()
-                .ForMember(x => x.DiscountId, op => op.MapFrom(dc => dc.Discount.Discount.Id))
-                .ForMember(x => x.MethodCode, op => op.MapFrom(dc => dc.MethodCode))
-                .ForMember(x => x.Description, op => op.MapFrom(dc => dc.Discount.Discount.Name))
-                .ForMember(x => x.Total, op => op.MapFrom(dc => dc.Discount.Impact))
-                .ForMember(x => x.CouponCode, op => op.MapFrom(dc => dc.Discount.CouponCode))
-                .ForMember(x => x.IsActive, op => op.MapFrom(dc => dc.Discount.Excluded.HasValue && !dc.Discount.Excluded.Value))
+                .ForMember(x => x.DiscountId, op => op.ResolveUsing(dc => (dc.Discount != null) 
+                    ? dc.Discount.Discount.Id : 0))
+                .ForMember(x => x.MethodCode, op => op.ResolveUsing(dc => dc.MethodCode))
+                .ForMember(x => x.Description, op => op.ResolveUsing(dc => (dc.Discount != null && dc.Discount.Discount != null) 
+                    ? dc.Discount.Discount.Name : null))
+                .ForMember(x => x.Total, op => op.ResolveUsing(dc => (dc.Discount != null) 
+                    ? dc.Discount.Impact : null))
+                .ForMember(x => x.CouponCode, op => op.ResolveUsing(dc => (dc.Discount != null) 
+                    ? dc.Discount.CouponCode : null))
+                .ForMember(x => x.IsActive, op => op.ResolveUsing(dc => dc.Discount != null && dc.Discount.Excluded.HasValue && !dc.Discount.Excluded.Value))
                 ;
         }
 
         private void Map_DcPayment_to_OrderPayment()
         {
             Mapper.CreateMap<PaymentsDC.Payment, OrderPayment>()
-                .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
-                .ForMember(x => x.OrderId, op => op.MapFrom(dc => dc.OrderId))
-                .ForMember(x => x.PaymentServiceTransactionId, op => op.MapFrom(dc => dc.PaymentServiceTransactionId))
-                .ForMember(x => x.Status, op => op.MapFrom(dc => dc.Status))
-                .ForMember(x => x.AmountCollected, op => op.MapFrom(dc => dc.AmountCollected))
-                .ForMember(x => x.AmountCredited, op => op.MapFrom(dc => dc.AmountCredited))
+                .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
+                .ForMember(x => x.OrderId, op => op.ResolveUsing(dc => dc.OrderId))
+                .ForMember(x => x.PaymentServiceTransactionId, op => op.ResolveUsing(dc => dc.PaymentServiceTransactionId))
+                .ForMember(x => x.Status, op => op.ResolveUsing(dc => dc.Status))
+                .ForMember(x => x.AmountCollected, op => op.ResolveUsing(dc => dc.AmountCollected))
+                .ForMember(x => x.AmountCredited, op => op.ResolveUsing(dc => dc.AmountCredited))
                 .ForMember(x => x.AmountAuthorized, op => op.ResolveUsing(dc =>
                 {
                     if (dc.PaymentType == PaymentsDC.PaymentTypeConst.CHECK && dc.Status == "Pending" && dc.Interactions.Any(i => i.Status == "CheckRequested"))
@@ -376,23 +451,33 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     else
                         return 0;
                 }))
-                .ForMember(x => x.Interactions, op => op.MapFrom(dc => dc.Interactions.OrderByDescending(t => t.AuditInfo.CreateDate)))
-                .ForMember(x => x.PaymentType, op => op.MapFrom(dc => dc.PaymentType))
-                .ForMember(x => x.CardType, op => op.MapFrom(dc => dc.BillingInfo.Card != null && dc.PaymentType == PaymentsDC.PaymentTypeConst.CREDIT_CARD ? dc.BillingInfo.Card.PaymentOrCardType : null))
-                .ForMember(x => x.CardNumber, op => op.MapFrom(dc => dc.BillingInfo.Card != null ? dc.BillingInfo.Card.CardNumberPartOrMask : null))
-                .ForMember(x => x.NameOnCard, op => op.MapFrom(dc => dc.BillingInfo.Card != null ? dc.BillingInfo.Card.NameOnCard : null))
-                .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
-                .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
-                .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
+                .ForMember(x => x.Interactions, op => op.ResolveUsing(dc => (dc.Interactions != null) 
+                    ? dc.Interactions.OrderByDescending(t => t.AuditInfo.CreateDate) : null))
+                .ForMember(x => x.PaymentType, op => op.ResolveUsing(dc => dc.PaymentType))
+                .ForMember(x => x.CardType, op => op.ResolveUsing(dc => dc.BillingInfo != null && dc.BillingInfo.Card != null 
+                    && dc.PaymentType == PaymentsDC.PaymentTypeConst.CREDIT_CARD 
+                        ? dc.BillingInfo.Card.PaymentOrCardType : null))
+                .ForMember(x => x.CardNumber, op => op.ResolveUsing(dc => (dc.BillingInfo != null && dc.BillingInfo.Card != null) 
+                    ? dc.BillingInfo.Card.CardNumberPartOrMask : null))
+                .ForMember(x => x.NameOnCard, op => op.ResolveUsing(dc => (dc.BillingInfo != null && dc.BillingInfo.Card != null) 
+                    ? dc.BillingInfo.Card.NameOnCard : null))
+                .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) 
+                    ? dc.AuditInfo.CreateDate : null))
+                .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))
+                .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) 
+                    ? dc.AuditInfo.CreateDate : null))
+                //ignores
+                .ForMember(x => x.IsManual, op => op.Ignore()) //calculated field
                 .AfterMap((dc, payment) =>
                 {
-                    if (payment.PaymentType == "Check")
+                    if (payment == null || payment.PaymentType == "Check")
                         return;
 
                     // if the payment is manual, all available actions should actually be ManualXXX
                     if (payment.IsManual)
                     {
-                        payment.AvailableActions = payment.AvailableActions.Select(action => action.StartsWith("Rollback") ? action : "Manual" + action).ToList();
+                        payment.AvailableActions = payment.AvailableActions.Select(action => action.StartsWith("Rollback") 
+                            ? action : "Manual" + action).ToList();
                     }
                     // otherwise we should duplicate each available actions with a ManualXXX.
                     else
@@ -414,60 +499,84 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private void Map_DcPaymentInteraction_to_PaymentInteraction()
         {
             Mapper.CreateMap<PaymentsDC.PaymentInteraction, PaymentInteraction>()
-                .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
-                .ForMember(x => x.GatewayTransactionId, op => op.MapFrom(dc => dc.GatewayTransactionId))
-                .ForMember(x => x.GatewayInteractionId, op => op.MapFrom(dc => dc.GatewayInteractionId))
-                .ForMember(x => x.GatewayInteractionIdReference, op => op.MapFrom(dc => dc.PaymentTransactionInteractionIdReference))
-                .ForMember(x => x.InteractionType, op => op.MapFrom(dc => dc.InteractionType))
-                .ForMember(x => x.CheckNumber, op => op.MapFrom(dc => dc.CheckNumber))
-                .ForMember(x => x.Status, op => op.MapFrom(dc => dc.Status))
-                .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateDate : null))
-                .ForMember(x => x.PaymentId, op => op.MapFrom(dc => dc.PaymentId))
-                .ForMember(x => x.IsManual, op => op.MapFrom(dc => dc.IsManual))
+                .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
+                .ForMember(x => x.GatewayTransactionId, op => op.ResolveUsing(dc => dc.GatewayTransactionId))
+                .ForMember(x => x.GatewayInteractionId, op => op.ResolveUsing(dc => dc.GatewayInteractionId))
+                .ForMember(x => x.GatewayInteractionIdReference, op => op.ResolveUsing(dc => dc.PaymentTransactionInteractionIdReference))
+                .ForMember(x => x.InteractionType, op => op.ResolveUsing(dc => dc.InteractionType))
+                .ForMember(x => x.CheckNumber, op => op.ResolveUsing(dc => dc.CheckNumber))
+                .ForMember(x => x.Status, op => op.ResolveUsing(dc => dc.Status))
+                .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateDate : null))
+                .ForMember(x => x.PaymentId, op => op.ResolveUsing(dc => dc.PaymentId))
+                .ForMember(x => x.IsManual, op => op.ResolveUsing(dc => dc.IsManual))
+                //ignores
+                .ForMember(x => x.CanEdit, op => op.Ignore()) //calc field returns IsManual
+                .ForMember(x => x.CanDelete, op => op.Ignore()) //ditto
                 ;
         }
 
         private void Map_DcPackage_to_OrderPackage()
         {
             Mapper.CreateMap<ShippingDC.Package, OrderPackage>()
-                .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
-                .ForMember(x => x.ShipmentId, op => op.MapFrom(dc => dc.ShipmentId))
-                .ForMember(x => x.FulfillmentLocationCode, op => op.MapFrom(dc => dc.FulfillmentLocationCode))
-                .ForMember(x => x.ShippingMethodCode, op => op.MapFrom(dc => dc.ShippingMethodCode))
-                .ForMember(x => x.ShippingMethodName, op => op.MapFrom(dc => dc.ShippingMethodName))
-                .ForMember(x => x.TrackingNumber, op => op.MapFrom(dc => dc.TrackingNumber))
+                .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
+                .ForMember(x => x.ShipmentId, op => op.ResolveUsing(dc => dc.ShipmentId))
+                .ForMember(x => x.FulfillmentLocationCode, op => op.ResolveUsing(dc => dc.FulfillmentLocationCode))
+                .ForMember(x => x.ShippingMethodCode, op => op.ResolveUsing(dc => dc.ShippingMethodCode))
+                .ForMember(x => x.ShippingMethodName, op => op.ResolveUsing(dc => dc.ShippingMethodName))
+                .ForMember(x => x.TrackingNumber, op => op.ResolveUsing(dc => dc.TrackingNumber))
 
-                .ForMember(x => x.PackagingType, op => op.MapFrom(dc => String.IsNullOrEmpty(dc.PackagingType) ? "CUSTOM" : dc.PackagingType))
-                .ForMember(x => x.Height, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Height : null))
-                .ForMember(x => x.Length, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Length : null))
-                .ForMember(x => x.Width, op => op.MapFrom(dc => dc.Measurements != null ? dc.Measurements.Width : null))
-                .ForMember(x => x.Weight, op => op.MapFrom(dc => dc.Measurements != null && dc.Measurements.Weight != null ? dc.Measurements.Weight.Value : null))
-                .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
-                .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
-                .ForMember(x => x.CreateDate, op => op.MapFrom(dc => dc.AuditInfo.CreateDate))
-                .ForMember(x => x.ShipDate, op => op.MapFrom(dc => dc.AuditInfo.UpdateDate))
-                .ForMember(x => x.TotalQuantity, op => op.MapFrom(dc => dc.Items.Sum(i => i.Quantity)))
+                .ForMember(x => x.PackagingType, op => op.ResolveUsing(dc => String.IsNullOrEmpty(dc.PackagingType) 
+                    ? "CUSTOM" : dc.PackagingType))
+                .ForMember(x => x.Height, op => op.ResolveUsing(dc => dc.Measurements != null ? 
+                    dc.Measurements.Height : null))
+                .ForMember(x => x.Length, op => op.ResolveUsing(dc => dc.Measurements != null 
+                    ? dc.Measurements.Length : null))
+                .ForMember(x => x.Width, op => op.ResolveUsing(dc => dc.Measurements != null 
+                    ? dc.Measurements.Width : null))
+                .ForMember(x => x.Weight, op => op.ResolveUsing(dc => dc.Measurements != null && dc.Measurements.Weight != null 
+                    ? dc.Measurements.Weight.Value : null))
+                .ForMember(x => x.Items, op => op.ResolveUsing(dc => dc.Items))
+                //todo: confirm cast to object for AvailableActions Greg Murray on 2014-01-24
+                .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions as object))                
+                .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) 
+                    ? dc.AuditInfo.CreateDate : null))
+                .ForMember(x => x.ShipDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) 
+                    ? dc.AuditInfo.UpdateDate : null))
+                //todo: confirm 0 default when null Greg Murray on 2014-01-28 
+                .ForMember(x => x.TotalQuantity, op => op.ResolveUsing(dc =>
+                    (dc.Items != null) ? dc.Items.Sum(i => i.Quantity) : 0))
+                //ignores
+                .ForMember(x => x.OrderId, op => op.Ignore()) //handled in Order map method
                 ;
         }
 
         private void Map_DcPackageItem_to_OrderPackageItem()
         {
             Mapper.CreateMap<ShippingDC.PackageItem, OrderPackageItem>()
-                .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.ProductCode))
-                .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
+                .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
+                .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
+                //ignores, handled in Order mapping or FillPackageItemDetails.
+                .ForMember(x => x.ProductName, op => op.Ignore())
+                .ForMember(x => x.FulfillmentMethod, op => op.Ignore())
+                .ForMember(x => x.FulfillmentLocationCode, op => op.Ignore())
+                .ForMember(x => x.Weight, op => op.Ignore())
+                .ForMember(x => x.UnitPrice, op => op.Ignore())
+                .ForMember(x => x.Total, op => op.Ignore())
                 ;
         }
 
         private void Map_DcPickup_to_OrderPickup()
         {
             Mapper.CreateMap<ShippingDC.Pickup, OrderPickup>()
-                .ForMember(x => x.Id, op => op.MapFrom(dc => dc.Id))
-                .ForMember(x => x.FulfillmentDate, op => op.MapFrom(dc => dc.FulfillmentDate))
-                .ForMember(x => x.AvailableActions, op => op.MapFrom(dc => dc.AvailableActions))
-                .ForMember(x => x.Status, op => op.MapFrom(dc => dc.Status))
-                .ForMember(x => x.Items, op => op.MapFrom(dc => dc.Items))
-                .ForMember(x => x.FulfillmentLocationCode, op => op.MapFrom(dc => dc.FulfillmentLocationCode))
-                .ForMember(x => x.TotalQuantity, op => op.MapFrom(dc => dc.Items.Sum(i => i.Quantity)))
+                .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
+                .ForMember(x => x.FulfillmentDate, op => op.ResolveUsing(dc => dc.FulfillmentDate))
+                .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))
+                .ForMember(x => x.Status, op => op.ResolveUsing(dc => dc.Status))
+                .ForMember(x => x.Items, op => op.ResolveUsing(dc => dc.Items))
+                .ForMember(x => x.FulfillmentLocationCode, op => op.ResolveUsing(dc => dc.FulfillmentLocationCode))
+                //todo: confirm 0 when null Greg Murray on 2014-01-28 
+                .ForMember(x => x.TotalQuantity, op => op.ResolveUsing(dc => (dc.Items != null) 
+                    ? dc.Items.Sum(i => i.Quantity) : 0))
                 .ForMember(x => x.OrderId, op => op.Ignore())
                 .AfterMap((dc, x) => {
                     // set FulfillmentLocationCode on all items.
@@ -479,68 +588,76 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private void Map_DcPickupItem_to_OrderPickupItem()
         {
             Mapper.CreateMap<ShippingDC.PickupItem, OrderPickupItem>()
-                .ForMember(x => x.ProductCode, op => op.MapFrom(dc => dc.ProductCode))
-                .ForMember(x => x.Quantity, op => op.MapFrom(dc => dc.Quantity))
+                .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
+                .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
+                //ignores, handled in Order mapping
                 .ForMember(x => x.ProductName, op => op.Ignore())
+                .ForMember(x => x.FulfillmentMethod, op => op.Ignore())
+                .ForMember(x => x.FulfillmentLocationCode, op => op.Ignore())
                 ;
         }
 
         private void Map_Adjustment_to_DcAdjustment()
         {
             Mapper.CreateMap<CommerceDC.Adjustment, Adjustment>()
-                .ForMember(x => x.Amount, op => op.MapFrom(dc => dc.Amount))
-                .ForMember(x => x.Description, op => op.MapFrom(dc => dc.Description))
-                .ForMember(x => x.InternalComment, op => op.MapFrom(dc => dc.InternalComment))
+                .ForMember(x => x.Amount, op => op.ResolveUsing(dc => dc.Amount))
+                .ForMember(x => x.Description, op => op.ResolveUsing(dc => dc.Description))
+                .ForMember(x => x.InternalComment, op => op.ResolveUsing(dc => dc.InternalComment))
                 ;
         }
 
         private void Map_OrderPackage_to_DcPackage()
         {
             Mapper.CreateMap<OrderPackage, ShippingDC.Package>()
-                .ForMember(dc => dc.Id, op => op.MapFrom(x => x.Id))
-                .ForMember(dc => dc.Items, op => op.MapFrom(x => x.Items))
-                .ForMember(dc => dc.ShipmentId, op => op.MapFrom(x => x.ShipmentId))
-                .ForMember(dc => dc.PackagingType, op => op.MapFrom(x => x.PackagingType))
-                .ForMember(dc => dc.FulfillmentLocationCode, op => op.MapFrom(x => x.FulfillmentLocationCode))
-                .ForMember(dc => dc.ShippingMethodCode, op => op.MapFrom(x => x.ShippingMethodCode))
-                .ForMember(dc => dc.ShippingMethodName, op => op.MapFrom(x => x.ShippingMethodName))
-                .ForMember(dc => dc.Status, op => op.MapFrom(x => x.Status))
-                .ForMember(dc => dc.TrackingNumber, op => op.MapFrom(x => x.TrackingNumber))
-                .ForMember(dc => dc.Measurements, op => op.MapFrom(x => new CommerceDC.PackageMeasurements
+                .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
+                .ForMember(dc => dc.Items, op => op.ResolveUsing(x => x.Items))
+                .ForMember(dc => dc.ShipmentId, op => op.ResolveUsing(x => x.ShipmentId))
+                .ForMember(dc => dc.PackagingType, op => op.ResolveUsing(x => x.PackagingType))
+                .ForMember(dc => dc.FulfillmentLocationCode, op => op.ResolveUsing(x => x.FulfillmentLocationCode))
+                .ForMember(dc => dc.ShippingMethodCode, op => op.ResolveUsing(x => x.ShippingMethodCode))
+                .ForMember(dc => dc.ShippingMethodName, op => op.ResolveUsing(x => x.ShippingMethodName))
+                .ForMember(dc => dc.Status, op => op.ResolveUsing(x => x.Status))
+                .ForMember(dc => dc.TrackingNumber, op => op.ResolveUsing(x => x.TrackingNumber))
+                .ForMember(dc => dc.Measurements, op => op.ResolveUsing(x => new CommerceDC.PackageMeasurements
                 {
                     Height = new Core.Api.Contracts.Measurement { Unit = "in", Value = x.Height },
                     Width = new Core.Api.Contracts.Measurement { Unit = "in", Value = x.Width },
                     Length = new Core.Api.Contracts.Measurement { Unit = "in", Value = x.Length },
                     Weight = new Core.Api.Contracts.Measurement { Unit = "lbs", Value = x.Weight }
                 }))
+                //todo: confirm cast Greg Murray on 2014-01-24 
+                .ForMember(dc => dc.AvailableActions, op => op.ResolveUsing(x => x.AvailableActions as List<string>))  
+                //ignores
+                .ForMember(dc => dc.FulfillmentDate, op => op.Ignore())
+                .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 ;
         }
 
         private void Map_OrderPackageItem_to_DcPackageItem()
         {
             Mapper.CreateMap<OrderPackageItem, ShippingDC.PackageItem>()
-                .ForMember(dc => dc.ProductCode, op => op.MapFrom(x => x.ProductCode))
-                .ForMember(dc => dc.Quantity, op => op.MapFrom(x => x.Quantity))
+                .ForMember(dc => dc.ProductCode, op => op.ResolveUsing(x => x.ProductCode))
+                .ForMember(dc => dc.Quantity, op => op.ResolveUsing(x => x.Quantity))
                 ;
         }
 
         private void Map_OrderPickup_to_DcPickup()
         {
             Mapper.CreateMap<OrderPickup, ShippingDC.Pickup>()
-                .ForMember(dc => dc.Id, op => op.MapFrom(x => x.Id))
-                .ForMember(dc => dc.FulfillmentLocationCode, op => op.MapFrom(x => x.FulfillmentLocationCode))
-                .ForMember(dc => dc.FulfillmentDate, op => op.MapFrom(x => x.FulfillmentDate))
-                .ForMember(dc => dc.AvailableActions, op => op.MapFrom(x => x.AvailableActions))
-                .ForMember(dc => dc.Status, op => op.MapFrom(x => x.Status))
-                .ForMember(dc => dc.Items, op => op.MapFrom(x => x.Items))
+                .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
+                .ForMember(dc => dc.FulfillmentLocationCode, op => op.ResolveUsing(x => x.FulfillmentLocationCode))
+                .ForMember(dc => dc.FulfillmentDate, op => op.ResolveUsing(x => x.FulfillmentDate))
+                .ForMember(dc => dc.AvailableActions, op => op.ResolveUsing(x => x.AvailableActions))
+                .ForMember(dc => dc.Status, op => op.ResolveUsing(x => x.Status))
+                .ForMember(dc => dc.Items, op => op.ResolveUsing(x => x.Items))
                 ;
         }
 
         private void Map_OrderPickupItem_to_DcPickupItem()
         {
             Mapper.CreateMap<OrderPickupItem, ShippingDC.PickupItem>()
-                .ForMember(dc => dc.ProductCode, op => op.MapFrom(x => x.ProductCode))
-                .ForMember(dc => dc.Quantity, op => op.MapFrom(x => x.Quantity))
+                .ForMember(dc => dc.ProductCode, op => op.ResolveUsing(x => x.ProductCode))
+                .ForMember(dc => dc.Quantity, op => op.ResolveUsing(x => x.Quantity))
                 ;
         }
 
@@ -548,7 +665,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             Mapper.CreateMap<OrderItem, OrdersDC.OrderItem>()
                
-                  .ForMember(dc => dc.Id, op => op.MapFrom(x => x.Id))
+                  .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
                   .ForMember(dc => dc.UnitPrice, op => op.Ignore())
                   .ForMember(dc => dc.Product, op => op.ResolveUsing(x => {
                       return new ProductsDC.Product
@@ -559,37 +676,51 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                           // other stuff (price/measurements) are not important to make service calls.
                       };
                   }))
-                  .ForMember(dc => dc.Quantity, op => op.MapFrom(x => x.Quantity))
-                  .ForMember(dc => dc.ProductDiscounts, op => op.MapFrom(x => x.Discounts))
-                  .ForMember(dc => dc.ShippingDiscounts, op => op.MapFrom(x => x.ShippingDiscounts))
-                  .ForMember(dc => dc.FulfillmentLocationCode, op => op.MapFrom(x => x.FulfillmentLocationCode))
-                  .ForMember(dc => dc.FulfillmentMethod, op => op.MapFrom(x => x.FulfillmentMethod))
+                  .ForMember(dc => dc.Quantity, op => op.ResolveUsing(x => x.Quantity))
+                  .ForMember(dc => dc.ProductDiscounts, op => op.ResolveUsing(x => x.Discounts))
+                  .ForMember(dc => dc.ShippingDiscounts, op => op.ResolveUsing(x => x.ShippingDiscounts))
+                  .ForMember(dc => dc.FulfillmentLocationCode, op => op.ResolveUsing(x => x.FulfillmentLocationCode))
+                  .ForMember(dc => dc.FulfillmentMethod, op => op.ResolveUsing(x => x.FulfillmentMethod))
+                  //ignores
+                  .ForMember(dc => dc.OriginalCartItemId, op => op.Ignore())
+                  .ForMember(dc => dc.LocaleCode, op => op.Ignore())
+                  .ForMember(dc => dc.IsRecurring, op => op.Ignore())
+                  .ForMember(dc => dc.IsTaxable, op => op.Ignore())
+                  .ForMember(dc => dc.ExtendedTotal, op => op.Ignore())
+                  .ForMember(dc => dc.TaxableTotal, op => op.Ignore())
+                  .ForMember(dc => dc.DiscountTotal, op => op.Ignore())
+                  .ForMember(dc => dc.DiscountedTotal, op => op.Ignore())
+                  .ForMember(dc => dc.ItemTaxTotal, op => op.Ignore())
+                  .ForMember(dc => dc.ShippingTaxTotal, op => op.Ignore())
+                  .ForMember(dc => dc.ShippingTotal, op => op.Ignore())
+                  .ForMember(dc => dc.FeeTotal, op => op.Ignore())
+                  .ForMember(dc => dc.AuditInfo, op => op.Ignore())                  
                   ;
         }
 
         private void Map_OrderItemDiscount_to_DcAppliedProductDiscount()
         { 
             Mapper.CreateMap<OrderItemDiscount, DiscountDC.AppliedProductDiscount>()
-                .ForMember(dc => dc.ProductQuantity, op => op.MapFrom(x => x.Quantity))
+                .ForMember(dc => dc.ProductQuantity, op => op.ResolveUsing(x => x.Quantity))
                 .ForMember(dc => dc.Discount, op => op.ResolveUsing(x => {
                     return new DiscountDC.Discount {
                         Id = x.DiscountId,
                         Name = x.Description
                     };
                 }))
-                .ForMember(dc => dc.ImpactPerUnit, op => op.MapFrom(x => x.UnitPrice))
-                .ForMember(dc => dc.Impact, op => op.MapFrom(x => x.Total))
-                .ForMember(dc => dc.CouponCode, op => op.MapFrom(x => x.CouponCode))
-                .ForMember(dc => dc.Excluded, op => op.MapFrom(x => !x.IsActive))
+                .ForMember(dc => dc.ImpactPerUnit, op => op.ResolveUsing(x => x.UnitPrice))
+                .ForMember(dc => dc.Impact, op => op.ResolveUsing(x => x.Total))
+                .ForMember(dc => dc.CouponCode, op => op.ResolveUsing(x => x.CouponCode))
+                .ForMember(dc => dc.Excluded, op => op.ResolveUsing(x => !x.IsActive))
                 ;
         }
 
         private void Map_OrderDiscount_to_DcAppliedDiscount()
         {
             Mapper.CreateMap<OrderDiscount, DiscountDC.AppliedDiscount>()
-                .ForMember(dc => dc.CouponCode, op => op.MapFrom(x => x.CouponCode))
-                .ForMember(dc => dc.Impact, op => op.MapFrom(x => x.Total))
-                .ForMember(dc => dc.Excluded, op => op.MapFrom(x => !x.IsActive))
+                .ForMember(dc => dc.CouponCode, op => op.ResolveUsing(x => x.CouponCode))
+                .ForMember(dc => dc.Impact, op => op.ResolveUsing(x => x.Total))
+                .ForMember(dc => dc.Excluded, op => op.ResolveUsing(x => !x.IsActive))
                 .ForMember(dc => dc.Discount, op => op.ResolveUsing(x =>
                 {
                     return new DiscountDC.Discount
@@ -605,7 +736,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private void Map_ShippingDiscount_to_DcShippingDiscount()
         {
             Mapper.CreateMap<ShippingDiscount, DiscountDC.ShippingDiscount>()
-                .ForMember(dc => dc.MethodCode, op => op.MapFrom(x => x.MethodCode))
+                .ForMember(dc => dc.MethodCode, op => op.ResolveUsing(x => x.MethodCode))
                 .ForMember(dc => dc.Discount, op => op.ResolveUsing(x => {
                     return new DiscountDC.AppliedDiscount {
                         CouponCode = x.CouponCode,
@@ -623,9 +754,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private void Map_DcAdjustment_to_OrderAdjustment()
         {
             Mapper.CreateMap<Adjustment, CommerceDC.Adjustment>()
-                .ForMember(dc => dc.Amount, op => op.MapFrom(x => x.Amount))
-                .ForMember(dc => dc.Description, op => op.MapFrom(x => x.Description))
-                .ForMember(dc => dc.InternalComment, op => op.MapFrom(x => x.InternalComment))
+                .ForMember(dc => dc.Amount, op => op.ResolveUsing(x => x.Amount))
+                .ForMember(dc => dc.Description, op => op.ResolveUsing(x => x.Description))
+                .ForMember(dc => dc.InternalComment, op => op.ResolveUsing(x => x.InternalComment))
                 ;
         }
 

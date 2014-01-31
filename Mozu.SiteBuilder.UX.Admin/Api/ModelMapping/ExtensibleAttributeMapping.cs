@@ -23,15 +23,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
 
             Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValue>()
-                .ForMember(dc => dc.Content, opt => opt.MapFrom(x =>  x.Value  is string ? new DC.AttributeValueLocalizedContent { LocaleCode = "en-US", Value = x.Value as string  } : null))
-                .ForMember(dc => dc.Value, opt => opt.MapFrom(x => x.Id ))
+                .ForMember(dc => dc.Content, opt => opt.ResolveUsing(x =>  x.Value  is string 
+                    ? new DC.AttributeValueLocalizedContent { LocaleCode = "en-US", Value = x.Value as string  } 
+                    : null))
+                .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Id ))
                 // TODO: do not hard code this.
-                .ForMember(dc => dc.Sequence, opt => opt.MapFrom(x => 0))
+                .ForMember(dc => dc.Sequence, opt => opt.ResolveUsing(x => 0))
                 ;
 
             Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeValue>()
-                .ForMember(dc => dc.Value, opt => opt.MapFrom(x => x.Content != null &&!string.IsNullOrEmpty( x.Content.Value)? x.Content.Value :  x.Value))
-                .ForMember(x => x.Id, op => op.MapFrom(x => (x.Value != null ? x.Value.ToString() : null)))
+                .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Content != null && !string.IsNullOrEmpty( x.Content.Value)
+                    ? x.Content.Value :  x.Value))
+                .ForMember(x => x.Id, op => op.ResolveUsing(x => (x.Value != null ? x.Value.ToString() : null)))
+                .ForMember(x => x.AttributeFQN, opt => opt.Ignore())
                 ;
 
             Mapper.CreateMap<Attribute, DC.Attribute>()
@@ -39,31 +43,47 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
             Mapper.CreateMap<DC.Attribute, Attribute>()
-                .ForMember(x => x.AdminName, op => op.MapFrom(x => x.AdminName))
-                .ForMember(x => x.Values, opt => opt.MapFrom(x => x.VocabularyValues))
-                .ForMember(x => x.Id, opt => opt.MapFrom(x => x.AttributeFQN))
-                .ForMember(x => x.AttributeId, opt => opt.MapFrom(x => x.Id))
-                .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Content.Value))
-                .ForMember(x=> x.IsActive , opt => opt.MapFrom(x=> x.IsActive ))
-                .ForMember(x => x.IsVisible, opt => opt.MapFrom(x => x.IsVisible))
+                .ForMember(x => x.AdminName, op => op.ResolveUsing(x => x.AdminName))
+                .ForMember(x => x.Values, opt => opt.ResolveUsing(x => x.VocabularyValues))
+                .ForMember(x => x.Id, opt => opt.ResolveUsing(x => x.AttributeFQN))
+                .ForMember(x => x.AttributeId, opt => opt.ResolveUsing(x => x.Id))
+                .ForMember(x => x.Name, opt => opt.ResolveUsing(x => (x.Content != null) ? x.Content.Value : null))
+                .ForMember(x=> x.IsActive , opt => opt.ResolveUsing(x=> x.IsActive ))
+                .ForMember(x => x.IsVisible, opt => opt.ResolveUsing(x => x.IsVisible))
                 
-                .ForMember( x=> x.AttributeMetadata , opt=> opt.MapFrom(dc=> dc.AttributeMetadata))
-                .ForMember(x => x.Regex, opt => opt.MapFrom(dc => dc.Validation != null ? dc.Validation.RegularExpression : null))
-                .ForMember(x => x.Min, opt => opt.MapFrom(dc => dc.Validation != null ? dc.Validation.MinNumericValue ?? dc.Validation.MinStringLength : null))
-                .ForMember(x => x.Max, opt => opt.MapFrom(dc => dc.Validation != null ? dc.Validation.MaxNumericValue ?? dc.Validation.MaxStringLength : null))
-                .ForMember(x => x.MinDate, opt => opt.MapFrom(dc => dc.Validation != null ? dc.Validation.MinDateTime : null))
-                .ForMember(x => x.MaxDate, opt => opt.MapFrom(dc => dc.Validation != null ? dc.Validation.MaxDateTime : null))
+                .ForMember( x=> x.AttributeMetadata , opt=> opt.ResolveUsing(dc=> dc.AttributeMetadata))
+                .ForMember(x => x.Regex, opt => opt.ResolveUsing(dc => dc.Validation != null ? dc.Validation.RegularExpression : null))
+                .ForMember(x => x.Min, opt => opt.ResolveUsing(dc => dc.Validation != null 
+                    ? (dc.Validation.MinNumericValue ?? dc.Validation.MinStringLength)
+                    : null))
+                .ForMember(x => x.Max, opt => opt.ResolveUsing(dc => dc.Validation != null 
+                    ? (dc.Validation.MaxNumericValue ?? dc.Validation.MaxStringLength) 
+                    : null))
+                .ForMember(x => x.MinDate, opt => opt.ResolveUsing(dc => dc.Validation != null ? dc.Validation.MinDateTime : null))
+                .ForMember(x => x.MaxDate, opt => opt.ResolveUsing(dc => dc.Validation != null ? dc.Validation.MaxDateTime : null))
+                //ignores
+                .ForMember(x => x.IsOption, opt => opt.Ignore())
+                .ForMember(x => x.IsExtra, opt => opt.Ignore())
+                .ForMember(x => x.IsProperty, opt => opt.Ignore())
                 ;
 
             Mapper.CreateMap<DC.AttributeMetadataItem, AttributeMetadataItem>();
             Mapper.CreateMap<AttributeMetadataItem, DC.AttributeMetadataItem>();
 
+            Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeVocabularyValue>()
+                //todo: confirm sequence mapping Greg Murray on 2014-01-24
+                .ForMember(x => x.ValueSequence, op => op.ResolveUsing(dc => dc.Sequence));
 
-            Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeVocabularyValue>();
-            Mapper.CreateMap<AttributeVocabularyValue, DC.AttributeVocabularyValue>();
+            Mapper.CreateMap<AttributeVocabularyValue, DC.AttributeVocabularyValue>()
+                //todo: confirm sequence Greg Murray on 2014-01-24
+                .ForMember(dc => dc.Sequence, op => op.ResolveUsing(x => x.ValueSequence));
 
-            Mapper.CreateMap<AttributeVocabularyValueLocalizedContent, DC.AttributeValueLocalizedContent>();
-            Mapper.CreateMap<DC.AttributeValueLocalizedContent, AttributeVocabularyValueLocalizedContent>();
+            Mapper.CreateMap<AttributeVocabularyValueLocalizedContent, DC.AttributeValueLocalizedContent>()
+                //todo: confirm stringValue -> value Greg Murray on 2014-01-24
+                .ForMember(dc => dc.Value, op => op.ResolveUsing(x => x.StringValue));
+            Mapper.CreateMap<DC.AttributeValueLocalizedContent, AttributeVocabularyValueLocalizedContent>()
+                //todo: confirm value -> stringValue Greg Murray on 2014-01-24
+                .ForMember(x => x.StringValue, op => op.ResolveUsing(dc => dc.Value));
         }
 
         public class AttributeToContractConverter2 : ITypeConverter<Attribute, DC.Attribute>
@@ -184,7 +204,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     AttributeCode = source.Id == null ? (source.Name ?? "").Trim() : null,
                     Id = source.AttributeId,
                     Validation = attributeValidation,
-                    VocabularyValues = source.InputType == AttributeInputType.List ? Mapper.Map<List<DC.AttributeVocabularyValue>>(source.Values) : null,
+                    VocabularyValues = source.InputType == AttributeInputType.List 
+                        ? Mapper.Map<List<DC.AttributeVocabularyValue>>(source.Values) : null,
                     AttributeFQN = source.Id,
                     AttributeMetadata = Mapper.Map<List<DC.AttributeMetadataItem>>(source.AttributeMetadata),
                     Content = new DC.AttributeLocalizedContent

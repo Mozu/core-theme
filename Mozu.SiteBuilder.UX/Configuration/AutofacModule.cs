@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
-using MassTransit;
+using Burrows.Publishing;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
@@ -138,18 +138,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             builder.RegisterType<VisitEventPublisher>().As<VisitEventPublisher>().InstancePerApiRequest();
 
-            // Register a MassTransit IServiceBus. This IServiceBus is picked up by Mozu.Core.Messaging.Publisher.
+            // Register a MassTransit IPublisher.
             // The rabbitMQ connectionstring is used to recieve control messages sent to our application by MassTransit.
-            builder.Register<IServiceBus>(c => ServiceBusFactory.New(sbc =>
-                {
-                    sbc.ReceiveFrom(c.Resolve<ISettings>().ConnectionStrings("SiteBuilderMessageQueue").Value);
-                    sbc.UseRabbitWithPublisherConfirms(c, ApplicationConstants.APPLICATION_NAME).WithFileBackingStore();
-                    sbc.UseControlBus();
-                    // sbc.UseLog4Net();
-                }))
-                .SingleInstance()
-                .As<IServiceBus>()
-                ;
+            builder.Register(c => c.Resolve<ISettings>().CreatePublisher("SiteBuilderMessageQueue", "Mozu.SiteBuilder.UX")).As<IPublisher>().SingleInstance();
 		}
 
         //object BuildClient<T>(IComponentContext c)

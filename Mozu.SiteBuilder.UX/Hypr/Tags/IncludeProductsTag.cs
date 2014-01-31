@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Web;
 
 using AutoMapper;
-using MassTransit;
 using Mozu.Core.Api.Client;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.ProductRuntime.Contracts.Clients;
@@ -175,7 +174,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             //     var pc = Mapper.Map<ProductSearchResult>(pcDC);
             result.Template = template;
 
-           
+
             result.Context = context.add(new Tuple<string, object>("model", pc));
             ;
             return result;

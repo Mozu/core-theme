@@ -21,11 +21,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         protected override void Configure()
         {
             Mapper.CreateMap<Document, FileManagementFile>()
-                .ForMember(x => x.dateModified, op => op.MapFrom(x => x.UpdateDate))
-               // .ForMember(x => x.folderId, op => op.MapFrom(x => x.FolderId))
-                .ForMember(x => x.fileType, op => op.MapFrom(x => x.Extension))
-                .ForMember(x => x.id, op => op.MapFrom(x => x.Id))
-                .ForMember(x => x.name, op => op.MapFrom(x => x.Name))
+                .ForMember(x => x.dateModified, op => op.ResolveUsing(x => x.UpdateDate))
+               // .ForMember(x => x.folderId, op => op.ResolveUsing(x => x.FolderId))
+                .ForMember(x => x.fileType, op => op.ResolveUsing(x => x.Extension))
+                .ForMember(x => x.id, op => op.ResolveUsing(x => x.Id))
+                .ForMember(x => x.name, op => op.ResolveUsing(x => x.Name))
                 .ForMember(x => x.tags, op => op.ResolveUsing(_ => _.Properties.Where(_p => _p.PropertyType == "tags").Select(_p =>
                 {
                     if (_p.Value is JArray)
@@ -42,23 +42,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.isUploaded, op => op.ResolveUsing(x => x.ContentLength.GetValueOrDefault(0) > 0))
                 .ForMember(x => x.width, op => op.ResolveUsing(_ => _.Properties.Where(_p => _p.PropertyType == "width").Select(_p => (double)_p.Value).FirstOrDefault()))
                 .ForMember(x => x.height, op => op.ResolveUsing(_ => _.Properties.Where(_p => _p.PropertyType == "height").Select(_p => (double)_p.Value).FirstOrDefault()))
-                .ForMember(x => x.fileSize, op => op.MapFrom(x => x.ContentLength.GetValueOrDefault(0)));
+                .ForMember(x => x.fileSize, op => op.ResolveUsing(x => x.ContentLength.GetValueOrDefault(0)));
 
             Mapper.CreateMap<FolderTree, FileManagementFolder>()
-
-                .ForMember(x => x.id, op => op.MapFrom(x => x.Folder.Id))
-                .ForMember(x => x.name, op => op.MapFrom(x => x.Folder.Name))
-                .ForMember(x => x.parentId , op => op.MapFrom(x => x.Folder.ParentId ))
-                .ForMember(x => x.leaf, op=> op.UseValue ( false ))// op => op.MapFrom(x => x.Children == null || x.Children.Count == 0))
-                .ForMember(x => x.items, op => op.MapFrom(x => x.Children));
+                .ForMember(x => x.id, op => op.ResolveUsing(x => (x.Folder != null) ? x.Folder.Id : null))
+                .ForMember(x => x.name, op => op.ResolveUsing(x => (x.Folder != null) ? x.Folder.Name : null))
+                .ForMember(x => x.parentId , op => op.ResolveUsing(x => (x.Folder != null) ? x.Folder.ParentId : null))
+                .ForMember(x => x.leaf, op=> op.UseValue ( false ))// op => op.ResolveUsing(x => x.Children == null || x.Children.Count == 0))
+                .ForMember(x => x.items, op => op.ResolveUsing(x => x.Children))
+                .ForMember(x => x.expanded, op => op.Ignore())
+                ;
 
             Mapper.CreateMap<Folder, FileManagementFolder>()
-
-                .ForMember(x => x.id, op => op.MapFrom(x => x.Id))
-                .ForMember(x => x.name, op => op.MapFrom(x => x.Name))
-                .ForMember(x => x.parentId, op => op.MapFrom(x => x.ParentId));
-               // .ForMember(x => x.leaf, op => op.MapFrom(x => x.Children == null || x.Children.Count == 0))
-               // .ForMember(x => x.items, op => op.MapFrom(x => x.Children));
+                .ForMember(x => x.id, op => op.ResolveUsing(x => x.Id))
+                .ForMember(x => x.name, op => op.ResolveUsing(x => x.Name))
+                .ForMember(x => x.parentId, op => op.ResolveUsing(x => x.ParentId))
+                //ignore
+                .ForMember(x => x.leaf, op => op.Ignore())
+                .ForMember(x => x.items, op => op.Ignore())
+                .ForMember(x => x.expanded, op => op.Ignore())
+                ;
+               // .ForMember(x => x.leaf, op => op.ResolveUsing(x => x.Children == null || x.Children.Count == 0))
+               // .ForMember(x => x.items, op => op.ResolveUsing(x => x.Children));
 
                 
         }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Web;
+using Burrows.Publishing;
 using Mozu.Core.Messaging.Contracts.Visit.Commands;
-using Mozu.Core.Messaging.Publish;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.UX.Models.Visit;

@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Linq;
 using System.Collections.Generic;
 using AutoMapper;
@@ -60,24 +61,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             #region Product Type
             Mapper.CreateMap<DC.ProductType, ProductType>()
-                .ForMember(x => x.Id, opt => opt.MapFrom(dc => dc.Id))
-                .ForMember(x => x.Name, opt => opt.MapFrom(dc => dc.Name))
-                .ForMember(x => x.IsBase, opt => opt.MapFrom(dc => dc.IsBaseProductType))
-//              .ForMember(x => x.NumberOfProducts, opt => opt.MapFrom(dc => dc.ProductCount))
+                .ForMember(x => x.Id, opt => opt.ResolveUsing(dc => dc.Id))
+                .ForMember(x => x.Name, opt => opt.ResolveUsing(dc => dc.Name))
+                .ForMember(x => x.IsBase, opt => opt.ResolveUsing(dc => dc.IsBaseProductType))
+//              .ForMember(x => x.NumberOfProducts, opt => opt.ResolveUsing(dc => dc.ProductCount))
                 .ForMember(x => x.Options, opt => opt.ResolveUsing(dc => MapDCAttributeToAttribute(dc.Options, dc.Id)))
                 .ForMember(x => x.Properties, opt => opt.ResolveUsing(dc => MapDCAttributeToAttribute(dc.Properties, dc.Id)))
-                .ForMember(x => x.ModifiedDate, opt => opt.MapFrom(dc => dc.AuditInfo.UpdateDate))
+                .ForMember(x => x.ModifiedDate, opt => opt.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.UpdateDate : null))
                 .ForMember(x => x.Extras, opt => opt.ResolveUsing(dc => MapDCAttributeToAttribute(dc.Extras, dc.Id)))
                 ;
 
             Mapper.CreateMap<ProductType, DC.ProductType>()
-                .ForMember( dc=> dc.ProductUsages, opt=> opt.MapFrom( x=> x.ProductUsages))
-                .ForMember(dc => dc.Id, opt => opt.MapFrom(x => x.Id))
-                .ForMember(dc => dc.Name, opt => opt.MapFrom(x => x.Name))
-                .ForMember(dc => dc.IsBaseProductType, opt => opt.MapFrom(x => x.IsBase))
+                .ForMember( dc=> dc.ProductUsages, opt=> opt.ResolveUsing( x=> x.ProductUsages))
+                .ForMember(dc => dc.Id, opt => opt.ResolveUsing(x => x.Id))
+                .ForMember(dc => dc.Name, opt => opt.ResolveUsing(x => x.Name))
+                .ForMember(dc => dc.IsBaseProductType, opt => opt.ResolveUsing(x => x.IsBase))
                 .ForMember(dc => dc.Options, opt => opt.ResolveUsing(x => MapAttributeToDCAttribute(x.Options)))
                 .ForMember(dc => dc.Properties, opt => opt.ResolveUsing(x => MapAttributeToDCAttribute(x.Properties)))
                 .ForMember(dc => dc.Extras, opt => opt.ResolveUsing(x => MapAttributeToDCAttribute(x.Extras)))
+                //ignores
+                .ForMember(dc => dc.MasterCatalogId, op => op.Ignore())
+                .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<DC.AttributeInProductType, ProductTypeAttribute>()
@@ -87,18 +91,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.AllowMulti, opt => opt.ResolveUsing(dc => dc.IsMultiValueProperty))
                 .ForMember(x => x.IsHidden, opt => opt.ResolveUsing(dc => dc.IsHiddenProperty))
                 .ForMember(x => x.IsLocked, opt => opt.ResolveUsing(dc => dc.IsInheritedFromBaseType))
-                .ForMember(x => x.AllValues, opt => opt.ResolveUsing(dc => dc.AttributeDetail.VocabularyValues))
+                .ForMember(x => x.AllValues, opt => opt.ResolveUsing(dc => (dc.AttributeDetail != null) ? dc.AttributeDetail.VocabularyValues : null))
                 .ForMember(x => x.SelectedValues, opt => opt.ResolveUsing(dc => MapVocabularyValueInProductTypeListToSelectedValues(dc.VocabularyValues, dc.AttributeFQN)))
-                .ForMember(x => x.DataType, opt => opt.ResolveUsing(dc => dc.AttributeDetail.DataType))
-                .ForMember(x => x.InputType, opt => opt.ResolveUsing(dc => dc.AttributeDetail.InputType))
-                .ForMember(x => x.AttributeMetadata, opt => opt.ResolveUsing(dc => dc.AttributeDetail.AttributeMetadata ))
-                .ForMember(x => x.AttributeName, opt => opt.ResolveUsing(dc => dc.AttributeDetail.Content != null ? dc.AttributeDetail.Content.Name : dc.AttributeDetail.AttributeCode))
+                .ForMember(x => x.DataType, opt => opt.ResolveUsing(dc => (dc.AttributeDetail != null) ? dc.AttributeDetail.DataType : null))
+                .ForMember(x => x.InputType, opt => opt.ResolveUsing(dc => (dc.AttributeDetail != null) ? dc.AttributeDetail.InputType : null))
+                .ForMember(x => x.AttributeMetadata, opt => opt.ResolveUsing(dc => (dc.AttributeDetail != null) ? dc.AttributeDetail.AttributeMetadata : null))
+                .ForMember(x => x.AttributeName, opt => opt.ResolveUsing(dc => (dc.AttributeDetail != null && dc.AttributeDetail.Content != null) 
+                        ? dc.AttributeDetail.Content.Name 
+                        : (dc.AttributeDetail != null) 
+                            ?  dc.AttributeDetail.AttributeCode 
+                            : null))
+                .ForMember(x => x.ProductTypeId, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<ProductTypeAttribute, DC.AttributeInProductType>()
-                .ForMember(dc => dc.AttributeFQN, opt => opt.MapFrom(dc => dc.AttributeFQN))
-                .ForMember(dc => dc.Order, opt => opt.MapFrom(x => x.Index))
-                .ForMember(dc => dc.AttributeDetail, opt => opt.MapFrom(x => new DC.Attribute
+                .ForMember(dc => dc.AttributeFQN, opt => opt.ResolveUsing(dc => dc.AttributeFQN))
+                .ForMember(dc => dc.Order, opt => opt.ResolveUsing(x => x.Index))
+                .ForMember(dc => dc.AttributeDetail, opt => opt.ResolveUsing(x => new DC.Attribute
                 {
                     AttributeFQN = x.AttributeFQN,
                     AttributeCode = x.AttributeName,
@@ -106,53 +115,81 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     DataType = x.DataType,
                     InputType = x.InputType
                 }))
-                .ForMember(dc => dc.IsHiddenProperty, opt => opt.MapFrom(x => x.IsHidden))
-                .ForMember(dc => dc.IsInheritedFromBaseType, opt => opt.MapFrom(x => x.IsLocked))
-                .ForMember(dc => dc.IsRequiredByAdmin, opt => opt.MapFrom(x => x.IsRequired))
-                .ForMember(dc => dc.IsMultiValueProperty  , opt => opt.MapFrom(x => x.AllowMulti))
+                .ForMember(dc => dc.IsHiddenProperty, opt => opt.ResolveUsing(x => x.IsHidden))
+                .ForMember(dc => dc.IsInheritedFromBaseType, opt => opt.ResolveUsing(x => x.IsLocked))
+                .ForMember(dc => dc.IsRequiredByAdmin, opt => opt.ResolveUsing(x => x.IsRequired))
+                .ForMember(dc => dc.IsMultiValueProperty  , opt => opt.ResolveUsing(x => x.AllowMulti))
                 .ForMember(dc => dc.VocabularyValues, opt => opt.ResolveUsing(x => MapSelectedValuesToVocabularyValueInProductTypeList(x.SelectedValues)))
                 ;
 
             Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValue>()
-                .ForMember(dc => dc.Content, opt => opt.MapFrom(x =>  x.Value  is string ? new DC.AttributeVocabularyValueLocalizedContent { LocaleCode = "en-US", StringValue = x.Value as string  } : null))
-                .ForMember(dc => dc.Value, opt => opt.MapFrom(x => x.Id ))
+                .ForMember(dc => dc.Content, opt => opt.ResolveUsing(x =>  x.Value  is string 
+                    ? new DC.AttributeVocabularyValueLocalizedContent { LocaleCode = "en-US", StringValue = x.Value as string  } 
+                    : null))
+                .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Id ))
                 // TODO: do not hard code this.
-                .ForMember(dc => dc.ValueSequence, opt => opt.MapFrom(x => 0))
+                .ForMember(dc => dc.ValueSequence, opt => opt.ResolveUsing(x => 0))
             ;
             Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeValue>()
-                .ForMember(dc => dc.Value, opt => opt.MapFrom(x => x.Content != null &&!string.IsNullOrEmpty( x.Content.StringValue)? x.Content.StringValue :  x.Value))
-                  .ForMember(x => x.Id, op => op.MapFrom(x => (x.Value.ToString())));
+                .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Content != null &&!string.IsNullOrEmpty( x.Content.StringValue) 
+                    ? x.Content.StringValue 
+                    :  x.Value))
+                .ForMember(x => x.Id, op => op.ResolveUsing(x => (x.Value != null) ? x.Value.ToString() : null))
+                .ForMember(x => x.AttributeFQN, op => op.Ignore())
+                ;
 
             Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValueInProductType>()
-                .ForMember(dc => dc.Value, opt => opt.MapFrom(x => x.Id ));
+                .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Id ))
+                //ignores
+                .ForMember(dc => dc.Order, op => op.Ignore())
+                .ForMember(dc => dc.VocabularyValueDetail, op => op.Ignore())
+                ;
 
             Mapper.CreateMap<DC.AttributeVocabularyValueInProductType, AttributeValue>()
-                .ForMember(x => x.Id , opt => opt.MapFrom(dc => dc.Value))
-                .ForMember( x=> x.Value , opt => opt.MapFrom( dc=> dc.VocabularyValueDetail != null && dc.VocabularyValueDetail.Content != null && !string.IsNullOrEmpty( dc.VocabularyValueDetail.Content.StringValue) ?
-                    dc.VocabularyValueDetail.Content.StringValue : dc.Value ));
+                .ForMember(x => x.Id , opt => opt.ResolveUsing(dc => dc.Value))
+                .ForMember(x=> x.Value , opt => opt.ResolveUsing( dc=> dc.VocabularyValueDetail != null && dc.VocabularyValueDetail.Content != null && !string.IsNullOrEmpty( dc.VocabularyValueDetail.Content.StringValue) 
+                    ? dc.VocabularyValueDetail.Content.StringValue 
+                    : dc.Value ))
+                .ForMember(x => x.AttributeFQN, op => op.Ignore());
             #endregion
 
             #region Attributes
             Mapper.CreateMap<Attribute, DC.Attribute>().ConvertUsing(new AttributeToContractConverter());
 
             Mapper.CreateMap<DC.Attribute, Attribute>()
-                .ForMember(x => x.AdminName, op => op.MapFrom(x => x.AdminName))
-                .ForMember(x => x.Values, opt => opt.MapFrom(x => x.VocabularyValues))
-                .ForMember(x => x.Id, opt => opt.MapFrom(x => x.AttributeFQN))
-                .ForMember(x => x.Name, opt => opt.MapFrom(x =>x.Content== null ? null : x.Content.Name))
-                .ForMember( x=> x.AttributeMetadata , opt=> opt.MapFrom(x=> x.AttributeMetadata))
-                .ForMember(x => x.Regex, opt => opt.MapFrom(x => x.Validation.RegularExpression))
-                .ForMember(x => x.Min, opt => opt.MapFrom(dc => dc.Validation.MinNumericValue ?? dc.Validation.MinStringLength))
-                .ForMember(x => x.Max, opt => opt.MapFrom(dc => dc.Validation.MaxNumericValue ?? dc.Validation.MaxStringLength))
-                .ForMember(x => x.MinDate, opt => opt.MapFrom(dc => dc.Validation.MinDateValue))
-                .ForMember(x => x.MaxDate, opt => opt.MapFrom(dc => dc.Validation.MaxDateValue))
-                ;
+                .ForMember(x => x.AdminName, op => op.ResolveUsing(x => x.AdminName))
+                .ForMember(x => x.Values, opt => opt.ResolveUsing(x => x.VocabularyValues))
+                .ForMember(x => x.Id, opt => opt.ResolveUsing(x => x.AttributeFQN))
+                .ForMember(x => x.Name, opt => opt.ResolveUsing(x => (x.Content == null) ? null : x.Content.Name))
+                .ForMember( x=> x.AttributeMetadata , opt=> opt.ResolveUsing(x=> x.AttributeMetadata))
+                .ForMember(x => x.Regex, opt => opt.ResolveUsing(x => (x.Validation != null) 
+                    ? x.Validation.RegularExpression 
+                    : null))
+                .ForMember(x => x.Min, opt => opt.ResolveUsing(dc => (dc.Validation != null) 
+                    ? (dc.Validation.MinNumericValue ?? dc.Validation.MinStringLength) 
+                    : null ))
+                .ForMember(x => x.Max, opt => opt.ResolveUsing(dc => (dc.Validation != null)
+                    ? (dc.Validation.MaxNumericValue ?? dc.Validation.MaxStringLength) 
+                    : null))
+                .ForMember(x => x.MinDate, opt => opt.ResolveUsing(dc => (dc.Validation != null) 
+                    ? dc.Validation.MinDateValue 
+                    : null))
+                .ForMember(x => x.MaxDate, opt => opt.ResolveUsing(dc => (dc.Validation != null) 
+                    ? dc.Validation.MaxDateValue 
+                    : null))
+                //ignores
+                .ForMember(x => x.AttributeId, op => op.Ignore())
+                .ForMember(x => x.IsActive, op => op.Ignore())
+                .ForMember(x => x.IsRequired, op => op.Ignore())
+                .ForMember(x => x.IsVisible, op => op.Ignore())
+                .ForMember(x => x.DisplayGroup, op => op.Ignore());
 
             Mapper.CreateMap<DC.AttributeMetadataItem, AttributeMetadataItem>();
             Mapper.CreateMap<AttributeMetadataItem, DC.AttributeMetadataItem>();
 
 
             Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeVocabularyValue>();
+
             Mapper.CreateMap<AttributeVocabularyValue, DC.AttributeVocabularyValue>();
 
             Mapper.CreateMap<AttributeVocabularyValueLocalizedContent, DC.AttributeVocabularyValueLocalizedContent>();
