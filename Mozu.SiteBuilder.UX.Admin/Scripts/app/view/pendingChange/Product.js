@@ -106,6 +106,7 @@ Ext.define('Taco.view.pendingChange.Product', {
 //    },
     
     gridPanelConf: {
+        selType: 'checkboxmodel',
         dockedItems: [{
             xtype: 'toolbar',
             dock: 'top',
