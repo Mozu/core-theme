@@ -98,6 +98,7 @@ Ext.define('Taco.view.pendingChange.Cms', {
     },
 
     gridPanelConf: {
+        selType: 'checkboxmodel',
         dockedItems: [{
             xtype: 'toolbar',
             dock: 'top',
