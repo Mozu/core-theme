@@ -111,7 +111,7 @@ Ext.define('Taco.model.Order', {
         {
             "name": "billingContact",
             "type": "auto",
-            "default": {}
+            "defaultValue": {}
         },
         {
             "name": "fulfillmentContact",
