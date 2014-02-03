@@ -1,4 +1,4 @@
-﻿// BEGIN UTILS
+// BEGIN UTILS
 // Many of these poached from lodash
 
     var maxFlattenDepth = 20;

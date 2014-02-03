@@ -270,6 +270,16 @@
       },
       "overridePostData": true,
       "returnType": "address"
+    },
+    "validate-lenient": {
+      "verb": "POST",
+      "template": "{+addressValidationService}",
+      "includeSelf": {
+        "asProperty": "address"
+      },
+      "overridePostData": true,
+      "returnType": "address",
+      "suppressErrors": true
     }
   },
   "order": {

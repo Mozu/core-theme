@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @external Promise
  * @see {@link https://github.com/cujojs/when/blob/master/docs/api.md#promise WhenJS/Promise}
  */
@@ -112,8 +112,10 @@ ApiInterfaceConstructor.prototype = {
                 return obj;
             }
         }, function(errorJSON) {
-            obj.fire('error', errorJSON);
-            me.fire('error', errorJSON, obj);
+            if (!requestConf.suppressErrors) {
+                obj.fire('error', errorJSON);
+                me.fire('error', errorJSON, obj);
+            }
             throw errorJSON;
         });
     },

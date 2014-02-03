@@ -1,4 +1,4 @@
-﻿var errors = require('../errors');
+var errors = require('../errors');
 var CONSTANTS = require('../constants/default');
 var utils = require('../utils');
 var ApiReference = require('../reference');

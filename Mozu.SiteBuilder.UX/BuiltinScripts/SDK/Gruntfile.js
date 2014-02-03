@@ -4,6 +4,24 @@
 var port = 9001,
     testurl = "http://127.0.0.1:" + port + "/tests/SpecRunner.html";
 
+var through = require('through'),
+    path = require('path'),
+    crlfRE = /\r\n|\n|\r/g,
+    wd = process.cwd(),
+    normalizeTo = "\n";
+
+function bNormalizeLineEndingsTransform(file) {
+    var data = '';
+    return through(write, end);
+
+    function write(buf) { data += buf }
+    function end() {
+        var tag = "\n\n//# sourceUrl=" + path.relative(wd, file).replace(/\\/g,'/') + "\n\n";
+        this.queue(tag + data.replace(crlfRE, normalizeTo));
+        this.queue(null);
+    }
+};
+
 module.exports = function (grunt) {
 
     grunt.initConfig({
@@ -34,10 +52,11 @@ module.exports = function (grunt) {
                     '<%= testPlatform %>': ['./src/init_debug.js']
                 },
                 options: {
-                    debug: true,
+                    //debug: true,
                     standalone: "<%= toExport %>",
                     bare: true,
-                    external: ["xmlhttprequest"]
+                    external: ["xmlhttprequest"],
+                    transform: [bNormalizeLineEndingsTransform]
                 }
             },
             dist: {
@@ -88,7 +107,7 @@ module.exports = function (grunt) {
         mocha: {
             test: {
                 options: {
-                    reporter: 'Dot',
+                    reporter: 'Nyan',
                     urls: [testurl],
                     run: true
                 }

@@ -1,4 +1,4 @@
-﻿// BEGIN IFRAMEXHR
+// BEGIN IFRAMEXHR
 var utils = require('./utils');
 module.exports = (function (window, document, undefined) {
 
