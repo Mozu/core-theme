@@ -1,4 +1,4 @@
-﻿// BEGIN CONTEXT
+// BEGIN CONTEXT
 /**
  * @class
  * @classdesc The context object helps you configure the SDK to connect to a particular Mozu site. Supply it with tenant, site, mastercatalog, currency code, locale code, app claims, and user claims, and  it will produce for you an ApiInterface object.

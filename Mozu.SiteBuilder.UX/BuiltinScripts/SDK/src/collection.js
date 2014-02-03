@@ -1,4 +1,4 @@
-﻿// BEGIN OBJECT
+// BEGIN OBJECT
 
 var utils = require('./utils');
 var ApiObject = require('./object');

@@ -1,4 +1,4 @@
-﻿var errors = require('../errors');
+var errors = require('../errors');
 var utils = require('../utils');
 var CONSTANTS = require('../constants/default');
 module.exports = {

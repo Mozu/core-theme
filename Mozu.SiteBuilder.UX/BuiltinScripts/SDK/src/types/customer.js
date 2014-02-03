@@ -1,4 +1,4 @@
-﻿var utils = require('../utils');
+var utils = require('../utils');
 var errors = require('../errors');
 module.exports = (function () {
     return {

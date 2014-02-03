@@ -1,4 +1,4 @@
-﻿// BEGIN REFERENCE
+// BEGIN REFERENCE
 var utils = require('./utils');
 var errors = require('./errors');
 var ApiCollection;
@@ -16,7 +16,7 @@ var basicOps = {
     create: 'POST',
     del: 'DELETE'
 };
-var copyToConf = ['verb', 'returnType', 'noBody'],
+var copyToConf = ['verb', 'returnType', 'noBody', 'suppressErrors'],
     copyToConfLength = copyToConf.length;
 var reservedWords = {
     template: true,
