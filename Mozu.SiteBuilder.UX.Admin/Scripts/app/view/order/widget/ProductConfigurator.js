@@ -316,7 +316,7 @@
                 failure: function (response) {
                     // error handling here
                     var json = Ext.decode(response.responseText, true),
-                        msg = (json && json.Message) ? json.Message : "Error adding coupon.";
+                        msg = (json && json.message) ? json.message : "Error adding coupon.";
                     Taco.app.fireEvent('setmessage', msg, 'error');
                     this.fireEvent('loadFailure');
                 },

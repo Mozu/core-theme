@@ -158,7 +158,7 @@ Ext.define('Taco.view.order.Index', {
                                     },
                                     failure: function (response) {
                                         var json = Ext.decode(response.responseText, true),
-                                            msg = (json && json.Message) ? json.Message : "Error canceling order";
+                                            msg = (json && json.message) ? json.message : "Error canceling order";
                                         Taco.app.fireEvent('setmessage', msg, 'error');
                                         grid.setLoading(false);
                                     }

@@ -82,7 +82,7 @@ Ext.define('Taco.view.order.modal.EditTrackingNumber', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : 'Error saving tracking number.';
+                    msg = (json && json.message) ? json.message : 'Error saving tracking number.';
                 
                 Taco.app.viewPort.setLoading(false);
                 var errorDialog = Ext.create('Taco.core.ux.window.Alert', {

@@ -360,7 +360,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                         failure: function (response) {
                             me.setLoading(false);
                             var json = Ext.decode(response.responseText, true),
-                                msg = (json && json.Message) ? json.Message : "Error rolling back.";
+                                msg = (json && json.message) ? json.message : "Error rolling back.";
                             Taco.app.fireEvent('setmessage', msg, 'error');
                         }
                     });

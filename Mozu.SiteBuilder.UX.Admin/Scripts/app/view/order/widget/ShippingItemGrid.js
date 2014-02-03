@@ -743,7 +743,7 @@ weight: 2
             },
             failure: function (response) {
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error moving items";
+                    msg = (json && json.message) ? json.message : "Error moving items";
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 Taco.app.viewPort.setLoading(false);
             },
@@ -813,7 +813,7 @@ weight: 2
                 },
                 failure: function (response) {
                     var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error changing shipping method";
+                    msg = (json && json.message) ? json.message : "Error changing shipping method";
                     Taco.app.fireEvent('setmessage', msg, 'error');
                     Taco.app.viewPort.setLoading(false);
                 },
@@ -871,7 +871,7 @@ weight: 2
             },
             failure: function (response) {
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error marking as shipped";
+                    msg = (json && json.message) ? json.message : "Error marking as shipped";
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 Taco.app.viewPort.setLoading(false);
             },
@@ -928,7 +928,7 @@ weight: 2
                 },
                 failure: function (response) {
                     var json = Ext.decode(response.responseText, true),
-                      msg = (json && json.Message) ? json.Message : "Error moving items";
+                      msg = (json && json.message) ? json.message : "Error moving items";
                     Taco.app.fireEvent('setmessage', msg, 'error');
                     newWindow.location = errorIcon;
                     me.setLoading(false);

@@ -427,7 +427,7 @@ Ext.define('Taco.core.data.Model', {
             }
             
             var json = Ext.decode(response.responseText, true),
-                msg = (json && json.Message) ? json.Message : (config.errorMsg) ? config.errorMsg : "Error";
+                msg = (json && json.message) ? json.message : (config.errorMsg) ? config.errorMsg : "Error";
             Taco.app.fireEvent('setmessage', msg, 'error');
             // call the passed in failure method after having passed the error validation messaging
             if (config.failure2) {
