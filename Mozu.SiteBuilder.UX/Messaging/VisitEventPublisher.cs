@@ -44,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Messaging
                     masterCatalogId:  _apiContext.MasterCatalogId,
                     catalogId:        _apiContext.CatalogId,
                     userId:           _apiContext.UserClaims.UserId,
-                    correlationId:    Trace.CorrelationManager.ActivityId.ToString("N")
+                    correlationId:    (_apiContext.TraceContext != null ? _apiContext.TraceContext.CorrelationId : null) ?? Trace.CorrelationManager.ActivityId.ToString("N")
                 ) { CustomerId = _pageContext.User != null  && _pageContext.User.AccountId != null ? _pageContext.User.AccountId.ToString() : null }
                 // TODO: would be nice to have a place to track landing page.
             };
