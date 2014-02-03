@@ -85,7 +85,7 @@ Ext.define('Taco.view.order.modal.IssueCredit', {
             },
             failure: function (response) {
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : 'Error saving credit',
+                    msg = (json && json.message) ? json.message : 'Error saving credit',
                     errorDialog;
                 
                 errorDialog = Ext.create('Taco.core.ux.window.Alert', {

@@ -600,7 +600,7 @@ Ext.define('Taco.view.order.widget.Package', {
                 },
                 failure: function (response) {
                     var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error changing shipping method";
+                    msg = (json && json.message) ? json.message : "Error changing shipping method";
                     Taco.app.fireEvent('setmessage', msg, 'error');
                     Taco.app.viewPort.setLoading(false);
                 },
@@ -656,7 +656,7 @@ Ext.define('Taco.view.order.widget.Package', {
                 },
                 failure: function (response) {
                     var json = Ext.decode(response.responseText, true),
-                        msg = (json && json.Message) ? json.Message : "Error updating packaging type";
+                        msg = (json && json.message) ? json.message : "Error updating packaging type";
                     Taco.app.fireEvent('setmessage', msg, 'error');
                     Taco.app.viewPort.setLoading(false);
                 },
@@ -729,7 +729,7 @@ Ext.define('Taco.view.order.widget.Package', {
             },
             failure: function (response) {
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error deleting package";
+                    msg = (json && json.message) ? json.message : "Error deleting package";
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 Taco.app.viewPort.setLoading(false);
             },
@@ -800,7 +800,7 @@ Ext.define('Taco.view.order.widget.Package', {
                 },
                 failure: function (response) {
                     var json = Ext.decode(response.responseText, true),
-                      msg = (json && json.Message) ? json.Message : "Error viewing shipping label";
+                      msg = (json && json.message) ? json.message : "Error viewing shipping label";
                     Taco.app.fireEvent('setmessage', msg, 'error');
                     newWindow.location = errorIcon;
                     me.setLoading(false);

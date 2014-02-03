@@ -333,7 +333,7 @@ Ext.define('Taco.view.order.widget.PackagePickup', {
                 },
                 failure: function (response) {
                     var json = Ext.decode(response.responseText, true),
-                        msg = (json && json.Message) ? json.Message : "Error updating packaging type";
+                        msg = (json && json.message) ? json.message : "Error updating packaging type";
                     Taco.app.fireEvent('setmessage', msg, 'error');
                     Taco.app.viewPort.setLoading(false);
                 },
@@ -406,7 +406,7 @@ Ext.define('Taco.view.order.widget.PackagePickup', {
             },
             failure: function (response) {
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.Message) ? json.Message : "Error deleting pickup";
+                    msg = (json && json.message) ? json.message : "Error deleting pickup";
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 Taco.app.viewPort.setLoading(false);
             },

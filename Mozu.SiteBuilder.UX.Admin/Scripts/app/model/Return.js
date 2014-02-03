@@ -161,7 +161,7 @@ Ext.define('Taco.model.Return', {
                 if (config.failure2) {
                     config.failure2.apply(config.scope2 || me, [response, options, json]);
                 } else {
-                    msg = json && json.Message ? json.Message : 'Error performing action:  ' + action;
+                    msg = json && json.message ? json.message : 'Error performing action:  ' + action;
                     Taco.app.fireEvent('setmessage', msg, 'error');
                 }
             },
@@ -209,7 +209,7 @@ Ext.define('Taco.model.Return', {
                 if (config.failure2) {
                     config.failure2.apply(config.scope2 || me, [response, options, json]);
                 } else {
-                    msg = json && json.Message ? json.Message : 'Error Adding Payments ';
+                    msg = json && json.message ? json.message : 'Error Adding Payments ';
                     Taco.app.fireEvent('setmessage', msg, 'error');
                 }
             },
