@@ -148,8 +148,14 @@ Ext.define('Taco.view.order.subform.Return', {
             }, this);
         });
 
-    },
+    }
+    /*
+     // deprecated; never used;
+
+    ,
+    
     initActionsMenu: function () {
+        
         var me = this,
             canVoidPayment = false,
             canApplyCheck = false,
@@ -225,6 +231,6 @@ Ext.define('Taco.view.order.subform.Return', {
             }
         });
     }
-
+    */
 
 });

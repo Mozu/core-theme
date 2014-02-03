@@ -13,6 +13,9 @@ Ext.define('Taco.view.order.modal.AddPayment', {
     title: 'Add Payment',
     models: ['Taco.model.CheckoutSettings'],
 
+    // the default amount to set in the amount field;  If not provided when instantiating the editor, the amount will be auto extracted from the record;
+    defaultPaymentAmount : null,
+
     initComponent: function () {
         var me = this;
 
@@ -41,7 +44,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                 }
             }
         });
-        
+
         this.form = Ext.create('Taco.core.ux.form.Form', {
             layout: {
                 type: 'vbox'
@@ -58,13 +61,15 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                 items: [{
                     xtype: 'textfield',
                     name: 'nameOnCard',
+                    allowBlank: false,
                     fieldLabel: 'Name on Card',
                     width: 340
                 }, {
                     xtype: 'currencyfield',
                     name: 'amount',
                     fieldLabel: 'Amount',
-                    emptyText: '0'
+                    allowBlank: false,
+                    value : this.getDefaultPaymentAmount()
                 }, {
                     xtype: 'combobox',
                     name: 'cardType',
@@ -91,6 +96,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     xtype: 'textfield',
                     name: 'cardNumber',
                     itemId: 'cardNumber',
+                    allowBlank: false,
                     fieldLabel: 'Card Number',
                     width: 340
                 }, {
@@ -98,6 +104,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     name: 'expireMonth',
                     hideTrigger: true,
                     mouseWheelEnabled: false,
+                    allowBlank: false,
                     fieldLabel: 'Exp Month',
                     minValue: 1,
                     maxValue: 12
@@ -105,12 +112,20 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     xtype: 'numberfield',
                     name: 'expireYear',
                     hideTrigger: true,
+                    allowBlank: false,
+                    validator: function (value) {                        
+                        if (value && value.length < 4) {
+                            return "Year must have 4 digits"
+                        }
+                        return true;
+                    },
                     mouseWheelEnabled: false,
                     fieldLabel: 'Exp Year'
                 }, {
                     xtype: 'textfield',
                     name: 'cvv',
                     itemId: 'cvv',
+                    allowBlank: false,
                     fieldLabel: 'CVV',
                     margin: '0 0 0 0',
                     width: 100
@@ -127,6 +142,45 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     scope: this,
                     handler: this.toggleExtraInfo
                 }]
+            }, {
+                xtype: 'component',
+                itemId: 'billingContactInfo',                
+                tpl: [
+                    '<tpl if="firstName || middleName ||lastName">',
+                        '<div>{firstName} {middleName} {lastName}</div>',
+                    '</tpl>',
+                    '<tpl if="address1">',
+                        '<div>{address1}</div>',
+                    '</tpl>',
+                    '<tpl if="address2">',
+                        '<div>{address2}</div>',
+                    '</tpl>',
+                    '<tpl if="address3">',
+                        '<div>{address3}</div>',
+                    '</tpl>',
+                    '<tpl if="address4">',
+                        '<div>{address4}</div>',
+                    '</tpl>',
+                    
+                    '<div>{cityOrTown} {postalOrZipCode} {stateOrProvince} {countryCode}</div>',
+
+                    '<tpl if="homePhone">',
+                        '<div>homePhone: {homePhone}</div>',
+                    '</tpl>',
+
+                    '<tpl if="workPhone">',
+                        '<div>Work Phone: {workPhone}</div>',
+                    '</tpl>',
+
+                    '<tpl if="mobilePhone ">',
+                        '<div>Mobile Phone: {mobilePhone}</div>',
+                    '</tpl>',
+
+                    '<tpl if="email">',
+                        '<div>{email}</div>',
+                    '</tpl>',
+                ],
+                data : this.record.data.billingContact
             }, {
                 xtype: 'container',
                 itemId: 'extraInfo',
@@ -267,6 +321,13 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         });
     },
 
+    primaryHandler: function () {
+        if (this.fireEvent('beforesave', this) !== false) {
+            this.fireEvent('save', this);
+            //this.close();
+        }
+    },
+
     /**
      * Create a PCIaaS form field.
      *
@@ -345,59 +406,36 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
                     me.setLoading(true,me.body);
                     
-                    if (me.isCreateMode) {
-                        order.setBillingInfo({
-                            jsonData: {
-                                orderId: order.getId(),
-                                billingInfo: billingInfo,
-                                billingContact: contactInfo
-                            },
-                            success: function (response) {
-                                me.setLoading(false, me.body);
-                                var json = Ext.decode(response.responseText, true);
-                                if (!json || !json.success) {
-                                    Taco.app.fireEvent('setmessage', "Error saving billing information", 'error');
-                                    return;
-                                }
-                                
-                                // me.hide();
-                                order.reload();
-                            },
-                            failure: function (response) {
-                                var json = Ext.decode(response.responseText, true),
-                                  msg = (json && json.Message) ? json.Message : "Error saving billing information";
-                                Taco.app.fireEvent('setmessage', msg, 'error');
-                                me.setLoading(false, me.body);
-                            }
-                        });
-                    }
-                    else {
-                        order.addPayment({
-                            jsonData: {
-                                orderId: order.getId(),
-                                amount: amount,
-                                billingInfo: billingInfo,
-                                billingContact: contactInfo
-                            },
-                            success: function (response) {
-                                me.setLoading(false, me.body);
-                                var json = Ext.decode(response.responseText, true);
-                                if (!json || !json.success) {
-                                    Taco.app.fireEvent('setmessage', "Error adding payment", 'error');
-                                    return;
-                                }
+                    
 
-                                // me.hide();
-                                order.reload();
-                            },
-                            failure: function (response) {
-                                var json = Ext.decode(response.responseText, true),
-                                  msg = (json && json.Message) ? json.Message : "Error adding payment";
-                                Taco.app.fireEvent('setmessage', msg, 'error');
-                                me.setLoading(false, me.body);
+
+                    order.addPayment({
+                        jsonData: {
+                            orderId: order.getId(),
+                            amount: amount,
+                            billingInfo: billingInfo,
+                            billingContact: contactInfo
+                        },
+                        success: function (response) {
+                            me.setLoading(false, me.body);
+                            var json = Ext.decode(response.responseText, true);
+                            if (!json || !json.success) {
+                                Taco.app.fireEvent('setmessage', "Error adding payment", 'error');
+                                return;
                             }
-                        });
-                    }
+                            
+                            order.reload();
+                            // close the dialog
+                            me.close();
+                        },
+                        failure: function (response) {
+                            var json = Ext.decode(response.responseText, true),
+                                msg = (json && json.message) ? json.message : "Error adding payment";
+                            Taco.app.fireEvent('setmessage', msg, 'error');
+                            me.setLoading(false, me.body);
+                        }
+                    });
+
                     // TODO: impl mask for our own form and also finish working.
                 }
             },
@@ -437,6 +475,25 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         }
     },
 
+    // returns the amount to populate the payment amount field; override if you need any custom logic to determine this amount;
+    getDefaultPaymentAmount: function () {
+        var me = this,
+            retVal = "",
+            authInfo;            
+
+        // only do this if one is not set when instantiating this class;
+        if (!this.defaultPaymentAmount) {
+            authInfo = me.record.data.authorizationInfo;
+            if (authInfo && authInfo.captureAmount) {
+                retVal = authInfo.captureAmount;
+            }
+        } else {
+            retVal = this.defaultPaymentAmount;
+        }
+
+        return retVal;
+    },  
+
     save: function () {
         this.setLoading(true, this.body);
         
@@ -447,6 +504,10 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         var extraInfo = this.down('#extraInfo');
 
         extraInfo[isChecked ? 'hide' : 'show']();
+
+        var billingContactInfo = this.down('#billingContactInfo');
+
+        billingContactInfo.setVisible(isChecked);
     }
 },
 /* class definition-time function */

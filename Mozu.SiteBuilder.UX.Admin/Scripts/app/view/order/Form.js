@@ -119,9 +119,9 @@ Ext.define('Taco.view.order.Form', {
 
     buildForm: function () {
         var subformCfg = {
-                record: this.record,
-                orderForm: this                
-            },
+            record: this.record,
+            orderForm: this                
+        },
             items = [];
 
         if (this.isEdit()) {
@@ -212,15 +212,15 @@ Ext.define('Taco.view.order.Form', {
         // Only validate when in create mode
         if (this.isEdit()) isValid = false;        
 
-        if (!this.record.get("customerId")) {
+        if (!this.customerRecord) {
             isValid = false;
             errors.push("A customer must be created or selected before saving this order");
-        }  else if (!this.record.itemsStore.count()) {
+        } else if (!this.record.itemsStore.count()) {
             isValid = false;
             errors.push("Products must be added before saving this order. Click the gear icon and select \"Edit Details\" to add products.");
-        } else if (!this.record.get("fulfillmentContact")) {
+        } else if (!this.record.data.fulfillmentContact || !this.record.data.fulfillmentContact.email) {
             isValid = false;
-            errors.push("A ship to address must be created or selected before saving this order");
+            errors.push("A shiping address must be created or selected before saving this order");
         } else if (!this.record.get("shippingMethodCode")) {
             isValid = false;
             errors.push("A shipping method must be selected before saving this order");
