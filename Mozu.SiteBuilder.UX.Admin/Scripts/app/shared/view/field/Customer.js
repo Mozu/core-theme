@@ -35,7 +35,7 @@ Ext.define('Taco.shared.view.field.Customer', {
     ),
     listConfig: {
         loadingText: 'Searching...',
-        emptyText: 'No mathching customers found.',
+        emptyText: '<div style="padding:20px; 10px; ">No matching customers found.</div>',
        
     },
     pageSize: 30,
