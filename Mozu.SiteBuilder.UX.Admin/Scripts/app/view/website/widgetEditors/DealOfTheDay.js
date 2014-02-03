@@ -26,9 +26,10 @@ Ext.define('Taco.view.website.widgetEditors.DealOfTheDay', {
                     xtype: 'combobox',
                     name: 'discountId',
                     fieldLabel: 'Discount',
-                    queryMode: 'local',
+                    queryMode: 'remote',
                     displayField: 'name',
                     valueField: 'id',
+                    pageSize: 30,
                     width: 400,
                     store: this.discountStore,
                     listeners: {
