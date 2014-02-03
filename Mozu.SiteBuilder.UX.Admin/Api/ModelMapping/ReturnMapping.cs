@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       ? dc.Product.ProductCode : null))
                   //ignores
                   .ForMember(x => x.ParentItemId, op => op.Ignore())
-                  .ForMember(x => x.Quantity, op => op.Ignore())
+                  .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Reasons.Sum(r => r.Quantity)))
                   ;
           
            // Mapper.CreateMap<ReturnsDC.ReturnUnitPrice, ReturnUnitPrice>();
