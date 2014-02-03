@@ -125,7 +125,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         IsUsedRecurring = false
                     },
                     IsSameBillingShippingAddress = args.BillingInfo.IsSameBillingShippingAddress,
-                    BillingContact = args.BillingContact.Map<Core.Api.Contracts.Contact>()
+                    BillingContact = args.BillingContact.Map<Core.Api.Contracts.Contact>(),
+                    PaymentType = DCp.PaymentTypeConst.CREDIT_CARD
                 },
                 Amount = args.Amount
             };
