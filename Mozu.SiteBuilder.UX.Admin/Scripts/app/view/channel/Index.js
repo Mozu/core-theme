@@ -10,7 +10,7 @@ Ext.define('Taco.view.channel.Index', {
         'Taco.model.Channel'
     ],
 
-    typeName: 'Channels',
+    typeName: 'Channel',
     gridHeaderLabel: 'Channels',
     
     // turn on the row editing feature for inline grid editing and inline grid creation.  typically used for simple entities with several fields.
