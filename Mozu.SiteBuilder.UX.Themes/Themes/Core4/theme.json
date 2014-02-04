@@ -513,7 +513,9 @@
         "defaultConfig": {
             "height": 400,
             "imageHeight": 400,
-            "heightResizable" : true
+            "heightResizable" : true,
+            "imageSource": "file",
+            "linkSource": "externalUrl"
         },
         "validPageTypes":["*"]
     }, {
