@@ -38,12 +38,12 @@
 
         {% if Model.config.imageSource == "externalUrl" %}
         
-            <a class="mz-cms-image-cover" target="_blank" href="{{ siteContext.cdnPrefix }}/cms/files/{{Model.config.linkFileId}}" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{Model.config.imageExternalUrl}}');"></a>
+            <a class="mz-cms-image-cover" target="_blank" data-thom="thom" {% if Model.config.linkFileId %}href="{{ siteContext.cdnPrefix }}/cms/files/{{Model.config.linkFileId}}"{% endif %} title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{Model.config.imageExternalUrl}}');"></a>
         
         {% endif %}
         {% if Model.config.imageSource == "file" %}
         
-            <a class="mz-cms-image-cover" target="_blank" href="{{ siteContext.cdnPrefix }}/cms/files/{{Model.config.linkFileId}}" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{siteContext.cdnPrefix}}/cms/files/{{Model.config.imageFileId}}');"></a>
+            <a class="mz-cms-image-cover" target="_blank" data-thom="thom" {% if Model.config.linkFileId %}href="{{ siteContext.cdnPrefix }}/cms/files/{{Model.config.linkFileId}}"{% endif %} title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{siteContext.cdnPrefix}}/cms/files/{{Model.config.imageFileId}}');"></a>
         
         {% endif %}
 
