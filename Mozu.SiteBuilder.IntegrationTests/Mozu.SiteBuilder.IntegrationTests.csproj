@@ -144,8 +144,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\AutoMapper.3.0.0\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
-    <Reference Include="Burrows">
-      <HintPath>..\packages\Burrows.0.2.2.8\lib\net45\Burrows.dll</HintPath>
+    <Reference Include="Burrows, Version=0.2.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Burrows.0.2.4.1\lib\net45\Burrows.dll</HintPath>
+    </Reference>
+    <Reference Include="Burrows.Log4Net">
+      <HintPath>..\packages\Burrows.Log4Net.0.2.4.1\lib\net45\Burrows.Log4Net.dll</HintPath>
     </Reference>
     <Reference Include="FiftyOne.Foundation, Version=2.1.15.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -359,8 +363,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Should.1.1.20\lib\Should.dll</HintPath>
     </Reference>
-    <Reference Include="Stact">
-      <HintPath>..\packages\Stact.1.1.1\lib\NET40\Stact.dll</HintPath>
+    <Reference Include="Stact, Version=1.1.2.0, Culture=neutral, PublicKeyToken=b800c4cfcdeea87b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Stact.1.1.2\lib\NET40\Stact.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
