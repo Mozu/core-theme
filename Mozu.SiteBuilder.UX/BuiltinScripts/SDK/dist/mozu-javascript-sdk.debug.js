@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-02-03
+ * Mozu JavaScript SDK - v0.3.0 - 2014-02-04
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -4449,15 +4449,19 @@ module.exports = {
 
 //# sourceUrl=src/types/shipment.js
 
+var utils = require('../utils');
 module.exports = {
     getShippingMethodsFromContact: function (contact) {
         var self = this;
-        return self.update({ fulfillmentContact: self.prop('fulfillmentContact') }).then(function () {
+        var fulfillmentContact = utils.clone(self.prop('fulfillmentContact'));
+        // currently the service can't handle not having a state
+        if (fulfillmentContact.address && !fulfillmentContact.address.stateOrProvince) fulfillmentContact.address.stateOrProvince = "n/a";
+        return self.update({ fulfillmentContact: fulfillmentContact }).then(function () {
             return self.getShippingMethods();
         });
     }
 };
-},{}],33:[function(require,module,exports){
+},{"../utils":35}],33:[function(require,module,exports){
 
 
 //# sourceUrl=src/types/user.js
