@@ -183,7 +183,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (emailTempalte == null)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "no templates defined for  topic " + notification.Topic);
+                var errMesage = "no templates defined for  topic " + notification.Topic;
+                _logger.Error(errMesage);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, errMesage );
             }
 
             var site = (await _sitesWebApiClient.GetSite(this.SbApiContext.SiteId)).ReadAsSync();
@@ -215,8 +217,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 _logger.Error(ex);
             }
 
-        var viewEngine = Request.Resolve<HyprViewEngine>();
+            var viewEngine = Request.Resolve<HyprViewEngine>();
             var view = viewEngine.FindPageView(emailTempalte.Template);
+
+            if (view == null)
+            {
+                var errMesage = string.Format("no template found for view:{0} topic{1}", emailTempalte.Template, notification.Topic);
+                _logger.Error(errMesage);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, errMesage);
+
+            }
             var vdd = new ViewDataDictionary();
             vdd["model"] = model;
             vdd["content"] = cmdContent;
@@ -225,6 +235,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var hvc = new HyprViewContext(this.Request , vdd, null);
             var stringWriter = new StringWriter();
+           
             view.Render(hvc, stringWriter);
 
 

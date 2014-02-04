@@ -486,7 +486,7 @@ Ext.define('Taco.view.website.Index', {
                 definitionId: cfg.widgetTypeId
             }, serverRenderFn;
 
-        cfg.config = def.get('defaultConfig');
+        cfg.config = Ext.apply({}, def.get('defaultConfig'));
 
         serverRenderFn = function (jsonData) {
             Ext.fly(body).setStyle('cursor', 'wait');
