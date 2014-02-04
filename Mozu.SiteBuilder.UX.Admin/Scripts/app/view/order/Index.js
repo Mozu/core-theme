@@ -35,10 +35,12 @@ Ext.define('Taco.view.order.Index', {
         columns: [{
             dataIndex: 'orderNumber',
             text: 'Order Number',
+            flex: 1,
             width: 100
         }, {
             dataIndex: 'createDate',
             text: 'Order Date',
+            flex: 1,
             minWidth: 180,
             xtype: 'datecolumn',
             format: 'M d g:ia'
@@ -47,6 +49,7 @@ Ext.define('Taco.view.order.Index', {
         }, {
             dataIndex: 'billingContact',
             text: 'First Name',
+            flex: 1,
             width: 120,
             getSortParam: function () {
                 return 'billingContact.firstName';
@@ -57,6 +60,7 @@ Ext.define('Taco.view.order.Index', {
         }, {
             dataIndex: 'billingContact',
             text: 'Last Name',
+            flex: 1,
             width: 120,
             getSortParam: function () {
                 return 'billingContact.lastName';
@@ -68,22 +72,27 @@ Ext.define('Taco.view.order.Index', {
             dataIndex: 'total',
             text: 'Order Total',
             renderer: 'usMoney',
+            flex: 1,
             width: 100
         }, {
             dataIndex: 'orderStatus',
             text: 'Order Status',
+            flex: 1,
             width: 100
         }, {
             dataIndex: 'paymentStatus',
             text: 'Payment Status',
+            flex: 1,
             width: 120
         }, {
             dataIndex: 'fulfillmentStatus',
             text: 'Fulfillment Status',
+            flex: 1,
             width: 120
         }, {
             text: 'Channel',
             dataIndex:"channelName",
+            flex: 1,
             width: 100
         }, {
             xtype: 'taco.menucolumn',
