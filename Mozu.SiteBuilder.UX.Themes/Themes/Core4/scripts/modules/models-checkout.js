@@ -6,9 +6,10 @@
     "modules/api",
     "modules/models-customer",
     "modules/models-address",
-    "modules/models-paymentmethods"
+    "modules/models-paymentmethods",
+    "hyprlivecontext"
 ],
-    function ($, _, Hypr, Backbone, api, CustomerModels, AddressModels, PaymentMethods) {
+    function ($, _, Hypr, Backbone, api, CustomerModels, AddressModels, PaymentMethods, HyprLiveContext) {
 
         var CheckoutStep = Backbone.MozuModel.extend({
             helpers: ['stepStatus', 'requiresFulfillmentInfo'],
@@ -104,13 +105,14 @@
                 if (this.validate()) return false;
                 var parent = this.parent,
                     me = this,
-                    isAddressValidationEnabled = Hypr.engine.options.locals.siteContext.generalSettings.isAddressValidationEnabled,
-                    allowInvalidAddresses = Hypr.engine.options.locals.siteContext.generalSettings.allowInvalidAddresses;
+                    isAddressValidationEnabled = HyprLiveContext.locals.siteContext.generalSettings.isAddressValidationEnabled,
+                    allowInvalidAddresses = HyprLiveContext.locals.siteContext.generalSettings.allowInvalidAddresses;
                 this.isLoading(true);
                 var addr = this.get('address');
                 var completeStep = function () {
-                    $('.mz-messagebar').html('');
+                    me.parent.getOrder().messages.reset();
                     parent.syncApiModel();
+                    me.isLoading(true);
                     parent.apiModel.getShippingMethodsFromContact().then(function (methods) {
                         return parent.set({
                             availableShippingMethods: methods
@@ -135,7 +137,8 @@
                     completeStep();
                 } else {
                     if (addr.get('candidateValidatedAddresses') == null) {
-                        addr.apiModel.validateAddress().then(function (resp) {
+                        var methodToUse = allowInvalidAddresses ? "validateLenient" : "validateStrict";
+                        addr.apiModel[methodToUse]().then(function (resp) {
                             if (resp.data && resp.data.addressCandidates && resp.data.addressCandidates.length) {
                                 var addrCompare = function (addr, valAddr) {
                                     var s1 = '',
@@ -167,10 +170,10 @@
                         }, function (e) {
                             if (allowInvalidAddresses) {
                                 // TODO: sink the exception.in a better way.
-                                $('.mz-messagebar').html('');
+                                me.parent.getOrder().messages.reset();
                                 completeStep();
                             } else {
-                                $('.mz-messagebar').html('<ul class="is-showing mz-errors"><li>We could not validate this address. Please check the address you entered and try again.</li></ul>');
+                                me.parent.getOrder().messages.reset({ message: Hypr.getLabel('addressValidationError') });
                             }
                         });
                     } else {
