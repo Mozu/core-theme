@@ -7,7 +7,7 @@ Ext.define('Taco.view.locationType.Index', {
         'Taco.model.LocationType',
         'Taco.store.LocationTypes'
     ],
-    typeName: 'Location Types',
+    typeName: 'Location Type',
     gridHeaderLabel: 'Location Types',
     
     //editorName: 'Taco.view.locationType.Edit',
