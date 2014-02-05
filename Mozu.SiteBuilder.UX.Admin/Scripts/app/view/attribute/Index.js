@@ -43,7 +43,7 @@ Ext.define('Taco.view.attribute.Index', {
             minWidth: 120
         }, {
             dataIndex: 'id',
-            text: 'Attribute ID',
+            text: 'Administration Name (ID)',
             minWidth: 200,
             hidden: true
         }, {
