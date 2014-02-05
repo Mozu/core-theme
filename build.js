@@ -2,12 +2,12 @@
     paths: {
         jquery: "empty:",
         sdk: "empty:",
-        knockout: "vendor/knockout-latest",
-        pciaas: "vendor/pci-temp"
+        hyprlive: "empty:",
+        hyprlivecontext: "empty:"
     },
     dir: "compiled/scripts/",
     locale: "en-us",
-    optimize: "uglify",
+    optimize: "uglify2",
     keepBuildDir: true,
     optimizeCss: "none",
     removeCombined: true,
@@ -17,25 +17,26 @@
             name: "modules/common",
             include: [
                 'modules/api',
-                'modules/backbone-mozu-model',
-                'modules/backbone-mozu-validation',
-                'modules/backbone-mozu-build',
                 'modules/backbone-mozu',
                 'modules/cart-monitor',
+                'modules/contextify',
                 'modules/jquery-mozu',
                 'modules/login-links',
                 'modules/mixin-paging',
                 'modules/models-address',
+                'modules/models-customer',
                 'modules/models-faceting',
                 'modules/models-messages',
                 'modules/models-product',
+                'modules/scroll-nav',
                 'modules/views-messages',
-                'modules/views-paging'
+                'modules/views-paging',
+                'modules/views-productlists'
             ],
-            exclude: ['jquery', 'pciaas'],
+            exclude: ['jquery'],
         },
         {
-            name: "pages/product",
+            name: "pages/cart",
             exclude: ["modules/common"]
         },
         {
@@ -43,15 +44,23 @@
             exclude: ["modules/common"]
         },
         {
-            name: "pages/cart",
+            name: "pages/checkout",
             exclude: ["modules/common"]
         },
         {
-            name: "pages/checkout",
-            exclude: ["modules/common", 'pciaas']
+            name: "pages/error",
+            exclude: ["modules/common"]
+        },
+        {
+            name: "pages/location",
+            exclude: ["modules/common"]
         },
         {
             name: "pages/myaccount",
+            exclude: ["modules/common"]
+        },
+        {
+            name: "pages/product",
             exclude: ["modules/common"]
         }
     ]

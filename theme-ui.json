@@ -9,7 +9,19 @@
           "xtype": "checkbox",
           "name": "allowWishlist",
           "fieldLabel": "Allow Wishlist"
+        },
+        {
+          "xtype": "checkbox",
+          "name": "useAnimatedProductLists",
+          "fieldLabel": "Use Animated Product Lists"
+        },
+       {
+          "xtype": "checkbox",
+          "name": "enablePartialCaching",
+          "fieldLabel": "Enable Partial Caching",
+          "value" :true
         }
+	  
       ]
     },
     {

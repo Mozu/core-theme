@@ -13,6 +13,24 @@
     "settings": {
 
         "internal-themeAddons": [],
+		"cmsTextStyles": [
+			{
+			  "label": "Heading 1",
+			  "tagName": "h1",
+			  "className": "mz-style-1",
+			  "attributes": {
+				"data-role": "{theNeedful: true}"
+			  }
+			},
+			{
+			  "label": "Heading 2",
+			  "tagName": "h2"
+			},
+			{
+			  "label": "Paragraph",
+			  "tagName": "p"
+			}
+		  ],
 
         "useDebugScripts": true,
 
@@ -21,9 +39,10 @@
         "pageSizeOptions": [15, 25, 50, 100],
         "maxProductSummaryWords": 40,
         "allowWishlist": false,
-        "showBreadcrumbs": true,
+        "enablePartialCaching":true,
         "showBreadcrumbs": true,
         "preselectCountryCode": "US",
+
 
         /* Common appearance settings used in the stylesheet */
         "font": "Source Sans Pro",
@@ -83,14 +102,14 @@
 		  "subject": "Order Confirmation #{model.orderNumber}"
 		}
 	  },
-	  {
+/*	  {
 		"id": "return.changed",
 		"title": "Return Status",
 		"template": "email/order-status",
 		"properties": {
 		  "subject": "Order Status #{model.orderNumber}"
 		}
-	  },
+	  }, */
 	  {
 		"id": "user.created",
 		"title": "New Login Created",
@@ -310,7 +329,7 @@
             "fieldLabel": "Video URL",
             "anchor": "100%"
         }],
-        "defaultConfig": {},
+        "defaultConfig": { "heightResizable" : false },
         "icon": "/resources/admin/widgets/08_video.png",
         "validPageTypes":["*"]
     }, {
@@ -486,19 +505,20 @@
         "validPageTypes":["*"]
         },
     {
-      "id":"cms-image",
-      "displayName":"Image",
-      "displayTemplate" :"cms/image",
+        "id":"cms-image",
+        "displayName":"Image",
+        "displayTemplate" :"cms/image",
         "icon": "/resources/admin/widgets/00_photo.png",
-      "editView": "taco-image-widgeteditor",
+        "editView": "taco-image-widgeteditor",
         "defaultConfig": {
             "height": 400,
-             "imageHeight": 400
+            "imageHeight": 400,
+            "heightResizable" : true,
+            "imageSource": "file",
+            "linkSource": "externalUrl"
         },
         "validPageTypes":["*"]
-    },
-		
-		{
+    }, {
         "id": "horizontal_rule",
         "displayName": "Horizontal Rule",
         "displayTemplate": "cms/horizontalrule",
@@ -518,12 +538,12 @@
         "displayTemplate": "cms/content",
         "icon": "/resources/admin/widgets/07_code.png",
         "editViewFields": [{
-            xtype: 'textareafield',
-            grow: true,
-            name: 'body',
-            fieldLabel: 'HTML',
-            anchor: '100%',
-            fieldStyle:"resize:both;font-family:Monaco, Menlo, Consolas, 'Droid Sans Mono', Inconsolata, 'Courier New', monospace;height:100%"
+            "xtype": "textareafield",
+            "grow": true,
+            "name": "body",
+            "fieldLabel": "HTML",
+            "anchor": "100%",
+            "fieldStyle": "resize:both;font-family:Monaco, Menlo, Consolas, 'Droid Sans Mono', Inconsolata, 'Courier New', monospace;height:100%"
         }],
         "defaultConfig": {
             "body": "<h2>Insert Markup</h2>"
@@ -617,5 +637,13 @@
         },
         "category": "social",
         "validPageTypes":["*"]
+    }, {
+        "id": "deal-of-the-day",
+        "category": "catalog",
+        "displayName": "Deal of the Day",
+        "displayTemplate": "catalog/deal-of-the-day",
+        "icon": "/resources/admin/widgets/26_related_products.png",
+        "validPageTypes": ["*"],
+        "editView": "taco-dealoftheday-widgeteditor"
     }]
 }

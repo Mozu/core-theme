@@ -11,13 +11,6 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
     },
     $docBody;
 
-    //Modernizr.load({
-    //    text: Modernizr.input.placeholder,
-    //    nope: [
-    //        '/scripts/vendor/placeholder_polyfill.jquery.amd.js'
-    //    ]
-    //});
-
     var DismissablePopover = function () { };
 
     $.extend(DismissablePopover.prototype, {
@@ -74,6 +67,11 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
 
             }
         },
+        displayApiMessage: function (xhr) {
+            this.displayMessage(xhr.message ||
+                (xhr && xhr.responseJSON && xhr.responseJSON.message) ||
+                Hypr.getLabel('unexpectedError'));
+        },
         displayMessage: function (msg) {
             this.setLoading(false);
             this.$parent.find('[data-mz-role="popover-message"]').html('<span class="mz-validationmessage">' + msg + '</span>');
@@ -90,7 +88,7 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
     }
     LoginPopover.prototype = new DismissablePopover();
     $.extend(LoginPopover.prototype, {
-        boundMethods: ['handleEnterKey', 'dismisser', 'displayMessage', 'displayLoginMessage', 'createPopover', 'slideRight', 'slideLeft', 'login', 'retrievePassword', 'onPopoverShow'],
+        boundMethods: ['handleEnterKey', 'handleLoginComplete', 'displayResetPasswordMessage', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'slideRight', 'slideLeft', 'login', 'retrievePassword', 'onPopoverShow'],
         template: Hypr.getTemplate('modules/common/login-popover').render(),
         bindListeners: function(on) {
             var onOrOff = on ? "on" : "off";
@@ -124,24 +122,24 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
         },        slideLeft: function () {
             this.$slideboxOuter.css('left', 0);
         },
-        displayLoginMessage: function (xhr) {
-            this.displayMessage(xhr.message ||
-                (xhr && xhr.responseJSON && xhr.responseJSON.message) ||
-                Hypr.getLabel('unexpectedError'));
-        },        login: function () {
+        login: function () {
             this.setLoading(true);
             api.action('customer', 'loginStorefront', {
                 email: this.$parent.find('[data-mz-login-email]').val(),
                 password: this.$parent.find('[data-mz-login-password]').val()
-            }).then(function (res) {
-                window.location.reload();
-            }, this.displayLoginMessage);
+            }).then(this.handleLoginComplete, this.displayApiMessage);
         },
         retrievePassword: function () {
             this.setLoading(true);
             api.action('customer', 'resetPasswordStorefront', {
                 EmailAddress: this.$parent.find('[data-mz-forgotpassword-email]').val()
-            }).then(this.displayLoginMessage, this.displayLoginMessage);
+            }).then(this.displayResetPasswordMessage, this.displayApiMessage);
+        },
+        handleLoginComplete: function() {
+            window.location.reload();
+        },
+        displayResetPasswordMessage: function () {
+            this.displayMessage(Hypr.getLabel('resetEmailSent'));
         }
     });
 
@@ -150,7 +148,7 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
     }
     SignupPopover.prototype = new DismissablePopover();
     $.extend(SignupPopover.prototype, LoginPopover.prototype, {
-        boundMethods: ['handleEnterKey', 'dismisser', 'displayMessage', 'displayLoginMessage', 'displayApiMessage', 'createPopover', 'signup', 'onPopoverShow'],
+        boundMethods: ['handleEnterKey', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'signup', 'onPopoverShow'],
         template: Hypr.getTemplate('modules/common/signup-popover').render(),
         bindListeners: function (on) {
             var onOrOff = on ? "on" : "off";
@@ -165,12 +163,6 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
             if (!payload.password) return this.displayMessage(Hypr.getLabel('passwordMissing')), false;
             if (payload.password !== this.$parent.find('[data-mz-signup-confirmpassword]').val()) return this.displayMessage(Hypr.getLabel('passwordsDoNotMatch')), false;
             return true;
-        },
-        displayLoginMessage: function (xhr) {
-            this.displayMessage(xhr.responseJSON.message);
-        },
-        displayApiMessage: function(res) {
-            this.displayMessage(res.message);
         },
         signup: function () {
             var self = this,
@@ -196,7 +188,7 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
                 this.setLoading(true);
                 return api.action('customer', 'createStorefront', payload).then(function () {
                     window.location.reload();
-                }, self.displayLoginMessage);
+                }, self.displayApiMessage);
             }
         }
     });

@@ -1,7 +1,9 @@
 ﻿  {% extends "email/email" %}
 
   {% block body-content %}
-  <H1> Welcome to {{siteContext.generalSettings.websiteName}}</H1>
-      <div>{% dump Model %}</div>
+
+  <h1>Welcome to {{siteContext.generalSettings.websiteName}}</h1>
+
+  Your customer account has been created and you can log in anytime at <a href="http://{{domainName}}/">http://{{domainName}}/</a> as {{model.UserEmailAddress}}.
 
 {% endblock body-content %}

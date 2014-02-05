@@ -23,7 +23,7 @@
       {% endif %}
       <li class="mz-utilitynav-item">
             <a class="mz-utilitynav-link mz-utilitynav-link-cart" href="/cart">
-                {{ labels.viewCart }} (<span class="mz-cartmonitor">0</span>)
+                {{ labels.viewCart }} (<span class="mz-cartmonitor" data-mz-role="cartmonitor">0</span>)
                 {% require_script "modules/cart-monitor" %}
             </a>
         </li>

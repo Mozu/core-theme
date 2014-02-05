@@ -75,6 +75,14 @@
                 <span class="mz-ordersummary-totalvalue">{{ model.shippingTotal|currency }}</span>
               </td>
             </tr>
+            {% for shippingDiscount in model.shippingDiscounts %}
+            <tr class="mz-ordersummary-shippingdiscount">
+              <td colspan="4">
+                <span class="mz-ordersummary-totalname">{{ shippingDiscount.discount.discount.name }}:</span>
+                <span class="mz-ordersummary-totalvalue">-{{ shippingDiscount.discount.impact|currency }}</span>
+              </td>
+            </tr>
+            {% endfor %}
             {% if model.handlingAmount %}
             <tr class="mz-ordersummary-additionalhandling">
                 <td colspan="4">

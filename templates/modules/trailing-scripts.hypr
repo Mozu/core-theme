@@ -1,31 +1,20 @@
-﻿{% comment %}
-<!-- 
-    When compiled theme scripts are active, there should be a "common.js" containing core dependencies.
-    Require it using the below script.
--->
+﻿<script src="{{siteContext.cdnPrefix}}/js/require-{% if themeSettings.useDebugScripts %}debug{% else %}min{% endif %}.js"></script>
 <script type="text/javascript">
-    require(['modules/common'], function() { require([{{model}}]) } );
-</script>
-{% endcomment %}
-
-
-<script>
-    var require = {
-        {% if siteContext.cdnPrefix %}
+    require.config({
         cdnPrefix: "{{ siteContext.cdnPrefix }}",
-        {% endif %}
         cacheKey: "{{ siteContext.hashString }}",
         urlArgs: "theme={{siteContext.themeId}}&cacheKey={{ siteContext.hashString }}",
-        baseUrl: "{% if siteContext.cdnPrefix %}{{ siteContext.cdnPrefix }}{% endif %}/scripts",
+        baseUrl: "{{ siteContext.cdnPrefix }}{% if not themeSettings.useDebugScripts %}/compiled{% endif %}/scripts",
         paths: {
             jquery: "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery{% if not themeSettings.useDebugScripts %}.min{% endif %}"
         },
         priority: ['jquery']
-    };
-</script>
-<script src="/js/require-{% if themeSettings.useDebugScripts %}debug{% else %}min{% endif %}.js"></script>
-<script type="text/javascript">
+    });
+    {% if themeSettings.useDebugScripts %}
     require([{% all_scripts %}]);
+    {% else %}
+    require(['jquery', 'modules/common'], function() { require([{% all_scripts %}]); });
+    {% endif %}
 </script>
 
 {% if siteContext.generalSettings.isGoogleAnalyticsEnabled %}

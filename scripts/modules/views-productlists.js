@@ -1,20 +1,23 @@
-﻿define(['modules/jquery-mozu', 'modules/backbone-mozu', 'hyprlive', 'shim!vendor/isotope.min[jquery=jQuery]'], function ($, Backbone, Hypr) {
+﻿define(['modules/jquery-mozu', 'modules/backbone-mozu', 'hyprlive'], function ($, Backbone, Hypr) {
     var ProductListView = Backbone.MozuView.extend({
             templateName: 'modules/product/product-list-tiled'
         }),
         
         AnimatedProductListView = ProductListView.extend({
         initialize: function () {
-            var items = this.model.get('items');
+            var self = this,
+                items = this.model.get('items');
             this.previousItems = new (items.constructor)(items.models);
             this.itemTemplate = Hypr.getTemplate('modules/product/product-listing');
-            this.$el.isotope({
-                itemSelector: '.mz-productlist-item',
-                layoutMode: 'cellsByRow',
-                animationOptions: {
-                    duration: 400,
-                    queue: false
-                }
+            require(['shim!vendor/isotope.min[jquery=jQuery]'], function() {
+                self.$el.isotope({
+                    itemSelector: '.mz-productlist-item',
+                    layoutMode: 'cellsByRow',
+                    animationOptions: {
+                        duration: 400,
+                        queue: false
+                    }
+                });
             });
         },
         getDifferentProducts: function (left, right) {
@@ -79,7 +82,7 @@
                 id = $target.data('mz-hierarchy-id'),
                 field = $target.data('mz-facet');
             this.model.setHierarchy(field, id);
-            this.model.updateFacets();
+            this.model.updateFacets({ force: true, resetIndex: true });
             e.preventDefault();
         },
         setFacetValue: function (e) {

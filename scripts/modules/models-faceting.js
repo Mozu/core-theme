@@ -35,7 +35,7 @@
         },
         empty: function () {
             this.set("values", { isApplied: false });
-            this.collection.parent.updateFacets();
+            this.collection.parent.updateFacets({ resetIndex: true });
         },
         getAppliedValues: function () {
             return _.invoke(this.get("values").where({ isApplied: true }), 'get', 'filterValue').join(',');
@@ -66,11 +66,18 @@
         },
         helpers: ['hasValueFacets'],
         hierarchyDepth: 2,
-        setQuery: function(query) {
+        hierarchyField: 'categoryId',
+        setQuery: function (query) {
             this.query = query;
+            if (!this.hierarchyValue && !this.baseRequestParams) {
+                this.baseRequestParams = {
+                    facet: this.hierarchyField,
+                    facetHierDepth: this.hierarchyField + ":" + this.hierarchyDepth
+                };
+            }
             this.lastRequest = this.buildFacetRequest();
         },
-        setHierarchy: function(hierarchyField, hierarchyValue) {
+        setHierarchy: function (hierarchyField, hierarchyValue) {
             this.hierarchyField = hierarchyField;
             this.hierarchyValue = hierarchyValue;
             this.baseRequestParams = (hierarchyValue !== null) && {
@@ -82,7 +89,7 @@
             if (this.query) this.baseRequestParams.query = this.query;
             this.lastRequest = this.buildFacetRequest();
         },
-        hasValueFacets: function() {
+        hasValueFacets: function () {
             return !!this.get('facets').findWhere({ facetType: 'Value' });
         },
         clearAllFacets: function () {
@@ -91,9 +98,9 @@
         getFacetValueFilter: function () {
             return _.compact(this.get("facets").invoke("getAppliedValues")).join(',');
         },
-        setFacetValue: function(field, value, yes) {
+        setFacetValue: function (field, value, yes) {
             this.get("facets").findWhere({ field: field }).get("values").findWhere({ value: value }).set("isApplied", yes);
-            this.updateFacets();
+            this.updateFacets({ resetIndex: true });
         },
         buildFacetRequest: function () {
             var conf = this.baseRequestParams ? _.clone(this.baseRequestParams) : {},
@@ -103,30 +110,34 @@
             conf.pageSize = pageSize;
             if (startIndex) conf.startIndex = startIndex;
             if (filterValue) conf.facetValueFilter = filterValue;
+            if (this.query) conf.query = this.query;
             return conf;
         },
-        updateFacets: _.debounce(function () {
+        updateFacets: _.debounce(function (options) {
             var me = this,
-                conf = this.buildFacetRequest();
-            if (!_.isEqual(conf, this.lastRequest)) {
+                conf;
+            options = options || {};
+            if (options.resetIndex) this.set("startIndex", 0);
+            conf = this.buildFacetRequest();
+            if (options.force || !_.isEqual(conf, this.lastRequest)) {
                 this.lastRequest = conf;
                 this.isLoading(true);
                 // wipe current data set, since the server will give us our entire state
                 this.get('facets').reset(null, { silent: true });
                 this.get('items').reset(null, { silent: true });
-                this.apiModel.get(conf).then(function() {
+                this.apiModel.get(conf).then(function () {
                     me.trigger("facetchange", me.getQueryString());
                 }).ensure(function () {
                     me.isLoading(false);
                 });
             }
         }, 300),
-        getQueryString: function() {
+        getQueryString: function () {
             var self = this, lrClone = _.clone(this.lastRequest);
             _.each(lrClone, function (v, p) {
                 if (self.baseRequestParams && (p in self.baseRequestParams)) delete lrClone[p];
             });
-            if (parseInt(lrClone.pageSize) === defaultPageSize) delete lrClone.pageSize;
+            if (parseInt(lrClone.pageSize, 10) === defaultPageSize) delete lrClone.pageSize;
             if (this.hierarchyField && this.hierarchyValue) lrClone[this.hierarchyField] = this.hierarchyValue;
             if (this.query) lrClone.query = this.query;
             return _.isEmpty(lrClone) ? "" : "?" + $.param(lrClone);
@@ -143,5 +154,3 @@
     };
 
 });
-
-

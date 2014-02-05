@@ -21,7 +21,18 @@
         {% endblock product-code %}
         {% include "modules/product/price-stack" %}
         {% block product-extrainfo %}
+        {% if dealOfTheDay %}
+          {% if dealOfTheDay.savings %}
+            {% if model.price.discount.impact %}
+              <p class="mz-productlisting-savings">You save: {{ model.price.discount.impact|currency }}</p>
+            {% endif %}
+          {% endif %}
+          {% if dealOfTheDay.expirationDate %}
+            {% if model.price.discount.discount.expirationDate %}
+              <p class="mz-productlisting-expirationdate">Expires: {{ model.price.discount.discount.expirationDate.createDate|date("F j, Y") }}</p>
+            {% endif %}
+          {% endif %}
+        {% endif %}
         {% endblock product-extrainfo %}
     </div>
 </div>
-
