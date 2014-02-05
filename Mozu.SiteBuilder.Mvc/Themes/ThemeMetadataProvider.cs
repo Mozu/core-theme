@@ -56,11 +56,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         string EscapeThemeId(string id)
         {
-            return (id ?? "").Replace("/", "*").Replace("\\", "*");
+            return (id ?? "").Replace("/", "~").Replace("\\", "~");
         }
         string UnEscapeThemeId(string id)
         {
-            return (id ?? "").Replace("*", "\\");
+            return (id ?? "").Replace("~", "\\");
         }
 
 
