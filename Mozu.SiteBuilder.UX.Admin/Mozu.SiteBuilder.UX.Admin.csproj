@@ -1145,6 +1145,7 @@
     <Content Include="Scripts\.sencha\app\package.defaults.properties" />
     <Content Include="Scripts\.sencha\app\package.properties" />
     <Content Include="ext-4.2.2-commercial.zip" />
+    <Content Include="Scripts\.sencha\app\production.defaults.properties" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
