@@ -74,7 +74,7 @@ Ext.define('Taco.view.capability.Form', {
             padding: '0 0 0 50',
             width: 320,
             tpl: [
-                '<div><span>Capability Type: </span><span>{[values.data.capabilityName]}</span></div>',
+                '<div><span>Application Type: </span><span>{[values.data.capabilityName]}</span></div>',
                 '<div><span>Publisher Name: </span><span>{[values.data.developerAccountName]}</span></div>',
                 '<div><span>Published Date: </span><span>{[Ext.util.Format.date(values.data.publishedDate, "m/d/Y")]}</span></div>',
                 '<div><span>Enabled: </span><span>{[values.data.enabled]}</span></div>'
