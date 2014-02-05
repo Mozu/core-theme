@@ -30,9 +30,7 @@
     <copy todir="${build.localepath}" overwrite="true">
       <fileset dir="${basedir}/ext/locale" includes="**/*" />
     </copy>
-    <copy todir="${build.dir}\..\..">
-      <fileset dir="${build.dir}"/>
-    </copy>
+ 
   </target>
   
   <!--
