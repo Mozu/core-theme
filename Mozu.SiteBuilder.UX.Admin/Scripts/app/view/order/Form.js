@@ -220,7 +220,7 @@ Ext.define('Taco.view.order.Form', {
             errors.push("Products must be added before saving this order. Click the gear icon and select \"Edit Details\" to add products.");
         } else if (!this.record.data.fulfillmentContact || !this.record.data.fulfillmentContact.email) {
             isValid = false;
-            errors.push("A shiping address must be created or selected before saving this order");
+            errors.push("A shipping address must be created or selected before saving this order");
         } else if (!this.record.get("shippingMethodCode")) {
             isValid = false;
             errors.push("A shipping method must be selected before saving this order");
