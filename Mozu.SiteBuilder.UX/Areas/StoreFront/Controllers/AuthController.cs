@@ -202,17 +202,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return redir;
 
         }
-          [System.Web.Http.HttpGet]
-        public Response<string> AjaxLogOut()
-        {
-            DoLogout();
 
-           return    new Response<string>()
-                  {
-                      Success = true
-                  };
-
-        }
         [System.Web.Http.HttpGet]
         public ActionResult Login(string returnUrl = null)
         {

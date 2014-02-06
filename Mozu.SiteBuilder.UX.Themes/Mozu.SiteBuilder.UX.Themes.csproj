@@ -390,7 +390,6 @@
     </Compile>
     <Content Include="Addons\Blue\thumb.jpg" />
     <Content Include="Addons\Orange\thumb.jpg" />
-    <Content Include="App_Readme\glimpse.readme.txt" />
     <Content Include="buildcore.bat" />
     <Content Include="Addons\Blue\addon.json" />
     <Content Include="Addons\Orange\addon.json" />

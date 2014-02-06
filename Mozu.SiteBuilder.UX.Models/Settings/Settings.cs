@@ -6,29 +6,11 @@ using Mozu.Core.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Models.Settings
 {
-    public interface IWebToolsSetting
-    {
-    }
-
     [DataContract]
-    public class WebmasterToolsSettings : ModelBase, IWebToolsSetting
-    {
-        [DataMember(Name = "metaTag")]
-        public string MetaTag { get; set; }
-    }
-
-    [DataContract]
-    public class RobotsTxtSettings : ModelBase, IWebToolsSetting
+    public class RobotsTxtSettings : ModelBase
     {
         [DataMember(Name = "content")]
         public string Content { get; set; }
-    }
-
-    [DataContract]
-    public class PaymentSettings
-    {
-        [DataMember(Name = "supportedCards")]
-        public List<KeyValuePair<string, string>> SupportedCards { get; set; }
     }
 
     public class SiteDomains
@@ -107,14 +89,6 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         public Dictionary<string, string> SupportedCards { get; set; }
     }
-
-    [DataContract]
-    public class SettingsContainer
-    {
-        [DataMember(Name = "general")]
-        public GeneralSettings General { get; set; }
-    }
-
    
 
     [DataContract]

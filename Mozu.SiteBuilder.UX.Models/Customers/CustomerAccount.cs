@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using Mozu.SiteBuilder.UX.Models.Orders;
 
 namespace Mozu.SiteBuilder.UX.Models.Customers
 {
@@ -48,7 +47,7 @@ namespace Mozu.SiteBuilder.UX.Models.Customers
         [DataMember(Name = "createdOn")]
         public DateTime CreatedOn { get; set; }
 
-        [DataMember(Name = "orders")]
-        public List<Order> Orders { get; set; }
+//        [DataMember(Name = "orders")]
+//        public List<Order> Orders { get; set; }
     }
 }

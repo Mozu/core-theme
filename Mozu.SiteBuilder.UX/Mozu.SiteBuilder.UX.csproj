@@ -458,7 +458,6 @@
     <Compile Include="Tags\InlineStyle.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Readme\glimpse.readme.txt" />
     <Content Include="Areas\Misc\Views\Testing\SiteList.aspx" />
     <Content Include="Assets\mozu_receiver.html" />
     <Content Include="BuiltinScripts\HyprLive\dist\mozu-hyprlive.debug.js" />

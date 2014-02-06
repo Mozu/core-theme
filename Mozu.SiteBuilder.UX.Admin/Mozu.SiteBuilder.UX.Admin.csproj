@@ -418,6 +418,7 @@
     <Compile Include="Api\CapabilityController.cs" />
     <Compile Include="Api\ModelMapping\CustomerContactMapping.cs" />
     <Compile Include="Api\Models\CustomerContact.cs" />
+    <Compile Include="Api\Models\GeneralSettings\IPBlock.cs" />
     <Compile Include="Api\Models\Order\OrderPickup.cs" />
     <Compile Include="Api\Models\Order\OrderPickupItem.cs" />
     <Compile Include="Api\OrderPickupController.cs" />
@@ -615,7 +616,6 @@
     <Compile Include="MockServices\TestResponse.cs" />
     <Compile Include="Navigation\CategoryNavigationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="App_Readme\glimpse.readme.txt" />
     <Content Include="Scripts\.sencha\app\find-cmd-impl.xml" />
     <Content Include="Scripts\.sencha\app\init-impl.xml" />
     <Content Include="Scripts\.sencha\app\js-impl.xml" />

@@ -462,7 +462,6 @@
     <Compile Include="WebApiClientTestExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Readme\glimpse.readme.txt" />
     <Content Include="Mobile\Default.aspx" />
     <None Include="App.config" />
     <Content Include="appSettings.config">

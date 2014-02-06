@@ -19,8 +19,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<Mozu.Reference.Contracts.TimeZone, UX.Models.Settings.TimeZone>()
                 .ForMember(x => x.Selected, op => op.Ignore());
 
-            Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.IPBlock, UX.Models.Settings.IPBlock>();
-            Mapper.CreateMap<UX.Models.Settings.IPBlock, Mozu.SiteSettings.General.Contracts.IPBlock>()
+            Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.IPBlock, UX.Admin.Api.Models.GeneralSettings.IPBlock>();
+            Mapper.CreateMap<UX.Admin.Api.Models.GeneralSettings.IPBlock, Mozu.SiteSettings.General.Contracts.IPBlock>()
                 //ignores
                 .ForMember(x => x.StoreFrontBlock, op => op.Ignore())
                 .ForMember(x => x.AdminBlock, op => op.Ignore())
