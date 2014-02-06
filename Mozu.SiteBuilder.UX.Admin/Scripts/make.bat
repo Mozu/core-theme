@@ -12,7 +12,7 @@ if exist .sencha\workspace (
 	sencha app build
 ) else (
     cd ..
-	sencha --sdk ext-4.2.1.883 generate workspace Scripts
+	sencha --sdk ext-4.2.2.1144 generate workspace Scripts
     cd Scripts
 	attrib -r build/*.* /S
 	attrib -r bootstrap.js
