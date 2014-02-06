@@ -7,7 +7,7 @@ using Mozu.Reference.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using DC= Mozu.SiteSettings.General.Contracts;
 using Mozu.SiteSettings.General.Contracts.Clients;
-using IPBlock = Mozu.SiteBuilder.UX.Models.Settings.IPBlock;
+using IPBlock = Mozu.SiteBuilder.UX.Admin.Api.Models.GeneralSettings.IPBlock;
 
 namespace Mozu.SiteBuilder.UX.Admin
 {

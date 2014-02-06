@@ -5,7 +5,7 @@ using Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping;
 using NUnit.Framework;
 using CustomerMapping = Mozu.SiteBuilder.UX.Admin.Api.ModelMapping.CustomerMapping;
 using GeneralSettingsMapping = Mozu.SiteBuilder.Mvc.Models.ModelMapping.GeneralSettingsMapping;
-using OrderMapping = Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping.OrderMapping;
+//using OrderMapping = Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping.OrderMapping;
 using ProductMapping = Mozu.SiteBuilder.UX.Admin.Api.ModelMapping.ProductMapping;
 
 namespace Mozu.SiteBuilder.IntegrationTests
@@ -29,7 +29,7 @@ namespace Mozu.SiteBuilder.IntegrationTests
             Mapper.AddProfile<OptionMapping>();
             Mapper.AddProfile<TaxMapping>();
             Mapper.AddProfile<UX.Areas.StoreFront.ModelMapping.CustomerMapping>();
-            Mapper.AddProfile<OrderMapping>();
+//            Mapper.AddProfile<OrderMapping>();
             Mapper.AddProfile<UX.Areas.StoreFront.ModelMapping.ProductMapping>();
             Mapper.AddProfile<CmsPagesMapping>();
             Mapper.AddProfile<NavigationMapping>();

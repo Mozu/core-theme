@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Mozu.SiteBuilder.UX.Models.Settings
+namespace Mozu.SiteBuilder.UX.Admin.Api.Models.GeneralSettings
 {
     [DataContract]
     public class IPBlock

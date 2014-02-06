@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Mozu.SiteBuilder.UX.Models.StoreFront.Cart;
 using System.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.Models.Mapping

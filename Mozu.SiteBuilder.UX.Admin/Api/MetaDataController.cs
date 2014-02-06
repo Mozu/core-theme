@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         static List<ModelDescription> CreateModelDescriptions()
         {
-            var modelModels = typeof (Mozu.SiteBuilder.UX.Models.Settings.IPBlock )
+            var modelModels = typeof (Mozu.SiteBuilder.UX.Admin.Api.Models.GeneralSettings.IPBlock )
                 .Assembly.GetTypes()
                 .Where(x => x.Namespace != null && x.Namespace.StartsWith("Mozu.SiteBuilder.UX.Models.Settings"))
                 .Select(x => ModelDescription.Create(x))

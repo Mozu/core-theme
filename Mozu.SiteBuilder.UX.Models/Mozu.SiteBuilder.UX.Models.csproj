@@ -403,23 +403,6 @@
     <Compile Include="Admin\CMS\CmsPageContext.cs" />
     <Compile Include="Admin\CMS\DocumentDraft.cs" />
     <Compile Include="Admin\TaContext.cs" />
-    <Compile Include="Checkout\AvailableShippingMethods.cs" />
-    <Compile Include="Checkout\CheckoutActionInformation.cs" />
-    <Compile Include="Checkout\CheckoutInformation.cs" />
-    <Compile Include="Checkout\CheckoutModel.cs" />
-    <Compile Include="Checkout\CommentInformation.cs" />
-    <Compile Include="Checkout\ContactInformation.cs" />
-    <Compile Include="Checkout\CouponInformation.cs" />
-    <Compile Include="Checkout\OrderItemInformation.cs" />
-    <Compile Include="Checkout\OrderStatus.cs" />
-    <Compile Include="Checkout\PaymentApiModel.cs" />
-    <Compile Include="Checkout\PaymentInformation.cs" />
-    <Compile Include="Checkout\ShipmentInformation.cs" />
-    <Compile Include="Checkout\AddressInformation.cs" />
-    <Compile Include="Checkout\ShippingMethodInformation.cs" />
-    <Compile Include="Checkout\StepStatus.cs" />
-    <Compile Include="Checkout\SubmitInformation.cs" />
-    <Compile Include="Customers\Account.cs" />
     <Compile Include="Customers\Address.cs" />
     <Compile Include="Customers\Contact.cs" />
     <Compile Include="Customers\CurrencyAmount.cs" />
@@ -431,7 +414,6 @@
     <Compile Include="Customers\PasswordInfo.cs" />
     <Compile Include="Customers\Phone.cs" />
     <Compile Include="Customers\User.cs" />
-    <Compile Include="Messages.cs" />
     <Compile Include="Navigation\NavigationNode.cs" />
     <Compile Include="Navigation\NavigationNodeType.cs" />
     <Compile Include="Navigation\NavigationRuntimeExtensions.cs" />
@@ -444,39 +426,9 @@
     <Compile Include="ModelBase.cs" />
     <Compile Include="ModelMetaData\MozuModelMetadataProvider.cs" />
     <Compile Include="Navigation\Redirect.cs" />
-    <Compile Include="Orders\AppliedDiscount.cs" />
-    <Compile Include="Orders\AvailableActionsInfo.cs" />
-    <Compile Include="Orders\Category.cs" />
-    <Compile Include="Orders\Discount.cs" />
-    <Compile Include="Orders\ItemDiscountContext.cs" />
-    <Compile Include="Orders\Measurement.cs" />
-    <Compile Include="Orders\Order.cs" />
-    <Compile Include="Orders\OrderItem.cs" />
-    <Compile Include="Orders\OrderNote.cs" />
-    <Compile Include="Orders\PackageMeasurements.cs" />
-    <Compile Include="Orders\PaymentReference.cs" />
-    <Compile Include="Orders\PaymentTransaction.cs" />
-    <Compile Include="Orders\PaymentTransactionInteraction.cs" />
-    <Compile Include="Orders\PaymentCardReference.cs" />
-    <Compile Include="Orders\Product.cs" />
-    <Compile Include="Orders\ProductOption.cs" />
-    <Compile Include="Orders\ProductPrice.cs" />
-    <Compile Include="Orders\ProductStock.cs" />
-    <Compile Include="Orders\Shipment.cs" />
-    <Compile Include="Orders\ShippingPrice.cs" />
-    <Compile Include="Orders\ShopperNotes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Response.cs" />
-    <Compile Include="Settings\IPBlock.cs" />
     <Compile Include="Settings\Settings.cs" />
-    <Compile Include="Settings\SiteBuilderWeb.cs" />
     <Compile Include="Settings\TimeZone.cs" />
-    <Compile Include="StoreFront\Cart\CartItem.cs" />
-    <Compile Include="StoreFront\Cart\CartItemPrice.cs" />
-    <Compile Include="StoreFront\Cart\CartSummary.cs" />
-    <Compile Include="StoreFront\Cart\Fee.cs" />
-    <Compile Include="StoreFront\Cart\Product.cs" />
-    <Compile Include="StoreFront\Cart\ProductOption.cs" />
     <Compile Include="StoreFront\Catalog\Product.cs" />
     <Compile Include="Admin\CMS\Document.cs" />
     <Compile Include="Admin\CMS\DocumentProperty.cs" />
@@ -505,9 +457,6 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_Readme\glimpse.readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

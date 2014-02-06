@@ -14,7 +14,6 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
-using Mozu.SiteBuilder.UX.Models.StoreFront.Cart;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Commerce;
 using Newtonsoft.Json.Linq;
