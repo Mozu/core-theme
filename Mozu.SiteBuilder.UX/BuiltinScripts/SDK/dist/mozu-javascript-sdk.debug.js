@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-02-04
+ * Mozu JavaScript SDK - v0.3.0 - 2014-02-07
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -3411,7 +3411,7 @@ module.exports=
       "overridePostData": true,
       "returnType": "address"
     },
-    "validate-lenient": {
+    "validate-address-lenient": {
       "verb": "POST",
       "template": "{+addressValidationService}",
       "includeSelf": {

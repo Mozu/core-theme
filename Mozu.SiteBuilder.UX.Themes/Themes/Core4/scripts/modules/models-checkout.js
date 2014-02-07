@@ -137,7 +137,7 @@
                     completeStep();
                 } else {
                     if (addr.get('candidateValidatedAddresses') == null) {
-                        var methodToUse = allowInvalidAddresses ? "validateLenient" : "validateStrict";
+                        var methodToUse = allowInvalidAddresses ? "validateAddressLenient" : "validateAddress";
                         addr.apiModel[methodToUse]().then(function (resp) {
                             if (resp.data && resp.data.addressCandidates && resp.data.addressCandidates.length) {
                                 var addrCompare = function (addr, valAddr) {
