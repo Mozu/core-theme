@@ -7,8 +7,8 @@
 Ext.Loader.addClassPathMappings({
   "Ext": "ext/src",
   "Ext.Msg": "ext/src/window/MessageBox.js",
-  "Ext.ux": "ux",
-  "Ext.ux.layout.component.field.BoxSelectField": "ux/form/field/BoxSelect.js",
+  "Ext.ux.form.field.BoxSelect": "ux/boxselect/form/field/BoxSelect.js",
+  "Ext.ux.layout.component.field.BoxSelectField": "ux/boxselect/form/field/BoxSelect.js",
   "MyReader": "app/view/order/modal/AddPayment.js",
   "Taco": "app",
   "Taco.Application": "app/application.js",

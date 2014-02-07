@@ -7,6 +7,7 @@
     "id": "92563b36-1252-45cc-b672-4d13569f8c92",
 	"paths":
     {
-         "Ext.ux": "ux"
+        "Ext.ux.form.field.BoxSelect": "ux/boxselect/form/field/BoxSelect.js",
+        "Ext.ux.layout.component.field.BoxSelectField": "ux/boxselect/layout/component/field/BoxSelectField.js"
     }
 }
