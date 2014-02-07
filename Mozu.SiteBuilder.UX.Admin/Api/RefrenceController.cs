@@ -44,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
            
              var res = (await _referenceDataWebApi.GetCountries()).ReadAsSync();
           
-             return this.Request.CreateResponse(HttpStatusCode.OK, List2(res.Items, (int)res.TotalCount), LowerCaseJsonMediaTypeFormatter.Default);
+             return this.Request.CreateResponse(HttpStatusCode.OK, List2(res.Items, (int)res.TotalCount));
            
          }
     }

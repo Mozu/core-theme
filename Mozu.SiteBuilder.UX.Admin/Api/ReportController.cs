@@ -39,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var resp = (await _reportWebApiClient.GetReports()).ReadAsSync();
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp), LowerCaseJsonMediaTypeFormatter.Default);
+            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));
         }
 
         [HttpGetRoute(UriTemplate = "read/{name}")]
@@ -52,7 +52,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             // return rows with meta data
             var resp = List2(rows.ToList(), total: (int)serviceResponse.TotalCount, metaData: serviceResponse.Report.GrandTotals);
-            return this.Request.CreateResponse(HttpStatusCode.OK, resp, new System.Net.Http.Formatting.JsonMediaTypeFormatter());
+            return this.Request.CreateResponse(HttpStatusCode.OK, resp);
         }
 
         [HttpGetRoute(UriTemplate = "download/{name}")]
@@ -75,7 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var resp = (await _reportDefinitionWebApiClient.GetReportDefinitions()).ReadAsSync();
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2(resp), LowerCaseJsonMediaTypeFormatter.Default);
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(resp));
         }
     }
 }

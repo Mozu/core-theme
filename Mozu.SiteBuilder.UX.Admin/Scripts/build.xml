@@ -21,7 +21,16 @@
 
 
   </target>
+  <target name="-after-refresh">
+    <echo>Rewriting ${app.dir}/bootstrap.js to load scripts from /bundles/bundlename</echo>
+    <replaceregexp
+            file="${app.dir}/bootstrap.js"
+            match="bootstrap.json"
+            replace="/admin/scripts/bootstrap.json"
+            flags="g" />
+   
 
+  </target>
   <target name="-after-build">
     <local name="build.localepath" />
     <property name="build.localepath" location="${build.dir}/locale"/>

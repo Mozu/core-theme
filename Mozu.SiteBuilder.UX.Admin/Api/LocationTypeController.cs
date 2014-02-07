@@ -29,7 +29,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var resp = (await _locationTypeWebApiClient.GetLocationTypes()).ReadAsSync();
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2(resp), LowerCaseJsonMediaTypeFormatter.Default);
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(resp));
         }
 
         [HttpPostRoute(UriTemplate = "create")]
@@ -37,14 +37,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var resp = (await _locationTypeWebApiClient.AddLocationType(lt)).ReadAsSync();
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp), LowerCaseJsonMediaTypeFormatter.Default);
+            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));
         }
 
         [HttpPostRoute(UriTemplate = "edit")]
         public async Task<HttpResponseMessage> EditLocationType(DC.LocationType lt)
         {
             var resp = (await _locationTypeWebApiClient.UpdateLocationType(lt.Code, lt)).ReadAsSync();
-            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp), LowerCaseJsonMediaTypeFormatter.Default);
+            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));
         }
     }
 }

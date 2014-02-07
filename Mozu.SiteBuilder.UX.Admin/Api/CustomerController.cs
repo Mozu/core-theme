@@ -358,7 +358,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<HttpResponseMessage> GetCreditTransactions(string code)
         {
             var resp = (await _creditWebApiClient.GetTransactions(code)).ReadAsSync();
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2(resp.Items), LowerCaseJsonMediaTypeFormatter.Default);
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(resp.Items));
         }
     }
 }
