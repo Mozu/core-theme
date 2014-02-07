@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             
 
 
-	        return this.Request.CreateResponse(HttpStatusCode.OK , ret,  LowerCaseJsonMediaTypeFormatter.Default );
+	        return this.Request.CreateResponse(HttpStatusCode.OK , ret );
 
 
 	    }
@@ -110,7 +110,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var vmApps = Mapper.Map<List<VM.Application>>(apps);
             List<VM.Capability> list = vmApps.SelectMany(x => x.Capabilities).ToList();
             var ret = this.List2<VM.Capability>(list);
-            return this.Request.CreateResponse(HttpStatusCode.OK, ret, LowerCaseJsonMediaTypeFormatter.Default);
+            return this.Request.CreateResponse(HttpStatusCode.OK, ret);
         }
 
       

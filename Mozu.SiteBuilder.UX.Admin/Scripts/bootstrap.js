@@ -155,8 +155,6 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ext.data.Field": [],
   "Ext.data.Group": [],
   "Ext.data.IdGenerator": [],
-  "Ext.data.JsonP": [],
-  "Ext.data.JsonPStore": [],
   "Ext.data.JsonStore": [],
   "Ext.data.Model": [
     "Ext.data.Record"
@@ -203,9 +201,6 @@ Ext.ClassManager.addNameAlternateMappings({
   ],
   "Ext.data.proxy.Direct": [
     "Ext.data.DirectProxy"
-  ],
-  "Ext.data.proxy.JsonP": [
-    "Ext.data.ScriptTagProxy"
   ],
   "Ext.data.proxy.LocalStorage": [
     "Ext.data.LocalStorageProxy"
@@ -1645,10 +1640,6 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Ext.data.Group": [],
   "Ext.data.IdGenerator": [],
-  "Ext.data.JsonP": [],
-  "Ext.data.JsonPStore": [
-    "store.jsonp"
-  ],
   "Ext.data.JsonStore": [
     "store.json"
   ],
@@ -1700,10 +1691,6 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.data.proxy.Client": [],
   "Ext.data.proxy.Direct": [
     "proxy.direct"
-  ],
-  "Ext.data.proxy.JsonP": [
-    "proxy.jsonp",
-    "proxy.scripttag"
   ],
   "Ext.data.proxy.LocalStorage": [
     "proxy.localstorage"
@@ -3552,7 +3539,7 @@ Ext.setVersion("mozuadmintheme", "1.0.0");
     }
 
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'bootstrap.json', false);
+    xhr.open('GET', '/admin/scripts/bootstrap.json', false);
     xhr.send(null);
 
     var options = eval("(" + xhr.responseText + ")"),

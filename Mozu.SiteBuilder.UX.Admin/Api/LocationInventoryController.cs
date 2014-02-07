@@ -65,9 +65,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 // handle 404 by returning an empty list
                 if (inventoryResp.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                    return this.Request.CreateResponse(HttpStatusCode.OK, EmptyList2<DC.LocationInventory>(), LowerCaseJsonMediaTypeFormatter.Default);
+                    return this.Request.CreateResponse(HttpStatusCode.OK, EmptyList2<DC.LocationInventory>());
 
-                return this.Request.CreateResponse(HttpStatusCode.OK, List2<DC.LocationInventory>(inventoryResp.ReadAsSync()), LowerCaseJsonMediaTypeFormatter.Default);
+                return this.Request.CreateResponse(HttpStatusCode.OK, List2<DC.LocationInventory>(inventoryResp.ReadAsSync()));
             }
             if (extFilter.ContainsProperty("locationcode"))
             {
@@ -93,10 +93,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
-                return this.Request.CreateResponse(HttpStatusCode.NotImplemented, FailureList2<DC.LocationInventory>("You must specify a locationcode or productcode filter."), LowerCaseJsonMediaTypeFormatter.Default);
+                return this.Request.CreateResponse(HttpStatusCode.NotImplemented, FailureList2<DC.LocationInventory>("You must specify a locationcode or productcode filter."));
             }
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2<DC.LocationInventory>(inventories.Items, (int)inventories.TotalCount), LowerCaseJsonMediaTypeFormatter.Default);
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2<DC.LocationInventory>(inventories.Items, (int)inventories.TotalCount));
         }
 
         [HttpPostRoute(UriTemplate = "create")]
@@ -111,7 +111,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var returnedInventories = tasks.SelectMany(t => t.Result.ReadAsSync()).ToList();
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2(returnedInventories), LowerCaseJsonMediaTypeFormatter.Default);
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(returnedInventories));
         }
 
         [HttpPostRoute(UriTemplate = "edit")]
@@ -136,7 +136,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var returnedInventories = tasks.SelectMany(t => t.Result.ReadAsSync()).ToList();
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2(returnedInventories), LowerCaseJsonMediaTypeFormatter.Default);
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(returnedInventories));
         }
 
         [HttpPostRoute(UriTemplate = "delete")]

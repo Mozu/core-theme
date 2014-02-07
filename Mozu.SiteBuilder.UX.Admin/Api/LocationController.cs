@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // default RegularHours to an object for pass through.
             locations.Items.ForEach(loc => EnsureLocationContract(loc));
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2(locations.Items, (int)locations.TotalCount), LowerCaseJsonMediaTypeFormatter.Default);
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(locations.Items, (int)locations.TotalCount));
         }
 
         [HttpPostRoute(UriTemplate = "create")]
@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var resp = (await _locationWebApiClient.AddLocation(l)).ReadAsSync();
             EnsureLocationContract(resp);
-            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp), LowerCaseJsonMediaTypeFormatter.Default);
+            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));
         }
 
 
@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             
             var resp = (await _locationWebApiClient.UpdateLocation(l.Code, l)).ReadAsSync();
             EnsureLocationContract(resp);
-            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp), LowerCaseJsonMediaTypeFormatter.Default);
+            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));
         }
 
         /// <summary>

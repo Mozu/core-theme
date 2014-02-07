@@ -35,7 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             string filter = extFilter.ToFilterString();
             var res = (await _channelWebApiClient.GetChannels(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filter)).ReadAsSync();
             var list = List2(res.Items, (int)res.TotalCount);
-            return this.Request.CreateResponse(HttpStatusCode.OK, list, LowerCaseJsonMediaTypeFormatter.Default);
+            return this.Request.CreateResponse(HttpStatusCode.OK, list);
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var tasks = channels.Select(_ => _channelWebApiClient.CreateChannel(_)).ToList();
             await Task.WhenAll(tasks);
             var newChannels = tasks.Select(x => x.Result.ReadAsSync()).ToList();
-            return this.Request.CreateResponse(HttpStatusCode.OK, this.List2(newChannels), LowerCaseJsonMediaTypeFormatter.Default);
+            return this.Request.CreateResponse(HttpStatusCode.OK, this.List2(newChannels));
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }).ToList();
             await Task.WhenAll(tasks);
             var newChannels = tasks.Select(x => x.Result.ReadAsSync()).ToList();
-            return this.Request.CreateResponse(HttpStatusCode.OK, this.List2(newChannels), LowerCaseJsonMediaTypeFormatter.Default);
+            return this.Request.CreateResponse(HttpStatusCode.OK, this.List2(newChannels));
         }
 
         /// <summary>

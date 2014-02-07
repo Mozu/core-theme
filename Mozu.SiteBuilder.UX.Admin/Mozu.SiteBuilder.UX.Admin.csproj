@@ -1146,6 +1146,8 @@
     <Content Include="Scripts\.sencha\app\package.properties" />
     <Content Include="ext-4.2.2-commercial.zip" />
     <Content Include="Scripts\.sencha\app\production.defaults.properties" />
+    <Content Include="Scripts\bootstrap.json" />
+    <Content Include="Scripts\makeTfsBuild.bat" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
@@ -3329,8 +3331,8 @@
     <AjaxMin JsSourceFiles="@(JS)" JsCombinedFileName="$(ProjectDir)\Scripts\resources\lib\init.min.js" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
   </Target>
   <Target Name="AfterCompile">
-    <Exec Command="robocopy d:\software\ext\ext-4.2.2.1144 $(ProjectDir)\ext-4.2.2.1144 /e /xd docs welcome builds /xf ext-all*.js" WorkingDirectory="$(ProjectDir)\Scripts" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Exec Command="make.bat" CustomErrorRegularExpression=".*ERR.*" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    
+    <Exec Command="makeTfsBuild.bat" CustomErrorRegularExpression=".*ERR.*" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
   </Target>
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
