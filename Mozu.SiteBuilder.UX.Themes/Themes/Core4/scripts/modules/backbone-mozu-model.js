@@ -36,12 +36,15 @@
             /** @lends MozuModel.prototype */
         {
             /**
-             * Extends the BackboneJS Model object to create a Backbone.MozuModel with extra features for model nesting, error handling, validation, and connection to the JavaScript SDK.
+             * @classdesc Extends the BackboneJS Model object to create a Backbone.MozuModel with extra features for model nesting, error handling, validation, and connection to the JavaScript SDK.
              * @class MozuModel
              * @augments external:Backbone.Model
              */
 
-            /** constructs */
+            /**
+             * @constructor
+             * @param {Object} json A JSON representation of the model to preload into the MozuModel. If you create a new MozuModel with no arguments, its attributes will be blank.
+             */
             constructor: function (conf) {
                 this.helpers = (this.helpers || []).concat(['isLoading', 'isValid']);
                 Backbone.Model.apply(this, arguments);
@@ -316,12 +319,17 @@
                     }
                 });
             },
+            /**
+             * The type of Mozu API object that this model represents; when you specify a `mozuType`, then an SDK object corresponding to that type is created and exposed at the {@link MozuModel#apiModel} property. Its methods are also added to the MozuModel, 
 
             /**
              * The underlying SDK object created if you specified a MozuModel#mozuType.
              * Does stuff
-             * @member apiModel
+             *
+             * @member {Object} apiModel
+             * @memberOf MozuModel.prototype
              */
+
 
             /**
              * Ensure that the underlying SDK object has exactly the same data as the live Backbone model. In conflicts, Backbone always wins.
@@ -342,7 +350,7 @@
                 me.helpers.push('hasMessages');
                 me.on('error', function (err) {
                     if (err.items && err.items.length) {
-                        me.messages.reset(err.Items);
+                        me.messages.reset(err.items);
                     } else {
                         me.messages.reset([err]);
                     }

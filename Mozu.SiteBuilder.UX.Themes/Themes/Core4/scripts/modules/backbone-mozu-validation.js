@@ -240,7 +240,7 @@ define(["shim!vendor/underscore>_", "shim!vendor/backbone[shim!vendor/underscore
                             });
                         }
 
-                        var allAttrs = _.extend({}, validatedAttrs, model.attributes, selectedAttrs),
+                        var allAttrs = _.extend({}, validatedAttrs, selectedAttrs, model.attributes),
                             changedAttrs = flatten(selectedAttrs || allAttrs),
                             result = validateModel(model, allAttrs);
 

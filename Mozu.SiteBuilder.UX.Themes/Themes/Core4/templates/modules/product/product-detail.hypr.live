@@ -5,7 +5,7 @@
 </div>
 {% endif %}
 
-{% if model.options %}
+{% if model.options and model.options.length > 0 %}
 <div class="mz-productdetail-options mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">{{ labels.options }}</h4>
   {% include "modules/product/product-options" %}
