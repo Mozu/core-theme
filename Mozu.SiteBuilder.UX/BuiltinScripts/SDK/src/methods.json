@@ -271,7 +271,7 @@
       "overridePostData": true,
       "returnType": "address"
     },
-    "validate-lenient": {
+    "validate-address-lenient": {
       "verb": "POST",
       "template": "{+addressValidationService}",
       "includeSelf": {
