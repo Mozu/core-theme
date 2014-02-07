@@ -11,10 +11,13 @@ if exist .sencha\workspace (
 	attrib -r bootstrap.js
 	sencha app build
 ) else (
+	attrib -r bootstrap.js
+	attrib -r bootstrap.json
     cd ..
 	sencha --sdk d:\software\ext\ext-4.2.2.1144 generate workspace Scripts
     cd Scripts
 	attrib -r build/*.* /S
 	attrib -r bootstrap.js
+	attrib -r bootstrap.json
 	sencha app build
 )
