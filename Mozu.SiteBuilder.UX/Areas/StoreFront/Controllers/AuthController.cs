@@ -279,8 +279,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             else
             {
-
-                return this.Request.CreateResponse(HttpStatusCode.OK, View("Login", new { email = email, Messages = new { Message = String.Format("Login as {0} failed. Please try again.", email) } }));
+                string errorStr = (email != null) ? String.Format("Login as {0} failed. Please try again.", email) : "Login failed. Please specify a user.";
+                return this.Request.CreateResponse(HttpStatusCode.OK, View("Login", new { email = email, Messages = new List<object> { new { Message = errorStr } } }));
             }
         }
          [System.Web.Http.HttpPost]
