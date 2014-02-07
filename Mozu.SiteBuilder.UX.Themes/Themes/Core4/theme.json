@@ -56,7 +56,7 @@
         "bannerImageRepeat": "repeat-x",
         "itemListingThumbSize": 80,
         "maxTopLevelNavItems": 8,
-        "maxTopLevelNavLabelLength": 50,
+        "maxTopLevelNavLabelLength": 20,
 
         /* Settings specific to category page display */
         "showCategoryFacets": true,

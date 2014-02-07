@@ -4,7 +4,7 @@
  * (tenant, catalog and store IDs, and authorization tickets).
  */
 
-define(['sdk', 'jquery'], function (Mozu, $) {
+define(['sdk', 'jquery', 'hyprlive'], function (Mozu, $, Hypr) {
     var apiConfig = require.mozuData('apicontext');
     Mozu.setServiceUrls(apiConfig.urls);
     var headers = apiConfig.headers,
@@ -14,11 +14,12 @@ define(['sdk', 'jquery'], function (Mozu, $) {
              .AppClaims(headers['x-vol-app-claims'])
              .UserClaims(headers['x-vol-user-claims'])
              .api();
-    api.on('error', function (badPromise, xhr, requestConf) {
-        var e = "Error communicating with Mozu API";
-        if (requestConf && requestConf.url) e += (" at " + requestConf.url);
-        window && window.console && console.error(e, badPromise, xhr);
-    });
-
+    if (Hypr.getThemeSetting('useDebugScripts')) {
+        api.on('error', function (badPromise, xhr, requestConf) {
+            var e = "Error communicating with Mozu API";
+            if (requestConf && requestConf.url) e += (" at " + requestConf.url);
+            window && window.console && console.error(e, badPromise, xhr);
+        });
+    }
     return api;
 });

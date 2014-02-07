@@ -1,9 +1,9 @@
-﻿{
+{
 	"tags"      : {
 		"allowUnknownTags" : true
 	},
     "source": {
-        "include": ["./externals", "../Themes/Core4/scripts"],
+        "include": ["../Themes/Core4/scripts"],
         "excludePattern": "vendor"
     },
 	"plugins"   : ["plugins/markdown"],
@@ -17,14 +17,11 @@
 		"footer"          : "",
 		"copyright"       : "&copy; 2013-2014 Volusion, Inc.",
 		"navType"         : "vertical",
-		"theme"           : "flatly",
-		"linenums"        : true,
-		"collapseSymbols" : true,
-		"inverseNav"      : false
+		"theme"           : "cosmo",
+		"linenums"        : true
 	},
 	"markdown"  : {
-		"parser"   : "gfm",
-		"hardwrap" : true
+		"parser"   : "gfm"
 	},
     "opts": {
         "destination": "./built",

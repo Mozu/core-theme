@@ -393,6 +393,7 @@
     <Content Include="buildcore.bat" />
     <Content Include="Addons\Blue\addon.json" />
     <Content Include="Addons\Orange\addon.json" />
+    <Content Include="Docs\Gruntfile.js" />
     <Content Include="Themes\Core4\compiled\scripts\build.txt" />
     <Content Include="Themes\Core4\compiled\scripts\modules\common.js" />
     <Content Include="Themes\Core4\compiled\scripts\pages\cart.js" />
@@ -418,13 +419,6 @@
     <Content Include="Themes\Core4\compiled\scripts\widgets\related-products.js" />
     <Content Include="Themes\Core4\compiled\scripts\widgets\store-locator.js" />
     <Content Include="Themes\Core4\compiled\scripts\widgets\video.js" />
-    <Content Include="Zubat\src\cli.js" />
-    <Content Include="Zubat\src\compile.js" />
-    <Content Include="Zubat\src\logger.js" />
-    <Content Include="Zubat\src\zubat.js" />
-    <Content Include="Zubat\src\constants.js" />
-    <Content Include="Zubat\src\themes.js" />
-    <Content Include="Zubat\testme.js" />
     <Content Include="Docs\externals\backbone.jsdoc.js" />
     <Content Include="Docs\Mozu_Themeing_Concepts.md" />
     <Content Include="Morrissey\src\plugins\i18n.js" />
@@ -476,6 +470,7 @@
     <Content Include="Themes\Core4\resources\images\button-loading.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Themes\Core4\scripts\modules\contextify.js" />
     <Content Include="Themes\Core4\scripts\modules\models-orders.js" />
     <Content Include="Themes\Core4\scripts\modules\models-location.js" />
     <Content Include="Themes\Core4\scripts\modules\jquery-dateinput-localized.js" />
@@ -730,7 +725,6 @@
     <Content Include="Themes\MobileCore\Modules\MessageBar.vol">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Zubat\README.md" />
     <Content Include="SampleThemes\helloWorld\Layouts\default.vol" />
     <Content Include="SampleThemes\helloWorld\MetaData\PageTypes\cms\hello_world\definition.json" />
     <Content Include="SampleThemes\helloWorld\MetaData\Widgets\cms\hello_world\definition.json" />
@@ -985,7 +979,9 @@
     <Content Include="Themes\Core4\templates\modules\checkout\checkout-store-credit.hypr.live" />
     <Content Include="Themes\Core4\stylesheets\modules\checkout\checkout-store-credit.less" />
     <Content Include="Themes\Core4\stylesheets\modules\checkout\checkout-payment.less" />
-    <Content Include="Themes\Core4\templates\modules\location\location-search.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\location\location-search.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Themes\Core4\templates\modules\location\location-list.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\location\location-list-for-product.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\location\location-listing-for-product.hypr.live" />
@@ -1013,12 +1009,6 @@
     <Content Include="Themes\Core4\templates\Widgets\catalog\deal-of-the-day.hypr">
       <SubType>Designer</SubType>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Zubat\bin\zubat" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Zubat\package.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core4\templates\pages\reset-password.hypr" />
