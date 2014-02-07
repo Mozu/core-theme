@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private readonly ICategoryWebApiClient _catClient;
         private readonly ICmsServiceWrapper _cmsService;
-        private readonly NavigationGandalf _gandalf;
+        private readonly INavigationGandalf _gandalf;
         private readonly ILogger _log;
         private readonly INavigationRepository _navRepo;
         private readonly SiteContext _siteContext;
@@ -50,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         ///     Public constructor.
         /// </summary>
-        public NavigationController(INavigationRepository navRepo, ICategoryWebApiClient catClient, ICmsServiceWrapper cmsService, NavigationGandalf gandalf, ILogger log, SiteContext siteContext)
+        public NavigationController(INavigationRepository navRepo, ICategoryWebApiClient catClient, ICmsServiceWrapper cmsService, INavigationGandalf gandalf, ILogger log, SiteContext siteContext)
         {
             _navRepo = navRepo;
             _catClient = catClient;

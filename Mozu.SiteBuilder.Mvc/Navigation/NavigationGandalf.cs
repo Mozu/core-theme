@@ -18,10 +18,10 @@ using DCC = Mozu.Content.Contracts;
 namespace Mozu.SiteBuilder.Mvc.Navigation
 {
     /// <summary>
-    /// The white wizard of navigation merges and formats the navigation list
+    /// The grey wizard of navigation merges and formats the navigation list
     /// for his fellow traveler, NavigationController
     /// </summary>
-    public class NavigationGandalf
+    public class NavigationGandalf : INavigationGandalf
     {
         // the top level name in EXT's tree thing (a root pseudo-node).
         public const string SUPER_ROOT_NODE_NAME = "root";
@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             _md5 = MD5.Create();
         }
 
-        public Task<NavigationNodeCollection> GetCategories()
+        private Task<NavigationNodeCollection> GetCategories()
         {
             if (_getCategoriesTask == null)
             {

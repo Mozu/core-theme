@@ -16,12 +16,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
     public class NavigationContext : ITagFilterFindable
     {
-        private readonly NavigationGandalf _navigationGandalf;
+        private readonly INavigationGandalf _navigationGandalf;
         private readonly ISiteBuilderApiContext _apiContext;
 
-        public NavigationContext(NavigationGandalf navigationGandalf, ICategoryNavigationProvider categoryNavigationProvider, ISiteBuilderApiContext apiContext)
+        public NavigationContext(INavigationGandalf gandalf, ICategoryNavigationProvider categoryNavigationProvider, ISiteBuilderApiContext apiContext)
         {
-            _navigationGandalf = navigationGandalf;
+            _navigationGandalf = gandalf;
             _apiContext = apiContext;
             //this.Category = new CategoryNodeFinder(this);
         }
@@ -103,13 +103,6 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             return _initTask; 
         }
-
-        public Task<List<NavigationNode>> GetCategories()
-        {
-            return _navigationGandalf.GetCategories()
-                .ContinueWith(catTask => catTask.Result.Nodes);
-        }
-
        
 
         private List<NavigationRuntimeNode> _rootCategoryList;

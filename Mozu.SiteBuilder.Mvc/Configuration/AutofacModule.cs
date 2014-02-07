@@ -113,7 +113,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             
             builder.RegisterType<NavigationRepository>().As<INavigationRepository>().InstancePerApiRequest();
 
-            builder.RegisterType<NavigationGandalf>().InstancePerLifetimeScope().InstancePerApiRequest();
+            builder.RegisterType<NavigationGandalf>().As<INavigationGandalf>().InstancePerLifetimeScope().InstancePerApiRequest();
 
             builder.RegisterType<RuntimeCategoryTreeProvider>().As<ICategoryTreeProvider>().InstancePerApiRequest();
 
