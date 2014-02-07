@@ -7,10 +7,7 @@
 Ext.Loader.addClassPathMappings({
   "Ext": "ext/src",
   "Ext.Msg": "ext/src/window/MessageBox.js",
-  "Ext.ux.IFrame": "ux/IFrame.js",
-  "Ext.ux.RowExpander": "ux/RowExpander.js",
-  "Ext.ux.form": "ux/form",
-  "Ext.ux.form.SearchField": "ext/src/ux/form/SearchField.js",
+  "Ext.ux": "ux",
   "Ext.ux.layout.component.field.BoxSelectField": "ux/form/field/BoxSelect.js",
   "MyReader": "app/view/order/modal/AddPayment.js",
   "Taco": "app",
@@ -2382,9 +2379,7 @@ Ext.ClassManager.addNameAliasMappings({
     "plugin.preview"
   ],
   "Ext.ux.ProgressBarPager": [],
-  "Ext.ux.RowExpander": [
-    "plugin.rowexpander"
-  ],
+  "Ext.ux.RowExpander": [],
   "Ext.ux.SlidingPager": [],
   "Ext.ux.Spotlight": [],
   "Ext.ux.TabCloseMenu": [
@@ -3539,7 +3534,7 @@ Ext.setVersion("mozuadmintheme", "1.0.0");
     }
 
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'bootstrap.json', false);
+    xhr.open('GET', '/admin/scripts/bootstrap.json', false);
     xhr.send(null);
 
     var options = eval("(" + xhr.responseText + ")"),
