@@ -1,7 +1,7 @@
 var errors = require('../errors');
 var CONSTANTS = require('../constants/default');
 var utils = require('../utils');
-var ApiReference = require('../reference');
+var ApiReference;
 module.exports = (function() {
 
     errors.register({
@@ -26,6 +26,7 @@ module.exports = (function() {
 
     var PaymentStrategies = {
         "PaypalExpress": function (order, billingInfo) {
+            if (!ApiReference) ApiReference = require('../reference');
             return order.createPayment({
                 returnUrl: billingInfo.paypalReturnUrl,
                 cancelUrl: billingInfo.paypalCancelUrl
