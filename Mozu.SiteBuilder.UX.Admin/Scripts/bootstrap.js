@@ -3539,7 +3539,7 @@ Ext.setVersion("mozuadmintheme", "1.0.0");
     }
 
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/admin/scripts/bootstrap.json', false);
+    xhr.open('GET', 'bootstrap.json', false);
     xhr.send(null);
 
     var options = eval("(" + xhr.responseText + ")"),
