@@ -20,8 +20,17 @@
           "name": "enablePartialCaching",
           "fieldLabel": "Enable Partial Caching",
           "value" :true
+        },
+        {
+          "xtype": "checkbox",
+          "name": "useDebugScripts",
+          "fieldLabel": "Debug Mode (use unminified JavaScript)"
+        },
+        {
+          "xtype": "checkbox",
+          "name": "showAddressTypeDropdown",
+          "fieldLabel": "Show Address Type dropdown in Address Forms (Residential/Commercial)"
         }
-	  
       ]
     },
     {

@@ -409,11 +409,11 @@
     <Content Include="Themes\Core4\compiled\scripts\vendor\bootstrap-popover.js" />
     <Content Include="Themes\Core4\compiled\scripts\vendor\bootstrap-scrollspy.js" />
     <Content Include="Themes\Core4\compiled\scripts\vendor\isotope.min.js" />
-    <Content Include="Themes\Core4\compiled\scripts\vendor\jquery-cookie.js" />
     <Content Include="Themes\Core4\compiled\scripts\vendor\jquery.colorbox-min.js" />
     <Content Include="Themes\Core4\compiled\scripts\vendor\jquery.tools.dateinput.js" />
     <Content Include="Themes\Core4\compiled\scripts\vendor\modernizr-respond.min.js" />
     <Content Include="Themes\Core4\compiled\scripts\vendor\underscore.js" />
+    <Content Include="Themes\Core4\compiled\scripts\widgets\deal-of-the-day.js" />
     <Content Include="Themes\Core4\compiled\scripts\widgets\image.js" />
     <Content Include="Themes\Core4\compiled\scripts\widgets\instock-request.js" />
     <Content Include="Themes\Core4\compiled\scripts\widgets\related-products.js" />

@@ -67,6 +67,7 @@
             'address.countryCode',
             'address.stateOrProvince',
             'address.postalOrZipCode',
+            'address.addressType',
             'phoneNumbers.home',
             'contactId'
         ],

@@ -260,4 +260,17 @@
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}phoneNumbers.home"></span>
         </div>
     </div>
+    {% if themeSettings.showAddressTypeDropdown %}
+    <div class="mz-l-formfieldgroup-row">
+        <div class="mz-l-formfieldgroup-cell">
+            <label for="addresstype">{{ labels.addressType }}<span class="is-required"> *</span>:</label>
+        </div>
+        <div class="mz-l-formfieldgroup-cell">
+            <select data-mz-value="{{ addresscontext }}address.addressType">
+                <option value="Residential" {% if model.address.addressType == "Residential" %}selected="selected"{% endif %} >{{ labels.residential }}</option>
+                <option value="Commercial" {% if model.address.addressType == "Commercial" %}selected="selected"{% endif %} >{{ labels.commercial }}</option>
+            </select>
+        </div>
+    </div>
+    {% endif %}
 {% endblock address-form %}

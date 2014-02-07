@@ -56,7 +56,8 @@
             },
             defaults: {
                 candidateValidatedAddresses: null,
-                countryCode: Hypr.getThemeSetting('preselectCountryCode') || ''
+                countryCode: Hypr.getThemeSetting('preselectCountryCode') || '',
+                addressType: 'Residential'
             },
             toJSON: function (options) {
                 // workaround for SA

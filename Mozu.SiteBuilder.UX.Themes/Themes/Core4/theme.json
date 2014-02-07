@@ -58,6 +58,9 @@
         "maxTopLevelNavItems": 8,
         "maxTopLevelNavLabelLength": 20,
 
+        /* Settings specific to addresses */
+        "showAddressTypeDropdown": true,
+
         /* Settings specific to category page display */
         "showCategoryFacets": true,
 

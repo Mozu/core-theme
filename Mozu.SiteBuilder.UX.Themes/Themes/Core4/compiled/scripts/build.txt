@@ -6,8 +6,8 @@ modules/api.js
 shim!vendor/underscore>_
 shim!vendor/backbone[shim!vendor/underscore>_=_,jquery=jQuery]>Backbone
 modules/backbone-mozu-validation.js
-shim!vendor/jquery-cookie[jquery=jQuery]>jQuery
 vendor/jquery-scrollto.js
+vendor/jquery-cookie.js
 modules/jquery-mozu.js
 modules/models-messages.js
 modules/backbone-mozu-model.js
