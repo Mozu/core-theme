@@ -25,9 +25,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         INavigationRepository _nav;
     
         private readonly ISitesWebApiClient _sitesWebApi;
-        private NavigationGandalf _gandalf;
+        private INavigationGandalf _gandalf;
 
-        public SitemapController(INavigationRepository navigationRepository, NavigationGandalf gandalf, ISitesWebApiClient sitesWebApi)
+        public SitemapController(INavigationRepository navigationRepository, INavigationGandalf gandalf, ISitesWebApiClient sitesWebApi)
         {
             _nav = navigationRepository;
             _gandalf = gandalf;

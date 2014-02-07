@@ -223,14 +223,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         
         private readonly IThemeSettingsRepository _themeSettingsRepository;
 
-        private readonly NavigationGandalf _navGandalf;
+        private readonly INavigationGandalf _navGandalf;
 
         private AMDModuleProvider _moduleProvider;
 
-        public ResourceController( IThemeSettingsRepository themeSettingsRepository,   MozuVirtualPathProvider pathProvider, NavigationGandalf navGandalf)
+        public ResourceController(IThemeSettingsRepository themeSettingsRepository, MozuVirtualPathProvider pathProvider, INavigationGandalf gandalf)
         {
             _themeSettingsRepository = themeSettingsRepository;
-            _navGandalf = navGandalf;
+            _navGandalf = gandalf;
             _pathProvider = pathProvider;
             _moduleProvider = new AMDModuleProvider()
             {

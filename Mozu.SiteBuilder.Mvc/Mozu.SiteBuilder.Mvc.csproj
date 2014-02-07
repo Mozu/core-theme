@@ -470,6 +470,8 @@
     <Compile Include="MediaTypeFormatters\LowerCaseJsonMediaTypeFormatte.cs" />
     <Compile Include="MessageHandler\SeoDelegatingHandler.cs" />
     <Compile Include="MessageHandler\HttpContextInjectingMessageHandler.cs" />
+    <Compile Include="Navigation\INavigationGandalf.cs" />
+    <Compile Include="Navigation\NavigationGandalfTheWhite.cs" />
     <Compile Include="ObjectPools\StringBuilderPool.cs" />
     <Compile Include="ObjectPools\CharBufferPool.cs" />
     <Compile Include="ObjectPools\ObjectPool.cs" />
