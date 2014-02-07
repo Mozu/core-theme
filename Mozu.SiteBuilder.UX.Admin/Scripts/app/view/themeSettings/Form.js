@@ -1,6 +1,5 @@
 ﻿/**
- * @class Taco.view.productType.Form
- * @author Jimmy Sanford
+ * @class Taco.view.themesettings.Form
  */
 
 Ext.define('Taco.view.themesettings.Form', {
@@ -16,6 +15,7 @@ Ext.define('Taco.view.themesettings.Form', {
         'Taco.model.ProductType',
         'Taco.view.productType.AttributeGroup'
     ],
+
     defaults: {
         ui: 'subform',
         //flex: 1,
@@ -32,24 +32,25 @@ Ext.define('Taco.view.themesettings.Form', {
     //    theme: theme,
     //    settingsValues: values
     //},
-    constructor: function () {
 
+    constructor: function () {
         this.callParent(arguments);
 
         this.mixins.navigable.constructor.call(this);
     },
+
     initComponent: function () {
+        this.title = "Theme Settings"; //tbd get theme name
 
-        this.title = "Theme Settings";//tbd get theme name 
         Ext.apply(this, this.themeInfo.formConfig);
+
+        console.log('items', this.items);
+
         this.callParent(arguments);
-         
 
-        
         this.getForm().setValues(this.themeInfo.settingsValues);
-
-        
     },
+
     addSaveTasks: function (tasks, updateRecord, saveRecord) {
         var me = this;
         tasks.add({
@@ -82,5 +83,4 @@ Ext.define('Taco.view.themesettings.Form', {
 
         });
     }
-    
 });
