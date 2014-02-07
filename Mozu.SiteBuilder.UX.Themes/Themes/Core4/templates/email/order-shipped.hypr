@@ -18,6 +18,13 @@
 		<dt>{{ labels.shippingMethod }}:</dt>
 		<dd>{{ model.fulfillmentInfo.shippingMethodName }}</dd>
 
+		<dt>{{ labels.trackingNumber }}:</dt>
+		<dd>
+			{% for package in model.packages %}
+				{{ package.trackingNumber }}
+			{% endfor %}
+		</dd>
+
 		<dt>{{ labels.shipTo }}:</dt>
 		<dd class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}</dd>
 	</dl>
