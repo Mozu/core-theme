@@ -1,28 +1,48 @@
 ﻿  {% extends "email/email" %}
 
   {% block body-content %}
-  <H1>Back in Stock</H1>
-  <h2>{{model.productCode}}</h2>
 
-  {% if model.content.productShortDescription and themeSettings.showProductDetailShortDesc %}
-<div class="mz-productdetail-shortdesc mz-l-stack-section">
-  <h4 class="mz-l-stack-sectiontitle">{{ labels.shortDesc }}</h4>
-  <span itemscope="description">{{ model.content.productShortDescription|safe }}</span>
-</div>
-{% endif %}
+	{% if user and user.firstName %}
+		{{ labels.emailOpening|string_format(user.firstName)|safe }}
+	{% else %}
+		{{ labels.emailOpeningAlternative|safe }}
+	{% endif %}
 
-{% if model.options %}
-<div class="mz-productdetail-options mz-l-stack-section">
-  <h4 class="mz-l-stack-sectiontitle">{{ labels.options }}</h4>
-  {% include "modules/product/product-options" %}
-</div>
-{% endif %}
-    
-<div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="mz-productdetail-price mz-l-stack-section">
-  <h4 class="mz-l-stack-sectiontitle">{{ labels.price }}</h4>
-{% include "modules/product/price-stack" %}
-</div>
+	{{ labels.inStockBlob1|string_format(siteContext.generalSettings.websiteName)|safe }}
 
+	<table class="mz-ordersummary">
+    <thead>
+        <tr>
+            <th class="mz-ordersummary-header-product">{{ labels.item }}</th>
+            <th class="mz-ordersummary-header-price">{{ labels.price }}</th>
+        </tr>
+    </thead>
+	<tbody>
+		<tr>
+			<td>
+				{% if model.content.productShortDescription and themeSettings.showProductDetailShortDesc %}
+				<div class="mz-productdetail-shortdesc mz-l-stack-section">
+				  <span itemscope="description">{{ model.content.productShortDescription|safe }}</span>
+				</div>
+				{% endif %}
+				{% if model.options %}
+				<div class="mz-productdetail-options mz-l-stack-section">
+				  {% include "modules/product/product-options" %}
+				</div>
+				{% endif %}
+				{{model.productCode}}
+			</td>
+			<td>
+				<div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="mz-productdetail-price mz-l-stack-section">
+				{% include "modules/product/price-stack" %}
+				</div>
+			</td>
+		</tr>
+	</tbody>
+	</table>
 
+	{{ labels.inStockBlob2|string_format(domainName, model.productCode)|safe }}
+
+	{{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
 
 {% endblock body-content %}
