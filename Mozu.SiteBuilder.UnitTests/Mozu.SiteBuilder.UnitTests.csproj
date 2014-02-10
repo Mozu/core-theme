@@ -128,8 +128,7 @@
       <HintPath>..\packages\Mozu.Content.Contracts.1.3.0.2\lib\Mozu.Content.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core">
-      <HintPath>..\packages\Mozu.Core.1.5.0-dev003\lib\net45\Mozu.Core.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Mozu.Core.1.5.0.1\lib\net45\Mozu.Core.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
