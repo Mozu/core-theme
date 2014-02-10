@@ -1074,7 +1074,7 @@
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets')" />
   <Target Name="AfterCompile">
-    <Exec Command="attrib -r &quot;$(ProjectDir)\ThemeTemplates&quot; /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <Exec Command="attrib -r &quot;$(ProjectDir)\ThemeTemplates\*.zip&quot; /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="DevCenterThemeTemplatizer.exe core4 &quot;$(ProjectDir)\Themes\Core4&quot; &quot;$(ProjectDir)\ThemeTemplates&quot;" WorkingDirectory="$(ProjectDir)\tools" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
   </Target>
   <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
