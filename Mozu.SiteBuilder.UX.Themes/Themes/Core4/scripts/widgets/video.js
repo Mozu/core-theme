@@ -60,11 +60,13 @@
         };
 
         $(document).ready(function() {
-            $('.mz-cms-video-placeholder').each(bind);
-    
-            $(document).on('mozuwidgetdrop', function(e) {
-                $(e.currentTarget).find('.mz-cms-video-placeholder').each(bind)
-            })
+            YT.ready(function () {
+                $('.mz-cms-video-placeholder').each(bind);
+
+                $(document).on('mozuwidgetdrop', function (e) {
+                    $(e.currentTarget).find('.mz-cms-video-placeholder').each(bind)
+                });
+            });
         });
     }
 );
