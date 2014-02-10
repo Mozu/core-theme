@@ -1,7 +1,7 @@
 /*! 
- * Mozu Hypr Live - v0.2.0 - 2013-12-31
+ * Mozu Hypr Live - v0.2.0 - 2014-02-10
  *
- * Copyright (c) 2013 Volusion, Inc.
+ * Copyright (c) 2014 Volusion, Inc.
  *
  */
 
@@ -1583,11 +1583,18 @@ exports.parse = function (source, opts, tags, filters) {
     // /(\{%[\s\S]*?%\}|\{\{[\s\S]*?\}\}|\{#[\s\S]*?#\})/
     splitter = new RegExp(
       '(' +
-        escapedTagOpen + anyChar + escapedTagClose + '|' +
         escapedVarOpen + anyChar + escapedVarClose + '|' +
-        escapeRegExp(cmtOpen) + anyChar + escapeRegExp(cmtClose) +
+        escapeRegExp(cmtOpen) + anyChar + escapeRegExp(cmtClose) + '|' +
+        escapedTagOpen + anyChar + escapedTagClose +
         ')'
     ),
+    // splitter = new RegExp(
+    //   '(' +
+    //     escapedTagOpen + anyChar + escapedTagClose + '|' +
+    //     escapedVarOpen + anyChar + escapedVarClose + '|' +
+    //     escapeRegExp(cmtOpen) + anyChar + escapeRegExp(cmtClose) +
+    //     ')'
+    // ),
     line = 1,
     stack = [],
     parent = null,
@@ -1752,6 +1759,11 @@ exports.parse = function (source, opts, tags, filters) {
       return;
     }
 
+    // Is a comment?
+    if (!inRaw && utils.startsWith(chunk, cmtOpen) && utils.endsWith(chunk, cmtClose)) {
+      // do nuthin and keep going!
+      return;
+    }
     // Is a variable?
     if (!inRaw && utils.startsWith(chunk, varOpen) && utils.endsWith(chunk, varClose)) {
       stripPrev = varStripBefore.test(chunk);
@@ -1794,7 +1806,7 @@ exports.parse = function (source, opts, tags, filters) {
       tokens.push(prevToken);
     }
 
-    // This was a comment, so let's just keep going.
+    // This was a comment that went somehow unparsed, so let's just keep going.
     if (!token) {
       return;
     }

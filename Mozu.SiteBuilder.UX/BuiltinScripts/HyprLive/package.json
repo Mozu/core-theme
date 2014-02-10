@@ -3,9 +3,6 @@
   "title": "Mozu Hypr Live",
   "author": "Volusion, Inc.",
   "version": "0.2.0",
-  "dependencies": {
-    "swig": "~1.0.0-rc3"
-  },
   "devDependencies": {
     "grunt": "~0.4.0",
     "grunt-contrib-clean": "~0.4.0",
