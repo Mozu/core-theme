@@ -225,9 +225,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Core.Api.Client.1.4.0.2\lib\Mozu.Core.Api.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Api.Contracts, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Api.Contracts.1.5.0-dev002\lib\net45\Mozu.Core.Api.Contracts.dll</HintPath>
+    <Reference Include="Mozu.Core.Api.Contracts">
+      <HintPath>..\packages\Mozu.Core.Api.Contracts.1.5.0.2\lib\net45\Mozu.Core.Api.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Caching, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
