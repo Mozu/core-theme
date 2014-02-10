@@ -613,6 +613,7 @@
     <Content Include="ThemeTemplates\ExtendsCore4\resources\README.txt" />
     <Content Include="ThemeTemplates\ExtendsCore4\stylesheets\README.txt" />
     <Content Include="ThemeTemplates\ExtendsCore4\templates\README.txt" />
+    <Content Include="Tools\DevCenterThemeTemplatizer.exe" />
     <Content Include="Tools\Documentation\Tags.vol" />
     <Content Include="Themes\Core4\thumb.jpg" />
     <Content Include="Themes\MobileCore\MetaData\build.js" />
@@ -1013,6 +1014,9 @@
   <ItemGroup>
     <Content Include="Themes\Core4\templates\pages\reset-password.hypr" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="ThemeTemplates\core4.zip" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -1069,6 +1073,10 @@
   <Import Project="..\packages\OctoPack.2.0.52\build\OctoPack.targets" Condition="Exists('..\packages\OctoPack.2.0.52\build\OctoPack.targets')" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="AfterCompile">
+    <Exec Command="attrib -r &quot;$(ProjectDir)\ThemeTemplates&quot; /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <Exec Command="DevCenterThemeTemplatizer.exe core4 &quot;$(ProjectDir)\Themes\Core4&quot; &quot;$(ProjectDir)\ThemeTemplates&quot;" WorkingDirectory="$(ProjectDir)\tools" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+  </Target>
   <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
     <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
     <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
