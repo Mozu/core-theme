@@ -116,6 +116,23 @@ Ext.define('Taco.overrides.grid.RowEditor', {
         }
     },
     
+    // Focus the cell on start edit based upon the current context
+    focusContextCell: function () {
+        var me = this;        
+        var field = this.getEditor(this.context.column);
+        // if field is disabled, we need to focus the next available field;
+        // this happens when the the first editor is only enabled for the create use case and is disabled for the edit use case;
+        if (field.disabled) {
+            var fieldsCollection =  me.query('[isFormField]');            
+            field = Ext.Array.findBy(fieldsCollection,function (item, key) {
+                return !item.disabled;
+            })
+        }
+        if (field && field.focus) {
+            field.focus();
+        }
+    },
+
     /*
     *  UX Enhancement - before the row editor becomes visible. itereate the fields of the editor calling an optional onEditorShow();
     *  Also looks for editOnCreateOnly property and disables the field in an edit situation;
