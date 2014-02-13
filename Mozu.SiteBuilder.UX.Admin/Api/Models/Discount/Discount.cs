@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         /// Target type.
         /// Valid values are Shipping, Product
         /// </summary>
-       
+        [DataMember(Name = "target")]
         public string TargetType { get; set; }
 
 
