@@ -311,6 +311,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                             Url = child.Url,
                             Name = child.Name,
                             Index = child.Index,
+                            OriginalId = child.OriginalId ,
                             NodeType = child.NodeType,
                             IsHomePage = false
                         }).ToList();
