@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             // To model
             Mapper.CreateMap<DC.Discount, Discount>()
-                  .ForMember(x => x.TargetType, opt => opt.ResolveUsing(x=> (x.Target != null) ? x.Target.Type : null))
+                  .ForMember(x => x.Target, opt => opt.ResolveUsing(x=> (x.Target != null) ? x.Target.Type : null))
                   .ForMember(x => x.IncludeAllProducts, opt => opt.ResolveUsing(x=> (x.Target != null) 
                       ? x.Target.IncludeAllProducts : null))
                   .ForMember(x => x.MinimumLifetimeValueAmount, opt => opt.ResolveUsing(x => (x.Conditions != null) 
@@ -87,7 +87,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                         }))
                   .ForMember(x => x.Target, opt => opt.ResolveUsing(x => new DC.DiscountTarget()
                                                                         {
-                                                                            Type = x.TargetType,
+                                                                            Type = x.Target,
                                                                             Categories = (x.Categories ?? Enumerable.Empty<int>()).Select(_ => new DC.TargetedCategory() {Id = _}).ToList(),
                                                                             ExcludedCategories  = (x.ExcludedCategories  ?? Enumerable.Empty<int>()).Select(_ => new DC.TargetedCategory()  { Id = _ }).ToList(),
                                                                             ExcludedProducts = (x.ExcludedProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedProduct() { ProductCode = _ }).ToList(),
@@ -126,7 +126,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         //private DC.DiscountTarget MapToDiscountTarget(Discount d)
         //{
         //    string targetType;
-        //    switch (d.TargetType.ToLowerInvariant())
+        //    switch (d.Target.ToLowerInvariant())
         //    {
         //        case "allproducts":
         //        case "product":
@@ -143,7 +143,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         //            Categories = (d.Categories ?? new List<int>()).Select(targetedCategory => new DC.TargetedCategory { Id = targetedCategory }).ToList(),
         //            Products = (d.Products ?? new List<string>()).Select(targetedProduct => new DC.TargetedProduct { Code = targetedProduct }).ToList(),
         //            ShippingMethods = (d.ShippingMethods ?? new List<string>()).Select(targetedShippingMethods => new DC.TargetedShippingMethod { Code = targetedShippingMethods }).ToList(),
-        //            IncludeAllProducts = d.TargetType.Equals("allproducts", StringComparison.InvariantCultureIgnoreCase),
+        //            IncludeAllProducts = d.Target.Equals("allproducts", StringComparison.InvariantCultureIgnoreCase),
         //            MinimumOrderAmount = d.MinimumOrderAmount,
         //            Type = targetType
         //        };

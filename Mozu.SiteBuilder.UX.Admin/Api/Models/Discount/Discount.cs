@@ -4,7 +4,8 @@ using System.Runtime.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
 {
-  
+
+   
     public class Discount
     {
        
@@ -20,13 +21,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
       
         public string Scope { get; set; }
 
-
+        //The field previously known as TargetType
         /// <summary>
-        /// Target type.
+        /// Target
         /// Valid values are Shipping, Product
         /// </summary>
-        [DataMember(Name = "target")]
-        public string TargetType { get; set; }
+        public string Target { get; set; }
 
 
      
