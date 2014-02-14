@@ -12,6 +12,7 @@ using System.Web;
 using System.Web.Http;
 using Mozu.Core;
 using Mozu.Core.Api.Routing;
+using Mozu.Core.Logging;
 using Mozu.PaymentService.Contracts;
 using Mozu.ShippingAdmin.Contracts;
 using Mozu.ShippingAdmin.Contracts.Clients;
@@ -40,13 +41,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
       
 
-        public ThemeController(ITenantsWebApiClient tenantClient, IGeneralSettingWrapper generalSettingsWebApiClient, IThemeRepository themeRepository, ICmsServiceWrapper cmsServiceWrapper, IThemeSettingsRepository themeSettingsRepository)
+        public ThemeController(ITenantsWebApiClient tenantClient, IGeneralSettingWrapper generalSettingsWebApiClient, IThemeRepository themeRepository, ICmsServiceWrapper cmsServiceWrapper, IThemeSettingsRepository themeSettingsRepository, ILogger logger )
         {
             _tenantClient = tenantClient;
             _generalSettingsWebApiClient = generalSettingsWebApiClient;
             _themeRepository = themeRepository;
             _cmsServiceWrapper = cmsServiceWrapper;
             _themeSettingsRepository = themeSettingsRepository;
+            _logger = logger;
         }
 
 
@@ -156,7 +158,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     }
                     catch (Exception ex)
                     {
-                        System.Diagnostics.Debug.Write(ex);
+                       _logger.Warn("theme error",ex);
                         return null;
                     }
 
@@ -199,6 +201,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     }
                     catch (Exception ex)
                     {
+                        _logger.Warn("addon error", ex);
                         System.Diagnostics.Debug.Write(ex);
                         return null;
                     }
@@ -283,5 +286,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IThemeRepository _themeRepository;
         private readonly ICmsServiceWrapper _cmsServiceWrapper;
         private readonly IThemeSettingsRepository _themeSettingsRepository;
+        private readonly ILogger _logger;
     }
 }
