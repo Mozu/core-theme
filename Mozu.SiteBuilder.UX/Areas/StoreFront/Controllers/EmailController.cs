@@ -36,6 +36,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     {
         private readonly ISitesWebApiClient _sitesWebApiClient;
         private readonly ILogger _logger;
+        private readonly Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;   
         private static readonly List<EmailTypeInfo> g_emailTypeInfos;
 
         static EmailController()
@@ -52,6 +53,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                        //        ModelType = typeof (NewUserEmailMessage),
                                        //        Topic = Topics.NewUserCreated
                                        //    },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Returns.Return),
+                                               Topic = Topics.ReturnApproved
+                                           },
                                        new EmailTypeInfo
                                            {
                                                ModelType = typeof (Order),
@@ -72,13 +78,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                ICustomerAccountWebApiClient customerAccountWebApiClient,
                                HyprViewEngine hyprViewEngine,
                                 Mozu.Tenant.Contracts.Clients.ISitesWebApiClient sitesWebApiClient,
-                                ILogger logger 
+                                ILogger logger,
+                                Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient
 
             )
             : base(docRepo, docTypeRepo, cmsService, cmsTypeHelper, customerAccountWebApiClient, hyprViewEngine)
         {
             _sitesWebApiClient = sitesWebApiClient.CloneWithoutUserClaims();
             _logger = logger;
+            _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
         }
 
         //
@@ -92,9 +100,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var model = new object();
 
-            if (emailTypeInfo != null  && emailTypeInfo.ModelType == typeof (Order))
+            if (emailTypeInfo != null)
             {
-                model = JsonConvert.DeserializeObject<Order>(_mockOrder);
+                if (emailTypeInfo.ModelType == typeof(Order))
+                {
+                    model = JsonConvert.DeserializeObject<Order>(_mockOrder);
+                }
+                else if (emailTypeInfo.ModelType == typeof(Mozu.CommerceRuntime.Contracts.Returns.Return))
+                {
+                    model = JsonConvert.DeserializeObject<Mozu.CommerceRuntime.Contracts.Returns.Return>(_mockRma);
+                }
             }
             var site = (await _sitesWebApiClient.GetSite(this.SbApiContext.SiteId)).ReadAsSync();
             HttpResponseMessage res = await Page("email", GetCmsPage(emailTempalte));
@@ -130,6 +145,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             vr.ViewName = emailTempalte.Template;
             ViewData["content"] = vr.Model;
             ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
+            ViewData["rmaLocation"] = _locationRuntimeWebApiClient.GetDirectShipLocation().Result.ReadAsSync();
 
 
 
@@ -231,6 +247,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             vdd["model"] = model;
             vdd["content"] = cmdContent;
             vdd["User"] = user;
+            vdd["rmaLocation"] = _locationRuntimeWebApiClient.GetDirectShipLocation().Result.ReadAsSync();
             vdd["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
 
             var hvc = new HyprViewContext(this.Request , vdd, null);
@@ -332,9 +349,170 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string NewUserCreated = "user.created";
             public const string OrderEmailTopic = "order.changed";
             public const string OrderShippedTopic = "order.shipped";
+            public const string ReturnApproved = "return.changed";
         }
 
         # region Mock Orders
+        private static string _mockRma = @"{
+            ""auditInfo"": {
+                ""createBy"": ""79a2be2e3abb413fb7cadb54956a5cce"",
+                ""createDate"": ""2014-02-14T20:36:51.904Z"",
+                ""updateBy"": ""79a2be2e3abb413fb7cadb54956a5cce"",
+                ""updateDate"": ""2014-02-14T20:36:52.403Z""
+            },
+            ""availableActions"": [
+                ""Await"",
+                ""Refund"",
+                ""Cancel""
+            ],
+            ""channelCode"": ""BNM"",
+            ""currencyCode"": ""usd"",
+            ""customerAccountId"": 1001,
+            ""customerInteractionType"": ""Unknown"",
+            ""id"": ""03fedc644fdce00e4cfddb690000256d"",
+            ""items"": [
+                {
+                    ""bundledProducts"": [],
+                    ""notes"": [],
+                    ""orderItemId"": ""21269410d2da42faaf4da29a01433e37"",
+                    ""product"": {
+                        ""bundledProducts"": [],
+                        ""categories"": [
+                            {
+                                ""id"": 9,
+                                ""parent"": {
+                                    ""id"": 6,
+                                    ""parent"": {
+                                        ""id"": 3
+                                    }
+                                }
+                            }
+                        ],
+                        ""description"": ""Rfcetn"",
+                        ""isPackagedStandAlone"": false,
+                        ""isTaxable"": true,
+                        ""measurements"": {
+                            ""weight"": {
+                                ""unit"": ""lbs"",
+                                ""value"": 50.0
+                            }
+                        },
+                        ""name"": ""odNxLb"",
+                        ""options"": [],
+                        ""price"": {
+                            ""price"": 500.0,
+                            ""salePrice"": 450.0
+                        },
+                        ""productCode"": ""lIQWn"",
+                        ""productUsage"": ""Standard"",
+                        ""properties"": [
+                            {
+                                ""attributeFQN"": ""tenant~Size_IjGCc"",
+                                ""dataType"": ""String"",
+                                ""isMultiValue"": true,
+                                ""name"": ""YUvYO"",
+                                ""values"": [
+                                    {
+                                        ""stringValue"": ""zeFUy"",
+                                        ""value"": ""fOwuWD""
+                                    },
+                                    {
+                                        ""stringValue"": ""LRaMt"",
+                                        ""value"": ""vHRJtn""
+                                    }
+                                ]
+                            },
+                            {
+                                ""attributeFQN"": ""tenant~Fabric_KuXWw"",
+                                ""dataType"": ""String"",
+                                ""isMultiValue"": true,
+                                ""name"": ""zQWKH"",
+                                ""values"": [
+                                    {
+                                        ""stringValue"": ""kLkET"",
+                                        ""value"": ""uQqnLC""
+                                    },
+                                    {
+                                        ""stringValue"": ""rMJSV"",
+                                        ""value"": ""ValDcu""
+                                    }
+                                ]
+                            },
+                            {
+                                ""attributeFQN"": ""tenant~Material_XMPxl"",
+                                ""dataType"": ""String"",
+                                ""isMultiValue"": true,
+                                ""name"": ""cKIQl"",
+                                ""values"": [
+                                    {
+                                        ""stringValue"": ""nXpVI"",
+                                        ""value"": ""wNqPeJ""
+                                    },
+                                    {
+                                        ""stringValue"": ""OQZjp"",
+                                        ""value"": ""tTYTRM""
+                                    }
+                                ]
+                            },
+                            {
+                                ""attributeFQN"": ""tenant~availability"",
+                                ""dataType"": ""String"",
+                                ""isMultiValue"": false,
+                                ""name"": ""Availability"",
+                                ""values"": [
+                                    {
+                                        ""stringValue"": ""Usually Ships in 24 Hours"",
+                                        ""value"": ""24hrs""
+                                    }
+                                ]
+                            },
+                            {
+                                ""attributeFQN"": ""tenant~product-crosssell"",
+                                ""dataType"": ""String"",
+                                ""isMultiValue"": true,
+                                ""name"": ""Product Cross-Sells"",
+                                ""values"": []
+                            },
+                            {
+                                ""attributeFQN"": ""tenant~product-upsell"",
+                                ""dataType"": ""String"",
+                                ""isMultiValue"": true,
+                                ""name"": ""Product Upsells"",
+                                ""values"": []
+                            }
+                        ]
+                    },
+                    ""productLossAmount"": 450.0,
+                    ""quantityReceived"": 0,
+                    ""quantityRestockable"": 0,
+                    ""quantityShipped"": 0,
+                    ""reasons"": [
+                        {
+                            ""quantity"": 1,
+                            ""reason"": ""MissingParts""
+                        }
+                    ]
+                }
+            ],
+            ""locationCode"": ""online store_1"",
+            ""lossTotal"": 450.0,
+            ""notes"": [],
+            ""originalOrderId"": ""03b54eb54fdce0fa782d06c60000256d"",
+            ""packages"": [],
+            ""payments"": [],
+            ""productLossTotal"": 450.0,
+            ""refundAmount"": 0.0,
+            ""returnNumber"": 1,
+            ""returnType"": ""Replace"",
+            ""rmaDeadline"": ""2015-02-05T00:00:00.000Z"",
+            ""shippingLossTaxTotal"": 0.0,
+            ""shippingLossTotal"": 0.0,
+            ""siteId"": 13587,
+            ""status"": ""Authorized"",
+            ""tenantId"": 9581,
+            ""userId"": ""80beb8559ad94dc0a3f92c870aac9325""
+        }";
+
         private static string _mockOrder = @"{
     ""acceptedDate"": ""2014-01-22T20:53:34.334Z"",
     ""amountAvailableForRefund"": 111.0,
