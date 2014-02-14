@@ -1147,7 +1147,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             ],
             ""shippingMethodCode"": ""48f0a141cfe34a5996efa29d008825fc"",
-            ""status"": ""NotFulfilled""
+            ""status"": ""NotFulfilled"",
             ""trackingNumber"": ""9407 1000 0000 0000 0000 00""
         }
     ],
