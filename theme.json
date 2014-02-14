@@ -102,14 +102,14 @@
 		  "subject": "Order Confirmation #{model.orderNumber}"
 		}
 	  },
-/*	  {
+	  {
 		"id": "return.changed",
 		"title": "Return Status",
-		"template": "email/order-status",
+		"template": "email/product-return",
 		"properties": {
-		  "subject": "Order Status #{model.orderNumber}"
+		  "subject": "RMA Request Approved RMA Request Approved"
 		}
-	  }, */
+	  },
 	  {
 		"id": "user.created",
 		"title": "New Login Created",
