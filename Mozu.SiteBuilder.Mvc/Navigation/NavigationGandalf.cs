@@ -14,6 +14,7 @@ using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using DCC = Mozu.Content.Contracts;
+using CONST = Mozu.SiteBuilder.Mvc.Navigation.NavigationConstants;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
 {
@@ -23,16 +24,6 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
     /// </summary>
     public class NavigationGandalf : INavigationGandalf
     {
-        // the top level name in EXT's tree thing (a root pseudo-node).
-        public const string SUPER_ROOT_NODE_NAME = "root";
-
-        // the top level name for items that exist in the navigation tree.
-        public const string NAV_ROOT_NODE_NAME = "_navigation";
-
-        // the special node to assign unlinked pages as a child of.
-        public const string UNLINKED_PAGES_NODE_ID = "_unlinked";
-
-
         private INavigationRepository _navRepo;
         private ICategoryNavigationProvider _catClient;
         private ICmsServiceWrapper _cmsService;
@@ -75,8 +66,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             masterList.Add(new NavigationNode {
                 Name = "Navigation",
                 NodeType = NavigationNodeType.Group,
-                Id = NAV_ROOT_NODE_NAME,
-                ParentId = SUPER_ROOT_NODE_NAME,
+                Id = CONST.NAV_ROOT_NODE_NAME,
+                ParentId = CONST.SUPER_ROOT_NODE_NAME,
                 Expandable = true,
                 Index = 0
             });
@@ -84,8 +75,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             masterList.Add(new NavigationNode {
                 Name = "Single Pages",
                 NodeType = NavigationNodeType.Group,
-                Id = UNLINKED_PAGES_NODE_ID,
-                ParentId = SUPER_ROOT_NODE_NAME,
+                Id = CONST.UNLINKED_PAGES_NODE_ID,
+                ParentId = CONST.SUPER_ROOT_NODE_NAME,
                 Expandable = true,
                 Index = 1
             });
@@ -100,7 +91,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             // var blogTask = _cmsService.GetList2(contentCollection: "blogs", pageSize: 1, filter: "DocumentType eq blog" );
 
             // get our navigation data authority
-            var navTask = _navRepo.GetSetAsync();
+            var navTask = _navRepo.GetNavigationSetAsync();
 
             return Task.WhenAll(catTask, pageTask, /*blogTask,*/ navTask)
                 .ContinueWith(_ =>
@@ -129,12 +120,12 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     var sortedCats = cats.Nodes.OrderBy(node => node.ParentId).ThenBy(node => node.Index).ToList();
 
                     // categories with a null ParentCategoryId should belong to the top level.
-                    sortedCats.ForEach(n => n.ParentId = n.ParentId ?? NAV_ROOT_NODE_NAME);
+                    sortedCats.ForEach(n => n.ParentId = n.ParentId ?? CONST.NAV_ROOT_NODE_NAME);
 
                     masterList.AddRange(sortedCats);
 
                     // build the masterlist. Step 2: put in navigation items we know about.
-                    foreach (var navmeta in (navSet.Nodes ?? new List<NavigationNode>()).OrderBy(n => n.ParentId).ThenBy(n => n.Index))
+                    foreach (var navmeta in (navSet.Nodes ?? Enumerable.Empty<NavigationNode>()).OrderBy(n => n.ParentId).ThenBy(n => n.Index))
                     {
                         NavigationNode node;
 
@@ -200,7 +191,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         select Mapper.Map<NavigationNode>(p)
                     ).ToList();
 
-                    allUnassigned.Each(n => n.ParentId = UNLINKED_PAGES_NODE_ID);
+                    allUnassigned.Each(n => n.ParentId = CONST.UNLINKED_PAGES_NODE_ID);
                     masterList.AddRange(allUnassigned);
 
                     var nodes = masterList.OrderBy(n => n.ParentId).ThenBy(n => n.Index).ToList();
@@ -217,7 +208,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// Build a flat list of NavigationNodes (which can have a ParentId to imply a hiearchy)
         /// This list can then be transformed to a List<NavigationRuntimeNode> or List<NavigationTreeNode>
         /// </summary>
-        public Task<List<NavigationTreeNode>> GetFlatList()
+        public Task<List<ITreeNavigationNode>> GetFlatList()
         {
             return GetListInternal()
                 .ContinueWith(res =>
@@ -226,19 +217,19 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
                     var nodeTree = Mapper.Map<List<NavigationTreeNode>>(nodelist);
 
-                    var root = nodeTree.First(n => n.Id == NAV_ROOT_NODE_NAME);
-                    var unlinked = nodeTree.First(n => n.Id == UNLINKED_PAGES_NODE_ID);
+                    var root = nodeTree.First(n => n.Id == CONST.NAV_ROOT_NODE_NAME);
+                    var unlinked = nodeTree.First(n => n.Id == CONST.UNLINKED_PAGES_NODE_ID);
                   
                     root.Expanded = unlinked.Expanded = true;
 
-                    return nodeTree;
+                    return nodeTree.Cast<ITreeNavigationNode>().ToList();
                 });
         }
 
         /// <summary>
         /// Build a hierarchical list of navigation nodes, ideal for consumption by NDjango templates and front-end javascript.
         /// </summary>
-        public Task<List<NavigationRuntimeNode>> GetTreeNavigation()
+        public Task<List<IRuntimeNavigationNode>> GetTreeNavigation()
         {
             return GetListInternal()
                 .ContinueWith(res =>
@@ -247,18 +238,18 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
                     var cachedTree = GetCachedTree(nodeCollection.ETag);
                     if (cachedTree != null)
-                        return cachedTree;
+                        return cachedTree.Cast<IRuntimeNavigationNode>().ToList();
 
                     var grouped =
                         (from node in nodeCollection.Nodes
-                         where node.Id != UNLINKED_PAGES_NODE_ID
-                         where node.ParentId != UNLINKED_PAGES_NODE_ID
+                         where node.Id != CONST.UNLINKED_PAGES_NODE_ID
+                         where node.ParentId != CONST.UNLINKED_PAGES_NODE_ID
                          group node by node.ParentId into g
                          select g).ToDictionary(k => k.Key, k => k.ToList());
 
                     List<NavigationNode> rootLevel;
 
-                    if(!grouped.TryGetValue(NAV_ROOT_NODE_NAME, out rootLevel))
+                    if (!grouped.TryGetValue(CONST.NAV_ROOT_NODE_NAME, out rootLevel))
                         return null;
                     var rootLevelMapped = Mapper.Map<List<NavigationRuntimeNode>>(rootLevel);
                     int entries = 0, counter = 0;
@@ -281,7 +272,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         if (nodeCollection.ETag != null)
                             SaveCachedTree(nodeCollection.ETag, rootLevelMapped);
                     }
-                    return rootLevelMapped;
+                    return rootLevelMapped.Cast<IRuntimeNavigationNode>().ToList();
                 });
         }
 
@@ -304,8 +295,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 {
                     if (childItems != null)
                     {
-                        node.Items = childItems.Select(child => new NavigationRuntimeNode
-                        {
+                        var nodeChildItems = childItems.Select(child => new NavigationRuntimeNode {
                             Id = child.Id,
                             Parent = node,
                             Url = child.Url,
@@ -315,7 +305,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                             NodeType = child.NodeType,
                             IsHomePage = false
                         }).ToList();
-                        BuildTree(node.Items, allObjects, ref entries, ref counter);
+                        node.Items = nodeChildItems.Cast<IRuntimeNavigationNode>().ToList();
+                        BuildTree(nodeChildItems, allObjects, ref entries, ref counter);
                     }
                 }
             }

@@ -8,7 +8,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
     /// Represents a node in the navigation hierarchy 
     /// </summary>
     [DataContract]
-    public class NavigationTreeNode
+    public class NavigationTreeNode : ITreeNavigationNode
     {
         [OnDeserializing ]
         void OnDeserializing(StreamingContext context)

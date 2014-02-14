@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Linq;
 
 namespace Mozu.SiteBuilder.UX.Models.Navigation
 {
     /// <summary>
     /// Represents a node in the navigation hierarchy 
     /// </summary>
-    [DataContract]
-    public class NavigationRuntimeNode : ModelBase 
+    [DataContract, Obsolete]
+    public class NavigationRuntimeNode : ModelBase, IRuntimeNavigationNode
     {
 
         /// <summary>
@@ -16,7 +17,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         /// </summary>
         public NavigationRuntimeNode()
         {
-            Items = new List<NavigationRuntimeNode>();
+            Items = new List<IRuntimeNavigationNode>();
         }
 
         public string Id { get; set; }
@@ -70,9 +71,9 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         
       
         [DataMember(Name = "items")]
-        public List<NavigationRuntimeNode> Items { get; set; }
+        public ICollection<IRuntimeNavigationNode> Items { get; set; }
 
-        public NavigationRuntimeNode Parent { get; set; }
+        public IRuntimeNavigationNode Parent { get; set; }
 
         public NavigationNodeType NodeType { get; set; }
 

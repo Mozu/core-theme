@@ -17,6 +17,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Navigation
     /// Retrieves categories from the Runtime category client and
     /// returns a list of NavigationTreeNodes.
     /// </summary>
+    [Obsolete]
     public class CategoryNavigationProvider : ICategoryNavigationProvider
     {
         private ICategoryTreeProvider _categoryTreeProvider;

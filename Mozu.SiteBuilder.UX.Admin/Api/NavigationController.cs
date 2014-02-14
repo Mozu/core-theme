@@ -67,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<HttpResponseMessage > List()
         {
             _log.Debug("Generating list.");
-            List<NavigationTreeNode> list = await GetFlatList();
+            List<ITreeNavigationNode> list = await GetFlatList();
             bool needsFixup = false;
             foreach (var sibblingNodes in list.GroupBy(x => x.ParentId))
             {
@@ -163,9 +163,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
-        public async Task<List<NavigationTreeNode>> GetFlatList()
+        public async Task<List<ITreeNavigationNode>> GetFlatList()
         {
-            List<NavigationTreeNode> list = await _gandalf.GetFlatList();
+            List<ITreeNavigationNode> list = await _gandalf.GetFlatList();
             var pageTypes = _siteContext  == null ? Enumerable.Empty<PageTypeDefinition>() : _siteContext.Theme.PageTypes;
 
             var emailTemplates = _siteContext == null ? Enumerable.Empty<PageTypeDefinition>() : _siteContext.Theme.EmailTemplates ;
@@ -238,7 +238,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<NavigationTreeNode>>> Create(List<NavigationTreeNode> items)
         {
-            NavigationSet navSet = await _navRepo.GetSetAsync();
+            NavigationSet navSet = await _navRepo.GetNavigationSetAsync();
 
             int currentHighestLinkIndex =
                 (from n in navSet.Nodes
@@ -274,7 +274,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<List<NavigationTreeNode>>> Delete(List<NavigationTreeNode> items)
         {
-            NavigationSet navSet = await _navRepo.GetSetAsync();
+            NavigationSet navSet = await _navRepo.GetNavigationSetAsync();
             bool isDirty = false;
 
             foreach (NavigationTreeNode item in items)
@@ -409,7 +409,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             // retrieve and update the navigation set.
             return
-                _navRepo.GetSetAsync()
+                _navRepo.GetNavigationSetAsync()
                         .ContinueWith(t =>
                             {
                                 NavigationSet navSet = t.Result;
@@ -435,7 +435,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private Task HandleNavigationMove(NavigationTreeNode change)
         {
             return
-                _navRepo.GetSetAsync()
+                _navRepo.GetNavigationSetAsync()
                         .ContinueWith(t =>
                             {
                                 NavigationSet navSet = t.Result;
@@ -507,20 +507,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             int categoryId = Convert.ToInt32(change.OriginalId);
 
-            Task<NavigationSet> navTask = _navRepo.GetSetAsync();
+            Task<NavigationSet> navTask = _navRepo.GetNavigationSetAsync();
             Task<ServiceClientResponse<DC.Category>> catTask = _catClient.GetCategory(categoryId);
-            Task<List<NavigationTreeNode>> listTask = GetFlatList();
+            Task<List<ITreeNavigationNode>> listTask = GetFlatList();
 
             return
                 Task.WhenAll(navTask, catTask, listTask)
                     .ContinueWith(_ =>
                         {
-                            List<NavigationTreeNode> list = listTask.Result;
+                            List<ITreeNavigationNode> list = listTask.Result;
                             DC.Category originalCat = catTask.Result.ReadAsSync();
                             NavigationSet navSet = navTask.Result;
                             var updateTasks = new List<Task>();
 
-                            NavigationTreeNode originalNav = list.FirstOrDefault(n => n.Id == change.Id);
+                            ITreeNavigationNode originalNav = list.FirstOrDefault(n => n.Id == change.Id);
                             if (originalNav == null)
                                 return Task.Run(() => null);
 
@@ -535,7 +535,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                     where n.ParentId == change.ParentId
                                     select n;
 
-                                IEnumerable<NavigationTreeNode> catSiblings =
+                                IEnumerable<ITreeNavigationNode> catSiblings =
                                     from n in list
                                     where n.ParentId == change.ParentId
                                     where n.NodeType.IsCategory
@@ -584,7 +584,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                     where n.Id != change.Id
                                     select n;
 
-                                IEnumerable<NavigationTreeNode> oldSiblingsCat =
+                                IEnumerable<ITreeNavigationNode> oldSiblingsCat =
                                     from n in list
                                     where n.ParentId == originalNav.ParentId
                                     where n.Id != change.Id
@@ -597,7 +597,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                     where n.Id != change.Id
                                     select n;
 
-                                IEnumerable<NavigationTreeNode> newSiblingsCat =
+                                IEnumerable<ITreeNavigationNode> newSiblingsCat =
                                     from n in list
                                     where n.ParentId == change.ParentId
                                     where n.NodeType.IsCategory

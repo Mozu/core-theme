@@ -10,9 +10,9 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
 {
     public static class NavigationRuntimeExtensions
     {
-        public static NavigationRuntimeNode FindNode(this List<NavigationRuntimeNode> nodes, string nodeType, string id)
+        public static IRuntimeNavigationNode FindNode(this List<IRuntimeNavigationNode> nodes, string nodeType, string id)
         {
-            var queue = new Queue<NavigationRuntimeNode>( nodes);
+            var queue = new Queue<IRuntimeNavigationNode>(nodes);
             while (queue.Count > 0)
             {
                 var node = queue.Dequeue();
@@ -20,27 +20,27 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
                     return node;
                 if (node.Items != null)
                 {
-                    node.Items.ForEach(queue.Enqueue);
-                    
+                    foreach (var child in node.Items)
+                        queue.Enqueue(child);
                 }
             }
 
             return null;
         }
 
-        public static NavigationRuntimeNode FindByCategory(this List<NavigationRuntimeNode> nodes, Category category)
+        public static IRuntimeNavigationNode FindByCategory(this List<IRuntimeNavigationNode> nodes, Category category)
         {
             return FindNode(nodes, "category", category.CategoryId.ToString());
         }
 
-      
 
-        public static NavigationRuntimeNode FindByProduct(this List<NavigationRuntimeNode> nodes, Product product)
+
+        public static IRuntimeNavigationNode FindByProduct(this List<IRuntimeNavigationNode> nodes, Product product)
         {
             return FindNode(nodes, "product", product.ProductCode);
         }
 
-        public static NavigationRuntimeNode FindByDocument(this List<NavigationRuntimeNode> nodes, Document document)
+        public static IRuntimeNavigationNode FindByDocument(this List<IRuntimeNavigationNode> nodes, Document document)
         {
             return FindNode(nodes, "page", document.Id);
         }

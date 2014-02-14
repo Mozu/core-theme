@@ -28,11 +28,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
        // private List<NavigationRuntimeNode> __navigationTree;
 
-        public List<NavigationRuntimeNode> Tree
+        public List<IRuntimeNavigationNode> Tree
         {
             get
             {
-                return ASyncGetTree().Result;
+                var tree = ASyncGetTree().Result;
+                return tree;
             }
         }
 
@@ -92,22 +93,22 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         //}
 
 
-        private Task<List<NavigationRuntimeNode>> _initTask;
-        public Task<List<NavigationRuntimeNode>> ASyncGetTree()
+        private Task<List<IRuntimeNavigationNode>> _initTask;
+        public Task<List<IRuntimeNavigationNode>> ASyncGetTree()
         {
             if (_initTask == null)
             {
                 _initTask = _navigationGandalf.GetTreeNavigation().ContinueWith(_ => {
-                    return _.Result ?? new List<NavigationRuntimeNode>();
+                    return _.Result ?? new List<IRuntimeNavigationNode>();
                 });
             }
             return _initTask; 
         }
-       
 
-        private List<NavigationRuntimeNode> _rootCategoryList;
 
-        public List<NavigationRuntimeNode> RootCategories
+        private List<IRuntimeNavigationNode> _rootCategoryList;
+
+        public List<IRuntimeNavigationNode> RootCategories
         {
             get
             {
@@ -123,12 +124,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         /// <summary>
         /// Contains the current node in the navigation tree.
         /// </summary>
-        public NavigationRuntimeNode CurrentNode { get; private set; }
+        public IRuntimeNavigationNode CurrentNode { get; private set; }
 
         /// <summary>
         /// Returns a collection of NavigationRuntimeNodes representing the path from the site root to the current node.
         /// </summary>
-        public IEnumerable<NavigationRuntimeNode> Breadcrumbs
+        public IEnumerable<IRuntimeNavigationNode> Breadcrumbs
         {
             get
             {
@@ -140,7 +141,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         /// In the case of a product belonging to multiple categories, there are multiple breadcrumbs possible.
         /// This enumerates all of those breadcrumbs lists.
         /// </summary>
-        public IEnumerable<IEnumerable<NavigationRuntimeNode>> Breadcrumbses
+        public IEnumerable<IEnumerable<IRuntimeNavigationNode>> Breadcrumbses
         {
             get
             {
@@ -152,11 +153,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 if (CurrentNode.NodeType == "product")
                 {
                     // only product has multiple parents
-                    var parents = new List<NavigationRuntimeNode> { new NavigationRuntimeNode(), new NavigationRuntimeNode() };
+                    var parents = new List<IRuntimeNavigationNode> { new NavigationRuntimeNode(), new NavigationRuntimeNode() };
 
                     foreach (var p in parents)
                     {
-                        var seed = new Stack<NavigationRuntimeNode>(new NavigationRuntimeNode[] { CurrentNode });
+                        var seed = new Stack<IRuntimeNavigationNode>();
+                        seed.Push(CurrentNode);
                         yield return GetBreadcrumbs(p, seed);
                     }
                 }
@@ -170,11 +172,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         /// <summary>
         /// Recursively build a breadcrumbs list by traversing from the leaf given up its parents.
         /// </summary>
-        private static IEnumerable<NavigationRuntimeNode> GetBreadcrumbs(NavigationRuntimeNode leaf, Stack<NavigationRuntimeNode> stack = null)
+        private static IEnumerable<IRuntimeNavigationNode> GetBreadcrumbs(IRuntimeNavigationNode leaf, Stack<IRuntimeNavigationNode> stack = null)
         {
             // build a stack from current node up
             if (stack == null)
-                stack = new Stack<NavigationRuntimeNode>();
+                stack = new Stack<IRuntimeNavigationNode>();
 
             if (leaf != null)
             {
@@ -201,7 +203,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     var parent = Tree.FindByCategory(product.Categories.First());
                     if (parent != null)
                     {
-                        productNode.Parent = parent;
+                        ((NavigationRuntimeNode)productNode).Parent = parent;
                         //parent.Items.Add(productNode);
                     }
                 }

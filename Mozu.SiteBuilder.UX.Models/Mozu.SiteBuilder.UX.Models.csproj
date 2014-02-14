@@ -417,6 +417,7 @@
     <Compile Include="ModelBase.cs" />
     <Compile Include="ModelMetaData\MozuModelMetadataProvider.cs" />
     <Compile Include="Navigation\Redirect.cs" />
+    <Compile Include="Navigation\SuperNavigationNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\TimeZone.cs" />
