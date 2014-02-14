@@ -11,13 +11,13 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
     {
         /// <summary>
         /// Build a flat list of NavigationNodes (which can have a ParentId to imply a hiearchy)
-        /// This list can then be transformed to a List<NavigationRuntimeNode> or List<NavigationTreeNode>
+        /// This list can then be transformed to a List[NavigationRuntimeNode] or List[NavigationTreeNode]
         /// </summary>
-        Task<List<NavigationTreeNode>> GetFlatList();
+        Task<List<ITreeNavigationNode>> GetFlatList();
 
         /// <summary>
         /// Build a hierarchical list of navigation nodes, ideal for consumption by NDjango templates and front-end javascript.
         /// </summary>
-        Task<List<NavigationRuntimeNode>> GetTreeNavigation();
+        Task<List<IRuntimeNavigationNode>> GetTreeNavigation();
     }
 }

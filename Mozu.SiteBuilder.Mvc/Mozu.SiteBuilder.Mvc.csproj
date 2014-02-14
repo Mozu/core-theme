@@ -446,6 +446,7 @@
     <Compile Include="Controllers\ApiControllerBase.cs" />
     <Compile Include="Extensions\FSharpExtensions.cs" />
     <Compile Include="Extensions\GuidExtensions.cs" />
+    <Compile Include="Extensions\MD5Extensions.cs" />
     <Compile Include="Extensions\ServiceClientResponseExtensions.cs" />
     <Compile Include="Filters\CollectionFilter.cs" />
     <Compile Include="Filters\MathFilters.cs" />
@@ -462,6 +463,7 @@
     <Compile Include="MessageHandler\SeoDelegatingHandler.cs" />
     <Compile Include="MessageHandler\HttpContextInjectingMessageHandler.cs" />
     <Compile Include="Navigation\INavigationGandalf.cs" />
+    <Compile Include="Navigation\NavigationConstants.cs" />
     <Compile Include="Navigation\NavigationGandalfTheWhite.cs" />
     <Compile Include="ObjectPools\StringBuilderPool.cs" />
     <Compile Include="ObjectPools\CharBufferPool.cs" />

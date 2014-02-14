@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using Mozu.Content.Contracts.Clients;
-using Mozu.Core.Api.Client.Exceptions;
-using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.TempMocks;
@@ -18,8 +13,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 {
     public class NavigationRepository : INavigationRepository
     {
-        private const string NavigationContentCollection = "settings";
-        private const string NavigationFileName = "navigation";
+        private const string NAVIGATION_CONTENT_COLLECTION = "settings";
+        private const string NAVIGATION_FILE_NAME = "navigation";
 
         private ICmsServiceWrapper _cmsService;
         private readonly ISiteBuilderApiContext _siteBuilderApiContext;
@@ -39,12 +34,9 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// <summary>
         /// Gets the navigation set stored for the current site.
         /// </summary>
-        public Task<NavigationSet> GetSetAsync()
+        public Task<NavigationSet> GetNavigationSetAsync()
         {
-
-
-
-            return _cmsService.GetByPath2(NavigationContentCollection, NavigationFileName)
+            return _cmsService.GetByPath2(NAVIGATION_CONTENT_COLLECTION, NAVIGATION_FILE_NAME)
                 .ContinueWith(docResultIntermediate =>
                 {
                     var serviceClientResponse = docResultIntermediate.Result;
@@ -82,9 +74,9 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         {
             var doc = new DC.Document
                       {
-                          Name = NavigationFileName,
+                          Name = NAVIGATION_FILE_NAME,
                           DocumentType = "document",
-                          DocumentListName = NavigationContentCollection,
+                          DocumentListName = NAVIGATION_CONTENT_COLLECTION,
                           Properties = new List<DC.PropertyValue>()
                       };
 
@@ -106,7 +98,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// </summary>
         public Task SaveSetAsync(NavigationSet set)
         {
-            return _cmsService.GetByPath2(NavigationContentCollection, NavigationFileName)
+            return _cmsService.GetByPath2(NAVIGATION_CONTENT_COLLECTION, NAVIGATION_FILE_NAME)
                 .ContinueWith(docResultIntermediate =>
                 {
                     var doc = docResultIntermediate.Result.ReadAsSync();

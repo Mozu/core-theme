@@ -14,6 +14,7 @@ namespace Mozu.SiteBuilder.UX.Navigation
     /// Abstracts the runtime distinction of categories and
     /// returns a list of NavigationTreeNodes.
     /// </summary>
+    [Obsolete]
     public class CategoryNavigationProvider : ICategoryNavigationProvider
     {
         private ICategoryTreeProvider _categoryTreeProvider;

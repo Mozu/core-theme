@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Mozu.SiteBuilder.UX.Models.Navigation
 {
 
-    [DataContract]
+    [DataContract, Obsolete]
     public class NavigationNodeCollection
     {
         public List<NavigationNode> Nodes { get; set; }
@@ -142,5 +142,6 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         {
             return str.Split(new string[] { STRING_SPLIT_DELIM }, StringSplitOptions.None);
         }
+
     }
 }

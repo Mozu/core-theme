@@ -32,13 +32,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private List<NavigationNode> GetPrimaryNodes()
         {
-            var navigationSet = _navigationRepository.GetSetAsync().Result;
+            var navigationSet = _navigationRepository.GetNavigationSetAsync().Result;
             return navigationSet.Nodes.Where(n => n.ParentId == null).ToList();
         }
 
         private List<NavigationNode> GetSecondaryNodes(string parentId)
         {
-            var navigationSet = _navigationRepository.GetSetAsync().Result;
+            var navigationSet = _navigationRepository.GetNavigationSetAsync().Result;
             return navigationSet.Nodes.Where(n => n.ParentId == parentId).ToList();
         }
     }
