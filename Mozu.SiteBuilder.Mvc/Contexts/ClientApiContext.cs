@@ -161,6 +161,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         },
                         new ServiceInfo
                         {
+                            Id = "ShippingService",
+                            InternalUrl = settings.AppSettings("service-url-ShippingWebApi"),
+                            RequiresSsl = true
+                        },
+                        new ServiceInfo
+                        {
                             Id = "OrderService",
                             InternalUrl = settings.AppSettings("service-url-OrderWebApi"),
                             RequiresSsl = true
