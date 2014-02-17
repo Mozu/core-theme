@@ -12,7 +12,8 @@ Ext.define('Taco.view.fileManager.Associator', {
         'Taco.shared.store.Files',
         'Taco.core.ux.form.TextField',
         'Taco.core.ux.form.FileInputButton',
-        'Taco.shared.store.Files'
+        'Taco.shared.store.Files',
+        'Taco.view.fileManager.AdvancedSearchForm'
     ],
 
     autoShow: true,
@@ -22,7 +23,9 @@ Ext.define('Taco.view.fileManager.Associator', {
     mixins: {
         savable: 'Taco.shared.util.Uploadable'
     },
-
+    advancedSearchConfig: {
+        advancedFormCls: 'Taco.view.fileManager.AdvancedSearchForm'
+    },
     initComponent: function () {
         var selModel = new Ext.selection.CheckboxModel;
 
@@ -32,9 +35,30 @@ Ext.define('Taco.view.fileManager.Associator', {
             autoSync: true
         });
 
+
+
         this.grid = Ext.create('Ext.grid.Panel', {
             selModel: selModel,
             store: this.store,
+            dockedItems: [
+                Ext.create('Ext.toolbar.Paging', {
+                        dock: 'bottom',
+                        displayInfo: true,
+                        store: this.store,
+                        inputItemWidth: 45
+                }),
+                Ext.widget({
+                    xtype: 'taco-filtercontainer',
+                    width: '100%',
+                    flex: 1,
+                    advancedForm: this.advancedSearchConfig.form,
+                    advancedFormCls: this.advancedSearchConfig.advancedFormCls,
+                    store: this.store,
+                    filterStores: this.advancedSearchConfig.stores
+                })
+                
+                
+            ],
             columns: [{
                 xtype: 'templatecolumn',
                 header: 'Image',

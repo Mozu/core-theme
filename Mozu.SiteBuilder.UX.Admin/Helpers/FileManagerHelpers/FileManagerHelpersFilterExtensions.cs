@@ -67,9 +67,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.FileManagerHelpers
                 case "createdby":
                     return string.Format("(createby eq \"{0}\" or updateby eq \"{0}\")", filter.value);
                 case "createdfrom":
-                    return string.Format("InsertDate ge {0}", filter.value);
-                case "modifiedto":
-                    return string.Format("InsertDate le {0}", filter.value);
+                {
+                    if (filter.value is DateTime)
+                    {
+                        return string.Format("InsertDate ge {0}", ((DateTime)filter.value).ToString("o"));
+                    }
+                    else
+                    {
+                        return string.Format("InsertDate ge {0}", filter.value);
+                    }
+                }
+                  //  return string.Format("InsertDate ge {0}", filter.value);
+                case "createdto":
+                {
+                    if (filter.value is DateTime)
+                    {
+                        return string.Format("InsertDate le {0}", ((DateTime) filter.value).ToString("o"));
+                    }
+                    else
+                    {
+                        return string.Format("InsertDate le {0}", filter.value);
+                    }
+                }
+                    
                 case "tags":
                 case "tag":
                     return string.Format("Properties.tags eq \"{0}\"", filter.value);
