@@ -45,8 +45,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         public class SuperchargedLocationInventory : DC.LocationInventory
         {
-            
+            [JsonProperty(PropertyName = "locationName")]
             public string LocationName { get; set; }
+
             public SuperchargedLocationInventory(DC.LocationInventory locbase, string locationName)
             {
                 // use some automapper magic.
