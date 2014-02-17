@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 using Mozu.Core.Api.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models

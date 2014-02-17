@@ -1,103 +1,103 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using System.Web;
 using Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Facets
 {
-    [DataContract]
+    
     public class FacetSet
     {
-        [DataMember(EmitDefaultValue = false, Name = "configured")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<Facet> Configured { get; set; }
 
 
 
-        [DataMember(EmitDefaultValue = false, Name = "categoryId")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int CategoryId { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "available")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<FacetSource> Available { get; set; }
     }
-    [DataContract]
+    
     public class Facet
     {
        
-        [DataMember(EmitDefaultValue = false, Name ="id")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName ="id")]
         public int? FacetId { get; set; }
 
 
 
-        [DataMember(EmitDefaultValue = false, Name = "sourceId")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string  SourceId { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "sourceName")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string SourceName { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "sourceType")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string SourceType { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "facetType")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string FacetType { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "order")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int Order { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "categoryId")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int CategoryId { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "overrideFacetId")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? OverrideFacetId { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "isHidden")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool IsHidden { get; set; }
 
        
 
-        [DataMember(EmitDefaultValue = false, Name = "isvalid")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "isvalid")]
         public bool ValidityIsValid { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "validityCode")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "validityCode")]
         public string ValidityReasonCode { get; set; }
 
 
 
 
-        [DataMember(EmitDefaultValue = false, Name = "ranges")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "ranges")]
         public List<FacetRangeQuery> RangeQueries { get; set; }
 
 
-        [DataMember(EmitDefaultValue = false, Name = "allowsRangeQuery")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? AllowsRangeQuery { get; set; }
 
        
     }
-    [DataContract]
+    
     public class FacetRangeQuery
     {
-        [DataMember(EmitDefaultValue = false, Name = "start")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "start")]
         public object RangeValueStart { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "end")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "end")]
         public object RangeValueEnd { get; set; }
     }
 
-    [DataContract]
+    
     public class FacetSource
     {
-        [DataMember(EmitDefaultValue = false, Name = "sourceId")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Id { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "sourceType")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Type { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "sourceName")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Name { get; set; }
 
 
-        [DataMember(EmitDefaultValue = false, Name = "allowsRangeQuery")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? AllowsRangeQuery { get; set; }
 
         

@@ -1,8 +1,8 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
 {
-    [DataContract]
+    
     public enum AttributeDataType
     {
         None = 0,
@@ -12,6 +12,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
         String = 4,
     }
 
+    //noAttrBefore but can't apply JsonIgnore to enum - Greg Murray on 2014-02-16 
     public enum ProductTypeAttributeUsage
     {
         option,extra,property

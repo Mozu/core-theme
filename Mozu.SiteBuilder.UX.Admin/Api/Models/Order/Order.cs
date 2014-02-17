@@ -1,188 +1,159 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using System.Web;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
 using DCpay = Mozu.CommerceRuntime.Contracts.Payments;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
-    [DataContract]
+    
     public class Order
     {
-        [DataMember(Name = "id")]
         public string Id { get; set; }
 
-        [DataMember(Name = "tenantId")]
         public int? TenantId { get; set; }
 
-        [DataMember(Name="channelCode")]
         public string ChannelCode { get; set; }
 
-        [DataMember(Name = "siteId")]
         public int? SiteId { get; set; }
 
         /// <summary>
         /// A sequential order number, only populated for completed orders.
         /// </summary>
-        [DataMember(Name = "orderNumber")]
         public int? OrderNumber { get; set; }
 
-        [DataMember(Name = "returnStatus")]
         public string ReturnStatus { get; set; }
 
-        [DataMember(Name = "createDate")]
         public DateTime CreateDate { get; set; }
 
-        [DataMember(Name = "updateDate")]
         public DateTime UpdateDate { get; set; }
 
-        [DataMember(Name="customerId")]
         public int? CustomerId { get; set; }
 
-        [DataMember(Name="billingContact")]
         public Contact BillingContact { get; set; }
 
-        [DataMember(Name = "isSameBillingShippingAddress")]
         public bool? IsSameBillingShippingAddress { get; set; }
 
-        [DataMember(Name="billingCard")]
         public DCpay.PaymentCard BillingCard { get; set; }
 
-        [DataMember(Name = "fulfillmentContact")]
         public Contact FulfillmentContact { get; set; }
 
-        [DataMember(Name = "ipAddress")]
         public string IpAddress { get; set; }
 
         /// <summary>
         /// List of attributes assigned to the order.
         /// </summary>
-        [DataMember(Name = "attributes")]
         public List<DC.OrderAttribute> Attributes { get; set; }
 
 
-        [DataMember(Name = "items")]
         public List<OrderItem> Items { get; set; }
 
         /// <summary>
         /// Active order-level discount, if one exists.
         /// </summary>
-        [DataMember(Name = "activeOrderDiscount", EmitDefaultValue = false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public OrderDiscount ActiveOrderDiscount { get; set; }
 
         /// <summary>
         /// List of all active and non-active order-level discounts.
         /// </summary>
-        [DataMember(Name = "orderDiscounts", EmitDefaultValue = false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<OrderDiscount> OrderDiscounts { get; set; }
 
         #region Shipping
-        [DataMember(Name = "shippingMethodCode")]
         public string ShippingMethodCode { get; set; }
 
-        [DataMember(Name = "shippingMethodName")]
         public string ShippingMethodName { get; set; }
 
-        [DataMember(Name = "activeShippingDiscount", EmitDefaultValue = false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public ShippingDiscount ActiveShippingDiscount { get; set; }
 
-        [DataMember(Name = "shippingDiscounts", EmitDefaultValue = false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ShippingDiscount> ShippingDiscounts { get; set; }
         #endregion
 
-        [DataMember(Name = "customerNote", EmitDefaultValue = false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string CustomerNote { get; set; }
 
         #region workflow shit
-        [DataMember(Name = "orderStatus")]
         public string OrderStatus { get; set; }
 
-        [DataMember(Name = "fulfillmentStatus")]
         public string FulfillmentStatus { get; set; }
 
-        [DataMember(Name = "paymentStatus")]
         public string PaymentStatus { get; set; }
 
-        [DataMember(Name = "payments")]
         public List<OrderPayment> Payments { get; set; }
 
-        [DataMember(Name="packages", EmitDefaultValue=true)]
         public List<OrderPackage> Packages { get; set; }
 
-        [DataMember(Name="pickups", EmitDefaultValue=true)]
         public List<OrderPickup> Pickups { get; set; }
 
-        [DataMember(Name="unpackagedItems")]
         public List<OrderPackageItem> UnpackagedItems { get; set; }
 
-        [DataMember(Name = "unpickedupItems")]
         public List<OrderPickupItem> UnpickedupItems { get; set; }
 
-        [DataMember(Name = "availableActions")]
         public List<string> AvailableActions { get; set; }
         #endregion
 
         /// <summary>
         /// Denormalization of payment summary data for UI.
         /// </summary>
-        [DataMember(Name="authorizationInfo", EmitDefaultValue=false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public OrderAuthorizationInfo AuthorizationInfo { get; set; }
 
         /// <summary>
         /// Total quantity of things ordered.
         /// </summary>
-        [DataMember(Name="itemsOrdered", EmitDefaultValue=false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int ItemsOrdered { get; set; }
 
         /// <summary>
         /// Total quantity of things unshipped.
         /// </summary>
-        [DataMember(Name = "itemsNotShipped", EmitDefaultValue = false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int ItemsNotShipped { get; set; }
 
         /// <summary>
         /// Total quantity of things shipped.
         /// </summary>
-        [DataMember(Name = "itemsShipped", EmitDefaultValue = false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int ItemsShipped { get; set; }
 
         /// <summary>
         /// Total quantity of things unpicked.
         /// </summary>
-        [DataMember(Name = "itemsNotPickedup", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "itemsNotPickedup", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int ItemsNotPickedup { get; set; }
 
         /// <summary>
         /// Total quantity of things picked.
         /// </summary>
-        [DataMember(Name = "itemsPickedup", EmitDefaultValue = false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int ItemsPickedup { get; set; }
 
         /// <summary>
         /// An optional order-level adjustment.
         /// </summary>
-        [DataMember(Name = "orderAdjustment", EmitDefaultValue = false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Adjustment OrderAdjustment { get; set; }
 
         /// <summary>
         /// An optional order-level shipping adjustment.
         /// </summary>
-        [DataMember(Name = "shippingAdjustment", EmitDefaultValue = false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Adjustment ShippingAdjustment { get; set; }
 
         /// <summary>
         /// Is this record a draft order.
         /// </summary>
-        [DataMember(Name = "isDraft", EmitDefaultValue = true)]
         public bool IsDraft { get; set; }
 
         /// <summary>
         /// Is this record an order that has an unsaved draft.
         /// Note: Always false if IsDraft = true.
         /// </summary>
-        [DataMember(Name = "hasDraft", EmitDefaultValue = true)]
         public bool HasDraft { get; set; }
 
         #region Totals
@@ -190,61 +161,51 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// <summary>
         /// Price without shipping, discounts, or anything.
         /// </summary>
-        [DataMember(Name = "subtotal")]
         public decimal Subtotal { get; set; }
 
         /// <summary>
         /// Cost of all items in the order, after item-level discounts are applied.
         /// </summary>
-        [DataMember(Name="discountedSubtotal")]
         public decimal DiscountedSubtotal { get; set; }
 
         /// <summary>
         /// Sum of all applied discounts.
         /// </summary>
-        [DataMember(Name="discountTotal")]
         public decimal DiscountTotal { get; set; }
 
         /// <summary>
         /// Order cost after all discounts are applied but before shipping, handling, and taxes.
         /// </summary>
-        [DataMember(Name="discountedTotal")]
         public decimal DiscountedTotal { get; set; }
 
         /// <summary>
         /// Price of shipping before fees and adjustments.
         /// </summary>
-        [DataMember(Name = "shippingSubtotal")]
         public decimal ShippingSubtotal;
 
         /// <summary>
         /// Final cost of shipping.
         /// </summary>
-        [DataMember(Name = "shippingTotal")]
         public decimal ShippingTotal { get; set; }
 
         /// <summary>
         /// Cost of handling.
         /// </summary>
-        [DataMember(Name = "handlingTotal")]
         public decimal HandlingTotal { get; set; }
 
         /// <summary>
         /// Sum of any fees.
         /// </summary>
-        [DataMember(Name = "feeTotal")]
         public decimal FeeTotal { get; set; }
 
         /// <summary>
         /// Final cost of taxes.
         /// </summary>
-        [DataMember(Name = "taxTotal", EmitDefaultValue = true)]
         public decimal TaxTotal { get; set; }
 
         /// <summary>
         /// Final price of the order.
         /// </summary>
-        [DataMember(Name = "total")]
         public decimal Total { get; set; }
 
         #endregion

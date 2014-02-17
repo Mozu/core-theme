@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Options
 {
@@ -10,40 +10,40 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Options
     //public class ProductVariation
     //{
 
-    //    [DataMember(EmitDefaultValue = false, Name = "clientId")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public string clientId { get; set; }
 
-    //    [DataMember(EmitDefaultValue = false, Name= "deltaPrice")]
+    //    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName= "deltaPrice")]
     //    public decimal? DeltaPriceValue { get; set; }
-    //    [DataMember(EmitDefaultValue = false, Name= "isActive")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public bool? IsActive { get; set; }
-    //    [DataMember(EmitDefaultValue = false, Name= "isOrphan")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public bool? IsOrphan { get; set; }
-    //    [DataMember(EmitDefaultValue = false, Name= "manageInventory")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public bool? ManageInventory { get; set; }
 
         
-    //    [DataMember(EmitDefaultValue = false, Name= "stockOnHand")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public int? StockOnHand { get; set; }
-    //    [DataMember(EmitDefaultValue = false, Name= "exists")]
+    //    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName= "exists")]
     //    public bool? VariationExists { get; set; }
-    //    [DataMember(EmitDefaultValue = false, Name= "id")]
+    //    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName= "id")]
     //    public string Variationkey { get; set; }
-    //    //[DataMember(EmitDefaultValue = false, Name= "productCode")]
+    //    //[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName= "productCode")]
     //    //public string VariationProductSku { get; set; }
-    //    [DataMember(EmitDefaultValue = false, Name= "weight")]
+    //    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName= "weight")]
     //    public double? VariationWeight { get; set; }
 
-    //    [DataMember(EmitDefaultValue = false, Name = "optionValue1")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public string OptionValue1 { get; set; }
-    //    [DataMember(EmitDefaultValue = false, Name = "optionValue2")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public string OptionValue2 { get; set; }
-    //    [DataMember(EmitDefaultValue = false, Name = "optionValue3")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public string OptionValue3 { get; set; }
 
-    //    [DataMember(EmitDefaultValue = false, Name = "productCode")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public string ProductCode { get; set; }
-    //    [DataMember(EmitDefaultValue = false, Name = "productVariationCode")]
+    //	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public string ProductVariationCode { get; set; }
       
     //}

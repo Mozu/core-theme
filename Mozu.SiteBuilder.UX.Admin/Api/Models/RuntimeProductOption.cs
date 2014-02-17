@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 {
-    [DataContract]
+    
     public class RuntimeProductOptions
     {
-        [DataContract]
+        
         public class AttributeDetail
         {
             public string Name { get; set; }

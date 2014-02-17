@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
 {
-    [DataContract]
+    
     public class LoginTicket
     {
-        [DataMember(Name = "accessToken")]
         public string AccessToken { get; set; }
 
-        [DataMember(Name = "refreshToken")]
         public string RefreshToken { get; set; }
    
-        [DataMember(Name = "tenantId")]
         public int TenantId { get; set; }
 
-        [DataMember(Name="redirectUrl", IsRequired=false, EmitDefaultValue=false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string RedirectUrl { get; set; }
     }
 }

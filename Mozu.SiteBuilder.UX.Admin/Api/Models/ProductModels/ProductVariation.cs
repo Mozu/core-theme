@@ -1,58 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using System.Web;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 {
-    [DataContract]
+    
     public class ProductVariation
     {
-        [DataMember(EmitDefaultValue = false, Name ="isActive")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? IsActive { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "isOrphan")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? IsOrphan { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "exists")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "exists")]
         public bool? VariationExists { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "key")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "key")]
         public string Variationkey { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "productCode")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "productCode")]
         public string VariationProductCode { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "deltaPrice")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "deltaPrice")]
         public Decimal? DeltaPriceValue { get; set; }
 
 
 
-        [DataMember(EmitDefaultValue = false, Name = "deltaWeight")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Decimal? DeltaWeight { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "stockOnHand")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? StockOnHand { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "stockOnOrder")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? StockOnOrder { get; set; }
 
       
 
-        [DataMember(EmitDefaultValue = false, Name = "options")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ProductVariationOption> Options { get; set; }
     }
-    [DataContract]
+    
     public class ProductVariationOption
     {
-        [DataMember(EmitDefaultValue = false, Name = "attributeFQN")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string AttributeFQN { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "value")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public object Value { get; set; }
 
-        //[DataMember(EmitDefaultValue = false)]
+        //[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         //public AttributeVocabularyValueLocalizedContent Content { get; set; }
     }
 }

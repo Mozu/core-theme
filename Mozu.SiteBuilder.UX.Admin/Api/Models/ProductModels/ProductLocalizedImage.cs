@@ -1,32 +1,33 @@
 ﻿using System;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 {
-    [DataContract]
+    
     public class ProductLocalizedImage
     {
-        [DataMember(EmitDefaultValue = false, Name = "productCode")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ProductCode { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "alt")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "alt")]
         public string AltText { get; set; }
-        [DataMember(EmitDefaultValue = false, Name = "cmsId")]
+
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string CmsId { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "isoCultureCode")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "isoCultureCode")]
         public string ISOCultureCode { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "videoUrl")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string VideoUrl { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "sequence")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? Sequence { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "id")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "id")]
         public int? ImageId { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "url")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "url")]
         public string ImageUrl { get; set; }
     }
 }

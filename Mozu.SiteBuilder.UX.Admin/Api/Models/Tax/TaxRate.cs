@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Tax
 {
-     [DataContract]
+     
     
     public class TaxRate
     {
-        [DataMember()]
+        
         public string id
         {
             get{
@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Tax
         }
         
         
-        [DataMember(EmitDefaultValue = false, Name = "countryCode")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string CountryCode 
         { 
             get
@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Tax
 
             }
         }
-       [DataMember(EmitDefaultValue = false, Name="stateCode")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string StateCode { get; set; }
        
     }

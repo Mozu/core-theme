@@ -1,55 +1,55 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 {
     using Attributes;
 
-    //[DataContract]
+    //
     //public class ProductExtraValueDeltaPrice
     //{
-    //    [DataMember(EmitDefaultValue = false, Name = "currencyCode")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public string CurrencyCode { get; set; }
 
-    //    [DataMember(EmitDefaultValue = false, Name = "deltaPrice")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public decimal DeltaPrice { get; set; }
     //}
 
-    [DataContract]
+    
     public class ProductExtraValue
     {
-        [DataMember(EmitDefaultValue = false, Name = "value")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public object Value { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "delta")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "delta")]
         public decimal DeltaPrice { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "deltaWeight")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? DeltaWeight { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "isDefaulted")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? IsDefaulted { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "detail")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "detail")]
         public AttributeVocabularyValue AttributeVocabularyValueDetail { get; set; }
     }
 
-    [DataContract]
+    
     public class ProductExtra
     {
-        [DataMember(EmitDefaultValue = false, Name = "attributeFQN")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string AttributeFQN { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "isRequired")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? IsRequired { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "isMultiSelect")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? IsMultiSelect { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "values")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ProductExtraValue> Values { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "detail")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "detail")]
         public Attribute AttributeDetail { get; set; }
     }
 }

@@ -1,20 +1,20 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
 {
-    [DataContract]
+    
     public enum AttributeValueType
     {
-        [DataMember(Name = "undefined")]
+        [JsonProperty(PropertyName = "undefined")]
         Unknown,
 
-        [DataMember(Name = "admin")]
+        [JsonProperty(PropertyName = "admin")]
         AdminEntered,
 
-        [DataMember(Name = "shopper")]
+        [JsonProperty(PropertyName = "shopper")]
         ShopperEntered,
 
-        [DataMember(Name = "predefined")]
+        [JsonProperty(PropertyName = "predefined")]
         Predefined,
     }
 }

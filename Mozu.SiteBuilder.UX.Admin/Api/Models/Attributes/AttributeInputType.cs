@@ -1,8 +1,8 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
 {
-    [DataContract]
+    
     public enum AttributeInputType
     {
        
