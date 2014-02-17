@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
@@ -52,33 +52,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        [DataContract]
+        
         public class ThemeDTO
         {
-            [DataMember(Name = "name")]
             public string Name { get; set; }
 
-            [DataMember(Name = "id")]
             public string Id { get; set; }
 
-            [DataMember(Name = "author")]
             public string Author { get; set; }
 
-            [DataMember(Name = "isDesktop")]
             public bool? IsDesktop { get; set; }
 
-            [DataMember(Name = "isMobile")]
             public bool? IsMobile { get; set; }
 
-            [DataMember(Name = "isSelectedDesktop")]
             public bool? IsSelectedDesktop { get; set; }
 
-            [DataMember(Name = "isSelectedMobile")]
             public bool? IsSelectedMobile { get; set; }
 
             public Thumbnail Thumbnail { get; set; }
 
-            [DataMember(Name = "thumbnail")]
+            [JsonProperty(PropertyName = "thumbnail")]
             public string ThumbnailAsDataUri
             {
                 get
@@ -87,7 +80,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 set
                 {
-                    // a public setter is required by [DataMember].
+                    // a public setter is required by .
                     // however, we don't want this field set, so this is a no-op.
                 }
             }

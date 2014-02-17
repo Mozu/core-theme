@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using Mozu.Core.Api.Routing;
@@ -159,26 +159,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
     }
     
-    [DataContract ()]
     public class SiteDirectoryNode
     {
-        [DataMember ()]
+        
         public string id { get; set; }
 
-        [DataMember()]
+        
         public string parentId { get; set; }
 
-        [DataMember()]
+        
         public string collection { get; set; }
-        [DataMember()]
+        
         public string name { get; set; }
-        [DataMember()]
+        
         public string nodeType { get; set; }
-        [DataMember()]
+        
         public string url { get; set; }
-        [DataMember(EmitDefaultValue = false)]
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<SiteDirectoryNode> items { get; set; }
-        [DataMember()]
+        
         public bool leaf { get; set; }
 
         //[DataMember( EmitDefaultValue=false)]
@@ -187,7 +187,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         // [DataMember( EmitDefaultValue=false)]
         //public bool? expanded { get; set; }
         
-        //[DataMember(EmitDefaultValue = false)]
+        //[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         //public bool? loaded { get; set; }
     }
     

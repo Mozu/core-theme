@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         public class SuperchargedLocationInventory : DC.LocationInventory
         {
-            [DataMember]
+            
             public string LocationName { get; set; }
             public SuperchargedLocationInventory(DC.LocationInventory locbase, string locationName)
             {
