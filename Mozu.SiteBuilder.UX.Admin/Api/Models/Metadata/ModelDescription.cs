@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Json;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Metadata
 {
@@ -17,8 +18,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Metadata
             ModelDescription desc = new ModelDescription() { fields = new List<ModelDescriptionField>(), OrigionalType = t ,  modelName = t.Name.Substring (0,1).ToLower ()+ t.Name.Substring (1)};
             foreach (System.ComponentModel.PropertyDescriptor prop in props)
             {
-                var att = prop.Attributes.OfType<DataMemberAttribute>().FirstOrDefault();
-                var propName = (att == null) ? null : att.Name;
+                var att = prop.Attributes.OfType<JsonPropertyAttribute>().FirstOrDefault();
+                var propName = (att == null) ? null : att.PropertyName;
                 propName = propName ?? prop.Name;
                 string typeName = "auto";
                 if (prop.PropertyType == typeof(string))
@@ -68,15 +69,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Metadata
             }
             return desc;
         }
-        [DataMember(Order = 1)]
+        [JsonProperty(Order = 1)]
         public List<ModelDescriptionField> fields { get; set; }
-        [DataMember(Order =0)]
+
+        [JsonProperty(Order = 0)]
         public string modelName
         {
             get;
             set;
         }
-        [IgnoreDataMember ()]
+        [JsonIgnore]
         internal  Type OrigionalType { get; set; }
     }
     public class ModelDescriptionField

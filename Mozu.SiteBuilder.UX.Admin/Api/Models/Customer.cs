@@ -1,72 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using DC = Mozu.Customer.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 {
-    [DataContract]
+    
     public class Customer
     {
         /// <summary>
         /// Unique identifier of the customer account, also known as a customer number.
         /// </summary>
-        [DataMember(Name = "id")]
         public int? Id { get; set; }
 
         /// <summary>
         /// Unique identifier of the storefront user account associated with this customer.
         /// </summary>
-        [DataMember(Name="userId")]
         public string UserId { get; set; }
 
-        [DataMember(Name="isAnonymous")]
         public bool IsAnonymous { get; set; }
 
 
 
 
-        [DataMember(EmitDefaultValue = false, Name = "userName")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string UserName { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "firstName")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string FirstName { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "lastName")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string LastName { get; set; }
-        [DataMember(EmitDefaultValue = false, Name = "emailAddress")]
+
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string EmailAddress { get; set; }
 
 
         /// <summary>
         /// List of contacts for this customer account. A customer account can have multiple contacts for billing and shipping addresses.
         /// </summary>
-        [DataMember(Name = "contacts")]
         public List<CustomerContact> Contacts { get; set; }
         
         /// <summary>
         /// The company or organization name for a customer account
         /// </summary>
-        [DataMember(Name="companyOrOrganization")]
         public string CompanyOrOrganization { get; set; }
 
         /// <summary>
         /// If true, the customer prefers to receive marketing material such as newsletters or email offers.
         /// </summary>
-        [DataMember(Name="acceptsMarketing")]
         public bool AcceptsMarketing { get; set; }
 
         /// <summary>
         /// List of groups assigned to customer accounts to indicate the groups to which they belong. Merchants create groups, for example, to manage discounts or assign VIP status. 
         /// Then they assign the groups to appropriate customer accounts. A customer account can belong to several groups or none at all.
         /// </summary>
-        [DataMember(Name="groups")]
         public List<int> Groups { get; set; }
 
         /// <summary>
         /// List of attributes assigned to the customer.
         /// </summary>
-        [DataMember(Name = "attributes")]
         public List<DC.CustomerAttribute> Attributes { get; set; }
 
         /// <summary>
@@ -79,53 +72,45 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         /// <summary>
         /// Whether or not this customer is tax exempt.
         /// </summary>
-        [DataMember(Name = "taxExempt")]
         public bool TaxExempt { get; set; }
 
         /// <summary>
         /// For tax exempt customers, their tax id.
         /// </summary>
-        [DataMember(Name="taxId")]
         public string TaxId { get; set; }
 
         /// <summary>
         /// Total number of customer visits.
         /// </summary>
-        [DataMember(Name = "visitCount")]
         public long VisitCount { get; set; }
 
         #region Order Summary
         /// <summary>
         /// Total amount of all orders, including cancellations and refunds.
         /// </summary>
-        [DataMember(Name="totalSpent")]
+        [JsonProperty(PropertyName="totalSpent")]
         public decimal? TotalOrderAmount { get; set; }
 
         /// <summary>
         /// Number of orders listed in the order history of a customer account.
         /// </summary>
-        [DataMember(Name="orderCount")]
         public int OrderCount { get; set; }
 
         /// <summary>
         /// When the last order was placed.
         /// </summary>
-        [DataMember(Name="lastOrderDate")]
         public DateTime? LastOrderDate { get; set; }
 
         /// <summary>
         /// Number of wishlists listed in the wishlist count of a customer account
         /// </summary>
-        [DataMember(Name="wishlistCount")]
         public int WishlistCount { get; set; }
 
         /// <summary>
         /// Create date
         /// </summary>
-        [DataMember(Name = "createDate")]
         public DateTime? CreateDate { get; set; }
 
-        [DataMember(Name="paymentCards")]
         public List<DC.Card> PaymentCards { get; set; }
 
         #endregion

@@ -2,28 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using System.Xml.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 {
-    [DataContract]
+    
     public class StockOnHandAdjustment
     {
-        [DataMember(EmitDefaultValue = false, Name = "type")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Type { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "value")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int Value { get; set; }
     }
 
-    [DataContract]
+    
     public class UnitOfMeasure
     {
-        [DataMember(EmitDefaultValue = false, Name = "symbol")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Symbol { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "val")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? Val { get; set; }
     }
 }

@@ -1,27 +1,27 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
 {
-    [DataContract]
+    
     public class AttributeVocabularyValue
     {
-        [DataMember(EmitDefaultValue = false, Name = "sequence")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "sequence")]
         public int? ValueSequence { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "value")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public object Value { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "content")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public AttributeVocabularyValueLocalizedContent Content { get; set; }
     }
 
-    [DataContract]
+    
     public class AttributeVocabularyValueLocalizedContent
     {
-        [DataMember(EmitDefaultValue = false, Name = "localCode")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "localCode")]
         public string LocaleCode { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "stringValue")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string StringValue { get; set; }
     }
 }

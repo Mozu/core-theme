@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
 {
 
-   
     public class Discount
     {
        
@@ -54,25 +53,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
              /// <summary>
         /// List of categories this discount applies to.
         /// </summary>
-        [DataMember(Name = "conditionalCategories")]
+        [JsonProperty(PropertyName = "conditionalCategories")]
         public List<int> DiscountConditionCategories { get; set; }
 
         /// <summary>
         /// List of products this discount requires to.
         /// </summary>
-        [DataMember(Name = "conditionalProducts")]
+        [JsonProperty(PropertyName = "conditionalProducts")]
         public List<string> DiscountConditionProducts { get; set; }
 
         /// <summary>
         /// List of categories this order cant have .
         /// </summary>
-        [DataMember(Name = "conditionalExcludedCategories")]
+        [JsonProperty(PropertyName = "conditionalExcludedCategories")]
         public List<int> DiscountConditionExcludedCategories { get; set; }
 
         /// <summary>
         /// List of products this discount requires to.
         /// </summary>
-        [DataMember(Name = "conditionalExcludedProducts")]
+        [JsonProperty(PropertyName = "conditionalExcludedProducts")]
         public List<string> DiscountConditionExcludedProducts { get; set; }
 
 

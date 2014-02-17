@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using DC = Mozu.Customer.Contracts.Credit;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models

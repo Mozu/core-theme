@@ -1,56 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 {
 
-    //  [DataContract]
+    //  
     //public class BundledProduct
     //{
         
     //}
 
-    [DataContract]
+    
     public class LocationWithInventory : Mozu.ProductAdmin.Contracts.LocationInventory
     {
-        [DataMember]
+        
         public Mozu.Location.Contracts.Location Location;
     }
 
-    [DataContract(Namespace = "http://admin.productservice.volusion.com")]
+    //[DataContract(Namespace = "http://admin.productservice.volusion.com")]
     public class BundledProduct
     {
-        [DataMember(EmitDefaultValue = false, Name = "productCode")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ProductCode { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "quantity")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int Quantity { get; set; }
 
         /// <summary>
         /// The list price.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "salePrice")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? SalePrice { get; set; }
 
         /// <summary>
         /// The price.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "price")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? Price { get; set; }
-        [DataMember(EmitDefaultValue = false, Name = "productName")]
+		
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ProductName { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "packageHeight")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? PackageHeight { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "packageWidth")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? PackageWidth { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "packageLength")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? PackageLength { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "packageWeight")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? PackageWeight { get; set; }
     }
 
@@ -59,32 +60,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
     /// Represents an editable product.
     /// See http://vconfluence.ads.volusion.com/display/Product/Product+-+v1#Product-v1-ProductDetails
     /// </summary>
-    [DataContract]
+    
     public class Product
     {
         #region General
         /// <summary>
         /// The user-specified identifier of this product.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "productCode")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ProductCode { get; set; }
 
-        [DataMember(EmitDefaultValue = false, IsRequired = false, Name = "bundledProducts")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<BundledProduct> BundledProducts { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "publishedState")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string PublishedState { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "lastModifiedBy")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string LastModifiedBy { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "lastModifiedDate")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DateTime? LastModifiedDate { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "lastPublishedBy")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string LastPublishedBy { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "lastPublishedDate")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DateTime? LastPublishedDate { get; set; }
 
 
@@ -92,70 +93,70 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// The parent product code, if any.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "baseProductCode")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string BaseProductCode { get; set; }
 
         /// <summary>
         /// The product name.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name="productName")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ProductName { get; set; }
 
 
-        [DataMember(EmitDefaultValue = false, Name = "manageStock")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? ManageStock { get; set; }
 
         /// <summary>
         /// The product short description.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "productShortDescription")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ProductShortDescription { get; set; }
 
         /// <summary>
         /// The product full description.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "productFullDescription")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ProductFullDescription { get; set; }
 
         /// <summary>
         /// A collection of images for this product.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "productImages")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ProductLocalizedImage> ProductImages { get; set; }
 
         /// <summary>
         /// The list price.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "listPrice")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? ListPrice { get; set; }
 
         /// <summary>
         /// The price.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "price")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? Price { get; set; }
 
 
-        [DataMember(EmitDefaultValue = false, IsRequired = false, Name = "properties")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ProductProperty> Properties { get; set; }
 
-        [DataMember(EmitDefaultValue = false, IsRequired = false, Name = "extras")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ProductExtra> Extras { get; set; }
 
 
-        [DataMember(EmitDefaultValue = false, IsRequired = false, Name = "options")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ProductProperty> Options { get; set; }
 
         /// <summary>
         /// The sale price.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "salePrice")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? SalePrice { get; set; }
 
         /// <summary>
         /// Is taxable
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "isTaxable")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool IsTaxable { get; set; }
         #endregion
         
@@ -165,22 +166,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// Quantity of inventory.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "stockOnHand")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? StockOnHand { get; set; }
 
 
 
-        [DataMember(EmitDefaultValue = false, Name = "stockOnHandAdjustment")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public StockOnHandAdjustment StockOnHandAdjustment { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "productTypeId")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? ProductTypeId { get; set; }
         
 
         /// <summary>
         /// Hide when out of stock.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name="isHiddenWhenOutOfStock")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? IsHiddenWhenOutOfStock { get; set; }
 
         // TODO: (boolean) show out of stock message selected
@@ -188,7 +189,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// Allow back-orders.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name="isBackOrderAllowed")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? IsBackOrderAllowed { get; set; }
 
         // TODO: low stock threshold
@@ -211,25 +212,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// The shipping weight.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "packageWeight")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? PackageWeight { get; set; }
 
         /// <summary>
         /// The package length.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "packageLength")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? PackageLength { get; set; }
 
         /// <summary>
         /// The package width.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "packageWidth")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? PackageWidth { get; set; }
 
         /// <summary>
         /// The package height.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "packageHeight")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? PackageHeight { get; set; }
 
         #endregion
@@ -239,51 +240,49 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// The HTML metatag title.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "metaTitle")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "metaTitle")]
         public string MetaTagTitle { get; set; }
 
         /// <summary>
         /// The HTML metatag description.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "metaDescription")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "metaDescription")]
         public string MetaTagDescription { get; set; }
 
         /// <summary>
         /// The HTML metatag keywords.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "metaKeywords")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "metaKeywords")]
         public string MetaTagKeywords { get; set; }
 
         /// <summary>
         /// An SEO friendly URL.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "slug")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "slug")]
         public string SEOFriendlyUrl { get; set; }
 
         #endregion
 
-        [DataMember(EmitDefaultValue = false, IsRequired = false, Name = "variationOptions")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ProductVariationOption> VariationOptions { get; set; }
 
         /// <summary>
         /// A collection of site-specific overrides for this product.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "productInCatalogs")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ProductInCatalogInfo> ProductInCatalogs { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "masterCatalogId")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? MasterCatalogId { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "outOfStockBehavior")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string OutOfStockBehavior { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "productUsage")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ProductUsage { get; set; }
 
-        [DataMember(Name = "hasConfigurableOptions")]
         public bool HasConfigurableOptions { get; set; }
         
-        [DataMember(Name = "hasStandaloneOptions")]
         public bool HasStandaloneOptions { get; set; }
     }
 }

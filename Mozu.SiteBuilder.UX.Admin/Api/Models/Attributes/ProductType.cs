@@ -1,34 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
 {
-    [DataContract]
+    
     public class ProductType
     {
-        [DataMember(Name = "id")]
         public int? Id { get; set; }
 
-        [DataMember(Name = "name")]
         public string Name { get; set; }
 
-        [DataMember(Name = "isBase")]
         public bool IsBase { get; set; }
 
-        [DataMember(Name = "numberOfProducts")]
+        [JsonProperty(PropertyName = "numberOfProducts")]
         public int? ProductCount { get; set; }
 
-        [DataMember(Name = "options")]
         public List<ProductTypeAttribute> Options { get; set; }
 
-        [DataMember(Name = "extras")]
         public List<ProductTypeAttribute> Extras { get; set; }
 
-        [DataMember(Name = "properties")]
         public List<ProductTypeAttribute> Properties { get; set; }
 
-        [DataMember(Name = "modifiedDate")]
         public DateTime? ModifiedDate { get; set; }
 
 
@@ -36,7 +29,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
         /// <summary>
         /// List of ProductUsages supported by the ProductType.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "productUsages")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<String> ProductUsages { get; set; }
 
     }

@@ -1,38 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 {
     /// <summary>
     /// Represents the site-specific overrides configurable for a product.
     /// </summary>
-    [DataContract]
+    
     public class ProductInCatalogInfo
     {
         /// <summary>
         /// The product these overrides belong to.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "productCode")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ProductCode { get; set; }
 
         /// <summary>
         /// The site identifier these overrides belong to.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "catalogId")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int CatalogId { get; set; }
 
         /// <summary>
         /// Represents whether the product is active in this site.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "categoryIds")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "categoryIds")]
         public List<int> ProductCategories { get; set; }
 
 
         /// <summary>
         /// Represents whether the product is active in this site.
         /// </summary>
-        [DataMember(EmitDefaultValue = true, Name = "isActive")]
         public bool IsActive { get; set; }
 
 
@@ -40,20 +39,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// Represents whether the content information is overridden from the global data.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "isContentOverridden")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? IsContentOverridden { get; set; }
 
         /// <summary>
         /// The product name.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "productName")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ProductName { get; set; }
 
 
         /// <summary>
         /// A collection of images for this product.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "productImages")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ProductLocalizedImage> ProductImages { get; set; }
 
 
@@ -61,13 +60,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// The product short description.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "productShortDescription")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ProductShortDescription { get; set; }
 
         /// <summary>
         /// The product full description.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "productFullDescription")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ProductFullDescription { get; set; }
 
         #endregion
@@ -76,25 +75,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// Represents whether the price information is overridden from the global data.
         /// </summary>                                
-        [DataMember(EmitDefaultValue = false, Name = "isPriceOverridden")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool IsPriceOverridden { get; set; }
 
         /// <summary>
         /// The list price.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "listPrice")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? ListPrice { get; set; }
 
         /// <summary>
         /// The price.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "price")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? Price { get; set; }
 
         /// <summary>
         /// The sale price.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "salePrice")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? SalePrice { get; set; }
 
         #endregion
@@ -105,31 +104,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// Represents whether the SEO information is overridden from the global data.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "isSEOContentOverridden")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool IsSEOContentOverridden { get; set; }
 
         /// <summary>
         /// The HTML metatag title.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "metaTitle")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "metaTitle")]
         public string MetaTagTitle { get; set; }
 
         /// <summary>
         /// The HTML metatag description.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name="metaDescription")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName="metaDescription")]
         public string MetaTagDescription { get; set; }
 
         /// <summary>
         /// The HTML metatag keywords.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name = "metaKeywords")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "metaKeywords")]
         public string MetaTagKeywords { get; set; }
 
         /// <summary>
         /// An SEO friendly URL.
         /// </summary>
-        [DataMember(EmitDefaultValue = false, Name="slug")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName="slug")]
         public string SEOFriendlyUrl { get; set; }
 
         #endregion

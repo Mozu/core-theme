@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using System.Web;
 using Mozu.Core.ThirdParty.Contracts;
 
@@ -121,61 +121,61 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement
     //}
     //public class Entitlement
     //{
-    //    [DataMember]
+    //    
     //    public int Id { get; set; }
 
-    //    [DataMember]
+    //    
     //    public int TenantId { get; set; }
 
-    //    [DataMember]
+    //    
     //    public int? SiteId { get; set; }
 
-    //    [DataMember]
+    //    
     //    public int ApplicationVersionId { get; set; }
 
-    //    [DataMember]
+    //    
     //    public string ApplicationType { get; set; }
 
-    //    [DataMember]
+    //    
     //    public string ApplicationName { get; set; }
 
-    //    [DataMember]
+    //    
     //    public string ApplicationVersion { get; set; }
 
-    //    [DataMember]
+    //    
     //    public string AppId { get; set; }
 
-    //    [DataMember]
+    //    
     //    public string AppConfigUrl { get; set; }
 
-    //    [DataMember]
+    //    
     //    public string Status { get; set; }
 
-    //    [DataMember]
+    //    
     //    public string HeroImage { get; set; }
 
-    //    [DataMember]
+    //    
     //    public string ApplicationAssetPath { get; set; }
 
-    //    [DataMember]
+    //    
     //    public string DeveloperAccountName { get; set; }
 
-    //    [DataMember]
+    //    
     //    public DateTime PublishedDate { get; set; }
 
-    //    [DataMember]
+    //    
     //    public string LicenseType { get; set; }
 
-    //    [DataMember]
+    //    
     //    public DateTime? EffectiveStartDate { get; set; }
 
-    //    [DataMember]
+    //    
     //    public DateTime? EffectiveEndDate { get; set; }
 
-    //    [DataMember]
+    //    
     //    public DateTime CreateDate { get; set; }
 
-    //    [DataMember]
+    //    
     //    public DateTime UpdateDate { get; set; }
     //}
 }

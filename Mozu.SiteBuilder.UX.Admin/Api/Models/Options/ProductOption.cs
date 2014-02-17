@@ -2,40 +2,40 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Options
 {
     //[DataContract(Name = "productOption")]
     //public class ProductOption : Option 
     //{
-    //    [DataMember(EmitDefaultValue = false, Name = "productCode")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public string productCode
     //    {
     //        get;
     //        set;
     //    }
-    //    [DataMember(EmitDefaultValue = false, Name = "sequence")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public int? sequence { get; set; }
 
-    //    [DataMember(EmitDefaultValue = false, Name = "intention")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public string Intention { get; set; }
     //}
     //[DataContract(Name = "productOption")]
     //public class ProductOptionValue : OptionValue 
     //{
-    //    [DataMember(EmitDefaultValue = false, Name = "productCode")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public string productCode {get;set;}
 
 
-    //    [DataMember(EmitDefaultValue = false, Name = "deltaPrice")]
+    //    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "deltaPrice")]
     //    public decimal? DeltaPriceValue { get; set; }
-    //    [DataMember(EmitDefaultValue = false, Name = "deltaWeight")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public decimal? DeltaWeight { get; set; }
-    //    [DataMember(EmitDefaultValue = false, Name = "isDefault")]
+    //	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public bool? IsDefault { get; set; }
 
-    //     [DataMember(EmitDefaultValue = false, Name = "intention")]
+    //     [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "intention")]
     //    public string intention2 { get; set; }
 
     //     [IgnoreDataMember()]

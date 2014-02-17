@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 {
@@ -135,11 +135,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
             if (memberExpression == null)
                 throw new InvalidOperationException("Expression is not a member");
 
-            var attribute = memberExpression.Member.GetCustomAttributes(typeof (DataMemberAttribute), false).Cast<DataMemberAttribute>().FirstOrDefault();
+            var attribute = memberExpression.Member.GetCustomAttributes(typeof(JsonPropertyAttribute), false).Cast<JsonPropertyAttribute>().FirstOrDefault();
             if (attribute == null)
-                throw new InvalidOperationException("DataMemberAttribute doesn't exist on " + memberExpression.Member.Name);
+                throw new InvalidOperationException("JsonPropertyAttribute doesn't exist on " + memberExpression.Member.Name);
 
-            var value = this.Where(x => string.Equals(x.property, attribute.Name, StringComparison.OrdinalIgnoreCase)).Select(x => x.value).FirstOrDefault();
+            var value = this.Where(x => string.Equals(x.property, attribute.PropertyName, StringComparison.OrdinalIgnoreCase)).Select(x => x.value).FirstOrDefault();
 
             return value == null ? default(TVal) : (TVal) value;
         }

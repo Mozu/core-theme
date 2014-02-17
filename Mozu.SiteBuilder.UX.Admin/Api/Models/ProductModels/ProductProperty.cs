@@ -1,34 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using System.Web;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 {
-    [DataContract]
+    
     public class ProductProperty
     {
-        [DataMember(EmitDefaultValue = false, Name = "attributeFQN")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string AttributeFQN { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "values")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<object> Values { get; set; }
 
-        //todo: confirm this is still used as only only ignored in automapper? Greg Murray on 2014-01-24
-        [DataMember(EmitDefaultValue = false, Name = "exists")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "exists")]
         public bool? VariationExists { get; set; }
     }
 
 
-  //  [DataContract]
+  //  
    
     ////public class ProductPropertyValue
     ////{
-    ////    [DataMember(EmitDefaultValue = false, Name = "value")]
+	////	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     ////    public object Value { get; set; }
 
-    ////    [DataMember(EmitDefaultValue = false, Name = "localizedValue")]
+	////	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     ////    public string LocalizedValue { get; set; }
 
         

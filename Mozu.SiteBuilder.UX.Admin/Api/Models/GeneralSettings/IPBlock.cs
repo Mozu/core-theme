@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.GeneralSettings
 {
-    [DataContract]
+    
     public class IPBlock
     {
-        [DataMember(Name = "id")]
         public int? Id { get; set; }
 
-        [DataMember(Name = "start")]
+        [JsonProperty(PropertyName = "start")]
         public string RangeStart { get; set; }
 
-        [DataMember(Name = "end")]
+        [JsonProperty(PropertyName = "end")]
         public string RangeEnd { get; set; }
     }
 }

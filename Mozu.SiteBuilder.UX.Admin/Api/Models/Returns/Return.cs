@@ -1,166 +1,165 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
 {
-    [DataContract(Namespace = "Mozu.services.contracts")]
+    //[DataContract(Namespace = "Mozu.services.contracts")]
     public class Return
     {
-        [DataMember(EmitDefaultValue = false, Name = "id")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Id { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "availableActions")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<string> AvailableActions { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "returnNumber")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? ReturnNumber { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "originalOrderId")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string OriginalOrderId { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "returnOrderId")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ReturnOrderId { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "status")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Status { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "items")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ReturnItem> Items { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "notes")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<OrderNote> Notes { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "rmaDeadline")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DateTime? RMADeadline { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "type")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "type")]
         public string ReturnType { get; set; }
 
 
-        [DataMember(EmitDefaultValue = false, Name = "refundAmount")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Decimal? RefundAmount { get; set; }
 
 
-        [DataMember(EmitDefaultValue = false, Name = "payments")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<OrderPayment> Payments { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "totalLossAmount")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Decimal TotalLossAmount { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "tenantId")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int TenantId { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "siteGroupId")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "siteGroupId")]
         public int? MasterCatalogId { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "siteId")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int SiteId { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "userId")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string UserId { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "createDate")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DateTime? CreateDate { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "updateDate")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DateTime? UpdateDate { get; set; }
     }
 
     [DataContract(Namespace = "Mozu.services.contracts")]
     public class ReturnItem
     {
-        [DataMember(EmitDefaultValue = false, Name = "productLossAmount")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Decimal? ProductLossAmount { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "productLossTaxAmount")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Decimal? ProductLossTaxAmount { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "shippingLossAmount")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Decimal? ShippingLossAmount { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "shippingLossTaxAmount")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Decimal? ShippingLossTaxAmount { get; set; }
 
 
-        [DataMember(EmitDefaultValue = false, Name = "orderItemId")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string OrderItemId { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "reason")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Reason { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "quantityReceived")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int QuantityReceived { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "quantityShipped")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int QuantityShipped { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "quantityRestockable")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int QuantityRestockable { get; set; }
 
 
-        [DataMember(EmitDefaultValue = false, Name = "notes")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<OrderNote> Notes { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "quantity")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int Quantity { get; set; }
 
         /// <summary>
         /// applicable to bundled products.
         /// </summary>
-        [DataMember(Name = "parentItemId")]
         public string ParentItemId { get; set; }
 
-        [DataMember(Name="productCode")]
         public string ProductCode { get; set; }
     }
 
     [DataContract(Namespace = "Mozu.services.contracts")]
     public class ReturnAction
     {
-        [DataMember(EmitDefaultValue = false, Name = "actionName")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ActionName { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "returnIds")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<string> ReturnIds { get; set; }
     }
 
     //[DataContract(Namespace = "Mozu.services.contracts")]
     //public class ReturnUnitPrice
     //{
-    //    [DataMember(EmitDefaultValue = false, Name = "taxableAmount")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public Decimal? TaxableAmount { get; set; }
 
-    //    [DataMember(EmitDefaultValue = false, Name = "shippingAmount")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public Decimal? ShippingAmount { get; set; }
 
-    //    [DataMember(EmitDefaultValue = false, Name = "itemTaxAmount")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public Decimal? ItemTaxAmount { get; set; }
 
-    //    [DataMember(EmitDefaultValue = false, Name = "shippingTaxAmount")]
+	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public Decimal? ShippingTaxAmount { get; set; }
     //}
 
     [DataContract(Namespace = "Mozu.services.contracts")]
     public class OrderNote
     {
-        [DataMember(EmitDefaultValue = false, Name = "id")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Id { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "text")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Text { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "updateDate")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DateTime? UpdateDate { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "createDate")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DateTime? CreateDate { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "updateBy")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string UpdateBy { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "createBy")]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string CreateBy { get; set; }
     }
 }
