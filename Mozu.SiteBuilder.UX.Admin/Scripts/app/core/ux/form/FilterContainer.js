@@ -380,7 +380,11 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                 if (fieldName === this.defaultFieldName) {
                     simpleValue.push(rawValue);
                 } else {
-                    simpleValue.push([fieldName, rawValue].join(':'));
+                    if (Ext.isDate(rawValue)) {
+                        simpleValue.push([fieldName, Ext.Date.format(rawValue, 'c')].join(':'));
+                    } else {
+                        simpleValue.push([fieldName, rawValue].join(':'));
+                    }
                 }
             }
         }, this);
