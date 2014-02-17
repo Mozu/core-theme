@@ -7,6 +7,7 @@ using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
+using Newtonsoft.Json;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
 using DCp = Mozu.CommerceRuntime.Contracts.Products;
 
@@ -16,6 +17,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         public class ProductWithQuantityStuffedIntoIt : Mozu.CommerceRuntime.Contracts.Products.Product
         {
+            [JsonProperty(PropertyName = "quantity")]
             public int Quantity { get; set; }
         }
 
