@@ -14,8 +14,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
     
     public class LocationWithInventory : Mozu.ProductAdmin.Contracts.LocationInventory
     {
-        
-        public Mozu.Location.Contracts.Location Location;
+        [JsonProperty(PropertyName = "location")]
+        public Mozu.Location.Contracts.Location Location { get; set; }
     }
 
     //[DataContract(Namespace = "http://admin.productservice.volusion.com")]
