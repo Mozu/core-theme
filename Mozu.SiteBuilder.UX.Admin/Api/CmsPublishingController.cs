@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
@@ -19,10 +19,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     /// <summary>
     /// DTO class to allow PublishAll and DiscardAll to receive arguments.
     /// </summary>
-    [DataContract]
+    
     public class PublishArgs
     {
-        [DataMember(Name = "docType")]
         public string DocType;
 
        
