@@ -61,7 +61,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.FileManagerHelpers
                 case "all":
                 case "name":
                 case "filename":
-                    return string.Format("name sw \"{0}\"", filter.value);
+                    return string.Format("name cont \"{0}\"", filter.value);
 
 
                 case "createdby":
