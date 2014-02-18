@@ -5,7 +5,7 @@
  */
 
 Ext.define('Taco.core.ux.browser.Browsable', {
-    requires: ['Taco.core.util.ExceptionWhiner'],
+    requires: ['Taco.core.util.ExceptionWhiner', 'Taco.core.ux.grid.AddEntityRow'],
     config: {
         typeName: 'Item',
         createButtonPrefix: "Create New ",
@@ -20,6 +20,8 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         header: null,
         secondToolbarItems:null,
         
+        showAddEntityRow : false,
+
         // turns on the row editor behavior of the grid;  Create button will create new record and show the rowEditor;  click on the row will show the editor
         enableRowEditing: false,
         
@@ -90,6 +92,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         return res;
     },
     initBrowserConfig: function () {
+        var me = this;
 
         this.gridPanelConf = Ext.clone(this.gridPanelConf);
 
@@ -108,6 +111,9 @@ Ext.define('Taco.core.ux.browser.Browsable', {
                 clicksToMoveEditor: 1,
                 clicksToEdit: 1,
                 errorSummary: false,
+                onCtrlEnterKey: function () {                    
+                    me.onRowEditorCreate();
+                },
                 listeners: {
                     'edit': {
                         fn: this.onRowEditorUpdate,
@@ -240,15 +246,40 @@ Ext.define('Taco.core.ux.browser.Browsable', {
             conf.dockedItems = Ext.clone(conf.dockedItems || []);
             conf.dockedItems.push(this.createGridPager());
         }
+
         conf.store = this.store;
-        this.gridPanel = Ext.create(this.gridPanelClass, conf);
+
+
+        //this.showAddEntityRow = true;
+        
+        if (this.showAddEntityRow) {
+            if (!conf.features) {
+                conf.features = [];
+            }
+
+            conf.features.push({
+                ftype: 'taco.addentityrow'
+            })            
+        }
+
+        var gridPanel = this.gridPanel = Ext.create(this.gridPanelClass, conf);
+
+
+        // auto select the first record in the grid after it loads;
+        this.gridPanel.store.on({
+            load: function () {
+                //select the first row;                
+                gridPanel.getSelectionModel().selectRange(0, 0, false)
+            }
+        })
         
         this.gridPanel.view.on('itemclick', this.onItemClick, this);
         
         if (this.launchEditorOnClick) {
             this.gridPanel.view.on('cellclick', this.onCellClick, this);
         }
-        
+
+
         var menuColumns = Ext.Array.filter(this.gridPanel.columns, function (col) { return col.isXType('taco.menucolumn'); });
         if (this.disableContextMenuClick !== true && menuColumns && menuColumns.length == 1) {
             this.gridPanel.on('itemcontextmenu', function (cmp, record, item, index, e) {
@@ -436,8 +467,9 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         var record = context.record,
             isNewRecord = record.phantom;
         // clear unpersisted new records when the user its the cancel button;
-        if (isNewRecord) {
-            this.store.remove(record);
+        if (isNewRecord && !record.leaveOnCancel) {            
+            this.store.remove(record);            
+            this.gridPanel.getSelectionModel().selectRange(0, 0, false);
         }
     },
 
@@ -454,7 +486,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         var r = Ext.create(modelName, this.defaultRowEditingData);
         this.store.insert(0, r);
         this.rowEditor.startEdit(0, 0);
-        
+        this.rowEditor.editor.focusContextCell()
     },
     
     onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {

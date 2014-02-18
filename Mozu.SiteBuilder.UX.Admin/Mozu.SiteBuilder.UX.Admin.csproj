@@ -649,6 +649,7 @@
     <Content Include="Scripts\app\core\ux\form\FilterContainer.js" />
     <Content Include="Scripts\app\core\ux\form\PhoneNumberField.js" />
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
+    <Content Include="Scripts\app\core\ux\grid\AddEntityRow.js" />
     <Content Include="Scripts\app\core\ux\mixins\Navigable.js" />
     <Content Include="Scripts\app\core\ux\mixins\RowEditable.js" />
     <Content Include="Scripts\app\core\ux\mixins\Searchable.js" />
