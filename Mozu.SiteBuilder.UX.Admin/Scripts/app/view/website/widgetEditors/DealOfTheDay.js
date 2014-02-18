@@ -20,25 +20,32 @@ Ext.define('Taco.view.website.widgetEditors.DealOfTheDay', {
 
         this.form = Ext.create('Taco.core.ux.form.Form', {
             items: [{
-                xtype: 'container',
-                layout: 'hbox',
-                items: [{
-                    xtype: 'combobox',
-                    name: 'discountId',
-                    fieldLabel: 'Discount',
-                    queryMode: 'remote',
-                    displayField: 'name',
-                    valueField: 'id',
-                    pageSize: 30,
-                    width: 400,
-                    store: this.discountStore,
-                    listeners: {
-                        change: {
-                            scope: this,
-                            fn: 'handleDiscountChange'
-                        }
+                xtype: 'combobox',
+                name: 'discountId',
+                fieldLabel: 'Discount',
+                queryMode: 'remote',
+                displayField: 'name',
+                valueField: 'id',
+                pageSize: 30,
+                width: 400,
+                store: this.discountStore,
+                listeners: {
+                    change: {
+                        scope: this,
+                        fn: 'handleDiscountChange'
                     }
-                }]
+                }
+            }, {
+                xtype: 'component',
+                itemId: 'productCount',
+                padding: '10 10 10 10',
+                tpl: [
+                    '<tpl if="all">',
+                        'Applies to all products',
+                    '<tpl else>',
+                        'Applies to {count} product(s)',
+                    '</tpl>'
+                ]
             }, {
                 xtype: 'radiogroup',
                 fieldLabel: 'Choose the display format:',
@@ -72,9 +79,17 @@ Ext.define('Taco.view.website.widgetEditors.DealOfTheDay', {
     },
 
     handleDiscountChange: function (field, newValue, oldValue) {
-        var record = field.getStore().getById(newValue);
+        var record = field.getStore().getById(newValue),
+            cmp = this.down('#productCount');
 
-        console.log(record);
+        if (cmp && record) {
+            cmp.update({
+                all: record.get('includeAllProducts'),
+                count: record.get('products').length
+            });
+        }
+
+        console.log(cmp, record.get('products'), record.get('includeAllProducts'));
     },
 
     /**
