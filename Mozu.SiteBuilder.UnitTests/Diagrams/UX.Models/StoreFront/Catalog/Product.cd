@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product">
+    <Position X="3.75" Y="2.75" Width="2.75" />
+    <Members>
+      <Method Name="Product" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="Content" />
+      <Property Name="Images" />
+      <Property Name="MainImage" />
+      <Property Name="Price" />
+      <Property Name="PriceRange" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Categories" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductOption">
+    <Position X="6.75" Y="0.75" Width="1.75" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductContent">
+    <Position X="0.5" Y="0.5" Width="2.75" />
+    <Members>
+      <Method Name="ProductContent" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductImage">
+    <Position X="0.5" Y="5" Width="3" />
+    <Members>
+      <Method Name="ProductImage" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductImage.ProductImageResizer">
+        <Members>
+          <Method Name="ProductImageResizer" Hidden="true" />
+        </Members>
+        <TypeIdentifier />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductImageCollection">
+    <Position X="0.5" Y="3" Width="2.25" />
+    <Members>
+      <Method Name="ProductImageCollection" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="Main" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ConfiguredProduct">
+    <Position X="4.5" Y="0.5" Width="2" />
+    <Members>
+      <Method Name="ConfiguredProduct" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.CategoryContent">
+    <Position X="8.75" Y="6" Width="2" />
+    <Members>
+      <Method Name="CategoryContent" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.CategoryTree">
+    <Position X="10.75" Y="1.25" Width="1.75" />
+    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="Items" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category">
+    <Position X="7.75" Y="3" Width="2.75" />
+    <Members>
+      <Method Name="Category" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="ParentCategory" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="ChildrenCategories" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductPriceRange">
+    <Position X="5.75" Y="6.5" Width="2" />
+    <Members>
+      <Method Name="ProductPriceRange" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="Lower" />
+      <Property Name="Upper" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductPrice">
+    <Position X="4.25" Y="4.75" Width="1.5" />
+    <Members>
+      <Method Name="ProductPrice" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

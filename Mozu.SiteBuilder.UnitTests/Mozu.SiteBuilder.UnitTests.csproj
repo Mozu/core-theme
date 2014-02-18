@@ -51,12 +51,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\AutoMapper.3.0.0\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
-    <Reference Include="Burrows, Version=0.2.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Burrows, Version=0.2.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Burrows.0.2.4.1\lib\net45\Burrows.dll</HintPath>
+      <HintPath>..\packages\Burrows.0.2.5.3\lib\net45\Burrows.dll</HintPath>
     </Reference>
-    <Reference Include="Burrows.Log4Net">
-      <HintPath>..\packages\Burrows.Log4Net.0.2.4.1\lib\net45\Burrows.Log4Net.dll</HintPath>
+    <Reference Include="Burrows.Log4Net, Version=0.2.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Burrows.Log4Net.0.2.5.3\lib\net45\Burrows.Log4Net.dll</HintPath>
     </Reference>
     <Reference Include="FiftyOne.Foundation, Version=2.1.15.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -312,7 +313,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="Diagrams\Admin\Api\Models\ProductModels\Product.cd" />
+    <None Include="Diagrams\UX.Models\StoreFront\Catalog\Product.cd" />
+    <None Include="Diagrams\UX.Models\StoreFront\Catalog\ProductSearchResults.cd" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mozu.SiteBuilder.UX.Admin\Mozu.SiteBuilder.UX.Admin.csproj">
@@ -324,6 +330,7 @@
       <Name>Mozu.SiteBuilder.UX.Models</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets')" />
