@@ -2352,12 +2352,24 @@
     <Content Include="Tests\siesta-1.1.8-standard\tests\senchatouch\010_performsetup.t.js" />
     <Content Include="Tests\siesta-1.1.8-standard\tests\senchatouch\701_sencha_touch_form.t.js" />
     <Content Include="Tests\sinon.js" />
-    <Content Include="Tests\specs\BasicTest.js" />
-    <Content Include="Tests\specs\chutzpah.json" />
-    <Content Include="Tests\specs\lib\chai-as-promised.js" />
-    <Content Include="Tests\specs\lib\chai.js" />
-    <Content Include="Tests\specs\lib\sinon-chai.js" />
-    <Content Include="Tests\specs\lib\sinon.js" />
+    <Content Include="Tests\specs\basic-mocha-bdd-test.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tests\specs\chutzpah.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tests\specs\lib\chai-as-promised.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tests\specs\lib\chai.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tests\specs\lib\sinon-chai.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tests\specs\lib\sinon.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Tests\speed-test.t.js" />
     <Content Include="Tests\unit\app-state-matches-uri.t.js" />
     <Content Include="Tests\unit\scrolling-content-body-adds-scroll-class.js" />
