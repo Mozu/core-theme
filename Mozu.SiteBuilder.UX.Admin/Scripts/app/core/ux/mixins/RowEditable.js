@@ -45,7 +45,6 @@ Ext.define('Taco.core.ux.mixins.RowEditable', {
 
     constructor: function () {
         var me = this;
-        
 
         if (this.enableRowEditing) {
             // update the button text to be "Save"
@@ -55,6 +54,9 @@ Ext.define('Taco.core.ux.mixins.RowEditable', {
                 clicksToMoveEditor: 1,
                 clicksToEdit: 1,
                 errorSummary: false,
+                onCtrlEnterKey: function () {
+                    me.onRowEditorCreate();
+                },
                 listeners: {
                     'edit': {
                         fn: this.onRowEditorUpdate,
@@ -103,7 +105,11 @@ Ext.define('Taco.core.ux.mixins.RowEditable', {
             isNewRecord = record.phantom;
         // clear unpersisted new records when the user its the cancel button;
         if (isNewRecord) {
-            this.store.remove(record);
+            this.store.remove(record);            
+            if (this.getSelectionModel()) {
+                this.getSelectionModel().selectRange(0, 0, false);
+            }
+            
         }
     },
 
@@ -120,6 +126,6 @@ Ext.define('Taco.core.ux.mixins.RowEditable', {
         var r = Ext.create(modelName, this.defaultRowEditingData);
         this.store.insert(0, r);
         this.rowEditor.startEdit(0, 0);
-
+        this.rowEditor.editor.focusContextCell()
     }
 });
