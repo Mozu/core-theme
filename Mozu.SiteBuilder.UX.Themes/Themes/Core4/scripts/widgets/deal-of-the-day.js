@@ -28,15 +28,16 @@
                     var productCollection = new ProductModels.ProductCollection(collection.data),
                         dealView;
 
-                    // if (config.displayStyle === 'product')
-                    //   randomly select one product from the collection
+                    if (productCollection.attributes.totalCount === 0) {
+                        throw "Deal of the Day: there are no products to show for the selected discount.";
+                    } else {
+                        dealView = new DealView({
+                            model: productCollection,
+                            el: deal
+                        });
 
-                    dealView = new DealView({
-                        model: productCollection,
-                        el: deal
-                    });
-
-                    dealView.render();
+                        dealView.render();
+                    }
                 });
             });
         });
