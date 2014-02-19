@@ -30,7 +30,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Prefer32Bit>false</Prefer32Bit>
     <DocumentationFile>bin\Debug\Mozu.SiteBuilder.Mvc.XML</DocumentationFile>
-    <NoWarn>1591,1572,1571,1573,1587,1570</NoWarn>
+    <NoWarn>1591,1572,1571,1573,1587,1570, 612</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
