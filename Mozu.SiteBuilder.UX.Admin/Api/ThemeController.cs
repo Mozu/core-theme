@@ -69,6 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             public bool? IsSelectedMobile { get; set; }
 
+        [JsonIgnore]
             public Thumbnail Thumbnail { get; set; }
 
             [JsonProperty(PropertyName = "thumbnail")]
