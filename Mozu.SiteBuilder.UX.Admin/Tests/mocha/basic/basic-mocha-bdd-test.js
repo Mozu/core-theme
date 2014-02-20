@@ -1,6 +1,5 @@
 ﻿/// <reference path="lib/chai.js" />
 /// <reference path="../Scripts/code.js" />
-
 var expect = chai.expect;
 
 describe("Mocha", function () {
