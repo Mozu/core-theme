@@ -57,8 +57,9 @@
         display: none;
         padding: 0;
         position: absolute;
-        top: -39px;
         right: 0;
+        top: -39px;
+		z-index: 1000001;
 
         //@include transition(opacity $duration);
 
@@ -79,7 +80,7 @@
         height: 3px;
         position: absolute;
         width: 3px;
-        z-index: 1000001;
+        z-index: 1000002;
 
         &:before, &:after {
             border-bottom: 0;
