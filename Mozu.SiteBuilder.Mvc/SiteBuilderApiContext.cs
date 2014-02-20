@@ -31,43 +31,17 @@ namespace Mozu.SiteBuilder.Mvc
         private readonly ISettings _settings;
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly HttpRequestMessage _httpRequestMessage;
-
+        
 
         internal const string COOKIENAME = "SBCONTEXT";
+        internal const string DEBUGCOOKIENAME = "SBD";
 
 
 
-
-        public SiteBuilderApiContext(System.Web.HttpContextBase context, ICookieProvider cookieProvider, ISettings settings, IAuthenticationHelper authenticationHelper, HttpRequestMessage httpRequestMessage)
+        public bool IsDebugMode { get; set; }
+        public SiteBuilderApiContext( ICookieProvider cookieProvider, ISettings settings, IAuthenticationHelper authenticationHelper, HttpRequestMessage httpRequestMessage)
             : base()
         {
-
-//            var dir = @"C:\projects\mzt\UI\Dev\Dev-branch\Mozu.SiteBuilder\";
-//            var files = System.IO.Directory.GetFiles(dir, "*.cs", SearchOption.AllDirectories);
-//            foreach (var file in files)
-//            {
-//                var lines = System.IO.File.ReadAllLines(file);
-//                for (int i = 1; i < lines.Length; i++)
-//                {
-//                    var line = lines[lines.Length - i];
-//                    if (line.Length < 2)
-//                    {
-//                        continue;
-//                    }
-//                    if (line.Contains("Copyright"))
-//                    {
-//                        continue;
-//                    }
-//                    if (line[0] == '/' && line[1] == '/')
-//                    {
-//                        System.Diagnostics.Debug.WriteLine(file);
-//                    }
-//                    break;
-//
-//                }
-//
-//            }
-
 
 
             TenantId = -1;
@@ -87,6 +61,32 @@ namespace Mozu.SiteBuilder.Mvc
             LoadUser();
             ValidateUser();
             ValidateDataMode();
+            SetDebugMode();
+        }
+
+        private void SetDebugMode()
+        {
+            var isDebugMode = false;
+            var cookie = _cookieProvider.GetRequestCookie(DEBUGCOOKIENAME);
+            if (cookie != null)
+            {
+                isDebugMode = cookie.Value == "t";
+            }
+            var val = _httpRequestMessage.GetQueryNameValuePairs().Where(x => string.Equals( x.Key, "debugmode",  StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
+            if (val != null)
+            {
+                isDebugMode = string.Equals(val, Boolean.TrueString , StringComparison.OrdinalIgnoreCase);
+
+                cookie =new HttpCookie(DEBUGCOOKIENAME, isDebugMode ? "t" : "f");
+                if (!isDebugMode)
+                {
+                    cookie.Expires = DateTime.MinValue;
+                }
+                
+                _cookieProvider.SaveResponseCookie(DEBUGCOOKIENAME,cookie);
+
+            }
+            this.IsDebugMode = isDebugMode;
         }
 
         private static System.Collections.Concurrent.ConcurrentDictionary<string, Site> g_domainSiteLookup = new ConcurrentDictionary<string, Site>(StringComparer.OrdinalIgnoreCase);

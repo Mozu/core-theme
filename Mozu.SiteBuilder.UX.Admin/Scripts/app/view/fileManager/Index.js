@@ -42,6 +42,7 @@ Ext.define('Taco.view.fileManager.Index', {
 
     gridPanelConf: {
         columns: [{
+            sortable:false,
                 xtype: 'templatecolumn',
                 header: 'Image',
                 tpl: [
@@ -79,7 +80,7 @@ Ext.define('Taco.view.fileManager.Index', {
                 width: 260,
             },
             {
-                text: 'Tags',
+                text: 'Tags', sortable: false,
                 dataIndex: 'tags',
                 renderer: function (value, metaData, record) {
                     return (Ext.isEmpty(value) ? ['...'] : value).join(', ');
@@ -107,7 +108,8 @@ Ext.define('Taco.view.fileManager.Index', {
                     return Ext.Date.format(val, 'M j, Y g:i a');
                 }
             }, {
-                text: 'Type',
+                text: 'Type', 
+                sortable: false,
                 dataIndex: 'fileType',
                 align: 'right',
                 renderer: function (val) {
@@ -115,11 +117,13 @@ Ext.define('Taco.view.fileManager.Index', {
                 }
             }, {
                 text: 'Size',
+                sortable: false,
                 dataIndex: 'fileSize',
                 align: 'right'
             },
             {
                 xtype: 'taco.menucolumn',
+                sortable: false,
                 text: 'Actions',
                 menuItems: [{
                         text: 'Delete',

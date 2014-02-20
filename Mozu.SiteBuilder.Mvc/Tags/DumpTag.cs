@@ -20,8 +20,24 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     /// <code>{%dump foo %}</code>
     /// </summary>
     [NDjango.Interfaces.Name("dump")]
-    public class DumpTag : DynamicTagBase
+    public class DumpTag : SimpleTagBase
     {
+
+        protected override void ProcessTag(ArgumentCollection arguments, ref NDjango.Interfaces.IContext context, out string buffer, out string templateName)
+        {
+            buffer = templateName = string.Empty;
+            if (arguments.Count == 0)
+                return;
+            var model = arguments[0].Value;
+
+
+            buffer = Process(model);
+
+
+
+
+
+        }
         public string Process(object model)
         {
             model = model ?? "null";

@@ -11,6 +11,7 @@ Ext.define('Taco.shared.store.Files', {
    
     buffered: false,
     remoteFilter: true,
+    remoteSort: true,
     storeManagerConfig: {
         clearFilters: true,
         contextLevel: 'c',

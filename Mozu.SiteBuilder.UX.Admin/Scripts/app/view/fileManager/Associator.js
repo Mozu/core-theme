@@ -89,6 +89,7 @@ Ext.define('Taco.view.fileManager.Associator', {
                 flex: 1
             }, {
                 text: 'Date Modified',
+                
                 dataIndex: 'dateModified',
                 width: 150,
                 renderer: function (val) {
@@ -96,6 +97,7 @@ Ext.define('Taco.view.fileManager.Associator', {
                 }
             }, {
                 text: 'Type',
+                sortable: false,
                 dataIndex: 'fileType',
                 align: 'right',
                 renderer: function (val) {
@@ -103,6 +105,7 @@ Ext.define('Taco.view.fileManager.Associator', {
                 }
             }, {
                 text: 'Size',
+                sortable: false,
                 dataIndex: 'fileSize',
                 align: 'right'
             }],

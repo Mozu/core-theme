@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using System.Web;
 
 using Autofac;
+using Microsoft.FSharp.Core;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.ObjectPools;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
@@ -64,12 +66,20 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         {
             return context.ViewContext().LifetimeScope.Resolve<T>();
         }
+        public static T ResolveOptional<T>(this NDjango.Interfaces.IContext context)
+           where T : class
+        {
+            return context.ViewContext().LifetimeScope.ResolveOptional<T>();
+        }
         public static string Render(this NDjango.Interfaces.IContext context, string viewName, object model)
         {
-            var writer = new StringWriter();
-
-            context.Render(viewName, model, writer);
-            return writer.GetStringBuilder().ToString();
+            using (var sbContainer = StringBuilderPool.Default.GetContainer())
+            {
+                var writer = new StringWriter(sbContainer.Item);
+                context.Render(viewName, model, writer);
+                return writer.GetStringBuilder().ToString();
+            }
+           
         }
 
         public static Task AsyncRender(this NDjango.Interfaces.IContext context, string viewName, object model, TextWriter writer)

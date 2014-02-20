@@ -20,6 +20,26 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
     /// </summary>
     public static class ObjectExtensions
     {
+
+
+        public static bool IsTruthy(this object obj)
+        {
+            if (obj is string && ((string)obj).Length > 0)
+            {
+                return true;
+            }
+            if (obj is bool)
+            {
+                return (bool)obj;
+            }
+
+            var str = Convert.ToString(obj);
+            if (obj is string && ((string)obj).Length > 0)
+            {
+                return true;
+            }
+            return str != null && str.Length > 0 && str != "0";
+        }
         public static T Clone<T>(this object original)
         {
 

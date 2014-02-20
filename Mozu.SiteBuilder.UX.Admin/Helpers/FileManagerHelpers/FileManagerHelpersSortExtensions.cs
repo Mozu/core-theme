@@ -28,9 +28,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.FileManagerHelpers
         {
             switch (item.property.ToLowerInvariant())
             {
-               
+                case "datemodified":
+                    return "contentUpdateDate";
+                case "filesize":
+                    return "contentLength";
                 default:
-                    throw new InvalidOperationException("unknown sort.property " + item.property);
+                    return item.property;
+                    //throw new InvalidOperationException("unknown sort.property " + item.property);
             }
         }
     }

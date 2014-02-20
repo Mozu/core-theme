@@ -7,11 +7,13 @@
     <div class="mz-errordetail">
         <h2 class="mz-errordetail-header">{{ labels.errorDetail }}</h2>
         <p class="mz-errordetail-text">{{model.message}}</p>
-        <a href="javascript:;" id="stacktrace-link" class="mz-errordetail-expander">{{ labels.stackTrace }}</a>
-        <blockquote class="mz-errordetail-stacktrace">
-            <h3>The following is a stacktrace, intended to be cut and pasted into a support ticket.</h3>
-            <pre><code>{% dump model %}</code></pre>
-        </blockquote>
+		{% if pageContext.isDebugMode %}
+			<a href="javascript:;" id="stacktrace-link" class="mz-errordetail-expander">{{ labels.stackTrace }}</a>
+			<blockquote class="mz-errordetail-stacktrace">
+				<h3>The following is a stacktrace, intended to be cut and pasted into a support ticket.</h3>
+				<pre><code>{% dump model %}</code></pre>
+			</blockquote>
+		{% endif %}
     </div>
 </div>
 {% require_script "pages/error" %}

@@ -114,6 +114,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             Pagination = PagingParmaters.Create(requestMessage);
         }
 
+        public bool IsDebugMode 
+        {
+            get { return _apiContext.IsDebugMode; }
+        }
         public SortingParamaters Sorting
         {
             get; set;
