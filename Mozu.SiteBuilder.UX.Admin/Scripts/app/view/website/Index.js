@@ -435,7 +435,12 @@ Ext.define('Taco.view.website.Index', {
         this.entitypeTypeHandler = this.createEntityTypeAdapter(pc, editor);
 
         Ext.EventManager.on(this.iframe.getDoc(), 'click', function (e, target) {
-            if (target.hostname == this.iframe.getWin().location.hostname) {
+            //cancel if over a dropzone.   dont interfere with 
+            if (this.chorizoEditor && this.chorizoEditor.isOverGrid()) {
+                e.stopEvent();
+                return;
+            }
+            if (target.hostname == this.iframe.getWin().location.hostname  ) {
                 me.fireEvent('beforeIframeClickNavigate', {
                     url: target.pathname + target.search
                 });
@@ -447,8 +452,7 @@ Ext.define('Taco.view.website.Index', {
                 e.stopEvent();
             }
         }, this, {
-            delegate: 'a',
-            delay: 100
+            delegate: 'a'
         });
     },
 
