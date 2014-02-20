@@ -1,22 +1,26 @@
-﻿<script src="{{siteContext.cdnPrefix}}/js/require-{% if themeSettings.useDebugScripts %}debug{% else %}min{% endif %}.js"></script>
+﻿{% with themeSettings.useDebugScripts|default:pageContext.isDebugMode as debugMode %}
+
+<script src="{{siteContext.cdnPrefix}}/js/require-{% if debugMode %}debug{% else %}min{% endif %}.js"></script>
 <script type="text/javascript">
     require.config({
         cdnPrefix: "{{ siteContext.cdnPrefix }}",
         cacheKey: "{{ siteContext.hashString }}",
         urlArgs: "theme={{siteContext.themeId}}&cacheKey={{ siteContext.hashString }}",
-        baseUrl: "{{ siteContext.cdnPrefix }}{% if not themeSettings.useDebugScripts %}/compiled{% endif %}/scripts",
-        paths: {
-            jquery: "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery{% if not themeSettings.useDebugScripts %}.min{% endif %}"
-        },
-        priority: ['jquery']
-    });
-    {% if themeSettings.useDebugScripts %}
-    require([{% all_scripts %}]);
-    {% else %}
-    require(['jquery', 'modules/common'], function() { require([{% all_scripts %}]); });
-    {% endif %}
+  baseUrl: "{{ siteContext.cdnPrefix }}{% if not debugMode %}/compiled{% endif %}/scripts",
+  paths: {
+  jquery: "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery{% if not debugMode %}.min{% endif %}"
+  },
+  priority: ['jquery']
+  });
+  {% if debugMode %}
+  require([{% all_scripts %}]);
+  {% else %}
+  require(['jquery', 'modules/common'], function() { require([{% all_scripts %}]); });
+  {% endif %}
 </script>
 
 {% if siteContext.generalSettings.isGoogleAnalyticsEnabled %}
-{% include "modules/analytics/google-analytics-tracking-code" %}
+  {% include "modules/analytics/google-analytics-tracking-code" %}
 {% endif %}
+
+{%endwith%}
