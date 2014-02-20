@@ -1970,8 +1970,30 @@
     <Content Include="Tests\integration\attributes\attribute-create.t.js" />
     <Content Include="Tests\integration\product-basic-edit-save.js" />
     <Content Include="Tests\index.html" />
+    <Content Include="Tests\mocha\basic\basic-mocha-bdd-test.js" />
+    <Content Include="Tests\mocha\requireJs\config.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Tests\MozuTestSuiteProduct.js" />
     <Content Include="Tests\MozuTestSuite.js" />
+    <Content Include="Tests\node_modules\chai-as-promised\lib\chai-as-promised.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tests\node_modules\chai\chai.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tests\node_modules\mocha\mocha.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tests\node_modules\requirejs\require.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tests\node_modules\sinon-chai\lib\sinon-chai.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tests\node_modules\sinon\lib\sinon.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Tests\sanity-test.t.js" />
     <Content Include="Tests\siesta-1.1.8-standard\bin\admin-integration-tests.js" />
     <Content Include="Tests\siesta-1.1.8-standard\bin\admin-tests.js" />
@@ -2352,24 +2374,13 @@
     <Content Include="Tests\siesta-1.1.8-standard\tests\senchatouch\010_performsetup.t.js" />
     <Content Include="Tests\siesta-1.1.8-standard\tests\senchatouch\701_sencha_touch_form.t.js" />
     <Content Include="Tests\sinon.js" />
-    <Content Include="Tests\specs\basic-mocha-bdd-test.js">
+    <Content Include="Tests\mocha\requireJs\specs\admin\require-mocha-bdd-test.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Tests\specs\chutzpah.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Tests\specs\lib\chai-as-promised.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Tests\specs\lib\chai.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Tests\specs\lib\sinon-chai.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Tests\specs\lib\sinon.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Tests\mocha\basic\lib\chai-as-promised.js" />
+    <Content Include="Tests\mocha\basic\lib\chai.js" />
+    <Content Include="Tests\mocha\basic\lib\sinon-chai.js" />
+    <Content Include="Tests\mocha\basic\lib\sinon.js" />
     <Content Include="Tests\speed-test.t.js" />
     <Content Include="Tests\unit\app-state-matches-uri.t.js" />
     <Content Include="Tests\unit\scrolling-content-body-adds-scroll-class.js" />
@@ -2509,6 +2520,10 @@
     </Content>
     <Content Include="Web.QA.config">
       <DependentUpon>Web.config</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tests\mocha\basic\chutzpah.json" />
+    <Content Include="Tests\mocha\requireJs\chutzpah.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
