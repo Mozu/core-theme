@@ -31,8 +31,8 @@ Ext.define('Taco.view.website.settings.General', {
             },
             {
                 xtype: 'checkboxfield',
-                name: 'show_in_nav',
-                boxLabel: 'Show in Navigation'
+                name: 'extended_page_configuration.hide_in_nav',
+                boxLabel: 'Hide in Navigation'
             }, {
                 xtype: 'checkboxfield',
                 name: '',

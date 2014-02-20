@@ -751,7 +751,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 }
                
 
-                var env = new Env {Compress = !_debug};
+                var env = new Env {Compress = !_debug , Debug =_debug};
                 
                 //env.AddPlugin(new MyLessPlugin() { Env = env });
                 // var rs = new dotless.Core.Parser.Tree.Ruleset()

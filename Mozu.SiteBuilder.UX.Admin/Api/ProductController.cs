@@ -69,8 +69,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             // use a hard-coded response group and filter for this search.
             string responseGroups = extFilter.ResponseGroups ?? "Min,Price,VariationOptions";
-            string extraFilter = extFilter.ToFilterString();
-            string q = extFilter.ToQString();
+
+            
+            string extraFilter = extFilter.ToFilterString(withVariations: true );
+            string q = extFilter.ToQString(withVariations:true);
 
             string filter = "manageStock eq true and (isVariation eq true or productUsage eq standard or productUsage eq component)";
             if (!string.IsNullOrEmpty(extraFilter))

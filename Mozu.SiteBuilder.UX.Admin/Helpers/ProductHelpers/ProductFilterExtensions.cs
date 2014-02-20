@@ -19,13 +19,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         private const string PRODUCT_FULL_DESCRIPTION = "productincatalogs.content.productFullDescription";
         private const string PRODUCT_PUBLISHED_STATE = "publishinginfo.publishedstate";
 
+
+      
+
         /// <summary>
         /// Converts a FilterCollection for Product to a mozu services-compatible filter string.
         /// </summary>
         public static string ToFilterString(this FilterCollection extFilter, bool? withVariations = null)
         {
            
-
             // TODO: If the filter needs to include products with variations, do something with 'withVariations'
             // Note: this could change, we're waiting on changes to be applied from the services team and/or Britt G.
 
@@ -44,8 +46,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
             }
             ;
 
+
+            
+
+
             if ( extFilter.Count == 0)
                 return null;
+
+            if (withVariations.GetValueOrDefault(false))
+            {
+                var item = extFilter.FirstOrDefault(x => x.field == "productCode" || x.property == "productCode");
+                if (item != null)
+                {
+                    item.property = item.field = "productinventorycode";
+                }
+            }
 
 
 
@@ -99,6 +114,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                 case "productfulldescription":
                     return string.Format("{1} cont \"{0}\"", filter.value, PRODUCT_FULL_DESCRIPTION);
                 case "productcode" :
+                    return
+                        "("+
+                        (value.ToString().Split(',')
+                        .Select(code => string.Format("ProductCode eq \"{0}\"", code.Trim()))
+                        .Aggregate((comp, next) => comp + " or " + next)) + ")";
+
+                case "productinventorycode":
                     return "(IsVariation eq true or IsVariation eq false) and (" +
                         (value.ToString().Split(',')
                         .Select(code => string.Format("(baseProductCode eq \"{0}\" or  ProductCode eq \"{0}\")", code.Trim()))
