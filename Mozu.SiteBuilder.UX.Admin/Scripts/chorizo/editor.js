@@ -256,6 +256,10 @@
         overGrid: function(val) {
             this._overGrid = val;
         },
+        
+        isOverGrid: function(val) {
+            return this._overGrid;
+        },
 
         _onMousemove: function(e, ui) {
             var x,
