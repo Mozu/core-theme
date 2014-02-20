@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Models.Navigation
 {
@@ -44,7 +45,11 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
 
         public int Index { get; set; }
 
+        [JsonIgnore]
         public NavigationNodeType NodeType { get; set; }
+
+        [JsonProperty(PropertyName = "nodeType")]
+        public string NodeTypeString { get { return NodeType; } set { NodeType = value; } }
 
         public bool IsLeaf { get; set; }
 
