@@ -186,6 +186,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
 
             }
+            var ipAddress = this.HttpContext.Request.Headers["x-forwarded-for"] ?? this.HttpContext.Request.ServerVariables["REMOTE_ADDR"];
+            model.IPAddress = ipAddress;
 
             var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
             var jOrder = JObject.FromObject(model, jSerializer);

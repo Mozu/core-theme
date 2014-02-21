@@ -278,14 +278,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public string Url { get; set; }
 
-        public string IpAddress
-        {
-            get
-            {
-                var req = System.Web.HttpContext.Current.Request;
-                return req.Headers["x-forwarded-for"] ?? req.ServerVariables["REMOTE_ADDR"];;
-            }
-        }
+        //public string IpAddress
+        //{
+        //    get
+        //    {
+        //        var req = System.Web.HttpContext.Current.Request;
+        //        return req.Headers["x-forwarded-for"] ?? req.ServerVariables["REMOTE_ADDR"];;
+        //    }
+        //}
 
     }
 }
