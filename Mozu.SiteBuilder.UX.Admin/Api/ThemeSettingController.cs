@@ -74,7 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var theme = _themeRepository.GetThemeOrDefault(themeId);
             if (theme != null)
             {
-                var file = theme.FileListing.FirstOrDefault(x=> x.VirtualPath == "theme-ui.json");
+                var file = theme.FileListing.GetFileInfo("theme-ui.json", true );
                 if (file != null)
 
                 {
