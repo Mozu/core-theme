@@ -2392,13 +2392,18 @@
     <Content Include="Tests\mocha\basic\lib\chai.js" />
     <Content Include="Tests\mocha\basic\lib\sinon-chai.js" />
     <Content Include="Tests\mocha\basic\lib\sinon.js" />
+    <Content Include="Tests\specs\admin\basic-mocha-bdd-test.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Tests\specs\admin\require-mocha-bdd-test.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Tests\specs\config.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Tests\specs\TestBootstrapper.js" />
+    <Content Include="Tests\specs\TestBootstrapper.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Tests\speed-test.t.js" />
     <Content Include="Tests\unit\app-state-matches-uri.t.js" />
     <Content Include="Tests\unit\scrolling-content-body-adds-scroll-class.js" />
@@ -2547,6 +2552,7 @@
     <Content Include="Tests\specs\chutzpah.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Tests\specs\chutzpahRequireJs.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />

@@ -1,4 +1,4 @@
-﻿window.Ext = Ext || {};
+﻿//window.Ext = {};
 window.Taco = {
     "baseCSSPrefix": "taco-",
     "testHarnessMode": false,

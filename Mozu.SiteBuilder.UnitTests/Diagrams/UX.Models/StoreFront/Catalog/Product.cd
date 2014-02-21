@@ -7,9 +7,9 @@
     </Members>
     <TypeIdentifier />
     <ShowAsAssociation>
-      <Property Name="Content" />
       <Property Name="Images" />
       <Property Name="MainImage" />
+      <Property Name="Content" />
       <Property Name="Price" />
       <Property Name="PriceRange" />
     </ShowAsAssociation>
@@ -19,6 +19,9 @@
   </Class>
   <Class Name="Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductOption">
     <Position X="6.75" Y="0.75" Width="1.75" />
+    <Members>
+      <Method Name="ProductOption" Hidden="true" />
+    </Members>
     <TypeIdentifier />
   </Class>
   <Class Name="Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductContent">
@@ -72,6 +75,9 @@
   </Class>
   <Class Name="Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.CategoryTree">
     <Position X="10.75" Y="1.25" Width="1.75" />
+    <Members>
+      <Method Name="CategoryTree" Hidden="true" />
+    </Members>
     <TypeIdentifier />
     <ShowAsCollectionAssociation>
       <Property Name="Items" />
