@@ -586,7 +586,7 @@
                     process.push(this.addNewCustomer);
                 }
 
-                if (this.get('shopperNotes').has('comments')) {
+                if (this.get('shopperNotes').has('comments') || this.get('ipAddress')) {
                     process.push(this.update);
                 }
 
