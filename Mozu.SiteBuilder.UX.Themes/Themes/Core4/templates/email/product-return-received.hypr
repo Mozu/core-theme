@@ -27,7 +27,7 @@
 	{% endif %}
 	</p>
 
-	{{ labels.returnOtherBlob1|string_format(siteContext.generalSettings.websiteName, model.status, domainName)|safe }}
+	{{ labels.returnReceivedBlob1|string_format(siteContext.generalSettings.websiteName, domainName)|safe }}
 
 	<table class="mz-ordersummary">
         <thead>
@@ -48,7 +48,7 @@
 		</tbody>
     </table>
 
-	{{ labels.returnOtherBlob2|safe }}
+	{{ labels.returnReceivedBlob2|safe }}
 
 	{{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
 
