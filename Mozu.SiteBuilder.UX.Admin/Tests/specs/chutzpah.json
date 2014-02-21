@@ -1,15 +1,14 @@
 ﻿{
     "Framework": "mocha",
     "MochaInterface": "bdd",
-    "TestHarnessReferenceMode": "AMD",
-    "TestHarnessLocationMode": "SettingsFileAdjacent",
     "References" : [
-		{"Path":  "../node_modules/chai/chai.js", "IsTestFrameworkFile": "true" },
+		{ "Path" : "../node_modules/chai/chai.js", "IsTestFrameworkFile": "true" },
 
-        {"Path" : "../../Scripts/resources/lib/init.min.js", "IsTestFrameworkFile": "false" },
-        {"Path" : "TestBootstrapper.js", "IncludeInTestHarness" : "false"  },
+		{ "Path" : "TestBootstrapper.js" },
+		{ "Path" : "../../Scripts/resources/lib/init.min.js" },
 
-		{"Path" : "../node_modules/requirejs/require.js", "IsTestFrameworkFile": "false"  }
+		{ "Path" : "../../Scripts/build/app.js" },
+		{ "Path" : "../../Scripts/build/locale/ext-lang-en.js" }
 
     ]
 }
