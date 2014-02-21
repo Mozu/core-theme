@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web.Hosting;
 using System.Web;
 using System.IO;
+using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Themes;
@@ -72,7 +73,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
          public IEnumerable<ThemeFileSystemInfo> GetLveTemplates()
          {
-             return this.ThemeStack.SelectMany(x=> x.FileListing ).Where(x => x.FullPath.EndsWith(".live")).Where(x => GetThemeFileInfo(x.VirtualPathNoExt, false) == x);
+             return this.ThemeStack.SelectMany(x=> x.FileListing.LiveTemmplates ).Where(x => GetThemeFileInfo(x.VirtualPathNoExt, false) == x);
             
          }
 
@@ -85,7 +86,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             }
             foreach (var theme in this.ThemeStack)
             {
-                    var file = theme.FileListing.FirstOrDefault( x => withExt ? x.VirtualPath == virtualPath : (x.VirtualPathNoExt == virtualPath && x.IsFile));
+                var file = theme.FileListing.GetFileInfo(virtualPath, withExt);
 
                     if (file != null )
                     {
@@ -149,7 +150,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
                 foreach (var theme in _mozuVirtualPathProvider.ThemeStack)
                 {
-                    var exists = theme.FileListing.Any(x => x.VirtualPath == this.VirtualPath);
+                    var exists = theme.FileListing.Exists(this.VirtualPath);
 
 
 

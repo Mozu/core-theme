@@ -99,7 +99,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public List<Models.CMS.WidgetDefinition> Widgets { get; set; }
         
         [IgnoreDataMember]
-        public ThemeFileSystemInfo[] FileListing { get; set; }
+        public ThemeFileSystemInfoCollection  FileListing { get; set; }
 
         /// <summary>
         /// Internal constructor.
@@ -128,6 +128,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public string VirtualPath { get; set; }
         public string VirtualPathNoExt { get; set; }
         public DateTime TimsStamp { get; set; }
+
+        public string ThemeId { get; set; }
 
         public System.IO.Stream  OpenRead()
         {

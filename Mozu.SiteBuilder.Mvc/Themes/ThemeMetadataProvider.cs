@@ -80,10 +80,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 return null;
 
             tmd.Configuration = LoadThemeDescriptor(tmd.ThemePath, METADATA_THEME_FILE_NAME);
-            tmd.FileListing = LoadThemeFileListing(tmd.ThemePath);
+            tmd.FileListing = LoadThemeFileListing(tmd.ThemePath, tmd.Id );
             tmd.Thumbnail = LoadThemeThumbnail(tmd.ThemePath);
             tmd.Labels = LoadThemeLabels(tmd.ThemePath);
-            tmd.TimeStamp = tmd.FileListing.Length == 0 ? DateTime.MaxValue : tmd.FileListing.Max(x => x.TimsStamp);
+            tmd.TimeStamp = tmd.FileListing.TimeStamp;
 
             if (tmd.Configuration == null)
                 return null;
@@ -115,7 +115,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 return null;
 
             tmd.Configuration = LoadThemeDescriptor(tmd.ThemePath, METADATA_ADDON_FILE_NAME);
-            tmd.FileListing = LoadThemeFileListing(tmd.ThemePath);
+            tmd.FileListing = LoadThemeFileListing(tmd.ThemePath, id );
             tmd.Thumbnail = LoadThemeThumbnail(tmd.ThemePath);
 
 
@@ -199,27 +199,28 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// <summary>
         /// Gather info on all files contained within the theme and save them for later access.
         /// </summary>
-        private ThemeFileSystemInfo[] LoadThemeFileListing(string themePath)
+        private ThemeFileSystemInfoCollection LoadThemeFileListing(string themePath, string themeId)
         {
             var dirinfo = new DirectoryInfo(themePath);
             if (!dirinfo.Exists)
                 return null;
 
-            return dirinfo.GetFileSystemInfos("*.*", SearchOption.AllDirectories).Select(x =>
+            return new ThemeFileSystemInfoCollection(dirinfo.GetFileSystemInfos("*.*", SearchOption.AllDirectories).Select(x =>
             {
-                var relPath = x.FullName.Substring(themePath.Length).Trim(new char[] { '\\' }).ToLowerInvariant();
+                var relPath = x.FullName.Substring(themePath.Length).Trim(new char[] {'\\'}).ToLowerInvariant();
                 var relPathNoExt = relPath.GetFilePathNameWithoutExtension();
                 return new ThemeFileSystemInfo()
-                {
-                    Name = x.Name,
-                    FullPath = x.FullName,
-                    TimsStamp = x.LastWriteTimeUtc,
-                    RootPath = themePath,
-                    VirtualPathNoExt = relPathNoExt,
-                    VirtualPath = relPath,
-                    IsFile = !x.Attributes.HasFlag(FileAttributes.Directory)
-                };
-            }).ToArray();
+                       {
+                           Name = x.Name,
+                           ThemeId = themeId,
+                           FullPath = x.FullName,
+                           TimsStamp = x.LastWriteTimeUtc,
+                           RootPath = themePath,
+                           VirtualPathNoExt = relPathNoExt,
+                           VirtualPath = relPath,
+                           IsFile = !x.Attributes.HasFlag(FileAttributes.Directory)
+                       };
+            }));
         }
 
         private string DevThemePath
