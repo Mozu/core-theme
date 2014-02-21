@@ -2,47 +2,40 @@
 
   {% block body-content %}
 
-    <h1 class="mz-pagetitle">
-        {{ labels.orderShipped }}
-    </h1>
+	<p>
+		{{ labels.orderWelcome }} {{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}!
+	</p>
 
-    <br>
-    
-    <h2>{{ labels.orderNo }} <a href="#">{{ model.orderNumber }}</a></h2>
+	<p>{{ labels.orderShipmentBlob1|string_format(siteContext.generalSettings.websiteName, domainName, model.fulfillmentInfo.shippingMethodName)|safe }}</p>
 
-    <br>
+	<dl class="mz-orderheader">
+		<dt>{{ labels.orderNo }}</dt>
+		<dd>{{ model.orderNumber }}</dd>
 
-    <h3>{{ labels.orderWelcome }} {{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }},</h3>
+		<dt>{{ labels.orderDate }}:</dt>
+		<dd>{{ model.auditInfo.createDate }}</dd>
 
-    <p>{{ labels.orderShipmentBlob1 }}</p>
+		<dt>{{ labels.shippingMethod }}:</dt>
+		<dd>{{ model.fulfillmentInfo.shippingMethodName }}</dd>
 
-    <table cellpadding="0" cellspacing="0" border="0" class="mz-email-header">
-        <thead>
-            <tr>
-                <th>
-                    {{ labels.shippedTo }}
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="mz-addresssummary">
-                    {% include "modules/common/address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}
-                    <br><br>
-                    {{ model.fulfillmentInfo.shippingMethodName }}
-                </td>
-            </tr>
-        </tbody>
-    </table>
+		<dt>{{ labels.trackingNumber }}:</dt>
+		<dd>
+			{% for package in model.packages %}
+				{{ package.trackingNumber }}
+			{% endfor %}
+		</dd>
 
+		<dt>{{ labels.shipTo }}:</dt>
+		<dd class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}</dd>
+	</dl>
 
     <h2>{{ labels.itemsShipped }}</h2>
 
 	<table class="mz-ordersummary">
         <thead>
             <tr>
-                <th class="mz-ordersummary-header-product">{{ labels.product }}</th>
                 <th class="mz-ordersummary-header-qty">{{ labels.qty }}</th>
+                <th class="mz-ordersummary-header-product">{{ labels.product }}</th>
             </tr>
         </thead>
 		{% for package in model.packages %}
@@ -51,6 +44,7 @@
 					{% if packageItem.productCode == item.product.productCode %}
 						<tbody class="mz-ordersummary-lineitems">
 						  <tr class="mz-ordersummary-line mz-ordersummary-line-item">
+								<td>{{ packageItem.quantity }}</td>
 								<td class="mz-ordersummary-item-product">
 								  {{ item.product.name }}
 								  {% if item.product.productUsage == 'Bundle' %}
@@ -62,7 +56,6 @@
 								  </dl>
 								  {% endif %}
 								</td>
-								<td>{{ packageItem.quantity }}</td>
 							</tr>
 						</tbody>
 					{% endif %}
@@ -70,5 +63,9 @@
 			{% endfor %}
 		{% endfor %}
     </table>
+
+	{{ labels.orderShipmentBlob2|safe }}
+
+	{{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
 
 {% endblock body-content %}
