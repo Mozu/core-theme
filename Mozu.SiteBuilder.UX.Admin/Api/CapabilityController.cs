@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "edit")]
         public async Task<HttpResponseMessage>  Edit(List<VM.Capability >capabilities )
         {
-            List<SiteSettings.Application.Contracts.Application> apps = new List<SiteSettings.Application.Contracts.Application>();
+            var apps = new List<SiteSettings.Application.Contracts.Internal.Application>();
             foreach (var cap in capabilities)
             {
                 var app = (await _applicationsWebApiClient.GetApplication(cap.AppId)).ReadAsSync();

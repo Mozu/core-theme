@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.Contacts, op => op.ResolveUsing(dc => dc.Contacts))
             .ForMember(x => x.CompanyOrOrganization, op => op.ResolveUsing(dc => dc.CompanyOrOrganization))
             .ForMember(x => x.AcceptsMarketing, op => op.ResolveUsing(dc => dc.AcceptsMarketing))
-            .ForMember(x => x.Groups, op => op.ResolveUsing(dc => (dc.Groups ?? Enumerable.Empty<DC.CustomerGroup>()).Select(g => g.Id )))
+           // .ForMember(x => x.Groups, op => op.ResolveUsing(dc => (dc.Groups ?? Enumerable.Empty<DC.CustomerGroup>()).Select(g => g.Id )))
             .ForMember(x => x.Attributes, op => op.ResolveUsing(dc => dc.Attributes))
             .ForMember(x => x.Notes, op => op.ResolveUsing(dc => dc.Notes))
             .ForMember(x => x.TotalOrderAmount, op => op.ResolveUsing(dc => dc.CommerceSummary != null && dc.CommerceSummary.TotalOrderAmount != null 
@@ -65,7 +65,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 {
                     CurrencyCode = "USD", Amount = x.TotalOrderAmount.HasValue ? x.TotalOrderAmount.Value : 0
                 } }))
-            .ForMember(dc => dc.Groups, op => op.ResolveUsing(x=> (x.Groups ?? Enumerable.Empty<int>() ).Select( _=> new DC.CustomerGroup() {Id=_ }) ))
+          //  .ForMember(dc => dc.Groups, op => op.ResolveUsing(x=> (x.Groups ?? Enumerable.Empty<int>() ).Select( _=> new DC.CustomerGroup() {Id=_ }) ))
             .ForMember(x => x.Attributes, op => op.ResolveUsing(x => x.Attributes))
             .ForMember(dc => dc.TaxExempt, op => op.ResolveUsing(x => x.TaxExempt))
             .ForMember(dc => dc.TaxId, op => op.ResolveUsing(x => x.TaxId))
