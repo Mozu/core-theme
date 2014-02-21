@@ -27,7 +27,7 @@
 	{% endif %}
 	</p>
 
-	{{ labels.returnOtherBlob1|string_format(siteContext.generalSettings.websiteName, model.status, domainName)|safe }}
+	{{ labels.returnApprovedBlob1|string_format(siteContext.generalSettings.websiteName, domainName)|safe }}
 
 	<table class="mz-ordersummary">
         <thead>
@@ -48,7 +48,15 @@
 		</tbody>
     </table>
 
-	{{ labels.returnOtherBlob2|safe }}
+	{{ labels.returnApprovedBlob2|safe }}
+
+	<dd class="mz-addresssummary">
+		<span>{{ rmaLocation.shippingOriginContact.firstName}} {{ rmaLocation.shippingOriginContact.lastNameOrSurname }}</span>
+		<span>{{ rmaLocation.shippingOriginContact.companyOrOrganization }}</span>
+		{% include "modules/common/address-summary" with model=rmaLocation %}
+	</dd>
+
+	{{ labels.returnApprovedBlob3|safe }}
 
 	{{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
 

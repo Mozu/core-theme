@@ -91,7 +91,7 @@
 		"title": "Order Shipped",
 		"template": "email/order-shipped",
 		"properties": {
-		  "subject": "You're Order Has Shipped #{model.orderNumber}"
+		  "subject": "Your Order Has Shipped #{model.orderNumber}"
 		}
 	  },
 	  {
@@ -102,14 +102,50 @@
 		  "subject": "Order Confirmation #{model.orderNumber}"
 		}
 	  },
+	  /*
 	  {
-		"id": "return.changed",
-		"title": "Return Status",
-		"template": "email/product-return",
+		"id": "return.created",
+		"title": "RMA Request Created",
+		"template": "email/product-return-created",
 		"properties": {
-		  "subject": "RMA Request Approved RMA Request Approved"
+		  "subject": "Your Return Request"
 		}
 	  },
+	  */
+	  {
+		"id": "return.authorized",
+		"title": "RMA Request Approved",
+		"template": "email/product-return-authorized",
+		"properties": {
+		  "subject": "RMA Request Approved"
+		}
+	  },
+	  {
+		"id": "return.rejected",
+		"title": "RMA Request Rejected",
+		"template": "email/product-return-rejected",
+		"properties": {
+		  "subject": "RMA Request Rejected"
+		}
+	  },
+	  {
+		"id": "return.closed",
+		"title": "Return Item Received",
+		"template": "email/product-return-received",
+		"properties": {
+		  "subject": "Return Item Received"
+		}
+	  },
+	  /*
+	  {
+		"id": "return.changed",
+		"title": "Return Has Been Updated",
+		"template": "email/product-return",
+		"properties": {
+		  "subject": "Your Return Request"
+		}
+	  },
+	  */
 	  {
 		"id": "user.created",
 		"title": "New Login Created",
