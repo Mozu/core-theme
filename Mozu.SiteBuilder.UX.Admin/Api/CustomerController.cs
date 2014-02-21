@@ -25,14 +25,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class CustomerController : BaseController
     {
         private readonly ICustomerAccountWebApiClient _customerWebApiClient;
-        private readonly ICustomerGroupWebApiClient _customerGroupWebApiClient;
+      //  private readonly ICustomerGroupWebApiClient _customerGroupWebApiClient;
         private readonly ICreditWebApiClient _creditWebApiClient;
         //private readonly ICustomerVisitWebApiClient _customerVisitWebApiClient;
 
-        public CustomerController(ICustomerAccountWebApiClient customerWebApiClient, Mozu.Customer.Contracts.Clients.ICustomerGroupWebApiClient customerGroupWebApiClient, ICreditWebApiClient creditWebApiClient/*, ICustomerVisitWebApiClient customerVisitWebApiClient*/)
+        public CustomerController(ICustomerAccountWebApiClient customerWebApiClient, 
+            //Mozu.Customer.Contracts.Clients.ICustomerGroupWebApiClient customerGroupWebApiClient, 
+            ICreditWebApiClient creditWebApiClient/*, ICustomerVisitWebApiClient customerVisitWebApiClient*/)
         {
             _customerWebApiClient = customerWebApiClient;
-            _customerGroupWebApiClient = customerGroupWebApiClient;
+           // _customerGroupWebApiClient = customerGroupWebApiClient;
             _creditWebApiClient = creditWebApiClient;
             //_customerVisitWebApiClient = customerVisitWebApiClient;
         }
@@ -48,21 +50,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "groups/list")]
         public async Task<HttpResponseMessage> GetGroups()
         {
-            var ret =(await _customerGroupWebApiClient.GetGroups(0, 200)).ReadAsSync().Items.OrderBy(x => x.Name).Select(x => new KeyValuePair<int, string>(x.Id, x.Name)).ToList();
+           // var ret =(await _customerGroupWebApiClient.GetGroups(0, 200)).ReadAsSync().Items.OrderBy(x => x.Name).Select(x => new KeyValuePair<int, string>(x.Id, x.Name)).ToList();
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2(ret));
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(new List<string>()));
         }
 
         [HttpPostRoute(UriTemplate = "groups/create")]
         public async Task<Response<List<KeyValuePair<int, string>>>> EditGroups(List<KeyValuePair<int, string>> groups)
         {
 
-            var tasks = groups.Select(x => _customerGroupWebApiClient.AddGroup(new DC.CustomerGroup() {Id = x.Key, Name = x.Value})).ToList() ;
+           // var tasks = groups.Select(x => _customerGroupWebApiClient.AddGroup(new DC.CustomerGroup() {Id = x.Key, Name = x.Value})).ToList() ;
 
-            await Task.WhenAll(tasks);
+           // await Task.WhenAll(tasks);
 
-            var ret = tasks.Select(x => x.Result.ReadAsSync()).Select(x => new KeyValuePair<int, string>(x.Id, x.Name)).ToList();
-            return List2(ret);
+           // var ret = tasks.Select(x => x.Result.ReadAsSync()).Select(x => new KeyValuePair<int, string>(x.Id, x.Name)).ToList();
+            return List2(new List<KeyValuePair<int, string>>());
         }
        
 
@@ -196,18 +198,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         private Task ManageGroups(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
         {
-            List<Task> groupManagementTasks = new List<Task>();
-            dcExistingCustomer.Groups = dcExistingCustomer.Groups ?? new List<DC.CustomerGroup>();
-            var existingGroups = dcExistingCustomer.Groups.Select(x => x.Id).ToList();
-            var newGroups = dcCustomer.Groups.Select(x => x.Id).ToList();
+            throw new NotImplementedException();
+            //List<Task> groupManagementTasks = new List<Task>();
+            //dcExistingCustomer.Groups = dcExistingCustomer.Groups ?? new List<DC.CustomerGroup>();
+            //var existingGroups = dcExistingCustomer.Groups.Select(x => x.Id).ToList();
+            //var newGroups = dcCustomer.Groups.Select(x => x.Id).ToList();
 
-            var groupsToAdd = newGroups.Except(existingGroups);
-            var groupsToDel = existingGroups.Except(newGroups);
+            //var groupsToAdd = newGroups.Except(existingGroups);
+            //var groupsToDel = existingGroups.Except(newGroups);
 
-            groupManagementTasks.AddRange( groupsToAdd.Select(x => _customerWebApiClient.AddAccountGroup(dcCustomer.Id, x) ) );
-            groupManagementTasks.AddRange( groupsToDel.Select(x => _customerWebApiClient.DeleteAccountGroup(dcCustomer.Id, x)) );
+            //groupManagementTasks.AddRange( groupsToAdd.Select(x => _customerWebApiClient.AddAccountGroup(dcCustomer.Id, x) ) );
+            //groupManagementTasks.AddRange( groupsToDel.Select(x => _customerWebApiClient.DeleteAccountGroup(dcCustomer.Id, x)) );
 
-            return Task.WhenAll(groupManagementTasks);
+            //return Task.WhenAll(groupManagementTasks);
         }
 
         private class ContactIdEqualityComparer : IEqualityComparer<DC.CustomerContact> 

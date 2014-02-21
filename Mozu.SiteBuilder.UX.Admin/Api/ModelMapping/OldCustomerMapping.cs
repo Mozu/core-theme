@@ -89,8 +89,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<AP.UserSystemData, AC.UserSystemData>();
 
             // TODO: Consider renaming, this will probably be confusing at some point
-            Mapper.CreateMap<CS.CustomerGroup, SB.CustomerGroup>();
-            Mapper.CreateMap<SB.CustomerGroup, CS.CustomerGroup>();
+       //     Mapper.CreateMap<CS.CustomerGroup, SB.CustomerGroup>();
+        //    Mapper.CreateMap<SB.CustomerGroup, CS.CustomerGroup>();
         }
     }
 }

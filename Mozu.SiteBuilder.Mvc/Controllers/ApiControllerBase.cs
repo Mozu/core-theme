@@ -218,7 +218,7 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             return View(viewName, model: null);
         }
 
-        protected internal virtual RedirectResult Redirect(string url)
+        protected internal virtual new RedirectResult Redirect(string url)
         {
 
             return new RedirectResult(url);

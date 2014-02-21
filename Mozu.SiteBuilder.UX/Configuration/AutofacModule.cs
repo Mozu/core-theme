@@ -51,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>().InstancePerApiRequest();
             builder.RegisterType<SbApiContextBuilder>().As<IApiContextBuilder>();
 
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteBuilder.Mvc.Customers.CustomerRepository).Assembly);
+        //    builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteBuilder.Mvc.Customers.CustomerRepository).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Customer.Contracts.Clients.CustomerAccountWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.AdminUser.Contracts.Clients.IMultiScopeInvitationWebApiClient).Assembly);
             // builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Content.Contracts.Clients.DocumentListWebApiClient    ).Assembly);
