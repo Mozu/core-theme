@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using System.Web.Http;
+using System.Linq;
 using Autofac;
 using Autofac.Integration.WebApi;
 using Burrows.Autofac;
@@ -13,6 +14,7 @@ using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Handlers.Message;
 using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
+using Mozu.Core.Messaging.Consume;
 using Mozu.Core.Messaging.Publish;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
@@ -22,6 +24,7 @@ using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Users;
+using Mozu.SiteBuilder.UX.Caching;
 using Mozu.SiteBuilder.UX.Messaging;
 using Mozu.SiteBuilder.UX.Navigation;
 using Mozu.SiteSettings.General.Contracts.Clients;
@@ -76,8 +79,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
 
-
-            builder.RegisterType<DefaultStorefrontCache>().As<IStorefrontCache>().InstancePerApiRequest();
+            // TODO: this is an old cache implementation that needs to be deleted
+            builder.RegisterType<DefaultStorefrontCache>().As<Mozu.SiteBuilder.Mvc.IStorefrontCache>().InstancePerApiRequest();
             builder.RegisterType<ServiceClientMessageHandler>().InstancePerApiRequest();
 
             //builder.Register(c => new GeneralSettingsWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IGeneralSettingsWebApiClient>().InstancePerLifetimeScope();
@@ -105,27 +108,38 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             builder.RegisterType<GeneralSettingsWebApiClient>().As<IGeneralSettingsWebApiClient>().InstancePerApiRequest();
 
-
+            // set up a MemoryCache just for us
+            builder.Register(c => new System.Runtime.Caching.MemoryCache("sfcache")).Named<System.Runtime.Caching.ObjectCache>("sfcache").SingleInstance();
+            builder.RegisterType<Mozu.SiteBuilder.UX.Caching.StorefrontCache>()
+                .WithParameter(
+                    // when parameter is a type of ObjectCache
+                    (p,c) => p.ParameterType.IsSubclassOf(typeof(System.Runtime.Caching.ObjectCache)),
+                    // resolve it using this named service
+                    (p,c) => c.ResolveNamed<System.Runtime.Caching.ObjectCache>("sfcache")
+                )
+                .InstancePerApiRequest()
+            ;
 
             // add these two logging context providers for loggers provided by the DI framework.
             builder.RegisterType<CurrentRequestLoggingContextProvider>().As<ILoggingContextProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", ApplicationConstants.APPLICATION_NAME).InstancePerLifetimeScope();
 
             builder.RegisterType<VisitEventPublisher>().AsSelf().InstancePerApiRequest();
-            builder.RegisterType<CacheItemsInvalidConsumer>().AsSelf().SingleInstance();
+            builder.RegisterType<CacheItemsInvalidConsumer>().AsSelf();
 
-            // Register a MassTransit/Burrows IPublisher.
+            // Register a MassTransit/Burrows IPublisher for visits.
             // The rabbitMQ connectionstring is used to recieve control messages sent to our application by MassTransit.
-            builder.Register(c => c.Resolve<ISettings>().CreatePublisher("SiteBuilderMessageQueue", "Mozu.SiteBuilder.UX")).As<IPublisher>().SingleInstance();
+            builder.Register(c => c.Resolve<ISettings>().CreatePublisher("SiteBuilderOutgoingMessageQueue", "Mozu.SiteBuilder.UX")).As<IPublisher>().SingleInstance();
 
-            // Register a MassTransit/Burrows Consumer.
-            // The rabbitMQ connectionstring is used to recieve control messages sent to our application by MassTransit.
-            //builder.Register(c => new Publisher(sbc => sbc.Configure("SiteBuilderMessageQueue", subs => subs.LoadFrom(c.Resolve<ILifetimeScope>()))
-            //    .UseLog4Net()
-            //    .SetConcurrentConsumerLimit(10), ps => ps.UsePublisherConfirms("SiteBuilderMessageQueue2").WithFileBackingStore())
-            //).As<IPublisher>().SingleInstance();
-
-            // builder.Register(c => c.Resolve<ISettings>().ConfigureConsumer("SiteBuilderMessageQueue", 
+            // Register a MassTransit/Burrows Consumer for cache invalidation.
+            builder
+                .Register(c => ServiceBusFactory.New(
+                    sbc => c.Resolve<ISettings>()
+                        .ConfigureConsumer("SiteBuilderIncomingMessageQueue", sbc, subs => subs.LoadFrom(c.Resolve<ILifetimeScope>()))
+                        .SetConcurrentConsumerLimit(10)
+                    ))
+                .SingleInstance()
+                .AutoActivate();
         }
     }
 }

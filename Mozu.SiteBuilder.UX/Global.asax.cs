@@ -49,12 +49,18 @@ namespace Mozu.SiteBuilder.UX
             }
         }
 
+        protected void Application_End()
+        {
+            // dispose of the IServiceBus and of the container
+            if (_bs != null && _bs.Container != null)
+            {
+                var sb = _bs.Container.ResolveOptional<Burrows.IServiceBus>();
+                if (sb != null)
+                    sb.Dispose();
 
-       
-
-        
-
-        
+                _bs.Container.Dispose();
+            }
+        }
        
     }
 

@@ -11,6 +11,7 @@ using Mozu.Core;
 
 namespace Mozu.SiteBuilder.Mvc
 {
+    [Obsolete]
     public interface  IStorefrontCache
     {
         object this[string key] { get; set; }
@@ -18,6 +19,8 @@ namespace Mozu.SiteBuilder.Mvc
         IEnumerable<string> Keys { get; }
         void Clear(string key);
     }
+
+    [Obsolete]
     public class StorefrontCache : IStorefrontCache
     {
         private readonly HttpRequestMessage _httpRequestMessage;

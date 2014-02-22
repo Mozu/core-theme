@@ -410,6 +410,10 @@
     <Compile Include="Areas\Misc\Controllers\ContentController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\LocationController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\VisitController.cs" />
+    <Compile Include="Caching\ObjectCacheExtensions.cs" />
+    <Compile Include="Caching\StorefrontCacheControl.cs" />
+    <Compile Include="Caching\CacheScope.cs" />
+    <Compile Include="Caching\StorefrontCache.cs" />
     <Compile Include="Configuration\ApplicationConstants.cs" />
     <Compile Include="Configuration\RouteConfig.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
