@@ -324,6 +324,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App1.config" />
     <None Include="Diagrams\Admin\Api\Models\ProductModels\Product.cd" />
     <None Include="Diagrams\UX.Models\StoreFront\Catalog\Product.cd" />
     <None Include="Diagrams\UX.Models\StoreFront\Catalog\ProductSearchResults.cd" />
