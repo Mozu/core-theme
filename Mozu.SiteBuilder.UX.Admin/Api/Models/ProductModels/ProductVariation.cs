@@ -27,7 +27,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "deltaPrice")]
         public Decimal? DeltaPriceValue { get; set; }
 
-
+        /// <summary>
+        /// MSRP of delta pricing
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "deltaMsrp")]
+        public Decimal? DeltaMSRP { get; set; }
 
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Decimal? DeltaWeight { get; set; }
