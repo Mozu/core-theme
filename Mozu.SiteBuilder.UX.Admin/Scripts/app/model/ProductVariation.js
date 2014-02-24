@@ -47,6 +47,31 @@ Ext.define('Taco.model.ProductVariation', {
             "useNull": true
         },
         {
+            name: "fulfillmentTypesSupported",
+            type: "auto",
+            defaultValue: []
+        },
+        {
+            name: "mfgPartNumber",
+            type: "string",
+            useNull: true
+        },
+        {
+            name: "distPartNumber",
+            type: "string",
+            useNull: true
+        },
+        {
+            name: "costCurrencyCode",
+            type: "string",
+            useNull: true
+        },
+        {
+            name: "cost",
+            type: "float",
+            useNull: true
+        },
+        {
             "name": "exists",
             "type": "boolean",
             "useNull": true
