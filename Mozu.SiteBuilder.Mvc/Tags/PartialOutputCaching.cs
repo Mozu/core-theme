@@ -142,7 +142,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
 
 
-                string key = string.Join("|", arguments.Where(x => x.Value != null).Select(x => x.Value)) + apiCtx.SiteId + sc.HashString + viewPath + loc;
+                string key = string.Join("|", arguments.Where(x => x.Value != null).Select(x => x.Value)) + apiCtx.SiteId + sc.HashString + viewPath + loc + (pc.IsSecure ?"1":"0");
                 var output = MemoryCache.Default[key] as string[];
                 
                 if (output == null)
