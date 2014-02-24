@@ -36,9 +36,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     : false))
                 .ForMember(x => x.Gateway, op => op.ResolveUsing(dc => {
                     if (dc.PaymentSettings.Gateways != null && dc.PaymentSettings.Gateways.Count > 0)
-                        return Mapper.Map<Gateway>(dc.PaymentSettings.Gateways.First());
-                    else 
+                    {
+                        var sourceGateway = dc.PaymentSettings.Gateways.FirstOrDefault(g => g.GatewayAccount != null && g.GatewayAccount.IsActive);
+                        return sourceGateway != null ? Mapper.Map<Gateway>(sourceGateway) : new Gateway();
+                    }
+                    else
+                    {
                         return new Gateway();
+                    }
                 }))
                 .ForMember(x => x.ExternalPaymentWorkflows, op => op.ResolveUsing(dc => (dc.PaymentSettings != null) 
                     ? dc.PaymentSettings.ExternalPaymentWorkflowDefinitions 
