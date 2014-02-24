@@ -96,6 +96,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? SalePrice { get; set; }
 
+        /// <summary>
+        /// Manufacturer Suggested Retail Price
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "msrp")]
+        public decimal? MSRP { get; set; }
+
+        /// <summary>
+        /// Minimum Advertised Price
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "map")]
+        public decimal? MAP { get; set; }
+
+        /// <summary>
+        /// Minimum Advertised Price Start Date
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "mapStartDate")]
+        public DateTime? MAPStartDate { get; set; }
+
+        /// <summary>
+        /// Minimum Advertised Price End Date
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "mapEndDate")]
+        public DateTime? MAPEndDate { get; set; }
+
         #endregion
 
         // TODO: categories
