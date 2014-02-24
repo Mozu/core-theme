@@ -268,8 +268,11 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         // auto select the first record in the grid after it loads;
         this.gridPanel.store.on({
             load: function () {
-                //select the first row;                
-                gridPanel.getSelectionModel().selectRange(0, 0, false)
+                //select the first row;
+                if (gridPanel.store.getCount()) {
+                    gridPanel.getSelectionModel().selectRange(0, 0, false)
+                }
+                
             }
         })
         
@@ -468,8 +471,11 @@ Ext.define('Taco.core.ux.browser.Browsable', {
             isNewRecord = record.phantom;
         // clear unpersisted new records when the user its the cancel button;
         if (isNewRecord && !record.leaveOnCancel) {            
-            this.store.remove(record);            
-            this.gridPanel.getSelectionModel().selectRange(0, 0, false);
+            this.store.remove(record);
+
+            if (this.gridPanel.store.getCount()) {
+                this.gridPanel.getSelectionModel().selectRange(0, 0, false);
+            }
         }
     },
 

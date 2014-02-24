@@ -106,7 +106,7 @@ Ext.define('Taco.core.ux.mixins.RowEditable', {
         // clear unpersisted new records when the user its the cancel button;
         if (isNewRecord) {
             this.store.remove(record);            
-            if (this.getSelectionModel()) {
+            if (this.store.getCount() && this.getSelectionModel()) {
                 this.getSelectionModel().selectRange(0, 0, false);
             }
             
