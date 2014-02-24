@@ -17,6 +17,11 @@ Ext.define('Taco.model.ProductVariation', {
             "useNull": true
         },
         {
+            name: "deltaMsrp",
+            type: "float",
+            useNull: true
+        },
+        {
             "name": "deltaWeight",
             "type": "float",
             "useNull": true
@@ -85,7 +90,8 @@ Ext.define('Taco.model.ProductVariation', {
             "name": "productCode",
             "type": "string",
             "useNull": true
-        }, {
+        },
+        {
             name: 'options',
             type: 'any',
             defaultValue: []
