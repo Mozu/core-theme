@@ -198,6 +198,11 @@ Ext.define('Taco.model.Product', {
             "useNull": true
         },
         {
+            name: "plu",
+            type: "string",
+            useNull: true
+        },
+        {
             "name": "freeShipping",
             "type": "boolean",
             "useNull": true
@@ -258,6 +263,63 @@ Ext.define('Taco.model.Product', {
             "useNull": true
         },
         {
+            name: "msrp",
+            type: "float",
+            useNull: true
+        },
+        {
+            name: "map",
+            type: "float",
+            useNull: true
+        },
+        {
+            name: "mapStartDate",
+            type: "date",
+            useNull: true
+        },
+        {
+            name: "mapEndDate",
+            type: "date",
+            useNull: true
+        },
+        {
+            name: "mfgPartNumber",
+            type: "string",
+            useNull: true
+        },
+        {
+            name: "distPartNumber",
+            type: "string",
+            useNull: true
+        },
+        {
+            name: "costCurrencyCode",
+            type: "string",
+            useNull: true
+        },
+        {
+            name: "cost",
+            type: "float",
+            useNull: true
+        },
+        {
+            name: "discountsRestricted",
+            type: "boolean",
+            useNull: true
+        },
+        {
+            name: "discountRestrictionStartDate",
+            type: "date",
+            useNull: true
+        },
+        {
+            name: "discountRestrictionEndDate",
+            type: "date",
+            useNull: true
+        },
+
+
+        {
             "name": "packageWeight",
             "type": "float",
             "defaultValue": 1,
@@ -280,6 +342,11 @@ Ext.define('Taco.model.Product', {
             "type": "float",
             "defaultValue": 1,
             "useNull": true
+        },
+        {
+            name: "fulfillmentTypesSupported",
+            type: "auto",
+            defaultValue: []
         },
         {
             "name": "productInCatalogs",

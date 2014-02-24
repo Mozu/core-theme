@@ -83,6 +83,26 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
             "useNull": true
         },
         {
+            name: "msrp",
+            type: "float",
+            useNull: true
+        },
+        {
+            name: "map",
+            type: "float",
+            useNull: true
+        },
+        {
+            name: "mapStartDate",
+            type: "date",
+            useNull: true
+        },
+        {
+            name: "mapEndDate",
+            type: "date",
+            useNull: true
+        },
+        {
             "name": "catalogId",
             "type": "int"
         },
