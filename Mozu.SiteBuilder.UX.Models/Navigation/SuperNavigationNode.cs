@@ -55,8 +55,10 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
 
         public bool IsHomePage { get; set; }
 
+        [JsonIgnore]
         public IRuntimeNavigationNode Parent { get; set; }
 
+        [JsonIgnore]
         public ICollection<IRuntimeNavigationNode> Items { get; set;  }
     }
 }
