@@ -20,8 +20,17 @@
           "name": "enablePartialCaching",
           "fieldLabel": "Enable Partial Caching",
           "value" :true
+        },
+        {
+          "xtype": "checkbox",
+          "name": "useDebugScripts",
+          "fieldLabel": "Debug Mode (use unminified JavaScript)"
+        },
+        {
+          "xtype": "checkbox",
+          "name": "showAddressTypeDropdown",
+          "fieldLabel": "Show Address Type dropdown in Address Forms (Residential/Commercial)"
         }
-	  
       ]
     },
     {
@@ -34,6 +43,8 @@
           "name": "gutterWidth",
           "fieldLabel": "Base Margin Width",
           "allowBlank": false,
+          "editable": false,
+          "forceSelection": true,
           "store": [
             "15px",
             "20px",
@@ -55,6 +66,8 @@
           "name": "font",
           "fieldLabel": "Font",
           "allowBlank": false,
+          "editable": false,
+          "forceSelection": true,
           "store": [
             "Source Sans Pro",
             "Open Sans",
@@ -69,6 +82,8 @@
           "name": "fallbackFontFamily",
           "fieldLabel": "Fallback Font Family",
           "allowBlank": false,
+          "editable": false,
+          "forceSelection": true,
           "store": [
             "sans-serif",
             "serif"
@@ -93,6 +108,8 @@
           "xtype": "combo",
           "name": "defaultPageSize",
           "allowBlank": false,
+          "editable": false,
+          "forceSelection": true,
           "store": [
             15,
             25,
