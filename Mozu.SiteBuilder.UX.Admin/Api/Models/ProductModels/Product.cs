@@ -89,12 +89,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         public DateTime? LastPublishedDate { get; set; }
 
 
-
         /// <summary>
         /// The parent product code, if any.
         /// </summary>
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string BaseProductCode { get; set; }
+
+        /// <summary>
+        /// Price Lookup Unit
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "plu")]
+        public string PLU { get; set; }
 
         /// <summary>
         /// The product name.
@@ -124,42 +129,135 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ProductLocalizedImage> ProductImages { get; set; }
 
+        #endregion
+
+        #region Price
+
+        /// <summary>
+        /// Is taxable
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public bool IsTaxable { get; set; }
+                
         /// <summary>
         /// The list price.
         /// </summary>
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? ListPrice { get; set; }
 
         /// <summary>
         /// The price.
         /// </summary>
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? Price { get; set; }
-
-
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ProductProperty> Properties { get; set; }
-
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ProductExtra> Extras { get; set; }
-
-
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ProductProperty> Options { get; set; }
 
         /// <summary>
         /// The sale price.
         /// </summary>
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? SalePrice { get; set; }
 
         /// <summary>
-        /// Is taxable
+        /// Manufacturer Suggested Retail Price
         /// </summary>
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool IsTaxable { get; set; }
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "msrp")]
+        public decimal? MSRP { get; set; }
+
+        /// <summary>
+        /// Minimum Advertised Price
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "map")]
+        public decimal? MAP { get; set; }
+
+        /// <summary>
+        /// Minimum Advertised Price Start Date
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "mapStartDate" )]
+        public DateTime? MAPStartDate { get; set; }
+
+        /// <summary>
+        /// Minimum Advertised Price End Date
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "mapEndDate")]
+        public DateTime? MAPEndDate { get; set; }
+
         #endregion
-        
+
+
+        #region Supplier Info
+
+        /// <summary>
+        /// Manufacturer Part Number
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string MfgPartNumber { get; set; }
+
+        /// <summary>
+        /// Distributor Part Number
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string DistPartNumber { get; set; }
+
+        /// <summary>
+        /// Cost Currency Code
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string CostCurrencyCode { get; set; }
+
+        /// <summary>
+        /// Cost
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public decimal? Cost { get; set; }
+
+        #endregion
+
+        #region Restricted Discounts
+        /// <summary>
+        /// Default is false, when true dates may apply, null dates mean beginning/end of time
+        /// </summary>
+        public bool DiscountsRestricted { get; set; }
+
+        /// <summary>
+        /// If discount restricted, then start date of restriction or null to indicate indefinite
+        /// </summary>
+        public DateTime? DiscountRestrictionStartDate { get; set; }
+
+        /// <summary>
+        /// If discount restricted, then end date of restriction or null to indicate indefinite
+        /// </summary>
+        public DateTime? DiscountRestrictionEndDate { get; set; }
+
+        #endregion
+
+        #region Properties
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<ProductProperty> Properties { get; set; }
+
+        #endregion
+
+        #region Extras
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<ProductExtra> Extras { get; set; }
+
+        #endregion
+
+        #region Options
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<ProductProperty> Options { get; set; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<ProductVariationOption> VariationOptions { get; set; }
+
+        public bool HasConfigurableOptions { get; set; }
+
+        public bool HasStandaloneOptions { get; set; }
+
+        #endregion
+
         #region Inventory
         // TODO: track inventory
 
@@ -169,15 +267,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? StockOnHand { get; set; }
 
-
-
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public StockOnHandAdjustment StockOnHandAdjustment { get; set; }
 
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? ProductTypeId { get; set; }
         
-
         /// <summary>
         /// Hide when out of stock.
         /// </summary>
@@ -192,19 +287,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? IsBackOrderAllowed { get; set; }
 
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string OutOfStockBehavior { get; set; }
+
         // TODO: low stock threshold
-
-        #endregion
-
-        #region Extras
-
-        // TODO: Extras
-
-        #endregion
-
-        #region Properties
-
-        // TODO: Properties
 
         #endregion
 
@@ -232,6 +318,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// </summary>
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? PackageHeight { get; set; }
+
+        /// <summary>
+        /// Fulfillment Types Supported (DirectShip, InStorePickup, or Both)
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string[] FulfillmentTypesSupported { get; set; }
 
         #endregion
 
@@ -263,8 +355,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
         #endregion
 
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ProductVariationOption> VariationOptions { get; set; }
+        #region Catalogs
 
         /// <summary>
         /// A collection of site-specific overrides for this product.
@@ -275,14 +366,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? MasterCatalogId { get; set; }
 
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string OutOfStockBehavior { get; set; }
+        #endregion
 
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ProductUsage { get; set; }
 
-        public bool HasConfigurableOptions { get; set; }
-        
-        public bool HasStandaloneOptions { get; set; }
+
     }
 }

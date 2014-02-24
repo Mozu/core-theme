@@ -38,7 +38,39 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? StockOnOrder { get; set; }
 
-      
+        /// <summary>
+        /// Supported Fulfillment Types
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string FulfillmentTypesSupported { get; set; }
+
+        #region Supplier Info
+
+        /// <summary>
+        /// Manufacturer Part Number
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string MfgPartNumber { get; set; }
+
+        /// <summary>
+        /// Distributor Part Number
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string DistPartNumber { get; set; }
+
+        /// <summary>
+        /// Cost Currency Code
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string CostCurrencyCode { get; set; }
+
+        /// <summary>
+        /// Cost
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public decimal? Cost { get; set; }
+
+        #endregion
 
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ProductVariationOption> Options { get; set; }

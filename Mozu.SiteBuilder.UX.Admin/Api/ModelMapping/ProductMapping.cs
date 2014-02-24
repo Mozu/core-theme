@@ -31,6 +31,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             var NULLCONTENT = new DC.ProductLocalizedContent();
             var NULLPRICE = new DC.ProductPrice();
             var NULLPUB = new DC.ProductPublishingInfo();
+            var NULLPRICEBEHAVE = new DC.ProductPricingBehaviorInfo();
+            var NULLSUPPLIER = new DC.ProductSupplierInfo();
 
             Mapper.CreateMap<DC.BundledProduct, BundledProduct>()
                   .ForMember(x => x.SalePrice, opt => opt.ResolveUsing(x => (x.Price != null) ? x.Price.SalePrice : null))
@@ -81,6 +83,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
            
                 .ForMember(x => x.Price, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).Price))
                 .ForMember(x => x.SalePrice, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).SalePrice))
+                .ForMember(x => x.MSRP, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).MSRP))
+                .ForMember(x => x.MAP, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).MAP))
+                .ForMember(x => x.MAPStartDate, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).MAPStartDate))
+                .ForMember(x => x.MAPEndDate, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).MAPEndDate))
+
                 //todo:what?
                // .ForMember(x => x.IsHiddenWhenOutOfStock, op => op.ResolveUsing(dc => dc.i))
                 .ForMember(x => x.ProductTypeId, op => op.ResolveUsing(dc => dc.ProductTypeId))
@@ -99,6 +106,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember( x=> x.Properties , op=> op.ResolveUsing(dc=> dc.Properties ))
                 .ForMember(x => x.Options, op => op.ResolveUsing(dc => dc.Options))
                 .ForMember(x => x.ProductImages, op => op.ResolveUsing(dc => (dc.Content ?? NULLCONTENT).ProductImages))
+                .ForMember(x => x.DiscountsRestricted, op => op.ResolveUsing(dc => (dc.PricingBehavior ?? NULLPRICEBEHAVE).DiscountsRestricted))
+                .ForMember(x => x.DiscountRestrictionStartDate, op => op.ResolveUsing(dc => (dc.PricingBehavior ?? NULLPRICEBEHAVE).DiscountRestrictionStartDate))
+                .ForMember(x => x.DiscountRestrictionEndDate, op => op.ResolveUsing(dc => (dc.PricingBehavior ?? NULLPRICEBEHAVE).DiscountRestrictionEndDate))
+                .ForMember(x => x.MfgPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).MfgPartNumber))
+                .ForMember(x => x.DistPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).DistPartNumber))
+                .ForMember(x => x.Cost, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).Cost))
+                .ForMember(x => x.MfgPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).MfgPartNumber))
+                .ForMember(x => x.DistPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).DistPartNumber))
+                .ForMember(x => x.CostCurrencyCode, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).CostCurrencyCode))
+                .ForMember(x => x.Cost, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).Cost))
 
                 //ignores
                 .ForMember(m => m.ListPrice, op => op.Ignore())
@@ -126,7 +143,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         ? "DisplayMessage" : p.OutOfStockBehavior 
                     }))
                 .ForMember(dc => dc.ProductCode, op => op.ResolveUsing(p => p.ProductCode))
-                 .ForMember(x => x.ProductUsage, op => op.ResolveUsing(x => x.ProductUsage))
+                .ForMember(x => x.ProductUsage, op => op.ResolveUsing(x => x.ProductUsage))
                 .ForMember(dc => dc.Properties, op => op.ResolveUsing(p => p.Properties))
                 .ForMember(dc => dc.Options, op => op.ResolveUsing(p => p.Options))
                 .ForMember(x => x.Extras, op => op.ResolveUsing(dc => dc.Extras == null 
@@ -160,9 +177,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         ISOCurrencyCode = "USD",
                         // ListPrice = p.ListPrice,
                         Price = p.Price,
-                        SalePrice = p.SalePrice
+                        SalePrice = p.SalePrice,
+                        MSRP = p.MSRP,
+                        MAP = p.MAP,
+                        MAPStartDate = p.MAPStartDate,
+                        MAPEndDate = p.MAPEndDate
                     }
                 ))
+                .ForMember(dc => dc.SupplierInfo, op => op.ResolveUsing(x => 
+                    new DC.ProductSupplierInfo()
+                    {
+                        DistPartNumber = x.DistPartNumber,
+                        MfgPartNumber = x.MfgPartNumber,
+                        CostCurrencyCode = x.CostCurrencyCode,
+                        Cost = x.Cost                   
+                    }
+                ))
+
                 .ForMember(x => x.PackageHeight, op => op.ResolveUsing(x => x.PackageHeight == null 
                     ? null: new Measurement { Unit = "in", Value = x.PackageHeight }))
                 .ForMember(x => x.PackageLength, op => op.ResolveUsing(x => x.PackageLength == null 
@@ -184,6 +215,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.VariationKey, op => op.Ignore())
                 .ForMember(dc => dc.PublishingInfo, op => op.Ignore())
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
+                .ForMember(dc => dc.PricingBehavior, op => op.ResolveUsing(x => new DC.ProductPricingBehaviorInfo
+                {
+                    DiscountsRestricted = x.DiscountsRestricted,
+                    DiscountRestrictionStartDate = x.DiscountRestrictionStartDate,
+                    DiscountRestrictionEndDate = x.DiscountRestrictionEndDate,
+                }))
 
                 .AfterMap((x, y) =>
                  {
@@ -358,6 +395,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.MetaTagKeywords, op => op.ResolveUsing(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagKeywords))
                 .ForMember(x => x.SEOFriendlyUrl, op => op.ResolveUsing(dc => dc.SEOContent == null ? null : dc.SEOContent.SEOFriendlyUrl))
                 .ForMember(x => x.ProductImages, op => op.ResolveUsing(dc => (dc.Content ?? NULLCONTENT).ProductImages))
+                .ForMember(x => x.MSRP, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).MSRP))
+                .ForMember(x => x.MAP, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).MAP))
+                .ForMember(x => x.MAPStartDate, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).MAPStartDate))
+                .ForMember(x => x.MAPEndDate, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).MAPEndDate))
+
                 //ignores
                 .ForMember(x => x.ProductCode, op => op.Ignore())
                 .ForMember(x => x.ListPrice, op => op.Ignore())
@@ -387,7 +429,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         ISOCurrencyCode = "USD",
                         // ListPrice = p.ListPrice,
                         Price = p.Price,
-                        SalePrice = p.SalePrice
+                        SalePrice = p.SalePrice,
+                        MSRP = p.MSRP,
+                        MAP = p.MAP,
+                        MAPStartDate = p.MAPStartDate,
+                        MAPEndDate = p.MAPEndDate
                     }
                 ))
                 .ForMember(dc => dc.SEOContent, op => op.ResolveUsing(piso =>
@@ -473,11 +519,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<DC.ProductVariation, ProductVariation>()
                   //.ForMember(x => x.Options, op => op.ResolveUsing(x => x.Options))
-                  .ForMember(x => x.DeltaPriceValue, op => op.ResolveUsing(x => x.DeltaPrice != null 
-                      ? x.DeltaPrice.Value : null));
+                .ForMember(x => x.DeltaPriceValue, op => op.ResolveUsing(x => x.DeltaPrice != null 
+                      ? x.DeltaPrice.Value : null))
+                .ForMember(x => x.DistPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).DistPartNumber))
+                .ForMember(x => x.MfgPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).MfgPartNumber))
+                .ForMember(x => x.CostCurrencyCode, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).CostCurrencyCode))
+                .ForMember(x => x.Cost, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).Cost))
+                      ;
             Mapper.CreateMap<ProductVariation, DC.ProductVariation>()
                 .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => x.DeltaPriceValue.HasValue 
-                    ? new DC.ProductVariationDeltaPrice() {CurrencyCode = "usd", Value = x.DeltaPriceValue} : null));
+                    ? new DC.ProductVariationDeltaPrice() {CurrencyCode = "usd", Value = x.DeltaPriceValue} : null))
+                .ForMember(dc => dc.SupplierInfo, op => op.ResolveUsing(x => new DC.ProductSupplierInfo()
+                    {
+                        DistPartNumber = x.DistPartNumber,
+                        MfgPartNumber = x.MfgPartNumber,
+                        CostCurrencyCode = x.CostCurrencyCode,
+                        Cost = x.Cost
+                    }))   
+                    ;
 
             Mapper.CreateMap<DC.ProductVariationOption, ProductVariationOption>();
             Mapper.CreateMap<ProductVariationOption, DC.ProductVariationOption>();
