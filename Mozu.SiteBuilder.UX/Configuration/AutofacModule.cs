@@ -110,15 +110,15 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             // set up a MemoryCache just for us
             builder.Register(c => new System.Runtime.Caching.MemoryCache("sfcache")).Named<System.Runtime.Caching.ObjectCache>("sfcache").SingleInstance();
-            builder.RegisterType<Mozu.SiteBuilder.UX.Caching.StorefrontCache>()
-                .WithParameter(
-                    // when parameter is a type of ObjectCache
-                    (p,c) => p.ParameterType.IsSubclassOf(typeof(System.Runtime.Caching.ObjectCache)),
-                    // resolve it using this named service
-                    (p,c) => c.ResolveNamed<System.Runtime.Caching.ObjectCache>("sfcache")
-                )
-                .InstancePerApiRequest()
-            ;
+            // builder.RegisterType<Mozu.SiteBuilder.UX.Caching.StorefrontCache>()
+            //     .WithParameter(
+            //         // when parameter is a type of ObjectCache
+            //         (p,c) => p.ParameterType.IsSubclassOf(typeof(System.Runtime.Caching.ObjectCache)),
+            //         // resolve it using this named service
+            //         (p,c) => c.ResolveNamed<System.Runtime.Caching.ObjectCache>("sfcache")
+            //     )
+            //     .InstancePerApiRequest()
+            // ;
 
             // add these two logging context providers for loggers provided by the DI framework.
             builder.RegisterType<CurrentRequestLoggingContextProvider>().As<ILoggingContextProvider>().InstancePerLifetimeScope();
@@ -132,14 +132,14 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.Register(c => c.Resolve<ISettings>().CreatePublisher("SiteBuilderOutgoingMessageQueue", "Mozu.SiteBuilder.UX")).As<IPublisher>().SingleInstance();
 
             // Register a MassTransit/Burrows Consumer for cache invalidation.
-            builder
-                .Register(c => ServiceBusFactory.New(
-                    sbc => c.Resolve<ISettings>()
-                        .ConfigureConsumer("SiteBuilderIncomingMessageQueue", sbc, subs => subs.LoadFrom(c.Resolve<ILifetimeScope>()))
-                        .SetConcurrentConsumerLimit(10)
-                    ))
-                .SingleInstance()
-                .AutoActivate();
+            //builder
+            //    .Register(c => ServiceBusFactory.New(
+            //        sbc => c.Resolve<ISettings>()
+            //            .ConfigureConsumer("SiteBuilderIncomingMessageQueue", sbc, subs => subs.LoadFrom(c.Resolve<ILifetimeScope>()))
+            //            .SetConcurrentConsumerLimit(10)
+            //        ))
+            //    .SingleInstance()
+            //    .AutoActivate();
         }
     }
 }
