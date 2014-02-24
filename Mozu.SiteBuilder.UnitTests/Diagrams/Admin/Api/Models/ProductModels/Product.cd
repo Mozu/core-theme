@@ -51,7 +51,7 @@
     <TypeIdentifier />
   </Class>
   <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductLocalizedImage">
-    <Position X="4.25" Y="9.5" Width="2" />
+    <Position X="2.25" Y="10.5" Width="2" />
     <Members>
       <Method Name="ProductLocalizedImage" Hidden="true" />
     </Members>

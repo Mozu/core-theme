@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping.Perf
 {
-    [TestFixture]
+    //[TestFixture]
     public class AutomapperMapFromPerfTest
     {
         #region setup & teardown
@@ -50,7 +50,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping.Perf
 
         #endregion setup
 
-        [Test]
+        [Test, Ignore]
         public void MapFrom_With_Complex_Object_Perf_Test()
         {
             //arrange

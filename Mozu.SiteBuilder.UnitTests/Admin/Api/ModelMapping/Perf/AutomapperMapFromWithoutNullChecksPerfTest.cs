@@ -433,7 +433,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping.Perf
 
         #endregion setup
 
-        [Test]
+        [Test, Ignore]
         public void MapFrom_With_Complex_Object_Without_Null_Checks_Perf_Test()
         {
             //arrange
