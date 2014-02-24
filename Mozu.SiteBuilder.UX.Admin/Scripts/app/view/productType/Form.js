@@ -94,6 +94,7 @@ Ext.define('Taco.view.productType.Form', {
             labelPosition: 'top',
             labelSeparator: '',
             width: 700,
+            maxLength: 50,
             emptyText: 'Enter a Product Type Name',
             name: 'name',
             allowBlank: false
