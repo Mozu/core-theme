@@ -51,6 +51,11 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         }
 
+        public ITemplate GetTemplateByAbsolutePath (string absolutePath)
+        {
+            return _innerTemplateManager.GetTemplate(absolutePath);
+        }
+
         ITemplate ITemplateManager.GetTemplate(string template, TypeResolver.ITypeResolver resolver, TypeResolver.ModelDescriptor model)
         {
             //var path = template.Split('|')[0];

@@ -97,6 +97,31 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
          }
 
+         public ThemeFileSystemInfo GetParentThemeFileInfo(ThemeFileSystemInfo item )
+         {
+             var virtualPath = item.VirtualPathNoExt;
+             bool parentOrLower = false;
+             foreach (var theme in this.ThemeStack)
+             {
+                 if (parentOrLower == false)
+                 {
+                     if (theme.Id == item.ThemeId)
+                     {
+                         parentOrLower = true;
+                     }
+                     continue;
+                 }
+                 var file = theme.FileListing.GetFileInfo(virtualPath, false);
+
+                 if (file != null)
+                 {
+                     return file;
+                 }
+             }
+             return null;
+
+         }
+
         static Dictionary<string, MozuVirtualMongoFile> g_fileCache = new Dictionary<string, MozuVirtualMongoFile>();
 
          public override bool FileExists(string virtualPath)
