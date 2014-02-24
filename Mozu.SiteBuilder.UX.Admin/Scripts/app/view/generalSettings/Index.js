@@ -15,19 +15,18 @@ Ext.define('Taco.view.generalSettings.Index', {
     
     initComponent: function () {
 
-        if (Ext.Array.contains(Taco.user.behaviors, 137)) {
-            this.additionalActions = [{
-                xtype: 'button',
-
-                itemId: 'provision',
-                ui: 'action',
-                scale: 'medium',
-                text: 'Provision',
-                handler: function () {
-                    Ext.create('Taco.view.provisioning.ProvisionerModal');
-                }
-            }];
-        }
+        //if (Ext.Array.contains(Taco.user.behaviors, 137)) {
+        //    this.additionalActions = [{
+        //        xtype: 'button',
+        //        itemId: 'provision',
+        //        ui: 'action',
+        //        scale: 'medium',
+        //        text: 'Provision',
+        //        handler: function () {
+        //            Ext.create('Taco.view.provisioning.ProvisionerModal');
+        //        }
+        //    }];
+        //}
 
        
         this.callParent(arguments);
