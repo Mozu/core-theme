@@ -17,7 +17,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         /// <summary>
         /// : Order, LineItem
         /// </summary>
-      
+
+        public bool DoesNotApplyToSalePrice { get; set; }
+
         public string Scope { get; set; }
 
         //The field previously known as TargetType
@@ -74,8 +76,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         [JsonProperty(PropertyName = "conditionalExcludedProducts")]
         public List<string> DiscountConditionExcludedProducts { get; set; }
 
+        public List<int> CustomerSegments { get; set; }
 
 
+        
 
 
 

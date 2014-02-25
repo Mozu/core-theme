@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Mozu.Core.Api.Contracts.Client;
 using Newtonsoft.Json;
 using DC = Mozu.Customer.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 {
-    
+
+    public class CustomerSegment : Mozu.Customer.Contracts.CustomerSegment 
+    {
+        
+    }
+
     public class Customer
     {
         /// <summary>
@@ -21,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         public bool IsAnonymous { get; set; }
 
 
-
+        public List<CustomerSegment> Segments { get; set; }
 
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string UserName { get; set; }
@@ -51,11 +58,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         /// </summary>
         public bool AcceptsMarketing { get; set; }
 
-        /// <summary>
-        /// List of groups assigned to customer accounts to indicate the groups to which they belong. Merchants create groups, for example, to manage discounts or assign VIP status. 
-        /// Then they assign the groups to appropriate customer accounts. A customer account can belong to several groups or none at all.
-        /// </summary>
-        public List<int> Groups { get; set; }
+      
 
         /// <summary>
         /// List of attributes assigned to the customer.
