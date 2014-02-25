@@ -28,7 +28,6 @@ Ext.define('Taco.view.product.variant.Grid', {
             dataIndex: 'deltaPrice',
             editor: {
                 xtype: 'currencyfield',
-                minValue: 0,
                 decimalPrecision: 2,
                 hideTrigger: true,
                 keyNavEnabled: false,
