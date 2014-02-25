@@ -24,6 +24,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     public class ClientCacheHeadersAttribute : ActionFilterAttribute
     {
         public override bool AllowMultiple { get { return false; } }
+        public  bool AllowCrossOrigin { get; set; }
 
         /// <summary>
         /// Gets or sets the cache duration in seconds. The default is 120 seconds.
@@ -38,6 +39,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
         public ClientCacheHeadersAttribute()
         {
             ConfigKey = "default";
+            AllowCrossOrigin = true;
         }
 
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
@@ -65,6 +67,12 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 
                 cache.MaxAge = cacheDuration;
                 cache.Public = true;
+                if (AllowCrossOrigin)
+                {
+                    actionExecutedContext.Response.Headers.TryAddWithoutValidation("Access-Control-Allow-Origin", new string[] {"*"});
+                }
+
+                //Access-Control-Allow-Origin
             }
             //cache.
             //cache.SetCacheability(HttpCacheability.Public);
