@@ -444,6 +444,11 @@
                 this.stepStatus("complete");
                 this.isLoading(false);
                 this.getOrder().isReady(true);
+            },
+            toJSON: function () {
+                if (this.nonStoreCreditTotal() > 0) {
+                    return CheckoutStep.prototype.toJSON.apply(this, arguments);
+                }
             }
         });
 
