@@ -30,6 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //private readonly ICustomerVisitWebApiClient _customerVisitWebApiClient;
 
         public CustomerController(ICustomerAccountWebApiClient customerWebApiClient, 
+            ICustomerSegmentWebApiClient customerSegmentWebApiClient,
             //Mozu.Customer.Contracts.Clients.ICustomerGroupWebApiClient customerGroupWebApiClient, 
             ICreditWebApiClient creditWebApiClient/*, ICustomerVisitWebApiClient customerVisitWebApiClient*/)
         {

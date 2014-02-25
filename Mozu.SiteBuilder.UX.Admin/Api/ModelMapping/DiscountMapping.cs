@@ -66,10 +66,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.DiscountConditionExcludedProducts, opt => opt.ResolveUsing(x => ((x.Conditions ?? new DC.DiscountCondition())
                       .ExcludedProducts ?? Enumerable.Empty<DC.ProductDiscountCondition>())
                       .Select(_ => _.ProductCode).ToList()))
+
+                   .ForMember(x => x.CustomerSegments, opt => opt.ResolveUsing(x => ((x.Conditions ?? new DC.DiscountCondition() )
+                       .CustomerSegments ?? Enumerable.Empty<DC.CustomerSegment >())
+                      .Select(_ => _.Id ).ToList()))
+
+                                                                         
+                  .ForMember(x => x.DoesNotApplyToSalePrice , op => op.ResolveUsing(dc => dc.DoesNotApplyToSalePrice ))
+        
                   .ForMember(x => x.Name , op => op.ResolveUsing(dc => dc.Content.Name ));
 
             // To data contract
             Mapper.CreateMap<Discount, DC.Discount>()
+                .ForMember(x => x.DoesNotApplyToSalePrice, opt => opt.ResolveUsing(x =>x.DoesNotApplyToSalePrice))
                   .ForMember(x => x.Content, opt => opt.ResolveUsing(x => new DC.DiscountLocalizedContent() {Name = x.Name}))
                   .ForMember(x => x.Conditions , opt => opt.ResolveUsing(x => new DC.DiscountCondition() 
                                                                         {
@@ -77,6 +86,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                             ExcludedCategories = (x.DiscountConditionExcludedCategories  ?? Enumerable.Empty<int>()).Select(_ => new DC.CategoryDiscountCondition() { CategoryId = _ }).ToList(),
                                                                             IncludedProducts = (x.DiscountConditionProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.ProductDiscountCondition() { ProductCode = _ }).ToList(),
                                                                             ExcludedProducts = (x.DiscountConditionExcludedProducts  ?? Enumerable.Empty<string>()).Select(_ => new DC.ProductDiscountCondition() { ProductCode  = _ }).ToList(),
+                                                                            CustomerSegments = (x.CustomerSegments ?? Enumerable.Empty<int>()).Select(_ => new DC.CustomerSegment() { Id = _ }).ToList(),
+                                                                            
                                                                             MinimumOrderAmount = x.MinimumOrderAmount ==0  ? null : x.MinimumOrderAmount,
                                                                             MinimumLifetimeValueAmount = x.MinimumLifetimeValueAmount == 0 ? null : x.MinimumLifetimeValueAmount,
                                                                             MaxRedemptionCount = x.MaxRedemptionCount,
