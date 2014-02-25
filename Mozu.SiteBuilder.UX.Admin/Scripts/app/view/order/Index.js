@@ -43,7 +43,7 @@ Ext.define('Taco.view.order.Index', {
             flex: 1,
             minWidth: 180,
             xtype: 'datecolumn',
-            format: 'M d g:ia'
+            format: 'M d Y g:ia'
             //resizable: false,
            
         }, {
