@@ -6,9 +6,9 @@
 Ext.define('Taco.overrides.grid.plugin.CellEditing', {
     override: 'Ext.grid.plugin.CellEditing',
 
-    init: function () {
-        if (this.cmp.columns) {
-            Ext.Array.each(this.cmp.columns, function(column) {
+    init: function (view) {
+        if (view && view.columns) {
+            Ext.Array.each(view.columns, function (column) {
                 if (column.editor) {
                     
                     var hasEl = column.getEl();
