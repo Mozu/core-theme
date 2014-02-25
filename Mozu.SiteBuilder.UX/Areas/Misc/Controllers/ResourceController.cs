@@ -214,7 +214,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                                                                                           {"xslt", "application/xslt+xml"},
                                                                                           {"xul", "application/vnd.mozilla.xul+xml"},
                                                                                           {"xwd", "image/x-xwindowdump"},
-                                                                                          {"woff", "APPLICATION/X-WOFF"},
+                                                                                          {"woff", "application/font-woff"},
                                                                                           {"xyz", "chemical/x-xyz"},
                                                                                           {"zip", "application/zip"}
                                                                                       };
