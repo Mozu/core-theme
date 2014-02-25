@@ -101,6 +101,11 @@
                 }
                 this.next();
             },
+            toJSON:function () {
+                if (this.requiresFulfillmentInfo()) {
+                    return  CheckoutStep.prototype.toJSON.apply(this, arguments);
+                }
+            },
             next: function () {
                 if (this.validate()) return false;
                 var parent = this.parent,
