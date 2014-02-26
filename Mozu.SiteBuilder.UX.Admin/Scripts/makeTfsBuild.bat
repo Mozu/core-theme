@@ -9,7 +9,8 @@ REM sencha compile -classpath=ext\src,app,ext\ux,js page  -yui -in index.html -o
 if exist .sencha\workspace (
     attrib -r build/*.* /S
 	attrib -r bootstrap.js
-	sencha app build
+	attrib -r bootstrap.json
+	sencha app build -c
 ) else (
 	attrib -r bootstrap.js
 	attrib -r bootstrap.json
@@ -19,5 +20,5 @@ if exist .sencha\workspace (
 	attrib -r build/*.* /S
 	attrib -r bootstrap.js
 	attrib -r bootstrap.json
-	sencha app build
+	sencha app build -c
 )
