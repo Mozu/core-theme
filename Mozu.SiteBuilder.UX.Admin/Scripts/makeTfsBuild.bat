@@ -20,5 +20,8 @@ if exist .sencha\workspace (
 	attrib -r build/*.* /S
 	attrib -r bootstrap.js
 	attrib -r bootstrap.json
+
+	robocopy build\chorizo chorizo /mir
 	sencha app build -c
+	robocopy chorizo build\chorizo /mir
 )
