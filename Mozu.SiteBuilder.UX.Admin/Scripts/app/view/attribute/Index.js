@@ -38,14 +38,18 @@ Ext.define('Taco.view.attribute.Index', {
     gridPanelConf: {
         columns: [{
             dataIndex: 'adminName',
+            text: 'Administration Name',
+            flex: 1,
+            minWidth: 120
+        }, {
+            dataIndex: 'name',
             text: 'Name',
             flex: 1,
             minWidth: 120
         }, {
             dataIndex: 'id',
-            text: 'Administration Name (ID)',
-            minWidth: 200,
-            hidden: true
+            text: 'ID',
+            minWidth: 200
         }, {
             dataIndex: 'inputType',
             text: 'Input Type',
