@@ -81,7 +81,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     return;
                 }
 
-                sb.AppendLine("\r\n\t\t<link rel=\"stylesheet\" href=\"/admin/scripts/build/chorizo/chorizo.css\">");
+                sb.AppendLine("\r\n\t\t<link rel=\"stylesheet\" href=\"/admin/scripts/chorizo/build/chorizo.css\">");
                 sb.AppendLine("\t\t<link rel=\"stylesheet\" href=\"//netdna.bootstrapcdn.com/font-awesome/4.0.2/css/font-awesome.min.css\">");
                 sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js\"></script>");
 #if DEBUG

@@ -832,7 +832,7 @@
     <Content Include="Scripts\app\view\website\widgetEditors\HorizontalRule.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\build\app.js" />
-    <Content Include="Scripts\build\chorizo\layout.css" />
+    <Content Include="Scripts\chorizo\Build\layout.css" />
     <Content Include="Scripts\build\fonts\journal-webfont.eot" />
     <Content Include="Scripts\build\fonts\journal-webfont.ttf" />
     <Content Include="Scripts\build\fonts\journal-webfont.woff" />
@@ -1016,8 +1016,8 @@
     <Content Include="Scripts\build\resources\lib\polyfills.js" />
     <Content Include="Scripts\build\resources\lib\utils.rb" />
     <Content Include="Scripts\build\resources\Readme.md" />
-    <Content Include="Scripts\build\chorizo\chorizo.css" />
-    <Content Include="Scripts\build\chorizo\siteBuilder.js" />
+    <Content Include="Scripts\chorizo\Build\chorizo.css" />
+    <Content Include="Scripts\chorizo\Build\siteBuilder.js" />
     <Content Include="Scripts\app\overrides\panel\Tool.js" />
     <Content Include="Scripts\build\resources\Taco-all_01.css" />
     <Content Include="Scripts\build\resources\Taco-all_02.css" />
