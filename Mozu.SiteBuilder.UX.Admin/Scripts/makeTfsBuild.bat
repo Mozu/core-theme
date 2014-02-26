@@ -21,7 +21,6 @@ if exist .sencha\workspace (
 	attrib -r bootstrap.js
 	attrib -r bootstrap.json
 
-	copy build\chorizo chorizo /Y
 	sencha app build -c
-	copy chorizo build\chorizo /Y
+
 )
