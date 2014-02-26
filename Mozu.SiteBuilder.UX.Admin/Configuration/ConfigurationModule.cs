@@ -17,7 +17,6 @@ using Mozu.SiteBuilder.Mvc.Logging;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.SiteBuilder.UX.Admin.Navigation;
 using Mozu.SiteSettings.Application.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Configuration
@@ -99,9 +98,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             builder.Register(c => new ProductSearchWebApiClient(c.Resolve<IServiceClientMessageHandler>())).As<IProductSearchWebApiClient>().InstancePerLifetimeScope();
 
             
-
-            builder.RegisterType<AdminCategoryTreeProvider>().As<ICategoryTreeProvider>();
-            builder.RegisterType<CategoryNavigationProvider>().As<ICategoryNavigationProvider>();
 
             builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", ApplicationConstants.APPLICATION_NAME).InstancePerLifetimeScope();
 

@@ -19,11 +19,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private readonly INavigationGandalf _navigationGandalf;
         private readonly ISiteBuilderApiContext _apiContext;
 
-        public NavigationContext(INavigationGandalf gandalf, ICategoryNavigationProvider categoryNavigationProvider, ISiteBuilderApiContext apiContext)
+        public NavigationContext(INavigationGandalf gandalf, ISiteBuilderApiContext apiContext)
         {
             _navigationGandalf = gandalf;
             _apiContext = apiContext;
-            //this.Category = new CategoryNodeFinder(this);
         }
 
        // private List<NavigationRuntimeNode> __navigationTree;
@@ -141,33 +140,33 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         /// In the case of a product belonging to multiple categories, there are multiple breadcrumbs possible.
         /// This enumerates all of those breadcrumbs lists.
         /// </summary>
-        public IEnumerable<IEnumerable<IRuntimeNavigationNode>> Breadcrumbses
-        {
-            get
-            {
-
-                if (CurrentNode == null)
-                {
-                    yield break; 
-                }
-                if (CurrentNode.NodeType == "product")
-                {
-                    // only product has multiple parents
-                    var parents = new List<IRuntimeNavigationNode> { new NavigationRuntimeNode(), new NavigationRuntimeNode() };
-
-                    foreach (var p in parents)
-                    {
-                        var seed = new Stack<IRuntimeNavigationNode>();
-                        seed.Push(CurrentNode);
-                        yield return GetBreadcrumbs(p, seed);
-                    }
-                }
-                else
-                {
-                    yield return GetBreadcrumbs(CurrentNode);
-                }
-            }
-        }
+        //public IEnumerable<IEnumerable<IRuntimeNavigationNode>> Breadcrumbses
+        //{
+        //    get
+        //    {
+        //
+        //        if (CurrentNode == null)
+        //        {
+        //            yield break; 
+        //        }
+        //        if (CurrentNode.NodeType == "product")
+        //        {
+        //            // only product has multiple parents
+        //            var parents = new List<IRuntimeNavigationNode> { new NavigationRuntimeNode(), new NavigationRuntimeNode() };
+        //
+        //            foreach (var p in parents)
+        //            {
+        //                var seed = new Stack<IRuntimeNavigationNode>();
+        //                seed.Push(CurrentNode);
+        //                yield return GetBreadcrumbs(p, seed);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            yield return GetBreadcrumbs(CurrentNode);
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Recursively build a breadcrumbs list by traversing from the leaf given up its parents.
