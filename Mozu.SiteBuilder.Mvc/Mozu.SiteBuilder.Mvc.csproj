@@ -537,7 +537,6 @@
     <Compile Include="Models\Mapping\ProductMapping.cs" />
     <Compile Include="Navigation\ICategoryNavigationProvider.cs" />
     <Compile Include="Navigation\INavigationRepository.cs" />
-    <Compile Include="Navigation\NavigationGandalf.cs" />
     <Compile Include="Navigation\NavigationRepository.cs" />
     <Compile Include="RssActionResult.cs" />
     <Compile Include="Security\AuthenticationExtensions.cs" />

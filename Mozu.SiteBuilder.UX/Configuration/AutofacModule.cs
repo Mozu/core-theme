@@ -26,7 +26,6 @@ using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Caching;
 using Mozu.SiteBuilder.UX.Messaging;
-using Mozu.SiteBuilder.UX.Navigation;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Module = Autofac.Module;
 
@@ -91,8 +90,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
             //  builder.RegisterType<MockProductCategoryRuntimeWebApiClient>().As<IProductCategoryRuntimeWebApiClient>();
             //builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>().As<IViewEngine>().InstancePerLifetimeScope();
 
+            // TODO: is this necessary
             builder.RegisterType<RuntimeCategoryTreeProvider>().As<ICategoryTreeProvider>().InstancePerApiRequest();
-            builder.RegisterType<CategoryNavigationProvider>().As<ICategoryNavigationProvider>().InstancePerApiRequest();
 
             // builder.RegisterType<MozuServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
 

@@ -9,6 +9,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
     /// Abstracts the admin/runtime distinction of categories and
     /// returns a list of NavigationNodes.
     /// </summary>
+    [Obsolete]
     public interface ICategoryNavigationProvider
     {
         /// <summary>
