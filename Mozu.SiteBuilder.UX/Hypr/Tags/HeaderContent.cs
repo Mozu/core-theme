@@ -15,7 +15,6 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.Mvc.Tags;
-using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
 using Mozu.SiteBuilder.UX.Models;
@@ -23,7 +22,6 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using NDjango.Interfaces;
 using Microsoft.FSharp.Core;
-using Mozu.SiteBuilder.Mvc.Models.CMS;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {

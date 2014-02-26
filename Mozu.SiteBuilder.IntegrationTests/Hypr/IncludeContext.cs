@@ -8,8 +8,6 @@ namespace Mozu.SiteBuilder.IntegrationTests.Hypr
     [TestFixture]
     public class IncludeContext
     {
-        private ILifetimeScope _lifetimeScope;
-
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
         {

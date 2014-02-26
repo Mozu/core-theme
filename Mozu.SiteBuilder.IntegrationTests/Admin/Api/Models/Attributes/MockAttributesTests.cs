@@ -20,8 +20,6 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
             //_attributeController = new AttributeController(new AttributeHelper(attributeWebApiClient));
         }
 
-        private AttributeController _attributeController;
-
         //[Test]
         //public void Mock_attributes_can_be_mapped()
         //{

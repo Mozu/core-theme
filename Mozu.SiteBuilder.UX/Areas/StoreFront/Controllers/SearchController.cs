@@ -97,7 +97,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
 
-            int tmp;
             if (pageSize == null)
             {
                 pageSize = ((int?) (JToken)themeSettings["defaultPageSize"]) ?? 20;

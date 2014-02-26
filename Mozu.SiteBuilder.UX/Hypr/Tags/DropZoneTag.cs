@@ -16,7 +16,6 @@ using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.Mvc.ObjectPools;
 using Mozu.SiteBuilder.Mvc.Tags;
-using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
 using Mozu.SiteBuilder.UX.Models;
@@ -192,7 +191,6 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             isEditmode = isEditmode && string.Equals(scope, pageContext.EditMode.GetValueOrDefault(EditModes.page ).ToString(), StringComparison.OrdinalIgnoreCase);
 
             var zoneRuntimeData = (pageContext.CmsContext == null || pageContext.CmsContext.RuntimeData == null) ? null : pageContext.CmsContext.RuntimeData.FirstOrDefault(x => string.Equals(x.Id, zoneId, StringComparison.OrdinalIgnoreCase));
-            bool useDefaultId = true;
             using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
             {
                 var sb = sbItemDisposer.Item;

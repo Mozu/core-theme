@@ -160,9 +160,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         }
 
-        private static XslTransform _xform; 
-
-
 
         static string ToHtmlString(XElement elm)
         {
@@ -171,7 +168,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 return null;
             }
             StringBuilder sb = new StringBuilder();
-            bool escape = true;
             foreach (var node in elm.Nodes())
             {
                 if (node.NodeType == XmlNodeType.Element)
