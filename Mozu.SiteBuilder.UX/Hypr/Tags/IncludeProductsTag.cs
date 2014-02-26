@@ -15,7 +15,6 @@ using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Tags;
-using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
@@ -141,7 +140,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
                 if (int.TryParse(request["startIndex"], out tmp))
                 {
-                    startIndex = startIndex;
+                    startIndex = tmp;
                 }
 
             }

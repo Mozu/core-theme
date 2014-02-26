@@ -100,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             try {
                 wishlist = wishlistTask.Result.ReadAsSync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }

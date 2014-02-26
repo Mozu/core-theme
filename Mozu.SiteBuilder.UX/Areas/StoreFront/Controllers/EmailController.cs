@@ -173,9 +173,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         public async Task<HttpResponseMessage> Render(EmailNotification notification)
         {
-            string topic;
-            string innerPayload;
-            int? customerAccountId;
             UX.Models.Customers.User user = null;
             HttpRequestBase request = HttpRequestBase;
 

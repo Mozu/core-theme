@@ -45,11 +45,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _apiCtx = apiCtx;
         }
 
-        private RequestContext RequestContext
-        {
-            get { return new RequestContext(HttpContext, new RouteData()); }
-        }
-
         [HttpGet]
         public async Task<HttpResponseMessage> ProductDetail(string productCode)
         {

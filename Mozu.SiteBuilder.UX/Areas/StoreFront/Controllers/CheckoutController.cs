@@ -164,7 +164,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     primaryShippingContact = account.Contacts.Find(x => x.Types.Exists(y => y.Name == ContactTypeConst.SHIPPING && y.IsPrimary));
                     //primaryBillingContact = account.Contacts.Find(x => x.Types.Exists(y => y.Name == ContactTypeConst.BILLING && y.IsPrimary));
                 }
-                catch (NullReferenceException ex)
+                catch (NullReferenceException)
                 {
                 }
 
