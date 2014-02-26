@@ -15,8 +15,7 @@ Ext.define('Taco.view.product.subform.Categories', {
     
     flex: 1,
     layout: {
-        type:'vbox',
-        align:'left'
+        type: 'fit'
     },
 
     initComponent: function () {
