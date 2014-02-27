@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Mozu.SiteBuilder.Mvc.Models.Mappings;
+using Mozu.SiteBuilder.Mvc.Models.Mapping;
 using Mozu.SiteBuilder.UX.Admin.Api.ModelMapping;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping;
 using NUnit.Framework;
