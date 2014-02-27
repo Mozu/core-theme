@@ -695,6 +695,7 @@
     <Content Include="Scripts\app\model\Wishlist.js" />
     <Content Include="Scripts\app\overrides\data\AbstractStore.js" />
     <Content Include="Scripts\app\overrides\form\Basic.js" />
+    <Content Include="Scripts\app\overrides\form\FieldContainer.js" />
     <Content Include="Scripts\app\overrides\form\field\Base.js" />
     <Content Include="Scripts\app\overrides\form\field\ComboBox.js" />
     <Content Include="Scripts\app\overrides\form\field\Number.js" />
@@ -748,8 +749,11 @@
     <Content Include="Scripts\app\view\order\modal\ApplyStoreCredit.js" />
     <Content Include="Scripts\app\view\order\modal\FulfillmentMethod.js" />
     <Content Include="Scripts\app\view\order\subform\InstorePickup.js" />
+    <Content Include="Scripts\app\view\order\widget\OrderTotalPanel.js" />
+    <Content Include="Scripts\app\view\order\widget\OrderTotalPanelEditable.js" />
     <Content Include="Scripts\app\view\order\widget\PackagePickup.js" />
     <Content Include="Scripts\app\view\order\widget\PickupItemGrid.js" />
+    <Content Include="Scripts\app\view\order\widget\FulfillmentPickerField.js" />
     <Content Include="Scripts\app\view\order\widget\UnpickedupItems.js" />
     <Content Include="Scripts\app\view\order\widget\LocationPickupGrid.js" />
     <Content Include="Scripts\app\view\provisioning\ProvisionerModal.js" />
@@ -1293,7 +1297,6 @@
     <Content Include="Scripts\app\view\order\widget\OrderItemGrid.js" />
     <Content Include="Scripts\app\view\order\widget\ProductConfigurator.js" />
     <Content Include="Scripts\app\view\order\widget\ShippingItemGrid.js" />
-    <Content Include="Scripts\app\view\order\widget\OrderTotalPanel.js" />
     <Content Include="Scripts\app\view\order\widget\Package.js" />
     <Content Include="Scripts\app\view\order\widget\PaymentPanel.js" />
     <Content Include="Scripts\app\view\order\widget\UnpackagedItems.js" />

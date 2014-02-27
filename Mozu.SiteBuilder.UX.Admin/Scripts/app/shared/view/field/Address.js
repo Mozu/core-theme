@@ -42,6 +42,8 @@ Ext.define('Taco.shared.view.field.Address', {
 
     editOnFieldClick: true,
 
+    addressValidationRequired: false,
+
     defaultValue : {
         "address1": "",
         "address2": "",
@@ -72,6 +74,7 @@ Ext.define('Taco.shared.view.field.Address', {
         // this is a work around for arrays defined in the config;
         //me.buttonItems = Ext.clone(me.buttonItems);
 
+        
         me.addressField = Ext.create('Taco.core.ux.form.field.EditableDisplayField', {
             name: me.name,
             width: "100%",
@@ -87,11 +90,25 @@ Ext.define('Taco.shared.view.field.Address', {
                 
                 if (me.allowBlank) {
                     return true;
-                } else if (value && value.addressIsValidated) {
-                    return true;
                 } else {
-                    return "Address is required";
+                    // requires a valid address (uses editors validation methodology
+                    if (value && this.addressValidationRequired) {
+                        if (value.addressIsValidated) {
+                            return true;
+                        } else {
+                            return "Address requires validation. Click the \"Edit address\" button and then click the \"Validate\" button"
+                        }
+                    } else {
+                        // check for values on required fields
+                        if (value.address1 && value.cityOrTown && value.stateOrProvince && value.countryCode && value.postalOrZipCode) {                            
+                            return true
+                        } else {
+                            return "Address is required";
+                        }
+                    }
                 }
+
+                
             },
             tpl: me.getAddressDisplayTemplate()
         });
@@ -168,6 +185,9 @@ Ext.define('Taco.shared.view.field.Address', {
             showPhoneNumbers: false,
             validateAddress: false,
             listeners: {
+                close:function (){
+                    me.addressField.focus();
+                },
                 savesuccess: function (win, record) {
                     var updatedAddressData = record.data,
                         address = Ext.clone(me.addressField.originalValue),

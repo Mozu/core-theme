@@ -19,7 +19,11 @@ Ext.define('Taco.shared.view.modal.Address', {
     showCompanyName: true,
     showEmail: true,
     showPhoneNumbers: true,
+
     
+
+    
+
     // force user to enter at least one phone number
     singlePhoneRequired : false,
     emailRequired:true,
