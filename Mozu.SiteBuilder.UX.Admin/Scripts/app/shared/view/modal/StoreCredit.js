@@ -69,12 +69,7 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
             scope: this
         });
 
-        this.items = [
-            me.grid,
-            {
-                xtype: 'checkboxfield',
-                boxLabel: 'Notify customer of changes in their Store Credit'
-            }];
+        this.items = [ me.grid ];
 
         this.callParent(arguments);
     }
