@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Linq;
 using AutoMapper;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 
-namespace Mozu.SiteBuilder.Mvc.Models.Mappings
+namespace Mozu.SiteBuilder.Mvc.Models.Mapping
 {
     public class NavigationMapping : Profile
     {
@@ -84,6 +85,11 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mappings
                .ForMember(d => d.Index, opt => opt.UseValue(null))
                .ForMember(d => d.IsLeaf, opt => opt.MapFrom(x => x.DocumentType == "blog"))
                ;
+
+            Mapper.CreateMap<SuperNavigationNode, NavigationRuntimeNode>()
+	                ;
+	
+
         }
 
         const string _STRINGSPLITDELIM = "^^";

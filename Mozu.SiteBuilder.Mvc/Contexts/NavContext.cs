@@ -195,7 +195,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
             if (productNode == null)
             {
-                productNode = Mapper.Map<NavigationRuntimeNode>(Mapper.Map<NavigationNode>(product));
+                productNode = Mapper.Map<NavigationRuntimeNode>(Mapper.Map<SuperNavigationNode>(product));
 
                 if (product.Categories != null && product.Categories.Count > 0)
                 {
@@ -224,7 +224,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
             if (categoryNode == null)
             {
-                categoryNode = Mapper.Map<NavigationRuntimeNode>(Mapper.Map<NavigationNode>(category));
+                categoryNode = Mapper.Map<NavigationRuntimeNode>(Mapper.Map<SuperNavigationNode>(category));
                 //Tree.Add(categoryNode);
             }
 
@@ -240,7 +240,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
             if (docNode == null)
             {
-                docNode = Mapper.Map<NavigationRuntimeNode>(Mapper.Map<NavigationNode>(doc));
+                docNode = Mapper.Map<NavigationRuntimeNode>(Mapper.Map<SuperNavigationNode>(doc));
             }
 
             CurrentNode = docNode;
