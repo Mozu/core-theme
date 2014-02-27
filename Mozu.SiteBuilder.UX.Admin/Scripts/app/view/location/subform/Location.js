@@ -75,12 +75,21 @@ Ext.define('Taco.view.location.subform.Location', {
             name: 'shippingOriginContact',
             width: 400,
             fieldLabel: 'Shipping Origin Contact',
+            allowBlank: false,
+            validator: function (value) {
+                // check for required fields;
+                if (value && value.phoneNumber && value.companyOrOrganization) {
+                    return true
+                } else {
+                    return "Shipping Origin Contact Is required"
+                }
+            },
             onClick: function () {
                 var modal = Ext.widget('taco-modal', {
                     autoShow: true,
                     scale: 'large',
                     closeAction:"destroy",
-                    title:"Shipping origin contact",
+                    title: "Shipping origin contact",
                     items: [{
                         xtype: 'formform',
                         defaults: {
@@ -110,6 +119,9 @@ Ext.define('Taco.view.location.subform.Location', {
                         ]
                     }],
                     listeners: {
+                        close: function () {                            
+                            me.shippingContextField.focus();
+                        },
                         save: function () {
                             var data = modal.form.getForm().getValues();
                             me.shippingContextField.setValue(data);
@@ -123,14 +135,19 @@ Ext.define('Taco.view.location.subform.Location', {
                 '<tpl if="values.firstName || values.middleNameOrInitial ||  values.lastNameOrSurname">',
                     '<div class="address-line-1">Name: {firstName} {middleNameOrInitial} {lastNameOrSurname}</div>',
                 '</tpl>',
-                '<div class="city-state-zip">Company Name: {companyOrOrganization}</div>',
-                '<div class="country">PhoneNumber: {phoneNumber}</div>'
+                '<tpl if="values.companyOrOrganization">',
+                    '<div class="city-state-zip">Company Name: {companyOrOrganization}</div>',
+                '</tpl>',
+                '<tpl if="values.phoneNumber">',
+                    '<div class="country">PhoneNumber: {phoneNumber}</div>',
+                '</tpl>'
             ]
         });
 
         me.addressView = Ext.create('Taco.shared.view.field.Address', {
             name: "address",
-            allowBlank: true
+            allowBlank: false
+
             // extra components to be inserted after the edit button
             
             //(Simeon) commented this out pending acquisition of services to do this address to geo location conversion;

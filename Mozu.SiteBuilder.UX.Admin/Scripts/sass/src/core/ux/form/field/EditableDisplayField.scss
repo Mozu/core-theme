@@ -3,7 +3,9 @@
 
 
 	
-	.x-form-editable-display-field{
+	.x-form-editable-display-field {
+        text-decoration:none;
+        display:block;
 		color: #333333;
 		padding: 6px 11px 4px 11px;	
 		background: white repeat-x 0 0;
@@ -13,7 +15,18 @@
 		line-height:20px;
 		min-height:$form-field-height;
 		height:"auto";
+        cursor:pointer;
+        
+        &:hover{
+            text-decoration:none;
+            /*border-color: #3778d5;*/
+            @include box-shadow(inset 0px -1px $color-action-outline-hover);
+        }
+
 	}
+
+    
+
 
 	.x-form-editable-display-field-border{		
 		padding: 5px 10px 3px 10px;	
@@ -25,3 +38,7 @@
 	.x-form-editable-display-field.x-form-invalid-field {
 	    border-color:$color-theme-base;
 	}
+
+    .x-form-editabledisplayfield-focus{
+        border-color: #3778d5;
+    }
