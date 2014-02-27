@@ -1,7 +1,4 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
 {

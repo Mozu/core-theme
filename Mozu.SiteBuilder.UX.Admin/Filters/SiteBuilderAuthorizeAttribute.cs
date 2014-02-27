@@ -33,7 +33,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Filters
         private static string _environment;
         private readonly ILifetimeScope lifetimeScope;
         private IPublicAdminAuthTicketWebApiClient _adminUserWebApiClient;
-        private IAuthTicketWebApiClient _authTicketWebApiClient;
         private ISettings _settings;
 
 

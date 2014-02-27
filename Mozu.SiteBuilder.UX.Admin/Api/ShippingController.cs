@@ -129,7 +129,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             var dcSettings = Mapper.Map<Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings>(settings);
-            _siteShippingSettingsClient.UpdateOrderHandlingFee(dcSettings.OrderHandlingFee);
+            await _siteShippingSettingsClient.UpdateOrderHandlingFee(dcSettings.OrderHandlingFee);
 
             var carrierConfiguration = (await _carrierConfigurationWebApiClient.GetConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId)).ReadAsSync();
 

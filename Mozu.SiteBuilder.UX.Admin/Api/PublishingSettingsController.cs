@@ -17,7 +17,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private ISiteBuilderApiContext _ctx;
         private IGeneralSettingsWebApiClient _siteSettingsClient;
         private IMasterCatalogWebApiClient _siteGroupClient;
-        private ICookieProvider _cookieMonster;
         private IPublishingWebApiClient _publishingClient;
         private ILogger _log;
 
