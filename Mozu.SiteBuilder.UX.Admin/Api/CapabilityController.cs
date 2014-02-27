@@ -26,7 +26,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
 	    private readonly ICapabilitiesWebApiClient _capabilitiesWebApiClient;
 	    private readonly IApplicationsWebApiClient _applicationsWebApiClient;
-	    private readonly IAttributeHelper _attributeHelper;
 
         public CapabilityController(ICapabilitiesWebApiClient capabilitiesWebApiClient , Mozu.SiteSettings.Application.Contracts.Clients.IApplicationsWebApiClient applicationsWebApiClient )
         {

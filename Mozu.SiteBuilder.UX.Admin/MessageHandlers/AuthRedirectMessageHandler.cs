@@ -52,7 +52,6 @@ namespace Mozu.SiteBuilder.UX.Admin.MessageHandlers
                             handledByRp = true;
                         }
                         var settings = request.Resolve<ISettings>();
-                        string returnUrl = "";
                         string redir = settings.LoginPath + "/to?scopeType=Tenant&redirectUrl=" + HttpUtility.UrlEncode(request.RequestUri.PathAndQuery);
                         if (!handledByRp)
                         {

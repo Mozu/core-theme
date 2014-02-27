@@ -35,8 +35,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
      
 
       
-        private readonly IGeneralSettingWrapper _generalSettingsWebApiClient;
-
         public TestingController()
         {
            
