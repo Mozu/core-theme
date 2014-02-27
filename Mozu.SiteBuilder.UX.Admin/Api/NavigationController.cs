@@ -4,12 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.InteropServices;
-using System.Security.Policy;
 using System.Threading.Tasks;
-using AutoMapper;
-using MongoDB.Driver.Builders;
-using Mozu.CommerceRuntime.Contracts.Products;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Extensions;
@@ -20,8 +15,8 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Navigation;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Navigation;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using DC = Mozu.ProductAdmin.Contracts;
 using Document = Mozu.Content.Contracts.Document;
@@ -260,7 +255,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (item.Id == null)
                     item.Id = "link^^" + ++currentHighestLinkIndex;
 
-                navSet.Nodes.Add(item.Map<NavigationNode>());
+                navSet.Nodes.Add(item);
             }
 
             await _navRepo.SaveSetAsync(navSet);
@@ -284,7 +279,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (item.NodeType.IsPage || item.NodeType.IsLink)
                 {
                     // delete item from navset.
-                    NavigationNode itemInNavSet = navSet.Nodes.FirstOrDefault(n => n.Id == item.Id);
+                    ITreeNavigationNode itemInNavSet = navSet.Nodes.FirstOrDefault(n => n.Id == item.Id);
                     if (itemInNavSet != null)
                     {
                         navSet.Nodes.Remove(itemInNavSet);
@@ -414,7 +409,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             {
                                 NavigationSet navSet = t.Result;
 
-                                NavigationNode originalNode = navSet.Nodes.FirstOrDefault(n => n.Id == change.Id);
+                                INavigationNode originalNode = navSet.Nodes.FirstOrDefault(n => n.Id == change.Id);
 
                                 Debug.WriteLine(
                                     String.Format("[node {0}] Renaming node. Old Name: {1}. New Name: {2}.",
@@ -440,17 +435,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             {
                                 NavigationSet navSet = t.Result;
 
-                                NavigationNode original = navSet.Nodes.FirstOrDefault(n => n.Id == change.Id);
+                                ITreeNavigationNode original = navSet.Nodes.FirstOrDefault(n => n.Id == change.Id);
                                 if (original == null)
                                 {
-                                    original = change.Map<NavigationNode>();
+                                    original = change;
                                     navSet.Nodes.Add(original);
                                 }
 
                                 // reorder within same parent
                                 if (original.ParentId == change.ParentId)
                                 {
-                                    IEnumerable<NavigationNode> siblings =
+                                    IEnumerable<ITreeNavigationNode> siblings =
                                         from n in navSet.Nodes
                                         where n.ParentId == change.ParentId
                                         where n.Id != change.Id
@@ -473,13 +468,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                     // change of parent
                                 else
                                 {
-                                    IEnumerable<NavigationNode> oldSiblings =
+                                    IEnumerable<ITreeNavigationNode> oldSiblings =
                                         from n in navSet.Nodes
                                         where n.ParentId == original.ParentId
                                         where n.Id != change.Id
                                         select n;
 
-                                    IEnumerable<NavigationNode> newSiblings =
+                                    IEnumerable<ITreeNavigationNode> newSiblings =
                                         from n in navSet.Nodes
                                         where n.ParentId == change.ParentId
                                         where n.Id != change.Id
@@ -530,7 +525,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             // reorder within same parent
                             if (originalNav.ParentId == change.ParentId)
                             {
-                                IEnumerable<NavigationNode> navSiblings =
+                                IEnumerable<ITreeNavigationNode> navSiblings =
                                     from n in navSet.Nodes
                                     where n.ParentId == change.ParentId
                                     select n;
@@ -578,7 +573,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                 // change of parent
                             else
                             {
-                                IEnumerable<NavigationNode> oldSiblingsNav =
+                                IEnumerable<ITreeNavigationNode> oldSiblingsNav =
                                     from n in navSet.Nodes
                                     where n.ParentId == originalNav.ParentId
                                     where n.Id != change.Id
@@ -591,7 +586,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                     where n.NodeType.IsCategory
                                     select n;
 
-                                IEnumerable<NavigationNode> newSiblingsNav =
+                                IEnumerable<ITreeNavigationNode> newSiblingsNav =
                                     from n in navSet.Nodes
                                     where n.ParentId == change.ParentId
                                     where n.Id != change.Id

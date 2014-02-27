@@ -11,7 +11,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mappings
 
         protected override void Configure()
         {
-            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product, NavigationNode>()
+            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product, SuperNavigationNode>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("product", x.ProductCode)))
                 .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.ProductCode))
                 .ForMember(d => d.Name, opt => opt.MapFrom(x => x.ProductName))
@@ -20,7 +20,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mappings
                 .ForMember(dest => dest.IsLeaf, opt => opt.UseValue(true))
                 ;
 
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Product, NavigationNode>()
+            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Product, SuperNavigationNode>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("product", x.ProductCode)))
                 .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.ProductCode))
                 .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Content.ProductName))
@@ -29,7 +29,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mappings
                 .ForMember(dest => dest.IsLeaf, opt => opt.UseValue(true))
                 ;
 
-            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.Product, NavigationNode>()
+            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.Product, SuperNavigationNode>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("product", x.ProductCode)))
                 .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.ProductCode))
                 .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Content.ProductName))
@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mappings
                 .ForMember(dest => dest.IsLeaf, opt => opt.UseValue(true))
                 ;
 
-            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, NavigationNode>()
+            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, SuperNavigationNode>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("category", x.CategoryId)))
                 .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.CategoryId))
                 .ForMember(d => d.ParentId, opt => opt.MapFrom(x => x.ParentCategoryId.HasValue ? JoinParts("category", x.ParentCategoryId.Value) : null))
@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mappings
                 .ForMember(d => d.IsLeaf, opt => opt.UseValue(false))
                 ;
 
-            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.Category, NavigationNode>()
+            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.Category, SuperNavigationNode>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("category", x.Id)))
                 .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.Id))
                 .ForMember(d => d.ParentId, opt => opt.MapFrom(x => x.ParentCategoryId.HasValue ? JoinParts("category", x.ParentCategoryId.Value) : null))
@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mappings
                 .ForMember(d => d.IsLeaf, opt => opt.UseValue(false))
                 ;
 
-            Mapper.CreateMap<Mozu.Content.Contracts.Document, NavigationNode>()
+            Mapper.CreateMap<Mozu.Content.Contracts.Document, SuperNavigationNode>()
                .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("page", x.DocumentListName, x.Id)))
                .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.Id))
                .ForMember(d => d.OriginalCollection, opt => opt.MapFrom(x => x.DocumentListName))
@@ -73,7 +73,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mappings
                .ForMember(d => d.IsLeaf, opt => opt.MapFrom(x => x.DocumentType == "blog"))
                ;
 
-            Mapper.CreateMap<Mozu.SiteBuilder.Mvc.Models.CMS.Document, NavigationNode>()
+            Mapper.CreateMap<Mozu.SiteBuilder.Mvc.Models.CMS.Document, SuperNavigationNode>()
                .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("page", x.Collection, x.Id)))
                .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.Id))
                .ForMember(d => d.OriginalCollection, opt => opt.MapFrom(x => x.Collection))
@@ -84,15 +84,6 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mappings
                .ForMember(d => d.Index, opt => opt.UseValue(null))
                .ForMember(d => d.IsLeaf, opt => opt.MapFrom(x => x.DocumentType == "blog"))
                ;
-
-            Mapper.CreateMap<NavigationNode, NavigationRuntimeNode>()
-                ;
-
-            Mapper.CreateMap<NavigationNode, NavigationTreeNode>()
-                ;
-
-            Mapper.CreateMap<NavigationTreeNode, NavigationNode>()
-                ;
         }
 
         const string _STRINGSPLITDELIM = "^^";

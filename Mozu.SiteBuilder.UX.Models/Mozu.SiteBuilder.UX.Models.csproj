@@ -423,7 +423,6 @@
     <Compile Include="Navigation\NavigationRuntimeExtensions.cs" />
     <Compile Include="Navigation\NavigationRuntimeNode.cs" />
     <Compile Include="Navigation\NavigationSet.cs" />
-    <Compile Include="Navigation\NavigationTreeNode.cs" />
     <Compile Include="ICaseInsensitiveNamingContainer.cs" />
     <Compile Include="IEditableContext.cs" />
     <Compile Include="JsonExtensions.cs" />

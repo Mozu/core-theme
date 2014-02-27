@@ -18,7 +18,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
     /// This type is used internally and is converted to a
     /// NavigationTreeNode or a NavigationRuntimeNode for use by Admin or Storefront.
     /// </summary>
-    [DataContract]
+    [DataContract, Obsolete]
     public class NavigationNode
     {
         private const string STRING_SPLIT_DELIM = "^^";

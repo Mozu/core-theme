@@ -18,25 +18,25 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _navigationRepository = navigationRepository;
         }
 
-        public List<NavigationNode > Primary()
+        public List<ITreeNavigationNode > Primary()
         {
             return GetPrimaryNodes();
             
         }
 
-        public List<NavigationNode> Secondary(string parentId)
+        public List<ITreeNavigationNode> Secondary(string parentId)
         {
             return  GetSecondaryNodes(parentId);
            
         }
 
-        private List<NavigationNode> GetPrimaryNodes()
+        private List<ITreeNavigationNode> GetPrimaryNodes()
         {
             var navigationSet = _navigationRepository.GetNavigationSetAsync().Result;
             return navigationSet.Nodes.Where(n => n.ParentId == null).ToList();
         }
 
-        private List<NavigationNode> GetSecondaryNodes(string parentId)
+        private List<ITreeNavigationNode> GetSecondaryNodes(string parentId)
         {
             var navigationSet = _navigationRepository.GetNavigationSetAsync().Result;
             return navigationSet.Nodes.Where(n => n.ParentId == parentId).ToList();
