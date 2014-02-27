@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
+using Burrows.Testing.TestActions;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Client.Caching;
@@ -12,6 +13,7 @@ using Mozu.Core.Settings;
 using Mozu.PaymentService.Contracts;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteSettings.Order.Contracts;
@@ -70,6 +72,25 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 Message = "Cool."
             });
+        }
+        static HttpClient _client;
+
+        [AcceptVerbs("GET","PUT","DELETE","POST","OPTIONS")]
+
+       
+        public Task<HttpResponseMessage> Api(string url)
+        {
+            var service = _settings.Resources.FirstOrDefault(x => url.IndexOf(x.Path, StringComparison.OrdinalIgnoreCase) == 0);
+            _client = _client ?? new HttpClient() {MaxResponseContentBufferSize = int.MaxValue, Timeout = new TimeSpan(0, 1, 3, 0)};
+            
+            this.Request.RequestUri = new Uri(service.BaseUrl +  this.Request.RequestUri.PathAndQuery.Substring(4));
+
+            if (this.Request.Content.Headers.ContentLength == 0)
+            {
+                this.Request.Content = null;
+            }
+            return _client.SendAsync(this.Request);
+
         }
 
 

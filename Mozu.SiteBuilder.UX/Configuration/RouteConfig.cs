@@ -359,6 +359,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "pages",
                 new { controller = "Home", action = "Index" });
 
+            routes.MapHttpRoute(
+                "apiforwarding",
+                "api/{*url}",
+                new { controller = "testing", action = "api" });
+
+
 
             routes.MapHttpRoute(
                 "Error",
