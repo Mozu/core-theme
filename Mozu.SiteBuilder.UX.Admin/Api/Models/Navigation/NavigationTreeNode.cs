@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Mozu.SiteBuilder.UX.Models.Navigation;
 
-namespace Mozu.SiteBuilder.UX.Models.Navigation
+namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Navigation
 {
     /// <summary>
-    /// Represents a node in the navigation hierarchy 
+    /// A node in the navigation hierarchy represented 
+    /// in a convenient way for the "sitebuilder" feature of admin.
     /// </summary>
     [DataContract]
     public class NavigationTreeNode : ITreeNavigationNode

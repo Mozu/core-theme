@@ -3,6 +3,9 @@ using Mozu.SiteBuilder.UX.Models.Navigation;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
 {
+    /// <summary>
+    /// Repository to access the navigation metadocument in CMS.
+    /// </summary>
     public interface INavigationRepository
     {
         Task<NavigationSet> GetNavigationSetAsync();

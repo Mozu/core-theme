@@ -426,6 +426,7 @@
     <Compile Include="Api\ModelMapping\CustomerContactMapping.cs" />
     <Compile Include="Api\Models\CustomerContact.cs" />
     <Compile Include="Api\Models\GeneralSettings\IPBlock.cs" />
+    <Compile Include="Api\Models\Navigation\NavigationTreeNode.cs" />
     <Compile Include="Api\Models\Order\OrderPickup.cs" />
     <Compile Include="Api\Models\Order\OrderPickupItem.cs" />
     <Compile Include="Api\OrderPickupController.cs" />

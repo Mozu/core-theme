@@ -11,7 +11,6 @@ using Mozu.Core.Logging;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Models.Navigation;
-using CONST = Mozu.SiteBuilder.Mvc.Navigation.NavigationConstants;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
 {
@@ -26,6 +25,16 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         private INavigationRepository _navRepo;
         private ILogger _logger;
         private static MD5 _md5;
+
+        // the top level name in EXT's tree thing (a root pseudo-node).
+        private const string SUPER_ROOT_NODE_NAME = "root";
+
+        // the top level name for items that exist in the navigation tree.
+        private const string NAV_ROOT_NODE_NAME = "_navigation";
+
+        // the special node to assign unlinked pages as a child of.
+        private const string UNLINKED_PAGES_NODE_ID = "_unlinked";
+
 
         /// <summary>
         /// Public constructor.
@@ -85,12 +94,6 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
             return Task.WhenAll(catTask, pageTask, navTask).ContinueWith(t =>
             {
-                string[] etags = { catTask.Result.ETag(), pageTask.Result.ETag(), navTask.Result.ETag };
-                bool isCacheable = etags.All(etag => !String.IsNullOrEmpty(etag));
-                // TODO: currently no caching. possibly moving it to another layer.
-
-                string cacheKey = isCacheable ? _md5.Encode(etags) : null;
-
                 var pages = pageTask.Result.ReadAsSync();
                 var categories = catTask.Result.ReadAsSync();
                 var navset = navTask.Result;
@@ -104,8 +107,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 {
                     Name = "Navigation",
                     NodeType = NavigationNodeType.Group,
-                    Id = CONST.NAV_ROOT_NODE_NAME,
-                    ParentId = CONST.SUPER_ROOT_NODE_NAME,
+                    Id = NAV_ROOT_NODE_NAME,
+                    ParentId = SUPER_ROOT_NODE_NAME,
                     //Expandable = true,
                     Index = 0
                 });
@@ -114,8 +117,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 {
                     Name = "Single Pages",
                     NodeType = NavigationNodeType.Group,
-                    Id = CONST.UNLINKED_PAGES_NODE_ID,
-                    ParentId = CONST.SUPER_ROOT_NODE_NAME,
+                    Id = UNLINKED_PAGES_NODE_ID,
+                    ParentId = SUPER_ROOT_NODE_NAME,
                     //Expandable = true,
                     Index = 1
                 });
@@ -126,7 +129,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 masterList.AddRange(allCats);
 
                 // build the masterlist. Step 2: put in navigation items we know about.
-                foreach (var navmeta in (navset.Nodes ?? Enumerable.Empty<NavigationNode>()).OrderBy(n => n.ParentId).ThenBy(n => n.Index))
+                foreach (var navmeta in (navset.Nodes ?? Enumerable.Empty<INavigationNode>()).OrderBy(n => n.ParentId).ThenBy(n => n.Index))
                 {
                     SuperNavigationNode node;
 
@@ -207,7 +210,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         Name = p.Name,
                         NodeType = NavigationNodeType.Page,
                         Id = "page^^" + p.DocumentListName + "^^" + p.Id,
-                        ParentId = CONST.UNLINKED_PAGES_NODE_ID,
+                        ParentId = UNLINKED_PAGES_NODE_ID,
                         OriginalId = p.Id,
                         Index = 0,
                         IsLeaf = true
@@ -235,7 +238,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     new SuperNavigationNode {
                         NodeType = NavigationNodeType.Category,
                         Id = "cat^^" + cat.CategoryId,
-                        ParentId = cat.ParentCategory != null ? "cat^^" + cat.ParentCategory.CategoryId : CONST.NAV_ROOT_NODE_NAME,
+                        ParentId = cat.ParentCategory != null ? "cat^^" + cat.ParentCategory.CategoryId : NAV_ROOT_NODE_NAME,
                         OriginalId = cat.CategoryId.ToString(),
                         Url = cat.Content == null || String.IsNullOrEmpty(cat.Content.Slug) ? "/c/" + cat.CategoryId : "/" + cat.Content.Slug + "/c/" + cat.CategoryId,
                         Name = cat.Content.Name,
@@ -274,15 +277,15 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             // step 2. put each item under its owner.
             foreach (var n in flat)
             {
-                if (n.Id == CONST.NAV_ROOT_NODE_NAME)
+                if (n.Id == NAV_ROOT_NODE_NAME)
                     root = n;
 
-                if (n.ParentId == null || n.ParentId == CONST.SUPER_ROOT_NODE_NAME)
+                if (n.ParentId == null || n.ParentId == SUPER_ROOT_NODE_NAME)
                     continue;
 
                 var parent = lookupTable[n.ParentId];
                 
-                if (n.ParentId != CONST.NAV_ROOT_NODE_NAME)
+                if (n.ParentId != NAV_ROOT_NODE_NAME)
                     n.Parent = parent;
 
                 if (parent.Items == null)

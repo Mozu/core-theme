@@ -11,6 +11,9 @@ using DC = Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
 {
+    /// <summary>
+    /// Repository to access the navigation metadocument in CMS.
+    /// </summary>
     public class NavigationRepository : INavigationRepository
     {
         private const string NAVIGATION_CONTENT_COLLECTION = "settings";
@@ -63,10 +66,9 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     if (!string.IsNullOrEmpty(jsonString))
                     {
                         var navset = Newtonsoft.Json.JsonConvert.DeserializeObject<NavigationSet>(jsonString);
-                        navset.ETag = etag;
                         return navset;
                     }
-                    return new NavigationSet() { ETag = etag };
+                    return new NavigationSet();
                 });
         }
 

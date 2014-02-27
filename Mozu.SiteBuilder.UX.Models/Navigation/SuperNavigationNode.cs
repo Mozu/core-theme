@@ -26,6 +26,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
 
     public interface ITreeNavigationNode : INavigationNode
     {
+        new string ParentId { get; set; }
     }
 
     /// <summary>
@@ -33,11 +34,38 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
     /// </summary>
     public class SuperNavigationNode : IRuntimeNavigationNode, ITreeNavigationNode
     {
+        private const string STRING_SPLIT_DELIM = "^^";
+
         public string Id { get; set; }
 
-        public string ParentId { get; set; }
+        private string _parentId = null;
+        public string ParentId { 
+            get { return _parentId ?? (Parent != null ? Parent.Id : null); }
+            set { _parentId = value; } 
+        }
 
-        public string OriginalId { get; set; }
+        private string _originalId;
+
+        /// <summary>
+        /// The original ID of this node.
+        /// </summary>
+        public string OriginalId
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(_originalId))
+                {
+                    if (NodeType != null && NodeType.IsPage && IdParts.Length >= 3)
+                        return IdParts[2];
+                    else
+                        return IdParts.Last();
+                }
+                else return _originalId;
+            }
+            set { _originalId = value; }
+        }
+
+        public string OriginalCollection { get; set; }
 
         public string Name { get; set; }
 
@@ -60,5 +88,8 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
 
         [JsonIgnore]
         public ICollection<IRuntimeNavigationNode> Items { get; set;  }
+
+        [JsonIgnore]
+        private string[] IdParts { get { return (Id ?? "").Split(new string[] { STRING_SPLIT_DELIM }, StringSplitOptions.None); } }
     }
 }

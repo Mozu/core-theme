@@ -481,7 +481,6 @@
     <Compile Include="MessageHandler\SeoDelegatingHandler.cs" />
     <Compile Include="MessageHandler\HttpContextInjectingMessageHandler.cs" />
     <Compile Include="Navigation\INavigationGandalf.cs" />
-    <Compile Include="Navigation\NavigationConstants.cs" />
     <Compile Include="Navigation\NavigationGandalfTheWhite.cs" />
     <Compile Include="ObjectPools\StringBuilderPool.cs" />
     <Compile Include="ObjectPools\CharBufferPool.cs" />
@@ -535,7 +534,6 @@
     <Compile Include="Models\Mapping\GeneralSettingsMapping.cs" />
     <Compile Include="Models\Mapping\NavigationMapping.cs" />
     <Compile Include="Models\Mapping\ProductMapping.cs" />
-    <Compile Include="Navigation\ICategoryNavigationProvider.cs" />
     <Compile Include="Navigation\INavigationRepository.cs" />
     <Compile Include="Navigation\NavigationRepository.cs" />
     <Compile Include="RssActionResult.cs" />
