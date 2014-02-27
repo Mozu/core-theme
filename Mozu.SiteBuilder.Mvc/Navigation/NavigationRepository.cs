@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
         private ICmsServiceWrapper _cmsService;
         private readonly ISiteBuilderApiContext _siteBuilderApiContext;
-        private readonly DataContractJsonSerializer _serializer = new DataContractJsonSerializer(typeof (NavigationSet), new[] {typeof (object), typeof (List<NavigationNode>), typeof (NavigationNode), typeof (string), typeof (int)});
+        private readonly DataContractJsonSerializer _serializer = new DataContractJsonSerializer(typeof (NavigationSet), new[] {typeof (object), typeof (List<SuperNavigationNode>), typeof (SuperNavigationNode), typeof (string), typeof (int)});
 
         /// <summary>
         /// Public constructor.
