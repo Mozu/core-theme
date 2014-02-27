@@ -68,13 +68,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
             bool sslEnabled = _settings.CoreSettings.IsSSLValidationEnabled;
 
+            bool useCoors = _settings.AppSettings("useCORS") == "true";
+
             return sis.ToDictionary(x => x.Id, y =>
             {
                 if (y.SkipRename)
                 {
                     return y.InternalUrl;
                 }
-                if (_pageContextLazy.Value.HandledByProxy)
+                if (!useCoors)
                 {
                     if (sslEnabled && y.RequiresSsl/* && !_pageContextLazy.Value.IsSecure*/)
                     {

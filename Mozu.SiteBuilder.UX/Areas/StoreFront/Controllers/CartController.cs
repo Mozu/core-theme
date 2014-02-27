@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private string BuildLocationsFilter(List<string> locationCodes)
         {
-            return string.Join(" or ", locationCodes.Select(x => "Code eq " + x));
+            return string.Join(" or ", locationCodes.Select(x => "Code eq \"" + x +"\""));
         }
 
         [System.Web.Http.HttpGet]
