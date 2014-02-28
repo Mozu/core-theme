@@ -1,1 +1,0 @@
-"C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\TF.exe" checkout .\Themes\Core3 /recursive && "C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\TF.exe" checkout .\Themes\MobileCore /recursive  && moz -d .\Themes -jv Core3 && moz -d .\Themes -jv MobileCore
