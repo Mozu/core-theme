@@ -3,26 +3,27 @@
 var expect = chai.expect;
 
 describe("Mocha Prototype", function () {
-    var attr = null;
+    //var attr = null;
 
     beforeEach(function () {
-        console.log('before every test');
-        try {
-            attr = window.Ext.Create('Taco.model.Attribute', {});
-        } catch (e) {
-            console.log(e.message);
-        }
+        //console.log('before every test');
+        //try {
+        //    attr = window.Ext.create('Taco.model.Attribute', {});
+        //} catch (e) {
+        //    console.log(e.message);
+        //}
 
     });
 
     afterEach(function () {
-        console.log('after every test');
-        attr.destroy();
+        //console.log('after every test');
+        //attr.destroy();
     });
 
     describe("ExtJs", function() {
-        it("should be a function", function() {
-            expect(typeof attr.supportsAttributeType()).equalTo('function');
+        it("should be a function", function () {
+            var attr = window.Ext.create('Taco.model.Attribute', {});
+            expect(typeof attr.supportsAttributeType).equals('function');
         });
     });
 
