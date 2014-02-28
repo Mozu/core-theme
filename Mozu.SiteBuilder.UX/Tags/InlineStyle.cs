@@ -17,25 +17,32 @@ namespace Mozu.SiteBuilder.UX.Tags
     {
         protected override void ProcessTag(ArgumentCollection arguments, ref NDjango.Interfaces.IContext context, out string buffer, out string templateName)
         {
-            buffer = templateName = null;
-            var controller = context.Resolve<ResourceController>();
-            controller.Request = context.Resolve<HttpRequestMessage>();
-            var path = (string) arguments[0].Value;
-         
-            var result = controller.Stylesheets(path);
-            if (result.StatusCode != HttpStatusCode.OK)
+            try
             {
-                buffer = "error rendering stylesheet " + path;
-                return;
+                buffer = templateName = null;
+                var controller = context.Resolve<ResourceController>();
+                controller.Request = context.Resolve<HttpRequestMessage>();
+                var path = (string)arguments[0].Value;
+
+                var result = controller.Stylesheets(path);
+                if (result.StatusCode != HttpStatusCode.OK)
+                {
+                    buffer = "error rendering stylesheet " + path;
+                    return;
+                }
+                var oc = result.Content as ObjectContent<ResourceController.MozuVirtualFileResult>;
+                var fileResult = (ResourceController.MozuVirtualFileResult)oc.Value;
+                var stream = new System.IO.MemoryStream();
+                fileResult.WriteFile(stream);
+                stream.Position = 0;
+                //
+                var sr = new System.IO.StreamReader(stream, System.Text.Encoding.UTF8);
+                buffer = sr.ReadToEnd();
             }
-            var oc = result.Content as ObjectContent<ResourceController.MozuVirtualFileResult>;
-            var fileResult = (ResourceController.MozuVirtualFileResult) oc.Value;
-            var stream = new System.IO.MemoryStream();
-            fileResult.WriteFile(stream);
-            stream.Position = 0;
-            //
-            var sr = new System.IO.StreamReader(stream, System.Text.Encoding.UTF8);
-            buffer = sr.ReadToEnd();
+            catch (Exception e)
+            {
+                buffer = "error rendering stylesheet";
+            }
         }
     }
 }
