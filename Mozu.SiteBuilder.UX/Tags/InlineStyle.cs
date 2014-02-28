@@ -17,9 +17,9 @@ namespace Mozu.SiteBuilder.UX.Tags
     {
         protected override void ProcessTag(ArgumentCollection arguments, ref NDjango.Interfaces.IContext context, out string buffer, out string templateName)
         {
+            buffer = templateName = null;
             try
             {
-                buffer = templateName = null;
                 var controller = context.Resolve<ResourceController>();
                 controller.Request = context.Resolve<HttpRequestMessage>();
                 var path = (string)arguments[0].Value;
