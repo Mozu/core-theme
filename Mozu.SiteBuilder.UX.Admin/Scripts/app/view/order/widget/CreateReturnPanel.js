@@ -115,7 +115,7 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
             fieldLabel: 'Deadline',
             labelAlign: 'top',
             emptyText: 'Any Time',
-            value: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDay()),
+            value: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate()),
             name: 'rmaDeadline'
         });
 
