@@ -77,24 +77,28 @@ Ext.define('Taco.view.discount.Index', {
             width: 180,
             hidden: false,
             renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-                console.log(record);
-                var val = "";
+                var val = "",
+                    cats = record.get("categories").length,
+                    prods = record.get("products").length;
 
-                if (record.get("products").length === 0) {
+                if (record.get('includeAllProducts')) {
                     val = "All products";
-                    return val;
-                }
+                } else {
+                    if (prods) {
+                        val = prods + ((prods > 1) ? " Products" : " Product");
+                    }
 
-                if (record.get("products").length) {
-                    val = record.get("products").length + ((record.get("products").length > 1) ? " Products" : " Product");
-                }
-
-                if (record.get("categories").length) {
-                    val += ((record.get("products").length > 0) ? " &amp; " : Ext.emptyString) + record.get("categories").length + ((record.get("categories").length > 1) ? " Categories" : " Category");
+                    if (cats) {
+                        val += (val ? " &amp; " : Ext.emptyString) + cats + ((cats > 1) ? " Categories" : " Category");
+                    }
                 }
 
                 if (record.get("targetType") == "Order") {
-                    val = "Min. Order ($" + record.get("minimumOrderAmount") + ")";
+                    val += " Min. Order ($" + record.get("minimumOrderAmount") + ")";
+                }
+
+                if (val === '') {
+                    val = 'Nothing';
                 }
 
                 return val;
