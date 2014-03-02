@@ -3,52 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using Mozu.SiteBuilder.UX.Models.Navigation;
 using Newtonsoft.Json;
 
-namespace Mozu.SiteBuilder.UX.Models.Navigation
+namespace Mozu.SiteBuilder.Mvc.Navigation
 {
-    public interface INavigationNode
-    {
-        string Id { get; }
-        string ParentId { get; }
-        string OriginalId { get; set; }
-        string Name { get; set; }
-        string Url { get; set; }
-        int Index { get; set; }
-        NavigationNodeType NodeType { get; set; }
-      
-        bool? IsHidden { get; set; }
-    }
-
-    public interface IRuntimeNavigationNode : INavigationNode
-    {
-        bool IsHomePage { get; }
-        IRuntimeNavigationNode Parent { get; }
-        ICollection<IRuntimeNavigationNode> Items { get; }
-
-       
-    }
-
-    public interface ITreeNavigationNode : INavigationNode
-    {
-        new string ParentId { get; set; }
-    }
-
     /// <summary>
     /// Representation of an element in a navigation tree.
+    /// This class should only be used by NavigationGandalf and NavigationRepository 
+	/// and always exposed as an interface!
     /// </summary>
-    public class SuperNavigationNode : IRuntimeNavigationNode, ITreeNavigationNode
+    internal class SuperNavigationNode : IRuntimeNavigationNode, ITreeNavigationNode
     {
         private const string STRING_SPLIT_DELIM = "^^";
 
         public string Id { get; set; }
 
-        public bool ? IsHidden { get; set; }
-
         private string _parentId = null;
-        public string ParentId { 
+        public string ParentId
+        {
             get { return _parentId ?? (Parent != null ? Parent.Id : null); }
-            set { _parentId = value; } 
+            set { _parentId = value; }
         }
 
         private string _originalId;
@@ -94,9 +69,20 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         public IRuntimeNavigationNode Parent { get; set; }
 
         [JsonIgnore]
-        public ICollection<IRuntimeNavigationNode> Items { get; set;  }
+        public ICollection<IRuntimeNavigationNode> Items { get; set; }
 
         [JsonIgnore]
         private string[] IdParts { get { return (Id ?? "").Split(new string[] { STRING_SPLIT_DELIM }, StringSplitOptions.None); } }
+
+
+        public bool AllowDrag { get; set; }
+
+        public bool AllowDrop { get; set; }
+
+        public bool Expanded { get; set; }
+
+        public bool Expandable { get; set; }
+
+        public bool IsHidden { get; set; }
     }
 }

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 
@@ -8,8 +10,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
     /// </summary>
     public interface INavigationRepository
     {
-        Task<NavigationSet> GetNavigationSetAsync();
+        Task<IList<INavigationNode>> GetNavigationSetAsync();
 
-        Task SaveSetAsync(NavigationSet set);
+        Task SaveSetAsync(IList<INavigationNode> set);
     }
 }

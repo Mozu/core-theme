@@ -164,7 +164,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var pageTypes = _siteContext  == null ? Enumerable.Empty<PageTypeDefinition>() : _siteContext.Theme.PageTypes;
 
             var emailTemplates = _siteContext == null ? Enumerable.Empty<PageTypeDefinition>() : _siteContext.Theme.EmailTemplates ;
-            list = list.Concat(pageTypes.Select(x => new NavigationTreeNode
+            list = list.Concat(pageTypes.Select(x => new SimpleTreeNavigationNode
                                                          {
                                                              AllowDrag = false,
                                                              AllowDrop = false,
@@ -233,10 +233,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<NavigationTreeNode>>> Create(List<NavigationTreeNode> items)
         {
-            NavigationSet navSet = await _navRepo.GetNavigationSetAsync();
+            IList<INavigationNode> navSet = await _navRepo.GetNavigationSetAsync();
 
             int currentHighestLinkIndex =
-                (from n in navSet.Nodes
+                (from n in navSet
                  where n.NodeType != null && n.NodeType.IsLink
                  let stringId = n.OriginalId
                  let id = (stringId == null ? null : (int?) Convert.ToInt32(stringId))
@@ -255,7 +255,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (item.Id == null)
                     item.Id = "link^^" + ++currentHighestLinkIndex;
 
-                navSet.Nodes.Add(item);
+                navSet.Add(item);
             }
 
             await _navRepo.SaveSetAsync(navSet);
@@ -269,7 +269,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<List<NavigationTreeNode>>> Delete(List<NavigationTreeNode> items)
         {
-            NavigationSet navSet = await _navRepo.GetNavigationSetAsync();
+            IList<INavigationNode> navSet = await _navRepo.GetNavigationSetAsync();
             bool isDirty = false;
 
             foreach (NavigationTreeNode item in items)
@@ -279,10 +279,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (item.NodeType.IsPage || item.NodeType.IsLink)
                 {
                     // delete item from navset.
-                    ITreeNavigationNode itemInNavSet = navSet.Nodes.FirstOrDefault(n => n.Id == item.Id);
+                    INavigationNode itemInNavSet = navSet.FirstOrDefault(n => n.Id == item.Id);
                     if (itemInNavSet != null)
                     {
-                        navSet.Nodes.Remove(itemInNavSet);
+                        navSet.Remove(itemInNavSet);
                         isDirty = true;
                     }
                 }
@@ -349,21 +349,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             int categoryId = Convert.ToInt32(change.OriginalId);
 
             // retrieve and update the requested category.
-            return
-                _catClient.GetCategory(categoryId)
-                          .ContinueWith(t =>
-                              {
-                                  DC.Category category = t.Result.ReadAsSync();
-
-                                  Debug.WriteLine(
-                                      String.Format("[cat {0}] Renaming category. Old Name: {1}. New Name: {2}.",
-                                                    category.Id, category.Content.Name, change.Name
-                                          ));
-
-                                  category.Content.Name = change.Name;
-                                  return _catClient.UpdateCategory(category, category.Id);
-                              })
-                          .Unwrap()
+            return _catClient.GetCategory(categoryId)
+                .ContinueWith(t => {
+                    DC.Category category = t.Result.ReadAsSync();
+                
+                    Debug.WriteLine(
+                        String.Format("[cat {0}] Renaming category. Old Name: {1}. New Name: {2}.",
+                                      category.Id, category.Content.Name, change.Name
+                            ));
+                
+                    category.Content.Name = change.Name;
+                    return _catClient.UpdateCategory(category, category.Id);
+                })
+                .Unwrap()
                 ;
         }
 
@@ -376,24 +374,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             string docId = change.OriginalId;
 
             // retrieve and update the requested category.
-            return
-                _cmsService.Get2(docCollection, docId)
-                           .ContinueWith(t =>
-                               {
-                                   Document page = t.Result.ReadAsSync();
-                                   if (page == null)
-                                       throw new Exception("Document not found: " + docCollection + "/" + docId);
+            return _cmsService.Get2(docCollection, docId)
+                .ContinueWith(t => {
+                    Document page = t.Result.ReadAsSync();
+                    if (page == null)
+                        throw new Exception("Document not found: " + docCollection + "/" + docId);
 
-                                   Debug.WriteLine(
-                                       String.Format("[doc {0}] Renaming document. Old Name: {1}. New Name: {2}.",
-                                                     page.Id, page.Get("link_title") ?? page.Name, change.Name
-                                           ));
+                    Debug.WriteLine(
+                        String.Format("[doc {0}] Renaming document. Old Name: {1}. New Name: {2}.",
+                                      page.Id, page.Get("link_title") ?? page.Name, change.Name
+                            ));
 
-                                   page.Set("link_title", change.Name);
+                    page.Set("link_title", change.Name);
 
-                                   return _cmsService.Update2(page);
-                               })
-                           .Unwrap()
+                    return _cmsService.Update2(page);
+                })
+                .Unwrap()
                 ;
         }
 
@@ -403,24 +399,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private Task HandleNavigationItemRename(NavigationTreeNode change)
         {
             // retrieve and update the navigation set.
-            return
-                _navRepo.GetNavigationSetAsync()
-                        .ContinueWith(t =>
-                            {
-                                NavigationSet navSet = t.Result;
+            return _navRepo.GetNavigationSetAsync()
+                .ContinueWith(t => {
+                    IList<INavigationNode> navSet = t.Result;
 
-                                INavigationNode originalNode = navSet.Nodes.FirstOrDefault(n => n.Id == change.Id);
+                    INavigationNode originalNode = navSet.FirstOrDefault(n => n.Id == change.Id);
 
-                                Debug.WriteLine(
-                                    String.Format("[node {0}] Renaming node. Old Name: {1}. New Name: {2}.",
-                                                  originalNode.Id, originalNode.Name, change.Name
-                                        ));
+                    Debug.WriteLine(
+                        String.Format("[node {0}] Renaming node. Old Name: {1}. New Name: {2}.",
+                                      originalNode.Id, originalNode.Name, change.Name
+                            ));
 
-                                originalNode.Name = change.Name;
+                    originalNode.Name = change.Name;
 
-                                return _navRepo.SaveSetAsync(navSet);
-                            })
-                        .Unwrap()
+                    return _navRepo.SaveSetAsync(navSet);
+                })
+                .Unwrap()
                 ;
         }
 
@@ -429,72 +423,70 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         private Task HandleNavigationMove(NavigationTreeNode change)
         {
-            return
-                _navRepo.GetNavigationSetAsync()
-                        .ContinueWith(t =>
-                            {
-                                NavigationSet navSet = t.Result;
+            return _navRepo.GetNavigationSetAsync()
+                .ContinueWith(t => {
+                    IList<INavigationNode> navSet = t.Result;
 
-                                ITreeNavigationNode original = navSet.Nodes.FirstOrDefault(n => n.Id == change.Id);
-                                if (original == null)
-                                {
-                                    original = change;
-                                    navSet.Nodes.Add(original);
-                                }
+                    INavigationNode original = navSet.FirstOrDefault(n => n.Id == change.Id);
+                    if (original == null)
+                    {
+                        original = change;
+                        navSet.Add(original);
+                    }
 
-                                // reorder within same parent
-                                if (original.ParentId == change.ParentId)
-                                {
-                                    IEnumerable<ITreeNavigationNode> siblings =
-                                        from n in navSet.Nodes
-                                        where n.ParentId == change.ParentId
-                                        where n.Id != change.Id
-                                        select n;
+                    // reorder within same parent
+                    if (original.ParentId == change.ParentId)
+                    {
+                        IEnumerable<INavigationNode> siblings =
+                            from n in navSet
+                            where n.ParentId == change.ParentId
+                            where n.Id != change.Id
+                            select n;
 
-                                    // if new value is closer to the bottom of the list, then some displaced items need to decrease in index.
-                                    if (change.Index > original.Index)
-                                    {
-                                        siblings.Where(n => n.Index > original.Index && n.Index <= change.Index).ToList().ForEach(n => n.Index--);
-                                    }
-                                        // if new value is closer to the top of the list, then some displaced items need to increase in index.
-                                    else if (change.Index < original.Index)
-                                    {
-                                        siblings.Where(n => n.Index >= change.Index && n.Index < original.Index).ToList().ForEach(n => n.Index++);
-                                    }
+                        // if new value is closer to the bottom of the list, then some displaced items need to decrease in index.
+                        if (change.Index > original.Index)
+                        {
+                            siblings.Where(n => n.Index > original.Index && n.Index <= change.Index).ToList().ForEach(n => n.Index--);
+                        }
+                            // if new value is closer to the top of the list, then some displaced items need to increase in index.
+                        else if (change.Index < original.Index)
+                        {
+                            siblings.Where(n => n.Index >= change.Index && n.Index < original.Index).ToList().ForEach(n => n.Index++);
+                        }
 
-                                    // set the index
-                                    original.Index = change.Index;
-                                }
-                                    // change of parent
-                                else
-                                {
-                                    IEnumerable<ITreeNavigationNode> oldSiblings =
-                                        from n in navSet.Nodes
-                                        where n.ParentId == original.ParentId
-                                        where n.Id != change.Id
-                                        select n;
+                        // set the index
+                        original.Index = change.Index;
+                    }
+                        // change of parent
+                    else
+                    {
+                        IEnumerable<INavigationNode> oldSiblings =
+                            from n in navSet
+                            where n.ParentId == original.ParentId
+                            where n.Id != change.Id
+                            select n;
 
-                                    IEnumerable<ITreeNavigationNode> newSiblings =
-                                        from n in navSet.Nodes
-                                        where n.ParentId == change.ParentId
-                                        where n.Id != change.Id
-                                        select n;
+                        IEnumerable<INavigationNode> newSiblings =
+                            from n in navSet
+                            where n.ParentId == change.ParentId
+                            where n.Id != change.Id
+                            select n;
 
-                                    // any old siblings that came after this node need to move closer to the top.
-                                    oldSiblings.Where(n => n.Index > original.Index).ToList().ForEach(n => n.Index--);
+                        // any old siblings that came after this node need to move closer to the top.
+                        oldSiblings.Where(n => n.Index > original.Index).ToList().ForEach(n => n.Index--);
 
-                                    // any new siblings that will be displaced by this node need to move closer to the bottom.
-                                    newSiblings.Where(n => n.Index <= change.Index).ToList().ForEach(n => n.Index++);
+                        // any new siblings that will be displaced by this node need to move closer to the bottom.
+                        newSiblings.Where(n => n.Index <= change.Index).ToList().ForEach(n => n.Index++);
 
-                                    // set the index and parent
-                                    original.Index = change.Index;
-                                    original.ParentId = change.ParentId;
-                                }
+                        // set the index and parent
+                        original.Index = change.Index;
+                        original.ParentId = change.ParentId;
+                    }
 
-                                // finally, save the document.
-                                return _navRepo.SaveSetAsync(navSet);
-                            })
-                        .Unwrap()
+                    // finally, save the document.
+                    return _navRepo.SaveSetAsync(navSet);
+                })
+                .Unwrap()
                 ;
         }
 
@@ -502,124 +494,122 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             int categoryId = Convert.ToInt32(change.OriginalId);
 
-            Task<NavigationSet> navTask = _navRepo.GetNavigationSetAsync();
+            Task<IList<INavigationNode>> navTask = _navRepo.GetNavigationSetAsync();
             Task<ServiceClientResponse<DC.Category>> catTask = _catClient.GetCategory(categoryId);
             Task<List<ITreeNavigationNode>> listTask = GetFlatList();
 
-            return
-                Task.WhenAll(navTask, catTask, listTask)
-                    .ContinueWith(_ =>
+            return Task.WhenAll(navTask, catTask, listTask)
+                .ContinueWith(_ => {
+                    List<ITreeNavigationNode> list = listTask.Result;
+                    DC.Category originalCat = catTask.Result.ReadAsSync();
+                    IList<INavigationNode> navSet = navTask.Result;
+                    var updateTasks = new List<Task>();
+
+                    ITreeNavigationNode originalNav = list.FirstOrDefault(n => n.Id == change.Id);
+                    if (originalNav == null)
+                        return Task.Run(() => null);
+
+                    int? oldSequence = originalCat.Sequence;
+                    int? newSequence = null;
+
+                    // reorder within same parent
+                    if (originalNav.ParentId == change.ParentId)
+                    {
+                        IEnumerable<INavigationNode> navSiblings =
+                            from n in navSet
+                            where n.ParentId == change.ParentId
+                            select n;
+
+                        IEnumerable<INavigationNode> catSiblings =
+                            from n in list
+                            where n.ParentId == change.ParentId
+                            where n.NodeType.IsCategory
+                            where n.Id != change.Id
+                            select n;
+
+                        // if new value is closer to the bottom of the list, then some displaced items need to decrease in index.
+                        if (change.Index > originalNav.Index)
                         {
-                            List<ITreeNavigationNode> list = listTask.Result;
-                            DC.Category originalCat = catTask.Result.ReadAsSync();
-                            NavigationSet navSet = navTask.Result;
-                            var updateTasks = new List<Task>();
+                            navSiblings.Where(n => n.Index > originalNav.Index && n.Index <= change.Index).ToList().ForEach(n => n.Index--);
+                            IEnumerable<int> catIds = catSiblings.Where(n => n.Index > originalNav.Index && n.Index <= change.Index).Select(n => Convert.ToInt32(n.OriginalId));
+                            updateTasks.AddRange(ReorderCategories(catIds, ReorderDirection.Decrease));
 
-                            ITreeNavigationNode originalNav = list.FirstOrDefault(n => n.Id == change.Id);
-                            if (originalNav == null)
-                                return Task.Run(() => null);
+                            // update the original category's sequence.
+                            newSequence = originalCat.Sequence = originalCat.Sequence + catIds.Count();
+                        }
+                            // if new value is closer to the top of the list, then some displaced items need to increase in index.
+                        else if (change.Index < originalNav.Index)
+                        {
+                            navSiblings.Where(n => n.Index >= change.Index && n.Index < originalNav.Index).ToList().ForEach(n => n.Index++);
+                            IEnumerable<int> catIds = catSiblings.Where(n => n.Index >= change.Index && n.Index < originalNav.Index).Select(n => Convert.ToInt32(n.OriginalId));
+                            updateTasks.AddRange(ReorderCategories(catIds, ReorderDirection.Increase));
 
-                            int? oldSequence = originalCat.Sequence;
-                            int? newSequence = null;
+                            // update the original category's sequence.
+                            newSequence = originalCat.Sequence = Math.Min(change.Index, Math.Abs(originalCat.Sequence.GetValueOrDefault(0) - catIds.Count()));
+                        }
 
-                            // reorder within same parent
-                            if (originalNav.ParentId == change.ParentId)
+                        if (  oldSequence != newSequence)
+                        {
+                            if (!newSequence.HasValue)
                             {
-                                IEnumerable<ITreeNavigationNode> navSiblings =
-                                    from n in navSet.Nodes
-                                    where n.ParentId == change.ParentId
-                                    select n;
-
-                                IEnumerable<ITreeNavigationNode> catSiblings =
-                                    from n in list
-                                    where n.ParentId == change.ParentId
-                                    where n.NodeType.IsCategory
-                                    where n.Id != change.Id
-                                    select n;
-
-                                // if new value is closer to the bottom of the list, then some displaced items need to decrease in index.
-                                if (change.Index > originalNav.Index)
-                                {
-                                    navSiblings.Where(n => n.Index > originalNav.Index && n.Index <= change.Index).ToList().ForEach(n => n.Index--);
-                                    IEnumerable<int> catIds = catSiblings.Where(n => n.Index > originalNav.Index && n.Index <= change.Index).Select(n => Convert.ToInt32(n.OriginalId));
-                                    updateTasks.AddRange(ReorderCategories(catIds, ReorderDirection.Decrease));
-
-                                    // update the original category's sequence.
-                                    newSequence = originalCat.Sequence = originalCat.Sequence + catIds.Count();
-                                }
-                                    // if new value is closer to the top of the list, then some displaced items need to increase in index.
-                                else if (change.Index < originalNav.Index)
-                                {
-                                    navSiblings.Where(n => n.Index >= change.Index && n.Index < originalNav.Index).ToList().ForEach(n => n.Index++);
-                                    IEnumerable<int> catIds = catSiblings.Where(n => n.Index >= change.Index && n.Index < originalNav.Index).Select(n => Convert.ToInt32(n.OriginalId));
-                                    updateTasks.AddRange(ReorderCategories(catIds, ReorderDirection.Increase));
-
-                                    // update the original category's sequence.
-                                    newSequence = originalCat.Sequence = Math.Min(change.Index, Math.Abs(originalCat.Sequence.GetValueOrDefault(0) - catIds.Count()));
-                                }
-
-                                if (  oldSequence != newSequence)
-                                {
-                                    if (!newSequence.HasValue)
-                                    {
-                                        originalCat.Sequence = originalCat.Sequence.GetValueOrDefault(0) + 1;
-                                    }
-                                    updateTasks.Add(_catClient.UpdateCategory(originalCat, originalCat.Id));
-                                    
-                                }
-                               
-                                updateTasks.Add(_navRepo.SaveSetAsync(navSet));
+                                originalCat.Sequence = originalCat.Sequence.GetValueOrDefault(0) + 1;
                             }
-                                // change of parent
-                            else
-                            {
-                                IEnumerable<ITreeNavigationNode> oldSiblingsNav =
-                                    from n in navSet.Nodes
-                                    where n.ParentId == originalNav.ParentId
-                                    where n.Id != change.Id
-                                    select n;
+                            updateTasks.Add(_catClient.UpdateCategory(originalCat, originalCat.Id));
+                            
+                        }
+                       
+                        updateTasks.Add(_navRepo.SaveSetAsync(navSet));
+                    }
+                    // change of parent
+                    else
+                    {
+                        IEnumerable<INavigationNode> oldSiblingsNav =
+                            from n in navSet
+                            where n.ParentId == originalNav.ParentId
+                            where n.Id != change.Id
+                            select n;
 
-                                IEnumerable<ITreeNavigationNode> oldSiblingsCat =
-                                    from n in list
-                                    where n.ParentId == originalNav.ParentId
-                                    where n.Id != change.Id
-                                    where n.NodeType.IsCategory
-                                    select n;
+                        IEnumerable<INavigationNode> oldSiblingsCat =
+                            from n in list
+                            where n.ParentId == originalNav.ParentId
+                            where n.Id != change.Id
+                            where n.NodeType.IsCategory
+                            select n;
 
-                                IEnumerable<ITreeNavigationNode> newSiblingsNav =
-                                    from n in navSet.Nodes
-                                    where n.ParentId == change.ParentId
-                                    where n.Id != change.Id
-                                    select n;
+                        IEnumerable<INavigationNode> newSiblingsNav =
+                            from n in navSet
+                            where n.ParentId == change.ParentId
+                            where n.Id != change.Id
+                            select n;
 
-                                IEnumerable<ITreeNavigationNode> newSiblingsCat =
-                                    from n in list
-                                    where n.ParentId == change.ParentId
-                                    where n.NodeType.IsCategory
-                                    where n.Id != change.Id
-                                    select n;
+                        IEnumerable<ITreeNavigationNode> newSiblingsCat =
+                            from n in list
+                            where n.ParentId == change.ParentId
+                            where n.NodeType.IsCategory
+                            where n.Id != change.Id
+                            select n;
 
-                                // any old siblings that came after this node need to move closer to the top.
-                                oldSiblingsNav.Where(n => n.Index > originalNav.Index).ToList().ForEach(n => n.Index--);
-                                IEnumerable<int> oldCatIds = oldSiblingsCat.Where(n => n.Index > originalNav.Index).Select(n => Convert.ToInt32(n.OriginalId));
-                                updateTasks.AddRange(ReorderCategories(oldCatIds, ReorderDirection.Decrease));
+                        // any old siblings that came after this node need to move closer to the top.
+                        oldSiblingsNav.Where(n => n.Index > originalNav.Index).ToList().ForEach(n => n.Index--);
+                        IEnumerable<int> oldCatIds = oldSiblingsCat.Where(n => n.Index > originalNav.Index).Select(n => Convert.ToInt32(n.OriginalId));
+                        updateTasks.AddRange(ReorderCategories(oldCatIds, ReorderDirection.Decrease));
 
-                                // any new siblings that will be displaced by this node need to move closer to the bottom.
-                                newSiblingsNav.Where(n => n.Index >= change.Index).ToList().ForEach(n => n.Index++);
-                                IEnumerable<int> newCatIds = newSiblingsCat.Where(n => n.Index > change.Index).Select(n => Convert.ToInt32(n.OriginalId));
-                                updateTasks.AddRange(ReorderCategories(newCatIds, ReorderDirection.Increase));
+                        // any new siblings that will be displaced by this node need to move closer to the bottom.
+                        newSiblingsNav.Where(n => n.Index >= change.Index).ToList().ForEach(n => n.Index++);
+                        IEnumerable<int> newCatIds = newSiblingsCat.Where(n => n.Index > change.Index).Select(n => Convert.ToInt32(n.OriginalId));
+                        updateTasks.AddRange(ReorderCategories(newCatIds, ReorderDirection.Increase));
 
-                                // update the sequence and parent id of the original category.
-                                originalCat.Sequence = change.Index - newSiblingsNav.Count(n => n.Index <= change.Index);
-                                originalCat.ParentCategoryId = Convert.ToInt32(list.First(n => n.Id == change.ParentId).OriginalId);
+                        // update the sequence and parent id of the original category.
+                        originalCat.Sequence = change.Index - newSiblingsNav.Count(n => n.Index <= change.Index);
+                        originalCat.ParentCategoryId = Convert.ToInt32(list.First(n => n.Id == change.ParentId).OriginalId);
 
-                                updateTasks.Add(_catClient.UpdateCategory(originalCat, originalCat.Id));
-                                updateTasks.Add(_navRepo.SaveSetAsync(navSet));
-                            }
+                        updateTasks.Add(_catClient.UpdateCategory(originalCat, originalCat.Id));
+                        updateTasks.Add(_navRepo.SaveSetAsync(navSet));
+                    }
 
-                            return Task.WhenAll(updateTasks);
-                        })
-                    .Unwrap()
+                    return Task.WhenAll(updateTasks);
+                })
+                .Unwrap()
                 ;
         }
 
@@ -631,18 +621,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 returnList.Add(
                     _catClient.GetCategory(catId)
-                              .ContinueWith(t =>
-                                  {
-                                      DC.Category cat = t.Result.ReadAsSync();
+                        .ContinueWith(t => {
+                            DC.Category cat = t.Result.ReadAsSync();
 
 
-                                      if (direction == ReorderDirection.Decrease)
-                                          cat.Sequence--;
-                                      else
-                                          cat.Sequence++;
+                            if (direction == ReorderDirection.Decrease)
+                                cat.Sequence--;
+                            else
+                                cat.Sequence++;
 
-                                      return _catClient.UpdateCategory(cat, catId);
-                                  }).Unwrap()
+                            return _catClient.UpdateCategory(cat, catId);
+                        })
+                        .Unwrap()
                     );
             }
 

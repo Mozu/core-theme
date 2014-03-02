@@ -4,12 +4,10 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Logging;
 using Mozu.ProductRuntime.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
@@ -24,8 +22,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         private IDocumentListWebApiClient _documentClient;
         private INavigationRepository _navRepo;
         private ILogger _logger;
-        private static MD5 _md5;
-
+        
         // the top level name in EXT's tree thing (a root pseudo-node).
         private const string SUPER_ROOT_NODE_NAME = "root";
 
@@ -48,20 +45,13 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         }
 
         /// <summary>
-        /// Static constructor.
-        /// </summary>
-        static NavigationGandalfTheWhite()
-        {
-            _md5 = MD5.Create();
-        }
-
-        /// <summary>
         /// Gets all navigation nodes in a flat list.
         /// Flat list is used by Admin.
         /// </summary>
         public Task<List<ITreeNavigationNode>> GetFlatList()
         {
             return GetListInternal().ContinueWith(t => {
+                // TODO: replace this .Cast() call
                 return t.Result.Cast<ITreeNavigationNode>().ToList();
             });
         }
@@ -72,8 +62,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// <returns></returns>
         public Task<List<IRuntimeNavigationNode>> GetTreeNavigation()
         {
-            return GetListInternal().ContinueWith(t =>
-            {
+            return GetListInternal().ContinueWith(t => {
                 return BuildTree(t.Result).Cast<IRuntimeNavigationNode>().ToList();
             });
         }
@@ -100,7 +89,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
                 int numpages = pages != null && pages.Items != null ? pages.Items.Count : 0;
                 int numcats = categories != null && categories.Items != null ? categories.Items.Count : 0;
-                int numNavset = navset != null & navset.Nodes != null ? navset.Nodes.Count : 0;
+                int numNavset = navset != null ? navset.Count : 0;
                 var masterList = new List<SuperNavigationNode>(numpages + numcats + numNavset + 2);
 
                 masterList.Add(new SuperNavigationNode
@@ -129,7 +118,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 masterList.AddRange(allCats);
 
                 // build the masterlist. Step 2: put in navigation items we know about.
-                foreach (var navmeta in (navset.Nodes ?? Enumerable.Empty<INavigationNode>()).OrderBy(n => n.ParentId).ThenBy(n => n.Index))
+                foreach (var navmeta in (navset ?? Enumerable.Empty<INavigationNode>()))
                 {
                     SuperNavigationNode node;
 

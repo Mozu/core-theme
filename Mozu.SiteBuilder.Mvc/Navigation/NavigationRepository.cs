@@ -14,14 +14,13 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
     /// <summary>
     /// Repository to access the navigation metadocument in CMS.
     /// </summary>
-    public class NavigationRepository : INavigationRepository
+    internal class NavigationRepository : INavigationRepository
     {
         private const string NAVIGATION_CONTENT_COLLECTION = "settings";
         private const string NAVIGATION_FILE_NAME = "navigation";
 
         private ICmsServiceWrapper _cmsService;
         private readonly ISiteBuilderApiContext _siteBuilderApiContext;
-        private readonly DataContractJsonSerializer _serializer = new DataContractJsonSerializer(typeof (NavigationSet), new[] {typeof (object), typeof (List<SuperNavigationNode>), typeof (SuperNavigationNode), typeof (string), typeof (int)});
 
         /// <summary>
         /// Public constructor.
@@ -37,7 +36,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// <summary>
         /// Gets the navigation set stored for the current site.
         /// </summary>
-        public Task<NavigationSet> GetNavigationSetAsync()
+        public Task<IList<INavigationNode>> GetNavigationSetAsync()
         {
             return _cmsService.GetByPath2(NAVIGATION_CONTENT_COLLECTION, NAVIGATION_FILE_NAME)
                 .ContinueWith(docResultIntermediate =>
@@ -49,8 +48,6 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         var doc = CreateNavigationDocument(new NavigationSet());
                         var res = new TestResponse<DC.Document>(doc);
                         return res.Task;
-
-
                     }
 
                     // otherwise, pass through the result.
@@ -68,7 +65,11 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         var navset = Newtonsoft.Json.JsonConvert.DeserializeObject<NavigationSet>(jsonString);
                         return navset;
                     }
-                    return new NavigationSet();
+                    else
+                    {
+                        IList<INavigationNode> navset = new NavigationSet();
+                        return navset;
+                    }
                 });
         }
 
@@ -90,36 +91,40 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         private static void UpdateNavigationDocument(DC.Document doc, NavigationSet set)
         {
             doc.Set("data", Newtonsoft.Json.JsonConvert.SerializeObject(set));
-
         }
-
 
 
         /// <summary>
         /// Saves the navigation set for the current site.
         /// </summary>
-        public Task SaveSetAsync(NavigationSet set)
+        public Task SaveSetAsync(IList<INavigationNode> set)
         {
+            NavigationSet navset;
+            if (set is NavigationSet)
+            {
+                navset = (NavigationSet)set;
+            }
+            else
+            {
+                navset = new NavigationSet();
+                navset.AddRange(set);
+            }
+
             return _cmsService.GetByPath2(NAVIGATION_CONTENT_COLLECTION, NAVIGATION_FILE_NAME)
                 .ContinueWith(docResultIntermediate =>
                 {
                     var doc = docResultIntermediate.Result.ReadAsSync();
                     if (doc == null)
                     {
-                        doc = CreateNavigationDocument(set);
+                        doc = CreateNavigationDocument(navset);
                         return _cmsService.RawCreate2(doc);
                     }
                     else
                     {
-                        UpdateNavigationDocument(doc, set);
+                        UpdateNavigationDocument(doc, navset);
                         return _cmsService.Update2(doc);
-
-
                     }
-
                 });
-
-
         }
     }
 }
