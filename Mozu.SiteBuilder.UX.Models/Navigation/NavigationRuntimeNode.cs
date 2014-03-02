@@ -56,6 +56,9 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         [DataMember(Name = "originalId")]
         public string OriginalId { get; set; }
 
+        [DataMember(Name = "originalCollection")]
+        public string OriginalCollection { get; set; }
+
 
         [DataMember (Name="url")]
         public string Url { get; set; }

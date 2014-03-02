@@ -65,7 +65,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Navigation
         public string Url { get; set; }
 
         [DataMember(Name = "leaf")]
-        public bool Leaf { get; set; }
+        public bool IsLeaf { get; set; }
         
         [DataMember(Name = "expanded")]
         public bool Expanded { get; set; }
@@ -83,8 +83,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Navigation
         public bool AllowDrag { get; set; }
 
         
-         [DataMember(Name = "isHidden")]
-        public bool? IsHidden { get; set; }
+        [DataMember(Name = "isHidden")]
+        public bool IsHidden { get; set; }
 
         public bool AllowDrop { get; set; }
 

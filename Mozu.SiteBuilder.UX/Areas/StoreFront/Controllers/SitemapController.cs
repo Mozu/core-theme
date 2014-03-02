@@ -83,7 +83,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
            {
                // var primaryNavTask = _gandalf.GetTreeNavigation();
                //var domainTask = GetSitePrimaryDomain();
-               var nodes = await _gandalf.GetTreeNavigation();
+               var nodes = await _gandalf.GetFlatList();
 
 
                var domain = await GetSitePrimaryDomain();
@@ -103,7 +103,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                writer.WriteElementString("priority", NS, "1");
                writer.WriteEndElement();
 
-               foreach ( var node in nodes.Where(x=> !x.IsHidden.GetValueOrDefault(false) && !string.IsNullOrEmpty(x.Url) ))
+               foreach ( var node in nodes.Where(x=> !x.IsHidden && !string.IsNullOrEmpty(x.Url) ))
                {
                    writer.WriteStartElement("url", NS);
                    writer.WriteElementString("loc", NS, node.Url.StartsWith("/") ?  domain + node.Url : node.Url );

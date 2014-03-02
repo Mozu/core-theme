@@ -1,22 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Mozu.SiteBuilder.UX.Models.Navigation;
 
-namespace Mozu.SiteBuilder.UX.Models.Navigation
+namespace Mozu.SiteBuilder.Mvc.Navigation
 {
+    /// <summary>
+    /// Wrapper around a list of navigation nodes with a custom serializer.
+    /// Used by NavigationRepository to persist the navigation set.
+    /// TODO: fhersey Remove this class completely and put its serializer inside of NavigationRepository.
+    /// </summary>
     [DataContract, Newtonsoft.Json.JsonConverter(typeof(Converter))]
-    public class NavigationSet
+    internal class NavigationSet : List<INavigationNode>
     {
-        public NavigationSet()
-        {
-            Nodes = new List<ITreeNavigationNode>();
-        }
-
-        [DataMember(Name = "nodes", EmitDefaultValue = false)]
-        public List<ITreeNavigationNode> Nodes { get; set; }
-
-
-
+        /// <summary>
+        /// Custom serializer for NavigationSet
+        /// </summary>
         private class Converter : Newtonsoft.Json.JsonConverter
         {
             public override bool CanConvert(Type objectType)
@@ -26,12 +25,15 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
 
             public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
             {
+                // we have to read two types of documents:
+                // the old style, { nodes: [<node>,<node>] }
+                // and the new style, [<node>,<node>]
                 if (reader.TokenType == Newtonsoft.Json.JsonToken.Null)
                 {
                     return null;
                 }
                 var set = new NavigationSet();
-                var list = new List<SuperNavigationNode>();
+                var list = new List<SimpleTreeNavigationNode>();
                 // fast-forward to the array of nodes
                 while ( reader.TokenType != Newtonsoft.Json.JsonToken.StartArray && reader.Read() ) ;
                 if (reader.TokenType != Newtonsoft.Json.JsonToken.None)
@@ -41,7 +43,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
                     while (reader.Read()) ;
                 }
 
-                set.Nodes.AddRange(list);
+                set.AddRange(list);
                 return set;
             }
 
@@ -53,7 +55,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
                     return;
                 }
                 var j = new Newtonsoft.Json.Linq.JObject();
-                j["nodes"] = Newtonsoft.Json.Linq.JArray.FromObject(set.Nodes);
+                j["nodes"] = Newtonsoft.Json.Linq.JArray.FromObject(set);
                 j.WriteTo(writer);
             }
         }

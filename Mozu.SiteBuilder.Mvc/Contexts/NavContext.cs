@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Mozu.SiteBuilder.Mvc.Filters;
@@ -57,39 +56,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 return parameter.Where(x => x != null).Select(key => this.Tree.FindNode(null, key.ToString())).ToList();
             }
-
         }
-
-        //public class CategoryNodeFinder : ITagFilterFindable
-        //{
-        //    private readonly NavigationContext _navigationContext;
-
-        //    public CategoryNodeFinder(NavigationContext navigationContext )
-        //    {
-        //        _navigationContext = navigationContext;
-        //    }
-         
-
-        //    public object Filter(IEnumerable<object> parameter)
-        //    {
-        //        if (parameter.Count() == 0)
-        //        {
-        //            return null;
-        //        }
-                
-        //        throw new NotImplementedException();
-        //    }
-        //}
-
-        ///// <summary>
-        ///// called by django
-        ///// </summary>
-        ///// <param name="id"></param>
-        ///// <returns></returns>
-        //public CategoryNodeFinder Category
-        //{
-        //    get; set;
-        //}
 
 
         private Task<List<IRuntimeNavigationNode>> _initTask;
@@ -195,14 +162,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
             if (productNode == null)
             {
-                productNode = Mapper.Map<NavigationRuntimeNode>(Mapper.Map<SuperNavigationNode>(product));
+                productNode = Mapper.Map<IRuntimeNavigationNode>(product);
 
                 if (product.Categories != null && product.Categories.Count > 0)
                 {
                     var parent = Tree.FindByCategory(product.Categories.First());
                     if (parent != null)
                     {
-                        ((NavigationRuntimeNode)productNode).Parent = parent;
+                        productNode.Parent = parent;
                         //parent.Items.Add(productNode);
                     }
                 }
@@ -224,7 +191,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
             if (categoryNode == null)
             {
-                categoryNode = Mapper.Map<NavigationRuntimeNode>(Mapper.Map<SuperNavigationNode>(category));
+                categoryNode = Mapper.Map<IRuntimeNavigationNode>(category);
                 //Tree.Add(categoryNode);
             }
 
@@ -240,7 +207,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
             if (docNode == null)
             {
-                docNode = Mapper.Map<NavigationRuntimeNode>(Mapper.Map<SuperNavigationNode>(doc));
+                docNode = Mapper.Map<IRuntimeNavigationNode>(doc);
             }
 
             CurrentNode = docNode;

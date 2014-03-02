@@ -12,46 +12,53 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
 
         protected override void Configure()
         {
-            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product, SuperNavigationNode>()
+
+            // this mapping is used by Mozu.SiteBuilder.Mvc.Contexts.NavContext
+            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product, SimpleRuntimeNavigationNode>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("product", x.ProductCode)))
                 .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.ProductCode))
                 .ForMember(d => d.Name, opt => opt.MapFrom(x => x.ProductName))
-                .ForMember(d => d.Url, opt => opt.MapFrom(x => (x.Content == null || string.IsNullOrEmpty(x.Content.SEOFriendlyUrl)) ? "/p/" + x.ProductCode : "/" + x.Content.SEOFriendlyUrl + "/p/" + x.ProductCode))//"/product/" + x.ProductCode))
+                .ForMember(d => d.Url, opt => opt.MapFrom(x => (x.Content == null || string.IsNullOrEmpty(x.Content.SEOFriendlyUrl)) ? "/p/" + x.ProductCode : "/" + x.Content.SEOFriendlyUrl + "/p/" + x.ProductCode))
                 .ForMember(dest => dest.NodeType, opt => opt.UseValue(NavigationNodeType.Product))
-                .ForMember(dest => dest.IsLeaf, opt => opt.UseValue(true))
+                //.ForMember(dest => dest.IsLeaf, opt => opt.UseValue(true))
+                .As<IRuntimeNavigationNode>()
                 ;
 
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Product, SuperNavigationNode>()
+            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Product, SimpleRuntimeNavigationNode>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("product", x.ProductCode)))
                 .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.ProductCode))
                 .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Content.ProductName))
                 .ForMember(d => d.Url, opt => opt.MapFrom(x => (x.Content == null || string.IsNullOrEmpty(x.Content.SEOFriendlyUrl)) ? "/p/" + x.ProductCode : "/" + x.Content.SEOFriendlyUrl + "/p/" + x.ProductCode))//"/product/" + x.ProductCode))
                 .ForMember(dest => dest.NodeType, opt => opt.UseValue(NavigationNodeType.Product))
-                .ForMember(dest => dest.IsLeaf, opt => opt.UseValue(true))
+                //.ForMember(dest => dest.IsLeaf, opt => opt.UseValue(true))
+                .As<IRuntimeNavigationNode>()
                 ;
 
-            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.Product, SuperNavigationNode>()
+            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.Product, SimpleRuntimeNavigationNode>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("product", x.ProductCode)))
                 .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.ProductCode))
                 .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Content.ProductName))
                 .ForMember(d => d.Url, opt => opt.MapFrom(x => (x.SEOContent == null || string.IsNullOrEmpty(x.SEOContent.SEOFriendlyUrl)) ? "/p/" + x.ProductCode : "/" + x.SEOContent.SEOFriendlyUrl + "/p/" + x.ProductCode))//"/product/" + x.ProductCode))
                 .ForMember(dest => dest.NodeType, opt => opt.UseValue(NavigationNodeType.Product))
-                .ForMember(dest => dest.IsLeaf, opt => opt.UseValue(true))
+                //.ForMember(dest => dest.IsLeaf, opt => opt.UseValue(true))
+                .As<IRuntimeNavigationNode>()
                 ;
 
-            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, SuperNavigationNode>()
+            // this mapping is used by Mozu.SiteBuilder.Mvc.Contexts.NavContext
+            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, SimpleRuntimeNavigationNode>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("category", x.CategoryId)))
                 .ForMember(d => d.IsHidden, opt => opt.ResolveUsing(x => !x.IsDisplayed))
                 .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.CategoryId))
-                .ForMember(d => d.ParentId, opt => opt.MapFrom(x => x.ParentCategoryId.HasValue ? JoinParts("category", x.ParentCategoryId.Value) : null))
+                //.ForMember(d => d.ParentId, opt => opt.MapFrom(x => x.ParentCategoryId.HasValue ? JoinParts("category", x.ParentCategoryId.Value) : null))
                 .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Name))
                 .ForMember(d => d.Url, opt => opt.MapFrom(x => (x.Content == null || string.IsNullOrEmpty(x.Content.Slug)) ? "/c/" + x.Id :"/"+ x.Content.Slug + "/c/" + x.CategoryId ))
                 .ForMember(d => d.NodeType, opt => opt.UseValue(NavigationNodeType.Category))
                 .ForMember(d => d.Index, opt => opt.MapFrom(x => x.Index))
-                .ForMember(d => d.IsLeaf, opt => opt.UseValue(false))
+                //.ForMember(d => d.IsLeaf, opt => opt.UseValue(false))
+                .As<IRuntimeNavigationNode>()
                 ;
 
-            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.Category, SuperNavigationNode>()
+            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.Category, SimpleTreeNavigationNode>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("category", x.Id)))
                 .ForMember(d => d.IsHidden, opt => opt.ResolveUsing(x => !x.IsDisplayed.GetValueOrDefault(true)))
                 .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.Id))
@@ -63,7 +70,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                 .ForMember(d => d.IsLeaf, opt => opt.UseValue(false))
                 ;
 
-            Mapper.CreateMap<Mozu.Content.Contracts.Document, SuperNavigationNode>()
+            Mapper.CreateMap<Mozu.Content.Contracts.Document, SimpleTreeNavigationNode>()
                .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("page", x.DocumentListName, x.Id)))
                .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.Id))
                .ForMember(d => d.OriginalCollection, opt => opt.MapFrom(x => x.DocumentListName))
@@ -76,7 +83,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                .ForMember(d => d.IsLeaf, opt => opt.MapFrom(x => x.DocumentType == "blog"))
                ;
 
-            Mapper.CreateMap<Mozu.SiteBuilder.Mvc.Models.CMS.Document, SuperNavigationNode>()
+            // this mapping is used by Mozu.SiteBuilder.Mvc.Contexts.NavContext
+            Mapper.CreateMap<Mozu.SiteBuilder.Mvc.Models.CMS.Document, SimpleTreeNavigationNode>()
                .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("page", x.Collection, x.Id)))
                .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.Id))
                .ForMember(d => d.OriginalCollection, opt => opt.MapFrom(x => x.Collection))
@@ -87,9 +95,6 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                .ForMember(d => d.Index, opt => opt.UseValue(null))
                .ForMember(d => d.IsLeaf, opt => opt.MapFrom(x => x.DocumentType == "blog"))
                ;
-
-            Mapper.CreateMap<SuperNavigationNode, NavigationRuntimeNode>()
-	                ;
 	
 
         }
