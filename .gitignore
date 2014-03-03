@@ -9,7 +9,7 @@ packages/
 node_modules/
 *.sublime-project
 *.sublime-workspace
-
+seismic-audio/
 
 Mozu.SiteBuilder.UX.Admin/Scripts/ext/
 Mozu.SiteBuilder.UX.Admin/Scripts/docs/
