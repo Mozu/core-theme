@@ -939,7 +939,15 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
-    
+    declineCheck: function (config) {
+
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/declinecheck',
+            method: "POST"
+        });
+        Ext.Ajax.request(config);
+    },
+
 
     /*
      ****************************************************

@@ -8,6 +8,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using DCcore = Mozu.Core.Api.Contracts;
 using DCp = Mozu.CommerceRuntime.Contracts.Payments;
+using ACTIONS = Mozu.CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -23,8 +24,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "payment/requestcheck")]
         public async Task<Response<Order>> RequestCheck(RequestCheckArgs args)
         {
-            var action = new DCp.PaymentAction { 
-                ActionName = "RequestCheck",
+            var action = new DCp.PaymentAction {
+                ActionName = ACTIONS.REQUEST_CHECK,
                 NewBillingInfo = new DCp.BillingInfo {
                     PaymentType = DCp.PaymentTypeConst.CHECK,
                     BillingContact = new DCcore.Contact {
@@ -51,7 +52,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var action = new DCp.PaymentAction
             {
-                ActionName = "ApplyCheck",
+                ActionName = ACTIONS.CAPTURE_PAYMENT,
                 
                 CurrencyCode = "USD",
                 CheckNumber = args.CheckNumber,
@@ -74,7 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var action = new DCp.PaymentAction
             {
-                ActionName = "ApplyCheck",
+                ActionName = ACTIONS.DECLINE_PAYMENT,
                 CurrencyCode = "USD",
                 CheckNumber = args.CheckNumber
             };
