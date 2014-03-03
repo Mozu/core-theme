@@ -105,7 +105,7 @@
 	  /*
 	  {
 		"id": "return.created",
-		"title": "RMA Request Created",
+		"title": "Return Created",
 		"template": "email/product-return-created",
 		"properties": {
 		  "subject": "Your Return Request"
@@ -114,7 +114,7 @@
 	  */
 	  {
 		"id": "return.authorized",
-		"title": "RMA Request Approved",
+		"title": "Return Authorized",
 		"template": "email/product-return-authorized",
 		"properties": {
 		  "subject": "RMA Request Approved"
@@ -122,7 +122,7 @@
 	  },
 	  {
 		"id": "return.rejected",
-		"title": "RMA Request Rejected",
+		"title": "Return Rejected",
 		"template": "email/product-return-rejected",
 		"properties": {
 		  "subject": "RMA Request Rejected"
@@ -130,22 +130,22 @@
 	  },
 	  {
 		"id": "return.closed",
-		"title": "Return Item Received",
-		"template": "email/product-return-received",
+		"title": "Return Closed",
+		"template": "email/product-return-closed",
 		"properties": {
-		  "subject": "Return Item Received"
+		  "subject": "Return Posted"
 		}
 	  },
 	  /*
 	  {
 		"id": "return.changed",
 		"title": "Return Has Been Updated",
-		"template": "email/product-return",
+		"template": "email/product-return-changed",
 		"properties": {
-		  "subject": "Your Return Request"
+		  "subject": "Your Return Updated"
 		}
 	  },
-	  */
+	*/
 	  {
 		"id": "user.created",
 		"title": "New Login Created",

@@ -201,6 +201,8 @@
   "returnRejectedBlob2"  : "<p>If you would like more information about our return and exchange policy, please visit our Return & Exchange Policy page.</p>",
   "returnReceivedBlob1"  : "<p>Thank you for shopping at {0}. We wanted to let you know that we have received the following returned items:</p>",
   "returnReceivedBlob2"  : "<p>You will receive another email when we have processed your return.</p>",
+  "returnClosedBlob1"    : "<p>Please be informed that we have completed processing your refund request. You will receive your refund within 3-5?? business days using the original payment method used when the purchase was placed.</p>",
+  "returnClosedBlob2"    : "<p>If you require any additional assistance, please feel free to contact customer service</p>",
   "returnOtherBlob1"     : "<p>Thank you for shopping at {0}. We wanted to let you know that your return status is now {1}.</p>",
   "returnOtherBlob2"     : "<p>You will receive another email when we have processed your return.</p>",
   "itemsShipped"         : "Shipment Details",
