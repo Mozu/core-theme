@@ -107,6 +107,7 @@
   "country"              : "Country",
   "state"                : "State",
   "province"             : "Province",
+  "stateOrProvince"      : "State/Province",
   "postalCode"           : "Zip/Postal Code",
   "postalTown"           : "Postal Town",
   "freeShipping"         : "Free Shipping",
