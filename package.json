@@ -6,6 +6,7 @@
   "devDependencies": {
     "colors": "~0.6.2",
     "optimist": "~0.6.0",
-    "gaze": "~0.5.0"
+    "gaze": "~0.5.0",
+    "ncp": "~0.5.0"
   }
 }
