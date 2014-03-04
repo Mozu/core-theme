@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Web;
+using Newtonsoft.Json.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 {
@@ -47,6 +48,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string FulfillmentTypesSupported { get; set; }
+
+        /// <summary>
+        /// Price Lookup Unit
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "plu")]
+        public string PLU { get; set; }
 
         #region Supplier Info
 
