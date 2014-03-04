@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozu.SiteBuilder.Mvc", "Mozu.SiteBuilder.Mvc\Mozu.SiteBuilder.Mvc.csproj", "{BFF6E39B-C66A-4D99-8B72-934BEEA4906B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozu.SiteBuilder.UX", "Mozu.SiteBuilder.UX\Mozu.SiteBuilder.UX.csproj", "{64E108C3-DDB5-4FA8-8C17-778F64B028BA}"
@@ -32,29 +34,29 @@ Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 8
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://tfs2012.corp.volusion.com:8080/tfs/vnext
-		SccProjectUniqueName0 = Mozu.SiteBuilder.UX.Models\\Mozu.SiteBuilder.UX.Models.csproj
-		SccProjectName0 = Mozu.SiteBuilder.UX.Models
-		SccLocalPath0 = Mozu.SiteBuilder.UX.Models
-		SccProjectUniqueName1 = Mozu.SiteBuilder.Mvc\\Mozu.SiteBuilder.Mvc.csproj
-		SccProjectName1 = Mozu.SiteBuilder.Mvc
-		SccLocalPath1 = Mozu.SiteBuilder.Mvc
-		SccProjectUniqueName2 = Mozu.SiteBuilder.UX\\Mozu.SiteBuilder.UX.csproj
-		SccProjectName2 = Mozu.SiteBuilder.UX
-		SccLocalPath2 = Mozu.SiteBuilder.UX
-		SccProjectUniqueName3 = Mozu.SiteBuilder.UX.Themes\\Mozu.SiteBuilder.UX.Themes.csproj
-		SccProjectName3 = Mozu.SiteBuilder.UX.Themes
-		SccLocalPath3 = Mozu.SiteBuilder.UX.Themes
-		SccProjectUniqueName4 = Mozu.SiteBuilder.UX.Admin\\Mozu.SiteBuilder.UX.Admin.csproj
-		SccProjectName4 = Mozu.SiteBuilder.UX.Admin
-		SccLocalPath4 = Mozu.SiteBuilder.UX.Admin
-		SccProjectUniqueName5 = Mozu.SiteBuilder.IntegrationTests\\Mozu.SiteBuilder.IntegrationTests.csproj
-		SccProjectName5 = Mozu.SiteBuilder.IntegrationTests
-		SccLocalPath5 = Mozu.SiteBuilder.IntegrationTests
-		SccProjectUniqueName6 = Mozu.SiteBuilder.UnitTests\\Mozu.SiteBuilder.UnitTests.csproj
-		SccProjectName6 = Mozu.SiteBuilder.UnitTests
-		SccLocalPath6 = Mozu.SiteBuilder.UnitTests
-		SccLocalPath7 = .
+		SccTeamFoundationServer = http://tfs.corp.volusion.com:8080/tfs/vnext
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Mozu.SiteBuilder.UX.Models\\Mozu.SiteBuilder.UX.Models.csproj
+		SccProjectName1 = Mozu.SiteBuilder.UX.Models
+		SccLocalPath1 = Mozu.SiteBuilder.UX.Models
+		SccProjectUniqueName2 = Mozu.SiteBuilder.Mvc\\Mozu.SiteBuilder.Mvc.csproj
+		SccProjectName2 = Mozu.SiteBuilder.Mvc
+		SccLocalPath2 = Mozu.SiteBuilder.Mvc
+		SccProjectUniqueName3 = Mozu.SiteBuilder.UX\\Mozu.SiteBuilder.UX.csproj
+		SccProjectName3 = Mozu.SiteBuilder.UX
+		SccLocalPath3 = Mozu.SiteBuilder.UX
+		SccProjectUniqueName4 = Mozu.SiteBuilder.UX.Themes\\Mozu.SiteBuilder.UX.Themes.csproj
+		SccProjectName4 = Mozu.SiteBuilder.UX.Themes
+		SccLocalPath4 = Mozu.SiteBuilder.UX.Themes
+		SccProjectUniqueName5 = Mozu.SiteBuilder.UX.Admin\\Mozu.SiteBuilder.UX.Admin.csproj
+		SccProjectName5 = Mozu.SiteBuilder.UX.Admin
+		SccLocalPath5 = Mozu.SiteBuilder.UX.Admin
+		SccProjectUniqueName6 = Mozu.SiteBuilder.IntegrationTests\\Mozu.SiteBuilder.IntegrationTests.csproj
+		SccProjectName6 = Mozu.SiteBuilder.IntegrationTests
+		SccLocalPath6 = Mozu.SiteBuilder.IntegrationTests
+		SccProjectUniqueName7 = Mozu.SiteBuilder.UnitTests\\Mozu.SiteBuilder.UnitTests.csproj
+		SccProjectName7 = Mozu.SiteBuilder.UnitTests
+		SccLocalPath7 = Mozu.SiteBuilder.UnitTests
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CI|Any CPU = CI|Any CPU
@@ -119,7 +121,6 @@ Global
 		{525FB9FF-4022-4C41-88D7-E5B49613B7FE}.QA|Any CPU.ActiveCfg = SI|Any CPU
 		{525FB9FF-4022-4C41-88D7-E5B49613B7FE}.QA|Any CPU.Build.0 = SI|Any CPU
 		{525FB9FF-4022-4C41-88D7-E5B49613B7FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{525FB9FF-4022-4C41-88D7-E5B49613B7FE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{525FB9FF-4022-4C41-88D7-E5B49613B7FE}.SI|Any CPU.ActiveCfg = SI|Any CPU
 		{525FB9FF-4022-4C41-88D7-E5B49613B7FE}.SI|Any CPU.Build.0 = SI|Any CPU
 		{73E0DB46-7958-4A58-B834-57A5B04669B1}.CI|Any CPU.ActiveCfg = CI|Any CPU
@@ -137,7 +138,6 @@ Global
 		{73E0DB46-7958-4A58-B834-57A5B04669B1}.QA|Any CPU.ActiveCfg = SI|Any CPU
 		{73E0DB46-7958-4A58-B834-57A5B04669B1}.QA|Any CPU.Build.0 = SI|Any CPU
 		{73E0DB46-7958-4A58-B834-57A5B04669B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{73E0DB46-7958-4A58-B834-57A5B04669B1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{73E0DB46-7958-4A58-B834-57A5B04669B1}.SI|Any CPU.ActiveCfg = SI|Any CPU
 		{73E0DB46-7958-4A58-B834-57A5B04669B1}.SI|Any CPU.Build.0 = SI|Any CPU
 		{3AC84F6C-74E6-4767-A80E-9FC022037F70}.CI|Any CPU.ActiveCfg = CI|Any CPU
@@ -191,7 +191,6 @@ Global
 		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.QA|Any CPU.ActiveCfg = Release|Any CPU
 		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.QA|Any CPU.Build.0 = Release|Any CPU
 		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.SI|Any CPU.ActiveCfg = Release|Any CPU
 		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.SI|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
