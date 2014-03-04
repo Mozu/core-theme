@@ -35,7 +35,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             var NULLPRICEBEHAVE = new DC.ProductPricingBehaviorInfo();
             var NULLSUPPLIER = new DC.ProductSupplierInfo();
             var NULLPRODVARPRICE = new DC.ProductVariationDeltaPrice();
-            var NULLCOST = new DC.ProductCost();
 
             Mapper.CreateMap<DC.BundledProduct, BundledProduct>()
                   .ForMember(x => x.SalePrice, opt => opt.ResolveUsing(x => (x.Price != null) ? x.Price.SalePrice : null))
@@ -106,7 +105,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.MetaTagKeywords, op => op.ResolveUsing(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagKeywords))
                 .ForMember(x => x.SEOFriendlyUrl, op => op.ResolveUsing(dc => dc.SEOContent == null ? null : dc.SEOContent.SEOFriendlyUrl))
                 .ForMember(x => x.ProductInCatalogs, op => op.ResolveUsing(dc => dc.ProductInCatalogs ))
-                .ForMember(x=> x.Properties , op=> op.ResolveUsing(dc=> dc.Properties ))
+                .ForMember( x=> x.Properties , op=> op.ResolveUsing(dc=> dc.Properties ))
                 .ForMember(x => x.Options, op => op.ResolveUsing(dc => dc.Options))
                 .ForMember(x => x.ProductImages, op => op.ResolveUsing(dc => (dc.Content ?? NULLCONTENT).ProductImages))
                 .ForMember(x => x.DiscountsRestricted, op => op.ResolveUsing(dc => (dc.PricingBehavior ?? NULLPRICEBEHAVE).DiscountsRestricted))
@@ -114,14 +113,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DiscountRestrictionEndDate, op => op.ResolveUsing(dc => (dc.PricingBehavior ?? NULLPRICEBEHAVE).DiscountRestrictionEndDate))
                 .ForMember(x => x.MfgPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).MfgPartNumber))
                 .ForMember(x => x.DistPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).DistPartNumber))
+                .ForMember(x => x.Cost, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).Cost))
                 .ForMember(x => x.MfgPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).MfgPartNumber))
                 .ForMember(x => x.DistPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).DistPartNumber))
-                .ForMember(x => x.CostCurrencyCode, op => op.ResolveUsing(dc => (dc.SupplierInfo != null && dc.SupplierInfo.Cost != null)
-                    ? dc.SupplierInfo.Cost.ISOCurrencyCode
-                    : DEFAULT_CURRENCY_CODE))
-                .ForMember(x => x.Cost, op => op.ResolveUsing(dc => (dc.SupplierInfo != null && dc.SupplierInfo.Cost != null)
-                    ? dc.SupplierInfo.Cost.Cost
-                    : NULLCOST.Cost))
+                .ForMember(x => x.CostCurrencyCode, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).CostCurrencyCode))
+                .ForMember(x => x.Cost, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).Cost))
 
                 //ignores
                 .ForMember(m => m.ListPrice, op => op.Ignore())
@@ -195,11 +191,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     {
                         DistPartNumber = x.DistPartNumber,
                         MfgPartNumber = x.MfgPartNumber,
-                        Cost = new DC.ProductCost()
-                        {
-                            ISOCurrencyCode = x.CostCurrencyCode,
-                            Cost = x.Cost
-                        }                 
+                        CostCurrencyCode = x.CostCurrencyCode,
+                        Cost = x.Cost                   
                     }
                 ))
 
@@ -532,12 +525,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DeltaMSRP, op => op.ResolveUsing(dc => (dc.DeltaPrice ?? NULLPRODVARPRICE).MSRP))
                 .ForMember(x => x.DistPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).DistPartNumber))
                 .ForMember(x => x.MfgPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).MfgPartNumber))
-                .ForMember(x => x.CostCurrencyCode, op => op.ResolveUsing(dc => (dc.SupplierInfo != null && dc.SupplierInfo.Cost != null)
-                    ? dc.SupplierInfo.Cost.ISOCurrencyCode
-                    : DEFAULT_CURRENCY_CODE))
-                .ForMember(x => x.Cost, op => op.ResolveUsing(dc => (dc.SupplierInfo != null && dc.SupplierInfo.Cost != null)
-                    ? dc.SupplierInfo.Cost.Cost
-                    : NULLCOST.Cost))
+                .ForMember(x => x.CostCurrencyCode, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).CostCurrencyCode))
+                .ForMember(x => x.Cost, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).Cost))
+                
                       ;
             Mapper.CreateMap<ProductVariation, DC.ProductVariation>()
                 .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => x.DeltaPriceValue.HasValue 
@@ -551,11 +541,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     {
                         DistPartNumber = x.DistPartNumber,
                         MfgPartNumber = x.MfgPartNumber,
-                        Cost = new DC.ProductCost()
-                        {
-                            ISOCurrencyCode = x.CostCurrencyCode,
-                            Cost = x.Cost
-                        } 
+                        CostCurrencyCode = string.IsNullOrEmpty(x.CostCurrencyCode) ? DEFAULT_CURRENCY_CODE : x.CostCurrencyCode,
+                        Cost = x.Cost
                     }))   
                     ;
 
