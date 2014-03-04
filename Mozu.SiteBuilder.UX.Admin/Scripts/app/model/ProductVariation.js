@@ -57,6 +57,11 @@ Ext.define('Taco.model.ProductVariation', {
             defaultValue: []
         },
         {
+            name: "plu",
+            type: "string",
+            useNull: true
+        },
+        {
             name: "mfgPartNumber",
             type: "string",
             useNull: true
