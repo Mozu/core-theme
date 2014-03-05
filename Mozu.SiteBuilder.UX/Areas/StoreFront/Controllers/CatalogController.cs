@@ -27,7 +27,7 @@ using ProductSearchResult = Mozu.ProductRuntime.Contracts.ProductSearchResult;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    
+    [NoSslActionFilter]
     [ContextInitialization]
     [ErrorFormattingActionFilter]
     public class CatalogController : BaseApiController

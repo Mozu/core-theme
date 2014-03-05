@@ -52,7 +52,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private bool? _supportsInStorePickup;
         private Theme _theme;
         private string _currentHost;
-        private string _themeId;
+        //private string _themeId;
+        private ThemeSelection _themeSelection;
         private ThemeRuntimeSettingsCollection _themeRuntimeSettingsCollection;
 
         public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, ISettings settings, ISiteBuilderApiContext apiContext, ILocationSettingsWebApiClient locationSettingsWebApiClient, Mozu.Tenant.Contracts.Clients.ISitesWebApiClient sitesWebApiClient,  HttpRequestMessage requestMessage)
@@ -97,6 +98,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
         }
 
+        public int TenantId
+        {
+            get { return _siteBuilderApiContext.TenantId; }
+        }
+        public int SiteId
+        {
+            get { return _siteBuilderApiContext.SiteId.GetValueOrDefault(-1); }
+        }
         public byte[] Hash
         {
             get
@@ -142,14 +151,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get
             {
-                if (_themeId == null)
+                if (_themeSelection  == null)
                 {
                     Init().Wait();
                 }
 
-                return _themeId;
+                return _themeSelection.Id ;
             }
-            set { _themeId = value; }
+           // set { _themeId = value; }
         }
 
         public GeneralSettings GeneralSettings
@@ -311,19 +320,19 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
                     if (cookie != null && !string.IsNullOrEmpty(cookie.Value))
                     {
-                        _themeId = cookie.Value;
+                        _themeSelection = new ThemeSelection() {Id = cookie.Value};
                     }
-                    else if (_mobileDetectionProvider.IsCurrentRequestMobile && !string.IsNullOrEmpty(_generalSettings.MobileTheme))
+                    else if (_mobileDetectionProvider.IsCurrentRequestMobile && ( _generalSettings.MobileTheme != null && !string.IsNullOrEmpty(_generalSettings.MobileTheme.Id )))
                     {
-                        _themeId = _generalSettings.MobileTheme;
+                        _themeSelection = _generalSettings.MobileTheme;
                     }
                     else
                     {
 #pragma warning disable 612
-                        _themeId = _generalSettings.Theme;
+                        _themeSelection = _generalSettings.DesktopTheme;
                     }
 
-                    _theme = _themeRepository.GetThemeOrDefault(_themeId);
+                    _theme = _themeRepository.GetThemeOrDefault(_themeSelection);
 
                     return _themeSettingsRepository.Value.GetRuntimeValues(_theme.Id).ContinueWith(task2 =>
                     {
@@ -332,7 +341,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         md5.TransformBlock(themeSettingsTimeStamp, 0, themeSettingsTimeStamp.Length, themeSettingsTimeStamp, 0);
                         var themeTimeStamp = BitConverter.GetBytes(_theme.TimeStamp.Ticks);
                         md5.TransformBlock(themeTimeStamp, 0, themeTimeStamp.Length, themeTimeStamp, 0);
-                        byte[] tid = Encoding.UTF8.GetBytes(_themeId ?? "");
+                        byte[] tid = Encoding.UTF8.GetBytes(_themeSelection.Id  ?? "");
                         md5.TransformFinalBlock(tid, 0, tid.Length);
                         Hash = md5.Hash;
                         //not ready for prime time
