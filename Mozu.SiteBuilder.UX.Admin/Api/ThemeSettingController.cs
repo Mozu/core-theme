@@ -13,6 +13,7 @@ using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Models.Settings;
 using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -43,7 +44,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "config/read/{themeId}")]
         public Response<List<ThemeSetting>> ReadConfiguration(string themeId )
         {
-            var config = _themeRepository.GetThemeOrDefault(themeId).MergedSettings;
+            //tbd send selection from ui
+            var config = _themeRepository.GetThemeOrDefault(new ThemeSelection(){Id=themeId}).MergedSettings;
             return List2(config);
         }
 
@@ -71,7 +73,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "ui/read/{themeId}")]
         public  HttpResponseMessage ReadUi(string themeId)
         {
-            var theme = _themeRepository.GetThemeOrDefault(themeId);
+
+            //todo get selection 
+            var theme = _themeRepository.GetThemeOrDefault(new ThemeSelection(){Id=themeId});
             if (theme != null)
             {
                 var file = theme.FileListing.GetFileInfo("theme-ui.json", true );

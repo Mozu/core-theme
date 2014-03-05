@@ -16,6 +16,7 @@ using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using Mozu.SiteBuilder.UX.Models.Settings;
 using Mozu.SiteSettings.Order.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts;
@@ -130,8 +131,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
             else
             {
-                if (mode == ThemeMode.Desktop) themeName = SiteContext.GeneralSettings.Theme;
-                if (mode == ThemeMode.Mobile) themeName = SiteContext.GeneralSettings.MobileTheme ;
+                if (mode == ThemeMode.Desktop) themeName = (SiteContext.GeneralSettings.DesktopTheme ?? new ThemeSelection()).Id;
+                if (mode == ThemeMode.Mobile) themeName = (SiteContext.GeneralSettings.MobileTheme ?? new ThemeSelection()).Id;
                 _cookies.SaveResponseCookie(FORCE_THEME_COOKIE_NAME, new HttpCookie(FORCE_THEME_COOKIE_NAME, themeName));
             }
             return new RedirectResult(redir ?? "/");

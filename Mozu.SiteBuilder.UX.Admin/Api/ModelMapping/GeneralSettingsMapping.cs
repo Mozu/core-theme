@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Mozu.SiteBuilder.UX.Models.Settings;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -27,22 +29,75 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.AuditInfo, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.GeneralSettings, UX.Models.Settings.GeneralSettings>()
-                //ignores
-                .ForMember(m => m.AdjustForDaylightSavingTime, op => op.Ignore())
-                .ForMember(m => m.AllowAllIPs, op => op.Ignore())
-                .ForMember(m => m.SenderEmailAddressName, op => op.Ignore())
-                .ForMember(m => m.ChannelId, op => op.Ignore())
-                .ForMember(m => m.DesktopTheme, op => op.Ignore());
+            //Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.GeneralSettings, UX.Models.Settings.GeneralSettings>()
+            //    //ignores
+            //    .ForMember(m => m.AdjustForDaylightSavingTime, op => op.Ignore())
+            //    .ForMember(m => m.AllowAllIPs, op => op.Ignore())
+            //    .ForMember(m => m.SenderEmailAddressName, op => op.Ignore())
+            //    .ForMember(m => m.ChannelId, op => op.Ignore())
+            //    .ForMember(m => m.DesktopTheme, opt => opt.ResolveUsing(x =>
+            //    {
+            //        if (string.IsNullOrEmpty(x.Theme))
+            //        {
+            //            if (x.Theme[0] == '{')
+            //            {
+            //                try
+            //                {
+            //                    return JsonConvert.DeserializeObject<ThemeSelection>(x.Theme);
+            //                }
+            //                catch
+            //                {
+            //                    //log
+            //                }
+            //            }
+            //            else
+            //            {
+            //                return new ThemeSelection()
+            //                {
+            //                    Id = x.Theme
+            //                };
+            //            }
+                        
+            //        }
+            //         return new ThemeSelection()
+            //                   {
+                                   
+            //                   };;
+            //    }))
+            //    .ForMember(m => m.MobileTheme, opt => opt.ResolveUsing(x =>
+            //    {
+            //        if (string.IsNullOrEmpty(x.MobileTheme))
+            //        {
+            //            if (x.MobileTheme[0] == '{')
+            //            {
+            //                try
+            //                {
+            //                    return JsonConvert.DeserializeObject<ThemeSelection>(x.MobileTheme);
+            //                }
+            //                catch
+            //                {
+            //                    //log
+            //                }
+            //            }
+            //            else
+            //            {
+            //                return new ThemeSelection()
+            //                       {
+            //                           Id = x.MobileTheme
+            //                       };
+            //            }
+            //        }
+            //        return new ThemeSelection();
+            //    }));
            
-             //   .ForMember(x => x.IPBlocks, o => o.ResolveUsing(x => x.IPBlocks != null ? x.IPBlocks.Items : new List<Mozu.SiteSettings.General.Contracts.IPBlock>()));
-            Mapper.CreateMap<UX.Models.Settings.GeneralSettings, Mozu.SiteSettings.General.Contracts.GeneralSettings>()
-                //ignores
-                .ForMember(dc => dc.IsMozuWebSite, op => op.Ignore())
-                .ForMember(dc => dc.IsWishlistCreationEnabled, op => op.Ignore())
-                .ForMember(dc => dc.TaxableTerritories, op => op.Ignore())
-                .ForMember(dc => dc.AuditInfo, op => op.Ignore())
-                ;
+            // //   .ForMember(x => x.IPBlocks, o => o.ResolveUsing(x => x.IPBlocks != null ? x.IPBlocks.Items : new List<Mozu.SiteSettings.General.Contracts.IPBlock>()));
+            //Mapper.CreateMap<UX.Models.Settings.GeneralSettings, Mozu.SiteSettings.General.Contracts.GeneralSettings>()
+            //    //ignores
+            //    .ForMember(dc => dc.IsMozuWebSite, op => op.Ignore())
+            //    .ForMember(dc => dc.IsWishlistCreationEnabled, op => op.Ignore())
+            //    .ForMember(dc => dc.TaxableTerritories, op => op.Ignore())
+            //    .ForMember(dc => dc.AuditInfo, op => op.Ignore())
+            //    ;
             //.ForMember(x => x.IPBlocks, o => o.ResolveUsing(x => 
             //    new Mozu.SiteSettings.General.Contracts.IPBlockCollection
             //    {
