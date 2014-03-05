@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Mozu.Core.Api.Descriptor;
 using Mozu.Core.Extensions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Models.Settings
 {
@@ -94,11 +97,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
     [DataContract]
     public class GeneralSettings
     {
-        /// <summary>
-        ///     "Theme" has been overridden in the UI to contain both the desktop and possibly mobile theme concatenated in one string.
-        /// </summary>
-        private string _theme;
-
+   
         //moved to site def in tenant. not editable
         //[DataMember(Name = "isMozuWebSite")]
         //public bool IsMozuWebSite { get; set; }
@@ -153,18 +152,38 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember(EmitDefaultValue = false, Name = "favIconPath")]
         public string FavIconPath { get; set; }
 
-        [DataMember(Name = "theme")]
+
+
+        
+
+        [DataMember(Name = "themeStr")]
        // [Obsolete("Theme doesn't mean what it used to mean. You probably want DesktopTheme.")]
-        public string Theme
+        public string ThemeStr
         {
-            get { return _theme; }
-            set { _theme = value; }
+            get; set;
         }
 
 
-        [DataMember(Name = "mobileTheme")]
-        public string MobileTheme { get; set; }
 
+     
+            
+        [DataMember(Name = "mobileThemeStr")]
+        public string MobileThemeStr
+        {
+            get; set;
+        }
+
+
+        public ThemeSelection MobileTheme
+        {
+            get; set;
+        }
+        [DataMember(Name = "desktopTheme")]
+        public ThemeSelection DesktopTheme
+        {
+            get;
+            set;
+        }
 
         [DataMember(Name = "googleAnalyticsId")]
         public string GoogleAnalyticsCode { get; set; }
@@ -181,10 +200,14 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember(Name = "isAddressValidationEnabled")]
         public bool? IsAddressValidationEnabled { get; set; }
 
-        public string DesktopTheme
-        {
-            get { return _theme; }
-            set { _theme = value; }
-        }
+         
+    }
+
+    public class ThemeSelection
+    {
+        public string Id { get; set; }
+        public string Location { get; set; }
+
+        public List<string> Addons { get; set; }
     }
 }

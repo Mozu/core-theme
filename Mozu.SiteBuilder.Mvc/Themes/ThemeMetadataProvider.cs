@@ -284,7 +284,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             get
             {
-                return  Path.GetDirectoryName( LocalThemePath)+"/addons/";
+                return  Path.GetDirectoryName( LocalThemePath)+"../addons/";
                 
               
              

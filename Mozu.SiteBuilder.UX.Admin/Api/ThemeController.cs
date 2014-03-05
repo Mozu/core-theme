@@ -55,6 +55,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         
         public class ThemeDTO
         {
+          
+
             public string Name { get; set; }
 
             public string Id { get; set; }
@@ -90,10 +92,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public ThemeDTO()
             { }
 
-            /// <summary>
-            /// Copy constructor
-            /// </summary>
-            public ThemeDTO(string desktopTheme, string mobileTheme, Theme theme, bool? isSelectedDesktop = null, bool? isSelectedMobile = null)
+         
+
+            public ThemeDTO(GeneralSettings genSettings, Theme theme, bool? isSelectedDesktop = null, bool? isSelectedMobile = null)
             {
                 Name = theme.Name;
                 Author = theme.Author;
@@ -104,18 +105,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 if (isSelectedDesktop.HasValue)
                     IsSelectedDesktop = isSelectedDesktop.Value;
-                else if (String.Equals(Id, desktopTheme, StringComparison.InvariantCultureIgnoreCase))
+                else if (String.Equals(Id, genSettings.DesktopTheme.Id, StringComparison.InvariantCultureIgnoreCase))
                     IsSelectedDesktop = true;
                 else
                     IsSelectedDesktop = false;
 
                 if (isSelectedMobile.HasValue)
                     IsSelectedMobile = isSelectedMobile.Value;
-                else if (!string.IsNullOrEmpty(mobileTheme) && String.Equals(Name, mobileTheme, StringComparison.InvariantCultureIgnoreCase))
+                else if (genSettings.MobileTheme != null && String.Equals(Name, genSettings.MobileTheme.Id , StringComparison.InvariantCultureIgnoreCase))
                     IsSelectedMobile = true;
                 else
                     IsSelectedMobile = false;
+
             }
+
+
 
 
             
@@ -148,7 +152,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     try
                     {
-                        return _themeRepository.GetTheme(x);
+                        return _themeRepository.GetTheme(new ThemeSelection(){Id=x});
                     }
                     catch (Exception ex)
                     {
@@ -158,7 +162,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 })
                     .Where(x => x != null)
-                .Select<Theme, ThemeDTO>(t => new ThemeDTO(genSettings.DesktopTheme, genSettings.MobileTheme, t)).ToList();
+                .Select<Theme, ThemeDTO>(t => new ThemeDTO(genSettings , t)).ToList();
             // List<ThemeDTO> themes = _themeRepository.GetAll().Select<ITheme, ThemeDTO>(t => new ThemeDTO(t)).ToList();
             return List2(themes);
             //   throw new NotImplementedException();
@@ -170,7 +174,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var localAddonDir = _themeRepository.GetLocalAddonPath();
             
-            var theme = _themeRepository.GetTheme(themeId);
+            var theme = _themeRepository.GetTheme( new ThemeSelection() { Id=themeId});
 
             var themeSettings = (await _themeSettingsRepository.GetInstanceValues(themeId)) ?? new JObject();
 
@@ -202,7 +206,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 })
                     .Where(x => x != null)
-                .Select<Theme, ThemeDTO>(t => new ThemeDTO(null, null , t)).ToList();
+                .Select<Theme, ThemeDTO>(t => new ThemeDTO(null , t)).ToList();
             
             
                 addons.ForEach(x =>
@@ -234,27 +238,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (newDesktop != null)
             {
+                settings.DesktopTheme.Id  = newDesktop.Id;
+
                 // intent to set a desktop theme.
-                settings.DesktopTheme = newDesktop.Id;
+               // settings.DesktopTheme = new ThemeSelection() {Id = newDesktop.Id};
             }
-            else if (themes.Any(t => t.Id == settings.DesktopTheme))
+            else if (themes.Any(t => t.Id == settings.DesktopTheme.Id ))
             {
                 // intent to un-set the desktop theme.
                 // having NO desktop theme is not a legal state, so we will set the theme to the default.
-                newDesktop = new ThemeDTO(settings.DesktopTheme, settings.MobileTheme, _themeRepository.GetDefaultTheme(), true);
+                newDesktop = new ThemeDTO(settings, _themeRepository.GetDefaultTheme(), true);
                 if (!themes.Any(t => t.Equals(newDesktop)))
                     themes.Add(newDesktop);
-                settings.DesktopTheme = newDesktop.Id;
+                settings.DesktopTheme.Id  =newDesktop.Id;
             }
 
             if (newMobile != null)
             {
-                settings.MobileTheme = newMobile.Id;
+                settings.MobileTheme = settings.MobileTheme ?? new ThemeSelection();
+                settings.MobileTheme.Id = newMobile.Id;
             }
-            else if (themes.Any(t => t.Id == settings.MobileTheme))
+            else if (themes.Any(t => t.Id == settings.MobileTheme.Id ))
             {
                 // intent to un-set the mobile theme.
-                settings.MobileTheme = null;
+                settings.MobileTheme.Id  = null;
             }
 
             _generalSettingsWebApiClient.UpdateGeneralSettings(settings);
@@ -265,10 +272,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             IEnumerable<ThemeDTO> returnedThemesList =
                 from t in themes
-                let isSelectedDesktop = (newDesktop != null && newDesktop.Equals(t)) || (newDesktop == null && t.Id.Equals(settings.DesktopTheme))
-                let isSelectedMobile = (newMobile != null && newMobile.Equals(t)) || (newMobile == null && t.Equals(settings.MobileTheme))
-                let fullTheme = _themeRepository.GetTheme(t.Id)
-                select new ThemeDTO(settings.DesktopTheme, settings.MobileTheme, fullTheme, isSelectedDesktop, isSelectedMobile);
+                let isSelectedDesktop = (newDesktop != null && newDesktop.Equals(t)) || (newDesktop == null && t.Id.Equals(settings.DesktopTheme.Id ))
+                let isSelectedMobile = (newMobile != null && newMobile.Equals(t)) || (newMobile == null && t.Equals(settings.MobileTheme.Id))
+                let fullTheme = _themeRepository.GetTheme( new ThemeSelection(){ Id=t.Id} )
+                select new ThemeDTO(settings , fullTheme, isSelectedDesktop, isSelectedMobile);
 
             return List2(returnedThemesList.ToList());
         }

@@ -6,6 +6,7 @@ using System.Linq;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.Themes.Exceptions;
 using Mozu.SiteBuilder.Mvc.Themes.Factories;
+using Mozu.SiteBuilder.UX.Models.Settings;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
 {
@@ -17,19 +18,19 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// <summary>
         /// Finds a theme by name.
         /// </summary>
-        Theme GetTheme(string name);
+        Theme GetTheme(ThemeSelection name);
 
 
         /// <summary>
         /// Finds an addon by name.
         /// </summary>
-        Theme GetAddon(string name);
+        Theme GetAddon(string id );
 
         /// <summary>
         /// Finds a theme by name.
         /// If the theme is not found, returns the system default theme.
         /// </summary>
-        Theme GetThemeOrDefault(string name);
+        Theme GetThemeOrDefault(ThemeSelection name);
 
         /// <summary>
         /// Returns the system default theme.
@@ -42,6 +43,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         Theme ApplyAddons(Theme Theme, string[] addonsIds);
     }
+
+
 
     /// <summary>
     /// A repository and factory for <code>ITheme</code>
@@ -76,9 +79,9 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// Finds a theme by name.
         /// </summary>
         /// <exception cref="ThemeNotFoundException">If the theme is not found.</exception>        
-        public Theme GetTheme(string name)
+        public Theme GetTheme(ThemeSelection selection )
         {
-            return GetThemeInternal(name, new Stack<string>());
+            return GetThemeInternal(selection.Id , new Stack<string>());
         }
 
         public Theme GetAddon(string name)
@@ -216,11 +219,15 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// Finds a theme by name.
         /// If the theme is not found, returns the system default theme.
         /// </summary>
-        public Theme GetThemeOrDefault(string name)
+        public Theme GetThemeOrDefault(ThemeSelection selection )
         {
             try
             {
-                return GetTheme(name ?? DEFAULT_THEME);
+                if ( selection != null && !string.IsNullOrEmpty(selection.Id ))
+                {
+                    return GetTheme(selection);
+                }
+                return GetDefaultTheme();
             }
             catch (ThemeNotFoundException)
             {
@@ -233,7 +240,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
         public Theme GetDefaultTheme()
         {
-            return GetTheme(DEFAULT_THEME);
+            return GetTheme(new ThemeSelection() {Id = DEFAULT_THEME});
         }
 
         public string GetLocalThemePath()
