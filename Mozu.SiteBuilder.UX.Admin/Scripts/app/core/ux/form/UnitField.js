@@ -203,8 +203,12 @@ Ext.define('Taco.core.ux.form.UnitField', {
         value = this.fixPrecision(value);
         value = Ext.isNumber(value) ? value : parseFloat(String(value).replace(decimalSeparator, '.'));
 
-        if (this.forcePrecision && String(value).indexOf(decimalSeparator) > 0)
+        
+        //if (this.forcePrecision && String(value).indexOf(decimalSeparator) > 0)
+        if (this.forcePrecision) {
             value = value.toFixed(this.decimalPrecision); // coerce decimal points.
+        }
+        
 
         value = isNaN(value) ? '' : String(value).replace('.', decimalSeparator);
         
