@@ -249,8 +249,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
             var selModel = this.gridPanel.getSelectionModel();
             // if you get to the view via the back button the selection model's store is null. Need to fun this down. until  then I am disabling the keyboard support when this occurs.
             // if your getting here its because the view has listeners that were not using the mon() method and they were left when the previous view was destroyed;
-            if (!selModel.store) {
-                debugger;
+            if (!selModel.store) {                
                 return 
             }        
             selModel.select(0, false, false);
@@ -259,8 +258,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
     
     // logic for selecting a row in grids;
-    doDefaultSeleciton: function (selModel) {
-        debugger;
+    doDefaultSeleciton: function (selModel) {        
         selModel.select(0, false, false);
     },
 
