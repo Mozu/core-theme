@@ -91,6 +91,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         
         return res;
     },
+
     initBrowserConfig: function () {
         var me = this;
 
@@ -239,7 +240,33 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         return this.gridPager;
     },
 
+    onViewLoad: function () {        
+        if (this.gridPanel.store.isLoading()) {        
+            return
+        }
+
+        if (this.gridPanel && this.gridPanel.store && this.gridPanel.store.getCount()) {
+            var selModel = this.gridPanel.getSelectionModel();
+            // if you get to the view via the back button the selection model's store is null. Need to fun this down. until  then I am disabling the keyboard support when this occurs.
+            // if your getting here its because the view has listeners that were not using the mon() method and they were left when the previous view was destroyed;
+            if (!selModel.store) {
+                debugger;
+                return 
+            }        
+            selModel.select(0, false, false);
+        }
+    },
+
+    
+    // logic for selecting a row in grids;
+    doDefaultSeleciton: function (selModel) {
+        debugger;
+        selModel.select(0, false, false);
+    },
+
     createGridPanel: function(conf) {
+        var me =this;
+
         Ext.applyIf(conf, this.gridPanelDefaults);
         conf = Taco.app.context.forCurrentContext(conf);
         if (conf.paged) {
@@ -263,28 +290,28 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         }
 
         var gridPanel = this.gridPanel = Ext.create(this.gridPanelClass, conf);
-
-
+        
         // auto select the first record in the grid after it loads;
-        this.gridPanel.store.on({
-            load: function () {
-                //select the first row;
-                if (gridPanel.store.getCount()) {
-                    gridPanel.getSelectionModel().selectRange(0, 0, false)
-                }
-                
-            }
-        })
+        this.mon(this.gridPanel.view, 'viewready', this.onViewLoad, me)
+        this.mon(this.gridPanel.store, 'load', this.onViewLoad, me)
         
-        this.gridPanel.view.on('itemclick', this.onItemClick, this);
-        
-        if (this.launchEditorOnClick) {
-            this.gridPanel.view.on('cellclick', this.onCellClick, this);
-        }
+        this.mon(this.gridPanel.view, 'itemclick', this.onItemClick, me)
 
+        // treat enter key as a click;
+        this.mon(this.gridPanel.view, 'itemkeydown', function (view, record, item, index, e, eOpts) {
+            var metaData = null;
+            if (e.getKey() == e.ENTER && !this.enableRowEditing) {                
+                this.launchEditor(record, metaData);
+            }
+        }, me)
+
+        if (this.launchEditorOnClick) {            
+            this.mon(this.gridPanel.view, 'cellclick', this.onCellClick, me)
+        }
 
         var menuColumns = Ext.Array.filter(this.gridPanel.columns, function (col) { return col.isXType('taco.menucolumn'); });
         if (this.disableContextMenuClick !== true && menuColumns && menuColumns.length == 1) {
+
             this.gridPanel.on('itemcontextmenu', function (cmp, record, item, index, e) {
                 var eventData = {
                     grid: cmp.ownerCt,
@@ -295,11 +322,22 @@ Ext.define('Taco.core.ux.browser.Browsable', {
                     item: item
                 },
                     menu = menuColumns[0].getMenu(eventData);
+
+                menu.on('hide', function () {
+                    // need to clear and reselect to get focus set after menu closes;
+                    // deselect old record
+                    this.gridPanel.getSelectionModel().deselect(record);
+                    //reselect old record
+                    this.gridPanel.getSelectionModel().select(record,false, false);
+                }, me)
+
+
                
-                e.preventDefault();
+                //e.preventDefault();
+                e.stopEvent();
                 menu.showAt(e.xy);
-                
             }, this);
+
         }
 
         return this.gridPanel;
@@ -510,8 +548,8 @@ Ext.define('Taco.core.ux.browser.Browsable', {
     },
 
     onItemClick: function (view, record, elm, index, e) {
-        var metaData = { id: record.getId() };
-        
+        var metaData = { id: record.getId() };        
+
         if (e.target.className === 'taco-launch-editor') {
             e.preventDefault();
             if (e.target) {
