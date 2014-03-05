@@ -10,6 +10,7 @@ using System.Web;
 using FiftyOne.Foundation.Mobile.Detection;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts.Provisioning;
+using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.UX.Models;
@@ -94,11 +95,13 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
     {
         private readonly ISiteBuilderApiContext _apiContext;
         private readonly IAuthenticationHelper _authenticationHelper;
+        private readonly ISettings _settings;
 
-        public PageContext(ISiteBuilderApiContext  apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage)
+        public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage, ISettings settings)
         {
             _apiContext = apiContext;
             _authenticationHelper = authenticationHelper;
+            _settings = settings;
             this.IsEditMode = _apiContext.IsEditMode;
             IEnumerable<string> values;
            
@@ -112,6 +115,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             Sorting = SortingParamaters.Create(requestMessage);
             Pagination = PagingParmaters.Create(requestMessage);
+
+            var uriBuilder = new UriBuilder(Url);
+            var host = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
+            uriBuilder.Port = 443;
+            uriBuilder.Scheme = "https";
+            var secure = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
+
+            SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? secure : host;
         }
 
         public bool IsDebugMode 
@@ -287,5 +298,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         //    }
         //}
 
+
+        public string SecureHost { get; set; }
     }
 }

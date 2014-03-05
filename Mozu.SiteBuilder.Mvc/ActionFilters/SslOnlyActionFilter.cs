@@ -16,23 +16,54 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 
 
             var sslEnabled = actionContext.Request.Resolve<ISettings>().CoreSettings.IsSSLValidationEnabled;
-           
+
             if (!sslEnabled)
             {
                 return;
             }
 
             var pageContext = actionContext.Request.Resolve<PageContext>();
-         
 
 
 
 
-            if (!string.IsNullOrEmpty(pageContext.Url) && !pageContext.IsSecure )
+
+            if (!string.IsNullOrEmpty(pageContext.Url) && !pageContext.IsSecure)
             {
                 var ubilBuilder = new UriBuilder(pageContext.Url);
                 ubilBuilder.Scheme = "https";
                 ubilBuilder.Port = 443;
+                actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.MovedPermanently);
+                actionContext.Response.Headers.Location = ubilBuilder.Uri;
+
+            }
+        }
+    }
+    public class NoSslActionFilter : ActionFilterAttribute
+    {
+        public override bool AllowMultiple
+        {
+            get { return false; }
+        }
+
+        public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
+        {
+
+
+            var pageContext = actionContext.Request.Resolve<PageContext>();
+
+
+            if (actionContext.Request.Method != HttpMethod.Get)
+            {
+                return;
+            }
+
+
+            if (!string.IsNullOrEmpty(pageContext.Url) && pageContext.IsSecure && !pageContext.IsEditMode)
+            {
+                var ubilBuilder = new UriBuilder(pageContext.Url);
+                ubilBuilder.Scheme = "http";
+                ubilBuilder.Port = 80;
                 actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.MovedPermanently);
                 actionContext.Response.Headers.Location = ubilBuilder.Uri;
 

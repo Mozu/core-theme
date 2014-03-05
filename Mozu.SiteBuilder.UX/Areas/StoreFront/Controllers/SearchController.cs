@@ -17,6 +17,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
+    [NoSslActionFilter]
     [ContextInitialization]
     public class SearchController : BaseApiController
     {
