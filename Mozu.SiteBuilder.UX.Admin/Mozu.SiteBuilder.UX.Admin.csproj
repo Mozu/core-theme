@@ -1625,6 +1625,8 @@
     <Content Include="Scripts\chorizo\targets.js" />
     <Content Include="Scripts\chorizo\widgets.js" />
     <Content Include="Scripts\chorizo\_classFactory.js" />
+    <Content Include="Scripts\switchIIS.bat" />
+    <Content Include="Scripts\switchiis.ps1" />
     <Content Include="Scripts\usagereport.js" />
     <Content Include="Scripts\ux\boxselect\form\field\BoxSelect.js" />
     <Content Include="Scripts\ux\boxselect\layout\component\field\BoxSelectField.js" />
