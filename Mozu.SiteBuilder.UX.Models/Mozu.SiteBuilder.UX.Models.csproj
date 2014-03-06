@@ -290,9 +290,8 @@
     <Reference Include="Mozu.ShippingRuntime.Contracts.Constants">
       <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.6.0.2\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.SiteSettings.Application.Contracts, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.SiteSettings.App.Contracts.1.5.0-dev002\lib\net45\Mozu.SiteSettings.Application.Contracts.dll</HintPath>
+    <Reference Include="Mozu.SiteSettings.Application.Contracts">
+      <HintPath>..\packages\Mozu.SiteSettings.App.Contracts.1.6.0.1\lib\net45\Mozu.SiteSettings.Application.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
