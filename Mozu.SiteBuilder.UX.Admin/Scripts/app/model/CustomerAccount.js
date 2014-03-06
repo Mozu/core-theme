@@ -13,7 +13,8 @@ Ext.define('Taco.model.CustomerAccount', {
         'Taco.model.Contact',
         'Taco.model.Order',
         'Taco.store.Orders',
-        'Taco.store.StoreCredits'
+        'Taco.store.StoreCredits',
+        'Taco.model.CustomerSegment'
     ],
     fields: [
         {
@@ -35,6 +36,11 @@ Ext.define('Taco.model.CustomerAccount', {
             name: 'emailAddress',
             type: 'string'
         },
+         {
+             name: 'segments',
+             type: 'auto',
+             defaultValue:[]
+         },
         {
             name: 'userName',
             type: 'string'
