@@ -8,6 +8,25 @@ Ext.define('Taco.core.context.StoreItem', {
     fields: [
         'name',
         'contextType',
+        {
+            name: 'currency',
+            type: 'string',
+            defaultValue: 'USD'
+        },
+        {
+            name: 'localeCode',
+            type: 'string',
+            defaultValue: 'en-US'
+        },
+        {
+            name: 'catalog',
+            convert: function (v, record) {
+                return "food";
+            }
+        }, {
+            name: 'isMozuHosted',
+            type: 'boolean'
+        },        
         'urlToken',
         {
             name: 'isMozuRendered',

@@ -1,6 +1,12 @@
 $vprefix: 'taco-';
 $prefix: 'x-';
 
+//sprites made with compass outside of bulid
+@import 'sprites/icons';
+@import 'sprites/dashboard';
+
+
+
 // Import all mixins
 @import 'taco/mixins/css3';
 @import 'taco/mixins/fonts';

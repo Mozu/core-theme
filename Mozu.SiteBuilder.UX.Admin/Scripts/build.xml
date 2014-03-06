@@ -16,11 +16,35 @@
 
 
   <target name="-before-sass">
+    <mkdir dir="${build.sass.dir}"/>
+    <mkdir dir="${build.sass.dir}/images"/>
+    <mkdir dir="${build.sass.dir}/images/icons"/>
+    <echo>Copying over image files</echo>
+    <copy todir="${build.sass.dir}/images/icons" overwrite="true">
+      <fileset dir="${app.resources.dir}/images/icons" includes="**"/>
+    </copy>
+    <copy todir="${build.sass.dir}/images/dashboard" overwrite="true">
+      <fileset dir="${app.resources.dir}/images/dashboard" includes="**"/>
+    </copy>
+  </target>
+
+  <target name="-after-sass">
+
+    <echo>Copying over image files</echo>
+    <copy todir="${app.resources.dir}/images" overwrite="true">
+      <fileset dir="${build.sass.dir}/images" includes="icons-*.png"/>
+
+    </copy>
+
+  </target>
+  
+  
+  <!--<target name="-before-sass">
 
     <mkdir dir="${build.sass.dir}"/>
 
 
-  </target>
+  </target>-->
   <target name="-after-refresh">
     <echo>Rewriting ${app.dir}/bootstrap.js to load scripts from /bundles/bundlename</echo>
     <replaceregexp
@@ -39,6 +63,17 @@
     <copy todir="${build.localepath}" overwrite="true">
       <fileset dir="${basedir}/ext/locale" includes="**/*" />
     </copy>
+
+    <replaceregexp
+           file="${build.dir}/resources/taco-all_01.css"
+           match="\(\'/images"
+           replace="('/admin/scripts/build/resources/images"
+           flags="g" />
+      <replaceregexp
+           file="${build.dir}/resources/taco-all_02.css"
+           match="\(\'/images"
+           replace="('/admin/scripts/build/resources/images"
+           flags="g" />
  
   </target>
   
