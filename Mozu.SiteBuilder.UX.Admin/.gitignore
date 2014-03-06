@@ -28,7 +28,7 @@ Scripts/resources/images/card-*
 
 # DAMNIT SENCHA
 ext-*/
-#Scripts/build/
+Scripts/build/
 Scripts/.sencha/workspace/
 Scripts/bootstrap.css
 Scripts/sass/example/
