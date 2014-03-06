@@ -908,11 +908,8 @@
     <Content Include="Scripts\build\resources\fonts\SourceSansPro-Regular-webfont.svg" />
     <Content Include="Scripts\build\resources\fonts\SourceSansPro-Semibold-webfont.svg" />
     <Content Include="Scripts\build\resources\fonts\SourceSansPro-SemiboldIt-webfont.svg" />
-    <Content Include="Scripts\build\resources\images\icons-s6196661b77.png" />
-    <Content Include="Scripts\build\resources\images\image-drop.png" />
-    <Content Include="Scripts\build\resources\images\loading-shipping-label-m.gif" />
-    <Content Include="Scripts\build\resources\images\loading-shipping-label-spinner.gif" />
-    <Content Include="Scripts\build\resources\images\loading.gif" />
+    <Content Include="Scripts\build\resources\images\*.*" />
+  
     <Content Include="Scripts\build\resources\lib\history-bundled.js" />
     <Content Include="Scripts\build\resources\lib\history.adapter.native.js" />
     <Content Include="Scripts\build\resources\lib\history.html4.js" />
