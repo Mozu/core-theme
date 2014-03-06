@@ -87,6 +87,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         /// </summary>
         public long VisitCount { get; set; }
 
+
+      
+
         #region Order Summary
         /// <summary>
         /// Total amount of all orders, including cancellations and refunds.

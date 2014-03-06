@@ -648,6 +648,7 @@
     <Content Include="Scripts\app\model\CheckoutSettings.js" />
     <Content Include="Scripts\app\model\Capability.js" />
     <Content Include="Scripts\app\model\BundledProduct.js" />
+    <Content Include="Scripts\app\model\CustomerSegment.js" />
     <Content Include="Scripts\app\model\LocationPickup.js" />
     <Content Include="Scripts\app\model\RedirectEntry.js" />
     <Content Include="Scripts\app\model\Provisionable.js" />
@@ -1205,7 +1206,7 @@
     <Content Include="Scripts\app\store\CmsDocumentDrafts.js" />
     <Content Include="Scripts\app\shared\store\Files.js" />
     <Content Include="Scripts\app\store\ConfiguredShippingRates.js" />
-    <Content Include="Scripts\app\store\CustomerGroups.js" />
+    <Content Include="Scripts\app\store\CustomerSegments.js" />
     <Content Include="Scripts\app\store\ShippingCarrierSettings.js" />
     <Content Include="Scripts\app\store\GeneralSettings.js" />
     <Content Include="Scripts\app\store\ItemFilters.js" />
@@ -1507,7 +1508,6 @@
     <Content Include="Scripts\app\store\OrderNotes.js" />
     <Content Include="Scripts\app\store\CustomerAccountNotes.js" />
     <Content Include="Scripts\app\store\CustomerGroupComboBox.js" />
-    <Content Include="Scripts\app\store\CustomerGroupNames.js" />
     <Content Include="Scripts\app\store\Customers.js" />
     <Content Include="Scripts\app\store\GatewayDefinitions.js" />
     <Content Include="Scripts\app\store\Roles.js" />

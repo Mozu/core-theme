@@ -4,7 +4,7 @@
 Ext.define('Taco.view.customers.AdvancedSearchForm', {
         extend: 'Taco.core.ux.form.Form',
         requires: [
-            'Taco.store.CustomerGroupNames',
+            'Taco.store.CustomerSegments',
             'Ext.ux.form.field.BoxSelect',
         ],
 
@@ -14,8 +14,8 @@ Ext.define('Taco.view.customers.AdvancedSearchForm', {
         },
 
         initComponent: function () {
-            var groups,
-                groupStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerGroupNames');
+            var segments,
+                segmentStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerSegments');
             this.items =
             [
                 {
@@ -31,12 +31,12 @@ Ext.define('Taco.view.customers.AdvancedSearchForm', {
                 },
                 {
                     xtype: 'combobox',
-                    store: groupStore,
-                    name: 'groups',
-                    fieldLabel: 'Groups',
+                    store: segmentStore,
+                    name: 'segments',
+                    fieldLabel: 'Segments',
                     width: 400,
-                    valueField: 'Value',
-                    displayField: 'Value',
+                    valueField: 'id',
+                    displayField: 'code',
                     queryMode: 'local',
                     valueNotFoundText: 'not found',
                     editable: true,
@@ -44,7 +44,7 @@ Ext.define('Taco.view.customers.AdvancedSearchForm', {
                 }];
 
             this.callParent(arguments);
-            groups = this.getForm().findField('groups');
+            segments = this.getForm().findField('segments');
             //
         
        
