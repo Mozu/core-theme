@@ -85,6 +85,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                    // return string.Format("isanonymous eq {0}", filter.value);
                 case "groups":
                     return string.Format("groups eq {0}", filter.value);
+                case "segments":
+                    return string.Format("segments eq {0}", filter.value);
+                case "notsegments":
+                    return string.Format("segments neq {0}", filter.value);
+                case "segment":
+                    return string.Format("segments eq {0}", filter.value);
+                case "notsegment":
+                    return string.Format("segments neq {0}", filter.value);
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);

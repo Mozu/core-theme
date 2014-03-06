@@ -71,6 +71,37 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
+        public class SegmentBatchUpdate
+        {
+            public int SegmentCode { get; set; }
+            public string Method { get; set; }
+            public List<int> Customers { get; set; }
+            
+        }
+
+       [HttpPostRoute(UriTemplate = "segments/batch")]
+        public async Task<HttpResponseMessage> Batch(SegmentBatchUpdate update)
+        {
+           if (update.Method == "add")
+           {
+               var res = (await _customerSegmentWebApiClient.AddSegmentAccounts(update.Customers, update.SegmentCode));
+               if (! res.ResponseMessage.IsSuccessStatusCode)
+               {
+                   throw res.ReadException();
+               }
+               return this.Request.CreateResponse(HttpStatusCode.OK, this.EmptyList2<int>());
+           }
+
+           if (update.Method == "remove")
+           {
+               var res = (await _customerSegmentWebApiClient.AddSegmentAccounts(update.Customers, update.SegmentCode));
+               if (!res.ResponseMessage.IsSuccessStatusCode)
+               {
+                   throw res.ReadException();
+               }
+           }
+           throw new NotImplementedException("unknown batch mode");
+        }
 
 
         [HttpPostRoute(UriTemplate = "segments/delete")]
@@ -79,8 +110,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var tasks = segments.Select(x => _customerSegmentWebApiClient.AddSegment(x)).ToList();
             await Task.WhenAll(tasks);
-            var retList = tasks.Select(x => x.Result.ReadAsSync()).ToList();
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2(segments));
+
+            foreach (var task in tasks.Where(x=> !x.Result.ResponseMessage.IsSuccessStatusCode ))
+            {
+                throw task.Result.ReadException();
+            }
+          
+           
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, new List<int>());
 
         }
 
