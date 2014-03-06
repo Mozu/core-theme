@@ -2,6 +2,7 @@
 using Mozu.Core.Api.Contracts.Provisioning;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Behaviors;
+using Mozu.Provisioning.Contracts;
 using Mozu.Provisioning.Contracts.Clients;
 using Mozu.Reporting.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
@@ -36,31 +37,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string    SiteName { get; set; }
         }
 
-        [HttpPostRoute(UriTemplate = "provision")]
-        public async Task<bool> Provision(ProvisionRequest request)
+        [HttpPostRoute(UriTemplate = "provisionSite")]
+        public async Task<bool> Provision(SiteProvisionRequest request)
         {
-            var tenantInfo = (await _tenantsWebApiClient.GetTenant(this.SbApiContext.TenantId)).ReadAsSync();
-            var masterCatInfo = tenantInfo.MasterCatalogs.First(x => x.Id == request.MasterCatalogId);
-            var res = await _provisioningWebApiClient.ProvisionSite(new CreateSiteRequest()
-                                                                    {
-                                                                        CatalogRequest = new CreateCatalogRequest()
-                                                                                         {
-                                                                                             DefaultCurrencyCode = masterCatInfo.DefaultCurrencyCode,
-
-                                                                                             DefaultLocaleCode = "en-US",
-                                                                                             MasterCatalogId = masterCatInfo.Id,
-                                                                                             Name = request.SiteName,
-                                                                                             TenantId = SbApiContext.TenantId
-                                                                                         },
-                                                                        CountryCode = "us",
-                                                                        CurrencyCode = masterCatInfo.DefaultCurrencyCode,
-                                                                        IsMozuStorefront = true,
-                                                                        MasterCatalogId = request.MasterCatalogId ,
-                                                                        LocaleCode = "en-US",
-
-                                                                        Name = request.SiteName,
-                                                                        TenantId = SbApiContext.TenantId
-                                                                    });
+            var res = await _provisioningWebApiClient.ProvisionSite(request);
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
                 return true;
