@@ -110,7 +110,8 @@ Ext.define('Taco.overrides.grid.RowEditor', {
             }
 
             // start edit
-            this.mon(field, 'change', this.onFieldChange, this);
+            //simeon: this is  removed in 4.2.2
+            //this.mon(field, 'change', this.onFieldChange, this);
             // end edit
         }
     },
