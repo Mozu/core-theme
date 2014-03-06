@@ -159,6 +159,7 @@
     </Reference>
     <Reference Include="FSharp.Core">
       <HintPath>..\packages\Mozu.Hypr.NDjango.1.6.0.1\lib\FSharp.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="FSharp.PowerPack">
       <HintPath>..\packages\Mozu.Hypr.NDjango.1.6.0.1\lib\FSharp.PowerPack.dll</HintPath>
