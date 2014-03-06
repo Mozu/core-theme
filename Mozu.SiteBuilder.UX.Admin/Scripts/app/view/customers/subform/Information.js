@@ -98,16 +98,16 @@ Ext.define('Taco.view.customers.subform.Information', {
                         },
                         scope: this
                     }, {
-                        store: this.tagStore,
+                        store: this.segmentStore,
                         xtype: 'boxselect',
                         width: 320,
                         hideTrigger: true,
                         triggerOnClick: false,
                         forceSelection: false,
                         createNewOnEnter: true,
-                        valueField: 'Key',
-                        displayField: 'Value',
-                        name: 'groups',
+                        valueField: 'id',
+                        displayField: 'code',
+                        name: 'segments',
                         queryMode: 'local',
                         fieldLabel: 'Groups',
                         cls: 'customer-history'

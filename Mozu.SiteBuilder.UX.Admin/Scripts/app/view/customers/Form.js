@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.customers.Form', {
     extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.store.CustomerGroups',
+    requires: ['Taco.store.CustomerSegments',
         'Taco.view.order.Index',
         'Taco.shared.view.form.ExtensibleAttribute',
         'Taco.view.customers.subform.Information',
@@ -25,17 +25,15 @@ Ext.define('Taco.view.customers.Form', {
         ].join(' ');
 
         this.store = this.record.getContacts();
-        this.tagStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerGroups');
+        this.segmentStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerSegments');
 
-        this.tagStore.on('add', function (store, records) {
-            console.log('tagstoreadd', records);
-        });
+        
 
         this.cls = this.cls + ' ' + Taco.baseCSSPrefix + 'customer-editor';
 
         me.profile = Ext.create('Taco.view.customers.subform.Information', {
             record: this.record,
-            tagStore: this.tagStore
+            segmentStore: this.segmentStore
         });
 
         me.billingInformation = Ext.create('Taco.view.customers.subform.BillingInformation', {
@@ -75,64 +73,6 @@ Ext.define('Taco.view.customers.Form', {
         this.callParent(arguments);
 
         this.loadRecord(this.record);
-    },
-    addSaveTasks: function (tasks, updateRecord, saveRecord) {
-        var me = this,
-            groups = this.findField('groups'),
-            groupValue = groups.getValue(),
-            updateTask,
-            newTags = [];
-
-        this.callParent(arguments);
-
-        if (groups.isDirty()) {
-            Ext.each(groupValue, function (val) {
-                if (Ext.isString(val)) {
-                    me.tagStore.add({ Value: val });
-                }
-            });
-
-            if (me.tagStore.isDirty()) {
-
-
-                tasks.add({
-                    store: me.tagStore,
-                    dependencyForFilter: function (task) {
-                        return task.saveRecord == me.record;
-                    }
-                });
-
-                tasks.add({
-                    fn: function (gfutasks) {
-
-                        Ext.Array.each(groupValue, function (val, index) {
-                            var gRecord;
-                            if (Ext.isString(val)) {
-                                gRecord = me.tagStore.findRecord('Value', val);
-                                if (gRecord) {
-                                    groupValue[index] = gRecord.getId();
-                                }
-
-                            }
-                        });
-
-                        groups.setValue(groupValue);
-                        gfutasks.callback();
-
-                    },
-                    dependencyFilter: function (task) {
-                        return task.store == me.tagStore;
-                    }
-                });
-            }
-
-        }
-        //tasks.add({
-        //    store: me.record.getContacts(),
-        //    key: 'contactStore'
-        //});
-
-
-        return tasks;
     }
+    
 });

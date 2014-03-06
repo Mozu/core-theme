@@ -9,7 +9,7 @@ Ext.define('Taco.view.customers.Index', {
         'Taco.model.CustomerAccount',
         'Taco.store.Customers',
         'Taco.view.customers.AdvancedSearchForm',
-        'Taco.store.CustomerGroups'
+        'Taco.store.CustomerSegments'
     ],
 
     typeName: 'Customer',
@@ -26,7 +26,7 @@ Ext.define('Taco.view.customers.Index', {
             title: 'Customers'
         };
 
-        this.tagStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerGroups');
+       
 
         this.gridPanelConf = {
             columns: [ {
@@ -86,26 +86,26 @@ Ext.define('Taco.view.customers.Index', {
                 text: 'Total Visits',
                 width: 100
             }, {
-                dataIndex: 'groups',
-                text: 'Groups',
+                dataIndex: 'segments',
+                text: 'Segments',
                     width: 300,
-                    renderer: function(value, metaData, record) {
-                    if (value && value.length) {
-                        var names = [];
+                //    renderer: function(value, metaData, record) {
+                //    if (value && value.length) {
+                //        var names = [];
                         
-                        Ext.each(value || [], function(tagId) {
-                            var tagRecord = me.tagStore.getById(tagId);
+                //        Ext.each(value || [], function(tagId) {
+                //            var tagRecord = me.tagStore.getById(tagId);
 
-                            if (tagRecord) {
-                                names.push(tagRecord.get('Value'));
-                            }
-                        });
+                //            if (tagRecord) {
+                //                names.push(tagRecord.get('Value'));
+                //            }
+                //        });
 
-                        if (names.length) {
-                            return names.join(', ');
-                        }
-                    }
-                },
+                //        if (names.length) {
+                //            return names.join(', ');
+                //        }
+                //    }
+                //},
                 minWidth: 100,
                 flex: 1
             }, {

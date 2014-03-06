@@ -1,6 +1,3 @@
-/**
- * @class Taco.store.CustomerGroups
- */
 Ext.define('Taco.store.RedirectEntries', {
     requires: ['Taco.model.RedirectEntry'],
     extend: 'Ext.data.Store',
