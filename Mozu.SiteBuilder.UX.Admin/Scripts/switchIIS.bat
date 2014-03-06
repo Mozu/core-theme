@@ -1,1 +1,1 @@
-powershell .\switchiis.ps1 sb2
+powershell .\switchiis.ps1 %1
