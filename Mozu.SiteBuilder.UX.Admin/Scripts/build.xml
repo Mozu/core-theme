@@ -30,10 +30,10 @@
 
   <target name="-after-sass">
 
-    <echo>Copying over image files</echo>
-    <copy todir="${app.resources.dir}/images" overwrite="true">
-      <fileset dir="${build.sass.dir}/images" includes="icons-*.png"/>
-
+    <echo>Copying over image files to ${build.dir}/resources/images</echo>
+ 
+    <copy todir="${build.dir}/resources/images" overwrite="true">
+      <fileset dir="${build.sass.dir}/images" includes="*.png"/>
     </copy>
 
   </target>
