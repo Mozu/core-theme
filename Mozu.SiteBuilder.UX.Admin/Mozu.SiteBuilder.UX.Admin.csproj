@@ -282,7 +282,7 @@
     </Reference>
     <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.6.0-dev006\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.6.0-dev007\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -757,6 +757,7 @@
     <Content Include="Scripts\app\view\order\widget\FulfillmentPickerField.js" />
     <Content Include="Scripts\app\view\order\widget\UnpickedupItems.js" />
     <Content Include="Scripts\app\view\order\widget\LocationPickupGrid.js" />
+    <Content Include="Scripts\app\view\product\subform\Pricing.js" />
     <Content Include="Scripts\app\view\provisioning\ProvisionerModal.js" />
     <Content Include="Scripts\app\view\redirects\Index.js" />
     <Content Include="Scripts\app\view\customerAttribute\Edit.js" />

@@ -13,7 +13,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
         var me = this;
         
         this.record = this.product;
-        this.items = [];
+      this.items = [];
 
         
         // only allow field persistance if the productUsage is not bundle;
@@ -23,7 +23,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
 
         this.callParent(arguments);
 
-        me.on('afterrender', function () {
+       me.on('afterrender', function () {
             var productForm = me.up("productform");
             me.mon(productForm, 'productusagechange', me.onProductUsageChange, me);
             // every change to the bundle items (add remove, quantity change) will cause a rerendering of the control
@@ -93,8 +93,22 @@ Ext.define('Taco.view.product.subform.Shipping', {
             });
         }
 
-        
-        
+        this.directShipCheckbox = Ext.widget({
+            xtype: 'checkboxfield',
+            boxLabel: 'Direct Ship',
+            name: 'directShipCb',
+            inputValue: 'DirectShip',
+            checked: true,
+        });
+
+        this.inStorePickupCheckbox = Ext.widget({
+            xtype: 'checkboxfield',
+            boxLabel: 'In Store Pickup',
+            name: 'inStoreCb',
+            inputValue: 'InStorePickup',
+        });
+
+
         var field = {
             xtype: 'container',
             width: '100%',
@@ -159,13 +173,23 @@ Ext.define('Taco.view.product.subform.Shipping', {
                             emptyText: 'h'
                         }
                     ]
+                }, {
+                    xtype: 'checkboxgroup',
+                    fieldLabel: 'Fulfillment Types',
+                    flex: 2,
+                    bodypadding: 10,
+                    columns: 2,
+                    items: [
+                        this.directShipCheckbox,
+                        this.inStorePickupCheckbox                        
+                    ]
                 }
             ]
         };
         
         // remove the productNameField if its null;
         field.items = Taco.core.util.Common.filterNulls(field.items);
-        
+
         return Ext.widget(field);
     },
 
