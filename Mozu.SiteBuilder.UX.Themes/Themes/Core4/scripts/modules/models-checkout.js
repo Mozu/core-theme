@@ -145,26 +145,10 @@
                         var methodToUse = allowInvalidAddresses ? "validateAddressLenient" : "validateAddress";
                         addr.apiModel[methodToUse]().then(function (resp) {
                             if (resp.data && resp.data.addressCandidates && resp.data.addressCandidates.length) {
-                                var addrCompare = function (addr, valAddr) {
-                                    var s1 = '',
-                                        s2 = '';
-                                    for (var k in valAddr) {
-                                        if (k === 'isValidated')
-                                            continue;
-                                        s1 = (valAddr[k] || '').toLowerCase();
-                                        s2 = (addr.get(k) || '').toLowerCase();
-                                        if (s1 != s2) {
-                                            return -1;
-                                        }
-                                    }
-                                    return 0;
-                                };
-                                var addrIsDifferent = false;
-                                for (var i = 0; i < resp.data.addressCandidates.length; i++) {
-                                    if (addrCompare(addr, resp.data.addressCandidates[i]) == 0) {
-                                        completeStep();
-                                        return;
-                                    }
+                                if (_.find(resp.data.addressCandidates, addr.is, addr)) {
+                                    addr.set('isValidated', true);
+                                    completeStep();
+                                    return;
                                 }
                                 addr.set('candidateValidatedAddresses', resp.data.addressCandidates);
                                 promptValidatedAddress();
