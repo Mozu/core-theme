@@ -95,21 +95,21 @@
   .#{$prefix}menu .#{$prefix}menu-item-unchecked .#{$prefix}menu-item-icon,
   .#{$prefix}grid-table .#{$prefix}grid-row-checker,
   .#{$prefix}grid-header-ct .#{$prefix}column-header-checkbox .#{$prefix}column-header-text {
-  //  @include icons-sprite(icon-checkbox);
+   @include icons-sprite(icon-barcode);
   }
   .#{$prefix}form-cb-checked .#{$prefix}form-checkbox,
   .#{$prefix}grid-cell-inner .#{$prefix}tree-checkbox-checked,
   .#{$prefix}menu .#{$prefix}menu-item-checked .#{$prefix}menu-item-icon,
   .#{$prefix}grid-table .#{$prefix}grid-row-selected .#{$prefix}grid-row-checker,
   .#{$prefix}grid-header-ct .#{$prefix}grid-hd-checker-on .#{$prefix}column-header-text {
-//    @include icons-sprite(icon-checkbox-selected);
+ @include icons-sprite(icon-checkbox-selected);
   }
 
   .#{$prefix}field .#{$prefix}form-radio {
-//    @include icons-sprite(icon-radio);
+ @include icons-sprite(icon-radio);
   }
   .#{$prefix}form-cb-checked .#{$prefix}form-radio {
-//    @include icons-sprite(icon-radio-selected);
+ @include icons-sprite(icon-radio-selected);
   }
 
   // .#{$prefix}form-cb-label-after {

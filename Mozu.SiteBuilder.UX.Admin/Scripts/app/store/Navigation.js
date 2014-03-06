@@ -216,6 +216,10 @@ Ext.define('Taco.store.Navigation', {
                         "id": "fileManager",
                         "label": "File Manager",
                         "address": "fileManager"
+                    }, {
+                        "id": "provisioning",
+                        "label": "Pro-Vision'n",
+                        "address": "provisioning"
                     }]
             }, {
                 "id": "publishing",

@@ -130,7 +130,7 @@ Ext.define('Taco.Application', {
         'Testing',
         'Discounts',
         'Settings',
-        
+        'Provisioning',
         'Tbd',
         'Themes',
         'Themesettings',
