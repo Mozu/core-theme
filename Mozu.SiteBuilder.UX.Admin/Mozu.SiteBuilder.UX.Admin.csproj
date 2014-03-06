@@ -217,9 +217,8 @@
     <Reference Include="Mozu.Content.Contracts">
       <HintPath>..\packages\Mozu.Content.Contracts.1.6.0.1\lib\Mozu.Content.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.1.6.0-dev013\lib\net45\Mozu.Core.dll</HintPath>
+    <Reference Include="Mozu.Core">
+      <HintPath>..\packages\Mozu.Core.1.6.0.5\lib\net45\Mozu.Core.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
