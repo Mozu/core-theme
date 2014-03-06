@@ -234,9 +234,8 @@
     <Reference Include="Mozu.Core.Extensible.Contracts">
       <HintPath>..\packages\Mozu.Core.Extensible.Contracts.1.6.0.2\lib\Mozu.Core.Extensible.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Messaging, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Messaging.1.6.0-dev003\lib\net45\Mozu.Core.Messaging.dll</HintPath>
+    <Reference Include="Mozu.Core.Messaging">
+      <HintPath>..\packages\Mozu.Core.Messaging.1.6.0.3\lib\net45\Mozu.Core.Messaging.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Messaging.Contracts, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
