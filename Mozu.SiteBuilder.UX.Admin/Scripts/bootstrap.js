@@ -17,6 +17,7 @@ Ext.Loader.addClassPathMappings({
   "Taco.store.OrderItems": "app/store/CartItems.js",
   "Taco.view.generalsettings.Form": "app/view/generalSettings/Form.js",
   "Taco.view.productOption.Edit": "app/view/productOption/edit.js",
+  "Taco.view.redirects.Index": "app/view/Redirects/Index.js",
   "Taco.view.themesettings.Addons": "app/view/themeSettings/Addons.js",
   "Taco.view.themesettings.Edit": "app/view/themeSettings/Edit.js",
   "Taco.view.themesettings.Form": "app/view/themeSettings/Form.js"
@@ -152,6 +153,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ext.data.Field": [],
   "Ext.data.Group": [],
   "Ext.data.IdGenerator": [],
+  "Ext.data.JsonP": [],
+  "Ext.data.JsonPStore": [],
   "Ext.data.JsonStore": [],
   "Ext.data.Model": [
     "Ext.data.Record"
@@ -198,6 +201,9 @@ Ext.ClassManager.addNameAlternateMappings({
   ],
   "Ext.data.proxy.Direct": [
     "Ext.data.DirectProxy"
+  ],
+  "Ext.data.proxy.JsonP": [
+    "Ext.data.ScriptTagProxy"
   ],
   "Ext.data.proxy.LocalStorage": [
     "Ext.data.LocalStorageProxy"
@@ -876,6 +882,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.controller.PendingChanges": [],
   "Taco.controller.ProductTypes": [],
   "Taco.controller.Products": [],
+  "Taco.controller.Provisioning": [],
   "Taco.controller.Redirects": [],
   "Taco.controller.Reports": [],
   "Taco.controller.Roles": [],
@@ -994,6 +1001,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.core.ux.form.FieldGroup": [],
   "Taco.core.ux.form.FileInputButton": [],
   "Taco.core.ux.form.FilterContainer": [],
+  "Taco.core.ux.form.FlexBox": [],
   "Taco.core.ux.form.FontField": [],
   "Taco.core.ux.form.FontPicker": [],
   "Taco.core.ux.form.Form": [],
@@ -1025,6 +1033,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.core.ux.form.field.Product": [],
   "Taco.core.ux.form.field.SingleImageField": [],
   "Taco.core.ux.grid.ActionColumn": [],
+  "Taco.core.ux.grid.AddEntityRow": [],
   "Taco.core.ux.grid.Header": [],
   "Taco.core.ux.grid.HeaderDropZone": [],
   "Taco.core.ux.grid.MenuColumn": [],
@@ -1127,6 +1136,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.model.ProductType": [],
   "Taco.model.ProductTypeAttribute": [],
   "Taco.model.ProductVariation": [],
+  "Taco.model.Provisionable": [],
   "Taco.model.RedirectEntry": [],
   "Taco.model.Return": [],
   "Taco.model.ReturnItem": [],
@@ -1156,6 +1166,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.model.WishlistItem": [],
   "Taco.overrides.data.AbstractStore": [],
   "Taco.overrides.form.Basic": [],
+  "Taco.overrides.form.FieldContainer": [],
   "Taco.overrides.form.field.Base": [],
   "Taco.overrides.form.field.ComboBox": [],
   "Taco.overrides.form.field.Display": [],
@@ -1163,6 +1174,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.overrides.grid.RowEditor": [],
   "Taco.overrides.grid.RowEditorButtons": [],
   "Taco.overrides.grid.plugin.CellEditing": [],
+  "Taco.overrides.grid.plugin.RowEditing": [],
   "Taco.overrides.menu.Item": [],
   "Taco.overrides.menu.Menu": [],
   "Taco.overrides.panel.Header": [],
@@ -1352,6 +1364,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.view.order.modal.ApplyStoreCredit": [],
   "Taco.view.order.modal.CapturePayment": [],
   "Taco.view.order.modal.CapturePaymentManual": [],
+  "Taco.view.order.modal.CheckDecline": [],
   "Taco.view.order.modal.CheckPayment": [],
   "Taco.view.order.modal.CreditPaymentManual": [],
   "Taco.view.order.modal.EditOrderDetail": [],
@@ -1372,9 +1385,11 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.view.order.widget.CreateReturnPanel": [],
   "Taco.view.order.widget.DiscountPickerField": [],
   "Taco.view.order.widget.DiscountRowBody": [],
+  "Taco.view.order.widget.FulfillmentPickerField": [],
   "Taco.view.order.widget.LocationPickupGrid": [],
   "Taco.view.order.widget.OrderItemGrid": [],
   "Taco.view.order.widget.OrderTotalPanel": [],
+  "Taco.view.order.widget.OrderTotalPanelEditable": [],
   "Taco.view.order.widget.Package": [],
   "Taco.view.order.widget.PackagePickup": [],
   "Taco.view.order.widget.PaymentPanel": [],
@@ -1425,6 +1440,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.view.productType.Edit": [],
   "Taco.view.productType.Form": [],
   "Taco.view.productType.Index": [],
+  "Taco.view.provisioning.Index": [],
   "Taco.view.provisioning.ProvisionerModal": [],
   "Taco.view.redirects.Index": [],
   "Taco.view.report.Header": [],
@@ -1637,6 +1653,10 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Ext.data.Group": [],
   "Ext.data.IdGenerator": [],
+  "Ext.data.JsonP": [],
+  "Ext.data.JsonPStore": [
+    "store.jsonp"
+  ],
   "Ext.data.JsonStore": [
     "store.json"
   ],
@@ -1688,6 +1708,10 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.data.proxy.Client": [],
   "Ext.data.proxy.Direct": [
     "proxy.direct"
+  ],
+  "Ext.data.proxy.JsonP": [
+    "proxy.jsonp",
+    "proxy.scripttag"
   ],
   "Ext.data.proxy.LocalStorage": [
     "proxy.localstorage"
@@ -2519,6 +2543,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.controller.PendingChanges": [],
   "Taco.controller.ProductTypes": [],
   "Taco.controller.Products": [],
+  "Taco.controller.Provisioning": [],
   "Taco.controller.Redirects": [],
   "Taco.controller.Reports": [],
   "Taco.controller.Roles": [],
@@ -2775,6 +2800,10 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.core.ux.form.FilterContainer": [
     "widget.taco-filtercontainer"
   ],
+  "Taco.core.ux.form.FlexBox": [
+    "layout.formflexbox",
+    "widget.formflexbox"
+  ],
   "Taco.core.ux.form.FontField": [
     "widget.fontfield"
   ],
@@ -2861,6 +2890,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Taco.core.ux.grid.ActionColumn": [
     "widget.taco.actioncolumn"
+  ],
+  "Taco.core.ux.grid.AddEntityRow": [
+    "feature.taco.addentityrow"
   ],
   "Taco.core.ux.grid.Header": [],
   "Taco.core.ux.grid.HeaderDropZone": [],
@@ -2998,6 +3030,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.model.ProductType": [],
   "Taco.model.ProductTypeAttribute": [],
   "Taco.model.ProductVariation": [],
+  "Taco.model.Provisionable": [],
   "Taco.model.RedirectEntry": [],
   "Taco.model.Return": [],
   "Taco.model.ReturnItem": [],
@@ -3027,6 +3060,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.model.WishlistItem": [],
   "Taco.overrides.data.AbstractStore": [],
   "Taco.overrides.form.Basic": [],
+  "Taco.overrides.form.FieldContainer": [],
   "Taco.overrides.form.field.Base": [],
   "Taco.overrides.form.field.ComboBox": [],
   "Taco.overrides.form.field.Display": [],
@@ -3034,6 +3068,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.overrides.grid.RowEditor": [],
   "Taco.overrides.grid.RowEditorButtons": [],
   "Taco.overrides.grid.plugin.CellEditing": [],
+  "Taco.overrides.grid.plugin.RowEditing": [],
   "Taco.overrides.menu.Item": [],
   "Taco.overrides.menu.Menu": [],
   "Taco.overrides.panel.Header": [],
@@ -3283,6 +3318,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.view.order.modal.ApplyStoreCredit": [],
   "Taco.view.order.modal.CapturePayment": [],
   "Taco.view.order.modal.CapturePaymentManual": [],
+  "Taco.view.order.modal.CheckDecline": [],
   "Taco.view.order.modal.CheckPayment": [],
   "Taco.view.order.modal.CreditPaymentManual": [],
   "Taco.view.order.modal.EditOrderDetail": [],
@@ -3315,9 +3351,13 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.view.order.widget.DiscountRowBody": [
     "feature.discountrowbody"
   ],
+  "Taco.view.order.widget.FulfillmentPickerField": [
+    "widget.taco-fulfillmentpickerfield"
+  ],
   "Taco.view.order.widget.LocationPickupGrid": [],
   "Taco.view.order.widget.OrderItemGrid": [],
   "Taco.view.order.widget.OrderTotalPanel": [],
+  "Taco.view.order.widget.OrderTotalPanelEditable": [],
   "Taco.view.order.widget.Package": [],
   "Taco.view.order.widget.PackagePickup": [],
   "Taco.view.order.widget.PaymentPanel": [],
@@ -3419,6 +3459,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.view.productType.Index": [
     "widget.taco.index.producttype"
   ],
+  "Taco.view.provisioning.Index": [],
   "Taco.view.provisioning.ProvisionerModal": [],
   "Taco.view.redirects.Index": [],
   "Taco.view.report.Header": [],
