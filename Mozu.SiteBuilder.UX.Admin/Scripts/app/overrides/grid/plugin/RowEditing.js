@@ -11,6 +11,19 @@ Ext.define('Taco.overrides.grid.plugin.RowEditing', {
     init: function () {
         this.callParent(arguments);
     },
+
+
+    // this is a fix for 4.2.2  remove this method after 4.3
+    onEnterKey: function () {        
+        // need skip over the superclass of this override as its method is overriding the base class;
+        this.superclass.onEnterKey.apply(this, arguments)
+        /*
+        if (this.getEditor().getForm().isValid()) {
+            this.completeEdit();
+        }*/
+    },
+
+
     completeEdit: function () {
         var me = this,
             createNew = false,
