@@ -14,6 +14,26 @@ Ext.define('Taco.overrides.grid.RowEditorButtons', {
                 scale: 'medium',
                 scope: plugin,
                 flex: 1,
+                listeners: {
+                    'keydown': {
+                        element: "el",
+                        fn: function (e) {
+                            var k = e.getKey(),
+                            btn;
+                            // SPACE and ENTER trigger a click
+                            if (k === e.SPACE || k === e.ENTER) {
+                                // need to prevent the button keypress event from bubbling since the row editor is also listening for the enter key and will persist the record even though you are hitting enter on the cancel key;
+                                e.stopPropagation();
+
+                                // get the button component and trigger the click event
+                                btn = Ext.getCmp(this.id);
+                                if (btn && btn.onClick) {
+                                    btn.onClick(e);
+                                }
+                            }
+                        }
+                    }
+                },
                 minWidth: Ext.panel.Panel.prototype.minButtonWidth
             },
             items: [{
