@@ -96,10 +96,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         public string BaseProductCode { get; set; }
 
         /// <summary>
-        /// Price Lookup Unit
+        /// Universal Product Code
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "plu")]
-        public string PLU { get; set; }
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "upc")]
+        public string UPC { get; set; }
 
         /// <summary>
         /// The product name.
@@ -221,12 +221,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// If discount restricted, then start date of restriction or null to indicate indefinite
         /// </summary>
-        public DateTime? DiscountRestrictionStartDate { get; set; }
+        public DateTime? DiscountsRestrictedStartDate { get; set; }
 
         /// <summary>
         /// If discount restricted, then end date of restriction or null to indicate indefinite
         /// </summary>
-        public DateTime? DiscountRestrictionEndDate { get; set; }
+        public DateTime? DiscountsRestrictedEndDate { get; set; }
 
         #endregion
 

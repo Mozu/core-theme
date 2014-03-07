@@ -1,5 +1,5 @@
 ﻿param (
-    [string]$filename = "ext-4.2.1-commercial.zip"
+    [string]$filename = "ext-4.2.2-commercial.zip"
 )
 
 $shell_app=new-object -com shell.application
