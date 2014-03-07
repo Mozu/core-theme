@@ -57,7 +57,7 @@ Ext.define('Taco.model.ProductVariation', {
             defaultValue: []
         },
         {
-            name: "plu",
+            name: "upc",
             type: "string",
             useNull: true
         },

@@ -52,8 +52,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// Price Lookup Unit
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "plu")]
-        public string PLU { get; set; }
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "upc")]
+        public string UPC { get; set; }
 
         #region Supplier Info
 

@@ -110,8 +110,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Options, op => op.ResolveUsing(dc => dc.Options))
                 .ForMember(x => x.ProductImages, op => op.ResolveUsing(dc => (dc.Content ?? NULLCONTENT).ProductImages))
                 .ForMember(x => x.DiscountsRestricted, op => op.ResolveUsing(dc => (dc.PricingBehavior ?? NULLPRICEBEHAVE).DiscountsRestricted))
-                .ForMember(x => x.DiscountRestrictionStartDate, op => op.ResolveUsing(dc => (dc.PricingBehavior ?? NULLPRICEBEHAVE).DiscountRestrictionStartDate))
-                .ForMember(x => x.DiscountRestrictionEndDate, op => op.ResolveUsing(dc => (dc.PricingBehavior ?? NULLPRICEBEHAVE).DiscountRestrictionEndDate))
+                .ForMember(x => x.DiscountsRestrictedStartDate, op => op.ResolveUsing(dc => (dc.PricingBehavior ?? NULLPRICEBEHAVE).DiscountsRestrictedStartDate))
+                .ForMember(x => x.DiscountsRestrictedEndDate, op => op.ResolveUsing(dc => (dc.PricingBehavior ?? NULLPRICEBEHAVE).DiscountsRestrictedEndDate))
                 .ForMember(x => x.MfgPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).MfgPartNumber))
                 .ForMember(x => x.DistPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).DistPartNumber))
                 .ForMember(x => x.MfgPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).MfgPartNumber))
@@ -156,6 +156,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? null : dc.Extras.Where(x => x.Values != null && x.Values.Count > 0).ToList()))
                 .ForMember(dc => dc.BaseProductCode, op => op.ResolveUsing(p => p.BaseProductCode))
                 .ForMember(dc => dc.ProductTypeId, op => op.ResolveUsing(dc => dc.ProductTypeId))
+                .ForMember(dc => dc.UPC, op => op.ResolveUsing(x => x.UPC))
                 .ForMember(dc => dc.Content, op => op.ResolveUsing(p =>
                 {
                     var images = Mapper.Map<List<DC.ProductLocalizedImage>>(p.ProductImages );
@@ -216,7 +217,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.IsValidForProductType, op => op.Ignore())
                 .ForMember(dc => dc.ShippingClassId, op => op.Ignore())
                 .ForMember(dc => dc.IsRecurring, op => op.Ignore())
-                .ForMember(dc => dc.UPC, op => op.Ignore())
                 .ForMember(dc => dc.IsPackagedStandAlone, op => op.Ignore())
                 .ForMember(dc => dc.StandAlonePackageType, op => op.Ignore())
                 .ForMember(dc => dc.ApplicableDiscounts, op => op.Ignore())
@@ -227,8 +227,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.PricingBehavior, op => op.ResolveUsing(x => new DC.ProductPricingBehaviorInfo
                 {
                     DiscountsRestricted = x.DiscountsRestricted,
-                    DiscountRestrictionStartDate = x.DiscountRestrictionStartDate,
-                    DiscountRestrictionEndDate = x.DiscountRestrictionEndDate,
+                    DiscountsRestrictedStartDate = x.DiscountsRestrictedStartDate,
+                    DiscountsRestrictedEndDate = x.DiscountsRestrictedEndDate,
                 }))
 
                 .AfterMap((x, y) =>

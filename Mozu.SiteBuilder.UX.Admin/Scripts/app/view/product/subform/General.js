@@ -188,10 +188,10 @@ Ext.define('Taco.view.product.subform.General', {
             selectOnFocus: true,
         };
 
-        var pluField = {
+        var upcField = {
             xtype: 'textfield',
-            fieldLabel: 'Price Lookup Unit',
-            name: 'plu',
+            fieldLabel: 'Universal Product Code (UPC)',
+            name: 'upc',
             anchor: '96%',
             width: 200,
             required: false,
@@ -329,19 +329,19 @@ Ext.define('Taco.view.product.subform.General', {
             anchor: '96%',
         };
 
-        var discountRestrictionStartField = {
+        var discountsRestrictedStartField = {
             xtype: 'datetime',
             fieldLabel: 'Effective Date',
-            name: 'discountRestrictionStartDate',
+            name: 'discountsRestrictedStartDate',
             anchor: '96%',
             width: 200,
             pickerOffset: 4
         };
 
-        var discountRestrictionEndField = {
+        var discountsRestrictedEndField = {
             xtype: 'datetime',
             fieldLabel: 'End Date',
-            name: 'discountRestrictionEndDate',
+            name: 'discountsRestrictedEndDate',
             anchor: '96%',
             width: 200,
             pickerOffset: 4
@@ -571,7 +571,7 @@ Ext.define('Taco.view.product.subform.General', {
                                 columnWidth: .2,
                                 layout: 'anchor',
                                 items: [
-                                    discountRestrictionStartField
+                                    discountsRestrictedStartField
                                 ]
                             },
                             {
@@ -579,7 +579,7 @@ Ext.define('Taco.view.product.subform.General', {
                                 columnWidth: .2,
                                 layout: 'anchor',
                                 items: [
-                                    discountRestrictionEndField
+                                    discountsRestrictedEndField
                                 ]
                             }
                         ]
@@ -623,7 +623,7 @@ Ext.define('Taco.view.product.subform.General', {
                                 columnWidth: .3,
                                 layout: 'anchor',
                                 items: [
-                                    pluField
+                                    upcField
                                 ]
                             }
                 ]

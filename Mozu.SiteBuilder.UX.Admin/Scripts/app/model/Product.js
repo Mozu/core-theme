@@ -193,12 +193,7 @@ Ext.define('Taco.model.Product', {
             "useNull": true
         },
         {
-            "name": "upc",
-            "type": "int",
-            "useNull": true
-        },
-        {
-            name: "plu",
+            name: "upc",
             type: "string",
             useNull: true
         },
@@ -308,12 +303,12 @@ Ext.define('Taco.model.Product', {
             useNull: true
         },
         {
-            name: "discountRestrictionStartDate",
+            name: "discountsRestrictedStartDate",
             type: "date",
             useNull: true
         },
         {
-            name: "discountRestrictionEndDate",
+            name: "discountsRestrictedEndDate",
             type: "date",
             useNull: true
         },
