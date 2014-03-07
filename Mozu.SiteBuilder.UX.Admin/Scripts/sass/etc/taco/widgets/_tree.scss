@@ -62,7 +62,7 @@
       .#{$prefix}tree-elbow, .#{$prefix}tree-elbow-end {
         height: 24px;
         width: 34px;
-   //     @include icons-sprite(icon-folder); // icon is an <img>
+        @include icons-sprite(icon-folder); // icon is an <img>
 
         &:hover {
           background-color: $color-neutral-dark !important;
@@ -72,7 +72,7 @@
       .#{$prefix}tree-elbow-plus, .#{$prefix}tree-elbow-end-plus {
         height: 24px;
         width: 34px;
-     //   @include icons-sprite(icon-folder); // icon is an <img>
+        @include icons-sprite(icon-folder); // icon is an <img>
 
         &:hover {
           background-color: $color-neutral-dark !important;
