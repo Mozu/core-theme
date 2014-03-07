@@ -15,7 +15,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers;
-using Mozu.SiteSettings.Application.Contracts.Clients;
+using Mozu.InstalledApplications.Contracts.Clients;
 using VM = Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 	    private readonly ICapabilitiesWebApiClient _capabilitiesWebApiClient;
 	    private readonly IApplicationsWebApiClient _applicationsWebApiClient;
 
-        public CapabilityController(ICapabilitiesWebApiClient capabilitiesWebApiClient , Mozu.SiteSettings.Application.Contracts.Clients.IApplicationsWebApiClient applicationsWebApiClient )
+        public CapabilityController(ICapabilitiesWebApiClient capabilitiesWebApiClient , IApplicationsWebApiClient applicationsWebApiClient )
         {
             _capabilitiesWebApiClient = capabilitiesWebApiClient;
             _applicationsWebApiClient = applicationsWebApiClient;
@@ -68,7 +68,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "edit")]
         public async Task<HttpResponseMessage>  Edit(List<VM.Capability >capabilities )
         {
-            var apps = new List<SiteSettings.Application.Contracts.Internal.Application>();
+            var apps = new List<InstalledApplications.Contracts.Internal.Application>();
             foreach (var cap in capabilities)
             {
                 var app = (await _applicationsWebApiClient.GetApplication(cap.AppId)).ReadAsSync();
