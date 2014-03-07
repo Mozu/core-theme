@@ -107,12 +107,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
            
             HandledByProxy = IsheaderTrue(Mozu.Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, requestMessage);
            
-            IsSecure = IsheaderTrue(Mozu.Core.Api.Contracts.Constants.Headers.SSL_HANDLED, requestMessage); 
-       
+            IsSecure = IsheaderTrue(Mozu.Core.Api.Contracts.Constants.Headers.SSL_HANDLED, requestMessage);
+
+            string url = requestMessage.RequestUri.ToString();
             if (requestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
             {
-                this.Url = values.FirstOrDefault();
+                url = values.FirstOrDefault();
             }
+            this.Url = url;
+
             Sorting = SortingParamaters.Create(requestMessage);
             Pagination = PagingParmaters.Create(requestMessage);
 
