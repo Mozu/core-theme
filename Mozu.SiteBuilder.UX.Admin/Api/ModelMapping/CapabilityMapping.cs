@@ -4,7 +4,7 @@ using System.Linq;
 using AutoMapper;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement;
 using Mozu.Tenant.Contracts;
-using DC = Mozu.SiteSettings.Application.Contracts.Internal;
+using DC = Mozu.InstalledApplications.Contracts.Internal;
 
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping

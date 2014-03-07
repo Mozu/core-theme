@@ -17,7 +17,7 @@ using Mozu.SiteBuilder.Mvc.Logging;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.SiteSettings.Application.Contracts.Clients;
+using Mozu.InstalledApplications.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Configuration
 {
