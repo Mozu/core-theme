@@ -535,7 +535,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CostCurrencyCode, op => op.ResolveUsing(dc => (dc.SupplierInfo != null && dc.SupplierInfo.Cost != null)
                     ? dc.SupplierInfo.Cost.ISOCurrencyCode
                     : DEFAULT_CURRENCY_CODE))
-                .ForMember(x => x.Cost, op => op.ResolveUsing(dc => (dc.SupplierInfo != null && dc.SupplierInfo.Cost != null)
+                .ForMember(x => x.DeltaCost, op => op.ResolveUsing(dc => (dc.SupplierInfo != null && dc.SupplierInfo.Cost != null)
                     ? dc.SupplierInfo.Cost.Cost
                     : NULLCOST.Cost))
                       ;
@@ -554,7 +554,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     Cost = new DC.ProductCost()
                     {
                         ISOCurrencyCode = x.CostCurrencyCode,
-                        Cost = x.Cost
+                        Cost = x.DeltaCost
                     }
                 }))
                     ;

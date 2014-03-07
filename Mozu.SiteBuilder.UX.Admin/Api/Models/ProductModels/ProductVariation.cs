@@ -79,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// Cost
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public decimal? Cost { get; set; }
+        public decimal? DeltaCost { get; set; }
 
         #endregion
 
