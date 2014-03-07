@@ -5,7 +5,7 @@
  */
 
 Ext.define('Taco.core.ux.browser.Browsable', {
-    requires: ['Taco.core.util.ExceptionWhiner', 'Taco.core.ux.grid.AddEntityRow'],
+    requires: ['Taco.core.util.ExceptionWhiner', 'Taco.core.ux.grid.AddEntityRow', 'Taco.core.ux.grid.plugins.AutoSelect'],
     config: {
         typeName: 'Item',
         createButtonPrefix: "Create New ",
@@ -103,6 +103,13 @@ Ext.define('Taco.core.ux.browser.Browsable', {
             //if header was defined in config and therefore existing on the prototype. then the destroyed objectes would stick around... badness would prevail
             this.header = Ext.clone(this.header);
         }
+                
+        if (!this.gridPanelConf.plugins) {
+            this.gridPanelConf.plugins = [];
+        }
+
+        // this plugin will auto select the first record in the grid and manage reselection of the selected item after a store load
+        this.gridPanelConf.plugins.push("autoselect");
         
         if (this.enableRowEditing) {
             // update the button text to be "Save"
@@ -127,16 +134,16 @@ Ext.define('Taco.core.ux.browser.Browsable', {
                     
                 },
                 autoCancel: false
-            });
-            
-            if (!this.gridPanelConf.plugins) {
-                this.gridPanelConf.plugins = [];
-            }
+            });            
             
             this.gridPanelConf.plugins.push(this.rowEditor);
             this.launchEditorOnClick = false;
         }
 
+
+        // add grid row selection plugin.
+        //this.gridPanelConf.plugins.push();
+        
         
 
         Ext.applyIf(this.header, {
@@ -190,6 +197,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         }
     },
 
+
     initBrowserListeners: function () {
         
         this.mon(this.store.getProxy(), 'exception', function (proxy, response, operation, eOpts) {
@@ -239,28 +247,11 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
         return this.gridPager;
     },
-
-    onViewLoad: function () {        
-        if (this.gridPanel.store.isLoading()) {        
-            return
-        }
-
-        if (this.gridPanel && this.gridPanel.store && this.gridPanel.store.getCount()) {
-            var selModel = this.gridPanel.getSelectionModel();
-            // if you get to the view via the back button the selection model's store is null. Need to fun this down. until  then I am disabling the keyboard support when this occurs.
-            // if your getting here its because the view has listeners that were not using the mon() method and they were left when the previous view was destroyed;
-            if (!selModel.store) {                
-                return 
-            }        
-            selModel.select(0, false, false);
-        }
-    },
-
     
     // logic for selecting a row in grids;
-    doDefaultSeleciton: function (selModel) {        
-        selModel.select(0, false, false);
-    },
+    //doDefaultSeleciton: function (selModel) {        
+    //    selModel.select(0, false, false);
+    //},
 
     createGridPanel: function(conf) {
         var me =this;
@@ -289,16 +280,12 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
         var gridPanel = this.gridPanel = Ext.create(this.gridPanelClass, conf);
         
-        // auto select the first record in the grid after it loads;
-        this.mon(this.gridPanel.view, 'viewready', this.onViewLoad, me)
-        this.mon(this.gridPanel.store, 'load', this.onViewLoad, me)
-        
         this.mon(this.gridPanel.view, 'itemclick', this.onItemClick, me)
 
         // treat enter key as a click;
         this.mon(this.gridPanel.view, 'itemkeydown', function (view, record, item, index, e, eOpts) {
-            var metaData = null;
-            if (e.getKey() == e.ENTER && !this.enableRowEditing) {                
+            var metaData = null;            
+            if (e.getKey() == e.ENTER && !this.enableRowEditing) {
                 this.launchEditor(record, metaData);
             }
         }, me)
