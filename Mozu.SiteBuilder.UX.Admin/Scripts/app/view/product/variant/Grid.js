@@ -24,8 +24,32 @@ Ext.define('Taco.view.product.variant.Grid', {
                 xtype: 'textfield'
             }
         }, {
-            text: 'Extra Cost',
+            text: 'Extra Price',
             dataIndex: 'deltaPrice',
+            editor: {
+                xtype: 'currencyfield',
+                decimalPrecision: 2,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }, {
+            text: 'Extra Cost',
+            dataIndex: 'deltaCost',
+            hideable: true,
+            hidden: true,
+            editor: {
+                xtype: 'currencyfield',
+                decimalPrecision: 2,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }, {
+            text: 'MSRP',
+            dataIndex: 'deltaMsrp',
+            hideable: true,
+            hidden: true,
             editor: {
                 xtype: 'currencyfield',
                 decimalPrecision: 2,
@@ -42,6 +66,38 @@ Ext.define('Taco.view.product.variant.Grid', {
                 hideTrigger: true,
                 keyNavEnabled: false,
                 mouseWheelEnabled: false
+            }
+        //}, {
+        //    text: 'Fulfillment Types',
+        //    dataIndex: 'fulfillmentTypesSupported',
+        //    hideable: true,
+        //    hidden: true,
+        //    editor: {
+        //        xtype: 'textfield'
+        //    }
+        }, {
+            text: 'Mfg Part #',
+            dataIndex: 'mfgPartNumber',
+            hideable: true,
+            hidden: true,
+            editor: {
+                xtype: 'textfield'
+            }
+        }, {
+            text: 'UPC',
+            dataIndex: 'upc',
+            hideable: true,
+            hidden: true,
+            editor: {
+                xtype: 'textfield'
+            }
+        }, {
+            text: 'Distributor Part #',
+            dataIndex: 'distPartNumber',
+            hideable: true,
+            hidden: true,
+            editor: {
+                xtype: 'textfield'
             }
         }, {
             text: 'Enabled',

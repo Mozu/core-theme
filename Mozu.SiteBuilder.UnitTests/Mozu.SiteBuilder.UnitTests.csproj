@@ -300,6 +300,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="App1.config" />
+    <None Include="Diagrams\Admin\Api\Models\ProductModels\cdProductVariation.cd" />
     <None Include="Diagrams\Admin\Api\Models\ProductModels\Product.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\product\cdProduct-View-Js.cd" />
     <None Include="Diagrams\UX.Models\StoreFront\Catalog\Product.cd" />
