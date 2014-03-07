@@ -139,7 +139,7 @@ Ext.define('Taco.view.location.subform.Location', {
                     '<div class="city-state-zip">Company Name: {companyOrOrganization}</div>',
                 '</tpl>',
                 '<tpl if="values.phoneNumber">',
-                    '<div class="country">PhoneNumber: {phoneNumber}</div>',
+                    '<div class="country">Phone Number: {phoneNumber}</div>',
                 '</tpl>'
             ]
         });
