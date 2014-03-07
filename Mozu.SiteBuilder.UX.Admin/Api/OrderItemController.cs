@@ -36,6 +36,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             foreach (var product in args.OrderItems)
             {
+                if (product == null)
+                    continue;
+
                 // scrub the product.
                 product.Options = (product.Options ?? Enumerable.Empty<DCp.ProductOption>()).Where(o => o.Value != null || o.ShopperEnteredValue != null).ToList();
                 product.Price = null;
