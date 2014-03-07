@@ -93,12 +93,20 @@ Ext.define('Taco.view.product.subform.Shipping', {
             });
         }
 
+        var fulfillmentTypes = record.get("fulfillmentTypesSupported");
+        
+        var hasDirectShip = (fulfillmentTypes.indexOf('DirectShip') != -1);
+        var hasInStore = (fulfillmentTypes.indexOf('InStorePickup') != -1);
+
         this.directShipCheckbox = Ext.widget({
             xtype: 'checkboxfield',
             boxLabel: 'Direct Ship',
             name: 'directShipCb',
             inputValue: 'DirectShip',
-            checked: true,
+            checked: hasDirectShip,
+            handler: me.manageFulfillment,
+            scope: me,
+            fulfillmentType: 1
         });
 
         this.inStorePickupCheckbox = Ext.widget({
@@ -106,6 +114,10 @@ Ext.define('Taco.view.product.subform.Shipping', {
             boxLabel: 'In Store Pickup',
             name: 'inStoreCb',
             inputValue: 'InStorePickup',
+            checked: hasInStore,
+            handler: me.manageFulfillment,
+            scope: me,
+            fulfillmentType:1
         });
 
 
@@ -254,5 +266,16 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 this.updateUI();
             }
         }
+    },
+
+    manageFulfillment: function () {
+        var me = this;
+        var fulfillmentTypeValue = [];
+        var fulfillmentFields = me.query("[fulfillmentType]");
+        Ext.Array.forEach(fulfillmentFields, function(field) {
+            if (field.checked)
+                fulfillmentTypeValue.push(field.inputValue);
+        }, me);
+        this.record.set("fulfillmentTypesSupported", fulfillmentTypeValue);
     }
 });
