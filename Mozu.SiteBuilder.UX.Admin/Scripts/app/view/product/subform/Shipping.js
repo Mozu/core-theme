@@ -104,7 +104,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
             name: 'directShipCb',
             inputValue: 'DirectShip',
             checked: hasDirectShip,
-            handler: me.manageFulfillment,
+            handler: me.onFulfillmentChange,
             scope: me,
             fulfillmentType: 1
         });
@@ -115,7 +115,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
             name: 'inStoreCb',
             inputValue: 'InStorePickup',
             checked: hasInStore,
-            handler: me.manageFulfillment,
+            handler: me.onFulfillmentChange,
             scope: me,
             fulfillmentType:1
         });
@@ -268,7 +268,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
         }
     },
 
-    manageFulfillment: function () {
+    onFulfillmentChange: function () {
         var me = this;
         var fulfillmentTypeValue = [];
         var fulfillmentFields = me.query("[fulfillmentType]");
