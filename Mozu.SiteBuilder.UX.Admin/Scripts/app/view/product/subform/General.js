@@ -326,17 +326,19 @@ Ext.define('Taco.view.product.subform.General', {
             disabled: isMapDisabled
         };
 
-        var discountsRestrictedField = {
+        this.discountsRestrictedField = Ext.widget({
             xtype: 'checkboxfield',
             margin: '0 0 0 10',
             fieldLabel: 'Product Discounts',
             boxLabel: 'Restrict Discount on this product',
             name: 'discountsRestricted',
             anchor: '96%',
-            checked: isDiscountRestricted
-        };
+            checked: isDiscountRestricted,
+            handler: me.onDiscountRestrictedChange,
+            scope: me
+        });
 
-        var discountsRestrictedStartField = {
+        this.discountsRestrictedStartField = Ext.widget({
             xtype: 'datetime',
             fieldLabel: 'Effective Date',
             name: 'discountsRestrictedStartDate',
@@ -344,9 +346,9 @@ Ext.define('Taco.view.product.subform.General', {
             width: 200,
             pickerOffset: 4,
             disabled: ! isDiscountRestricted
-        };
+        });
 
-        var discountsRestrictedEndField = {
+        this.discountsRestrictedEndField = Ext.widget({
             xtype: 'datetime',
             fieldLabel: 'End Date',
             name: 'discountsRestrictedEndDate',
@@ -354,7 +356,7 @@ Ext.define('Taco.view.product.subform.General', {
             width: 200,
             pickerOffset: 4,
             disabled: !isDiscountRestricted
-        };
+        });
 
 
 
@@ -572,7 +574,7 @@ Ext.define('Taco.view.product.subform.General', {
                                 columnWidth: .4,
                                 layout: 'anchor',
                                 items: [
-                                    discountsRestrictedField
+                                    this.discountsRestrictedField
                                 ]
                             },
                             {
@@ -580,7 +582,7 @@ Ext.define('Taco.view.product.subform.General', {
                                 columnWidth: .2,
                                 layout: 'anchor',
                                 items: [
-                                    discountsRestrictedStartField
+                                    this.discountsRestrictedStartField
                                 ]
                             },
                             {
@@ -588,7 +590,7 @@ Ext.define('Taco.view.product.subform.General', {
                                 columnWidth: .2,
                                 layout: 'anchor',
                                 items: [
-                                    discountsRestrictedEndField
+                                    this.discountsRestrictedEndField
                                 ]
                             }
                         ]
@@ -832,5 +834,15 @@ Ext.define('Taco.view.product.subform.General', {
             me.optionsForm.loadByProductTypeId(value);
         }
 
+    },
+
+    onDiscountRestrictedChange: function (source, isChecked) {
+        var me = source.scope;
+        if (!isChecked) {
+            me.discountsRestrictedStartField.setValue('');
+            me.discountsRestrictedEndField.setValue('');         
+        } 
+        me.discountsRestrictedStartField.setDisabled(!isChecked);
+        me.discountsRestrictedEndField.setDisabled(!isChecked);        
     }
 });
