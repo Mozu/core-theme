@@ -178,6 +178,10 @@ Ext.define('Taco.view.product.subform.General', {
 
         }
 
+        var isMapDisabled = (this.record.get("map") === null);
+        var isDiscountRestricted = this.record.get("discountsRestricted");
+
+
         var mfgPartNumField = {
             xtype: 'textfield',
             fieldLabel: 'Manufacturer Part Number',
@@ -306,8 +310,9 @@ Ext.define('Taco.view.product.subform.General', {
             name: 'mapStartDate',
             anchor: '96%',
             width: 200,
-            emptyText: 'Start Date',
-            pickerOffset: 4
+            //emptyText: 'Start Date',
+            pickerOffset: 4,
+            disabled: isMapDisabled
         };
 
         var mapEndField = {
@@ -316,8 +321,9 @@ Ext.define('Taco.view.product.subform.General', {
             name: 'mapEndDate',
             anchor: '96%',
             width: 200,
-            emptyText: 'End Date',
-            pickerOffset: 4
+            //emptyText: 'End Date',
+            pickerOffset: 4,
+            disabled: isMapDisabled
         };
 
         var discountsRestrictedField = {
@@ -327,6 +333,7 @@ Ext.define('Taco.view.product.subform.General', {
             boxLabel: 'Restrict Discount on this product',
             name: 'discountsRestricted',
             anchor: '96%',
+            checked: isDiscountRestricted
         };
 
         var discountsRestrictedStartField = {
@@ -335,7 +342,8 @@ Ext.define('Taco.view.product.subform.General', {
             name: 'discountsRestrictedStartDate',
             anchor: '96%',
             width: 200,
-            pickerOffset: 4
+            pickerOffset: 4,
+            disabled: ! isDiscountRestricted
         };
 
         var discountsRestrictedEndField = {
@@ -344,7 +352,8 @@ Ext.define('Taco.view.product.subform.General', {
             name: 'discountsRestrictedEndDate',
             anchor: '96%',
             width: 200,
-            pickerOffset: 4
+            pickerOffset: 4,
+            disabled: !isDiscountRestricted
         };
 
 
