@@ -301,10 +301,19 @@ Ext.define('Taco.view.product.subform.General', {
             hideTrigger: true,
             mouseWheelEnabled: false,
             selectOnFocus: true,
-            emptyText: 'MAP'
+            enableKeyEvents: true,
+            listeners: {
+                keyup: {
+                    fn: function (source, evt) {
+                        var isDisabled = ((source.getValue() == null) || (source.getValue().length == 0));
+                        me.mapStartField.setDisabled(isDisabled);
+                        me.mapEndField.setDisabled(isDisabled);                        
+                    }
+                }
+            }
         };
 
-        var mapStartField = {
+        this.mapStartField = Ext.widget({
             xtype: 'datetime',
             fieldLabel: 'Effective Date',
             name: 'mapStartDate',
@@ -313,9 +322,9 @@ Ext.define('Taco.view.product.subform.General', {
             //emptyText: 'Start Date',
             pickerOffset: 4,
             disabled: isMapDisabled
-        };
+        });
 
-        var mapEndField = {
+        this.mapEndField = Ext.widget({
             xtype: 'datetime',
             fieldLabel: 'End Date',
             name: 'mapEndDate',
@@ -324,7 +333,7 @@ Ext.define('Taco.view.product.subform.General', {
             //emptyText: 'End Date',
             pickerOffset: 4,
             disabled: isMapDisabled
-        };
+        });
 
         this.discountsRestrictedField = Ext.widget({
             xtype: 'checkboxfield',
@@ -553,14 +562,14 @@ Ext.define('Taco.view.product.subform.General', {
                             columnWidth: .2,
                             layout: 'anchor',
                             items: [
-                                mapStartField
+                                this.mapStartField
                             ]
                         },
                         {
                             columnWidth: .2,
                             layout: 'anchor',
                             items: [
-                                mapEndField
+                                this.mapEndField
                             ]
                         }
                     ]
