@@ -1,6 +1,8 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using AutoMapper.Impl;
 using Jolt;
+using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Contracts.Provisioning;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Behaviors;
@@ -25,13 +27,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class ProvisioningController : BaseController
     {
         private readonly IProvisioningWebApiClient _provisioningWebApiClient;
+        private readonly ISitesWebApiClient _sitesWebApiClient;
         private readonly ITenantsWebApiClient _tenantsWebApiClient;
 
 
-        public ProvisioningController(Mozu.Provisioning.Contracts.Clients.IProvisioningWebApiClient provisioningWebApiClient, Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient tenantsWebApiClient)
+        public ProvisioningController(Mozu.Provisioning.Contracts.Clients.IProvisioningWebApiClient provisioningWebApiClient, Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient tenantsWebApiClient, Mozu.Tenant.Contracts.Clients.ISitesWebApiClient sitesWebApiClient )
         {
             _provisioningWebApiClient = provisioningWebApiClient;
-            
+            _sitesWebApiClient = sitesWebApiClient;
+
             _tenantsWebApiClient = tenantsWebApiClient.CloneWithoutUserClaims();
         }
         //137
@@ -43,16 +47,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public class Provisionable
         {
             public string Name { get; set; }
-            public string LocaleCode { get; set; }
-            public string CurrencyCode { get; set; }
+            public string DefaultLocaleCode { get; set; }
+            public string DefaultCurrencyCode { get; set; }
             public int Id { get; set; }
             public string ItemType { get; set; }
             public bool Expanded { get; set; }
             public List<Provisionable> Items { get; set; }
             public string Path { get; set; }
             public bool Leaf { get; set; }
-            public string State { get; set; }
+            public string Status { get; set; }
+
+            public int MasterCatalogId { get; set; }
         }
+
+
+        [HttpGetRoute(UriTemplate = "sites")]
+        public async Task<Response<List<Mozu.Tenant.Contracts.Site >>> GetSites()
+        {
+          
+            var tenantInfo = (await _tenantsWebApiClient.GetTenantInternal(this.SbApiContext.TenantId, false)).ReadAsSync();
+            var sites = tenantInfo.Sites;
+            return this.List2(sites);
+        }
+
+
+
 
         [HttpGetRoute(UriTemplate = "catalogs")]
         public async Task<Response<List<Provisionable>>> GetCatalogs()
@@ -69,12 +88,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                              {
 
                                  Name = mc.Name,
-                                 LocaleCode = mc.DefaultLocaleCode,
-                                 CurrencyCode = mc.DefaultCurrencyCode,
+                                 DefaultLocaleCode = mc.DefaultLocaleCode,
+                                 DefaultCurrencyCode = mc.DefaultCurrencyCode,
                                  Expanded = true,
                                  Id = mc.Id,
-                                 ItemType = "mc",
+                                 ItemType = "mastercatalog",
                                  Path = "/"+ mc.Id ,
+                                 Status = mc.Status ,
                                  Leaf = mc.Catalogs == null || mc.Catalogs.Count == 0,
                                
                              };
@@ -85,11 +105,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         {
 
                             Name = cat.Name,
-                            LocaleCode = cat.DefaultLocaleCode,
-                            CurrencyCode = cat.DefaultCurrencyCode,
+                            MasterCatalogId = cat.MasterCatalogId ,
+                            DefaultLocaleCode = cat.DefaultLocaleCode,
+                            DefaultCurrencyCode = cat.DefaultCurrencyCode,
                             Expanded = false,
                             Id = cat.Id,
-                            ItemType = "cat",
+                            Status = mc.Status,
+                            ItemType = "catalog",
                             Path =  "/" + mc.Id + "/" + cat.Id ,
                             Leaf = true
                         }).ToList();
@@ -104,8 +126,63 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
+        [HttpPostRoute(UriTemplate = "RenameEntity")]
+        public async Task<bool> RenameEntity(Provisionable entity)
+        {
+            var tenant = (await _tenantsWebApiClient.GetTenantInternal(this.SbApiContext.TenantId)).ReadAsSync();
+        
+            if (entity.ItemType == "site")
+            {
+                var site = tenant.Sites.FirstOrDefault(x => x.Id == entity.Id);
+                site.Name = entity.Name;
+               
+            }
+            if (entity.ItemType == "catalog")
+            {
+                var catalog = tenant.MasterCatalogs.SelectMany(x => x.Catalogs).FirstOrDefault(x => x.Id == entity.Id);
+                catalog.Name = entity.Name;
+            }
+            if (entity.ItemType == "mastercatalog")
+            {
+                var catalog = tenant.MasterCatalogs.FirstOrDefault(x => x.Id == entity.Id);
+                catalog.Name = entity.Name;
+            }
+            var res = await _tenantsWebApiClient.UpdateTenant(tenant, tenant.Id);
+            if (res.ResponseMessage.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            throw res.ReadException();
+
+        }
+
+        [HttpPostRoute(UriTemplate = "deleteEntity")]
+        public async Task<bool> DeleteEntity( Provisionable entity)
+        {
+            
+            ServiceClientResponse<StreamContent> res = null;
+            if (entity.ItemType == "site")
+            {
+                res = await _provisioningWebApiClient.DeleteSite(this.SbApiContext.TenantId, entity.Id );    
+            }
+            if (entity.ItemType == "catalog")
+            {
+                res = await _provisioningWebApiClient.DeleteCatalog(new DeleteCatalogRequest() { CatalogId = entity.Id , MasterCatalogId = entity.MasterCatalogId , TenantId = this.SbApiContext.TenantId });
+            }
+            if (entity.ItemType == "mastercatalog")
+            {
+                res = await _provisioningWebApiClient.DeleteMasterCatalog(this.SbApiContext.TenantId, entity.Id );
+            }
+
+            if (res.ResponseMessage.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            throw res.ReadException();
+        }
+
         [HttpPostRoute(UriTemplate = "provisionSite")]
-        public async Task<bool> Provision(SiteProvisionRequest request)
+        public async Task<bool> ProvisionSite(SiteProvisionRequest request)
         {
             var res = await _provisioningWebApiClient.ProvisionSite(request);
             if (res.ResponseMessage.IsSuccessStatusCode)
@@ -115,5 +192,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             throw res.ReadException();
         }
 
+      
+        [HttpPostRoute(UriTemplate = "provisionCatalog")]
+        public async Task<bool> ProvisionCatalog(CatalogProvisionRequest request)
+        {
+            var res = await _provisioningWebApiClient.ProvisionCatalog(request);
+            if (res.ResponseMessage.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            throw res.ReadException();
+        }
+
+        [HttpPostRoute(UriTemplate = "provisionMasterCatalog")]
+        public async Task<bool> ProvisionMasterCatalog(MasterCatalogProvisionRequest request)
+        {
+
+            var res = await _provisioningWebApiClient.ProvisionMasterCatalog(request);
+            if (res.ResponseMessage.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            throw res.ReadException();
+
+
+        }
+
+     
+
+       
     }
 }

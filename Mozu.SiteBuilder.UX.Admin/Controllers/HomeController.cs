@@ -145,7 +145,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var taContext = AutoMapper.Mapper.Map<TaContext>(tenant);
             AutoMapper.Mapper.Map(masterCatalogs, taContext);
 
-            taContext.MasterCatalogs.ForEach(mc => mc.Sites.ForEach(site => site.PublishingEnabled = sitePubList.Where(x=> x.Key == site.Id ).Select(x=> x.Value ).FirstOrDefault()   ));
+            taContext.MasterCatalogs.ForEach(mc => (mc.Sites ?? new List<TaContextSite>()).ForEach(site => site.PublishingEnabled = sitePubList.Where(x=> x.Key == site.Id ).Select(x=> x.Value ).FirstOrDefault()   ));
 
             this.ViewData["localizationValues"] = new LocalizationController(_httpContext).GetStrings();
             this.ViewData["taContext"] = taContext;
