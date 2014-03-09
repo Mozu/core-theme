@@ -25,17 +25,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class ProductTypeController : BaseController
     {
         private readonly IProductTypeWebApiClient _productTypeClient;
-        private readonly IAttributeWebApiClient _attributeWebApiClient;
+        private readonly AttributeController _attributeController;
+       // private readonly IAttributeWebApiClient _attributeWebApiClient;
 
         private readonly CollectionTaskUnMapper<ProductType, DC.ProductType> _productTypeMapper = new CollectionTaskUnMapper<ProductType, DC.ProductType>();
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public ProductTypeController(IProductTypeWebApiClient productTypeClient , Mozu.ProductAdmin.Contracts.Clients.IAttributeWebApiClient attributeWebApiClient)
+        public ProductTypeController(IProductTypeWebApiClient productTypeClient ,AttributeController attributeController)
         {
             _productTypeClient = productTypeClient;
-            _attributeWebApiClient = attributeWebApiClient;
+            _attributeController = attributeController;
+           // _attributeWebApiClient = attributeWebApiClient;
         }
 
         /// <summary>
@@ -75,10 +77,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
             //todo after service adds in attributemetadata
-            var attTask = _attributeWebApiClient.GetAttributes(0, 600, responseGroups: "LocalizedContent,Values");
+
+            var attTask = _attributeController.GetAttributesRaw(new PagingParamaters() {pageSize = 2000, startIndex = 0}, new FilterCollection() {ResponseGroups= "LocalizedContent,Values"});
             await Task.WhenAll(gpttask, attTask);
             var res = gpttask.Result.ReadAsSync();
-            var atts = attTask.Result.ReadAsSync().Items.ToDictionary(x => x.AttributeFQN);
+            var atts = attTask.Result.Item1.ToDictionary(x => x.AttributeFQN);
             Mozu.ProductAdmin.Contracts.Attribute att;
             foreach (var pt in res.Items)
             {

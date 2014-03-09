@@ -53,10 +53,10 @@ Ext.define('Taco.core.data.StoreManager', {
         }
         if (config.contextLevel && !contextSuffix) {
 
-            if (config.contextLevel == 'sc') {
+            if (config.contextLevel == 'sc' || config.contextLevel == 'mc') {
                 ctxLvl = '-sc=' + Taco.app.context.getSiteId() + ';' + Taco.app.context.getMasterCatalogId();
             } else if (config.contextLevel == 'c') {
-                ctxLvl = '-c=' + Taco.app.context.getMasterCatalogId();
+                ctxLvl = '-c=' + (Taco.app.context.getCatalogId() || '*')+Taco.app.context.getMasterCatalogId();
             } else if (config.contextLevel == 's') {
                 ctxLvl = '-s=' + Taco.app.context.getSiteId();
             }
@@ -91,7 +91,7 @@ Ext.define('Taco.core.data.StoreManager', {
                 }
             }
         }
-        if (store.hasUpdates) {
+        if (store.hasUpdates || store.needsRefresh) {
             needsRefresh = true;
         }
 
@@ -101,6 +101,7 @@ Ext.define('Taco.core.data.StoreManager', {
             }
             store.load();
             store.hasUpdates = null;
+            store.needsRefresh = null;
         }
 
         if (config.autoLoad && !store.hasLoaded()) {

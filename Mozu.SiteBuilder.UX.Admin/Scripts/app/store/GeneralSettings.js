@@ -13,7 +13,7 @@ Ext.define('Taco.store.GeneralSettings', {
     remoteFilter: false,
     storeManagerConfig: {
         clearFilters: true,
-        contextLevel: 'c',
+        contextLevel: 's',
         clearSort: true,
         autoLoad: true
     }
