@@ -304,7 +304,7 @@ Ext.define('Taco.view.product.subform.General', {
             enableKeyEvents: true,
             listeners: {
                 keyup: {
-                    fn: function (source, evt) {
+                    fn: function (source) {
                         var isDisabled = ((source.getValue() == null) || (source.getValue().length == 0));
                         me.mapStartField.setDisabled(isDisabled);
                         me.mapEndField.setDisabled(isDisabled);                        
