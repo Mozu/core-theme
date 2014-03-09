@@ -5,18 +5,22 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Metadata.Providers;
 using AutoMapper;
+using Microsoft.FSharp.Text.StructuredFormat;
+using Microsoft.Server.Common;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.ErrorHandling;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers;
+using Stact;
 using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
 using Mozu.ProductAdmin.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-	[AllowAnonymous]
+    [AllowAnonymous]
     [WebApi("app/attribute", SuppressDescriptorGeneration = true)]
     public class AttributeController : BaseController
     {
@@ -30,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "read")]
-        public async Task<Response<List<Attribute>>> ListAttributes([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
+        public async Task<Models.Response<List<Attribute>>> ListAttributes([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
         {
             if (!String.IsNullOrEmpty(pagingParams.id))
             {
@@ -38,32 +42,58 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var item = await _attributeHelper.GetAttribute(pagingParams.id);
                 return List2(item);
             }
-            else
-            {
-                string filter = extFilter.ToFilterString();
-                string sort = null;   // pagingParams.sort.ToSortString();
 
+            long totalCount;
+            var dcAttributes = await GetAttributesRaw(pagingParams, extFilter);
+
+            var mapped = Mapper.Map<List<Attribute>>(dcAttributes.Item1 );
+            return List2(mapped, (int)dcAttributes.Item2);
+        }
+
+        public async Task<Tuple<List<ProductAdmin.Contracts.Attribute>,long>> GetAttributesRaw(PagingParamaters pagingParams, FilterCollection extFilter)
+        {
+            string filter = extFilter.ToFilterString();
+            string sort = null; // pagingParams.sort.ToSortString();
+
+            var dcAttributes = new List<Mozu.ProductAdmin.Contracts.Attribute>();
+            long totalCount = 0;
+
+            int startIndex = pagingParams.startIndex.GetValueOrDefault(0);
+            while (true)
+            {
                 var result = await _attributeWebApiClient.GetAttributes(
-                    /* startIndex:     */ pagingParams.startIndex,
-                    /* pageSize:       */ pagingParams.pageSize,
-                    /* sortBy:         */ sort,
-                    /* filter:         */ filter,
-                    /* responseGroups: */ null
+                    startIndex: startIndex,
+                        pageSize:pagingParams.pageSize.GetValueOrDefault(200),
+                        sortBy:sort,
+                        filter:filter,
+                        responseGroups:extFilter.ResponseGroups 
+                       
                     ).ConfigureAwait(false);
                 var res = result.ReadAsAsync().Result;
-                var mapped = res.Items.Map<List<Attribute>>();
 
-                return List2(mapped.ToList(), (int)res.TotalCount);
+                totalCount = res.TotalCount;
+
+                dcAttributes.AddRange(res.Items);
+
+
+                startIndex = res.PageSize + res.StartIndex;
+
+                if (startIndex >= pagingParams.startIndex.GetValueOrDefault(0) + pagingParams.pageSize.GetValueOrDefault(200) || startIndex >= totalCount)
+                {
+                    break;
+                }
             }
+            return new Tuple<List<ProductAdmin.Contracts.Attribute>, long>(dcAttributes, totalCount);
         }
 
         [HttpPostRoute(UriTemplate = "create")]
-        public async Task<Response<List<Attribute>>> CreateAttribute([FromBody] List<Attribute> attributes)
+        public async Task<Models.Response<List<Attribute>>> CreateAttribute([FromBody] List<Attribute> attributes)
         {
             if (attributes == null || !attributes.Any())
                 return Message3<List<Attribute>>(false, "No attributes were created because they were not sent correctly. Please try again.");
 
-            
+            GenTestData(attributes);
+
             try
             {
                 IEnumerable<Attribute> createdAttributes = await _attributeHelper.CreateAttributes(attributes);
@@ -89,8 +119,35 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-        [HttpPostRoute(UriTemplate = "update")]
-        public async Task<Response<List<Attribute>>> EditAttribute(List<Attribute> attributes)
+	    void GenTestData(List<Attribute> attributes)
+	    {
+	        IEnumerable<string> vals;
+	        var tasks = new List<Task>();
+	        if (Request.Headers.TryGetValues("createTestData", out vals))
+	        {
+	            int cnt = int.Parse(vals.First());
+	            var att = attributes[0];
+
+	            var testAtts = new List<Attribute>() {att};
+	            for (int i = 1; i < cnt; i++)
+	            {
+	                var dcatt = Mapper.Map<Mozu.ProductAdmin.Contracts.Attribute>(att);
+	                dcatt.AttributeCode += i;
+	                dcatt.AdminName += i;
+	                if (dcatt.Content != null && dcatt.Content.Name != null)
+	                {
+	                    dcatt.Content.Name += i;
+	                }
+	                tasks.Add(_attributeWebApiClient.AddAttribute(dcatt));
+	            }
+	            Task.WaitAll(tasks.ToArray());
+                
+	            throw new NotImplementedException("nope");
+	        }
+	    }
+
+	    [HttpPostRoute(UriTemplate = "update")]
+        public async Task<Models.Response<List<Attribute>>> EditAttribute(List<Attribute> attributes)
         {
             if (attributes == null || !attributes.Any())
                 return Message3<List<Attribute>>(false, "No attributes were edited because they were not sent correctly. Please try again.");
@@ -100,7 +157,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "destroy")]
-        public async Task<Response<List<Attribute>>> DeleteAttribute(List<Attribute> attributes)
+        public async Task<Models.Response<List<Attribute>>> DeleteAttribute(List<Attribute> attributes)
         {
             if (attributes == null || !attributes.Any())
                 return Message3<List<Attribute>>(false, "No attributes were deleted because they were not sent correctly. Please try again.");

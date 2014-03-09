@@ -14,7 +14,7 @@ Ext.define('Taco.store.ProductComboBox', {
 
     storeManagerConfig: {
         clearFilters: true,
-        contextLevel: 'sc',
+        contextLevel: 'c',
         autoLoad: false,
         createOnly: true
     },

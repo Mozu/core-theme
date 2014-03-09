@@ -101,12 +101,12 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         this.initFilterStores();
 
         this.on({
-            beforerender: {
-                scope: this,
-                fn: function (cmp) {
-                    this.store.reload();
-                }
-            },
+            //beforerender: {
+            //    scope: this,
+            //    fn: function (cmp) {
+            //        this.store.reload();
+            //    }
+            //},
             boxready: {
                 scope: this,
                 fn: function (cmp) {
@@ -440,8 +440,11 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
     onDestroy: function () {
         if (this.store && this.store.getProxy()) {
             var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
-            
-            delete params.advancedSearch;
+            if (params.advancedSearch) {
+                this.store.needsRefresh = true;
+                delete params.advancedSearch;
+            }
+           
         }
 
         this.callParent(arguments);
