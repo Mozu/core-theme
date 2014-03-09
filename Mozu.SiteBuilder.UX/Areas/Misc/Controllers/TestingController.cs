@@ -30,6 +30,7 @@ using System.Web;
 using System.Collections.Generic;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.Mvc.Security;
+using Constants = Mozu.Core.Api.Contracts.Constants;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
@@ -61,6 +62,28 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             _authenticationHelper = authenticationHelper;
 //            SuppressMissingContextRedirect = true;
         }
+
+
+
+        [AcceptVerbs("POST")]
+        public HttpResponseMessage RefreshAPiContextHeaders()
+        {
+            IEnumerable<string> tmp;
+            if (this.Request.Headers.TryGetValues(Constants.Headers.APP_CLAIMS, out tmp))
+            {
+                var appClaim = Mozu.Core.LightweightAppClaims.Parse(tmp.First());
+                if ((DateTime.UtcNow - appClaim.Expiration).TotalDays < 1)
+                {
+                    var clientApiContext = this.Request.Resolve<ClientApiContext>();
+                    var resp = Request.CreateResponse(HttpStatusCode.OK);
+                    resp.Headers.Add(Constants.Headers.APP_CLAIMS, clientApiContext.Headers[Constants.Headers.APP_CLAIMS]);
+                    resp.Headers.Add(Constants.Headers.USER_CLAIMS, clientApiContext.Headers[Constants.Headers.USER_CLAIMS]);
+                    return resp;
+                }
+            }
+            return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "not authorized");
+        }
+
 
 
         [AcceptVerbs("GET")]

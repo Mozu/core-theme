@@ -325,6 +325,13 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new {controller = "Auth", action = "Login"},
                 new {acceptConstraint = new AcceptConstraint("text/html", true)});
 
+            routes.MapHttpRoute(
+                "refresh tokens",
+                "user/refresh",
+                new {controller = "testing", action = "RefreshAPiContextHeaders"});
+
+
+
 
             routes.MapHttpRoute(
                 "AjaxCreateAccount",
