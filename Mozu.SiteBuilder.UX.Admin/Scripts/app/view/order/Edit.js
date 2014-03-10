@@ -13,7 +13,7 @@ Ext.define('Taco.view.order.Edit', {
     initComponent: function () {
         this.saveHidden
             = this.cancelHidden
-            = this.record.get('orderStatus') !== 'Created';
+            = this.record.get('orderStatus') !== 'Pending';
 
         this.callParent(arguments);
 

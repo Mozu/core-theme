@@ -1130,7 +1130,6 @@
     <Content Include="Scripts\app\core\ux\modal\SidebarModal.js" />
     <Content Include="Scripts\app\core\ux\content\Sidebar.js" />
     <Content Include="Scripts\app\core\ux\TabBar.js" />
-    <Content Include="Scripts\app\core\ux\form\field\Container.js" />
     <Content Include="Scripts\app\core\ux\form\field\MultiSelect.js" />
     <Content Include="Scripts\app\core\ux\form\TextField.js" />
     <Content Include="Scripts\app\core\ux\grid\MenuColumn.js" />

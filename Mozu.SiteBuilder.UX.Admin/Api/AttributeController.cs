@@ -1,22 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.ServiceModel;
-using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Metadata.Providers;
 using AutoMapper;
-using Microsoft.FSharp.Text.StructuredFormat;
-using Microsoft.Server.Common;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.ErrorHandling;
+using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers;
-using Stact;
 using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
-using Mozu.ProductAdmin.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {

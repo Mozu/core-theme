@@ -82,7 +82,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var cardsTask = _customerAccountWebApiClient.GetAccountCards(account.Id);
-            var orderHistoryTask = _orderWebApiClient.GetOrders(0, 5, null, "OrderNumber ne null");
+            var orderHistoryTask = _orderWebApiClient.GetOrders(0, 5, null, "Status ne Created and Status ne Validated and Status ne Pending");
             var returnHistoryTask = _returnApiClient.GetReturns(0, 5, null);
             var storeCreditsTask = _creditApiClient.GetCredits(0, 25, null, String.Format("CustomerId eq \"{0}\"", account.Id));
             var wishlistTask = _wishlistApiClient.GetWishlistByName(account.Id, DEFAULT_WISHLIST_NAME);
