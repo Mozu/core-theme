@@ -1,35 +1,31 @@
 ﻿
+using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using Burrows.Testing.TestActions;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Client.Caching;
-using Mozu.Core.Api.Contracts;
 using Mozu.Core.Settings;
-using Mozu.PaymentService.Contracts;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.Security;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using Mozu.SiteSettings.Order.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
-using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc;
-using Mozu.Core.ErrorHandling;
-using System.Threading.Tasks;
-using System;
-using System.Net;
-using System.Web;
-using System.Collections.Generic;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.SiteBuilder.Mvc.Security;
 using Constants = Mozu.Core.Api.Contracts.Constants;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
@@ -112,7 +108,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             if (this.Request.Content.Headers.ContentLength == 0)
             {
                 this.Request.Content = null;
-            }
+        }
             return _client.SendAsync(this.Request);
 
         }

@@ -199,7 +199,7 @@ Ext.define('Taco.view.order.Form', {
 
     isEdit: function () {
         if (this._isEdit === undefined) {
-            this._isEdit = this.record.get('orderStatus') !== 'Created';
+            this._isEdit = this.record.get('orderStatus') !== 'Pending';
         }
         return this._isEdit;
     },

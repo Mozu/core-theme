@@ -11,6 +11,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         'Taco.view.order.modal.CapturePaymentManual',
         'Taco.view.order.modal.VoidPaymentManual',
         'Taco.view.order.modal.CreditPaymentManual',
+        'Taco.view.order.modal.CheckDecline',
         'Ext.window.MessageBox'
     ],
     cls: 'orderform-payment-transaction',
@@ -287,18 +288,21 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
          *  'IssueCredit'
          */
         switch (me.getValue()) {
-            case 'ApplyCheck':
-                me.parent.applyCheck();
-                break;
             case 'DeclineCheck':
             case 'DeclinePayment':
-                alert('todo: decline check.');
+                me.parent.declineCheck();
+                break;
+            case 'ApplyCheck':
+            case 'CapturePayment':
+                if (me.record.get('paymentType') == 'Check') {
+                    me.parent.applyCheck();
+                }
+                else {
+                    me.parent.capturePayment();
+                }
                 break;
             case 'VoidPayment':
                 me.parent.voidTransaction();
-                break;
-            case 'CapturePayment':
-                me.parent.capturePayment();
                 break;
             case 'CreditPayment':
                 me.parent.issueCredit();
@@ -379,6 +383,18 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
         checkPaymentModal.show();
     },
+
+    declineCheck: function() {
+        var me = this;
+
+        var checkDeclineModal = Ext.create('Taco.view.order.modal.CheckDecline', {
+            order: me.order,
+            record: me.record
+        });
+
+        checkDeclineModal.show();
+    },
+
 
     // call the service via the model and save the captured amount
     capturePayment: function () {

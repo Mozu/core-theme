@@ -24,6 +24,9 @@ Ext.define('Taco.core.data.RemoteException', {
         if (this.data && this.data.exceptionMessage) {
             return this.data.exceptionMessage;
         }
+        if (this.data && this.data.message) {
+            return this.data.message;
+        }
         return null;
     },
     getErrorCode: function() {

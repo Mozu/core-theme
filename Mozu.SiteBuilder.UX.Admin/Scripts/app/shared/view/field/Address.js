@@ -57,7 +57,7 @@ Ext.define('Taco.shared.view.field.Address', {
         "addressIsValidated": false
     },
 
-    allowBlank: true,
+    //allowBlank: true,
     
     initComponent: function () {
         var me = this,
