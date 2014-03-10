@@ -188,6 +188,8 @@ Ext.define('Taco.view.product.subform.General', {
             name: 'mfgPartNumber',
             anchor: '96%',
             width: 200,
+            maxLength: 30,
+            enforceMaxLength: true,
             required: false,
             selectOnFocus: true,
         };
@@ -198,6 +200,8 @@ Ext.define('Taco.view.product.subform.General', {
             name: 'upc',
             anchor: '96%',
             width: 200,
+            maxLength: 128,
+            enforceMaxLength:true,
             required: false,
             selectOnFocus: true,
         };
@@ -208,6 +212,8 @@ Ext.define('Taco.view.product.subform.General', {
             name: 'distPartNumber',
             anchor: '96%',
             width: 200,
+            maxLength: 30,
+            enforceMaxLength: true,
             required: false,
             selectOnFocus: true,
         };
@@ -366,6 +372,25 @@ Ext.define('Taco.view.product.subform.General', {
             pickerOffset: 4,
             disabled: !isDiscountRestricted
         });
+
+        //var emailFields = {
+        //    xtype: 'fieldcontainer',
+        //    fieldLabel: 'Email addresses',
+        //    defaults: {
+        //        labelWidth: 45,
+        //        flex: 1,
+        //        margins: '0 5 0 0',
+        //        defaultType: 'textfield'
+        //    },
+        //    items: [
+        //        {
+        //            fieldLabel: 'Email 1'
+        //        },
+        //        {
+        //            fieldLabel: 'Email 2'
+        //        }
+        //    ]
+        //};
 
 
 
@@ -530,6 +555,23 @@ Ext.define('Taco.view.product.subform.General', {
                         }
                     ]
                 },
+                //{
+                //    xtype: 'container',
+                //    ui: 'subform-subform',
+                //    layout    : 'anchor',
+                //    defaults  : {
+                //        anchor      : '100%',
+                //        labelAlign  : 'top',
+                //        layout      : 'hbox'
+                //    },
+                //    items: [
+                //        emailFields
+                //    ]
+                //},
+
+
+
+
                 //{
                 //    xtype: 'menuseparator',
                 //    width: '100%',
