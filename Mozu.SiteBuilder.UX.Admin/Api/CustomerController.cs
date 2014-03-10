@@ -57,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // var ret =(await _customerGroupWebApiClient.GetGroups(0, 200)).ReadAsSync().Items.OrderBy(x => x.Name).Select(x => new KeyValuePair<int, string>(x.Id, x.Name)).ToList();
             var segments = (await _customerSegmentWebApiClient.GetSegments(startIndex: pagingParameters.startIndex, pageSize: pagingParameters.pageSize)).ReadAsSync();
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2(segments));
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(segments.Items,(int)segments.TotalCount));
         }
 
         [HttpPostRoute(UriTemplate = "segments/create")]
@@ -218,7 +218,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var dcExistingCustomer = await GetAccountWithAttributes(dcCust.Id);
 
-                await Task.WhenAll(ManageGroups(dcCust, dcExistingCustomer), ManageContacts(dcCust, dcExistingCustomer), ManageAttributes(dcCust, dcExistingCustomer));
+                await Task.WhenAll( ManageContacts(dcCust, dcExistingCustomer), ManageAttributes(dcCust, dcExistingCustomer));
                 await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id);
 
                 var updatedCustomer = await GetAccountWithAttributes(dcCust.Id);
@@ -264,22 +264,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Add/remove customer group subroutine for EditCustomers. Yes, a subroutine.
         /// </summary>
-        private Task ManageGroups(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
-        {
-            throw new NotImplementedException();
-            //List<Task> groupManagementTasks = new List<Task>();
-            //dcExistingCustomer.Groups = dcExistingCustomer.Groups ?? new List<DC.CustomerGroup>();
-            //var existingGroups = dcExistingCustomer.Groups.Select(x => x.Id).ToList();
-            //var newGroups = dcCustomer.Groups.Select(x => x.Id).ToList();
+        //private Task ManageGroups(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
+        //{
+        //    throw new NotImplementedException();
+        //    //List<Task> groupManagementTasks = new List<Task>();
+        //    //dcExistingCustomer.Groups = dcExistingCustomer.Groups ?? new List<DC.CustomerGroup>();
+        //    //var existingGroups = dcExistingCustomer.Groups.Select(x => x.Id).ToList();
+        //    //var newGroups = dcCustomer.Groups.Select(x => x.Id).ToList();
 
-            //var groupsToAdd = newGroups.Except(existingGroups);
-            //var groupsToDel = existingGroups.Except(newGroups);
+        //    //var groupsToAdd = newGroups.Except(existingGroups);
+        //    //var groupsToDel = existingGroups.Except(newGroups);
 
-            //groupManagementTasks.AddRange( groupsToAdd.Select(x => _customerWebApiClient.AddAccountGroup(dcCustomer.Id, x) ) );
-            //groupManagementTasks.AddRange( groupsToDel.Select(x => _customerWebApiClient.DeleteAccountGroup(dcCustomer.Id, x)) );
+        //    //groupManagementTasks.AddRange( groupsToAdd.Select(x => _customerWebApiClient.AddAccountGroup(dcCustomer.Id, x) ) );
+        //    //groupManagementTasks.AddRange( groupsToDel.Select(x => _customerWebApiClient.DeleteAccountGroup(dcCustomer.Id, x)) );
 
-            //return Task.WhenAll(groupManagementTasks);
-        }
+        //    //return Task.WhenAll(groupManagementTasks);
+        //}
 
         private class ContactIdEqualityComparer : IEqualityComparer<DC.CustomerContact>
         {

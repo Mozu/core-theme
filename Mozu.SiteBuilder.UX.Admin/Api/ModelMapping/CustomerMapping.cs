@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using DC = Mozu.Customer.Contracts;
@@ -17,6 +18,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         protected override void Configure()
         {
             Mapper.CreateMap<DC.CustomerAccount, ApiCustomer>()
+                .ForMember(x => x.SegmentIds, op => op.ResolveUsing(dc => dc.Segments == null ? new List<int>(): dc.Segments.Select( x=> x.Id ).ToList()))
                 .ForMember(x => x.Segments, op => op.ResolveUsing(dc => dc.Segments))
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
                 .ForMember(x => x.UserId, op => op.ResolveUsing(dc => string.IsNullOrWhiteSpace(dc.UserId) ? null : dc.UserId))
@@ -48,12 +50,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             //todo: Greg Murray on 2014-01-23 redundant mappings, ex FirstName => FirstName, Remove?
             Mapper.CreateMap<ApiCustomer, DC.CustomerAccount>()
-                .ForMember(x => x.Segments, op => op.ResolveUsing(dc => dc.Segments))
+                .ForMember(x => x.Segments, op => op.ResolveUsing(dc => (dc.SegmentIds??new List<int>()).Select(x=> new DC.CustomerSegment(){ Id=x})))
                 .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(x => x.UserId, op => op.ResolveUsing(dc => string.IsNullOrWhiteSpace(dc.UserId) ? null : dc.UserId))
                 .ForMember(x => x.EmailAddress, op => op.ResolveUsing(dc => dc.EmailAddress))
                 .ForMember(x => x.UserName, op => op.ResolveUsing(dc => dc.UserName))
-
+                 
                 .ForMember(x => x.FirstName, op => op.ResolveUsing(dc => dc.FirstName))
                 .ForMember(x => x.LastName, op => op.ResolveUsing(dc => dc.LastName))
                 .ForMember(x => x.Contacts, op => op.ResolveUsing(dc => dc.Contacts))
