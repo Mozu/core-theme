@@ -175,6 +175,47 @@ Ext.define('Taco.view.product.subform.General', {
                 boxLabel: 'Taxable'
             });
 
+            this.mfgPartNumField = Ext.widget({
+                xtype: 'textfield',
+                fieldLabel: 'Manufacturer Part Number',
+                name: 'mfgPartNumber',
+                anchor: '96%',
+                width: 200,
+                maxLength: 30,
+                enforceMaxLength: true,
+                required: false,
+                selectOnFocus: true,
+            });
+
+            this.upcField = Ext.widget({
+                xtype: 'textfield',
+                fieldLabel: 'Universal Product Code (UPC)',
+                name: 'upc',
+                anchor: '96%',
+                width: 200,
+                maxLength: 128,
+                enforceMaxLength: true,
+                required: false,
+                selectOnFocus: true,
+                //listeners: {
+                //    change: function(source, newVal, oldVal) {
+                //        me.record.set('upc', newVal);
+                //    }
+                //}
+            });
+
+            this.distPartNumField = Ext.widget({
+                xtype: 'textfield',
+                fieldLabel: 'Distributor Part Number',
+                name: 'distPartNumber',
+                anchor: '96%',
+                width: 200,
+                maxLength: 30,
+                enforceMaxLength: true,
+                required: false,
+                selectOnFocus: true,
+            });
+
 
         }
 
@@ -182,41 +223,7 @@ Ext.define('Taco.view.product.subform.General', {
         var isDiscountRestricted = this.record.get("discountsRestricted");
 
 
-        var mfgPartNumField = {
-            xtype: 'textfield',
-            fieldLabel: 'Manufacturer Part Number',
-            name: 'mfgPartNumber',
-            anchor: '96%',
-            width: 200,
-            maxLength: 30,
-            enforceMaxLength: true,
-            required: false,
-            selectOnFocus: true,
-        };
-
-        var upcField = {
-            xtype: 'textfield',
-            fieldLabel: 'Universal Product Code (UPC)',
-            name: 'upc',
-            anchor: '96%',
-            width: 200,
-            maxLength: 128,
-            enforceMaxLength:true,
-            required: false,
-            selectOnFocus: true,
-        };
-
-        var distPartNumField = {
-            xtype: 'textfield',
-            fieldLabel: 'Distributor Part Number',
-            name: 'distPartNumber',
-            anchor: '96%',
-            width: 200,
-            maxLength: 30,
-            enforceMaxLength: true,
-            required: false,
-            selectOnFocus: true,
-        };
+        
 
         var priceField = {
             xtype: 'numberfield',  //'currencyfield', //,
@@ -648,8 +655,9 @@ Ext.define('Taco.view.product.subform.General', {
                     }
 
             ]
-        }, {
-                xtype: 'formform',
+            }, {
+                xtype: 'container',
+                hidden: (!(this.isGlobal || this.isSingleSite)),
                 ui: 'subform-subform',
                 layout: {
                     type: 'column',
@@ -667,8 +675,8 @@ Ext.define('Taco.view.product.subform.General', {
                                 columnWidth: .3,
                                 layout: 'anchor',
                                 items: [
-                                    mfgPartNumField,
-                                    distPartNumField
+                                    this.mfgPartNumField,
+                                    this.distPartNumField
                                 ]
                             }, {
                                 columnWidth: .2,
@@ -685,7 +693,7 @@ Ext.define('Taco.view.product.subform.General', {
                                 columnWidth: .3,
                                 layout: 'anchor',
                                 items: [
-                                    upcField
+                                    this.upcField
                                 ]
                             }
                 ]
