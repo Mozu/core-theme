@@ -121,6 +121,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 
         #endregion
 
-        
+
+
+        public List<int> SegmentIds { get; set; }
     }
 }

@@ -101,15 +101,15 @@ Ext.define('Taco.view.customers.subform.Information', {
                         store: this.segmentStore,
                         xtype: 'boxselect',
                         width: 320,
-                        hideTrigger: true,
+                        hideTrigger: false,
                         triggerOnClick: false,
-                        forceSelection: false,
-                        createNewOnEnter: true,
+                        forceSelection: true,
+                        createNewOnEnter: false,
                         valueField: 'id',
                         displayField: 'code',
-                        name: 'segments',
+                        name: 'segmentIds',
                         queryMode: 'local',
-                        fieldLabel: 'Groups',
+                        fieldLabel: 'Segments',
                         cls: 'customer-history'
                     }]
             }];

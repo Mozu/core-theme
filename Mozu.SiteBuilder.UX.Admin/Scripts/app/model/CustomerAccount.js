@@ -40,6 +40,10 @@ Ext.define('Taco.model.CustomerAccount', {
              name: 'segments',
              type: 'auto',
              defaultValue:[]
+         }, {
+             name: 'segmentIds',
+             type: 'auto',
+             defaultValue:[]
          },
         {
             name: 'userName',
@@ -88,6 +92,7 @@ Ext.define('Taco.model.CustomerAccount', {
         }
     ],    
    
+
     getOrders: function () {
 
         if (!this.orders) {

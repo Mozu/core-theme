@@ -1,0 +1,109 @@
+﻿/**
+ * @class Taco.view.customers.Index
+ */
+
+Ext.define('Taco.view.customers.Segments.Index', {
+    extend: 'Taco.core.ux.browser.BrowserPage',
+    
+    requires: [
+       // 'Taco.model.CustomerAccount',
+     //   'Taco.store.CustomerSegments',
+     //   'Taco.view.customers.AdvancedSearchForm',
+        'Taco.store.CustomerSegments'
+    ],
+
+    typeName: 'CustomerSegment',
+    modelName: 'Taco.model.CustomerSegment',
+    store: { type: 'Taco.store.CustomerSegments' },
+    enableRowEditing: true,
+    defaultRowEditingData: {
+        //name: "name here",
+        //code: "code here",
+        //region:"region here"
+    },
+    useTilePanel: false,
+    
+  
+    initComponent: function () {
+        var me = this;
+
+        this.header = {
+            title: 'Customer Segments'
+        };
+
+       
+
+        this.gridPanelConf = {
+            columns: [ {
+                dataIndex: 'id',
+                text: 'Id',
+                width: 130
+            },{
+                dataIndex: 'code',
+                text: 'Code',
+               
+                editor: {
+                    // defaults to textfield if no xtype is supplied
+                    emptyText: "Code",
+                    msgTarget: "qtip",
+                    // optional enhancement to rowEditor. Makes the field only editable during a create;
+                    editableOnCreateOnly: true,
+                    selectOnFocus: true,
+                    allowBlank: false
+                },
+                width: 200
+                
+            }, {
+                dataIndex: 'name',
+                text: 'name',
+               
+                editor: {
+                    // defaults to textfield if no xtype is supplied
+                    emptyText: "Name",
+                    msgTarget: "qtip",
+                    selectOnFocus: true,
+                    allowBlank: false
+                },
+                width: 200
+            }, {
+                dataIndex: 'description',
+                text: 'description',
+                flex:1,
+                editor: {
+                    // defaults to textfield if no xtype is supplied
+                    emptyText: "Name",
+                    msgTarget: "qtip",
+                    selectOnFocus: true,
+                    allowBlank: false
+                },
+            }, {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                flex:1,
+                menuItems: [{
+                    text: 'Edit',
+                    requiredBehaviors: {
+                        model: 'Taco.model.CustomerAccount',
+                        behavior: 'update'
+                    },
+                    menuColumnHandler: function (item, eventData) {
+                        var page = eventData.grid.getParentPage(),
+                            record = eventData.record,
+                            metaData = { id: record.getId() };
+
+                        page.launchEditor(record, metaData);
+                    }
+                }],
+                // do any processing needed to show menu
+                onMenuShow: function (menu, eventData) {}
+            }]
+        };
+        
+        this.callParent(arguments);
+    },
+    
+   
+    
+
+    
+});
