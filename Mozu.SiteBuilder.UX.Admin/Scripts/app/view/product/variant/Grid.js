@@ -81,7 +81,9 @@ Ext.define('Taco.view.product.variant.Grid', {
             hideable: true,
             hidden: true,
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                maxLength: 30,
+                enforceMaxLength: true
             }
         }, {
             text: 'UPC',
@@ -89,7 +91,9 @@ Ext.define('Taco.view.product.variant.Grid', {
             hideable: true,
             hidden: true,
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                maxLength: 128,
+                enforceMaxLength: true
             }
         }, {
             text: 'Distributor Part #',
@@ -97,7 +101,9 @@ Ext.define('Taco.view.product.variant.Grid', {
             hideable: true,
             hidden: true,
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                maxLength: 30,
+                enforceMaxLength: true
             }
         }, {
             text: 'Enabled',
