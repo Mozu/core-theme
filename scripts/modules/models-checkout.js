@@ -145,27 +145,11 @@
                         var methodToUse = allowInvalidAddresses ? "validateAddressLenient" : "validateAddress";
                         addr.apiModel[methodToUse]().then(function (resp) {
                             if (resp.data && resp.data.addressCandidates && resp.data.addressCandidates.length) {
-                                var addrCompare = function (addr, valAddr) {
-                                    var s1 = '',
-                                        s2 = '';
-                                    for (var k in valAddr) {
-                                        if (k === 'isValidated')
-                                            continue;
-                                        s1 = (valAddr[k] || '').toLowerCase();
-                                        s2 = (addr.get(k) || '').toLowerCase();
-                                        if (s1 != s2) {
-                                            return -1;
-                                        }
-                                    }
-                                    return 0;
-                                };
-                                var addrIsDifferent = false;
-                                for (var i = 0; i < resp.data.addressCandidates.length; i++) {
-                                    if (!addrCompare(addr, resp.data.addressCandidates[i])) {
+                                if (_.find(resp.data.addressCandidates, addr.is, addr)) {
+                                    addr.set('isValidated', true);
                                         completeStep();
                                         return;
                                     }
-                                }
                                 addr.set('candidateValidatedAddresses', resp.data.addressCandidates);
                                 promptValidatedAddress();
                             }
@@ -244,7 +228,7 @@
                 "billingContact.email": {
                     required: true,
                     msg: Hypr.getLabel('emailMissing')
-                }
+                } 
             },
             dataTypes: {
                 "isSameBillingShippingAddress": Backbone.MozuModel.DataTypes.Boolean,
@@ -500,7 +484,7 @@
                         fulfillmentInfo = self.get('fulfillmentInfo'),
                         fulfillmentContact = fulfillmentInfo.get('fulfillmentContact'),
                         billingInfo = self.get('billingInfo'),
-                        isReady = ((fulfillmentInfo.stepStatus() + fulfillmentContact.stepStatus() + billingInfo.stepStatus()) === "completecompletecomplete") ||
+                        isReady = ((fulfillmentInfo.stepStatus() + fulfillmentContact.stepStatus() + billingInfo.stepStatus()) === "completecompletecomplete") || 
                                   (latestPayment && latestPayment.paymentType === "PaypalExpress" && window.location.href.indexOf('PaypalExpress=complete') !== -1);
                     self.isReady(isReady);
 
@@ -594,15 +578,15 @@
 
                 if (this.get("createAccount") && !this.customerCreated) {
                     process.push(this.addNewCustomer);
-                }
+                } 
 
                 if (this.get('shopperNotes').has('comments') || this.get('ipAddress')) {
                     process.push(this.update);
                 }
 
                 process.push(this.apiCheckout);
-
-
+                
+                
                 api.steps(process).then(this.onCheckoutSuccess, this.onCheckoutError);
 
             },

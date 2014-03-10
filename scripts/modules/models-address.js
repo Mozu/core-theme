@@ -60,6 +60,19 @@
                     delete j.stateOrProvince;
                 }
                 return j;
+            },
+            is: function (another) {
+                var s1 = '', s2 = '';
+                for (var k in another) {
+                    if (k === 'isValidated')
+                        continue;
+                    s1 = (another[k] || '').toLowerCase();
+                    s2 = (this.get(k) || '').toLowerCase();
+                    if (s1 != s2) {
+                        return false;
+                    }
+                }
+                return true;
             }
         });
 
