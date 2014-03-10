@@ -106,6 +106,11 @@ Ext.define('Taco.view.product.subform.Inventory', {
 
         me.on('afterrender', function () {
             var productForm = me.up("productform");
+
+            if (me.manageInventoryButton) {
+                productForm.getForm().getBoundItems().add(me.manageInventoryButton);
+            }
+
             me.mon(productForm, 'productusagechange', me.onProductUsageChange, me);
         });
 
