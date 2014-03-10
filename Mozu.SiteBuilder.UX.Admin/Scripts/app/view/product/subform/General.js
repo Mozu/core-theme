@@ -175,6 +175,20 @@ Ext.define('Taco.view.product.subform.General', {
                 boxLabel: 'Taxable'
             });
 
+            this.costField = Ext.widget({
+                xtype: 'numberfield',
+                fieldLabel: 'Cost',
+                name: 'cost',
+                anchor: '96%',
+                width: 200,
+                forcePrecision: true,
+                required: false,
+                hideTrigger: true,
+                mouseWheelEnabled: false,
+                selectOnFocus: true,
+                emptyText: ''
+            });
+
             this.mfgPartNumField = Ext.widget({
                 xtype: 'textfield',
                 fieldLabel: 'Manufacturer Part Number',
@@ -289,20 +303,6 @@ Ext.define('Taco.view.product.subform.General', {
             emptyText: "Manufacturer's Suggested Retail Price"
         };
 
-        var costField = {
-            xtype: 'numberfield',
-            fieldLabel: 'Cost',
-            name: 'cost',
-            anchor: '96%',
-            width: 200,
-            forcePrecision: true,
-            required: false,
-            hideTrigger: true,
-            mouseWheelEnabled: false,
-            selectOnFocus: true,
-            emptyText: ''
-        };
-
         var mapField = {
             xtype: 'numberfield',
             fieldLabel: 'Minimum Advertised Price',
@@ -319,6 +319,10 @@ Ext.define('Taco.view.product.subform.General', {
                 keyup: {
                     fn: function (source) {
                         var isDisabled = ((source.getValue() == null) || (source.getValue().length == 0));
+                        if (isDisabled) {
+                            me.mapStartField.setValue('');
+                            me.mapEndField.setValue('');
+                        }
                         me.mapStartField.setDisabled(isDisabled);
                         me.mapEndField.setDisabled(isDisabled);                        
                     }
@@ -549,7 +553,7 @@ Ext.define('Taco.view.product.subform.General', {
                             items: [
                                 salePriceField,
                                 this.rollupBundleSalePriceField,
-                                costField
+                                this.costField
                             ]
                         },
                         {
