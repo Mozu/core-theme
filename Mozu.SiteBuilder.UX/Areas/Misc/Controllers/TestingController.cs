@@ -202,9 +202,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var viewMode = DataViewModeType.NoneSet;
             switch ((environment ?? "").ToLower())
             {
-                case "primary":
-                    domainList = site.Domains.OrderBy(s => s.IsPrimary).Select(x => x.DomainName);
-                    break;
                 case "preview":
                 case "admin-pending":
                 case "staging":
@@ -221,10 +218,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     domainList = Enumerable.Empty<string>();
                     break;
                 }
-
+                case "primary":
+                case "production":
                 default:
-                    domainList = site.Domains.Select(x => x.DomainName);
+                {
+                    domainList = site.Domains.OrderBy(s => s.IsPrimary).Select(x => x.DomainName);
                     break;
+                }
             }
 
 
