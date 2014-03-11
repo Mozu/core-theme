@@ -12,7 +12,7 @@ Ext.define('Taco.view.Header', {
 
     autoEl: { tag: 'header' },
     componentCls: Taco.baseCSSPrefix + 'viewport-header',
-    height: 105,
+    height: 85,
     hideMode: 'offsets',
     layout: { type: 'vbox', align: 'stretch' },
 
@@ -23,8 +23,8 @@ Ext.define('Taco.view.Header', {
         primaryMenuTrigger = Ext.create('Taco.core.ux.action.Action', {
             xtype: 'action',
             text: '',
-            width: 56,
-            height: 50,
+            width: 60,
+            height: 40,
             cls: Taco.baseCSSPrefix + 'primary-menu-trigger',
             click: function () {
                 if (me.primaryMenu.isHidden() || !me.primaryMenu.rendered) {
@@ -58,7 +58,7 @@ Ext.define('Taco.view.Header', {
         this.items = [{
             xtype: 'container',
             anchor: '100%',
-            height: 55,
+            height: 45,
             cls: Taco.baseCSSPrefix + 'masthead',
             layout: {
                 type: 'hbox',
@@ -67,6 +67,7 @@ Ext.define('Taco.view.Header', {
             items: [{
                 xtype: 'component',
                 cls: Taco.baseCSSPrefix + 'mozulogo',
+                width: 103,
                 autoEl: {
                     tag: 'a',
                     href: '/admin',
@@ -90,7 +91,7 @@ Ext.define('Taco.view.Header', {
         }, {
             xtype: 'container',
             anchor: '100%',
-            height: 50,
+            height: 40,
             cls: Taco.baseCSSPrefix + 'viewport-nav',
             autoEl: { tag: 'nav' },
             layout: {

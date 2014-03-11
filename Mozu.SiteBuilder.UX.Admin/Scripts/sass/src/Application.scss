@@ -3,7 +3,7 @@
 @include taco-panel;
 @include taco-grid;
 @include taco-tree;
-@include taco-navmenu;
+// @include taco-navmenu;
 @include taco-content;
 @include taco-modal;
 @include taco-window;
@@ -24,8 +24,8 @@
 @include taco-order;
 //@include taco-contextSwitcher;
 
-body[data-current-user="travis_johnson"] {
-    .x-border-layout-ct {
-        background-image: url('http://i.imgur.com/igIUXoR.png');
-    }
-}
+// body[data-current-user="travis_johnson"] {
+//     .x-border-layout-ct {
+//         background-image: url('http://i.imgur.com/igIUXoR.png');
+//     }
+// }

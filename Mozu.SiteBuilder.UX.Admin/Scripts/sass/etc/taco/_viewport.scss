@@ -18,55 +18,6 @@
 
   /* HEADER */
 
-  .#{$vprefix}masthead {
-    background-color: $color-neutral-20;
-    border-top: 5px solid $color-theme-base;
-    color: $color-neutral-white;
-    font-size: px-to-rem(14);
-    left: 0px;
-    line-height: 1.0;
-    position: absolute;
-
-    .#{$prefix}btn-link-medium {
-
-      .#{$prefix}btn-inner {
-        color: $color-neutral-75;
-        font-size: 14px;
-        line-height: 16px;
-      }
-
-      .#{$prefix}btn-glyph {
-        color: $color-neutral-75;
-        -webkit-font-smoothing: antialiased;
-      }
-
-      .#{$prefix}btn-arrow-right,
-      .#{$prefix}btn-split-right {
-        &::after {
-          color: $color-neutral-75
-        }
-      }
-    }
-
-    .#{$vprefix}mozulogo {
-      display: block;
-      overflow: hidden;
-      @include icon-font($glyph-mozulogo, 32px, $color-theme-base);
-      width: 125px;
-
-      &::after {
-        text-align: center;
-        width: 100%;
-      }
-    }
-  }
-
-  .#{$vprefix}secondary-nav {
-    .#{$vprefix}action {
-      margin-right: 21px;
-    }
-  }
-
   /* BODY */
 
   .#{$vprefix}content-view {

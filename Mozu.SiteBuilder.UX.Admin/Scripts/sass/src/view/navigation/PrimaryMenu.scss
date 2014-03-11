@@ -1,0 +1,114 @@
+.#{$vprefix}primary-menu-ct {
+  background-color: $color-neutral-20;
+  margin-top: 40px;
+  opacity: 1;
+  visibility: visible !important;
+  @include outer-shadow(0.4, 2px, 3px, 3px);
+  @include transition(margin 0.15s linear, opacity 0.15s linear, top 0s linear, left 0s linear);
+
+  &.#{$prefix}hide-offsets {
+    margin-top: 0px;
+    opacity: 0;
+    @include transition(margin 0.15s linear, opacity 0.15s linear, top 0s linear 0.15s, left 0s linear 0.15s);
+  }
+}
+
+.#{$vprefix}primary-menu {
+  font-size: px-to-rem(18);
+  line-height: px-to-rem(24);
+  
+  li.#{$vprefix}menu-item {
+    cursor: pointer;
+    padding: px-to-rem(13) 0px px-to-rem(13) 70px;
+    position: relative;
+    width: 325px;
+
+    a {
+      color: $color-neutral-75;
+      display: inline-block;
+
+      &:hover {
+        color: $color-neutral-white;
+      }
+      &.#{$vprefix}menu-item-link {
+        font-weight: bold;
+      }
+      &.#{$vprefix}icon {
+        @include icon-font($glyph-dashboard, 32px, $color-neutral-75);
+        height: auto;
+        width: auto;
+
+        &::after {
+          left: -51px;
+          top: -9px;
+        }
+        &:hover::after {
+          &::after {
+            color: $color-neutral-white;
+          }
+        }
+      }
+      &.#{$vprefix}icon-nav-customers::after {
+        content: $glyph-customers;
+      }
+      &.#{$vprefix}icon-nav-catalog::after {
+        content: $glyph-catalog;
+      }
+      &.#{$vprefix}icon-nav-orders::after {
+        content: $glyph-orders;
+      }
+      &.#{$vprefix}icon-nav-marketing::after {
+        content: $glyph-marketing;
+      }
+      &.#{$vprefix}icon-nav-sites::after {
+        content: $glyph-sitebuilder;
+      }
+      &.#{$vprefix}icon-nav-publishing::after {
+        content: $glyph-publishing;
+      }
+      &.#{$vprefix}icon-nav-locations::after {
+        content: $glyph-locations;
+        top: -4px;
+      }
+    }
+
+    &.#{$vprefix}menu-item-hover {
+      background-color: $color-neutral-30;
+
+      .#{$vprefix}icon {
+        color: $color-neutral-white;
+
+        &::after {
+          color: $color-neutral-white;
+        }
+      }
+    }
+
+    &.#{$vprefix}menu-item-active {
+      a.#{$vprefix}menu-item-link {
+        border-bottom: 2px solid $color-theme-base;
+        color: $color-neutral-white;
+      }
+    }
+
+    ul {
+      font-size: px-to-rem(13);
+      line-height: px-to-rem(16);
+      margin-left: -5px;
+
+      li {
+        display: inline-block;
+        margin: 4px 0px 1px;
+        padding: 0px 7px 0px 5px;
+
+        &.#{$vprefix}submenu-item-active {
+          a {
+            border-bottom: 2px solid $color-theme-base;
+            color: $color-neutral-white;
+            text-decoration: none;
+          }
+        }
+      }
+    }
+  }
+}
