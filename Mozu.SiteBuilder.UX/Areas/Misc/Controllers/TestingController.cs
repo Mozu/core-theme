@@ -222,7 +222,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 case "production":
                 default:
                 {
-                    domainList = site.Domains.OrderBy(s => s.IsPrimary).Select(x => x.DomainName);
+                    domainList = site.Domains.OrderByDescending(s => s.IsPrimary).Select(x => x.DomainName);
                     break;
                 }
             }
