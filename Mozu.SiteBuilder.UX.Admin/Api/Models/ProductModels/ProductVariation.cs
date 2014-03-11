@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// Supported Fulfillment Types
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string FulfillmentTypesSupported { get; set; }
+        public string[] FulfillmentTypesSupported { get; set; }
 
         /// <summary>
         /// Price Lookup Unit
