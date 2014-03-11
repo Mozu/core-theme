@@ -1,0 +1,174 @@
+/** 
+ * Masthead
+ * The dark first bar
+ */
+
+.#{$vprefix}masthead {
+    background-color: $color-neutral-20;
+    border-top: 5px solid $color-theme-base;
+    color: $color-neutral-white;
+    font-size: px-to-rem(14);
+    left: 0px;
+    line-height: 1.0;
+    position: absolute;
+
+    .#{$vprefix}mozulogo {
+        display: block;
+        overflow: hidden;
+        @include icon-font($glyph-mozulogo, 26px, $color-theme-base);
+        width: 103px;
+
+        &::after {
+            left: auto;
+            right: 10px;
+            text-align: right;
+            top: 1px;
+            width: 100%;
+        }
+    }
+
+    .#{$prefix}btn-link-medium {
+
+      .#{$prefix}btn-inner {
+        color: $color-neutral-75;
+        font-size: 14px;
+        line-height: 16px;
+      }
+
+      .#{$prefix}btn-glyph {
+        color: $color-neutral-75;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .#{$prefix}btn-arrow-right,
+      .#{$prefix}btn-split-right {
+        &::after {
+          color: $color-neutral-75
+        }
+      }
+    }
+}
+
+.#{$vprefix}secondary-nav {
+  .#{$vprefix}action {
+    margin-right: 21px;
+  }
+}
+
+/** 
+ * Viewport nav
+ * The light second bar
+ */
+
+.#{$vprefix}viewport-nav {
+  background-color: $color-neutral-white;
+  padding-right: 30px;
+
+  .#{$vprefix}primary-menu-trigger {
+    border-right: 1px solid border-for($color-neutral-95);
+    display: block;
+    overflow: hidden;
+    @include box-shadow(1px 0px $color-neutral-white);
+    @include icon-font($glyph-menu, 32px);
+    @include single-transition(background-color, 0.4s);
+
+    &::after {
+      left: 14px;
+      top: 4px;
+    }
+    &.expanded {
+      background-color: $color-neutral-20;
+      
+      &::after {
+        color: $color-neutral-75;
+      }
+    }
+  }
+
+  .#{$vprefix}breadcrumb {
+    .#{$vprefix}icon {
+      border-right: 1px solid border-for($color-neutral-95);
+      color: $color;
+      display: inline-block;
+      padding: 15px 15px 0px 50px;
+      @include icon-font($glyph-dashboard, 32px);
+      height: 40px;
+      vertical-align: top;
+      width: auto;
+
+      &::after {
+        left: 9px;
+        top: 1px;
+      }
+    }
+    .#{$vprefix}icon-nav-customers::after {
+      content: $glyph-customers;
+    }
+    .#{$vprefix}icon-nav-catalog::after {
+      content: $glyph-catalog;
+    }
+    .#{$vprefix}icon-nav-orders::after {
+      content: $glyph-orders;
+    }
+    .#{$vprefix}icon-nav-marketing::after {
+      content: $glyph-marketing;
+    }
+    .#{$vprefix}icon-nav-sites::after {
+      content: $glyph-sitebuilder;
+    }
+    .#{$vprefix}icon-nav-publishing::after {
+      content: $glyph-publishing;
+    }
+    .#{$vprefix}icon-nav-locations::after {
+      content: $glyph-locations;
+      top: 10px;
+    }
+
+    ul {
+      display: inline-block;
+      height: 40px;
+      margin-left: 10px;
+      vertical-align: top;
+
+      li {
+        display: inline-block;
+        padding: 0px 8px;
+        position: relative;
+        vertical-align: top;
+
+        a {
+          color: $color;
+          display: inline-block;
+          font-size: px-to-rem(14);
+          height: 40px;
+          line-height: 1.0;
+          padding: 16px 2px 0px;
+        }
+
+        &.#{$vprefix}breadcrumb-item-selected {
+          a {
+            border-bottom: 2px solid $color-theme-base;
+            color: $color-theme-base;
+          }
+        }
+
+        &::after {
+          background-color: border-for($color-neutral-70);
+          content: "";
+          display: block;
+          height: 14px;
+          position: absolute;
+          right: 0px;
+          top: 15px;
+          width: 1px;
+        }
+
+        &:nth-last-of-type(1) {
+          &::after {
+            content: none;
+          }
+        }
+      }
+    }
+  }
+}
