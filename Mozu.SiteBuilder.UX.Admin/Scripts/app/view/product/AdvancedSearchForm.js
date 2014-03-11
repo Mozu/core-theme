@@ -11,14 +11,57 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
         width: 450,
         xtype: 'textfield'
     },
-    items: [{
-        name: 'keyword',
-        fieldLabel: 'Keyword Search'
-    }, {
-        name: 'productCode',
-        fieldLabel: 'Product Code'
-    },
+    items: [
         {
+            name: 'keyword',
+            fieldLabel: 'Keyword Search'
+        },{
+            xtype: 'fieldcontainer',
+            layout: {
+                type: 'hbox',
+                align: 'middle'
+            },
+            items: [
+                {
+                    xtype: 'textfield',
+                    name: 'productCode',
+                    fieldLabel: 'Product Code',
+                    width: 200
+                },
+                {
+                    width:20
+                },
+                {
+                    xtype: 'textfield',
+                    name: 'upc',
+                    fieldLabel: 'UPC',
+                    width: 200
+                } 
+            ]
+        }, {
+            xtype: 'fieldcontainer',
+            layout: {
+                type: 'hbox',
+                align: 'middle'
+            },
+            items: [
+                {
+                    xtype: 'textfield',
+                    name: 'mfgPartNumber',
+                    fieldLabel: 'Mfg Part #',
+                    width: 200
+                },
+                {
+                    width: 20
+                },
+                {
+                    xtype: 'textfield',
+                    name: 'distPartNumber',
+                    fieldLabel: 'Dist Part #',
+                    width: 200
+                }
+            ]
+        }, {
             xtype:'container',
             layout: 'hbox',
            
@@ -113,6 +156,31 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                     mouseWheelEnabled: false,
                     width: 200
                 }]
+        }, {
+            xtype: 'fieldcontainer',
+            layout: {
+                type: 'hbox',
+                align: 'middle'
+            },
+            items: [{
+                xtype: 'numberfield',
+                name: 'map',
+                fieldLabel: 'MAP',
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false,
+                width: 200
+            }, {
+                width: 20
+            }, {
+                xtype: 'numberfield',
+                name: 'msrp',
+                fieldLabel: 'MSRP',
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false,
+                width: 200
+            }]
         },
         {
             xtype: 'taco-adminuserfield',

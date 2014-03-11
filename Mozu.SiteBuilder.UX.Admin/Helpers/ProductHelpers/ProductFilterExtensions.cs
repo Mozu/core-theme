@@ -12,12 +12,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         private const string PRODUCT_NAME_PROPERTY = "productincatalogs.content.productName";
         private const string PRODUCT_CODE_PROPERTY = "productCode";
         private const string PRICE_PROPERTY = "productsincatalog.price.price";
+        private const string PRICE_MSRP_PROPERTY = "price.msrp";
+        private const string PRICE_MAP_PROPERTY = "price.map";
         private const string CATEGORY_ID_PROPERTY = "productincatalogs.productcategories.categoryId";
         private const string IS_ACTIVE_PROPERTY = "productincatalogs.isActive";
         private const string STOCK_ON_HAND_PROPERTY = "stockOnHand";
         private const string SITE_ID_PROPERTY = "productincatalogs.siteId";
         private const string PRODUCT_FULL_DESCRIPTION = "productincatalogs.content.productFullDescription";
         private const string PRODUCT_PUBLISHED_STATE = "publishinginfo.publishedstate";
+        private const string PRODUCT_UPC_PROPERTY = "upc";
+        private const string PRODUCT_MFG_PART_NUM_PROPERTY = "supplierInfo.manufacturerPartNumber";
+        private const string PRODUCT_DIST_PART_NUM_PROPERTY = "supplierInfo.distributorPartNumber";
 
 
       
@@ -159,6 +164,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                     return string.Format("{1} eq {0}", filter.value, SITE_ID_PROPERTY);
                 case "publishedstate":
                     return String.Format("{1} ne Live", filter.value, PRODUCT_PUBLISHED_STATE);
+                case "upc":
+                    return string.Format("{1} eq \"{0}\"", filter.value, PRODUCT_UPC_PROPERTY);
+                case "mfgpartnumber":
+                    return string.Format("{1} eq \"{0}\"", filter.value, PRODUCT_MFG_PART_NUM_PROPERTY);
+                case "distpartnumber":
+                    return string.Format("{1} eq \"{0}\"", filter.value, PRODUCT_DIST_PART_NUM_PROPERTY);
+                case "msrp":
+                    return string.Format("{1} eq {0}", filter.value, PRICE_MSRP_PROPERTY);
+                case "map":
+                    return string.Format("{1} eq {0}", filter.value, PRICE_MAP_PROPERTY);
+                
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);
