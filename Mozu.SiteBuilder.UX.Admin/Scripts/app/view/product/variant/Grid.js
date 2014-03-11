@@ -17,6 +17,30 @@ Ext.define('Taco.view.product.variant.Grid', {
             staticColumns,
             tplColumnHeader;
 
+        var fulfillmentTypeData = Ext.create('Ext.data.Store', {
+            fields: ['id', 'name'],
+            data: [
+                { "id": "DirectShip", "name": "Direct Ship" },
+                { "id": "InStorePickup", "name": "In Store Pickup" },
+                { "id": "DirectShip,InStorePickup", "name": "Direct Ship, In Store Pickup" }
+            ]
+        });
+
+        var fulfillmentEditor = {
+            xtype: "combobox",
+            triggerAction: 'all',
+            queryMode: 'local',
+            displayField: 'name',
+            valueField: 'id',
+            autoSelect: true,
+            store: fulfillmentTypeData,
+            listeners : {
+                'beforeselect': function(combo, record, index) {
+
+                }
+            }
+        };
+
         staticColumns = [{
             text: 'Product Code',
             dataIndex: 'productCode',
@@ -67,14 +91,22 @@ Ext.define('Taco.view.product.variant.Grid', {
                 keyNavEnabled: false,
                 mouseWheelEnabled: false
             }
-        //}, {
-        //    text: 'Fulfillment Types',
-        //    dataIndex: 'fulfillmentTypesSupported',
-        //    hideable: true,
-        //    hidden: true,
-        //    editor: {
-        //        xtype: 'textfield'
-        //    }
+        }, {
+            text: 'Fulfillment Types',
+            dataIndex: 'fulfillmentTypesSupported',
+            hideable: true,
+            hidden: true,
+            width: 185,
+            //renderer: function (value) {
+            //    var result = '';
+            //    if (value.indexOf('DirectShip') != -1)
+            //        result += "<div class='check'>Direct Ship</div>";
+            //    if (value.indexOf('InStorePickup') != -1)
+            //        result += "<div class='check'>Instore Pickup</div>";
+            //    return result;
+            //},
+            editor: fulfillmentEditor
+            
         }, {
             text: 'Mfg Part #',
             dataIndex: 'mfgPartNumber',
@@ -96,7 +128,7 @@ Ext.define('Taco.view.product.variant.Grid', {
                 enforceMaxLength: true
             }
         }, {
-            text: 'Distributor Part #',
+            text: 'Dist Part #',
             dataIndex: 'distPartNumber',
             hideable: true,
             hidden: true,
@@ -181,8 +213,8 @@ Ext.define('Taco.view.product.variant.Grid', {
         };
     },
 
-    onRowEdit: function (e) {
-        
+    onRowEdit: function (editor, e) {
+
     },
 
     onRowCancelEdit: function (e) {
