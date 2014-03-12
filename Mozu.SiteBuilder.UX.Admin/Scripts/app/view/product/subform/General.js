@@ -96,6 +96,9 @@ Ext.define('Taco.view.product.subform.General', {
             ]
         });
 
+        var isMapDisabled = (this.record.get("map") === null);
+        var isDiscountRestricted = this.record.get("discountsRestricted");
+        var productUsage = this.record.get("productUsage");
 
         // remove for multi site;
         if (this.isGlobal || this.isSingleSite) {
@@ -247,9 +250,6 @@ Ext.define('Taco.view.product.subform.General', {
 
 
         }
-
-        var isMapDisabled = (this.record.get("map") === null);
-        var isDiscountRestricted = this.record.get("discountsRestricted");
 
         var priceField = {
             xtype: 'currencyfield',
@@ -489,6 +489,7 @@ Ext.define('Taco.view.product.subform.General', {
                         xtype: 'fieldcontainer',
                         layout: 'hbox',
                         width: '100%',
+                        hidden: (productUsage != "Bundle"),
                         defaults: {
                             width: 250
                         },
