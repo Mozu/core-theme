@@ -6,6 +6,9 @@
 
 Ext.define('Taco.view.product.subform.Shipping', {
     extend: 'Taco.view.product.subform.Subform',
+    requires: [
+        'Taco.view.product.widget.ProductFulfillmentTypes'
+    ],
     alias: 'widget.productshippingsubform',
     title: 'Shipping',
     
@@ -13,17 +16,20 @@ Ext.define('Taco.view.product.subform.Shipping', {
         var me = this;
         
         this.record = this.product;
-      this.items = [];
+        this.items = [];
 
-        
         // only allow field persistance if the productUsage is not bundle;
         this.isPersistable = (this.product.get("productUsage") != "Bundle");
+
+        this.productFulfillmentTypes = Ext.create('Taco.view.product.widget.ProductFulfillmentTypes', {
+              product: me.record
+          });
 
         this.updateUI();
 
         this.callParent(arguments);
 
-       me.on('afterrender', function () {
+        me.on('afterrender', function () {
             var productForm = me.up("productform");
             me.mon(productForm, 'productusagechange', me.onProductUsageChange, me);
             // every change to the bundle items (add remove, quantity change) will cause a rerendering of the control
@@ -42,8 +48,6 @@ Ext.define('Taco.view.product.subform.Shipping', {
             delay :100
         });
         */
-
-
 
     },
     
@@ -91,110 +95,78 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 },
                 fieldLabel: ''
             });
-        } else {
-
-            var fulfillmentTypes = record.get("fulfillmentTypesSupported");
-
-            var hasDirectShip = (fulfillmentTypes.indexOf('DirectShip') != -1);
-            var hasInStore = (fulfillmentTypes.indexOf('InStorePickup') != -1);
-
-            this.directShipCheckbox = Ext.widget({
-                xtype: 'checkboxfield',
-                boxLabel: 'Direct Ship',
-                name: 'directShipCb',
-                inputValue: 'DirectShip',
-                checked: hasDirectShip,
-                handler: me.onFulfillmentChange,
-                scope: me,
-                fulfillmentType: 1
-            });
-
-            this.inStorePickupCheckbox = Ext.widget({
-                xtype: 'checkboxfield',
-                boxLabel: 'In Store Pickup',
-                name: 'inStoreCb',
-                inputValue: 'InStorePickup',
-                checked: hasInStore,
-                handler: me.onFulfillmentChange,
-                scope: me,
-                fulfillmentType: 1
-            });
-        }
+        } 
 
         var field = {
             xtype: 'container',
             width: '100%',
-            layout: 'hbox',
             items: [
-                productNameField,
+                this.productFulfillmentTypes,
                 {
-                    xtype: 'unitfield',
-                    name: (isBundle) ? "" : 'packageWeight',
-                    width:200,
-                    fieldLabel: 'Weight',
-                    selectOnFocus: true,
-                    emptyText: 'lbs',
-                    unitString: ' lbs',
-                    unitAtEnd: true,
-                    decimalPrecision: 3,
-                    minValue: .001,
-                    hideTrigger: true,
-                    value: record.get('packageWeight'),
-                    keyNavEnabled: false,
-                    readOnly: (isBundle),
-                    allowBlank: (isBundle),
-                    mouseWheelEnabled: false,
-                    style: {
-                        'margin-right': '20px'
-                    }
-                }, {
-                    xtype: 'fieldcontainer',
-                    fieldLabel: 'Package Dimensions',
-                    labelClsExtra : 'x-form-item-required',
-                    width: 480,
-                    layout: {
-                        type: 'hbox',
-                        align: 'top'
-                    },
-                    defaults: {
-                        width: 120,
-                        margin: '0 0 0 10',
-                        selectOnFocus: true,
-                        xtype: 'unitfield',
-                        unitString: ' in',
-                        decimalPrecision: 3,
-                        hideTrigger: true,
-                        keyNavEnabled: false,
-                        readOnly: (isBundle),
-                        allowBlank: (isBundle),
-                        mouseWheelEnabled: false
-                    },
+                    xtype: 'container',
+                    width: '100%',
+                    layout: 'hbox',
                     items: [
+                        productNameField,
                         {
-                            margin: 0,
-                            name: (isBundle) ? "" : 'packageLength',
-                            value: record.get('packageLength'),
-                            emptyText: 'l'
+                            xtype: 'unitfield',
+                            name: (isBundle) ? "" : 'packageWeight',
+                            width: 200,
+                            fieldLabel: 'Weight',
+                            selectOnFocus: true,
+                            emptyText: 'lbs',
+                            unitString: ' lbs',
+                            unitAtEnd: true,
+                            decimalPrecision: 3,
+                            minValue: .001,
+                            hideTrigger: true,
+                            value: record.get('packageWeight'),
+                            keyNavEnabled: false,
+                            readOnly: (isBundle),
+                            allowBlank: (isBundle),
+                            mouseWheelEnabled: false,
+                            style: {
+                                'margin-right': '20px'
+                            }
                         }, {
-                            name: (isBundle) ? "" : 'packageWidth',
-                            value: record.get('packageWidth'),
-                            emptyText: 'w'
-                        }, {
-                            name: (isBundle) ? "" : 'packageHeight',
-                            value: record.get('packageHeight'),
-                            emptyText: 'h'
+                            xtype: 'fieldcontainer',
+                            fieldLabel: 'Package Dimensions',
+                            labelClsExtra: 'x-form-item-required',
+                            width: 480,
+                            layout: {
+                                type: 'hbox',
+                                align: 'top'
+                            },
+                            defaults: {
+                                width: 120,
+                                margin: '0 0 0 10',
+                                selectOnFocus: true,
+                                xtype: 'unitfield',
+                                unitString: ' in',
+                                decimalPrecision: 3,
+                                hideTrigger: true,
+                                keyNavEnabled: false,
+                                readOnly: (isBundle),
+                                allowBlank: (isBundle),
+                                mouseWheelEnabled: false
+                            },
+                            items: [
+                                {
+                                    margin: 0,
+                                    name: (isBundle) ? "" : 'packageLength',
+                                    value: record.get('packageLength'),
+                                    emptyText: 'l'
+                                }, {
+                                    name: (isBundle) ? "" : 'packageWidth',
+                                    value: record.get('packageWidth'),
+                                    emptyText: 'w'
+                                }, {
+                                    name: (isBundle) ? "" : 'packageHeight',
+                                    value: record.get('packageHeight'),
+                                    emptyText: 'h'
+                                }
+                            ]
                         }
-                    ]
-                }, {
-                    xtype: 'checkboxgroup',
-                    fieldLabel: 'Fulfillment Types',
-                    flex: 2,
-                    bodypadding: 10,
-                    hidden: isBundle,
-                    columns: 2,
-                    items: [
-                        this.directShipCheckbox,
-                        this.inStorePickupCheckbox                        
                     ]
                 }
             ]
@@ -219,10 +191,10 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 }]
             },
             store = me.product.getBundledProducts();
-        
+
         if (store.count()) {
             // clear out the container;
-            bundleContainer.items = [];
+            bundleContainer.items = [this.productFulfillmentTypes];
             var totalWeight = 0;
                 
             // push a fieldset for each bundledProduct
@@ -267,16 +239,6 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 this.updateUI();
             }
         }
-    },
-
-    onFulfillmentChange: function () {
-        var me = this;
-        var fulfillmentTypeValue = [];
-        var fulfillmentFields = me.query("[fulfillmentType]");
-        Ext.Array.forEach(fulfillmentFields, function(field) {
-            if (field.checked)
-                fulfillmentTypeValue.push(field.inputValue);
-        }, me);
-        this.record.set("fulfillmentTypesSupported", fulfillmentTypeValue);
     }
+
 });
