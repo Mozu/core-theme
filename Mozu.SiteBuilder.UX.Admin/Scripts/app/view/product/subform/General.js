@@ -17,7 +17,8 @@ Ext.define('Taco.view.product.subform.General', {
         'Ext.form.field.Text',
         'Taco.shared.view.field.Image',
         'Taco.core.ux.form.SelectField',
-        'Taco.store.ProductTypes'
+        'Taco.store.ProductTypes',
+        'Taco.core.ux.form.CurrencyField'
     ],
 
     title: 'General',
@@ -176,12 +177,9 @@ Ext.define('Taco.view.product.subform.General', {
             });
 
             this.costField = Ext.widget({
-                xtype: 'numberfield',
+                xtype: 'currencyfield',
                 fieldLabel: 'Cost',
                 name: 'cost',
-                anchor: '96%',
-                width: 200,
-                forcePrecision: true,
                 required: false,
                 hideTrigger: true,
                 mouseWheelEnabled: false,
@@ -194,7 +192,6 @@ Ext.define('Taco.view.product.subform.General', {
                 fieldLabel: 'Manufacturer Part Number',
                 name: 'mfgPartNumber',
                 anchor: '96%',
-                width: 200,
                 maxLength: 30,
                 enforceMaxLength: true,
                 required: false,
@@ -206,16 +203,10 @@ Ext.define('Taco.view.product.subform.General', {
                 fieldLabel: 'Universal Product Code (UPC)',
                 name: 'upc',
                 anchor: '96%',
-                width: 200,
                 maxLength: 128,
                 enforceMaxLength: true,
                 required: false,
-                selectOnFocus: true,
-                //listeners: {
-                //    change: function(source, newVal, oldVal) {
-                //        me.record.set('upc', newVal);
-                //    }
-                //}
+                selectOnFocus: true
             });
 
             this.distPartNumField = Ext.widget({
@@ -223,7 +214,6 @@ Ext.define('Taco.view.product.subform.General', {
                 fieldLabel: 'Distributor Part Number',
                 name: 'distPartNumber',
                 anchor: '96%',
-                width: 200,
                 maxLength: 30,
                 enforceMaxLength: true,
                 required: false,
@@ -236,16 +226,10 @@ Ext.define('Taco.view.product.subform.General', {
         var isMapDisabled = (this.record.get("map") === null);
         var isDiscountRestricted = this.record.get("discountsRestricted");
 
-
-        
-
         var priceField = {
-            xtype: 'numberfield',  //'currencyfield', //,
+            xtype: 'currencyfield',
             fieldLabel: 'Price',
             name: 'price',
-            anchor: '96%',
-            width: 200,
-            forcePrecision: true,
             required: true,
             hideTrigger: true,
             mouseWheelEnabled: false,
@@ -256,7 +240,7 @@ Ext.define('Taco.view.product.subform.General', {
         this.rollupBundlePriceField = Ext.widget({
             xtype: "editabledisplayfield",
             itemId: "rollupBundlePrice",
-            anchor: '96%',
+            margins: '0 50 0 0',
             border: false,
             tpl: [
                 "<tpl if='price'>",
@@ -267,21 +251,19 @@ Ext.define('Taco.view.product.subform.General', {
         });
 
         var salePriceField = {
-            xtype: 'numberfield',
+            xtype: 'currencyfield',
             fieldLabel: 'Sale Price',
             name: 'salePrice',
-            anchor: '96%',
-            forcePrecision: true,
             hideTrigger: true,
             mouseWheelEnabled: false,
-            selectOnFocus: true,
-            emptyText: '$10.00'
+            selectOnFocus: true
         };
 
         this.rollupBundleSalePriceField = Ext.widget({
             xtype: "editabledisplayfield",
             itemId: "rollupBundleSalePrice",
             anchor: '96%',
+            margins: '0 50 0 10',
             border: false,
             tpl: [
                 "<tpl if='price'>",
@@ -292,11 +274,9 @@ Ext.define('Taco.view.product.subform.General', {
         });
 
         var msrpField = {
-            xtype: 'numberfield',
+            xtype: 'currencyfield',
             fieldLabel: 'MSRP',
             name: 'msrp',
-            anchor: '96%',
-            forcePrecision: true,
             hideTrigger: true,
             mouseWheelEnabled: false,
             selectOnFocus: true,
@@ -304,12 +284,9 @@ Ext.define('Taco.view.product.subform.General', {
         };
 
         var mapField = {
-            xtype: 'numberfield',
+            xtype: 'currencyfield',
             fieldLabel: 'Minimum Advertised Price',
             name: 'map',
-            anchor: '96%',
-            width: 200,
-            forcePrecision: true,
             required: false,
             hideTrigger: true,
             mouseWheelEnabled: false,
@@ -334,9 +311,6 @@ Ext.define('Taco.view.product.subform.General', {
             xtype: 'datetime',
             fieldLabel: 'Effective Date',
             name: 'mapStartDate',
-            anchor: '96%',
-            width: 200,
-            //emptyText: 'Start Date',
             pickerOffset: 4,
             disabled: isMapDisabled
         });
@@ -345,20 +319,15 @@ Ext.define('Taco.view.product.subform.General', {
             xtype: 'datetime',
             fieldLabel: 'End Date',
             name: 'mapEndDate',
-            anchor: '96%',
-            width: 200,
-            //emptyText: 'End Date',
             pickerOffset: 4,
             disabled: isMapDisabled
         });
 
         this.discountsRestrictedField = Ext.widget({
             xtype: 'checkboxfield',
-            margin: '0 0 0 10',
             fieldLabel: 'Product Discounts',
             boxLabel: 'Restrict Discount on this product',
             name: 'discountsRestricted',
-            anchor: '96%',
             checked: isDiscountRestricted,
             handler: me.onDiscountRestrictedChange,
             scope: me
@@ -368,8 +337,6 @@ Ext.define('Taco.view.product.subform.General', {
             xtype: 'datetime',
             fieldLabel: 'Effective Date',
             name: 'discountsRestrictedStartDate',
-            anchor: '96%',
-            width: 200,
             pickerOffset: 4,
             disabled: ! isDiscountRestricted
         });
@@ -378,52 +345,26 @@ Ext.define('Taco.view.product.subform.General', {
             xtype: 'datetime',
             fieldLabel: 'End Date',
             name: 'discountsRestrictedEndDate',
-            anchor: '96%',
-            width: 200,
             pickerOffset: 4,
             disabled: !isDiscountRestricted
         });
-
-        //var emailFields = {
-        //    xtype: 'fieldcontainer',
-        //    fieldLabel: 'Email addresses',
-        //    defaults: {
-        //        labelWidth: 45,
-        //        flex: 1,
-        //        margins: '0 5 0 0',
-        //        defaultType: 'textfield'
-        //    },
-        //    items: [
-        //        {
-        //            fieldLabel: 'Email 1'
-        //        },
-        //        {
-        //            fieldLabel: 'Email 2'
-        //        }
-        //    ]
-        //};
-
-
 
         readOnly = this.isEdit() || !(this.isSingleSite || this.isGlobal);
         visable = !readOnly || this.isEdit();
         requiredContent = this.isSingleSite || this.isGlobal;
 
 
-
         this.items = [
             this.productCodeField,
             this.productTypeField,
             this.productUsageField,
-
-
             {
-                xtype:'formform',
+                xtype: 'formform',
                 persistChangesToModel: true,
                 record: this.productInCatalogInfo,
                 hidden: this.isGlobal,
                 width: '100%',
-                header:false,
+                header: false,
                 items: [
                     {
                         xtype: 'combobox',
@@ -446,265 +387,166 @@ Ext.define('Taco.view.product.subform.General', {
                 overrideFieldName: 'isContentOverridden',
                 hideOverride: this.isSingleSite,
                 width: '100%',
-                items: [{
-                    fieldLabel: 'Name',
-                    allowBlank: false,
-                    minLength: 3,
-                    name: 'productName',
+                items: [
+                    {
+                        fieldLabel: 'Name',
+                        allowBlank: false,
+                        minLength: 3,
+                        name: 'productName',
 
-                    emptyText: 'Some product description',
-                    width: '100%',
-                    required: true,
-                    listeners: {
-                        change: function (cmp, newValue ) {
-                            cmp.productForm = cmp.productForm || cmp.up('productform');
-                            cmp.productForm.fireEvent('productnamechange', this.productInCatalogInfo || this.product, newValue);
-                        },
-                        scope:this
-                    }
-                }, {
-                    xtype: 'htmleditor',
-                    enableFont: false,
-                    fieldLabel: 'Short Description',
-                    name: 'productShortDescription',
-                    emptyText: 'Words',
-                    listeners: {
-                        editmodechange: htmlEditorEditModeChangeHandler
-                    },
-                    width: '100%'
-                    //fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
-                }, {
-                    xtype: 'htmleditor',
-                    enableFont:false,
-                    fieldLabel: 'Full Description',
-                    name: 'productFullDescription',
-                    emptyText: 'Words, words, and more words.  Also, with lists.',
-                    //fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
-                    listeners: {
-                        editmodechange: htmlEditorEditModeChangeHandler,
-                        change: function (cmp, newValue) {
-                            cmp.productForm = cmp.productForm || cmp.up('productform');
-                            cmp.productForm.fireEvent('productfulldescriptionchange', me.productInCatalogInfo || me.product, newValue);
+                        emptyText: 'Some product description',
+                        width: '100%',
+                        required: true,
+                        listeners: {
+                            change: function(cmp, newValue) {
+                                cmp.productForm = cmp.productForm || cmp.up('productform');
+                                cmp.productForm.fireEvent('productnamechange', this.productInCatalogInfo || this.product, newValue);
+                            },
+                            scope: this
                         }
+                    }, {
+                        xtype: 'htmleditor',
+                        enableFont: false,
+                        fieldLabel: 'Short Description',
+                        name: 'productShortDescription',
+                        emptyText: 'Words',
+                        listeners: {
+                            editmodechange: htmlEditorEditModeChangeHandler
+                        },
+                        width: '100%'
+                        //fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
+                    }, {
+                        xtype: 'htmleditor',
+                        enableFont: false,
+                        fieldLabel: 'Full Description',
+                        name: 'productFullDescription',
+                        emptyText: 'Words, words, and more words.  Also, with lists.',
+                        //fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
+                        listeners: {
+                            editmodechange: htmlEditorEditModeChangeHandler,
+                            change: function(cmp, newValue) {
+                                cmp.productForm = cmp.productForm || cmp.up('productform');
+                                cmp.productForm.fireEvent('productfulldescriptionchange', me.productInCatalogInfo || me.product, newValue);
+                            }
+                        },
+                        width: '100%'
                     },
-                    width: '100%'
-                },
-
-
-
-                {
-                    fieldLabel: 'Product Image',
-                    name: 'productImages',
-                    xtype: 'taco.imagefield',
-                    width: '100%'
-                }
-
+                    {
+                        fieldLabel: 'Product Image',
+                        name: 'productImages',
+                        xtype: 'taco.imagefield',
+                        width: '100%'
+                    }
                 ]
             }, {
                 xtype: 'productoverride',
                 width: '100%',
                 overrideFieldName: 'isPriceOverridden',
                 hideOverride: this.isSingleSite,
-
                 items: [
-                {
-                    xtype: 'container',
-                    ui: 'subform-subform',
-                    layout: {
-                        type: 'column',
-                        align: 'top'
-                    },
-                    fieldDefaults: {
-                        labelAlign: 'top',
-                        msgTarget: 'side'
-                    },
-                    width: '100%',
-                    margin: '10 0 0',
-                    items: [
-                        {
-                            xtype: 'container',
-                            columnWidth: .3,
-                            layout: 'anchor',
-                            items: [
-                                priceField,
-                                this.rollupBundlePriceField,
-                                msrpField
-                            ]
-                        }, {
-                            xtype: 'container',
-                            columnWidth: .2,
-                            layout: 'anchor',
-                            items: [
-                                {
-                                    xtype: 'tbspacer'
-                                },
-                                {
-                                    xtype: 'tbspacer'
-                                },
-                                {
-                                    xtype: 'tbspacer'
-                                }
-                            ]
+                    {
+                        xtype: 'fieldcontainer',
+                        layout: 'hbox',
+                        width: '100%',
+                        defaults: {
+                            width: 250,
+                            margins: '0 50 0 10'
                         },
-                        {
-                            xtype: 'container',
-                            columnWidth: .3,
-                            layout: 'anchor',
-                            items: [
-                                salePriceField,
-                                this.rollupBundleSalePriceField,
-                                this.costField
-                            ]
-                        },
-                        {
-                            xtype: 'container',
-                            columnWidth: .2,
-                            layout: 'anchor',
-                            items: [
-                                this.isTaxableField
-                            ]
-                        }
-                    ]
-                },
-                //{
-                //    xtype: 'container',
-                //    ui: 'subform-subform',
-                //    layout    : 'anchor',
-                //    defaults  : {
-                //        anchor      : '100%',
-                //        labelAlign  : 'top',
-                //        layout      : 'hbox'
-                //    },
-                //    items: [
-                //        emailFields
-                //    ]
-                //},
-
-
-
-
-                //{
-                //    xtype: 'menuseparator',
-                //    width: '100%',
-                //    height: 5,
-                    
-                //},
-                {
-                    xtype: 'container',
-                    ui: 'subform-subform',
-                    layout: {
-                        type: 'column',
-                        align: 'top'
-                    },
-                    fieldDefaults: {
-                        labelAlign: 'top',
-                        msgTarget: 'side'
-                    },
-                    width: '100%',
-                    margin: '10 0 0',
-                    defaultType: 'container',
-                    items: [
-                        {
-                            columnWidth: .4,
-                            layout: 'anchor',
-                            items: [
-                                mapField
-                            ]
-                        },
-                        {
-                            columnWidth: .2,
-                            layout: 'anchor',
-                            items: [
-                                this.mapStartField
-                            ]
-                        },
-                        {
-                            columnWidth: .2,
-                            layout: 'anchor',
-                            items: [
-                                this.mapEndField
-                            ]
-                        }
-                    ]
-                }, {
-                        xtype: 'container',
-                        anchor: '100%',
-                        layout: 'column',
                         items: [
+                            priceField,
+                            salePriceField,
                             {
                                 xtype: 'container',
-                                columnWidth: .4,
-                                layout: 'anchor',
+                                flex: 1,
                                 items: [
-                                    this.discountsRestrictedField
-                                ]
-                            },
-                            {
-                                xtype: 'container',
-                                columnWidth: .2,
-                                layout: 'anchor',
-                                items: [
-                                    this.discountsRestrictedStartField
-                                ]
-                            },
-                            {
-                                xtype: 'container',
-                                columnWidth: .2,
-                                layout: 'anchor',
-                                items: [
-                                    this.discountsRestrictedEndField
+                                    this.isTaxableField
                                 ]
                             }
                         ]
+                    },
+                    {
+                        xtype: 'fieldcontainer',
+                        layout: 'hbox',
+                        width: '100%',
+                        defaults: {
+                            width: 250
+                        },
+                        items: [
+                            this.rollupBundlePriceField,
+                            this.rollupBundleSalePriceField
+                        ]
+                    },
+                    {
+                        xtype: 'fieldcontainer',
+                        layout: 'hbox',
+                        width: '100%',
+                        defaults: {
+                            width: 250,
+                            margins: '0 50 0 10'
+                        },
+                        items: [
+                            msrpField,
+                            this.costField
+                        ]
+                    },
+                    {
+                        xtype: 'fieldcontainer',
+                        layout: 'hbox',
+                        width: '100%',
+                        defaults: {
+                            width: 250,
+                            margins: '0 50 0 10'
+                        },
+                        items: [
+                            mapField,
+                            this.mapStartField,
+                            this.mapEndField
+                        ]
+                    },
+                    {
+                        xtype: 'fieldcontainer',
+                        layout: 'hbox',
+                        width: '100%',
+                        defaults: {
+                            width: 250,
+                            margins: '0 50 0 10'
+                        },
+                        items: [
+                            this.discountsRestrictedField,
+                            this.discountsRestrictedStartField,
+                            this.discountsRestrictedEndField
+                        ]
+                    },
+                    {
+                        xtype: 'fieldcontainer',
+                        hidden: (!(this.isGlobal || this.isSingleSite)),
+                        layout: 'hbox',
+                        width: '100%',
+                        defaults: {
+                            width: 250,
+                            margins: '0 50 0 10'
+                        },
+                        items: [
+                            this.mfgPartNumField,
+                            this.upcField
+                        ]
+                    },
+                    {
+                        xtype: 'fieldcontainer',
+                        hidden: (!(this.isGlobal || this.isSingleSite)),
+                        layout: 'hbox',
+                        width: '100%',
+                        defaults: {
+                            width: 250,
+                            margins: '0 50 0 10'
+                        },
+                        items: [
+                            this.distPartNumField
+                        ]
                     }
-
-            ]
-            }, {
-                xtype: 'container',
-                hidden: (!(this.isGlobal || this.isSingleSite)),
-                ui: 'subform-subform',
-                layout: {
-                    type: 'column',
-                    align: 'top'
-                },
-                fieldDefaults: {
-                    labelAlign: 'top',
-                    msgTarget: 'side'
-                },
-                width: '100%',
-                margin: '10 0 0',
-                defaultType: 'container',
-                items: [
-                            {
-                                columnWidth: .3,
-                                layout: 'anchor',
-                                items: [
-                                    this.mfgPartNumField,
-                                    this.distPartNumField
-                                ]
-                            }, {
-                                columnWidth: .2,
-                                layout: 'anchor',
-                                items: [
-                                    {
-                                        xtype: 'tbspacer'
-                                    },
-                                    {
-                                        xtype: 'tbspacer'
-                                    }
-                                ]
-                            }, {
-                                columnWidth: .3,
-                                layout: 'anchor',
-                                items: [
-                                    this.upcField
-                                ]
-                            }
                 ]
             }
-
         ];
-
 
         this.items = Taco.core.util.Common.filterNulls(this.items);
 
