@@ -103,7 +103,7 @@ Ext.define('Taco.shared.view.field.Image', {
                             '</li>',
                         '<tpl else>',
                             '<li class="item image newLoad">',
-                                '<div class="square" style="background-image:url({url}?size=' + this.thumbnailSize + ')">',
+                                '<div class="square" style="background-image:url(\'{url}?size=' + this.thumbnailSize + '\')">',
                                     '<ul class="toolbar">',
                                         '<li class="drag-handle">Drag</li>',
                                         '<li class="remove">Remove</li>',
