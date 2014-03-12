@@ -156,7 +156,7 @@ Ext.define('Taco.core.ux.form.BackgroundImageField', {
         Ext.each(this.backgroundProperties, function (property) {
             var value = background[property];
             if (property === 'background-image' && value.indexOf('url(') < 0) {
-                value = 'url(\  /files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getMasterCatalogId() + '/' +  value + '\')';
+                value = 'url(\'/files/' + Taco.app.context.getTenantId() + '/' + Taco.app.context.getMasterCatalogId() + '/' +  value + '\')';
             }
             style += property + ':' + value + ';';
         }, this);

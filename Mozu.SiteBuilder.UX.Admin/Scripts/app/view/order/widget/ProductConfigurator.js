@@ -2,8 +2,10 @@
     extend: 'Taco.core.ux.form.Form',
     cls: 'taco-product-configurator',
     requires: [
-        'Taco.core.ux.form.SelectField'
+        'Taco.core.ux.form.SelectField',
+        'Taco.shared.store.Files'
     ],
+    thumbnailSize: 150,
     statics: {
 
         updates: {
@@ -101,34 +103,36 @@
 
         me.on('loadFailure', me.onLoadFailure, me);
 
-        this.imageContainer = Ext.widget({
-            xtype: 'container',
+        this.images = Ext.create('Taco.shared.store.Files');
+
+        this.imagesView = Ext.widget({
+            xtype: 'dataview',
             autoEl: {
                 tag: 'ul',
                 cls: 'images'
             },
-            items: [
-                {
-                    xtype: "component",
-                    cls: "image-item images-loading",
-                    html: "Loading Images"
-                }
-            ]
+            store: this.images,
+            tpl: [
+                '<tpl foreach=".">',
+                    '<li class="image-item" style="background-image:url(\'{url}?size=' + this.thumbnailSize + '\')"></li>',
+                '</tpl>'
+            ],
+            itemSelector: 'li.image-item'
         });
 
         this.optionsHeading = Ext.widget({
             xtype: 'component',
-            cls: "fieldSetHeading",
+            cls: 'fieldSetHeading',
             hidden: true,
-            html: "Choose your options..."
+            html: 'Choose your options...'
         });
 
 
         this.optionsContainer = Ext.widget({
             xtype: 'container',
             cls: 'options',
-            width: "100%",
-            layout:"anchor",
+            width: '100%',
+            layout:'anchor',
             items: [{
                 xtype: 'component',
                 html: ''
@@ -151,7 +155,6 @@
         this.description = Ext.widget({
             xtype: 'component',
             flex: 1,
-            //style:"border:1px solid red",
             cls: 'description'
         });
 
@@ -170,12 +173,6 @@
                     '<span class="price-value">{Price.SalePrice:currency}</span>',
                     '</tpl>',
                 '</tpl>',
-                /*
-                PriceRange: {
-                  Lower:{Price:123},
-                  Upper:{Price:123},
-                }
-                */
 
                 '<tpl if="PriceRange">',
 
@@ -219,15 +216,15 @@
 
         this.items = [
             {
-                layout: "hbox",
+                layout: 'hbox',
                 padding:20,
                 items: [
                     {
                             xtype: 'container',
-                        cls: "left-column",
+                        cls: 'left-column',
                         width: 170,
                         items: [
-                            this.imageContainer
+                            this.imagesView
                         ]
                     },
                     {
@@ -243,7 +240,7 @@
                                     {
                                         flex:1,
                                         xtype: 'container',
-                                        layout:"anchor",
+                                        layout:'anchor',
                                         items: [
                                             this.optionsHeading,
                                             this.optionsContainer,
@@ -253,7 +250,7 @@
                                     {
                                         flex:1,
                                         xtype: 'container',
-                                        padding: "0 0 0 20",
+                                        padding: '0 0 0 20',
                                         items: [
                                             this.productCodeField,
                                             this.description,
@@ -268,15 +265,6 @@
             }
         ];
         
-        /*
-        this.items = [{
-            xtype: "component",
-            //bodyStyle: "padding:20px;",
-            html: "asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>asdf<br>"
-
-        }];
-    */
-        
         this.loadProduct();
 
         this.callParent(arguments);
@@ -285,10 +273,10 @@
     onLoadFailure : function() {
         this.removeAll();
         this.add({
-            xtype: "component",
+            xtype: 'component',
             flex:1,
-            cls: "error-loading",
-            html: "Error loading this product configuration"
+            cls: 'error-loading',
+            html: 'Error loading this product configuration'
         });
     },
 
@@ -316,7 +304,7 @@
                 failure: function (response) {
                     // error handling here
                     var json = Ext.decode(response.responseText, true),
-                        msg = (json && json.message) ? json.message : "Error adding coupon.";
+                        msg = (json && json.message) ? json.message : 'Error adding coupon.';
                     Taco.app.fireEvent('setmessage', msg, 'error');
                     this.fireEvent('loadFailure');
                 },
@@ -342,7 +330,7 @@
                 
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : "Error adding coupon.";
+                    msg = (json && json.message) ? json.message : 'Error adding coupon.';
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('loadFailure');
             },
@@ -354,13 +342,13 @@
         this.productCodeField.update({ code:this.record.get('productCode') });
         
 
-        var description = "";
+        var description = '';
         var longDescription = this.record.get('productFullDescription');
         var shortDescription = this.record.get('productShortDescription');
         
-        if (!longDescription.length || longDescription == "<br>") {
+        if (!longDescription.length || longDescription == '<br>') {
             // no long description. check for a short description
-            if (shortDescription.length && shortDescription != "<br>") {
+            if (shortDescription.length && shortDescription != '<br>') {
                 description = shortDescription;
             }
         } else {
@@ -372,46 +360,17 @@
             this.description.hide();
         } else {
             this.description.update(description);
-        }
-        
-
-
-        
+        }  
         
     },
 
     loadRuntimeProduct: function (data) {
         this.runtimeData = data;
-        //console.log('RUNTIME DATA', this.runtimeData);
         this.buildOptions(this.runtimeData.Options);
     },
 
     buildImages: function () {
-        var items = [],
-            images = this.record.get('productImages');
-        
-        if (images.length) {
-            Ext.each(images, function(image) {
-                items.push({
-                    xtype: 'component',
-                    autoEl: 'li',
-                    cls : "image-item",
-                    style: {
-                        backgroundImage: 'url(' + image.url + '?size=150)'
-                    }
-                });
-            }, this);
-
-            this.imageContainer.removeAll();
-            this.imageContainer.add(items);
-        } else {
-            this.imageContainer.removeAll();
-            this.imageContainer.add({
-                xtype: "component",
-                cls: "image-item images-none",
-                html:"No Images Available"
-            });
-        }
+        this.images.loadData(this.record.get('productImages'));
     },
 
     buildOptions: function (options) {

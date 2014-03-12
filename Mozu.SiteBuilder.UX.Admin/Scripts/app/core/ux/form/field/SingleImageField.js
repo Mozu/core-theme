@@ -20,7 +20,7 @@ Ext.define('Taco.core.ux.form.field.SingleImageField', {
 
     tpl: [
         '<tpl for=".">',
-            '<div class="thumb" style="background-image: url({url});">',
+            '<div class="thumb" style="background-image: url(\'{url}\');">',
                 '<div class="controls"><span class="remove"></span></div>',
             '</div>',
         '</tpl>'
