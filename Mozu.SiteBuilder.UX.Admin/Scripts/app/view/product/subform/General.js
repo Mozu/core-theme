@@ -200,19 +200,21 @@ Ext.define('Taco.view.product.subform.General', {
             });
 
             this.discountsRestrictedStartField = Ext.widget({
-                xtype: 'datetime',
+                xtype: 'datefield',
                 fieldLabel: 'Restriction Effective Date',
                 name: 'discountsRestrictedStartDate',
                 pickerOffset: 4,
-                disabled: !isDiscountRestricted
+                disabled: !isDiscountRestricted,
+                emptyText: 'mm/dd/yy'
             });
 
             this.discountsRestrictedEndField = Ext.widget({
-                xtype: 'datetime',
+                xtype: 'datefield',
                 fieldLabel: 'Restriction End Date',
                 name: 'discountsRestrictedEndDate',
                 pickerOffset: 4,
-                disabled: !isDiscountRestricted
+                disabled: !isDiscountRestricted,
+                emptyText: 'mm/dd/yy'
             });
 
             this.mfgPartNumField = Ext.widget({
@@ -333,19 +335,21 @@ Ext.define('Taco.view.product.subform.General', {
         };
 
         this.mapStartField = Ext.widget({
-            xtype: 'datetime',
+            xtype: 'datefield',
             fieldLabel: 'MAP Effective Date',
             name: 'mapStartDate',
             pickerOffset: 4,
-            disabled: isMapDisabled
+            disabled: isMapDisabled,
+            emptyText: 'mm/dd/yy'
         });
 
         this.mapEndField = Ext.widget({
-            xtype: 'datetime',
+            xtype: 'datefield',
             fieldLabel: 'MAP End Date',
             name: 'mapEndDate',
             pickerOffset: 4,
-            disabled: isMapDisabled
+            disabled: isMapDisabled,
+            emptyText: 'mm/dd/yy'
         });
 
         readOnly = this.isEdit() || !(this.isSingleSite || this.isGlobal);
