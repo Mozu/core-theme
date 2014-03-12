@@ -730,6 +730,7 @@
     <Content Include="Scripts\app\view\order\widget\FulfillmentPickerField.js" />
     <Content Include="Scripts\app\view\order\widget\UnpickedupItems.js" />
     <Content Include="Scripts\app\view\order\widget\LocationPickupGrid.js" />
+    <Content Include="Scripts\app\view\product\widget\ProductFulfillmentTypes.js" />
     <Content Include="Scripts\app\view\provisioning\Index.js" />
     <Content Include="Scripts\app\view\provisioning\CatalogProvisionerModal.js" />
     <Content Include="Scripts\app\view\provisioning\SiteProvisionerModal.js" />

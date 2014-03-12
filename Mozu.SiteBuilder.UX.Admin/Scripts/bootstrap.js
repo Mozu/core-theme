@@ -1434,6 +1434,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.view.product.variant.Modal": [],
   "Taco.view.product.variant.Options": [],
   "Taco.view.product.widget.ProductBundleGrid": [],
+  "Taco.view.product.widget.ProductFulfillmentTypes": [],
   "Taco.view.productOption.Edit": [],
   "Taco.view.productType.AttributeForm": [],
   "Taco.view.productType.AttributeGroup": [],
@@ -3444,6 +3445,9 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.view.product.variant.Options": [],
   "Taco.view.product.widget.ProductBundleGrid": [
     "widget.productbundlegrid"
+  ],
+  "Taco.view.product.widget.ProductFulfillmentTypes": [
+    "widget.productfulfillmenttypes"
   ],
   "Taco.view.productOption.Edit": [
     "widget.productOptionedit"
