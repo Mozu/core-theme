@@ -21,8 +21,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         private const string PRODUCT_FULL_DESCRIPTION = "productincatalogs.content.productFullDescription";
         private const string PRODUCT_PUBLISHED_STATE = "publishinginfo.publishedstate";
         private const string PRODUCT_UPC_PROPERTY = "upc";
-        private const string PRODUCT_MFG_PART_NUM_PROPERTY = "supplierInfo.manufacturerPartNumber";
-        private const string PRODUCT_DIST_PART_NUM_PROPERTY = "supplierInfo.distributorPartNumber";
+        private const string PRODUCT_MFG_PART_NUM_PROPERTY = "supplierInfo.mfgPartNumber";
+        private const string PRODUCT_DIST_PART_NUM_PROPERTY = "supplierInfo.distPartNumber";
 
 
       

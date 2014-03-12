@@ -464,107 +464,140 @@ Ext.define('Taco.view.product.subform.General', {
                 width: '100%',
                 overrideFieldName: 'isPriceOverridden',
                 hideOverride: this.isSingleSite,
+                margin: '10 0 0',
                 items: [
                     {
-                        xtype: 'fieldcontainer',
-                        layout: 'hbox',
+                        xtype: 'panel',
+                        ui: 'subform-subform',
                         width: '100%',
-                        defaults: {
-                            width: 250,
-                            margins: '0 50 0 10'
-                        },
+                        margin: '10 0 0',
                         items: [
-                            priceField,
-                            salePriceField,
                             {
-                                xtype: 'container',
-                                flex: 1,
+                                xtype: 'fieldcontainer',
+                                layout: 'hbox',
+                                width: '100%',
+                                defaults: {
+                                    width: 250,
+                                    margins: '0 50 0 10'
+                                },
                                 items: [
-                                    this.isTaxableField
+                                    priceField,
+                                    salePriceField,
+                                    {
+                                        xtype: 'container',
+                                        flex: 1,
+                                        items: [
+                                            this.isTaxableField
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: 'fieldcontainer',
+                                layout: 'hbox',
+                                width: '100%',
+                                hidden: (productUsage != "Bundle"),
+                                defaults: {
+                                    width: 250
+                                },
+                                items: [
+                                    this.rollupBundlePriceField,
+                                    this.rollupBundleSalePriceField
+                                ]
+                            },
+                            {
+                                xtype: 'fieldcontainer',
+                                layout: 'hbox',
+                                width: '100%',
+                                defaults: {
+                                    width: 250,
+                                    margins: '0 50 0 10'
+                                },
+                                items: [
+                                    msrpField,
+                                    this.costField
                                 ]
                             }
                         ]
                     },
                     {
-                        xtype: 'fieldcontainer',
-                        layout: 'hbox',
+                        xtype: 'panel',
+                        ui: 'subform-subform',
                         width: '100%',
-                        hidden: (productUsage != "Bundle"),
-                        defaults: {
-                            width: 250
-                        },
+                        margin: '10 0 0',
                         items: [
-                            this.rollupBundlePriceField,
-                            this.rollupBundleSalePriceField
+                            {
+                                xtype: 'fieldcontainer',
+                                layout: 'hbox',
+                                width: '100%',
+                                defaults: {
+                                    width: 250,
+                                    margins: '0 50 0 10'
+                                },
+                                items: [
+                                    mapField,
+                                    this.mapStartField,
+                                    this.mapEndField
+                                ]
+                            }
                         ]
                     },
                     {
-                        xtype: 'fieldcontainer',
-                        layout: 'hbox',
+                        xtype: 'panel',
+                        ui: 'subform-subform',
                         width: '100%',
-                        defaults: {
-                            width: 250,
-                            margins: '0 50 0 10'
-                        },
+                        margin: '10 0 0',
                         items: [
-                            msrpField,
-                            this.costField
+                            {
+                                xtype: 'fieldcontainer',
+                                hidden: (!(this.isGlobal || this.isSingleSite)),
+                                layout: 'hbox',
+                                width: '100%',
+                                defaults: {
+                                    width: 250,
+                                    margins: '0 50 0 10'
+                                },
+                                items: [
+                                    this.discountsRestrictedField,
+                                    this.discountsRestrictedStartField,
+                                    this.discountsRestrictedEndField
+                                ]
+                            }
                         ]
                     },
                     {
-                        xtype: 'fieldcontainer',
-                        layout: 'hbox',
+                        xtype: 'panel',
+                        ui: 'subform-subform',
                         width: '100%',
-                        defaults: {
-                            width: 250,
-                            margins: '0 50 0 10'
-                        },
+                        margin: '10 0 0',
                         items: [
-                            mapField,
-                            this.mapStartField,
-                            this.mapEndField
-                        ]
-                    },
-                    {
-                        xtype: 'fieldcontainer',
-                        hidden: (!(this.isGlobal || this.isSingleSite)),
-                        layout: 'hbox',
-                        width: '100%',
-                        defaults: {
-                            width: 250,
-                            margins: '0 50 0 10'
-                        },
-                        items: [
-                            this.discountsRestrictedField,
-                            this.discountsRestrictedStartField,
-                            this.discountsRestrictedEndField
-                        ]
-                    },
-                    {
-                        xtype: 'fieldcontainer',
-                        hidden: (!(this.isGlobal || this.isSingleSite)),
-                        layout: 'hbox',
-                        width: '100%',
-                        defaults: {
-                            width: 250,
-                            margins: '0 50 0 10'
-                        },
-                        items: [
-                            this.mfgPartNumField,
-                            this.upcField
-                        ]
-                    },
-                    {
-                        xtype: 'fieldcontainer',
-                        hidden: (!(this.isGlobal || this.isSingleSite)),
-                        layout: 'hbox',
-                        width: '100%',
-                        defaults: {
-                            width: 250,
-                            margins: '0 50 0 10'
-                        },
-                        items: [
-                            this.distPartNumField
+                            {
+                                xtype: 'fieldcontainer',
+                                hidden: (!(this.isGlobal || this.isSingleSite)),
+                                layout: 'hbox',
+                                width: '100%',
+                                defaults: {
+                                    width: 250,
+                                    margins: '0 50 0 10'
+                                },
+                                items: [
+                                    this.mfgPartNumField,
+                                    this.upcField
+                                ]
+                            },
+                            {
+                                xtype: 'fieldcontainer',
+                                hidden: (!(this.isGlobal || this.isSingleSite)),
+                                layout: 'hbox',
+                                width: '100%',
+                                defaults: {
+                                    width: 250,
+                                    margins: '0 50 0 10'
+                                },
+                                items: [
+                                    this.distPartNumField
+                                ]
+                            }
                         ]
                     }
                 ]
