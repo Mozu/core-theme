@@ -187,6 +187,32 @@ Ext.define('Taco.view.product.subform.General', {
                 emptyText: ''
             });
 
+            this.discountsRestrictedField = Ext.widget({
+                xtype: 'checkboxfield',
+                fieldLabel: 'Product Discounts',
+                boxLabel: 'Restrict Discount on this product',
+                name: 'discountsRestricted',
+                checked: isDiscountRestricted,
+                handler: me.onDiscountRestrictedChange,
+                scope: me
+            });
+
+            this.discountsRestrictedStartField = Ext.widget({
+                xtype: 'datetime',
+                fieldLabel: 'Effective Date',
+                name: 'discountsRestrictedStartDate',
+                pickerOffset: 4,
+                disabled: !isDiscountRestricted
+            });
+
+            this.discountsRestrictedEndField = Ext.widget({
+                xtype: 'datetime',
+                fieldLabel: 'End Date',
+                name: 'discountsRestrictedEndDate',
+                pickerOffset: 4,
+                disabled: !isDiscountRestricted
+            });
+
             this.mfgPartNumField = Ext.widget({
                 xtype: 'textfield',
                 fieldLabel: 'Manufacturer Part Number',
@@ -321,32 +347,6 @@ Ext.define('Taco.view.product.subform.General', {
             name: 'mapEndDate',
             pickerOffset: 4,
             disabled: isMapDisabled
-        });
-
-        this.discountsRestrictedField = Ext.widget({
-            xtype: 'checkboxfield',
-            fieldLabel: 'Product Discounts',
-            boxLabel: 'Restrict Discount on this product',
-            name: 'discountsRestricted',
-            checked: isDiscountRestricted,
-            handler: me.onDiscountRestrictedChange,
-            scope: me
-        });
-
-        this.discountsRestrictedStartField = Ext.widget({
-            xtype: 'datetime',
-            fieldLabel: 'Effective Date',
-            name: 'discountsRestrictedStartDate',
-            pickerOffset: 4,
-            disabled: ! isDiscountRestricted
-        });
-
-        this.discountsRestrictedEndField = Ext.widget({
-            xtype: 'datetime',
-            fieldLabel: 'End Date',
-            name: 'discountsRestrictedEndDate',
-            pickerOffset: 4,
-            disabled: !isDiscountRestricted
         });
 
         readOnly = this.isEdit() || !(this.isSingleSite || this.isGlobal);
