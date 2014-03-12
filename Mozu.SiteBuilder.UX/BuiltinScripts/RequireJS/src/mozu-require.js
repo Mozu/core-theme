@@ -142,7 +142,9 @@
 
     function getMozuData(name) {
         var script = document.getElementById('data-mz-preload-' + name);
-        if (script) return script.textContent && JSON.parse(script.textContent);
+        var text;
+        if (script) text = script.textContent || script.innerText || script.text || script.innerHTML;
+        if (text) return text && JSON.parse(text);
     }
 
     //Allow getting a global that expressed in
