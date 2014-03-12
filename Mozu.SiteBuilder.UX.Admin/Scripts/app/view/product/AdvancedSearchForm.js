@@ -4,11 +4,12 @@
 Ext.define('Taco.view.product.AdvancedSearchForm', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
-        'Taco.core.ux.form.field.AdminUser'
+        'Taco.core.ux.form.field.AdminUser',
+        'Taco.core.ux.form.CurrencyField'
     ],
 
     defaults: {
-        width: 450,
+        width: 435,
         xtype: 'textfield'
     },
     items: [
@@ -29,7 +30,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                     width: 200
                 },
                 {
-                    width:20
+                    width:35
                 },
                 {
                     xtype: 'textfield',
@@ -52,7 +53,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                     width: 200
                 },
                 {
-                    width: 20
+                    width: 35
                 },
                 {
                     xtype: 'textfield',
@@ -79,8 +80,9 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                     editable: true,
                     forceSelection: true,
                     store: { type: 'Taco.store.ProductTypes' }
-                },{ width:20},
-                {
+                }, {
+                     width:35
+                },{
                     xtype: 'combobox',
                     name: 'productUsage',
                     fieldLabel: 'Product Usage',
@@ -138,7 +140,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                 align: 'middle'
             },
             items: [{
-                    xtype: 'numberfield',
+                    xtype: 'currencyfield',
                     name: 'minPrice',
                     hideTrigger: true,
                     keyNavEnabled: false,
@@ -149,7 +151,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                     html: 'to',
                     margin: '0 10'
                 }, {
-                    xtype: 'numberfield',
+                    xtype: 'currencyfield',
                     name: 'maxPrice',
                     hideTrigger: true,
                     keyNavEnabled: false,
@@ -163,7 +165,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                 align: 'middle'
             },
             items: [{
-                xtype: 'numberfield',
+                xtype: 'currencyfield',
                 name: 'map',
                 fieldLabel: 'MAP',
                 hideTrigger: true,
@@ -171,9 +173,9 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                 mouseWheelEnabled: false,
                 width: 200
             }, {
-                width: 20
+                width: 35
             }, {
-                xtype: 'numberfield',
+                xtype: 'currencyfield',
                 name: 'msrp',
                 fieldLabel: 'MSRP',
                 hideTrigger: true,
