@@ -192,7 +192,7 @@ Ext.define('Taco.view.product.subform.General', {
             this.discountsRestrictedField = Ext.widget({
                 xtype: 'checkboxfield',
                 fieldLabel: 'Product Discounts',
-                boxLabel: 'Restrict Discount on this product',
+                boxLabel: 'Restrict discounts on this product',
                 name: 'discountsRestricted',
                 checked: isDiscountRestricted,
                 handler: me.onDiscountRestrictedChange,
@@ -201,7 +201,7 @@ Ext.define('Taco.view.product.subform.General', {
 
             this.discountsRestrictedStartField = Ext.widget({
                 xtype: 'datetime',
-                fieldLabel: 'Effective Date',
+                fieldLabel: 'Restriction Effective Date',
                 name: 'discountsRestrictedStartDate',
                 pickerOffset: 4,
                 disabled: !isDiscountRestricted
@@ -209,7 +209,7 @@ Ext.define('Taco.view.product.subform.General', {
 
             this.discountsRestrictedEndField = Ext.widget({
                 xtype: 'datetime',
-                fieldLabel: 'End Date',
+                fieldLabel: 'Restriction End Date',
                 name: 'discountsRestrictedEndDate',
                 pickerOffset: 4,
                 disabled: !isDiscountRestricted
@@ -334,7 +334,7 @@ Ext.define('Taco.view.product.subform.General', {
 
         this.mapStartField = Ext.widget({
             xtype: 'datetime',
-            fieldLabel: 'Effective Date',
+            fieldLabel: 'MAP Effective Date',
             name: 'mapStartDate',
             pickerOffset: 4,
             disabled: isMapDisabled
@@ -342,7 +342,7 @@ Ext.define('Taco.view.product.subform.General', {
 
         this.mapEndField = Ext.widget({
             xtype: 'datetime',
-            fieldLabel: 'End Date',
+            fieldLabel: 'MAP End Date',
             name: 'mapEndDate',
             pickerOffset: 4,
             disabled: isMapDisabled
