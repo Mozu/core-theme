@@ -13,24 +13,24 @@
     "settings": {
 
         "internal-themeAddons": [],
-		"cmsTextStyles": [
-			{
-			  "label": "Heading 1",
-			  "tagName": "h1",
-			  "className": "mz-style-1",
-			  "attributes": {
-				"data-role": "{theNeedful: true}"
-			  }
-			},
-			{
-			  "label": "Heading 2",
-			  "tagName": "h2"
-			},
-			{
-			  "label": "Paragraph",
-			  "tagName": "p"
-			}
-		  ],
+        "cmsTextStyles": [
+            {
+              "label": "Heading 1",
+              "tagName": "h1",
+              "className": "mz-style-1",
+              "attributes": {
+                "data-role": "{theNeedful: true}"
+              }
+            },
+            {
+              "label": "Heading 2",
+              "tagName": "h2"
+            },
+            {
+              "label": "Paragraph",
+              "tagName": "p"
+            }
+          ],
 
         "useDebugScripts": false,
 
@@ -64,7 +64,7 @@
         /* Settings specific to product listing modules */
         "listProductShortDesc": true,
         "listProductCode": true,
-        "useAnimatedProductLists": true,
+        "useAnimatedProductLists": false,
         "listProductThumbSize": 160,
 
         /* Settings specific to product pages */
@@ -326,91 +326,91 @@
     },
     /* Page Types: Users will be allowed to create documents of this type in the CMS */
     "emailTemplates": [
-	  {
-		"id": "order.shipped",
-		"title": "Order Shipped",
-		"template": "email/order-shipped",
-		"properties": {
-		  "subject": "Your Order Has Shipped #{model.orderNumber}"
-		}
-	  },
-	  {
-		"id": "order.changed",
-		"title": "Order Confirmation",
-		"template": "email/order-confirmation",
-		"properties": {
-		  "subject": "Order Confirmation #{model.orderNumber}"
-		}
-	  },
-	  /*
-	  {
-		"id": "return.created",
-		"title": "Return Created",
-		"template": "email/product-return-created",
-		"properties": {
-		  "subject": "Your Return Request"
-		}
-	  },
-	  */
-	  {
-		"id": "return.authorized",
-		"title": "Return Authorized",
-		"template": "email/product-return-authorized",
-		"properties": {
-		  "subject": "RMA Request Approved"
-		}
-	  },
-	  {
-		"id": "return.rejected",
-		"title": "Return Rejected",
-		"template": "email/product-return-rejected",
-		"properties": {
-		  "subject": "RMA Request Rejected"
-		}
-	  },
-	  {
-		"id": "return.closed",
-		"title": "Return Closed",
-		"template": "email/product-return-closed",
-		"properties": {
-		  "subject": "Return Posted"
-		}
-	  },
-	  /*
-	  {
-		"id": "return.changed",
-		"title": "Return Has Been Updated",
-		"template": "email/product-return-changed",
-		"properties": {
-		  "subject": "Your Return Updated"
-		}
-	  },
-	*/
-	  {
-		"id": "user.created",
-		"title": "New Login Created",
-		"template": "email/new-user",
-		"properties": {
-		  "subject": "Welcome"
-		}
-	  },
-	  {
-		"id": "user.passwordreset",
-		"title": "Password Reset",
-		"template": "email/password-reset",
-		"properties": {
-		  "subject": "Reset Your Password"
-		}
-	  },
-	  {
-		"id": "product.instock",
-		"title": "Back in Stock",
-		"template": "email/product-instock",
-		"properties": {
-		  "subject": "Back in Stock"
-		}
-	  }
-	],
+      {
+        "id": "order.shipped",
+        "title": "Order Shipped",
+        "template": "email/order-shipped",
+        "properties": {
+          "subject": "Your Order Has Shipped #{model.orderNumber}"
+        }
+      },
+      {
+        "id": "order.changed",
+        "title": "Order Confirmation",
+        "template": "email/order-confirmation",
+        "properties": {
+          "subject": "Order Confirmation #{model.orderNumber}"
+        }
+      },
+      /*
+      {
+        "id": "return.created",
+        "title": "Return Created",
+        "template": "email/product-return-changed",
+        "properties": {
+          "subject": "Your Return Request"
+        }
+      },
+      */
+      {
+        "id": "return.authorized",
+        "title": "Return Authorized",
+        "template": "email/product-return-authorized",
+        "properties": {
+          "subject": "RMA Request Approved"
+        }
+      },
+      {
+        "id": "return.rejected",
+        "title": "Return Rejected",
+        "template": "email/product-return-rejected",
+        "properties": {
+          "subject": "RMA Request Rejected"
+        }
+      },
+      {
+        "id": "return.closed",
+        "title": "Return Closed",
+        "template": "email/product-return-closed",
+        "properties": {
+          "subject": "Return Posted"
+        }
+      },
+      /*
+      {
+        "id": "return.changed",
+        "title": "Return Has Been Updated",
+        "template": "email/product-return-changed",
+        "properties": {
+          "subject": "Your Return Updated"
+        }
+      },
+    */
+      {
+        "id": "user.created",
+        "title": "New Login Created",
+        "template": "email/new-user",
+        "properties": {
+          "subject": "Welcome"
+        }
+      },
+      {
+        "id": "user.passwordreset",
+        "title": "Password Reset",
+        "template": "email/password-reset",
+        "properties": {
+          "subject": "Reset Your Password"
+        }
+      },
+      {
+        "id": "product.instock",
+        "title": "Back in Stock",
+        "template": "email/product-instock",
+        "properties": {
+          "subject": "Back in Stock"
+        }
+      }
+    ],
 
     /* Page Types: Users will be allowed to create documents of this type in the CMS */
     "pageTypes": [
@@ -425,43 +425,43 @@
             "userCreatable": true,
             /* list of zone widgetes attached to this type of page by default */
             "zones":[
-			  {
-				"Id": "body",
-				"Rows": [
-				  {
-					"Columns": [
-					  {
-						"Span": 12,
-						"Widgets": [
-						  {
-							"definitionId": "cms-image",
-							"config": {
-							  "height": 206,
-							  "imageHeight": "400",
-							  "imageSource": "externalUrl",
-							  "imageExternalUrl": "http://www.fabifirm.com/wp-content/uploads/2013/05/about-us-banner.jpg",
-							  "borderWidth": "1px",
-							  "borderStyle": "Solid",
-							  "borderColor": "rgba(0,0,0,1)",
-							  "imageSize": "Stretch",
-							  "linkSource": "External URL"
-							}
-						  },
-						  {
-							"definitionId": "content",
-							"isRichText": true,
-							"config": {
-							  "body": "<h2>Insert Title</h2><p>Insert Content</p>"
-							}
-						  }
-						],
-						"Rows": null
-					  }
-					]
-				  }
-				]
-			  }
-			]
+              {
+                "Id": "body",
+                "Rows": [
+                  {
+                    "Columns": [
+                      {
+                        "Span": 12,
+                        "Widgets": [
+                          {
+                            "definitionId": "cms-image",
+                            "config": {
+                              "height": 206,
+                              "imageHeight": "400",
+                              "imageSource": "externalUrl",
+                              "imageExternalUrl": "http://www.fabifirm.com/wp-content/uploads/2013/05/about-us-banner.jpg",
+                              "borderWidth": "1px",
+                              "borderStyle": "Solid",
+                              "borderColor": "rgba(0,0,0,1)",
+                              "imageSize": "Stretch",
+                              "linkSource": "External URL"
+                            }
+                          },
+                          {
+                            "definitionId": "content",
+                            "isRichText": true,
+                            "config": {
+                              "body": "<h2>Insert Title</h2><p>Insert Content</p>"
+                            }
+                          }
+                        ],
+                        "Rows": null
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
             
         }, {
             "id": "site_page",
@@ -617,7 +617,7 @@
 
             {
                 "fieldLabel": "Main Category",
-				"name": "mainCategory",
+                "name": "mainCategory",
                 "xtype": "categorycombobox",
                 "anchor": "100%"
             }, {
@@ -631,10 +631,10 @@
                     ["tertiary", "tertiary"]
                 ]
             },
-			{
-				"xtype": "numberfield",
+            {
+                "xtype": "numberfield",
                 "fieldLabel": "Count",
-				"name": "numberToDisplay",
+                "name": "numberToDisplay",
                 "anchor": "100%"
             }
         ],
@@ -643,7 +643,7 @@
             "mainCategory": "Category",
             "numberToDisplay": 4
         },
-		"validPageTypes":["*"]
+        "validPageTypes":["*"]
     },{
         "id": "crosssells",
         "displayName": "Cross Sells",
@@ -651,7 +651,7 @@
         "icon": "/resources/admin/widgets/23_cross_sells.png",
         "editViewFields": [{
                 "fieldLabel": "title",
-				"name": "title",
+                "name": "title",
                 "xtype": "textfield",
                 "anchor": "100%"
             }, {
@@ -666,7 +666,7 @@
                 ]
             }, {
                 "fieldLabel": "count",
-				"name": "count",
+                "name": "count",
                 "xtype": "spinnerfield",
                 "anchor": "100%"
             }
@@ -677,7 +677,7 @@
             "title": "Related Items",
             "count": "4"
         },
-		"validPageTypes":["product","cart"]
+        "validPageTypes":["product","cart"]
     }, {
         "id": "upsells",
         "displayName": "Up Sells",
@@ -687,7 +687,7 @@
 
             {
                 "fieldLabel": "title",
-				"name": "title",
+                "name": "title",
                 "xtype": "textfield",
                 "anchor": "100%"
             }, {
@@ -701,9 +701,9 @@
                     ["modules/product/product-list", "list"]
                 ]
             },
-			{
+            {
                 "fieldLabel": "count",
-				"name": "count",
+                "name": "count",
                 "xtype": "spinnerfield",
                 "anchor": "100%"
             }
@@ -714,7 +714,7 @@
             "title": "Other Items",
             "count": "4"
         },
-		"validPageTypes":["product","cart"]
+        "validPageTypes":["product","cart"]
     }, {
         "id": "relatedproducts",
         "displayName": "Related Products",
@@ -724,7 +724,7 @@
 
             {
                 "fieldLabel": "title",
-				"name": "title",
+                "name": "title",
                 "xtype": "textfield",
                 "anchor": "100%"
             }, {
@@ -738,9 +738,9 @@
                     ["modules/product/product-list", "list"]
                 ]
             },
-			{
+            {
                 "fieldLabel": "count",
-				"name": "count",
+                "name": "count",
                 "xtype": "spinnerfield",
                 "anchor": "100%"
             }
@@ -751,7 +751,7 @@
             "title": "Other Items",
             "count": "4"
         },
-		"validPageTypes":["product","cart"]
+        "validPageTypes":["product","cart"]
     }, 	{
          "id": "instockrequest",
          "displayName": "Instock Request",
@@ -759,16 +759,16 @@
          "icon": "/resources/admin/widgets/25_instock_requests.png",
         "editViewFields":[
 
-			{
-				"fieldLabel":"title",
-				"xtype":"textfield",
-				"anchor":"100%"
-				}
-			
+            {
+                "fieldLabel":"title",
+                "xtype":"textfield",
+                "anchor":"100%"
+                }
+            
          ],
           "defaultConfig": {
-			  "title": "Related Items"
-		},
+              "title": "Related Items"
+        },
          "validPageTypes":["product"]
     },  {
         "id": "content",
