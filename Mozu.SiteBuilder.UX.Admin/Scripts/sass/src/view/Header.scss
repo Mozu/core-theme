@@ -90,15 +90,16 @@
       border-right: 1px solid border-for($color-neutral-95);
       color: $color;
       display: inline-block;
-      padding: 15px 15px 0px 50px;
-      @include icon-font($glyph-dashboard, 32px);
+      margin-right: 10px;
+      padding: 14px 20px 0px 40px;
+      @include icon-font($glyph-dashboard, 20px);
       height: 40px;
       vertical-align: top;
       width: auto;
 
       &::after {
-        left: 9px;
-        top: 1px;
+        left: 10px;
+        top: 8px;
       }
     }
     .#{$vprefix}icon-nav-customers::after {
@@ -109,6 +110,7 @@
     }
     .#{$vprefix}icon-nav-orders::after {
       content: $glyph-orders;
+      top: 10px;
     }
     .#{$vprefix}icon-nav-marketing::after {
       content: $glyph-marketing;
@@ -132,7 +134,7 @@
 
       li {
         display: inline-block;
-        padding: 0px 8px;
+        padding: 0px 10px;
         position: relative;
         vertical-align: top;
 
@@ -153,7 +155,7 @@
         }
 
         &::after {
-          background-color: border-for($color-neutral-70);
+          background-color: $color-neutral-20;
           content: "";
           display: block;
           height: 14px;

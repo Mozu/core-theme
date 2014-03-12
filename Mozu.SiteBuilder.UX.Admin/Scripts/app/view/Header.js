@@ -60,6 +60,7 @@ Ext.define('Taco.view.Header', {
             anchor: '100%',
             height: 45,
             cls: Taco.baseCSSPrefix + 'masthead',
+            padding: '0 10 0 10',
             layout: {
                 type: 'hbox',
                 align: 'middle'
