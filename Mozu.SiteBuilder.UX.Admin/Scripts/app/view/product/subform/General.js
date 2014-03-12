@@ -110,7 +110,6 @@ Ext.define('Taco.view.product.subform.General', {
                 allowBlank: false,
                 minLength: 3,
                 //hidden: !visable,
-                width: 200,
                 xtype: 'textfield',
                 listeners: {
                     change:function ( cmp, newValue) {
@@ -355,34 +354,56 @@ Ext.define('Taco.view.product.subform.General', {
 
 
         this.items = [
-            this.productCodeField,
-            this.productTypeField,
-            this.productUsageField,
             {
-                xtype: 'formform',
-                persistChangesToModel: true,
-                record: this.productInCatalogInfo,
-                hidden: this.isGlobal,
+                xtype: 'fieldcontainer',
+                layout: 'hbox',
                 width: '100%',
-                header: false,
+                defaults: {
+                    width: 250,
+                    margins: '0 50 0 10'
+                },
                 items: [
+                    this.productCodeField,
                     {
-                        xtype: 'combobox',
-                        fieldLabel: 'Status',
-                        name: 'isActive',
-                        labelAlign: 'top',
+                        xtype: 'formform',
+                        persistChangesToModel: true,
+                        record: this.productInCatalogInfo,
                         hidden: this.isGlobal,
-                        allowBlank: false,
-                        editable: false,
-                        forceSelection: true,
-                        listConfig: { shadow: false },
-                        shrinkWrap: 3,
-                        store: [[false, 'Disable'], [true, 'Active']],
-                        value: this.productInCatalogInfo ? this.productInCatalogInfo.get('isActive') : false
+                        width: '100%',
+                        header: false,
+                        items: [
+                            {
+                                xtype: 'combobox',
+                                fieldLabel: 'Status',
+                                name: 'isActive',
+                                labelAlign: 'top',
+                                hidden: this.isGlobal,
+                                allowBlank: false,
+                                editable: false,
+                                forceSelection: true,
+                                listConfig: { shadow: false },
+                                shrinkWrap: 3,
+                                store: [[false, 'Disable'], [true, 'Active']],
+                                value: this.productInCatalogInfo ? this.productInCatalogInfo.get('isActive') : false
+                            }
+                        ]
                     }
                 ]
-
-            }, {
+            },
+            {
+                xtype: 'fieldcontainer',
+                layout: 'hbox',
+                width: '100%',
+                defaults: {
+                    width: 250,
+                    margins: '0 50 0 10'
+                },
+                items: [
+                    this.productTypeField,
+                    this.productUsageField
+                ]
+            },
+            {
                 xtype: 'productoverride',
                 overrideFieldName: 'isContentOverridden',
                 hideOverride: this.isSingleSite,
@@ -505,6 +526,7 @@ Ext.define('Taco.view.product.subform.General', {
                     },
                     {
                         xtype: 'fieldcontainer',
+                        hidden: (!(this.isGlobal || this.isSingleSite)),
                         layout: 'hbox',
                         width: '100%',
                         defaults: {
