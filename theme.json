@@ -370,11 +370,11 @@
       },
       {
         "id": "return.closed",
-        "title": "Return Closed",
-        "template": "email/product-return-closed",
-        "properties": {
-          "subject": "Return Posted"
-        }
+		"title": "Return Item Received",
+		"template": "email/product-return-received",
+		"properties": {
+		  "subject": "Return Item Received"
+		}
       },
       /*
       {
