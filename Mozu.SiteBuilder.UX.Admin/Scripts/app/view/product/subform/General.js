@@ -141,7 +141,10 @@ Ext.define('Taco.view.product.subform.General', {
                 //  queryCaching: true,
                 store: this.productTypeStore,
                 listeners: {
-                    change: this.onProductTypeChange
+                    change: {
+                        scope: this,
+                        fn: 'onProductTypeChange'
+                    }
                 }
             });
 
@@ -769,7 +772,7 @@ Ext.define('Taco.view.product.subform.General', {
         productUsageField.enable();
 
         // when the user changes the productType field we need to update the available productUsages based on the selected productType
-        me.ownerCt.filterProductUsageField(productUsages);
+        me.filterProductUsageField(productUsages);
 
         //need to set the productTypeId for variations to work.
         product = parentForm.product || parentForm.record;
