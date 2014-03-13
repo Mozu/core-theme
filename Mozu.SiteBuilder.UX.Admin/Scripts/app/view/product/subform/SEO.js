@@ -37,17 +37,42 @@ Ext.define('Taco.view.product.subform.SEO', {
         this.callParent(arguments);
 
 
-        this.on('boxready', function () {
-            this.productForm = this.up('productform');
-            this.slugField = this.getForm().findField('slug');
-            this.metaTitle = this.getForm().findField('metaTitle');
-            this.metaDescription = this.getForm().findField('metaDescription');
-            this.mon(this.productForm, 'productnamechange', this.onNameChange, this);
-            this.mon(this.productForm, 'productfulldescriptionchange', this.onProductLongDescriptionChange, this);
+        this.on({
+            boxready: {
+                scope: this,
+                fn: function () {
+                    this.productForm = this.up('productform');
+                    this.slugField = this.getForm().findField('slug');
+                    this.metaTitle = this.getForm().findField('metaTitle');
+                    this.metaDescription = this.getForm().findField('metaDescription');
+
+                    if (this.productForm.isCreate) {
+                        this.manageListeners(true);
+                    }
+                }
+            }
         });
-
-
     },
+
+    manageListeners: function (attach) {
+        var fn = (attach === true ? 'mon' : 'mun');
+
+        this[fn](this.productForm, {
+            productnamechange: {
+                scope: this,
+                fn: 'onNameChange'
+            },
+            productfulldescriptionchange: {
+                scope: this,
+                fn: 'onProductLongDescriptionChange'
+            },
+            savesuccess: {
+                scope: this,
+                fn: 'manageListeners'
+            }
+        });
+    },
+
     onProductLongDescriptionChange: function (record, value) {
         if ((this.productInCatalogInfo || this.product) != record) {
             return;
@@ -57,6 +82,7 @@ Ext.define('Taco.view.product.subform.SEO', {
         
         this.metaDescription.setValue((shadow.innerText || '').trim());
     },
+
     onNameChange: function (record, name) {
         if ((this.productInCatalogInfo || this.product) != record) {
             return;
