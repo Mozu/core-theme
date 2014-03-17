@@ -9,7 +9,8 @@ Ext.define('Taco.view.customers.Segments.Index', {
        // 'Taco.model.CustomerAccount',
      //   'Taco.store.CustomerSegments',
      //   'Taco.view.customers.AdvancedSearchForm',
-        'Taco.store.CustomerSegments'
+        'Taco.store.CustomerSegments',
+    'Taco.view.customers.Segments.AddRemoveModal'
     ],
 
     typeName: 'CustomerSegment',
@@ -81,21 +82,58 @@ Ext.define('Taco.view.customers.Segments.Index', {
                 text: 'Actions',
                 flex:1,
                 menuItems: [{
-                    text: 'Edit',
+                    text: 'Add Customers',
                     requiredBehaviors: {
                         model: 'Taco.model.CustomerAccount',
                         behavior: 'update'
                     },
                     menuColumnHandler: function (item, eventData) {
-                        var page = eventData.grid.getParentPage(),
-                            record = eventData.record,
-                            metaData = { id: record.getId() };
-
-                        page.launchEditor(record, metaData);
+                        var modal = Ext.create('Taco.view.customers.Segments.AddRemoveModal',
+                        {
+                            segmentId: eventData.record.getId(),
+                            batchMethod: 'add',
+                            segmentCode: eventData.record.get('code')
+                        });
                     }
-                }],
-                // do any processing needed to show menu
-                onMenuShow: function (menu, eventData) {}
+                }, {
+                    text: 'Remove Customers',
+                    requiredBehaviors: {
+                        model: 'Taco.model.CustomerAccount',
+                        behavior: 'update'
+                    },
+                    menuColumnHandler: function (item, eventData) {
+                        var modal = Ext.create('Taco.view.customers.Segments.AddRemoveModal',
+                        {
+                            segmentId: eventData.record.getId(),
+                            batchMethod: 'remove',
+                            segmentCode: eventData.record.get('code')
+                        });
+                    }
+                }, {
+                    text: 'Delete Segment',
+                    requiredBehaviors: {
+                        model: 'Taco.model.CustomerAccount',
+                        behavior: 'update'
+                    },
+                    menuColumnHandler: function (item, eventData) {
+                        var modal = Ext.create('Taco.core.ux.window.Alert', {
+                            autoShow: true,
+                            closeAction: 'destroy',
+                            items: [
+                                {
+                                    html: 'Do you really want to Delete Segment: ' + eventData.record.get('code')
+                                }],
+                            listeners: {
+                                confirm: function () {
+                                    me.store.remove([eventData.record]);
+                                    me.store.sync();
+                                }
+                            }
+                        });
+
+                    }
+                }]
+                
             }]
         };
         

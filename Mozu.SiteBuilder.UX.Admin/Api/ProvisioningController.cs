@@ -182,15 +182,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             ServiceClientResponse<StreamContent> res = null;
             if (entity.ItemType == "site")
             {
-                res = await _provisioningWebApiClient.DeleteSite(this.SbApiContext.TenantId, entity.Id );    
+                res = await _provisioningWebApiClient.SoftDeleteSite(this.SbApiContext.TenantId, entity.Id );    
             }
             if (entity.ItemType == "catalog")
             {
-                res = await _provisioningWebApiClient.DeleteCatalog(new DeleteCatalogRequest() { CatalogId = entity.Id , MasterCatalogId = entity.MasterCatalogId , TenantId = this.SbApiContext.TenantId });
+                res = await _provisioningWebApiClient.SoftDeleteCatalog(  catalogId : entity.Id, masterCatalogId : entity.MasterCatalogId, tenantId : this.SbApiContext.TenantId );
             }
             if (entity.ItemType == "mastercatalog")
             {
-                res = await _provisioningWebApiClient.DeleteMasterCatalog(this.SbApiContext.TenantId, entity.Id );
+                res = await _provisioningWebApiClient.SoftDeleteMasterCatalog(this.SbApiContext.TenantId, entity.Id);
             }
 
             if (res.ResponseMessage.IsSuccessStatusCode)

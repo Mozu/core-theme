@@ -73,7 +73,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public class SegmentBatchUpdate
         {
-            public int SegmentCode { get; set; }
+            public int SegmentId { get; set; }
             public string Method { get; set; }
             public List<int> Customers { get; set; }
             
@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
            if (update.Method == "add")
            {
-               var res = (await _customerSegmentWebApiClient.AddSegmentAccounts(update.Customers, update.SegmentCode));
+               var res = (await _customerSegmentWebApiClient.AddSegmentAccounts(update.Customers, update.SegmentId));
                if (! res.ResponseMessage.IsSuccessStatusCode)
                {
                    throw res.ReadException();
@@ -94,11 +94,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
            if (update.Method == "remove")
            {
-               var res = (await _customerSegmentWebApiClient.AddSegmentAccounts(update.Customers, update.SegmentCode));
+               var res = (await _customerSegmentWebApiClient.DeleteSegmentAccounts( update.Customers, update.SegmentId));
                if (!res.ResponseMessage.IsSuccessStatusCode)
                {
                    throw res.ReadException();
                }
+               return this.Request.CreateResponse(HttpStatusCode.OK, this.EmptyList2<int>());
            }
            throw new NotImplementedException("unknown batch mode");
         }
@@ -108,7 +109,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<HttpResponseMessage> DeleteSegments(List<DC.CustomerSegment> segments)
         {
 
-            var tasks = segments.Select(x => _customerSegmentWebApiClient.AddSegment(x)).ToList();
+            var tasks = segments.Select(x => _customerSegmentWebApiClient.DeleteSegment(x.Id )).ToList();
             await Task.WhenAll(tasks);
 
             foreach (var task in tasks.Where(x=> !x.Result.ResponseMessage.IsSuccessStatusCode ))
