@@ -133,26 +133,45 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         
             if (entity.ItemType == "site")
             {
-                var site = tenant.Sites.FirstOrDefault(x => x.Id == entity.Id);
+                var site = tenant.Sites.First(x => x.Id == entity.Id);
                 site.Name = entity.Name;
-               
+                var res = await _tenantsWebApiClient.UpdateSite(this.SbApiContext.TenantId, entity.Id, site);
+                
+
+             
+
+                if (res.ResponseMessage.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                throw res.ReadException();
+
             }
             if (entity.ItemType == "catalog")
             {
-                var catalog = tenant.MasterCatalogs.SelectMany(x => x.Catalogs).FirstOrDefault(x => x.Id == entity.Id);
+                var catalog = tenant.MasterCatalogs.SelectMany(x => x.Catalogs).First(x => x.Id == entity.Id);
                 catalog.Name = entity.Name;
+                var res = await _tenantsWebApiClient.UpdateCatalog(this.SbApiContext.TenantId, entity.Id, catalog);
+
+                if (res.ResponseMessage.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                throw res.ReadException();
             }
             if (entity.ItemType == "mastercatalog")
             {
-                var catalog = tenant.MasterCatalogs.FirstOrDefault(x => x.Id == entity.Id);
+                var catalog = tenant.MasterCatalogs.First(x => x.Id == entity.Id);
                 catalog.Name = entity.Name;
+                var res = await _tenantsWebApiClient.UpdateMasterCatalog(this.SbApiContext.TenantId, entity.Id, catalog);
+
+                if (res.ResponseMessage.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                throw res.ReadException();
             }
-            var res = await _tenantsWebApiClient.UpdateTenant(tenant, tenant.Id);
-            if (res.ResponseMessage.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            throw res.ReadException();
+            throw new NotImplementedException();
 
         }
 

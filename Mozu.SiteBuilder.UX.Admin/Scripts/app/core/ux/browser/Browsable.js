@@ -181,6 +181,13 @@ Ext.define('Taco.core.ux.browser.Browsable', {
             this.store = Taco.core.data.StoreManager.getOrCreate(this.store);
         }
         
+        if (this.store && this.store.getProxy()) {
+            this.mon(this.store.getProxy(), 'exception', function (proxy, response, operation, eOpts ) {
+                var error = Ext.create('Taco.core.data.RemoteException', { response: response }),
+                    msg = error.getMessage() || 'error occurd';
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+            }, this);
+        }
 
         if (this.useGridPanel) {
             this.createGridPanel(this.gridPanelConf || {});

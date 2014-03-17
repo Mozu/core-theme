@@ -218,7 +218,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var dcExistingCustomer = await GetAccountWithAttributes(dcCust.Id);
 
-                await Task.WhenAll( ManageContacts(dcCust, dcExistingCustomer), ManageAttributes(dcCust, dcExistingCustomer));
+                await Task.WhenAll( ManageContacts(dcCust, dcExistingCustomer), ManageAttributes(dcCust, dcExistingCustomer), ManageSegments ( dcCust, dcExistingCustomer ));
                 await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id);
 
                 var updatedCustomer = await GetAccountWithAttributes(dcCust.Id);
@@ -227,6 +227,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(retList);
 
         }
+
+       
 
         /// <summary>
         /// Create a new customer.
@@ -293,6 +295,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return c.Id;
             }
         }
+
+
+        private Task ManageSegments(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
+        {
+
+            List<Task> groupManagementTasks = new List<Task>();
+            dcExistingCustomer.Segments = dcExistingCustomer.Segments ?? new List<DC.CustomerSegment>();
+            var existingGroups = dcExistingCustomer.Segments .Select(x => x.Id).ToList();
+            var newGroups = dcCustomer.Segments.Select(x => x.Id).ToList();
+
+            var groupsToAdd = newGroups.Except(existingGroups);
+            var groupsToDel = existingGroups.Except(newGroups);
+
+            groupManagementTasks.AddRange(groupsToAdd.Select(x => _customerSegmentWebApiClient.AddSegmentAccounts( new List<int>{ dcCustomer.Id} , x)));
+            groupManagementTasks.AddRange(groupsToDel.Select(x => _customerSegmentWebApiClient.DeleteSegmentAccounts( new List<int>{ dcCustomer.Id} , x)));
+
+            return Task.WhenAll(groupManagementTasks);
+        }
+
+
 
         /// <summary>
         /// Update contacts subroutine for EditCustomers. Yes, a subroutine.
