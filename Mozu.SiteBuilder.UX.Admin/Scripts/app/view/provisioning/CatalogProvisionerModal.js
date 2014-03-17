@@ -33,8 +33,12 @@ Ext.define('Taco.view.provisioning.CatalogProvisionerModal', {
                         ],
                         listeners: {
                             change: function (cType, newValue) {
+                                var mc = me.form.findField('masterCatalogId');
                                 me.form.findField('name').setFieldLabel(newValue == 'catalog' ? 'Catalog Name' : 'Master Catalog Name');
-                                me.form.findField('masterCatalogId').setVisible(newValue == 'catalog');
+                                mc.setVisible(newValue == 'catalog');
+                                if (newValue == 'mastercatalog') {
+                                    mc.setValue(' ');
+                                }
                             }
                         },
                         scope:this,
@@ -44,8 +48,10 @@ Ext.define('Taco.view.provisioning.CatalogProvisionerModal', {
                      {
                          xtype: 'combobox',
                          name: 'masterCatalogId',
+                         editable:false,
                          store: this.masterCatalogStore,
                          hidden: this.itemType == 'mastercatalog',
+                         value:this.itemType == 'mastercatalog'?' ':null,
                          valueField: 'id',
                          displayField: 'name',
                          fieldLabel: 'Master Catalog',
