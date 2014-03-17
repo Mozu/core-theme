@@ -39,8 +39,9 @@ Ext.define('Taco.core.ux.window.Alert', {
 
     primaryHandler: function () {
         if (this.fireEvent('beforeconfirm', this) !== false) {
-            this.close();
+           
             this.fireEvent('confirm', this);
+            this.close();
         }
     }
 });

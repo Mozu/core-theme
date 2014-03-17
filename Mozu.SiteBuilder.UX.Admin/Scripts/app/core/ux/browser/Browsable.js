@@ -109,8 +109,10 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         }
 
         // this plugin will auto select the first record in the grid and manage reselection of the selected item after a store load
-        this.gridPanelConf.plugins.push("autoselect");
-        
+        if (this.enableAutoSelect !== false) {
+               this.gridPanelConf.plugins.push("autoselect");
+        }
+
         if (this.enableRowEditing) {
             // update the button text to be "Save"
             Ext.grid.RowEditor.prototype.saveBtnText = "Save";
