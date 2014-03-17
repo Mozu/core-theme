@@ -110,7 +110,13 @@ Ext.define('Taco.view.customers.subform.Information', {
                         name: 'segmentIds',
                         queryMode: 'local',
                         fieldLabel: 'Segments',
-                        cls: 'customer-history'
+                        cls: 'customer-history',
+                        pageSize :10,
+                        tpl: Ext.create('Ext.XTemplate',
+       '<tpl for=".">',
+            '<div class="x-boundlist-item">code:{code} - name:{name}</div>',
+        '</tpl>'
+    ),
                     }]
             }];
 

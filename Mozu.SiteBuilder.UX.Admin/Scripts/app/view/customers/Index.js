@@ -88,7 +88,16 @@ Ext.define('Taco.view.customers.Index', {
             }, {
                 dataIndex: 'segments',
                 text: 'Segments',
-                    width: 300,
+                width: 300,
+                renderer: function (value, metaData, record) {
+                    var codes = [];
+                    if (value && value.length) {
+                        codes = Ext.Array.pluck(value, 'code');
+                        return codes.join(', ');
+                    }
+                    return '';
+
+                },
                 //    renderer: function(value, metaData, record) {
                 //    if (value && value.length) {
                 //        var names = [];

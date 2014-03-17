@@ -271,7 +271,7 @@ Ext.define('Taco.view.provisioning.Index', {
         });
     },
     deleteEntity: function (entity) {
-        
+
         var me = this,
             request = {
                 url: '/admin/app/provisioning/deleteEntity',
@@ -291,14 +291,16 @@ Ext.define('Taco.view.provisioning.Index', {
                     Taco.app.fireEvent('setmessage', errorMsg, 'error');
                 }
             };
-        Ext.create('Taco.core.ux.modal.Confirmation', {
-            text: 'You are about to delete "' +entity.name +'"!<br/>Are your sure you want to continue?',
-            confirm: function () {
-                confirm.close();
-                Ext.Ajax.request(request);
-            },
-            autoShow: true
-        });
+            Ext.create('Taco.core.ux.modal.Confirmation', {
+                text: 'You are about to delete "' +entity.name +'"!<br/>Are your sure you want to continue?',
+                listeners: {
+                    confirm: function () {
+                        Ext.Ajax.request(request);
+                    },    
+                },
+                
+                autoShow: true
+            });
        
     },
     renameEntity: function (entity) {
