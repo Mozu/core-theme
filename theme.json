@@ -36,6 +36,7 @@
 
         /* Common settings used in templates */
         "defaultPageSize": 15,
+        "defaultSort": "createDate asc",
         "pageSizeOptions": [15, 25, 50, 100],
         "maxProductSummaryWords": 40,
         "allowWishlist": false,
@@ -370,11 +371,11 @@
       },
       {
         "id": "return.closed",
-		"title": "Return Item Received",
-		"template": "email/product-return-received",
-		"properties": {
-		  "subject": "Return Item Received"
-		}
+        "title": "Return Item Received",
+        "template": "email/product-return-received",
+        "properties": {
+          "subject": "Return Item Received"
+        }
       },
       /*
       {
