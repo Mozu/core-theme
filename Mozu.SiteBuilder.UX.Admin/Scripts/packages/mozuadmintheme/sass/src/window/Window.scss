@@ -1,10 +1,10 @@
 /* WINDOW UI DEFINITIONS */
 
 @include extjs-window-ui(
-    $ui-label: 'dialog',
+    $ui: 'dialog',
 
     $ui-padding: 0px 0px 19px,
-    $ui-border-radius: 0px,
+    $ui-border-radius: 1px,
     $ui-border-color: $color-neutral-75,
     $ui-border-width: 1px,
     $ui-inner-border-color: $color-neutral-75,
@@ -48,10 +48,10 @@
 );
 
 @include extjs-window-ui(
-    $ui-label: 'modal',
+    $ui: 'modal',
 
     $ui-padding: 0px 0px 20px,
-    $ui-border-radius: 0px,
+    $ui-border-radius: 1px,
     $ui-border-color: $color-neutral-75,
     $ui-border-width: 0px,
     $ui-inner-border-color: $color-neutral-75,

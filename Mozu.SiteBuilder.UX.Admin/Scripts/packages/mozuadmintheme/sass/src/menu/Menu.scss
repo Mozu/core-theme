@@ -12,6 +12,7 @@
 
 .#{$prefix}menu-item-link {
     margin: 0px;
+    padding-right: 20px;
     text-decoration: none;
 }
 
@@ -49,6 +50,12 @@
         &+ img {
             background-color: $menu-item-active-background-color;
         }
+    }
+
+    .#{$prefix}menu-item-arrow {
+        left: auto;
+        right: 0px;
+        top: 0px;
     }
 }
 
