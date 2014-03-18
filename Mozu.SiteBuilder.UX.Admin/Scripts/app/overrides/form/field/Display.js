@@ -30,80 +30,21 @@ Ext.define('Taco.overrides.form.field.Display', {
     },
         
     validator: function (value) {
-       // debugger;
         return "validator error"
 
     },
     
     isDirty: function () {
-        //debugger
         return false;
     },
 
     isValid: function () {
-    //    debugger
         return true;
     },
 
     validate: function () {
-      //  debugger
         return true;
     },
-
-
-
-    /*
-
-    renderActiveError: function() {
-        
-        var me = this,
-            hasError = me.hasActiveError();
-        if (me.inputEl) {
-            // Add/remove invalid class
-            me.inputEl[hasError ? 'addCls' : 'removeCls'](me.invalidCls + '-field');
-        }
-        me.mixins.labelable.renderActiveError.call(me);
-    },
-    
-    hasActiveError : function() {
-    
-        return this.callParent(arguments);
-    },
-    
-    getActiveError: function () {
-    
-        return this.callParent(arguments);
-    },
-
-    
-    isDirty: function () {
-        var me = this;
-        return !me.disabled && !me.isEqual(me.getValue(), me.originalValue);
-    },
-    
-    
-    
-    getErrors: function (value) {
-        debugger
-        return ["asdf"]
-    },
-    
-    
-    // need to override this method if you want any custom validation
-    
-    isValid: function () {
-        return this.superclass.isValid();
-    },
-    
-
-
-    // need to override this method if you want any custom validation
-    
-    validate: function () {
-        return this.superclass.validate();
-    },
-    
-    */
     
 
     // fixing issue in extjs where you setValue an object and it gets converted to string by the default valueToRaw method
@@ -116,19 +57,6 @@ Ext.define('Taco.overrides.form.field.Display', {
     }
 }, function () {
     
-    this.borrow(Ext.form.field.Text, [
-        // 'onDirtyChange',
-//        'isValid',
-//        'validateValue',
-//        'markInvalid',
-//        'clearInvalid',
-//        'setError',
-//        'renderActiveError',
-//        'onChange',
-//        'isDirty',
-//        'checkDirty',
-//        'getErrors',
-//        'validate'
-    ]);
+    this.borrow(Ext.form.field.Text, []);
 
 });
