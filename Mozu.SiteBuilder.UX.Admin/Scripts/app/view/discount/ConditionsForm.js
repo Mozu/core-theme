@@ -59,6 +59,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
         this.buildCategory();
 
+        this.buildSegments();
+
         this.requiresCouponInput = Ext.create('Ext.form.field.Checkbox', {
             name: 'requiresCoupon',
             boxLabel: "Create coupon",
@@ -130,8 +132,10 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             this.minimumOrderAmountInput,
             this.minimumLifetimeValueAmount,
             this.datesContainer,
+            this.segmentsBox,
             this.productsBox,
             this.categoriesBox,
+            this.segmentsBox,
             this.redemptionLimits,
             this.requiresCouponInput,
             this.couponCodeBox
@@ -188,6 +192,29 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         });
     },
 
+
+    buildSegments:function (){
+        var segStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerSegments');
+        this.segmentsBox = Ext.create('Ext.container.Container', {
+            layout: {
+                type: 'hbox',
+                align: 'bottom'
+            },
+            store:segStore,
+            width: 600,
+            items: [{
+                xtype: 'boxselect',
+                name: "customerSegments",
+                queryMode: "local",
+                displayField: 'code',
+                fieldLabel: 'Choose a Segment',
+                valueField: 'id'
+
+            }]
+        });
+        //segmentsBox
+    },
+
     buildCategory: function () {
         var catStore = this.record.getCategoryStore();
         // reset the list's dirty state when its store first loads
@@ -235,6 +262,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 }
             ]
         });
+
+       
     },
     
     /**

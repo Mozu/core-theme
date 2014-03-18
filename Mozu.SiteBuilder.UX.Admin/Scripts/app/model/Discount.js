@@ -12,15 +12,15 @@ Ext.define('Taco.model.Discount', {
     },
     idProperty: 'id',
     fields: [{
-            name: 'id',
-            type: 'int'
-        }, {
-            name: 'name',
-            type: 'string'
-        }, {
-            name: 'scope',
-            type: 'string'
-        },
+        name: 'id',
+        type: 'int'
+    }, {
+        name: 'name',
+        type: 'string'
+    }, {
+        name: 'scope',
+        type: 'string'
+    },
         {
             name: 'target',
             type: 'string'
@@ -49,7 +49,7 @@ Ext.define('Taco.model.Discount', {
             type: 'auto',
             defaultValue: []
         },
-        
+
 
         {
             name: 'conditionalCategories',
@@ -71,7 +71,7 @@ Ext.define('Taco.model.Discount', {
             type: 'auto',
             defaultValue: []
         },
-        
+
 
 
         {
@@ -84,6 +84,15 @@ Ext.define('Taco.model.Discount', {
             type: 'float',
             useNull: true,
             defaultValue: null
+        },
+        {
+            name: "doesNotApplyToSalePrice",
+            type: 'bool',
+        },
+        {
+            name: "customerSegments",
+            type: 'auto',
+            defaultValue: []
         },
         {
             name: 'maxRedemptionCount',
