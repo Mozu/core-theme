@@ -182,12 +182,31 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         if (!this.store.isStore) {
             this.store = Taco.core.data.StoreManager.getOrCreate(this.store);
         }
-        
+
         if (this.store && this.store.getProxy()) {
-            this.mon(this.store.getProxy(), 'exception', function (proxy, response, operation, eOpts ) {
-                var error = Ext.create('Taco.core.data.RemoteException', { response: response }),
-                    msg = error.getMessage() || 'error occurd';
-                    Taco.app.fireEvent('setmessage', msg, 'error');
+            this.mon(this.store.getProxy(), 'exception', function (proxy, response, operation, eOpts) {
+                var error, msg;
+
+                if (operation && operation.error && operation.error.remoteException) {
+                    if (operation.error.remoteException.wasHandled) {
+                        return;
+                    }
+                    error = operation.error.remoteException;
+                    
+                } else {
+                    error = Ext.create('Taco.core.data.RemoteException', { response: response });
+
+                    if (operation) {
+                        if (!operation.error) {
+                            operation.error = {};
+                        }
+                        operation.error.remoteException = error;
+                    }
+
+                }
+                error.wasHandled = true;
+                msg = error.getMessage() || 'error occurd';
+                Taco.app.fireEvent('setmessage', msg, 'error');
             }, this);
         }
 
@@ -464,11 +483,14 @@ Ext.define('Taco.core.ux.browser.Browsable', {
                             grid.setLoading(false);
 
                             var text = "Unknown error.";
-                            if (m.exceptions) {
+                            if (m.exceptions && Taco.core.util.ExceptionWhiner.wasHandled(m.exceptions)) {
+                                return;
+                            }
+                            if (m.exceptions ){
                                 text = Taco.core.util.ExceptionWhiner.createHtmlList(m.exceptions);
                             }
 
-                            Taco.app.fireEvent('setmessage', 'Delete failed.', 'error');
+                            Taco.app.fireEvent('setmessage', text, 'error');
                             
                         }
                         
