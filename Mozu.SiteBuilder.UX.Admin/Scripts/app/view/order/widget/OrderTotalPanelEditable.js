@@ -49,10 +49,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                         if (e.getKey() == e.ENTER) {
                             var target = Ext.fly(t);
                             if (target.hasCls("taco-order-adjustment-cell")){
-                                //debugger;
                                 me.onEditAdjustmentStart("order")
                             } else if (target.hasCls("taco-shipping-adjustment-cell")){
-                                //debugger;
                                 me.onEditAdjustmentStart("shipping")
                             };
                         }
@@ -101,8 +99,6 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
 
         var editor = new Ext.Editor({
             updateEl: true,
-            //height: size.height,
-            //width: size.width,
             autoSize: true,
             alignment: "tr-tr?",
             value:4.25,
@@ -131,14 +127,11 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
 
     },
 
-    initLeftPanel : function (){
-        //this.couponCombo = 
-
+    initLeftPanel : function () {
         this.initCouponCombo();
 
         this.leftPanel = Ext.create("Ext.container.Container", {
             cls: "orderform-detail-totalpanel-leftpanel",
-            //style:"background-color:red",
             layout:{
                 type: 'form'
             },
@@ -230,7 +223,6 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         orderAdjustmentValue = me.record.get("orderAdjustment").amount;
         shippingAdjustmentValue = me.record.get("shippingAdjustment").amount;
 
-        //this.activeSearchField = Ext.create('Taco.core.ux.form.CurrencyField', {
         this.activeSearchField = Ext.create('Ext.form.field.Number', {
             label: "Order Adjustment",
             itemId: "orderAdjustmentField",
@@ -321,12 +313,5 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         if (newValue) {
             this.totalTable.update(newValue);
         }
-    },
-    
-    /**
-     * Do any class level cleanup. Destroy and null any scoped refs.     
-     */
-    onDestroy : function() {
-        this.callParent(arguments);
     }
 });

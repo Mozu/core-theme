@@ -128,6 +128,10 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         buttonConfig: {
                             ui: 'action',
                             scale: 'medium'
+                        },
+                        listeners: {
+                            filechange: this.handleUploadFile,
+                            scope: this
                         }
                     }, {
                         xtype: 'textfield',
@@ -161,6 +165,7 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         items: [{
                             xtype: 'taco-singleimagefield',
                             height: 160,
+                            itemId: 'imageField',
                             store: this.imageStore
                         }]
                     }, {
@@ -484,6 +489,10 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
         this.down('[name=linkInternalUrl]').setVisible(newValue === 'internalUrl');
         this.down('[name=linkExternalUrl]').setVisible(newValue === 'externalUrl');
         this.down('#linkSelectors').getLayout().setActiveItem(cardIndex);
+    },
+
+    handleUploadFile: function (files) {
+        this.down('#imageField').onUploadFile(files)
     },
 
     toggleAssociator: function (state, button, store) {

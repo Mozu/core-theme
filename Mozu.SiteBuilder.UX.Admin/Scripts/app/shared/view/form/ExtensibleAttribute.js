@@ -13,21 +13,12 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
     statics: {
         editors: {
             'Date': function (ptAttribute, values) {
-                //debugger
                 var date = new Date(values[0]);
-                //debugger
                 return [{
                     xtype: 'datefield',
                     name: this.getFieldName(ptAttribute),
                     fieldLabel: ptAttribute.get('name'),
-                    value: date.toLocaleDateString(),//(values && values.length) ? values[0] : null,
-                    listeners: {
-                        afterrender: function () {
-                            //debugger
-                            //this.setValue(values[0]);
-                        }
-                    },
-                    scope: this
+                    value: date.toLocaleDateString()
                 }];
             },
             'TextArea': function (ptAttribute, values) {
@@ -174,8 +165,6 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
 
     buildEditor: function (attributeDefinition, attr, attrValue) {
         var editor = attributeDefinition.get('inputType'),
-            //attributeFQN = ptAttribute.get('attributeFQN'),
-            //prop = this.product.getProperties().getById(attributeFQN),
             values = attrValue.get('values');
 
         if (typeof this.statics().editors[editor] !== 'function') {
