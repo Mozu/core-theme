@@ -614,13 +614,19 @@
                 });
             },
             saveCustomerCard: function (cust) {
-                var customer = this.get('customer'), //new CustomerModels.EditableCustomer(this.get('customer').toJSON()),
+                var order = this,
+                    customer = this.get('customer'), //new CustomerModels.EditableCustomer(this.get('customer').toJSON()),
                     billingInfo = this.get('billingInfo'),
                     billingContact = billingInfo.get('billingContact').toJSON(),
                     card = billingInfo.get('card'),
                     doSaveCard = function () {
+                        order.cardsSaved = order.cardsSaved || {};
+                        var method = order.cardsSaved[card.get('id')] ? 'updateCard' : 'addCard';
                         card.set('contactId', billingContact.id);
-                        return customer.apiModel.addCard(card.toJSON());
+                        return customer.apiModel[method](card.toJSON()).then(function (card) {
+                            order.cardsSaved[card.data.id] = true;
+                            return card;
+                        });
                     },
                     saveContactFirst = function () {
                         if (billingContact.id === -1) delete billingContact.id;
@@ -669,7 +675,8 @@
                     process.push(this.update);
                 }
 
-                if (billingInfo.get('paymentType') === "CreditCard" && billingInfo.get('card').get('isCardInfoSaved')) {
+                var card = billingInfo.get('card');
+                if (billingInfo.get('paymentType') === "CreditCard" && card.get('isCardInfoSaved') && (this.get('createAccount') || require.mozuData('user').isAuthenticated)) {
                     process.push(this.saveCustomerCard);
                 }
 
