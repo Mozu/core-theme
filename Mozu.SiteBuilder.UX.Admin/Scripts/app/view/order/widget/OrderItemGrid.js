@@ -527,8 +527,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 emptyText: 'No matching products found.',
                 // Custom rendering template for each item
                 getInnerTpl: function () {
-                    return "<span class='product-name'>{productName}</span>"
-                    + "<tpl if='productTypeId==7'><span class='product-name'>{productCode} - bundle components may not be added to order</span>"
+                    return "<span class='product-name'>{productName} </span>"
+                    + '<tpl if="productUsage==\'Component\'"><span class="product-name">{productCode} - bundle components may not be added to order</span>'
                     + "<tpl else><span class='product-code'>{productCode}</span></tpl>";
                 },
 
@@ -563,7 +563,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     fn: function (combo, record, index, e) {
                         var productCode = record.get("productCode"),
                             isConfigurable = record.get("isConfigurable"),
-                            isBundleComponent = (record.get("productTypeId") == 7);
+                            isBundleComponent = (record.get("productUsage") == 'Component');
                         
                         //var picker = combo.getPicker();
                         combo.collapse();
