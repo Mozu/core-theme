@@ -15,7 +15,21 @@ Ext.define('Taco.core.util.ExceptionWhiner', {
         if (!Ext.isArray(exc)) exc = [exc];
         return this.tpls.htmlList.apply({ errors: Ext.Array.map(exc, this.convertExceptionToString, this) });
     },
-
+    /**
+     * lets know if 
+     */
+    wasHandled:function (exc) {
+        if (!Ext.isArray(exc)) exc = [exc];
+        var ret = false;
+        Ext.Array.each(exc, function (item) {
+            if (item && item.error && item.error.remoteException) {
+                if (item.error.remoteException.wasHandled) {
+                    ret = true;
+                }
+            }
+        });
+        return ret;
+    },
     /**
      * Takes exceptions of various types and outputs their error messages as strings.
      * @param {Object/Ext.util.Operation} exception The exception to process.

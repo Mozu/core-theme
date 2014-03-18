@@ -71,7 +71,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ => _customerAttributeDefinitionWebApiClient.DeleteAttribute(_.AttributeFQN)).ToList();
             await Task.WhenAll(tasks);
-
+             
+            tasks.ForEach(x =>
+            {
+                if (!x.Result.ResponseMessage.IsSuccessStatusCode)
+                {
+                    throw x.Result.ReadException();
+                }
+            });
+            
             var newAttributes = tasks.Select(x => x.Result.ResponseMessage.IsSuccessStatusCode ).ToList();
             return this.List2<AttributeModel>(attributes);
         }
