@@ -343,7 +343,6 @@
           "subject": "Order Confirmation #{model.orderNumber}"
         }
       },
-      /*
       {
         "id": "return.created",
         "title": "Return Created",
@@ -352,7 +351,6 @@
           "subject": "Your Return Request"
         }
       },
-      */
       {
         "id": "return.authorized",
         "title": "Return Authorized",
@@ -377,7 +375,6 @@
           "subject": "Return Item Received"
         }
       },
-      /*
       {
         "id": "return.changed",
         "title": "Return Has Been Updated",
@@ -386,7 +383,6 @@
           "subject": "Your Return Updated"
         }
       },
-    */
       {
         "id": "user.created",
         "title": "New Login Created",
