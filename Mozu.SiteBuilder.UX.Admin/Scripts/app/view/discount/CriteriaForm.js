@@ -237,11 +237,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 xtype: 'container',
                 width: 600,
                 items: [
-                    this.includeAllProductsInput,
-                    this.categoriesBox,
-                    this.productsBox,
-                    this.exclueCategoriesBox,
-                    this.productsExcludeBox
+                    this.productCategoryContainer
                 ]
             },
             this.shippingList
@@ -320,12 +316,29 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         }
     },
 
+    setShippingListVisibility: function (appliesToShipping) {
+        this.shippingList.setVisible(appliesToShipping);
+        if (!appliesToShipping) {
+            this.shippingList.setValue('');
+        }
+    },
+
+    //todo: gm split prodCat containter into include and exclude. On includeAll checked, then only show exclude.
+    setProductCategoryContainerVisibility: function(isLineItem) {
+        this.productCategoryContainer.setVisible(isLineItem);
+        if (!isLineItem) {
+            this.includeAllProductsInput.setValue(false);
+            this.categoryList.setValue('');
+            this.productList.setValue('');
+            this.exclueCategoryList.setValue('');
+            this.productExcludeList.setValue('');
+        }
+    },
+
     setFieldVisibility: function (isLineItem, appliesToShipping) {
         this.setVisible(isLineItem || appliesToShipping);
-        this.productCategoryContainer.setVisible(isLineItem);
-        this.includeAllProductsInput.setVisible(isLineItem);
-        this.shippingList.setVisible(appliesToShipping);
-        
-        this.productCategoryContainer.setVisible(!this.includeAllProductsInput.isChecked());
+        this.setProductCategoryContainerVisibility(isLineItem);
+        this.setShippingListVisibility(appliesToShipping);
     }
+
 });
