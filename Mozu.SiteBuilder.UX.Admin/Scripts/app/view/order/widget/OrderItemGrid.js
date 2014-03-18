@@ -521,6 +521,31 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         this.activeSearchField = Ext.create('Taco.shared.view.field.ProductPickerField', {
             fieldCls: "toolbar-field",
             pageSize: me.productsPerPage,
+            listConfig: {
+                loadingText: 'Searching...',
+                cls: "product-picker-menu",
+                emptyText: 'No matching products found.',
+                // Custom rendering template for each item
+                getInnerTpl: function () {
+                    return "<span class='product-name'>{productName}</span>"
+                    + "<tpl if='productTypeId==7'><span class='product-name'>{productCode} - bundle components may not be added to order</span>"
+                    + "<tpl else><span class='product-code'>{productCode}</span></tpl>";
+                },
+
+                // this is an override that hides the paging toolbar when the list only contains a single page of results;
+                refresh: function () {
+                    var me = this,
+                        toolbar = me.pagingToolbar;
+
+                    Ext.view.View.prototype.refresh.call(me);
+
+                    if (me.rendered && toolbar && toolbar.rendered && !me.preserveScrollOnRefresh) {
+                        me.el.appendChild(toolbar.el);
+                        if (me.getStore().getTotalCount() <= me.pageSize) me.el.last().hide();
+                        else me.el.last().show();
+                    }
+                }
+            },
             listeners: {
                 'specialkey':{
                     fn: function(field, e) {
@@ -537,12 +562,12 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 beforeselect: {
                     fn: function (combo, record, index, e) {
                         var productCode = record.get("productCode"),
-                            isConfigurable = record.get("isConfigurable");
+                            isConfigurable = record.get("isConfigurable"),
+                            isBundleComponent = (record.get("productTypeId") == 7);
                         
                         //var picker = combo.getPicker();
                         combo.collapse();
                         
-
                         // determine if we need to show the configurator
                         if (isConfigurable) {
                             var win = Ext.create('Taco.view.order.modal.ProductConfigurator', {
@@ -556,6 +581,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                                     }
                                 }
                             });
+                        } else if (isBundleComponent) {
+                            return false;
                         } else {
                             // the product doesn't require configuration so just add it and skip opening the dialog;
                             this.addConfiguredProduct([
