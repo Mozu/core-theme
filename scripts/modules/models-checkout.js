@@ -653,7 +653,7 @@
             submit: function () {
                 var order = this,
                     billingInfo = this.get('billingInfo'),
-                    process = [];
+                    process = [this.update];
 
                 if (this.isSubmitting) return;
 
@@ -669,10 +669,6 @@
 
                 if (this.get("createAccount") && !this.customerCreated) {
                     process.push(this.addNewCustomer);
-                }
-
-                if (this.get('shopperNotes').has('comments')) {
-                    process.push(this.update);
                 }
 
                 var card = billingInfo.get('card');
