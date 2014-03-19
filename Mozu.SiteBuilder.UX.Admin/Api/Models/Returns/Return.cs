@@ -33,6 +33,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<OrderNote> Notes { get; set; }
 
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string RmaNote { get; set; }
+
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DateTime? RMADeadline { get; set; }
 
@@ -103,6 +106,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
 
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<OrderNote> Notes { get; set; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string RmaNote { get; set; }
 
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int Quantity { get; set; }

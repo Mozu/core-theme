@@ -22,13 +22,11 @@ Ext.define('Taco.model.ReturnItem', {
             "type": "string",
             "useNull": true
         },
-        
         {
             "name": "reason",
             "type": "string",
             "useNull": true,
             defaultValue: null
-
         },
         {
             "name": "quantityReceived",
@@ -53,6 +51,11 @@ Ext.define('Taco.model.ReturnItem', {
         }, {
             "name": "notes",
             "type": "auto",
+            "useNull": true,
+            defaultValue: null
+        }, {
+            "name": "rmaNote",
+            "type": "string",
             "useNull": true,
             defaultValue: null
         }, {

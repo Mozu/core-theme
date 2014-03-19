@@ -119,6 +119,19 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
             name: 'rmaDeadline'
         });
 
+        me.rmaNote = Ext.widget({
+            xtype: 'textarea',
+            name: 'rmaNote',
+            fieldLabel: 'Notes',
+            requiredCls: 'x-form-item-required',
+            flex: 4,
+            allowBlank: true,
+            listeners: {
+                change: me.onCreateStateChange,
+                scope: me
+            },
+        });
+
         me.createButton = Ext.create('Taco.core.ux.action.DirtyButton', {
             text: 'Create Return',
             listeners: {
@@ -127,7 +140,8 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
                         originalOrderId: me.order.getId(),
                         items: [],
                         rmaDeadline: me.rmaDeadline.getValue(),
-                        type: me.returnType.getValue()
+                        type: me.returnType.getValue(),
+                        rmaNote: me.rmaNote.getValue()
                     };
                     me.store.each(function (item) {
                         if (item.data.returnQuantity > 0) {
@@ -136,8 +150,9 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
                                 quantity: item.data.returnQuantity,
                                 parentItemId: item.raw.parentItemId,
                                 productCode: item.data.productCode,
-                                reason: me.returnReason.getValue()
-                            });
+                                reason: me.returnReason.getValue(),
+                                rmaNote: me.rmaNote.getValue()
+                        });
                         }
                     });
                     me.fireEvent('create', me, returnData);
@@ -177,7 +192,8 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
                         items: [
                             me.returnType,
                             me.returnReason,
-                            me.rmaDeadline
+                            me.rmaDeadline,
+                            me.rmaNote
                         ]
                     }
                 ]
@@ -209,8 +225,21 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
     },
     onCreateStateChange: function () {
         var me = this,
-            savableState = me.store.findBy(function (item) { return item.get('returnQuantity'); }) > -1 && me.returnType.getValue() && me.returnReason.getValue()
-        me.createButton.setDirty(savableState);
+            savableState = me.store.findBy(function(item) { return item.get('returnQuantity'); }) > -1 && me.returnType.getValue() && me.returnReason.getValue(),
+            rationale = me.returnReason.getValue(),
+            noteLength = me.rmaNote.getValue().length;
 
+        if (rationale == "Other") {
+            me.rmaNote.allowBlank = false;
+            me.rmaNote.minLength = 3;
+            if (noteLength < 3) {
+                savableState = false;
+            }
+        } else {
+            me.rmaNote.allowBlank = true;
+            me.rmaNote.minLength = 0;
+        }
+
+        me.createButton.setDirty(savableState);
     }
 });
