@@ -366,6 +366,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="App1.config" />
+    <None Include="Diagrams\Admin\Api\Models\OrderModels\cdReturns.cd" />
     <None Include="Diagrams\Admin\Api\Models\ProductModels\cdProductVariation.cd" />
     <None Include="Diagrams\Admin\Api\Models\ProductModels\Product.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\product\cdProduct-View-Js.cd" />

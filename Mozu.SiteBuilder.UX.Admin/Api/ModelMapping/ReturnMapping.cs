@@ -30,6 +30,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       ? x.AuditInfo.CreateDate : null))
                   .ForMember(x => x.UpdateDate, opt => opt.ResolveUsing(x =>(x.AuditInfo != null) 
                       ? x.AuditInfo.UpdateDate : null))
+                  .ForMember(x => x.RmaNote, op => op.ResolveUsing(dc => (dc.Notes != null && dc.Notes.Any() ) 
+                      ? dc.Notes.First().Text 
+                      : string.Empty))
                   //ignores
                   //todo: confirm should total loss = sum(prod,tax,ship losses)? Greg Murray on 2014-01-24
                   .ForMember(x => x.TotalLossAmount, op => op.Ignore())
@@ -43,6 +46,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   //todo: confirm new ProductCode mapping Greg Murray on 2014-01-24 
                   .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => (dc.Product != null) 
                       ? dc.Product.ProductCode : null))
+                  .ForMember(x => x.RmaNote, op => op.ResolveUsing(dc => (dc.Notes != null && dc.Notes.Any()) 
+                      ? dc.Notes.First().Text 
+                      : string.Empty))
                   //ignores
                   .ForMember(x => x.ParentItemId, op => op.Ignore())
                   .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Reasons.Sum(r => r.Quantity)))
@@ -69,7 +75,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                           select new ReturnsDC.ReturnItem {
                               OrderItemId = g.Key,
                               BundledProducts = g.Select(ri => new ReturnsDC.ReturnBundle { ProductCode = ri.ProductCode, Quantity = ri.Quantity }).ToList(),
-                              Reasons = new List<ReturnsDC.ReturnReason> { new ReturnsDC.ReturnReason { Reason = g.First().Reason, Quantity = g.Sum(ri => ri.Quantity) } }
+                              Reasons = new List<ReturnsDC.ReturnReason> { new ReturnsDC.ReturnReason { Reason = g.First().Reason, Quantity = g.Sum(ri => ri.Quantity) } },
+                              Notes = string.IsNullOrEmpty(g.First().RmaNote)
+                                    ? new List<OrdersDC.OrderNote>()
+                                    : new List<OrdersDC.OrderNote> { new OrdersDC.OrderNote { Text = g.First().RmaNote } }
                           };
 
                       var returnVanillaProducts =
@@ -78,12 +87,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                           select Mapper.Map<ReturnItem, ReturnsDC.ReturnItem>(r, new ReturnsDC.ReturnItem {
                               OrderItemId = r.OrderItemId,
                               Reasons = new List<ReturnsDC.ReturnReason> {
-                                  new ReturnsDC.ReturnReason { Reason = r.Reason, Quantity = r.Quantity }
-                              }
+                                  new ReturnsDC.ReturnReason { Reason = r.Reason, Quantity = r.Quantity } 
+                              },
+                              Notes = string.IsNullOrEmpty(r.RmaNote)
+                                    ? new List<OrdersDC.OrderNote>()
+                                    : new List<OrdersDC.OrderNote> { new OrdersDC.OrderNote { Text = r.RmaNote } }
                           });
 
                       return returnBundles.Concat(returnVanillaProducts).ToList();
                   }))
+                .ForMember(dc => dc.Notes, op => op.ResolveUsing(x => string.IsNullOrEmpty(x.RmaNote) 
+                          ? new List<OrdersDC.OrderNote>() 
+                          : new List<OrdersDC.OrderNote>{ new OrdersDC.OrderNote{ Text = x.RmaNote } } ))
                 //ignores
                 .ForMember(dc => dc.Payments, opt => opt.Ignore())
                 .ForMember(dc => dc.CustomerAccountId, op => op.Ignore())
@@ -108,6 +123,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       {
                           new ReturnsDC.ReturnReason() { Reason = x.Reason, Quantity = x.Quantity }
                       }))
+                   .ForMember(dc => dc.Notes, op => op.ResolveUsing(x => string.IsNullOrEmpty(x.RmaNote) 
+                      ? new List<OrdersDC.OrderNote>() 
+                      : new List<OrdersDC.OrderNote>{ new OrdersDC.OrderNote{ Text = x.RmaNote } } ))
                 //ignores
                 .ForMember(dc => dc.Product, op => op.Ignore())
                 .ForMember(dc => dc.BundledProducts, op => op.Ignore())
