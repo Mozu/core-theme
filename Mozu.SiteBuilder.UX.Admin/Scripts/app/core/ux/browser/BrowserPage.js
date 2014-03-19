@@ -21,7 +21,7 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
     ],
 
     cls: undefined,
-
+    reFetchRecordOnEdit:false,
     mixins: {
         browsable: 'Taco.core.ux.browser.Browsable'
     },
@@ -64,9 +64,14 @@ Ext.define('Taco.core.ux.browser.BrowserPage', {
         me.launchLoadedEditor(record, options);
     },
 
-    launchLoadedEditor: function(record, options) {
+    launchLoadedEditor: function (record, options) {
+        var complexMetaData = { record: record, options: options };
+        if (this.reFetchRecordOnEdit) {
+            delete complexMetaData.record;
+        }
+        
         Ext.defer(function() {
-            Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), { complexMetaData: { record: record, options: options } });
+            Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), complexMetaData );
         }, 1, this);
     }
 });

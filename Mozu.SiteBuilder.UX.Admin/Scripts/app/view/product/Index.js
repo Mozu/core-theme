@@ -17,7 +17,7 @@ Ext.define('Taco.view.product.Index', {
     filterProperty: 'productName2',
     useTilePanel: false,
 
-    
+    reFetchRecordOnEdit: true,
     contextConfig: {
         supportedLevels: ['m', 'c'],
         requiresContextOfType: ['m', 'c', 's']
@@ -340,13 +340,7 @@ Ext.define('Taco.view.product.Index', {
         advancedFormCls: 'Taco.view.product.AdvancedSearchForm'
     },
     
-    launchLoadedEditor: function (record, options) {
-
-        
-        Ext.defer(function () {
-            Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), { complexMetaData: { _record: record, options: options } });
-        }, 1, this);
-    } 
+    
     /*
     initComponent: function() {
         var me = this;

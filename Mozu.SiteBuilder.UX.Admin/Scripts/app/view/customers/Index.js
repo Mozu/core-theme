@@ -11,7 +11,7 @@ Ext.define('Taco.view.customers.Index', {
         'Taco.view.customers.AdvancedSearchForm',
         'Taco.store.CustomerSegments'
     ],
-
+    reFetchRecordOnEdit: true,
     typeName: 'Customer',
     modelName: 'Taco.model.CustomerAccount',
     store: { type: 'Taco.store.Customers' },
@@ -151,10 +151,10 @@ Ext.define('Taco.view.customers.Index', {
         return false;
     },
 
-    launchEditor: function (record) {
-        Ext.defer(function () {
-            Taco.core.StateManager.attemptNavigate('customers/edit/' + record.getId(), { complexMetaData: { record: record } });
-        }, 1, this);
-        return;
-    }
+    //launchEditor: function (record) {
+    //    Ext.defer(function () {
+    //        Taco.core.StateManager.attemptNavigate('customers/edit/' + record.getId(), { complexMetaData: { record: record } });
+    //    }, 1, this);
+    //    return;
+    //}
 });
