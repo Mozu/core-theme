@@ -225,7 +225,7 @@
       <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.7.0-dev001\lib\net45\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts">
-      <HintPath>..\packages\Mozu.Content.Contracts.1.6.0.1\lib\Mozu.Content.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Content.Contracts.1.7.0-dev002\lib\Mozu.Content.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core">
       <HintPath>..\packages\Mozu.Core.1.6.0.5\lib\net45\Mozu.Core.dll</HintPath>
