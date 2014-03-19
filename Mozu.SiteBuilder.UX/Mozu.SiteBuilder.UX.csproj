@@ -300,7 +300,7 @@
       <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.7.0-dev001\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.Order.Contracts">
-      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.6.0.1\lib\net45\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.7.0-dev001\lib\net45\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.Shipping.Contracts, Version=1.1.0.3, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
