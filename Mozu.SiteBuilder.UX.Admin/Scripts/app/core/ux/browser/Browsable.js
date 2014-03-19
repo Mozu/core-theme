@@ -205,7 +205,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
                 }
                 error.wasHandled = true;
-                msg = error.getMessage() || 'error occurd';
+                msg = error.getMessage() || 'An error occurred';
                 Taco.app.fireEvent('setmessage', msg, 'error');
             }, this);
         }

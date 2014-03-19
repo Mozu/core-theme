@@ -11,6 +11,7 @@ using AutoMapper;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.ErrorHandling;
+using Mozu.Core.Exceptions;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -81,10 +82,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 else
                 {
-                    var index = app.Capabilities.FindIndex(_ => _.Id == cap.Id);
-                    var editCap = app.Capabilities[index];
+                    var editCap = app.Capabilities.FirstOrDefault(x => x.Id == cap.Id);
+                    if (editCap == null)
+                        throw new VaeItemNotFoundException(string.Format("Could not find capability {0}", cap.Id));
+
                     AutoMapper.Mapper.Map(cap, editCap);
 
+                    if (cap.Enabled.GetValueOrDefault())
+                    {
+                        app.Enabled = true;
+                    }
+                    else
+                    {
+                        var enabledCount = app.Capabilities.Count(x => x.Enabled.GetValueOrDefault());
+                        app.Enabled = (enabledCount > 0);
+                    }
                     // scope to site, if needed
                     // wut? OJP 2014.01.09 - apparently i don't have to do this any more? not sure why
                     //app.Capabilities = app.Capabilities.Where(x => x.ScopeId == editCap.ScopeId).ToList();
