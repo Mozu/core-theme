@@ -292,6 +292,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                               {
                                   ppv.Value = vStr.Substring(0, MAX_ATTRIBUTE_VALUE_LENGTH);
                               }
+                              if (string.IsNullOrEmpty(vStr))
+                              {
+                                  ppv.Value = null;
+                              }
                           }
                           return ppv;
                       }).ToList();
