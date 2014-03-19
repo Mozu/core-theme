@@ -262,7 +262,7 @@
       <HintPath>..\packages\Mozu.Core.Mongo.1.7.0-dev001\lib\net45\Mozu.Core.Mongo.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.ThirdParty">
-      <HintPath>..\packages\Mozu.Core.ThirdParty.1.6.0.2\lib\net45\Mozu.Core.ThirdParty.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.ThirdParty.1.7.0-dev002\lib\net45\Mozu.Core.ThirdParty.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.ThirdParty.Contracts">
       <HintPath>..\packages\Mozu.Core.ThirdParty.Contracts.1.6.0.4\lib\net45\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
