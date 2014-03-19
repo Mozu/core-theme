@@ -102,7 +102,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
 
         if (!this.isDraftMode) {
             this.down('#discardAction').hide();
-            this.down('#primaryAction').hide();
+            this.down('#secondaryAction').hide();
         }
     },
     
