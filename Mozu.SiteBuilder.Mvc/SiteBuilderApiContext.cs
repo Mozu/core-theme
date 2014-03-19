@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.Mvc
         public SiteBuilderApiContext( ICookieProvider cookieProvider, ISettings settings, IAuthenticationHelper authenticationHelper, HttpRequestMessage httpRequestMessage)
             : base()
         {
-
+            
 
             TenantId = -1;
             _cookieProvider = cookieProvider;
@@ -50,7 +50,7 @@ namespace Mozu.SiteBuilder.Mvc
             _authenticationHelper = authenticationHelper;
             _httpRequestMessage = httpRequestMessage;
 
-            DataViewMode = DataViewModeType.Live;
+            DataViewMode = DataViewModeType.NoneSet ;
             IsEditMode = false;
 
             Load();
@@ -142,6 +142,15 @@ namespace Mozu.SiteBuilder.Mvc
 
         void ValidateDataMode()
         {
+            if (DataViewMode== DataViewModeType.NoneSet && 
+                ScopeType == UserScopeType.Tenant && 
+                UserClaims != null && UserClaims.BehaviorIds != null && UserClaims.BehaviorIds.Contains(PublishBehavorID))
+            {
+                DataViewMode = DataViewModeType.Pending;
+            }
+
+
+
             if (ScopeType != UserScopeType.Shopper 
                 || this.DataViewMode != DataViewModeType.Pending)
             {
