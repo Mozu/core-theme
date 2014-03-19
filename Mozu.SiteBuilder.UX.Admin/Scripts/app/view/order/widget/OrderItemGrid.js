@@ -997,8 +997,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         var me = this,
             jsonData = {
                 orderId: this.record.get('id'),
-                orderAdjustment: this.record.get("orderAdjustment"),
-                shippingAdjustment: this.record.get("shippingAdjustment")
+                orderAdjustment: Ext.clone(this.record.get("orderAdjustment")),
+                shippingAdjustment: Ext.clone(this.record.get("shippingAdjustment"))
             };
         
         if (!config.data) {
