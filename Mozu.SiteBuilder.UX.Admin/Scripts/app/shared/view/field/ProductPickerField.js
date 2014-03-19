@@ -13,7 +13,7 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
     },
     
     productsPerPage: 30,
-    
+    productType: 'parent',
     displayField: 'name',
     hideLabel: true,
     hideTrigger: false,
@@ -73,18 +73,32 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
         var me = this;
 
         if (!me.store) {
-            me.store = Taco.core.data.StoreManager.getOrCreate({
-                type: 'Taco.store.Products',
-                pageSize: me.productsPerPage,
-                // note that clearSort is required to avoid having the sorters get cleared when the store is instantiated;
-                clearSort: false,
-                remoteSort: true,
-                sorters: [{
-                    property: 'productName',
-                    direction: 'ASC'
-                }],
-                autoLoad: true
-            });
+
+            if (me.productType == 'parent') {
+                me.store = Taco.core.data.StoreManager.getOrCreate({
+                    type: 'Taco.store.Products',
+                    pageSize: me.productsPerPage,
+                    // note that clearSort is required to avoid having the sorters get cleared when the store is instantiated;
+                    clearSort: false,
+                    remoteSort: true,
+                    sorters: [{
+                        property: 'productName',
+                        direction: 'ASC'
+                    }],
+                    autoLoad: true
+                });
+            }
+            if (me.productType == 'inventory') {
+                me.store = Taco.core.data.StoreManager.getOrCreate({
+                    type: 'Taco.store.InventoriedProducts',
+                    pageSize: me.productsPerPage,
+                    // note that clearSort is required to avoid having the sorters get cleared when the store is instantiated;
+                    clearSort: false,
+                    remoteSort: true,
+                
+                    autoLoad: true
+                });
+            }
         }
         
 

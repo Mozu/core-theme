@@ -194,6 +194,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                     editor: {
                         xtype: "taco-productpickerfield",
                         editableOnCreateOnly: true,
+                        productType:'inventory',
                         msgTarget: "qtip",
                         allowBlank: true,
                         onEditorShow: function(field, editor, context) {

@@ -186,6 +186,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                     editableOnCreateOnly: true,
                     msgTarget: "qtip",
                     allowBlank: false,
+                    productType: 'inventory',
                     onEditorShow: function (field, editor, context) {
                         // need to add the locationCode to the locationInventory;
                         var store = editor.grid.store,
