@@ -448,6 +448,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(Mapper.Map<Credit>(dcitem));
         }
 
+        [HttpPostRoute(UriTemplate = "credits/delete")]
+        public async Task<Response<Credit>> DeleteCredit(Credit credit)
+        {
+            (await _creditWebApiClient.DeleteCredit(credit.Code)).ReadAsSync();
+
+            return EmptySingle2<Credit>();
+        }
+
         [HttpGetRoute(UriTemplate = "credits/{code}/transactions/list")]
         public async Task<HttpResponseMessage> GetCreditTransactions(string code)
         {
