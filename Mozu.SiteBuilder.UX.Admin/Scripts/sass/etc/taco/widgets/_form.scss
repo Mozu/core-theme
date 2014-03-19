@@ -95,7 +95,7 @@
   .#{$prefix}menu .#{$prefix}menu-item-unchecked .#{$prefix}menu-item-icon,
   .#{$prefix}grid-table .#{$prefix}grid-row-checker,
   .#{$prefix}grid-header-ct .#{$prefix}column-header-checkbox .#{$prefix}column-header-text {
-   @include icons-sprite(icon-barcode);
+   @include icons-sprite(icon-checkbox);
   }
   .#{$prefix}form-cb-checked .#{$prefix}form-checkbox,
   .#{$prefix}grid-cell-inner .#{$prefix}tree-checkbox-checked,
