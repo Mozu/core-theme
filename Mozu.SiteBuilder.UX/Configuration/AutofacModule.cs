@@ -9,6 +9,7 @@ using Burrows.Log4Net;
 using Burrows.Publishing;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
+using Mozu.Core.Api;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Handlers.Message;

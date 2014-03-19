@@ -106,7 +106,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 // this is so bad, but we need to clean up all of capabilities / application mgmt
                 try
                 {
-                    app = (await client.UpsertApplication(app.AppId, app)).ReadAsSync();
+                    
+                    app = (await client.UpdateApplication(app.AppId, app)).ReadAsSync();
                 }
                 catch {
                     app = null;

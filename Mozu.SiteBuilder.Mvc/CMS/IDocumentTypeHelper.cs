@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             }
             if (dic == null)
             {
-                var props = _docTypeClient.List(int.MaxValue, 0).Result.ReadAsSync();
+                var props = _docTypeClient.GetDocumentTypes(int.MaxValue, 0).Result.ReadAsSync();
                 
                 dic = props.Items.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
                 lock (g_cache)
@@ -83,7 +83,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             }
             if (dic == null)
             {
-                var response = _propTypeClient.GetList(int.MaxValue, 0).Result;
+                var response = _propTypeClient.GetPropertyTypes(int.MaxValue, 0).Result;
                 var props = response.ReadAsAsync().Result.Items;
                 //props.ForEach(x => x.PropertyValueType.Name = x.Name == "tags" ? "tags" : x.PropertyValueType.Name);
 

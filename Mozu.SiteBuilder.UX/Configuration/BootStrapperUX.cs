@@ -19,9 +19,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
 {
     public  class BootStrapperUX : AbstractWebApiBootstrapper
     {
-        protected override void AddMessageHandlers(HttpConfiguration httpConfiguration, IHttpMessageHandlerErrorHandler messageErrorHandler)
+        protected override void AddMessageHandlers(HttpConfiguration httpConfiguration)
         {
-            base.AddMessageHandlers(httpConfiguration, messageErrorHandler);
+            base.AddMessageHandlers(httpConfiguration);
             httpConfiguration.MessageHandlers.Insert(0, new HttpContextInjectingMessageHandler());
             httpConfiguration.MessageHandlers.Add(new SeoDelegatingHandler());
             httpConfiguration.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
         {
             base.InitializeAutoMapperProfiles(httpConfiguration);
         }
-        protected override void AddFilters(HttpConfiguration httpConfiguration, Core.Api.Filters.Exception.ApiExceptionFilter exceptionFilter, Core.Api.Routing.ReflectedControllerIndex controllers)
+        protected override void AddFilters(HttpConfiguration httpConfiguration,  Core.Api.Routing.ReflectedControllerIndex controllers)
         {
 
             httpConfiguration.Filters.Add(new EditModeCacheInvalidatorFilter());
@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             
 
             // handle exceptions with a pretty screen
-            httpConfiguration.Filters.Add(new StorefrontErrorFilterAttribute(exceptionFilter));
+         //   httpConfiguration.Filters.Add(new StorefrontErrorFilterAttribute(exceptionFilter));
 
             //todo:hyprlive add as webapi filteres
             // httpConfiguration.Filters.Add(new NotFoundActionHttpFilter());
