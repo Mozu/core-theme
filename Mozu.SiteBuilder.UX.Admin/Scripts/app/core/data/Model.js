@@ -197,7 +197,7 @@ Ext.define('Taco.core.data.Model', {
 
 
                 if (newRrecords.length) {
-                    store.loadData(newRrecords);
+                    store.loadData(newRrecords, true);
                 }
 
 
