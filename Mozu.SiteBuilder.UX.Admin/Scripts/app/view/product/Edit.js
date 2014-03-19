@@ -48,9 +48,6 @@
                     menu: {
                         plain: true,
                         shadow: false,
-                        defaults: {
-                            plain: true
-                        },
                         items: []
                     }
                 },{
@@ -59,9 +56,6 @@
                     menu: {
                         plain: true,
                         shadow: false,
-                        defaults: {
-                            plain: true
-                        },
                         items: []
                     }
                 }, {

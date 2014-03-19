@@ -676,7 +676,6 @@
     <Content Include="Scripts\app\overrides\grid\RowEditorButtons.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditor.js" />
     <Content Include="Scripts\app\overrides\menu\Menu.js" />
-    <Content Include="Scripts\app\overrides\menu\Item.js" />
     <Content Include="Scripts\app\overrides\picker\Month.js" />
     <Content Include="Scripts\app\overrides\window\MessageBox.js" />
     <Content Include="Scripts\app\overrides\window\Window.js" />
@@ -1094,6 +1093,8 @@
     <Content Include="Scripts\build\resources\fonts\SourceSansPro-SemiboldIt-webfont.woff" />
     <Content Include="Scripts\sass\etc\sprites\_icons.scss" />
     <Content Include="Scripts\sass\etc\sprites\_dashboard.scss" />
+    <Content Include="Scripts\sass\src\view\Header.scss" />
+    <Content Include="Scripts\sass\src\view\navigation\PrimaryMenu.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
