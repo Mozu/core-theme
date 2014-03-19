@@ -406,10 +406,13 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
         return JSON.stringify(merchantPayload);
     },
 
-    // string compare last payload sent with payload that would send, to prevent unnecessary requests
+        // string compare last payload sent with payload that would send, to prevent unnecessary requests
+        //changing to return true to bypass the storefronts check to minimize net chatter... cards can be reused on the same order or others... 
     fieldsChanged = function () {
-        return makePayload(true) !== lastPostSent;
+        return true;
+        //return makePayload(true) !== lastPostSent;
     },
+
 
     // let's roll!
     process = function () {

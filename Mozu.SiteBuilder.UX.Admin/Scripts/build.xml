@@ -64,7 +64,7 @@
       <fileset dir="${basedir}/ext/locale" includes="**/*" />
     </copy>
 
-    <replaceregexp
+    <!--<replaceregexp
            file="${build.dir}/resources/taco-all_01.css"
            match="\(\'/images"
            replace="('/admin/scripts/build/resources/images"
@@ -73,7 +73,7 @@
            file="${build.dir}/resources/taco-all_02.css"
            match="\(\'/images"
            replace="('/admin/scripts/build/resources/images"
-           flags="g" />
+           flags="g" />-->
  
   </target>
   

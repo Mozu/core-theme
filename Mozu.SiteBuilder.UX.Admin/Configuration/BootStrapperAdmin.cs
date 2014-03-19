@@ -11,6 +11,7 @@ using System.Web.Routing;
 using Autofac.Integration.WebApi;
 using Mozu.Core.Api;
 using Mozu.Core.Api.ErrorHandler;
+using Mozu.Core.Api.Routing;
 using Mozu.Core.Logging;
 using Mozu.Provisioning.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
@@ -27,10 +28,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 {
     public class BootStrapperAdmin : AbstractWebApiBootstrapper
     {
-        protected override void AddMessageHandlers(HttpConfiguration httpConfiguration, IHttpMessageHandlerErrorHandler messageErrorHandler)
+        protected override void AddMessageHandlers(HttpConfiguration httpConfiguration)
         {
             
-            base.AddMessageHandlers(httpConfiguration, messageErrorHandler);
+            base.AddMessageHandlers(httpConfiguration);
 
             httpConfiguration.MessageHandlers.Insert( 0,new HttpContextInjectingMessageHandler());
 
@@ -56,11 +57,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             
 
         }
-        protected override void AddFilters(HttpConfiguration httpConfiguration, Core.Api.Filters.Exception.ApiExceptionFilter exceptionFilter, Core.Api.Routing.ReflectedControllerIndex controllers)
-        {
-            httpConfiguration.Filters.Add(exceptionFilter);
 
+        protected override void AddFilters(HttpConfiguration httpConfiguration, ReflectedControllerIndex controllers)
+        {
+            return;
         }
+
         protected override void ApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)
         {
             new RouteConfig().Register( httpConfiguration.Routes );
