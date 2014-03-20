@@ -561,6 +561,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [System.Web.Http.HttpGet]
         public HttpResponseMessage SiteThumbnail()
         {
+            if (this.SiteContext.Theme.Thumbnail == null || string.IsNullOrEmpty(this.SiteContext.Theme.Thumbnail.Name))
+                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "Theme thumbnail not specified.");
+
             var stem  = "/"+ this.SiteContext.Theme.Thumbnail.Name;
             var contentType = GetMimeType(stem);
             
