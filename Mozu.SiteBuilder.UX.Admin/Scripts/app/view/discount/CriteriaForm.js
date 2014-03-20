@@ -17,9 +17,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.includeAllProductsInput = Ext.widget({
             xtype: 'checkbox',
             name: 'includeAllProducts',
-            fieldLabel: 'Applies to All Products',
-            labelAlign: 'top',
-            width: 600,
+            boxLabel: 'Applies to All Products',
+            width: 300,
             value: this.record.get('includeAllProducts'),
             listeners: {
                 change: function () {
@@ -27,6 +26,14 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 },
                 scope: this
             }
+        });
+
+        this.appliesToSaleProducts = Ext.widget({
+            xtype: 'checkbox',
+            name: 'doesNotApplyToSalePrice',
+            boxLabel: 'Does Not Apply to On Sale Products',
+            width: 300,
+            value: this.record.get('doesNotApplyToSalePrice') === true
         });
 
         var catStore = this.record.getCategoryStore();
@@ -193,8 +200,18 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.productCategoryContainer = Ext.create('Ext.container.Container', {
             width: 600,
 
-            items: [
-                this.includeAllProductsInput,
+            items: [{
+                    xtype: 'container',
+                    layout: {
+                        type: 'hbox'
+                    },
+                    width: 600,
+                    margin: '10 0 0 0',
+                    items: [
+                        this.includeAllProductsInput,
+                        this.appliesToSaleProducts
+                    ]
+                },
                 this.categoriesBox,
                 this.productsBox,
                 this.exclueCategoriesBox,
