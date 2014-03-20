@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Autofac.Core;
 using AutoMapper.Impl;
 using Jolt;
 using Mozu.Core.Api.Contracts.Client;
@@ -201,42 +202,94 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "provisionSite")]
-        public async Task<bool> ProvisionSite(SiteProvisionRequest request)
+        public async Task<HttpResponseMessage> ProvisionSite(SiteProvisionRequest request)
         {
-            var res = await _provisioningWebApiClient.ProvisionSite(request);
-            if (res.ResponseMessage.IsSuccessStatusCode)
+            var res = (await _provisioningWebApiClient.ProvisionSite(request)).ReadAsSync();
+            return this.Request.CreateResponse(new CommitRequest()
             {
-                return true;
-            }
-            throw res.ReadException();
+                MasterCatalogId = res.MasterCatalogId ,
+                CatalogId =res.CatalogId ,
+                SiteId  = res.Id,
+                Type = "site"
+            });
         }
 
       
         [HttpPostRoute(UriTemplate = "provisionCatalog")]
-        public async Task<bool> ProvisionCatalog(CatalogProvisionRequest request)
+        public async Task<HttpResponseMessage> ProvisionCatalog(CatalogProvisionRequest request)
         {
-            var res = await _provisioningWebApiClient.ProvisionCatalog(request);
-            if (res.ResponseMessage.IsSuccessStatusCode)
+            var res = (await _provisioningWebApiClient.ProvisionCatalog(request)).ReadAsSync();
+            return this.Request.CreateResponse(new CommitRequest()
             {
-                return true;
-            }
-            throw res.ReadException();
+                MasterCatalogId = res.MasterCatalogId ,
+                CatalogId =res.Id ,
+                Type = "catalog"
+            });
+
         }
 
         [HttpPostRoute(UriTemplate = "provisionMasterCatalog")]
-        public async Task<bool> ProvisionMasterCatalog(MasterCatalogProvisionRequest request)
+        public async Task<HttpResponseMessage> ProvisionMasterCatalog(MasterCatalogProvisionRequest request)
         {
 
-            var res = await _provisioningWebApiClient.ProvisionMasterCatalog(request);
-            if (res.ResponseMessage.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            throw res.ReadException();
+            var res = (await _provisioningWebApiClient.ProvisionMasterCatalog(request)).ReadAsSync();
+
+            return this.Request.CreateResponse(new CommitRequest()
+                                               {
+                                                   MasterCatalogId =res.Id,
+                                                   Type = "mastercatalog"
+                                               });
+            //return res;
 
 
         }
 
+        public class CommitRequest
+        {
+            public string Type { get; set; }
+            public int? CatalogId { get; set; }
+            public int? MasterCatalogId { get; set; }
+            public int? SiteId { get; set; }
+
+        }
+
+        [HttpPostRoute(UriTemplate = "provisionCommit")]
+        public async Task<HttpResponseMessage> CommitProvisioning(CommitRequest  request)
+        {
+            
+            int tenantId = this.SbApiContext.TenantId;
+            if (request.Type == "site")
+            {
+                var res = await _provisioningWebApiClient.FinishSite(tenantId, request.SiteId);
+                if (!res.ResponseMessage.IsSuccessStatusCode)
+                {
+                    throw res.ReadException();
+                }
+            }
+            if (request.Type == "catalog")
+            {
+                var res = await _provisioningWebApiClient.FinishCatalog(tenantId, request.CatalogId);
+                if (!res.ResponseMessage.IsSuccessStatusCode)
+                {
+                    throw res.ReadException();
+                }
+            }
+            if (request.Type == "mastercatalog")
+            {
+                var res = await _provisioningWebApiClient.FinishMasterCatalog(tenantId, request.MasterCatalogId);
+                if (!res.ResponseMessage.IsSuccessStatusCode)
+                {
+                    throw res.ReadException();
+                }
+            }
+
+            return this.Request.CreateResponse(HttpStatusCode.OK);
+            //return res;
+
+
+        }
+
+       
      
 
        
