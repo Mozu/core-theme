@@ -227,6 +227,7 @@ Ext.define('Taco.view.provisioning.Index', {
     showCatalogModal: function (config) {
         var me = this,
             modal = Ext.create('Taco.view.provisioning.CatalogProvisionerModal', {
+                height:600,
                 catalogType: config.itemType == config.itemType,
                 masterCatalogStore: this.createMasterCatalogStore(),
                 listeners: {
@@ -333,6 +334,28 @@ Ext.define('Taco.view.provisioning.Index', {
             method: "POST",
             jsonData: config.jsonData,
             success: function (response, opts) {
+                
+                var json = Ext.decode(response.responseText);
+                Ext.Ajax.request({
+                    url: '/admin/app/provisioning/provisionCommit',
+                    method: "POST",
+                    jsonData: json,
+                    success: function (response2, opts2) {
+                        if (config.itemType == 'site') {
+                            me.siteStore.reload();
+                        } else {
+                            me.catalogTreeStore.reload();
+                        }
+                    },
+                    failure: function (response2, opts2) {
+                        var respObj = Ext.decode(response2.responseText, true),
+                        errorMsg = respObj && respObj.message ? respObj.message : 'Failure Provisioning';
+
+                        Taco.app.fireEvent('setmessage', errorMsg, 'error');
+                    }
+                });
+
+
                 if (config.itemType == 'site') {
                     me.siteStore.reload();
                 } else {

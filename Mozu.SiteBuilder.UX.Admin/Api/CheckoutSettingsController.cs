@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout;
@@ -35,6 +36,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var ret = Mapper.Map<CheckoutSettings>(dcSettings);
 
             return Single2(ret); 
+        }
+
+        /// <summary>
+        /// Returns the active checkout settings
+        /// </summary>
+        /// <returns></returns>
+        [HttpGetRoute(UriTemplate = "cards/list")]
+        public async Task<Response<List<KeyValuePair<string,string>>>> GetCards()
+        {
+            var dcSettings = (await _checkoutSettingsWebApiClient.CloneWithoutUserClaims().GetCheckoutSettings()).ReadAsSync();
+
+            var ret = Mapper.Map<CheckoutSettings>(dcSettings).Gateway.SupportedCards.Select(x => new KeyValuePair<string, string>(x, x)).ToList();
+
+
+            return List2(ret);
         } 
 
         /// <summary>

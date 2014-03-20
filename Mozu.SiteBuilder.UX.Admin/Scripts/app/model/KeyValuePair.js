@@ -29,6 +29,12 @@ Ext.define('Taco.model.KeyValuePair', {
                 }
                 return v;
             }
+        }, {
+            name: 'key',
+            persist: false
+        }, {
+            name: 'value',
+            persist: false
         }
     ],
 
