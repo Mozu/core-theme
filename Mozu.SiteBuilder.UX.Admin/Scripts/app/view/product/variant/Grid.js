@@ -33,6 +33,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             displayField: 'name',
             valueField: 'id',
             autoSelect: true,
+            forceSelection:true,
             store: fulfillmentTypeData,
             listeners : {
                 'beforeselect': function(combo, record, index) {
