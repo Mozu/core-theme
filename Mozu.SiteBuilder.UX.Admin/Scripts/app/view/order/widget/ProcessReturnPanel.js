@@ -107,9 +107,9 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     renderer: function(value, meta, record) {
                         var notes = record.get('notes');
 
-                        if (!notes || !notes.length) return '';
+                        if (!notes || !notes.length || !notes[0].text) return '';
 
-                        return notes[0];
+                        return notes[0].text
                     },
                     flex:1
                 }, {
