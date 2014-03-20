@@ -97,7 +97,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                         }
                         return 'na';
                     },
-                    flex: 200
+                    width: 200
                 }, {
                     text: 'Customer Comments',
                     draggable: false,
@@ -110,7 +110,8 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                         if (!notes || !notes.length) return '';
 
                         return notes[0];
-                    }
+                    },
+                    flex:1
                 }, {
                     text: 'Quantity',
                     draggable: false,
