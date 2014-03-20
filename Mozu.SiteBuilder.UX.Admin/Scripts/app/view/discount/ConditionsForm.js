@@ -6,7 +6,12 @@
  * @description Discount Conditions Editor
  */
 Ext.define('Taco.view.discount.ConditionsForm', {
-    requires:['Ext.data.UuidGenerator'],
+    requires:[
+        'Ext.data.UuidGenerator',
+        'Taco.view.category.Modal',
+        'Taco.view.product.Modal',
+        'Taco.view.customers.segments.Modal'
+    ],
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-conditions',
     ui: 'subform',
@@ -63,7 +68,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
         this.requiresCouponInput = Ext.create('Ext.form.field.Checkbox', {
             name: 'requiresCoupon',
-            boxLabel: "Create coupon",
+            boxLabel: 'Create coupon',
             labelAlign: 'right',
             listeners: {
                 change: function (cb, newValue) {
@@ -131,11 +136,10 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             },
             this.minimumOrderAmountInput,
             this.minimumLifetimeValueAmount,
-            this.datesContainer,
             this.segmentsBox,
+            this.datesContainer,
             this.productsBox,
             this.categoriesBox,
-            this.segmentsBox,
             this.redemptionLimits,
             this.requiresCouponInput,
             this.couponCodeBox
@@ -195,24 +199,39 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
     buildSegments:function (){
         var segStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerSegments');
+        
+        this.segmentsList = Ext.create('Ext.ux.form.field.BoxSelect', {
+            name: 'customerSegments',
+            flex: 1,
+            store: segStore,
+            getStore: function() {
+                return segStore;
+            },
+            hideTrigger: true,
+            triggerOnClick: false,
+            forceSelection: true,
+            disableKeyFilter: true,
+            typeAhead: false,
+            displayField: 'code',
+            fieldLabel: 'Customer Segments',
+            valueField: 'id'
+        });
+
         this.segmentsBox = Ext.create('Ext.container.Container', {
             layout: {
                 type: 'hbox',
                 align: 'bottom'
             },
-            store:segStore,
             width: 600,
-            items: [{
-                xtype: 'boxselect',
-                name: "customerSegments",
-                queryMode: "local",
-                displayField: 'code',
-                fieldLabel: 'Choose a Segment',
-                valueField: 'id'
-
-            }]
+            items: [
+                this.segmentsList, {
+                    xtype: 'secondarybutton',
+                    text: 'Add',
+                    click: function() { this.launchSegmentModal(this.segmentsList);},
+                    scope: this
+                }
+            ]
         });
-        //segmentsBox
     },
 
     buildCategory: function () {
@@ -315,6 +334,26 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         //     this.modal.show();
         //     return;
         // }
+    },
+
+    launchSegmentModal: function(list) {
+        var listStore = list.getStore(),
+            gridStore = Taco.core.data.StoreManager.getOrCreate({
+                type: 'Taco.store.CustomerSegments',
+                clearFilters: true,
+                clearSort: true,
+                autoLoad: true
+            });
+
+        this.modal = Ext.create('Taco.view.customers.segments.Modal', {
+            store: gridStore,
+            listeners: {
+                save: function(modal, values) {
+                    list.addValue(values);
+                },
+                scope: this
+            }
+        });
     },
 
     /**

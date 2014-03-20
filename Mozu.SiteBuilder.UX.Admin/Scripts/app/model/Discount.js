@@ -176,6 +176,26 @@ Ext.define('Taco.model.Discount', {
 
     },
 
+    getCustomerSegmentStore: function() {
+        var me = this;
+        if (me.customerSegmentStore == null) {
+            me.customerSegmentStore = Taco.core.data.StoreManager.getOrCreate(
+                {
+                    type: 'Taco.store.CustomerSegments',
+                    createOnly: true,
+                    id: "seg-" + me.id,
+                    autoLoad: true,
+                    clearFilters: false,
+                    remoteFilter: false,
+                    filters: function (record) {
+                        return Ext.Array.indexOf((me.get('customerSegments') || []), record.getId()) > -1;
+                    }
+                });
+
+        }
+        return me.customerSegmentStore;
+    },
+
     proxy: {
         type: 'ajaxproxy',
         api: {

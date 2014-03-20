@@ -97,39 +97,49 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                         }
                         return 'na';
                     },
-                    flex: 1
-                },
-                {
+                    flex: 200
+                }, {
+                    text: 'Customer Comments',
+                    draggable: false,
+                    sortable: false,
+                    resizable: false,
+                    menuDisabled: true,
+                    renderer: function(value, meta, record) {
+                        var notes = record.get('notes');
+
+                        if (!notes || !notes.length) return '';
+
+                        return notes[0];
+                    }
+                }, {
                     text: 'Quantity',
                     draggable: false,
                     sortable: false,
                     resizable: false,
                     menuDisabled: true,
-                    width: 150,
+                    width: 80,
                     dataIndex: 'quantity'
-                },
-                {
+                }, {
                     text: 'Recieved',
                     dataIndex: 'quantityReceived',
                     draggable: false,
                     sortable: false,
                     resizable: false,
                     menuDisabled: true,
-                    width: 150,
+                    width: 80,
                     editor: {
                         xtype: 'numberfield',
                         showBorder:true,
                         hideTrigger: true,
                         minValue: 0
                     }
-                },
-                {
+                }, {
                     text: 'Restockable',
                     draggable: false,
                     sortable: false,
                     resizable: false,
                     menuDisabled: true,
-                    width: 150,
+                    width: 80,
                     dataIndex: 'quantityRestockable',
                     editor: {
                         xtype: 'numberfield',
