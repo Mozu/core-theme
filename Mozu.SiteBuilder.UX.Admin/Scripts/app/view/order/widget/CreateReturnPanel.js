@@ -123,9 +123,7 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
             xtype: 'textarea',
             name: 'rmaNote',
             fieldLabel: 'Notes',
-            requiredCls: 'x-form-item-required',
             flex: 4,
-            allowBlank: true,
             listeners: {
                 change: me.onCreateStateChange,
                 scope: me
@@ -227,18 +225,19 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
         var me = this,
             savableState = me.store.findBy(function(item) { return item.get('returnQuantity'); }) > -1 && me.returnType.getValue() && me.returnReason.getValue(),
             rationale = me.returnReason.getValue(),
-            noteLength = me.rmaNote.getValue().length;
+            noteLength = me.rmaNote.getValue().trim().length;
 
         if (rationale == "Other") {
+            me.rmaNote.allowOnlyWhitespace = false;
             me.rmaNote.allowBlank = false;
-            me.rmaNote.minLength = 3;
-            if (noteLength < 3) {
+            if (noteLength == 0) {
                 savableState = false;
             }
         } else {
+            me.rmaNote.allowOnlyWhitespace = true;
             me.rmaNote.allowBlank = true;
-            me.rmaNote.minLength = 0;
         }
+        me.rmaNote.validate();
 
         me.createButton.setDirty(savableState);
     }
