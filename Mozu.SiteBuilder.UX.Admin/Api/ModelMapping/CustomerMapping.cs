@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
                 .ForMember(x => x.UserId, op => op.ResolveUsing(dc => string.IsNullOrWhiteSpace(dc.UserId) ? null : dc.UserId))
                 .ForMember(x => x.EmailAddress, op => op.ResolveUsing(dc => dc.EmailAddress))
-                .ForMember(x => x.UserName, op => op.ResolveUsing(dc => !String.IsNullOrEmpty(dc.UserName) ? dc.UserName : (!dc.IsAnonymous ? dc.EmailAddress : null)))
+                .ForMember(x => x.UserName, op => op.ResolveUsing(dc => dc.UserName))
                 .ForMember(x => x.FirstName, op => op.ResolveUsing(dc => dc.FirstName))
                 .ForMember(x => x.LastName, op => op.ResolveUsing(dc => dc.LastName))
                 .ForMember(x => x.Contacts, op => op.ResolveUsing(dc => dc.Contacts))
@@ -51,19 +51,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             //todo: Greg Murray on 2014-01-23 redundant mappings, ex FirstName => FirstName, Remove?
             Mapper.CreateMap<ApiCustomer, DC.CustomerAccount>()
                 .ForMember(x => x.Segments, op => op.ResolveUsing(dc => (dc.SegmentIds??new List<int>()).Select(x=> new DC.CustomerSegment(){ Id=x})))
-                .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
+                .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(x => x.UserId, op => op.ResolveUsing(dc => string.IsNullOrWhiteSpace(dc.UserId) ? null : dc.UserId))
                 .ForMember(x => x.EmailAddress, op => op.ResolveUsing(dc => dc.EmailAddress))
-                .ForMember(x => x.UserName, op => op.ResolveUsing(dc => dc.UserName))
+                .ForMember(x => x.UserName, op => op.ResolveUsing(dc => !String.IsNullOrEmpty(dc.UserName) ? dc.UserName : (!dc.IsAnonymous ? dc.EmailAddress : null)))
                  
                 .ForMember(x => x.FirstName, op => op.ResolveUsing(dc => dc.FirstName))
                 .ForMember(x => x.LastName, op => op.ResolveUsing(dc => dc.LastName))
                 .ForMember(x => x.Contacts, op => op.ResolveUsing(dc => dc.Contacts))
 
-                .ForMember(dc => dc.Contacts, op => op.ResolveUsing(x => x.Contacts))
-                .ForMember(dc => dc.CompanyOrOrganization, op => op.ResolveUsing(x => x.CompanyOrOrganization))
-                .ForMember(dc => dc.AcceptsMarketing, op => op.ResolveUsing(x => x.AcceptsMarketing))
-                .ForMember(dc => dc.CommerceSummary, op => op.ResolveUsing(x => new DC.CommerceSummary
+                .ForMember(x => x.Contacts, op => op.ResolveUsing(x => x.Contacts))
+                .ForMember(x => x.CompanyOrOrganization, op => op.ResolveUsing(x => x.CompanyOrOrganization))
+                .ForMember(x => x.AcceptsMarketing, op => op.ResolveUsing(x => x.AcceptsMarketing))
+                .ForMember(x => x.CommerceSummary, op => op.ResolveUsing(x => new DC.CommerceSummary
                                                                                 {
                                                                                     OrderCount = x.OrderCount, LastOrderDate = x.LastOrderDate,
                                                                                     TotalOrderAmount = new DC.CurrencyAmount
