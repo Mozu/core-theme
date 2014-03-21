@@ -77,7 +77,7 @@
 
         attributeView = Ext.create('Ext.panel.Panel', {
             //strip out the spaces from the name so it will be a valid itemId tfs-17235
-            itemId: Ext.String.createVarName(ptAttribute.get('attributeName')),
+            attributeFQN: Ext.String.createVarName(ptAttribute.get('attributeFQN')),
             ui: 'subform-subform',
             cls: Taco.baseCSSPrefix + 'attribute-item',
             margin: '0 0 10',
@@ -162,8 +162,8 @@
 
         if (record && record.isModel) {
             //strip out the spaces from the name so it will be a valid itemId
-            name = Ext.String.createVarName(record.get('attributeName'));
-            listCt.down('#' + name).down('#placeholder').update(record.getData());
+            name = record.get('attributeFQN');
+            listCt.down('[attributeFQN="' + name + '"]').down('#placeholder').update(record.getData());
         }
     }
 });
