@@ -413,33 +413,36 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     
                     
 
+                                
+                        order.addPayment({
+                            jsonData: {
+                                orderId: order.getId(),
+                                amount: amount,
+                                billingInfo: billingInfo,
+                                billingContact: contactInfo
+                            },
+                            success: function (response) {
+                                me.setLoading(false, me.body);
+                                var json = Ext.decode(response.responseText, true);
+                                if (!json || !json.success) {
+                                    Taco.app.fireEvent('setmessage', "Error adding payment", 'error');
+                                }
 
-                    order.addPayment({
-                        jsonData: {
-                            orderId: order.getId(),
-                            amount: amount,
-                            billingInfo: billingInfo,
-                            billingContact: contactInfo
-                        },
-                        success: function (response) {
-                            me.setLoading(false, me.body);
-                            var json = Ext.decode(response.responseText, true);
-                            if (!json || !json.success) {
-                                Taco.app.fireEvent('setmessage', "Error adding payment", 'error');
-                                return;
+                                order.reload();
+                                // close the dialog
+                                me.close();
+                            },
+                            failure: function (response) {
+                                var json = Ext.decode(response.responseText, true),
+                                    msg = (json && json.message) ? json.message : "Error adding payment";
+                                Taco.app.fireEvent('setmessage', msg, 'error');
+                                me.setLoading(false, me.body);
+
+                                order.reload();
+                                // close the dialog
+                                me.close();
                             }
-                            
-                            order.reload();
-                            // close the dialog
-                            me.close();
-                        },
-                        failure: function (response) {
-                            var json = Ext.decode(response.responseText, true),
-                                msg = (json && json.message) ? json.message : "Error adding payment";
-                            Taco.app.fireEvent('setmessage', msg, 'error');
-                            me.setLoading(false, me.body);
-                        }
-                    });
+                        });
 
                     // TODO: impl mask for our own form and also finish working.
                 }
@@ -497,7 +500,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         }
 
         return retVal;
-    },  
+    },
 
     save: function () {
         this.setLoading(true, this.body);
