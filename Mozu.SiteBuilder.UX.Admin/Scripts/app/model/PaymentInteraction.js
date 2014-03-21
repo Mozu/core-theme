@@ -41,6 +41,16 @@ Ext.define('Taco.model.PaymentInteraction', {
         'useNull': true
     },
     {
+        'name': 'gatewayResponseCode',
+        'type': 'string',
+        'useNull': true
+    },
+    {
+        'name': 'gatewayResponseText',
+        'type': 'string',
+        'useNull': true
+    },
+    {
         'name': 'amount',
         'type': 'float',
         'useNull': true

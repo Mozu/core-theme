@@ -53,6 +53,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string Status { get; set; }
 
         /// <summary>
+        /// Gateway Response Code.
+        /// </summary>        
+        public string GatewayResponseCode { get; set; }
+
+        /// <summary>
+        /// Gateway Response Message.
+        /// </summary>
+        public string GatewayResponseText { get; set; }
+
+        /// <summary>
         /// Amount of funds to withdraw to pay for this order.
         /// </summary>        
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]

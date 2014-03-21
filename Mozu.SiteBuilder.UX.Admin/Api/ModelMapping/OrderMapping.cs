@@ -512,6 +512,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.InteractionType, op => op.ResolveUsing(dc => dc.InteractionType))
                 .ForMember(x => x.CheckNumber, op => op.ResolveUsing(dc => dc.CheckNumber))
                 .ForMember(x => x.Status, op => op.ResolveUsing(dc => dc.Status))
+                .ForMember(x => x.GatewayResponseCode, op => op.ResolveUsing(dc => dc.GatewayResponseCode))
+                .ForMember(x => x.GatewayResponseText, op => op.ResolveUsing(dc => dc.GatewayResponseText))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateDate : null))
                 .ForMember(x => x.PaymentId, op => op.ResolveUsing(dc => dc.PaymentId))
                 .ForMember(x => x.IsManual, op => op.ResolveUsing(dc => dc.IsManual))
