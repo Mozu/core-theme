@@ -638,6 +638,7 @@
     <Content Include="Scripts\app\core\util\Common.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
     <Content Include="Scripts\app\core\ux\browser\SearchList.js" />
+    <Content Include="Scripts\app\core\ux\content\SplitContainer.js" />
     <Content Include="Scripts\app\core\ux\content\ContextMenu.js" />
     <Content Include="Scripts\app\core\ux\form\field\AdminUser.js" />
     <Content Include="Scripts\app\core\ux\form\field\SingleImageField.js" />
