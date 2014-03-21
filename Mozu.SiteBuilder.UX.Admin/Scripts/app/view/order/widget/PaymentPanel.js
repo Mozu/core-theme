@@ -47,7 +47,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             'RollbackCapture': 'Rollback Capture',
             'RollbackCredit': 'Rollback Credit',
             'RollbackVoid': 'Rollback Void',
-
+git
             'ManualCapturePayment': 'Capture Payment (Manual)',
             'ManualCreditPayment': 'Credit Payment (Manual)',
             'ManualVoidPayment': 'Void Payment (Manual)',
@@ -63,6 +63,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 return label;
             }
         };
+
+        this.reorderActions();
 
         var actionsWithLabels = Ext.Array.map(me.record.data.availableActions, function (action) {
             var label = labels[action];
@@ -190,9 +192,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             ],
             store: this.interactionsStore
         });
-
-
-
     },
 
 
@@ -230,6 +229,17 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             data: data
         });
 
+    },
+
+    reorderActions: function() {
+        var actions = this.record.get('availableActions'),
+            capturePayment = 'CapturePayment';
+
+        if (!Ext.Array.contains(actions, capturePayment)) return;
+
+        Ext.Array.remove(actions, capturePayment);
+
+        Ext.Array.insert(actions, 0, capturePayment);
     },
 
     // removes the authorized transaction (first item in the payments collection). Will call service, reload the record, and update the ui;
