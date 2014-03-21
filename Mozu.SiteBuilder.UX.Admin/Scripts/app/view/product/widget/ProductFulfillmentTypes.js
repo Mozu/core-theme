@@ -16,21 +16,17 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
     product: null,
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            fulfillmentTypes = this.product.get("fulfillmentTypesSupported");
 
-        this.record = this.product;
-
-        var fulfillmentTypes = this.record.get("fulfillmentTypesSupported");
-
-        var hasDirectShip = (fulfillmentTypes.indexOf('DirectShip') != -1);
-        var hasInStore = (fulfillmentTypes.indexOf('InStorePickup') != -1);
+        me.record = this.product;
 
         this.directShipCheckbox = Ext.widget({
             xtype: 'checkboxfield',
             boxLabel: 'Direct Ship',
             name: 'directShipCb',
             inputValue: 'DirectShip',
-            checked: hasDirectShip,
+            checked: (fulfillmentTypes.indexOf('DirectShip') != -1),
             handler: me.onFulfillmentChange,
             scope: me,
             fulfillmentType: 1
@@ -41,7 +37,7 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
             boxLabel: 'In Store Pickup',
             name: 'inStoreCb',
             inputValue: 'InStorePickup',
-            checked: hasInStore,
+            checked: (fulfillmentTypes.indexOf('InStorePickup') != -1),
             handler: me.onFulfillmentChange,
             scope: me,
             fulfillmentType: 1
@@ -57,8 +53,8 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
     },
     
     onFulfillmentChange: function () {
-        var me = this;
-        var fulfillmentTypeValue = [];
+        var me = this,
+            fulfillmentTypeValue = [];
 
         if (me.directShipCheckbox.getValue())
             fulfillmentTypeValue.push(me.directShipCheckbox.inputValue);
