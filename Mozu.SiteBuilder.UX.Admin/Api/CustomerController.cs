@@ -357,7 +357,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             if (updatedAttributeIds.Count > 0)
             {
-                attributeTasks.AddRange(dcCustomer.Attributes.Where(a => updatedAttributeIds.Contains(a.FullyQualifiedName)).Select(a => _customerWebApiClient.UpdateAccountAttribute(a, dcCustomer.Id)));
+                attributeTasks.AddRange(dcCustomer.Attributes.Where(a => updatedAttributeIds.Contains(a.FullyQualifiedName)).Select(a => _customerWebApiClient.UpdateAccountAttribute(a, dcCustomer.Id, a.FullyQualifiedName )));
             }
 
             return Task.WhenAll(attributeTasks);
