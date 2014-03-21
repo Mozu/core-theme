@@ -58,6 +58,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "edit")]
         public async Task<Response<List<AttributeModel>>> EditAttribute(List<AttributeModel> attributes)
         {
+           
+           
             var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ =>
             {
                 _.AttributeCode = string.IsNullOrEmpty(_.AttributeCode) ? _.AttributeFQN.Split('~')[1] : _.AttributeCode;
