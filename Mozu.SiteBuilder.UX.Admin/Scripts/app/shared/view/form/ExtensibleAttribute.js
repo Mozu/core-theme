@@ -52,7 +52,13 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                     value: (values && values.length) ? values[0] : null,
                     store: Ext.create('Ext.data.Store', {
                         fields: [
-                            {name: 'id', type: 'string'},
+                            {name: 'id', type: 'auto' , convert:function (v, record) {
+                                var dt = ptAttribute.get('dataType');
+                                if (dt == 'Number') {
+                                    v=parseFloat(v);
+                                }
+                                return v;
+                            }},
                             {name: 'value', type: 'string'}
                         ],
                         data: ptAttribute.get('values')

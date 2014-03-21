@@ -58,9 +58,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "edit")]
         public async Task<Response<List<AttributeModel>>> EditAttribute(List<AttributeModel> attributes)
         {
-            var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ => _customerAttributeDefinitionWebApiClient.UpdateAttribute( _.AttributeFQN , _)).ToList();
+            var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ =>
+            {
+                _.AttributeCode = string.IsNullOrEmpty(_.AttributeCode) ? _.AttributeFQN.Split('~')[1] : _.AttributeCode;
+                return _customerAttributeDefinitionWebApiClient.UpdateAttribute(_.AttributeFQN, _);
+            }
+            ).ToList();
             await Task.WhenAll(tasks);
-
+            
             var newAttributes = tasks.Select(x => x.Result.ReadAsSync()).Select(Mapper.Map<AttributeModel>).ToList();
             return this.List2(newAttributes);
 
