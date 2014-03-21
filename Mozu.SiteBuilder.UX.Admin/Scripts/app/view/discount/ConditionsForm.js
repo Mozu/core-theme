@@ -8,6 +8,7 @@
 Ext.define('Taco.view.discount.ConditionsForm', {
     requires:[
         'Ext.data.UuidGenerator',
+        'Ext.ux.form.field.BoxSelect',
         'Taco.view.category.Modal',
         'Taco.view.product.Modal',
         'Taco.view.customers.segments.Modal'
@@ -328,12 +329,6 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             },
             scope: this
         });
-
-        // if (this.modal) {
-        //     this.modal.down('grid').getSelectionModel().deselectAll();
-        //     this.modal.show();
-        //     return;
-        // }
     },
 
     launchSegmentModal: function(list) {

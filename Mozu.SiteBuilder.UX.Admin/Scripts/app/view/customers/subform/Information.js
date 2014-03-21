@@ -1,5 +1,10 @@
 Ext.define('Taco.view.customers.subform.Information', {
     extend: 'Taco.view.customers.subform.Subform',
+
+    requires: [
+        'Ext.ux.form.field.BoxSelect'
+    ],
+
     title: 'Shopper ID',
     cls: Taco.baseCSSPrefix + 'customer-profile',
     initComponent: function () {
@@ -65,61 +70,87 @@ Ext.define('Taco.view.customers.subform.Information', {
                 width: 320,
                 cls: 'customer-settings',
                 items: [{
-                        xtype: 'component',
-                        width: 320,
-                        cls: 'customer-history',
-                        renderData: data,
-                        renderTpl: [
-                            '<div class="total-spent"><label>Lifetime Value</label><h2>{[Ext.util.Format.usMoney(values.totalSpent || 0)]}</h2></div>',
-                            '<div class="total-orders"><label>Fulfilled Orders</label><h2>{[values.orderCount || 0]}</h2></div>',
-                            '<div class="total-visits"><label>Total Visits</label><h2>{[values.visitCount || 0]}</h2></div>',
-                            '<div class="total-orders"><span>Customer Since: </span><span>{[Ext.util.Format.date(values.createDate, "m/d/Y")]}</span></div>'
-                        ]
-                    }, {
-                        xtype: 'button',
-                        text: 'View Wish List',
-                        cls: 'customer-wish-list-btn',
-                        handler: function () {
-                            //console.log(this.record);
-                            var model = Ext.create('Taco.shared.view.modal.Wishlist', {
-                                record: this.record
-                            });
-                        },
-                        scope: this
-                    }, {
-                        xtype: 'button',
-                        text: 'View Store Credit',
-                        cls: 'customer-wish-list-btn',
-                        handler: function () {
-                            //console.log(this.record);
-                            var model = Ext.create('Taco.shared.view.modal.StoreCredit', {
-                                record: this.record
-                            });
-                        },
-                        scope: this
-                    }, {
-                        store: this.segmentStore,
-                        xtype: 'boxselect',
-                        width: 320,
-                        hideTrigger: false,
-                        triggerOnClick: false,
-                        forceSelection: true,
-                        createNewOnEnter: false,
-                        valueField: 'id',
-                        displayField: 'code',
-                        name: 'segmentIds',
-                        queryMode: 'local',
-                        fieldLabel: 'Segments',
-                        cls: 'customer-history',
-                        pageSize :10,
-                        tpl: Ext.create('Ext.XTemplate',
-       '<tpl for=".">',
-            '<div class="x-boundlist-item">code:{code} - name:{name}</div>',
-        '</tpl>'
-    ),
-                    }]
+                    xtype: 'component',
+                    width: 320,
+                    cls: 'customer-history',
+                    renderData: data,
+                    renderTpl: [
+                        '<div class="total-spent"><label>Lifetime Value</label><h2>{[Ext.util.Format.usMoney(values.totalSpent || 0)]}</h2></div>',
+                        '<div class="total-orders"><label>Fulfilled Orders</label><h2>{[values.orderCount || 0]}</h2></div>',
+                        '<div class="total-visits"><label>Total Visits</label><h2>{[values.visitCount || 0]}</h2></div>',
+                        '<div class="total-orders"><span>Customer Since: </span><span>{[Ext.util.Format.date(values.createDate, "m/d/Y")]}</span></div>'
+                    ]
+                }, {
+                    xtype: 'button',
+                    text: 'View Wish List',
+                    cls: 'customer-wish-list-btn',
+                    handler: function () {
+                        var model = Ext.create('Taco.shared.view.modal.Wishlist', {
+                            record: this.record
+                        });
+                    },
+                    scope: this
+                }, {
+                    xtype: 'button',
+                    text: 'View Store Credit',
+                    cls: 'customer-wish-list-btn',
+                    handler: function () {
+                        var model = Ext.create('Taco.shared.view.modal.StoreCredit', {
+                            record: this.record
+                        });
+                    },
+                    scope: this
+                }]
+            }, {
+                xtype: 'container',
+                layout: {
+                    type: 'hbox',
+                    align: 'bottom'
+                },
+                width: 600,
+                items: [{
+                    xtype: 'boxselect',
+                    fieldLabel: 'Customer Segments',
+                    itemId: 'customerSegments',
+                    store: this.segmentStore,
+                    getStore: function() { return me.segmentStore; },
+                    name: 'segmentIds',
+                    valueField: 'id',
+                    displayField: 'code',
+                    hideTrigger: true,
+                    triggerOnClick: false,
+                    forceSelection: true,
+                    disableKeyFilter: true,
+                    flex: 1
+                }, {
+                    xtype: 'secondarybutton',
+                    text: 'Add',
+                    click: function() { this.launchSegmentModal(); },
+                    scope: this
+                }]
             }];
 
         this.callParent(arguments);
+    },
+
+    launchSegmentModal: function() {
+        var list = this.down('#customerSegments'),
+            listStore = list.getStore(),
+            gridStore = Taco.core.data.StoreManager.getOrCreate({
+                type: 'Taco.store.CustomerSegments',
+                clearFilters: true,
+                clearSort: true,
+                autoLoad: true
+            });
+
+        this.modal = Ext.create('Taco.view.customers.segments.Modal', {
+            store: gridStore,
+            listeners: {
+                save: function(modal, values) {
+                    list.addValue(values);
+                },
+                scope: this
+            }
+        });
     }
 });
