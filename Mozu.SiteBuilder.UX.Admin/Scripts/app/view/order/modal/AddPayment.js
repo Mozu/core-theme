@@ -76,9 +76,9 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     value : this.getDefaultPaymentAmount()
                 }, {
                     xtype: 'combobox',
-                    name: 'Key',
-                    itemId: 'Key',
-                    valueField: 'Value',
+                    name: 'cardType',
+                    itemId: 'cardType',
+                    valueField: 'Key',
                     displayField: 'Value',
                     fieldLabel: 'Card Type',
                     queryMode:'local',
