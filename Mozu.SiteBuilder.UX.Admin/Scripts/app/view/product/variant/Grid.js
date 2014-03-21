@@ -35,11 +35,6 @@ Ext.define('Taco.view.product.variant.Grid', {
             autoSelect: true,
             forceSelection:true,
             store: fulfillmentTypeData,
-            listeners : {
-                'beforeselect': function(combo, record, index) {
-
-                }
-            }
         };
 
         staticColumns = [{
@@ -98,14 +93,6 @@ Ext.define('Taco.view.product.variant.Grid', {
             hideable: true,
             hidden: true,
             width: 185,
-            //renderer: function (value) {
-            //    var result = '';
-            //    if (value.indexOf('DirectShip') != -1)
-            //        result += "<div class='check'>Direct Ship</div>";
-            //    if (value.indexOf('InStorePickup') != -1)
-            //        result += "<div class='check'>Instore Pickup</div>";
-            //    return result;
-            //},
             editor: fulfillmentEditor
             
         }, {

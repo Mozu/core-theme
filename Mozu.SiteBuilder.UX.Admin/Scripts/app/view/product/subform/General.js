@@ -27,8 +27,12 @@ Ext.define('Taco.view.product.subform.General', {
         var me = this,
             readOnly,
             requiredContent,
-            visable;
+            visable,
+            isMapDisabled = (this.product.get("map") === null),
+            isDiscountRestricted = this.product.get("discountsRestricted"),
+            productUsage = this.product.get("productUsage");
 
+        me.record = this.product;
 
         // get the data from the preloaded product type store;
         var tempProductTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
@@ -60,8 +64,6 @@ Ext.define('Taco.view.product.subform.General', {
             labelSeparator: '',
             persistChangesToModel: true
         };
-
-        this.record = this.product;
 
         // sync changes from code view of the htmleditor to WYSIWYG view
         var htmlEditorEditModeChangeHandler = function(el, editMode, eOpts) {
@@ -96,9 +98,6 @@ Ext.define('Taco.view.product.subform.General', {
             ]
         });
 
-        var isMapDisabled = (this.record.get("map") === null);
-        var isDiscountRestricted = this.record.get("discountsRestricted");
-        var productUsage = this.record.get("productUsage");
 
         // remove for multi site;
         if (this.isGlobal || this.isSingleSite) {
