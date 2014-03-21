@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @external Promise
  * @see {@link https://github.com/cujojs/when/blob/master/docs/api.md#promise WhenJS/Promise}
  */
@@ -49,15 +49,23 @@ ApiInterfaceConstructor.prototype = {
             data = conf.data || conf;
         }
 
-        var contextHeaders = this.context.asObject("x-vol-");
-
-        var xhr = utils.request(method, url, contextHeaders, data, function(rawJSON) {
-            // update context with response headers
-            me.fire('success', rawJSON, xhr, requestConf);
-            deferred.resolve(rawJSON, xhr);
-        }, function(error) {
-            deferred.reject(error, xhr, url);
-        }, requestConf.iframeTransportUrl);
+        var xhr;
+        var triedRefresh = false;
+        var makeRequest = function () {
+            var contextHeaders = me.context.asObject("x-vol-");
+            xhr = utils.request(method, url, contextHeaders, data, function(rawJSON) {
+                // update context with response headers
+                me.fire('success', rawJSON, xhr, requestConf);
+                deferred.resolve(rawJSON, xhr);
+            }, function (error) {
+                if (error && error.errorCode === "INVALID_ACCESS_TOKEN" && !triedRefresh) {
+                    me.refresh().then(makeRequest);
+                    triedRefresh = true;
+                } else {
+                    deferred.reject(error, xhr, url);
+                }
+            }, requestConf.iframeTransportUrl);
+        }
 
         var cancelled = false,
             canceller = function() {
@@ -66,6 +74,7 @@ ApiInterfaceConstructor.prototype = {
                 deferred.reject("Request cancelled.")
             };
 
+        makeRequest();
         this.fire('request', xhr, canceller, deferred.promise, requestConf, conf);
 
         deferred.promise.otherwise(function(error) {
@@ -78,6 +87,20 @@ ApiInterfaceConstructor.prototype = {
 
 
         return deferred.promise;
+    },
+    refresh: function() {
+        var me = this,
+            updateClaimsHeaders = function(json, xhr, conf) {
+                if (conf === '/user/refresh') {
+                    me.context.AppClaims(xhr.getResponseHeader('x-vol-app-claims'));
+                    me.context.UserClaims(xhr.getResponseHeader('x-vol-user-claims'));
+                }
+            };
+        me.on('success', updateClaimsHeaders);
+        return me.request('POST', '/user/refresh').ensure(function () {
+            me.off('success', updateClaimsHeaders);
+            return null;
+        });
     },
     /**
      * @public
