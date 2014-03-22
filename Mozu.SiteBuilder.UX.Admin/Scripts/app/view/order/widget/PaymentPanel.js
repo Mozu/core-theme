@@ -47,7 +47,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             'RollbackCapture': 'Rollback Capture',
             'RollbackCredit': 'Rollback Credit',
             'RollbackVoid': 'Rollback Void',
-git
             'ManualCapturePayment': 'Capture Payment (Manual)',
             'ManualCreditPayment': 'Credit Payment (Manual)',
             'ManualVoidPayment': 'Void Payment (Manual)',
