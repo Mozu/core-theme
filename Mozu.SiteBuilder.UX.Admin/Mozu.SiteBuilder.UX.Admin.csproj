@@ -298,7 +298,7 @@
       <HintPath>..\packages\Mozu.SiteSettings.Shipping.Contracts.1.1.0.3\lib\Mozu.SiteSettings.Shipping.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Tenant.Contracts">
-      <HintPath>..\packages\Mozu.Tenant.Contracts.1.7.0-dev006\lib\net45\Mozu.Tenant.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Tenant.Contracts.1.7.0.1\lib\net45\Mozu.Tenant.Contracts.dll</HintPath>
     </Reference>
     <!--<Reference Include="PhoneNumbers">
       <HintPath>..\packages\libphonenumber-csharp.4.10.0.62\lib\PhoneNumbers.dll</HintPath>
