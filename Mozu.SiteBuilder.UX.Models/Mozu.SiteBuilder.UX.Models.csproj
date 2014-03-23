@@ -230,9 +230,8 @@
     <Reference Include="Mozu.Core.Api">
       <HintPath>..\packages\Mozu.Core.Api.1.7.0.1\lib\net45\Mozu.Core.Api.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Api.Client, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Api.Client.1.7.0-dev005\lib\net45\Mozu.Core.Api.Client.dll</HintPath>
+    <Reference Include="Mozu.Core.Api.Client">
+      <HintPath>..\packages\Mozu.Core.Api.Client.1.7.0.1\lib\net45\Mozu.Core.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.Contracts, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
