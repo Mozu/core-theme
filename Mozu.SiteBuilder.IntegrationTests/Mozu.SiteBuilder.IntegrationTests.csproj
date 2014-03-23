@@ -227,9 +227,8 @@
     <Reference Include="Mozu.Core">
       <HintPath>..\packages\Mozu.Core.1.7.0.1\lib\net45\Mozu.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Api, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Api.1.7.0-dev010\lib\net45\Mozu.Core.Api.dll</HintPath>
+    <Reference Include="Mozu.Core.Api">
+      <HintPath>..\packages\Mozu.Core.Api.1.7.0.1\lib\net45\Mozu.Core.Api.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.Client, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
