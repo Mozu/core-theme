@@ -276,7 +276,7 @@
       <HintPath>..\packages\Mozu.PricingRuntime.Contracts.1.6.0.1\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductAdmin.Contracts">
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.7.0-dev006\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.7.0.1\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts">
       <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.7.0-dev004\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
