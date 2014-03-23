@@ -289,7 +289,7 @@
       <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.6.0.2\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.General.Contracts">
-      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.7.0-dev001\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.7.0.1\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.Order.Contracts">
       <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.7.0-dev001\lib\net45\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
