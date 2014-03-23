@@ -258,7 +258,7 @@
       <HintPath>..\packages\Mozu.Location.Contracts.1.7.0.1\lib\Mozu.Location.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.PaymentService.Contracts">
-      <HintPath>..\packages\Mozu.PaymentService.Contracts.1.7.0-dev001\lib\net451\Mozu.PaymentService.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.PaymentService.Contracts.1.7.0.1\lib\net451\Mozu.PaymentService.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.PricingRuntime.Contracts">
       <HintPath>..\packages\Mozu.PricingRuntime.Contracts.1.6.0.1\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
