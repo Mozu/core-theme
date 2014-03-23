@@ -273,7 +273,7 @@
       <HintPath>..\packages\Mozu.Provisioning.Contracts.1.7.0.1\lib\Mozu.Provisioning.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Reference.Contracts">
-      <HintPath>..\packages\Mozu.Reference.Contracts.1.7.0-dev001\lib\net45\Mozu.Reference.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Reference.Contracts.1.7.0.1\lib\net45\Mozu.Reference.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Reporting.Contracts">
       <HintPath>..\packages\Mozu.Reporting.Contracts.1.7.0-dev002\lib\Mozu.Reporting.Contracts.dll</HintPath>
