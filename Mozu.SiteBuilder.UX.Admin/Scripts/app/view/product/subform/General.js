@@ -28,11 +28,15 @@ Ext.define('Taco.view.product.subform.General', {
             readOnly,
             requiredContent,
             visable,
-            isMapDisabled = (this.product.get("map") === null),
+            isMapEnabled = (this.product.get("map") != null),
             isDiscountRestricted = this.product.get("discountsRestricted"),
-            productUsage = this.product.get("productUsage");
-
+            productUsage = this.product.get("productUsage"),
+            invalidDateText = "{0} is not a valid date - it must be in the format mm/dd/yy";
+            
         me.record = this.product;
+
+        //used for data range validation key value lookup, since multiple pair of fields
+        me.dateRangeFieldMap = {};
 
         // get the data from the preloaded product type store;
         var tempProductTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
@@ -97,7 +101,7 @@ Ext.define('Taco.view.product.subform.General', {
                 }
             ]
         });
-
+    
 
         // remove for multi site;
         if (this.isGlobal || this.isSingleSite) {
@@ -205,19 +209,41 @@ Ext.define('Taco.view.product.subform.General', {
                 xtype: 'datefield',
                 fieldLabel: 'Restriction Effective Date',
                 name: 'discountsRestrictedStartDate',
+                itemId: 'discountDateRangeStart',
+                endDateField: 'discountDateRangeEnd',
                 pickerOffset: 4,
                 disabled: !isDiscountRestricted,
-                emptyText: 'mm/dd/yy'
+                allowBlank: !isDiscountRestricted,
+                emptyText: 'mm/dd/yy',
+                invalidText: invalidDateText,
+                listeners: {
+                    change: {
+                        scope: me,
+                        fn: me.onDateRangeChange
+                    }
+                }
             });
+            me.dateRangeFieldMap['discountDateRangeStart'] = this.discountsRestrictedStartField;
 
             this.discountsRestrictedEndField = Ext.widget({
                 xtype: 'datefield',
                 fieldLabel: 'Restriction End Date',
                 name: 'discountsRestrictedEndDate',
+                itemId: 'discountDateRangeEnd',
+                startDateField: 'discountDateRangeStart',
                 pickerOffset: 4,
                 disabled: !isDiscountRestricted,
-                emptyText: 'mm/dd/yy'
+                allowBlank: !isDiscountRestricted,
+                invalidText: invalidDateText,
+                emptyText: 'mm/dd/yy',
+                listeners: {
+                    change: {
+                        scope: me,
+                        fn: me.onDateRangeChange
+                    }
+                }
             });
+            me.dateRangeFieldMap['discountDateRangeEnd'] = this.discountsRestrictedEndField;
 
             this.mfgPartNumField = Ext.widget({
                 xtype: 'textfield',
@@ -321,16 +347,13 @@ Ext.define('Taco.view.product.subform.General', {
             mouseWheelEnabled: false,
             selectOnFocus: true,
             enableKeyEvents: true,
+            scope: me,
             listeners: {
                 keyup: {
+                    scope: me,
                     fn: function (source) {
-                        var isDisabled = ((source.getValue() == null) || (source.getValue().length == 0));
-                        if (isDisabled) {
-                            me.mapStartField.setValue('');
-                            me.mapEndField.setValue('');
-                        }
-                        me.mapStartField.setDisabled(isDisabled);
-                        me.mapEndField.setDisabled(isDisabled);                        
+                        var isEnabled = (source.getValue() != null);
+                        me.enableDateRangeFields(source, me.mapStartField, me.mapEndField, isEnabled);
                     }
                 }
             }
@@ -340,19 +363,41 @@ Ext.define('Taco.view.product.subform.General', {
             xtype: 'datefield',
             fieldLabel: 'MAP Effective Date',
             name: 'mapStartDate',
+            itemId: 'mapstartdt',
+            endDateField: 'mapenddt',
             pickerOffset: 4,
-            disabled: isMapDisabled,
-            emptyText: 'mm/dd/yy'
+            disabled: !isMapEnabled,
+            allowBlank: !isMapEnabled,
+            invalidText: invalidDateText,
+            emptyText: 'mm/dd/yy',
+            listeners: {
+                change: {
+                    scope: me,
+                    fn: me.onDateRangeChange
+                }
+            }
         });
+        me.dateRangeFieldMap['mapstartdt'] = this.mapStartField;
 
         this.mapEndField = Ext.widget({
             xtype: 'datefield',
             fieldLabel: 'MAP End Date',
             name: 'mapEndDate',
+            itemId: 'mapenddt',
+            startDateField: 'mapstartdt',
             pickerOffset: 4,
-            disabled: isMapDisabled,
-            emptyText: 'mm/dd/yy'
+            disabled: !isMapEnabled,
+            allowBlank: !isMapEnabled,
+            invalidText: invalidDateText,
+            emptyText: 'mm/dd/yy',
+            listeners: {
+                change: {
+                    scope: me,
+                    fn: me.onDateRangeChange
+                }
+            }
         });
+        me.dateRangeFieldMap['mapenddt'] = this.mapEndField;
 
         readOnly = this.isEdit() || !(this.isSingleSite || this.isGlobal);
         visable = !readOnly || this.isEdit();
@@ -800,16 +845,70 @@ Ext.define('Taco.view.product.subform.General', {
         if (me.optionsForm) {
             me.optionsForm.loadByProductTypeId(value);
         }
-
     },
 
     onDiscountRestrictedChange: function (source, isChecked) {
         var me = source.scope;
-        if (!isChecked) {
-            me.discountsRestrictedStartField.setValue('');
-            me.discountsRestrictedEndField.setValue('');         
-        } 
-        me.discountsRestrictedStartField.setDisabled(!isChecked);
-        me.discountsRestrictedEndField.setDisabled(!isChecked);        
+        me.enableDateRangeFields(source, me.discountsRestrictedStartField, me.discountsRestrictedEndField, isChecked);
+    },
+
+    enableDateRangeFields: function(source, startField, endField, isEnabled) {
+        var me = source.scope;
+        
+        if (isEnabled) {
+            me.enableDateField(startField);
+            me.enableDateField(endField);
+        } else {
+            me.disableDateField(startField);
+            me.disableDateField(endField);
+        }
+
+        startField.validate();
+        endField.validate();
+    },
+
+    disableDateField: function (dateField) {
+        dateField.allowBlank = true;
+        dateField.setDisabled(true);
+        dateField.setValue(null);
+        dateField.setMaxValue(null);
+        dateField.setMinValue(null);
+        this.product.set(dateField.name, null);
+    },
+
+    enableDateField: function (dateField) {
+        dateField.allowBlank = false;
+        dateField.setDisabled(false);
+    },
+
+    //modified from http://docs.sencha.com/extjs/4.2.2/#!/example/form/adv-vtypes.html
+
+    onDateRangeChange: function (field, val, oldVal, eOpts) {
+        var me = eOpts.scope, date = field.parseDate(val);
+
+        //invalid date.  Null value ok to clear max|min
+        if (!date && val != null) {
+            return false;
+        }
+        if (field.startDateField) { 
+            //var start = field.up('form').down('#' + field.startDateField);
+            var start = me.dateRangeFieldMap[field.startDateField];
+            if (start == null) {
+                return true;
+            }
+            start.setMaxValue(date);
+            start.validate();
+        } else if (field.endDateField) {
+            //var end = field.up('form').down('#' + field.endDateField);
+            var end = me.dateRangeFieldMap[field.endDateField];
+            if (end == null) {
+                return true;
+            }
+            end.setMinValue(date);
+            end.validate();
+        }
+        return true;
     }
+
 });
+
