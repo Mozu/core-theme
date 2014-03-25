@@ -73,7 +73,8 @@
         },
         isConfigured: function () {
             var value = this.get('value') || this.get('shopperEnteredValue');
-            return value !== undefined && value !== '';
+            var legalValues = _.pluck(this.get('values'), 'value');
+            return value !== undefined && value !== '' && _.contains(legalValues, value);
         },
         toJSON: function (options) {
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
