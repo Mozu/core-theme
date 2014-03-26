@@ -74,7 +74,7 @@
         isConfigured: function () {
             var value = this.get('value') || this.get('shopperEnteredValue');
             var legalValues = _.chain(this.get('values')).pluck('value').map(function(v) { return !_.isUndefined(v) && !_.isNull(v) ? v.toString() : v });
-            return value !== undefined && && value !== '' && legalValues.contains(value).value();
+            return value !== undefined && value !== '' && legalValues.contains(value).value();
         },
         toJSON: function (options) {
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
