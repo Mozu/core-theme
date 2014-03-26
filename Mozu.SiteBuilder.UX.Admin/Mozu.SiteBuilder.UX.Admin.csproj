@@ -1380,6 +1380,7 @@
     <Content Include="Scripts\sass\etc\sprites\_dashboard.scss" />
     <Content Include="Scripts\sass\src\view\Header.scss" />
     <Content Include="Scripts\sass\src\view\navigation\PrimaryMenu.scss" />
+    <Content Include="Scripts\sass\src\core\ux\content\SplitContainer.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
