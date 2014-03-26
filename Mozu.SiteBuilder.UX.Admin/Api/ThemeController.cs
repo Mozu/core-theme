@@ -258,7 +258,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 settings.MobileTheme = settings.MobileTheme ?? new ThemeSelection();
                 settings.MobileTheme.Id = newMobile.Id;
             }
-            else if (themes.Any(t => t.Id == settings.MobileTheme.Id ))
+            else if ( settings.MobileTheme != null &&  themes.Any(t => t.Id == settings.MobileTheme.Id ))
             {
                 // intent to un-set the mobile theme.
                 settings.MobileTheme.Id  = null;
@@ -273,7 +273,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             IEnumerable<ThemeDTO> returnedThemesList =
                 from t in themes
                 let isSelectedDesktop = (newDesktop != null && newDesktop.Equals(t)) || (newDesktop == null && t.Id.Equals(settings.DesktopTheme.Id ))
-                let isSelectedMobile = (newMobile != null && newMobile.Equals(t)) || (newMobile == null && t.Equals(settings.MobileTheme.Id))
+                let isSelectedMobile = (newMobile != null && newMobile.Equals(t)) || (newMobile == null && settings.MobileTheme != null && t.Equals(settings.MobileTheme.Id))
                 let fullTheme = _themeRepository.GetTheme( new ThemeSelection(){ Id=t.Id} )
                 select new ThemeDTO(settings , fullTheme, isSelectedDesktop, isSelectedMobile);
 
