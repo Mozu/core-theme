@@ -158,6 +158,15 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
     },
 
     /**
+     * Include CSS classes.
+     */
+    onBoxReady: function () {
+        this.callParent(arguments);
+
+        this.addCls('taco-spliteditor');
+    },
+
+    /**
      * Updates the split editor's `mode` following a `collapsedState` change.
      * @param {Object} nextState The next collapsed state.
      * @param {Object} prevState The previous collapsed state.

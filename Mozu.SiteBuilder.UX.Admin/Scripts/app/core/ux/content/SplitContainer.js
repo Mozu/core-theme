@@ -12,7 +12,7 @@
 
 Ext.define('Taco.core.ux.content.SplitContainer', {
     extend: 'Taco.core.ux.content.Container',
-    alias: 'widget.splitcontainer',
+    alias: 'widget.taco-splitcontainer',
 
     body: {
         layout: {
@@ -147,14 +147,10 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
         if (splitter === true) {
             return Ext.widget({
                 xtype: 'splitter',
+                cls: 'taco-splitcontainer-splitter',
                 collapseTarget: 'prev',
                 collapsible: false,
-                width: 4,
-                style: {
-                    backgroundColor: '#bfbfbf',
-                    borderLeft: '4px solid #bfbfbf',
-                    overflow: 'hidden'
-                }
+                width: 4
             });
         } else if (Ext.isString(splitter)) {
             return Ext.create(splitter, {});
@@ -210,10 +206,8 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
             flex: 2,
             lbar: {
                 xtype: 'component',
+                cls: 'taco-splitcontainer-collapsetool',
                 width: 13,
-                style: {
-                    backgroundColor: '#e6e6e6'
-                },
                 listeners: {
                     click: {
                         scope: this,
@@ -244,10 +238,8 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
             flex: 1,
             rbar: {
                 xtype: 'component',
+                cls: 'taco-splitcontainer-collapsetool',
                 width: 13,
-                style: {
-                    backgroundColor: '#e6e6e6'
-                },
                 listeners: {
                     click: {
                         scope: this,
@@ -275,6 +267,15 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
             west: (direction === 'west' && !prevState.east),
             east: (direction === 'east' && !prevState.west)
         });
+    },
+
+    /**
+     * Include CSS classes.
+     */
+    onBoxReady: function () {
+        this.callParent(arguments);
+
+        this.addCls('taco-splitcontainer');
     },
 
     /**
