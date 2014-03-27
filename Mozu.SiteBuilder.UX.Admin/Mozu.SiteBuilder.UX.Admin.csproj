@@ -1538,6 +1538,8 @@
     <Content Include="Scripts\app\view\order\modal\CreditPaymentManual.js" />
     <Content Include="Scripts\app\view\order\modal\VoidPaymentManual.js" />
     <Content Include="Scripts\app\view\order\modal\CapturePayment.js" />
+    <Content Include="Scripts\app\view\order\modal\AuthAndCapture.js" />
+    <Content Include="Scripts\app\view\order\modal\AuthorizePayment.js" />
     <Content Include="Scripts\app\view\order\modal\CheckPayment.js" />
     <Content Include="Scripts\app\view\order\modal\EditOrderDetail.js" />
     <Content Include="Scripts\app\view\order\modal\EditTrackingNumber.js" />

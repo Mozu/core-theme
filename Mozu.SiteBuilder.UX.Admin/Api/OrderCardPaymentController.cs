@@ -40,6 +40,50 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2( order.Map<Order>() );
         }
 
+
+        /// <summary>
+        /// Performs the "CapturePayment" action on an authorized payment.
+        /// </summary>
+        [HttpPostRoute(UriTemplate = "payment/authandcapture")]
+        public async Task<Response<Order>> AuthAndCapture(CapturePaymentArgs args)
+        {
+            // Possible actions can be "AuthAndCapture", "AuthorizePayment", "CapturePayment", "VoidPayment", "CreditPayment", "RequestCheck", "ApplyCheck", "DeclineCheck"
+            var action = new DCp.PaymentAction
+            {
+                ActionName = "AuthAndCapture",
+                CurrencyCode = "USD",
+                Amount = args.Amount,
+                ReferenceSourcePaymentId = null
+            };
+
+            var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
+
+            //_orderWebApiClient.GetPackageLabel
+            return Single2(order.Map<Order>());
+        }
+
+
+        /// <summary>
+        /// Performs the "CapturePayment" action on an authorized payment.
+        /// </summary>
+        [HttpPostRoute(UriTemplate = "payment/authorize")]
+        public async Task<Response<Order>> AuthorizePayment(CapturePaymentArgs args)
+        {
+            // Possible actions can be "AuthAndCapture", "AuthorizePayment", "CapturePayment", "VoidPayment", "CreditPayment", "RequestCheck", "ApplyCheck", "DeclineCheck"
+            var action = new DCp.PaymentAction
+            {
+                ActionName = "AuthorizePayment",
+                CurrencyCode = "USD",
+                Amount = args.Amount,
+                ReferenceSourcePaymentId = null
+            };
+
+            var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
+
+            //_orderWebApiClient.GetPackageLabel
+            return Single2(order.Map<Order>());
+        }
+
         public class CreditPaymentArgs
         {
             public string OrderId { get; set; }
