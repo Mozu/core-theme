@@ -8,6 +8,9 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         'Taco.view.order.modal.RequestCheck',
         'Taco.view.order.modal.CheckPayment',
         'Taco.view.order.modal.CapturePayment',
+        'Taco.view.order.modal.AuthorizePayment',
+        'Taco.view.order.modal.AuthAndCapture',
+        'Taco.view.order.modal.CapturePayment',
         'Taco.view.order.modal.CapturePaymentManual',
         'Taco.view.order.modal.VoidPaymentManual',
         'Taco.view.order.modal.CreditPaymentManual',
@@ -42,6 +45,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             'CapturePayment': 'Capture Payment',
             'CreditPayment': 'Credit Payment',
             'VoidPayment': 'Void Payment',
+            'AuthorizePayment': 'Authorize Payment',
+            'AuthAndCapture': 'Auth And Capture',
 
             'Rollback': 'Rollback',
             'RollbackCapture': 'Rollback Capture',
@@ -338,6 +343,13 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             case 'ManualDeclinePayment':
                 alert('not implemented.');
                 break;
+
+            case 'AuthorizePayment':
+                me.parent.authorize();
+                break;
+            case 'AuthAndCapture':
+                me.parent.authAndCapture();
+                break;
             case 'Rollback':
             case 'RollbackCapture':
             case 'RollbackCredit':
@@ -412,6 +424,22 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         });
 
         checkDeclineModal.show();
+    },
+
+    authorize: function() {
+        Ext.create('Taco.view.order.modal.AuthorizePayment', {
+            order: this.order,
+            record: this.record,
+            autoShow: true
+        });
+    },
+
+    authAndCapture: function() {
+        Ext.create('Taco.view.order.modal.AuthAndCapture', {
+            order: this.order,
+            record: this.record,
+            autoShow: true
+        });
     },
 
 

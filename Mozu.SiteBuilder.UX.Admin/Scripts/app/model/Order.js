@@ -709,6 +709,24 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
+    authorize: function (config) {
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/authorize',
+            method: 'POST'        
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    authAndCapture: function (config) {
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/authAndCapture',
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
     /**
      * service call to add a new authorized payment transaction for an order     
      * @param {Object} config  A configuration object     
