@@ -148,7 +148,9 @@ Ext.define('Taco.core.ux.tab.Panel', {
     },
 
     getCheckedItems: function () {
-        return Ext.Array.pluck(this.items.items || this.items, 'tabPickerId');
+        return Ext.Array.filter(Ext.Array.pluck(this.items.items || this.items, 'tabPickerId'), function(value) {
+            return typeof value !== 'undefined';
+        });
     },
 
     getItemByPickerId: function (id) {

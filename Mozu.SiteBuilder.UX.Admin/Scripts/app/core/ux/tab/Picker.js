@@ -30,8 +30,6 @@ Ext.define('Taco.core.ux.tab.Picker', {
         this.idTpl = new Ext.Template(this.idTpl);
         this.displayTpl = new Ext.Template(this.displayTpl);
 
-        
-
         this.checkboxGroup = Ext.widget({
             xtype: 'checkboxgroup',
             columns: 1,
@@ -46,7 +44,7 @@ Ext.define('Taco.core.ux.tab.Picker', {
     },
 
     buildCheckBoxes: function (checkedItems) {
-        var checkboxes = [];
+        var checkboxes = []; 
 
         if (!checkedItems) {
             checkedItems = this.checkedItems;
@@ -57,13 +55,16 @@ Ext.define('Taco.core.ux.tab.Picker', {
         this.checkboxGroup.removeAll();
 
         Ext.each(this.data, function (record) {
-            var id = this.idTpl.apply(record);
-            checkboxes.push({
-                value: id,
+            var recordId = this.idTpl.apply(record);
+            var isChecked = Ext.Array.contains(checkedItems, recordId);
+            var cb = Ext.widget({
+                xtype: 'checkbox',
+                value: recordId,
                 boxLabel: this.displayTpl.apply(record),
-                checked: Ext.Array.contains(checkedItems, id),
                 data: record
             });
+            cb.setValue(isChecked);
+            checkboxes.push(cb);
         }, this);
 
         this.checkboxGroup.add(checkboxes);
