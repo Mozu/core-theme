@@ -153,7 +153,15 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 facetHierValue = "categoryId:" + categoryId;
                 facetValueFilter = request.QueryString["facetValueFilter"];
             }
-            string sortBy = null;
+
+           string sortBy = (siteContext.ThemeSettings["defaultSort"] ?? "").ToString();
+            
+
+           if (sortWithUrl && !string.IsNullOrEmpty(request["sortBy"]))
+           {
+               sortBy = request["sortBy"];
+           }
+
             ProductSearchResult pc;
             //searchWebApiClient = searchWebApiClient.CloneWithConfigOptions(x => x.HttpCompletionOption = HttpCompletionOption.ResponseHeadersRead);
 
@@ -173,7 +181,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             //     var pc = Mapper.Map<ProductSearchResult>(pcDC);
             result.Template = template;
 
-
+           
             result.Context = context.add(new Tuple<string, object>("model", pc));
             ;
             return result;
