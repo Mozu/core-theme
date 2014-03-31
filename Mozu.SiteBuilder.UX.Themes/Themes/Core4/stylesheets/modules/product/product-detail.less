@@ -1,5 +1,6 @@
 ﻿.mz-productdetail {
     overflow: auto;
+
     .mz-propertylist {
         float: left;
         max-width: 400px;
@@ -13,6 +14,15 @@
 
     .mz-price {
         font-size: @fontSizeLarge;
+    }
+
+    .mz-price-msrp {
+        display: block;
+        font-size: @fontSizeSmall;
+        color: lighten(@textColor, 15%);
+        .mz-price {
+            font-size: @fontSizeSmall;
+        }
     }
 
     .mz-productdetail-notpurchasable {
@@ -31,10 +41,10 @@
         vertical-align: middle;
     }
 
-    .mz-productdetail-conversion-buttons .mz-button {
-        display: block;
-        margin: 0 0 @gutter/2;
-    }
+        .mz-productdetail-conversion-buttons .mz-button {
+            display: block;
+            margin: 0 0 @gutter/2;
+        }
 
     .mz-productbundle-measurements-product {
         clear: both;

@@ -21,5 +21,8 @@
      {% endif %}
  </span>
  {% endif %}
+ {% if themeSettings.showMSRP and model.msrp %}
+ <span class="mz-price-msrp">{{ labels.msrp}}: <span class="mz-price">{{ model.msrp|currency }}</span></span>
+ {% endif %}
 
 

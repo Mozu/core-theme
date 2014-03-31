@@ -471,6 +471,9 @@
     <Content Include="Themes\Core4\stylesheets\layouts\l-sidebar.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-slidebox.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\address-summary.less" />
+    <Content Include="Themes\Core4\stylesheets\modules\common\price.css">
+      <DependentUpon>price.less</DependentUpon>
+    </Content>
     <Content Include="Themes\Core4\stylesheets\modules\faceting-form.less" />
     <Content Include="Themes\Core4\stylesheets\layouts\l-tiles.less" />
     <Content Include="Themes\Core4\stylesheets\base\normalize.less" />
@@ -1004,6 +1007,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core4\templates\email\product-return-rejected.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core4\stylesheets\modules\common\price.css.map">
+      <DependentUpon>price.css</DependentUpon>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
