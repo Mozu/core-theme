@@ -332,8 +332,9 @@ Ext.define('Taco.core.context.TaContext', {
     forCurrentContext: function (obj) {
         var contextType = this.getCurrent().contextType;
         if (obj.contextConf && obj.contextConf[contextType]) {
-            obj = Ext.apply({}, obj, obj.contextConf[contextType]);
+            obj = Ext.apply({}, obj.contextConf[contextType], obj);
         }
+
         //return a shallow clone of the top object
         return Ext.apply({}, obj);
     }
