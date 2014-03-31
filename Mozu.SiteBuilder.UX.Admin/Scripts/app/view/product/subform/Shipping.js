@@ -18,12 +18,9 @@ Ext.define('Taco.view.product.subform.Shipping', {
         this.record = this.product;
         this.items = [];
 
+        //todo: create a bundle & a standard widget to reduce if/then complexity - Greg Murray on 2014-03-26 
         // only allow field persistance if the productUsage is not bundle;
-        this.isPersistable = (this.product.get("productUsage") != "Bundle");
-
-        this.productFulfillmentTypes = Ext.create('Taco.view.product.widget.ProductFulfillmentTypes', {
-              product: me.record
-          });
+        this.isNotBundle = (this.product.get("productUsage") != "Bundle");
 
         this.updateUI();
 
@@ -60,12 +57,11 @@ Ext.define('Taco.view.product.subform.Shipping', {
         
         var field;
         
-        if (this.isPersistable) {
-            field = this.getPersistableFields();
+        if (this.isNotBundle) {
+            field = this.getFieldCollection(this.product, false); //this.getNonBundleFields();
         } else {
             field = this.getBundleFields();
         }
-
 
         if (this.rendered) {
             this.add(field);
@@ -76,15 +72,23 @@ Ext.define('Taco.view.product.subform.Shipping', {
 
     getFieldCollection: function (record,isBundle) {
         var me = this,
-            packageWeight = record.get('packageWeight'),
-            productNameField;
+            fulfillmentContainer,
+            field;
         
         isBundle = (isBundle == true);
+
+        var packageFields = this.getPackageFields(record, isBundle);
+
+        fulfillmentContainer = Ext.create('Taco.view.product.widget.ProductFulfillmentTypes', {
+            product: me.record,
+            isReadOnly: isBundle,
+            allowBlank: isBundle
+        });
 
         if (isBundle) {
             var productName = record.get("productName") + " (Qty " + record.get("quantity") + ")";
 
-            productNameField = Ext.widget({
+            var productNameField = Ext.widget({
                 xtype: 'editabledisplayfield',
                 width: 200,
                 border: false,
@@ -95,87 +99,103 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 },
                 fieldLabel: ''
             });
-        } 
+            field = {
+                xtype: 'container',
+                width: '100%',
+                layout: 'hbox',
+                items: [
+                    productNameField
+                ]
+            };
+            packageFields.forEach(function(pkg) {
+                field.items.push(pkg);
+            });
+            field.items.push(fulfillmentContainer);
 
-        var field = {
-            xtype: 'container',
-            width: '100%',
-            items: [
-                this.productFulfillmentTypes,
-                {
-                    xtype: 'container',
-                    width: '100%',
-                    layout: 'hbox',
-                    items: [
-                        productNameField,
-                        {
-                            xtype: 'unitfield',
-                            name: (isBundle) ? "" : 'packageWeight',
-                            width: 200,
-                            fieldLabel: 'Weight',
-                            selectOnFocus: true,
-                            emptyText: 'lbs',
-                            unitString: ' lbs',
-                            unitAtEnd: true,
-                            decimalPrecision: 3,
-                            minValue: .001,
-                            hideTrigger: true,
-                            value: record.get('packageWeight'),
-                            keyNavEnabled: false,
-                            readOnly: (isBundle),
-                            allowBlank: (isBundle),
-                            mouseWheelEnabled: false,
-                            style: {
-                                'margin-right': '20px'
-                            }
-                        }, {
-                            xtype: 'fieldcontainer',
-                            fieldLabel: 'Package Dimensions',
-                            labelClsExtra: 'x-form-item-required',
-                            width: 480,
-                            layout: {
-                                type: 'hbox',
-                                align: 'top'
-                            },
-                            defaults: {
-                                width: 120,
-                                margin: '0 0 0 10',
-                                selectOnFocus: true,
-                                xtype: 'unitfield',
-                                unitString: ' in',
-                                decimalPrecision: 3,
-                                hideTrigger: true,
-                                keyNavEnabled: false,
-                                readOnly: (isBundle),
-                                allowBlank: (isBundle),
-                                mouseWheelEnabled: false
-                            },
-                            items: [
-                                {
-                                    margin: 0,
-                                    name: (isBundle) ? "" : 'packageLength',
-                                    value: record.get('packageLength'),
-                                    emptyText: 'l'
-                                }, {
-                                    name: (isBundle) ? "" : 'packageWidth',
-                                    value: record.get('packageWidth'),
-                                    emptyText: 'w'
-                                }, {
-                                    name: (isBundle) ? "" : 'packageHeight',
-                                    value: record.get('packageHeight'),
-                                    emptyText: 'h'
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        };
-        
+        } else {
+            field = {
+                xtype: 'container',
+                width: '100%',
+                items: [
+                    fulfillmentContainer,
+                    {
+                        xtype: 'container',
+                        width: '100%',
+                        layout: 'hbox',
+                        items: packageFields
+                    }
+                ]
+            };
+        }
+
         // remove the productNameField if its null;
         field.items = Taco.core.util.Common.filterNulls(field.items);
 
         return Ext.widget(field);
+    },
+
+    getPackageFields: function (record, isBundle) {
+        return [
+            {
+                xtype: 'unitfield',
+                name: (isBundle) ? "" : 'packageWeight',
+                width: 200,
+                fieldLabel: 'Weight',
+                selectOnFocus: true,
+                emptyText: 'lbs',
+                unitString: ' lbs',
+                unitAtEnd: true,
+                decimalPrecision: 3,
+                minValue: .001,
+                hideTrigger: true,
+                value: record.get('packageWeight'),
+                keyNavEnabled: false,
+                readOnly: (isBundle),
+                allowBlank: (isBundle),
+                mouseWheelEnabled: false,
+                style: {
+                    'margin-right': '20px'
+                }
+            }, {
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Package Dimensions',
+                labelClsExtra: 'x-form-item-required',
+                width: 480,
+                layout: {
+                    type: 'hbox',
+                    align: 'top'
+                },
+                defaults: {
+                    width: 120,
+                    margin: '0 0 0 10',
+                    selectOnFocus: true,
+                    xtype: 'unitfield',
+                    unitString: ' in',
+                    decimalPrecision: 3,
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    readOnly: (isBundle),
+                    allowBlank: (isBundle),
+                    mouseWheelEnabled: false
+                },
+                items: [
+                    {
+                        margin: 0,
+                        name: (isBundle) ? "" : 'packageLength',
+                        value: record.get('packageLength'),
+                        emptyText: 'l'
+                    }, {
+                        name: (isBundle) ? "" : 'packageWidth',
+                        value: record.get('packageWidth'),
+                        emptyText: 'w'
+                    }, {
+                        name: (isBundle) ? "" : 'packageHeight',
+                        value: record.get('packageHeight'),
+                        emptyText: 'h'
+                    }
+                ]
+            }
+        ];
     },
 
     getBundleFields: function () {
@@ -194,7 +214,12 @@ Ext.define('Taco.view.product.subform.Shipping', {
 
         if (store.count()) {
             // clear out the container;
-            bundleContainer.items = [this.productFulfillmentTypes];
+
+            var fulfillment = Ext.create('Taco.view.product.widget.ProductFulfillmentTypes', {
+                product: me.product
+            });
+
+            bundleContainer.items = [fulfillment];
             var totalWeight = 0;
                 
             // push a fieldset for each bundledProduct
@@ -220,22 +245,17 @@ Ext.define('Taco.view.product.subform.Shipping', {
         return bundleContainer;
     },
 
-    getPersistableFields: function (config) {
-        // if the productUsage is bundle need to show the fields for each product.
-        return this.getFieldCollection(this.product);
-    },
-
     onProductUsageChange: function(view, value) {
         if (value == "Bundle") {
             // only need to do this if we are changing from a persistable product to a bundle;
-            if (this.isPersistable) {
-                this.isPersistable = false;
+            if (this.isNotBundle) {
+                this.isNotBundle = false;
                 this.updateUI();
             }
         } else {
             // only need to do this if we are changing from a bundle to a persistable product;
-            if (!this.isPersistable) {
-                this.isPersistable = true;
+            if (!this.isNotBundle) {
+                this.isNotBundle = true;
                 this.updateUI();
             }
         }

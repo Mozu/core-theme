@@ -401,7 +401,7 @@ Ext.define('Taco.model.Product', {
         {
             name: "fulfillmentTypesSupported",
             type: "auto",
-            defaultValue: []
+            defaultValue: ['DirectShip']
         },
         {
             "name": "productInCatalogs",
@@ -443,7 +443,7 @@ Ext.define('Taco.model.Product', {
             type: 'boolean',
             convert: function (v, record) {
                 return (record.get("hasConfigurableOptions") || record.get("hasStandaloneOptions"));
-                return (record.get("options").length || record.get("extras").length);
+                //return (record.get("options").length || record.get("extras").length);
             }
         },
         {

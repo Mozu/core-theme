@@ -97,4 +97,16 @@ namespace Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product
     public class jsExtras { }
     public class jsShipping { }
     public class jsSEO { }
+
+    public class jsTacoCoreUxTabPanel
+    {
+        
+    }
+
+    public class jsTacoViewProductForm
+    {
+        public jsGlobalForm globalForm { get; set; }
+
+        public jsTacoCoreUxTabPanel tabPanel { get; set; }
+    }
 }
