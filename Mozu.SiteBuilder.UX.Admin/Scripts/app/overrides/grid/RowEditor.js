@@ -62,7 +62,8 @@
  */
 
 Ext.define('Taco.overrides.grid.RowEditor', {
-    override: 'Ext.grid.RowEditor',    
+    override: 'Ext.grid.RowEditor',  
+    /*
     addFieldsForColumn: function (column, initial) {
         var me = this,
             i,
@@ -115,11 +116,40 @@ Ext.define('Taco.overrides.grid.RowEditor', {
             // end edit
         }
     },
+    */
+    
+    
+    
+    onEnterKey: function () {
+        me = this,
+        plugin = me.editingPlugin;
+        
+        if (this.getForm().isValid()) {                        
+            plugin.completeEdit();
+            
+        }
+
+    },
+
+    initKeyNav: function () {
+        var me = this,
+            plugin = me.editingPlugin;
+
+        me.keyNav = new Ext.util.KeyNav(me.el, {
+            enter: {
+                fn: me.onEnterKey,
+                scope:me
+            },
+            esc: plugin.onEscKey,
+            scope: plugin
+        });
+    },
     
     // Focus the cell on start edit based upon the current context
     focusContextCell: function () {
         var me = this;        
-        var field = me.getEditor(me.context.column);                
+        var field = me.getEditor(me.context.column);
+
         // check to see if field is focusable; if not find first field that is focusable;       
         if (!field.isFocusable()) {
             var fieldsCollection =  me.query('[isFormField]');            
@@ -133,6 +163,41 @@ Ext.define('Taco.overrides.grid.RowEditor', {
     },
 
     
+    onNavCancel: function () {
+        var me = this;
+
+        // Scroll the visible RowEditor that is in error state back into view
+        scrollDelta = me.getScrollDelta();
+        if (scrollDelta) {
+            me.scrollingViewEl.scrollBy(0, scrollDelta, true)
+        }
+        me.showToolTip();
+    },
+    // override of the default method. adding support for autoSave
+    beforeEdit: function () {
+        var me = this,
+            scrollDelta,
+            plugin = me.editingPlugin;
+        
+        
+        
+        if (me.isVisible() && me.isDirty() && me.autoSave) {
+            
+            // do a save 
+            if (this.getForm().isValid()) {
+                plugin.completeEdit();
+            } else {
+                me.onNavCancel();
+                return false;
+            }
+
+            
+            //} else if (me.isVisible() && me.errorSummary && !me.autoCancel && me.isDirty()) {
+        } else if (me.isVisible() && !me.autoCancel && me.isDirty()) {
+            me.onNavCancel();            
+            return false;
+        }
+    },
 
     /*
     *  UX Enhancement - before the row editor becomes visible. itereate the fields of the editor calling an optional onEditorShow();
@@ -170,6 +235,12 @@ Ext.define('Taco.overrides.grid.RowEditor', {
     
     initComponent: function () {
         this.callParent(arguments);
+
+        // if you enable autoSave we need to make autoCancel false;
+        if (this.autoSave) {
+            this.autoCancel = false;
+        }
+
         // adding ux enhancement to allow the field editors to have some control over their display before showing;
         this.editingPlugin.on('beforeedit', this.onBeforeEdit, this);
     },

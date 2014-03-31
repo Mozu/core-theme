@@ -8,6 +8,25 @@
 Ext.define('Taco.overrides.grid.plugin.RowEditing', {
     override: 'Ext.grid.plugin.RowEditing',
 
+    /**
+     * @cfg {Boolean} autoSave
+     * `true` to automatically save any pending changes when the row editor begins editing a new row.
+     * `false` will then check the autoCancel member which forces the user to explicitly cancel the pending changes or will auto cancel.
+     */
+    autoSave: true,
+
+    autoCancel: false,
+
+    /**
+     * override of extjs class method. adding support for autoSave.
+     */
+    initEditorConfig: function () {
+        var me = this;        
+        var cfg = me.callParent(arguments);
+        cfg.autoSave = me.autoSave;
+        return cfg;
+    },
+
     init: function () {
         this.callParent(arguments);
     },
@@ -17,6 +36,7 @@ Ext.define('Taco.overrides.grid.plugin.RowEditing', {
     onEnterKey: function () {        
         // need skip over the superclass of this override as its method is overriding the base class;
         this.superclass.onEnterKey.apply(this, arguments)
+        // commented out from original extjs method  
         /*
         if (this.getEditor().getForm().isValid()) {
             this.completeEdit();
