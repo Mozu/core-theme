@@ -332,6 +332,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         _themeSelection = _generalSettings.DesktopTheme;
                     }
 
+                    if (_themeSelection == null)
+                    {
+                        _themeSelection = ThemeRepository.DefaultThemeSelection;
+                    }
                     _theme = _themeRepository.GetThemeOrDefault(_themeSelection);
 
                     return _themeSettingsRepository.Value.GetRuntimeValues(_theme.Id).ContinueWith(task2 =>

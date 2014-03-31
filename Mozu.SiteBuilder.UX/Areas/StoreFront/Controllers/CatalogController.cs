@@ -92,8 +92,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                         }
                                          };
             ViewResult result = View("product", product);
-          
-            
+
+            await ContextInitilaztionTasks;
+
             var overrideTemplate = PageContext.CmsContext.Page.Document.Get<string>("template");
             if (!string.IsNullOrEmpty(overrideTemplate))
             {
@@ -106,7 +107,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 
             }
 
-            await ContextInitilaztionTasks;
+           
             SetCatalogContext(product);
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
