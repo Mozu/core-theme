@@ -38,6 +38,8 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
 
         public string Id { get; set; }
 
+        public bool ? IsHidden { get; set; }
+
         private string _parentId = null;
         public string ParentId { 
             get { return _parentId ?? (Parent != null ? Parent.Id : null); }

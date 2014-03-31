@@ -9,6 +9,7 @@
 
 Ext.define('Taco.model.ProductVariation', {
     extend: 'Taco.core.data.Model',
+    
     fields:
     [
         {
@@ -75,27 +76,57 @@ Ext.define('Taco.model.ProductVariation', {
         {
             name: "upc",
             type: "string",
-            useNull: true
+            useNull: true,
+            convert:function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
         },
         {
             name: "mfgPartNumber",
             type: "string",
-            useNull: true
+            useNull: true,
+            convert: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
         },
         {
             name: "distPartNumber",
             type: "string",
-            useNull: true
+            useNull: true,
+            convert: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
         },
         {
             name: "costCurrencyCode",
             type: "string",
-            useNull: true
+            useNull: true,
+            convert: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
         },
         {
             name: "cost",
             type: "float",
-            useNull: true
+            useNull: true,
+            convert: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
         },
         {
             "name": "exists",
@@ -110,7 +141,13 @@ Ext.define('Taco.model.ProductVariation', {
         {
             "name": "productCode",
             "type": "string",
-            "useNull": true
+            "useNull": true,
+            convert: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
         },
         {
             name: 'options',

@@ -195,7 +195,13 @@ Ext.define('Taco.model.Product', {
         {
             name: "upc",
             type: "string",
-            useNull: true
+            useNull: true,
+            convert: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
         },
         {
             "name": "freeShipping",
@@ -205,22 +211,46 @@ Ext.define('Taco.model.Product', {
         {
             "name": "metaDescription",
             "type": "string",
-            "useNull": true
+            "useNull": true,
+            convert: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
         },
         {
             "name": "metaKeywords",
             "type": "string",
-            "useNull": true
+            "useNull": true,
+            convert: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
         },
         {
             "name": "metaTitle",
             "type": "string",
-            "useNull": true
+            "useNull": true,
+            convert: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
         },
         {
             "name": "productFullDescription",
             "type": "string",
-            "useNull": true
+            "useNull": true,
+            convert: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
         },
         {
             "name": "productImages",
@@ -235,12 +265,24 @@ Ext.define('Taco.model.Product', {
         {
             "name": "productShortDescription",
             "type": "string",
-            "useNull": true
+            "useNull": true,
+            convert: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
         },
         {
             "name": "slug",
             "type": "string",
-            "useNull": true
+            "useNull": true,
+            convert: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
         },
         {
             "name": "listPrice",
@@ -280,17 +322,35 @@ Ext.define('Taco.model.Product', {
         {
             name: "mfgPartNumber",
             type: "string",
-            useNull: true
+            useNull: true,
+            convert: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
         },
         {
             name: "distPartNumber",
             type: "string",
-            useNull: true
+            useNull: true,
+            convert: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
         },
         {
             name: "costCurrencyCode",
             type: "string",
-            useNull: true
+            useNull: true,
+            convert: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
         },
         {
             name: "cost",
