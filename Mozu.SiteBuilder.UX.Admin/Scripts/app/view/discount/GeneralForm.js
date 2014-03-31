@@ -99,10 +99,15 @@ Ext.define('Taco.view.discount.GeneralForm', {
                     if (newV == 'Percentage') {
                         this.amountInput.unitString = '%';
                         this.amountInput.unitAtEnd = true;
+                    } else if (newV == 'Free') {
+                        this.amountInput.setDisabled(true);
+                        this.amountInput.setValue(null);
+                        return;
                     } else {
                         this.amountInput.unitString = '$';
                         this.amountInput.unitAtEnd = false;
                     }
+                    this.amountInput.setDisabled(false);
                     this.amountInput.setValue(this.amountInput.value);
                 },
                 scope: this
@@ -115,9 +120,10 @@ Ext.define('Taco.view.discount.GeneralForm', {
             width: 150,
             forcePrecision:(this.record.get('amountType') === 'Amount'),
             margin: '0 0 0 10',
-            unitAtEnd: this.record.get('amountType') === 'Amount' ? false : true,
-            unitString: this.record.get('amountType') === 'Amount' ? '$' : '%',
-            hideTrigger: true
+            unitAtEnd: this.record.get('amountType') === 'Percentage' ? true : false,
+            unitString: (this.record.get('amountType') === 'Percentage') ? '%' : '$',
+            hideTrigger: true,
+            disabled: (this.record.get('amountType') === 'Free') ? true : false
         });
 
         this.items = [
