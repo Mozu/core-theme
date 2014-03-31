@@ -243,7 +243,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
         Ext.Array.remove(actions, capturePayment);
 
-        Ext.Array.insert(actions, 0, capturePayment);
+        actions.unshift(capturePayment);
     },
 
     // removes the authorized transaction (first item in the payments collection). Will call service, reload the record, and update the ui;
