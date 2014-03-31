@@ -254,17 +254,96 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         [DataMember(EmitDefaultValue = false)]
         public object Respell { get; set; }
 
-       
-     
+        private bool? _hasValueFacets;
+        public bool HasValueFacets
+        {
+            get
+            {
+                if (this.Facets == null || this.Facets.Count == 0)
+                {
+                    return false;
+                }
+                if (!_hasValueFacets.HasValue)
+                {
+                    _hasValueFacets = this.Facets.Any(x => x.FacetType == "Value");
+                }
+
+
+                 return _hasValueFacets.Value;
+                 
+                          
+            }
+
+        }
+
+
+        //public int CurrentPage
+        //{
+        //    get
+        //    {
+        //        double  val = this.FirstIndex/(this.PageSize == 0 ? 1 : this.PageSize);
+           
+        //        return (int)Math.Ceiling(val); 
+        //    }
+        //}
+
+        //public string CurrentSort
+        //{
+        //    get
+        //    {
+        //        this.CurrentSort 
+        //         return this.la && decodeURIComponent(this.lastRequest.sortBy).replace(/\+/g,' '); 
+        //    }    
+        //}
+        //         var conf = this.baseRequestParams ? _.clone(this.baseRequestParams) : {},
+        //        pageSize = this.get("pageSize"),
+        //        startIndex = this.get("startIndex"),
+        //        filterValue = this.getFacetValueFilter();
+        //    conf.pageSize = pageSize;
+        //    if (startIndex) conf.startIndex = startIndex;
+        //    if (filterValue) conf.facetValueFilter = filterValue;
+        //    if (this.query) conf.query = this.query;
+        //    return conf;
+
+
+        // hasValueFacets: function () { return !!this.get('facets').findWhere({ facetType: 'Value' }); },
+    //firstIndex: function() { return this.get("startIndex") + 1; },
+    //lastIndex: function () { return this.get("startIndex") + this.get("items").length; },
+    //hasPreviousPage: function () { return this.get("startIndex") > 0; },
+    //hasNextPage: function () { return this.lastIndex() < this.get("totalCount"); },
+    //currentPage: function() { return Math.ceil(this.firstIndex() / (this.get('pageSize') || 1)); },
+    //currentSort: function() { return this.lastRequest && decodeURIComponent(this.lastRequest.sortBy).replace(/\+/g,' '); },
+
+
+
+
+
         //[DataMember(EmitDefaultValue = false)]
         //public CategoryFacet CategoryFacet { get; set; }
 
         public string Query { get; set; }
 
          [DataMember(EmitDefaultValue = false)]
-        public virtual List<Mozu.ProductRuntime.Contracts.Facet> Facets { get; set; }
+        public virtual List<Facet> Facets { get; set; }
     }
-   
+
+
+    public class Facet : Mozu.ProductRuntime.Contracts.Facet
+    {
+        public virtual bool IsFaceted
+        {
+            get
+            {
+                if (this.Values == null || this.Values.Count == 0)
+                {
+                    return false;
+                }
+
+                return this.Values.Any(x => x.IsApplied.GetValueOrDefault(false));
+            }
+        }
+    }
+
     //public class CategoryFacetItem:  Mozu.ProductRuntime.Contracts.CategoryFacetItem
     //{
 
@@ -354,6 +433,41 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 _cP = value;
             }
         }
+
+
+        public int FirstIndex
+        {
+            get
+            {
+                return this.StartIndex + 1;
+            }
+        }
+
+        public int LastIndex
+        {
+            get
+            {
+                return this.StartIndex + (this.Items == null ? 0 : this.Items.Count);
+            }
+        }
+
+        public bool HasPreviousPage
+        {
+            get
+            {
+                return this.StartIndex > 0;
+            }
+        }
+        public bool HasNextPage
+        {
+            get
+            {
+
+                return this.LastIndex < this.TotalCount;
+            }
+        }
+
+
         public new int PageCount
         {
             get { return (int)base.PageCount; }

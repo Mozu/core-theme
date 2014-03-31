@@ -86,9 +86,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "validate")]
         public async Task<Response<List<Models.Contact>>> ValidateAddress(Models.Contact contact)
         {
+            var dcContact = Mapper.Map<Core.Api.Contracts.Contact>(contact);
             var req = new Customer.Contracts.AddressValidationRequest()
             {
-                Address = Mapper.Map<Core.Api.Contracts.Address>(contact)
+                Address = dcContact.Address
             };
 
             var tenant = (await _tenantsWebApiClient.GetTenantInternal(SbApiContext.TenantId, false)).ReadAsSync();
@@ -96,7 +97,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var list = (await svc.ValidateAddress(req))
                 .ReadAsSync()
-                .AddressCandidates.Select(x => Mapper.Map<Models.Contact>(x))
+                .AddressCandidates.Select(x => Mapper.Map<Models.Contact>(new Core.Api.Contracts.Contact(){ Address=x}))
                 .ToList();
 
             list.Each(addr =>

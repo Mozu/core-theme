@@ -285,7 +285,7 @@ Ext.define('Taco.shared.view.modal.Address', {
                     response.changed = false;
                     response.validatedAddr = validatedAddr;
                     for (item in validatedAddr) {
-                        if (item == 'addressIsValidated')
+                        if (item == 'addressIsValidated' || item == 'id')
                             continue;
                         a = rawAddr[item];
                         b = validatedAddr[item];
@@ -334,7 +334,7 @@ Ext.define('Taco.shared.view.modal.Address', {
                     var rawAddr = this.form.getValues();
 
                     for (item in validatedAddr) {
-                        if (item == 'addressIsValidated')
+                        if (item == 'addressIsValidated' || item =='id')
                             continue;
                         if (rawAddr[item] != validatedAddr[item]) {
                             addrChanged = true;
