@@ -178,8 +178,7 @@ Ext.define('Taco.view.product.variant.Grid', {
                 edit: this.onRowEdit,
                 canceledit: this.onRowCancelEdit,
                 scope: this
-            },
-            autoCancel: false
+            }
         });
 
         this.columns = optionColumns.concat(staticColumns);

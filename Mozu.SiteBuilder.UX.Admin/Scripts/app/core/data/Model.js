@@ -17,7 +17,11 @@ Ext.define('Taco.core.data.Model', {
 
         return me.callParent(arguments);
     },
-
+    statics: {
+        nullIfEmpty: function (v) {
+            return v || null;
+        },
+    },
     inheritableStatics: {
         allowMethod: function (method) {
             if (this.prototype.behaviors && this.prototype.behaviors[method]) {

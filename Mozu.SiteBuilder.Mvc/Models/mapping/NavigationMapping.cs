@@ -41,6 +41,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
 
             Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, SuperNavigationNode>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("category", x.CategoryId)))
+                .ForMember(d => d.IsHidden, opt => opt.ResolveUsing(x => !x.IsDisplayed))
                 .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.CategoryId))
                 .ForMember(d => d.ParentId, opt => opt.MapFrom(x => x.ParentCategoryId.HasValue ? JoinParts("category", x.ParentCategoryId.Value) : null))
                 .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Name))
@@ -52,6 +53,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
 
             Mapper.CreateMap<Mozu.ProductAdmin.Contracts.Category, SuperNavigationNode>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("category", x.Id)))
+                .ForMember(d => d.IsHidden, opt => opt.ResolveUsing(x => !x.IsDisplayed.GetValueOrDefault(true)))
                 .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.Id))
                 .ForMember(d => d.ParentId, opt => opt.MapFrom(x => x.ParentCategoryId.HasValue ? JoinParts("category", x.ParentCategoryId.Value) : null))
                 .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Content.Name))

@@ -104,21 +104,21 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _settings = settings;
             this.IsEditMode = _apiContext.IsEditMode;
             IEnumerable<string> values;
-           
+
             HandledByProxy = IsheaderTrue(Mozu.Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, requestMessage);
-           
+
             IsSecure = IsheaderTrue(Mozu.Core.Api.Contracts.Constants.Headers.SSL_HANDLED, requestMessage);
 
-            string url = requestMessage.RequestUri.ToString();
             if (requestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
             {
-                url = values.FirstOrDefault();
+                this.Url = values.FirstOrDefault();
             }
-            this.Url = url;
-
+            else
+            {
+                this.Url = requestMessage.RequestUri.ToString();
+            }
             Sorting = SortingParamaters.Create(requestMessage);
             Pagination = PagingParmaters.Create(requestMessage);
-
             var uriBuilder = new UriBuilder(Url);
             var host = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
             uriBuilder.Port = 443;
@@ -126,6 +126,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             var secure = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
 
             SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? secure : host;
+
+
         }
 
         public bool IsDebugMode 
