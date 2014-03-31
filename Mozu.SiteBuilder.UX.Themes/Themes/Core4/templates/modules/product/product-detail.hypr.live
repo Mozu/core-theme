@@ -17,6 +17,15 @@
 {% include "modules/product/price-stack" %}
 </div>
 
+<dl class="mz-productcodes mz-propertylist mz-pagetitle-note mz-l-stack-section">
+	<dt class="mz-productcodes-productcode-label">{{ labels.productCode }}</dt>
+	<dd class="mz-productcodes-productcode" itemprop="sku">{{ model.productCode }}</dd>
+	{% if themeSettings.showProductDetailMfgPartNumber and model.mfgPartNumber.length == 1 %}
+	<dt class="mz-productcodes-mfgpartnumber-label">{{ labels.mfgPartNumber }}</dt>
+	<dd class="mz-productcodes-mfgpartnumber" itemprop="mpn">{{ model.mfgPartNumber|first }}</dd>
+	{% endif %}
+</dl>
+
 <section class="mz-l-stack-section mz-productdetail-conversion">
 <div class="mz-productdetail-conversion-controls">
   <span class="mz-qty-label">{{ labels.qty }}</span>

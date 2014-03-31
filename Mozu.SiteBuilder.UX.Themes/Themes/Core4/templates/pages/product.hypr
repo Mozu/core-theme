@@ -12,16 +12,7 @@
 
 <div itemscope itemtype="http://schema.org/Product" class="mz-l-container">
 
-	<h1 class="mz-pagetitle"><span itemprop="name">{{ model.content.productName }}</span>
-		<dl class="mz-productcodes mz-propertylist mz-pagetitle-note">
-			<dt class="mz-productcodes-productcode-label">{{ labels.productCode }}</dt>
-			<dd class="mz-productcodes-productcode" itemprop="sku">{{ model.productCode }}</dd>
-			{% if themeSettings.showProductDetailMfgPartNumber and model.mfgPartNumber.length == 1 %}
-			<dt class="mz-productcodes-mfgpartnumber-label">{{ labels.mfgPartNumber }}</dt>
-			<dd class="mz-productcodes-mfgpartnumber" itemprop="mpn">{{ model.mfgPartNumber|first }}</dd>
-			{% endif %}
-		</dl>
-	</h1>
+	<h1 class="mz-pagetitle" itemprop="name">{{ model.content.productName }}</h1>
 	
     <div data-mz-productimages class="mz-productimages mz-l-sidebar">
         {% include "modules/product/product-images" %}
