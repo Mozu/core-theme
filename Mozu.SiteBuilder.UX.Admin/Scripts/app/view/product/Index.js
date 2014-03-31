@@ -242,7 +242,7 @@ Ext.define('Taco.view.product.Index', {
         contextConf: {
             m: {
                 useMultiGrid: true,
-                plugins: [{
+                plugins: ['autoselect', {
                     ptype: 'rowexpander',
                     pluginId: 'expander',
                     rowBodyTpl: new Ext.XTemplate(
