@@ -89,14 +89,16 @@ Ext.define('Taco.view.settings.paymentAndCheckout.Gateway', {
             val[field.name] = field.getValue();
         });
 
-        gateway['credentialsSet'] = hasCredentialsChanged;
-        gateway['credentials'] = val;
-        gateway['gatewayDefinitionId'] = this.gatewayDefinition.get('id');
+        gateway.credentialsSet = hasCredentialsChanged;
+        gateway.credentials = val;
+        gateway.gatewayDefinitionId = this.gatewayDefinition.get('id');
 
-        gateway['supportedCards'] = me.supportedCardsCbg.getValue().cards;
+        gateway.supportedCards = me.supportedCardsCbg.getValue().cards;
+
+        if (gateway.supportedCards && typeof gateway.supportedCards === 'string') gateway.supportedCards = [gateway.supportedCards];
 
         //update this when ever there is a reason to turn off a gateway.
-        gateway['isActive'] = true;
+        gateway.isActive = true;
 
 
         me.record.set('gateway', gateway);
