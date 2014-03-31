@@ -93,9 +93,10 @@ Ext.define('Taco.view.storeCredit.Form', {
             xtype: 'combo',
             readOnly: me.isEdit(),
             name: 'creditType',
-            fieldLabel: 'Cread Type',
+            fieldLabel: 'Credit Type',
             store: ['StoreCredit', 'GiftCard'],
-            queryMode: 'local'
+            queryMode: 'local',
+            editable: false
         });
 
         me.customerEmail = Ext.widget({

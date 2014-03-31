@@ -21,16 +21,16 @@
       <FileName>Diagrams\Admin\Scripts\app\view\product\DiagramProductJs.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="Bundle" />
-      <Property Name="Extras" />
-      <Property Name="General" />
-      <Property Name="Inventory" />
-      <Property Name="Options" />
-      <Property Name="Pricing" />
-      <Property Name="Properties" />
-      <Property Name="SEO" />
-      <Property Name="Shipping" />
       <Property Name="MixinsNavigable" />
+      <Property Name="General" />
+      <Property Name="Pricing" />
+      <Property Name="Bundle" />
+      <Property Name="Options" />
+      <Property Name="Inventory" />
+      <Property Name="Properties" />
+      <Property Name="Extras" />
+      <Property Name="Shipping" />
+      <Property Name="SEO" />
     </ShowAsAssociation>
   </Class>
   <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product.jsGeneral" Collapsed="true">
@@ -109,6 +109,24 @@
       <HashCode>AAAAAAAAAAIAEAAAAAAAAJAAAAAAAAAAAAAAAAEAAAA=</HashCode>
       <FileName>Diagrams\Admin\Scripts\app\view\product\DiagramProductJs.cs</FileName>
     </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product.jsTacoCoreUxTabPanel">
+    <Position X="11.25" Y="3.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\product\DiagramProductJs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product.jsTacoViewProductForm">
+    <Position X="9.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\product\DiagramProductJs.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="globalForm" />
+      <Property Name="tabPanel" />
+    </ShowAsAssociation>
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

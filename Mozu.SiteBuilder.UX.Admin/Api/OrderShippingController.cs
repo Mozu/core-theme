@@ -67,7 +67,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var tasks = packages.Select(p => _orderWebApiClient.CreatePackage(args.OrderId, p)).ToList();
             await Task.WhenAll(tasks);
 
-            var results = tasks.Select(t => t.Result.ReadAsSync());
+            var results = new List<DCs.Package>();
+            foreach (var t in tasks)
+            {
+                if (t.Result.HasException)
+                {
+                    throw t.Result.ReadException();
+                }
+                results.Add(t.Result.ReadAsSync());
+            }
 
             return List2( Mapper.Map<List<OrderPackage>>(results) );
         }

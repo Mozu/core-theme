@@ -14,6 +14,8 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
     hidden: false,
     columns: 2,
     product: null,
+    isReadOnly: false,
+    allowBlank: false,
 
     initComponent: function () {
         var me = this,
@@ -27,7 +29,8 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
             name: 'directShipCb',
             inputValue: 'DirectShip',
             checked: (fulfillmentTypes.indexOf('DirectShip') != -1),
-            handler: me.onFulfillmentChange,
+            readOnly: this.isReadOnly,
+            handler: (this.isReadOnly) ? '' : me.onFulfillmentChange,
             scope: me,
             fulfillmentType: 1
         });
@@ -38,7 +41,8 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
             name: 'inStoreCb',
             inputValue: 'InStorePickup',
             checked: (fulfillmentTypes.indexOf('InStorePickup') != -1),
-            handler: me.onFulfillmentChange,
+            readOnly: this.isReadOnly,
+            handler: (this.isReadOnly) ? '' : me.onFulfillmentChange,
             scope: me,
             fulfillmentType: 1
         });
