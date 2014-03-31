@@ -42,6 +42,7 @@
         "enablePartialCaching":true,
         "showBreadcrumbs": true,
         "preselectCountryCode": "US",
+		"showMSRP": true,
 
 
         /* Common appearance settings used in the stylesheet */
@@ -74,6 +75,7 @@
         "showProductDetailShortDesc": true,
         "showProductDetailProperties": true,
         "showProductDetailMeasurements": true,
+		"showProductDetailMfgPartNumber": true,
         "productImagesContainerWidth": 350,
         "maxProductImageThumbnailSize": 50,
 

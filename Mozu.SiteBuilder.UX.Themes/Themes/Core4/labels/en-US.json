@@ -350,6 +350,8 @@
   "noImages"             : "no image",
   "more"                 : "more",
   "checkLocalStores"     : "Check Local Stores",
+  "mfgPartNumber"		 : "Mfg. Part Number",
+  "msrp" 				 : "MSRP",
 
   /* Locations labels */
   "localStores"          : "Local Stores",
