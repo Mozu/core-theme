@@ -23,33 +23,27 @@ Ext.define('Taco.model.CustomerAccount', {
         }, {
             name: 'userId',
             type: 'string'
-        },        
-        {
+        }, {
             name: 'firstName',
             type: 'string'        
-        },
-        {
+        }, {
             name: 'lastName',
             type: 'string'
-        },
-        {
+        }, {
             name: 'emailAddress',
             type: 'string'
-        },
-         {
+        }, {
              name: 'segments',
              type: 'auto',
              defaultValue:[]
-         }, {
+        }, {
              name: 'segmentIds',
              type: 'auto',
              defaultValue:[]
-         },
-        {
+        }, {
             name: 'userName',
             type: 'string'
-        },
-        {
+        }, {
             name: 'companyOrOrganization',
             type: 'string'
         }, {
@@ -89,9 +83,15 @@ Ext.define('Taco.model.CustomerAccount', {
         }, {
             name: 'createDate',
             type: 'date'
+        }, {
+            name: 'taxExempt',
+            type: 'boolean',
+            defaultValue: false
+        }, {
+            name: 'taxId',
+            type: 'string'
         }
-    ],    
-   
+    ],
 
     getOrders: function () {
 
