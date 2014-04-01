@@ -352,6 +352,7 @@
   "checkLocalStores"     : "Check Local Stores",
   "mfgPartNumber"		 : "Mfg. Part Number",
   "msrp" 				 : "MSRP",
+  "upc"					 : "UPC",
 
   /* Locations labels */
   "localStores"          : "Local Stores",

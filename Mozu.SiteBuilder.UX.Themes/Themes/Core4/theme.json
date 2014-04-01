@@ -76,6 +76,7 @@
         "showProductDetailProperties": true,
         "showProductDetailMeasurements": true,
 		"showProductDetailMfgPartNumber": true,
+		"showProductDetailUPC": true,
         "productImagesContainerWidth": 350,
         "maxProductImageThumbnailSize": 50,
 
