@@ -215,6 +215,15 @@
     @include icons-sprite(icon-rowactions); // icon is an <img>
   }
 
+  // hide the action menu trigger image when its inside of the row editor. it causes a bunch of padding to be added;
+  .x-grid-row-editor {
+     .#{$vprefix}grid-row-menu-trigger {
+        disaply:none;
+        height:0px;
+     }
+   }   
+
+
   // over ride of default menu trigger icon to make it a remove icon instead of a gear menu icon
   .#{$vprefix}grid-row-menu-trigger-remove {    
     @include icons-sprite(icon-remove); // icon is an <img>
