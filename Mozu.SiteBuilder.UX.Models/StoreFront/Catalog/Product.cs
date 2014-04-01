@@ -433,7 +433,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 _cP = value;
             }
         }
-
+          
 
         public int FirstIndex
         {
@@ -679,6 +679,22 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
 
         [IgnoreDataMember()]
         public new  Category ParentCategory { get; set; }
+
+        private string _url;
+         [DataMember(EmitDefaultValue = false)]
+        public string Url
+        {
+             get
+             {
+                 if (_url == null)
+                 {
+                     _url = (Content == null || string.IsNullOrEmpty(Content.Slug)) ? "/c/" + Id : "/" + Content.Slug + "/c/" + CategoryId;
+                 }
+                 return _url;
+             }
+        }
+       
+
     }
   
 

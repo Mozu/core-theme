@@ -69,7 +69,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ProductRuntime.Contracts.Product prod =  await res.ReadAsAsync();
             var product = Mapper.Map<Product>(prod);
 
-           
+            HttpResponseMessage msg;
+            if (RedirectToCanonicle(product.Url , out msg))
+            {
+                return msg;
+            }
+
 
             PageContext.PageType = "product";
             PageContext.ProductCode = productCode;
@@ -209,6 +214,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "category not found");
             }
+            HttpResponseMessage msg;
+            if (RedirectToCanonicle(cat.Url , out msg))
+            {
+                return msg;
+            }
+
 
 
             PageContext.MetaDescription = cat.Content.MetaTagDescription;
@@ -267,6 +278,28 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //.Result.ReadAsSync();
             //AutoMapper.Mapper.Map< Category>( cat );
             //return View();
+        }
+
+        private bool RedirectToCanonicle(string url, out HttpResponseMessage msg)
+        {
+            msg = null;
+            var requestUrl = this.Request.RequestUri.AbsolutePath;
+            if (!this.SiteContext.IsEditMode && !string.Equals(requestUrl, url, StringComparison.OrdinalIgnoreCase))
+            {
+                msg = this.Request.CreateResponse(HttpStatusCode.MovedPermanently);
+                if (!string.IsNullOrEmpty(this.Request.RequestUri.Query))
+                {
+                    var qs = this.Request.GetQueryNameValuePairs().ToArray();
+                    if ( ! (qs.Length == 1 &&  qs[0].Key.Equals("productcode", StringComparison.OrdinalIgnoreCase ) ))
+                    {
+                        url = url + this.Request.RequestUri.Query;    
+                    }
+                    
+                }
+                msg.Headers.Location = new Uri(url, UriKind.Relative);
+                return true;
+            }
+            return false;
         }
 
 
