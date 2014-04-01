@@ -194,7 +194,13 @@
         },
         toJSON: function (options) {
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
-            if (!options || !options.helpers) j.options = this.getConfiguredOptions();
+            if (!options || !options.helpers) {
+                j.options = this.getConfiguredOptions();
+            }
+            if (options && options.helpers) {
+                if (typeof j.mfgPartNumber == "string") j.mfgPartNumber = [j.mfgPartNumber];
+                if (typeof j.upc == "string") j.upc = [j.upc];
+            }
             return j;
         }
     }),
