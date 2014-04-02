@@ -23,6 +23,8 @@ Ext.define('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
     },
 
     getId: function () {
+        if (!this.pageContext.cmsContext.page.collection || !this.pageContext.cmsContext.page.id)
+            return undefined;
         return this.pageContext.cmsContext.page.collection + "_" + this.pageContext.cmsContext.page.id;
     },
 
