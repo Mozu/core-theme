@@ -195,7 +195,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var res = await _wsRepo.GetSite(siteId);
             var site = res.ReadAsAsync().Result;
 
-
+            var domains = site.Domains.Where(x => x.IsInfrastructureRecord == false).ToList();
 
             //string domainPriority = System.Configuration.ConfigurationManager.AppSettings["gositeDomainPriority"];
             IEnumerable<string> domainList;
@@ -209,7 +209,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     var invalidator = Request.Resolve<IDirtyCacheInvalidator>();
                     invalidator.Invalidate();
                     viewMode = DataViewModeType.Pending;
-                    domainList = site.Domains.Where(x => x.IsSystemAssigned).Select(x => "admin-pending-view." + x.DomainName);
+                    domainList = domains.Where(x => x.IsSystemAssigned).Select(x => "admin-pending-view." + x.DomainName);
                     break;
                 }
                 case "editing":
@@ -222,7 +222,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 case "production":
                 default:
                 {
-                    domainList = site.Domains.OrderByDescending(s => s.IsPrimary).Select(x => x.DomainName);
+                    domainList = domains.OrderByDescending(s =>  s.IsPrimary).Select(x => x.DomainName);
                     break;
                 }
             }
