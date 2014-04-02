@@ -4,7 +4,7 @@
             border-bottom-width: 0;
         }
         .#{$prefix}grid-subcell {
-            @extend .#{$prefix}grid-cell;
+            // @extend .#{$prefix}grid-cell; /* this does not work as intended */
             border-width: 0;
             border-color: transparent;
         }
