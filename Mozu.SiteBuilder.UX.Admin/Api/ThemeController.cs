@@ -105,7 +105,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 if (isSelectedDesktop.HasValue)
                     IsSelectedDesktop = isSelectedDesktop.Value;
-                else if (String.Equals(Id, genSettings.DesktopTheme.Id, StringComparison.InvariantCultureIgnoreCase))
+                else if (genSettings.DesktopTheme != null &&  String.Equals(Id, genSettings.DesktopTheme.Id, StringComparison.InvariantCultureIgnoreCase))
                     IsSelectedDesktop = true;
                 else
                     IsSelectedDesktop = false;

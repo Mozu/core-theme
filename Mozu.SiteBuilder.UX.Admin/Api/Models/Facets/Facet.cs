@@ -87,13 +87,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Facets
     
     public class FacetSource
     {
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "sourceId")]
         public string Id { get; set; }
 
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "sourceType")]
         public string Type { get; set; }
 
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "sourceName")]
         public string Name { get; set; }
 
 
