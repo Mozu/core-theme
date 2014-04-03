@@ -52,7 +52,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         }
 
         this.totalTable = Ext.create("Ext.Component", {
-            data: me.getData(),
+            data: Ext.apply({},me.getData(),{isActive:undefined,storeCredit:undefined}),
             cls: editableCls,
             flex: 1,
             tpl: [

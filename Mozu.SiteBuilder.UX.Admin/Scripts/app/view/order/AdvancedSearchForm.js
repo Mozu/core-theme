@@ -60,6 +60,9 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                             name: "Processing ",
                             id: "Processing "
                         }, {
+                            name: "Pending",
+                            id: "Pending "
+                        }, {
                             name: 'Accepted',
                             id: 'Accepted'
                         }, {
@@ -68,7 +71,10 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                         }, {
                             name: "Cancelled ",
                             id: "Cancelled "
-                        }
+                        }, {
+                            name: "Validated",
+                            id: "Validated "
+                        },
                     ]
                 })
             }, {

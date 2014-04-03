@@ -86,9 +86,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<ActionResult> GoogleSiteVerification(string hash)
         {
             var webToolsRepository = LifetimeScope.Resolve<IWebToolsRepository>();
-            var fileStream = await webToolsRepository.GetWebMasterToolsFile(string.Format("google{0}.html", hash));
-
-            return File(fileStream, "text/html");
+            try
+            {
+                var fileStream = await webToolsRepository.GetWebMasterToolsFile(string.Format("google{0}.html", hash));
+                return File(fileStream, "text/html");
+            }
+            catch
+            {
+               
+            }
+            return await this.NotFound();
+           
         }
 [System.Web.Http.HttpGet]
         public async Task<ActionResult> RobotsTxt()

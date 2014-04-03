@@ -18,6 +18,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { controller = "Search", action = "index" });
 
 
+           
+
             routes.MapHttpRoute(
                 "StoreFront_productDetails_SEO",
                 "{slug}/p/{productCode}",
@@ -354,6 +356,31 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new {acceptConstraint = new AcceptConstraint("text/html", false)});
 
 
+            
+
+            routes.MapHttpRoute(
+               "beep boop",
+               "robots.txt",
+               new { controller = "Home", action = "RobotsTxt" });
+
+
+            routes.MapHttpRoute(
+               "gaverify",
+               "google{hash}.html",
+               new { controller = "Home", action = "GoogleSiteVerification" });
+
+
+            /*********************************************************************
+             * 
+             *          Single name routes go above here.
+             * 
+             * 
+             * 
+             * 
+             * 
+             *****************************************************************/
+
+
             routes.MapHttpRoute(
                "StoreFront_pages_seo",
                "{pageName}",
@@ -371,7 +398,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "api/{*url}",
                 new { controller = "testing", action = "api" });
 
-
+            
 
             routes.MapHttpRoute(
                 "Error",

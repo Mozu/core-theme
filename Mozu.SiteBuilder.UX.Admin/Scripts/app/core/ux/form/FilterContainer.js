@@ -55,6 +55,9 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         if (this.initFromStateManager) {
             this.initialValue = (Ext.Array.findBy(Taco.core.StateManager.getCurrentState().metaData.args, function (i) { return i.q; }) || {}).q;
         }
+        if (!this.initialValue && this.getAdvancedSearchFromStore()) {
+            this.initialValue = this.currentFilterString = this.serializeFilterValue(this.getAdvancedSearchFromStore());
+        }
 
         this.items = [{
                 xtype: 'textfield',
@@ -120,16 +123,24 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         });
     },
 
+    getAdvancedSearchFromStore: function () {
+        var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
+        if (params.advancedSearch) {
+            return Ext.JSON.decode(params.advancedSearch);
+        }
+    },
     /**
      * Send a filter request to the server.
      * 
      * @param  {Object} value An object containing field keys and values.
      */
     doFilter: function (value) {
-        
+        var existingFilter = this.getAdvancedSearchFromStore();
         if (this.store.isLoading()) {
             this.store.abort();
-            
+        }
+        if (existingFilter && Ext.Object.equals(existingFilter, value)) {
+            return;
         }
         var filterString = Ext.JSON.encodeValue(value);
 
@@ -137,6 +148,8 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             return;
         }
 
+
+        
         if (this.fireEvent('beforefilter', this, value) !== false) {
             if (this.store.remoteFilter) {
 
@@ -171,7 +184,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * @return {Object} The value of the field, specified by returnIndex, on the record that was found.
      */
     findNearestRecord: function (store, dataIndex, rawValue) {
-        return store.getById(rawValue) || store.findRecord(dataIndex, rawValue, 0, false, false, false);
+        return store.getById(rawValue) || store.getById(parseInt(rawValue,10)) || store.findRecord(dataIndex, rawValue, 0, false, false, false);
     },
 
     /**
@@ -373,7 +386,14 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      */
     setTextFilterValue: function (values) {
         var field = this.down('#textFilter'),
-            simpleValue = [];
+            simpleValue = this.serializeFilterValue(values);
+
+        field.setValue(simpleValue);
+    },
+
+
+    serializeFilterValue:function (values) {
+        var simpleValue = [];
 
         Ext.Object.each(values, function (fieldName, rawValue) {
             if (!Ext.isEmpty(rawValue)) {
@@ -389,7 +409,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             }
         }, this);
 
-        field.setValue(Ext.String.trim(simpleValue.join(' ')));
+        return Ext.String.trim(simpleValue.join(' '));
     },
 
     /**
@@ -437,16 +457,16 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         return syncedValues;
     },
 
-    onDestroy: function () {
-        if (this.store && this.store.getProxy()) {
-            var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
-            if (params.advancedSearch) {
-                this.store.needsRefresh = true;
-                delete params.advancedSearch;
-            }
+    //onDestroy: function () {
+    //    if (this.store && this.store.getProxy()) {
+    //        var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
+    //        if (params.advancedSearch) {
+    //            this.store.needsRefresh = true;
+    //            delete params.advancedSearch;
+    //        }
            
-        }
+    //    }
 
-        this.callParent(arguments);
-    },
+    //    this.callParent(arguments);
+    //},
 });

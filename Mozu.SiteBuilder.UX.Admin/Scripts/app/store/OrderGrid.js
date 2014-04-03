@@ -2,14 +2,14 @@
  * @class Taco.store.Orders
  */
 
-    Ext.define('Taco.store.Orders', {
+    Ext.define('Taco.store.OrderGrid', {
         extend: 'Ext.data.Store',
         model: 'Taco.model.Order',
-        pageSize: 25,
+        pageSize: 50,
         remoteSort: true,
         remoteFilter: true,
         storeManagerConfig: {
-            createOnly:true,
+          //  createOnly:false,
             autoLoad: true
         }
     });
