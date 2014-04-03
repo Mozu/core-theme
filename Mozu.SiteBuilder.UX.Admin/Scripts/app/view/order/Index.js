@@ -8,14 +8,14 @@ Ext.define('Taco.view.order.Index', {
     alias: 'widget.orderindex',
     requires: [
         'Taco.model.Order',
-        'Taco.store.Orders',
+        'Taco.store.OrderGrid',
         'Taco.view.order.modal.ProductConfigurator',
         'Taco.view.order.AdvancedSearchForm'
     ],
 
     typeName: 'Order',
     modelName: 'Taco.model.Order',
-    store: { type: 'Taco.store.Orders' },
+    store: { type: 'Taco.store.OrderGrid' },
     editorName: 'Taco.view.order.Edit',
     
     //contextConfig: {

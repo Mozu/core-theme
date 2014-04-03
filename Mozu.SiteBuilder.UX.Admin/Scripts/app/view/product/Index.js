@@ -7,12 +7,14 @@ Ext.define('Taco.view.product.Index', {
     requires: [
         'Taco.model.Product',
         'Taco.store.Products',
-        'Taco.view.product.AdvancedSearchForm'
+        'Taco.view.product.AdvancedSearchForm',
+        'Taco.store.ProductGrid'
+
     ],
 
     typeName: 'Product',
     modelName: 'Taco.model.Product',
-    store: { type: 'Taco.store.Products' },
+    store: { type: 'Taco.store.ProductGrid' },
     editorName: 'Taco.view.product.Edit',
     filterProperty: 'productName2',
     useTilePanel: false,
@@ -24,59 +26,6 @@ Ext.define('Taco.view.product.Index', {
     },
 
 
-    //filterFormConf: {
-    //    width: 600,
-    //    cls: Taco.baseCSSPrefix + 'combofilter-form products',
-    //    items: [{
-    //        xtype: 'container',
-    //        justify: false,
-    //        defaults: {
-    //            xtype: 'textfield',
-    //            width: 560
-    //        },
-    //        items: [{
-    //                name: 'productCode',
-    //                fieldLabel: 'Product Code',
-    //                width: 160
-    //            }, {
-    //                name: 'productName',
-    //                fieldLabel: 'Name'
-    //            }]
-    //    }]
-    //},
-
-    //filterProperties: [{
-    //        property: 'all',
-    //        text: 'All',
-    //        isDefault: true
-    //    }, {
-    //        property: 'productName',
-    //        text: 'Name'
-    //    }, {
-    //        property: 'productCode',
-    //        text: 'Code'
-    //    }, {
-    //        property: 'producttypeid',
-    //        text: 'Product Type'
-    //    }, {
-    //        property: 'productFullDescription',
-    //        text: 'Description'
-    //    }],
-    
-    //initComponent: function () {
-    //    var me = this;
-    //    me.header = {
-    //        title: 'Products',
-    //        actions: [{
-    //            xtype: 'primarybutton',
-    //            text: 'Create New Product',
-    //            click: function () {
-    //                me.launchEditor(Ext.create('Taco.model.Product'));
-    //            }
-    //        }]
-    //    };
-    //    this.callParent(arguments);
-    //},
 
     gridPanelConf: {
         columns: [{

@@ -93,7 +93,7 @@ Disallow: /admin/";
 
             var blah = await _documentWebApiClient.GetDocumentContent(ContentCollection, documentId).ConfigureAwait(false);
 
-            var stream = blah.ResponseMessage.Content.ReadAsStreamAsync().Result;
+            var stream = await blah.ResponseMessage.Content.ReadAsStreamAsync();
 
             return stream;
         }
