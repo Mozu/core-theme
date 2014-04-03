@@ -22,6 +22,10 @@ Ext.define('Taco.overrides.form.field.ComboBox', {
         * combo enhanclement to hide paging toolbar when the result set is less than a single page;
         */
         if (me.autoHidePagingToolbar) {
+            if (!me.listConfig) {
+                me.listConfig = {};
+            }
+
             // this is an override that hides the paging toolbar when the list only contains a single page of results;
             me.listConfig.refresh = function () {
                 var me = this,
