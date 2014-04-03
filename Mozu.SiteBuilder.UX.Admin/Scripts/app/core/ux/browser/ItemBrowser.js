@@ -85,6 +85,8 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
                 xtype: 'taco-filtercontainer',
                 width: '100%',
                 flex: 1,
+                
+                quickFilterData: me.advancedSearchConfig.quickFilterData,
                 advancedForm: me.advancedSearchConfig.form,
                 advancedFormCls: me.advancedSearchConfig.advancedFormCls,
                 store: me.createItemStore(),

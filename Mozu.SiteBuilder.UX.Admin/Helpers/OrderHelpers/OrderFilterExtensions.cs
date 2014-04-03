@@ -62,6 +62,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                     }
                     return "siteid eq " + filter.value;
                 }
+                case "paymentstatus":
+                {
+                    return "paymentstatus eq " + filter.value;;
+                }
+                case "fulfillmentstatus":
+                {
+                    return "fulfillmentStatus eq " + filter.value; ;
+                }
+                    
                 case "mintotal":
                     return "total GE " + filter.value;
                 case "maxtotal":
@@ -72,7 +81,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                     return string.Format("updatedate gt {0}", filter.value);
                     case "modifiedto":
                     return string.Format("updatedate lt {0}", filter.value);
+
                 case "orderstatus":
+                    if (filter.value.ToString().ToLower() == "open")
+                    {
+                        return "(status ne Closed and status ne Cancelled and status ne Pending)";
+                    }
                     return string.Format("status eq {0}", filter.value);
                 case "billingcontactfirstname":
                     return string.Format("({1} sw {0})", filter.value, BILLINGCONTACTFIRSTNAME);

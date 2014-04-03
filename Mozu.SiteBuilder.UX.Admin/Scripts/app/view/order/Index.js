@@ -204,7 +204,53 @@ Ext.define('Taco.view.order.Index', {
     },
     
     advancedSearchConfig : {
-        advancedFormCls: 'Taco.view.order.AdvancedSearchForm'
+        advancedFormCls: 'Taco.view.order.AdvancedSearchForm',
+        quickFilterData: [
+            [{ orderStatus: 'Open' }, 'Open Orders'],
+            [{ paymentstatus: 'Paid', fulfillmentStatus: 'NotFulfilled' }, 'Paid, Pending Fulfillment Orders'],
+            [{ fulfillmentStatus: 'Fulfilled' }, 'Fulfilled Orders'],
+            [{ orderStatus: 'Closed' }, 'Closed Orders'],
+            [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
+            [{}, 'All Orders']
+        ]
     }
-    
+
 });
+
+
+
+
+///// <summary>
+///// Current fulfillment status, which can be "NotFulfilled,", "PartiallyFulfilled", or "Fufilled."
+/////             System-supplied and read-only.  Values are available in FulfillmentStatusConst of this class.
+///// 
+///// </summary>
+//public string FulfillmentStatus { get; set; }
+
+
+
+///// <summary>
+///// Current status of payment, which can be "Null," "AwaitingCheck," "AwaitingPayment," "Paid," "Authorized," or "Void."
+/////             System-supplied and read-only.
+///// 
+///// </summary>
+//public string PaymentStatus { get; set; }
+
+
+///// <summary>
+///// Current status of the order, which can be viewed in OrderStatusConst. System-supplied and read-only.
+///// 
+///// </summary>
+//public string Status { get; set; }
+// public static class OrderStatusConst
+//    {
+//      public const string PENDING = "Pending";
+//      public const string SUBMITTED = "Submitted";
+//      public const string PROCESSING = "Processing";
+//      public const string COMPLETED = "Completed";
+//      public const string CANCELLED = "Cancelled";
+//      public const string ABANDONED = "Abandoned";
+//      public const string VALIDATED = "Validated";
+//      public const string ACCEPTED = "Accepted";
+//      public const string PENDING_REVIEW = "PendingReview";
+//    }
