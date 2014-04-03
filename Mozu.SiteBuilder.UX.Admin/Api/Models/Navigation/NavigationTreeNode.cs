@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Navigation
 
         
          [DataMember(Name = "isHidden")]
-        public bool IsHidden { get; set; }
+        public bool? IsHidden { get; set; }
 
         public bool AllowDrop { get; set; }
 

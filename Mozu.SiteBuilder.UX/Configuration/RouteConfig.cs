@@ -194,8 +194,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             routes.MapHttpRoute(
                 "StoreFront_Sitemap",
-                "sitemap.xml",
-                new {controller = "Sitemap", action = "Index"});
+                "sitemap.xml/{action}/{page}",
+                new { controller = "Sitemap", action = "Index", page = RouteParameter.Optional });
 
             routes.MapHttpRoute(
                 "Widgets",
@@ -369,7 +369,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
                "google{hash}.html",
                new { controller = "Home", action = "GoogleSiteVerification" });
 
-             
+
             /*********************************************************************
              * 
              *          Single name routes go above here.

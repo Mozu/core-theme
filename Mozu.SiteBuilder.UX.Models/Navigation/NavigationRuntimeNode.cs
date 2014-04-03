@@ -49,7 +49,8 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
                 return -1;
             }
         }
-
+        [DataMember(Name = "isHidden")]
+        public bool? IsHidden { get; set; }
 
 
         [DataMember(Name = "originalId")]

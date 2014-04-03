@@ -1,9 +1,13 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Xml.Linq;
+using AutoMapper;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Settings;
+using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using System.Xml;
@@ -13,6 +17,7 @@ using Mozu.SiteBuilder.Mvc;
 using System.Threading.Tasks;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
+using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -25,85 +30,163 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         INavigationRepository _nav;
     
         private readonly ISitesWebApiClient _sitesWebApi;
+        private readonly IProductSearchWebApiClient _productSearchWebApiClient;
+        private readonly IProductRuntimeWebApiClient _productRuntimeWebApiClient;
         private INavigationGandalf _gandalf;
-
-        public SitemapController(INavigationRepository navigationRepository, INavigationGandalf gandalf, ISitesWebApiClient sitesWebApi)
+        private const int PageSize = 2000;
+        const string NS = "http://www.sitemaps.org/schemas/sitemap/0.9";
+        public SitemapController(INavigationRepository navigationRepository,ISitesWebApiClient sitesWebApiClient , INavigationGandalf gandalf,  Mozu.ProductRuntime.Contracts.Clients.IProductSearchWebApiClient productSearchWebApiClient)
         {
             _nav = navigationRepository;
             _gandalf = gandalf;
+
+            _sitesWebApi = sitesWebApiClient;
+            _productSearchWebApiClient = productSearchWebApiClient;
+            
+        }
+
+           [System.Web.Http.HttpGet]
+        public async Task<HttpResponseMessage> Index()
+        {
+           // var primaryNavTask = _gandalf.GetTreeNavigation();
+            //var domainTask = GetSitePrimaryDomain();
+            var prods = (await _productSearchWebApiClient.Search(query: "*:*", pageSize: 0)).ReadAsSync();
+            var resp = this.Request.CreateResponse(HttpStatusCode.OK);
+            int pages = (int)Math.Ceiling((decimal)prods.TotalCount/(decimal)PageSize);
+            var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
            
-            _sitesWebApi = sitesWebApi;
+           // resp.Content.
+               this.HttpContext.Response.ContentType = "text/xml";
+            var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
+            writer.WriteStartElement("sitemapindex", NS);
+
+            writer.WriteStartElement("sitemap", NS);
+            writer.WriteElementString("loc", NS,"http:"+ this.SiteContext.CdnPrefix + "/sitemap.xml/categories");
+          //  writer.WriteElementString("lastmod", NS, date);
+            writer.WriteEndElement();
+
+
+            for (int i = 0; i < pages; i++)
+            {
+                writer.WriteStartElement("sitemap", NS);
+                writer.WriteElementString("loc", NS, "http:" + this.SiteContext.CdnPrefix + "/sitemap.xml/products/" + i);
+            //    writer.WriteElementString("lastmod", NS, DateTime.UtcNow.AddDays(1).Date.ToString("o"));
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+            writer.Flush();
+            return resp;
         }
 
-        // GET: /sitemap.xml
-        public async Task<ActionResult> Index()
+           [System.Web.Http.HttpGet]
+           public async Task<HttpResponseMessage> Categories()
+           {
+               // var primaryNavTask = _gandalf.GetTreeNavigation();
+               //var domainTask = GetSitePrimaryDomain();
+               var nodes = await _gandalf.GetTreeNavigation();
+
+
+               var domain = await GetSitePrimaryDomain();
+               var resp = this.Request.CreateResponse(HttpStatusCode.OK);
+
+               var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
+               // resp.Content.
+               this.HttpContext.Response.ContentType = "text/xml";
+               var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
+               writer.WriteStartElement("urlset", NS);
+
+
+               writer.WriteStartElement("url", NS);
+               writer.WriteElementString("loc", NS,  domain );
+               //  writer.WriteElementString("lastmod", NS, );
+               writer.WriteElementString("changefreq", NS, "daily");
+               writer.WriteElementString("priority", NS, "1");
+               writer.WriteEndElement();
+
+               foreach ( var node in nodes.Where(x=> !x.IsHidden.GetValueOrDefault(false) && !string.IsNullOrEmpty(x.Url) ))
+               {
+                   writer.WriteStartElement("url", NS);
+                   writer.WriteElementString("loc", NS, node.Url.StartsWith("/") ?  domain + node.Url : node.Url );
+                 //  writer.WriteElementString("lastmod", NS, );
+                   writer.WriteElementString("changefreq", NS, "daily");
+                   writer.WriteElementString("priority", NS, ".7");
+                   writer.WriteEndElement();
+               }
+               writer.WriteEndElement();
+               writer.Flush();
+               return resp;
+           }
+
+         [System.Web.Http.HttpGet]
+           public async Task<HttpResponseMessage> Products(int page)
+           {
+               var domain = await GetSitePrimaryDomain();
+               
+               var resp = this.Request.CreateResponse(HttpStatusCode.OK);
+               var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
+               // resp.Content.
+               this.HttpContext.Response.ContentType = "text/xml";
+               var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
+               writer.WriteStartElement("urlset", NS);
+             int offset = 0;
+             var startIndex = page*PageSize;
+             while (true)
+             {
+                 
+                 var prods = (await _productSearchWebApiClient.CloneWithoutUserClaims().Search(query: "*:*", pageSize: PageSize, startIndex: startIndex)).ReadAsSync();
+
+                 
+
+                 var vm = Mapper.Map<List<Product>>(prods.Items);
+                 WriteProducts(vm, writer, domain);
+                 startIndex = page*PageSize + prods.PageSize;
+                 if (startIndex >= (page+1) * PageSize || startIndex >= prods.TotalCount || prods.PageCount == 0 )
+                 {
+                     break;
+                 }
+                
+             }
+             writer.WriteEndElement();
+               writer.Flush();
+               return resp;
+
+           }
+
+        private static void WriteProducts(List<Product> vm, XmlWriter writer, string domain)
         {
-            var primaryNavTask = _gandalf.GetTreeNavigation();
-            var domainTask = GetSitePrimaryDomain();
-            await Task.WhenAll(primaryNavTask, domainTask);
-
-            var primaryNav = primaryNavTask.Result;
-            var domain = domainTask.Result.TrimEnd('/');
-
-            //SiteBuilderContext.Current.PageContext.CanonicalUrl
-
-            string[] products = new string[] { "bike1" };
-
-            // TODO: all these urls should be absolute paths.
-            XNamespace ns = "http://www.sitemaps.org/schemas/sitemap/0.9";
-            XDocument doc = new XDocument(
-                new XDeclaration("1.0", "utf-8", "yes"),
-                new XElement(ns + "urlset",
-                    new XComment("oh hai, im fixin ur sitemaps"),
-                    new XElement(ns + "url",
-                        new XElement(ns + "loc", domain + "/"),
-                        new XElement(ns + "priority", 1.0)),
-                    from node in primaryNav
-                    let url = node.Url.TrimStart('/')
-                    select new XElement(ns + "url",
-                        new XElement(ns + "loc", domain + "/" + url),
-                        new XElement(ns + "priority", 0.5))
-                )
-            );
-
-            // we use a StringWriter instead of doc.ToString() to ensure that the <?xml?> declaration is written intact.
-            using (StringWriter w = new SitemapStringWriter())
+            foreach (var prod in vm)
             {
-                doc.Save(w);
-                return Content(w.ToString(), "application/xml");
+                writer.WriteStartElement("url", NS);
+                writer.WriteElementString("loc", NS, "http://" + domain + prod.Url);
+                //  writer.WriteElementString("lastmod", NS, );
+                writer.WriteElementString("changefreq", NS, "daily");
+                writer.WriteElementString("priority", NS, ".7");
+                writer.WriteEndElement();
             }
         }
 
-        /// <summary>
-        /// Gets the primary domain name for the current SiteContext.
-        /// </summary>
+
         private async Task<string> GetSitePrimaryDomain()
-        {
-            int siteId = SbApiContext.SiteId.GetValueOrDefault(-1);
+           {
+               int siteId = SbApiContext.SiteId.GetValueOrDefault(-1);
 
-            // we have to use the service client to lookup a Site object by id
-            var client = _sitesWebApi;
-            Site site = await client.GetSite(siteId).Result.ReadAsAsync();
+               // we have to use the service client to lookup a Site object by id
+              
+               Site site = await _sitesWebApi.CloneWithoutUserClaims().GetSite(siteId).Result.ReadAsAsync();
 
-            if (site != null)
-            {
-                Domain primary = site.Domains.FirstOrDefault(d => d.IsPrimary) ?? site.Domains.FirstOrDefault();
-                if (primary != null)
-                    return primary.DomainName;
-                else
-                    return null;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        // stupid workaround to prevent the returned document from being UTF-16.
-        // see http://stackoverflow.com/questions/5248400/why-does-the-xdocument-give-me-a-utf16-declaration
-        private class SitemapStringWriter : StringWriter
-        { 
-            public override Encoding Encoding { get { return Encoding.UTF8; } }
-        }
+               if (site != null)
+               {
+                   Domain primary = site.Domains.FirstOrDefault(d => d.IsPrimary) ?? site.Domains.FirstOrDefault();
+                   if (primary != null)
+                       return "http://"+ primary.DomainName;
+                   else
+                       return null;
+               }
+               else
+               {
+                   return null;
+               }
+           }
+       
     }
 }
