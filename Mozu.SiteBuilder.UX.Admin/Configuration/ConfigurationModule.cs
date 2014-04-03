@@ -7,10 +7,12 @@ using Mozu.Core;
 using Mozu.Core.Api;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Api.ErrorHandler;
 using Mozu.Core.Api.Handlers.Message;
 using Mozu.Core.Behaviors;
 using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
+using Mozu.Core.Settings;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Catalog;
@@ -19,6 +21,7 @@ using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.InstalledApplications.Contracts.Clients;
+using Mozu.SiteBuilder.UX.Admin.Api.ErrorHandlers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Configuration
 {
@@ -102,6 +105,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
             builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", ApplicationConstants.APPLICATION_NAME).InstancePerLifetimeScope();
 
+            builder.RegisterType<FriendlyExceptionResponseBuilderCollection>()
+                .As<IExceptionResponseBuilderCollection>()
+                .WithParameter("settings", MozuConfigurationManager.Settings)
+                .SingleInstance();
 
             builder.RegisterType<ProductCategoryRuntimeWebApiClient>();
             builder.Register(c =>
