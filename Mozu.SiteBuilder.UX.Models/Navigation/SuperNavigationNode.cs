@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using Newtonsoft.Json;
 
@@ -15,6 +16,8 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         string Url { get; set; }
         int Index { get; set; }
         NavigationNodeType NodeType { get; set; }
+      
+        bool? IsHidden { get; set; }
     }
 
     public interface IRuntimeNavigationNode : INavigationNode
@@ -22,6 +25,8 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         bool IsHomePage { get; }
         IRuntimeNavigationNode Parent { get; }
         ICollection<IRuntimeNavigationNode> Items { get; }
+
+       
     }
 
     public interface ITreeNavigationNode : INavigationNode
