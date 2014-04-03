@@ -83,7 +83,29 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                 enableToggle: true,
                 scope: this,
                 toggleHandler: this.handleButtonToggle
-            }];
+            }
+        ];
+
+        if (this.quickFilterData) {
+   
+            this.items.push(
+            {
+                xtype: 'combo',
+                margin: '0 0 0 50',
+                itemId: 'quickFilter',
+                queryMode: 'local',
+                typeAhead: false,
+                isSelectField: true,
+                emptyText: 'Quick Filter',
+                store: this.quickFilterData,
+              //  value: this.getQuickFilterFromStore(),
+                listeners: {
+                    change: this.onQuickFilterChange,
+                    beforeselect:this.onBeforeSelect,
+                    scope: this
+                }
+            });
+        }
 
         this.callParent(arguments);
 
@@ -122,6 +144,34 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             }
         });
     },
+    onBeforeSelect:function (combo, record) {
+        var newValue = record.get('field1'),
+            picker = combo.getPicker();
+        if (newValue && combo.findRecordByValue(newValue)) {
+            this.syncAndFilter(newValue);
+        }
+        combo.reset();
+        Ext.defer(function () {
+            //picker.hide();
+            combo.reset();
+        }, 1, this);
+        return true;
+        
+    },
+    onQuickFilterChange: function (combo, newValue, oldValue) {
+        //var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
+        //if (newValue && combo.findRecordByValue(newValue)) {
+        //    this.syncAndFilter(newValue);
+        //}
+        
+        
+    },
+
+    //getQuickFilterFromStore:function () {
+    //    var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
+    //    return params.queryFilter;
+
+    //},
 
     getAdvancedSearchFromStore: function () {
         var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};

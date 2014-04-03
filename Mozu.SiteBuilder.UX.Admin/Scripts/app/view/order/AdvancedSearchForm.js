@@ -53,28 +53,99 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                 store: Ext.create('Ext.data.Store', {
                     fields: ['id', "name"],
                     data: [
+                    {
+                        name:"Open",
+                        id:"Open"
+                    },
                         {
-                            name: "Submitted ",
-                            id: "Submitted "
+                            name: "Submitted",
+                            id: "Submitted"
                         }, {
-                            name: "Processing ",
-                            id: "Processing "
+                            name: "Processing",
+                            id: "Processing"
                         }, {
                             name: "Pending",
-                            id: "Pending "
+                            id: "Pending"
                         }, {
                             name: 'Accepted',
                             id: 'Accepted'
                         }, {
                             name: "Completed",
-                            id: "Completed "
+                            id: "Completed"
                         }, {
-                            name: "Cancelled ",
-                            id: "Cancelled "
+                            name: "Cancelled",
+                            id: "Cancelled"
+                        }, {
+                            name: "Closed",
+                            id: "Closed"
                         }, {
                             name: "Validated",
-                            id: "Validated "
-                        },
+                            id: "Validated"
+                        }
+                    ]
+                })
+            }, {
+                xtype: 'combobox',
+                name: 'paymentstatus',
+                fieldLabel: 'Payment Status',
+                valueField: 'id',
+                displayField: 'name',
+                queryMode: 'local',
+                valueNotFoundText: 'not found',
+                editable: true,
+                forceSelection: true,
+                store: Ext.create('Ext.data.Store', {
+                    fields: ['id', "name"],
+                    data: [
+                    {
+                        name: "Not Set",
+                        id: "Null"
+                    },
+                        {
+                            name: "AwaitingCheck",
+                            id: "AwaitingCheck"
+                        }, {
+                            name: "AwaitingPayment",
+                            id: "AwaitingPayment"
+                        }, {
+                            name: "Paid",
+                            id: "Paid"
+                        }, {
+                            name: 'Authorized',
+                            id: 'Authorized'
+                        }, {
+                            name: "Void",
+                            id: "Void"
+                        }
+                    ]
+                })
+            }, {
+                xtype: 'combobox',
+                name: 'fulfillmentStatus',
+                fieldLabel: 'Fulfillment Status',
+                valueField: 'id',
+                displayField: 'name',
+                queryMode: 'local',
+                valueNotFoundText: 'not found',
+                editable: true,
+                forceSelection: true,
+                store: Ext.create('Ext.data.Store', {
+                    fields: ['id', "name"],
+                    data: [
+                    {
+                        name: "Not Set",
+                        id: "Null"
+                    },
+                        {
+                            name: "NotFulfilled",
+                            id: "NotFulfilled"
+                        }, {
+                            name: "PartiallyFulfilled",
+                            id: "PartiallyFulfilled"
+                        }, {
+                            name: "Fulfilled",
+                            id: "Fulfilled"
+                        }
                     ]
                 })
             }, {
