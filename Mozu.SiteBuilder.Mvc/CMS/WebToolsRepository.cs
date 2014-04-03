@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Mozu.Content.Contracts;
 using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.UX.Models.Settings;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
@@ -87,15 +88,13 @@ Disallow: /admin/";
         //    }
         //}
 
-        public async Task<Stream> GetWebMasterToolsFile(string fileName)
+        public Task<ServiceClientResponse<StreamContent>> GetWebMasterToolsFile(string fileName)
         {
-            var documentId = await GetOrCreateDocumentId(fileName, "text/html");
+            //var documentId = await GetOrCreateDocumentId(fileName, "text/html");
 
-            var blah = await _documentWebApiClient.GetDocumentContent(ContentCollection, documentId).ConfigureAwait(false);
+            return _documentWebApiClient.GetTreeDocumentContent(ContentCollection, fileName);
 
-            var stream = await blah.ResponseMessage.Content.ReadAsStreamAsync();
 
-            return stream;
         }
 
         public async Task<bool> SaveRobotsContent(RobotsTxtSettings settings)
@@ -116,8 +115,8 @@ Disallow: /admin/";
 
         public async Task<string> GetRobotsContent()
         {
-            var documentId = await GetOrCreateDocumentId("robots.txt", "text/plain").ConfigureAwait(false);
-            var result = await _documentWebApiClient.GetDocumentContent(ContentCollection, documentId).ConfigureAwait(false);
+            //var documentId = await GetOrCreateDocumentId("robots.txt", "text/plain").ConfigureAwait(false);
+            var result = await _documentWebApiClient.GetTreeDocumentContent(ContentCollection, "robots.txt").ConfigureAwait(false);
 
             if (result.HasException || !result.ResponseMessage.IsSuccessStatusCode)
                 return DefaultRobotsTxt;
