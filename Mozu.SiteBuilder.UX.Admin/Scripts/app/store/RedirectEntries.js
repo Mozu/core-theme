@@ -5,5 +5,9 @@ Ext.define('Taco.store.RedirectEntries', {
     pageSize: 50,
     remoteSort: true,
     remoteFilter: true,
-    autoLoad:false
+    
+    storeManagerConfig: {
+        createOnly: true,
+        autoLoad: true
+    }
 });
