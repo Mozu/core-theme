@@ -389,6 +389,8 @@
     <Compile Include="Api\CmsDocumentController.cs" />
     <Compile Include="Api\CmsPublishingController.cs" />
     <Compile Include="Api\CapabilityController.cs" />
+    <Compile Include="Api\ErrorHandlers\FriendlyAggregateExceptionResponseBuilder.cs" />
+    <Compile Include="Api\ErrorHandlers\FriendlyExceptionResponseBuilderCollection.cs" />
     <Compile Include="Api\ModelMapping\CustomerContactMapping.cs" />
     <Compile Include="Api\Models\CustomerContact.cs" />
     <Compile Include="Api\Models\GeneralSettings\IPBlock.cs" />
