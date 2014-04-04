@@ -34,12 +34,12 @@
 
   .#{$prefix}trigger-cell {
     display: block;
-    height: 16px;
+    height: 28px;
     left: auto;
     position: absolute;
-    right: 7px;
-    top: 7px;
-    width: 16px;
+    right: 2px;
+    top: 1px;
+    width: 21px !important;
   }
 
   .#{$prefix}form-arrow-trigger {
@@ -53,7 +53,6 @@
     overflow: visible;
     position: absolute;
     width: 0px;
-    @include icon-font($glyph-arrowdown);
   }
 
   // textarea styles
