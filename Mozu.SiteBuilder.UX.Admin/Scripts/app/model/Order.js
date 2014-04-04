@@ -14,7 +14,10 @@ Ext.define('Taco.model.Order', {
         read: 73,
         create: 74,
         update: 75,
-        destroy: 76
+        destroy: 76,
+        fulfill: 77,
+        cancel: 78,
+        applypayment: 79
     },
     requiredStores: [
         'Taco.store.ShippingMethods',

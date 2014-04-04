@@ -360,7 +360,7 @@
             this.description.hide();
         } else {
             this.description.update(description);
-        }  
+        }
         
     },
 
@@ -446,6 +446,7 @@
         Ext.each(option.Values, function (value) {
             if (!value.StringValue) value.StringValue = value.Value;
             if (value.IsSelected) option.Value = value.ShopperEnteredValue || value.Value;
+            if (value.IsSelected) option.ShopperEnteredValue = value.ShopperEnteredValue || value.Value;
             
 
             if (currentValue === value.Value && !value.IsEnabled) {

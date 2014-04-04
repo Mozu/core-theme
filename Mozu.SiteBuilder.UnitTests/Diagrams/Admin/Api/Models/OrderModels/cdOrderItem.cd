@@ -1,0 +1,271 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Comment CommentText="CommerceRuntime">
+    <Position X="2.5" Y="2.5" Height="0.75" Width="1.7" />
+  </Comment>
+  <Comment CommentText="ProductRuntime">
+    <Position X="7.583" Y="2.521" Height="0.75" Width="1.7" />
+  </Comment>
+  <Class Name="Mozu.CommerceRuntime.Contracts.Products.Product">
+    <Position X="1.5" Y="3.5" Width="3" />
+    <Members>
+      <Method Name="Product" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="Measurements" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Options" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Mozu.CommerceRuntime.Contracts.Commerce.PackageMeasurements">
+    <Position X="0.5" Y="5.75" Width="2" />
+    <Members>
+      <Method Name="PackageMeasurements" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.ProductRuntime.Contracts.Product">
+    <Position X="6.5" Y="3.5" Width="4.5" />
+    <Members>
+      <Method Name="Product" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Mozu.ProductRuntime.Contracts.Product.ProductUsageConst" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.ProductRuntime.Contracts.Product.FulfillmentTypeConst" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.ProductRuntime.Contracts.Product.PublishStateConst" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="Measurements" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Options" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Mozu.ProductRuntime.Contracts.PackageMeasurements">
+    <Position X="6.25" Y="5.25" Width="3.25" />
+    <Members>
+      <Method Name="PackageMeasurements" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.ProductRuntime.Contracts.ProductOption">
+    <Position X="9.5" Y="7.5" Width="2.5" />
+    <Members>
+      <Method Name="ProductOption" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="Values" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Mozu.ProductRuntime.Contracts.ProductOptionValue">
+    <Position X="13" Y="6.75" Width="2.75" />
+    <Members>
+      <Method Name="ProductOptionValue" Hidden="true" />
+      <Method Name="ShouldSerializeDeltaPrice" Hidden="true" />
+      <Method Name="ShouldSerializeDeltaWeight" Hidden="true" />
+      <Method Name="ShouldSerializeIsDefault" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.CommerceRuntime.Contracts.Products.ProductOption">
+    <Position X="2.25" Y="7.75" Width="2.75" />
+    <Members>
+      <Method Name="ProductOption" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController">
+    <Position X="6.25" Y="0.5" Width="6" />
+    <Members>
+      <Method Name="ActivateDiscount" Hidden="true" />
+      <Method Name="ActivateItemDiscount" Hidden="true" />
+      <Method Name="AddCoupon" Hidden="true" />
+      <Method Name="AddOrUpdateAdjustment" Hidden="true" />
+      <Method Name="ApplyCheck" Hidden="true" />
+      <Method Name="AuthAndCapture" Hidden="true" />
+      <Method Name="AuthorizePayment" Hidden="true" />
+      <Method Name="CancelOrder" Hidden="true" />
+      <Method Name="CapturePayment" Hidden="true" />
+      <Method Name="CapturePaymentManual" Hidden="true" />
+      <Method Name="CommitDraft" Hidden="true" />
+      <Method Name="CreateOrder" Hidden="true" />
+      <Method Name="CreatePackage" Hidden="true" />
+      <Method Name="CreatePayment" Hidden="true" />
+      <Method Name="CreatePaymentManual" Hidden="true" />
+      <Method Name="CreatePickup" Hidden="true" />
+      <Method Name="CreditPayment" Hidden="true" />
+      <Method Name="CreditPaymentManual" Hidden="true" />
+      <Method Name="DeclineCheck" Hidden="true" />
+      <Method Name="DeleteDraft" Hidden="true" />
+      <Method Name="DeletePackage" Hidden="true" />
+      <Method Name="DeletePickup" Hidden="true" />
+      <Method Name="EditPackages" Hidden="true" />
+      <Method Name="GetPackageLabel" Hidden="true" />
+      <Method Name="GetRuntimeShipmentMethods" Hidden="true" />
+      <Method Name="List" Hidden="true" />
+      <Method Name="MarkPackagesShipped" Hidden="true" />
+      <Method Name="MarkPickupsFulfilled" Hidden="true" />
+      <Method Name="MovePackageItems" Hidden="true" />
+      <Method Name="MovePickupItems" Hidden="true" />
+      <Method Name="OrderController" Hidden="true" />
+      <Method Name="PrepareShipment" Hidden="true" />
+      <Method Name="RemoveCoupon" Hidden="true" />
+      <Method Name="RemoveOrderItem" Hidden="true" />
+      <Method Name="RequestCheck" Hidden="true" />
+      <Method Name="RollbackTransaction" Hidden="true" />
+      <Method Name="SetBillingInfo" Hidden="true" />
+      <Method Name="SetCustomerAccountId" Hidden="true" />
+      <Method Name="SetShippingInfo" Hidden="true" />
+      <Method Name="SubmitOrder" Hidden="true" />
+      <Method Name="SuppressDiscount" Hidden="true" />
+      <Method Name="SuppressItemDiscount" Hidden="true" />
+      <Method Name="UpdateAttributes" Hidden="true" />
+      <Method Name="UpdateOrderItemFulfillmentMethodAndCode" Hidden="true" />
+      <Method Name="UpdateOrderItemPrice" Hidden="true" />
+      <Method Name="UpdateOrderItemQuantity" Hidden="true" />
+      <Method Name="VoidPayment" Hidden="true" />
+      <Method Name="VoidPaymentManual" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.VoidPaymentManualArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.MarkPickupsFulfilledArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.UpdateOrderItemArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.DeletePackageArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.MovePackageItemArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.ActivateSuppressDiscountArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.RequestCheckArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.CreatePaymentArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.UpdateAttributeArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.ProductWithQuantityStuffedIntoIt">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.OrderIdArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.AddRemoveCouponArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.DeclineCheckArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.CapturePaymentArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.RemoveOrderItemArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.MarkPackagesShippedArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.CreatePackageArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.CreatePickupArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.CreditPaymentArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.SetBillingInfoArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.CreatePaymentManualArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.VoidPaymentArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.SetCustomerAccountIdArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.CreditPaymentManualArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.UpdateAdjustmentArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.MovePickupItemArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.RollbackTransactionArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.ApplyCheckArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.AddOrderItemArgs">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.SetShippingInfoArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.CapturePaymentManualArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.PrepareShipmentArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.SiteBuilder.UX.Admin.Api.OrderController.DeletePickupArgs" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.ProductAdmin.Contracts.Product">
+    <Position X="17.25" Y="1.25" Width="4.5" />
+    <NestedTypes>
+      <Class Name="Mozu.ProductAdmin.Contracts.Product.ProductUsageConst" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.ProductAdmin.Contracts.Product.FulfillmentTypeConst" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.ProductAdmin.Contracts.Product.StandAlonePackageTypeConst" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="VariationOptions" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Mozu.ProductAdmin.Contracts.ProductVariationOption">
+    <Position X="23" Y="1.5" Width="3.75" />
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

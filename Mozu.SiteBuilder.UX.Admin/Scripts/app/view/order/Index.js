@@ -55,7 +55,7 @@ Ext.define('Taco.view.order.Index', {
                 return 'billingContact.firstName';
             },
             renderer: function (value, metaData, record) {
-                return value.firstName;
+                return Ext.util.Format.htmlEncode(value.firstName);
             }
         }, {
             dataIndex: 'billingContact',
@@ -66,7 +66,7 @@ Ext.define('Taco.view.order.Index', {
                 return 'billingContact.lastName';
             },
             renderer: function (value, metaData, record) {
-                return value.lastName;
+                return Ext.util.Format.htmlEncode(value.lastName);
             }
         }, {
             dataIndex: 'total',

@@ -27,16 +27,34 @@ Ext.define('Taco.model.CustomerAccount', {
             name: 'firstName',
             type: 'string'        
         }, {
+            name: 'firstNameSafe',
+            type: 'string',
+            convert: function(value, record) {
+                return Ext.util.Format.htmlEncode(record.get('firstName'));
+            }
+        }, {
             name: 'lastName',
             type: 'string'
+        }, {
+            name: 'lastNameSafe',
+            type: 'string',
+            convert: function(value, record) {
+                return Ext.util.Format.htmlEncode(record.get('lastName'));
+            }
         }, {
             name: 'emailAddress',
             type: 'string'
         }, {
+            name: 'emailAddressSafe',
+            type: 'string',
+            convert: function(value, record) {
+                return Ext.util.Format.htmlEncode(record.get('emailAddress'));
+            }
+        }, {
              name: 'segments',
              type: 'auto',
              defaultValue:[]
-        }, {
+         }, {
              name: 'segmentIds',
              type: 'auto',
              defaultValue:[]
@@ -91,8 +109,8 @@ Ext.define('Taco.model.CustomerAccount', {
             name: 'taxId',
             type: 'string'
         }
-    ],
-
+    ],    
+   
     getOrders: function () {
 
         if (!this.orders) {

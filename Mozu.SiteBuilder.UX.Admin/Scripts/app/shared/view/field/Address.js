@@ -84,9 +84,8 @@ Ext.define('Taco.shared.view.field.Address', {
                     me.editAddress();
                 }
             },
-            validator: function () {
-                var errors = [],
-                    value = me.addressField.getValue();
+            validator: function (value) {
+                var errors = [];
                 
                 if (me.allowBlank) {
                     return true;
@@ -94,14 +93,14 @@ Ext.define('Taco.shared.view.field.Address', {
                     // requires a valid address (uses editors validation methodology
                     if (value && this.addressValidationRequired) {
                         if (value.addressIsValidated) {
-                            return true;
-                        } else {
+                    return true;
+                } else {
                             return "Address requires validation. Click the \"Edit address\" button and then click the \"Validate\" button"
                         }
                     } else {
                         // check for values on required fields
                         if (value.address1 && value.cityOrTown && value.stateOrProvince && value.countryCode && value.postalOrZipCode) {                            
-                            return true
+                            return true;
                         } else {
                             return "Address is required";
                         }
@@ -218,4 +217,4 @@ Ext.define('Taco.shared.view.field.Address', {
         
         this.callParent(arguments);
     }
-})
+});

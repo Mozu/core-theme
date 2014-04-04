@@ -31,6 +31,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string OrderId { get; set; }
             public List<OrderPackageItem> Items { get; set; }
             public string ShippingMethodCode { get; set; }
+            public string ShippingMethodName { get; set; }
 
             // optional. means we are moving things out of one package into a new one.
             public string SourcePackageId { get; set; }
@@ -63,7 +64,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             var shipMethodCode = !String.IsNullOrEmpty(args.ShippingMethodCode) ? args.ShippingMethodCode : (order.FulfillmentInfo != null ? order.FulfillmentInfo.ShippingMethodCode : null);
-            var packages = args.Items.GroupBy(oi => oi.FulfillmentLocationCode).Select(g => new DCs.Package { ShippingMethodCode = shipMethodCode, FulfillmentLocationCode = g.Key, Items = Mapper.Map<List<DCs.PackageItem>>(g.ToList()) });
+            var shipMethodName = !String.IsNullOrEmpty(args.ShippingMethodName) ? args.ShippingMethodName : (order.FulfillmentInfo != null ? order.FulfillmentInfo.ShippingMethodName : null);
+            var packages = args.Items.GroupBy(oi => oi.FulfillmentLocationCode).Select(g => new DCs.Package { ShippingMethodCode = shipMethodCode, ShippingMethodName = shipMethodName, FulfillmentLocationCode = g.Key, Items = Mapper.Map<List<DCs.PackageItem>>(g.ToList()) });
             var tasks = packages.Select(p => _orderWebApiClient.CreatePackage(args.OrderId, p)).ToList();
             await Task.WhenAll(tasks);
 
@@ -88,8 +90,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "shipping/package/delete")]
         public async Task<Response<OrderPackage>> DeletePackage(DeletePackageArgs args)
         {
-            var tasks = args.PackageIds.Select(pid => _orderWebApiClient.DeletePackage(args.OrderId, pid));
-            await Task.WhenAll(tasks);
+            foreach (var packageId in args.PackageIds)
+            {
+                var package = (await _orderWebApiClient.GetPackage(args.OrderId, packageId)).ReadAsSync();
+                await DeletePackageInternal(args.OrderId, package);
+            }
 
             return SuccessWithTotal2<OrderPackage>(args.PackageIds.Count);
         }
@@ -251,6 +256,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public class PrepareShipmentArgs {
             public string OrderId { get; set; }
             public List<string> PackageIds { get; set; }
+            public decimal? DefaultWeight { get; set; }
+            public string DefaultPackagingType { get; set; }
         }
         [HttpPostRoute(UriTemplate = "shipping/package/prepareshipment")]
         public async Task<Response<List<OrderPackage>>> PrepareShipment(PrepareShipmentArgs args)
@@ -259,26 +266,41 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             await Task.WhenAll(dcPackageTasks);
             var dcPackages = dcPackageTasks.Select(t => t.Result.ReadAsSync()).ToList();
 
-            // ensure the packages are in a valid state
-            // foreach (var packageDc in dcPackages)
-            // {
-            //     // do not operate on already-shipped packages
-            //     if (!String.IsNullOrEmpty(packageDc.ShipmentId))
-            //         continue;
-            // 
-            //     // hard-code a packaging type
-            //     packageDc.PackagingType = "CUSTOM";
-            //     
-            //     // hard-code package dimensions
-            //     packageDc.Measurements = new CommerceRuntime.Contracts.Commerce.PackageMeasurements { 
-            //         Weight = packageDc.Measurements.Weight,
-            //         Height = null,
-            //         Length = null,
-            //         Width = null
-            //     };
-            // 
-            //     await _orderWebApiClient.UpdatePackage(args.OrderId, packageDc.Id, packageDc);
-            // }
+            // ensure that packages have a valid weight.
+            foreach (var packageDc in dcPackages)
+            {
+                bool hasChanged = false;
+
+                // do not operate on already-shipped packages
+                if (!String.IsNullOrEmpty(packageDc.ShipmentId))
+                    continue;
+
+                if (packageDc.Measurements == null)
+                {
+                    packageDc.Measurements = new CommerceRuntime.Contracts.Commerce.PackageMeasurements();
+                }
+
+                if (packageDc.Measurements.Weight == null || !packageDc.Measurements.Weight.Value.HasValue && args.DefaultWeight.HasValue)
+                {
+                    packageDc.Measurements.Weight = new Core.Api.Contracts.Measurement {
+                        Unit = "lbs",
+                        Value = args.DefaultWeight
+                    };
+
+                    hasChanged = true;
+                }
+
+                if (String.IsNullOrEmpty(packageDc.PackagingType) && !String.IsNullOrEmpty(args.DefaultPackagingType))
+                {
+                    packageDc.PackagingType = args.DefaultPackagingType;
+                    hasChanged = true;
+                }
+
+                if (hasChanged)
+                {
+                    await _orderWebApiClient.UpdatePackage(args.OrderId, packageDc.Id, packageDc);
+                }
+            }
 
             var unshippedPackageIds = dcPackages.Where(p => String.IsNullOrEmpty(p.ShipmentId)).Select(p => p.Id).ToList();
             if (unshippedPackageIds.Count == 0)

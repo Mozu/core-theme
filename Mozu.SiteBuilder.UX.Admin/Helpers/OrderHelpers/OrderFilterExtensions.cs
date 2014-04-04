@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
         public static string ToFilterString(this FilterCollection extFilter, bool? withVariations = null)
         {
             if (extFilter == null || extFilter.Count == 0)
-                return "Status ne \"Created\"";
+                return "Status ne Pending and Status ne Abandoned";
 
             // TODO: If the filter needs to include products with variations, do something with 'withVariations'
             // Note: this could change, we're waiting on changes to be applied from the services team and/or Britt G.
@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
             IEnumerable<string> stateMents = extFilter.Where(x => x.property != "all").Select(GetFilter).Where(x => !string.IsNullOrWhiteSpace(x));
             if (!extFilter.Any(x => string.Equals(x.property, "status", StringComparison.OrdinalIgnoreCase)))
             {
-                stateMents = stateMents.Concat(new[] {"Status ne \"Created\""});
+                stateMents = stateMents.Concat(new[] { "Status ne Pending  and Status ne Abandoned" });
             }
             return string.Join(" and ", stateMents);
         }
@@ -78,10 +78,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                 case "modifiedby":
                     return string.Format("(updateby eq {0} or createby eq {0})", filter.value);
                 case "modifiedfrom":
-                    return string.Format("updatedate gt {0}", filter.value);
+                    return string.Format("updatedate gt {0}", ((DateTime)filter.value).ToUniversalTime().ToString("s") + "Z");
                     case "modifiedto":
-                    return string.Format("updatedate lt {0}", filter.value);
-
+                    return string.Format("updatedate lt {0}", ((DateTime)filter.value).ToUniversalTime().ToString("s") + "Z");
                 case "orderstatus":
                     if (filter.value.ToString().ToLower() == "open")
                     {
