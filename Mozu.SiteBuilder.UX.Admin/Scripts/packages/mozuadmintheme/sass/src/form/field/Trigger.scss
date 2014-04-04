@@ -13,6 +13,12 @@
 
 .#{$prefix}form-arrow-trigger {
     @include icon-font($glyph-arrowdown);
+
+    &::after {
+        height: 22px;
+        padding-top: 6px;
+        width: 21px;
+    }
 }
 
 .#{$prefix}form-date-trigger {
