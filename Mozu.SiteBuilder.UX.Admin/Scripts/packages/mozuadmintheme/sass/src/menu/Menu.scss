@@ -28,6 +28,11 @@
 
 .#{$prefix}menu-item-icon {
     top: 0px;
+
+    &.#{$prefix}menu-item-checkbox {
+        height: 15px;
+        width: 17px;
+    }
 }
 
 .#{$prefix}menu-item-arrow {
@@ -44,6 +49,11 @@
         border: 0px none;
         margin: 0px;
         @include border-radius(0px);
+    }
+
+    .#{$prefix}menu-item-icon {
+        left: 3px;
+        top: 0px;
     }
 
     .#{$prefix}menu-item-text {

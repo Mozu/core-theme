@@ -32,10 +32,13 @@ Ext.define('Taco.view.order.Index', {
    
 
     gridPanelConf: {
+        stateful: true,
+        stateId: 'statefulOrderGrid',
         columns: [{
             dataIndex: 'orderNumber',
             text: 'Order Number',
             flex: 1,
+            minWidth: 100,
             width: 100
         }, {
             dataIndex: 'createDate',
@@ -61,6 +64,7 @@ Ext.define('Taco.view.order.Index', {
             dataIndex: 'billingContact',
             text: 'Last Name',
             flex: 1,
+            minWidth: 120,
             width: 120,
             getSortParam: function () {
                 return 'billingContact.lastName';
@@ -73,27 +77,110 @@ Ext.define('Taco.view.order.Index', {
             text: 'Order Total',
             renderer: 'usMoney',
             flex: 1,
+            minWidth: 100,
             width: 100
         }, {
             dataIndex: 'orderStatus',
             text: 'Order Status',
             flex: 1,
+            minWidth: 100,
             width: 100
         }, {
             dataIndex: 'paymentStatus',
             text: 'Payment Status',
             flex: 1,
-            width: 120
+            minWidth: 100,
+            width: 100
         }, {
             dataIndex: 'fulfillmentStatus',
             text: 'Fulfillment Status',
             flex: 1,
-            width: 120
+            minWidth: 100,
+            width: 100
         }, {
             text: 'Channel',
             dataIndex:"channelName",
             flex: 1,
+            minWidth: 100,
             width: 100
+        }, {
+            text: 'Customer Email',
+            dataIndex: 'billingContact',
+            flex: 1,
+            minWidth: 160,
+            width: 260,
+            hidden: true,
+            renderer: function (value, metaData, record) {
+                return value && value.email ? value.email : null;
+            }
+        }, {
+            text: 'Customer State',
+            dataIndex: 'billingContact',
+            flex: 1,
+            minWidth: 100,
+            width: 100,
+            hidden: true,
+            renderer: function (value, metaData, record) {
+                return value && value.stateOrProvince ? value.stateOrProvince : null;
+            }
+        }, {
+            text: 'Payment Type',
+            dataIndex: 'payments',
+            flex: 1,
+            minWidth: 120,
+            width: 120,
+            hidden: true,
+            renderer: function (value, metaData, record) {
+                return Ext.isArray(value) ? Ext.Array.unique(Ext.Array.pluck(value, 'paymentType')).join(', ') : null;
+            }
+        }, {
+            text: 'Amount Received',
+            dataIndex: 'authorizationInfo',
+            flex: 1,
+            minWidth: 120,
+            width: 120,
+            hidden: true,
+            renderer: function (value, metaData, record) {
+                return Ext.util.Format.usMoney(value.amountCollected);
+            }
+        }, {
+            text: 'Remaining Amount',
+            dataIndex: 'authorizationInfo',
+            flex: 1,
+            minWidth: 120,
+            width: 120,
+            hidden: true,
+            renderer: function (value, metaData, record) {
+                return Ext.util.Format.usMoney(value.captureAmount);
+            }
+        }, {
+            text: 'IP Address',
+            dataIndex: 'ipAddress',
+            flex: 1,
+            minWidth: 120,
+            width: 120,
+            hidden: true
+        }, {
+            text: 'Fraud Score',
+            dataIndex: 'attributes',
+            flex: 1,
+            minWidth: 100,
+            width: 100,
+            hidden: true,
+            renderer: function (value, metaData, record) {
+                var attribute = Ext.Array.findBy(value, function (item, index) {
+                    return item.fullyQualifiedName === 'tenant~Kount Fraud Detection Results';
+                }, this);
+                var results = attribute ? attribute.values[0] : '';
+                var start;
+
+                if (attribute) {
+                    start = results.indexOf('FraudScore');
+                    results = Ext.String.splitWords(results.substr(start === -1 ? 0 : start))[1];
+                }
+
+                return results;
+            }
         }, {
             xtype: 'taco.menucolumn',
             text: 'Actions',
