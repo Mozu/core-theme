@@ -331,7 +331,8 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
         
 
         var me =this,
-            shippingMethodCode = (this.shippingMethodField) ? this.shippingMethodField.getValue() : null
+            shippingMethodCode = (this.shippingMethodField) ? this.shippingMethodField.getValue() : null,
+            shippingMethodName = (this.shippingMethodField) ? this.shippingMethodField.getDisplayValue() : null;
         
 
         Ext.Ajax.request({
@@ -340,7 +341,8 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
             jsonData: {
                 orderId: this.record.getId(),
                 contact: this.contactData,
-                shippingMethodCode: shippingMethodCode
+                shippingMethodCode: shippingMethodCode,
+                shippingMethodName: shippingMethodName
             },
             success: function (record, operation) {                
                 

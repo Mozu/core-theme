@@ -60,7 +60,7 @@
             return $(this._widgetTpl.join(''))
                 .data('definition', cfg)
                 .find('.mz-cms-icon')
-                    .css('background-image', 'url(' + cfg.icon + ')')
+                    .css('background-image', 'url(\'' + cfg.icon + '\')')
                 .end()
                 .find('.mz-cms-label')
                     .html(cfg.name)

@@ -91,14 +91,17 @@ Ext.define('Taco.view.order.subform.Shipping', {
                 weight: me.record.get("weight"),
 
                 // billing contact info
-                firstName: contact.firstName,
-                lastName: contact.lastName,
-                cityOrTown: contact.cityOrTown,
-                address1: contact.address1,
-                postalOrZipCode: contact.postalOrZipCode,
-                stateOrProvince: contact.stateOrProvince,
-                phoneNumber: contact.phoneNumber,
-                email: contact.email
+                
+                firstName: Ext.util.Format.htmlEncode(contact.firstName),
+                lastName: Ext.util.Format.htmlEncode(contact.lastName),
+                cityOrTown: Ext.util.Format.htmlEncode(contact.cityOrTown),
+                address1: Ext.util.Format.htmlEncode(contact.address1),
+                postalOrZipCode: Ext.util.Format.htmlEncode(contact.postalOrZipCode),
+                stateOrProvince: Ext.util.Format.htmlEncode(contact.stateOrProvince),
+                phoneNumber: Ext.util.Format.htmlEncode(contact.phoneNumber),
+                email: Ext.util.Format.htmlEncode(contact.email)
+
+                
             }
         });
         
@@ -143,15 +146,15 @@ Ext.define('Taco.view.order.subform.Shipping', {
                         trackingNumber: dataItem.trackingNumber,
                         
                         // billing contact info
-                        firstName: contact.firstName,
-                        lastName: contact.lastName,
-                        address1: contact.address1,
                         
-                        cityOrTown: contact.cityOrTown,
-                        postalOrZipCode: contact.postalOrZipCode,
-                        stateOrProvince: contact.stateOrProvince,
-                        phoneNumber: contact.phoneNumber,
-                        email: contact.email
+                        firstName: Ext.util.Format.htmlEncode(contact.firstName),
+                        lastName: Ext.util.Format.htmlEncode(contact.lastName),
+                        cityOrTown: Ext.util.Format.htmlEncode(contact.cityOrTown),
+                        address1: Ext.util.Format.htmlEncode(contact.address1),
+                        postalOrZipCode: Ext.util.Format.htmlEncode(contact.postalOrZipCode),
+                        stateOrProvince: Ext.util.Format.htmlEncode(contact.stateOrProvince),
+                        phoneNumber: Ext.util.Format.htmlEncode(contact.phoneNumber),
+                        email: Ext.util.Format.htmlEncode(contact.email)
                     }
                 })
             );
@@ -231,14 +234,14 @@ Ext.define('Taco.view.order.subform.Shipping', {
                     packagingType : packagingTypeText,
                         
                     // billing contact info
-                    firstName: contact.firstName,
-                    lastName: contact.lastName,
-                    cityOrTown: contact.cityOrTown,
-                    address1: contact.address1,
-                    postalOrZipCode: contact.postalOrZipCode,
-                    stateOrProvince: contact.stateOrProvince,
-                    phoneNumber: contact.phoneNumber,
-                    email: contact.email
+                    firstName: Ext.util.Format.htmlEncode(contact.firstName),
+                    lastName: Ext.util.Format.htmlEncode(contact.lastName),
+                    cityOrTown: Ext.util.Format.htmlEncode(contact.cityOrTown),
+                    address1: Ext.util.Format.htmlEncode(contact.address1),
+                    postalOrZipCode: Ext.util.Format.htmlEncode(contact.postalOrZipCode),
+                    stateOrProvince: Ext.util.Format.htmlEncode(contact.stateOrProvince),
+                    phoneNumber: Ext.util.Format.htmlEncode(contact.phoneNumber),
+                    email: Ext.util.Format.htmlEncode(contact.email)
                 }
             })
             );

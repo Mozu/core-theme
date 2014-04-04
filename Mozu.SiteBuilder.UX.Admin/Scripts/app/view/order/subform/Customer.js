@@ -78,7 +78,7 @@ Ext.define('Taco.view.order.subform.Customer', {
             tpl: [
                 '<tpl if="firstName">',
 
-                    '{firstName} {lastName} {emailAddress}',
+                    '{firstNameSafe} {lastNameSafe} {emailAddressSafe}',
 
                 '<tpl else>',
                     'Select or Create a Customer',

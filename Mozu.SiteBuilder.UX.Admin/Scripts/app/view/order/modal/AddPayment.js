@@ -17,7 +17,9 @@ Ext.define('Taco.view.order.modal.AddPayment', {
     defaultPaymentAmount : null,
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            authorizationInfo = this.record.get('authorizationInfo'),
+            balance = authorizationInfo.captureAmount || 0;
 
         //Ext.define('MyReader', {
         //    extend: 'Ext.data.reader.Json',
@@ -48,7 +50,10 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         //        }
         //    }
         //});
+        
+        
 
+        
         this.form = Ext.create('Taco.core.ux.form.Form', {
             layout: {
                 type: 'vbox'
@@ -141,7 +146,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                 fieldLabel: 'Payment Address',
                 items: [{
                     xtype: 'checkboxfield',
-                    boxLabel: 'Use billing address',
+                    boxLabel: 'Use primary billing address',
                     name: 'sameAsBilling',
                     checked: true,
                     scope: this,
@@ -204,15 +209,18 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     },
                     items: [{
                         xtype: 'textfield',
+                        itemId: 'billingFirstName',
                         name: 'firstName',
                         fieldLabel: 'First Name'
                     }, {
                         xtype: 'textfield',
                         name: 'middleName',
+                        itemId: 'billingMiddleName',
                         fieldLabel: 'Middle Name'
                     }, {
                         xtype: 'textfield',
                         name: 'lastName',
+                        itemId: 'billingLastName',
                         fieldLabel: 'Last Name',
                         margin: '0 0 0 0'
                     }]
@@ -228,10 +236,12 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     items: [{
                         xtype: 'textfield',
                         name: 'address1',
+                        itemId: 'billingAddress1',
                         fieldLabel: 'Address 1'
                     }, {
                         xtype: 'textfield',
                         name: 'address2',
+                        itemId: 'billingAddress2',
                         fieldLabel: 'Address 2',
                         margin: '0 0 0 0'
                     }]
@@ -247,10 +257,12 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     items: [{
                         xtype: 'textfield',
                         name: 'address3',
+                        itemId: 'billingAddress3',
                         fieldLabel: 'Address 3'
                     }, {
                         xtype: 'textfield',
                         name: 'address4',
+                        itemId: 'billingAddress4',
                         fieldLabel: 'Address 4',
                         margin: '0 0 0 0'
                     }]
@@ -266,18 +278,22 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     items: [{
                         xtype: 'textfield',
                         name: 'cityOrTown',
+                        itemId: 'billingCityOrTown',
                         fieldLabel: 'City'
                     }, {
                         xtype: 'textfield',
                         name: 'stateOrProvince',
+                        itemId: 'billingStateOrProvince',
                         fieldLabel: 'State'
                     }, {
                         xtype: 'textfield',
                         name: 'postalOrZipCode',
+                        itemId: 'billingPostalOrZipCode',
                         fieldLabel: 'ZIP Code'
                     }, {
                         xtype: 'textfield',
                         name: 'countryCode',
+                        itemId: 'billingCountryCode',
                         fieldLabel: 'Country',
                         margin: '0 0 0 0'
                     }]
@@ -293,18 +309,22 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     items: [{
                         xtype: 'textfield',
                         name: 'email',
+                        itemId: 'billingEmail',
                         fieldLabel: 'Email'
                     }, {
                         xtype: 'textfield',
                         name: 'homePhone',
+                        itemId: 'billingHomePhone',
                         fieldLabel: 'Home Phone'
                     }, {
                         xtype: 'textfield',
                         name: 'workPhone',
+                        itemId: 'billingWorkPhone',
                         fieldLabel: 'Work Phone'
                     }, {
                         xtype: 'textfield',
                         name: 'mobilePhone',
+                        itemId: 'billingMobilePhone',
                         fieldLabel: 'Mobile Phone',
                         margin: '0 0 0 0'
                     }]
@@ -324,6 +344,8 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                 fn: 'save'
             }
         });
+
+        this.copyBillingInfo();
     },
 
     primaryHandler: function () {
@@ -411,7 +433,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
                     me.setLoading(true,me.body);
                     
-                    
+                                
 
                                 
                         order.addPayment({
@@ -513,9 +535,38 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
         extraInfo[isChecked ? 'hide' : 'show']();
 
-        var billingContactInfo = this.down('#billingContactInfo');
+        this.copyBillingInfo();
+    },
 
-        billingContactInfo.setVisible(isChecked);
+    copyBillingInfo: function() {
+        var isChecked = this.getForm().findField('sameAsBilling').getValue(),
+            billingContact = this.record.get('billingContact'),
+            fields = [
+                'firstName',
+                'fiddleName',
+                'lastName',
+                'address1',
+                'address2',
+                'address3',
+                'address4',
+                'cityOrTown',
+                'stateOrProvince',
+                'postalOrZipCode',
+                'countryCode',
+                'email',
+                'homePhone',
+                'workPhone',
+                'mobilePhone'
+            ];
+
+        Ext.each(fields, function(fieldName) {
+            var field = this.getForm().findField(fieldName);
+
+            if (!field) return;
+
+            field.setValue(billingContact[fieldName]);
+        }, this);
+
     }
 },
 /* class definition-time function */

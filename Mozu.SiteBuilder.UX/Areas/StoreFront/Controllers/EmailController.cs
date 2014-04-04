@@ -13,21 +13,18 @@ using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Logging;
 using Mozu.Core.Messaging.Contracts.Notification;
-using Mozu.Customer.Contracts;
+using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
-using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using DC = Mozu.Content.Contracts;
 //using VMOrder = Mozu.SiteBuilder.UX.Models.Checkout.or;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
-using Mozu.Customer.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -87,7 +84,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (Order),
                                                Topic = Topics.OrderShippedTopic
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Mozu.ProductRuntime.Contracts.Product),
+                                               Topic = Topics.InStockNotification
                                            }
+
                                    };
         }
 
@@ -130,6 +133,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 {
                     model = JsonConvert.DeserializeObject<Mozu.CommerceRuntime.Contracts.Returns.Return>(_mockRma);
                 }
+                else if (emailTypeInfo.ModelType == typeof(Mozu.ProductRuntime.Contracts.Product))
+                {
+                    model = JsonConvert.DeserializeObject<Mozu.ProductRuntime.Contracts.Product>(_mockProduct);
+                }
             }
             var site = (await _sitesWebApiClient.GetSite(this.SbApiContext.SiteId)).ReadAsSync();
             HttpResponseMessage res = await Page("email", GetCmsPage(emailTempalte));
@@ -167,6 +174,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
             ViewData["rmaLocation"] = _locationRuntimeWebApiClient.GetDirectShipLocation().Result.ReadAsSync();
 
+            //Conte
             return Request.CreateResponse(HttpStatusCode.OK, View(emailTempalte.Template, model));
         }
 
@@ -353,6 +361,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string ReturnAuthorized = "return.authorized";
             public const string ReturnRejected = "return.rejected";
             public const string ReturnClosed = "return.closed";
+            public const string InStockNotification = "product.instock";
         }
 
         # region Mock Orders
@@ -1462,6 +1471,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     ""validationResults"": [],
     ""version"": ""9""
 }";
+
+        private static string _mockProduct = "{\"ProductCode\":\"test001\",\"ProductSequence\":1,\"ProductUsage\":\"Standard\",\"BundledProducts\":[],\"Content\":{\"ProductName\":\"Test001\",\"ProductFullDescription\":\"asdfasdfasdf\",\"ProductShortDescription\":\"asdfasdfasdfasdfasdf\",\"MetaTagTitle\":\"\",\"MetaTagDescription\":\"\",\"MetaTagKeywords\":\"\",\"SEOFriendlyUrl\":\"\",\"ProductImages\":[]},\"PurchasableState\":{\"IsPurchasable\":true,\"Messages\":[]},\"IsActive\":true,\"PublishState\":\"Live\",\"Price\":{\"Price\":111.0000,\"SalePrice\":110.0000},\"IsTaxable\":true,\"InventoryInfo\":{\"ManageStock\":true,\"OutOfStockBehavior\":\"DisplayMessage\",\"OnlineStockAvailable\":10,\"OnlineLocationCode\":\"homebase\"},\"CreateDate\":\"2013-09-26T18:52:56.1886\",\"Categories\":[{\"CategoryId\":33,\"Content\":{\"CategoryImages\":[],\"Name\":\"Clearance\",\"Description\":\"Clearance for items we couldn't sell.\",\"PageTitle\":\"Clearance\",\"MetaTagTitle\":\"Clearance\",\"MetaTagDescription\":\"Clearance\",\"MetaTagKeywords\":\"KYUPMYECL\",\"Slug\":\"clearance\"},\"ChildrenCategories\":[],\"Sequence\":16}],\"Measurements\":{\"PackageHeight\":{\"Unit\":\"in\",\"Value\":1.000},\"PackageWidth\":{\"Unit\":\"in\",\"Value\":1.000},\"PackageLength\":{\"Unit\":\"in\",\"Value\":1.000},\"PackageWeight\":{\"Unit\":\"lbs\",\"Value\":3.000}},\"Properties\":[{\"AttributeFQN\":\"tenant~availability\",\"IsHidden\":false,\"IsMultiValue\":false,\"AttributeDetail\":{\"ValueType\":\"Predefined\",\"InputType\":\"List\",\"DataType\":\"String\",\"UsageType\":\"Property\",\"DataTypeSequence\":1,\"Name\":\"Availability\"},\"Values\":[{\"Value\":\"24-48hrs\",\"StringValue\":\"Usually Ships in 24 to 48 Hours\"}]}]}";
         #endregion
 
     }

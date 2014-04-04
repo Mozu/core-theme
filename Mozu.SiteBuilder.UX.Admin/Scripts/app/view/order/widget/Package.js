@@ -784,7 +784,9 @@ Ext.define('Taco.view.order.widget.Package', {
                 method: 'POST',
                 jsonData: {
                     orderId: data.orderId,
-                    packageIds: [ data.id ]
+                    packageIds: [ data.id ],
+                    defaultWeight: data.weight,
+                    defaultPackagingType: data.packagingType
                 },
                 success: function (response) {
                     me.setLoading(false);
