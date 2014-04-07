@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
@@ -8,10 +9,12 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using System.Web.Routing;
+using Autofac;
 using Autofac.Integration.WebApi;
 using Mozu.Core.Api;
 using Mozu.Core.Api.ErrorHandler;
 using Mozu.Core.Api.Routing;
+using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
 using Mozu.Provisioning.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
@@ -19,6 +22,7 @@ using Mozu.SiteBuilder.Mvc.Logging;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.Mvc.Users;
+using Mozu.SiteBuilder.UX.Admin.Api.ErrorHandlers;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers;
 using Mozu.SiteBuilder.UX.Admin.MessageHandlers;
@@ -33,6 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             
             base.AddMessageHandlers(httpConfiguration);
 
+            //todo: replace per Wayne - Greg Murray on 2014-04-04 
             httpConfiguration.MessageHandlers.Insert( 0,new HttpContextInjectingMessageHandler());
 
             httpConfiguration.MessageHandlers.Add(new AuthRedirectMessageHandler());
@@ -82,18 +87,40 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
         {
             base.InitializeContainerFactory(containerFactory);
             containerFactory
-                .UsingAssembly(Assembly.Load("Mozu.Core.Api"))
+                //.UsingAssembly(Assembly.Load("Mozu.Core.Api")) //per Wayne not needed.
                 .UsingAssembly(typeof(ISitesWebApiClient).Assembly)
                 .UsingAssembly(typeof(IPermissionsRepository).Assembly)
-                .UsingAssembly(Assembly.Load("Mozu.SiteBuilder.Mvc"))
+                .UsingAssembly(Assembly.Load("Mozu.SiteBuilder.Mvc")) //typeof preferred
                 .UsingAssembly(Assembly.GetExecutingAssembly())
               
                 ;
-            
+
+
+            //SubstituteAggregationExceptionResponseBuilder(containerFactory);
+
            // containerFactory.ShowDebugOutput(true);
            
 
         }
+
+        //todo: Can enable in R5. - Greg Murray on 2014-04-07 
+        //private void SubstituteAggregationExceptionResponseBuilder(AutofacContainerFactory containerFactory)
+        //{
+        //    containerFactory.UsingBuildAction(builder =>
+        //    {
+        //        var myBuilders = new List<IExceptionResponseBuilder>();
+        //        foreach (var exceptionResponseBuilder in ExceptionResponseBuilderCollection.GetDefaultBuilders())
+        //        {
+        //            myBuilders.Add(exceptionResponseBuilder.GetType() == typeof (AggregateExceptionResponseBuilder)
+        //                ? new FriendlyAggregateExceptionResponseBuilder()
+        //                : exceptionResponseBuilder);
+        //        }
+        //        builder.Register(c => new ExceptionResponseBuilderCollection(myBuilders))
+        //            .As<IExceptionResponseBuilderCollection>()
+        //            .SingleInstance();
+        //    });
+        //}
+
         protected override void InitializeLoggingServiceFactory(System.Web.Http.HttpConfiguration configuration)
         {
             base.InitializeLoggingServiceFactory(configuration);
