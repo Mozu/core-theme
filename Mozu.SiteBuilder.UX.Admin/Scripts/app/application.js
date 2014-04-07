@@ -483,6 +483,8 @@ Ext.define('Taco.Application', {
         // console.log('launching');
         Ext.onReady(this.doTheNeedful, this, false);
 
+        Ext.state.Manager.setProvider(new Ext.state.LocalStorageProvider({ prefix: 'mozu-' }));
+
         // console.log('launched');
     },
     initViewPort: function () {
