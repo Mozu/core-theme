@@ -35,21 +35,22 @@ Ext.define('Taco.view.order.Index', {
         stateful: true,
         stateId: 'statefulOrderGrid',
         columns: [{
+            stateId: 'orderNumber',
             dataIndex: 'orderNumber',
             text: 'Order Number',
             flex: 1,
             minWidth: 100,
             width: 100
         }, {
+            stateId: 'createDate',
             dataIndex: 'createDate',
             text: 'Order Date',
             flex: 1,
             minWidth: 180,
             xtype: 'datecolumn',
             format: 'M d Y g:ia'
-            //resizable: false,
-           
         }, {
+            stateId: 'firstName',
             dataIndex: 'billingContact',
             text: 'First Name',
             flex: 1,
@@ -61,6 +62,7 @@ Ext.define('Taco.view.order.Index', {
                 return Ext.util.Format.htmlEncode(value.firstName);
             }
         }, {
+            stateId: 'lastName',
             dataIndex: 'billingContact',
             text: 'Last Name',
             flex: 1,
@@ -73,6 +75,7 @@ Ext.define('Taco.view.order.Index', {
                 return Ext.util.Format.htmlEncode(value.lastName);
             }
         }, {
+            stateId: 'orderTotal',
             dataIndex: 'total',
             text: 'Order Total',
             renderer: 'usMoney',
@@ -80,30 +83,35 @@ Ext.define('Taco.view.order.Index', {
             minWidth: 100,
             width: 100
         }, {
+            stateId: 'orderStatus',
             dataIndex: 'orderStatus',
             text: 'Order Status',
             flex: 1,
             minWidth: 100,
             width: 100
         }, {
+            stateId: 'paymentStatus',
             dataIndex: 'paymentStatus',
             text: 'Payment Status',
             flex: 1,
             minWidth: 100,
             width: 100
         }, {
+            stateId: 'fulfillmentStatus',
             dataIndex: 'fulfillmentStatus',
             text: 'Fulfillment Status',
             flex: 1,
             minWidth: 100,
             width: 100
         }, {
+            stateId: 'channelName',
             text: 'Channel',
             dataIndex:"channelName",
             flex: 1,
             minWidth: 100,
             width: 100
         }, {
+            stateId: 'customerEmail',
             text: 'Customer Email',
             dataIndex: 'billingContact',
             flex: 1,
@@ -114,6 +122,7 @@ Ext.define('Taco.view.order.Index', {
                 return value && value.email ? value.email : null;
             }
         }, {
+            stateId: 'customerState',
             text: 'Customer State',
             dataIndex: 'billingContact',
             flex: 1,
@@ -124,6 +133,7 @@ Ext.define('Taco.view.order.Index', {
                 return value && value.stateOrProvince ? value.stateOrProvince : null;
             }
         }, {
+            stateId: 'paymentType',
             text: 'Payment Type',
             dataIndex: 'payments',
             flex: 1,
@@ -134,6 +144,7 @@ Ext.define('Taco.view.order.Index', {
                 return Ext.isArray(value) ? Ext.Array.unique(Ext.Array.pluck(value, 'paymentType')).join(', ') : null;
             }
         }, {
+            stateId: 'amountReceived',
             text: 'Amount Received',
             dataIndex: 'authorizationInfo',
             flex: 1,
@@ -144,6 +155,7 @@ Ext.define('Taco.view.order.Index', {
                 return Ext.util.Format.usMoney(value.amountCollected);
             }
         }, {
+            stateId: 'remainingAmount',
             text: 'Remaining Amount',
             dataIndex: 'authorizationInfo',
             flex: 1,
@@ -154,6 +166,7 @@ Ext.define('Taco.view.order.Index', {
                 return Ext.util.Format.usMoney(value.captureAmount);
             }
         }, {
+            stateId: 'ipAddress',
             text: 'IP Address',
             dataIndex: 'ipAddress',
             flex: 1,
@@ -161,6 +174,7 @@ Ext.define('Taco.view.order.Index', {
             width: 120,
             hidden: true
         }, {
+            stateId: 'fraudScore',
             text: 'Fraud Score',
             dataIndex: 'attributes',
             flex: 1,
@@ -182,6 +196,7 @@ Ext.define('Taco.view.order.Index', {
                 return results;
             }
         }, {
+            stateId: 'actions',
             xtype: 'taco.menucolumn',
             text: 'Actions',
             menuItems: [
