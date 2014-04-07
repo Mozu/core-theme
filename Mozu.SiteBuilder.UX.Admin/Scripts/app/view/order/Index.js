@@ -199,7 +199,7 @@ Ext.define('Taco.view.order.Index', {
                     page.launchEditor(record, metaData);
 
                 }
-            },
+            }, 
                 {
                     text: 'Capture Payment',
                     itemId: 'capturePaymentAction',
@@ -209,10 +209,11 @@ Ext.define('Taco.view.order.Index', {
                           
                             grid = eventData.grid,
                             index = eventData.rowIndex,
+                            amount = record.get('total')  -   (((record.get('authorizationInfo')|| {}).amountCollected) || 0),
                             data = {
                                 orderId: record.getId(),
                                 paymentId: record.payments().getAt(0).getId(),
-                                amount: record.get('total')  //todo:is this safe.. check collected?
+                                amount: amount
                             },
                             ajaxConfig = {
                                 jsonData: data,
