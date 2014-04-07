@@ -38,6 +38,12 @@ Ext.define('Taco.model.OrderItemDiscount', {
         {
             "name": "isActive",
             "type": "boolean"
+        },
+        {
+            "name": "appliesToSalePrice",
+            "type": "boolean",
+            useNull: true,
+            defaultValue: null
         }
     ],
 

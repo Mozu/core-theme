@@ -115,6 +115,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ProductLossTaxTotal, op => op.Ignore())
                 .ForMember(dc => dc.ShippingLossTaxTotal, op => op.Ignore())
                 .ForMember(dc => dc.ChannelCode, op => op.Ignore())
+                .ForMember(dc => dc.ChangeMessages, op => op.Ignore())
                   ;
 
             Mapper.CreateMap<ReturnItem, ReturnsDC.ReturnItem>()

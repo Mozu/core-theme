@@ -106,6 +106,12 @@ Ext.define('Taco.model.Discount', {
             defaultValue: null
         },
         {
+            name: 'maximumUsesPerUser',
+            type: 'int',
+            useNull: true,
+            defaultValue: null
+        },
+        {
             name: 'minimumLifetimeValueAmount',
             type: 'int',
             useNull: true
