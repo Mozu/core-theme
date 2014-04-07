@@ -9,5 +9,9 @@ Ext.define('Taco.controller.Roles', {
     views: ['role.Index'],
     stores: ['Taco.store.Roles'],
     requires:['Taco.view.role.Edit'],
-    modelName: 'Role'
+    modelName: 'Role',
+
+    editorView: 'Taco.view.role.Edit',
+
+    
 });

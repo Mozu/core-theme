@@ -15,6 +15,7 @@ Ext.define('Taco.core.data.StoreManager', {
         me.mixins.observable.constructor.call(me, config);
         me.callParent(arguments);
         me.on('afterproxyrequest', me.afterProxyRequest, me);
+       
     },
 
     getOrCreate: function (config, contextSuffix) {
@@ -128,7 +129,12 @@ Ext.define('Taco.core.data.StoreManager', {
             }, me);
         }
     },
-
+    onAjaxRequestComplete:function (conn, response, options, eOpts) {
+        if (!options || !options.method || !options.url) {
+            return;
+        }
+     
+    },
     afterProxyRequest: function (request, success, model) {
         var me = this,
             invalidStores = [];

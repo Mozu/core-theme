@@ -30,7 +30,7 @@ Ext.define('Taco.view.settings.shipping.Form', {
             data: [me.shippingFrom, me.methodsAndRates, me.shippingPreferences]
         });
 
-        me.record.on('afteredit', Ext.emptyFn, me); // used to check savable state here
+        me.mon(me.record,'afteredit', Ext.emptyFn, me); // used to check savable state here
         
         me.items = [
             me.shippingFrom,

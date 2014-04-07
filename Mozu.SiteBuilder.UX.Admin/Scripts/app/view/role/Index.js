@@ -4,9 +4,12 @@
  */
 
 Ext.define('Taco.view.role.Index', {
-    extend: 'Taco.core.ux.content.Container',
+    extend: 'Taco.core.ux.browser.BrowserPage',
     requires: ['Taco.model.Role', 'Taco.store.Roles'],
 
+    modelName: 'Taco.model.Role',
+    store: { type: 'Taco.store.Roles' },
+    editorName: 'Taco.view.role.Edit',
     initComponent: function () {
         this.header = {
             title: 'Roles'
@@ -18,125 +21,50 @@ Ext.define('Taco.view.role.Index', {
             });
         }
 
-        this.grid = Ext.create('Taco.core.ux.BaseGrid', {
-            store: this.store,
+        this.gridPanelConf = {
+         //   store: this.store,
             listeners: {
-                itemclick: this.onItemClick,
+               // itemclick: this.onItemClick,
                 deleterole: this.onDeleteRole,
                 scope: this
             },
             layout: 'fit',
-            columns: [{
-                xtype: 'gridcolumn',
-                dataIndex: 'name',
-                text: 'Name',
-                flex: 1,
-                renderer: function (value, metaData, record) {
+            columns: [
+                {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'name',
+                    text: 'Name',
+                    flex: 1,
+                    renderer: function (value, metaData, record) {
 
-                    if (record.get('isEditable')) {
-                        return '<a href="#" class="taco-launch-editor">' + value + '</a>';
-                    } else {
-                        return value;
+                        if (record.get('isEditable')) {
+                            return '<a href="#" class="taco-launch-editor">' + value + '</a>';
+                        } else {
+                            return value;
+                        }
                     }
                 }
-            }],
-            actions: [{
-                tooltip: 'Delete',
-                iconCls: 'taco-action-delete',
-                eventName: 'deleterole'
-            }]
-
-        });
-        
-        this.body = {
-            layout: {
-                type: 'vbox',
-                align: 'stretch'
-            },
-            items: [
-                this.grid
+            ],
+            actions: [
+                {
+                    tooltip: 'Delete',
+                    iconCls: 'taco-action-delete',
+                    eventName: 'deleterole'
+                }
             ]
-        };
 
-        this.header = {
-            title: 'Roles',
-            actions:  [{
-                xtype: 'primarybutton',
-                text: 'Create New Role',
-                click: function () {
-                    var record = new Taco.model.Role();
-                    record.set('roledId', null);
-                    this.launchEditor(record);
-                    Taco.app.StateManager.addState('roles/create');
-                },
-                scope: this
-            }]
         };
+        
+       
 
         this.callParent(arguments);
 
-        this.store.load();
+       // this.store.load();
 
-        this.on({
-            afterrender: function () {
-                if (this.record) {
-                    this.launchLoadedEditor(this.record);
-                }
-            },
-            scope: this
-        });
+       
     },
 
-    addState: function (record) {
-        var token = 'roles/edit/';
-
-        if (!record || record.phantom) {
-            token = 'roles/create';
-        } else if (record.getId) {
-            token += record.getId();
-        }
-        Taco.app.StateManager.addState(token);
-    },
-
-    launchEditor: function (record) {
-        this.launchLoadedEditor(record);
-    },
-
-    launchLoadedEditor: function (record, formCfg) {
-        var store = this.store,
-            editorView;
-
-        editorView = Ext.create('Taco.view.role.Edit', {
-            logicalParent: this,
-            formCfg: formCfg,
-            listeners: {
-                cancel: function () { 
-                    Taco.core.StateManager.attemptNavigate('roles');
-                },
-                aftersave: function (editor, record, isEdit) {
-                    
-                    if (!isEdit) {
-                        store.add(record);
-                    }
-                   
-                    Taco.core.StateManager.attemptNavigate('roles');
-                }
-            },
-            record: record
-        });
-
-        Taco.app.contentView.add(editorView);
-    },
-
-    onItemClick: function (view, record, item, index, e, eOpts) {
-        if (e.target.className !== 'taco-launch-editor') {
-            return;
-        }
-
-        e.preventDefault();
-        this.addState(record);
-        this.launchEditor(record);
-    },
+   
 
     onDeleteRole: function (view, index, idx, action, e, record) {
         Ext.create('Taco.core.ux.modal.Confirmation', {
@@ -151,6 +79,6 @@ Ext.define('Taco.view.role.Index', {
                 },
                 scope: this
             }
-        })
+        });
     }
 });

@@ -27,7 +27,7 @@ Ext.define('Taco.view.order.subform.Return', {
         this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-returns'].join(' ');
 
         // after the record is reloaded we will need to refresh the ui
-        me.record.on("aftercommit", function () {
+        this.mon( me.record, "aftercommit", function () {
             me.onOrderChange();
         }, this);
         

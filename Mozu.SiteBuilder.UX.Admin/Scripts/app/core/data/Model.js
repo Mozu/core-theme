@@ -43,7 +43,48 @@ Ext.define('Taco.core.data.Model', {
 
         allowRead: function () {
             return this.allowMethod('read');
+        },
+
+        load: function (id, config) {
+            config = Ext.apply({}, config);
+            config = Ext.applyIf(config, {
+                action: 'read',
+                id: id
+            });
+
+            var operation = new Ext.data.Operation(config),
+                scope = config.scope || this,
+                callback;
+
+            callback = function (operation) {
+                var record = null,
+                    records= null,
+                    success = operation.wasSuccessful();
+
+                if (success) {
+                    records = operation.getRecords();
+                    if (records.length > 1) {
+                        record = Ext.Array.findBy(records, function (item) { return item.getId() == id; });
+                    }
+                    if (!record) {
+                        record = operation.getRecords()[0];
+                    }
+                    
+                    // If the server didn't set the id, do it here
+                    if (!record.hasId()) {
+                        record.setId(id);
+                    }
+                    Ext.callback(config.success, scope, [record, operation]);
+                } else {
+                    Ext.callback(config.failure, scope, [record, operation]);
+                }
+                Ext.callback(config.callback, scope, [record, operation, success]);
+            };
+
+            this.getProxy().read(operation, callback, this);
         }
+
+
     },
 
     isEqual: function (a, b) {
@@ -262,18 +303,36 @@ Ext.define('Taco.core.data.Model', {
         this.commit();
 
     },
-    reload: function () {
-        var me = this;
-        me.fireEvent("reload", me);
-        
-        this.self.load(me.getId(), {
-            bypassCache: true,
-            success: function (record, operation) {
+    reload: function (config) {
+        var me = this,
+            config = config|| {},
+            loadConfig = Ext.applyIf(
+             {
+                 bypassCache: true,
+                 success: function (record) {
+                     
 
-                me.copyFrom(record);
-                me.commit();
-            }
-        });
+                     if (record.getId() == me.getId()) {
+                         me.copyFrom(record);
+                         me.commit();
+                     }
+                         
+                     if (config.success) {
+                         Ext.callback(config.success, config.scope, arguments );
+                     }
+                     me.fireEvent("reload", me);
+                 }
+             },
+             config
+            );
+
+        
+
+      
+        //tbd: remove this
+        
+
+        this.self.load(me.getId(), loadConfig);
     },
 
 

@@ -40,7 +40,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
                 
 
         // after the record is reloaded we will need to refresh the ui
-        this.record.on("aftercommit", function () {
+        this.mon(this.record,"aftercommit", function () {
             this.onRecordChange();
         }, this);
 

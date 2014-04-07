@@ -47,7 +47,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-payment'].join(' ');
 
         // after the record is reloaded we will need to refresh the ui
-        this.record.on("aftercommit", function () {
+        this.mon( this.record,"aftercommit", function () {
             this.onRecordChange();
         }, this);
         
