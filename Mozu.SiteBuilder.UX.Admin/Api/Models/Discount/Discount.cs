@@ -118,6 +118,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         
         public int? CurrentRedemptionCount { get; set; }
 
+        public int? MaximumUsesPerUser { get; set; }
+
         public bool RequiresCoupon { get; set; }
 
         public string CouponCode { get; set; }

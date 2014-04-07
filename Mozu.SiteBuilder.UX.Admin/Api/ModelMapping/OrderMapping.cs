@@ -638,6 +638,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //ignores
                 .ForMember(dc => dc.FulfillmentDate, op => op.Ignore())
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
+                .ForMember(dc => dc.ChangeMessages, op => op.Ignore())
                 ;
         }
 
