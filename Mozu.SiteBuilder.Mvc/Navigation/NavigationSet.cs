@@ -54,6 +54,12 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     writer.WriteNull();
                     return;
                 }
+                if (set.Count == 0)
+                {
+                    writer.WriteStartArray();
+                    writer.WriteEndArray();
+                    return;
+                }
                 var j = new Newtonsoft.Json.Linq.JObject();
                 j["nodes"] = Newtonsoft.Json.Linq.JArray.FromObject(set);
                 j.WriteTo(writer);
