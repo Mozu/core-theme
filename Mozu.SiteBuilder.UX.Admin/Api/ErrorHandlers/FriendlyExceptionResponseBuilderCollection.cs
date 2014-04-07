@@ -8,6 +8,7 @@ using Mozu.Core.Settings;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ErrorHandlers
 {
+    //todo: eventually remove in R5 once Wayne makes GetDefaults public - Greg Murray on 2014-04-04 
     public class FriendlyExceptionResponseBuilderCollection : IExceptionResponseBuilderCollection
     {
         private readonly List<IExceptionResponseBuilder> _builders = new List<IExceptionResponseBuilder>();

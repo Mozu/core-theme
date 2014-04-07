@@ -105,6 +105,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
             builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", ApplicationConstants.APPLICATION_NAME).InstancePerLifetimeScope();
 
+            //todo: remove once core updated.
+            //remove web.config setting.
             builder.RegisterType<FriendlyExceptionResponseBuilderCollection>()
                 .As<IExceptionResponseBuilderCollection>()
                 .WithParameter("settings", MozuConfigurationManager.Settings)
