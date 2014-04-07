@@ -36,26 +36,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
 
             switch (item.property.ToLowerInvariant())
             {
-                case "orderid":
-                    return ORDER_NUMBER_PROPERTY;
-                case "ordernumber":
-                    return ORDER_NUMBER_PROPERTY;
-                case "billingcontact.firstname":
-                    return FIRST_NAME_PROPERTY;
-                case "billingcontact.lastname":
-                    return LAST_NAME_PROPERTY;
-                case "total":
-                    return TOTAL_PROPERTY;
-                case "orderstatus":
-                    return ORDER_STATUS_PROPERTY;
-                case "shippingstatus":
-                    return SHIPPING_STATUS_PROPERTY;
-
-
-                case "createdate":
-                    return CREATE_DATE_PROPERTY;
+             
                 default:
-                    throw new InvalidOperationException("unknown sort.property " + item.property);
+                   return item.property.ToLowerInvariant();
             }
         }
     }

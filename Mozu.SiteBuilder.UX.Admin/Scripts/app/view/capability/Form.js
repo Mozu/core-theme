@@ -14,7 +14,7 @@ Ext.define('Taco.view.capability.Form', {
         this.title = this.record.get('applicationName');
         this.buildFormComponents();
 
-        this.record.on("aftercommit", function () {
+        this.mon(this.record,"aftercommit", function () {
             this.updateForm();
         }, this);
 

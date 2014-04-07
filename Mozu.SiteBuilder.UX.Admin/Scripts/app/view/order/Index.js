@@ -199,7 +199,45 @@ Ext.define('Taco.view.order.Index', {
                     page.launchEditor(record, metaData);
 
                 }
-            }, {
+            },
+                {
+                    text: 'Capture Payment',
+                    itemId: 'capturePaymentAction',
+                    menuColumnHandler: function (item, eventData) {
+                        var me = this,
+                            record = eventData.record,
+                          
+                            grid = eventData.grid,
+                            index = eventData.rowIndex,
+                            data = {
+                                orderId: record.getId(),
+                                paymentId: record.payments().getAt(0).getId(),
+                                amount: record.get('total')  //todo:is this safe.. check collected?
+                            },
+                            ajaxConfig = {
+                                jsonData: data,
+                                success: function (response) {
+                                    var json = Ext.decode(response.responseText, true);
+
+                                    if (!json || !json.success) {
+                                        Taco.app.fireEvent('setmessage', 'issue capturing payment on order# <a href="#" onclick="Taco.core.StateManager.attemptNavigate(\'/admin/orders/edit/' + record.getId() + '\')">' + record.get('orderNumber') + '</a>', 'error');
+                                    }
+                                   
+                                    record.reload();
+                                },
+                                failure: function () {
+                                    Taco.app.fireEvent('setmessage', 'issue capturing payment on order# <a href="#" onclick="Taco.core.StateManager.attemptNavigate(\'/admin/orders/edit/' + record.getId() + '\')">' + record.get('orderNumber') + '</a>', 'error');
+                                },
+                                scope: this
+                            };
+
+                        record.capturePayment(ajaxConfig);
+
+
+                    }
+                }
+            ,
+            {
                 text: 'Cancel Order',
                 itemId: "cancelAction",
                 menuColumnHandler: function (item, eventData) {
@@ -273,9 +311,15 @@ Ext.define('Taco.view.order.Index', {
                     record = eventData.record,
                     availableActions = record.get("availableActions"),
                     canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
-                    cancelAction = menu.items.get('cancelAction');
+                    cancelAction = menu.items.get('cancelAction'),
+                    capturePaymentAction = menu.items.get('capturePaymentAction'),
+                    canCapture = record.payments().getCount() == 1 && (record.payments().getAt(0).get('availableActions') || []).indexOf('CapturePayment') > -1;
+
+                /*    Order only has a single payment transaction
+                Order Payment transaction is in “Authorized State”*/
 
                 cancelAction.setDisabled(!canCancel);
+                capturePaymentAction.setDisabled(!canCapture);
             }
         }]
 

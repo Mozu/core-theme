@@ -470,7 +470,7 @@ Ext.define('Taco.Application', {
             if (this.shouldShowLoadmask) {
                 this.viewPort.setLoading(config);
             }
-        }, 500, this);
+        }, 200, this);
 
     },
 

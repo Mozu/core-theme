@@ -19,6 +19,7 @@ Ext.define('Taco.model.Order', {
         cancel: 78,
         applypayment: 79
     },
+    
     requiredStores: [
         'Taco.store.ShippingMethods',
         'Taco.store.Channels'        
@@ -2093,4 +2094,8 @@ Ext.define('Taco.model.Order', {
         });
         Ext.Ajax.request(config);
     }
+}, function () {
+
+    console.log(arguments, "orderz", Taco.model.Order);
+   
 });

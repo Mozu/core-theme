@@ -60,7 +60,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
 
      
 
-        me.record.on('aftercommit', function () {
+        me.mon(me.record,'aftercommit', function () {
             me.initReturnActions();
             me.status.update(me.record.data);
             me.setEditablity();

@@ -45,14 +45,21 @@ Ext.define('Taco.view.order.Form', {
         var me = this;
 
         // after the record is reloaded we will need to refresh the ui
-        me.record.on("aftercommit", function () {
+        me.mon(me.record, 'aftercommit', function () {
             me.onRecordChange();
-        }, this);
+        }, me);
         
-        // after the record is reloaded we will need to refresh the ui
+
+        /* 
+           !!!this is redundant commit fires during reload!!!
+        
+         after the record is reloaded we will need to refresh the ui
         me.record.on("reload", function () {            
             me.onBeforeReload();
         }, this);
+
+        */
+
         
         this.customer = {};
         // todo: get the customer record right away if an id exists;

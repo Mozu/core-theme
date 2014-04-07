@@ -203,7 +203,7 @@ Ext.define('Taco.store.Navigation', {
                     }, {
                         "id": "roles",
                         "label": "Roles",
-                        "address": "account/roles"
+                        "address": "roles"
                     }, {
                         "id": "publishing",
                         "label": "Publishing",

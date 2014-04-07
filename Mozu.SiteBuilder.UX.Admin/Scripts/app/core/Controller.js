@@ -125,15 +125,25 @@ Ext.define('Taco.core.Controller', {
         var record = appState ? appState.record : null,
             options = appState ? appState.options : null;
         if (record) {
-            if (record.dirty) {
-                record.reject();
-            }
-            this.ensureRequiredStores(function () {
-                this.createContentView(this.getEditorView(), {
-                    record: record,
-                    options: options
-                });
+            Taco.app.setLoading();
+            record.reload({
+                success: function () {
+                    Taco.app.setLoading(false);
+
+                    this.ensureRequiredStores(function () {
+                        this.createContentView(this.getEditorView(), {
+                            record: record,
+                            options: options
+                        });
+                    });
+                },
+                failure: function () {
+                    Taco.app.setLoading(false);
+                },
+                scope: this
             });
+
+
         } else {
             Taco.app.setLoading();
             Taco.model[this.modelName].load(id, {
