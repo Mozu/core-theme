@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
@@ -53,6 +54,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             string sort = pagingParams.sort.ToSortString();
 		    string q = extFilter.ToQString();
             int? qLimit = extFilter.SearchType == "global" ? (int?)3 : (int?)null;
+            // if there is a q AND there is no filter, default qLimit to 50.
+            if (String.IsNullOrWhiteSpace(filter) && !String.IsNullOrWhiteSpace(q) && !qLimit.HasValue)
+                qLimit = 50;
+
 
 
             ProductCollection res = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, sortBy: sort, responseGroups: responseGroups, filter: filter, q: q, qLimit: qLimit)).ReadAsSync();
@@ -79,6 +84,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 filter += "and (" + extraFilter + ")";
             }
+            int? qLimit = extFilter.SearchType == "global" ? (int?)null : (int?)null;
+            if (String.IsNullOrWhiteSpace(filter) && !String.IsNullOrWhiteSpace(q) && !qLimit.HasValue)
+                qLimit = 50;
             ProductCollection res = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, responseGroups: responseGroups, filter: filter, q:q )).ReadAsSync();
 
             var mapped = res.Items.Map<List<Product>>();

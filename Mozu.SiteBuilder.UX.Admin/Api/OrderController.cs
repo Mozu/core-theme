@@ -72,6 +72,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var q = extFilter.ToQString();
                 int? qLimit = q == null ?(int?) null : 3;
                 var dcOrders = (await _orderWebApiClient.CloneWithApiContext(x=> x.SiteId = null).GetOrders(startIndex: startIndex, pageSize: pageSize, sortBy: pagingParams.sort.ToSortString(), filter: filter, q: q, qLimit: qLimit)).ReadAsSync();
+                
+                //trim out items for speedyness...
+                dcOrders.Items.ForEach(x=> { x.Items = new List<DCo.OrderItem>();
+                                               x.Packages = null;
+                                               x.ShopperNotes = null;
+                                               x.Pickups = null;
+                                               x.Shipments = null;
+                                               x.ValidationResults = null;
+                   
+                });
                 return List2(Mapper.Map<List<Order>>(dcOrders.Items), (int)dcOrders.TotalCount);
             }
         }
