@@ -411,7 +411,7 @@ Ext.define('Taco.view.product.subform.General', {
                 width: '100%',
                 defaults: {
                     width: 250,
-                    margins: '0 50 0 10'
+                    margin: '0 50 0 0'
                 },
                 items: [
                     this.productCodeField,
@@ -440,21 +440,19 @@ Ext.define('Taco.view.product.subform.General', {
                         ]
                     }
                 ]
-            },
-            {
+            }, {
                 xtype: 'fieldcontainer',
                 layout: 'hbox',
                 width: '100%',
                 defaults: {
                     width: 250,
-                    margins: '0 50 0 10'
+                    margin: '0 50 0 0'
                 },
                 items: [
                     this.productTypeField,
                     this.productUsageField
                 ]
-            },
-            {
+            }, {
                 xtype: 'productoverride',
                 overrideFieldName: 'isContentOverridden',
                 hideOverride: this.isSingleSite,
