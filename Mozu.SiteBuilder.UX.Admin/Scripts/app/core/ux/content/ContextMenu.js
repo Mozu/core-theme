@@ -122,7 +122,7 @@ Ext.define('Taco.core.ux.content.ContextMenu', {
          {
              contentTypes: {
                  t: {
-                     label: 'Eveything'
+                     label: 'Everything'
                  },
                  m: {
                      label: '&nbsp;Master Catalog'
@@ -147,7 +147,7 @@ Ext.define('Taco.core.ux.content.ContextMenu', {
         {
             contentTypes: {
                 t: {
-                    label: 'Eveything'
+                    label: 'Everything'
                 },
                 m: {
                     label: 'Master Catalog'

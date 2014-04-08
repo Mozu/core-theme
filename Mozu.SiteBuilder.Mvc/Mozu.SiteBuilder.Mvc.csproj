@@ -453,6 +453,7 @@
     <Compile Include="ObjectPools\CharBufferPool.cs" />
     <Compile Include="ObjectPools\ObjectPool.cs" />
     <Compile Include="SEO\RedirectRepository.cs" />
+    <Compile Include="SEO\SlugNormalizer.cs" />
     <Compile Include="SiteBuilderApiContextBuilder.cs" />
     <Compile Include="Tags\PreloadJsonTag.cs" />
     <Compile Include="Tags\ParentTag.cs" />
