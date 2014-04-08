@@ -308,9 +308,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             msg = null;
             var requestUrl = this.Request.RequestUri.AbsolutePath;
+            var cleanedRequestUrl = _slugNormalizer.StripUrl(requestUrl);
             var cleanedUrl = _slugNormalizer.StripUrl(url);
-
-            if (!this.SiteContext.IsEditMode && !string.Equals(requestUrl, cleanedUrl, StringComparison.OrdinalIgnoreCase))
+            
+            if (!this.SiteContext.IsEditMode && !string.Equals(cleanedRequestUrl, cleanedUrl, StringComparison.OrdinalIgnoreCase))
             {
                 msg = this.Request.CreateResponse(HttpStatusCode.MovedPermanently);
                 if (!string.IsNullOrEmpty(this.Request.RequestUri.Query))
@@ -318,11 +319,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     var qs = this.Request.GetQueryNameValuePairs().ToArray();
                     if ( ! (qs.Length == 1 &&  qs[0].Key.Equals("productcode", StringComparison.OrdinalIgnoreCase ) ))
                     {
-                        cleanedUrl = cleanedUrl + this.Request.RequestUri.Query;    
+                        url = url + this.Request.RequestUri.Query;    
                     }
                     
                 }
-                msg.Headers.Location = new Uri(cleanedUrl, UriKind.Relative);
+                msg.Headers.Location = new Uri(url, UriKind.Relative);
                 return true;
             }
             return false;

@@ -13,8 +13,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
     {
         //private static Regex _slugRegex = new Regex(@"[^a-zA-Z0-9\.\-/]"); ///%]|(%\d)
 
-        [TestCase("% slash", @"/ac-1%39/p/AC-1", @"/ac-19/p/AC-1")]
-        [TestCase("% and .", @"/ac-1%39.p/AC-1", @"/ac-19.p/AC-1")]
+        [TestCase("% invalid", @"/ac-1%39/p/AC-1", @"/ac-19/p/AC-1")]
+        [TestCase("% space and .", @"/ac-1%209.p/AC-1", @"/ac-19.p/AC-1")]
         [TestCase("space", @"/ac-1%209/p/AC-1", @"/ac-19/p/AC-1")]
         [TestCase("%%%", @"/ac-1%209/p/AC-1%%%", @"/ac-19/p/AC-1")]
         [TestCase("+", @"/ac-1%209/p/AC-1+", @"/ac-19/p/AC-1")]
