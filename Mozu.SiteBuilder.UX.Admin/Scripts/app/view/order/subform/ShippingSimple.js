@@ -104,7 +104,7 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
                 '<tpl for=".">',
                     '<div class="address">',
                         '<tpl if="firstName">',
-                            '<div class="shipToLabel">Ship To:</div>',
+                            '<div class="ship-to-label">Ship To:</div>',
                             '<div class="name">{firstName} {middleName} {lastName}</div>',
                             '<div class="address-line-1">{address1}</div>',
                             '<div class="address-line-2">{address2}</div>',
@@ -118,7 +118,7 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
                 '</tpl>',
 
                 //'<tpl if="values.length">',
-                    '<a  href="#" style="float:left;padding:10px;clear:both" class="addLink">Add new address</a>'
+                    '<div><a href="#" style="float:left;padding:10px;clear:both" class="addLink">Add new address</a></div>'
                 //'<tpl else>',
                 //    '<div class="no-address addLink"><br>Click to add one.</div>',                    
                 //'</tpl>',

@@ -55,6 +55,7 @@ Ext.define('Taco.view.order.Index', {
             text: 'First Name',
             flex: 1,
             width: 120,
+            sortable: false,
             getSortParam: function () {
                 return 'billingContact.firstName';
             },
@@ -68,6 +69,7 @@ Ext.define('Taco.view.order.Index', {
             flex: 1,
             minWidth: 120,
             width: 120,
+            sortable: false,
             getSortParam: function () {
                 return 'billingContact.lastName';
             },
@@ -88,7 +90,8 @@ Ext.define('Taco.view.order.Index', {
             text: 'Order Status',
             flex: 1,
             minWidth: 100,
-            width: 100
+            width: 100,
+            sortable: false
         }, {
             stateId: 'paymentStatus',
             dataIndex: 'paymentStatus',
@@ -102,14 +105,16 @@ Ext.define('Taco.view.order.Index', {
             text: 'Fulfillment Status',
             flex: 1,
             minWidth: 100,
-            width: 100
+            width: 100,
+            sortable: false
         }, {
             stateId: 'channelName',
             text: 'Channel',
             dataIndex:"channelName",
             flex: 1,
             minWidth: 100,
-            width: 100
+            width: 100,
+            sortable: false
         }, {
             stateId: 'customerEmail',
             text: 'Customer Email',
@@ -117,6 +122,7 @@ Ext.define('Taco.view.order.Index', {
             flex: 1,
             minWidth: 160,
             width: 260,
+            sortable: false,
             hidden: true,
             renderer: function (value, metaData, record) {
                 return value && value.email ? value.email : null;
@@ -128,6 +134,7 @@ Ext.define('Taco.view.order.Index', {
             flex: 1,
             minWidth: 100,
             width: 100,
+            sortable: false,
             hidden: true,
             renderer: function (value, metaData, record) {
                 return value && value.stateOrProvince ? value.stateOrProvince : null;
@@ -139,6 +146,7 @@ Ext.define('Taco.view.order.Index', {
             flex: 1,
             minWidth: 120,
             width: 120,
+            sortable: false,
             hidden: true,
             renderer: function (value, metaData, record) {
                 return Ext.isArray(value) ? Ext.Array.unique(Ext.Array.pluck(value, 'paymentType')).join(', ') : null;
@@ -150,6 +158,7 @@ Ext.define('Taco.view.order.Index', {
             flex: 1,
             minWidth: 120,
             width: 120,
+            sortable: false,
             hidden: true,
             renderer: function (value, metaData, record) {
                 return Ext.util.Format.usMoney(value.amountCollected);
@@ -161,6 +170,7 @@ Ext.define('Taco.view.order.Index', {
             flex: 1,
             minWidth: 120,
             width: 120,
+            sortable: false,
             hidden: true,
             renderer: function (value, metaData, record) {
                 return Ext.util.Format.usMoney(value.captureAmount);
@@ -172,6 +182,7 @@ Ext.define('Taco.view.order.Index', {
             flex: 1,
             minWidth: 120,
             width: 120,
+            sortable: false,
             hidden: true
         }, {
             stateId: 'fraudScore',
@@ -180,6 +191,7 @@ Ext.define('Taco.view.order.Index', {
             flex: 1,
             minWidth: 100,
             width: 100,
+            sortable: false,
             hidden: true,
             renderer: function (value, metaData, record) {
                 var attribute = Ext.Array.findBy(value, function (item, index) {
@@ -224,7 +236,7 @@ Ext.define('Taco.view.order.Index', {
                           
                             grid = eventData.grid,
                             index = eventData.rowIndex,
-                            amount =record.get('authorizationInfo').captureAmount ,
+                            amount = record.get('total')  -   (((record.get('authorizationInfo')|| {}).amountCollected) || 0),
                             data = {
                                 orderId: record.getId(),
                                 paymentId: record.payments().getAt(0).getId(),
