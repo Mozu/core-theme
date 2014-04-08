@@ -11,7 +11,7 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
     config: {
     
     },
-    
+    minChars :4,
     productsPerPage: 30,
     productType: 'parent',
     displayField: 'name',
@@ -54,6 +54,8 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
     
     // modify the format of the query data to fit the service filtering pattern.
     formatQuery: function (queryEvent, e) {
+
+    
         // need to format the search text from the combobox into a filter structure the service wants;
         // always force the query to match what's in the field.
         // after a selection the queryEvent.query is initially set to "" which is incorrect in this situation;
@@ -62,8 +64,13 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
             // need to force the load of the full list. just returning a value of "" causes the control to reload the last query;
             queryEvent.forceAll = true;
         } else {
+            //the formated query f's the min char check.... 
+            if (queryText.length < this.minChars) {
+                return false;
+            }
+
             queryEvent.forceAll = false;
-            queryEvent.query = '[{ "property": "all", "value": "' + queryText + '" }]'
+            queryEvent.query = Ext.encode([{ property: 'all', value: queryText }]);
         }
 
         return true;
@@ -76,16 +83,8 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
 
             if (me.productType == 'parent') {
                 me.store = Taco.core.data.StoreManager.getOrCreate({
-                    type: 'Taco.store.Products',
-                    pageSize: me.productsPerPage,
-                    // note that clearSort is required to avoid having the sorters get cleared when the store is instantiated;
-                    clearSort: false,
-                    remoteSort: true,
-                    sorters: [{
-                        property: 'productName',
-                        direction: 'ASC'
-                    }],
-                    autoLoad: true
+                    type: 'Taco.store.ProductPicker'
+                   
                 });
             }
             if (me.productType == 'inventory') {
