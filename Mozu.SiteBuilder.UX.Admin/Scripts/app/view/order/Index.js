@@ -224,7 +224,7 @@ Ext.define('Taco.view.order.Index', {
                           
                             grid = eventData.grid,
                             index = eventData.rowIndex,
-                            amount = record.get('total')  -   (((record.get('authorizationInfo')|| {}).amountCollected) || 0),
+                            amount =record.get('authorizationInfo').captureAmount ,
                             data = {
                                 orderId: record.getId(),
                                 paymentId: record.payments().getAt(0).getId(),
