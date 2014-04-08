@@ -5,7 +5,7 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.taco-productpickerfield',
     requires: [
-        
+        'Taco.store.ProductPicker'
     ],
     
     config: {

@@ -360,6 +360,7 @@
     <Compile Include="Admin\Api\ModelMapping\Perf\PerfUtil.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductJs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Mvc\SEO\SlugRegexTest.cs" />
     <Compile Include="StoreFront\ModelMapping\MvcMappingTest.cs" />
   </ItemGroup>
   <ItemGroup>

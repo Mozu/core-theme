@@ -12,12 +12,15 @@ using AutoMapper;
 using Autofac;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Extensions;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Catalog;
+using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
@@ -36,11 +39,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ICategoryTreeProvider _categoryTreeProvider;
         private readonly IProductWebApiClient _productClient;
         private readonly IProductSearchWebApiClient _searchClient;
+        private readonly ISlugNormalizer _slugNormalizer;
 
-        public CatalogController(ICategoryTreeProvider categoryTreeProvider, ISiteBuilderApiContext apiCtx, IProductWebApiClient productClient, IProductSearchWebApiClient searchClient, ILifetimeScope lifetimeScope)
+        public CatalogController(ICategoryTreeProvider categoryTreeProvider, ISiteBuilderApiContext apiCtx, IProductWebApiClient productClient, IProductSearchWebApiClient searchClient, ILifetimeScope lifetimeScope, ISlugNormalizer slugNormalizer)
         {
             _categoryTreeProvider = categoryTreeProvider;
             _searchClient = searchClient;
+            _slugNormalizer = slugNormalizer;
             _productClient = productClient;
             _apiCtx = apiCtx;
         }
@@ -109,6 +114,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     result.ViewName = template.Template ;
                     PageContext.CmsContext.Template.Path  = overrideTemplate;
                 }
+
+                PageContext.CmsContext.Template = new DocumentRequest()
+                {
+                    Path = overrideTemplate
+                };
+
+                await this.LifetimeScope.Resolve<CmsHelper>().InitCmsPageContext(PageContext);
                 
             }
 
@@ -267,8 +279,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     result.ViewName = template.Template ;
                     this.PageContext.CmsContext.Template.Path = overrideTemplate;
                 }
-                
+            
+                PageContext.CmsContext.Template= new DocumentRequest()
+                                                 {
+                                                     Path = overrideTemplate 
+                                                 };
+
+                await this.LifetimeScope.Resolve<CmsHelper>().InitCmsPageContext(PageContext);
+
             }
+            
+
+
+
+
 
             await this.ContextInitilaztionTasks;
             SetCatalogContext(cat);
@@ -284,7 +308,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             msg = null;
             var requestUrl = this.Request.RequestUri.AbsolutePath;
-            if (!this.SiteContext.IsEditMode && !string.Equals(requestUrl, url, StringComparison.OrdinalIgnoreCase))
+            var cleanedUrl = _slugNormalizer.StripUrl(url);
+
+            if (!this.SiteContext.IsEditMode && !string.Equals(requestUrl, cleanedUrl, StringComparison.OrdinalIgnoreCase))
             {
                 msg = this.Request.CreateResponse(HttpStatusCode.MovedPermanently);
                 if (!string.IsNullOrEmpty(this.Request.RequestUri.Query))
@@ -292,17 +318,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     var qs = this.Request.GetQueryNameValuePairs().ToArray();
                     if ( ! (qs.Length == 1 &&  qs[0].Key.Equals("productcode", StringComparison.OrdinalIgnoreCase ) ))
                     {
-                        url = url + this.Request.RequestUri.Query;    
+                        cleanedUrl = cleanedUrl + this.Request.RequestUri.Query;    
                     }
                     
                 }
-                msg.Headers.Location = new Uri(url, UriKind.Relative);
+                msg.Headers.Location = new Uri(cleanedUrl, UriKind.Relative);
                 return true;
             }
             return false;
         }
 
-
+        
         [HttpGet]
         public async Task<HttpResponseMessage> CategoryFeed(int? categoryId = null)
         {
