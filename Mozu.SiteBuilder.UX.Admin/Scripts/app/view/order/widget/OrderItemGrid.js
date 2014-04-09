@@ -194,7 +194,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     '<div class="product-options">',
                         '<tpl for="options">',
                             '<span class="option"><tpl if="xindex &gt; 1">, </tpl>{name}',
-                            ': {value}',
+                            ': {[this.getAttributeValueFromOption(values)]}',
                         '</span>',
                         '</tpl>',
                         '<tpl for="bundledProducts">',
@@ -213,6 +213,21 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         '</div>',
                     '</div>',
                     {
+                        getAttributeValueFromOption: function (option) {
+                            // it sure would be nice if we didn't have to fetch this data from the store
+                            var attributeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Attributes');
+                            var attribute = attributeStore.getById(option.attributeFQN);
+                            var values = attribute ? attribute.get('values') : null;
+                            var value = option.value;
+
+                            if (!Ext.isEmpty(values)) {
+                                value = Ext.Array.findBy(values, function (item) {
+                                    return item.id === option.value;
+                                })['value'];
+                            }
+
+                            return value;
+                        },
                         getFulfillmentMethodText: function (record) {                            
                             var fulfillmentMethod = record.fulfillmentMethod;
                             var fulfillmentLocation = " (" + record.fulfillmentLocationCode + ")";
