@@ -22,7 +22,8 @@ Ext.define('Taco.model.Order', {
     
     requiredStores: [
         'Taco.store.ShippingMethods',
-        'Taco.store.Channels'        
+        'Taco.store.Channels',
+        'Taco.store.Attributes'
     ],
     fields: [
         {
