@@ -368,7 +368,6 @@ Ext.define('Taco.view.order.Index', {
             [{ orderStatus: 'Open' }, 'Open Orders'],
             [{ paymentstatus: 'Paid', fulfillmentStatus: 'NotFulfilled' }, 'Paid, Pending Fulfillment Orders'],
             [{ fulfillmentStatus: 'Fulfilled' }, 'Fulfilled Orders'],
-            [{ orderStatus: 'Closed' }, 'Closed Orders'],
             [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
             [{}, 'All Orders']
         ]
