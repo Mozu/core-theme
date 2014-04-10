@@ -238,9 +238,6 @@ Ext.define('Taco.core.ux.window.MessageBox', {
         //if (closeTool && closeTool.isComponent) closeTool.setVisible(hideToolbar);
         //me.down('tool[type="close"]').setVisible(hideToolbar);
 
-
-        me.setTitle(cfg.title);
-
         // Hide or show the message area
         msg = me.msg;
         if (cfg.msg) {
@@ -275,6 +272,8 @@ Ext.define('Taco.core.ux.window.MessageBox', {
         me.userCallback = Ext.Function.bind(cfg.callback || cfg.fn || Ext.emptyFn, cfg.scope || Ext.global);
         
         me.callParent(arguments);
+
+        me.setTitle(cfg.title);
 
         // Init the close tool on the window
         if (!me.closeTool) me.closeTool = me.down('tool[type="close"]');
