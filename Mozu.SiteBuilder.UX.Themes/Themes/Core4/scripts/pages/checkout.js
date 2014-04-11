@@ -127,6 +127,9 @@
             'paymentType',
             'isSameBillingShippingAddress',
         ],
+        updateAcceptsMarketing: function(e) {
+            this.model.getOrder().set('acceptsMarketing', $(e.currentTarget).prop('checked'));
+        },
         beginApplyCredit: function () {
             this.model.beginApplyCredit();
             this.render();
