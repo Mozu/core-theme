@@ -405,6 +405,7 @@
     <Content Include="SampleThemes\helloWorld\theme.xml" />
     <Content Include="SampleThemes\Test\thumb.jpg" />
     <Content Include="Scripts\backbone.d.ts" />
+    <Content Include="Themes\Core4\Gruntfile.js" />
     <Content Include="Themes\Core4\resources\admin\widgets\00_photo.png" />
     <Content Include="Themes\Core4\resources\admin\widgets\01_photo_text.png" />
     <Content Include="Themes\Core4\resources\admin\widgets\02_photo_gallery.png" />
@@ -547,6 +548,8 @@
     <Content Include="Themes\Core4\stylesheets\storefront.less" />
     <Content Include="Themes\Core4\stylesheets\modules\location\location-list.less" />
     <Content Include="Themes\Core4\stylesheets\email.less" />
+    <Content Include="Themes\Core4\tasks\grunt-setver.js" />
+    <Content Include="Themes\Core4\tasks\grunt-zubat.js" />
     <Content Include="Themes\Core4\templates\modules\checkout\checkout-payment.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\common\price.hypr.live" />
     <Content Include="Themes\Core4\stylesheets\state\is-crossedout.less" />
@@ -574,6 +577,7 @@
     <Content Include="Themes\Core4\templates\modules\common\page-numbers.hypr.live" />
     <Content Include="Themes\Core4\templates\pages\blank-page.hypr" />
     <Content Include="Themes\Core4\theme-ui.json" />
+    <Content Include="Themes\Core4\thumb.tpt.png" />
     <Content Include="ThemeTemplates\ExtendsCore4\labels\README.txt" />
     <Content Include="ThemeTemplates\ExtendsCore4\README.txt" />
     <Content Include="ThemeTemplates\ExtendsCore4\scripts\README.txt" />
@@ -582,7 +586,6 @@
     <Content Include="ThemeTemplates\ExtendsCore4\templates\README.txt" />
     <Content Include="Tools\DevCenterThemeTemplatizer.exe" />
     <Content Include="Tools\Documentation\Tags.vol" />
-    <Content Include="Themes\Core4\thumb.jpg" />
     <Content Include="Themes\MobileCore\MetaData\build.js" />
     <Content Include="Themes\MobileCore\MetaData\mobilecore_thumb.jpg" />
     <Content Include="Themes\MobileCore\MetaData\ThemeSettings.xml" />
@@ -997,6 +1000,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core4\templates\email\product-return-rejected.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core4\package.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core4\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core4\CHANGELOG.md" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
