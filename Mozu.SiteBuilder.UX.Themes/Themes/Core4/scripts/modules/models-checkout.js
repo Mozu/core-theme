@@ -240,7 +240,10 @@
                 card: PaymentMethods.CreditCard,
                 check: PaymentMethods.Check
             },
-            helpers: ['savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply', 'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments'],
+            helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply', 'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments'],
+            acceptsMarketing: function() {
+                return this.getOrder().get('acceptsMarketing');
+            },
             activePayments: function() {
                 return this.getOrder().apiModel.getActivePayments();
             },
@@ -471,9 +474,10 @@
             validation: checkoutPageValidation,
             dataTypes: {
                 createAccount: Backbone.MozuModel.DataTypes.Boolean,
+                acceptsMarketing: Backbone.MozuModel.DataTypes.Boolean,
                 amountRemainingForPayment: Backbone.MozuModel.DataTypes.Float
             },
-            initialize: function () {
+            initialize: function (data) {
                 var self = this;
                 _.defer(function () {
                     var latestPayment = self.apiModel.getCurrentPayment(),
@@ -489,6 +493,10 @@
                     }
 
                 });
+                // preloaded JSON has this as null if it's unset, which defeats the defaults collection in backbone
+                if (data.acceptsMarketing === null) {
+                    self.set('acceptsMarketing', true);
+                }
                 _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'apiCheckout');
             },
             addCoupon: function () {
@@ -543,11 +551,13 @@
                         emailAddress: email,
                         userName: email,
                         firstName: billingContact.get("firstName"),
-                        lastName: billingContact.get("lastNameOrSurname")
+                        lastName: billingContact.get("lastNameOrSurname"),
+                        acceptsMarketing: self.get('acceptsMarketing')
                     },
                     password: this.get('password')
                 }).otherwise(function (error) {
                     self.customerCreated = false;
+                    self.isSubmitting = false;
                     throw error;
                 });
             },
