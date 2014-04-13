@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', "modules/models-faceting", "modules/views-productlists", "modules/views-paging"], function($, Hypr, Backbone, FacetingModels, ProductListViews, PagingViews){
+define(['modules/jquery-mozu', 'shim!vendor/underscore>_', 'hyprlive', 'modules/backbone-mozu', "modules/models-faceting", "modules/views-productlists", "modules/views-paging"], function($, _, Hypr, Backbone, FacetingModels, ProductListViews, PagingViews){
 
     var useAnimatedLists = Hypr.getThemeSetting('useAnimatedProductLists') && !Modernizr.mq('(max-width: 480px)');
     
@@ -7,10 +7,11 @@ define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', "modules/mod
         var $categoryPageBody = $('[data-mz-category]'),
             $facetPanel = $('[data-mz-facets]'),
             categoryId = $categoryPageBody.data('mz-category'),
-            productListData = require.mozuData('facetedproducts');
+            productListData = require.mozuData('facetedproducts'),
+            facetingViews;
 
         if (productListData) {
-            var facetingModel = new FacetingModels.FacetedProductCollection(productListData);            if (categoryId) facetingModel.setHierarchy('categoryId',categoryId);            var facetingViews = {
+            var facetingModel = new FacetingModels.FacetedProductCollection(productListData);            if (categoryId) facetingModel.setHierarchy('categoryId',categoryId);            facetingViews = {
                 pagingControls: new PagingViews.PagingControls({
                     el: $categoryPageBody.find('[data-mz-pagingcontrols]'),
                     model: facetingModel

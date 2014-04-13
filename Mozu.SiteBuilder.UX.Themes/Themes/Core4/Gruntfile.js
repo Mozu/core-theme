@@ -2,16 +2,24 @@
 
     grunt.initConfig({
         jshint: {
-            main: [
+            default: [
               'Gruntfile.js',
               'build.js',
               'scripts/**/*.js'
             ],
             options: {
                 ignores: ['scripts/vendor/**/*.js'],
+                asi: true,
+                boss: true,
                 undef: true,
                 laxcomma: true,
                 unused: false,
+                expr: true,
+                eqnull: true,
+                browser: true,
+                devel: true,
+                nonstandard: true,
+                loopfunc: true,
                 globals: {
                     console: true,
                     window: true,
@@ -24,6 +32,11 @@
                     Modernizr: true,
                     process: true
                 }
+            }
+        },
+        tfscheckout: {
+            main: {
+                dir: 'compiled'
             }
         },
         zubat: {
@@ -47,6 +60,6 @@
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadTasks('./tasks/');
-    grunt.registerTask('default', ['jshint', 'zubat']);
-    grunt.registerTask('release', ['jshint', 'zubat', 'setver']);
+    grunt.registerTask('default', ['jshint', 'tfscheckout', 'zubat']);
+    grunt.registerTask('release', ['jshint', 'tfscheckout', 'zubat', 'setver']);
 };

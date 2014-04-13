@@ -99,7 +99,7 @@
          * // an example override
          * var ViewWithExtraRootVariable = MozuView.extend({
          *   getRenderContext: function() {
-	     *      // first get the parent method's output
+         *      // first get the parent method's output
          *      var context = MozuView.prototype.getRenderContext.apply(this, arguments);
          *      context.foo = "bar";
          *      return context;

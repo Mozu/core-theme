@@ -127,7 +127,8 @@
                 model: WishlistItem
             })
         },
-        addItemToCart: function(id) {
+        addItemToCart: function (id) {
+            var self = this;
             return this.apiAddItemToCartById(id).then(function (item) {
                 self.trigger('addedtocart', item, id);
                 return item;
