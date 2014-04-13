@@ -388,14 +388,6 @@
     <Content Include="Themes\Core4\compiled\scripts\widgets\video.js" />
     <Content Include="Docs\externals\backbone.jsdoc.js" />
     <Content Include="Docs\Mozu_Themeing_Concepts.md" />
-    <Content Include="Morrissey\src\plugins\i18n.js" />
-    <Content Include="Morrissey\src\plugins\node_i18n.js" />
-    <Content Include="Morrissey\src\plugins\node_shim.js" />
-    <Content Include="Morrissey\src\plugins\node_text.js" />
-    <Content Include="Morrissey\src\plugins\shim.js" />
-    <Content Include="Morrissey\src\plugins\text.js" />
-    <Content Include="Morrissey\src\tasks\buildtemptheme.js" />
-    <Content Include="Morrissey\src\tasks\removeuntouchedfiles.js" />
     <Content Include="SampleThemes\helloWorld\MetaData\thumb.png" />
     <Content Include="SampleThemes\helloWorld\MetaData\ThemeSettings.xml" />
     <Content Include="SampleThemes\helloWorld\MetaData\Widgets\cms\hello_world\widget_thumb.png" />
@@ -529,12 +521,6 @@
     <Content Include="Themes\Core4\scripts\vendor\jquery.tools.dateinput.js" />
     <Content Include="Themes\Core4\scripts\vendor\modernizr-respond.min.js" />
     <Content Include="Themes\Core4\scripts\vendor\underscore.js" />
-    <Content Include="Morrissey\morrissey.js" />
-    <Content Include="Morrissey\src\lyrically.js" />
-    <Content Include="Morrissey\src\optimizer.js" />
-    <Content Include="Morrissey\src\tasks\buildjs.js" />
-    <Content Include="Morrissey\src\tasks\generatethemeconfig.js" />
-    <Content Include="Morrissey\src\theme.js" />
     <Content Include="Themes\Core4\stylesheets\modules\page-header\utility-nav.less" />
     <Content Include="Themes\Core4\stylesheets\modules\page-header\cart-monitor.less" />
     <Content Include="Themes\Core4\stylesheets\modules\page-header\search-box.less" />
@@ -911,12 +897,8 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Morrissey\bin\morrissey" />
     <Content Include="Properties\PublishProfiles\demo wp.pubxml" />
     <Content Include="Themes\MobileCore\Modules\ProductImages.vol" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Morrissey\package.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core4\stylesheets\widgets\instock-request.less" />
