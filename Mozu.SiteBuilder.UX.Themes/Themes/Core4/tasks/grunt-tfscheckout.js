@@ -14,7 +14,7 @@ module.exports = function (grunt) {
             done(true);
         }
 
-        child = spawn(tfsloc, ["checkout", this.data.dir + "\\*"]);
+        child = spawn(tfsloc, ["checkout", this.data.dir, "/recursive"]);
 
         child.stderr.on('data', function (data) {
             grunt.log.error(data);
