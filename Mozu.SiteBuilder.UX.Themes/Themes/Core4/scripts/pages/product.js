@@ -1,4 +1,4 @@
-﻿require(["modules/jquery-mozu", "hyprlive", "modules/backbone-mozu", "modules/models-product", "modules/views-productimages", "modules/jquery-dateinput-localized"], function ($, Hypr, Backbone, ProductModels, ProductImageViews) {
+﻿require(["modules/jquery-mozu", "shim!vendor/underscore>_", "hyprlive", "modules/backbone-mozu", "modules/models-product", "modules/views-productimages", "modules/jquery-dateinput-localized"], function ($, _, Hypr, Backbone, ProductModels, ProductImageViews) {
 
     var ProductView = Backbone.MozuView.extend({
         templateName: 'modules/product/product-detail',

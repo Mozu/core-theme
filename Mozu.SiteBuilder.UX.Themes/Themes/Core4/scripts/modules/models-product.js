@@ -6,7 +6,7 @@
         return str;
     }
     function formatDate(d) {
-        var date = new Date(Date.parse(d) + (new Date).getTimezoneOffset() * 60000);
+        var date = new Date(Date.parse(d) + (new Date()).getTimezoneOffset() * 60000);
         return [zeroPad(date.getFullYear(),4),zeroPad(date.getMonth() + 1,2), zeroPad(date.getDate(),2)].join('-');
     }
 
@@ -44,7 +44,7 @@
             });
         },
         handleInvalid: function(newValObj, opt) {
-            if (!(this === opt)) {
+            if (this !== opt) {
                 this.unset("value");
                 _.each(this.get("values"), function(value) {
                     value.isSelected = false;

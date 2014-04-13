@@ -307,8 +307,7 @@
             },
             finishApplyCredit: function() {
                 var self = this,
-                    order = this.getOrder(),
-                    apiOrder;
+                    order = this.getOrder();
                 var currentPayment = order.apiModel.getCurrentPayment();
                 if (currentPayment) {
                     // must first void the current payment because it will no longer be the right price
@@ -323,9 +322,9 @@
                     storeCreditCode: this.get('selectedCredit'),
                     amount: this.get('creditAmountToApply')
                 }).then(function (o) {
-                    apiOrder = o;
+                    self.set(o.data);
                     self.closeApplyCredit();
-                    return apiOrder; // return order.get('customer').getCredits();
+                    return o; // return order.get('customer').getCredits();
                 });
             },
             removeCredit: function(id) {
@@ -390,7 +389,7 @@
             },
             calculateStepStatus: function() {
                 return this.stepStatus(this.parent.get('fulfillmentInfo').stepStatus() === "complete" ? (
-                    (this.activePayments().length > 0 && (this.parent.get('amountRemainingForPayment') == 0)) ? 'complete' : 'invalid')
+                    (this.activePayments().length > 0 && (this.parent.get('amountRemainingForPayment') === 0)) ? 'complete' : 'invalid')
                     : 'new');
             },
             getPaypalUrls: function() {

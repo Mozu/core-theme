@@ -1,7 +1,7 @@
 ﻿  {% extends "email/email" %}
 
   {% block body-content %}
-
+	
 	<p>
 		{{ labels.orderWelcome }} {{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}!
 	</p>
@@ -15,16 +15,7 @@
 		<dt>{{ labels.orderDate }}:</dt>
 		<dd>{{ model.auditInfo.createDate }}</dd>
 
-		<dt>{{ labels.shippingMethod }}:</dt>
-		<dd>{{ model.fulfillmentInfo.shippingMethodName }}</dd>
-
-		<dt>{{ labels.trackingNumber }}:</dt>
-		<dd>
-			{% for package in model.packages %}
-				{{ package.trackingNumber }}
-			{% endfor %}
-		</dd>
-
+		
 		<dt>{{ labels.shipTo }}:</dt>
 		<dd class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}</dd>
 	</dl>
@@ -41,7 +32,7 @@
 		{% for package in model.packages %}
 			{% for packageItem in package.items %}
 				{% for item in model.items %}
-					{% if packageItem.productCode == item.product.productCode %}
+					{% if packageItem.productCode == item.product.productCode or packageItem.productCode == item.product.variationProductCode %}
 						<tbody class="mz-ordersummary-lineitems">
 						  <tr class="mz-ordersummary-line mz-ordersummary-line-item">
 								<td>{{ packageItem.quantity }}</td>

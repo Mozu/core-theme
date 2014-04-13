@@ -9,12 +9,12 @@
 
     var twoWayCardShapeMapping = {
         "cardNumber": "cardNumberPartOrMask",
-        "cardNumberPart": "cardNumberPartOrMask", 
+        "cardNumberPart": "cardNumberPartOrMask",
         "cardType": "paymentOrCardType",
         "id": "paymentServiceCardId"
     };
 
-    CreditCard = PaymentMethod.extend({
+    var CreditCard = PaymentMethod.extend({
         mozuType: 'creditcard',
         validation: {
             paymentOrCardType: {
@@ -84,14 +84,14 @@
             });
             return j;
         }
-    }),
+    });
 
 
-    PayPal = PaymentMethod.extend({
+    var PayPal = PaymentMethod.extend({
         mozuType: 'paypalpayment'
-    }),
+    });
 
-    Check = PaymentMethod.extend({
+    var Check = PaymentMethod.extend({
         validation: {
             nameOnCheck: {
                 fn: "present"

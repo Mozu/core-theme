@@ -416,7 +416,7 @@
              * @param {boolean} flag Set this to true to trigger a `loadingchange` event.
              */
             isLoading: function (yes, opts) {
-                if (arguments.length == 0) return !!this._isLoading;
+                if (arguments.length === 0) return !!this._isLoading;
                 this._isLoading = yes;
                 if (!opts || !opts.silent) this.trigger('loadingchange', yes);
             },

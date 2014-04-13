@@ -304,7 +304,7 @@
         
     $(document).ready(function () {
 
-        var accountModel = window.accountModel =  CustomerModels.EditableCustomer.fromCurrent();
+        var accountModel = window.accountModel = CustomerModels.EditableCustomer.fromCurrent();
 
         var $accountSettingsEl = $('#account-settings'),
             $orderHistoryEl = $('#account-orderhistory'),
@@ -317,7 +317,7 @@
             orderHistory = accountModel.get('orderHistory'),
             returnHistory = accountModel.get('returnHistory');
 
-        window.accountViews = {
+        var accountViews = window.accountViews = {
             settings: new AccountSettingsView({
                 el: $accountSettingsEl,
                 model: accountModel,
