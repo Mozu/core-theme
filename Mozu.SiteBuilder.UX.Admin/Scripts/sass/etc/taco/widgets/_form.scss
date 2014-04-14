@@ -16,44 +16,44 @@
   }
 
   // combobox styles
-  .#{$prefix}form-trigger-input-cell {
-    .#{$prefix}form-text {
-      padding-right: 30px;
-    }
-  }
-  .#{$prefix}pickerfield-open {
-    .#{$prefix}form-text {
-      background-color: $color-neutral-75;
-      border-color: $color-neutral-75;
-    }
-  }
+  // .#{$prefix}form-trigger-input-cell {
+  //   .#{$prefix}form-text {
+  //     padding-right: 30px;
+  //   }
+  // }
+  // .#{$prefix}pickerfield-open {
+  //   .#{$prefix}form-text {
+  //     background-color: $color-neutral-75;
+  //     border-color: $color-neutral-75;
+  //   }
+  // }
 
-  .#{$prefix}form-trigger-wrap {
-    position: relative;
-  }
+  // .#{$prefix}form-trigger-wrap {
+  //   position: relative;
+  // }
 
-  .#{$prefix}trigger-cell {
-    display: block;
-    height: 28px;
-    left: auto;
-    position: absolute;
-    right: 2px;
-    top: 1px;
-    width: 21px !important;
-  }
+  // .#{$prefix}trigger-cell {
+  //   display: block;
+  //   height: 28px;
+  //   left: auto;
+  //   position: absolute;
+  //   right: 2px;
+  //   top: 1px;
+  //   width: 21px !important;
+  // }
 
-  .#{$prefix}form-arrow-trigger {
-    background: none transparent;
-    border-color: $color-neutral-20 $color-neutral-transparent;
-    border-style: none;
-    border-width: 0px;
-    font-size: px-to-rem(16);
-    height: 0px !important;
-    margin: 0px;
-    overflow: visible;
-    position: absolute;
-    width: 0px;
-  }
+  // .#{$prefix}form-arrow-trigger {
+  //   background: none transparent;
+  //   border-color: $color-neutral-20 $color-neutral-transparent;
+  //   border-style: none;
+  //   border-width: 0px;
+  //   font-size: px-to-rem(16);
+  //   height: 0px !important;
+  //   margin: 0px;
+  //   overflow: visible;
+  //   position: absolute;
+  //   width: 0px;
+  // }
 
   // textarea styles
   .#{$prefix}webkit {
