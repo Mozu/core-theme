@@ -80,6 +80,7 @@ Ext.define('Taco.Application', {
         'Taco.overrides.grid.plugin.CellEditing',
         'Taco.overrides.menu.Menu',
         'Taco.overrides.panel.Tool',
+        'Taco.overrides.toolbar.Paging',
         'Taco.overrides.window.MessageBox',
         'Ext.data.association.HasOne',
         'Taco.core.data.RemoteException',
