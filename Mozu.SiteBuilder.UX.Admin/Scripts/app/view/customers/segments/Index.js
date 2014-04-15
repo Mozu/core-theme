@@ -13,7 +13,7 @@ Ext.define('Taco.view.customers.Segments.Index', {
     'Taco.view.customers.Segments.AddRemoveModal'
     ],
 
-    typeName: 'CustomerSegment',
+    typeName: 'Customer Segment',
     modelName: 'Taco.model.CustomerSegment',
     store: { type: 'Taco.store.CustomerSegments' },
     enableRowEditing: true,
