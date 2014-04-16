@@ -1,9 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using Autofac;
+using Mozu.Core.Api;
+using Mozu.Core.Api.Client;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.Tenant.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.Mvc.Caching
 {
@@ -17,14 +23,46 @@ namespace Mozu.SiteBuilder.Mvc.Caching
     {
         private ISiteBuilderApiContext _ctx;
         private System.Runtime.Caching.ObjectCache _cache;
+        private readonly ILifetimeScope _scope;
+        private static  Hashtable _siteLookupHashtable = new Hashtable();
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public StorefrontCache(ISiteBuilderApiContext ctx, System.Runtime.Caching.ObjectCache cache)
+        public StorefrontCache(ISiteBuilderApiContext ctx, System.Runtime.Caching.ObjectCache cache, ILifetimeScope scope)
         {
             _ctx = ctx;
             _cache = cache;
+            _scope = scope;
+        }
+
+        void ValidateContext()
+        {
+            if (_ctx.SiteId.HasValue && !_ctx.CatalogId.HasValue)
+            {
+                var key = _ctx.SiteId.Value;
+                var res = (int?)_siteLookupHashtable[key ];
+                if (res == null)
+                {
+                    var client = _scope.Resolve<Mozu.Tenant.Contracts.Clients.ISitesWebApiClient >().CloneWithoutUserClaims();
+                    var siteTask = client.GetSite(_ctx.SiteId.Value ,true);
+                    if (!siteTask.Result.HasException && siteTask.Result.ResponseMessage.IsSuccessStatusCode)
+                    {
+                        var site = siteTask.Result.ReadAsSync();
+                        if (site!= null)
+                        {
+                            res = site.Id;
+                        }
+                        else
+                        {
+                            res = new Nullable<int>();
+                        }
+                    }
+                    _siteLookupHashtable[key] = res;
+                }
+                ((MozuServiceApiContext)_ctx).CatalogId = res;
+
+            }
         }
 
         /// <summary>
@@ -34,7 +72,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
         {
             if (String.IsNullOrWhiteSpace(key))
                 return null;
-
+            ValidateContext();
             if (_ctx == null || _ctx.TenantId == 0)
                 return null;
             else if (scope >= CacheScope.Catalog && !_ctx.CatalogId.HasValue)
@@ -64,7 +102,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
         {
             if (String.IsNullOrWhiteSpace(key))
                 return;
-
+            ValidateContext();
 
             if (_ctx == null || _ctx.TenantId == 0)
                 throw new ArgumentOutOfRangeException("scope", "Cannot add item to cache: no api context.");

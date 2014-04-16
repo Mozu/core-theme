@@ -44,6 +44,8 @@
         this.bindActionsToForm();
 
         this.on('idchange', function(editor, record) {
+            // Don't navigate if the record has yet to be persisted
+            if (record.phantom) return;
             Taco.app.contentView.remove(editor);
             Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), { record: record });
         }, this, { delay: 10, single: true, scope: this });

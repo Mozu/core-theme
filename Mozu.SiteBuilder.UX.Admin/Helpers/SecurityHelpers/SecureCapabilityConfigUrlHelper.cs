@@ -19,9 +19,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SecurityHelpers
     public class SecureCapabilityConfigUrlHelper : ISecureCapabilityConfigUrlHelper
     {
         public const string X_VOL_RETURN_URL = "x-vol-return-url";
+        public const string RETURN_ANCHOR = "#configure";
         public const string X_VOL_ORIGIN_URL = "x-vol-orig-url";
         public const string X_VOL_TENANT_DOMAIN = "x-vol-tenant-domain";
         public const string DATE_TIME_FORMAT = "R"; //RFC-1123;
+
 
         private readonly IHttpRequestHeaderWrapper _httpRequest;
 
@@ -58,6 +60,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SecurityHelpers
             var origUrl = _httpRequest.GetHeader(X_VOL_ORIGIN_URL);
             var uri = (string.IsNullOrEmpty(origUrl)) ? _httpRequest.GetRequestUri() : new Uri(origUrl);
 
+            return (uri.AbsoluteUri.IndexOf(capabilityId, StringComparison.InvariantCultureIgnoreCase) != -1)
+                ? BuildReturnUrlFromEditUrl(uri) 
+                : BuildReturnUrlFromListStart(uri, capabilityId);
+        }
+
+        //Example:  https://t2544.sandbox.mozu-qa.com/Admin/s-4839/capability/edit/e542ac2f762448f98daba24500cf49b4 
+        private string BuildReturnUrlFromEditUrl(Uri uri)
+        {
+            if (uri.AbsoluteUri.EndsWith(RETURN_ANCHOR))
+                return uri.AbsoluteUri;
+            return uri.AbsoluteUri.EndsWith("/")
+                ? uri.AbsoluteUri + RETURN_ANCHOR
+                : uri.AbsoluteUri + "/" + RETURN_ANCHOR;
+        }
+
+        //Example https://t2544.sandbox.mozu-qa.com/Admin/s-4839/capability
+        private string BuildReturnUrlFromListStart(Uri uri, string capabilityId)
+        {
             var sb = new StringBuilder("https://");
             sb.Append(uri.Host);
             for (int i = 0; i < uri.Segments.Length - 1; i++)
@@ -65,10 +85,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SecurityHelpers
                 sb.Append(uri.Segments[i]);
             }
             sb.Append("edit/").Append(capabilityId);
-            sb.Append("/#configure");
+            sb.Append("/").Append(RETURN_ANCHOR);
             return sb.ToString();
         }
-
     }
 
     public interface IHttpRequestHeaderWrapper
