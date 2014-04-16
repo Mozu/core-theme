@@ -15,6 +15,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
             Mapper.AddProfile<CategoryMapping>();
             Mapper.AddProfile<CheckoutMapping>();
             Mapper.AddProfile<ContactMapping>();
+            Mapper.AddProfile<CustomerContactMapping>();
             Mapper.AddProfile<CreditMapping>();
             Mapper.AddProfile<CustomerMapping>();
             Mapper.AddProfile<DiscountMapping>();

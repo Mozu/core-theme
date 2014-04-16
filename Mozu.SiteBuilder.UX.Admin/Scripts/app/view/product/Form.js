@@ -389,17 +389,13 @@ Ext.define('Taco.view.product.Form', {
     },
 
     onTabClose: function (tab, catalogId) {
-        this.updateForm();
-        this.saveTasks.on('complete', function () {
+        this.updateForm(function () {
             this.removeCatalog(catalogId);
         }, this);
     },
 
     onTabSelectionChange: function (tabPanel, values, oldValues) {
-       
-
-        this.updateForm();
-        this.saveTasks.on('complete', function () {
+        this.updateForm(function () {
             var addCatalogs = Ext.Array.difference(values, oldValues),
                 removeCatalogs = Ext.Array.difference(oldValues, values);
 
