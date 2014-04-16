@@ -50,7 +50,7 @@
                 }
                 return this._stepStatus;
             },
-            requiresFulfillmentInfo: function() {
+            requiresFulfillmentInfo: function () {
                 return this.getOrder().get('requiresFulfillmentInfo');
             },
             edit: function () {
@@ -65,11 +65,11 @@
             relations: CustomerModels.Contact.prototype.relations,
             validation: CustomerModels.Contact.prototype.validation,
             helpers: ['contacts'],
-            contacts: function() {
+            contacts: function () {
                 var contacts = this.getOrder().get('customer').get('contacts').toJSON();
                 return contacts && contacts.length > 0 && contacts;
             },
-            initialize: function() {
+            initialize: function () {
                 var self = this;
                 this.on('change:contactId', function (model, newContactId) {
                     if (!newContactId || newContactId === "new") {
@@ -82,7 +82,7 @@
                     }
                 });
             },
-            calculateStepStatus: function() {
+            calculateStepStatus: function () {
                 if (!this.requiresFulfillmentInfo()) return this.stepStatus("complete");
                 return CheckoutStep.prototype.calculateStepStatus.apply(this);
             },
@@ -226,9 +226,8 @@
                     msg: Hypr.getLabel('paymentTypeMissing')
                 },
                 "billingContact.email": {
-                    required: true,
-                    msg: Hypr.getLabel('emailMissing')
-                } 
+                    fn: 'validateBillingEmail'
+                }
             },
             dataTypes: {
                 "isSameBillingShippingAddress": Backbone.MozuModel.DataTypes.Boolean,
@@ -241,13 +240,13 @@
                 check: PaymentMethods.Check
             },
             helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply', 'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments'],
-            acceptsMarketing: function() {
+            acceptsMarketing: function () {
                 return this.getOrder().get('acceptsMarketing');
             },
-            activePayments: function() {
+            activePayments: function () {
                 return this.getOrder().apiModel.getActivePayments();
             },
-            nonStoreCreditTotal: function() {
+            nonStoreCreditTotal: function () {
                 var order = this.getOrder(),
                     total = order.get('total'),
                     activeCredits = this.activeStoreCredits();
@@ -256,15 +255,15 @@
                     return sum + credit.amountRequested;
                 }, 0);
             },
-            savedPaymentMethods: function() {
+            savedPaymentMethods: function () {
                 var cards = this.getOrder().get('customer').get('cards').toJSON();
                 return cards && cards.length > 0 && cards;
             },
-            activeStoreCredits: function() {
+            activeStoreCredits: function () {
                 var active = this.getOrder().apiModel.getActiveStoreCredits();
                 return active && active.length > 0 && active;
             },
-            availableStoreCredits: function() {
+            availableStoreCredits: function () {
                 var order = this.getOrder(),
                     customer = order.get('customer'),
                     credits = customer && customer.get('credits'),
@@ -289,7 +288,7 @@
                     applyingCredit = this.applyingCredit();
                 if (applyingCredit) return Math.min(applyingCredit.currentBalance, total).toFixed(2);
             },
-            beginApplyCredit: function() {
+            beginApplyCredit: function () {
                 var selectedCredit = this.get('selectedCredit');
                 this._oldPaymentType = this.get('paymentType');
                 if (selectedCredit) {
@@ -300,12 +299,12 @@
                     }
                 }
             },
-            closeApplyCredit: function() {
+            closeApplyCredit: function () {
                 delete this._applyingCredit;
                 this.unset('selectedCredit');
                 this.set('paymentType', this._oldPaymentType);
             },
-            finishApplyCredit: function() {
+            finishApplyCredit: function () {
                 var self = this,
                     order = this.getOrder();
                 var currentPayment = order.apiModel.getCurrentPayment();
@@ -316,7 +315,7 @@
                     return this.addStoreCredit();
                 }
             },
-            addStoreCredit: function() {
+            addStoreCredit: function () {
                 var self = this;
                 return self.getOrder().apiAddStoreCredit({
                     storeCreditCode: this.get('selectedCredit'),
@@ -327,14 +326,14 @@
                     return o; // return order.get('customer').getCredits();
                 });
             },
-            removeCredit: function(id) {
+            removeCredit: function (id) {
                 var order = this.getOrder(),
                     currentPayment = order.apiModel.getCurrentPayment();
                 // must also, asynchronously, void the current payment because it will no longer be the right price
                 if (currentPayment) order.apiVoidPayment(currentPayment.id);
                 return this.getOrder().apiVoidPayment(id);
             },
-            syncPaymentMethod: function(me, newId) {
+            syncPaymentMethod: function (me, newId) {
                 if (!newId || newId === "new") {
                     me.get('billingContact').clear();
                     me.get('card').clear();
@@ -344,7 +343,7 @@
                     me.setSavedPaymentMethod(newId);
                 }
             },
-            setSavedPaymentMethod: function(newId) {
+            setSavedPaymentMethod: function (newId) {
                 var me = this,
                     customer = me.getOrder().get('customer'),
                     card = customer.get('cards').get(newId),
@@ -355,7 +354,7 @@
                     me.set('paymentType', 'CreditCard');
                 }
             },
-            getPaymentTypeFromCurrentPayment: function() {
+            getPaymentTypeFromCurrentPayment: function () {
                 var billingInfoPaymentType = this.get('paymentType'),
                         currentPayment = this.getOrder().apiModel.getCurrentPayment(),
                         currentPaymentType = currentPayment && currentPayment.billingInfo.paymentType;
@@ -363,36 +362,42 @@
                     this.set('paymentType', currentPaymentType);
                 }
             },
-            edit: function() {
+            edit: function () {
                 this.getPaymentTypeFromCurrentPayment();
                 CheckoutStep.prototype.edit.apply(this, arguments);
             },
-            initialize: function() {
+            initialize: function () {
                 var me = this;
                 _.defer(function () {
                     me.getPaymentTypeFromCurrentPayment();
                     me.setSavedPaymentMethod(me.get('savedPaymentMethodId'));
                 });
+                var billingContact = this.get('billingContact');
                 this.on('change:paymentType', this.selectPaymentType);
                 this.selectPaymentType(this, this.get('paymentType'));
                 this.on('change:isSameBillingShippingAddress', function (model, wellIsIt) {
                     if (wellIsIt) {
-                        this.get('billingContact').set(this.parent.get('fulfillmentInfo').get('fulfillmentContact').toJSON(), { silent: true });
+                        billingContact.set(this.parent.get('fulfillmentInfo').get('fulfillmentContact').toJSON(), { silent: true });
                     }
                 });
                 this.on('change:savedPaymentMethodId', this.syncPaymentMethod);
+
+                billingContact.validateBillingEmail = function (value) {
+                    return (me.nonStoreCreditTotal() === 0 || Backbone.Validation.patterns.email.test(value)) ? undefined : Hypr.getLabel('emailMissing');
+                };
+
                 _.bindAll(this, 'applyPayment', 'addStoreCredit');
             },
-            selectPaymentType: function(me, newPaymentType) {
+            selectPaymentType: function (me, newPaymentType) {
                 me.get('check').selected = newPaymentType == "Check";
                 me.get('card').selected = newPaymentType == "CreditCard";
             },
-            calculateStepStatus: function() {
+            calculateStepStatus: function () {
                 return this.stepStatus(this.parent.get('fulfillmentInfo').stepStatus() === "complete" ? (
                     (this.activePayments().length > 0 && (this.parent.get('amountRemainingForPayment') === 0)) ? 'complete' : 'invalid')
                     : 'new');
             },
-            getPaypalUrls: function() {
+            getPaypalUrls: function () {
                 var base = window.location.href + (window.location.href.indexOf('?') !== -1 ? "&" : "?");
                 return {
                     paypalReturnUrl: base + "PaypalExpress=complete",
@@ -431,6 +436,13 @@
                 this.stepStatus("complete");
                 this.isLoading(false);
                 this.getOrder().isReady(true);
+            },
+            toJSON: function (options) {
+                var j = CheckoutStep.prototype.toJSON.apply(this, arguments);
+                if ((!options || !options.helpers) && this.nonStoreCreditTotal() === 0) {
+                    delete j.billingContact;
+                }
+                return j;
             }
         });
 
@@ -438,17 +450,17 @@
 
         checkoutPageValidation = {
             'emailAddress': {
-                fn: function(value) {
+                fn: function (value) {
                     if (this.attributes.createAccount && (!value || !value.match(Backbone.Validation.patterns.email))) return Hypr.getLabel('emailMissing')
                 }
             },
             'password': {
-                fn: function(value) {
+                fn: function (value) {
                     if (this.attributes.createAccount && !value) return Hypr.getLabel('passwordMissing')
                 }
             },
             'confirmPassword': {
-                fn: function(value) {
+                fn: function (value) {
                     if (this.attributes.createAccount && value !== this.get('password')) return Hypr.getLabel('passwordsDoNotMatch')
                 }
             },
@@ -483,7 +495,7 @@
                         fulfillmentInfo = self.get('fulfillmentInfo'),
                         fulfillmentContact = fulfillmentInfo.get('fulfillmentContact'),
                         billingInfo = self.get('billingInfo'),
-                        isReady = ((fulfillmentInfo.stepStatus() + fulfillmentContact.stepStatus() + billingInfo.stepStatus()) === "completecompletecomplete") || 
+                        isReady = ((fulfillmentInfo.stepStatus() + fulfillmentContact.stepStatus() + billingInfo.stepStatus()) === "completecompletecomplete") ||
                                   (latestPayment && latestPayment.paymentType === "PaypalExpress" && window.location.href.indexOf('PaypalExpress=complete') !== -1);
                     self.isReady(isReady);
 
@@ -540,7 +552,7 @@
                 order.isSubmitting = false;
                 throw error;
             },
-            addNewCustomer: function() {
+            addNewCustomer: function () {
                 var self = this,
                     billingContact = this.get('billingInfo').get('billingContact'),
                     email = this.get('emailAddress');
@@ -560,7 +572,7 @@
                     throw error;
                 });
             },
-            syncBillingAndCustomerEmail: function() {
+            syncBillingAndCustomerEmail: function () {
                 var billingEmail = this.get('billingInfo').get('billingContact').get('email'),
                     customerEmail = this.get('emailAddress');
                 if (!customerEmail) this.set('emailAddress', billingEmail);
@@ -583,19 +595,19 @@
 
                 if (this.get("createAccount") && !this.customerCreated) {
                     process.push(this.addNewCustomer);
-                } 
+                }
 
                 if (this.get('shopperNotes').has('comments') || this.get('ipAddress')) {
                     process.push(this.update);
                 }
 
                 process.push(this.apiCheckout);
-                
-                
+
+
                 api.steps(process).then(this.onCheckoutSuccess, this.onCheckoutError);
 
             },
-            update: function() {
+            update: function () {
                 return this.apiModel.update(this.toJSON());
             },
             isReady: function (val) {

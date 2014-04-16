@@ -48,7 +48,63 @@ Ext.define('Taco.model.CmsDocument', {
             "name": "items",
             "type": "auto",
             defaultValue:[],
-            "useNull": true
+            "useNull": true,
+            serialize: function (value, record) {
+                var cleanValue= null,
+                    newItems = {};
+                if (value) {
+                    cleanValue = Ext.Array.clone(value);
+                    Ext.each(value, function (item, index, items) {
+                        var dotIndex = item.key.indexOf("."),
+                            parentKey,
+                            subKey,
+                            newItem;
+                        if (item.key.indexOf("extended_") == 0 && dotIndex > 0) {
+                            parentKey = item.key.substring(0, dotIndex);
+                            subKey = item.key.substring(dotIndex + 1);
+                            newItem = newItems[parentKey];
+                            if (!newItem) {
+                                newItem = {};
+                                newItems[parentKey] = newItem;
+                            }
+                            newItem[subKey] = item.value;
+                            Ext.Array.remove(cleanValue, item);
+                        }
+                    });
+                    Ext.Object.each(newItems, function (key, val) {
+                        cleanValue.push({ key: key, value: Ext.encode(val) });
+                    });
+                   
+                }
+                return cleanValue;
+
+            },
+            convert: function (value, record) {
+                var cleanValue = null;
+                
+                if (value) {
+                    cleanValue = Ext.Array.clone(value);
+                    Ext.each(value, function (item, index, items) {
+                        var json = item.value;
+                        if (item.key.indexOf("extended_") == 0 && item.key.indexOf(".")==-1) {
+                            if (Ext.isString(item.value)) {
+                                json = Ext.decode(item.value, true);
+                            }
+                            if (json) {
+                                Ext.Object.each(json, function (key, val) {
+                                    cleanValue.push({ key: item.key +"."+ key, value: val });
+                                });
+                                
+                                Ext.Array.remove(cleanValue, item);
+                            }
+                            
+                            
+                        }
+                    });
+                }
+                return cleanValue;
+
+            }
         }, {
             name: 'publishState'
         }

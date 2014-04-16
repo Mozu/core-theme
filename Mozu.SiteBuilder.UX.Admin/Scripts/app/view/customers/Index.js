@@ -29,115 +29,124 @@ Ext.define('Taco.view.customers.Index', {
        
 
         this.gridPanelConf = {
-            columns: [ {
-                dataIndex: 'id',
-                text: 'Customer Number',
-                width: 130
-            },{
-                dataIndex: 'firstNameSafe',
-                text: 'First Name',
-                width: 130,
-                renderer: function (value, metaData, record) {
-                    if (value)
-                        return value;
-                    if (!Ext.isEmpty(record.data.contacts)) {
-                        return Ext.util.Format.htmlEncode(record.data.contacts[0].firstName);
-                    }
-                    return null;
-                }
-                
-            }, {
-                dataIndex: 'lastNameSafe',
-                text: 'Last Name',
-                width: 130,
-                renderer: function (value, metaData, record) {
-                    if (value)
-                        return value;
-                    if (!Ext.isEmpty(record.data.contacts)) {
-                        return Ext.util.Format.htmlEncode(record.data.contacts[0].lastName);
-                    }
-                    return null;
-                }
-            }, {
-                dataIndex: 'emailAddressSafe',
-                text: 'Email',
-                width: 200,
-                renderer: function (value, metaData, record) {
-                    if (value)
-                        return value;
-                    if (!Ext.isEmpty(record.data.contacts)) {
-                        return Ext.util.Format.htmlEncode(record.data.contacts[0].emailAddress);
-                    }
-                    return null;
-                }
-            }, {
-                dataIndex: 'orderCount',
-                text: 'Fulfilled Orders',
-                width: 100
-            }, {
-                dataIndex: 'totalSpent',
-                text: 'Lifetime Value',
-                width: 100,
-                renderer: function (value, metaData, record) {
-                    return Ext.util.Format.usMoney(value);
-                }
-            }, {
-                dataIndex: 'visitCount',
-                text: 'Total Visits',
-                width: 100
-            }, {
-                dataIndex: 'segments',
-                text: 'Segments',
-                width: 300,
-                renderer: function (value, metaData, record) {
-                    var codes = [];
-                    if (value && value.length) {
-                        codes = Ext.Array.pluck(value, 'code');
-                        return codes.join(', ');
-                    }
-                    return '';
-
+            columns: {
+                defaults: {
+                    sortable: false
                 },
-                //    renderer: function(value, metaData, record) {
-                //    if (value && value.length) {
-                //        var names = [];
-                        
-                //        Ext.each(value || [], function(tagId) {
-                //            var tagRecord = me.tagStore.getById(tagId);
-
-                //            if (tagRecord) {
-                //                names.push(tagRecord.get('Value'));
-                //            }
-                //        });
-
-                //        if (names.length) {
-                //            return names.join(', ');
-                //        }
-                //    }
-                //},
-                minWidth: 100,
-                flex: 1
-            }, {
-                xtype: 'taco.menucolumn',
-                text: 'Actions',
-                flex:1,
-                menuItems: [{
-                    text: 'Edit',
-                    requiredBehaviors: {
-                        model: 'Taco.model.CustomerAccount',
-                        behavior: 'update'
-                    },
-                    menuColumnHandler: function (item, eventData) {
-                        var page = eventData.grid.getParentPage(),
-                            record = eventData.record,
-                            metaData = { id: record.getId() };
-
-                        page.launchEditor(record, metaData);
+                items: [
+                {
+                    dataIndex: 'id',
+                    sortable: true,
+                    text: 'Customer Number',
+                    width: 130
+                }, {
+                    dataIndex: 'firstNameSafe',
+                    text: 'First Name',
+                    width: 130,
+                    renderer: function (value, metaData, record) {
+                        if (value)
+                            return value;
+                        if (!Ext.isEmpty(record.data.contacts)) {
+                            return Ext.util.Format.htmlEncode(record.data.contacts[0].firstName);
+                        }
+                        return null;
                     }
-                }],
-                // do any processing needed to show menu
-                onMenuShow: function (menu, eventData) {}
-            }]
+
+                }, {
+                    dataIndex: 'lastNameSafe',
+                    text: 'Last Name',
+                    width: 130,
+                    renderer: function (value, metaData, record) {
+                        if (value)
+                            return value;
+                        if (!Ext.isEmpty(record.data.contacts)) {
+                            return Ext.util.Format.htmlEncode(record.data.contacts[0].lastName);
+                        }
+                        return null;
+                    }
+                }, {
+                    dataIndex: 'emailAddressSafe',
+                    text: 'Email',
+                    width: 200,
+                    renderer: function (value, metaData, record) {
+                        if (value)
+                            return value;
+                        if (!Ext.isEmpty(record.data.contacts)) {
+                            return Ext.util.Format.htmlEncode(record.data.contacts[0].emailAddress);
+                        }
+                        return null;
+                    }
+                }, {
+                    dataIndex: 'orderCount',
+                    sortable: true,
+                    text: 'Fulfilled Orders',
+                    width: 100
+                }, {
+                    dataIndex: 'totalSpent',
+                    sortable: true,
+                    text: 'Lifetime Value',
+                    width: 100,
+                    renderer: function (value, metaData, record) {
+                        return Ext.util.Format.usMoney(value);
+                    }
+                }, {
+                    dataIndex: 'visitCount',
+                    text: 'Total Visits',
+                    width: 100
+                }, {
+                    dataIndex: 'segments',
+                    text: 'Segments',
+                    width: 300,
+                    renderer: function (value, metaData, record) {
+                        var codes = [];
+                        if (value && value.length) {
+                            codes = Ext.Array.pluck(value, 'code');
+                            return codes.join(', ');
+                        }
+                        return '';
+
+                    },
+                    //    renderer: function(value, metaData, record) {
+                    //    if (value && value.length) {
+                    //        var names = [];
+
+                    //        Ext.each(value || [], function(tagId) {
+                    //            var tagRecord = me.tagStore.getById(tagId);
+
+                    //            if (tagRecord) {
+                    //                names.push(tagRecord.get('Value'));
+                    //            }
+                    //        });
+
+                    //        if (names.length) {
+                    //            return names.join(', ');
+                    //        }
+                    //    }
+                    //},
+                    minWidth: 100,
+                    flex: 1
+                }, {
+                    xtype: 'taco.menucolumn',
+                    text: 'Actions',
+                    flex: 1,
+                    menuItems: [{
+                        text: 'Edit',
+                        requiredBehaviors: {
+                            model: 'Taco.model.CustomerAccount',
+                            behavior: 'update'
+                        },
+                        menuColumnHandler: function (item, eventData) {
+                            var page = eventData.grid.getParentPage(),
+                                record = eventData.record,
+                                metaData = { id: record.getId() };
+
+                            page.launchEditor(record, metaData);
+                        }
+                    }],
+                    // do any processing needed to show menu
+                    onMenuShow: function (menu, eventData) { }
+                }]
+            } 
         };
         
         this.callParent(arguments);

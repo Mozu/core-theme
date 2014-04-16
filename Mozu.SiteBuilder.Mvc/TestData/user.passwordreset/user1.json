@@ -1,0 +1,51 @@
+﻿{
+ "id": 1019,
+ "emailAddress": "dpuddy14@gmail.com",
+ "userName": "dpuddy14@gmail.com",
+ "firstName": "David",
+ "lastName": "Puddy",
+ "commerceSummary": {
+  "totalOrderAmount": {},
+  "visitsCount": 10
+ },
+ "contacts": [
+  {
+   "accountId": 1019,
+   "types": [
+    {
+     "name": "Billing",
+     "isPrimary": true
+    }
+   ],
+   "auditInfo": {
+    "createDate": "2014-01-07T03:11:08.913",
+    "createBy": "88318826167a438ab4bf32679971c561"
+   },
+   "id": 1018,
+   "email": "dpuddy14@gmail.com",
+   "firstName": "David",
+   "lastNameOrSurname": "Puddy",
+   "phoneNumbers": {
+    "home": "617-635-3880"
+   },
+   "address": {
+    "address1": "43 Hawkins St",
+    "cityOrTown": "Boston",
+    "stateOrProvince": "MA",
+    "postalOrZipCode": "02114",
+    "countryCode": "US",
+    "addressType": "None",
+    "isValidated": false
+   }
+  }
+ ],
+ "userId": "a5b8ccc3bd5c46768df30d7d0a693cd3",
+ "notes": [],
+ "groups": [],
+ "taxExempt": false,
+ "isAnonymous": false,
+ "auditInfo": {
+  "createDate": "2014-01-07T03:11:08.333",
+  "createBy": "a5b8ccc3bd5c46768df30d7d0a693cd3"
+ }
+}

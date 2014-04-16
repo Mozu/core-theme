@@ -500,6 +500,10 @@ Ext.define('Taco.view.website.Index', {
                 callback: function () {
                     Ext.fly(body).setStyle('cursor', 'auto');
                 },
+                failure:function (response) {
+                    var res = Ext.JSON.decode(response.responseText);
+                    Taco.MessageBox.alert('Error', 'There was a problem adding the widget: ' + res.message);
+                },
                 success: function (response) {
                     var ret = Ext.JSON.decode(response.responseText);
 
@@ -579,7 +583,11 @@ Ext.define('Taco.view.website.Index', {
                             success: function (response) {
                                 var ret = Ext.JSON.decode(response.responseText);
                                 callbackWrapper(ret, cfg);
-                            }
+                            },
+                            failure: function (response) {
+                                var res = Ext.JSON.decode(response.responseText);
+                                Taco.MessageBox.alert('Error', 'There was a problem adding the widget: ' + res.message);
+                            },
                         });
                     }
                 }

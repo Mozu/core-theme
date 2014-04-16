@@ -492,7 +492,50 @@ Ext.define('Taco.model.Order', {
 
     ],
     
+    reload: function (config) {
+        var me = this,
+            config = config || {},
+            modifiedNames = [],
+            loadConfig = Ext.applyIf(
+             {
+                 bypassCache: true,
+                 success: function (record) {
 
+
+
+
+                     if (record.getId() == me.getId()) {
+                         me.beginEdit();
+                         modifiedNames = me.copyFrom(record);
+
+                         me.associations.each(function (association) {
+                             var reader = association.getReader();
+                             if (reader) {
+                                 association.read(me, reader, me.get(association.name));
+                             }
+                         });
+
+                         me.endEdit(false, modifiedNames);
+                         me.commit(false, modifiedNames);
+                     }
+
+                     if (config.success) {
+                         Ext.callback(config.success, config.scope, arguments);
+                     }
+                     me.fireEvent("reload", me);
+                 }
+             },
+             config
+            );
+
+
+
+
+        //tbd: remove this
+
+
+        this.self.load(me.getId(), loadConfig);
+    },
     getAttributes: function () {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.ExtensibleAttributeValue',

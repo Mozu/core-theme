@@ -61,7 +61,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var redir = _settings.LoginPath + "/to?scopeType=Tenant&redirectUrl=" + returnUrl;
             if (!_handledByRP)
             {
-                redir += "&PostbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants&showdev=true";
+                redir += "&PostbackUrl=http://" + GetHost() + "/admin/auth/pants&showdev=true";
             }
 
             var message = new System.Net.Http.HttpResponseMessage(HttpStatusCode.Redirect);
@@ -79,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             //redirectUrl=%2Fadmin&accessToken=4BOtDlSWnUJ%2Fyli1jpWidgFVEkpey96IBLWO8Kve5Ka8un912AIQsvoOqOJEIC8CVoMYv8x2tsDg99NLkK8%2BiH%2BSvXNi0RrfsTTpieIUyps69%2FnXf6wK8yKouea9k1QLSjcgF72Dyzj4mY4YCYLg0DDKycD28XbrdGHnPIUGFp3svwaK5Ca2PAw1qMasMvut525lcNDVYjdTXbA1gIEqLGiONo5InlFfjduQRPaBhoGtCUuDcspYMG9nHVkKxjSFXdVqEX%2FTmvBMEt4Rh9ruXpbyO5zOB9LqwAtEU94tZxMlnvaJ8QgFN0pDAZ4uZGtOAbgo%2BXydVE76NNiOyqI9L5l%2FsU3pq3SbT96q%2F%2Blb%2FC3RRo5kiN%2F8DxpqlD2yl2AN
             var user = LightweightUserClaims.Parse(accessToken);
 
-            Mozu.SiteBuilder.Mvc.Contexts.SiteContext.Save(null, null, user.GetUserScope().Id.Value, false, DataViewModeType.NoneSet, _cookieProvider);
+            Mozu.SiteBuilder.Mvc.Contexts.SiteContext.Save(null, null, user.GetUserScope().Id.Value, false, DataViewModeType.NoneSet, _cookieProvider, null);
             
             _apiContext.SetUser(user);
             _authenticationHelper.SaveAdminAccessToken(  accessToken);
@@ -100,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
               if (!_handledByRP)
             {
-                redir += "?postbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants&scopeType=tenant&showdev=true";
+                redir += "?postbackUrl=http://" + GetHost() + "/admin/auth/pants&scopeType=tenant&showdev=true";
             }
             
 
@@ -122,7 +122,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var redir = _settings.LoginPath + "/home/Logout";
             if (!_handledByRP)
             {
-                redir += "?PostbackUrl=http://" + HttpContext.Request.Headers["host"] + "/admin/auth/pants&scopeType=tenant&showdev=true";
+                redir += "?PostbackUrl=http://" + GetHost() + "/admin/auth/pants&scopeType=tenant&showdev=true";
             }
             var resp = new HttpResponseMessage(HttpStatusCode.Redirect );
             resp.Headers.Location = new Uri(redir);
@@ -130,5 +130,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         }
 
         public bool _handledByRP { get; set; }
+
+        private string GetHost()
+        {
+            return !string.IsNullOrEmpty( HttpContext.Request.Headers["x-forwarded-host"] ) ? HttpContext.Request.Headers["x-forwarded-host"] : HttpContext.Request.Headers["host"];
+        }
     }
 }

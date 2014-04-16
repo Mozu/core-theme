@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using Mozu.Content.Contracts;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
 using Document = Mozu.Content.Contracts.Document;
 
 
@@ -142,7 +144,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 
             var key = typeof(List<ThemeRuntimeSetting>) + themeId;
 
-            var cachedResult = _cache[key] as Tuple<DateTime, JObject, byte[]>;
+            var cachedResult = _cache.Get<Tuple<DateTime, JObject, byte[]>>(key);
             if (cachedResult != null )
             {
                 var tcs = new TaskCompletionSource<JObject>();
@@ -176,14 +178,13 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                                     value = new JObject();
                                 }
                             }
-
-                            _cache[key] = new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, this.Etag );
+                            _cache.Set(key,new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, this.Etag ));
                         }
                         else
                         {
                             _ts = DateTime.Today;
                             this.Etag = new byte[0];
-                            _cache[key] = new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, this.Etag);
+                              _cache.Set(key,new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, this.Etag));
 
                         }
                         return value ?? new JObject();

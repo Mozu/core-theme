@@ -143,7 +143,25 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         /// </summary>
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("type", _nodeType, typeof(string));
+            info.AddValue("nodeType", _nodeType, typeof(string));
+        }
+
+
+        public class NavigationNodeTypeConverter : Newtonsoft.Json.JsonConverter {
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(NavigationNodeType);
+            }
+
+            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                return (NavigationNodeType)reader.ReadAsString();
+            }
+
+            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                writer.WriteValue(value.ToString());
+            }
         }
     }
 }

@@ -45,7 +45,9 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     // if the document doesn't exist, create it first.
                     if (serviceClientResponse != null && serviceClientResponse.ResponseMessage != null && serviceClientResponse.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
                     {
-                        var doc = CreateNavigationDocument(new NavigationSet());
+                        var ns = new NavigationSet();
+                        ns.Add(new SimpleRuntimeNavigationNode { Id = "page^^hi" });
+                        var doc = CreateNavigationDocument(ns);
                         var res = new TestResponse<DC.Document>(doc);
                         return res.Task;
                     }

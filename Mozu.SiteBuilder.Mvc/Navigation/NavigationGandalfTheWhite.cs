@@ -98,8 +98,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     NodeType = NavigationNodeType.Group,
                     Id = NAV_ROOT_NODE_NAME,
                     ParentId = SUPER_ROOT_NODE_NAME,
-                    Expandable = true,
-                    Expanded = true,
+                    IsSystemNode = true,
+                    AllowDrop = true,
                     Index = 0
                 });
 
@@ -109,8 +109,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     NodeType = NavigationNodeType.Group,
                     Id = UNLINKED_PAGES_NODE_ID,
                     ParentId = SUPER_ROOT_NODE_NAME,
-                    Expandable = true,
-                    Expanded = true,
+                    IsSystemNode = true,
+                    AllowDrop = true,
                     Index = 1
                 });
 
@@ -142,8 +142,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                                 ParentId = navmeta.ParentId,
                                 OriginalId = page.Id,
                                 Index = navmeta.Index,
-                                Url = String.Equals(page.DocumentListName, "pages", StringComparison.OrdinalIgnoreCase) ? "/" + page.Name : "/" + page.DocumentListName + "/" + page.Name,
-                                IsLeaf = true
+                                Url = String.Equals(page.DocumentListName, "pages", StringComparison.OrdinalIgnoreCase) ? "/" + page.Name : "/" + page.DocumentListName + "/" + page.Name
                             };
                         }
                         else
@@ -161,8 +160,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                             Url = navmeta.Url,
                             Index = navmeta.Index,
                             ParentId = navmeta.ParentId,
-                            NodeType = NavigationNodeType.Link,
-                            IsLeaf = true
+                            NodeType = NavigationNodeType.Link
                         };
                     }
                     else
@@ -204,7 +202,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         ParentId = UNLINKED_PAGES_NODE_ID,
                         OriginalId = p.Id,
                         Index = 0,
-                        IsLeaf = true
+                        Url = String.Equals(p.DocumentListName, "pages", StringComparison.OrdinalIgnoreCase) ? "/" + p.Name : "/" + p.DocumentListName + "/" + p.Name,
                     };
                 masterList.AddRange(allUnassigned);
 
@@ -234,8 +232,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         Url = cat.Content == null || String.IsNullOrEmpty(cat.Content.Slug) ? "/c/" + cat.CategoryId : "/" + cat.Content.Slug + "/c/" + cat.CategoryId,
                         Name = cat.Content.Name,
                         Index = cat.Sequence.GetValueOrDefault(0),
-                        IsLeaf = false,
-                        Expandable = true
+                        IsHidden = !cat.IsDisplayed
                     });
 
                 // recursively deal with children
@@ -286,9 +283,11 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 parent.Items.Add(n);
             }
 
-            var topLevelNav = root.Items.Cast<SuperNavigationNode>().ToList();
+            var topLevelNav = root.Items != null ? root.Items.Cast<SuperNavigationNode>().ToList() : new List<SuperNavigationNode>(0);
             var homePage = topLevelNav.OrderBy(n => n.Index).FirstOrDefault(node => !node.NodeType.IsLink && !String.IsNullOrEmpty(node.Url));
-            return root.Items.Cast<SuperNavigationNode>().ToList();
+            if (homePage != null)
+                homePage.IsHomePage = true;
+            return topLevelNav;
         }
     }
 }

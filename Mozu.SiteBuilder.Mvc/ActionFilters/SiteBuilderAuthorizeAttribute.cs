@@ -31,5 +31,10 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 
         }
 
+        public override bool AllowMultiple
+        {
+            get { return false; }
+        }
+
     }
 }

@@ -20,6 +20,7 @@ using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
+using Mozu.SiteBuilder.UX.TestData;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json;
 using DC = Mozu.Content.Contracts;
@@ -121,23 +122,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             EmailTypeInfo emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic, id, StringComparison.OrdinalIgnoreCase));
 
-            var model = new object();
+           // var model = new object();
 
-            if (emailTypeInfo != null)
-            {
-                if (emailTypeInfo.ModelType == typeof(Order))
-                {
-                    model = JsonConvert.DeserializeObject<Order>(_mockOrder);
-                }
-                else if (emailTypeInfo.ModelType == typeof(Mozu.CommerceRuntime.Contracts.Returns.Return))
-                {
-                    model = JsonConvert.DeserializeObject<Mozu.CommerceRuntime.Contracts.Returns.Return>(_mockRma);
-                }
-                else if (emailTypeInfo.ModelType == typeof(Mozu.ProductRuntime.Contracts.Product))
-                {
-                    model = JsonConvert.DeserializeObject<Mozu.ProductRuntime.Contracts.Product>(_mockProduct);
-                }
-            }
+            var model = TestDataBroker.Default.GetFileContents(id).FirstOrDefault() ?? new object();
+
+           
             var site = (await _sitesWebApiClient.GetSite(this.SbApiContext.SiteId)).ReadAsSync();
             HttpResponseMessage res = await Page("email", GetCmsPage(emailTempalte));
             if (res.StatusCode == HttpStatusCode.NotFound)
@@ -168,9 +157,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             PageContext.PageType = "email";
-            var vr = ((ObjectContent) res.Content).Value as ViewResult;
-            vr.ViewName = emailTempalte.Template;
-            ViewData["content"] = vr.Model;
+            ViewResult vr = null;
+            if (res.IsSuccessStatusCode)
+            {
+                vr = ((ObjectContent) res.Content).Value as ViewResult;
+                vr.ViewName = emailTempalte.Template;
+                ViewData["content"] = vr.Model;
+            }
+          
+            
             ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
             ViewData["rmaLocation"] = _locationRuntimeWebApiClient.GetDirectShipLocation().Result.ReadAsSync();
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mozu.SiteBuilder.UX.Caching
+namespace Mozu.SiteBuilder.Mvc.Caching
 {
     public enum CacheScope
     {

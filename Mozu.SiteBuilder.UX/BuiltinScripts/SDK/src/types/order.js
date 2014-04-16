@@ -7,9 +7,9 @@ module.exports = (function() {
     errors.register({
         'BILLING_INFO_MISSING': 'Billing info missing.',
         'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED': 'Payment type missing or unrecognized.',
-        'PAYMENT_MISSING': 'Expected a payment to exist on this order and one did not.',
-        'PAYPAL_TRANSACTION_ID_MISSING': 'Expected the active payment to include a paymentServiceTransactionId and it did not.',
-        'ORDER_CANNOT_SUBMIT': 'Order cannot be submitted. Is order complete?',
+        'PAYMENT_MISSING': 'Sorry, something went wrong: Expected a payment to exist on this order and one did not.',
+        'PAYPAL_TRANSACTION_ID_MISSING': 'Sorry, something went wrong: Expected the active payment to include a paymentServiceTransactionId and it did not.',
+        'ORDER_CANNOT_SUBMIT': 'Sorry, this order cannot be submitted. Please refresh the page and try again, or contact Support.',
         'ADD_COUPON_FAILED': 'Adding coupon failed for the following reason: {0}',
         'ADD_CUSTOMER_FAILED': 'Adding customer failed for the following reason: {0}'
     });

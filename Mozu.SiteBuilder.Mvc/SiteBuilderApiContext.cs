@@ -269,6 +269,7 @@ namespace Mozu.SiteBuilder.Mvc
                 {
                     this.SiteId = site.Id;
                     this.MasterCatalogId = site.MasterCatalogId ;
+                    this.CatalogId = site.CatalogId;
                     this.TenantId = site.TenantId;
                     return;
                 }
@@ -311,6 +312,10 @@ namespace Mozu.SiteBuilder.Mvc
                 if (int.TryParse(cookie["masterCatalog"], out tmpInt))
                 {
                     this.MasterCatalogId = tmpInt;
+                }
+                if (int.TryParse(cookie["catalog"], out tmpInt))
+                {
+                    this.CatalogId  = tmpInt;
                 }
                 DataViewModeType dataViewModeType;
                 if (Enum.TryParse<DataViewModeType>(cookie["dataview"], true, out dataViewModeType))

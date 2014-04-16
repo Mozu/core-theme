@@ -13,35 +13,54 @@
 
     var ProductOption = Backbone.MozuModel.extend({
         idAttribute: "attributeFQN",
+        helpers: ['isChecked'],
         initialize: function() {
             var me = this;
             _.defer(function() {
                 me.listenTo(me.collection, 'invalidoptionselected', me.handleInvalid, me);
             });
-            me.on("change:value", function(model, newVal) {
-                var newValObj, values = me.get("values");
-                newVal = $.trim(newVal);
-                if (newVal) {
-                    _.each(values, function(fvalue) {
-                        if (fvalue.value.toString() === newVal.toString()) {
-                            newValObj = fvalue;
-                            fvalue.isSelected = true;
-                            me.set("value", newVal);
-                        } else {
-                            fvalue.isSelected = false;
-                        }
-                    });
-                    me.set("values", values);
-                    //if (me.get("attributeDetail").inputType !== "List") {
-                    //    me.set("shopperEnteredValue", newVal);
-                    //}
-                } else {
-                    me.unset('value');
-                    me.unset("shopperEnteredValue");
-                }
-                if (newValObj && !newValObj.isEnabled) me.collection.trigger('invalidoptionselected', newValObj, me);
-                me.trigger('optionchange', newVal, me);
-            });
+            if (me.get('attributeDetail').inputType === "YesNo") {
+                me.on('change:value', function(model, newVal) {
+                    var values;
+                    if (me.previous('value') !== newVal) {
+                        values = me.get('values');
+                        _.first(values).isSelected = newVal;
+                        me.set({
+                            value: newVal,
+                            shopperEnteredValue: newVal,
+                            values: values
+                        }, {
+                            silent: true
+                        });
+                        me.trigger('optionchange', newVal, me);
+                    }
+                });
+            } else {
+                me.on("change:value", function(model, newVal) {
+                    var newValObj, values = me.get("values");
+                    if (typeof newVal === "string") newVal = $.trim(newVal);
+                    if (newVal || newVal === false || newVal === 0 || newVal === '') {
+                        _.each(values, function(fvalue) {
+                            if (fvalue.value.toString() === newVal.toString()) {
+                                newValObj = fvalue;
+                                fvalue.isSelected = true;
+                                me.set("value", newVal);
+                            } else {
+                                fvalue.isSelected = false;
+                            }
+                        });
+                        me.set("values", values);
+                        //if (me.get("attributeDetail").inputType !== "List") {
+                        //    me.set("shopperEnteredValue", newVal);
+                        //}
+                    } else {
+                        me.unset('value');
+                        me.unset("shopperEnteredValue");
+                    }
+                    if (newValObj && !newValObj.isEnabled) me.collection.trigger('invalidoptionselected', newValObj, me);
+                    me.trigger('optionchange', newVal, me);
+                });
+            }
         },
         handleInvalid: function(newValObj, opt) {
             if (this !== opt) {
@@ -71,7 +90,11 @@
             }
             return raw;
         },
-        isConfigured: function () {
+        isChecked: function() {
+            return this.get('attributeDetail').inputType === "YesNo" && this.attributes.values && this.attributes.values[0].isSelected;
+        },
+        isConfigured: function() {
+            if (this.isChecked()) return true;
             var value = this.get('value') || this.get('shopperEnteredValue');
             var legalValues = _.chain(this.get('values')).pluck('value').map(function(v) { return !_.isUndefined(v) && !_.isNull(v) ? v.toString() : v });
             return value !== undefined && value !== '' && legalValues.contains(value).value();
@@ -83,6 +106,7 @@
                 if (j.attributeDetail.dataType === "Number") val = parseFloat(val);
                 j.shopperEnteredValue = j.value = val;
             }
+
             return j;
         }
     }),

@@ -312,12 +312,15 @@ Ext.define('Taco.model.Product', {
         {
             name: "mapStartDate",
             type: "date",
-            useNull: true
+            dateWriteFormat: "c",
+            useNull: true,
         },
         {
             name: "mapEndDate",
             type: "date",
-            useNull: true
+            dateWriteFormat: "c",
+            useNull: true,
+            
         },
         {
             name: "mfgPartNumber",
@@ -370,6 +373,7 @@ Ext.define('Taco.model.Product', {
         {
             name: "discountsRestrictedEndDate",
             type: "date",
+            dateWriteFormat: "c",
             useNull: true
         },
 

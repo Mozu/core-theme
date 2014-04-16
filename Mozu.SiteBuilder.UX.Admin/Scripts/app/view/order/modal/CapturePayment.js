@@ -24,7 +24,7 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
                 fieldLabel: 'Amount to Capture',
                 selectOnFocus: true,
                 width: 170,
-                value: this.record.data.amountAuthorized
+                value: Math.min(this.record.data.amountAuthorized, this.order.data.authorizationInfo.captureAmount)
             }]
         });
 

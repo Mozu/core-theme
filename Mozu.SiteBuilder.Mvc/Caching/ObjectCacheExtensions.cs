@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mozu.SiteBuilder.UX.Caching
+namespace Mozu.SiteBuilder.Mvc.Caching
 {
     internal static class ObjectCacheExtensions
     {

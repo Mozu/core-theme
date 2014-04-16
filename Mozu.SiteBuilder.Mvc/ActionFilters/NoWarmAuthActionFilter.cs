@@ -8,6 +8,11 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
     public class NoWarmAuthActionFilter : ActionFilterAttribute
     {
+        public override bool AllowMultiple
+        {
+            get { return false; }
+        }
+
 
         public string ReturnUrl
         {

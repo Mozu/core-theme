@@ -24,10 +24,14 @@
                 optionEl = $optionEl[0],
                 isPicked = (optionEl.type !== "checkbox" && optionEl.type !== "radio") || optionEl.checked,
                 option = this.model.get('options').get(id);
-            if (option && isPicked) {
-                oldValue = option.get('value');
-                if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
-                    option.set('value', newValue);
+            if (option) {
+                if (option.get('attributeDetail').inputType === "YesNo") {
+                    option.set("value", isPicked);
+                } else if (isPicked) {
+                    oldValue = option.get('value');
+                    if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
+                        option.set('value', newValue);
+                    }
                 }
             }
         },

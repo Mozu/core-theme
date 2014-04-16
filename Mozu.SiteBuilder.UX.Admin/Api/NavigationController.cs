@@ -28,10 +28,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         // the top level name in EXT's tree thing (a root pseudo-node).
         public const string SUPER_ROOT_NODE_NAME = "root";
-
-        // the top level name in EXT's tree thing (a root pseudo-node).
-        public const string NAV_ROOT_NODE_NAME = "_navigation";
-
         // the special node to assign unlinked pages as a child of.
         public const string UNLINKED_PAGES_NODE_ID = "_unlinked";
 
@@ -189,7 +185,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                              Expandable = true,
                              Index = 99,
                              Name = "Templates",
-                             ParentId = "root",
+                             ParentId = SUPER_ROOT_NODE_NAME,
                              IsHidden = false
                          });
 
@@ -219,7 +215,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                              Expandable = true,
                              Index = 100,
                              Name = "Email Templates",
-                             ParentId = "root",
+                             ParentId = SUPER_ROOT_NODE_NAME,
                              IsHidden = false
                          });
 

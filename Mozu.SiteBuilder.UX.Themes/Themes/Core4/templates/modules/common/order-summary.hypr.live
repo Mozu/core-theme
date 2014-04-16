@@ -22,11 +22,14 @@
                       {% endif %}
                     </td>
                     <td>{{ item.quantity }}</td>
-                    <td><span class="mz-ordersummary-price{% if item.discountTotal > 0 %} mz-strikethrough{% endif %}">{{ item.unitPrice.baseAmount|currency }}</span></td>
-                    <td><span class="mz-ordersummary-price mz-ordersummary-itemtotal{% if item.discountTotal > 0 %} mz-strikethrough{% endif %}">{{ item.subtotal|currency }}</span></td>
+                    <td><span class="mz-ordersummary-price{% if item.discountTotal > 0 %} mz-strikethrough{% endif %}">{{ item.unitPrice.listAmount|currency }}</span>
+                        {% if item.unitPrice.saleAmount > 0 and not item.unitPrice.discountedAmount > 0 %}<span class="mz-ordersummary-price is-saleprice">{{ item.unitPrice.saleAmount|currency }}</span>{% endif %}
+                    </td>
+                    <td><span class="mz-ordersummary-price mz-ordersummary-itemtotal">{{ item.total|currency }}</span>
+                    </td>
                 </tr>
               
-                {% if item.discountTotal > 0 %}
+                {% if item.unitPrice.discountedAmount > 0 %}
                     <tr class="mz-ordersummary-line mz-ordersummary-line-discount">
                         <td colspan="2">
                             {% for productDiscount in item.productDiscounts %}

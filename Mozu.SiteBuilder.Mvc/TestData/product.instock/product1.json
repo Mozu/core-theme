@@ -1,0 +1,391 @@
+﻿{
+  "productCode": "MS-SKI-JKT-024",
+  "productSequence": 478,
+  "productUsage": "Configurable",
+  "bundledProducts": [],
+  "content": {
+    "productName": "Isotherm WS Jacket - Women's",
+    "productFullDescription": "<div>• Windproof fabric protects your core and shoulders from the wind and cold without sacrificing breathability and mobility</div><div>• Underarm and rear panels with moisture-wicking, quick-drying FlashDry fibers draw moisture away from skin to keep you more comfortable when working hard in cold weather&nbsp;</div><div>• Fabric mapping delivers optimum temperature regulation in gender-specific thermal zones to keep you more comfortable during long-distance Nordic ski sessions</div><div>• Reflective taping can be seen from any angle</div><div>• Thumbholes; secure rear pocket; shaped hem; reflective logos&nbsp;</div><div>• Athlete tested and competition proven, The North Face Isotherm WS jacket for women is part of the Flight Series® collection</div>",
+    "productShortDescription": "<div>The North Face Isotherm WS jacket for women uses GORE WINDSTOPPER® fabric with FlashDry™ fibers in the side panels to regulate your temperature while Nordic skiing in cold weather.&nbsp;</div><div><br></div>",
+    "metaTagTitle": "",
+    "metaTagDescription": "",
+    "metaTagKeywords": "",
+    "seoFriendlyUrl": "",
+    "productImages": [
+      {
+        "imageUrl": "//cdn-sb.mozu.com/3706-4507/cms/4507/files/91f8dc68-3f06-421f-8000-830f321cdc83",
+        "cmsId": "91f8dc68-3f06-421f-8000-830f321cdc83",
+        "sequence": 1
+      },
+      {
+        "imageUrl": "//cdn-sb.mozu.com/3706-4507/cms/4507/files/616b38a6-89d0-48db-86b9-09cc6c2dd41d",
+        "cmsId": "616b38a6-89d0-48db-86b9-09cc6c2dd41d",
+        "sequence": 2
+      },
+      {
+        "imageUrl": "//cdn-sb.mozu.com/3706-4507/cms/4507/files/c9504426-6814-497d-9548-4c19f39068f1",
+        "cmsId": "c9504426-6814-497d-9548-4c19f39068f1",
+        "sequence": 3
+      }
+    ]
+  },
+  "purchasableState": {
+    "isPurchasable": false,
+    "messages": [
+      {
+        "severity": "Info",
+        "source": "ConfigurableProduct",
+        "message": "Not done configuring"
+      }
+    ]
+  },
+  "isActive": true,
+  "publishState": "Live",
+  "price": {
+    "price": 160
+  },
+  "isTaxable": true,
+  "inventoryInfo": {
+    "manageStock": true,
+    "outOfStockBehavior": "DisplayMessage",
+    "onlineLocationCode": "BWH"
+  },
+  "createDate": "2013-12-31T21:02:23.8581",
+  "categories": [
+    {
+      "categoryId": 2,
+      "content": {
+        "categoryImages": [],
+        "name": "Skiing",
+        "description": "Skiing",
+        "pageTitle": "Skiing",
+        "metaTagTitle": "Skiing",
+        "metaTagDescription": "Skiing",
+        "metaTagKeywords": "Skiing",
+        "slug": "skiing"
+      },
+      "childrenCategories": [],
+      "sequence": 0,
+      "isDisplayed": true
+    },
+    {
+      "categoryId": 6,
+      "content": {
+        "categoryImages": [],
+        "name": "Apparel",
+        "description": "Apparel",
+        "pageTitle": "Apparel",
+        "metaTagTitle": "Apparel",
+        "metaTagDescription": "Apparel",
+        "metaTagKeywords": "Apparel",
+        "slug": "apparel"
+      },
+      "childrenCategories": [],
+      "sequence": 6,
+      "isDisplayed": true
+    },
+    {
+      "categoryId": 23,
+      "parentCategory": {
+        "categoryId": 2,
+        "content": {
+          "categoryImages": [],
+          "name": "Skiing",
+          "description": "Skiing",
+          "pageTitle": "Skiing",
+          "metaTagTitle": "Skiing",
+          "metaTagDescription": "Skiing",
+          "metaTagKeywords": "Skiing",
+          "slug": "skiing"
+        },
+        "childrenCategories": [],
+        "sequence": 3,
+        "isDisplayed": true
+      },
+      "content": {
+        "categoryImages": [],
+        "name": "Ski Jackets",
+        "description": "Ski Jackets",
+        "pageTitle": "Ski Jackets",
+        "metaTagTitle": "Ski Jackets",
+        "metaTagDescription": "Ski Jackets",
+        "metaTagKeywords": "Ski Jackets",
+        "slug": "ski-jackets"
+      },
+      "childrenCategories": [],
+      "sequence": 3,
+      "isDisplayed": true
+    }
+  ],
+  "measurements": {
+    "packageHeight": {
+      "unit": "in",
+      "value": 2
+    },
+    "packageWidth": {
+      "unit": "in",
+      "value": 8
+    },
+    "packageLength": {
+      "unit": "in",
+      "value": 12
+    },
+    "packageWeight": {
+      "unit": "lbs",
+      "value": 2.9
+    }
+  },
+  "properties": [
+    {
+      "attributeFQN": "tenant~availability",
+      "isHidden": false,
+      "isMultiValue": false,
+      "attributeDetail": {
+        "valueType": "Predefined",
+        "inputType": "List",
+        "dataType": "String",
+        "usageType": "Property",
+        "dataTypeSequence": 1,
+        "name": "Availability"
+      },
+      "values": [
+        {
+          "value": "24-48hrs",
+          "stringValue": "Usually Ships in 24 to 48 Hours"
+        }
+      ]
+    },
+    {
+      "attributeFQN": "Tenant~Back-Length",
+      "isHidden": false,
+      "isMultiValue": false,
+      "attributeDetail": {
+        "valueType": "Predefined",
+        "inputType": "List",
+        "dataType": "String",
+        "usageType": "Property",
+        "dataTypeSequence": 60,
+        "name": "Back Length",
+        "description": ""
+      },
+      "values": [
+        {
+          "value": "Waist-Length",
+          "stringValue": "Waist-Length"
+        }
+      ]
+    },
+    {
+      "attributeFQN": "Tenant~Best-Use",
+      "isHidden": false,
+      "isMultiValue": false,
+      "attributeDetail": {
+        "valueType": "Predefined",
+        "inputType": "List",
+        "dataType": "String",
+        "usageType": "Property",
+        "dataTypeSequence": 44,
+        "name": "Best Use",
+        "description": ""
+      },
+      "values": [
+        {
+          "value": "Cross-Country-Skiing",
+          "stringValue": "Cross Country Skiing"
+        }
+      ]
+    },
+    {
+      "attributeFQN": "Tenant~Brand",
+      "isHidden": false,
+      "isMultiValue": false,
+      "attributeDetail": {
+        "valueType": "Predefined",
+        "inputType": "List",
+        "dataType": "String",
+        "usageType": "Property",
+        "dataTypeSequence": 61,
+        "name": "Brand",
+        "description": ""
+      },
+      "values": [
+        {
+          "value": "The-North-Face",
+          "stringValue": "The North Face"
+        }
+      ]
+    },
+    {
+      "attributeFQN": "Tenant~Gender",
+      "isHidden": false,
+      "isMultiValue": false,
+      "attributeDetail": {
+        "valueType": "Predefined",
+        "inputType": "List",
+        "dataType": "String",
+        "usageType": "Property",
+        "dataTypeSequence": 73,
+        "name": "Gender",
+        "description": ""
+      },
+      "values": [
+        {
+          "value": "Women-s",
+          "stringValue": "Women's"
+        }
+      ]
+    },
+    {
+      "attributeFQN": "Tenant~Insulated",
+      "isHidden": false,
+      "isMultiValue": false,
+      "attributeDetail": {
+        "valueType": "AdminEntered",
+        "inputType": "YesNo",
+        "dataType": "Bool",
+        "usageType": "Property",
+        "dataTypeSequence": 31,
+        "name": "Insulated",
+        "description": ""
+      },
+      "values": [
+        {
+          "value": true
+        }
+      ]
+    },
+    {
+      "attributeFQN": "Tenant~Removable-Liner",
+      "isHidden": false,
+      "isMultiValue": false,
+      "attributeDetail": {
+        "valueType": "AdminEntered",
+        "inputType": "YesNo",
+        "dataType": "Bool",
+        "usageType": "Property",
+        "dataTypeSequence": 8,
+        "name": "Removable Liner",
+        "description": ""
+      },
+      "values": [
+        {
+          "value": false
+        }
+      ]
+    },
+    {
+      "attributeFQN": "Tenant~Rentable-Item",
+      "isHidden": false,
+      "isMultiValue": false,
+      "attributeDetail": {
+        "valueType": "AdminEntered",
+        "inputType": "YesNo",
+        "dataType": "Bool",
+        "usageType": "Property",
+        "dataTypeSequence": 9,
+        "name": "Rentable Item",
+        "description": ""
+      },
+      "values": [
+        {
+          "value": false
+        }
+      ]
+    },
+    {
+      "attributeFQN": "Tenant~Waterproof",
+      "isHidden": false,
+      "isMultiValue": false,
+      "attributeDetail": {
+        "valueType": "AdminEntered",
+        "inputType": "YesNo",
+        "dataType": "Bool",
+        "usageType": "Property",
+        "dataTypeSequence": 40,
+        "name": "Waterproof",
+        "description": ""
+      },
+      "values": [
+        {
+          "value": true
+        }
+      ]
+    }
+  ],
+  "options": [
+    {
+      "attributeFQN": "Tenant~Color",
+      "isRequired": true,
+      "isMultiValue": false,
+      "attributeDetail": {
+        "valueType": "Predefined",
+        "inputType": "List",
+        "dataType": "String",
+        "usageType": "Option",
+        "dataTypeSequence": 8,
+        "name": "Color",
+        "description": ""
+      },
+      "values": [
+        {
+          "value": "Blue",
+          "attributeValueId": 89,
+          "stringValue": "Blue",
+          "isEnabled": true,
+          "isSelected": false
+        },
+        {
+          "value": "Purple",
+          "attributeValueId": 127,
+          "stringValue": "Purple",
+          "isEnabled": true,
+          "isSelected": false
+        }
+      ]
+    },
+    {
+      "attributeFQN": "Tenant~Size",
+      "isRequired": true,
+      "isMultiValue": false,
+      "attributeDetail": {
+        "valueType": "Predefined",
+        "inputType": "List",
+        "dataType": "String",
+        "usageType": "Option",
+        "dataTypeSequence": 29,
+        "name": "Size",
+        "description": ""
+      },
+      "values": [
+        {
+          "value": "M",
+          "attributeValueId": 334,
+          "stringValue": "M",
+          "isEnabled": true,
+          "isSelected": false
+        },
+        {
+          "value": "S",
+          "attributeValueId": 340,
+          "stringValue": "S",
+          "isEnabled": true,
+          "isSelected": false
+        },
+        {
+          "value": "L",
+          "attributeValueId": 329,
+          "stringValue": "L",
+          "isEnabled": true,
+          "isSelected": false
+        },
+        {
+          "value": "XS",
+          "attributeValueId": 347,
+          "stringValue": "XS",
+          "isEnabled": true,
+          "isSelected": false
+        }
+      ]
+    }
+  ]
+}

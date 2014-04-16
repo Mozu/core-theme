@@ -3,6 +3,7 @@ using System.ServiceModel;
 using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
+using Burrows.Publishing;
 using Mozu.Core;
 using Mozu.Core.Api;
 using Mozu.Core.Api.Client;
@@ -12,6 +13,7 @@ using Mozu.Core.Api.Handlers.Message;
 using Mozu.Core.Behaviors;
 using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
+using Mozu.Core.Messaging.Publish;
 using Mozu.Core.Settings;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
@@ -119,6 +121,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
                 pcrc.Options.EnableDirtyCacheRead = false;
                 return pcrc;
             }).As<IProductCategoryRuntimeWebApiClient>();
+
+
+
+            builder.Register(c => c.Resolve<ISettings>().CreatePublisher("SiteBuilderOutgoingMessageQueue", "Mozu.SiteBuilder.UX.Admin"))
+                .As<IPublisher>().SingleInstance();
+
+
 
             // TODO: This binding will be unnecessary once the DocumentWebApiClient works better.
             //builder.RegisterType<InSessionDocumentWebApiClient>().As<IMoreAwesomeDocumentWebApiClient>();

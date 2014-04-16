@@ -11,6 +11,7 @@ using AutoMapper;
 using Magnum.Extensions;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
+using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Settings;
 using Mozu.Location.Contracts;
@@ -21,8 +22,10 @@ using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using Mozu.SiteSettings.General.Contracts.Clients;
+using Mozu.SiteSettings.Order.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts.Clients;
+using CheckoutSettings = Mozu.SiteBuilder.UX.Models.Settings.CheckoutSettings;
 using Constants = Mozu.Core.Api.Contracts.Constants;
 using Theme = Mozu.SiteBuilder.Mvc.Themes.Theme;
 
@@ -260,12 +263,13 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             set { _domains = value; }
         } 
 
-        public static void Save(int? site, int? masterCatalog, int tenant, bool isEditMode, DataViewModeType dataViewMode, ICookieProvider cookieProvider)
+        public static void Save(int? site, int? masterCatalog, int tenant, bool isEditMode, DataViewModeType dataViewMode, ICookieProvider cookieProvider, int? catalogid)
         {
             var cookie = new HttpCookie("") {Expires = DateTime.MaxValue};
 
             cookie["site"] = site.HasValue ? site.ToString() : null;
             cookie["masterCatalog"] = masterCatalog.HasValue ? masterCatalog.ToString() : null;
+            cookie["catalog"] = catalogid.HasValue ? catalogid.ToString() : null;
             cookie["tenant"] = tenant.ToString();
             cookie["editmode"] = isEditMode.ToString();
             if (dataViewMode == DataViewModeType.Pending)
@@ -292,7 +296,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     this.Domains = new SiteDomains(_currentHost, Mapper.Map<List<SiteDomain>>(sitesDc.Domains));
                 
                     SiteSettings.General.Contracts.GeneralSettings genSettingsDC = genSettingsTask.Result.ReadAsSync();
-                    SiteSettings.Order.Contracts.CheckoutSettings checkoutSettingsDC = checkoutSettingsTask.Result.ReadAsSync();
+                    SiteSettings.Order.Contracts.CheckoutSettings checkoutSettingsDC = checkoutSettingsTask.Result.ResponseMessage.IsSuccessStatusCode? checkoutSettingsTask.Result.ReadAsSync() : FalloverCheckoutSettings;
                     _generalSettings = Mapper.Map<GeneralSettings>(genSettingsDC);
                     _checkoutSettings = Mapper.Map<CheckoutSettings>(checkoutSettingsDC);
                     md5.HashAuditInfo(genSettingsDC.AuditInfo).
@@ -369,6 +373,47 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             return _initTask;
         }
 
-       
+        private static SiteSettings.Order.Contracts.CheckoutSettings _falloverCheckoutSettings;
+        static SiteSettings.Order.Contracts.CheckoutSettings FalloverCheckoutSettings
+        {
+            get
+            {
+                return _falloverCheckoutSettings = _falloverCheckoutSettings ?? new SiteSettings.Order.Contracts.CheckoutSettings()
+                                                                         {
+                                                                             CustomerCheckoutSettings = new CustomerCheckoutSettings()
+                                                                                                        {
+                                                                                                            AuditInfo = new Mozu.Core.Api.Contracts.AuditInfo()
+                                                                                                            {
+                                                                                                                CreateDate = DateTime.Now,
+                                                                                                                UpdateDate = DateTime.Now
+                                                                                                            },
+                                                                                                            CustomerCheckoutType = ""
+                                                                                                        },
+                                                                             OrderProcessingSettings = new OrderProcessingSettings()
+                                                                                                       {
+                                                                                                           AuditInfo = new Mozu.Core.Api.Contracts.AuditInfo()
+                                                                                                           {
+                                                                                                               CreateDate = DateTime.Now,
+                                                                                                               UpdateDate = DateTime.Now
+                                                                                                           },
+                                                                                                           PaymentProcessingFlowType = "",
+                                                                                                          
+                                                                                                       },
+                                                                             PaymentSettings = new PaymentSettings()
+                                                                                               {
+                                                                                                   AuditInfo = new Mozu.Core.Api.Contracts.AuditInfo()
+                                                                                                               {
+                                                                                                                   CreateDate = DateTime.Now,
+                                                                                                                   UpdateDate = DateTime.Now
+                                                                                                               },
+                                                                                                               ExternalPaymentWorkflowDefinitions = new List<ExternalPaymentWorkflowDefinition>(),
+                                                                                                               Gateways = new List<Gateway>(),
+                                                                                                               PayByMail = false
+                                                                                               }
+
+                                                                         };
+                 
+            }
+        }
     }
 }

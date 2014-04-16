@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mozu.SiteBuilder.UX.Caching
+namespace Mozu.SiteBuilder.Mvc.Caching
 {
     public interface IStorefrontCacheControl
     {
@@ -9,7 +9,7 @@ namespace Mozu.SiteBuilder.UX.Caching
         void InvalidateSite(int siteId);
     }
 
-    internal class StorefrontCacheControlImpl : IStorefrontCacheControl
+    public  class StorefrontCacheControlImpl : IStorefrontCacheControl
     {
         private System.Runtime.Caching.ObjectCache _cache;
 

@@ -1,6 +1,15 @@
 ﻿module.exports = function (grunt) {
 
     grunt.initConfig({
+        jsonlint: {
+            default: {
+                src: [
+                    'theme.json',
+                    'theme-ui.json',
+                    'labels/**/*.json'
+                ]
+            }
+        },
         jshint: {
             default: [
               'Gruntfile.js',
@@ -55,11 +64,33 @@
                     dest: 'thumb.png'
                 }
             }
+        },
+        watch: {
+            json: {
+                files: [
+                    'theme.json',
+                    'theme-ui.json',
+                    'labels/**/*.json'
+                ],
+                tasks: ['jsonlint'],
+                options: {
+                    spawn: false
+                }
+            },
+            javascript: {
+                files: [
+                    'scripts/**/*.js'
+                ],
+                tasks: ['default'],
+                options: {
+                    spawn: false
+                }
+            }
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-jshint');
+    ['grunt-jsonlint', 'grunt-contrib-jshint', 'grunt-contrib-watch'].forEach(grunt.loadNpmTasks);
     grunt.loadTasks('./tasks/');
-    grunt.registerTask('default', ['jshint', 'tfscheckout', 'zubat']);
-    grunt.registerTask('release', ['jshint', 'tfscheckout', 'zubat', 'setver']);
+    grunt.registerTask('default', ['jsonlint', 'jshint', 'tfscheckout', 'zubat']);
+    grunt.registerTask('release', ['jsonlint', 'jshint', 'tfscheckout', 'zubat', 'setver']);
 };

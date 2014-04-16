@@ -77,6 +77,11 @@ isShipping: false
             "useNull": true
         },
         {
+            "name":"addressType",
+            "type": "string",
+            "defaultValue":"Residential"
+        },
+        {
             "name": "lastName",
             "type": "string",
             "useNull": true
