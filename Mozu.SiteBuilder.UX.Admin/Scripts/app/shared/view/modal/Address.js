@@ -20,57 +20,40 @@ Ext.define('Taco.shared.view.modal.Address', {
     showEmail: true,
     showPhoneNumbers: true,
 
-    
-
-    
-
     // force user to enter at least one phone number
-    singlePhoneRequired : false,
-    emailRequired:true,
-
-    validateAddress: false,
-
-    title:"Edit Address",
+    singlePhoneRequired: false,
+    emailRequired: true,
+    validateAddress: true,
 
     formCfg: null,
 
-    constructor: function (config) {
-        this.actions = [{
+    config : {
+        actions: [{
+            xtype: 'button',
+            itemId: 'otherAction',
+            ui: 'action',
+            scale: 'medium',
+            text: 'Validate',
+            handler: function () {
+                this.validateAndPrompt(true, Ext.emptyFn);
+            }
+        }, {
+            xtype: 'tbfill'
+        }, {
             xtype: 'button',
             itemId: 'secondaryAction'
         }, {
             xtype: 'button',
             itemId: 'primaryAction',
+            formBind: true,
             handler: function () {
-                var me = this;
-                this.validateAndPrompt(false, function () {                    
-                    me.form.save();
-
-
-                    // this class no longer fires save or savesuccess events;
-                    // removing this close call and listening to the form savesuccess event to close;
-                    //me.close();
-                });
-            },
-            formBind: true
-        }];
-
-        if (config.validateAddress) {
-            this.actions = [{
-                xtype: 'button',
-                ui: 'action',
-                scale: 'medium',
-                text: 'Validate',
-                handler: function () {
-                    this.validateAndPrompt(true, function () {
-                    });
-                },
-                itemId: 'otherAction'
-            }, {
-                xtype: 'tbfill'
-            }].concat(this.actions);
-        }
-        this.callParent(arguments);
+                this.form.save();
+                // var me = this;
+                // this.validateAndPrompt(false, function () {
+                //     me.form.save();
+                // });
+            }
+        }]
     },
 
     initComponent: function () {
@@ -102,68 +85,11 @@ Ext.define('Taco.shared.view.modal.Address', {
             }
         }, this.formCfg));
 
-        
-
         this.items = [this.form];
         
         this.callParent(arguments);
 
-        //this.on({
-        //    beforesave: {
-        //        scope: this,
-        //        fn: 'maybeValidate'
-        //    },
-        //    save: {
-        //        scope: this,
-        //        fn: 'save'
-        //    }
-        //});
-    },
-
-    /**
-     * Request address validation if the current address has not yet been validated. If this dialog
-     * was configured to bypass address validation, this function will always return true.
-     *
-     * @private
-     * @return {Boolean} The validity state of the current address (before validation).
-     */
-    maybeValidate: function () {
-        var wasValid = this.validateAddress ? !!(this.record.get('addressIsValidated')) : true;
-
-        if (!wasValid) {
-            this.validate();
-        }
-
-        return wasValid;
-    },
-
-    /**
-     * Save the form.
-     *
-     * @private
-     * @deprecated
-     */
-    save: function () {
-        this.form.save();
-    },
-
-    /**
-     * Validate the address and update the record
-     *
-     * @private
-     */
-    validateOnly: function () {
-        var me = this;
-        this.validateForm(function (response) {
-            if (response.error) {
-                Ext.Msg.show({
-                    title: 'Address',
-                    msg: 'Unable to validate address'
-                });
-            } else {
-                response.applyToRecord();
-            }
-        });
+        this.down('#otherAction').setDisabled(this.validateAddress === false);
     },
 
     /**
@@ -306,85 +232,6 @@ Ext.define('Taco.shared.view.modal.Address', {
                 this.setLoading(false);
                 me.record.set('addressIsValidated', false);
                 callback(response);
-            }
-        });
-    },
-
-    /**
-     * Perform an ajax request to validate the current address.
-     *
-     * @private
-     * @deprecated
-     */
-    validate: function () {
-        var me = this;
-
-        me.record.set('addressIsValidated', false);
-        this.setLoading(true);
-        Ext.Ajax.request({
-            url: '/admin/app/address/validate',
-            method: 'POST',
-            jsonData: this.form.getValues(),
-            scope: this,
-            success: function (response) {
-                this.json = JSON.parse(response.responseText);
-                if (this.json.total > 0) {
-                    var addrChanged = false;
-                    var validatedAddr = this.json.items[0];
-                    var rawAddr = this.form.getValues();
-
-                    for (item in validatedAddr) {
-                        if (item == 'addressIsValidated' || item =='id')
-                            continue;
-                        if (rawAddr[item] != validatedAddr[item]) {
-                            addrChanged = true;
-                            break;
-                        }
-                    }
-
-                    if (addrChanged) {
-                        var message = '';
-                        message += validatedAddr['address1'] + ', ';
-                        if (validatedAddr['address2'] != '') {
-                            message += validatedAddr['address2'] + ', ';
-                        }
-                        message += validatedAddr['cityOrTown'] + ' ';
-                        message += validatedAddr['stateOrProvince'] + ', ';
-                        message += validatedAddr['countryCode'] + ', ';
-                        message += validatedAddr['postalOrZipCode'];
-                        Ext.Msg.show({
-                            title: 'Address',
-                            msg: 'Did you mean: ' + message,
-                            buttons: Ext.Msg.YESNO,
-                            closable: false,
-                            rightJustifyButtons: true,
-                            scope: this,
-                            fn: function (rec) {
-                                if (rec === "yes") {
-                                    validatedAddr['addressIsValidated'] = true;
-                                    for (item in validatedAddr) {
-                                        me.record.set(item, validatedAddr[item]);
-                                    }
-                                    this.form.loadRecord(me.record);
-                                }
-                                this.form.save();
-                            }
-                        });
-                    } else {
-                        me.record.set('addressIsValidated', true);
-                        this.form.save();
-                    }
-                }
-                this.setLoading(false);
-
-            },
-            failure: function () {
-                Ext.Msg.show({
-                    title: 'Address',
-                    msg: 'Unable to validate address'
-                });
-                this.setLoading(false);
-                this.form.save();
             }
         });
     }

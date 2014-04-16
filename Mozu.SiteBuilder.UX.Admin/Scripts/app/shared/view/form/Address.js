@@ -49,54 +49,60 @@ Ext.define('Taco.shared.view.form.Address', {
         if (me.showCompanyName) {
             fields.push({
                 xtype: 'textfield',
-                width: 315,
                 name: 'companyOrOrganization',
                 fieldLabel: 'Company Name',
-                margin: '0 14 5 0',
-                style: { 'display': 'inline-table' }
-            })
-        }
-	    
-        if (me.showEmail) {
-            fields.push({
-                xtype: 'textfield',
-                width: 315,
-                allowBlank: !this.emailRequired,
-                name: 'email',
-                fieldLabel: 'Email',
-                margin: '0 0 5 0',
+                margin: '0 15 5 0',
                 style: { 'display': 'inline-table' }
             })
         }
 
+        if (me.showEmail) {
+            fields.push({
+                xtype: 'textfield',
+                allowBlank: !this.emailRequired,
+                name: 'email',
+                fieldLabel: 'Email',
+                margin: '0 15 5 0',
+                style: { 'display': 'inline-table' }
+            });
+        }
+
 		fields.push({
+            xtype: 'combobox',
+            // width: 315,
+            name: 'addressType',
+            fieldLabel: 'Address Type',
+            margin: '0 100 5 0',
+            style: { 'display': 'inline-table' },
+            store: ['Residential', 'Commercial']
+        }, {
             xtype: 'textfield',
-            width: 315,
+            width: 480,
             name: 'address1',
             fieldLabel: 'Address 1',
-            margin: '0 14 5 0',
+            margin: '0 100 5 0',
             allowBlank: false,
             style: { 'display': 'inline-table' }
         }, {
             xtype: 'textfield',
-            width: 315,
+            // width: 315,
             name: 'address2',
             fieldLabel: 'Address 2',
-            margin: '0 0 5 0',
+            margin: '0 15 5 0',
             style: { 'display': 'inline-table' }
         }, {
             xtype: 'textfield',
-            width: 315,
+            // width: 315,
             name: 'address3',
             fieldLabel: 'Address 3',
-            margin: '0 14 5 0',
+            margin: '0 15 5 0',
             style: { 'display': 'inline-table' }
         }, {
             xtype: 'textfield',
-            width: 315,
+            // width: 315,
             name: 'address4',
             fieldLabel: 'Address 4',
-            margin: '0 0 5 0',
+            margin: '0 100 5 0',
             style: { 'display': 'inline-table' }
         }, {
             xtype: 'textfield',
@@ -107,6 +113,7 @@ Ext.define('Taco.shared.view.form.Address', {
             style: { 'display': 'inline-table' }
         }, {
             xtype: 'textfield',
+            width: 68,
             name: 'stateOrProvince',
             fieldStyle: 'text-transform:uppercase',
             fieldLabel: 'State',
@@ -116,15 +123,16 @@ Ext.define('Taco.shared.view.form.Address', {
             style: { 'display': 'inline-table' }
         }, {
             xtype: 'textfield',
+            width: 68,
             name: 'postalOrZipCode',
             fieldLabel: 'ZIP',
-            margin: '0 15 5 0',
+            margin: '0 14 5 0',
             allowBlank: false,
             style: { 'display': 'inline-table' }
         }, {
             xtype: 'combobox',
             name: 'countryCode',
-            margin: '0 0 5 0',
+            margin: '0 100 5 0',
             style: { 'display': 'inline-table' },
             fieldLabel: 'Country',
             allowBlank: false,
@@ -135,27 +143,22 @@ Ext.define('Taco.shared.view.form.Address', {
             emptyText: "Country",
             selectOnFocus: true
 	    });
-	    
-		
 
         if (this.showPhoneNumbers) {
             fields.push({
                     xtype: 'phonefield',
-                    width: 206,
                     name: 'homePhone',
                     fieldLabel: 'Home Phone',
-                    margin: '0 13 5 0',
+                    margin: '0 15 5 0',
                     style: { 'display': 'inline-table' }
                 }, {
                     xtype: 'phonefield',
-                    width: 206,
                     name: 'workPhone',
                     fieldLabel: 'Work Phone',
-                    margin: '0 13 5 0',
+                    margin: '0 15 5 0',
                     style: { 'display': 'inline-table' }
                 }, {
                     xtype: 'phonefield',
-                    width: 206,
                     name: 'mobilePhone',
                     fieldLabel: 'Mobile Phone',
                     margin: '0 0 5 0',
@@ -168,28 +171,28 @@ Ext.define('Taco.shared.view.form.Address', {
         if (this.addressHasNames) {
             fields.unshift({
                 xtype: 'textfield',
-                width: 206,
+                // width: 206,
                 name: 'firstName',
                 fieldLabel: 'First Name',
-                margin: '0 13 5 0',
+                margin: '0 15 5 0',
                 allowBlank: false,
                 labelStyle: 'padding-top: 5px',
                 style: { 'display': 'inline-table' }
             }, {
                 xtype: 'textfield',
-                width: 206,
+                // width: 206,
                 name: 'middleName',
                 fieldLabel: 'Middle Name',
-                margin: '0 13 5 0',
+                margin: '0 15 5 0',
                 labelStyle: 'padding-top: 5px',
                 style: { 'display': 'inline-table' }
             }, {
                 xtype: 'textfield',
-                width: 206,
+                // width: 206,
                 name: 'lastName',
                 fieldLabel: 'Last Name',
                 allowBlank: false,
-                margin: '0 0 5 0',
+                margin: '0 100 5 0',
                 labelStyle: 'padding-top: 5px',
                 style: { 'display': 'inline-table' }
             });
