@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
         public static string ToFilterString(this FilterCollection extFilter, bool? withVariations = null)
         {
             if (extFilter == null || extFilter.Count == 0)
-                return "Status ne Pending and Status ne Abandoned";
+                return "(Status eq Submitted or Status eq  Processing or Status eq  Completed or Status eq  Cancelled  or Status eq  Validated or Status eq  Accepted or Status eq  PendingReview)";
 
             // TODO: If the filter needs to include products with variations, do something with 'withVariations'
             // Note: this could change, we're waiting on changes to be applied from the services team and/or Britt G.
@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
             IEnumerable<string> stateMents = extFilter.Where(x => x.property != "all").Select(GetFilter).Where(x => !string.IsNullOrWhiteSpace(x));
             if (!extFilter.Any(x => string.Equals(x.property, "status", StringComparison.OrdinalIgnoreCase)))
             {
-                stateMents = stateMents.Concat(new[] { "Status ne Pending  and Status ne Abandoned" });
+                stateMents = stateMents.Concat(new[] { "(Status eq Submitted or Status eq  Processing or Status eq  Completed or Status eq  Cancelled  or Status eq  Validated or Status eq  Accepted or Status eq  PendingReview)" });
             }
             return string.Join(" and ", stateMents);
         }
@@ -84,7 +84,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                 case "orderstatus":
                     if (filter.value.ToString().ToLower() == "open")
                     {
-                        return "(status ne Closed and status ne Cancelled and status ne Pending)";
+                    
+                        return "(status eq Submitted or status eq Processing  or status eq Validated or status eq Accepted or status eq PendingReview)";
                     }
                     return string.Format("status eq {0}", filter.value);
                 case "billingcontactfirstname":

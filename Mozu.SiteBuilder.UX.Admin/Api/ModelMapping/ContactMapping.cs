@@ -32,6 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.CountryCode, op => op.ResolveUsing(dc => dc.Address != null ? dc.Address.CountryCode : null))
             .ForMember(x => x.PostalOrZipCode, op => op.ResolveUsing(dc => dc.Address != null ? dc.Address.PostalOrZipCode : null))
             .ForMember(x => x.StateOrProvince, op => op.ResolveUsing(dc => dc.Address != null ? dc.Address.StateOrProvince : null))
+            .ForMember(x => x.AddressType, op => op.ResolveUsing(dc => dc.Address != null ? dc.Address.AddressType : "Residential"))
             .ForMember(x => x.AddressIsValidated, op=>op.ResolveUsing(dc => (dc.Address != null) ? dc.Address.IsValidated : null))
             .ForMember(x => x.HomePhone, op => op.ResolveUsing(dc => dc.PhoneNumbers != null ? dc.PhoneNumbers.Home : null))
             .ForMember(x => x.WorkPhone, op => op.ResolveUsing(dc => dc.PhoneNumbers != null ? dc.PhoneNumbers.Work : null))
@@ -53,8 +54,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                  CityOrTown = x.CityOrTown,
                  CountryCode = x.CountryCode,
                  PostalOrZipCode = x.PostalOrZipCode,
-                 StateOrProvince = x.StateOrProvince,
-                 IsValidated = x.AddressIsValidated
+                 StateOrProvince = x.StateOrProvince ,
+                 IsValidated = x.AddressIsValidated,
+                 AddressType = string.IsNullOrEmpty(x.AddressType) ? "Residential" : x.AddressType
             }))
             .ForMember(dc => dc.PhoneNumbers, op => op.ResolveUsing(x => new DC.Phone {
                 Home = x.HomePhone,

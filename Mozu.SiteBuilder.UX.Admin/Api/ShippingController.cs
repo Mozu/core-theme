@@ -102,7 +102,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
 
 
-            
+         
 
             if (!string.IsNullOrEmpty(settings.ShippingLocationCode))
             {

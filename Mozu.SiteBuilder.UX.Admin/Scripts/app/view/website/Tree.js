@@ -226,6 +226,14 @@ Ext.define('Taco.view.website.Tree', {
                 handler: function () {
                     this.onRename(record);
                 }
+            },
+            emailtest = {
+                text: 'Send Test Email',
+                scope: scope,
+                handler: function () {
+
+                    this.onTestEmail(record);
+                }
             };
         ;
 
@@ -253,7 +261,12 @@ Ext.define('Taco.view.website.Tree', {
             items.push(addPage);
             items.push(deletePage);
 
+        } else if (record.data.parentId == '_emailTemplates') {
+            items.push(emailtest);
+           
+
         }
+        
 
 
         return items;
@@ -291,6 +304,79 @@ Ext.define('Taco.view.website.Tree', {
         this.cellEditor.allowEdit = true;
         this.cellEditor.startEdit(record, this.columns[0]);
         this.cellEditor.allowEdit = false;
+    },
+    onTestEmail: function (record) {
+
+        var dialog = Ext.create('Taco.core.ux.window.Modal', {
+            autoShow: true,
+            closeAction: 'destroy',
+            scale: 'medium',
+            title: 'Send Test Email',
+            primaryText: 'Send Email',
+            items: [
+                {
+                    xtype: 'form',
+                    items: [
+                        {
+                            xtype: 'textfield',
+                            allowBlank: false,
+                            allowOnlyWhitespace: false,
+                            name: 'recipient',
+                            width: '100%',
+                            fieldLabel: 'Send test email to:',
+                            value: Taco.user.email
+                        }
+                    ]
+                    
+                }
+            ],
+            listeners: {
+
+                beforesave: function () {
+
+                    var request = {
+                        url: '/admin/app/emailTesting/Send',
+                        method: "POST",
+                        jsonData: {
+                            email: dialog.getForm().getValues().recipient || Taco.user.email,
+                            id: record.get('originalId')
+                        },
+                        success: function (response, opts) {
+
+                            Taco.app.fireEvent('setmessage', 'email sent', 'info');
+                        },
+                        failure: function (response, opts) {
+
+                            var respObj = Ext.decode(response.responseText, true),
+                                errorMsg = respObj && respObj.message ? respObj.message : 'Failure Sending Email';
+
+                            Taco.app.fireEvent('setmessage', errorMsg, 'error');
+                        }
+                    };
+
+                    Ext.Ajax.request(request);
+                }
+            }
+        });
+        //var request = {
+        //    url: '/admin/app/emailTesting/Send',
+        //    method: "POST",
+        //    jsonData: {
+        //        email: Taco.user.email,
+        //        id: record.get('originalId')
+        //    },
+        //    success: function (response, opts) {
+        //        Taco.app.fireEvent('setmessage', 'email sent', 'info');
+        //    },
+        //    failure: function (response, opts) {
+        //        var respObj = Ext.decode(response.responseText, true),
+        //            errorMsg = respObj && respObj.message ? respObj.message : 'Failure Sending Email';
+
+        //        Taco.app.fireEvent('setmessage', errorMsg, 'error');
+        //    }
+        //};
+
+        //Ext.Ajax.request(request);
     },
     showPageCreator: function (parentRecord) {
         var me = this,

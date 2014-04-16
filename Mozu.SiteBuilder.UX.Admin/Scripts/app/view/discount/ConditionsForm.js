@@ -73,11 +73,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             labelAlign: 'right',
             listeners: {
                 change: function (cb, newValue) {
-                    if (newValue) {
-                        this.couponCodeBox.show();
-                    } else {
-                        this.couponCodeBox.hide();
-                    }
+                    this.couponCodeBox[newValue ? 'show' : 'hide']();
                 },
                 scope: this
             }
@@ -119,7 +115,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
         this.minimumLifetimeValueAmount = Ext.create('Taco.core.ux.form.UnitField', {
             name: 'minimumLifetimeValueAmount',
-            hidden: this.record.get('scope') != 'Order',
+            hidden: this.record.get('scope') !== 'Order',
             unitString: '$',
             forcePrecision:true,
             unitAtEnd: false,
@@ -128,6 +124,18 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             fieldLabel: 'Minimum Lifetime Value Amount',
             emptyText: 'No Customer Value limit',
             minValue: 0
+        });
+
+        this.oneTimeUsePerShopper = Ext.create('Ext.form.field.Checkbox', {
+            name: 'oneTimeUsePerShopper',
+            boxLabel: 'One Time Use per Shopper',
+            checked: this.record.get('maximumUsesPerUser') === 1,
+            listeners: {
+                change: function(cb, newValue) {
+                    this.record.set('maximumUsesPerUser', newValue ? 1 : 0);
+                },
+                scope: this
+            }
         });
 
         this.items = [{
@@ -143,7 +151,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             this.categoriesBox,
             this.redemptionLimits,
             this.requiresCouponInput,
-            this.couponCodeBox
+            this.couponCodeBox,
+            this.oneTimeUsePerShopper
         ];
 
 

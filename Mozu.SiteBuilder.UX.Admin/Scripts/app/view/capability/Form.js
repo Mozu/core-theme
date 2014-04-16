@@ -18,7 +18,15 @@ Ext.define('Taco.view.capability.Form', {
             this.updateForm();
         }, this);
 
+        this.mon(this, "afterrender", function () {
+            var urlHash = window.location.hash;
+            if (urlHash != null && urlHash.toUpperCase() === "#CONFIGURE") {
+                this.configureCapability();
+            }
+        }, this);
+
         this.callParent(arguments);
+
     },
 
     allowEnableDisable: function () {
@@ -106,7 +114,7 @@ Ext.define('Taco.view.capability.Form', {
             //src: 'http://aus02ncfrnt002.dev.volusion.com:8080/Console/storeprofile/241/en-us'
             src: data.get('uiSupportUrl')
         };
-           
+
         me.configPanel = Ext.create('Ext.container.Container', {
                 layout: 'hbox',
                 items: [{
@@ -116,30 +124,7 @@ Ext.define('Taco.view.capability.Form', {
                     xtype: 'button',
                     ui: 'button',
                     text: 'Configuration',
-                    handler: function () {
-                        var modal = Ext.create('Taco.core.ux.window.Window', {
-                            autoShow: true,
-                            resizable: true,
-                            draggable: true,
-                            scale: 'large',
-                            shadow: true,
-                            height: 700,
-                            items: [
-                                {
-                                    xtype: 'uxiframe',
-                                    height: '100%',
-                                    src: Ext.urlAppend(this.record.get('uiConfigurationUrl'), 'tenantId=' + Taco.app.context.getTenantId())
-                                }
-                            ],
-                            listeners: {
-                                close: function () {
-                                    this.record.reload();
-                                },
-                                scope: this
-                            }
-                        });
-                    
-                    },
+                    handler: me.configureCapability,                    
                     scope: me
                 }]
             }
@@ -180,5 +165,53 @@ Ext.define('Taco.view.capability.Form', {
             me.shippingCountry
         ];
 
+    },
+
+    configureCapability: function () {
+
+        var configIframe = Ext.create('Ext.ux.IFrame', {
+            height: '100%',
+            src: 'about:blank'
+        });
+
+        var formHtml = "<form id='configPost' method='POST' action='" + this.record.get('uiConfigurationUrl')
+            + "' target='" + configIframe.frameName +  "'>"
+            + "<input type=hidden name='x-vol-tenant-domain' value='" + this.record.get("tenantDomain") + "'/>"
+            + "<input type=hidden name='x-vol-return-url' value='" + this.record.get("configReturnUrl") + "'/>"
+            + "</form>";
+
+        var configForm = {
+            xtype: 'component',
+            html: formHtml,
+            id: 'configHiddenForm',
+            listeners: {
+                render: function (cmp) {
+                    var fm = cmp.el.dom.firstElementChild;
+                    fm.submit();
+                }
+            }
+        };
+
+        var modalConfigWindow = Ext.create('Taco.core.ux.window.Window', {
+            autoShow: true,
+            resizable: true,
+            draggable: true,
+            scale: 'large',
+            shadow: true,
+            height: 700,
+            items: [
+                configIframe,
+                configForm
+            ],
+            listeners: {
+                close: function (cmp) {
+                    cmp.removeAll(true);
+                    this.record.reload();
+                },
+                scope: this
+            }
+        });
+        modalConfigWindow.center();
     }
+
 });

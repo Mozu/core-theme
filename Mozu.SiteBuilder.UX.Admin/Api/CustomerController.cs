@@ -440,8 +440,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             var dcitem = Mapper.Map<DC.Credit.Credit>(credit);
-            dcitem.CurrencyCode = "USD";
-            dcitem.CreditType = "StoreCredit";
+           // dcitem.CurrencyCode = "USD";
+            //dcitem.CreditType = dcitem.CreditType "StoreCredit";
             //dcitem.CurrentBalance = 
 
             dcitem = (await _creditWebApiClient.UpdateCredit(dcitem, dcitem.Code)).ReadAsSync();

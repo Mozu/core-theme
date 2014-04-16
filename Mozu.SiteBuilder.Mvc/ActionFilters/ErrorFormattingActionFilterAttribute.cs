@@ -15,6 +15,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
     public class ErrorFormattingActionFilterAttribute :  System.Attribute, IActionFilter
     {
+       
 
         async Task<HttpResponseMessage> IActionFilter.ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {

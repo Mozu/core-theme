@@ -78,39 +78,39 @@ Ext.define('Taco.view.customers.Segments.AddRemoveModal', {
                 text: 'Customer Number',
                 width: 130
             }, {
-                dataIndex: 'firstName',
+                dataIndex: 'firstNameSafe',
                 text: 'First Name',
                 width: 130,
                 renderer: function (value, metaData, record) {
                     if (value)
                         return value;
                     if (!Ext.isEmpty(record.data.contacts)) {
-                        return record.data.contacts[0].firstName;
+                        return Ext.util.Format.htmlEncode(record.data.contacts[0].firstName);
                     }
                     return null;
                 }
 
             }, {
-                dataIndex: 'lastName',
+                dataIndex: 'lastNameSafe',
                 text: 'Last Name',
                 width: 130,
                 renderer: function (value, metaData, record) {
                     if (value)
                         return value;
                     if (!Ext.isEmpty(record.data.contacts)) {
-                        return record.data.contacts[0].lastName;
+                        return Ext.util.Format.htmlEncode(record.data.contacts[0].lastName);
                     }
                     return null;
                 }
             }, {
-                dataIndex: 'emailAddress',
+                dataIndex: 'emailAddressSafe',
                 text: 'Email',
                 width: 200,
                 renderer: function (value, metaData, record) {
                     if (value)
                         return value;
                     if (!Ext.isEmpty(record.data.contacts)) {
-                        return record.data.contacts[0].emailAddress;
+                        return Ext.util.Format.htmlEncode(record.data.contacts[0].emailAddress);
                     }
                     return null;
                 }

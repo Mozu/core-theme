@@ -233,11 +233,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             ThemeDTO newDesktop = themes.LastOrDefault(t => t.IsSelectedDesktop.Value);
             ThemeDTO newMobile = themes.LastOrDefault(t => t.IsSelectedMobile.Value);
 
+
+            
             // TODO: need async settingsClient
             var settings = await _generalSettingsWebApiClient.ReadSettings();
 
+            if (settings.DesktopTheme == null)
+            {
+                settings.DesktopTheme = new ThemeSelection()
+                {
+                    Id = "Core4"
+                };
+            }
+
             if (newDesktop != null)
             {
+                
                 settings.DesktopTheme.Id  = newDesktop.Id;
 
                 // intent to set a desktop theme.

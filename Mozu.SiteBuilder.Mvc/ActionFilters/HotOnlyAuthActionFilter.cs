@@ -12,6 +12,10 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     public class HotOnlyAuthActionFilter : ActionFilterAttribute
     {
 
+        public override bool AllowMultiple
+        {
+            get { return false; }
+        }
 
         public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
         {

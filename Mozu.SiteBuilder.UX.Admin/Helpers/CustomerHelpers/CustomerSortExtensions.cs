@@ -28,7 +28,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
             {
                 return "contact." + item.property.Substring("primary".Length);
             }
-            switch (item.property.ToLowerInvariant())
+            var propName = item.property.ToLowerInvariant().Replace("safe", "");
+            switch (propName)
             {
                 case "id":
                     return "id";
@@ -37,23 +38,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                 case "userid":
                     return "userid";
                 case "wishlistcount":
-                    return "wishlistcount";
+                    return "commercesummary.wishlistcount";
                 case "ordercount":
-                    return "ordercount";
+                    return "commercesummary.ordercount";
                 case "totalspent":
-                    return "totalorderamount";
+                    return "commercesummary.totalorderamount";
                 case "createdate":
                     return "createdate";
-                case "lastorderdate":
+                case "commercesummary.lastorderdate":
                     return "lastorderdate";
-                case "firstname":
-                    return "contact.firstname";
-                case "lastname":
-                    return "contact.lastname";
-                case "emailaddress":
-                    return "contact.emailaddress";
+                //case "firstname":
+                //    return "contact.firstname";
+                //case "lastname":
+                //    return "contact.lastname";
+                //case "emailaddress":
+                //    return "contact.emailaddress";
                 default:
-                    throw new InvalidOperationException("unknown sort.property " + item.property);
+                    return propName;
             }
         }
     }

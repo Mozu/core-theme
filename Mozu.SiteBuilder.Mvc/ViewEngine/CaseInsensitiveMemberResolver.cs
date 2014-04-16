@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         private static MethodInfo _createIndexedGetterGeneric = typeof(CaseInsensitiveMemberResolver).GetMethod("CreateIndexedGetterGeneric", BindingFlags.NonPublic | BindingFlags.Static);
 
         
-        static Func<object, object> CreateGetterGeneric<T, R>(MethodInfo getter) where T : class
+        static Func<object, object> CreateGetterGeneric<T, R>(MethodInfo getter) 
         {
             var getterTypedDelegate = (Func<T, R>)Delegate.CreateDelegate(typeof(Func<T, R>), getter);
             var getterDelegate = (Func<object, object>)((object instance) => getterTypedDelegate((T)instance));

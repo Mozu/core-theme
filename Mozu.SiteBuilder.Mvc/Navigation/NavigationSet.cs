@@ -16,7 +16,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// <summary>
         /// Custom serializer for NavigationSet
         /// </summary>
-        private class Converter : Newtonsoft.Json.JsonConverter
+        public class Converter : Newtonsoft.Json.JsonConverter
         {
             public override bool CanConvert(Type objectType)
             {
@@ -50,19 +50,20 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
             {
                 var set = value as NavigationSet;
+                var ser = Newtonsoft.Json.JsonSerializer.CreateDefault();
+
                 if (set == null) {
                     writer.WriteNull();
                     return;
                 }
-                if (set.Count == 0)
-                {
-                    writer.WriteStartArray();
-                    writer.WriteEndArray();
-                    return;
-                }
-                var j = new Newtonsoft.Json.Linq.JObject();
-                j["nodes"] = Newtonsoft.Json.Linq.JArray.FromObject(set);
-                j.WriteTo(writer);
+
+                writer.WriteStartArray();
+                
+                    foreach (var item in set) {
+                        ser.Serialize(writer, item);
+                    }
+
+                writer.WriteEndArray();
             }
         }
     }

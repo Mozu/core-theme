@@ -241,6 +241,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
                 headers[Mozu.Core.Api.Contracts.Constants.Headers.TENANT]=site.TenantId.ToString();
                 headers[Mozu.Core.Api.Contracts.Constants.Headers.MASTER_CATALOG ]= site.MasterCatalogId.ToString();
+                headers[Mozu.Core.Api.Contracts.Constants.Headers.CATALOG ] = site.CatalogId.ToString();
                 headers[Mozu.Core.Api.Contracts.Constants.Headers.SITE]= site.Id.ToString();
                 headers[Mozu.Core.Api.Contracts.Constants.Headers.DATA_VIEW_MODE]= viewMode.ToString();
 
@@ -251,7 +252,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                            Headers = headers
                        };
             }
-            Mozu.SiteBuilder.Mvc.Contexts.SiteContext.Save(site: site.Id, masterCatalog: site.MasterCatalogId, tenant: site.TenantId, isEditMode: false, dataViewMode: viewMode, cookieProvider: _cookies);
+            Mozu.SiteBuilder.Mvc.Contexts.SiteContext.Save(site: site.Id, masterCatalog: site.MasterCatalogId, tenant: site.TenantId, isEditMode: false, dataViewMode: viewMode, cookieProvider: _cookies, catalogid:site.CatalogId.Value );
 
             if (!String.IsNullOrEmpty(redir))
             {

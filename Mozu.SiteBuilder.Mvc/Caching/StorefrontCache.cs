@@ -5,7 +5,7 @@ using System.Text;
 using System.Web;
 using Mozu.SiteBuilder.Mvc;
 
-namespace Mozu.SiteBuilder.UX.Caching
+namespace Mozu.SiteBuilder.Mvc.Caching
 {
     public interface IStorefrontCache
     {
@@ -64,6 +64,7 @@ namespace Mozu.SiteBuilder.UX.Caching
         {
             if (String.IsNullOrWhiteSpace(key))
                 return;
+
 
             if (_ctx == null || _ctx.TenantId == 0)
                 throw new ArgumentOutOfRangeException("scope", "Cannot add item to cache: no api context.");

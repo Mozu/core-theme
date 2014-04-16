@@ -305,7 +305,8 @@ Ext.define('Taco.core.data.Model', {
     },
     reload: function (config) {
         var me = this,
-            config = config|| {},
+            config = config || {},
+            modifiedNames=[],
             loadConfig = Ext.applyIf(
              {
                  bypassCache: true,
@@ -313,8 +314,10 @@ Ext.define('Taco.core.data.Model', {
                      
 
                      if (record.getId() == me.getId()) {
-                         me.copyFrom(record);
-                         me.commit();
+                         me.beginEdit();
+                         modifiedNames = me.copyFrom(record);
+                         me.endEdit(false, modifiedNames);
+                         me.commit(false, modifiedNames);
                      }
                          
                      if (config.success) {

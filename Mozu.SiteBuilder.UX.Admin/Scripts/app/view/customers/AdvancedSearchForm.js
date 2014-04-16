@@ -26,7 +26,7 @@ Ext.define('Taco.view.customers.AdvancedSearchForm', {
                 {
                     xtype: 'checkbox',
                     name: 'showAnonymous',
-                    fieldLabel: 'Include Anonymouse Checkouts',
+                    fieldLabel: 'Include Anonymous Checkouts',
                     width: 450,             
                 },
                 {

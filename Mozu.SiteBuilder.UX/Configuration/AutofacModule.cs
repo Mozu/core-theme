@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Web.Http;
 using System.Linq;
 using Autofac;
@@ -19,13 +20,14 @@ using Mozu.Core.Messaging.Consume;
 using Mozu.Core.Messaging.Publish;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Logging;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Users;
-using Mozu.SiteBuilder.UX.Caching;
+
 using Mozu.SiteBuilder.UX.Messaging;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Module = Autofac.Module;
@@ -80,7 +82,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
             // TODO: this is an old cache implementation that needs to be deleted
-            builder.RegisterType<DefaultStorefrontCache>().As<Mozu.SiteBuilder.Mvc.IStorefrontCache>().InstancePerApiRequest();
+          //builder.RegisterType<DefaultStorefrontCache>().As<Mozu.SiteBuilder.Mvc.IStorefrontCache>().InstancePerApiRequest();
             builder.RegisterType<ServiceClientMessageHandler>().InstancePerApiRequest();
 
             //builder.Register(c => new GeneralSettingsWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IGeneralSettingsWebApiClient>().InstancePerLifetimeScope();
@@ -126,20 +128,32 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             builder.RegisterType<VisitEventPublisher>().AsSelf().InstancePerApiRequest();
             builder.RegisterType<CacheItemsInvalidConsumer>().AsSelf();
+           // builder.RegisterType<CacheItemsInvalidConsumer2>().AsSelf();
 
             // Register a MassTransit/Burrows IPublisher for visits.
             // The rabbitMQ connectionstring is used to recieve control messages sent to our application by MassTransit.
             builder.Register(c => c.Resolve<ISettings>().CreatePublisher("SiteBuilderOutgoingMessageQueue", "Mozu.SiteBuilder.UX")).As<IPublisher>().SingleInstance();
+            builder.Register(c => System.Runtime.Caching.MemoryCache.Default).As<System.Runtime.Caching.ObjectCache>().SingleInstance();
+            builder.RegisterType<StorefrontCacheControlImpl>().As<IStorefrontCacheControl>().SingleInstance();;
+           //  Register a MassTransit/Burrows Consumer for cache invalidation.
+            builder
+                .Register(c => ServiceBusFactory.New(
+                    sbc =>
+                    {
+                        var format = c.Resolve<ISettings>().ConnectionStrings("SiteBuilderIncomingMessageQueueFormatString");
+                        if (format == null || string.IsNullOrEmpty(format.Value))
+                        {
+                            throw new Exception("missing SiteBuilderIncomingMessageQueueFormatString in config");
+                        }
+                        var conString = string.Format(format.Value , Guid.NewGuid().ToString("N"));
+                        conString.ConfigureConsumer(sbc, subs => subs.LoadFrom(c.Resolve<ILifetimeScope>()))
+                            .SetConcurrentConsumerLimit(10);
 
-            // Register a MassTransit/Burrows Consumer for cache invalidation.
-            //builder
-            //    .Register(c => ServiceBusFactory.New(
-            //        sbc => c.Resolve<ISettings>()
-            //            .ConfigureConsumer("SiteBuilderIncomingMessageQueue", sbc, subs => subs.LoadFrom(c.Resolve<ILifetimeScope>()))
-            //            .SetConcurrentConsumerLimit(10)
-            //        ))
-            //    .SingleInstance()
-            //    .AutoActivate();
+                    }))
+                .SingleInstance()
+                .AutoActivate();
+
+          
         }
     }
 }

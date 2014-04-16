@@ -172,14 +172,17 @@
     <Reference Include="FluentValidation">
       <HintPath>..\packages\FluentValidation.5.1.0.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
-    <Reference Include="FSharp.Core">
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.6.0.1\lib\FSharp.Core.dll</HintPath>
+    <Reference Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.7.0.8\lib\FSharp.Core.dll</HintPath>
     </Reference>
-    <Reference Include="FSharp.PowerPack">
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.6.0.1\lib\FSharp.PowerPack.dll</HintPath>
+    <Reference Include="FSharp.PowerPack, Version=4.0.0.1, Culture=neutral, PublicKeyToken=f536804aa0eb945b, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.7.0.8\lib\FSharp.PowerPack.dll</HintPath>
     </Reference>
-    <Reference Include="FSharp.PowerPack.Compatibility">
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.6.0.1\lib\FSharp.PowerPack.Compatibility.dll</HintPath>
+    <Reference Include="FSharp.PowerPack.Compatibility, Version=4.0.0.1, Culture=neutral, PublicKeyToken=f536804aa0eb945b, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.7.0.8\lib\FSharp.PowerPack.Compatibility.dll</HintPath>
     </Reference>
     <Reference Include="Glimpse.Core">
       <HintPath>..\packages\Glimpse.0.87\lib\net40\Glimpse.Core.dll</HintPath>
@@ -233,14 +236,17 @@
     <Reference Include="Mozu.Content.Contracts">
       <HintPath>..\packages\Mozu.Content.Contracts.1.7.0.2\lib\Mozu.Content.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core">
-      <HintPath>..\packages\Mozu.Core.1.7.0.4\lib\net45\Mozu.Core.dll</HintPath>
+    <Reference Include="Mozu.Core, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.1.7.0.6\lib\net45\Mozu.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Api">
-      <HintPath>..\packages\Mozu.Core.Api.1.7.0.12\lib\net45\Mozu.Core.Api.dll</HintPath>
+    <Reference Include="Mozu.Core.Api, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Api.1.7.0.13\lib\net45\Mozu.Core.Api.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Api.Client">
-      <HintPath>..\packages\Mozu.Core.Api.Client.1.7.0.8\lib\net45\Mozu.Core.Api.Client.dll</HintPath>
+    <Reference Include="Mozu.Core.Api.Client, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Api.Client.1.7.0.10\lib\net45\Mozu.Core.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.Contracts">
       <HintPath>..\packages\Mozu.Core.Api.Contracts.1.7.0.3\lib\net45\Mozu.Core.Api.Contracts.dll</HintPath>
@@ -251,14 +257,16 @@
     <Reference Include="Mozu.Core.Extensible.Contracts">
       <HintPath>..\packages\Mozu.Core.Extensible.Contracts.1.7.0.4\lib\Mozu.Core.Extensible.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Messaging">
-      <HintPath>..\packages\Mozu.Core.Messaging.1.7.0.3\lib\net451\Mozu.Core.Messaging.dll</HintPath>
+    <Reference Include="Mozu.Core.Messaging, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Messaging.1.7.0.4\lib\net451\Mozu.Core.Messaging.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Messaging.Contracts">
-      <HintPath>..\packages\Mozu.Core.Messaging.Contracts.1.7.0.2\lib\net45\Mozu.Core.Messaging.Contracts.dll</HintPath>
+    <Reference Include="Mozu.Core.Messaging.Contracts, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Messaging.Contracts.1.7.0.3\lib\net45\Mozu.Core.Messaging.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Mongo">
-      <HintPath>..\packages\Mozu.Core.Mongo.1.7.0.11\lib\net45\Mozu.Core.Mongo.dll</HintPath>
+    <Reference Include="Mozu.Core.Mongo, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mozu.Core.Mongo.1.7.0.12\lib\net45\Mozu.Core.Mongo.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.ThirdParty">
       <HintPath>..\packages\Mozu.Core.ThirdParty.1.7.0.6\lib\net45\Mozu.Core.ThirdParty.dll</HintPath>
@@ -266,11 +274,12 @@
     <Reference Include="Mozu.Core.ThirdParty.Contracts">
       <HintPath>..\packages\Mozu.Core.ThirdParty.Contracts.1.7.0.4\lib\net45\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Customer.Contracts">
-      <HintPath>..\packages\Mozu.Customer.Contracts.1.7.0.3\lib\net45\Mozu.Customer.Contracts.dll</HintPath>
+    <Reference Include="Mozu.Customer.Contracts, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mozu.Customer.Contracts.1.7.0.4\lib\net45\Mozu.Customer.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.InstalledApplications.Contracts">
-      <HintPath>..\packages\Mozu.InstalledApps.Contracts.1.7.0.3\lib\net45\Mozu.InstalledApplications.Contracts.dll</HintPath>
+    <Reference Include="Mozu.InstalledApplications.Contracts, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.InstalledApps.Contracts.1.7.0.4\lib\net45\Mozu.InstalledApplications.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Location.Contracts">
       <HintPath>..\packages\Mozu.Location.Contracts.1.7.0.3\lib\Mozu.Location.Contracts.dll</HintPath>
@@ -278,11 +287,12 @@
     <Reference Include="Mozu.PaymentService.Contracts">
       <HintPath>..\packages\Mozu.PaymentService.Contracts.1.7.0.3\lib\net451\Mozu.PaymentService.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.PricingRuntime.Contracts">
-      <HintPath>..\packages\Mozu.PricingRuntime.Contracts.1.7.0.2\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
+    <Reference Include="Mozu.PricingRuntime.Contracts, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.PricingRuntime.Contracts.1.7.0.3\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ProductAdmin.Contracts">
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.7.0.2\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.7.0.3\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts">
       <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.7.0.3\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
@@ -305,8 +315,9 @@
     <Reference Include="Mozu.SiteSettings.General.Contracts">
       <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.7.0.2\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.SiteSettings.Order.Contracts">
-      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.7.0.2\lib\net45\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
+    <Reference Include="Mozu.SiteSettings.Order.Contracts, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.7.0.3\lib\net45\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.Shipping.Contracts, Version=1.1.0.3, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -315,11 +326,13 @@
     <Reference Include="Mozu.Tenant.Contracts">
       <HintPath>..\packages\Mozu.Tenant.Contracts.1.7.0.3\lib\net45\Mozu.Tenant.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="NDjango.Core40">
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.6.0.1\lib\NDjango.Core40.dll</HintPath>
+    <Reference Include="NDjango.Core40, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.7.0.8\lib\NDjango.Core40.dll</HintPath>
     </Reference>
-    <Reference Include="NDjangoFilters.NDjangoExtension40">
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.6.0.1\lib\NDjangoFilters.NDjangoExtension40.dll</HintPath>
+    <Reference Include="NDjangoFilters.NDjangoExtension40, Version=0.9.9.8, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.7.0.8\lib\NDjangoFilters.NDjangoExtension40.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -405,6 +418,10 @@
     <Compile Include="ActionResults\IgnoreRoute.cs" />
     <Compile Include="ActionResults\RedirectResult.cs" />
     <Compile Include="ActionResults\ViewResultBase.cs" />
+    <Compile Include="Caching\CacheScope.cs" />
+    <Compile Include="Caching\ObjectCacheExtensions.cs" />
+    <Compile Include="Caching\StorefrontCache.cs" />
+    <Compile Include="Caching\StorefrontCacheControl.cs" />
     <Compile Include="CaseInsensitiveJsonSerializerSettings.cs" />
     <Compile Include="Catalog\AdminCategoryTreeProvider.cs" />
     <Compile Include="Catalog\ICategoryTreeProvider.cs" />
@@ -461,6 +478,7 @@
     <Compile Include="Tags\NDjangoContextExtensions.cs" />
     <Compile Include="Tags\SetTemplateVariablesTag.cs" />
     <Compile Include="Tags\PartialOutputCaching.cs" />
+    <Compile Include="TestData\TestDataBroker.cs" />
     <Compile Include="Themes\ThemeLabel.cs" />
     <Compile Include="Themes\ThemeSetting.cs" />
     <Compile Include="Themes\ThemeMetaData.cs" />
@@ -554,6 +572,18 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <EmbeddedResource Include="TestData\order.shipped\Order1.json" />
+    <EmbeddedResource Include="TestData\order.changed\Order1.json" />
+    <EmbeddedResource Include="TestData\return.closed\Return1.json" />
+    <EmbeddedResource Include="TestData\return.changed\Return1.json" />
+    <EmbeddedResource Include="TestData\return.created\Return1.json" />
+    <EmbeddedResource Include="TestData\return.rejected\Return1.json" />
+    <EmbeddedResource Include="TestData\return.authorized\Return1.json" />
+    <EmbeddedResource Include="TestData\order.shipped\Order2.json" />
+    <EmbeddedResource Include="TestData\order.changed\Order2.json" />
+    <EmbeddedResource Include="TestData\product.instock\product1.json" />
+    <EmbeddedResource Include="TestData\user.created\user1.json" />
+    <EmbeddedResource Include="TestData\user.passwordreset\user1.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tags\Data\" />

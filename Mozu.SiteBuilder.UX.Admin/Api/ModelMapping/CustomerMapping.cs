@@ -54,7 +54,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(x => x.UserId, op => op.ResolveUsing(dc => string.IsNullOrWhiteSpace(dc.UserId) ? null : dc.UserId))
                 .ForMember(x => x.EmailAddress, op => op.ResolveUsing(dc => dc.EmailAddress))
-                .ForMember(x => x.UserName, op => op.ResolveUsing(dc => !String.IsNullOrEmpty(dc.UserName) ? dc.UserName : (!dc.IsAnonymous ? dc.EmailAddress : null)))
+                //chanaged for Bug 27071:Admin > Customers: Modify Customer Name fails
+                .ForMember(x => x.UserName, op => op.ResolveUsing(dc => dc.UserName))
                  
                 .ForMember(x => x.FirstName, op => op.ResolveUsing(dc => dc.FirstName))
                 .ForMember(x => x.LastName, op => op.ResolveUsing(dc => dc.LastName))

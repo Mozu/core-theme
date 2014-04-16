@@ -120,7 +120,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             header[APIConstants.Headers.MASTER_CATALOG] = apiContext.MasterCatalogId.HasValue ? apiContext.MasterCatalogId.Value.ToString() : "";
             header[APIConstants.Headers.TENANT] = apiContext.TenantId.ToString();
             header[APIConstants.Headers.USER_CLAIMS] = apiContext.UserClaims.ToAccessToken();
-            header[APIConstants.Headers.BYPASS_CACHE] = apiContext.ShouldBypassCache.ToString();
+         //   header[APIConstants.Headers.BYPASS_CACHE] = apiContext.ShouldBypassCache.ToString();
             if (apiContext.DataViewMode == DataViewModeType.Pending)
             {
                 header[APIConstants.Headers.DATA_VIEW_MODE] = apiContext.DataViewMode.ToString();

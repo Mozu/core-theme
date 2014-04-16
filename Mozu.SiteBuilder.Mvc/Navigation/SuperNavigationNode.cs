@@ -55,13 +55,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
         public int Index { get; set; }
 
-        [JsonIgnore]
+        [JsonConverter(typeof(NavigationNodeType.NavigationNodeTypeConverter))]
         public NavigationNodeType NodeType { get; set; }
-
-        [JsonProperty(PropertyName = "nodeType")]
-        public string NodeTypeString { get { return NodeType; } set { NodeType = value; } }
-
-        public bool IsLeaf { get; set; }
 
         public bool IsHomePage { get; set; }
 
@@ -74,14 +69,29 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         [JsonIgnore]
         private string[] IdParts { get { return (Id ?? "").Split(new string[] { STRING_SPLIT_DELIM }, StringSplitOptions.None); } }
 
+        /// <summary>
+        /// Is this a system-created node like _root.
+        /// </summary>
+        public bool IsSystemNode { get; set; }
 
-        public bool AllowDrag { get; set; }
 
-        public bool AllowDrop { get; set; }
+        private bool? _allowDrag;
+        public bool AllowDrag { get { return _allowDrag.HasValue ? _allowDrag.Value : !IsSystemNode; } set { _allowDrag = value; } }
 
-        public bool Expanded { get; set; }
+        private bool? _allowDrop;
+        public bool AllowDrop { get { return _allowDrop.HasValue ? _allowDrop.Value : (!IsSystemNode && (NodeType == NavigationNodeType.Category || NodeType == NavigationNodeType.Group)); } set { _allowDrop = value; } }
 
-        public bool Expandable { get; set; }
+        private bool? _expanded;
+        public bool Expanded { get { return _expanded.HasValue ? _expanded.Value : (Expandable && IsSystemNode); } set { _expanded = value; } }
+
+        private bool? _expandable;
+        public bool Expandable { get { return _expandable.HasValue ? _expandable.Value : (NodeType == NavigationNodeType.Category || NodeType == NavigationNodeType.Group); } set { _expandable = value; } }
+
+        private bool? _isLeaf;
+        /// <summary>
+        /// Opposite of Expandable
+        /// </summary>
+        public bool IsLeaf { get { return _isLeaf.HasValue ? _isLeaf.Value : !Expandable; } set { _isLeaf = value; } }
 
         public bool IsHidden { get; set; }
     }

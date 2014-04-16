@@ -7,7 +7,8 @@ Ext.define('Taco.view.category.Form', {
     editTitle: 'Edit Category',
     createTitle: 'Create New Category',
     requires: [
-        'Taco.shared.view.field.Image'
+        'Taco.shared.view.field.Image',
+        'Taco.core.ux.CategoryComboBox'
     ],
     ui: 'subform',
     defaults: {

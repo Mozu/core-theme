@@ -35,6 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                               };
                     }
                     //http://<env_specific_devcenter_server>/console/storeprofile/<appversionid>/<localecode>
+                    //todo: convert to automapper - Greg Murray on 2014-04-14 
                     var a = new Application ()
                     {
                         AppId = app.AppId,
@@ -45,6 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                                AppId = app.AppId ,
                                                                                Id = cap.Id,
                                                                                UIConfigurationUrl = app.UIConfigurationUrl,
+                                                                               AppHashKey = cap.AppHashKey,
                                                                                CapabilityType = cap.CapabilityType ,
                                                                                CapabilityMode = cap.CapabilityMode ,
                                                                                ScopeId = cap.ScopeId ,

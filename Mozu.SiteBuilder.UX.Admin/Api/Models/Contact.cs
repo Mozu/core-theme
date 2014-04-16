@@ -54,6 +54,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         public string StateOrProvince { get; set; }
 
         public bool AddressIsValidated { get; set; }
+
+        public string AddressType { get; set; }
         #endregion
 
         #region Phone Numbers

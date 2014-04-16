@@ -18,11 +18,16 @@ Ext.define('Taco.model.Capability', {
         }, {
             "name": "uiConfigurationUrl",
             "type": "string"
+        }, {
+            name: "tenantDomain",
+            type: "string"
+        }, {
+            name: "configReturnUrl",
+            type: "string"
+        }, {
+            name: 'uiSupportUrl',
+            defaultValue:'http://google.com/?k=thoms a jar of pickles'
         },
-    {
-        name: 'uiSupportUrl',
-        defaultValue:'http://google.com/?k=thoms a jar of pickles'
-    },
         {
             "name": "capabilityType",
             "type": "string"

@@ -14,6 +14,7 @@ using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
@@ -65,6 +66,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
        protected override async Task<SimpleTagBaseAsync.ProcessTagResult> ProcessTagAsync(Mvc.Tags.ArgumentCollection arguments, NDjango.Interfaces.IContext context)
         {
             var result = new SimpleTagBaseAsync.ProcessTagResult(context);
+            var cache = context.Resolve<IStorefrontCache>();
 
             var template = arguments.GetValueOrDefault<string>("viewName") ?? (string) arguments[0].Value;
             var includeFacets = arguments.GetValueOrDefault<bool>("includeFacets", false);
@@ -164,19 +166,27 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             ProductSearchResult pc;
             //searchWebApiClient = searchWebApiClient.CloneWithConfigOptions(x => x.HttpCompletionOption = HttpCompletionOption.ResponseHeadersRead);
+           var filter = searchQuery.ToString();
 
-            var res = await searchWebApiClient.Search(query: qurey, filter: searchQuery.ToString(), facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: facetValueFilter, startIndex: startIndex, sortBy: sortBy, pageSize: pageSize).ConfigureAwait(false);
+           var cacheKey = new StringBuilder().Append(qurey).Append(filter).Append(facetHierValue).Append(facetTemplate).Append(facetHierDepth).Append(facetValueFilter).Append(startIndex).Append(sortBy).Append(pageSize).ToString();
 
-            using (var stream = await res.ResponseMessage.Content.ReadAsStreamAsync())
-            {
-                using (var sr = new StreamReader(stream))
-                {
-                    var rdr = new JsonTextReader(sr);
-                    var ser = JsonSerializer.CreateDefault();
+           pc = cache.Get<ProductSearchResult>(cacheKey);
+           if (pc == null)
+           {
+               var res = await searchWebApiClient.Search(query: qurey, filter: filter, facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: facetValueFilter, startIndex: startIndex, sortBy: sortBy, pageSize: pageSize).ConfigureAwait(false);
 
-                    pc = ser.Deserialize<ProductSearchResult>(rdr);
-                }
-            }
+               using (var stream = await res.ResponseMessage.Content.ReadAsStreamAsync())
+               {
+                   using (var sr = new StreamReader(stream))
+                   {
+                       var rdr = new JsonTextReader(sr);
+                       var ser = JsonSerializer.CreateDefault();
+                       pc = ser.Deserialize<ProductSearchResult>(rdr);
+                   }
+               }
+               cache.Set(cacheKey,pc);
+           }
+           
             //    var pcDC = await  res.ReadAsAsync();
             //     var pc = Mapper.Map<ProductSearchResult>(pcDC);
             result.Template = template;

@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
     /// This class is intended to be treated as a singleton 
     /// by the dependency injection framework.
     /// </summary>
-    internal class ThemeRepository : IThemeRepository
+     class ThemeRepository : IThemeRepository
     {
         private readonly ThemeFactory _themeFactory;
         private readonly IThemeMetaDataProvider _themeMetaDataProvider;

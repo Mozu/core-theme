@@ -122,6 +122,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<ThemeEntityDefinitionProvider>().As<IThemeEntityDefinitionProvider>().InstancePerDependency();
 
             builder.RegisterType<ExceptionContextLogWrapper>();
+
+            //builder.Register(c => System.Runtime.Caching.MemoryCache.Default).As<System.Runtime.Caching.ObjectCache>();
         }
     }
 }

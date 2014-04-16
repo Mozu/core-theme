@@ -8,6 +8,7 @@ using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.ErrorHandling;
@@ -17,6 +18,8 @@ using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers;
 using Mozu.InstalledApplications.Contracts.Clients;
+using Mozu.SiteBuilder.UX.Admin.Helpers.SecurityHelpers;
+using Mozu.Tenant.Contracts.Clients;
 using VM = Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -25,44 +28,62 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [WebApi("app/capabilities", SuppressDescriptorGeneration = true)]
     public class CapabilityController : BaseController
     {
-	    private readonly ICapabilitiesWebApiClient _capabilitiesWebApiClient;
-	    private readonly IApplicationsWebApiClient _applicationsWebApiClient;
+        private readonly IApplicationsWebApiClient _applicationsWebApiClient;
+        private readonly ITenantsWebApiClient _tenantsWebApiClient;
+        private readonly ISecureCapabilityConfigUrlHelper _secureConfigUrlHelper;
+        private readonly IApiContext _apiContext;
 
-        public CapabilityController(ICapabilitiesWebApiClient capabilitiesWebApiClient , IApplicationsWebApiClient applicationsWebApiClient )
+        public CapabilityController(IApplicationsWebApiClient applicationsWebApiClient, ITenantsWebApiClient tenantsWebApiClient, ISecureCapabilityConfigUrlHelper secureConfigUrlHelper, IApiContext apiContext)
         {
-            _capabilitiesWebApiClient = capabilitiesWebApiClient;
             _applicationsWebApiClient = applicationsWebApiClient;
+            _tenantsWebApiClient = tenantsWebApiClient;
+            _secureConfigUrlHelper = secureConfigUrlHelper;
+            _apiContext = apiContext;
         }
 
 	    [HttpGetRoute(UriTemplate = "list")]
         public async Task<HttpResponseMessage> CapList([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
 	    {
             var apps = (await _applicationsWebApiClient.GetApplications(startIndex: 0, pageSize: 600)).ReadAsSync().Items;
-             
             
-	        var vmApps = Mapper.Map<List<VM.Application>>(apps);
+            //todo: replace with Tasks.WhenAll...continueWith - Greg Murray on 2014-04-09
+            var tenant = (await _tenantsWebApiClient.GetTenantInternal(_apiContext.TenantId)).ReadAsSync();
 
+            #region test
+            //var appsTask = _applicationsWebApiClient.GetApplications(startIndex: 0, pageSize: 600);
+            //var tenantTask = _tenantsWebApiClient.GetTenantInternal(_apiContext.TenantId);
 
+            //try
+            //{
+            //    await Task.WhenAll(appsTask, tenantTask);
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine(e);
+            //}
+
+            //var appsM = (await appsTask).ReadAsSync().Items;
+            //var tenantM = (await tenantTask).ReadAsSync();
+
+            #endregion
+
+            var vmApps = Mapper.Map<List<VM.Application>>(apps);
 
 	        List<VM.Capability> list = vmApps.SelectMany(x => x.Capabilities).ToList();
 
-
-
+            foreach (var capability in list)
+            {
+                _secureConfigUrlHelper.BuildSecureUrl(capability, tenant);
+            }
 
             if (pagingParams != null && !string.IsNullOrEmpty(pagingParams.id))
             {
                 list = list.Where(x => x.Id == pagingParams.id).ToList();
             }
 
-
 	        var ret = this.List2<VM.Capability>(list);
 
-            
-
-
 	        return this.Request.CreateResponse(HttpStatusCode.OK , ret );
-
-
 	    }
 
        
@@ -96,7 +117,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     {
                         var enabledCount = app.Capabilities.Count(x => x.Enabled.GetValueOrDefault());
                         app.Enabled = (enabledCount > 0);
-                    }
+                    }              
                     // scope to site, if needed
                     // wut? OJP 2014.01.09 - apparently i don't have to do this any more? not sure why
                     //app.Capabilities = app.Capabilities.Where(x => x.ScopeId == editCap.ScopeId).ToList();
@@ -121,6 +142,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var vmApps = Mapper.Map<List<VM.Application>>(apps);
             List<VM.Capability> list = vmApps.SelectMany(x => x.Capabilities).ToList();
+
+            var tenant = (await _tenantsWebApiClient.GetTenantInternal(_apiContext.TenantId)).ReadAsSync();
+            foreach (var cap in list)
+            {
+                _secureConfigUrlHelper.BuildSecureUrl(cap, tenant);
+            }
+
             var ret = this.List2<VM.Capability>(list);
             return this.Request.CreateResponse(HttpStatusCode.OK, ret);
         }

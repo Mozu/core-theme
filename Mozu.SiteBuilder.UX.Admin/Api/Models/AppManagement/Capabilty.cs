@@ -44,8 +44,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement
         public string AppId { get; set; }
         public string UIConfigurationUrl { get; set; }
 
+        public string TenantDomain { get; set; }
 
+        public string ConfigReturnUrl { get; set; }
 
+        public string AppHashKey { get; set; }
 
         public string CapabilityType { get; set; }
        
