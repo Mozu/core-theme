@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.CapabilityController">
+    <Position X="1" Y="0.75" Width="3.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.InstalledApplications.Contracts.Internal.Application">
+    <Position X="5.5" Y="3" Width="3.25" />
+    <Members>
+      <Method Name="Application" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="Entitlement" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Capabilities" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Mozu.Core.ThirdParty.Contracts.Capability">
+    <Position X="4.5" Y="5.5" Width="5.5" />
+    <Members>
+      <Method Name="Capability" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.Tenant.Contracts.Entitlement">
+    <Position X="0.5" Y="3.25" Width="3.5" />
+    <Members>
+      <Method Name="Entitlement" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement.Application">
+    <Position X="10.5" Y="3" Width="2.75" />
+    <Members>
+      <Method Name="Application" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="Capabilities" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement.Capability">
+    <Position X="10.5" Y="5.5" Width="5.25" />
+    <Members>
+      <Method Name="Capability" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Interface Name="Mozu.InstalledApplications.Contracts.Clients.IApplicationsWebApiClient">
+    <Position X="5.25" Y="0.75" Width="4.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

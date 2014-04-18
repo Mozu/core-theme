@@ -80,6 +80,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                             Id = app.AppId,
                             UIConfigurationUrl = app.UIConfigurationUrl,
                             CapabilityType = "Extensions",
+                            AppHashKey = app.HashKey,
                             //CapabilityMode = cap.CapabilityMode ,
                             //ScopeId = cap.ScopeId ,
                             //ScopeType = cap.ScopeType ,

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Crypto;
 using Mozu.Core.Exceptions;
+using Mozu.Core.Logging;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.SecurityHelpers
@@ -20,28 +22,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SecurityHelpers
     {
         public const string X_VOL_RETURN_URL = "x-vol-return-url";
         public const string RETURN_ANCHOR = "#configure";
-        public const string X_VOL_ORIGIN_URL = "x-vol-orig-url";
         public const string X_VOL_TENANT_DOMAIN = "x-vol-tenant-domain";
-        public const string DATE_TIME_FORMAT = "R"; //RFC-1123;
 
+        private readonly IApiContext _apiContext;
+        private readonly IHttpSpecDateProvider _httpSpecDateProvider;
 
-        private readonly IHttpRequestHeaderWrapper _httpRequest;
-
-        public SecureCapabilityConfigUrlHelper(IHttpRequestHeaderWrapper httpRequest)
+        public SecureCapabilityConfigUrlHelper(IApiContext apiContext, IHttpSpecDateProvider httpSpecDateProvider)
         {
-            _httpRequest = httpRequest;
+            _apiContext = apiContext;
+            _httpSpecDateProvider = httpSpecDateProvider;
         }
 
         public Capability BuildSecureUrl(Capability capability, Tenant.Contracts.Tenant tenant)
         {
-            if (string.IsNullOrEmpty(capability.UIConfigurationUrl))
+            if (string.IsNullOrEmpty(capability.UIConfigurationUrl) || string.IsNullOrEmpty(capability.AppHashKey))
+            {
+                LoggingService.LoggerFor<SecureCapabilityConfigUrlHelper>().Warn(string.Format("Missing UIConfigUrl or AppHashKey for app {0} and capability {1}", capability.AppId, capability.Id));
                 return capability;
-            
-            var retUrl = BuildReturnUrl(capability.Id);
-            var body = string.Format("{0}={1}&{2}={3}", X_VOL_TENANT_DOMAIN, tenant.Domain.DomainName, 
-                X_VOL_RETURN_URL, retUrl);
-            var dt = DateTime.UtcNow.ToString(DATE_TIME_FORMAT);
-            var hashedMsg = Sha256HashGenerator.Hash(capability.AppHashKey, dt + body);
+            }
+                
+            var retUrl = BuildReturnUrl(tenant, capability.Id);
+            var body = string.Format("{0}={1}&{2}={3}", X_VOL_TENANT_DOMAIN, tenant.Domain.DomainName, X_VOL_RETURN_URL, retUrl);
+            var dt = _httpSpecDateProvider.GetRfc1123Format();
+            var hashedMsg = ComputeHash(capability.AppHashKey, dt, body);   //Sha256HashGenerator.Hash(capability.AppHashKey, dt + body);
             var secureUrl = string.Format("{0}{1}tenantId={2}&messageHash={3}&dt={4}",  //https://partner.com?tenantId=123&messageHash=RG7es7Etc&dt=Wed, 
                 capability.UIConfigurationUrl,
                 ((capability.UIConfigurationUrl.Contains("?")) ? "&" : "?"),
@@ -55,97 +58,46 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SecurityHelpers
             return capability;
         }
 
-        private string BuildReturnUrl(string capabilityId)
+        private string ComputeHash(string appHashKey, string date, string body)
         {
-            var origUrl = _httpRequest.GetHeader(X_VOL_ORIGIN_URL);
-            var uri = (string.IsNullOrEmpty(origUrl)) ? _httpRequest.GetRequestUri() : new Uri(origUrl);
-
-            return (uri.AbsoluteUri.IndexOf(capabilityId, StringComparison.InvariantCultureIgnoreCase) != -1)
-                ? BuildReturnUrlFromEditUrl(uri) 
-                : BuildReturnUrlFromListStart(uri, capabilityId);
-        }
-
-        //Example:  https://t2544.sandbox.mozu-qa.com/Admin/s-4839/capability/edit/e542ac2f762448f98daba24500cf49b4 
-        private string BuildReturnUrlFromEditUrl(Uri uri)
-        {
-            if (uri.AbsoluteUri.EndsWith(RETURN_ANCHOR))
-                return uri.AbsoluteUri;
-            return uri.AbsoluteUri.EndsWith("/")
-                ? uri.AbsoluteUri + RETURN_ANCHOR
-                : uri.AbsoluteUri + "/" + RETURN_ANCHOR;
-        }
-
-        //Example https://t2544.sandbox.mozu-qa.com/Admin/s-4839/capability
-        private string BuildReturnUrlFromListStart(Uri uri, string capabilityId)
-        {
-            var sb = new StringBuilder("https://");
-            sb.Append(uri.Host);
-            for (int i = 0; i < uri.Segments.Length - 1; i++)
+            byte[] hashArray;
+            using (var encryptor = new SHA256Managed())
             {
-                sb.Append(uri.Segments[i]);
+                var payload = string.Concat(appHashKey, date, body);
+                var payloadByteArray = Encoding.UTF8.GetBytes(payload);
+                hashArray = encryptor.ComputeHash(payloadByteArray);
             }
-            sb.Append("edit/").Append(capabilityId);
-            sb.Append("/").Append(RETURN_ANCHOR);
-            return sb.ToString();
+            var hash = Convert.ToBase64String(hashArray);
+            return hash;
         }
+
+        private string BuildReturnUrl(Tenant.Contracts.Tenant tenant, string capabilityId)
+        {
+            var siteOrTenantSegment = (_apiContext.SiteId.HasValue)
+                ? string.Format("s-{0}", _apiContext.SiteId.Value)
+                : string.Format("t-{0}", _apiContext.TenantId);
+
+            return string.Format("https://{0}/Admin/{1}/capability/edit/{2}/{3}", tenant.Domain.DomainName, siteOrTenantSegment,
+                capabilityId, RETURN_ANCHOR);
+        }
+
     }
 
-    public interface IHttpRequestHeaderWrapper
+    /// <summary>
+    /// To enable deterministic unit testing
+    /// </summary>
+    public interface IHttpSpecDateProvider
     {
-        Uri GetRequestUri();
-        string GetHeader(string name);
+        string GetRfc1123Format();
     }
 
-    //for unit testing
-    public class HttpRequestHeaderWrapper : IHttpRequestHeaderWrapper
+    public class HttpSpecDateProvider : IHttpSpecDateProvider
     {
-        private readonly HttpContextBase _httpContext;
 
-        public HttpRequestHeaderWrapper(HttpContextBase httpContext)
+        public string GetRfc1123Format()
         {
-            _httpContext = httpContext;
+            return DateTime.UtcNow.ToString("R");
         }
-
-        public Uri GetRequestUri()
-        {
-            if (_httpContext != null && _httpContext.Request != null)
-            {
-                return _httpContext.Request.Url;
-            }
-
-            try
-            {
-                if (HttpContext.Current != null && HttpContext.Current.Request != null)
-                {
-                    return HttpContext.Current.Request.Url;
-                }
-            }
-            catch (Exception)
-            {
-                // supress HttpContext.Current not available exceptions
-            }
-            return null;
-        }
-
-        public string GetHeader(string name)
-        {
-            if (_httpContext != null && _httpContext.Request != null)
-            {
-                return _httpContext.Request.Headers.Get(name);
-            }
-            try
-            {
-                if (HttpContext.Current != null)
-                {
-                    return HttpContext.Current.Request.Headers.Get(name);
-                }
-            }
-            catch (Exception)
-            {
-                // supress HttpContext.Current not available exceptions
-            }
-            return null;
-        }
-
     }
+
 }

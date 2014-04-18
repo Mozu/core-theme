@@ -21,11 +21,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement
 
         public bool? Enabled { get; set; }
 
-
-
         public int EntitlementId { get; set; }
         public int EntitlementApplicationVersionId { get; set; }
         //public AuditInfo AuditInfo { get; set; }
+
+        public string SharedSecret { get; set; }
     }
 
     //public enum CapabilityMode
@@ -48,6 +48,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement
 
         public string ConfigReturnUrl { get; set; }
 
+        [JsonIgnore]
         public string AppHashKey { get; set; }
 
         public string CapabilityType { get; set; }

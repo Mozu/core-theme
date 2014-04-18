@@ -387,6 +387,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="App1.config" />
+    <None Include="Diagrams\Admin\Api\cdCapabilities.cd" />
     <None Include="Diagrams\Admin\Api\Models\OrderModels\cdOrderItem.cd" />
     <None Include="Diagrams\Admin\Api\Models\OrderModels\cdReturns.cd" />
     <None Include="Diagrams\Admin\Api\Models\ProductModels\cdProductVariation.cd" />
