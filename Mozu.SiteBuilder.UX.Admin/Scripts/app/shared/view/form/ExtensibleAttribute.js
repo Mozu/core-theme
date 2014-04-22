@@ -13,7 +13,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
     statics: {
         editors: {
             'Date': function (ptAttribute, values) {
-                var date = new Date(values[0]);
+                var date = (! values[0]) ? '' : new Date(values[0]);
                 return [{
                     xtype: 'datefield',
                     name: this.getFieldName(ptAttribute),

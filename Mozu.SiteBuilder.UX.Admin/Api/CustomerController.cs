@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.Customer.Contracts.Credit;
@@ -218,8 +219,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             foreach (var dcCust in dcCustomers)
             {
                 var dcExistingCustomer = await GetAccountWithAttributes(dcCust.Id);
-
-                await Task.WhenAll( ManageContacts(dcCust, dcExistingCustomer), ManageAttributes(dcCust, dcExistingCustomer), ManageSegments ( dcCust, dcExistingCustomer ));
+                var contactsTuple = ManageContacts(dcCust, dcExistingCustomer);
+                var contactsManagementTasks = contactsTuple.Item1;
+                var contactsDeleteTasks = contactsTuple.Item2;
+                var attrTasks = ManageAttributes(dcCust, dcExistingCustomer);
+                var segmentTasks = ManageSegments(dcCust, dcExistingCustomer);
+                
+                await Task.WhenAll(contactsManagementTasks, contactsDeleteTasks, attrTasks, segmentTasks);
+                IfTaskHasExceptionThenThrow(contactsManagementTasks);
+                IfTaskHasExceptionThenThrow(contactsDeleteTasks);
+                IfTaskHasExceptionThenThrow(attrTasks);
+                IfTaskHasExceptionThenThrow(segmentTasks);
+ 
                 await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id);
 
                 var updatedCustomer = await GetAccountWithAttributes(dcCust.Id);
@@ -229,7 +240,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
-       
+        private static void IfTaskHasExceptionThenThrow<T>(Task<ServiceClientResponse<T>[]> taskResults)
+        {
+            foreach (var taskResult in taskResults.Result.Where(taskResult => taskResult.HasException))
+            {
+                throw taskResult.ReadException();
+            }
+        }
 
         /// <summary>
         /// Create a new customer.
@@ -298,10 +315,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        private Task ManageSegments(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
+        private Task<ServiceClientResponse<StreamContent>[]> ManageSegments(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
         {
 
-            List<Task> groupManagementTasks = new List<Task>();
+            var groupManagementTasks = new List<Task<ServiceClientResponse<StreamContent>>>();
             dcExistingCustomer.Segments = dcExistingCustomer.Segments ?? new List<DC.CustomerSegment>();
             var existingGroups = dcExistingCustomer.Segments .Select(x => x.Id).ToList();
             var newGroups = dcCustomer.Segments.Select(x => x.Id).ToList();
@@ -320,9 +337,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Update contacts subroutine for EditCustomers. Yes, a subroutine.
         /// </summary>
-        private Task ManageContacts(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
+        private Tuple<Task<ServiceClientResponse<DC.CustomerContact>[]>, Task<ServiceClientResponse<StreamContent>[]>> ManageContacts(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
         {
-            List<Task> contactManagementTasks = new List<Task>();
+            var contactManagementTasks = new List<Task<ServiceClientResponse<DC.CustomerContact>>>();
+            var contactDeleteTasks = new List<Task<ServiceClientResponse<StreamContent>>>();
+
             if (dcCustomer != null && dcCustomer.Contacts != null && dcExistingCustomer != null && dcExistingCustomer != null)
             {
                 var comparer = new ContactIdEqualityComparer();
@@ -332,18 +351,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 contactManagementTasks.AddRange(contactsToUpdate.Select(con => _customerWebApiClient.UpdateAccountContact(con, con.AccountId, con.Id)));
                 contactManagementTasks.AddRange(contactsToAdd.Select(con => _customerWebApiClient.AddAccountContact(con, con.AccountId)));
-                contactManagementTasks.AddRange(contactsToDel.Select(con => _customerWebApiClient.DeleteAccountContact(con.AccountId, con.Id)));
+                contactDeleteTasks.AddRange(contactsToDel.Select(con => _customerWebApiClient.DeleteAccountContact(con.AccountId, con.Id)));
             }
 
-            return Task.WhenAll(contactManagementTasks);
+            var managementResults = Task.WhenAll(contactManagementTasks);
+            var deleteResults = Task.WhenAll(contactDeleteTasks);
+            return new Tuple<Task<ServiceClientResponse<DC.CustomerContact>[]>, Task<ServiceClientResponse<StreamContent>[]>>(managementResults, deleteResults);
+
         }
 
         /// <summary>
         /// Update attributes subroutine for EditCustomers. Yes, a subroutine.
         /// </summary>
-        private Task ManageAttributes(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
+        private Task<ServiceClientResponse<DC.CustomerAttribute>[]> ManageAttributes(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
         {
-            List<Task> attributeTasks = new List<Task>();
+            var attributeTasks = new List<Task<ServiceClientResponse<DC.CustomerAttribute>>>();
 
             var custAttrIds = (dcCustomer.Attributes ?? new List<DC.CustomerAttribute>()).Select(attr => attr.FullyQualifiedName);
             var existingAttrIds = (dcExistingCustomer.Attributes ?? new List<DC.CustomerAttribute>()).Select(attr => attr.FullyQualifiedName);
@@ -357,7 +379,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             if (updatedAttributeIds.Count > 0)
             {
-                attributeTasks.AddRange(dcCustomer.Attributes.Where(a => updatedAttributeIds.Contains(a.FullyQualifiedName)).Select(a => _customerWebApiClient.UpdateAccountAttribute(a, dcCustomer.Id, a.FullyQualifiedName )));
+                attributeTasks.AddRange(dcCustomer.Attributes.Where(a => updatedAttributeIds.Contains(a.FullyQualifiedName))
+                    .Select(a => _customerWebApiClient.UpdateAccountAttribute(a, dcCustomer.Id, a.FullyQualifiedName)));
             }
 
             return Task.WhenAll(attributeTasks);
