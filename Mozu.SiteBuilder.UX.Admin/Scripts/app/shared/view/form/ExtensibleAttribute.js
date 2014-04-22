@@ -19,7 +19,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                     name: this.getFieldName(ptAttribute),
                     fieldLabel: ptAttribute.get('name'),
                     allowBlank: ptAttribute.get('isRequired') === true ? false: true,
-                    value: date.toLocaleDateString()
+                    value: date
                 }];
             },
             'TextArea': function (ptAttribute, values) {
