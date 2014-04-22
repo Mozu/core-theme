@@ -18,6 +18,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                     xtype: 'datefield',
                     name: this.getFieldName(ptAttribute),
                     fieldLabel: ptAttribute.get('name'),
+                    allowBlank: ptAttribute.get('isRequired') === true ? false: true,
                     value: date.toLocaleDateString()
                 }];
             },
@@ -26,6 +27,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                     xtype: 'textareafield',
                     fieldLabel: ptAttribute.get('name'),
                     name: this.getFieldName(ptAttribute),
+                    allowBlank: ptAttribute.get('isRequired') === true ? false: true,
                     value:(values && values.length) ? values[0] : null,
                     width: '100%',
                     rows: 12,
@@ -71,6 +73,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                     xtype: 'textfield',
                     name: this.getFieldName(ptAttribute),
                     fieldLabel: ptAttribute.get('name'),
+                    allowBlank: ptAttribute.get('isRequired') === true ? false: true,
                     value: (values && values.length) ? values[0] : null,
                     width: '100%'
                 }];
@@ -203,6 +206,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
         Ext.each(fields.items, function (field) {
             var fqn = me.parseFieldName(field.getName()),
                 definition = me.attributeDefinitionStore.getById(fqn),
+                val = field.getValue(),
                 item = {};
             
             item['attributeDefinitionId'] = definition.get('attributeId');
@@ -210,11 +214,10 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
             item['id'] = null;
 
             if (field.getXType() != 'datefield') {
-                item['values'] = [field.getValue()];
+                item['values'] = [val];
             } else {
-                item['values'] = [field.getValue().toString()];
+                item['values'] = [Ext.isEmpty(val) ? val : Ext.Date.format(val, 'c')];
             }
-            
             
             attrs.push(item);
         });
