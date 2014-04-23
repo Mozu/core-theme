@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Mozu.CommerceRuntime.Contracts.Discounts;
 using Mozu.Core.Api.Routing;
+using Mozu.Core.Exceptions;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
+using Mozu.SiteBuilder.UX.Admin.Helpers;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -59,10 +64,46 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 dcOrder = (await _orderWebApiClient.ApplyCoupon(args.OrderId, couponCode, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
             }
 
-            if (dcOrder != null)
-                return Single2(dcOrder.Map<Order>());
+            if (dcOrder == null)
+            {
+                throw new VaeUnexpectedErrorException("Could not apply coupon to order. Please try again");
+            }
+
+            var invalidCoupons = dcOrder.InvalidCoupons.Where(x => args.Coupons.Contains(x.CouponCode)).DistinctBy(x => x.CouponCode);
+
+            var invalidCount = invalidCoupons.Count();
+            if (invalidCount == 0)
+            {
+                return (dcOrder != null)
+                ? Single2(dcOrder.Map<Order>())
+                : Message3<Order>(false, "No coupons were applied.");
+            }
+
+            var errMsg = BuildInvalidCouponMessage(invalidCount, invalidCoupons);
+            throw new VaeValidationConflictException(errMsg);
+
+        }
+
+        private static string BuildInvalidCouponMessage(int invalidCount, IEnumerable<InvalidCoupon> invalidCoupons)
+        {
+            string errMsg;
+            if (invalidCount == 1)
+            {
+                var singleCoupon = invalidCoupons.First();
+                errMsg = string.Format("Invalid coupon: {0} - {1}", singleCoupon.CouponCode, singleCoupon.Reason);
+            }
             else
-                return Message3<Order>(false, "No coupons were applied.");
+            {
+                var sb = new StringBuilder();
+                sb.Append("Invalid coupons: ");
+                foreach (var invCoupon in invalidCoupons)
+                {
+                    sb.Append(invCoupon.CouponCode);
+                    sb.Append(" - ").Append(invCoupon.Reason).Append(";");
+                }
+                errMsg = sb.ToString();
+            }
+            return errMsg;
         }
 
         [HttpPostRoute(UriTemplate = "removecoupon")]
