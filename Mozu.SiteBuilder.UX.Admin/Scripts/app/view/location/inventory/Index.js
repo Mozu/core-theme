@@ -192,7 +192,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                         var store = editor.grid.store,
                             locationFilter = store.extraFilters.getByKey("locationCode"),
                             locationCode;
-                    
+                        
                         if (!locationFilter) {
                             return false;
                         }
@@ -202,13 +202,29 @@ Ext.define('Taco.view.location.inventory.Index', {
                     },
                     listeners: {
                         select: {
-                            fn: function(combo, records, eOpts) {
+                            fn: function (combo, records, eOpts) {                                
                                 var record = records[0],
                                     rowEditor = combo.up('roweditor'),
-                                    productCodeField = rowEditor.form.findField("productCode");
+                                    productCodeField = rowEditor.form.findField("productCode"),
+                                    grid = combo.up('grid'),
+                                    store = grid.store,
+                                    productCode = record.get("productCode"),
+                                    existingRecord = store.findRecord('productCode', productCode),
+                                    // the column to set focus in when opening the editor;
+                                    columnHeader = grid.getTopLevelVisibleColumnManager().getHeaderById("stockOnHand");
                             
-                                productCodeField.setValue(record.get("productCode"));
-                                combo.setValue(record.get("productName"));
+                                // check to see if a record already exists in the current store data with this product code;
+                                // note that this does not check the service for an existing record that is not loaded in the current page of the store;
+                                // the service is expected to return an error when persisting a new record with the same productCode;
+                                if (existingRecord) {
+                                    // cancel the create and select the existing record and start editing it;
+                                    combo.collapse();
+                                    grid.editingPlugin.cancelEdit();                                    
+                                    grid.editingPlugin.startEdit(existingRecord, columnHeader);
+                                } else {
+                                    productCodeField.setValue(productCode);
+                                    combo.setValue(record.get("productName"));
+                                }
                             }
                         }
                     }
@@ -251,6 +267,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                 */
             }, {
                 dataIndex: 'stockOnHand',
+                itemId: "stockOnHand",
                 width: 100,
                 menuDisabled: true,
                 sortable: true,
