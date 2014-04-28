@@ -30,7 +30,6 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Commerce
 
     public class Cart : Mozu.CommerceRuntime.Contracts.Carts.Cart
     {
-        [IgnoreDataMember]
         public Boolean IsEmpty
         {
             get

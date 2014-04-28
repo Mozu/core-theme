@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
@@ -90,6 +91,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<Order>> CreateOrder()
         {
             var emptyOrder = new DCo.Order();
+
+            // fill in order ip address
+            if (Request.Properties.ContainsKey("MS_HttpContext"))
+            {
+                var ctx = Request.Properties["MS_HttpContext"] as HttpContextWrapper;
+                if (ctx != null)
+                {
+                    emptyOrder.IPAddress = ctx.Request.Headers["X-Forwarded-For"] ?? ctx.Request.UserHostAddress;
+                }
+            }
+
             var order = (await _orderWebApiClient.CreateOrder(emptyOrder)).ReadAsSync();
 
             return Single2( order.Map<Order>() );
@@ -98,6 +110,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public class OrderIdArgs
         {
             public string OrderId { get; set; }
+        }
+
+        [HttpPostRoute(UriTemplate = "accept")]
+        public async Task<Response<Order>> AcceptOrder(OrderIdArgs args)
+        {
+            var dc = (await _orderWebApiClient.PerformOrderAction(args.OrderId, new DCo.OrderAction { ActionName = "AcceptOrder" })).ReadAsSync();
+
+            return Single2( dc.Map<Order>() );
         }
 
 		[HttpPostRoute(UriTemplate = "cancel")]

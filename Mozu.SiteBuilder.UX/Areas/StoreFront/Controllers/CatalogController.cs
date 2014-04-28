@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [NoSslActionFilter]
     [ContextInitialization]
-    [ErrorFormattingActionFilter]
+
     public class CatalogController : BaseApiController
     {
         private readonly ISiteBuilderApiContext _apiCtx;

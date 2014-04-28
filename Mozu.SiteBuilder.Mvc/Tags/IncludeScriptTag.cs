@@ -30,10 +30,10 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 throw new InvalidOperationException("includescript takes only 1 arg");
 
             
-            var scripts = (List<string>)context.HttpContext().Items ["scripts"];
+            var scripts = (HashSet<string>)context.HttpContext().Items ["scripts"];
             if (scripts == null)
             {
-                context.HttpContext().Items["scripts"] = scripts = new List<string>();
+                context.HttpContext().Items["scripts"] = scripts = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             }
             scripts.Add(arguments[0].Value.ToString());
 

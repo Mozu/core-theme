@@ -106,7 +106,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                     view.Render(viewContext, tw);
 
-                    DebugScriptsTag.RenderRequiresForWidgetPreview(tw, this.HttpContext);
+                    RenderScriptsTag.RenderRequiresForWidgetPreview(tw, this.HttpContext);
                   
                 }
                 else

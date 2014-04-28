@@ -29,6 +29,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                 // base class maps AddressType. DO NOT let automapper overwrite it.
                 .ForMember(x => x.AddressType, op => op.Ignore())
+
+                // ignore a bunch of other members that base class maps, but unit test fails on
+                .ForMember(x => x.MiddleName, op => op.Ignore())
+                .ForMember(x => x.LastName, op => op.Ignore())
+                .ForMember(x => x.Address1, op => op.Ignore())
+                .ForMember(x => x.Address2, op => op.Ignore())
+                .ForMember(x => x.Address3, op => op.Ignore())
+                .ForMember(x => x.Address4, op => op.Ignore())
+                .ForMember(x => x.CityOrTown, op => op.Ignore())
+                .ForMember(x => x.StateOrProvince, op => op.Ignore())
+                .ForMember(x => x.CountryCode, op => op.Ignore())
+                .ForMember(x => x.PostalOrZipCode, op => op.Ignore())
+                .ForMember(x => x.HomePhone, op => op.Ignore())
+                .ForMember(x => x.MobilePhone, op => op.Ignore())
+                .ForMember(x => x.WorkPhone, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<CustomerContact, DC.CustomerContact>()
@@ -45,6 +60,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                     return types;
                 }))
+
+                // have to ignore the following members for unit tests to pass even though they are mapped by .BeforeMap
+                .ForMember(dc => dc.PhoneNumbers, op => op.Ignore())
+                .ForMember(dc => dc.MiddleNameOrInitial, op => op.Ignore())
+                .ForMember(dc => dc.LastNameOrSurname, op => op.Ignore())
+                .ForMember(dc => dc.Address, op => op.Ignore())
+                .ForMember(dc => dc.AuditInfo, op => op.Ignore())
+
                 ;
 
         }

@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using System.Web;
 using Autofac;
 using Magnum.Extensions;
-
+using Mozu.Core.Api.Contracts;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Logging;
+using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Newtonsoft.Json;
 
@@ -44,7 +45,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             {
                 hex = new HttpUnhandledException(ex.Message, ex);
             }
-
+            
             var stw = new StreamWriter(writeStream);
             stw.Write(hex.GetHtmlErrorMessage());
 
@@ -66,58 +67,28 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 
             
             var tcs = new TaskCompletionSource<bool>();
-            var tempModel = (System.Web.Http.HttpError)value;
-            var model = tempModel;
+            //var tempModel = (Tuple<Exception, ErrorCollection>) value;
+
+            var ec = value as ErrorCollection;
+            var ex = value is SiteBuilderErrorCollection ? ((SiteBuilderErrorCollection) value).Exception : null;
+
+            var model = ec;
             var showYSOD = this.RequestMessage.Resolve<ISettings>().AppSettings("YSOD_ERRORS") == "true";
-            object obj;
-            Exception ex = null;
-            if (tempModel.TryGetValue("_ex", out obj))
+            object obj = null;
+
+
+
+            if (ex!= null &&( showYSOD || this.RequestMessage.GetRouteData().Values.TryGetValue("controller", out obj)))
             {
-                ex = obj as Exception;
-                tempModel.Remove("_ex");
-
-                if ( showYSOD ||  this.RequestMessage.GetRouteData().Values.TryGetValue("controller",out obj))
+                if (showYSOD || string.Equals("resource", (string)obj, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (showYSOD || string.Equals("resource", (string)obj, StringComparison.OrdinalIgnoreCase))
-                    {
-                        WriteYSOD(ex, writeStream);
-                        tcs.SetResult(true);
-                        return tcs.Task;
-                    }
-                }
-                
-
-            }
-           
-
-
-
-            var innerException = model;
-            while (true)
-            {
-                
-                if (tempModel.TryGetValue("InnerException", out obj))
-                {
-                    tempModel = (System.Web.Http.HttpError)obj;
-                    var exType = tempModel["ExceptionType"] as string;
-                    if (exType == wrapperException)
-                    {
-                        model = (System.Web.Http.HttpError) tempModel["InnerException"];
-                        break;
-                        
-                    }else if (exType != null && exType.StartsWith("NDjango"))
-                    {
-                        model = tempModel;
-                        break;
-                    }
-
-                    
-                }
-                else
-                {
-                    break;
+                    WriteYSOD(ex, writeStream);
+                    tcs.SetResult(true);
+                    return tcs.Task;
                 }
             }
+                
+
 
 
            
@@ -197,7 +168,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 
         public override bool CanWriteType(Type type)
         {
-            return type == typeof(System.Web.Http.HttpError);
+            return type == typeof(ErrorCollection);
         }
 
         public HttpRequestMessage RequestMessage { get; set; }

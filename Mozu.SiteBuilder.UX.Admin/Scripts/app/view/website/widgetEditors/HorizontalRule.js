@@ -43,10 +43,8 @@ Ext.define('Taco.view.website.widgetEditors.HorizontalRule', {
                 xtype: 'radiogroup',
                 fieldLabel: 'Style',
                 defaults: {
-                    name: 'hrBorderStyle',
-                    boxLabelCls: 'taco-hr-line-style-label'
+                    name: 'hrBorderStyle'
                 },
-                layout: 'vbox',
                 items: [{
                     inputValue: 'solid',
                     boxLabel: 'solid'
@@ -60,11 +58,11 @@ Ext.define('Taco.view.website.widgetEditors.HorizontalRule', {
             }, {
                 fieldLabel: 'Spacing Above',
                 name: 'hrMarginTop',
-                store: ['None', 'Small (4px)', 'Medium (8px)', 'Large (12px)']
+                store: [['0px', 'None'], ['4px', 'Small (4px)'], ['8px', 'Medium (8px)'], ['12px', 'Large (12px)']]
             }, {
                 fieldLabel: 'Spacing Below',
                 name: 'hrMarginBottom',
-                store: ['None', 'Small (4px)', 'Medium (8px)', 'Large (12px)']
+                store: [['0px', 'None'], ['4px', 'Small (4px)'], ['8px', 'Medium (8px)'], ['12px', 'Large (12px)']]
             }, {
                 xtype: 'component',
                 width: '100%',
@@ -114,8 +112,8 @@ Ext.define('Taco.view.website.widgetEditors.HorizontalRule', {
             newStyles['border-top-width'] = formValues['hrBorderWidth'];
             newStyles['border-color']     = formValues['hrBorderColor'];
             newStyles['border-style']     = formValues['hrBorderStyle'];
-            newStyles['margin-top']       = marginMap[ formValues['hrMarginTop'] ];
-            newStyles['margin-bottom']    = marginMap[ formValues['hrMarginBottom'] ];
+            newStyles['margin-top']       = formValues['hrMarginTop'];
+            newStyles['margin-bottom']    = formValues['hrMarginBottom'];
 
             previewEl.applyStyles(newStyles);
         }

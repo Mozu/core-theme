@@ -287,6 +287,18 @@ Ext.define('Taco.view.product.Form', {
     },
 
     /**
+     * Tamper with the model before it saves to the server.
+     */
+    beforeSave: function () {
+        // when saving a product which is a BundleComponent, we cannot include any extras or the service will shit a brick. bug #27643
+        if (this.record.get('productUsage') === 'Component') {
+            this.record.set('extras', []);
+        }
+
+        return this.callParent(arguments);
+    },
+
+    /**
      * Adds the sync store task for the ProductsInSiteInfo store (no dependencies)
      * @param {Ext.core.ux.form.Task} tasks The save tasks associated with the form.
      * @return {Ext.core.ux.form.Task} The save tasks associated with the form

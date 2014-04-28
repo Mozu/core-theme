@@ -93,7 +93,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                    .ForMember(d => d.Url, opt => opt.ResolveUsing(x => string.Equals(x.DocumentListName, "pages", StringComparison.OrdinalIgnoreCase)? "/"+ x.Name:   "/" + x.DocumentListName + "/" + x.Name))
                .ForMember(d => d.NodeType, opt => opt.UseValue(NavigationNodeType.Page))
                .ForMember(d => d.Index, opt => opt.UseValue(null))
-               .ForMember(d => d.IsLeaf, opt => opt.ResolveUsing(x => x.DocumentType == "blog"))
+               .ForMember(d => d.IsLeaf, opt => opt.ResolveUsing(x => x.DocumentType == "blog" || x.DocumentType == "page"))
                ;
 
             // this mapping is used by Mozu.SiteBuilder.Mvc.Contexts.NavContext

@@ -2093,6 +2093,19 @@ Ext.define('Taco.model.Order', {
     },
     
     /**
+     * service call to accept an order.
+     * you need to accept an order that is in 'PendingReview' state.
+     */
+    acceptOrder: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/accept',
+            method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    /**
     * service call to cancel an order.
     * @param {Object} config  A configuration object
     * config object:
@@ -2140,6 +2153,6 @@ Ext.define('Taco.model.Order', {
     }
 }, function () {
 
-    console.log(arguments, "orderz", Taco.model.Order);
+    // console.log(arguments, "orderz", Taco.model.Order);
    
 });

@@ -876,10 +876,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 
             }
 
+            private static string g_content = "/*.nullcontainerguything {}*/";
             private ResourceController  Controller { get; set; }
             // public ResourceController Controller { get; set; }
             public string GetFileContents(string fileName)
             {
+                var transFormedContent = string.Empty;
                 // foreach (var theme in SiteContext.ThemeInfo.Stack )
                 {
                     string stem = fileName;
@@ -889,12 +891,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                         using (var sr = file.OpenText())
                         {
                             string ret = sr.ReadToEnd();
-                            return lessTransFormer.ProcessSettingsVariables(ret, file.VirtualPath );
+                            transFormedContent =  lessTransFormer.ProcessSettingsVariables(ret, file.VirtualPath );
                         }
                     }
                 }
-
-                return string.Empty;
+                if (string.IsNullOrWhiteSpace(transFormedContent))
+                {
+                    return g_content;
+                }
+                return transFormedContent;
             }
 
             public bool DoesFileExist(string fileName)

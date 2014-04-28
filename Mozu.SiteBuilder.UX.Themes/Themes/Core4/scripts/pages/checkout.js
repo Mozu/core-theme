@@ -1,4 +1,4 @@
-﻿require(["modules/jquery-mozu", "shim!vendor/underscore>_", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages"], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory) {
+﻿require(["modules/jquery-mozu", "shim!vendor/underscore>_", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor"], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor) {
 
     var CheckoutStepView = Backbone.MozuView.extend({
         edit: function () {
@@ -280,7 +280,8 @@
 
         window.checkoutViews = checkoutViews;
 
-        checkoutModel.on('complete', function () {
+        checkoutModel.on('complete', function() {
+            CartMonitor.setCount(0);
             window.location = "/checkout/" + checkoutModel.get('id') + "/confirmation";
         });
 

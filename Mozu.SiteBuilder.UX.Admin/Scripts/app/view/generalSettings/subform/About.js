@@ -116,9 +116,20 @@ Ext.define('Taco.view.generalSettings.subform.About', {
         
 
 
-
+        var siteStore = Taco.app.context.getStore(true);
+        siteStore.filter([{
+            filterFn: function (item) { return item.get('contextType') === 's' && item.get('isMozuRendered') }
+        }]);
+        siteStore.addListener('load', function (data) {
+            var value = me.record.get("templateSiteId");
+            if (!value) {
+                // default to the first selection;
+                me.customerExperienceTemplate.select(me.customerExperienceTemplate.store.data.items[1]);
+            }
+            me.customerExperienceTemplate.clearInvalid();
+        }, me, { single: true });
         me.customerExperienceTemplate = Ext.create('Ext.form.field.ComboBox', {
-            name: "theme",
+            name: "templateSiteId",
             flex: 1,
             columnWidth: .5,
             fieldLabel: 'Customer Experience Template',
@@ -130,24 +141,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             //check if needed before setting allowBlank
             allowBlank: true,
             hidden:this.record.get("isMozuWebSite"),
-            store: Taco.core.data.StoreManager.getOrCreate({
-                type: 'Taco.store.ThemeListing',
-                autoLoad: true,
-                listeners: {
-                    load: {
-                        fn: function (data) {
-                            var value = me.record.get("theme");
-                            if (!value) {
-                                // default to the first selection;
-                                me.customerExperienceTemplate.select(me.customerExperienceTemplate.store.data.items[1]);
-                            }
-                            me.customerExperienceTemplate.clearInvalid();
-                        },
-                        single: true,
-                        scope: me
-                    }
-                }
-            })
+            store: siteStore
         });
         
         this.items = [

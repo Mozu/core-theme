@@ -498,6 +498,7 @@
   },
   "instockrequest": {
     "create": {
+		"useIframeTransport": "{+storefrontUserService}../../receiver",
         "verb": "POST",
         "template": "{+customerService}../../instocknotifications"
     }

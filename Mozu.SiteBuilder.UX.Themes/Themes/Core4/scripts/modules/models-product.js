@@ -19,47 +19,50 @@
             _.defer(function() {
                 me.listenTo(me.collection, 'invalidoptionselected', me.handleInvalid, me);
             });
-            if (me.get('attributeDetail').inputType === "YesNo") {
-                me.on('change:value', function(model, newVal) {
-                    var values;
-                    if (me.previous('value') !== newVal) {
-                        values = me.get('values');
-                        _.first(values).isSelected = newVal;
-                        me.set({
-                            value: newVal,
-                            shopperEnteredValue: newVal,
-                            values: values
-                        }, {
-                            silent: true
-                        });
+            var attributeDetail = me.get('attributeDetail');
+            if (attributeDetail) {
+                if (attributeDetail.inputType === "YesNo") {
+                    me.on('change:value', function(model, newVal) {
+                        var values;
+                        if (me.previous('value') !== newVal) {
+                            values = me.get('values');
+                            _.first(values).isSelected = newVal;
+                            me.set({
+                                value: newVal,
+                                shopperEnteredValue: newVal,
+                                values: values
+                            }, {
+                                silent: true
+                            });
+                            me.trigger('optionchange', newVal, me);
+                        }
+                    });
+                } else {
+                    me.on("change:value", function(model, newVal) {
+                        var newValObj, values = me.get("values");
+                        if (typeof newVal === "string") newVal = $.trim(newVal);
+                        if (newVal || newVal === false || newVal === 0 || newVal === '') {
+                            _.each(values, function(fvalue) {
+                                if (fvalue.value.toString() === newVal.toString()) {
+                                    newValObj = fvalue;
+                                    fvalue.isSelected = true;
+                                    me.set("value", newVal);
+                                } else {
+                                    fvalue.isSelected = false;
+                                }
+                            });
+                            me.set("values", values);
+                            //if (me.get("attributeDetail").inputType !== "List") {
+                            //    me.set("shopperEnteredValue", newVal);
+                            //}
+                        } else {
+                            me.unset('value');
+                            me.unset("shopperEnteredValue");
+                        }
+                        if (newValObj && !newValObj.isEnabled) me.collection.trigger('invalidoptionselected', newValObj, me);
                         me.trigger('optionchange', newVal, me);
-                    }
-                });
-            } else {
-                me.on("change:value", function(model, newVal) {
-                    var newValObj, values = me.get("values");
-                    if (typeof newVal === "string") newVal = $.trim(newVal);
-                    if (newVal || newVal === false || newVal === 0 || newVal === '') {
-                        _.each(values, function(fvalue) {
-                            if (fvalue.value.toString() === newVal.toString()) {
-                                newValObj = fvalue;
-                                fvalue.isSelected = true;
-                                me.set("value", newVal);
-                            } else {
-                                fvalue.isSelected = false;
-                            }
-                        });
-                        me.set("values", values);
-                        //if (me.get("attributeDetail").inputType !== "List") {
-                        //    me.set("shopperEnteredValue", newVal);
-                        //}
-                    } else {
-                        me.unset('value');
-                        me.unset("shopperEnteredValue");
-                    }
-                    if (newValObj && !newValObj.isEnabled) me.collection.trigger('invalidoptionselected', newValObj, me);
-                    me.trigger('optionchange', newVal, me);
-                });
+                    });
+                }
             }
         },
         handleInvalid: function(newValObj, opt) {
@@ -91,7 +94,9 @@
             return raw;
         },
         isChecked: function() {
-            return this.get('attributeDetail').inputType === "YesNo" && this.attributes.values && this.attributes.values[0].isSelected;
+            var attributeDetail = this.get('attributeDetail'),
+                values = this.get('values');
+            return attributeDetail && attributeDetail.inputType === "YesNo" && values && values[0].isSelected;
         },
         isConfigured: function() {
             if (this.isChecked()) return true;

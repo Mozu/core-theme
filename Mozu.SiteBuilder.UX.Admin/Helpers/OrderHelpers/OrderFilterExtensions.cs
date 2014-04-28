@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
         public static string ToFilterString(this FilterCollection extFilter, bool? withVariations = null)
         {
             if (extFilter == null || extFilter.Count == 0)
-                return "(Status eq Submitted or Status eq  Processing or Status eq  Completed or Status eq  Cancelled  or Status eq  Validated or Status eq  Accepted or Status eq  PendingReview)";
+                return "status.in eq \"Submitted,Processing,Completed,Cancelled,Validated,Accepted,PendingReview\"";
 
             // TODO: If the filter needs to include products with variations, do something with 'withVariations'
             // Note: this could change, we're waiting on changes to be applied from the services team and/or Britt G.
@@ -31,9 +31,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
             //     extFilter.Add(new FilterCollectionItem { comparison = "cont", field = PropertyGuy.Convert(x => x.Content.ProductName), value = extFilter.query });
 
             IEnumerable<string> stateMents = extFilter.Where(x => x.property != "all").Select(GetFilter).Where(x => !string.IsNullOrWhiteSpace(x));
-            if (!extFilter.Any(x => string.Equals(x.property, "status", StringComparison.OrdinalIgnoreCase)))
+            if (!extFilter.Any(x => string.Equals(x.property, "status", StringComparison.OrdinalIgnoreCase) || string.Equals(x.property, "status.in", StringComparison.OrdinalIgnoreCase)))
             {
-                stateMents = stateMents.Concat(new[] { "(Status eq Submitted or Status eq  Processing or Status eq  Completed or Status eq  Cancelled  or Status eq  Validated or Status eq  Accepted or Status eq  PendingReview)" });
+                stateMents = stateMents.Concat(new[] { "(status.in eq \"Submitted,Processing,Completed,Cancelled,Validated,Accepted,PendingReview\")" });
             }
             return string.Join(" and ", stateMents);
         }
@@ -85,7 +85,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                     if (filter.value.ToString().ToLower() == "open")
                     {
                     
-                        return "(status eq Submitted or status eq Processing  or status eq Validated or status eq Accepted or status eq PendingReview)";
+                        return "(status.in  eq \"Submitted,Processing,Validated,Accepted,PendingReview\")";
                     }
                     return string.Format("status eq {0}", filter.value);
                 case "billingcontactfirstname":

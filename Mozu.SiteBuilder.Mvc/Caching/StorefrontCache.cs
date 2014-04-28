@@ -8,6 +8,7 @@ using System.Web;
 using Autofac;
 using Mozu.Core.Api;
 using Mozu.Core.Api.Client;
+using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.Tenant.Contracts.Clients;
 
@@ -25,15 +26,21 @@ namespace Mozu.SiteBuilder.Mvc.Caching
         private System.Runtime.Caching.ObjectCache _cache;
         private readonly ILifetimeScope _scope;
         private static  Hashtable _siteLookupHashtable = new Hashtable();
-
+        private int _timeout = 300;
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public StorefrontCache(ISiteBuilderApiContext ctx, System.Runtime.Caching.ObjectCache cache, ILifetimeScope scope)
+        public StorefrontCache(ISiteBuilderApiContext ctx, System.Runtime.Caching.ObjectCache cache, ILifetimeScope scope, ISettings setting )
         {
             _ctx = ctx;
             _cache = cache;
             _scope = scope;
+
+            
+            if ( !int.TryParse(setting.AppSettings("storefrontcache_duration"), out _timeout))
+            {
+                _timeout = 300;
+            }
         }
 
         void ValidateContext()
@@ -70,6 +77,8 @@ namespace Mozu.SiteBuilder.Mvc.Caching
         /// </summary>
         public object Get(string key, CacheScope scope)
         {
+            if (_timeout == 0)
+                return null;
             if (String.IsNullOrWhiteSpace(key))
                 return null;
             ValidateContext();
@@ -100,7 +109,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
 
         public void Set(string key, object value, CacheScope scope = CacheScope.Site)
         {
-            if (String.IsNullOrWhiteSpace(key))
+            if (String.IsNullOrWhiteSpace(key) || _timeout ==0 )
                 return;
             ValidateContext();
 
@@ -141,13 +150,13 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             // ensure that all the dependencies have an entry in cache. we will have a really bad experience if they're not.
             foreach (string dep in dependencies)
             {
-                // dependencies have a 5 minute _sliding_ expiration.
-                _cache.AddOrGetExisting(dep, Guid.NewGuid(), new System.Runtime.Caching.CacheItemPolicy { SlidingExpiration = new TimeSpan(0, 5, 0) });            
+                // dependencies have a max expiration
+                _cache.AddOrGetExisting(dep, Guid.NewGuid(), new System.Runtime.Caching.CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.MaxValue });            
             }
 
             var itemPolicy = new System.Runtime.Caching.CacheItemPolicy {
-                // items have a 5 minute absolute expiration.
-                AbsoluteExpiration = DateTimeOffset.UtcNow.AddMinutes(5)
+                // items have a configurable  absolute expiration.
+                AbsoluteExpiration = DateTimeOffset.UtcNow.AddSeconds(_timeout)
             };
             itemPolicy.ChangeMonitors.Add( _cache.CreateCacheEntryChangeMonitor(dependencies) );
 

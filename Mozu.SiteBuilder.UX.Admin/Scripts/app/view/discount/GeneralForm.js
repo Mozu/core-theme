@@ -11,6 +11,8 @@ Ext.define('Taco.view.discount.GeneralForm', {
     ui: 'subform',
     margin: '0 0 39 0',
 
+    title: 'General',
+
     initComponent: function () {
 
         this.nameInput = Ext.create('Ext.form.field.Text', {
@@ -131,7 +133,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 xtype: 'container',
                 layout: {
                     type: 'hbox',
-                    align: 'bottom'
+                    align: 'top'
                 },
                 items: [
                     this.scopeTypeInput,
@@ -141,7 +143,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 xtype: 'container',
                 layout: {
                     type: 'hbox',
-                    align: 'bottom'
+                    align: 'top'
                 },
                 width: 600,
                 items: [

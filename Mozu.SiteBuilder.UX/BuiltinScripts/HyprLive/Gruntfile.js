@@ -15,7 +15,13 @@ module.exports = function (grunt) {
 
         bower: {
             install: {
-                cleanup: true
+                options: {
+                    cleanup: true,
+                    bowerOptions: {
+                        verbose: true,
+                        forceLatest: true
+                    }
+                }
             }
         },
         clean: {

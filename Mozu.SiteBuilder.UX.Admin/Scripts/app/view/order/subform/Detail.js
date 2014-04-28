@@ -62,41 +62,8 @@ Ext.define('Taco.view.order.subform.Detail', {
         me.mon( me.record, "aftercommit", function () {
             me.onRecordChange();
         }, me);
-        
-        // var siteContext = Taco.app.context.getCurrent().urlToken;
 
         this.cls += ' ' + Taco.baseCSSPrefix + 'orderform-detail';
-        
-        // this.actionTrigger = Ext.create('Taco.core.ux.action.Button', {
-        //     width: 50,
-        //     height: 30,
-        //     text: ' ',
-        //     menuAlign: 'tr-br',
-        //     cls: Taco.baseCSSPrefix + 'editcontainer-menu-button',
-        //     autoEl: {
-        //         tag: 'a'
-        //     },
-            
-        //     listeners: {
-        //         menushow: {
-        //             fn: function (button, menu, eOpts) {
-        //                 // need to generate the menu each time since the menu options may change after the record is modified;
-        //                 menu.removeAll();
-        //                 menu.add(me.getMenuActions());
-        //             },
-        //             scope: me
-        //         }
-        //     },
-        //     menu: {
-        //         plain: true,
-        //         items: [{
-        //             text: ""
-        //         }]
-        //     }
-        // });
-    
-        // add the action trigger icon in header;
-        // this.setTools([this.actionTrigger]);
     
         // store that contains the orderItems for this order model
         orderItemStore = this.record.itemsStore;
@@ -119,6 +86,11 @@ Ext.define('Taco.view.order.subform.Detail', {
                         me.detailGrid.hasDraftToolbar = null;
                     },
                     scope: me
+                },
+                'orderAccepted': {
+                    fn: function() {
+                        me.record.reload();
+                    },
                 },
                 'orderCancelled': {
                     fn: function() {
@@ -157,9 +129,7 @@ Ext.define('Taco.view.order.subform.Detail', {
 
         this.callParent(arguments);
     },
-        
-    
-    
+
     editOrder: function () {
         var me = this,
             isDraft = me.orderForm.isEdit(),
@@ -199,37 +169,6 @@ Ext.define('Taco.view.order.subform.Detail', {
 
         // now we sit back and let autoShow do the rest..
     },
-
-    /*
-    loadRecord: function () {
-        var me = this,
-            orderId = (me.record) ? me.record.get('id') : me.orderId;
-        me.orderModel.load(orderId, {
-            scope: me,
-            failure: function (record, operation) {
-                //do something if the load failed
-                this.setLoading(false, this.body);
-            },
-            success: function (record, operation) {
-                me.record = record;
-                me.onLoadRecord();
-            },
-            callback: function (record, operation) {
-                //do something whether the load succeeded or failed
-            }
-        });
-    },
-
-    // when the draft record has loaded create and add the total and grid and hide the loading mask;
-    onLoadRecord: function () {
-        var me = this;
-        // initialize the ui when the record loads the first time.
-        //me.updateUi();
-        //this.setLoading(false, this.body);
-        me.record.reload();
-    },
-    
-    */
 
     // when the record changes we will need to update the order details
     onRecordChange: function () {
@@ -307,11 +246,19 @@ Ext.define('Taco.view.order.subform.Detail', {
     getMenuActions: function () {
         var me = this,
             availableActions = me.record.get("availableActions"),
+            canAccept = Ext.Array.indexOf(availableActions, "AcceptOrder") != -1,
             canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
-            canEdit = true,
+            canEdit = !canAccept,
             menu;
         
         menu = [{
+            text: 'Accept Order',
+            handler: function() {
+                this.detailGrid.acceptOrder();
+            },
+            scope: me,
+            hidden: !canAccept
+        }, {
             text: 'Edit Details',
             handler: function () {
                 this.editOrder();

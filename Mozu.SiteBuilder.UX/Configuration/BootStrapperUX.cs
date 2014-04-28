@@ -24,6 +24,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
             base.AddMessageHandlers(httpConfiguration);
             httpConfiguration.MessageHandlers.Insert(0, new HttpContextInjectingMessageHandler());
             httpConfiguration.MessageHandlers.Add(new SeoDelegatingHandler());
+            httpConfiguration.MessageHandlers.Add(new FourHundredMessageHandler());
+            
             httpConfiguration.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
 
         }

@@ -314,6 +314,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             _log.Info("Updating navigation item: " + item.Name + ". Action: " + item.EditAction);
 
+            if (string.IsNullOrEmpty(item.OriginalId)&& !string.IsNullOrEmpty(item.Id))
+            {
+                item.OriginalId = item.Id.Split(new string[]{"^^"}, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+            }
+
             switch (item.EditAction)
             {
                 case "rename":

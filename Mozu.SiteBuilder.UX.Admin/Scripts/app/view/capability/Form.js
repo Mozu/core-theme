@@ -212,6 +212,14 @@ Ext.define('Taco.view.capability.Form', {
             }
         });
         modalConfigWindow.center();
-    }
 
+        if (Ext.isArray(this.modals)) this.modals.push(modalConfigWindow);
+        else this.modals = [modalConfigWindow];
+    },
+
+    onDestroy: function () {
+        Ext.destroy(this.modals);
+
+        this.callParent(arguments);
+    }
 });

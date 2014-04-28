@@ -23,6 +23,8 @@ using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Logging;
+using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
+using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.Settings;
@@ -134,6 +136,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
             // The rabbitMQ connectionstring is used to recieve control messages sent to our application by MassTransit.
             builder.Register(c => c.Resolve<ISettings>().CreatePublisher("SiteBuilderOutgoingMessageQueue", "Mozu.SiteBuilder.UX")).As<IPublisher>().SingleInstance();
             builder.Register(c => System.Runtime.Caching.MemoryCache.Default).As<System.Runtime.Caching.ObjectCache>().SingleInstance();
+            builder.RegisterType<SiteBuilderHttpErrorResponseGenerator>().As<IHttpErrorResponseGenerator>();
+            builder.RegisterType<HttpErrorResponseGenerator>();
             builder.RegisterType<StorefrontCacheControlImpl>().As<IStorefrontCacheControl>().SingleInstance();;
            //  Register a MassTransit/Burrows Consumer for cache invalidation.
             builder

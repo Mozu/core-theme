@@ -19,7 +19,8 @@ Ext.define('Taco.view.discount.Form', {
         navigable: 'Taco.core.ux.mixins.Navigable'
     },
 
-    title: 'Discount',
+    createTitle: 'Create Discount',
+    editTitle: '{[values.record.data.name]}',
 
     constructor: function () {
         

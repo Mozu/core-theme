@@ -1084,6 +1084,40 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         });
     },
     
+    acceptOrder: function() {
+        var me = this;
+
+        me.ownerCt.setLoading({
+            maskCls: "x-mask taco-white-mask"
+        });
+
+        me.record.acceptOrder({
+            jsonData: {
+                orderId: me.record.get('id')
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    Taco.app.fireEvent('setmessage', "Error accepting order", 'error');
+                    me.fireEvent('saveFailure');
+                    return;
+                }
+                me.ownerCt.setLoading(false);
+                me.fireEvent("orderAccepted", json);
+            },
+            failure: function (response) {
+                me.setLoading(false);
+                // error handling here
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.message) ? json.message : "Error accepting order";
+                Taco.app.fireEvent('setmessage', msg, 'error');
+                me.ownerCt.setLoading(false);
+                me.fireEvent('saveFailure');
+            },
+            scope: me
+        });
+    },
 
     cancelOrder: function () {
         var me = this;

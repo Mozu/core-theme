@@ -13,7 +13,8 @@
                     event.preventDefault();
 
                     $.colorbox({
-                        html: ['<img src="', imageUrl, '"</img>'].join('')
+                        photo: true,
+                        href: imageUrl
                     });
                 });
             }

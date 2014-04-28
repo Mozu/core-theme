@@ -46,6 +46,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(m => m.AllowAllIPs, op => op.Ignore())
                 .ForMember(m => m.SenderEmailAddressName, op => op.Ignore())
                 .ForMember(m => m.ChannelId, op => op.Ignore())
+                .ForMember(m => m.TemplateSiteId, op => op.ResolveUsing(dc => dc.TemplateSiteId))
                 .ForMember(m => m.DesktopTheme, opt => opt.ResolveUsing(x =>
                 {
                     if (!string.IsNullOrEmpty(x.Theme))
@@ -76,7 +77,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(dc => dc.TaxableTerritories, op => op.Ignore())
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 .ForMember(dc => dc.Theme, op => op.ResolveUsing(x => Serialize(x.DesktopTheme)))
-                .ForMember(dc => dc.MobileTheme, op => op.ResolveUsing(x => (x.MobileTheme == null || string.IsNullOrEmpty(x.MobileTheme.Id)) ? null : Serialize(x.MobileTheme)));
+                .ForMember(dc => dc.MobileTheme, op => op.ResolveUsing(x => (x.MobileTheme == null || string.IsNullOrEmpty(x.MobileTheme.Id)) ? null : Serialize(x.MobileTheme)))
+                .ForMember(dc => dc.TemplateSiteId, op => op.ResolveUsing(x => x.TemplateSiteId))
             
                 ;
 

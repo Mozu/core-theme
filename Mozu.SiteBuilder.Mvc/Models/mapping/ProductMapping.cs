@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using System;
+using Mozu.Core.Api.Contracts;
+using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
+using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using System.Linq;
 
@@ -20,6 +23,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductSearchResult, ProductSearchResult>();
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Facet, Facet>();
+          
           //  Mapper.CreateMap<Mozu.ProductRuntime.Contracts.CategoryFacet, CategoryFacet>();
           //  Mapper.CreateMap<Mozu.ProductRuntime.Contracts.CategoryFacetItem, CategoryFacetItem>();
            // Mapper.CreateMap<ProductRuntime.Contracts.CategoryFacet, CategoryFacet>();

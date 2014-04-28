@@ -18,11 +18,14 @@ using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
+using Mozu.SiteBuilder.UX.Messaging;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.Settings;
+using Mozu.SiteBuilder.UX.Models.Visit;
 using Mozu.SiteSettings.Order.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts.Clients;
@@ -157,7 +160,36 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return new RedirectResult(redir ?? "/");
         }
 
-           [System.Web.Http.HttpGet]
+
+        [System.Web.Http.HttpPost]
+        public HttpResponseMessage Visit(string id=null)
+        {
+            int accountId;
+            if (int.TryParse(id, out accountId))
+            {
+                this.PageContext.User.AccountId = accountId;
+
+            }
+            
+
+            var publisher = this.Request.Resolve<VisitEventPublisher>();
+            
+         
+
+            publisher.PublishVisit(new Visit()
+                                   {
+                                      
+                                    //   CustomerId  = int.Parse(id),
+                                       VisitId = Guid.NewGuid().ToUrlSafeString(),
+                                       IsTracked = true,
+                                       UserAgent = "blurf",
+                                       VisitorId = Guid.NewGuid().ToUrlSafeString()
+                                   });
+            return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "page not found");
+        }
+
+
+        [System.Web.Http.HttpGet]
         public ContentResult Echo()
         {
             StringBuilder sb = new StringBuilder();

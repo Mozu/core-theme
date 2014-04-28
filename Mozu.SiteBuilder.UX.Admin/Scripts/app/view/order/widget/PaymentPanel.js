@@ -4,6 +4,7 @@
 Ext.define('Taco.view.order.widget.PaymentPanel', {
     extend: 'Ext.panel.Panel',
     requires: [
+        'Ext.MessageBox',
         'Taco.view.order.modal.IssueCredit',
         'Taco.view.order.modal.RequestCheck',
         'Taco.view.order.modal.CheckPayment',
@@ -70,7 +71,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
         this.reorderActions();
 
-        var actionsWithLabels = Ext.Array.map(me.record.data.availableActions, function (action) {
+        var availableActions = Ext.Array.filter(me.record.data.availableActions, function (action) { return !Ext.Array.contains(['CreatePayment', 'RequestCheck', 'ManualAuthorizePayment', 'ManualAuthAndCapture', 'ManualCreatePayment'], action) });
+        var actionsWithLabels = Ext.Array.map(availableActions, function (action) {
             var label = labels[action];
             if (!label) {
                 label = labels._createFromAction(action);
@@ -94,7 +96,9 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             // auth ready is when you have an authorized card with id
             authReady = Ext.Array.contains(me.record.data.availableActions, 'CapturePayment'),
             // can capture is when you are auth ready and your order has a positive capture amount
-            canCapture = authReady && captureAmount && captureAmount > 0;
+            canCapture = authReady && captureAmount && captureAmount > 0,
+            // order is awaiting approval
+            pendingReview = (me.record.get('status') === 'New' && me.order.get('orderStatus') === 'PendingReview');
 
 
         
@@ -103,7 +107,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             cls: "orderform-payment-statusRow",
             layout: {
                 type: 'hbox',
-                align: 'stretch',
+                align: 'middle',
                 pack: 'start'
             },
             childEls: [
@@ -117,10 +121,18 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     cls: "statusField",
                     tpl: '{.}',
                     data: me.record.data.status
-                },{
+                }, {
+                    xtype: 'component',
+                    html: 'Order must be approved first',
+                    margin: '0 10 0 0',
+                    hidden: !pendingReview,
+                    style: {
+                        'font-size': '14px'
+                    }
+                }, {
                     xtype: 'combo',
                     store: me.getAvailableActionsStore(),
-                    disabled: !(me.record.data.availableActions.length > 0),
+                    disabled: !(me.record.data.availableActions.length > 0) || pendingReview,
                     displayField: 'lbl',
                     valueField: 'val',
                     forceSelection: true,
@@ -235,15 +247,33 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
     },
 
-    reorderActions: function() {
+    // reorder actions: Capture payment should be first in the list,
+    // void payment should be last. Manual* is at the bottom.
+    reorderActions: function () {
         var actions = this.record.get('availableActions'),
-            capturePayment = 'CapturePayment';
+            capturePayment = 'CapturePayment',
+            voidPayment = 'VoidPayment';
 
-        if (!Ext.Array.contains(actions, capturePayment)) return;
+        if (!Ext.isArray(actions)) return;
 
-        Ext.Array.remove(actions, capturePayment);
+        Ext.Array.sort(actions, function (action1,action2) {
+            if (action1 === capturePayment)
+                return -1;
+            if (action2 === capturePayment)
+                return 1;
+            if (action1 === voidPayment)
+                return action2.match(/^Manual/) ? -1 : 1;
+            if (action1.match(/^Manual/) && !action2.match(/^Manual/))
+                return 1;
+            else {
+                if (action1 === 'Manual'+capturePayment)
+                    return -1;
+                if (action1 === 'Manual'+voidPayment)
+                    return 1;
+            }
 
-        actions.unshift(capturePayment);
+            return 0;
+        });
     },
 
     // removes the authorized transaction (first item in the payments collection). Will call service, reload the record, and update the ui;
@@ -272,9 +302,21 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 scope: this
             };
 
+        Ext.MessageBox.show({
+            title: 'Void Payment',
+            rightJustifyButtons: true,
+            reverseOrder: true,
+            msg: 'Are you certain you want to void this payment?',
+            closable: false,
+            buttons: Ext.Msg.YESNO,
+            fn: function(val) {
+                if (val !== 'yes') return;                
+
         me.setLoading(true);
         // call the model method to persist the change
         me.order.voidTransaction(config);
+            }
+        });
     },
     
     issueCredit: function (config) {

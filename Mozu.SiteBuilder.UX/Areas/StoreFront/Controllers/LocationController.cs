@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
     [ContextInitialization]
-    [ErrorFormattingActionFilter]
+    
     public class LocationController : BaseApiController
     {
         //

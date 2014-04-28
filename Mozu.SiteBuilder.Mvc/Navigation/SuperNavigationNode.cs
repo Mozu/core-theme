@@ -55,7 +55,6 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
         public int Index { get; set; }
 
-        [JsonConverter(typeof(NavigationNodeType.NavigationNodeTypeConverter))]
         public NavigationNodeType NodeType { get; set; }
 
         public bool IsHomePage { get; set; }

@@ -115,6 +115,12 @@ Ext.define('Taco.view.location.subform.Location', {
                                 name: 'phoneNumber',
                                 fieldLabel: 'Phone Number',
                                 allowBlank: false
+                            }, {
+                                xtype: 'textfield',
+                                name: 'email',
+                                fieldLabel: 'Email',
+                                // allow blank: if directship, then no.
+                                allowBlank: me.fulfillmentTypeIds && me.fulfillmentTypeIds.value && !Ext.Array.contains(me.fulfillmentTypeIds.value, "DS")
                             }
                         ]
                     }],
