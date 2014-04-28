@@ -269,12 +269,29 @@ Ext.define('Taco.view.attribute.Form', {
                                 fieldLabel: 'Min char/val',
                                 xtype: 'numberfield',
                                 hideTrigger: true,
-                                name: 'min'
+                                name: 'min',
+                                validator: function (value) {
+                                    var form = this.up('form');
+                                    var maxField = form.getForm().findField('max');
+                                    var maxValue = maxField.getValue();
+
+                                    if (Ext.isNumeric(value) && Ext.isNumeric(maxValue) && value > maxValue) {
+                                        return 'Minimum value must not be greater than maximum value.';
+                                    } else {
+                                        return true;
+                                    }
+                                }
                             }, {
                                 fieldLabel: 'Max char/val',
                                 xtype: 'numberfield',
                                 hideTrigger: true,
-                                name: 'max'
+                                name: 'max',
+                                checkChangeBuffer: 120,
+                                listeners: {
+                                    change: function (field) {
+                                        field.up('form').getForm().findField('min').validate();
+                                    }
+                                }
                             }],
                         listeners: {
                             boxready: function () {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using Mozu.SiteBuilder.UX.Models.Navigation;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Navigation
 {
@@ -54,12 +55,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Navigation
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
+        [IgnoreDataMember, JsonIgnore]
         public NavigationNodeType NodeType { get; set; }
 
         // plain string for easy serialization.
         [Obsolete]
         [DataMember(Name = "nodeType")]
-        public string NodeTypeString { get { return NodeType; } set { NodeType = value; } }
+        public string NodeTypeString { get { return NodeType.ToString(); } set { NodeType = value; } }
 
         [DataMember(Name = "url")]
         public string Url { get; set; }

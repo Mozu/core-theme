@@ -22,7 +22,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 return;
             }
      
-            buffer = String.Format("<img src=\"/_mzblank.gif?r={0}\" />",  visit.VisitId);
+            buffer = String.Format("<img data-mztp src=\"/_mzblank.gif?r={0}\" alt=\"\"/>",  visit.VisitId);
         }
     }
 }

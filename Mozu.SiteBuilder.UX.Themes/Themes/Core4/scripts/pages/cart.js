@@ -1,4 +1,4 @@
-﻿define(['modules/backbone-mozu', 'shim!vendor/underscore>_', 'modules/jquery-mozu', 'modules/models-cart'], function (Backbone, _, $, CartModels) {
+﻿define(['modules/backbone-mozu', 'shim!vendor/underscore>_', 'modules/jquery-mozu', 'modules/models-cart', 'modules/cart-monitor'], function (Backbone, _, $, CartModels, CartMonitor) {
 
     var CartView = Backbone.MozuView.extend({
         templateName: "modules/cart/cart-table",
@@ -40,6 +40,10 @@
         cartModel.on('ordercreated', function (order) {
             cartModel.isLoading(true);
             window.location = "/checkout/" + order.prop('id');
+        });
+
+        cartModel.on('sync', function() {
+            CartMonitor.setCount(cartModel.count());
         });
 
         window.cartView = cartView;

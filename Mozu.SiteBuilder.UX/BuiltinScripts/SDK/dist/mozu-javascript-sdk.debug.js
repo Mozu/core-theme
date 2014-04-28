@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-04-11
+ * Mozu JavaScript SDK - v0.3.0 - 2014-04-18
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -3661,6 +3661,7 @@ module.exports=
   },
   "instockrequest": {
     "create": {
+		"useIframeTransport": "{+storefrontUserService}../../receiver",
         "verb": "POST",
         "template": "{+customerService}../../instocknotifications"
     }

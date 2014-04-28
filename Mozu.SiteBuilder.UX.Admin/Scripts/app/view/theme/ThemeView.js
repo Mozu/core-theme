@@ -86,7 +86,7 @@ Ext.define('Taco.view.theme.ThemeView', {
                             }
                         },
                         items: { // Let's put an empty grid in just to illustrate fit layout
-                            html: '<iframe src="/" width=' + (width - 30) + ' height=' + (height - 30) + ' />'
+                            html: '<iframe src="/_gosite/' + Taco.app.context.getSiteId() + '/?environment=preview" width=' + (width - 30) + ' height=' + (height - 30) + ' />'
                         }
                     }).show();
                 }

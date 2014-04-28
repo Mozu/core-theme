@@ -141,6 +141,10 @@
             </div>
             {% endif %}
         </div>
+        
+        {% else %}
+        <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
+        {% endif %}
         <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.billingContact }}</h4>
             <div class="mz-l-formfieldgroup">
@@ -167,9 +171,6 @@
                 {% endif %}
             </div>
         </div>
-        {% else %}
-        <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
-        {% endif %}
     </div>
 
     <div class="mz-formstep-next">

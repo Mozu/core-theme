@@ -99,19 +99,7 @@
 
     &:last-child {
         margin-bottom: 0px;
-    }
-
-    .#{$prefix}boundlist-item-contents {
-        padding: 3px 4px;
-        @include flexbox(row, nowrap, flex-start, center, center);
-
-        &> * {
-            @include flex(0);
-        }
-
-        .#{$prefix}boundlist-item-content {
-            @include flex(1);
-        }
+        padding-bottom: 0px;
     }
 }
 
@@ -140,62 +128,47 @@
     text-transform: uppercase;
 }
 
-.#{$prefix}boundlist-item-drag {
-    cursor: move;
-    display: inline-block;
-    overflow: hidden;
-    padding-top: 16px;
-    vertical-align: top;
-    @include icon-font($glyph-knurling);
-
-    &::after {
-        left: -2px;
-    }
-
-    &+ .#{$prefix}boundlist-item-content {
-        display: inline-block;
-        vertical-align: top;
-    }
+.#{$prefix}boundlist-item-contents {
+    display: block;
+    padding: 4px 0px;
 }
 
+.#{$prefix}boundlist-item-content,
+.#{$prefix}boundlist-item-drag,
 .#{$prefix}boundlist-item-action {
-    cursor: pointer;
-    display: block;
-    font-size: 0px;
-    height: 20px;
-    line-height: 0px;
-    overflow: hidden;
-    @include flexbox(row, nowrap, center, flex-end, stretch);
-    right: 0px;
-    text-indent: -9999px;
-    top: 7px;
-    width: 20px;
+    display: inline-block;
+    vertical-align: top;
+}
 
-    &::after {
-        color: $color-neutral-20;
-        font-size: 14px;
-        font-weight: bold;
-        height: 16px;
-        left: 0px;
-        line-height: 1.0;
-        text-align: center;
-        text-indent: 0px;
-        top: 0px;
-        width: 16px;
-        @include border-radius(14px);
-        @include flexbox(row, nowrap, center, flex-end, stretch);
-    }
+.#{$prefix}boundlist-item-drag,
+.#{$prefix}boundlist-item-action {
+    overflow: hidden;
+    padding-top: 16px;
+    top: 8px;
+}
+
+.#{$prefix}boundlist-item-content {
+    padding-left: 20px;
+    padding-right: 40px;
+    width: 100%;
+}
+
+.#{$prefix}boundlist-item-drag {
+    cursor: move;
+    @include icon-font($glyph-knurling);
+    position: absolute;
 }
 
 .#{$prefix}boundlist-item-close {
-    display: inline-block;
     left: auto;
-    right: 8px;
-    top: 12px;
+    right: 4px;
     @include icon-font($glyph-close);
     position: absolute;
 }
 
-.#{$prefix}boundlist-item-settings::after {
-    content: "⚙";
+.#{$prefix}boundlist-item-settings {
+    left: auto;
+    right: 24px;
+    @include icon-font($glyph-gear);
+    position: absolute;
 }

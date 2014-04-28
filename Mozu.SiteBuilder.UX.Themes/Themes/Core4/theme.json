@@ -10,27 +10,25 @@
     "settings": {
 
         "internal-themeAddons": [],
-        "cmsTextStyles": [
-            {
-              "label": "Heading 1",
-              "tagName": "h1",
-              "className": "mz-style-1",
-              "attributes": {
-                "data-role": "{theNeedful: true}"
-              }
-            },
-            {
-              "label": "Heading 2",
-              "tagName": "h2"
-            },
-            {
-              "label": "Paragraph",
-              "tagName": "p"
-            }
-          ],
+		"cmsTextStyles": [
+			{
+			  "label": "Heading 1",
+			  "tagName": "h1",
+			  "className": "mz-style-1"
+			},
+			{
+			  "label": "Heading 2",
+			  "tagName": "h2"
+			},
+			{
+			  "label": "Paragraph",
+			  "tagName": "p"
+			}
+		  ],
 
         "useDebugScripts": false,
         "defaultPageSize": 15,
+        "defaultSort": "createDate asc",
         "pageSizeOptions": [15, 25, 50, 100],
         "maxProductSummaryWords": 40,
         "allowWishlist": false,
@@ -58,7 +56,7 @@
 
         "listProductShortDesc": true,
         "listProductCode": true,
-        "useAnimatedProductLists": true,
+        "useAnimatedProductLists": false,
         "listProductThumbSize": 160,
 
         "showProductDetailShortDesc": true,
@@ -75,28 +73,276 @@
         "showCartItemWeight": true,
 
         "showCheckoutCommentsField": true,
-        "requireCheckoutAgreeToTerms": true
+        "requireCheckoutAgreeToTerms": true,
+
+        
+     "usStates": [
+        {
+            "name": "Alabama",
+            "abbreviation": "AL"
+        },
+        {
+            "name": "Alaska",
+            "abbreviation": "AK"
+        },
+        {
+            "name": "American Samoa",
+            "abbreviation": "AS"
+    },
+        {
+            "name": "Arizona",
+            "abbreviation": "AZ"
+        },
+        {
+            "name": "Arkansas",
+            "abbreviation": "AR"
+        },
+        {
+            "name": "California",
+            "abbreviation": "CA"
+        },
+        {
+            "name": "Colorado",
+            "abbreviation": "CO"
+        },
+        {
+            "name": "Connecticut",
+            "abbreviation": "CT"
+        },
+        {
+            "name": "Delaware",
+            "abbreviation": "DE"
+        },
+        {
+            "name": "District Of Columbia",
+            "abbreviation": "DC"
+        },
+        {
+            "name": "Federated States Of Micronesia",
+            "abbreviation": "FM"
+        },
+        {
+            "name": "Florida",
+            "abbreviation": "FL"
+        },
+        {
+            "name": "Georgia",
+            "abbreviation": "GA"
+        },
+        {
+            "name": "Guam",
+            "abbreviation": "GU"
+        },
+        {
+            "name": "Hawaii",
+            "abbreviation": "HI"
+        },
+        {
+            "name": "Idaho",
+            "abbreviation": "ID"
+        },
+        {
+            "name": "Illinois",
+            "abbreviation": "IL"
+        },
+        {
+            "name": "Indiana",
+            "abbreviation": "IN"
+        },
+        {
+            "name": "Iowa",
+            "abbreviation": "IA"
+        },
+        {
+            "name": "Kansas",
+            "abbreviation": "KS"
+        },
+        {
+            "name": "Kentucky",
+            "abbreviation": "KY"
+        },
+        {
+            "name": "Louisiana",
+            "abbreviation": "LA"
+        },
+        {
+            "name": "Maine",
+            "abbreviation": "ME"
+        },
+        {
+            "name": "Marshall Islands",
+            "abbreviation": "MH"
+        },
+        {
+            "name": "Maryland",
+            "abbreviation": "MD"
+        },
+        {
+            "name": "Massachusetts",
+            "abbreviation": "MA"
+        },
+        {
+            "name": "Michigan",
+            "abbreviation": "MI"
+        },
+        {
+            "name": "Minnesota",
+            "abbreviation": "MN"
+        },
+        {
+            "name": "Mississippi",
+            "abbreviation": "MS"
+        },
+        {
+            "name": "Missouri",
+            "abbreviation": "MO"
+        },
+        {
+            "name": "Montana",
+            "abbreviation": "MT"
+        },
+        {
+            "name": "Nebraska",
+            "abbreviation": "NE"
+        },
+        {
+            "name": "Nevada",
+            "abbreviation": "NV"
+        },
+        {
+            "name": "New Hampshire",
+            "abbreviation": "NH"
+        },
+        {
+            "name": "New Jersey",
+            "abbreviation": "NJ"
+        },
+        {
+            "name": "New Mexico",
+            "abbreviation": "NM"
+        },
+        {
+            "name": "New York",
+            "abbreviation": "NY"
+        },
+        {
+            "name": "North Carolina",
+            "abbreviation": "NC"
+        },
+        {
+            "name": "North Dakota",
+            "abbreviation": "ND"
+        },
+        {
+            "name": "Northern Mariana Islands",
+            "abbreviation": "MP"
+        },
+        {
+            "name": "Ohio",
+            "abbreviation": "OH"
+        },
+        {
+            "name": "Oklahoma",
+            "abbreviation": "OK"
+        },
+        {
+            "name": "Oregon",
+            "abbreviation": "OR"
+        },
+        {
+            "name": "Palau",
+            "abbreviation": "PW"
+        },
+        {
+            "name": "Pennsylvania",
+            "abbreviation": "PA"
+        },
+        {
+            "name": "Puerto Rico",
+            "abbreviation": "PR"
+        },
+        {
+            "name": "Rhode Island",
+            "abbreviation": "RI"
+        },
+        {
+            "name": "South Carolina",
+            "abbreviation": "SC"
+        },
+        {
+            "name": "South Dakota",
+            "abbreviation": "SD"
+        },
+        {
+            "name": "Tennessee",
+            "abbreviation": "TN"
+        },
+        {
+            "name": "Texas",
+            "abbreviation": "TX"
+        },
+        {
+            "name": "Utah",
+            "abbreviation": "UT"
+        },
+        {
+            "name": "Vermont",
+            "abbreviation": "VT"
+        },
+        {
+            "name": "Virgin Islands",
+            "abbreviation": "VI"
+        },
+        {
+            "name": "Virginia",
+            "abbreviation": "VA"
+        },
+        {
+            "name": "Washington",
+            "abbreviation": "WA"
+        },
+        {
+            "name": "West Virginia",
+            "abbreviation": "WV"
+        },
+        {
+            "name": "Wisconsin",
+            "abbreviation": "WI"
+        },
+        {
+            "name": "Wyoming",
+            "abbreviation": "WY"
+        }
+    ]
     },
     "emailTemplates": [
-      {
-        "id": "order.shipped",
-        "title": "Order Shipped",
-        "template": "email/order-shipped",
-        "properties": {
+	  {
+		"id": "order.shipped",
+		"title": "Order Shipped",
+		"template": "email/order-shipped",
+		"properties": {
           "subject": "Your Order Has Shipped #{model.orderNumber}"
-        }
-      },
+		}
+	  },
+	  {
+		"id": "order.changed",
+		"title": "Order Confirmation",
+		"template": "email/order-confirmation",
+		"properties": {
+		  "subject": "Order Confirmation #{model.orderNumber}"
+		}
+	  },
       {
-        "id": "order.changed",
-        "title": "Order Confirmation",
-        "template": "email/order-confirmation",
+        "id": "return.created",
+        "title": "Return Created",
+        "template": "email/product-return-changed",
         "properties": {
-          "subject": "Order Confirmation #{model.orderNumber}"
+          "subject": "Your Return Request"
         }
       },
       {
         "id": "return.authorized",
-        "title": "RMA Request Approved",
+        "title": "Return Authorized",
         "template": "email/product-return-authorized",
         "properties": {
           "subject": "RMA Request Approved"
@@ -104,7 +350,7 @@
       },
       {
         "id": "return.rejected",
-        "title": "RMA Request Rejected",
+        "title": "Return Rejected",
         "template": "email/product-return-rejected",
         "properties": {
           "subject": "RMA Request Rejected"
@@ -119,30 +365,38 @@
         }
       },
       {
-        "id": "user.created",
-        "title": "New Login Created",
-        "template": "email/new-user",
-        "properties": {
-          "subject": "Welcome"
-        }
+        "id": "return.changed",
+        "title": "Return Has Been Updated",
+        "template": "email/product-return-changed",
+		"properties": {
+          "subject": "Your Return Updated"
+		}
       },
-      {
-        "id": "user.passwordreset",
-        "title": "Password Reset",
-        "template": "email/password-reset",
-        "properties": {
-          "subject": "Reset Your Password"
-        }
-      },
-      {
-        "id": "product.instock",
-        "title": "Back in Stock",
-        "template": "email/product-instock",
-        "properties": {
-          "subject": "Back in Stock"
-        }
-      }
-    ],
+	  {
+		"id": "user.created",
+		"title": "New Login Created",
+		"template": "email/new-user",
+		"properties": {
+		  "subject": "Welcome"
+		}
+	  },
+	  {
+		"id": "user.passwordreset",
+		"title": "Password Reset",
+		"template": "email/password-reset",
+		"properties": {
+		  "subject": "Reset Your Password"
+		}
+	  },
+	  {
+		"id": "product.instock",
+		"title": "Back in Stock",
+		"template": "email/product-instock",
+		"properties": {
+		  "subject": "Back in Stock"
+		}
+	  }
+	],
 
 
     "pageTypes": [
@@ -155,29 +409,29 @@
             "template": "about-us",
             "userCreatable": true,
             "zones":[
-              {
+			  {
                 "id": "body",
                 "rows": [
-                  {
+					  {
                     "columns": [
-                      {
+						  {
                         "span": 12,
                         "widgets": [
-                          {
-                            "definitionId": "content",
-                            "isRichText": true,
-                            "config": {
-                              "body": "<h2>Insert Title</h2><p>Insert Content</p>"
-                            }
-                          }
-                        ],
+						  {
+							"definitionId": "content",
+							"isRichText": true,
+							"config": {
+							  "body": "<h2>Insert Title</h2><p>Insert Content</p>"
+							}
+						  }
+						],
                         "rows": null
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
+					  }
+					]
+				  }
+				]
+			  }
+			]
             
         }, {
             "id": "site_page",
@@ -330,7 +584,7 @@
 
             {
                 "fieldLabel": "Main Category",
-                "name": "mainCategory",
+				"name": "mainCategory",
                 "xtype": "categorycombobox",
                 "anchor": "100%"
             }, {
@@ -344,10 +598,10 @@
                     ["tertiary", "tertiary"]
                 ]
             },
-            {
-                "xtype": "numberfield",
+			{
+				"xtype": "numberfield",
                 "fieldLabel": "Count",
-                "name": "numberToDisplay",
+				"name": "numberToDisplay",
                 "anchor": "100%"
             }
         ],
@@ -356,7 +610,7 @@
             "mainCategory": "Category",
             "numberToDisplay": 4
         },
-        "validPageTypes":["*"]
+		"validPageTypes":["*"]
     },{
         "id": "crosssells",
         "displayName": "Cross Sells",
@@ -364,7 +618,7 @@
         "icon": "/resources/admin/widgets/23_cross_sells.png",
         "editViewFields": [{
                 "fieldLabel": "title",
-                "name": "title",
+				"name": "title",
                 "xtype": "textfield",
                 "anchor": "100%"
             }, {
@@ -379,7 +633,7 @@
                 ]
             }, {
                 "fieldLabel": "count",
-                "name": "count",
+				"name": "count",
                 "xtype": "spinnerfield",
                 "anchor": "100%"
             }
@@ -390,7 +644,7 @@
             "title": "Related Items",
             "count": "4"
         },
-        "validPageTypes":["product","cart"]
+		"validPageTypes":["product","cart"]
     }, {
         "id": "upsells",
         "displayName": "Up Sells",
@@ -400,7 +654,7 @@
 
             {
                 "fieldLabel": "title",
-                "name": "title",
+				"name": "title",
                 "xtype": "textfield",
                 "anchor": "100%"
             }, {
@@ -414,9 +668,9 @@
                     ["modules/product/product-list", "list"]
                 ]
             },
-            {
+			{
                 "fieldLabel": "count",
-                "name": "count",
+				"name": "count",
                 "xtype": "spinnerfield",
                 "anchor": "100%"
             }
@@ -427,7 +681,7 @@
             "title": "Other Items",
             "count": "4"
         },
-        "validPageTypes":["product","cart"]
+		"validPageTypes":["product","cart"]
     }, {
         "id": "relatedproducts",
         "displayName": "Related Products",
@@ -437,7 +691,7 @@
 
             {
                 "fieldLabel": "title",
-                "name": "title",
+				"name": "title",
                 "xtype": "textfield",
                 "anchor": "100%"
             }, {
@@ -451,9 +705,9 @@
                     ["modules/product/product-list", "list"]
                 ]
             },
-            {
+			{
                 "fieldLabel": "count",
-                "name": "count",
+				"name": "count",
                 "xtype": "spinnerfield",
                 "anchor": "100%"
             }
@@ -464,7 +718,7 @@
             "title": "Other Items",
             "count": "4"
         },
-        "validPageTypes":["product","cart"]
+		"validPageTypes":["product","cart"]
     }, 	{
          "id": "instockrequest",
          "displayName": "Instock Request",
@@ -472,16 +726,16 @@
          "icon": "/resources/admin/widgets/25_instock_requests.png",
         "editViewFields":[
 
-            {
-                "fieldLabel":"title",
-                "xtype":"textfield",
-                "anchor":"100%"
-                }
-            
+			{
+				"fieldLabel":"title",
+				"xtype":"textfield",
+				"anchor":"100%"
+				}
+			
          ],
           "defaultConfig": {
-              "title": "Related Items"
-        },
+			  "title": "Related Items"
+		},
          "validPageTypes":["product"]
     },  {
         "id": "content",

@@ -26,7 +26,8 @@ define(['modules/jquery-mozu', 'hyprlive', 'shim!vendor/underscore>_', "modules/
                 },
                 render: function() {
                     Backbone.MozuView.prototype.render.apply(this, arguments);
-                    this.$('.mz-instock-request').css('display', 'inherit');
+                    var inventoryInfo = this.model.get('inventoryInfo');
+                    this.$el.css('display', (inventoryInfo && ("onlineStockAvailable" in inventoryInfo) && inventoryInfo.onlineStockAvailable === 0) || $('body').hasClass('mz-cms-editing') ? 'inherit' : 'none');
                 },
                 widgetNotifyUserAction: function () {
                     var self = this;
@@ -51,21 +52,25 @@ define(['modules/jquery-mozu', 'hyprlive', 'shim!vendor/underscore>_', "modules/
             });
         
         $(document).ready(function () {
-            var currentProduct = ProductModels.Product.fromCurrent(),
-                inventoryInfo = currentProduct.get('inventoryInfo'),
-                inStockRequestView = new InstockReqView({
-                    model: currentProduct,
-                    el: $('.mz-instock-request').first().parent()
-                });
-            
-            
-            if ((inventoryInfo && inventoryInfo.onlineStockAvailable < 1) || $('body').hasClass('mz-cms-editing')) {
-                //renders on store front if there is no stock, or if we're in editing mode (for preview)
-                inStockRequestView.render();
-                //Takes away the initial flicker of showing then hiding 
-            } else {
-                inStockRequestView.$('.mz-instock-request').remove();
-            }
+            var currentProduct = ProductModels.Product.fromCurrent();
+
+            api.on('sync', function(o) {
+                if (o.type === "product") {
+                    currentProduct.set(o.data);
+                    currentProduct.trigger('sync', o.data);
+                }
+            });
+
+            $('[data-mz-instock-request]').each(function() {
+                var $this = $(this),
+                    config = $this.data('mzInstockRequest'),
+                    viewConfig = {
+                        model: currentProduct,
+                        el: $this
+                    };
+                if (config.template) viewConfig.template = config.template;
+                (new InstockReqView(viewConfig)).render();
+            });
 
         });
 

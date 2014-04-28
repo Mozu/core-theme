@@ -9,7 +9,7 @@ Ext.define('Taco.view.order.Header', {
     
     title: 'Overview',
 
-    tpl: [
+    tpl: new Ext.XTemplate(
 
         '<tpl if="values.loading==true">',
             '<div style="padding:20px;">loading Customer Information...</div>',
@@ -29,15 +29,15 @@ Ext.define('Taco.view.order.Header', {
         '</div>',
         '<div class="taco-order-detail-header-section history-data">',
             '<label>Customer Profile</label>',
-            '<div>Customer Since: <strong>{[Ext.util.Format.date(values.createDate)]}</strong></div>',
-            '<div>Fulfilled Orders: <strong>{orderCount}</strong></div>',
-            '<div>Lifetime Value: <strong>{[Ext.util.Format.usMoney(values.totalSpent || 0)]}</strong></div>',
+            '<div>Customer Since: <strong>{[this.convertDate(values.customer.createDate, "F j, Y")]}</strong></div>',
+            '<div>Fulfilled Orders: <strong>{customer.orderCount}</strong></div>',
+            '<div>Lifetime Value: <strong>{[Ext.util.Format.usMoney(values.customer.totalSpent || 0)]}</strong></div>',
         '</div>',
         '<div class="taco-order-detail-header-section origin-data">',
-            'Created: {createDate:date("F j, Y  g:i a")}',
+            'Created: {[this.convertDate(values.createDate)]}',
         
             '<tpl if="updateDate">',
-                ' | Updated:{updateDate:date("F j, Y  g:i a")}',
+                ' | Updated: {[this.convertDate(values.updateDate)]}',
             '</tpl>',
         
             '<tpl if="ipAddress">',
@@ -57,11 +57,11 @@ Ext.define('Taco.view.order.Header', {
         '</tpl>',
         '</tpl>',
         {
-            convertDate: function(date) {
-                return Ext.Date.format(date, 'F j, Y, g:i a');
+            convertDate: function(date, format) {
+                return Ext.Date.format(date, format || 'F j, Y, g:i a');
             }
         }
-    ],
+    ),
     
     initComponent: function () {
         var me = this;
@@ -105,7 +105,7 @@ Ext.define('Taco.view.order.Header', {
         Taco.model.CustomerAccount.load(me.record.get('customerId'), {
             success: function (record) {
                 me.customerData = record.getData();
-                var data = Ext.apply({}, me.customerData, me.record.getData());
+                var data = Ext.apply({}, me.record.getData(), { customer: me.customerData });
                 this.update(data);
             },
             failure: function (response) {            

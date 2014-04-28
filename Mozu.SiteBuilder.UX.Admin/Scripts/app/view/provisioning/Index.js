@@ -64,15 +64,16 @@ Ext.define('Taco.view.provisioning.Index', {
             items:
             [          
                 {
-                    width: '45%',
-                    padding: 10,
                     xtype: 'treepanel',
+                    flex: 1,
+                    margin: '0 10 0 0',
                     autoHeight: true,
                     store: this.catalogTreeStore,
                     rootVisible: false,
                     dockedItems: [
                         {
                             xtype: 'toolbar',
+                            padding: '0 0 10 0',
                             dock: 'top',
                             items: [{
                                     xtype: 'box',
@@ -80,6 +81,8 @@ Ext.define('Taco.view.provisioning.Index', {
                                 }, '->',
                                 {
                                     xtype: 'button',
+                                    ui: 'action-primary',
+                                    scale: 'medium',
                                     text: 'Create',
                                     handler: function () { this.showCatalogModal({ itemType: 'mastercatalog' }); },
                                     scope: this
@@ -117,20 +120,23 @@ Ext.define('Taco.view.provisioning.Index', {
                     ]
                 },               
                 {
-                    padding: 10,
-                    width: '45%',
                     xtype: 'grid',
+                    flex: 1,
+                    margin: '0 0 0 10',
                     autoHeight: true,
                     dockedItems: [
                         {
                             xtype: 'toolbar',
                             dock: 'top',
+                            padding: '0 0 10 0',
                             items: [{
                                     xtype: 'box',
                                     html: '<h3>Sites</h3>'
                                 }, '->',
                                 {
                                     xtype: 'button',
+                                    ui: 'action-primary',
+                                    scale: 'medium',
                                     handler: this.showSiteModal,
                                     scope: this,
                                     text: 'Create'
@@ -246,22 +252,17 @@ Ext.define('Taco.view.provisioning.Index', {
             autoShow: true,
             scale: 'small',
             title:'Rename',
-            items: [
-                {
-                    xtype: 'formform',
-                    items: [
-                        {                            
-                            xtype: 'textfield',
-                            name: 'name',
-                            fieldLabel: 'Name',
-                            value: entity.name,
-                            allowBlank: false,
-                            width: 400                         
-                        }
-                    ]
-                }
-            ],
-
+            items: [{
+                xtype: 'formform',
+                layout: 'fit',
+                items: [{
+                    xtype: 'textfield',
+                    name: 'name',
+                    fieldLabel: 'Name',
+                    value: entity.name,
+                    allowBlank: false
+                }]
+            }],
             listeners: {
                 save: function (modal) {
                     entity.name = modal.form.findField('name').getValue();
@@ -272,7 +273,6 @@ Ext.define('Taco.view.provisioning.Index', {
         });
     },
     deleteEntity: function (entity) {
-
         var me = this,
             request = {
                 url: '/admin/app/provisioning/deleteEntity',
@@ -292,15 +292,20 @@ Ext.define('Taco.view.provisioning.Index', {
                     Taco.app.fireEvent('setmessage', errorMsg, 'error');
                 }
             };
-            Ext.create('Taco.core.ux.modal.Confirmation', {
-                text: 'You are about to delete "' +entity.name +'"!<br/>Are your sure you want to continue?',
-                listeners: {
-                    confirm: function () {
+            Ext.Msg.show({
+                title: 'Delete Catalog',
+                msg: ('<p style="padding-right: 1em;">Are you certain you want to delete the following catalog?</p><ul style="margin-top: 1em;"><li>' +
+                    entity.name + '</li></ul>'),
+                buttons: Ext.Msg.YESNO,
+                // buttonText: {yes: "Yes, delete it", no: "No, keep it"},
+                closable: false,
+                rightJustifyButtons: true,
+                scope: this,
+                fn: function (val) {
+                    if (val === "yes") {
                         Ext.Ajax.request(request);
-                    },    
-                },
-                
-                autoShow: true
+                    }
+                }
             });
        
     },

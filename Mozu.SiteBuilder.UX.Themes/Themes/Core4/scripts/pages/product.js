@@ -1,4 +1,4 @@
-﻿require(["modules/jquery-mozu", "shim!vendor/underscore>_", "hyprlive", "modules/backbone-mozu", "modules/models-product", "modules/views-productimages", "modules/jquery-dateinput-localized"], function ($, _, Hypr, Backbone, ProductModels, ProductImageViews) {
+﻿require(["modules/jquery-mozu", "shim!vendor/underscore>_", "hyprlive", "modules/backbone-mozu", "modules/cart-monitor", "modules/models-product", "modules/views-productimages", "modules/jquery-dateinput-localized"], function ($, _, Hypr, Backbone, CartMonitor, ProductModels, ProductImageViews) {
 
     var ProductView = Backbone.MozuView.extend({
         templateName: 'modules/product/product-detail',
@@ -84,6 +84,7 @@
         product.on('addedtocart', function (cartitem) {
             if (cartitem && cartitem.prop('id')) {
                 product.isLoading(true);
+                CartMonitor.addToCount(product.get('quantity'));
                 window.location.href = "/cart";
             } else {
                 product.trigger("error", { message: Hypr.getLabel('unexpectedError') });

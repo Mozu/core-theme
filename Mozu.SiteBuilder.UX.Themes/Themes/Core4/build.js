@@ -8,7 +8,7 @@
     dir: "compiled/scripts/",
     locale: "en-us",
     optimize: "uglify2",
-    keepBuildDir: true,
+    keepBuildDir: false,
     optimizeCss: "none",
     removeCombined: true,
     skipPragmas: true,

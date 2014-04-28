@@ -31,7 +31,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
-    [ErrorFormattingActionFilter]
+  
     public class CmsPagesController : BaseApiController
     {
 

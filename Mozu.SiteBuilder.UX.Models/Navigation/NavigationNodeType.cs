@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Models.Navigation
 {
@@ -7,7 +8,8 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
     /// Provides a rich object corresponding to the type options of NavigationNode 
     /// which is implicitly castable to and from string.
     /// </summary>
-    public class NavigationNodeType : ISerializable
+    [JsonConverter(typeof(NavigationNodeType.NavigationNodeTypeConverter))]
+    public class NavigationNodeType
     {
         private const string NODE_TYPE_CATEGORY = "category";
         private const string NODE_TYPE_GROUP = "group";
@@ -31,6 +33,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         public static NavigationNodeType Product = new NavigationNodeType(NODE_TYPE_PRODUCT);
         public static NavigationNodeType EmailTemplate = new NavigationNodeType(NODE_TYPE_TEMPLATE);
         public static NavigationNodeType Template = new NavigationNodeType(NODE_TYPE_EMAIL_TEMPLATE);
+
         /// <summary>
         /// Operator overload to allow for comparison with strings.
         /// </summary>
@@ -44,6 +47,8 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
             else
                 return false;
         }
+
+        public NavigationNodeType() { }
 
         /// <summary>
         /// Operator overload to allow for comparison with strings.
@@ -76,6 +81,8 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
                     return Page;
                 case NODE_TYPE_PRODUCT:
                     return Product;
+                case NODE_TYPE_EMAIL_TEMPLATE:
+                    return EmailTemplate;
                 default:
                     throw new ArgumentException("Attempt to cast invalid string to NavigationNodeType: " + type);
             }
@@ -98,14 +105,6 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         private NavigationNodeType(string nodeType)
         {
             _nodeType = nodeType;
-        }
-
-        /// <summary>
-        /// Deserialization constructor.
-        /// </summary>
-        public NavigationNodeType(SerializationInfo info, StreamingContext context)
-        {
-            _nodeType = (string)info.GetValue("nodeType", typeof(string));
         }
 
         /// <summary>
@@ -138,14 +137,6 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
             return _nodeType;
         }
 
-        /// <summary>
-        /// Allows this object to be serialized.
-        /// </summary>
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("nodeType", _nodeType, typeof(string));
-        }
-
 
         public class NavigationNodeTypeConverter : Newtonsoft.Json.JsonConverter {
             public override bool CanConvert(Type objectType)
@@ -155,7 +146,24 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
 
             public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
             {
-                return (NavigationNodeType)reader.ReadAsString();
+                if (reader.TokenType == JsonToken.Null)
+                {
+                    return null;
+                }
+                if (reader.TokenType == JsonToken.String) {
+                    return (NavigationNodeType)(string)reader.Value;
+                }
+                else if (reader.TokenType == JsonToken.StartObject)
+                {
+                    reader.Read();
+                    if (reader.TokenType == JsonToken.PropertyName && String.Equals((string)reader.Value, "nodeType", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        string value = reader.ReadAsString();
+                        reader.Read();
+                        return (NavigationNodeType)value;
+                    }
+                }
+                throw new SerializationException("Could not parse NavigationNodeType.");
             }
 
             public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)

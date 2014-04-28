@@ -13,38 +13,21 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
     {
    
 
-        public TextReader GetTemplate(string path)
-        {
-           // path = path.Split('|')[0];
-            if (!Path.IsPathRooted(path))
-            {
-                throw new NotImplementedException("faaaak");
-            }
-          //  path = Path.GetFullPath(path).ToLowerInvariant();
-            
-            return new StreamReader(path);
-        }
+        //public TextReader GetTemplate(string path)
+        //{
+           
+        //}
          
         public bool IsUpdated(string path, DateTime timestamp)
         {
-            //path = path.Split('|')[0];
-            //if (!Path.IsPathRooted(path))
-            //{
-
-            //    string vpath = path;
-            //    if (path.IndexOf("templates", StringComparison.OrdinalIgnoreCase) == -1)
-            //    {
-            //        vpath = "templates\\" + path;
-            //    }
-
-            //    vpath = vpath.GetFilePathNameWithoutExtension();
-
-            //    var vFile = PathProvider.GetThemeFileInfo(vpath, false);
-
-            //    return System.IO.File.GetLastWriteTime(vFile.FullPath  ) > timestamp;
-            //}
             
-            return File.GetLastWriteTime(path) > timestamp;
+            return File.GetLastWriteTime(path) != timestamp;
+        }
+
+        Tuple<TextReader, DateTime> ITemplateLoader.GetTemplate(string path)
+        {
+            var file = new System.IO.FileInfo(path);
+            return new Tuple<TextReader, DateTime>(file.OpenText(), file.LastWriteTime);
         }
     }
 }

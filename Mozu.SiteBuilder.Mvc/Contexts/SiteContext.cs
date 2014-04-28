@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public const string FORCE_THEME_COOKIE_NAME = "SBTHEME";
         internal const string COOKIENAME = "SBCONTEXT";
         private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
-        private readonly ICookieProvider _cookieProvider;
+      //  private readonly ICookieProvider _cookieProvider;
         private readonly IGeneralSettingsWebApiClient _generalSettingsWebApiClient;
         private readonly ILocationSettingsWebApiClient _locationSettingsWebApiClient;
         private readonly IMobileDetectionProvider _mobileDetectionProvider;
@@ -58,14 +58,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         //private string _themeId;
         private ThemeSelection _themeSelection;
         private ThemeRuntimeSettingsCollection _themeRuntimeSettingsCollection;
-
+        private string _themeOverrideId = null;
         public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, ISettings settings, ISiteBuilderApiContext apiContext, ILocationSettingsWebApiClient locationSettingsWebApiClient, Mozu.Tenant.Contracts.Clients.ISitesWebApiClient sitesWebApiClient,  HttpRequestMessage requestMessage)
         {
             _generalSettingsWebApiClient = generalSettingsWebApiClient.CloneWithoutUserClaims();
             _themeSettingsRepository = themeSettingsRepository;
             _themeRepository = themeRepository;
             _mobileDetectionProvider = mobileDetectionProvider;
-            _cookieProvider = cookieProvider;
+           // _cookieProvider = cookieProvider;
             _siteBuilderApiContext = siteBuilderApiContext;
             _locationSettingsWebApiClient = locationSettingsWebApiClient.CloneWithoutUserClaims();
             _settings = settings;
@@ -74,7 +74,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             CdnPrefix = settings.AppSettings("CdnHost");
 
 
+            _themeOverrideId = ProcessThemeOverride(requestMessage, cookieProvider);
+
+
             string url = requestMessage.RequestUri.ToString();
+            
             IEnumerable<string> values;
             if (requestMessage.Headers.TryGetValues(Constants.Headers.ORIGINAL_URL, out values))
             {
@@ -99,6 +103,26 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 CdnPrefix = null;
             }
+        }
+
+        private string ProcessThemeOverride(HttpRequestMessage requestMessage, ICookieProvider cookieProvider)
+        {
+            var nvc = requestMessage.RequestUri.ParseQueryString();
+            if ( nvc.Keys != null && nvc.Keys.Cast<string>().Contains(FORCE_THEME_COOKIE_NAME))
+            {
+                return nvc[FORCE_THEME_COOKIE_NAME];
+            }
+           
+            else
+            {
+                HttpCookie cookie = cookieProvider.GetRequestCookie(FORCE_THEME_COOKIE_NAME);
+                if (cookie != null && !string.IsNullOrEmpty(cookie.Value ))
+                {
+                   return  cookie.Value;
+                }
+            }
+            return null;
+
         }
 
         public int TenantId
@@ -320,12 +344,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         
                     }
 
-                    HttpCookie cookie = _cookieProvider.GetRequestCookie(FORCE_THEME_COOKIE_NAME);
-
-                    if (cookie != null && !string.IsNullOrEmpty(cookie.Value))
+                    
+                    if (!string.IsNullOrEmpty(_themeOverrideId) )
                     {
-                        _themeSelection = new ThemeSelection() {Id = cookie.Value};
-                    }
+                        _themeSelection = new ThemeSelection() {Id = _themeOverrideId};
+                    } 
                     else if (_mobileDetectionProvider.IsCurrentRequestMobile && ( _generalSettings.MobileTheme != null && !string.IsNullOrEmpty(_generalSettings.MobileTheme.Id )))
                     {
                         _themeSelection = _generalSettings.MobileTheme;

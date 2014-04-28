@@ -12,11 +12,11 @@
         /** @lends MozuView.prototype */
         {
 
-        /**
-         * Extends the BackboneJS View object to create a Backbone.MozuView with extra features for Hypr integration, queued rendering, simple one-way data binding, and automatic accessor generation.
-         * @class MozuView
-         * @augments external:Backbone.View
-         */
+            /**
+             * Extends the BackboneJS View object to create a Backbone.MozuView with extra features for Hypr integration, queued rendering, simple one-way data binding, and automatic accessor generation.
+             * @class MozuView
+             * @augments external:Backbone.View
+             */
 
 
             /**
@@ -63,7 +63,7 @@
             Backbone.Validation.bind(this);
 
         },
-        enqueueRender: function() {
+            enqueueRender: function () {
             this.renderQueued = true;
         },
         dequeueRender: function () {
@@ -89,39 +89,39 @@
         handleLoadingChange: function (isLoading) {
             this.$el[isLoading ? 'addClass' : 'removeClass']('is-loading');
         },
-        /**
-         * Get the context that will be sent to the template by the MozuView#render method. In the base implementation, this returns an object with a single property, `model`, whose value is the JSON representation of the `model` property of this view. This object is sent to Hypr, which extends it on to the global context object always present in every template, which includes `siteContext`, `labels`, etc. 
-         * 
-         * Override this method to add another base-level variable to be available in this template.
-         * @example
-         * // base implementation
-         * productView.getRenderContext(); // --> { model: { [...product data] } }
-         * // an example override
-         * var ViewWithExtraRootVariable = MozuView.extend({
-         *   getRenderContext: function() {
-         *      // first get the parent method's output
-         *      var context = MozuView.prototype.getRenderContext.apply(this, arguments);
-         *      context.foo = "bar";
-         *      return context;
-         *   }
-         * });
-         * var anotherView = new ViewWithExtraRootVariable({
-         *   model: someModel,
-         *   templateName: "path/to/template",
-         *   el: $('some-selector')
-         * });
-         * anotherView.getRenderContext(); // --> { model: { [...model data] }, foo: "bar" }
-         * // now, the template bound to this view can say {{ foo }} to render bar.
-         * @param {MozuModel} substituteModel A model to use, for this render cycle only instead of the view's model.
-         */
-        getRenderContext: function(substituteModel) {
+            /**
+             * Get the context that will be sent to the template by the MozuView#render method. In the base implementation, this returns an object with a single property, `model`, whose value is the JSON representation of the `model` property of this view. This object is sent to Hypr, which extends it on to the global context object always present in every template, which includes `siteContext`, `labels`, etc. 
+             * 
+             * Override this method to add another base-level variable to be available in this template.
+             * @example
+             * // base implementation
+             * productView.getRenderContext(); // --> { model: { [...product data] } }
+             * // an example override
+             * var ViewWithExtraRootVariable = MozuView.extend({
+             *   getRenderContext: function() {
+             *      // first get the parent method's output
+             *      var context = MozuView.prototype.getRenderContext.apply(this, arguments);
+             *      context.foo = "bar";
+             *      return context;
+             *   }
+             * });
+             * var anotherView = new ViewWithExtraRootVariable({
+             *   model: someModel,
+             *   templateName: "path/to/template",
+             *   el: $('some-selector')
+             * });
+             * anotherView.getRenderContext(); // --> { model: { [...model data] }, foo: "bar" }
+             * // now, the template bound to this view can say {{ foo }} to render bar.
+             * @param {MozuModel} substituteModel A model to use, for this render cycle only instead of the view's model.
+             */
+            getRenderContext: function (substituteModel) {
             var model = (substituteModel || this.model).toJSON({ helpers: true });
                 return {
                     Model: model,
                     model: model
                 };
             },
-         
+            
             /**
              * Renders the template into the element specified at the `el` property, using the JSON representation of the `model` and whatever else is added by {@link MozuView#getRenderContext}.
              */
