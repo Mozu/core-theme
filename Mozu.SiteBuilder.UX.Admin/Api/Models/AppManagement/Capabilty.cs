@@ -25,7 +25,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement
         public int EntitlementApplicationVersionId { get; set; }
         //public AuditInfo AuditInfo { get; set; }
 
-        public string SharedSecret { get; set; }
+        [JsonIgnore]
+        public string HashKey { get; set; }
     }
 
     //public enum CapabilityMode

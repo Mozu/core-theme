@@ -41,6 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         AppId = app.AppId,
                         Initialized = app.Initialized,
                         Enabled = app.Enabled ,
+                        HashKey = app.HashKey,
                         Capabilities = app.Capabilities.Select( cap => new Capability()
                                                                            {
                                                                                AppId = app.AppId ,
