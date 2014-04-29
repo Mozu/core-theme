@@ -124,7 +124,9 @@ Ext.define('Taco.view.capability.Form', {
                     xtype: 'button',
                     ui: 'button',
                     text: 'Configuration',
-                    handler: me.configureCapability,                    
+                    handler: function() {
+                        this.record.reload({ callback: me.configureCapability, scope: me });
+                    },
                     scope: me
                 }]
             }
