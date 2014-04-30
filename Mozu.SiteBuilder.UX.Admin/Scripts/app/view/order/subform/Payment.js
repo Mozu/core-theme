@@ -82,6 +82,7 @@ Ext.define('Taco.view.order.subform.Payment', {
     getMenuActions: function () {
         var me = this,
             actions = [],
+            canAddPayment = me.record.get('orderStatus') !== 'Completed',
             canUseStoreCredit = me.availableCredits && me.availableCredits.length;
         
         me.addPaymentAction = new Ext.Action({
@@ -95,6 +96,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         
                 modal.show();
             },
+            disabled: !canAddPayment,
             scope: this
         });
         actions.push(me.addPaymentAction);
@@ -110,7 +112,8 @@ Ext.define('Taco.view.order.subform.Payment', {
         
                 modal.show();
             },
-            scope: this
+            scope: this,
+            disabled: !canAddPayment
         });
         actions.push(me.requestCheckAction);
 
@@ -125,7 +128,8 @@ Ext.define('Taco.view.order.subform.Payment', {
         
                 modal.show();
             },
-            scope: this
+            scope: this,
+            disabled: !canAddPayment
         });
         actions.push(me.applyManualPayment);
 
