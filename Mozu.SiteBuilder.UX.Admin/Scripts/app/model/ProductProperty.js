@@ -21,14 +21,11 @@ Ext.define('Taco.model.ProductProperty', {
                 var idx = 0, dateVal;
                 if (v && v.length) {
                     for (idx; idx < v.length; idx++) {
-                        if (Ext.isString(v[idx]) && Ext.isDate(v[idx])) {
-                            dateVal = Ext.Date.parse(v[idx], 'c');
-                            if (dateVal) {
-                                v[idx] = dateVal;
-                            }
+                        dateVal = r.convertDate(v[idx]);
+                        if (dateVal) {
+                            v[idx] = dateVal;
                         }
                     }
-
                 }
                 return v;
             },
