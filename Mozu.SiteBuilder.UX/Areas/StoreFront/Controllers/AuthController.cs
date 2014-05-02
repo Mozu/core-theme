@@ -16,6 +16,7 @@ using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
@@ -206,6 +207,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [System.Web.Http.HttpGet]
         public ActionResult Login(string returnUrl = null)
         {
+
+            var pc = this.PageContext;
+            pc.CmsContext = new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = "login",
+                    DocumentType = "page_template"
+                }
+
+            };
+
+
             return View("Login", new { ReturnUrl = returnUrl });
         }
 

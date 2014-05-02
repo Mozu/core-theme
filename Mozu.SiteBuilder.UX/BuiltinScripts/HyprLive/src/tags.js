@@ -57,3 +57,35 @@ var DumpTag = {
     }
 };
 HyprLive.engine.setTag("dump", DumpTag.parse, DumpTag.compile);
+
+
+var WithTag = {
+    as: 'as',
+    asError: 'The {% with %} tag requires the token "as" to appear once and only once.',
+    parse: function(str, line, parser, types) {
+        var asEncountered = false;
+        parser.on('*', function(token) {
+            if (!asEncountered) return true;
+        })
+        parser.on(types.VAR, function(token) {
+            if (token.match === WithTag.as) {
+                if (asEncountered) throw new Error("Error on line " + line + ": " + WithTag.asError);
+                asEncountered = true;
+                return false;
+            } else if (this.prevToken && this.prevToken.match === WithTag.as) {
+                this.out.push(token.match);
+            } else {
+                return true;
+            }
+        });
+        parser.on('end', function() {
+            if (!asEncountered) throw new Error("Error on line " + line + ": " + WithTag.asError)
+        });
+        return true;
+    },
+    compile: function(compiler, args, content, parents, options) {
+        var localVar = args.pop();
+        return "\n(function(" + localVar + "){\n" + compiler(content, parents, options) + ";\n})(" + args.join('') + ");\n";
+    }
+};
+HyprLive.engine.setTag('with', WithTag.parse, WithTag.compile, true, false);

@@ -330,6 +330,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
 
     public class Facet : Mozu.ProductRuntime.Contracts.Facet
     {
+          [DataMember]
         public virtual bool IsFaceted
         {
             get
@@ -417,6 +418,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
     {
         
         int? _cP;
+        [DataMember]
         public int CurrentPage
         {
             get
@@ -433,8 +435,33 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 _cP = value;
             }
         }
-          
 
+        private List<int> _middlePageNumbers;
+        [DataMember]
+        public List<int> MiddlePageNumbers
+        {
+            get
+            {
+                if (_middlePageNumbers == null)
+                {
+                    _middlePageNumbers = new List<int>();
+
+                    var current = this.CurrentPage;
+                    var pageCount = this.PageCount;
+                    var i = Math.Max(Math.Min(current - 2, pageCount - 4), 2);
+                    var last = Math.Min(i + 5, pageCount);
+                    while (i < last)
+                    {
+                        _middlePageNumbers.Add(i++);
+                    }
+                }
+                return _middlePageNumbers;
+            }
+
+        }
+
+
+         [DataMember]
         public int FirstIndex
         {
             get
@@ -442,7 +469,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 return this.StartIndex + 1;
             }
         }
-
+         [DataMember]
         public int LastIndex
         {
             get
@@ -450,7 +477,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 return this.StartIndex + (this.Items == null ? 0 : this.Items.Count);
             }
         }
-
+         [DataMember]
         public bool HasPreviousPage
         {
             get
@@ -458,6 +485,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 return this.StartIndex > 0;
             }
         }
+         [DataMember]
         public bool HasNextPage
         {
             get
@@ -467,13 +495,15 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
             }
         }
 
-
+         [DataMember]
         public new int PageCount
         {
             get { return (int)base.PageCount; }
             set { base.PageCount = value; }
         }
+         [DataMember]
         public int CurrentItemsPerPage { get; set; }
+         [DataMember]
         public string CurrentSort { get; set; }
         List<RepeaterItem> _sorts;
         List<RepeaterItem> _pageSizes;

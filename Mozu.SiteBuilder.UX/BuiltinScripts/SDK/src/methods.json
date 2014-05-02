@@ -40,7 +40,7 @@
   "orders": {
     "template": "{+orderService}{?_*}",
     "defaultParams": {
-      "filter": "Status ne Created and Status ne Validated and Status ne Pending",
+      "filter": "Status ne Open",
       "startIndex": 0,
       "pageSize": 5
     },
@@ -500,7 +500,7 @@
     "create": {
 		"useIframeTransport": "{+storefrontUserService}../../receiver",
         "verb": "POST",
-        "template": "{+customerService}../../instocknotifications"
+        "template": "{+inStockNotificationService}"
     }
   }
 }

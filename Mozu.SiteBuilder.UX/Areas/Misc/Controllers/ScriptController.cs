@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Mozu.SiteBuilder.Mvc;
@@ -12,10 +13,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 	{
 		public ActionResult Add(string scriptName)
 		{
-			var scripts = (List<string>)  this.HttpContext.Items   ["scripts"];
+            var scripts = (HashSet<string>)this.HttpContext.Items["scripts"];
 			if (scripts == null)
 			{
-                this.HttpContext.Items["scripts"] = scripts = new List<string>();
+                this.HttpContext.Items["scripts"] = scripts = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 			}
 			scripts.Add(scriptName);
 			return null;
@@ -24,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
            [System.Web.Http.HttpGet]
 		public ActionResult RenderScripts()
 		{
-            var scriptsArray = (List<string>)this.HttpContext.Items["scripts"];
+            var scriptsArray = (HashSet<string>)this.HttpContext.Items["scripts"];
 			if (scriptsArray == null)
 				return null;
 
@@ -40,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
            [System.Web.Http.HttpGet]
         public ActionResult DebugScripts()
         {
-            var scriptsArray = (List<string>)this.HttpContext.Items["scripts"];
+            var scriptsArray = (HashSet<string>)this.HttpContext.Items["scripts"];
             if (scriptsArray == null)
                 return null;
 

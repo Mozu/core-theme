@@ -1,7 +1,0 @@
-{
-	"id": "addthis",
-	"displayName": "AddThis",
-	"displayTemplate": "core/addthis/template",
-	"editView": "Taco.view.site.widget.AddThis",
-	"properties": []
-}

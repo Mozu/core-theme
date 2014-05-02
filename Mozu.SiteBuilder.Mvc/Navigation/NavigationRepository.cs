@@ -65,6 +65,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     if (!string.IsNullOrEmpty(jsonString))
                     {
                         var navset = Newtonsoft.Json.JsonConvert.DeserializeObject<NavigationSet>(jsonString);
+                        navset.ETag = etag;
                         return navset;
                     }
                     else

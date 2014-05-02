@@ -641,7 +641,7 @@
                         });
                     },
                     saveContactFirst = function () {
-                        if (billingContact.id === -1) delete billingContact.id;
+                        if (billingContact.id === -1 || billingContact.id === 1) delete billingContact.id;
                         return customer.apiModel.addContact(billingContact).then(function (contact) {
                             billingContact.id = contact.data.id;
                             return contact;
@@ -651,7 +651,7 @@
                 var contactId = billingContact.contactId;
                 if (contactId) billingContact.id = contactId;
 
-                if (!billingContact.id || billingContact.id === -1 || billingContact.id === "new") {
+                if (!billingContact.id || billingContact.id === -1 || billingContact.id === 1 || billingContact.id === "new") {
                     return saveContactFirst().then(doSaveCard);
                 } else {
                     return doSaveCard();

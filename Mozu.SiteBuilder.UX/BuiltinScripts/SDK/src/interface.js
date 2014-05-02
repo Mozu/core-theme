@@ -53,19 +53,24 @@ ApiInterfaceConstructor.prototype = {
         var triedRefresh = false;
         var makeRequest = function () {
             var contextHeaders = me.context.asObject("x-vol-");
-            xhr = utils.request(method, url, contextHeaders, data, function(rawJSON) {
-                // update context with response headers
-                me.fire('success', rawJSON, xhr, requestConf);
-                deferred.resolve(rawJSON, xhr);
+            xhr = utils.request(method, url, contextHeaders, data, function (rawJSON) {
+            // update context with response headers
+            me.fire('success', rawJSON, xhr, requestConf);
+            deferred.resolve(rawJSON, xhr);
             }, function (error) {
+
+                var failRequest = function () {
+            deferred.reject(error, xhr, url);
+                }
+
                 if (error && error.errorCode === "INVALID_ACCESS_TOKEN" && !triedRefresh) {
-                    me.refresh().then(makeRequest);
+                    me.refresh().then(makeRequest, failRequest);
                     triedRefresh = true;
                 } else {
-                    deferred.reject(error, xhr, url);
+                    failRequest();
                 }
-            }, requestConf.iframeTransportUrl);
-        }
+        }, requestConf.iframeTransportUrl);
+        };
 
         var cancelled = false,
             canceller = function() {
@@ -91,13 +96,13 @@ ApiInterfaceConstructor.prototype = {
     refresh: function() {
         var me = this,
             updateClaimsHeaders = function(json, xhr, conf) {
-                if (conf === '/user/refresh') {
+                if (conf === '/token/refresh') {
                     me.context.AppClaims(xhr.getResponseHeader('x-vol-app-claims'));
                     me.context.UserClaims(xhr.getResponseHeader('x-vol-user-claims'));
                 }
             };
         me.on('success', updateClaimsHeaders);
-        return me.request('POST', '/user/refresh').ensure(function () {
+        return me.request('POST', '/token/refresh').ensure(function () {
             me.off('success', updateClaimsHeaders);
             return null;
         });
@@ -136,8 +141,8 @@ ApiInterfaceConstructor.prototype = {
             }
         }, function(errorJSON) {
             if (!requestConf.suppressErrors) {
-                obj.fire('error', errorJSON);
-                me.fire('error', errorJSON, obj);
+            obj.fire('error', errorJSON);
+            me.fire('error', errorJSON, obj);
             }
             throw errorJSON;
         });

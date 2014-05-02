@@ -1,1 +1,0 @@
-﻿define(['jquery', 'shim!vendor/jquery.specialevent.hammer[jquery=jQuery,shim!vendor/hammer>Hammer=Hammer]'], function($) { return $; })

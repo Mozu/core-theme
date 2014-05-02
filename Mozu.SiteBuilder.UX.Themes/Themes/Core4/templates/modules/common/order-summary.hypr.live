@@ -22,28 +22,12 @@
                       {% endif %}
                     </td>
                     <td>{{ item.quantity }}</td>
-                    <td><span class="mz-ordersummary-price{% if item.discountTotal > 0 %} mz-strikethrough{% endif %}">{{ item.unitPrice.listAmount|currency }}</span>
-                        {% if item.unitPrice.saleAmount > 0 and not item.unitPrice.discountedAmount > 0 %}<span class="mz-ordersummary-price is-saleprice">{{ item.unitPrice.saleAmount|currency }}</span>{% endif %}
+                    <td>
+                        {% include "modules/common/item-price" %}
                     </td>
-                    <td><span class="mz-ordersummary-price mz-ordersummary-itemtotal">{{ item.total|currency }}</span>
+                    <td>{% include "modules/common/item-total" %}
                     </td>
                 </tr>
-              
-                {% if item.unitPrice.discountedAmount > 0 %}
-                    <tr class="mz-ordersummary-line mz-ordersummary-line-discount">
-                        <td colspan="2">
-                            {% for productDiscount in item.productDiscounts %}
-                                <span class="mz-ordersummary-discountname">{{ productDiscount.discount.name }}</span> 
-                                {% if productDiscount.discount.freeShipping %}
-                                    <span class="mz-ordersummary-discountamt">{{ labels.freeShipping }}</span>
-                                {% endif %}
-                            {% endfor %}
-                            <span class="mz-ordersummary-price mz-ordersummary-discountamt" >{{ item.discountTotal|currency}} OFF</span>
-                        </td>
-                        <td>{{ item.unitPrice.discountedAmount|currency }}</td>
-                        <td class="mz-ordersummary-price mz-ordersummary-itemtotal">{{ item.discountedTotal|currency }}</td>
-                    </tr>
-                {% endif %}
             </tbody>
         {% endfor %}
       

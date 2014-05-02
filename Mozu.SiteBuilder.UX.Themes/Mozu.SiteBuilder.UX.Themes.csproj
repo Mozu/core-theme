@@ -235,9 +235,8 @@
     <Reference Include="Mozu.Core.Extensible.Contracts">
       <HintPath>..\packages\Mozu.Core.Extensible.Contracts.1.7.0.4\lib\Mozu.Core.Extensible.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Messaging, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Messaging.1.7.0.4\lib\net451\Mozu.Core.Messaging.dll</HintPath>
+    <Reference Include="Mozu.Core.Messaging">
+      <HintPath>..\packages\Mozu.Core.Messaging.1.7.0.5\lib\net451\Mozu.Core.Messaging.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Messaging.Contracts, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -597,134 +596,17 @@
     <Content Include="ThemeTemplates\ExtendsCore4\templates\README.txt" />
     <Content Include="Tools\DevCenterThemeTemplatizer.exe" />
     <Content Include="Tools\Documentation\Tags.vol" />
-    <Content Include="Themes\MobileCore\MetaData\build.js" />
-    <Content Include="Themes\MobileCore\MetaData\mobilecore_thumb.jpg" />
-    <Content Include="Themes\MobileCore\MetaData\ThemeSettings.xml" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\build.txt" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Modules\common.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Modules\facebook-tools.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Modules\images-gallery.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\nls\fr\messages-checkout.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\nls\fr\messages.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Pages\cart.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Pages\category.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Pages\checkout.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Pages\error.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Pages\myaccount.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Pages\product.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\require.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\Bootstrap\bootstrap-affix.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\hammer.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\jquery-colorbox.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\jquery-cookie.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\jquery-slider.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\jquery.history.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\jquery.specialevent.hammer.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\jquery.tagcloud.0-0-1.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\jquery.tools.dateinput.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\jquery.tools.rangeinput.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\knockout-latest.debug.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\modernizr-respond.min.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\pci-temp.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts-Built\Vendor\swipe.min.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts\Modules\message-dismisser.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts\Modules\jquery-mobileevents.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts\Modules\login-links.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts\Modules\product-images.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts\Pages\checkout.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts\Pages\product.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts\Vendor\hammer.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts\Vendor\jquery.specialevent.hammer.js" />
-    <Content Include="Themes\MobileCore\Resources\Scripts\Vendor\swipe.min.js" />
-    <Content Include="Themes\MobileCore\theme.xml" />
-    <Content Include="Themes\MobileCore\MetaData\lang-de.csv" />
-    <Content Include="Themes\MobileCore\MetaData\lang-en.csv" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\breadcrumbs.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\common-elements.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\common-variables.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\content-section.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\featured-products-widget.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\icons.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\layout.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\messages.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\navs.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\paging.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\price-stack.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\product-listing.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\product-stack.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\site-header.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\typography.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Pages\blog.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Pages\cart.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Pages\category.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Pages\checkout.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Pages\confirmation.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Pages\product-details.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Pages\search-results.less" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\storefront.less" />
-    <Content Include="Themes\MobileCore\Widgets\core\aboutauthor\definition.json" />
-    <Content Include="Themes\MobileCore\Widgets\core\aboutauthor\template.vol" />
-    <Content Include="Themes\MobileCore\Widgets\core\addthis\definition.json" />
-    <Content Include="Themes\MobileCore\Widgets\core\addthis\template.vol" />
-    <Content Include="Themes\MobileCore\Widgets\core\blogarchive\definition.json" />
-    <Content Include="Themes\MobileCore\Widgets\core\blogarchive\template.vol" />
-    <Content Include="Themes\MobileCore\Widgets\core\blogRss\definition.json" />
-    <Content Include="Themes\MobileCore\Widgets\core\blogRss\template.vol" />
-    <Content Include="Themes\MobileCore\Widgets\core\columndivider\definition.json" />
-    <Content Include="Themes\MobileCore\Widgets\core\columndivider\template.vol" />
-    <Content Include="Themes\MobileCore\Widgets\core\content2Col\definition.json" />
-    <Content Include="Themes\MobileCore\Widgets\core\content2Col\template.vol" />
-    <Content Include="Themes\MobileCore\Widgets\core\content\definition.json" />
-    <Content Include="Themes\MobileCore\Widgets\core\content\template.vol" />
-    <Content Include="Themes\MobileCore\Widgets\core\facebookComments\definition.json" />
-    <Content Include="Themes\MobileCore\Widgets\core\facebookComments\template.vol" />
-    <Content Include="Themes\MobileCore\Widgets\core\featuredproducts\definition.json" />
-    <Content Include="Themes\MobileCore\Widgets\core\featuredproducts\template.vol" />
-    <Content Include="Themes\MobileCore\Widgets\core\horizontalrule\definition.json" />
-    <Content Include="Themes\MobileCore\Widgets\core\horizontalrule\template.vol" />
-    <Content Include="Themes\MobileCore\Widgets\core\imagesGallery\definition.json" />
-    <Content Include="Themes\MobileCore\Widgets\core\imagesGallery\template.vol" />
-    <Content Include="Themes\MobileCore\Widgets\core\image\definition.json" />
-    <Content Include="Themes\MobileCore\Widgets\core\image\template.vol" />
-    <Content Include="Themes\MobileCore\Widgets\core\paragraphWithHeader\definition.json" />
-    <Content Include="Themes\MobileCore\Widgets\core\paragraphWithHeader\template.vol" />
-    <Content Include="Themes\MobileCore\Widgets\core\pickles\definition.json" />
-    <Content Include="Themes\MobileCore\Widgets\core\pickles\template.vol" />
-    <Content Include="Themes\MobileCore\Widgets\core\recentposts\definition.json" />
-    <Content Include="Themes\MobileCore\Widgets\core\recentposts\template.vol" />
-    <Content Include="Themes\MobileCore\Widgets\core\taco\definition.json" />
-    <Content Include="Themes\MobileCore\Widgets\core\taco\template.vol" />
-    <Content Include="Themes\MobileCore\Widgets\core\tagcollection\definition.json" />
-    <Content Include="Themes\MobileCore\Widgets\core\tagcollection\template.vol" />
-    <Content Include="Themes\MobileCore\Widgets\core\tags\definition.json" />
-    <Content Include="Themes\MobileCore\Widgets\core\tags\template.vol" />
-    <Content Include="Themes\MobileCore\Resources\Stylesheets\Modules\mobile-base.less" />
     <Content Include="Scripts\_references.ts" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Scripts\knockout.d.ts" />
     <Content Include="Scripts\require.d.ts" />
     <Content Include="web.config" />
-    <Content Include="Themes\MobileCore\Modules\MessageBar.vol">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="SampleThemes\helloWorld\Layouts\default.vol" />
     <Content Include="SampleThemes\helloWorld\MetaData\PageTypes\cms\hello_world\definition.json" />
     <Content Include="SampleThemes\helloWorld\MetaData\Widgets\cms\hello_world\definition.json" />
     <Content Include="SampleThemes\helloWorld\Resources\Stylesheets\modules\layout.less" />
     <Content Include="SampleThemes\helloWorld\Templates\Hello_world.vol" />
     <Content Include="SampleThemes\helloWorld\Widgets\hello_world\hello_world_widget.vol" />
-    <Content Include="Themes\MobileCore\Modules\PageFooter.vol" />
-    <Content Include="Themes\MobileCore\Modules\ProductOptions.vol" />
-    <Content Include="Themes\MobileCore\Templates\Product.vol" />
-    <Content Include="Themes\MobileCore\Modules\CartTable.vol">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\MobileCore\Modules\CartTableRow.vol">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\MobileCore\Modules\CartTableFooter.vol">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Themes\Core4\stylesheets\modules\common\datepicker.less" />
     <Content Include="Themes\Core4\templates\Widgets\social\addthis.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\social\facebookcomments.hypr" />
@@ -820,7 +702,6 @@
     <Content Include="Themes\Core4\templates\modules\page-header\utility-nav.hypr">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Themes\StarTac\templates\modules\cart\CartTableBody.hypr.live" />
     <Content Include="Themes\Core4\theme.json" />
     <Content Include="Themes\Core4\templates\modules\json-required-for-hyprlive.hypr" />
     <Content Include="Themes\Core4\templates\modules\analytics\google-analytics-ecommerce-tracking-code.hypr" />
@@ -917,7 +798,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Properties\PublishProfiles\demo wp.pubxml" />
-    <Content Include="Themes\MobileCore\Modules\ProductImages.vol" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core4\stylesheets\widgets\instock-request.less" />
@@ -1017,6 +897,18 @@
   <ItemGroup>
     <Content Include="Themes\Core4\templates\email\product-return-changed.hypr" />
     <Content Include="Themes\Core4\templates\email\product-return-closed.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core4\templates\modules\common\item-price.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core4\templates\modules\common\item-total.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core4\templates\modules\common\email-item-price.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core4\templates\modules\common\email-item-total.hypr.live" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

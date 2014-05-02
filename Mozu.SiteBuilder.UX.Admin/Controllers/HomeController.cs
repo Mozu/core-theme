@@ -133,8 +133,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             };
 
             var sitesListTasks = tenant.Sites.Select(x => _documentListWebApiClient.CloneWithApiContext(z=> z.SiteId = x.Id  )
-                .GetDocumentList("pages").ContinueWith(y =>
-                    new KeyValuePair<int, bool>(x.Id, y.Result.ReadAsSync().EnablePublishing.GetValueOrDefault(false))
+                .GetDocumentList("pages").ContinueWith(y =>new KeyValuePair<int, bool>(x.Id, y.Result.ResponseMessage.IsSuccessStatusCode? y.Result.ReadAsSync().EnablePublishing.GetValueOrDefault(false): false  )
+                    
                 )).ToArray();
             
             await Task.WhenAll(sitesListTasks);

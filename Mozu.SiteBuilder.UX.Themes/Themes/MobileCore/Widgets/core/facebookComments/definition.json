@@ -1,9 +1,0 @@
-{
-	"id": "facebook_comments",
-	"displayName": "Facebook Comments",
-	"displayTemplate": "core/facebookComments/template",
-	"icon": "/admin/scripts/resources/images/legacy/AddPhotos.png",
-	"editView": "Taco.view.site.widget.FacebookComments",
-	"minWidth": 400,
-	"properties": []
-}

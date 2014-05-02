@@ -207,7 +207,11 @@
             }
             xhr.setRequestHeader('Content-type', 'application/json');
             xhr.setRequestHeader('Accept', 'application/json');
-            xhr.send(method !== 'GET' && data);
+            if (data && method !== 'GET') {
+                xhr.send(data);
+            } else {
+                xhr.send();
+            }
             return xhr;
         },
 

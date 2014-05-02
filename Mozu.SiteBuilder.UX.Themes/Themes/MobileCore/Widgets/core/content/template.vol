@@ -1,1 +1,0 @@
-﻿<div class="mz-content-widget-wrap" {% data_attributes Model%} ><div class="mz-content-widget-inner-wrap" {% data_attributes Model.body %}>{{Model.body}}</div></div>

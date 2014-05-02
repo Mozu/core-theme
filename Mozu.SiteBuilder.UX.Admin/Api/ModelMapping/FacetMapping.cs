@@ -44,10 +44,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.Source, op => op.ResolveUsing(x => new DC.FacetSource {Id = x.SourceId, Name = x.SourceName, Type = x.SourceType}))
                   .ForMember(x => x.FacetType, op => op.ResolveUsing(x => x.RangeQueries != null && x.RangeQueries.Count > 0 ? "RangeQuery" : "Value"))
                  //todo: confirm FacetValidity mapping Greg Murray on 2014-01-24
-                  .ForMember(dc => dc.Validity, op => op.ResolveUsing(x => new DC.FacetValidity()
-                      {
-                          IsValid = x.ValidityIsValid, ReasonCode = x.ValidityReasonCode
-                      }))
+                 .ForMember( x=> x.Validity , op=> op.Ignore())
+                  //.ForMember(dc => dc.Validity, op => op.ResolveUsing(x => new DC.FacetValidity()
+                  //    {
+                  //        IsValid = x.ValidityIsValid, ReasonCode = x.ValidityReasonCode
+                  //    }))
                   //ignores
                   .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                   ;

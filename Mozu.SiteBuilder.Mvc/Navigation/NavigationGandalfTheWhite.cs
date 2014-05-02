@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Logging;
 using Mozu.ProductRuntime.Contracts.Clients;
-using Mozu.SiteBuilder.UX.Models.Navigation;
+using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.UX.Models.Navigation;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
 {
@@ -23,6 +25,10 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         private IDocumentListWebApiClient _documentClient;
         private INavigationRepository _navRepo;
         private ILogger _logger;
+        private MD5 _md5;
+        private IStorefrontCache _cache;
+        private const string NAVIGATION_LIST_INTERNAL_CACHE_KEY = "navigation_list";
+        private const string NAVIGATION_TREE_CACHE_KEY = "navigation_tree";
 
         // the top level name in EXT's tree thing (a root pseudo-node).
         private const string SUPER_ROOT_NODE_NAME = "root";
@@ -37,12 +43,14 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public NavigationGandalfTheWhite(IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient, IDocumentListWebApiClient documentClient, INavigationRepository navRepo, ILogger logger)
+        public NavigationGandalfTheWhite(IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient, IDocumentListWebApiClient documentClient, INavigationRepository navRepo,  ILogger logger, IStorefrontCache cache = null)
         {
             _productCategoryRuntimeWebApiClient = productCategoryRuntimeWebApiClient.CloneWithoutUserClaims();
             _documentClient = documentClient.CloneWithoutUserClaims();
             _navRepo = navRepo;
             _logger = logger;
+            _md5 = MD5.Create();
+            _cache = cache;
         }
 
         /// <summary>
@@ -54,8 +62,6 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             return GetListInternal().ContinueWith(t =>
             {
                 return t.Result.OrderBy(n => n.ParentId).ThenBy(n => n.Index).ToList<ITreeNavigationNode>();
-                // TODO: replace this .Cast() call
-//                return t.Result.Cast<ITreeNavigationNode>().ToList();
             });
         }
 
@@ -67,11 +73,31 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         {
             return GetListInternal().ContinueWith(t =>
             {
-                return BuildTree(t.Result).Cast<IRuntimeNavigationNode>().ToList();
+                var list = t.Result;
+                if (_cache != null && !String.IsNullOrEmpty(list.ETag))
+                {
+                    var cached = _cache.Get<List<IRuntimeNavigationNode>>(NAVIGATION_TREE_CACHE_KEY + list.ETag, CacheScope.Site);
+                    if (cached != null)
+                        return cached;
+                }
+                var result = BuildTree(list).Cast<IRuntimeNavigationNode>().ToList();
+
+                if (_cache != null && !String.IsNullOrEmpty(list.ETag))
+                {
+                    _cache.Set(NAVIGATION_TREE_CACHE_KEY + list.ETag, result, CacheScope.Site);
+                }
+
+                return result;
             });
         }
 
-        private Task<List<SuperNavigationNode>> GetListInternal()
+        private class SuperNavigationNodeList : List<SuperNavigationNode>
+        {
+            public string ETag { get; set; }
+
+            public SuperNavigationNodeList(int capacity) : base(capacity) {}
+        }
+        private Task<SuperNavigationNodeList> GetListInternal()
         {
             // get the list of categories
             var catTask = _productCategoryRuntimeWebApiClient.GetCategoryTree();
@@ -87,14 +113,27 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
             return Task.WhenAll(catTask, pageTask, navTask).ContinueWith(t =>
             {
-                var pages = pageTask.Result.ReadAsSync();
+                var pagesResp = pageTask.Result;
+                var pages = pagesResp.ReadAsSync();
+                var categoriesResp = catTask.Result;
                 var categories = catTask.Result.ReadAsSync();
                 var navset = navTask.Result;
+                var navsetEtag = navset is NavigationSet ? (navset as NavigationSet).ETag : null;
+
+                string etag = CompositeETag(categoriesResp.ETag(), pagesResp.ETag(), navsetEtag);
+
+                if (!String.IsNullOrEmpty(etag) && _cache != null)
+                {
+                    var cached = _cache.Get<SuperNavigationNodeList>(NAVIGATION_LIST_INTERNAL_CACHE_KEY + etag, CacheScope.Site);
+                    if (cached != null)
+                        return cached;
+                }
 
                 int numpages = pages != null && pages.Items != null ? pages.Items.Count : 0;
                 int numcats = categories != null && categories.Items != null ? categories.Items.Count : 0;
                 int numNavset = navset != null ? navset.Count : 0;
-                var masterList = new List<SuperNavigationNode>(numpages + numcats + numNavset + 2);
+                var masterList = new SuperNavigationNodeList(numpages + numcats + numNavset + 2);
+                masterList.ETag = etag;
 
                 masterList.Add(new SuperNavigationNode
                 {
@@ -120,7 +159,6 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
                 // build the masterlist. Step 1: put the top level categories in.
                 var allCats = GetAllCategoriesFromTree(categories.Items);
-                EnsureAllNodesHaveUniqueIndex(allCats);
 
                 masterList.AddRange(allCats);
 
@@ -213,6 +251,10 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     };
                 masterList.AddRange(allUnassigned);
 
+                if (!String.IsNullOrEmpty(etag) && _cache != null)
+                {
+                    _cache.Set(NAVIGATION_LIST_INTERNAL_CACHE_KEY + etag, masterList, CacheScope.Site);
+                }
                 return masterList;
             });
         }
@@ -277,7 +319,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 if (n.Id == NAV_ROOT_NODE_NAME)
                     root = n;
 
-                if (n.ParentId == null || n.ParentId == SUPER_ROOT_NODE_NAME)
+                if (n.ParentId == null || n.ParentId == SUPER_ROOT_NODE_NAME || !lookupTable.ContainsKey(n.ParentId))
                     continue;
 
                 var parent = lookupTable[n.ParentId];
@@ -298,34 +340,16 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             return topLevelNav;
         }
 
-        private void EnsureAllNodesHaveUniqueIndex(IEnumerable<SuperNavigationNode> inputList)
+        private string CompositeETag(string categoriesEtag, string pagesEtag, string navsetEtag)
         {
-            // this function is intended to operate on lists of SuperNavigationNodes with a common ParentId
-            if (inputList.Select(snn => snn.ParentId).Distinct().Count() > 1) {
-                foreach (IEnumerable<SuperNavigationNode> group in inputList.GroupBy(snn => snn.ParentId))
-                {
-                    EnsureAllNodesHaveUniqueIndex(group);
-                }
-                return;
-            }
+            // if any service didn't give us an etag, we can't depend on this cache.
+            if (String.IsNullOrEmpty(categoriesEtag) || String.IsNullOrEmpty(pagesEtag) || String.IsNullOrEmpty(navsetEtag))
+                return null;
 
-            int lowestIndex = -1;
-            foreach (var node in inputList.OrderBy(snn => snn.Index))
-            {
-                if (node.Items != null && node.Items.Count > 0)
-                {
-                    EnsureAllNodesHaveUniqueIndex(node.Items.Cast<SuperNavigationNode>());
-                }
-
-                // ensure anything with a null or negative index has a minimum index value of 1.
-                int nodeIndex = Math.Max(node.Index, 1);
-                if (nodeIndex <= lowestIndex)
-                {
-                    nodeIndex = node.Index = lowestIndex + 1;
-                }
-
-                lowestIndex = nodeIndex;
-            }
+            // smoosh all the etags together in one glorious byte array and then MD5 that byte array.
+            byte[] allTheBytes = ASCIIEncoding.ASCII.GetBytes(categoriesEtag + pagesEtag + navsetEtag);
+            string cacheKey = BitConverter.ToString(_md5.ComputeHash(allTheBytes));
+            return cacheKey;
         }
     }
 }

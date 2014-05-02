@@ -11,7 +11,7 @@
 {% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination %}
 <div data-mz-category="{{model.categoryId}}" class="mz-l-container">
     <h1 class="mz-pagetitle">{{ model.name }}</h1>
-    {% include_products "modules/product/faceted-products" with includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+    {% include_products "modules/product/faceted-products" with includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
 </div>
 {% endpartial_cache %}
 {% endblock body-content %}
