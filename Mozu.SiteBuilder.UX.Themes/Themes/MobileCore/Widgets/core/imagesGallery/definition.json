@@ -1,7 +1,0 @@
-{
-	"id": "imagesGallery",
-	"displayName": "Images Gallery",
-	"displayTemplate": "core/imagesGallery/template",
-	"editView": "Taco.view.site.widget.ImagesGallery",
-	"properties": []
-}

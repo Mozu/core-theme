@@ -134,7 +134,7 @@ module.exports = (function() {
         },
         getOrderData: function () {
             return {
-                cardNumberPartOrMask: this.maskedCardNumber,
+                cardNumberPartOrMask: this.maskedCardNumber || this.data.cardNumberPartOrMask || this.data.cardNumberPart || this.data.cardNumber,
                 cvv: this.data.cvv,
                 nameOnCard: this.data.nameOnCard,
                 paymentOrCardType: this.data.paymentOrCardType || this.data.cardType,

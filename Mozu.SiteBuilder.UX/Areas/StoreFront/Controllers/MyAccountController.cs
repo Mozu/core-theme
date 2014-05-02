@@ -16,6 +16,7 @@ using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.Customers;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Controllers;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.Customers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -81,6 +82,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
             }
 
+
+            var pc = this.PageContext;
+            pc.CmsContext = new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = "my-account",
+                    DocumentType = "page_template"
+                }
+
+            };
+
+
+
             var cardsTask = _customerAccountWebApiClient.GetAccountCards(account.Id);
             var orderHistoryTask = _orderWebApiClient.GetOrders(0, 5, null, "Status ne Created and Status ne Validated and Status ne Pending");
             var returnHistoryTask = _returnApiClient.GetReturns(0, 5, null);
@@ -98,7 +113,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             
             CommerceRuntime.Contracts.Wishlists.Wishlist wishlist = null;
             try {
-                wishlist = wishlistTask.Result.ReadAsSync();
+                if (wishlistTask.Result.ResponseMessage.IsSuccessStatusCode)
+                {
+                    wishlist = wishlistTask.Result.ReadAsSync();    
+                }
+                
             }
             catch (Exception)
             {

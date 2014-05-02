@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Linq;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
@@ -13,6 +14,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
     [DataContract, Newtonsoft.Json.JsonConverter(typeof(Converter))]
     internal class NavigationSet : List<INavigationNode>
     {
+        public string ETag { get; set; }
+
         /// <summary>
         /// Custom serializer for NavigationSet
         /// </summary>
@@ -43,6 +46,17 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     while (reader.Read()) ;
                 }
 
+                // ensure that all nodes have a .OriginalId
+                list.ForEach(nn => {
+                    if (nn != null && String.IsNullOrEmpty(nn.OriginalId) && !String.IsNullOrEmpty(nn.Id))
+                    {
+                        string[] idParts = nn.Id.Split(new string[] { "^^" }, StringSplitOptions.None);
+                        if (nn.NodeType != null && nn.NodeType.IsPage && idParts.Length >= 3)
+                            nn.OriginalId = idParts[2];
+                        else
+                            nn.OriginalId = idParts.Last();
+                    }
+                });
                 set.AddRange(list);
                 return set;
             }

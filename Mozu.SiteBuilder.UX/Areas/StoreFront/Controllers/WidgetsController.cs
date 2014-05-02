@@ -94,7 +94,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             }
 
-            if (this.HttpContext.Request.ContentType == "application/json")
+           // if (this.HttpContext.Request.ContentType == "application/json")
             {
                 var tw = new StringWriter();
                
@@ -121,12 +121,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return wrd;
 
             }
-            else
-            {
-                var vr = View(wrd);
-                vr.ViewName = def.DisplayTemplate;
-                return vr;
-            }
+            //else
+            //{
+            //    var vr = View(wrd);
+            //    vr.ViewName = def.DisplayTemplate;
+            //    return vr;
+            //}
 
 
         }

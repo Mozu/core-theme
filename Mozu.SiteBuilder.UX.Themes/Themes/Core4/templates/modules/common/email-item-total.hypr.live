@@ -1,0 +1,3 @@
+﻿{% extends "modules/common/item-total" %}
+
+{% block crossedout-inline-style %}style="text-decoration: line-through;"{% endblock crossedout-inline-style %}

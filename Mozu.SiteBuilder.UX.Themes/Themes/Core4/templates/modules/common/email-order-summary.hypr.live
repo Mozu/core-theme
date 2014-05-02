@@ -22,25 +22,9 @@
                       {% endif %}
                     </td>
                     <td>{{ item.quantity }}</td>
-                    <td><span class="mz-ordersummary-price" {% if item.discountTotal > 0 %}style="text-decoration: line-through;"{% endif %}>{{ item.unitPrice.baseAmount|currency }}</span></td>
-                    <td><span class="mz-ordersummary-price mz-ordersummary-itemtotal" {% if item.discountTotal > 0 %}style="text-decoration: line-through;"{% endif %}>{{ item.subtotal|currency }}</span></td>
+                    <td align="right"> {% include "modules/common/email-item-price" %}</td>
+                    <td align="right"> {% include "modules/common/email-item-total" %}</td>
                 </tr>
-              
-                {% if item.discountTotal > 0 %}
-                    <tr class="mz-ordersummary-line mz-ordersummary-line-discount">
-                        <td colspan="2">
-                            {% for productDiscount in item.productDiscounts %}
-                                <span class="mz-ordersummary-discountname">{{ productDiscount.discount.name }}</span> 
-                                {% if productDiscount.discount.freeShipping %}
-                                    <span class="mz-ordersummary-discountamt">{{ labels.freeShipping }}</span>
-                                {% endif %}
-                            {% endfor %}
-                            <span class="mz-ordersummary-price mz-ordersummary-discountamt" >{{ item.discountTotal|currency}} OFF</span>
-                        </td>
-                        <td>{{ item.unitPrice.discountedAmount|currency }}</td>
-                        <td class="mz-ordersummary-price mz-ordersummary-itemtotal">{{ item.discountedTotal|currency }}</td>
-                    </tr>
-                {% endif %}
             </tbody>
         {% endfor %}
       

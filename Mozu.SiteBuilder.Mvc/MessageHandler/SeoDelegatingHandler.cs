@@ -42,6 +42,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                     ub.Host = "localhost";
                     ub.Path = redir.Destination; ;
 
+                    
                     #region magicstrings
 
                     var req = new HttpRequestMessage(HttpMethod.Get, ub.Uri);
@@ -63,7 +64,12 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 else
                 {
                     HttpResponseMessage resp = request.CreateResponse(HttpStatusCode.MovedPermanently);
-                    resp.Headers.Location = new Uri(redir.Destination, UriKind.RelativeOrAbsolute);
+                    var uri = new Uri(redir.Destination, UriKind.RelativeOrAbsolute);
+                    if (!uri.IsAbsoluteUri && !string.IsNullOrEmpty(redir.Destination) && redir.Destination[0] != '/')
+                    {
+                        uri = new Uri("/"+ redir.Destination, UriKind.RelativeOrAbsolute);
+                    }
+                    resp.Headers.Location = uri;
                     //var tcs = new TaskCompletionSource<HttpResponseMessage>();
                     //tcs.SetResult(resp);
                     return resp;

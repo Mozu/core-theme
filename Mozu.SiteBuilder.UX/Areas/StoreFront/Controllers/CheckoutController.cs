@@ -241,13 +241,32 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
             Order order = null;
             await Task.WhenAll(locTask, orderTask);
-            try
+            if (orderTask.Result.ResponseMessage.IsSuccessStatusCode)
             {
-                order = orderTask.Result.ReadAsSync();
+                try
+                {
+                    order = orderTask.Result.ReadAsSync();
+                }
+                catch
+                {
+                }
             }
-            catch
+
+            var pc = this.PageContext;
+            pc.CmsContext = new CmsPageContext()
             {
-            } 
+                Template = new DocumentRequest()
+                {
+                    Path = "confirmation"
+                }
+
+            };
+           
+
+
+
+
+
             if (order == null)
                 return Redirect("/");
             Mozu.Location.Contracts.LocationCollection locations = null;

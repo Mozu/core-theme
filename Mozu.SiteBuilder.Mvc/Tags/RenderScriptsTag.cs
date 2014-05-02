@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
         public static void RenderRequiresForWidgetPreview(TextWriter tw, HttpContextBase httpContext)
         {
-            var scriptsArray = (List<string>)httpContext.Items["scripts"];
+            var scriptsArray = (HashSet<string>)httpContext.Items["scripts"];
             if (scriptsArray == null || scriptsArray.Count == 0)
                 return;
             tw.WriteLine("<script type=\"text/javascript\">");

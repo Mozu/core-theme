@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-04-18
+ * Mozu JavaScript SDK - v0.3.0 - 2014-04-30
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -3029,19 +3029,24 @@ ApiInterfaceConstructor.prototype = {
         var triedRefresh = false;
         var makeRequest = function () {
             var contextHeaders = me.context.asObject("x-vol-");
-            xhr = utils.request(method, url, contextHeaders, data, function(rawJSON) {
-                // update context with response headers
-                me.fire('success', rawJSON, xhr, requestConf);
-                deferred.resolve(rawJSON, xhr);
+            xhr = utils.request(method, url, contextHeaders, data, function (rawJSON) {
+            // update context with response headers
+            me.fire('success', rawJSON, xhr, requestConf);
+            deferred.resolve(rawJSON, xhr);
             }, function (error) {
+
+                var failRequest = function () {
+            deferred.reject(error, xhr, url);
+                }
+
                 if (error && error.errorCode === "INVALID_ACCESS_TOKEN" && !triedRefresh) {
-                    me.refresh().then(makeRequest);
+                    me.refresh().then(makeRequest, failRequest);
                     triedRefresh = true;
                 } else {
-                    deferred.reject(error, xhr, url);
+                    failRequest();
                 }
-            }, requestConf.iframeTransportUrl);
-        }
+        }, requestConf.iframeTransportUrl);
+        };
 
         var cancelled = false,
             canceller = function() {
@@ -3067,13 +3072,13 @@ ApiInterfaceConstructor.prototype = {
     refresh: function() {
         var me = this,
             updateClaimsHeaders = function(json, xhr, conf) {
-                if (conf === '/user/refresh') {
+                if (conf === '/token/refresh') {
                     me.context.AppClaims(xhr.getResponseHeader('x-vol-app-claims'));
                     me.context.UserClaims(xhr.getResponseHeader('x-vol-user-claims'));
                 }
             };
         me.on('success', updateClaimsHeaders);
-        return me.request('POST', '/user/refresh').ensure(function () {
+        return me.request('POST', '/token/refresh').ensure(function () {
             me.off('success', updateClaimsHeaders);
             return null;
         });
@@ -3112,8 +3117,8 @@ ApiInterfaceConstructor.prototype = {
             }
         }, function(errorJSON) {
             if (!requestConf.suppressErrors) {
-                obj.fire('error', errorJSON);
-                me.fire('error', errorJSON, obj);
+            obj.fire('error', errorJSON);
+            me.fire('error', errorJSON, obj);
             }
             throw errorJSON;
         });
@@ -3203,7 +3208,7 @@ module.exports=
   "orders": {
     "template": "{+orderService}{?_*}",
     "defaultParams": {
-      "filter": "Status ne Created and Status ne Validated and Status ne Pending",
+      "filter": "Status ne Open",
       "startIndex": 0,
       "pageSize": 5
     },
@@ -3663,7 +3668,7 @@ module.exports=
     "create": {
 		"useIframeTransport": "{+storefrontUserService}../../receiver",
         "verb": "POST",
-        "template": "{+customerService}../../instocknotifications"
+        "template": "{+inStockNotificationService}"
     }
   }
 }
@@ -4089,7 +4094,7 @@ module.exports = (function() {
         },
         getOrderData: function () {
             return {
-                cardNumberPartOrMask: this.maskedCardNumber,
+                cardNumberPartOrMask: this.maskedCardNumber || this.data.cardNumberPartOrMask || this.data.cardNumberPart || this.data.cardNumber,
                 cvv: this.data.cvv,
                 nameOnCard: this.data.nameOnCard,
                 paymentOrCardType: this.data.paymentOrCardType || this.data.cardType,
@@ -4299,7 +4304,7 @@ var errors = require('../errors');
 var CONSTANTS = require('../constants/default');
 var utils = require('../utils');
 var ApiReference;
-module.exports = (function() {
+module.exports = (function () {
 
     errors.register({
         'BILLING_INFO_MISSING': 'Billing info missing.',
@@ -4799,7 +4804,11 @@ var process=require("__browserify_process");
             }
             xhr.setRequestHeader('Content-type', 'application/json');
             xhr.setRequestHeader('Accept', 'application/json');
-            xhr.send(method !== 'GET' && data);
+            if (data && method !== 'GET') {
+                xhr.send(data);
+            } else {
+                xhr.send();
+            }
             return xhr;
         },
 

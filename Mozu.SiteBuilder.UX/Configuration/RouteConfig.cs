@@ -213,6 +213,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
                  new { controller = "Catalog", action = "ProductDetail" });
 
             routes.MapHttpRoute(
+               "vlegacy_product_asp",
+               "ProductDetails.asp",
+                new { controller = "Catalog", action = "ProductDetail" });
+            
+
+            routes.MapHttpRoute(
                 "vlegacy_category",
                 "{slug}-s/{categoryId}.htm",
                  new { controller = "Catalog", action = "Category" });
@@ -329,7 +335,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             routes.MapHttpRoute(
                 "refresh tokens",
-                "user/refresh",
+                "token/refresh",
                 new {controller = "testing", action = "RefreshAPiContextHeaders"});
 
 
@@ -357,6 +363,10 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
             
+
+            
+
+
 
             routes.MapHttpRoute(
                "beep boop",
