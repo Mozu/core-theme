@@ -186,9 +186,6 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      */
     doFilter: function (value) {
         var existingFilter = this.getAdvancedSearchFromStore();
-        if (this.store.isLoading()) {
-            this.store.abort();
-        }
         if (existingFilter && Ext.Object.equals(existingFilter, value)) {
             return;
         }
@@ -196,6 +193,9 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
         if (filterString === this.currentFilterString) {
             return;
+        }
+        if (this.store.isLoading()) {
+            this.store.abort();
         }
 
 
