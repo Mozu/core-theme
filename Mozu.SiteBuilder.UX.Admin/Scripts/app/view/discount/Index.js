@@ -11,7 +11,9 @@ Ext.define('Taco.view.discount.Index', {
         'Taco.core.ux.FilterableDataView', 'Taco.core.ux.grid.MenuColumn'
     ],
     modelName: 'Taco.model.Discount',
-    store: { type: 'Taco.store.Discounts' },
+    store: {
+        type: 'Taco.store.Discounts'
+    },
     editorName: 'Taco.view.discount.Edit',
     typeName: 'Discount',
 
@@ -76,6 +78,7 @@ Ext.define('Taco.view.discount.Index', {
             text: 'Applies To',
             width: 180,
             hidden: false,
+            sortable:false,
             renderer: function (value, metaData, record, rowIndex, colIndex, store) {
                 var val = "",
                     cats = record.get("categories").length,
@@ -127,7 +130,8 @@ Ext.define('Taco.view.discount.Index', {
         }, {
             xtype: 'gridcolumn',
             dataIndex: 'status',
-            text: 'Status'
+            text: 'Status',
+            sortable: false
         }, {
             xtype: 'gridcolumn',
             dataIndex: 'couponCode',
@@ -181,7 +185,9 @@ Ext.define('Taco.view.discount.Index', {
             }]
         };
 
-        me.store = Ext.create('Taco.store.Discounts', { filters: me.filters });
+        me.store = Ext.create('Taco.store.Discounts', {
+            filters: me.filters
+        });
 
         me.basegrid = Ext.create('Taco.core.ux.BaseGrid', {
             store: me.store,

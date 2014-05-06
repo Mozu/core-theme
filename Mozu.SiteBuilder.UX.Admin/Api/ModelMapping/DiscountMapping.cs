@@ -3,11 +3,46 @@ using System.Collections.Generic;
 using AutoMapper;
 using System.Linq;
 using Mozu.Core.Extensions;
+using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using DC = Mozu.ProductAdmin.Contracts;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Discount;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
+    #region sort field mapping
+    public interface IDiscountSortFormatter : ISortFormatter { }
+
+    /// <summary>
+    /// Provides mapping to API fields for sorting and formatting to API sort syntax.
+    /// Keeps mapping in one place by colocating with mapping.
+    /// </summary>
+    public class DiscountSortFormatter : IDiscountSortFormatter
+    {
+        public string Format(SortingCollectionItem sortItem)
+        {
+            if (sortItem == null || string.IsNullOrEmpty(sortItem.property))
+                return string.Empty;
+            switch (sortItem.property.ToLowerInvariant())
+            {
+                case "name":
+                    return "content.name" + GetSortDirection(sortItem);
+                case "expirationdate":
+                    return "enddate" + GetSortDirection(sortItem);
+                case "amounttype":
+                    return "amounttype" + GetSortDirection(sortItem) + ", amount" + GetSortDirection(sortItem);
+                default:
+                    return sortItem.property.ToLowerInvariant() + GetSortDirection(sortItem);
+            }
+        }
+
+        private static string GetSortDirection(SortingCollectionItem sortItem)
+        {
+            return ((sortItem.IsAscending) ? " asc" : " desc");
+        }
+    }
+
+    #endregion
+
     public class DiscountMapping : Profile
     {
         public override string ProfileName

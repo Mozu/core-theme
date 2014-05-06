@@ -6,6 +6,7 @@ using AutoMapper;
 using Mozu.Core.Api.Client.Exceptions;
 using Mozu.Core.Api.Routing;
 using Mozu.ProductAdmin.Contracts.Clients;
+using Mozu.SiteBuilder.UX.Admin.Api.ModelMapping;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Discount;
 using Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers;
@@ -20,13 +21,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class DiscountController : BaseController
     {
         private readonly IDiscountWebApiClient _discountWebClient;
+        private readonly IDiscountSortFormatter _discountSortFormatter;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public DiscountController(IDiscountWebApiClient discountWebClient)
+        public DiscountController(IDiscountWebApiClient discountWebClient, IDiscountSortFormatter discountSortFormatter)
         {
             _discountWebClient = discountWebClient;
+            _discountSortFormatter = discountSortFormatter;
         }
 
         /// <summary>
@@ -43,10 +46,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             string filter = extFilter.ToFilterString();
+            string sortBy = pagingParams.ToSort(_discountSortFormatter);
 
             try
             {
-                var discountList = (await _discountWebClient.GetDiscounts(pagingParams.startIndex, pagingParams.pageSize , null, filter, null)).ReadAsSync();
+                var discountList = (await _discountWebClient.GetDiscounts(pagingParams.startIndex, pagingParams.pageSize, sortBy, filter, null)).ReadAsSync();
 
                 var discounts = Mapper.Map<List<Discount>>(discountList.Items);
 
