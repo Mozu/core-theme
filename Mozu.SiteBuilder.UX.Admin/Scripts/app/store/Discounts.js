@@ -12,5 +12,10 @@
             contextLevel: 's',
             clearSort: true,
             autoLoad: true
+        },
+        remoteSort: true,
+        sortInfo: {
+            field: 'name',
+            direction: 'asc' | 'desc'
         }
     });

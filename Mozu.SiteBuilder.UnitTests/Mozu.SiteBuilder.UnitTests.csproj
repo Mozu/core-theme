@@ -375,6 +375,7 @@
     <Compile Include="Admin\Api\ModelMapping\Perf\AutomapperResolveUsingPerfTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\Perf\AutomapperResolveUsingWithoutNullChecksPerfTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\Perf\PerfUtil.cs" />
+    <Compile Include="Admin\Api\Models\PagingParametersTests.cs" />
     <Compile Include="Admin\Api\SecureCapabilityConfigUrlTest.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductJs.cs" />
     <Compile Include="Mvc\Navigation\NavigationSetSerializationTest.cs" />

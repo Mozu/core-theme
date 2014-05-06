@@ -20,8 +20,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
         /// </summary>
         public static string ToFilterString(this FilterCollection extFilter, bool? withVariations = null)
         {
+            const string defaultStatus = "(status eq 'Submitted' or status eq 'Processing' or status eq 'Completed' or status eq 'Cancelled' or status eq 'Validated' or status eq 'Accepted' or status eq 'PendingReview')";
+                //"status in['Submitted','Processing','Completed','Cancelled','Validated','Accepted','PendingReview']";
             if (extFilter == null || extFilter.Count == 0)
-                return "status.in eq \"Submitted,Processing,Completed,Cancelled,Validated,Accepted,PendingReview\"";
+                return defaultStatus; //"status.in eq \"Submitted,Processing,Completed,Cancelled,Validated,Accepted,PendingReview\"";
 
             // TODO: If the filter needs to include products with variations, do something with 'withVariations'
             // Note: this could change, we're waiting on changes to be applied from the services team and/or Britt G.
@@ -31,9 +33,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
             //     extFilter.Add(new FilterCollectionItem { comparison = "cont", field = PropertyGuy.Convert(x => x.Content.ProductName), value = extFilter.query });
 
             IEnumerable<string> stateMents = extFilter.Where(x => x.property != "all").Select(GetFilter).Where(x => !string.IsNullOrWhiteSpace(x));
-            if (!extFilter.Any(x => string.Equals(x.property, "status", StringComparison.OrdinalIgnoreCase) || string.Equals(x.property, "status.in", StringComparison.OrdinalIgnoreCase)))
+            if (!extFilter.Any(x => string.Equals(x.property, "status", StringComparison.OrdinalIgnoreCase) || string.Equals(x.property, "status", StringComparison.OrdinalIgnoreCase)))
             {
-                stateMents = stateMents.Concat(new[] { "(status.in eq \"Submitted,Processing,Completed,Cancelled,Validated,Accepted,PendingReview\")" });
+                stateMents = stateMents.Concat(new[] { string.Format("({0})", defaultStatus) });
             }
             return string.Join(" and ", stateMents);
         }
