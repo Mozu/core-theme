@@ -1,4 +1,4 @@
-﻿define(["modules/jquery-mozu", "shim!vendor/underscore>_", "modules/backbone-mozu", "hyprlive", "modules/models-price", "modules/api"], function ($, _, Backbone, Hypr, PriceModels, api) {
+﻿define(["modules/jquery-mozu", "shim!vendor/underscore>_", "modules/backbone-mozu", "hyprlive", "modules/models-price", "modules/api"], function($, _, Backbone, Hypr, PriceModels, api) {
 
     function zeroPad(str, len) {
         str = str.toString();
@@ -7,7 +7,7 @@
     }
     function formatDate(d) {
         var date = new Date(Date.parse(d) + (new Date()).getTimezoneOffset() * 60000);
-        return [zeroPad(date.getFullYear(),4),zeroPad(date.getMonth() + 1,2), zeroPad(date.getDate(),2)].join('-');
+        return [zeroPad(date.getFullYear(), 4), zeroPad(date.getMonth() + 1, 2), zeroPad(date.getDate(), 2)].join('-');
     }
 
 
@@ -104,7 +104,7 @@
             var legalValues = _.chain(this.get('values')).pluck('value').map(function(v) { return !_.isUndefined(v) && !_.isNull(v) ? v.toString() : v });
             return value !== undefined && value !== '' && legalValues.contains(value).value();
         },
-        toJSON: function (options) {
+        toJSON: function(options) {
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
             if (j && j.attributeDetail && j.attributeDetail.inputType !== "List" && this.isConfigured()) {
                 var val = j.value || j.shopperEnteredValue;
@@ -150,12 +150,12 @@
         calculateHasPriceRange: function(json) {
             this._hasPriceRange = json && !!json.priceRange;
         },
-        initialize: function (conf) {
+        initialize: function(conf) {
             var slug = this.get('content').get('seoFriendlyUrl');
             _.bindAll(this, 'calculateHasPriceRange', 'onOptionChange');
             this.listenTo(this.get("options"), "optionchange", this.onOptionChange);
             this.updateConfiguration = _.debounce(this.updateConfiguration, 300);
-            this.set({ url: slug ? "/"+ slug + "/p/"+ this.get("productCode") :  "/p/" + this.get("productCode") });
+            this.set({ url: slug ? "/" + slug + "/p/" + this.get("productCode") : "/p/" + this.get("productCode") });
             this.lastConfiguration = [];
             this.calculateHasPriceRange(conf);
             this.on('sync', this.calculateHasPriceRange);
@@ -176,34 +176,34 @@
         },
         addToCart: function() {
             var me = this;
-            this.whenReady(function () {
+            this.whenReady(function() {
                 if (!me.validate()) {
-                    me.apiAddToCart(me.get("quantity")).then(function (item) {
+                    me.apiAddToCart(me.get("quantity")).then(function(item) {
                         me.trigger('addedtocart', item);
                     });
                 }
             });
         },
-        addToWishlist: function () {
+        addToWishlist: function() {
             var me = this;
-            this.whenReady(function () {
+            this.whenReady(function() {
                 if (!me.validate()) {
                     me.apiAddToWishlist({
                         customerAccountId: require.mozuData('user').accountId,
                         quantity: me.get("quantity")
-                    }).then(function (item) {
+                    }).then(function(item) {
                         me.trigger('addedtowishlist', item);
                     });
                 }
             });
         },
-        addToCartForPickup: function (locationCode, quantity) {
+        addToCartForPickup: function(locationCode, quantity) {
             var me = this;
-            this.whenReady(function () {
+            this.whenReady(function() {
                 return me.apiAddToCartForPickup({
                     fulfillmentLocationCode: locationCode,
                     quantity: quantity || 1
-                }).then(function (item) {
+                }).then(function(item) {
                     me.trigger('addedtocart', item);
                 });
             });
@@ -221,7 +221,7 @@
                 this.isLoading(false);
             }
         },
-        toJSON: function (options) {
+        toJSON: function(options) {
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
             if (!options || !options.helpers) {
                 j.options = this.getConfiguredOptions();
@@ -229,6 +229,7 @@
             if (options && options.helpers) {
                 if (typeof j.mfgPartNumber == "string") j.mfgPartNumber = [j.mfgPartNumber];
                 if (typeof j.upc == "string") j.upc = [j.upc];
+                if (j.bundledProducts && j.bundledProducts.length === 0) delete j.bundledProducts;
             }
             return j;
         }

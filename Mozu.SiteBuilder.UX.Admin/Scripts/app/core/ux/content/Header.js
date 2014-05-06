@@ -29,7 +29,7 @@ Ext.define('Taco.core.ux.content.Header', {
         items = Ext.isArray(items) ? items : [items];
 
         if (actionsCt) {
-            items.push({ xtype: 'container', flex: 1 });
+            // items.push({ xtype: 'container', flex: 1 });
             items.push(actionsCt);
         }
         if (!Ext.isEmpty(this.contextConfig)) {
@@ -109,7 +109,8 @@ Ext.define('Taco.core.ux.content.Header', {
 
         Ext.apply(title, {
             autoEl: 'h1',
-            itemId: 'title'
+            itemId: 'title',
+            flex: 1
         });
 
         return title;

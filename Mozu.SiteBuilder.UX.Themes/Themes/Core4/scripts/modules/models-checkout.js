@@ -112,16 +112,17 @@
             next: function () {
                 if (this.validate()) return false;
                 var parent = this.parent,
+                    order = this.getOrder(),
                     me = this,
                     isAddressValidationEnabled = HyprLiveContext.locals.siteContext.generalSettings.isAddressValidationEnabled,
                     allowInvalidAddresses = HyprLiveContext.locals.siteContext.generalSettings.allowInvalidAddresses;
                 this.isLoading(true);
                 var addr = this.get('address');
                 var completeStep = function () {
-                    me.parent.getOrder().messages.reset();
-                    parent.syncApiModel();
+                    order.messages.reset();
+                    order.syncApiModel();
                     me.isLoading(true);
-                    parent.apiModel.getShippingMethodsFromContact().then(function (methods) {
+                    order.apiModel.getShippingMethodsFromContact().then(function (methods) {
                         return parent.set({
                             availableShippingMethods: methods
                         });
@@ -135,7 +136,7 @@
                 };
 
                 var promptValidatedAddress = function () {
-                    parent.syncApiModel();
+                    order.syncApiModel();
                     me.isLoading(false);
                     parent.isLoading(false);
                     me.stepStatus('invalid');
@@ -162,10 +163,10 @@
                         }, function (e) {
                             if (allowInvalidAddresses) {
                                 // TODO: sink the exception.in a better way.
-                                me.parent.getOrder().messages.reset();
+                                order.messages.reset();
                                 completeStep();
                             } else {
-                                me.parent.getOrder().messages.reset({ message: Hypr.getLabel('addressValidationError') });
+                                order.messages.reset({ message: Hypr.getLabel('addressValidationError') });
                             }
                         });
                     } else {
@@ -176,7 +177,6 @@
         }),
 
         FulfillmentInfo = CheckoutStep.extend({
-            mozuType: 'shipment',
             initialize: function () {
                 // this adds the price and other metadata off the chosen method to the info object itself
                 this.updateShippingMethod(this.get('shippingMethodCode'));

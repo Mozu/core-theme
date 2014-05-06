@@ -52,6 +52,15 @@ module.exports = (function () {
     };
     
     return {
+        getShippingMethodsFromContact: function (contact) {
+            var self = this;
+            var fulfillmentContact = utils.clone(self.prop('fulfillmentInfo').fulfillmentContact);
+            // currently the service can't handle not having a state
+            if (fulfillmentContact.address && !fulfillmentContact.address.stateOrProvince) fulfillmentContact.address.stateOrProvince = "n/a";
+            return self.update({ fulfillmentInfo: { fulfillmentContact: fulfillmentContact } }).then(function () {
+                return self.getShippingMethods();
+            });
+        },
         addCoupon: function(couponCode) {
             var self = this;
             return this.applyCoupon(couponCode).then(function () {

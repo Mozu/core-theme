@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-04-30
+ * Mozu JavaScript SDK - v0.3.0 - 2014-05-05
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -3465,6 +3465,10 @@ module.exports=
       "returnType": "shipment",
       "includeSelf": true
     },
+    "get-shipping-methods": {
+      "template": "{+orderService}{id}/shipments/methods",
+      "returnType": "shippingmethods"
+    },
     "set-user-id": {
       "verb": "PUT",
       "template": "{+orderService}{id}/users",
@@ -3537,16 +3541,6 @@ module.exports=
       "pageSize": 5
     },
     "collectionOf": "rma"
-  },
-  "shipment": {
-    "defaults": {
-      "template": "{+orderService}{orderId}/fulfillmentinfo",
-      "includeSelf": true
-    },
-    "get-shipping-methods": {
-      "template": "{+orderService}{orderId}/shipments/methods",
-      "returnType": "shippingmethods"
-    }
   },
   "payment": {
     "create": {
@@ -4354,6 +4348,15 @@ module.exports = (function () {
     };
     
     return {
+        getShippingMethodsFromContact: function (contact) {
+            var self = this;
+            var fulfillmentContact = utils.clone(self.prop('fulfillmentInfo').fulfillmentContact);
+            // currently the service can't handle not having a state
+            if (fulfillmentContact.address && !fulfillmentContact.address.stateOrProvince) fulfillmentContact.address.stateOrProvince = "n/a";
+            return self.update({ fulfillmentInfo: { fulfillmentContact: fulfillmentContact } }).then(function () {
+                return self.getShippingMethods();
+            });
+        },
         addCoupon: function(couponCode) {
             var self = this;
             return this.applyCoupon(couponCode).then(function () {
