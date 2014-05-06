@@ -36,6 +36,9 @@
         font-size: px-to-rem(24);
         font-weight: normal;
         line-height: px-to-rem(30);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
       p {
