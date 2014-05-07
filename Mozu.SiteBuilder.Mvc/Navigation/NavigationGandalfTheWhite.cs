@@ -297,7 +297,10 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         {
             public int Compare(IRuntimeNavigationNode node1, IRuntimeNavigationNode node2)
             {
-                return node1.Index.CompareTo(node2.Index);
+                var result = node1.Index.CompareTo(node2.Index);
+                return (result == 0) 
+                    ? node1.Id.CompareTo(node2.Id) 
+                    : result;
             }
         }
         private NavigationNodeIndexComparer _navigationNodeIndexComparer = new NavigationNodeIndexComparer();
