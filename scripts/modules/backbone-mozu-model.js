@@ -36,12 +36,11 @@
             /** @lends MozuModel.prototype */
         {
             /**
-             * Extends the BackboneJS Model object to create a Backbone.MozuModel with extra features for model nesting, error handling, validation, and connection to the JavaScript SDK.
+             * @classdesc Extends the BackboneJS Model object to create a Backbone.MozuModel with extra features for model nesting, error handling, validation, and connection to the JavaScript SDK.
              * @class MozuModel
+             * @param {object} json A JSON representation of the model to preload into the MozuModel. If you create a new MozuModel with no arguments, its attributes will be blank.
              * @augments external:Backbone.Model
              */
-
-            /** constructs */
             constructor: function (conf) {
                 this.helpers = (this.helpers || []).concat(['isLoading', 'isValid']);
                 Backbone.Model.apply(this, arguments);
@@ -52,6 +51,24 @@
                     this.passErrors();
                 }
             },
+
+
+            /**
+             * Array of the names of methods whose return values should be added to the JSON serialization of this model that is sent to the view, when MozuModel#toJSON is called with `{ helpers: true }`, which it is in the default implementation of {@ link MozuView#getRenderContext}.
+             * The base MozuModel has helpers `['isLoading', 'isValid']`. When you subclass a MozuModel, any helpers you specify will be added to this array, rather than replacing it.
+             * @member {string[]} helpers
+             * @memberof MozuModel.prototype
+             * @public
+             */
+
+            /**
+             * If `true`, then this MozuModel will gain a `messages` property that is a {@ link Messages.MessageCollection }. It will also subscribe to the `error` event on its `apiModel` and update the `messages` collection as error messages come in from the service.
+             * If `false`, this MozuModel will traverse up any existing tree of relations to find a parent or ancestor model that does handle messages, and use its `messages` collection instead.
+             * @member {Boolean} handlesMessages
+             * @memberof MozuModel.prototype
+             * @default false
+             */
+
             /**
              * Find the nearest parent model that handles error messages and pass all subsequent errors thrown on this model to that model. Run on contruct.
              * @private
@@ -74,7 +91,7 @@
 
             /**
              * Dictionary of related models or collections.
-             * @member {object} relations
+             * @member {Object} relations
              * @memberof MozuModel.prototype
              * @public
              * @example
@@ -107,7 +124,7 @@
                 }
                 return ret;
             },
-            /** @private */
+
             setRelation: function (attr, val, options) {
                 var relation = this.attributes[attr],
                     id = this.idAttribute || "id",
@@ -197,6 +214,7 @@
 
                 return val;
             },
+
             /**
              * Set the value of an attribute or a hash of attributes. Unlike the `set()` method on he plain `Backbone.Model`, this method accepts a dot-separated path to a property on a child model (child models are defined on {@link Backbone.MozuModel#relations}).
              * @example
@@ -318,10 +336,20 @@
             },
 
             /**
-             * The underlying SDK object created if you specified a MozuModel#mozuType.
-             * Does stuff
-             * @member apiModel
+             * The type of Mozu API object that this model represents; when you specify a `mozuType`, then an SDK object corresponding to that type is created and exposed at the {@link MozuModel#apiModel} property. Its methods are also added to the MozuModel, all prefixed with "api". For example, the SDK `product` object has a method `addToCart`. A Backbone.MozuModel with mozuType `product` will therefore have a method `apiAddToCart`.
+             * member {string} mozuType
+             * @memberOf MozuModel.prototype
              */
+
+            /**
+             * The underlying SDK object created if you specified a MozuModel#mozuType.
+             * MozuModels do not use the default Backbone.sync function used by standard Backbone.Models. Instead, MozuModels can communicate with the Mozu API if a {@link MozuModel#mozuType mozuType} is specified.
+             * When a new instance of such a model is created, then it will create an SDK object of its `mozuType`, use event listeners to link up `sync` and `error` events between the SDK object and the MozuModel, and add methods for all the methods provided by the SDK object (see {@link MozuModel#mozuType mozuType}.)
+             *
+             * @member {object} apiModel
+             * @memberOf MozuModel.prototype
+             */
+
 
             /**
              * Ensure that the underlying SDK object has exactly the same data as the live Backbone model. In conflicts, Backbone always wins.
@@ -333,6 +361,15 @@
             syncApiModel: function() {
                 this.apiModel.prop(this.toJSON());
             },
+
+            /**
+             * A helper method for use in templates. True if there are one or more messages in this model's `messages` cllection.
+             * Added to the list of {@link MozuModel#helpers } if {@link MozuModel#handlesMessages } is set to `true`.
+             * @returns {boolean} True if there are one or more messages in this model's `messages` collection.
+             * @method hasMessages
+             * @memberof MozuModel.prototype
+             */
+
             initMessages: function () {
                 var me = this;
                 me.messages = new MessageModels.MessagesCollection();
@@ -342,7 +379,7 @@
                 me.helpers.push('hasMessages');
                 me.on('error', function (err) {
                     if (err.items && err.items.length) {
-                        me.messages.reset(err.Items);
+                        me.messages.reset(err.items);
                     } else {
                         me.messages.reset([err]);
                     }
@@ -371,14 +408,27 @@
                     options.error(error);
                 });
             },
+
+            /**
+             * Called whenever an API request begins. You may call this manually to trigger a `loadingchange` event, which {@link MozuView} automatically listens to and displays loading state in the DOM.
+             * Added to the list of {@link MozuModel#helpers } automatically, to provide a boolean `model.isLoading` inside HyprLive templates.
+             * @returns {boolean} True if the model is currently loading.
+             * @param {boolean} flag Set this to true to trigger a `loadingchange` event.
+             */
             isLoading: function (yes, opts) {
-                if (arguments.length == 0) return !!this._isLoading;
+                if (arguments.length === 0) return !!this._isLoading;
                 this._isLoading = yes;
                 if (!opts || !opts.silent) this.trigger('loadingchange', yes);
             },
             getHelpers: function () {
                 return this.helpers;
             },
+
+            /**
+             * Calls the provided callback immediately if `isLoading` is false, or queues it to be called the next time `isLoading` becomes false.
+             * Good for queueing user actions while waiting for an API request to complete.
+             * @param {function} callback The function to be called when the `isLoading` is false.
+             */
             whenReady: function(cb) {
                 var me = this,
                     isLoading = this.isLoading();
@@ -391,6 +441,15 @@
                 }
                 me.on('loadingchange', handler);
             },
+
+            /**
+             * Convert the data in this model to a plain JavaScript object that could be passed to `JSON.stringify`.
+             * MozuModel extends the Backbone.Model#toJSON method with two configuration options.
+             * @param {object} options The configuration options.
+             * @param {boolean} options.helpers Include helper methods specified in the {@link MozuModel#helpers} collection.
+             * @param {boolean} options.ensureCopy Ensure that the returned JSON is a complete in-memory copy of the attributes, with no references. Use this helper if you're going to transform the JSON.
+             * @returns {object}
+             */
             toJSON: function (options) {
                 var attrs = _.clone(this.attributes);
                 if (options && options.helpers) {
@@ -410,6 +469,21 @@
                 return (options && options.ensureCopy) ? JSON.parse(JSON.stringify(attrs)) : attrs;
             }
         }), {
+            /**
+             * Create a mozuModel from any preloaded JSON present for this type.
+             * @example
+             *     var Product = Backbone.MozuModel.extend({
+             *         mozuType: 'product'
+             *     });
+             *     
+             *     // the fromCurrent static factory method is a shortcut for a common pattern.
+             *     var thisProduct = Product.fromCurrent();
+             *     
+             *     // the above is equivalent to:
+             *     var thisProduct = new Product(require.mozuData('product'));
+             * @memberof MozuModel
+             * @static
+             */
             fromCurrent: function () {
                 return new this(require.mozuData(this.prototype.mozuType), { silent: true });
             },

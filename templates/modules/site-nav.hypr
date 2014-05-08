@@ -5,7 +5,7 @@
         data-mz-contextify-val='is-current'>
       {% partial_cache %}
       {% for link in navigation.tree %}
-      {% if not link.isHidden  and   forloop.counter0 < themeSettings.maxTopLevelNavItems %}
+      {% if not link.isHidden  and  forloop.counter0 < themeSettings.maxTopLevelNavItems %}
         
         <li class="mz-sitenav-item">
                 <div class="mz-sitenav-item-inner">

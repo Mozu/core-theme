@@ -10,12 +10,12 @@
                 <select {% if option.isMultiValue %}multiple{% endif %} class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}">
                     {% if not option.isMultiValue %}<option></option>{% endif %}
                     {% for value in option.values %}
-                    <option {% if not value.isEnabled %} class="is-disabled" {% endif %} {% if value.isSelected %}selected="true"{% endif %} value="{{value.value}}">{{value.stringValue}}{% if value.deltaPrice and value.deltaPrice > 0 %} ( {{ value.deltaPrice|currency }} {{ labels.more }} ){% endif %}</option>
+                    <option {% if not value.isEnabled %} class="is-disabled" {% endif %} {% if value.isSelected %}selected="true"{% endif %} value="{{value.value}}">{{value.stringValue|default(value.value)}}{% if value.deltaPrice and value.deltaPrice > 0 %} ( {{ value.deltaPrice|currency }} {{ labels.more }} ){% endif %}</option>
                     {% endfor %}
                 </select>
             {% else %}
                 {% if option.attributeDetail.inputType == "YesNo" %}
-                    <input class="mz-productoptions-option" type="checkbox" data-mz-product-option="{{ option.attributeFQN }}" />
+                    <input class="mz-productoptions-option" type="checkbox" {% if option.isChecked %}checked="checked"{% endif %} data-mz-product-option="{{ option.attributeFQN }}" />
                 {% endif %}
                 {% if option.attributeDetail.inputType == "TextBox" %}
                     {% if option.attributeDetail.dataType == "Number" %}

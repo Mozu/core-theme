@@ -99,7 +99,10 @@
             return _.compact(this.get("facets").invoke("getAppliedValues")).join(',');
         },
         setFacetValue: function (field, value, yes) {
-            this.get("facets").findWhere({ field: field }).get("values").findWhere({ value: value }).set("isApplied", yes);
+            var thisFacetValues = this.get('facets').findWhere({ field: field }).get('values'),
+                // jQuery.data attempts to detect type, but the facet value might be a string anyway
+                newValue = thisFacetValues.findWhere({ value: value }) || thisFacetValues.findWhere({ value: value.toString() });
+            newValue.set("isApplied", yes);
             this.updateFacets({ resetIndex: true });
         },
         buildFacetRequest: function () {

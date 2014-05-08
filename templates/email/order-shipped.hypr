@@ -1,71 +1,62 @@
 ﻿  {% extends "email/email" %}
 
   {% block body-content %}
+    <br>
+    <p>
+        {{ labels.orderWelcome }} {{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}!
+    </p>
+    <p>{{ labels.orderShipmentBlob1|string_format(siteContext.generalSettings.websiteName, domainName, model.fulfillmentInfo.shippingMethodName)|safe }}</p>
 
-	<p>
-		{{ labels.orderWelcome }} {{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}!
-	</p>
+    <p><b>{{ labels.orderNo }}:</b> {{ model.orderNumber }}</p>
+    <p><b>{{ labels.orderDate }}:</b> {{ model.auditInfo.createDate }}</p>
 
-	<p>{{ labels.orderShipmentBlob1|string_format(siteContext.generalSettings.websiteName, domainName, model.fulfillmentInfo.shippingMethodName)|safe }}</p>
-
-	<dl class="mz-orderheader">
-		<dt>{{ labels.orderNo }}</dt>
-		<dd>{{ model.orderNumber }}</dd>
-
-		<dt>{{ labels.orderDate }}:</dt>
-		<dd>{{ model.auditInfo.createDate }}</dd>
-
-		<dt>{{ labels.shippingMethod }}:</dt>
-		<dd>{{ model.fulfillmentInfo.shippingMethodName }}</dd>
-
-		<dt>{{ labels.trackingNumber }}:</dt>
-		<dd>
-			{% for package in model.packages %}
-				{{ package.trackingNumber }}
-			{% endfor %}
-		</dd>
-
-		<dt>{{ labels.shipTo }}:</dt>
-		<dd class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}</dd>
-	</dl>
+    <p><b>{{ labels.shipTo }}:</b></p>
+    {% include "modules/common/email-address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}
 
     <h2>{{ labels.itemsShipped }}</h2>
 
-	<table class="mz-ordersummary">
+
+   {% for package in model.packages %}
+   <table width="100%" cellpadding="1" cellspacing="1" width="100%">
         <thead>
             <tr>
-                <th class="mz-ordersummary-header-qty">{{ labels.qty }}</th>
-                <th class="mz-ordersummary-header-product">{{ labels.product }}</th>
+                <td bgcolor="#EEEEEE" colspan="2">
+                    {{ labels.orderShippedPkgHeader|string_format(package.fulfillmentDate, package.shippingMethodName) }}
+                </td>
+            </tr>
+            <tr>
+                <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.qty }}</font></td>
+                <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.product }}</font></td>
             </tr>
         </thead>
-		{% for package in model.packages %}
-			{% for packageItem in package.items %}
-				{% for item in model.items %}
-					{% if packageItem.productCode == item.product.productCode %}
-						<tbody class="mz-ordersummary-lineitems">
-						  <tr class="mz-ordersummary-line mz-ordersummary-line-item">
-								<td>{{ packageItem.quantity }}</td>
-								<td class="mz-ordersummary-item-product">
-								  {{ item.product.name }}
-								  {% if item.product.productUsage == 'Bundle' %}
-								  <dl class="mz-propertylist">
-									{% for bundledProduct in item.product.bundledProducts %}
-									<dt>{{ bundledProduct.productCode }}</dt>&nbsp;
-									<dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
-									{% endfor %}
-								  </dl>
-								  {% endif %}
-								</td>
-							</tr>
-						</tbody>
-					{% endif %}
-				{% endfor %}
-			{% endfor %}
-		{% endfor %}
+        {% for packageItem in package.items %}
+            {% for item in model.items %}
+                {% if packageItem.productCode == item.product.productCode or packageItem.productCode == item.product.variationProductCode %}
+                <tbody class="mz-ordersummary-package">
+                    <tr class="mz-ordersummary-line mz-ordersummary-line-item">
+                        <td>{{ packageItem.quantity }}</td>
+                        <td class="mz-ordersummary-item-product">
+                            {{ item.product.name }}
+                            {% if item.product.productUsage == 'Bundle' %}
+                            <dl class="mz-propertylist">
+                            {% for bundledProduct in item.product.bundledProducts %}
+                            <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
+                            <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
+                            {% endfor %}
+                            </dl>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
     </table>
+    {% endfor %}
 
-	{{ labels.orderShipmentBlob2|safe }}
 
-	{{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+    {{ labels.orderShipmentBlob2|safe }}
+
+    {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
 
 {% endblock body-content %}

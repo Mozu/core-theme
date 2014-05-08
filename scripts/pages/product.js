@@ -1,4 +1,4 @@
-﻿require(["modules/jquery-mozu", "hyprlive", "modules/backbone-mozu", "modules/models-product", "modules/views-productimages", "modules/jquery-dateinput-localized"], function ($, Hypr, Backbone, ProductModels, ProductImageViews) {
+﻿require(["modules/jquery-mozu", "shim!vendor/underscore>_", "hyprlive", "modules/backbone-mozu", "modules/cart-monitor", "modules/models-product", "modules/views-productimages", "modules/jquery-dateinput-localized"], function ($, _, Hypr, Backbone, CartMonitor, ProductModels, ProductImageViews) {
 
     var ProductView = Backbone.MozuView.extend({
         templateName: 'modules/product/product-detail',
@@ -24,10 +24,14 @@
                 optionEl = $optionEl[0],
                 isPicked = (optionEl.type !== "checkbox" && optionEl.type !== "radio") || optionEl.checked,
                 option = this.model.get('options').get(id);
-            if (option && isPicked) {
-                oldValue = option.get('value');
-                if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
-                    option.set('value', newValue);
+            if (option) {
+                if (option.get('attributeDetail').inputType === "YesNo") {
+                    option.set("value", isPicked);
+                } else if (isPicked) {
+                    oldValue = option.get('value');
+                    if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
+                        option.set('value', newValue);
+                    }
                 }
             }
         },
@@ -80,6 +84,7 @@
         product.on('addedtocart', function (cartitem) {
             if (cartitem && cartitem.prop('id')) {
                 product.isLoading(true);
+                CartMonitor.addToCount(product.get('quantity'));
                 window.location.href = "/cart";
             } else {
                 product.trigger("error", { message: Hypr.getLabel('unexpectedError') });

@@ -78,7 +78,8 @@ require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mo
                 product = ProductModels.Product.fromCurrent(),
                 productPresent = !!product.get('productCode'),
                 locationsCollection = new LocationModels.LocationCollection(),
-                view = new (productPresent ? LocationsSearchView : LocationsView)({
+                ViewClass = productPresent ? LocationsSearchView : LocationsView,
+                view = new ViewClass({
                     model: locationsCollection,
                     el: $locationSearch
                 });

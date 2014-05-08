@@ -1,8 +1,4 @@
-/* 
-  en-US labels. 
-*/
 {
-  /* Global default labels */
   "january"              : "January",
   "february"             : "February",
   "march"                : "March",
@@ -129,14 +125,12 @@
   "unexpectedError"      : "Sorry, an unexpected error occurred. Please refresh the page and try again, or contact Support.",
   "navMore"              : "More...",
 
-  /* Search labels */
   "searchResults"        : "Search Results",
   "searchTitle"          : "Search Results for {0}",
   "noResultsTitle"       : "No results for {0}",
   "noResults"            : "No Results",
   "noResultsText"        : "We're sorry! No results were found matching your query.",
 
-  /* Cart labels */
   "cart"                 : "Cart",
   "itemTotal"            : "Item Total", 
   "cartEmpty"            : "You have no items in your cart.", 
@@ -145,7 +139,6 @@
   "proceedToCheckout"    : "Proceed to Checkout",
   "storePickupAt"        : "In-Store Pickup at <strong>{0}</strong>",
   
-  /* Checkout labels */
   "checkout"             : "Checkout",
   "orderSummary"         : "Order Summary",
   "shippingInformation"  : "Shipping Information",
@@ -193,17 +186,16 @@
   "inStockBlob1"         : "<p>Thank you for shopping at {0}!  We have good news for you-- we now have the following item(s) in stock:</p>",
   "inStockBlob2"         : "<p>TO ADD THE ITEMS TO YOUR CART: <a href=\"http://{0}/p/{1}\">CLICK HERE</a>.</p>",
   "orderShipped"         : "Your Order Has Shipped",
+  "orderShippedPkgHeader": "Shipped {0} via {1}",
   "orderShipmentBlob1"   : "<p>Thank you for shopping at {0}.  Your order has shipped using {2}. Once an order has shipped, it can no longer be updated. If you must return an item from this order or check on other orders,  please visit <a href=\"http://{1}/myaccount\">My Account</a>.</p>",
   "orderShipmentBlob2"   : "<p>Data on tracking may not show up in your account for at least 24 hours from ship date.</p>",
   "returnApprovedBlob1"  : "<p>Thank you for shopping at {0}. Your request to return the following item(s) has been accepted.</p>",
-  "returnApprovedBlob2"  : "	<p>To return your online purchase:</p>  	<ol> 		<li>Pack your return in the original shipping package, if possible.</li> 		<li>Include the attached packing slip and return label, and indicate the reason for the return.</li> 		<li>Include all original packing materials and accessories.</li> 		<li>Send your return to:</li> 	</ol>",
+  "returnApprovedBlob2"  : "<p>To return your online purchase:</p><ol><li>Pack your return in the original shipping package, if possible.</li><li>Include the attached packing slip and return label, and indicate the reason for the return.</li><li>Include all original packing materials and accessories.</li><li>Send your return to:</li></ol>",
   "returnApprovedBlob3"  : "<p>You will receive another email when we receive the returned item(s).</p>",
   "returnRejectedBlob1"  : "<p>Thank you for shopping at {0}. We regret to inform you that your request to return the following item(s) has been rejected:</p>",
   "returnRejectedBlob2"  : "<p>If you would like more information about our return and exchange policy, please visit our Return & Exchange Policy page.</p>",
   "returnReceivedBlob1"  : "<p>Thank you for shopping at {0}. We wanted to let you know that we have received the following returned items:</p>",
   "returnReceivedBlob2"  : "<p>You will receive another email when we have processed your return.</p>",
-  "returnClosedBlob1"    : "<p>Please be informed that we have completed processing your refund request. You will receive your refund within 3-5?? business days using the original payment method used when the purchase was placed.</p>",
-  "returnClosedBlob2"    : "<p>If you require any additional assistance, please feel free to contact customer service</p>",
   "returnOtherBlob1"     : "<p>Thank you for shopping at {0}. We wanted to let you know that your return status is now {1}.</p>",
   "returnOtherBlob2"     : "<p>You will receive another email when we have processed your return.</p>",
   "itemsShipped"         : "Shipment Details",
@@ -225,11 +217,9 @@
   "customerAlreadyExists": "A customer is already registered as {0}. <a href=\"/user/login?returnUrl={1}\">Login as this customer</a>",
   "noPaymentRequired"    : "Your total is {0}, so no payment method is required.",
 
-  /* Error page labels */
   "errorApology"         : "Sorry, an error occurred.",
   "errorDetail"          : "Our software encountered an error it couldn't resolve.",
 
-  /* My Account page labels */
   "myAccount"            : "My Account",
   "yourAccount"          : "Your Account",
   "accountSettings"      : "Account Settings",
@@ -283,10 +273,8 @@
   "remaining"            : "Remaining",
   "totalCreditBalance"   : "Total Credit Balance",
 
-  /* Not Found labels */
   "pageNotFound"         : "Page Not Found",
   
-  /* Validation labels */
   "genericRequired"      : "This field is required",
   "genericAcceptance"    : "{0} must be accepted",
   "genericMin"           : "{0} must be greater than or equal to {1}",
@@ -333,14 +321,11 @@
   "wrongCountryForType"  : "Please select a country supported for this contact type",
 
   
-  /* Faceting labels */
   "clearAllFilters"      : "Clear All Filters",
 
-  /* Product Listing labels */
   "productImagePlaceholder" : "[no image]",
   "packageWeight"        : "Package Weight",
 
-  /* Product Detail labels */
   "shortDesc"            : "Summary",
   "options"              : "Options",
   "addToCart"            : "Add To Cart",
@@ -353,8 +338,10 @@
   "noImages"             : "no image",
   "more"                 : "more",
   "checkLocalStores"     : "Check Local Stores",
+  "mfgPartNumber"		 : "Mfg. Part Number",
+  "msrp" 				 : "MSRP",
+  "upc"					 : "UPC",
 
-  /* Locations labels */
   "localStores"          : "Local Stores",
   "findAtLocalStore"     : "Find it at a Local Store",
   "locationWait"         : "We're searching for local stores. Your browser may ask for permission to use your location. Click \"Allow\" to sort the search results by distance.",
@@ -367,7 +354,6 @@
   "milesAway"            : "{0} miles away",
   "positionError"        : "Your position could not be determined. Displaying stores out of order.",
 
-  /* Widget labels */
   "notifyWidgetHeader"   : "Notify me when this product is back in stock.",
   "notifyWidgetButton"   : "Notify Me",
   "notifyWidgetSuccess"  : "You will be notified when this product is back in stock.",

@@ -1,4 +1,6 @@
-﻿define(['modules/jquery-mozu', '//www.youtube.com/iframe_api'],
+﻿/* jshint undef: true */
+/* global YT */
+define(['modules/jquery-mozu', '//www.youtube.com/iframe_api'],
     function($) {
         var parseId,
             bind;
@@ -60,11 +62,13 @@
         };
 
         $(document).ready(function() {
-            $('.mz-cms-video-placeholder').each(bind);
-    
-            $(document).on('mozuwidgetdrop', function(e) {
-                $(e.currentTarget).find('.mz-cms-video-placeholder').each(bind)
-            })
+            YT.ready(function () {
+                $('.mz-cms-video-placeholder').each(bind);
+
+                $(document).on('mozuwidgetdrop', function (e) {
+                    $(e.currentTarget).find('.mz-cms-video-placeholder').each(bind)
+                });
+            });
         });
     }
 );

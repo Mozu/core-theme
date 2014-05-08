@@ -12,9 +12,7 @@
 
 <div itemscope itemtype="http://schema.org/Product" class="mz-l-container">
 
-	<h1 class="mz-pagetitle"><span itemprop="name">{{ model.content.productName }}</span>
-        <span class="mz-pagetitle-note">{{ labels.productCode }}: <span itemprop="sku">{{ model.productCode }}</span></span>
-    </h1>
+	<h1 class="mz-pagetitle" itemprop="name">{{ model.content.productName }}</h1>
 	
     <div data-mz-productimages class="mz-productimages mz-l-sidebar">
         {% include "modules/product/product-images" %}

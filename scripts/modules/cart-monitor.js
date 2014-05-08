@@ -4,37 +4,48 @@
  */
 define(['modules/jquery-mozu', 'modules/api'], function ($, api) {
 
-    $(document).ready(function () {
-        var $cartCount = $('[data-mz-role="cartmonitor"]'), timeout;
-        function waitAndGetCart() {
-            return setTimeout(function() {
-                api.get('cartsummary').then(function (summary) {
-                    updateCartCount(summary.count());
+    var $cartCount,
+        user = require.mozuData('user'),
+        userId = user.userId,
+        $document = $(document),
+        CartMonitor = {
+            setCount: function(count) {
+                this.$el.text(count);
+                savedCounts[userId] = count;
+                $.cookie('mozucartcount', JSON.stringify(savedCounts), { path: '/' });
+            },
+            addToCount: function(count) {
+                this.setCount(this.getCount() + count);
+            },
+            getCount: function() {
+                return parseInt(this.$el.text()) || 0;
+            },
+            update: function() {
+                api.get('cartsummary').then(function(summary) {
+                    $document.ready(function() {
+                        CartMonitor.setCount(summary.count());
+                    });
                 });
-            }, 500);
-        }
-        function checkForCartUpdates(apiObject) {
-            if (!apiObject || !apiObject.type) return;
-            switch (apiObject.type) {
-                case "cart":
-                case "cart-summary":
-                    clearTimeout(timeout);
-                    updateCartCount(apiObject.count() || 0);
-                    break;
-                case "cartitem":
-                    if (!apiObject.unsynced) timeout = waitAndGetCart();
-                    break;
             }
-        }
-        function updateCartCount(count) {
-            $cartCount.text(count);
-            $.cookie('mozucartcount', count, { path: '/' });
-        }
-        api.on('sync', checkForCartUpdates);
-        api.on('spawn', checkForCartUpdates);
-        var savedCount = $.cookie('mozucartcount');
-        if (savedCount === null) waitAndGetCart();
-        $cartCount.text(savedCount || 0);
+        },
+        savedCounts,
+        savedCount;
+
+    try {
+        savedCounts = JSON.parse($.cookie('mozucartcount'));
+    } catch(e) {}
+
+    if (!savedCounts) savedCounts = {};
+    savedCount = savedCounts && savedCounts[userId];
+
+    if (isNaN(savedCount)) {
+        CartMonitor.update();
+    }
+
+    $document.ready(function () {
+        CartMonitor.$el = $('[data-mz-role="cartmonitor"]').text(savedCount || 0);
     });
+
+    return CartMonitor;
 
 });

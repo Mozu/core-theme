@@ -82,6 +82,8 @@
         save: function () {
             if (!this.parent.validate("editingContact")) {
                 var id = this.get('id');
+
+                if (!this.get('email')) this.set({ email: this.parent.get('emailAddress') }, { silent: true })
                 if (!id) return this.apiCreate();
                 return this.apiUpdate();
             }
@@ -127,7 +129,8 @@
                 model: WishlistItem
             })
         },
-        addItemToCart: function(id) {
+        addItemToCart: function (id) {
+            var self = this;
             return this.apiAddItemToCartById(id).then(function (item) {
                 self.trigger('addedtocart', item, id);
                 return item;

@@ -99,7 +99,7 @@
                 {% endblock breadcrumbs %}
                 
                 {% block body-content %}
-                {% dropzone "body" %}
+                {% dropzone "body" scope="page" %}
 				{% endblock body-content %}
                 
                 {% dropzone "body-bottom" scope="template" %}

@@ -3,7 +3,14 @@
     function (Backbone, Hypr) {
 
 
-        var defaultStateProv = "n/a";
+        var requiresZipCode = {
+            US: true,
+            CA: true,
+            JP: true,
+            TW: true
+        },
+            requiresStateProv = requiresZipCode,
+            defaultStateProv = "n/a";
 
         var PhoneNumbers = Backbone.MozuModel.extend({
             validation: {
@@ -16,10 +23,10 @@
 
         StreetAddress = Backbone.MozuModel.extend({
             mozuType: 'address',
-            initialize: function () {
+            initialize: function() {
                 this.on('change:countryCode', this.clearStateAndZipWhenCountryChanges, this);
             },
-            clearStateAndZipWhenCountryChanges: function () {
+            clearStateAndZipWhenCountryChanges: function() {
                 this.unset('postalOrZipCode');
                 this.unset('stateOrProvince');
             },
@@ -37,12 +44,14 @@
                     msg: Hypr.getLabel("countryMissing")
                 },
                 stateOrProvince: {
-                    required: true,
-                    msg: Hypr.getLabel("stateProvMissing")
+                    fn: function(value) {
+                        if (requiresStateProv[this.attributes.countryCode] && (!value || value === defaultStateProv)) return Hypr.getLabel('stateProvMissing');
+                    }
                 },
                 postalOrZipCode: {
-                    required: true,
-                    msg: Hypr.getLabel("postalCodeMissing")
+                    fn: function (value) {
+                        if (requiresZipCode[this.attributes.countryCode] && !value) return Hypr.getLabel("postalCodeMissing")
+                    }
                 }
             },
             defaults: {

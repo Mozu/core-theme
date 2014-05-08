@@ -15,7 +15,7 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
 
     $.extend(DismissablePopover.prototype, {
         boundMethods: [],
-        setMethodContext: function() {
+        setMethodContext: function () {
             for (var i = this.boundMethods.length - 1; i >= 0; i--) {
                 this[this.boundMethods[i]] = $.proxy(this[this.boundMethods[i]], this);
             }
@@ -76,7 +76,8 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
             this.setLoading(false);
             this.$parent.find('[data-mz-role="popover-message"]').html('<span class="mz-validationmessage">' + msg + '</span>');
         },
-        init: function (el) {            this.$el = $(el);
+        init: function (el) {
+            this.$el = $(el);
             this.loading = false;
             this.setMethodContext();
             this.$el.on('click', this.createPopover);
@@ -90,7 +91,7 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
     $.extend(LoginPopover.prototype, {
         boundMethods: ['handleEnterKey', 'handleLoginComplete', 'displayResetPasswordMessage', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'slideRight', 'slideLeft', 'login', 'retrievePassword', 'onPopoverShow'],
         template: Hypr.getTemplate('modules/common/login-popover').render(),
-        bindListeners: function(on) {
+        bindListeners: function (on) {
             var onOrOff = on ? "on" : "off";
             this.$parent[onOrOff]('click', '[data-mz-action="forgotpasswordform"]', this.slideRight);
             this.$parent[onOrOff]('click', '[data-mz-action="loginform"]', this.slideLeft);
@@ -98,7 +99,7 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
             this.$parent[onOrOff]('click', '[data-mz-action="submitforgotpassword"]', this.retrievePassword);
             this.$parent[onOrOff]('keypress', 'input', this.handleEnterKey);
         },
-        onPopoverShow: function() {
+        onPopoverShow: function () {
             DismissablePopover.prototype.onPopoverShow.apply(this, arguments);
             this.panelWidth = this.$parent.find('.mz-l-slidebox-panel').first().outerWidth();
             this.$slideboxOuter = this.$parent.find('.mz-l-slidebox-outer');
@@ -135,7 +136,7 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
                 EmailAddress: this.$parent.find('[data-mz-forgotpassword-email]').val()
             }).then(this.displayResetPasswordMessage, this.displayApiMessage);
         },
-        handleLoginComplete: function() {
+        handleLoginComplete: function () {
             window.location.reload();
         },
         displayResetPasswordMessage: function () {
@@ -158,7 +159,7 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
         handleEnterKey: function (e) {
             if (e.which === 13) { this.signup(); }
         },
-        validate: function(payload) {
+        validate: function (payload) {
             if (!payload.account.emailAddress) return this.displayMessage(Hypr.getLabel('emailMissing')), false;
             if (!payload.password) return this.displayMessage(Hypr.getLabel('passwordMissing')), false;
             if (payload.password !== this.$parent.find('[data-mz-signup-confirmpassword]').val()) return this.displayMessage(Hypr.getLabel('passwordsDoNotMatch')), false;
@@ -199,7 +200,8 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
         $('[data-mz-action="login"]').each(function () {
             var popover = new LoginPopover();
             popover.init(this);
-            $(this).data('mz.popover', popover);        });
+            $(this).data('mz.popover', popover);
+        });
         $('[data-mz-action="signup"]').each(function () {
             var popover = new SignupPopover();
             popover.init(this);
