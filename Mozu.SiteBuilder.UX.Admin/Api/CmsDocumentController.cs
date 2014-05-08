@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Policy;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Web.Http;
 using Mozu.Core.Api.Routing;
+using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using DC=Mozu.Content.Contracts;
@@ -31,18 +33,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         ICmsTypeHelper _cmsTypeHelper;
 
         ICmsServiceWrapper _cmsService;
+        private readonly ILogger _logger;
         //ISessionDocumentStore _sessionDocStore;
         public CmsDocumentController(IDocumentListWebApiClient docRepo ,
       
             IApiContext apiContext,
           //  ISessionDocumentStore sessionDocStore,
             ICmsTypeHelper cmsTypeHelper,
-             ICmsServiceWrapper cmsService
+             ICmsServiceWrapper cmsService,
+            ILogger logger 
             )
         {
 
             _cmsService = cmsService;
-          //  _docRepo = docRepo;
+            _logger = logger;
+            //  _docRepo = docRepo;
          //   _sessionDocStore = sessionDocStore;
             _cmsTypeHelper = cmsTypeHelper;
          //   provHelper.ProvisionCms();
@@ -126,19 +131,51 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (docResult.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
             {
                 doc = new DC.Document()
-                          {
-                              DocumentListName = source.Collection,
-                              Name = source.Path,
-                              DocumentType = source.DocumentType
-                          };
+                      {
+                          DocumentListName = source.Collection,
+                          Name = source.Path,
+                          DocumentType = source.DocumentType
+                      };
             }
             else
             {
                 exitst = true;
                 doc = docResult.ReadAsSync();
+
+                var existingZonesString = doc.Get<string>("widgets");
+                if (!string.IsNullOrEmpty(existingZonesString))
+                {
+
+                    List<AVM.ZoneRuntimeData> existingZones = null;
+                    try
+                    {
+                        existingZones = Newtonsoft.Json.JsonConvert.DeserializeObject<List<AVM.ZoneRuntimeData>>(existingZonesString);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Warn("error Deserializing existing widgets", ex);
+                    }
+                    if (existingZones != null)
+                    {
+                        foreach (var zoneRuntimeData in existingZones)
+                        {
+                            if (!message.zones.Any(x => string.Equals(zoneRuntimeData.Id, x.Id, StringComparison.OrdinalIgnoreCase)))
+                            {
+                                message.zones.Add(zoneRuntimeData);
+                            }
+                        }
+                    }
+                }
             }
 
             var zoneSerilized = Newtonsoft.Json.JsonConvert.SerializeObject(message.zones);
+
+            
+          //  zoneSerilized
+
+
+
+
             doc.Properties = new List<DC.PropertyValue>();
             doc.Set("widgets", zoneSerilized);
 
