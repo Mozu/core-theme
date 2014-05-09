@@ -151,12 +151,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         /// <summary>
-        /// Merge the LocationInventory list returned by ProductAdmin with the Location information returned by Location and filter for locations that support in-store pickup.
+        /// For a single productCode, merge the LocationInventory list returned by ProductAdmin with the Location information returned by Location.
         /// </summary>
-        [HttpGetRoute(UriTemplate = "pickup")]
-        public async Task<Response<List<LocationWithInventory>>> GetLocationsForPickup([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string productCode = null)
+        [HttpGetRoute(UriTemplate = "forproduct")]
+        public async Task<Response<List<LocationWithInventory>>> GetLocationsForProduct([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string productCode = null)
         {
-            // filter should be for location type pickup
             productCode = productCode ?? extFilter.PopValue<string>("productcode");
             if (productCode == null)
                 throw new ArgumentException("Missing product code.");
@@ -171,7 +170,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var locationsWithInventory = inventories.Items.Map<List<LocationWithInventory>>();
             locationsWithInventory.ForEach(lwi => lwi.Location = locations.FirstOrDefault(l => l.Code == lwi.LocationCode));
 
-            //return EmptyList2<DC.LocationInventory>();
+            return List2(locationsWithInventory);
+        }
+
+
+        /// <summary>
+        /// For a single productCode, Merge the LocationInventory list returned by ProductAdmin with the Location information returned by Location and filter for locations that support in-store pickup.
+        /// </summary>
+        [HttpGetRoute(UriTemplate = "pickup")]
+        public async Task<Response<List<LocationWithInventory>>> GetLocationsForPickup([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string productCode = null)
+        {
+            var locationsWithInventoryResponse = await GetLocationsForProduct(pagingParams, extFilter, productCode);
+            var locationsWithInventory = locationsWithInventoryResponse.Items;
+
+            // filter for location type pickup
             return List2(locationsWithInventory.Where(lwi => lwi.Location.FulfillmentTypes.Any(ft => ft.Code == "SP")).ToList());
         }
     }

@@ -1,4 +1,5 @@
-﻿/**
+﻿
+/**
  * @class Taco.view.order.modal.EditOrderDetail
  */
 
@@ -6,7 +7,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     extend: 'Taco.core.ux.window.Drawer',
     requires: [
         'Taco.view.order.widget.OrderItemGrid',
-        'Taco.view.order.widget.OrderTotalPanel'
+        'Taco.view.order.widget.OrderTotalPanelEditable'
     ],
 
     // this should really be the default;
@@ -19,7 +20,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     scale: 'large',
     title: 'Edit Order Details',
     width: '95%',
-
+    
     actions: [{
         xtype: 'button',
         itemId: 'discardAction',
@@ -33,7 +34,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         xtype: 'tbfill'
     }, {
         xtype: 'button',
-        text:"Close",
+        text:"Save Draft",
         itemId: 'secondaryAction'
     }, {
         xtype: 'button',
@@ -42,14 +43,10 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
 
     config: {
         record: null,
+        dockTotalPanel: "inline", // possible values bottomm, right, inline
         rowTotalColumnWidth: 100,
         hasDraft: true,
-        actionColumnWidth: 60
-    },
-
-    layout: {
-        type: 'vbox',
-        align: 'stretch'
+        actionColumnWidth: 30
     },
 
     resizable: {
@@ -65,6 +62,29 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     initComponent: function (eOpts) {
         var me = this;
         
+
+        if (this.getDockTotalPanel() == "bottom") {
+            
+            this.layout = {
+                type: 'vbox',
+                align: 'stretch'
+            }
+        } else if (this.getDockTotalPanel() == "inline") {
+            this.layout = {  
+                type: "auto"
+            }
+
+            //this.layout = {
+            //    type:"auto"
+            //}       
+        } else {
+
+
+
+        }
+            
+        
+
         // Todo: Need to listen for a navigation (via backbutton) and cancel the navigation if editor is dirty or prompt user to cancel and navigate.
         // Todo: Create override/mixin/plugin for Ext.Window to add support for relative height and width with min max values.
 
@@ -77,6 +97,48 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         });
 
         this.callParent(arguments);
+        me.on('show', function (){
+            
+            this.keyNav = new Ext.util.KeyNav({
+                target: me.el,
+                up:function (e){
+                    //debugger;
+                },
+                down: function (e) {
+                    //debugger
+                },
+                left: function (e) {
+                    //debugger;
+                    //this.moveLeft(e.ctrlKey);
+                },
+                right: function (e) {
+                    //debugger;
+                    //this.moveRight(e.ctrlKey);
+                },
+                enter: function (e) {
+                    //debugger;
+                    //this.save();
+
+
+                },
+                /*
+                tab: function (e){
+                    debugger;
+                
+                },
+                */
+                // Binding may be a function specifiying fn, scope and defaultAction
+                /*
+                esc: {
+                    fn: this.onEsc,
+                    defaultEventAction: false
+                },
+                */
+                scope: this
+            });
+        }, this)
+
+        
 
         /*
         this.on({
@@ -87,6 +149,8 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         });
         */
     },
+
+    onEsc : Ext.emptyFn,
     
     /**
      * Show the loading mask while we wait for the service to respond with the draft record.
@@ -175,11 +239,11 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     initUi: function () {
         var me = this;
 
-        me.totalRow = Ext.create('Taco.view.order.widget.OrderTotalPanel', {
+        me.totalRow = Ext.create('Taco.view.order.widget.OrderTotalPanelEditable', {                        
             data: me.record.getData(),
+            record: me.record,
             totalColumnWidth: me.getRowTotalColumnWidth(),
-            actionColumnWidth: me.getActionColumnWidth(),
-            isEditable: true,
+            actionColumnWidth: me.getActionColumnWidth(),            
             listeners: {
                 "clearShippingAdjustment":{
                     fn:function() {
@@ -226,6 +290,9 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             }
         });
 
+
+        
+
         me.detailGrid = Ext.create('Taco.view.order.widget.OrderItemGrid', {
             editMode: true,
             flex: 1,
@@ -233,6 +300,10 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             store: me.record.itemsStore,
             autoHeight: true,
             listeners: {
+                'viewready': function (view, eOpts) {
+                    // selects the first cell of the first row by default;
+                    //me.detailGrid.getSelectionModel().select(0)
+                },
                 'draftOrderSaved': function (data) {
                     
                     me.setLoading(false, me.body);
@@ -268,10 +339,25 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             }
         });
 
-        this.add([
-            me.detailGrid,
-            me.totalRow
-        ]);
+
+
+        var dockTotalPanel = this.getDockTotalPanel();
+        var items = [me.detailGrid];
+        var dockedItems = [];
+        
+        if (dockTotalPanel == "bottom") {
+            items.push(this.totalRow)
+        } else if (dockTotalPanel == "right") {
+            this.totalRow.dock = "right"
+            this.totalRow.width = 340;
+            this.addDocked(this.totalRow);
+        } else {
+            // inline            
+            items.push(this.totalRow)
+        }
+                
+        this.add(items);
+        
     },
 
     

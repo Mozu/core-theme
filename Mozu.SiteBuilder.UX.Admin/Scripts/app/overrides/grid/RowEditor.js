@@ -162,7 +162,7 @@ Ext.define('Taco.overrides.grid.RowEditor', {
         }
     },
 
-    
+
     onNavCancel: function () {
         var me = this;
 
