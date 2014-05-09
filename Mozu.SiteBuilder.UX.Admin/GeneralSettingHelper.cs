@@ -96,7 +96,12 @@ namespace Mozu.SiteBuilder.UX.Admin
 
         public GeneralSettings UpdateGeneralSettings(GeneralSettings settingsToSave)
         {
+            var dcGeneralSettings = _generalSettingsWebApiClient.GetGeneralSettings().Result.ReadAsSync();
             var settings = Mapper.Map<DC.GeneralSettings>(settingsToSave);
+            settings.Theme = dcGeneralSettings.Theme;
+            settings.MobileTheme = dcGeneralSettings.MobileTheme;
+
+
             var updateGeneralSettings = _generalSettingsWebApiClient.UpdateGeneralSettings(settings).Result.ReadAsAsync();
 
             return Mapper.Map<GeneralSettings>(updateGeneralSettings.Result);

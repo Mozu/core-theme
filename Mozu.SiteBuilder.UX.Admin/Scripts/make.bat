@@ -1,10 +1,11 @@
-REM   attrib -r build/*.*
-REM   robocopy \\aus02bptfs003.corp.volusion.com\d$\software\ext\ext-4.1.3\extjs-4.1.3 ext /e /xd docs examples resources locale welcome builds /xf ext-all*.js
+echo off
+if not exist C:\sitebuilder\devstuff\ExtVersions\ext-4.2.2.1144 (
+	echo "missing C:\sitebuilder\devstuff\ExtVersions\ext-4.2.2.1144  get from $/Mozu/UI/Dev/LocalDevStuff/ExtVersions/ext-4.2.2.1144"
+	EXIT /B
+)
 
-REM   equivalent OSX command below (first mount tfs-build01.ads.volusion.com/software and then execute the below line)
-REM   rsync -CPDrlptvzb --modify-window=1 --exclude docs --exclude examples --exclude resources --exclude locale --exclude welcome --exclude builds --exclude ext-all*.js /Volumes/software/ext/ext-4.1.3/extjs-4.1.3 ext
 
-REM sencha compile -classpath=ext\src,app,ext\ux,js page  -yui -in index.html -out build/index.html
+
 
 if exist .sencha\workspace (
     attrib -r build/*.* /S
@@ -13,7 +14,7 @@ if exist .sencha\workspace (
 	sencha app build -c
 ) else (
     cd ..
-	sencha --sdk ext-4.2.2.1144 generate workspace Scripts
+	sencha --sdk C:\sitebuilder\devstuff\ExtVersions\ext-4.2.2.1144 generate workspace Scripts
     cd Scripts
 	attrib -r build/*.* /S
 	attrib -r bootstrap.js

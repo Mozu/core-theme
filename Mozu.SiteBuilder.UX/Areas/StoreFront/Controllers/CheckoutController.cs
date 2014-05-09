@@ -206,7 +206,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 if (addedPrimaryShippingContactToOrderJustNow)
                 {
-                    model = (await _orderWebApiClient.UpdateOrder(id, model)).ReadAsSync();
+                    try
+                    {
+                        model = (await _orderWebApiClient.UpdateOrder(id, model)).ReadAsSync();
+                    }
+                    catch { } // it's really okay if this doesn't work
+                   
                 }
                 var methods = (await _orderWebApiClient.GetAvailableShipmentMethods(id)).ReadAsSync();
                 var asm = JArray.FromObject(methods, jSerializer);
@@ -273,7 +278,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (order.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Fulfillment.FulfillmentMethodConst.PICKUP))
             {
-                var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", order.Items.Select(x => "Code eq " + x.FulfillmentLocationCode).Distinct().ToList())));
+                //var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", order.Items.Select(x => "Code eq " + x.FulfillmentLocationCode).Distinct().ToList())));
+                var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", order.Items.Select(x => string.Format("Code eq \"{0}\"", x.FulfillmentLocationCode)).Distinct().ToList())));
+
                 locations = locationsTask.ReadAsSync();
             }
 

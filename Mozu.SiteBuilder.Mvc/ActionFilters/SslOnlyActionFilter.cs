@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 
 
 
-            if (!string.IsNullOrEmpty(pageContext.Url) && !pageContext.IsSecure)
+            if (!string.IsNullOrEmpty(pageContext.Url) && !pageContext.IsSecure && !pageContext.IsEditMode)
             {
                 var ubilBuilder = new UriBuilder(pageContext.Url);
                 ubilBuilder.Scheme = "https";
