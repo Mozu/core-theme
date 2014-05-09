@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.Mvc.Mobile
                 }
                 else
                 {
-                    return _context.Request.Browser.IsMobileDevice;
+                    return _context.Request.Browser.IsMobileDevice && !string.Equals( _context.Request.Browser["IsTablet"], "true", StringComparison.OrdinalIgnoreCase);
                 }
             }
         }

@@ -128,7 +128,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// Represents whether the SEO information is overridden from the global data.
         /// </summary>
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "isSEOContentOverridden")]
         public bool IsSEOContentOverridden { get; set; }
 
         /// <summary>
