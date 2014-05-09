@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Commerce;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core.Api.Client;
@@ -84,30 +85,59 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                  var cart = (await _cartWebApiClient.GetOrCreateCart()).ReadAsSync();
                  id = cart.Id;
              }
-             var order = (await _orderWebApiClient.CreateOrderFromCart(id)).ReadAsSync();
 
-             var req = this.Request.CreateResponse(HttpStatusCode.Redirect);
              Uri redirectUrl = null;
-             if ( _settings.CoreSettings.IsSSLValidationEnabled &&  this.PageContext.HandledByProxy && !this.PageContext.IsSecure)
+             try
              {
-                 var uriBuilder = new UriBuilder(PageContext.Url);
-                 uriBuilder.Scheme = "https";
-                 uriBuilder.Port = 443;
-                 uriBuilder.Path = "/checkout/" + order.Id;
-                 redirectUrl = uriBuilder.Uri;
-                    
+                 var order = (await _orderWebApiClient.CreateOrderFromCart(id)).ReadAsSync();
+                 redirectUrl = CreateRedirectUrl("/checkout/" + order.Id);
              }
-             else
+             catch (Exception e)
              {
-                 redirectUrl  = new Uri("/checkout/" + order.Id,UriKind.Relative );
+                 UpdateCartWithExceptionMessage(id, e);
+                 redirectUrl = CreateRedirectUrl("/cart/");
              }
-
+             var req = this.Request.CreateResponse(HttpStatusCode.Redirect);
              req.Headers.Location = redirectUrl;
              return req;
-
-
-
          }
+
+        /// <summary>
+        /// not async as called from exception block
+        /// </summary>
+        /// <param name="cartId"></param>
+        /// <param name="e"></param>
+        private void UpdateCartWithExceptionMessage(string cartId, Exception e)
+        {
+            var badCart = (_cartWebApiClient.GetCart(cartId)).Result.ReadAsSync();
+            badCart.ChangeMessages.Add(new ChangeMessage()
+            {
+                Message = string.Format("{0}{1}", e.Message, (e.InnerException != null)
+                    ? " : " + e.InnerException.Message
+                    : string.Empty),
+                Success = false,
+                SubjectType = "Product",
+            });
+            _cartWebApiClient.UpdateCart(badCart).Result.ReadAsSync();
+        }
+
+        private Uri CreateRedirectUrl(string path)
+        {
+            Uri redirectUrl = null;
+            if (_settings.CoreSettings.IsSSLValidationEnabled && this.PageContext.HandledByProxy && !this.PageContext.IsSecure)
+            {
+                var uriBuilder = new UriBuilder(PageContext.Url);
+                uriBuilder.Scheme = "https";
+                uriBuilder.Port = 443;
+                uriBuilder.Path = path;
+                redirectUrl = uriBuilder.Uri;
+            }
+            else
+            {
+                redirectUrl = new Uri(path, UriKind.Relative);
+            }
+            return redirectUrl;
+        }
 
 
         [System.Web.Http.HttpGet]
