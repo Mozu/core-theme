@@ -145,6 +145,7 @@
         {% else %}
         <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
         {% endif %}
+        {% if user.isAnonymous %}
         <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.billingContact }}</h4>
             <div class="mz-l-formfieldgroup">
@@ -159,7 +160,6 @@
                             <span class="mz-validationmessage" data-mz-validationmessage-for="billingContact.email"></span>
                         </div>
                 </div>
-                {% if user.isAnonymous %}
                 <div class="mz-l-formfieldgroup-row">
                     <div class="mz-l-formfieldgroup-cell"></div>
                     <div class="mz-l-formfieldgroup-cell">
@@ -168,9 +168,9 @@
                         </label>
                     </div>
                 </div>
-                {% endif %}
             </div>
         </div>
+        {% endif %}
     </div>
 
     <div class="mz-formstep-next">

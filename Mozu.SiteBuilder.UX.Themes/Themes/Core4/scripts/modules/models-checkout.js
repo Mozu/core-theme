@@ -328,12 +328,13 @@
                 }
             },
             addStoreCredit: function () {
-                var self = this;
-                return self.getOrder().apiAddStoreCredit({
+                var self = this,
+                    order = self.getOrder();
+                return order.apiAddStoreCredit({
                     storeCreditCode: this.get('selectedCredit'),
                     amount: this.get('creditAmountToApply')
                 }).then(function (o) {
-                    self.set(o.data);
+                    order.set(o.data);
                     self.closeApplyCredit();
                     return o; // return order.get('customer').getCredits();
                 });
@@ -453,10 +454,15 @@
                 this.isLoading(false);
                 this.getOrder().isReady(true);
             },
-            toJSON: function () {
-                if (this.nonStoreCreditTotal() > 0) {
-                    return CheckoutStep.prototype.toJSON.apply(this, arguments);
+            toJSON: function() {
+                var j = CheckoutStep.prototype.toJSON.apply(this, arguments), loggedInEmail;
+                if (this.nonStoreCreditTotal() === 0 && j.billingContact) {
+                    delete j.billingContact.address;
                 }
+                if (j.billingContact && !j.billingContact.email) {
+                    j.billingContact.email = this.getOrder().get('customer.emailAddress');
+                }
+                return j;
             }
         });
 
