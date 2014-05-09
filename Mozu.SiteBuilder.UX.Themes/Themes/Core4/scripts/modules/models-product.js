@@ -21,7 +21,10 @@
             });
             var attributeDetail = me.get('attributeDetail');
             if (attributeDetail) {
-                if (attributeDetail.inputType === "YesNo") {
+                if (attributeDetail.valueType === ProductOption.Constants.ValueTypes.Predefined) {
+                    this.legalValues = _.chain(this.get('values')).pluck('value').map(function(v) { return !_.isUndefined(v) && !_.isNull(v) ? v.toString() : v }).value();
+                }
+                if (attributeDetail.inputType === ProductOption.Constants.InputTypes.YesNo) {
                     me.on('change:value', function(model, newVal) {
                         var values;
                         if (me.previous('value') !== newVal) {
@@ -79,7 +82,7 @@
                 selectedValue = _.findWhere(raw.values, { isSelected: true });
                 if (selectedValue) raw.value = selectedValue.value;
             }
-            if (raw.attributeDetail.inputType !== "List") {
+            if (raw.attributeDetail.valueType !== ProductOption.Constants.ValueTypes.Predefined) {
                 storedShopperValue = raw.values[0] && raw.values[0].shopperEnteredValue;
                 if (storedShopperValue || storedShopperValue === 0)
                     this.set({
@@ -87,7 +90,7 @@
                         value: storedShopperValue
                     });
             }
-            if (raw.attributeDetail.inputType === "Date" && raw.attributeDetail.validation) {
+            if (raw.attributeDetail.inputType === ProductOption.Constants.InputTypes.Date && raw.attributeDetail.validation) {
                 raw.minDate = formatDate(this.attributeDetail.validation.minDateValue);
                 raw.maxDate = formatDate(this.attributeDetail.validation.maxDateValue);
             }
@@ -96,23 +99,37 @@
         isChecked: function() {
             var attributeDetail = this.get('attributeDetail'),
                 values = this.get('values');
-            return attributeDetail && attributeDetail.inputType === "YesNo" && values && values[0].isSelected;
+            return attributeDetail && attributeDetail.inputType === ProductOption.Constants.InputTypes.YesNo && values && values[0].isSelected;
+        },
+        isValidValue: function() {
+            var value = this.get('value') || this.get('shopperEnteredValue');
+            return value !== undefined && value !== '' && (this.get('attributeDetail').valueType !== ProductOption.Constants.ValueTypes.Predefined || _.contains(this.legalValues, value));
         },
         isConfigured: function() {
-            if (this.isChecked()) return true;
-            var value = this.get('value') || this.get('shopperEnteredValue');
-            var legalValues = _.chain(this.get('values')).pluck('value').map(function(v) { return !_.isUndefined(v) && !_.isNull(v) ? v.toString() : v });
-            return value !== undefined && value !== '' && legalValues.contains(value).value();
+            return this.isChecked() || this.isValidValue();
         },
         toJSON: function(options) {
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
-            if (j && j.attributeDetail && j.attributeDetail.inputType !== "List" && this.isConfigured()) {
+            if (j && j.attributeDetail && j.attributeDetail.valueType !== ProductOption.Constants.ValueTypes.Predefined && this.isConfigured()) {
                 var val = j.value || j.shopperEnteredValue;
                 if (j.attributeDetail.dataType === "Number") val = parseFloat(val);
                 j.shopperEnteredValue = j.value = val;
             }
 
             return j;
+        }
+    }, {
+        Constants: {
+            ValueTypes: {
+                Predefined: "Predefined",
+                ShopperEntered: "ShopperEntered",
+                AdminEntered: "AdminEntered"
+            },
+            InputTypes: {
+                List: "List",
+                YesNo: "YesNo",
+                Date: "Date"
+            }
         }
     }),
 

@@ -274,6 +274,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (order == null)
                 return Redirect("/");
+
+            if (!CompletedOrderStates.Contains(order.Status)) return Redirect("/checkout/" + order.Id);
             Mozu.Location.Contracts.LocationCollection locations = null;
 
             if (order.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Fulfillment.FulfillmentMethodConst.PICKUP))
