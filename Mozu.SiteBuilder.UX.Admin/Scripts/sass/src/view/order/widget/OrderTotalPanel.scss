@@ -1,8 +1,10 @@
 
-.orderform-detail-totalRow { 
+.orderform-detail-totalpanel { 
 	margin: 0px 0px 0px 0px;
 	
-	border: 1px solid $color-neutral-75 !important; 
+	/*border: 1px solid $color-neutral-75 !important; */
+
+    border: 1px solid #fff !important; 
 
 	border-top-width:0px !important;
 
@@ -13,10 +15,11 @@
 
 	padding-top:10px;
 	padding-bottom:10px;
-	background-color:$color-neutral-95;	        
+	/*background-color:$color-neutral-95;	        */
+    background-color:#fff;
     text-align:right;
-    font-size: 1.4rem;
-    line-height: 1.4rem;
+    font-size: 14px;
+    line-height: 16px;
 
 	.x-grid-cell-inner {		
 	    padding: 0px 5px 0px 5px;
@@ -25,7 +28,7 @@
 	.discount-suppress {
 		@include icon-font($glyph-close);
 		&:hover{				
-			color:red !important;	
+			color:$color-theme-red !important;	
 		}
     }
 
@@ -46,16 +49,16 @@
 			left: 8px;
 			top: 0px;
 			font-size: 1.4rem;
-			line-height: 1.4rem;			
+			line-height: 1.4rem;
 		}
 		visibility:hidden;	
 
 		&:hover{				
-			color:red !important;	
+			color:$color-theme-red !important;	
 		}
 	}
 		
-	.orderEditable {
+	.taco-editable {
 		.order-action-icon {
 			visibility: visible;
 		}
@@ -78,4 +81,109 @@
 	.discount.suppressed {
 		text-decoration: line-through;
 	}
+
+
+    .totalrow{
+        .totalcell{
+            //background-color:#eee
+            font-weight:bold;
+        }
+    }
+
+    .subtotalrow{
+        .subtotalcell{
+            //background-color:#eee
+            font-weight:bold;
+        }
+    }
+
+    
+
+
+    .taco-grid-cell{
+    
+    }
+
+    .taco-grid-cell-inner {
+        border: 1px solid transparent;
+        margin: 1px 0px 1px 0px;
+        padding:5px;
+        display:block;
+    }
+
+    .negative-currency {
+        color:$color-theme-red;
+    }
+
+
+    
+    // override the background color of the menu button so that its white
+    .order-adjusment-menu{
+        background-color:#fff;
+    }
+
+    // need to reneable the background color for the other states of the menu button
+    .order-adjusment-menu.x-btn-focus, .order-adjusment-menu.x-btn-action-medium-over,.order-adjusment-menu.x-btn-action-medium-menu-active,.order-adjusment-menu.x-btn-action-medium-pressed{
+        background-color: #f2f2f2;
+    }
+
+
+        
+
+    
+
+    /*
+    .taco-order-adjustment-label, .taco-order-adjustment-cell, .taco-shipping-adjustment-cell{
+        box-shadow: 0 0 1px 0 #a0a0a0 inset;
+        border: 1px solid transparent;
+        curosr:text;
+        text-decoration:none;
+        &:focus {
+            border-color: #3778d5;        
+        }
+
+    }
+
+    .taco-order-adjustment-label{
+        float:right;
+    }
+
+    */
+    .orderform-detail-totalpanel-leftpanel{
+        text-align:left;
+    }
+
+    // need to reduce the text size of the standard buttons so they allign with the form fields in the table;
+    .x-btn-inner{
+        font-size: 14px;
+        line-height: 16px;
+    }
+
+    
+    
+
+    .order-adjustment-row {
+
+        .x-form-text{
+            text-align:right;
+            font-size: 14px;
+            line-height: 16px;
+            padding-right:4px !important;
+        }
+
+        .order-adustment-label{
+            padding-top:1px;
+            padding-bottom:1px;
+            
+         }
+
+        .order-adustment-field{
+            padding:1px 1px 1px 1px;
+        }
+    }
+
+     
+
 }
+
+

@@ -10,6 +10,7 @@ Ext.define('Taco.core.ux.grid.Panel', {
     alias: 'widget.taco.gridpanel',
     rowLines: true,
     viewConfig: {
+        enableTextSelection:true,
         stripeRows: false
     },
     mixins: ['Taco.core.util.GetsParentPage'],

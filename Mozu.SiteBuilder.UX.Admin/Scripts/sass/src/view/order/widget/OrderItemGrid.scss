@@ -58,11 +58,27 @@
 			text-decoration:underline;
         }
 	}
-
-
-
-
 }
+
+
+
+// add order item (product) toolbar
+.order-addproducttoolbar{
+    border-color:#ccc;
+    border-width:0px 1px 1px 1px;
+    padding-bottom:2px;
+    padding-top:2px;
+    
+
+    .order-addproducttoolbar-cell{
+        padding:5px 1px 4px 1px ;
+        .order-addproducttoolbar-field, .x-form-field {
+            font-size: 14px;
+            line-height: 16px;
+        }
+    }
+}
+
 
 
 
@@ -148,7 +164,15 @@
 //this is the overrides of the default read only grid. ie the editor version
 .#{$vprefix}orderform-editor {  
 
-	
+	.taco-orderform-orderitemgrid-body{
+        // hide the bottom border on the last row of the grid
+        table tbody tr:last-child{
+            td {
+                // note this will only work in ie9 and later
+                border-bottom-width:0px;
+            }
+        }
+    }
 
 
 
@@ -221,4 +245,6 @@
     .noDiscount {
         //display:none;   
     }    
+
+
 }

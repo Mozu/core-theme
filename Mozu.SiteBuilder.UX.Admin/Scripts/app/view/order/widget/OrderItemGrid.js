@@ -9,11 +9,16 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         'Taco.shared.view.field.ProductPickerField',
         'Taco.view.order.widget.DiscountPickerField',
         'Taco.view.order.widget.DiscountRowBody',
+        'Taco.view.order.widget.FulfillmentPickerField',
       
         'Taco.core.ux.modal.Confirmation',
         'Taco.core.ux.grid.ActionColumn',
         'Taco.view.order.modal.FulfillmentMethod'
     ],
+
+    mixins: {      
+        //rowEditable: 'Taco.core.ux.mixins.RowEditable'
+    },
     
     config: {
         header: false,
@@ -44,7 +49,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         rowTotalColumnWidth: 110,
 
         // width of the actionColumn. used to align the grid total container
-        actionColumnWidth: 60,
+        actionColumnWidth: 30,
         
         // components to add to the panel header. typically used to add an actions menu button
         tools: []
@@ -58,19 +63,23 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         this.addEvents('save','saveFailure','saveSuccess');
         
         me.cls = [this.cls, editModeCls, Taco.baseCSSPrefix + 'orderform-orderitemgrid'].join(' ');
+
+        me.bodyCls = Taco.baseCSSPrefix + 'orderform-orderitemgrid-body'
         
         siteContext = Taco.app.context.getCurrent().urlToken;
 
         // if the grid is editable show the edit toolbar;
         if (this.getEditMode()) {
             
+            
+
             // listen for changes to the amount and quantity fields and persist them
             me.on('edit', me.onFieldEdit, me);
 
             this.dockedItems = [
                 {
                     xtype: "toolbar",
-                    doc: "top",
+                    dock: "top",
                     componentCls: "title-toolbar",
                     enableOverflow: true,
                     weight: 1,
@@ -113,10 +122,24 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                                 this.toggleAddToolbar("product");
                             },
                             scope: this
+                        },
+                        {
+                            xtype: "button",                            
+                            scale: "medium",
+                            ui: "action",                            
+                            text: "+",
+                            handler: function () {                                
+                                this.onRowEditorCreate()
+                            },
+                            scope: this
                         }
                     ]
                 }
             ];
+
+            
+
+
         } else {
             // if there is a draft version of this order we need to show a warning toolbar
             if (this.record.get("hasDraft")) {
@@ -170,137 +193,168 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 selType: 'cellmodel'
             },
 
-            plugins: [Ext.create('Ext.grid.plugin.CellEditing', {
-                clicksToEdit: 1
-            })],
+            plugins: [
+                Ext.create('Ext.grid.plugin.CellEditing', {
+                    clicksToEdit: 1
+                })
+            ],
 
             columns: [
-            {
-                text: 'Products',
-                draggable: false,
-                xtype: 'templatecolumn',
-                flex: 1,
-                tdCls:"taco-product-column",
-                sortable: false,
-                resizable: false,
-                menuDisabled: true,
-                tpl: new Ext.XTemplate(
-                    '<tpl if="isDeleted">',
-                    '<span class="product-link-disabled" productCode="{productCode}">{productName}</span>',
-                    '<tpl else>',
-                    //'<a class="product-link" productCode="{productCode}" target="_blank" href="/admin/' + siteContext + '/products/edit/{productCode}">{productName}</a>',
-                    '<span class="product-link-disabled">{productName}</span>',
-                    '</tpl>',
-                    '<div class="product-options">',
-                        '<tpl for="options">',
-                            '<span class="option"><tpl if="xindex &gt; 1">, </tpl>{name}',
-                            ': {[this.getAttributeValueFromOption(values)]}',
-                        '</span>',
-                        '</tpl>',
-                        '<tpl for="bundledProducts">',
-                            '<div class="bundledProduct">',
-                                '{productCode} - {name} (Qty. {quantity})',
-                            '</div>',
-                        '</tpl>',
-                    
-                        '<div>',
-                            // if order item supports instore pickup and user is currently editing the order. make the fulfillment method a link;
-                            '<tpl if="this.isEditable() && supportsInStorePickup">',
-                                'Fulfillment Method: <a class="fulfillment-link" href="#" fulfillmentMethod="{fulfillmentMethod}">{[this.getFulfillmentMethodText(values)]}</a>',
-                            '<tpl else>',
-                                'Fulfillment Method: {[this.getFulfillmentMethodText(values)]}',
-                            '</tpl>',
-                        '</div>',
-                    '</div>',
-                    {
-                        getAttributeValueFromOption: function (option) {
-                            // it sure would be nice if we didn't have to fetch this data from the store
-                            var attributeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Attributes');
-                            var attribute = attributeStore.getById(option.attributeFQN);
-                            var values = attribute ? attribute.get('values') : null;
-                            var value = option.value;
 
-                            if (!Ext.isEmpty(values)) {
-                                value = Ext.Array.findBy(values, function (item) {
-                                    return item.id === option.value;
-                                })['value'];
-                            }
-
-                            return value;
-                        },
-                        getFulfillmentMethodText: function (record) {                            
-                            var fulfillmentMethod = record.fulfillmentMethod;
-                            var fulfillmentLocation = " (" + record.fulfillmentLocationCode + ")";
-                            if (fulfillmentMethod == "Ship") {
-                                return "Direct Ship" + fulfillmentLocation;
-                            } else {
-                                return "In Store Pickup" + fulfillmentLocation;                                
-                            }
-                        },
-                        isEditable: function (values) {
-                            return me.getEditMode();
-                        }
-                    }
-                    ),
-                    dataIndex: 'productName',
-                    listeners: {
-                        click: {
-                            fn: function (view, cell, cellIndex, rowIndex, e, record, row, eOpt) {
-
-                                
-                                var editMode = view.ownerCt.editMode,
-                                    fulfillmentMethod = e.target.getAttribute("fulfillmentMethod"),
-                                    orderRecord = me.record
-
-                                
-
-                                // if user clicks the fulfillment method link. open the fulfillment Method Selector;
-                                if (editMode && fulfillmentMethod) {
-                                    me.editFulfillmentMethod(record,orderRecord);
-                                }
-
-                                if (!editMode || e.target.tagName != "A") {
-                                    return;
-                                }
-                                
-                                //temporarily disabling while we add service support for updating the options and extras.
-                                return;
-
-                                // prevent the default link behavior
-                                e.preventDefault();
-                                
-                                var productCode = record.get("productCode"),
-                                isConfigurable = record.get("isConfigurable");
-
-                                // determine if we need to show the configurator
-                                //if (isConfigurable) {
-                                
-                                    var win = Ext.create('Taco.view.order.modal.ProductConfigurator', {
-                                        productCode: productCode,
-                                        configuredProduct: record,
-                                        listeners: {
-                                            'configureproduct': {
-                                                fn: function (configurationData) {
-                                                    //this.addConfiguredProduct([configurationData]);
-                                                    
-                                                },
-                                                scope: this
-                                            }
-                                        }
-                                    });
-                                //}
-                                
-                            },
-                            scope: this
-                        }
-                        
-                    }
+                {
+                    text: 'Code',
+                    draggable: false,
+                    resizable: true,
+                    width: 80,
+                    sortable: false,
+                    menuDisabled: true,
+                    hidden:false,
+                    align: "left",                                        
+                    dataIndex: 'productCode'
                 },
+
+
+                {
+                    text: 'Products',
+                    draggable: false,
+                    minWidth:80,
+                    xtype: 'templatecolumn',
+                    flex: 1,
+                    tdCls:"taco-product-column",
+                    sortable: false,
+                    resizable: false,
+                    menuDisabled: true,
+                   
+                                       
+                    tpl: new Ext.XTemplate(
+                        '<tpl if="isDeleted">',
+                        '<span class="product-link-disabled" productCode="{productCode}">{productName}</span>',
+                        '<tpl else>',
+                        //'<a class="product-link" productCode="{productCode}" target="_blank" href="/admin/' + siteContext + '/products/edit/{productCode}">{productName}</a>',
+                        '<span class="product-link-disabled">{productName}</span>',
+                        '</tpl>',
+                        '<div class="product-options">',
+                            '<tpl for="options">',
+                                '<span class="option"><tpl if="xindex &gt; 1">, </tpl>{name}',
+                                ': {value}',
+                            '</span>',
+                            '</tpl>',
+                            '<tpl for="bundledProducts">',
+                                '<div class="bundledProduct">',
+                                    '{productCode} - {name} (Qty. {quantity})',
+                                '</div>',
+                            '</tpl>',
+                    
+                            '<div>',
+                                // if order item supports instore pickup and user is currently editing the order. make the fulfillment method a link;
+                                '<tpl if="this.isEditable() && supportsInStorePickup">',
+                                    'Fulfillment Method: <a class="fulfillment-link" href="#" fulfillmentMethod="{fulfillmentMethod}">{[this.getFulfillmentMethodText(values)]}</a>',
+                                '<tpl else>',
+                                    'Fulfillment Method: {[this.getFulfillmentMethodText(values)]}',
+                                '</tpl>',
+                            '</div>',
+                        '</div>',
+                        {
+                            getFulfillmentMethodText: function (record) {                            
+                                var fulfillmentMethod = record.fulfillmentMethod;
+                                var fulfillmentLocation = " (" + record.fulfillmentLocationCode + ")";
+                                if (fulfillmentMethod == "Ship") {
+                                    return "Direct Ship" + fulfillmentLocation;
+                                } else {
+                                    return "In Store Pickup" + fulfillmentLocation;                                
+                                }
+                            },
+                            isEditable: function (values) {
+                                return me.getEditMode();
+                            }
+                        }
+                        ),
+                        dataIndex: 'productName',
+                        listeners: {
+                            click: {
+                                fn: function (view, cell, cellIndex, rowIndex, e, record, row, eOpt) {
+
+                                
+                                    var editMode = view.ownerCt.editMode,
+                                        fulfillmentMethod = e.target.getAttribute("fulfillmentMethod"),
+                                        orderRecord = me.record
+
+                                
+
+                                    // if user clicks the fulfillment method link. open the fulfillment Method Selector;
+                                    if (editMode && fulfillmentMethod) {
+                                        me.editFulfillmentMethod(record,orderRecord);
+                                    }
+
+                                    if (!editMode || e.target.tagName != "A") {
+                                        return;
+                                    }
+                                
+                                    //temporarily disabling while we add service support for updating the options and extras.
+                                    return;
+
+                                    // prevent the default link behavior
+                                    e.preventDefault();
+                                
+                                    var productCode = record.get("productCode"),
+                                    isConfigurable = record.get("isConfigurable");
+
+                                    // determine if we need to show the configurator
+                                    //if (isConfigurable) {
+                                
+                                        var win = Ext.create('Taco.view.order.modal.ProductConfigurator', {
+                                            productCode: productCode,
+                                            configuredProduct: record,
+                                            listeners: {
+                                                'configureproduct': {
+                                                    fn: function (configurationData) {
+                                                        //this.addConfiguredProduct([configurationData]);
+                                                    
+                                                    },
+                                                    scope: this
+                                                }
+                                            }
+                                        });
+                                    //}
+                                
+                                },
+                                scope: this
+                            }
+                        
+                        }
+                },
+
+                {
+                    text: 'Fulfillment',
+                    xtype: 'templatecolumn',
+                    draggable: false,
+                    resizable: true,
+                    //flex:1,
+                    width:180,
+                    sortable: false,
+                    menuDisabled: true,
+                    align: "left",
+                    tpl: [
+                        '{fulfillmentMethod}({fulfillmentLocationCode})'
+                    ]
+                    
+                    ,editor: (this.getEditMode()) ? {
+                        //xtype: 'textfield',
+                        xtype: "taco-fulfillmentpickerfield",
+                        showBorder: (this.getEditMode()),                        
+                        //fieldStyle: "text-align:right;padding-right:4px;",
+                        allowBlank: false
+                    } : null
+                    
+                    
+                },
+
+
                 {
                     text: 'Price',
                     draggable: false,
                     resizable: false,
-                    width: 100,
+                    width: 80,
                     sortable: false,
                     menuDisabled: true,
                     align: "right",
@@ -326,7 +380,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     text: 'Quantity',
                     draggable: false,
                     resizable: false,
-                    width: 100,
+                    width: 80,
                     sortable: false,
                     menuDisabled: true,
                     align: "right",
@@ -343,6 +397,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 },
                 {
                     text: 'Row Total',
+                    width:80,
                     draggable: false,
                     resizable: false,
                     menuDisabled: true,
@@ -356,7 +411,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     //xtype: 'taco.menucolumn',
                     //xtype:"templatecolumn",
                     xtype: 'taco.actioncolumn',
-                    width:30,
+                    
                     disabled:(!this.getEditMode()),
                     draggable: false,
                     resizable: false,
@@ -407,7 +462,256 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             ]
         });
         
+
+        this.initAddProductToolbar();
+
         me.callParent(arguments);
+    },
+
+    initAddProductToolbar: function () {
+        var me = this;
+
+        if (!this.getEditMode()) {
+            return
+        }
+
+
+        // todo: syncronize the width of columns that are resized
+        this.on({            
+            'columnresize': function (columnHeader, column, width, eOpts) {
+                // need to synchronize the width of the columns and the addProductToolbar fields when user resizes the columns                
+                var columnIndex = columnHeader.columnManager.columns.indexOf(column);
+                var cell = this.addProductToolbar.items.items[columnIndex]
+                cell.setWidth(width);
+            },
+            'cellkeydown': function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {                
+                var me=this,
+                    count = view.store.getCount()
+
+                //if last row
+                if (rowIndex == count - 1 && e.getKey() == e.DOWN) {
+                    // need to manually deselect the last selected grid cell to work around a bug in extjs;
+                    me.view.onCellDeselect({
+                        column: cellIndex,
+                        row: rowIndex
+                    });
+                    
+                    //set focus on product picker field
+                    this.productPickerField.focus();
+                }
+            }
+        })
+
+        this.codeField = Ext.widget({
+            xtype: "displayfield",
+            fieldBodyCls: "order-addproducttoolbar-cell",
+            fieldStyle: "padding:0px 4px;",
+            fieldCls: "order-addproducttoolbar-field",
+            width : this.columns[0].width,            
+            value:""
+        })
+
+        this.priceField = Ext.widget({
+            xtype: "numberfield",
+            disabled:true,
+            fieldBodyCls: "order-addproducttoolbar-cell",
+            fieldStyle: "text-align:right;padding-right:4px;",
+            selectOnFocus: true,
+            forcePrecision: true,
+            hideTrigger: true,            
+            //fieldStyle: "text-align:right;padding-right:4px;",
+            mouseWheelEnabled: false,
+
+            allowBlank: false,
+            minValue: 0,
+            maxValue: 100000,
+            width: this.columns[3].width,
+            value: ""
+        })
+
+        this.quantityField = Ext.widget({
+            xtype: "numberfield",
+            disabled: true,
+            fieldBodyCls: "order-addproducttoolbar-cell",
+            fieldStyle: "text-align:right;padding-right:4px;",
+            //forcePrecision: true,
+            selectOnFocus:true,
+            hideTrigger: true,            
+            //fieldStyle: "text-align:right;padding-right:4px;",
+            mouseWheelEnabled: false,                       
+            
+            allowBlank: false,
+            minValue: 0,
+            maxValue: 100000,
+            width: this.columns[4].width,
+            value: ""
+        })
+
+        this.rowTotalField = Ext.widget({
+            xtype: "displayfield",
+            fieldBodyCls: "order-addproducttoolbar-cell",
+            width: this.columns[5].width,
+            value: ""
+        })
+
+
+
+        this.productPickerField = Ext.create('Taco.shared.view.field.ProductPickerField', {
+            width: this.columns[0].width,
+            style: "padding:5px",
+            cls: "simeon1",
+            fieldBodyCls: "order-addproducttoolbar-cell",
+            fieldCls: "toolbar-field",
+            pageSize: me.productsPerPage,
+            listeners: {
+                'specialkey': {
+                    fn: function (field, e) {                        
+
+                        // if field doesnt have a flyout menu expanded and hits key up. pass focus to grid's last row;
+                        if (e.getKey() == e.UP && !field.isExpanded) {
+                            //index of last row
+                            var index = me.store.getCount() - 1;
+                            me.getSelectionModel().select(index);
+
+                            // wierd bug in extjs. If you don't blur the trigger as well the field will not remove the focus css class;
+                            field.triggerBlur();
+                            field.blur();
+                        }
+
+                        // e.HOME, e.END, e.PAGE_UP, e.PAGE_DOWN,
+                        // e.TAB, e.ESC, arrow keys: e.LEFT, e.RIGHT, e.UP, e.DOWN
+                        if (e.getKey() == e.ESC) {
+
+
+                            //return false;
+                        }
+                    },
+                    scope: me
+                },
+                beforeselect: {
+                    fn: function (combo, record, index, e) {
+                        var productCode = record.get("productCode"),
+                            isConfigurable = record.get("isConfigurable");
+
+                        //var picker = combo.getPicker();
+                        combo.collapse();
+
+                        // determine if we need to show the configurator
+                        if (isConfigurable) {
+                            //debugger;
+                            return;
+                            var win = Ext.create('Taco.view.order.modal.ProductConfigurator', {
+                                productCode: productCode,
+                                listeners: {
+                                    'configureproduct': {
+                                        fn: function (configurationData) {
+                                            this.addConfiguredProduct([configurationData]);
+                                        },
+                                        scope: this
+                                    }
+                                }
+                            });
+                        } else {
+                            //debugger;
+                            return;
+                            // the product doesn't require configuration so just add it and skip opening the dialog;
+                            this.addConfiguredProduct([
+                                {
+                                    // always going to be 1 because they don't want to open the configurator for products without options or extras
+                                    quantity: 1,
+
+                                    productCode: productCode
+                                }
+                            ]);
+                        }
+
+                        // cancel the selection so that the same product can be reselected again;
+                        return false;
+                    },
+                    scope: this
+                }
+            }
+        });
+
+
+        this.fulfillmentPickerField = Ext.create('Taco.view.order.widget.FulfillmentPickerField', {
+            disabled: true,
+            fieldCls: "toolbar-field",
+            fieldBodyCls: "order-addproducttoolbar-cell",
+            width: this.columns[2].width,
+            pageSize: me.productsPerPage,
+            listeners: {
+                'specialkey': {
+                    fn: function (field, e) {
+                        // e.HOME, e.END, e.PAGE_UP, e.PAGE_DOWN,
+                        // e.TAB, e.ESC, arrow keys: e.LEFT, e.RIGHT, e.UP, e.DOWN
+                        if (e.getKey() == e.ESC) {
+
+
+                            //return false;
+                        }
+                    },
+                    scope: me
+                },
+                beforeselect: {
+                    fn: function (combo, record, index, e) {
+                        var productCode = record.get("productCode"),
+                            isConfigurable = record.get("isConfigurable");
+
+                        //var picker = combo.getPicker();
+                        combo.collapse();
+
+                        //debugger;                        
+
+                        // cancel the selection so that the same product can be reselected again;
+                        return false;
+                    },
+                    scope: this
+                }
+            }
+        });
+
+        
+
+        this.addProductToolbar = new Ext.container.Container({
+            dock: "bottom",
+            layout: {
+                type: "hbox",
+                align: "middle"
+            },            
+            style: "border:1px solid #ccc;padding-top:2px;padding-bottom:2px;",
+            cls: "order-addproducttoolbar",
+            items: [
+                this.codeField,
+                this.productPickerField,
+                this.fulfillmentPickerField,
+                this.priceField,
+                this.quantityField,
+                this.rowTotalField,
+                {
+                    xtype: "component",
+                    width: this.columns[6].width
+                }
+            ]
+        });
+
+        this.dockedItems.push(this.addProductToolbar);
+    },
+
+    onRowEditorCreate: function () {
+        //this.rowEditor.cancelEdit();
+
+        // check with the rowEditor to see if creation is allowed;
+        
+        //debugger;
+        // Create a model instance
+        var modelName = this.store.model.getName();
+        var r = Ext.create(modelName, {});
+        this.store.insert(0, r);
+        //this.rowEditor.startEdit(0, 0);
+        //this.rowEditor.editor.focusContextCell()
+
+
     },
     
     showHasDraftToolbar: function () {
@@ -422,7 +726,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 items: [
                     {
                         xtype: "component",
-                        html: "Warning: You have unsaved changes to this order detail",
+                        html: "Warning: You have draft changes to this order detail",
                         cls: "title",
                         flex: 1
                     }, {
@@ -440,7 +744,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         xtype: "button",
                         ui: "action",
                         scale: "medium",
-                        text: "Edit Details",
+                        text: "Continue Editing",
                         style: "margin-left:5px;",
                         handler: function (button, e) {
                             var animationTarget = button.el;
@@ -536,31 +840,6 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         this.activeSearchField = Ext.create('Taco.shared.view.field.ProductPickerField', {
             fieldCls: "toolbar-field",
             pageSize: me.productsPerPage,
-            listConfig: {
-                loadingText: 'Searching...',
-                cls: "product-picker-menu",
-                emptyText: 'No matching products found.',
-                // Custom rendering template for each item
-                getInnerTpl: function () {
-                    return "<span class='product-name'>{productName} </span>"
-                    + '<tpl if="productUsage==\'Component\'"><span class="product-name">{productCode} - bundle components may not be added to order</span>'
-                    + "<tpl else><span class='product-code'>{productCode}</span></tpl>";
-                },
-
-                // this is an override that hides the paging toolbar when the list only contains a single page of results;
-                refresh: function () {
-                    var me = this,
-                        toolbar = me.pagingToolbar;
-
-                    Ext.view.View.prototype.refresh.call(me);
-
-                    if (me.rendered && toolbar && toolbar.rendered && !me.preserveScrollOnRefresh) {
-                        me.el.appendChild(toolbar.el);
-                        if (me.getStore().getTotalCount() <= me.pageSize) me.el.last().hide();
-                        else me.el.last().show();
-                    }
-                }
-            },
             listeners: {
                 'specialkey':{
                     fn: function(field, e) {
@@ -577,12 +856,12 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 beforeselect: {
                     fn: function (combo, record, index, e) {
                         var productCode = record.get("productCode"),
-                            isConfigurable = record.get("isConfigurable"),
-                            isBundleComponent = (record.get("productUsage") == 'Component');
+                            isConfigurable = record.get("isConfigurable");
                         
                         //var picker = combo.getPicker();
                         combo.collapse();
                         
+
                         // determine if we need to show the configurator
                         if (isConfigurable) {
                             var win = Ext.create('Taco.view.order.modal.ProductConfigurator', {
@@ -596,8 +875,6 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                                     }
                                 }
                             });
-                        } else if (isBundleComponent) {
-                            return false;
                         } else {
                             // the product doesn't require configuration so just add it and skip opening the dialog;
                             this.addConfiguredProduct([
@@ -704,6 +981,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             selectOnFocus: true,
             forcePrecision:true,
             listeners: {
+                /*
                 focus: {
                     fn: function(field) {
                         if (!field.getValue()) {
@@ -712,6 +990,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     },
                     scope:me
                 }
+                */
 
             },
             hideTrigger:true,
@@ -794,12 +1073,14 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             //style: "border-color:#CCC;background-color:#f1f1f1;padding:5px;",
             items: [],
             listeners: {
+                /*
                 afterlayout: {
                     fn: function () {
                         this.focusActiveSearchField();
                     },
                     scope: this
                 } 
+                */
             },
             onDestroy: function() {
             
@@ -926,7 +1207,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 
                 me.fireEvent('saveSuccess', json);
                 // after a successful add, pass focus back to the searchfield;
-                me.focusActiveSearchField();
+                //me.focusActiveSearchField();
             },
             failure: function (response) {
                 // error handling here
@@ -1012,8 +1293,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         var me = this,
             jsonData = {
                 orderId: this.record.get('id'),
-                orderAdjustment: Ext.clone(this.record.get("orderAdjustment")),
-                shippingAdjustment: Ext.clone(this.record.get("shippingAdjustment"))
+                orderAdjustment: this.record.get("orderAdjustment"),
+                shippingAdjustment: this.record.get("shippingAdjustment")
             };
         
         if (!config.data) {
@@ -1084,40 +1365,6 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         });
     },
     
-    acceptOrder: function() {
-        var me = this;
-
-        me.ownerCt.setLoading({
-            maskCls: "x-mask taco-white-mask"
-        });
-
-        me.record.acceptOrder({
-            jsonData: {
-                orderId: me.record.get('id')
-            },
-            success: function (response) {
-                // success handling here
-                var json = Ext.decode(response.responseText, true);
-                if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', "Error accepting order", 'error');
-                    me.fireEvent('saveFailure');
-                    return;
-                }
-                me.ownerCt.setLoading(false);
-                me.fireEvent("orderAccepted", json);
-            },
-            failure: function (response) {
-                me.setLoading(false);
-                // error handling here
-                var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : "Error accepting order";
-                Taco.app.fireEvent('setmessage', msg, 'error');
-                me.ownerCt.setLoading(false);
-                me.fireEvent('saveFailure');
-            },
-            scope: me
-        });
-    },
 
     cancelOrder: function () {
         var me = this;

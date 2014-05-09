@@ -17,7 +17,8 @@ Ext.define('Taco.view.order.subform.Detail', {
     itemId: 'orderDetailPanel',
     title: 'Order Details',
 
-    tools: [{
+    
+    tools:[{
         type: 'gear',
         itemId: 'actionTrigger',
         menu: {
@@ -33,7 +34,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                 menu.add(owner.getMenuActions());
             }
         }
-    }],
+    }],    
     
     config: {
 
@@ -44,14 +45,15 @@ Ext.define('Taco.view.order.subform.Detail', {
         editMode: false,
         
         // width of the actionColumn. used to align the grid total container
-        actionColumnWidth: 60,
+        actionColumnWidth: 30,
         
+        totalColumnWidth: 100,
+
         // width of the row total Column. used to align the grid total container
         rowTotalColumnWidth: 100,
         
         itemId:"orderDetails"
-        // components to add to the panel header. typically used to add an actions menu button
-        // tools: []
+        
     },
         
     initComponent: function (eOpts) {
@@ -59,11 +61,53 @@ Ext.define('Taco.view.order.subform.Detail', {
             orderItemStore;
         
         // after the record is reloaded we will need to refresh the ui
-        me.mon( me.record, "aftercommit", function () {
+        me.record.on("aftercommit", function () {
             me.onRecordChange();
         }, me);
+        
+        //me.tools = me.getButtonActions();
+        
+        // var siteContext = Taco.app.context.getCurrent().urlToken;
 
         this.cls += ' ' + Taco.baseCSSPrefix + 'orderform-detail';
+        
+        // this.actionTrigger = Ext.create('Taco.core.ux.action.Button', {
+        //     width: 50,
+        //     height: 30,
+        //     text: ' ',
+
+
+
+
+
+
+
+        //     menuAlign: 'tr-br',
+        //     cls: Taco.baseCSSPrefix + 'editcontainer-menu-button',
+        //     autoEl: {
+        //         tag: 'a'
+        //     },
+            
+        //     listeners: {
+        //         menushow: {
+        //             fn: function (button, menu, eOpts) {
+        //                 // need to generate the menu each time since the menu options may change after the record is modified;
+        //                 menu.removeAll();
+        //                 menu.add(me.getMenuActions());
+        //             },
+        //             scope: me
+        //         }
+        //     },
+        //     menu: {
+        //         plain: true,
+        //         items: [{
+        //             text: ""
+        //         }]
+        //     }
+        // });
+    
+        // add the action trigger icon in header;
+        // this.setTools([this.actionTrigger]);
     
         // store that contains the orderItems for this order model
         orderItemStore = this.record.itemsStore;
@@ -78,6 +122,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             editMode: this.getEditMode(),
             record : this.record,
             store: orderItemStore,
+            actionColumnWidth: me.getActionColumnWidth(),
             autoHeight: true,
             listeners: {
                 'draftOrderRemoved': {
@@ -86,11 +131,6 @@ Ext.define('Taco.view.order.subform.Detail', {
                         me.detailGrid.hasDraftToolbar = null;
                     },
                     scope: me
-                },
-                'orderAccepted': {
-                    fn: function() {
-                        me.record.reload();
-                    },
                 },
                 'orderCancelled': {
                     fn: function() {
@@ -129,7 +169,9 @@ Ext.define('Taco.view.order.subform.Detail', {
 
         this.callParent(arguments);
     },
-
+        
+    
+    
     editOrder: function () {
         var me = this,
             isDraft = me.orderForm.isEdit(),
@@ -169,6 +211,37 @@ Ext.define('Taco.view.order.subform.Detail', {
 
         // now we sit back and let autoShow do the rest..
     },
+
+    /*
+    loadRecord: function () {
+        var me = this,
+            orderId = (me.record) ? me.record.get('id') : me.orderId;
+        me.orderModel.load(orderId, {
+            scope: me,
+            failure: function (record, operation) {
+                //do something if the load failed
+                this.setLoading(false, this.body);
+            },
+            success: function (record, operation) {
+                me.record = record;
+                me.onLoadRecord();
+            },
+            callback: function (record, operation) {
+                //do something whether the load succeeded or failed
+            }
+        });
+    },
+
+    // when the draft record has loaded create and add the total and grid and hide the loading mask;
+    onLoadRecord: function () {
+        var me = this;
+        // initialize the ui when the record loads the first time.
+        //me.updateUi();
+        //this.setLoading(false, this.body);
+        me.record.reload();
+    },
+    
+    */
 
     // when the record changes we will need to update the order details
     onRecordChange: function () {
@@ -246,19 +319,11 @@ Ext.define('Taco.view.order.subform.Detail', {
     getMenuActions: function () {
         var me = this,
             availableActions = me.record.get("availableActions"),
-            canAccept = Ext.Array.indexOf(availableActions, "AcceptOrder") != -1,
             canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
-            canEdit = !canAccept,
+            canEdit = true,
             menu;
         
         menu = [{
-            text: 'Accept Order',
-            handler: function() {
-                this.detailGrid.acceptOrder();
-            },
-            scope: me,
-            hidden: !canAccept
-        }, {
             text: 'Edit Details',
             handler: function () {
                 this.editOrder();
@@ -277,6 +342,48 @@ Ext.define('Taco.view.order.subform.Detail', {
         return menu;
         
     },
+
+    /*
+    // removed temporarily. due to designer snerst
+
+    getButtonActions: function () {
+        var me = this,
+            availableActions = me.record.get("availableActions"),
+            canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
+            canEdit = true,
+            buttons;
+
+        buttons = [
+            {
+                text: 'Cancel Order',
+                xtype: "button",
+                ui: "action",
+                scale: "medium",
+                margin: {
+                    right:2
+                },
+                handler: function () {
+                    this.detailGrid.cancelOrder();
+                },
+                scope: me,
+                disabled: !canCancel
+            },{
+                text: 'Edit Details',
+                xtype: "button",
+                ui: "action",
+                scale: "medium",
+                handler: function () {
+                    this.editOrder();
+                },
+                scope: me,
+                disabled: !canEdit
+            }
+        ];
+
+        return buttons;
+
+    },
+    */
 
     /**
     * Do any class level cleanup. Destroy and null any scoped refs.     
