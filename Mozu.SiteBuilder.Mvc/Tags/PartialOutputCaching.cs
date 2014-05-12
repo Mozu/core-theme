@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.Caching;
 using Magnum.Extensions;
 using Microsoft.FSharp.Collections;
@@ -151,10 +152,35 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
                     var renderer = new TemplateRenderer(manager, innerWalker);
                     var sb = StringBuilderPool.Default.Get();
+
+                    var req = walker.context.Resolve<HttpRequestMessage>();
+                    object callCount = 0;
+                    if (req != null )
+                    {
+                        if (!req.Properties.TryGetValue("partial_output_cache_call_count", out callCount))
+                        {
+                            callCount = 0;
+                        }
+
+                        callCount = 1 + (int) callCount;
+                        req.Properties["partial_output_cache_call_count"] = callCount;
+                    }
+
+                    if ((int)callCount > 20 )
+                    {
+                        throw new RenderingException("recursive cache detected", this.Token, new FSharpOption<Exception>(new StackOverflowException(key)));
+                    }
+
                     var sw = new StringWriter(sb);
                     renderer.Render(sw);
                     sw.Flush();
-                    
+
+                    if (req != null)
+                    {
+                        callCount = (int) callCount - 1;
+                        req.Properties["partial_output_cache_call_count"] = callCount;
+                    }
+
                     if (sb.Length > CharBufferPool.Default.MaxBufferSize)
                     {
                         var charBuff = CharBufferPool.Default.Get();
