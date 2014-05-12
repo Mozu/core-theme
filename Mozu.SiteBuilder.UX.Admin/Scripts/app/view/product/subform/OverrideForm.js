@@ -103,11 +103,14 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
                 scope: this
             });
         
+        }
+        else if (!this.isOverridden) {
+            this.setOverride(this.isOverridden, false);
         } else {
             // *** GlobalForm and SiteForm Single Site Mode
             this.record = this.product;
             this.loadForm();
-        }
+        } 
     },
 
     onProductChange: function ( record, modifiedFieldNames ) {
