@@ -275,7 +275,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 settings.MobileTheme.Id  = null;
             }
 
-            _generalSettingsWebApiClient.UpdateGeneralSettings(settings);
+            _generalSettingsWebApiClient.UpdateThemeCore(settings);
 
             // the UI returns the ThemeDTO without a thumbnail (to minimize the payload). But if we pass the same ThemeDTO without
             // a thumbnail back to them, the UI will update to have no thumbnail. So we have to loop over the provided ThemeDTO objects
