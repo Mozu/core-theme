@@ -132,10 +132,12 @@ Ext.define('Taco.model.Discount', {
             defaultValue: 'Amount'
         }, {
             name: 'startDate',
-            type: 'date'
+            type: 'date',
+            dateFormat: 'c'
         }, {
             name: 'expirationDate',
-            type: 'date'
+            type: 'date',
+            dateFormat: 'c'
         }, {
             name: 'status',
             type: 'string'
