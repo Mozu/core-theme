@@ -23,6 +23,7 @@ namespace Mozu.SiteBuilder.UX.Admin
 
       //  void DeleteAllIPBlocks(IEnumerable<int?> existingBlockIds);
 
+        GeneralSettings UpdateThemeCore(GeneralSettings settingsToSave);
         GeneralSettings UpdateGeneralSettings(GeneralSettings settingsToSave);
     }
 
@@ -93,7 +94,6 @@ namespace Mozu.SiteBuilder.UX.Admin
         //        _generalSettingsWebApiClient.DeleteIPBlock(ipBlockId).Result.ReadAsAsync();
         //    }
         //}
-
         public GeneralSettings UpdateGeneralSettings(GeneralSettings settingsToSave)
         {
             var dcGeneralSettings = _generalSettingsWebApiClient.GetGeneralSettings().Result.ReadAsSync();
@@ -101,6 +101,18 @@ namespace Mozu.SiteBuilder.UX.Admin
             settings.Theme = dcGeneralSettings.Theme;
             settings.MobileTheme = dcGeneralSettings.MobileTheme;
 
+
+            var updateGeneralSettings = _generalSettingsWebApiClient.UpdateGeneralSettings(settings).Result.ReadAsAsync();
+
+            return Mapper.Map<GeneralSettings>(updateGeneralSettings.Result);
+        }
+
+
+
+        public GeneralSettings UpdateThemeCore(GeneralSettings settingsToSave)
+        {
+
+            var settings = Mapper.Map<DC.GeneralSettings>(settingsToSave);
 
             var updateGeneralSettings = _generalSettingsWebApiClient.UpdateGeneralSettings(settings).Result.ReadAsAsync();
 
