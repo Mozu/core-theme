@@ -43,7 +43,8 @@ Ext.define('Taco.model.Shipment', {
     }, {
         "name": "createDate",
         "type": "date",
-        "useNull": true
+        "useNull": true,
+        dateFormat: 'c'
     }, {
         "name": "createBy",
         "type": "string",
@@ -51,7 +52,8 @@ Ext.define('Taco.model.Shipment', {
     }, {
         "name": "updateDate",
         "type": "date",
-        "useNull": true
+        "useNull": true,
+        dateFormat: 'c'
     }, {
         "name": "updateBy",
         "type": "string",

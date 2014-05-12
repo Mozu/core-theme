@@ -95,12 +95,14 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
         {
             name: "mapStartDate",
             type: "date",
-            useNull: true
+            useNull: true,
+            dateFormat: 'c'
         },
         {
             name: "mapEndDate",
             type: "date",
-            useNull: true
+            useNull: true,
+            dateFormat: 'c'
         },
         {
             "name": "catalogId",

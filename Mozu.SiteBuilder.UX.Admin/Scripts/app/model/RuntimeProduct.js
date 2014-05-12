@@ -27,7 +27,8 @@ Ext.define('Taco.model.RuntimeProduct', {
     {
         "name": "createDate",
         "type": "date",
-        "useNull": true
+        "useNull": true,
+        dateFormat: 'c'
     },
       {
           "name": "hasStandAloneOptions",

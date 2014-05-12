@@ -101,12 +101,14 @@ Ext.define('Taco.model.Order', {
         {
             "name": "createDate",
             "type": "date",
-            "useNull": true
+            "useNull": true,
+            dateFormat: 'c'
         },
         {
             "name": "updateDate",
             "type": "date",
-            "useNull": true
+            "useNull": true,
+            dateFormat: 'c'
         },
         {
             "name": "customerId",
@@ -312,12 +314,14 @@ Ext.define('Taco.model.Order', {
         {
             "name": "lastValidationDate",
             "type": "date",
-            "useNull": true
+            "useNull": true,
+            dateFormat: 'c'
         },
         {
             "name": "expirationDate",
             "type": "date",
-            "useNull": true
+            "useNull": true,
+            dateFormat: 'c'
         },
         
         {

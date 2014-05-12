@@ -42,7 +42,8 @@ Ext.define('Taco.model.CmsDocumentDraft', {
         {
             "name": "lastModified",
             "type": "date",
-            "useNull": true
+            "useNull": true,
+            dateFormat: 'c'
         },
         {
             "name": "modifiedBy",

@@ -57,19 +57,22 @@ Ext.define('Taco.model.Return', {
              "name": "rmaDeadline",
              "type": "date",
              "useNull": true,
-             defaultValue: null
+             defaultValue: null,
+            dateFormat: 'c'
          },
         {
             "name": "updateDate",
             "type": "date",
             "useNull": true,
-            defaultValue: null
+            defaultValue: null,
+            dateFormat: 'c'
         },
         {
             "name": "createDate",
             "type": "date",
             "useNull": true,
-            defaultValue: null
+            defaultValue: null,
+            dateFormat: 'c'
         },
         
          {

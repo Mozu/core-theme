@@ -59,8 +59,16 @@ Ext.define('Taco.model.Capability', {
         { name: "licenseType", type: "string" },
         { name: "developerAccountName", type: "string" },
         { name: "publishedDate", type: "date" },
-        { name: "effectiveStartDate", type: "date" },
-        { name: "effectiveEndDate", type: "date" },
+        {   
+            name: "effectiveStartDate",
+            type: "date",
+            dateFormat: 'c'
+        },
+        {
+            name: "effectiveEndDate",
+            type: "date",
+            dateFormat: 'c'
+        },
         { name: "createDate", type: "date" },
 
         {

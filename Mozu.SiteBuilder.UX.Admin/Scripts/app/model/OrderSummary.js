@@ -11,11 +11,13 @@ Ext.define('Taco.model.OrderSummary', {
     }, {
         "name": "orderDate",
         "type": "date",
-        "useNull": true
+        "useNull": true,
+        dateFormat: 'c'
     }, {
         "name": "shipDate",
         "type": "date",
-        "useNull": true
+        "useNull": true,
+        dateFormat: 'c'
     }, {
         "name": "firstName",
         "type": "string",
