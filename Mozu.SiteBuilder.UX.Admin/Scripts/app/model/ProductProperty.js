@@ -21,6 +21,8 @@ Ext.define('Taco.model.ProductProperty', {
                 var idx = 0, dateVal;
                 if (v && v.length) {
                     for (idx; idx < v.length; idx++) {
+                        if (Ext.isNumeric(v[idx]))
+                            continue;
                         dateVal = r.convertDate(v[idx]);
                         if (dateVal) {
                             v[idx] = dateVal;
