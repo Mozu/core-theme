@@ -29,6 +29,8 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     public class OutputCachingTag : ITag
     {
         private static readonly string[] g_keywords = {"as", "with", "as_param", "as_parameter", "and"};
+        private const string partial_output_cache_stack_limit = "partial_output_cache_stack_limit";
+
         private string[] _keywords = g_keywords;
         public FSharpList<INodeImpl> InnerNodes { get; set; }
 
@@ -124,7 +126,8 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     arguments = TagBase.ArguemntParserStrategy(arguments);
                 }
                 int configDuration = 0;
-                if (!int.TryParse(walker.context.Resolve<ISettings>().AppSettings("partial_caching_default_duration"), out configDuration))
+                var settings = walker.context.Resolve<ISettings>();
+                if (!int.TryParse(settings.AppSettings("partial_caching_default_duration"), out configDuration))
                 {
                     configDuration = 0;
                 }
@@ -157,18 +160,27 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     object callCount = 0;
                     if (req != null )
                     {
-                        if (!req.Properties.TryGetValue("partial_output_cache_call_count", out callCount))
+                        if (!req.Properties.TryGetValue(partial_output_cache_stack_limit, out callCount))
                         {
                             callCount = 0;
                         }
 
                         callCount = 1 + (int) callCount;
-                        req.Properties["partial_output_cache_call_count"] = callCount;
+                        req.Properties[partial_output_cache_stack_limit] = callCount;
                     }
 
-                    if ((int)callCount > 20 )
+                    if ((int)callCount > 1 )
                     {
-                        throw new RenderingException("recursive cache detected", this.Token, new FSharpOption<Exception>(new StackOverflowException(key)));
+                        int maxStackCount = 100;
+                        if (!int.TryParse(settings.AppSettings(partial_output_cache_stack_limit), out maxStackCount))
+                        {
+                            maxStackCount = 100;
+                        }
+                        if ((int) callCount > maxStackCount)
+                        {
+                            throw new RenderingException("recursive cache detected", this.Token, new FSharpOption<Exception>(new StackOverflowException(key)));
+                        }
+                        
                     }
 
                     var sw = new StringWriter(sb);
@@ -178,10 +190,10 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     if (req != null)
                     {
                         callCount = (int) callCount - 1;
-                        req.Properties["partial_output_cache_call_count"] = callCount;
+                        req.Properties[partial_output_cache_stack_limit] = callCount;
                     }
 
-                    if (sb.Length > CharBufferPool.Default.MaxBufferSize)
+                    if ( sb.Length > CharBufferPool.Default.MaxBufferSize )
                     {
                         var charBuff = CharBufferPool.Default.Get();
                         var strings = new List<string>();
