@@ -112,7 +112,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 if (isSelectedMobile.HasValue)
                     IsSelectedMobile = isSelectedMobile.Value;
-                else if (genSettings.MobileTheme != null && String.Equals(Name, genSettings.MobileTheme.Id , StringComparison.InvariantCultureIgnoreCase))
+                else if (genSettings.MobileTheme != null && String.Equals(Id, genSettings.MobileTheme.Id, StringComparison.InvariantCultureIgnoreCase))
                     IsSelectedMobile = true;
                 else
                     IsSelectedMobile = false;
