@@ -18,7 +18,7 @@ Ext.define('Taco.model.OrderNote', {
         "name": "createDate",
         "type": "date",
         "useNull": true,
-        "dateFormat": "MS",
+        "dateFormat": "c",
         defaultValue:new Date(),
         "persist": false
     }, {
@@ -31,7 +31,7 @@ Ext.define('Taco.model.OrderNote', {
         "type": "date",
         "useNull": true,
         defaultValue: new Date(),
-        "dateFormat": "MS",
+        "dateFormat": "c",
         "persist": false
     }, {
         "name": "updateBy",

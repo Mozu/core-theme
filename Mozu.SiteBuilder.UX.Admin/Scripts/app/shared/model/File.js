@@ -41,7 +41,8 @@ Ext.define('Taco.shared.model.File', {
             name: 'dateModified',
             type: 'date',
             useNull: true,
-            persist: false
+            persist: false,
+            dateFormat: 'c'
         }, {
             name: 'fileType',
             type: 'string',

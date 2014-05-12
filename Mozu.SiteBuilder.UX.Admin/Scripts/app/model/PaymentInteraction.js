@@ -38,7 +38,8 @@ Ext.define('Taco.model.PaymentInteraction', {
     {
         'name': 'status',
         'type': 'string',
-        'useNull': true
+        'useNull': true,
+        dateFormat: 'c'
     },
     {
         'name': 'gatewayResponseCode',

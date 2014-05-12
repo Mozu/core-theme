@@ -19,11 +19,13 @@ Ext.define('Taco.model.PaymentReference', {
     }, {
         "name": "createDate",
         "type": "date",
-        "useNull": true
+        "useNull": true,
+        dateFormat: 'c'
     }, {
         "name": "createBy",
         "type": "string",
-        "useNull": true
+        "useNull": true,
+        dateFormat: 'c'
     }, {
         "name": "updateDate",
         "type": "date",

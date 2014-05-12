@@ -9,7 +9,8 @@ Ext.define('Taco.model.StoreCredit', {
             type: 'string'
         }, {
             name: 'activationDate',
-            type: 'date'
+            type: 'date',
+            dateFormat: 'c'
         },
         {
             name: 'initialBalance',
@@ -21,7 +22,8 @@ Ext.define('Taco.model.StoreCredit', {
         },
         {
             name: 'expirationDate',
-            type: 'date'
+            type: 'date',
+            dateFormat: 'c'
         },
         //      public const string StoreCredit = "StoreCredit";
     //public const string GiftCard = "GiftCard";
@@ -38,7 +40,8 @@ Ext.define('Taco.model.StoreCredit', {
         },
         {
             name: 'modifiedDate',
-            type: 'date'
+            type: 'date',
+            dateFormat: 'c'
         },
         {
             name: 'currentBalance',

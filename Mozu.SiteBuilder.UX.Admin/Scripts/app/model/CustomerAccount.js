@@ -97,10 +97,12 @@ Ext.define('Taco.model.CustomerAccount', {
             defaultValue: 0
         }, {
             name: 'lastOrderDate',
-            type: 'date'
+            type: 'date',
+            dateFormat: 'c'
         }, {
             name: 'createDate',
-            type: 'date'
+            type: 'date',
+            dateFormat: 'c'
         }, {
             name: 'taxExempt',
             type: 'boolean',

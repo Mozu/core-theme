@@ -99,7 +99,8 @@ Ext.define('Taco.model.Product', {
         {
             name: "lastModifiedDate",
             type: "date",
-            useNull: true
+            useNull: true,
+            dateFormat: 'c'
         },
         {
             name: "lastPublishedBy",
@@ -109,7 +110,8 @@ Ext.define('Taco.model.Product', {
         {
             "name": "lastPublishedDate",
             "type": "date",
-            "useNull": true
+            "useNull": true,
+            dateFormat: 'c'
         },
         {
             name: "lastModifiedByUser",
@@ -138,7 +140,8 @@ Ext.define('Taco.model.Product', {
         {
             "name": "createDate",
             "type": "date",
-            "useNull": true
+            "useNull": true,
+            dateFormat: 'c'
         },
         {
             "name": "isBackOrderAllowed",
@@ -312,15 +315,14 @@ Ext.define('Taco.model.Product', {
         {
             name: "mapStartDate",
             type: "date",
-            dateWriteFormat: "c",
             useNull: true,
+            dateFormat: 'c'
         },
         {
             name: "mapEndDate",
             type: "date",
-            dateWriteFormat: "c",
             useNull: true,
-            
+            dateFormat: 'c'
         },
         {
             name: "mfgPartNumber",
@@ -368,13 +370,14 @@ Ext.define('Taco.model.Product', {
         {
             name: "discountsRestrictedStartDate",
             type: "date",
-            useNull: true
+            useNull: true,
+            dateFormat: 'c'
         },
         {
             name: "discountsRestrictedEndDate",
             type: "date",
-            dateWriteFormat: "c",
-            useNull: true
+            useNull: true,
+            dateFormat: 'c'
         },
 
 
