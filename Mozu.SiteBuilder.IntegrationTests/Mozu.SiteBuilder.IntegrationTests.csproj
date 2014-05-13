@@ -447,6 +447,7 @@
     </Content>
     <None Include="Diagrams\CommerceRuntime\Orders\cdOrderServicePayments.cd" />
     <None Include="Diagrams\CommerceRuntime\Orders\cdOrderService.cd" />
+    <None Include="Diagrams\ProductAdmin\cdProductType.cd" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
