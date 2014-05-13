@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
@@ -24,37 +25,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _webToolsRepository = webToolsRepository;
         }
 
-		[HttpPostRoute(UriTemplate = "webmasterTools")]
-        public async Task<Response<string>> UpdateWebmasterTools()
+        public class WmtReq 
         {
-            if (!Request.Content.IsMimeMultipartContent())
-                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            public string Content { get; set; }
+            public string Name { get; set; }
+        }
 
-            Task<Response<string>> result;
-            try
-            {
-                var provider = await Request.Content.ReadAsMultipartAsync(new MultipartFormDataStreamProvider(Path.GetTempPath()));
+		[HttpPostRoute(UriTemplate = "webmasterTools")]
+        public async Task<Response<string>> UpdateWebmasterTools(WmtReq req)
+		{
 
-                var file = provider.FileData.First();
-                var fileName = file.Headers.ContentDisposition.FileName.Replace("\"", "");
-                await _webToolsRepository.SaveWebmasterToolsFile(file.LocalFileName, fileName);
+
+		    await _webToolsRepository.SaveWebmasterToolsFile(req.Content, req.Name);
 
                 return Message3<string>(true, "File uploaded");
-            }
-            catch (Exception ex)
-            {
-                result = Message<string>(false, ex.Message);
-            }
+            
 
-            return await result;
+         
         }
 
 		[HttpPostRoute(UriTemplate = "robotsTxt")]
-        public async Task<Response<RobotsTxtSettings>> UpdateRobotsTxt(RobotsTxtSettings settings)
+        public async Task<HttpResponseMessage> UpdateRobotsTxt(RobotsTxtSettings robots)
         {
-            await _webToolsRepository.SaveRobotsContent(settings);
+            
+            await _webToolsRepository.SaveRobotsContent(robots);
 
-            return Single2(settings);
+		    return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }
