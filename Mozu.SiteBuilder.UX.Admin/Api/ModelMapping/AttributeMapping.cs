@@ -91,6 +91,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.AllowMulti, opt => opt.ResolveUsing(dc => dc.IsMultiValueProperty))
                 .ForMember(x => x.IsHidden, opt => opt.ResolveUsing(dc => dc.IsHiddenProperty))
                 .ForMember(x => x.IsLocked, opt => opt.ResolveUsing(dc => dc.IsInheritedFromBaseType))
+                .ForMember(x => x.Order, opt => opt.ResolveUsing(dc => dc.Order ))
+
                 .ForMember(x => x.AllValues, opt => opt.ResolveUsing(dc => (dc.AttributeDetail != null) ? dc.AttributeDetail.VocabularyValues : null))
                 .ForMember(x => x.SelectedValues, opt => opt.ResolveUsing(dc => MapVocabularyValueInProductTypeListToSelectedValues(dc.VocabularyValues, dc.AttributeFQN)))
                 .ForMember(x => x.DataType, opt => opt.ResolveUsing(dc => (dc.AttributeDetail != null) ? dc.AttributeDetail.DataType : null))
@@ -116,6 +118,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     InputType = x.InputType
                 }))
                 .ForMember(dc => dc.IsHiddenProperty, opt => opt.ResolveUsing(x => x.IsHidden))
+                 .ForMember(x => x.Order, opt => opt.ResolveUsing(dc => dc.Order))
                 .ForMember(dc => dc.IsInheritedFromBaseType, opt => opt.ResolveUsing(x => x.IsLocked))
                 .ForMember(dc => dc.IsRequiredByAdmin, opt => opt.ResolveUsing(x => x.IsRequired))
                 .ForMember(dc => dc.IsMultiValueProperty  , opt => opt.ResolveUsing(x => x.AllowMulti))

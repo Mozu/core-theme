@@ -74,32 +74,61 @@
 
     buildAttribute: function (ptAttribute) {
         var attributeView, items;
-
+        //var value = ;
+       // console.log("xxx",value);
         attributeView = Ext.create('Ext.panel.Panel', {
             //strip out the spaces from the name so it will be a valid itemId tfs-17235
             attributeFQN: Ext.String.createVarName(ptAttribute.get('attributeFQN')),
             ui: 'subform-subform',
             cls: Taco.baseCSSPrefix + 'attribute-item',
             margin: '0 0 10',
-            title: ptAttribute.get('attributeName'),
-            tools: [{
-                type: 'delete',
-                hidden: ptAttribute.get('isLocked'),
-                scope: this,
-                handler: function () {
-                    console.log('delete');
-                    this.removeAttribute(ptAttribute, attributeView);
+            header:false,
+           
+            dockedItems: [{
+                xtype: 'toolbar',
+                dock: 'top',
+                items: [{
+                    xtype: 'numberfield',
+                    margin: '0 10 0 0',
+                    hideTrigger: true,
+                    name:'order',
+                    width: 60,
+                    //value: ptAttribute.get('order'),
+                    value: ptAttribute.get('order'),
+                    listeners: {
+                        change: function (cmp,value) {
+                            ptAttribute.set('order', value);
+                        }
+                    }
+                }, {
+                    xtype: 'component',
+                    html: '<b>' + ptAttribute.get('attributeName') + "</b>"
+                },
+                
+                 { xtype: 'tbfill' },
+                {
+                    xtype: 'tool',
+                    type: 'delete',
+                    hidden: ptAttribute.get('isLocked'),
+                    scope: this,
+                    handler: function () {
+                        console.log('delete');
+                        this.removeAttribute(ptAttribute, attributeView);
+                    }
+                }, {
+                    xtype: 'tool',
+                    type: 'edit',
+                    hidden: ptAttribute.get('isLocked'),
+                    scope: this,
+                    handler: function () {
+                        console.log('edit');
+                        this.edit(ptAttribute);
+                    }
                 }
-            }, {
-                type: 'edit',
-                hidden: ptAttribute.get('isLocked'),
-                scope: this,
-                handler: function () {
-                    console.log('edit');
-                    this.edit(ptAttribute);
-                }
+                ]
             }],
-            items: [{
+            items: [
+           {
                 xtype: 'component',
                 itemId: 'placeholder',
                 data: ptAttribute.data,
@@ -118,7 +147,7 @@
         
         return attributeView;
     },
-
+   
     create: function () {
         this.down('[itemId=add]').disable();
         this.editor.record = Ext.create('Taco.model.ProductTypeAttribute', {
