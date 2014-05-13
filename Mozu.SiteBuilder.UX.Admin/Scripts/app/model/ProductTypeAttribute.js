@@ -16,7 +16,9 @@ Ext.define('Taco.model.ProductTypeAttribute', {
         { name: 'selectedValues', type: 'auto', defaultValue: [] },
         { name: 'dataType', type: 'string' },
         { name: 'inputType', type: 'string' },
-        { name: 'attributeMetadata', type: 'auto', persist: false, defaultValue: [] }
+        { name: 'attributeMetadata', type: 'auto', persist: false, defaultValue: [] },
+        { name: 'order', type: 'int' }
+        
     ],
     getAttributeMetaDataValue:function (key) {
         var val;

@@ -31,5 +31,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
 
 
         public List<AttributeMetadataItem> AttributeMetadata { get; set; }
+
+        public int Order { get; set; }
     }
 }       
