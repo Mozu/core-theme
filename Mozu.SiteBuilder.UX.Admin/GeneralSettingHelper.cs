@@ -100,8 +100,8 @@ namespace Mozu.SiteBuilder.UX.Admin
             var settings = Mapper.Map<DC.GeneralSettings>(settingsToSave);
             settings.Theme = dcGeneralSettings.Theme;
             settings.MobileTheme = dcGeneralSettings.MobileTheme;
-
-
+            settings.TaxableTerritories = dcGeneralSettings.TaxableTerritories;
+            settings.TabletTheme = dcGeneralSettings.TabletTheme;
             var updateGeneralSettings = _generalSettingsWebApiClient.UpdateGeneralSettings(settings).Result.ReadAsAsync();
 
             return Mapper.Map<GeneralSettings>(updateGeneralSettings.Result);
@@ -111,10 +111,16 @@ namespace Mozu.SiteBuilder.UX.Admin
 
         public GeneralSettings UpdateThemeCore(GeneralSettings settingsToSave)
         {
+            var existing = _generalSettingsWebApiClient.GetGeneralSettings().Result.ReadAsSync();
 
+           
             var settings = Mapper.Map<DC.GeneralSettings>(settingsToSave);
 
-            var updateGeneralSettings = _generalSettingsWebApiClient.UpdateGeneralSettings(settings).Result.ReadAsAsync();
+            existing.Theme = settings.Theme;
+            existing.MobileTheme = settings.MobileTheme;
+            existing.TabletTheme = settings.TabletTheme;
+
+            var updateGeneralSettings = _generalSettingsWebApiClient.UpdateGeneralSettings(existing).Result.ReadAsAsync();
 
             return Mapper.Map<GeneralSettings>(updateGeneralSettings.Result);
         }
