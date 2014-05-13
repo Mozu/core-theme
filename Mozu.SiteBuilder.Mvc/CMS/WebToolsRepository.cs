@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Mozu.Content.Contracts;
 using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.UX.Models.Settings;
 
@@ -18,7 +19,7 @@ Disallow: /admin/";
 
         public const string ContentCollection = "settings";
 
-        private readonly IDocumentListWebApiClient _documentWebApiClient;
+        private IDocumentListWebApiClient _documentWebApiClient;
         private readonly ICmsServiceWrapper _cmsServiceWrapper;
 
         public WebToolsRepository(IDocumentListWebApiClient documentWebApiClient, ICmsServiceWrapper cmsServiceWrapper)
@@ -27,22 +28,21 @@ Disallow: /admin/";
             _cmsServiceWrapper = cmsServiceWrapper;
         }
 
-        public async Task<bool> SaveWebmasterToolsFile(string localFileName, string fileName)
+        public async Task<bool> SaveWebmasterToolsFile(string content, string fileName)
         {
 
             var documentId = await GetOrCreateDocumentId(fileName, "text/html").ConfigureAwait(false);
-         
-            using (var stream = File.OpenRead(localFileName))
+
+            var ms = new System.IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(content));
+            var result = await _documentWebApiClient.UpdateDocumentContent(ContentCollection, documentId, ms).ConfigureAwait(false);
+            if (result.HasException)
             {
-                var result = await _documentWebApiClient.UpdateDocumentContent(ContentCollection, documentId, stream).ConfigureAwait(false);
-                if (result.HasException)
-                {
-                    throw result.ReadException();
-                }
-                return true;
+                throw result.ReadException();
             }
-        
-           
+            return true;
+
+
+
 
         }
 
@@ -92,13 +92,14 @@ Disallow: /admin/";
         {
             //var documentId = await GetOrCreateDocumentId(fileName, "text/html");
 
-            return _documentWebApiClient.GetTreeDocumentContent(ContentCollection, fileName);
+            return _documentWebApiClient.CloneWithoutUserClaims().GetTreeDocumentContent(ContentCollection, fileName);
 
 
         }
 
         public async Task<bool> SaveRobotsContent(RobotsTxtSettings settings)
         {
+           
             var documentId = await GetOrCreateDocumentId("robots.txt", "text/plain").ConfigureAwait(false);
             var content = Encoding.ASCII.GetBytes(settings.Content);
             var stream = new MemoryStream(content);
@@ -116,11 +117,11 @@ Disallow: /admin/";
         public async Task<string> GetRobotsContent()
         {
             //var documentId = await GetOrCreateDocumentId("robots.txt", "text/plain").ConfigureAwait(false);
-            var result = await _documentWebApiClient.GetTreeDocumentContent(ContentCollection, "robots.txt").ConfigureAwait(false);
+            var result = await _documentWebApiClient.CloneWithoutUserClaims().GetTreeDocumentContent(ContentCollection, "robots.txt").ConfigureAwait(false);
 
             if (result.HasException || !result.ResponseMessage.IsSuccessStatusCode)
                 return DefaultRobotsTxt;
-
+           
             var stream = result.ResponseMessage.Content.ReadAsStreamAsync().Result;
 
             var reader = new StreamReader(stream);

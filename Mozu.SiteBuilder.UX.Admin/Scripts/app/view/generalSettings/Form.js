@@ -43,7 +43,7 @@ Ext.define('Taco.view.generalsettings.Form', {
             Ext.create('Taco.view.generalSettings.subform.Notifications', subFormConfig),
             Ext.create('Taco.view.generalSettings.subform.Analytics', subFormConfig),
             Ext.create('Taco.view.generalSettings.subform.AddressValidation', subFormConfig),
-        //    Ext.create('Taco.view.generalSettings.subform.Robots', subFormConfig),
+            Ext.create('Taco.view.generalSettings.subform.Robots', subFormConfig),
             Ext.create('Taco.view.generalSettings.subform.Tools', subFormConfig)
         ];
 

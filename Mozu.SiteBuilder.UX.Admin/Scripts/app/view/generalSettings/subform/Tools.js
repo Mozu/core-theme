@@ -6,9 +6,10 @@
  */
 
 Ext.define('Taco.view.generalSettings.subform.Tools', {
-    //extend: 'Taco.view.product.subform.Subform',
+    //extend: 'Taco.view.product.subform.Subform',.
+    requires: ['Taco.core.ux.form.FileInputButton'],
     extend: 'Taco.core.ux.form.Form',
-    requires: [],
+   
     title: 'Tools',
     margin: "0 0 20 0",
     ui: "subform",
@@ -35,7 +36,7 @@ Ext.define('Taco.view.generalSettings.subform.Tools', {
                             
                     },
                     {
-                        xtype: "filefield",
+                        xtype: "tacofilefield",
                         buttonOnly: true,
                         buttonConfig: {
                             ui: 'action',
@@ -45,14 +46,14 @@ Ext.define('Taco.view.generalSettings.subform.Tools', {
                         width: 300,
                         name: "gwtFile",
                         validate: function () { return true; },
-                        isValid:function() { return true; },
+                        isValid: function () { return true; },
                         labelAlign: "top",
                         allowBlank: false,
                         listeners: {
-                            change: {
-                                fn: function() {
-                                    this.onFileUpload();
-                                },
+
+                            filechange: {
+                                fn: me.onFileUpload,
+
                                 scope: me
                             }
                         }
@@ -63,29 +64,42 @@ Ext.define('Taco.view.generalSettings.subform.Tools', {
 
         this.callParent(arguments);
     },
-    
-    onFileUpload: function () {
-        var me = this;
-        var form = me.getForm();
-        if (form.isValid()) {
-            form.submit(
-                {
+    onFileUpload: function (fileList, e, callback) {
+        var me = this,
+            files = [];
+        me.setLoading(true);
+        Ext.each(fileList, function (file) { files.push(file); });
+
+        Ext.each(files, function (file) {
+            var reader;
+
+            reader = new FileReader();
+
+
+            reader.onload = function (e) {
+
+
+                Ext.Ajax.request({
                     url: "/admin/app/webtools/webmasterTools",
-                    headers: [
-                        { "Accept": "application/json" }
-                    ],
-                    waitMsg: "Uploading your file...",
-                    success: function (form, action) {
-                        console.log("form/action", form, action);
+                    method: 'post',
+                    jsonData: { content: e.target.result, name: file.name },
+                    success: function () {
+                        me.setLoading(false);
                     },
-                    failure: function (field, operation) {
-                        var json = Ext.decode(operation.response.responseText, true),
+                    failure: function (resp) {
+                        me.setLoading(false);
+                        var json = Ext.decode(resp.responseText, true),
                             msg = (json && json.message) ? json.message : "Error uploading file";
-                            
+
                         Taco.app.fireEvent('setmessage', msg, 'error');
                     }
-                }
-            );
-        }
+                });
+
+
+            };
+            reader.readAsText(file);
+        });
+
     }
+
 });
