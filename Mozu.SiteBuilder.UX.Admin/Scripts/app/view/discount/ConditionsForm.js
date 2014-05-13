@@ -128,6 +128,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
         this.oneTimeUsePerShopper = Ext.create('Ext.form.field.Checkbox', {
             name: 'oneTimeUsePerShopper',
+            hidden: true,
             boxLabel: 'One Time Use per Shopper',
             checked: this.record.get('maximumUsesPerUser') === 1,
             listeners: {
