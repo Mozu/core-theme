@@ -445,6 +445,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Diagrams\CommerceRuntime\Orders\cdOrderServicePayments.cd" />
+    <None Include="Diagrams\CommerceRuntime\Orders\cdOrderService.cd" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
