@@ -20,6 +20,7 @@ using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
@@ -310,8 +311,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var requestUrl = this.Request.RequestUri.AbsolutePath;
             var cleanedRequestUrl = _slugNormalizer.StripUrl(requestUrl);
             var cleanedUrl = _slugNormalizer.StripUrl(url);
-            
-            if (!this.SiteContext.IsEditMode && !string.Equals(cleanedRequestUrl, cleanedUrl, StringComparison.OrdinalIgnoreCase))
+
+
+
+            if (!this.SiteContext.IsEditMode && !string.Equals(cleanedRequestUrl, cleanedUrl, StringComparison.OrdinalIgnoreCase) && !SeoDelegatingHandler.IsSeoRewrite(this.Request))
             {
                 msg = this.Request.CreateResponse(HttpStatusCode.MovedPermanently);
                 if (!string.IsNullOrEmpty(this.Request.RequestUri.Query))

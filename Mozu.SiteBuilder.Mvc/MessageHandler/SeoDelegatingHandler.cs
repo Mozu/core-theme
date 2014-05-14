@@ -22,6 +22,11 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 {
     public class SeoDelegatingHandler : DelegatingHandler
     {
+        public static bool IsSeoRewrite(HttpRequestMessage msg)
+        {
+             object isRedirectFlag;
+            return  msg.Properties.TryGetValue("isSeoRewrite", out isRedirectFlag) && (bool) isRedirectFlag ;
+        }
         protected async override Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request,
             CancellationToken cancellationToken)
@@ -47,6 +52,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 
                     var req = new HttpRequestMessage(HttpMethod.Get, ub.Uri);
                     //magic strings taken from decompiled source :(
+                    
                     var httpContextBase = (HttpContextBase)request.Properties["MS_HttpContext"];
                     var myHttpContext = new MyHttpContextBase(httpContextBase, url);
 
@@ -60,6 +66,10 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                     {
                         request.Properties[HttpPropertyKeys.HttpRouteDataKey] = routeData;
                     }
+                    request.Properties["isSeoRewrite"] = true;
+                    var rctx = request.GetRequestContext();
+                    rctx.RouteData = routeData;
+                     
                 }
                 else
                 {
