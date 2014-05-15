@@ -118,6 +118,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
 
         this.amountInput = Ext.create('Taco.core.ux.form.UnitField', {
             name: 'amount',
+            fieldLabel: 'Amount',
             minValue: 0,
             width: 150,
             forcePrecision:(this.record.get('amountType') === 'Amount'),
@@ -125,7 +126,8 @@ Ext.define('Taco.view.discount.GeneralForm', {
             unitAtEnd: this.record.get('amountType') === 'Percentage' ? true : false,
             unitString: (this.record.get('amountType') === 'Percentage') ? '%' : '$',
             hideTrigger: true,
-            disabled: (this.record.get('amountType') === 'Free') ? true : false
+            disabled: (this.record.get('amountType') === 'Free') ? true : false,
+            labelStyle: 'visibility: hidden'
         });
 
         this.items = [
