@@ -412,7 +412,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             rightJustifyButtons: true,
             // reverses the order of the buttons
             reverseOrder: true,
-            msg: 'Are you sure you want to rollback this ' + actionSimpleName + ' transacion?',
+            msg: 'Are you sure you want to rollback this ' + actionSimpleName + ' transaction?',
             closable:false,
             buttons: Ext.Msg.OKCANCEL,
             fn: function (rec) {
