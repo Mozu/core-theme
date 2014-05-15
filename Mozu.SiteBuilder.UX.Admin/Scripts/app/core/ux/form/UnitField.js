@@ -60,7 +60,7 @@ Ext.define('Taco.core.ux.form.UnitField', {
         num = me.parseValue(value);
 
         if (me.minValue === 0 && num < 0) {
-            errors.push(this.negativeText);
+            Ext.Array.include(errors, this.negativeText);
         }
         else if (num < me.minValue) {
             errors.push(format(me.minText, me.minValue));
