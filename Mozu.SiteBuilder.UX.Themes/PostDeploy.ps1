@@ -60,13 +60,6 @@ function update-themes-path($configFile, $propertyToEdit, $newValue)
 }
 
 
-if(get-web-vdir "themes")
-{ Write-host "Themes directory is already in place" 
-}
-else{ 
-    CreateVirtualDir "Themes" "D:\mozu\Sites\SiteBuilder\themes" "SiteBuilder"
-}
-
 $appPath = get-mozu-AppPoolPath Admin
 $adminPath = "$appPath\web.config"
 if($adminPath)
