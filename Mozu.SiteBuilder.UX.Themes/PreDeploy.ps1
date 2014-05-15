@@ -64,6 +64,12 @@ if(get-web-vdir "themes")
 { Write-host "Themes directory is already in place" 
 }
 else{ 
-    CreateVirtualDir "Themes" "D:\mozu\Sites\SiteBuilder\themes" "SiteBuilder"
+	if(test-path "D:\mozu\Sites\SiteBuilder\themes")
+    {CreateVirtualDir "Themes" "D:\mozu\Sites\SiteBuilder\themes" "SiteBuilder"}
+	else
+	{
+		md "D:\mozu\Sites\SiteBuilder\themes"
+		CreateVirtualDir "Themes" "D:\mozu\Sites\SiteBuilder\themes" "SiteBuilder"
+	}
 }
 
