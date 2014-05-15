@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             var productWebApiClient = NSubstitute.Substitute.For<DCprod.Clients.IProductWebApiClient>();
             var locationAdminWebApiClient = NSubstitute.Substitute.For<DCloc.Clients.ILocationAdminWebApiClient>();
 
-            var locationInventoryResult = new DCprod.LocationInventoryCollection() {
+            var locationInventoryCollection = new DCprod.LocationInventoryCollection() {
                 Items = (
                     from l in locations
                     select new DCprod.LocationInventory {
@@ -47,13 +47,12 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
                         StockAvailable = 100
                     }
                 ).ToList()
-            }.AsServiceClientResponseAsync();
-            productWebApiClient.GetLocationInventories(product_code).Returns(locationInventoryResult);
+            };
+            productWebApiClient.GetLocationInventories(product_code).Returns(locationInventoryCollection.AsServiceClientResponseAsync());
 
             foreach (var loc in locations)
             {
-                var locAsResult = loc.AsServiceClientResponseAsync();
-                locationAdminWebApiClient.GetLocation(loc.Code).Returns(locAsResult);
+                locationAdminWebApiClient.GetLocation(loc.Code).Returns(loc.AsServiceClientResponseAsync());
             }
 
             return new LocationInventoryController(locationInventoryClient, productWebApiClient, locationAdminWebApiClient);
