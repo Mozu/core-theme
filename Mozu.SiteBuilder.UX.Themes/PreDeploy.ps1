@@ -29,20 +29,21 @@ function CreateVirtualDir(
 	[string] $virtualDirPhysicalPath,
     [string] $siteName)
 {
-    New-WebVirtualDirectory -name $virtualDir -PhysicalPath $virtualDirPhysicalPath -Site $sitename
+    New-WebVirtualDirectory -name $virtualDir -PhysicalPath $virtualDirPhysicalPath -Site $sitename -Force 
 }
 
 $result = get-web-vdir "themes"
-if($result[0])
-{ Write-host "Themes directory is already in place" 
-}
-else{ 
-	if(test-path "D:\mozu\Sites\SiteBuilder\themes")
-    {CreateVirtualDir "Themes" "D:\mozu\Sites\SiteBuilder\themes" "SiteBuilder"}
-	else
-	{
-		md "D:\mozu\Sites\SiteBuilder\themes"
-		CreateVirtualDir "Themes" "D:\mozu\Sites\SiteBuilder\themes" "SiteBuilder"
+	if($result[0] -eq $true)
+	{ 
+		Write-host "Themes directory is already in place" 
 	}
-}
+	else{ 
+		if(test-path "D:\mozu\Sites\SiteBuilder\themes")
+		{CreateVirtualDir "Themes" "D:\mozu\Sites\SiteBuilder\themes" "SiteBuilder"}
+		else
+		{
+			md "D:\mozu\Sites\SiteBuilder\themes"
+			CreateVirtualDir "Themes" "D:\mozu\Sites\SiteBuilder\themes" "SiteBuilder"
+		}
+	}
 
