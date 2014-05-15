@@ -29,7 +29,7 @@ function CreateVirtualDir(
 	[string] $virtualDirPhysicalPath,
     [string] $siteName)
 {
-    New-WebVirtualDirectory -name $virtualDir -PhysicalPath $virtualDirPhysicalPath $sitename
+    New-WebVirtualDirectory -name $virtualDir -PhysicalPath $virtualDirPhysicalPath -Site $sitename
 }
 
 Function get-mozu-AppPoolPath($appPool)
