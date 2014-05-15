@@ -56,7 +56,7 @@ Ext.define('Taco.view.customers.Segments.Index', {
                 
             }, {
                 dataIndex: 'name',
-                text: 'name',
+                text: 'Name',
                
                 editor: {
                     // defaults to textfield if no xtype is supplied
@@ -68,7 +68,7 @@ Ext.define('Taco.view.customers.Segments.Index', {
                 width: 200
             }, {
                 dataIndex: 'description',
-                text: 'description',
+                text: 'Description',
                 flex:1,
                 editor: {
                     // defaults to textfield if no xtype is supplied
