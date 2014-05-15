@@ -342,21 +342,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
          {
 
              var task = _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccounts(filter: "UserId eq " + u);
-             string email = await task.ContinueWith<string>(x =>
+             string userName = await task.ContinueWith<string>(x =>
              {
                  var res = x.Result;
                  if (res.ResponseMessage.IsSuccessStatusCode)
                  {
                      var account = res.ReadAsSync().Items.FirstOrDefault();
                      if (account != null)
-                         return account.EmailAddress;
+                         return account.UserName ;
                  }
                  return null;
              });
 
              var model = new ResetPasswordConfirmDetails()
              {
-                 username = email,
+                 username = userName,
                  validationToken = t,
              };
              return View("Reset-Password", model);
