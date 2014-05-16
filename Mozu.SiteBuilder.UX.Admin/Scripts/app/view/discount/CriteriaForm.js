@@ -72,9 +72,12 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             items: [
                 this.categoryList,
                 {
-                    xtype: 'secondarybutton',
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
                     text: 'Add',
-                    click: function () {
+                    margin: '0 0 0 10',
+                    handler: function () {
                         this.launchCategoryModal(this.categoryList);
                     },
                     scope: this
@@ -83,7 +86,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         });
 
 
-        this.exclueCategoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
+        this.excludeCategoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'excludedCategories',
             flex: 1,
             store: catStore,
@@ -100,18 +103,21 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             fieldLabel: 'Excluded Categories'
         });
 
-        this.exclueCategoriesBox = Ext.create('Ext.container.Container', {
+        this.excludeCategoriesBox = Ext.create('Ext.container.Container', {
             layout: {
                 type: 'hbox',
                 align: 'bottom'
             },
             items: [
-                this.exclueCategoryList,
+                this.excludeCategoryList,
                 {
-                    xtype: 'secondarybutton',
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
                     text: 'Add',
-                    click: function () {
-                        this.launchCategoryModal(this.exclueCategoryList);
+                    margin: '0 0 0 10',
+                    handlerf: function () {
+                        this.launchCategoryModal(this.excludeCategoryList);
                     },
                     scope: this
                 }
@@ -154,9 +160,12 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             items: [
                 this.productList,
                 {
-                    xtype: 'secondarybutton',
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
                     text: 'Add',
-                    click: function () { this.launchProductModal(this.productList); },
+                    margin: '0 0 0 10',
+                    handler: function () { this.launchProductModal(this.productList); },
                     scope: this
                 }
             ]
@@ -188,9 +197,12 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             items: [
                 this.productExcludeList,
                 {
-                    xtype: 'secondarybutton',
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
                     text: 'Add',
-                    click: function () { this.launchProductModal(this.productExcludeList); },
+                    margin: '0 0 0 10',
+                    handler: function () { this.launchProductModal(this.productExcludeList); },
                     scope: this
                 }
             ]
@@ -214,7 +226,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 },
                 this.categoriesBox,
                 this.productsBox,
-                this.exclueCategoriesBox,
+                this.excludeCategoriesBox,
                 this.productsExcludeBox
             ]
         });
@@ -347,7 +359,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             this.includeAllProductsInput.setValue(false);
             this.categoryList.setValue('');
             this.productList.setValue('');
-            this.exclueCategoryList.setValue('');
+            this.excludeCategoryList.setValue('');
             this.productExcludeList.setValue('');
         }
     },
