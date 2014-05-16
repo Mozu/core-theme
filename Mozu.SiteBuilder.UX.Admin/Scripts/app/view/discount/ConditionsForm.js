@@ -91,9 +91,12 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             items: [
                 this.couponCodeInput,
                 {
-                    xtype: 'secondarybutton',
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
                     text: 'Random',
-                    click: function () {
+                    margin: '0 0 0 10',
+                    handler: function () {
                         var randomizer = Ext.data.IdGenerator.get('uuid'),
                             code = randomizer.generate().replace(/[^0-9a-z]/g, "").substr(0, 8).toUpperCase();
 
@@ -198,9 +201,12 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             items: [
                 this.productList,
                 {
-                    xtype: 'secondarybutton',
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
                     text: 'Add',
-                    click: function () { this.launchProductModal(this.productList); },
+                    margin: '0 0 0 10',
+                    handler: function () { this.launchProductModal(this.productList); },
                     scope: this
                 }
             ]
@@ -236,9 +242,12 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             width: 600,
             items: [
                 this.segmentsList, {
-                    xtype: 'secondarybutton',
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
                     text: 'Add',
-                    click: function() { this.launchSegmentModal(this.segmentsList);},
+                    margin: '0 0 0 10',
+                    handler: function() { this.launchSegmentModal(this.segmentsList);},
                     scope: this
                 }
             ]
@@ -283,9 +292,12 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             items: [
                 this.categoryList,
                 {
-                    xtype: 'secondarybutton',
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
                     text: 'Add',
-                    click: function () {
+                    margin: '0 0 0 10',
+                    handler: function () {
                         this.launchCategoryModal(this.categoryList);
                     },
                     scope: this
