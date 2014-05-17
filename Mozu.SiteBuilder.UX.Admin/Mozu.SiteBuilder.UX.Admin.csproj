@@ -1916,8 +1916,8 @@
     <Content Include="Tests\Chalupa\Core.js" />
     <Content Include="Tests\indexProduct.html" />
     <Content Include="Tests\index-no-ui.html" />
-    <Content Include="Tests\integration\attributes\attribute-create.t.js" />
-    <Content Include="Tests\integration\product-basic-edit-save.js" />
+    <Content Include="Tests\integration\attribute\attribute-create.t.js" />
+    <Content Include="Tests\integration\product\product-basic-edit-save.js" />
     <Content Include="Tests\index.html" />
     <Content Include="Tests\mocha\basic\basic-mocha-bdd-test.js" />
     <Content Include="Tests\mocha\requireJs\config.js">
@@ -1948,14 +1948,9 @@
     </Content>
     <Content Include="Tests\speed-test.t.js" />
     <Content Include="Tests\unit\app-state-matches-uri.t.js" />
-    <Content Include="Tests\unit\scrolling-content-body-adds-scroll-class.js" />
-    <Content Include="Tests\unit\enabling-robots-txt-override-enabled-robots-field.js" />
-    <Content Include="Tests\unit\disabling-google-analytics-disables-ua-field.js" />
     <Content Include="Tests\unit\form\model-binds.t.js" />
-    <Content Include="Tests\unit\grid-action-buttons.js" />
-    <Content Include="Tests\unit\roles\edit-form.t.js" />
+    <Content Include="Tests\unit\grid\grid-action-buttons.js" />
     <Content Include="Tests\unit\tab\picker.t.js" />
-    <Content Include="Tests\unit\treelist-row-is-draggable.t.js" />
     <Content Include="Views\Home\Index_Compiled.cshtml">
       <SubType>Code</SubType>
     </Content>

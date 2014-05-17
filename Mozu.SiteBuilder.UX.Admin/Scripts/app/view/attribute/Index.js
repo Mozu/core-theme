@@ -4,7 +4,7 @@
 
 Ext.define('Taco.view.attribute.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
-  
+    alias: "widget.taco-attribute-index",
     requires: ['Taco.model.Attribute', 'Taco.store.Attributes', 'Taco.view.attribute.Edit'],
 
   
@@ -26,6 +26,7 @@ Ext.define('Taco.view.attribute.Index', {
         me.header = {
             actions: [{
                 xtype: 'primarybutton',
+                itemId:'createbutton',
                 text: 'Create New Attribute',
                 click: function () {
                     Taco.core.StateManager.attemptNavigate('attributes/create');
