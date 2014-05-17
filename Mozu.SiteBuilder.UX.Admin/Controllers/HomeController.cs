@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             {
                 _logger.Error("error loading admin", ex);
                 var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
-                redir.Headers.Location = new System.Uri("/admin/auth/logout", UriKind.Relative);
+                redir.Headers.Location = new System.Uri("/admin/auth/launchpad", UriKind.Relative);
                 return redir;
             }
         }

@@ -9,53 +9,17 @@ Ext.define('Chalupa.Core', {
     },
     applyHelpers: function (test) {
         Ext.override(test, {
-            waitForRender: function (cmp, afterRender) {
-                test.waitFor(function () {return cmp.rendered;}, afterRender);
-            },
-            loadIndex: function (controllerName, callback, scope, componentQuery) {
-                var fn, controller;
-
-                test.diag('Loading Index from Controller: ' + controllerName);
-
-                scope = scope || test;
-
-                controller = Taco.app.controllers.get(controllerName);
-
-                test.ok(controller, controllerName + ' Controller is loaded');
-
-                controller.index();
-
-                if (typeof componentQuery === 'function') {
-                    fn = componentQuery;
-                } else if (typeof componentQuery === 'string') {
-                    fn = function () {
-                        var results = Ext.ComponentQuery.query(componentQuery);
-
-                        if (results.length !== 1) {
-                            return false;
-                        }
-                        
-                        test.indexCmp = results[0];
-
-                        if (!test.indexCmp.rendered) {
-                            return false;
-                        }
-
-                        return true;
-                    }
-                } else {
-                    fn = function () {
-                        var cmp = Taco.app.contentView.items.first();
-
-                        test.indexCmp = cmp;
-
-                        return (cmp && cmp.rendered);
+           
+            randomStringSuffix: function (seed, existing, depth) {
+                depth = depth || 100;
+                while (true) {
+                    var ret = seed + Math.floor((Math.random() * depth) + 1);
+                    if (ret != existing) {
+                        return ret;
                     }
                 }
-
-                test.waitFor(fn, callback, scope);
+                return ret;
             },
-
             setContext: function (cfg, navigate) {
                 var temp;
                 test.diag('Loading Conext: ' + (cfg.$className || cfg));
@@ -78,83 +42,96 @@ Ext.define('Chalupa.Core', {
                 Taco.app.context.setCurrentContext(cfg, navigate);
             },
 
-            clickSelect: function (cmp, text, callback) {
+            clickSelect: function (cmp, value, next) {
                 if (!cmp) {
                     return;
                 }
+                cmp.focus();
                 test.click(cmp.getEl(), function () {
-                    var nodes = cmp.getPicker().getNodes();
-
-                    Ext.each(nodes, function (node) {
-                        var el = Ext.fly(node);
-                        if (el.getHTML() === text) {
-                            test.click(el, callback);
-                            return false;
-                        }
-                    })
-                    
-                });
-            },
-
-            setFormValues: function (form, map, callback, timeout, interval) {
-                var fieldsToSet = [],
-                    intervals = {};
-
-                timeout = timeout || 10000;
-                interval = interval || 10;
-                callback = callback || Ext.emptyFn;
-
-                Ext.iterate(map, function (key, value) {
-                    var fnComplete = function () {
-                        var field = form.findField(key);
-                        clearInterval(intervals[key]);
-                        Ext.Array.remove(fieldsToSet, key);
-
-                        test.ok(field, 'Found field: "' + key + '", setting value: "' + value + '"');
-                        field.setValue(value);
-
-                        
-                        // Get out if there are still fields to set
-                        if (fieldsToSet.length) {
-                            return;
-                        }
-
-                        callback();
-
-                        // if (field.getValue() === value) {
-                        //     callback();
-                        //     return;
-                        // }
-
-                        // test.waitFor(function () {
-                        //     return field.getValue() === value;
-                        // }, callback);
-                    };
-                    
-                    fieldsToSet.push(key);
-
-                    intervals[key] = setInterval(function () {
-                        if (form.findField(key)) {
-                            fnComplete();
-                        }
-                    }, interval);
-                });
-
-                setTimeout(function () {
-                    if (fieldsToSet.length === 0) {
+                    var nodes = cmp.getPicker().getNodes(),
+                        idx = cmp.store.findBy(function (rec) { return rec.get(cmp.valueField) == value; }),
+                        node;
+                    if (idx > -1) {
+                        test.click(nodes[idx], next);
                         return;
                     }
 
-                    Ext.iterate(intervals, function (key, interval) {
-                        clearInterval(interval);
+
+                    Ext.each(nodes, function (node) {
+                        var el = Ext.fly(node);
+                        if (el.getHTML() === value) {
+                            test.click(el, next);
+                            return false;
+                        }
                     });
 
-                    Ext.each(fieldsToSet, function (field) {
-                        test.fail('Timed out finding field: "' + field + '"', 'setFormValues');
-                    });
+                });
+            },
+            validateFormValues: function (form, map) {
+                Ext.iterate(map, function (key, value) {
+                    //  var fnComplete = function () {
+                    var field = form.findField(key);
+                    test.is(field.getValue(), value, ' field: "' + key + '" not set propertly');
 
-                    callback();
-                }, timeout);
+
+                });
+            },
+
+            setFormValues: function (form, map, next ) {
+                var t = this,
+                    steps = [];
+
+
+                Ext.iterate(map, function (key, value) {
+                    //  var fnComplete = function () {
+                    var field = form.findField(key);
+
+                 
+
+                    test.ok(field, 'Found field: "' + key + '", setting value: "' + value + '"');
+
+                    
+                    if (field.getPicker) {
+                        steps.push(
+                            function (n) {
+                                t.clickSelect(field, value, n);
+                            });
+
+                    } else {
+                        steps.push(
+                            function (n) {
+                                field.focus();
+                                t.selectText(field);
+                                t.type(field, value, n);
+                            });
+                    }
+
+
+                   
+                });
+
+                steps.push(function (n) {
+                    t.validateFormValues(form,map);
+                    n();
+                });
+                steps.push(next);
+                t.chain(steps);
+
+                //setTimeout(function () {
+                //    if (fieldsToSet.length === 0) {
+                //        return;
+                //    }
+
+                //    Ext.iterate(intervals, function (key, interval) {
+                //        clearInterval(interval);
+                //    });
+
+                //    Ext.each(fieldsToSet, function (field) {
+                //        test.fail('Timed out finding field: "' + field + '"', 'setFormValues');
+                //    });
+
+                //    callback();
+                //}, timeout);
             }
         });
     },
