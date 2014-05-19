@@ -1,19 +1,37 @@
 ﻿StartTest(function (t) {
     var m = {};
     t.setOnlyMocks();
-    // var index, editor;
+    t.simManager().register([
+        {
+            url: '/admin/app/Product/list',
+            jsonFile: '/admin/tests/mocks/productadmin/Mystic1/products1.json'
+        },
+        {
+            url: '/admin/app/ProductType/read',
+            jsonFile: '/admin/tests/mocks/productadmin/Mystic1/ProductTypes1.json'
+        },
+        {
+            url: '/admin/app/category/read',
+            jsonFile: '/admin/tests/mocks/productadmin/Mystic1/Categories1.json'
+        },
+        {
+            url: '/admin/app/Product/edit',
+            stype: 'json',
+            getData:function () {
+                return [
+                    {
+                        productName: m.newName 
+                    }
+                ];
+            },
+            doPost:function () {
+                return this.doGet.apply(this, arguments);
+            }
+        }
+    ]);
+    
     t.chain(
-        function (next) {
-            t.setMockAxajRedirect('/admin/app/Product/list', '/admin/tests/mocks/productadmin/Mystic1/products1.json', next);
-
-        },
-        function (next) {
-            t.setMockAxajRedirect('/admin/app/ProductType/read', '/admin/tests/mocks/productadmin/Mystic1/ProductTypes1.json', next);
-        },
-        function (next) {
-            t.setMockAxajRedirect('/admin/app/category/read', '/admin/tests/mocks/productadmin/Mystic1/Categories1.json', next);
-        },
-
+        
         function (next) {
             Taco.core.StateManager.attemptNavigate('products');
             next();
@@ -37,19 +55,13 @@
 
             t.setFormValues(m.editor.form, {
                 productName: m.newName,
-                //     productShortDescription: t.randomStringSuffix('bla bla bla - '),
                 price: 56
             }, next);
 
         },
         function (next) {
-            t.waitForEvent(m.editor.form, 'savecomplete');
-
-            t.setMockAxajData('/admin/app/Product/edit', [{
-                productName: m.newName
-            }]);
-            t.click('>> #save', next);
-
+            t.waitForEvent(m.editor.form, 'savesuccess', next);
+            t.click('>> #save');
         },
         function (next) {
             var record = m.editor.record;
@@ -61,8 +73,6 @@
 
         //}
     );
-
-
 
 
 });
