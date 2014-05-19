@@ -10,11 +10,12 @@ Ext.define('Taco.view.role.Index', {
     modelName: 'Taco.model.Role',
     store: { type: 'Taco.store.Roles' },
     editorName: 'Taco.view.role.Edit',
-    initComponent: function () {
-        this.header = {
-            title: 'Roles'
-        };
 
+    // this is the title. 
+    typeName: "Roles",
+
+    initComponent: function () {       
+        
         if (!this.store) {
             this.store = Ext.create('Taco.store.Roles', {
                 autoLoad: true

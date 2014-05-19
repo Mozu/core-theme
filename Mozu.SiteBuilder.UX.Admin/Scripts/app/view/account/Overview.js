@@ -2,6 +2,10 @@
  * @class Taco.view.account.Overview
  */
 
+/*
+
+deprecated
+
 Ext.define('Taco.view.account.Overview', {
     extend: 'Taco.core.ux.content.Container',
     requires: [
@@ -134,3 +138,6 @@ Ext.define('Taco.view.account.Overview', {
         this.callParent(arguments);
     }
 });
+
+
+*/

@@ -1,6 +1,8 @@
 /**
  * @class Taco.view.account.Navigation
  */
+/*
+// deprecated
 
 	Ext.define('Taco.view.account.Navigation', {
 	    extend: 'Ext.panel.Panel',
@@ -44,3 +46,5 @@
             }
 		]
     });
+
+*/
