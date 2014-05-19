@@ -1915,6 +1915,7 @@
     </Content>
     <Content Include="Tests\Chalupa\Core.js" />
     <Content Include="Tests\HomePages\Mystic.html" />
+    <Content Include="Tests\CheckinTests.html" />
     <Content Include="Tests\indexProduct.html" />
     <Content Include="Tests\index-no-ui.html" />
     <Content Include="Tests\integration\attribute\attribute-create.t.js" />
@@ -1925,6 +1926,7 @@
     <Content Include="Tests\mocha\requireJs\config.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Tests\CheckinTests.js" />
     <Content Include="Tests\MozuTestSuiteProduct.js" />
     <Content Include="Tests\MozuTestSuite.js" />
     <Content Include="Tests\sanity-test.t.js" />
