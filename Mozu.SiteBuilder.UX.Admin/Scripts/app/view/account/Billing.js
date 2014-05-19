@@ -2,6 +2,11 @@
  * @class Taco.view.account.Billing
  */
 
+/*
+
+// deprecated
+
+
 	Ext.define('Taco.view.account.Billing', {
 		extend: 'Taco.core.ux.content.Container',
 	    requires: ['Taco.view.account.Navigation','Taco.view.account.Overview'],
@@ -34,3 +39,4 @@
 	        me.callParent(arguments);
 	    }
 	});
+*/

@@ -30,18 +30,24 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             menu: {
                 plain: true,
                 shadow: false,
-                items: [{
-                    text: 'My Account',
-                    handler: function() {
-                        Taco.app.StateManager.attemptNavigate('account');
+                items: [
+                    /*
+                    // deprecated old views
+                    {
+                        text: 'My Account',
+                        handler: function() {
+                            Taco.app.StateManager.attemptNavigate('account');
+                        }
+                    },
+                    */
+                    {
+                        text: 'Launchpad',
+                        href: '/admin/auth/launchpad'
+                    }, {
+                        text: 'Log Out',
+                        href: '/admin/auth/logout'
                     }
-                }, {
-                    text: 'Launchpad',
-                    href: '/admin/auth/launchpad'
-                }, {
-                    text: 'Log Out',
-                    href: '/admin/auth/logout'
-                }]
+                ]
             }
         }, {
             xtype: 'button',

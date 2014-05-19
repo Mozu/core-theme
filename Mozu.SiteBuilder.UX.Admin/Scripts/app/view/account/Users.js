@@ -4,14 +4,25 @@
 
 	Ext.define('Taco.view.account.Users', {
 		extend: 'Taco.core.ux.content.Container',
-	    requires: ['Taco.store.Roles', 'Taco.store.AccountUsers', 'Taco.view.account.Navigation', 'Taco.view.account.Overview'],
+		requires: [
+            'Taco.store.Roles',
+            'Taco.store.AccountUsers'
+
+            //,
+            //'Taco.view.account.Navigation',
+            //'Taco.view.account.Overview'
+
+		],
+
+	    // this is the title. 
+	    title: "Users",
 
 	    initComponent: function () {
 	        var me = this;
 
 	        me.header = {
-	            title: 'My Account'
-	        };
+	            title : this.title
+	        }
 
 			me.store = Ext.create('Taco.store.AccountUsers', {
 				autoLoad: true
