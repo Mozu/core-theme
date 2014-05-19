@@ -22,19 +22,19 @@ Harness.start({
 
 
         /*********** ADMIN COMPONENT INTEGRATION TEST ***********/
-        group: "Admin Application (Integration tests)",
+        group: "Admin  (Integration tests)",
         expanded: true,
 
      
         items: [
             {
                 alsoPreload: [
-                    'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimXhr.js',
-                    'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/Simlet.js',
-                    'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/DataSimlet.js',
-                    'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/JsonSimlet.js',
-                    'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimManager.js',
-                    '/admin/tests/sinon.js'
+                      'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimXhr.js',
+                      'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/Simlet.js',
+                      'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/DataSimlet.js',
+                      'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/JsonSimlet.js',
+                      'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimManager.js',
+                      '/admin/tests/sinon.js'
                 ],
                 hostPageUrl: '/admin',
                 group: 'Products',

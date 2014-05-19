@@ -9,9 +9,20 @@
                     var me = this;
                     me.timer = setTimeout(function () {
                         me.onTick();
-                    }, me.mgr ? me.mgr.delay:100);
+                    }, me.mgr ? me.mgr.delay : 100);
                 }
             });
+
+            ext.override(ext.ux.ajax.Simlet, {
+                doRedirect: function (ctx) {
+                    if (this.jsonFile) {
+                        return this.redirect('GET', this.jsonFile);
+                    }
+                    return false;
+                },
+
+            });
+
             callback();
 
 
@@ -80,7 +91,7 @@
                 //  var fnComplete = function () {
 
                 var field = test.fieldFieldInForm(form, key);
-                test.is(field.getValue(), value, ' field: "' + key + '" not set propertly');
+                test.is(field.getValue(), value, ' field: "' + key + '" set propertly');
 
 
             });
@@ -159,9 +170,7 @@
         },
         setOnlyMocks: function (value) {
             var sm = this.getExt().ux.ajax.SimManager;
-            sm.init({
-                delay: 100
-            });
+            
 
             sm.defaultSimlet = value == false ? null : this.getExt().create('Ext.ux.ajax.Simlet', {
                 status: 404,
@@ -169,48 +178,38 @@
                 manager: sm,
             });
         },
-        setMockAxajData: function (url, data, next) {
-
-
-            var cfg = {};
-            cfg[url] = {
-                stype: 'json',
-                data: data
-            };
-            this.getExt().ux.ajax.SimManager.init({
-                delay: 100,
-             
-            }).register(cfg);
-            if (next) {
-                next();
-            }
+        simManager: function () {
+            return this.getExt().ux.ajax.SimManager;
         },
-        setMockAxajRedirect: function (url, redirect, next) {
-            var t = this;
-            Ext.Ajax.request({
-                url: redirect,
-                disableCaching: false,
-                success: function (response) {
-                    var cfg = {};
-                    cfg[url] = {
-                        stype: 'json',
-                        data: Ext.decode(response.responseText)
-                    };
-                    t.getExt().ux.ajax.SimManager.init({
-                        delay: 100,
+       
+        //setRemoteMockAjaxData: function (url, redirect ) {
+           
+
+          
+        //    Ext.Ajax.request({
+        //        url: redirect,
+        //        disableCaching: false,
+        //        success: function (response) {
+        //            var cfg = {};
+        //            cfg[url] = {
+        //                stype: 'json',
+        //                data: Ext.decode(response.responseText)
+        //            };
+        //            t.getExt().ux.ajax.SimManager.init({
+        //                delay: 100,
                     
-                    }).register(cfg);
-                    if (next) {
-                        next();
-                    }
-                },
-                failure: function (response, opts) {
-                    t.fail('failed to get mock data ' + redirect);
-                }
+        //            }).register(cfg);
+        //            if (next) {
+        //                next();
+        //            }
+        //        },
+        //        failure: function (response, opts) {
+        //            t.fail('failed to get mock data ' + redirect);
+        //        }
 
-            });
+        //    });
 
-        },
+        //},
 
         showViewPort: function () {
             Taco.app.initViewPort();

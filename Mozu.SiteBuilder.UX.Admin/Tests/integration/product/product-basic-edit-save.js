@@ -38,8 +38,8 @@ StartTest(function (t) {
 
        },
         function (next) {
-            t.waitForEvent(m.editor.form, 'savecomplete');
-            t.click('>> #save', next);
+            t.waitForEvent(m.editor.form, 'savecomplete', next);
+            t.click('>> #save');
 
         },
         function (next) {
