@@ -7,7 +7,7 @@
 
 StartTest(function (test) {
     test.ok(Taco, "Taco is ready");
-
+    test.setOnlyMocks();
     var getCurrentStateAbsoluteUri = function () {
         var uri = Taco.adminAppPath + Taco.core.StateManager.getCurrentState().uri;
         return uri.replace("/?", "?");

@@ -1,6 +1,6 @@
 ﻿StartTest(function (t) {
     
-    Chalupa.Core.applyHelpers(t);
+   
     Taco.core.StateManager.attemptNavigate('Attributes');
 
     var m = {};

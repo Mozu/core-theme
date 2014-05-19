@@ -35,7 +35,7 @@
                 renderTo: Ext.getBody()
             });
 
-            Chalupa.Core.waitForRender(t, form1, m.afterFormRender);
+            t.waitForRender(t, form1, m.afterFormRender); 
         },
 
         afterFormRender: function () {

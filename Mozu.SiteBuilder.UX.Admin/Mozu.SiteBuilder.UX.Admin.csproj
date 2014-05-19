@@ -1914,11 +1914,13 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Tests\Chalupa\Core.js" />
+    <Content Include="Tests\HomePages\Mystic.html" />
     <Content Include="Tests\indexProduct.html" />
     <Content Include="Tests\index-no-ui.html" />
     <Content Include="Tests\integration\attribute\attribute-create.t.js" />
-    <Content Include="Tests\integration\product\product-basic-edit-save.js" />
+    <Content Include="Tests\Functional\product\product-basic-edit-save.js" />
     <Content Include="Tests\index.html" />
+    <Content Include="Tests\integration\product\product-basic-edit-save.js" />
     <Content Include="Tests\mocha\basic\basic-mocha-bdd-test.js" />
     <Content Include="Tests\mocha\requireJs\config.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -2022,6 +2024,9 @@
     </Content>
     <Content Include="Tests\specs\chutzpahRequireJs.json" />
     <Content Include="Tests\package.json" />
+    <Content Include="Tests\Mocks\ProductAdmin\Mystic1\Products1.json" />
+    <Content Include="Tests\Mocks\ProductAdmin\Mystic1\ProductTypes1.json" />
+    <Content Include="Tests\Mocks\ProductAdmin\Mystic1\Categories1.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />

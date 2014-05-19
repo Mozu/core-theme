@@ -1,5 +1,5 @@
 ﻿StartTest(function(t) {
-    Chalupa.Core.applyHelpers(t);
+    
 
     var o = {
         initUi: function() {

@@ -84,7 +84,7 @@ Ext.define('Taco.shared.model.File', {
             persist: false,
             convert: function fullName(v, record) {
                 var raw = record.raw || {};
-                return v || (raw.localthumbnail || '/cms/' + record.getCurrentSiteId() + '/files/' + (raw.cmsId || raw.id));
+                return v || (raw.localthumbnail || raw.imageUrl || '/cms/' + record.getCurrentSiteId() + '/files/' + (raw.cmsId || raw.id));
             }
         },{
             name: 'url',
@@ -93,7 +93,7 @@ Ext.define('Taco.shared.model.File', {
             persist: false,
             convert: function fullName(v, record) {
                 var raw = record.raw || {};
-                return v || (raw.url || '/cms/' + record.getCurrentSiteId() + '/files/' + (raw.cmsId || raw.id));
+                return v || (raw.url || raw.imageUrl || '/cms/' + record.getCurrentSiteId() + '/files/' + (raw.cmsId || raw.id));
             }
         }
     ],
