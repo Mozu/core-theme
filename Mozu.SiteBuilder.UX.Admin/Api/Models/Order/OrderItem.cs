@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Mozu.CommerceRuntime.Contracts.Discounts;
 using Newtonsoft.Json;
 using DC = Mozu.CommerceRuntime.Contracts.Products;
 
@@ -61,8 +62,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public List<OrderItemDiscount> Discounts { get; set; }
 
         //todo: Added to pass mapping unit test, need to review - Greg Murray on 2014-05-19 
-        public OrderItemDiscount AppliedDiscount { get; set; }
-
+        public AppliedProductDiscount ProductDiscount { get; set; }
+       
         public ShippingDiscount ActiveShippingDiscount { get; set; }
 
         public List<ShippingDiscount> ShippingDiscounts { get; set; }
