@@ -90,8 +90,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (Mozu.ProductRuntime.Contracts.Product),
                                                Topic = Topics.InStockNotification
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Mozu.ProductRuntime.Contracts.Product),
+                                               Topic = Topics.GiftCardCreated
                                            }
-
                                    };
         }
 
@@ -357,6 +361,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string ReturnRejected = "return.rejected";
             public const string ReturnClosed = "return.closed";
             public const string InStockNotification = "product.instock";
+            public const string GiftCardCreated = "giftcard.created";
+            //public const string GiftCardUpdated = "giftcard.updated";
         }
 
         # region Mock Orders

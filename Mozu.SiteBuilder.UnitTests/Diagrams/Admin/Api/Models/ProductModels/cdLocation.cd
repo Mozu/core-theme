@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.LocationWithInventory">
+    <Position X="12" Y="5.5" Width="2.75" />
+    <Members>
+      <Method Name="LocationWithInventory" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="Location" />
+      <Property Name="Fulfillment" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product">
+    <Position X="0.5" Y="0.75" Width="3.75" />
+    <Members>
+      <Property Name="BaseProductCode" Hidden="true" />
+      <Property Name="BundledProducts" Hidden="true" />
+      <Property Name="Cost" Hidden="true" />
+      <Property Name="CostCurrencyCode" Hidden="true" />
+      <Property Name="DiscountsRestricted" Hidden="true" />
+      <Property Name="DiscountsRestrictedEndDate" Hidden="true" />
+      <Property Name="DiscountsRestrictedStartDate" Hidden="true" />
+      <Property Name="DistPartNumber" Hidden="true" />
+      <Property Name="Extras" Hidden="true" />
+      <Property Name="HasConfigurableOptions" Hidden="true" />
+      <Property Name="HasStandaloneOptions" Hidden="true" />
+      <Property Name="IsTaxable" Hidden="true" />
+      <Property Name="LastModifiedBy" Hidden="true" />
+      <Property Name="LastModifiedDate" Hidden="true" />
+      <Property Name="LastPublishedBy" Hidden="true" />
+      <Property Name="LastPublishedDate" Hidden="true" />
+      <Property Name="ListPrice" Hidden="true" />
+      <Property Name="MAP" Hidden="true" />
+      <Property Name="MAPEndDate" Hidden="true" />
+      <Property Name="MAPStartDate" Hidden="true" />
+      <Property Name="MasterCatalogId" Hidden="true" />
+      <Property Name="MetaTagDescription" Hidden="true" />
+      <Property Name="MetaTagKeywords" Hidden="true" />
+      <Property Name="MetaTagTitle" Hidden="true" />
+      <Property Name="MfgPartNumber" Hidden="true" />
+      <Property Name="MSRP" Hidden="true" />
+      <Property Name="Options" Hidden="true" />
+      <Property Name="PackageHeight" Hidden="true" />
+      <Property Name="PackageLength" Hidden="true" />
+      <Property Name="PackageWeight" Hidden="true" />
+      <Property Name="PackageWidth" Hidden="true" />
+      <Property Name="Price" Hidden="true" />
+      <Method Name="Product" Hidden="true" />
+      <Property Name="ProductCode" Hidden="true" />
+      <Property Name="ProductFullDescription" Hidden="true" />
+      <Property Name="ProductImages" Hidden="true" />
+      <Property Name="ProductInCatalogs" Hidden="true" />
+      <Property Name="ProductName" Hidden="true" />
+      <Property Name="ProductShortDescription" Hidden="true" />
+      <Property Name="ProductTypeId" Hidden="true" />
+      <Property Name="ProductUsage" Hidden="true" />
+      <Property Name="Properties" Hidden="true" />
+      <Property Name="PublishedState" Hidden="true" />
+      <Property Name="SalePrice" Hidden="true" />
+      <Property Name="SEOFriendlyUrl" Hidden="true" />
+      <Property Name="UPC" Hidden="true" />
+      <Property Name="VariationOptions" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="StockOnHandAdjustment" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Mozu.Location.Contracts.Location">
+    <Position X="8.25" Y="1.25" Width="3.25" />
+    <Members>
+      <Method Name="Location" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="LocationTypes" />
+      <Property Name="FulfillmentTypes" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Mozu.Location.Contracts.FulfillmentType">
+    <Position X="7" Y="5.75" Width="1.5" />
+    <Members>
+      <Method Name="FulfillmentType" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.StockOnHandAdjustment">
+    <Position X="0.5" Y="3.5" Width="2.25" />
+    <Members>
+      <Method Name="StockOnHandAdjustment" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.Location.Contracts.LocationType">
+    <Position X="4.5" Y="3.25" Width="2" />
+    <Members>
+      <Method Name="LocationType" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.ProductAdmin.Contracts.LocationInventory">
+    <Position X="12.5" Y="2.75" Width="2" />
+    <Members>
+      <Method Name="LocationInventory" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.ProductAdmin.Contracts.LocationInventoryCollection">
+    <Position X="12" Y="1.25" Width="2.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.ProductAdmin.Contracts.Product">
+    <Position X="1" Y="5.75" Width="3" />
+    <NestedTypes>
+      <Class Name="Mozu.ProductAdmin.Contracts.Product.ProductUsageConst" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.ProductAdmin.Contracts.Product.FulfillmentTypeConst" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Mozu.ProductAdmin.Contracts.Product.StandAlonePackageTypeConst" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="InventoryInfo" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Mozu.ProductAdmin.Contracts.ProductInventoryInfo">
+    <Position X="5" Y="7.75" Width="2.5" />
+    <Members>
+      <Method Name="ProductInventoryInfo" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Mozu.ProductAdmin.Contracts.ProductInventoryInfo.OutOfStockBehaviorConst">
+        <TypeIdentifier />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

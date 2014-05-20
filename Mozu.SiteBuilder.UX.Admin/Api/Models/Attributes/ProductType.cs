@@ -12,6 +12,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
         public string Name { get; set; }
 
         public bool IsBase { get; set; }
+        
+        public string GoodsType { get; set; }
 
         [JsonProperty(PropertyName = "numberOfProducts")]
         public int? ProductCount { get; set; }

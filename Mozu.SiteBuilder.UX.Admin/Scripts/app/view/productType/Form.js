@@ -32,8 +32,12 @@ Ext.define('Taco.view.productType.Form', {
 
         me.stores = me.stores || [];
         me.stores.push(me.record.getOptions(), me.record.getExtras(), me.record.getProperties());
-        
-        
+
+        me.productBundleUsageType = Ext.create('Ext.form.field.Checkbox', {
+            name: "productUsagesField",
+            boxLabel: "Product Bundle",
+            inputValue: "Bundle"
+        });
 
         me.productUsagesCheckboxGroup = Ext.create('Ext.form.FieldContainer', {
             fieldLabel: "Supported Usage Types",
@@ -72,12 +76,9 @@ Ext.define('Taco.view.productType.Form', {
                             name: "productUsagesField",
                             boxLabel: "Configurable Product With Options",
                             inputValue: "Configurable"
-                        }, {
-                            xtype: "checkboxfield",
-                            name: "productUsagesField",
-                            boxLabel: "Product Bundle",
-                            inputValue: "Bundle"
-                        }, {
+                        },
+                        me.productBundleUsageType,
+                        {
                             xtype: "checkboxfield",
                             name: "productUsagesField",
                             boxLabel: "Bundle Component",
@@ -98,7 +99,25 @@ Ext.define('Taco.view.productType.Form', {
             emptyText: 'Enter a Product Type Name',
             name: 'name',
             allowBlank: false
-        }, 
+        },
+
+        {
+            xtype: "checkboxfield",
+            name: "goodsType",
+            boxLabel: "This Product Type is an Email Gift Card",
+            inputValue: "DigitalGiftCard",
+            handler: function(el, isChecked) {
+                if (isChecked) {
+                    if (me.productBundleUsageType.getValue()) {
+                        me.productBundleUsageType.setValue(false);
+                    }
+                    me.productBundleUsageType.disable();
+                } else {
+                    me.productBundleUsageType.enable();
+                }
+            }
+        },
+
         me.productUsagesCheckboxGroup,    
         {
             xtype: 'taco.producttype.attributegroup',

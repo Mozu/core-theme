@@ -22,7 +22,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             data: [
                 { "id": "DirectShip", "name": "Direct Ship" },
                 { "id": "InStorePickup", "name": "In Store Pickup" },
-                { "id": "DirectShip,InStorePickup", "name": "Direct Ship, In Store Pickup" }
+                { "id": "DigitalGiftCard", "name": "Digital Gift Card" }
             ]
         });
 
@@ -35,6 +35,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             autoSelect: true,
             forceSelection:true,
             store: fulfillmentTypeData,
+            multiSelect: true
         };
 
         staticColumns = [{

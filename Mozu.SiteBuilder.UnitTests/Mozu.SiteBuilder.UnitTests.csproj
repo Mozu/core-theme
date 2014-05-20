@@ -199,8 +199,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.BuildSupport.GetAssemblyFileVersionTask.1.0.0\lib\Mozu.BuildSupport.GetAssemblyFileVersionTask.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.CommerceRuntime.Contracts">
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.7.0.6\lib\net45\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.8.0-dev003\lib\net45\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts">
       <HintPath>..\packages\Mozu.Content.Contracts.1.7.0.2\lib\Mozu.Content.Contracts.dll</HintPath>
@@ -259,9 +260,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.PricingRuntime.Contracts.1.7.0.3\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.7.0.3\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.8.0-dev008\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts">
       <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.7.0.3\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
@@ -392,6 +393,7 @@
     <None Include="Diagrams\Admin\Api\cdCapabilities.cd" />
     <None Include="Diagrams\Admin\Api\Models\OrderModels\cdOrderItem.cd" />
     <None Include="Diagrams\Admin\Api\Models\OrderModels\cdReturns.cd" />
+    <None Include="Diagrams\Admin\Api\Models\ProductModels\cdLocation.cd" />
     <None Include="Diagrams\Admin\Api\Models\ProductModels\cdProductVariation.cd" />
     <None Include="Diagrams\Admin\Api\Models\ProductModels\Product.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\product\cdProduct-View-Js.cd" />
