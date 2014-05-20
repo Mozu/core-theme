@@ -57,11 +57,11 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
             }
 
             Ext.each(me.editor.persistanceData(), function (zone) {
-                if (!Ext.isEmpty(zone.rows)) {
+               // if (!Ext.isEmpty(zone.rows)) {
                     //todo: check pc for edit type... page/vs template
                     zone.source = source;
                     zoneData.push(zone);
-                }
+                //}
             });
 
             tasks.on('complete', function (endTasks) {
