@@ -49,7 +49,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         this.categoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'categories',
-            flex: 1,
+            width: 520,
+            margin: 0,
             store: catStore,
             getStore: function () {
                 return catStore;
@@ -61,14 +62,15 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             typeAhead: true,
             displayField: 'name',
             valueField: 'id',
-            fieldLabel: 'Select Categories'
+            fieldLabel: 'Select Categories',
+            style: {
+                display: 'inline-table',
+                verticalAlign: 'bottom'
+            }
         });
 
         this.categoriesBox = Ext.create('Ext.container.Container', {
-            layout: {
-                type: 'hbox',
-                align: 'bottom'
-            },
+            layout: 'auto',
             items: [
                 this.categoryList,
                 {
@@ -77,6 +79,10 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     ui: 'action',
                     text: 'Add',
                     margin: '0 0 0 10',
+                    width: 70,
+                    style: {
+                        verticalAlign: 'bottom'
+                    },
                     handler: function () {
                         this.launchCategoryModal(this.categoryList);
                     },
@@ -88,7 +94,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         this.excludeCategoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'excludedCategories',
-            flex: 1,
+            width: 520,
+            margin: 0,
             store: catStore,
             getStore: function () {
                 return catStore;
@@ -100,14 +107,15 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             typeAhead: true,
             displayField: 'name',
             valueField: 'id',
-            fieldLabel: 'Excluded Categories'
+            fieldLabel: 'Excluded Categories',
+            style: {
+                display: 'inline-table',
+                verticalAlign: 'bottom'
+            }
         });
 
         this.excludeCategoriesBox = Ext.create('Ext.container.Container', {
-            layout: {
-                type: 'hbox',
-                align: 'bottom'
-            },
+            layout: 'auto',
             items: [
                 this.excludeCategoryList,
                 {
@@ -116,7 +124,11 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     ui: 'action',
                     text: 'Add',
                     margin: '0 0 0 10',
-                    handlerf: function () {
+                    width: 70,
+                    style: {
+                        verticalAlign: 'bottom'
+                    },
+                    handler: function () {
                         this.launchCategoryModal(this.excludeCategoryList);
                     },
                     scope: this
@@ -136,7 +148,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         this.productList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'products',
-            flex: 1,
+            width: 520,
+            margin: 0,
             store: productStore,
             getStore: function () {
                 return productStore;
@@ -148,15 +161,16 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             typeAhead: false,
             displayField: 'productName',
             fieldLabel: 'Select Products',
-            valueField: 'productCode'
+            valueField: 'productCode',
+            style: {
+                display: 'inline-table',
+                verticalAlign: 'bottom'
+            }
         });
 
 
         this.productsBox = Ext.create('Ext.container.Container', {
-            layout: {
-                type: 'hbox',
-                align: 'bottom'
-            },
+            layout: 'auto',
             items: [
                 this.productList,
                 {
@@ -165,6 +179,10 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     ui: 'action',
                     text: 'Add',
                     margin: '0 0 0 10',
+                    width: 70,
+                    style: {
+                        verticalAlign: 'bottom'
+                    },
                     handler: function () { this.launchProductModal(this.productList); },
                     scope: this
                 }
@@ -173,7 +191,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         this.productExcludeList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'excludedProducts',
-            flex: 1,
+            width: 520,
+            margin: 0,
             store: productStore,
             getStore: function () {
                 return productStore;
@@ -185,15 +204,16 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             typeAhead: false,
             displayField: 'productName',
             fieldLabel: 'Excluded Products',
-            valueField: 'productCode'
+            valueField: 'productCode',
+            style: {
+                display: 'inline-table',
+                verticalAlign: 'bottom'
+            }
         });
 
 
         this.productsExcludeBox = Ext.create('Ext.container.Container', {
-            layout: {
-                type: 'hbox',
-                align: 'bottom'
-            },
+            layout: 'auto',
             items: [
                 this.productExcludeList,
                 {
@@ -202,6 +222,10 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     ui: 'action',
                     text: 'Add',
                     margin: '0 0 0 10',
+                    width: 70,
+                    style: {
+                        verticalAlign: 'bottom'
+                    },
                     handler: function () { this.launchProductModal(this.productExcludeList); },
                     scope: this
                 }
@@ -239,7 +263,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         this.shippingList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'shippingMethods',
-            flex: 1,
+            width: 520,
+            margin: 0,
             store: shippingStore,
             getStore: function () {
                 return shippingStore;
@@ -255,7 +280,11 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             //displayField: 'Value',
             displayField: 'name',
             fieldLabel: 'Select Shipping Methods',
-            valueField: 'code'
+            valueField: 'code',
+            style: {
+                display: 'inline-table',
+                verticalAlign: 'bottom'
+            }
         });
 
         this.items = [{

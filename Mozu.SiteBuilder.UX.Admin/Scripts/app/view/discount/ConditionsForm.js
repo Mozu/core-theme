@@ -176,7 +176,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
         this.productList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'conditionalProducts',
-            flex: 1,
+            width: 520,
+            margin: 0,
             store: productStore,
             getStore: function () {
                 return productStore;
@@ -188,24 +189,28 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             typeAhead: false,
             displayField: 'productName',
             fieldLabel: 'Purchase one of the following items',
-            valueField: 'productCode'
+            valueField: 'productCode',
+            style: {
+                display: 'inline-table',
+                verticalAlign: 'bottom'
+            }
         });
 
 
         this.productsBox = Ext.create('Ext.container.Container', {
-            layout: {
-                type: 'hbox',
-                align: 'bottom'
-            },
+            layout: 'auto',
             width: 600,
             items: [
-                this.productList,
-                {
+                this.productList, {
                     xtype: 'button',
                     scale: 'medium',
                     ui: 'action',
                     text: 'Add',
                     margin: '0 0 0 10',
+                    width: 70,
+                    style: {
+                        verticalAlign: 'bottom'
+                    },
                     handler: function () { this.launchProductModal(this.productList); },
                     scope: this
                 }
@@ -219,7 +224,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         
         this.segmentsList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'customerSegments',
-            flex: 1,
+            width: 520,
+            margin: 0,
             store: segStore,
             getStore: function() {
                 return segStore;
@@ -231,14 +237,15 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             typeAhead: false,
             displayField: 'code',
             fieldLabel: 'Customer Segments',
-            valueField: 'id'
+            valueField: 'id',
+            style: {
+                display: 'inline-table',
+                verticalAlign: 'bottom'
+            }
         });
 
         this.segmentsBox = Ext.create('Ext.container.Container', {
-            layout: {
-                type: 'hbox',
-                align: 'bottom'
-            },
+            layout: 'auto',
             width: 600,
             items: [
                 this.segmentsList, {
@@ -247,6 +254,10 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                     ui: 'action',
                     text: 'Add',
                     margin: '0 0 0 10',
+                    width: 70,
+                    style: {
+                        verticalAlign: 'bottom'
+                    },
                     handler: function() { this.launchSegmentModal(this.segmentsList);},
                     scope: this
                 }
@@ -268,7 +279,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         this.categoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'conditionalCategories',
-            flex: 1,
+            width: 520,
+            margin: 0,
             store: catStore,
             getStore: function () {
                 return catStore;
@@ -280,14 +292,15 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             typeAhead: true,
             displayField: 'name',
             valueField: 'id',
-            fieldLabel: 'Purchase an item from the following categories'
+            fieldLabel: 'Purchase an item from the following categories',
+            style: {
+                display: 'inline-table',
+                verticalAlign: 'bottom'
+            }
         });
 
         this.categoriesBox = Ext.create('Ext.container.Container', {
-            layout: {
-                type: 'hbox',
-                align: 'bottom'
-            },
+            layout: 'auto',
             width: 600,
             items: [
                 this.categoryList,
@@ -297,6 +310,10 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                     ui: 'action',
                     text: 'Add',
                     margin: '0 0 0 10',
+                    width: 70,
+                    style: {
+                        verticalAlign: 'bottom'
+                    },
                     handler: function () {
                         this.launchCategoryModal(this.categoryList);
                     },

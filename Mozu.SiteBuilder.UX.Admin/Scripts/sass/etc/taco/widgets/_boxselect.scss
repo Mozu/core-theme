@@ -17,6 +17,7 @@
     .x-boxselect-input, .x-boxselect-item {
         display: inline-block;
         position: relative;
+        vertical-align: top;
         *display:inline; /* IE7 */
         zoom:1; /* IE */
     }
