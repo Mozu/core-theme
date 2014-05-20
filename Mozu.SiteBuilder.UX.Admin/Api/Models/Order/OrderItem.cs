@@ -60,6 +60,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public List<OrderItemDiscount> Discounts { get; set; }
 
+        //todo: Added to pass mapping unit test, need to review - Greg Murray on 2014-05-19 
+        public OrderItemDiscount AppliedDiscount { get; set; }
+
         public ShippingDiscount ActiveShippingDiscount { get; set; }
 
         public List<ShippingDiscount> ShippingDiscounts { get; set; }

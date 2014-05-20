@@ -569,6 +569,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<Mozu.ProductAdmin.Contracts.LocationInventory, LocationWithInventory>()
                 .ForMember(x => x.Location, op => op.Ignore())
+                .ForMember(x => x.Fulfillment, op => op.Ignore())
                 ;
 
         }

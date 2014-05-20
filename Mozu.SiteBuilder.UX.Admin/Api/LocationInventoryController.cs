@@ -29,15 +29,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ILocationInventoryWebApiClient _locationInventoryClient;
         private readonly IProductWebApiClient _productClient;
         private readonly ILocationAdminWebApiClient _locationWebApiClient;
+        private readonly IProductAvailableInventoryHelper _productAvailableInventoryHelper;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public LocationInventoryController(ILocationInventoryWebApiClient locationInventoryClient, IProductWebApiClient productInventoryClient, ILocationAdminWebApiClient locationWebApiClient)
+        public LocationInventoryController(ILocationInventoryWebApiClient locationInventoryClient, IProductWebApiClient productInventoryClient, ILocationAdminWebApiClient locationWebApiClient, IProductAvailableInventoryHelper productAvailableInventoryHelper)
         {
             _locationInventoryClient = locationInventoryClient;
             _productClient = productInventoryClient;
             _locationWebApiClient = locationWebApiClient;
+            _productAvailableInventoryHelper = productAvailableInventoryHelper;
         }
 
         /// <summary>
@@ -162,13 +164,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var filterString = extFilter.ToFilterString();
             var inventories = (await _productClient.GetLocationInventories(productCode: productCode, startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filterString)).ReadAsSync();
-
+            var product = (await _productClient.GetProduct(productCode)).ReadAsSync();
             var locationLookupTasks = inventories.Items.Select(i => i.LocationCode).Distinct().Select(lc => _locationWebApiClient.GetLocation(lc)).ToList();
             await Task.WhenAll(locationLookupTasks);
             var locations = locationLookupTasks.Select(t => t.Result.ReadAsSync()).ToList();
 
-            var locationsWithInventory = inventories.Items.Map<List<LocationWithInventory>>();
-            locationsWithInventory.ForEach(lwi => lwi.Location = locations.FirstOrDefault(l => l.Code == lwi.LocationCode));
+            var locationsWithInventory = _productAvailableInventoryHelper.GetShipAndPickupLocationsWithInventory(inventories, locations, product);
 
             return List2(locationsWithInventory);
         }
@@ -186,5 +187,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // filter for location type pickup
             return List2(locationsWithInventory.Where(lwi => lwi.Location.FulfillmentTypes.Any(ft => ft.Code == "SP")).ToList());
         }
+    }
+
+    /// <summary>
+    /// Mozu.Location does not have a constant for these, so this is temporary.
+    /// </summary>
+    public class FulfillmentTypeConstants
+    {
+        public static readonly DCloc.FulfillmentType DirectShip = new DCloc.FulfillmentType { Code = "DS", Name = "Direct Ship" };
+        public static readonly DCloc.FulfillmentType InStorePickup = new DCloc.FulfillmentType { Code = "SP", Name = "In Store Pickup" };
     }
 }
