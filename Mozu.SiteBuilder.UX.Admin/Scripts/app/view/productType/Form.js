@@ -100,23 +100,61 @@ Ext.define('Taco.view.productType.Form', {
             name: 'name',
             allowBlank: false
         },
-
         {
-            xtype: "checkboxfield",
-            name: "goodsType",
-            boxLabel: "This Product Type is an Email Gift Card",
-            inputValue: "DigitalGiftCard",
-            handler: function(el, isChecked) {
-                if (isChecked) {
-                    if (me.productBundleUsageType.getValue()) {
-                        me.productBundleUsageType.setValue(false);
+            xtype: "checkboxgroup",
+            columnWidth: .5,
+            name: "goodsTypeGroup",
+            layout: {
+                layout: "hbox"
+            },
+            //listeners: {
+            //    change: {
+            //        fn: function(group, newValue, oldValue, eOpts) {
+            //            me.onUsageTypeChange(newValue);
+            //        },
+            //        scope: me
+            //    }
+            //},
+            allowBlank: true,
+            columns: 1,
+            items: [
+                {
+                    xtype: "checkboxfield",
+                    name: "goodsTypeField",
+                    boxLabel: "This Product Type is an Email Gift Card",
+                    inputValue: "DigitalGiftCard",
+                    handler: function (el, isChecked) {
+                        if (isChecked) {
+                            if (me.productBundleUsageType.getValue()) {
+                                me.productBundleUsageType.setValue(false);
+                            }
+                            me.productBundleUsageType.disable();
+                        } else {
+                            me.productBundleUsageType.enable();
+                        }
                     }
-                    me.productBundleUsageType.disable();
-                } else {
-                    me.productBundleUsageType.enable();
                 }
-            }
+            ]
         },
+
+
+
+        //{
+        //    xtype: "checkboxfield",
+        //    name: "goodsType",
+        //    boxLabel: "This Product Type is an Email Gift Card",
+        //    inputValue: "DigitalGiftCard",
+        //    handler: function(el, isChecked) {
+        //        if (isChecked) {
+        //            if (me.productBundleUsageType.getValue()) {
+        //                me.productBundleUsageType.setValue(false);
+        //            }
+        //            me.productBundleUsageType.disable();
+        //        } else {
+        //            me.productBundleUsageType.enable();
+        //        }
+        //    }
+        //},
 
         me.productUsagesCheckboxGroup,    
         {
@@ -515,12 +553,17 @@ Ext.define('Taco.view.productType.Form', {
     loadRecord: function () {
         var me = this,
             form = me.getForm(),
-            productUsagesGroup = form.findField("productUsagesGroup");
+            productUsagesGroup = form.findField("productUsagesGroup"),
+            goodsTypeGroup = form.findField('goodsTypeGroup');
         
         this.callParent(arguments);
         
         productUsagesGroup.setValue({
             productUsagesField: this.record.get("productUsages")
+        });
+
+        goodsTypeGroup.setValue({
+            goodsTypeField: this.record.get("goodsType")
         });
 
     },
@@ -538,6 +581,9 @@ Ext.define('Taco.view.productType.Form', {
         }
    
         this.record.set("productUsages", productUsagesGroupData);
+
+        var goodsTypeData = form.findField("goodsTypeGroup").getValue().goodsTypeField;
+        this.record.set('goodsType', goodsTypeData);
         
         return true;
     }
