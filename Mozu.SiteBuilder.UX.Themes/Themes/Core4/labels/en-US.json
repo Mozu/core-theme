@@ -220,6 +220,11 @@
   "customerAlreadyExists": "A customer is already registered as {0}. <a href=\"/user/login?returnUrl={1}\">Login as this customer</a>",
   "noPaymentRequired"    : "Your total is {0}, so no payment method is required.",
 
+  "giftCardBlob1"         : "<p>Thank you for shopping at {0}!  We have good news for you-- here is your gift card:</p>",
+  "giftCardBlob2"         : "<p>TO ADD THE ITEMS TO YOUR CART: <a href=\"http://{0}/p/{1}\">CLICK HERE</a>.</p>",
+  "giftCardValue"         : "Value",
+  
+
   "errorApology"         : "Sorry, an error occurred.",
   "errorDetail"          : "Our software encountered an error it couldn't resolve.",
 

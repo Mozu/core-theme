@@ -79,6 +79,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Options, opt => opt.ResolveUsing(x => MapAttributeToDCAttribute(x.Options)))
                 .ForMember(dc => dc.Properties, opt => opt.ResolveUsing(x => MapAttributeToDCAttribute(x.Properties)))
                 .ForMember(dc => dc.Extras, opt => opt.ResolveUsing(x => MapAttributeToDCAttribute(x.Extras)))
+                .ForMember(dc => dc.GoodsType, op => op.ResolveUsing(x => (string.IsNullOrEmpty(x.GoodsType)) 
+                    ? DC.ProductType.GoodsTypeConst.Physical : x.GoodsType))
                 //ignores
                 .ForMember(dc => dc.MasterCatalogId, op => op.Ignore())
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())

@@ -425,10 +425,8 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping.Perf
             Mapper.CreateMap<ProductAdmin.Contracts.ProductVariationOption, ProductVariationOption>();
             Mapper.CreateMap<ProductVariationOption, ProductAdmin.Contracts.ProductVariationOption>();
 
-
-
-
-            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.LocationInventory, LocationWithInventory>();
+            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.LocationInventory, LocationWithInventory>()
+                .ForMember(x => x.Fulfillment, op => op.Ignore());
         }
 
         #endregion setup

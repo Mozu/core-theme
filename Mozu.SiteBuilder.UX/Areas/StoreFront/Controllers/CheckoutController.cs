@@ -222,7 +222,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
             var jOrder = JObject.FromObject(model, jSerializer);
 
-            jOrder.Add("requiresFulfillmentInfo", model.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Fulfillment.FulfillmentMethodConst.SHIP));
+            jOrder.Add("requiresFulfillmentInfo", model.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.SHIP));
 
             if (account != null)
             {
@@ -308,7 +308,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (!CompletedOrderStates.Contains(order.Status)) return Redirect("/checkout/" + order.Id);
             Mozu.Location.Contracts.LocationCollection locations = null;
 
-            if (order.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Fulfillment.FulfillmentMethodConst.PICKUP))
+            if (order.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.PICKUP))
             {
                 //var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", order.Items.Select(x => "Code eq " + x.FulfillmentLocationCode).Distinct().ToList())));
                 var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", order.Items.Select(x => string.Format("Code eq \"{0}\"", x.FulfillmentLocationCode)).Distinct().ToList())));
@@ -318,7 +318,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             JObject jOrder = JObject.FromObject(order, jSerializer);
 
-            jOrder.Add("hasDirectShip", order.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Fulfillment.FulfillmentMethodConst.SHIP));
+            jOrder.Add("hasDirectShip", order.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.SHIP));
 
             if (locations != null)
             {
@@ -326,7 +326,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 for (int i = 0; i < order.Items.Count; i++)
                 {
-                    if (order.Items[i].FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Fulfillment.FulfillmentMethodConst.SHIP)
+                    if (order.Items[i].FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.SHIP)
                     {
                         var location = locations.Items.Find(x => x.Code == order.Items[i].FulfillmentLocationCode);
                         if (location != null)

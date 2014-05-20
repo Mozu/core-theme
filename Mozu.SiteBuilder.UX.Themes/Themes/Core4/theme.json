@@ -395,6 +395,14 @@
 		"properties": {
 		  "subject": "Back in Stock"
 		}
+	  },
+	  {
+		"id": "giftcard.created",
+		"title": "Gift Card",
+		"template": "email/giftcard-created",
+		"properties": {
+		  "subject": "Gift Card"
+		}
 	  }
 	],
 
