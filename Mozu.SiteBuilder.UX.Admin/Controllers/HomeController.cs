@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Razor;
+using Mozu.AdminUser.Contracts;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
@@ -89,6 +90,50 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             }
         }
 
+        public class TestContext
+        {
+            public TaContext TenantContext { get; set; }
+            public Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User User { get; set; }
+            public List<UserRole> Roles { get; set; }
+            public AdminUserCollection Users { get; set; }
+        }
+
+        //[HttpGet()]
+        //public async Task<RazorViewResult> Mock(string id)
+        //{
+
+        //    var tc = new TestContext();
+        //    this.ViewData["localizationValues"] = new LocalizationController(_httpContext).GetStrings();
+        //    this.ViewData["taContext"] = tc.TenantContext ;
+        //    this.ViewData["user"] = tc.User ;
+        //    this.ViewData["siteRoles"] = tc.Roles ;
+
+
+
+        //    this.ViewData["extlocalefile"] = GetExtLocaleFile(Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName);
+        //    this.ViewData["useGoogleAnalytics"] = System.Configuration.ConfigurationManager.AppSettings["useGoogleAnalytics"];
+        //    this.ViewData["googleAnalyticsAccount"] = System.Configuration.ConfigurationManager.AppSettings["googleAnalyticsAccount"];
+        //    this.ViewData["siteUsers"] = siteUsers.Items;
+
+        //    // IE8 compatibility (http://hsivonen.fi/doctype/)
+        //    this.Response.AddHeader("X-UA-Compatible", "IE=Edge");
+
+        //    this.ViewData["extlib"] = (string)((_httpContext.Request.Cookies.Get("debugExt") != null && _httpContext.Request.Cookies.Get("debugExt").Value == "true") ? "ext-all-dev.js" : "ext-all.js");
+
+        //    this.ViewData["applib"] = (string)((_httpContext.Request.Cookies.Get("debugExt") != null && _httpContext.Request.Cookies.Get("debugExt").Value == "true") ? "app-dev.js" : "app.js");
+
+
+        //    if (this.HttpContext.Request["testHarnessMode"] == "true")
+        //    {
+        //        return RazorView("TestHarnes");
+        //    }
+        //    if (System.Configuration.ConfigurationManager.AppSettings["use_compiled_taco"] == "true")
+        //    {
+        //        return RazorView("Index_Compiled");
+        //    }
+
+        //    return RazorView("index");
+        //}
        
         async Task<ActionResult> GetIndex()
         {
@@ -163,7 +208,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             this.Response.AddHeader("X-UA-Compatible", "IE=Edge");
 
             this.ViewData["extlib"] = (string)((_httpContext.Request.Cookies.Get("debugExt") != null && _httpContext.Request.Cookies.Get("debugExt").Value == "true") ? "ext-all-dev.js" : "ext-all.js");
-         
+            this.ViewData["applib"] = (string)((_httpContext.Request.Cookies.Get("debugExt") != null && _httpContext.Request.Cookies.Get("debugExt").Value == "true") ? "app-dev.js" : "app.js");
+
             if (this.HttpContext.Request["testHarnessMode"] == "true")
             {
                 return RazorView("TestHarnes");

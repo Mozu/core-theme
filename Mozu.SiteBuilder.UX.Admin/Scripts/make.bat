@@ -12,6 +12,7 @@ if exist .sencha\workspace (
 	attrib -r bootstrap.js
 	attrib -r bootstrap.json
 	sencha app build -c
+	sencha ant testing js
 ) else (
    
 	sencha --sdk C:\sitebuilder\devstuff\ExtVersions\ext-4.2.2.1144 generate workspace .
@@ -20,4 +21,5 @@ if exist .sencha\workspace (
 	attrib -r bootstrap.js
 	attrib -r bootstrap.json
 	sencha app build -c
+	sencha ant testing js
 )

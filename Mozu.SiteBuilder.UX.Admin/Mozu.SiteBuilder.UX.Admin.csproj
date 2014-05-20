@@ -836,6 +836,7 @@
     <Content Include="Scripts\app\view\website\widgetEditors\FeaturedProducts.js" />
     <Content Include="Scripts\app\view\website\widgetEditors\HorizontalRule.js" />
     <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\build\app-dev.js" />
     <Content Include="Scripts\build\app.js" />
     <Content Include="Scripts\build\index.html" />
     <Content Include="Scripts\build\locale\ext-lang-af.js" />
