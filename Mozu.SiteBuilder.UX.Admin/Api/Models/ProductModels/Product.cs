@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Mozu.Location.Contracts;
 using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
@@ -16,6 +17,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
     {
         [JsonProperty(PropertyName = "location")]
         public Mozu.Location.Contracts.Location Location { get; set; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public FulfillmentType Fulfillment { get; set; }
     }
 
     //[DataContract(Namespace = "http://admin.productservice.volusion.com")]
@@ -320,7 +324,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         public decimal? PackageHeight { get; set; }
 
         /// <summary>
-        /// Fulfillment Types Supported (DirectShip, InStorePickup, or Both)
+        /// Fulfillment Types Supported: DirectShip, InStorePickup, DigitalGiftCard, and/or Digital (in future)
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string[] FulfillmentTypesSupported { get; set; }

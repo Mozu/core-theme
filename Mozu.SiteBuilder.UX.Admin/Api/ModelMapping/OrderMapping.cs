@@ -222,8 +222,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     foreach (var productCode in productCodes)
                     {
                         var productName = GetProductName(productCode);
-                        var desiredPackageQuantity = GetDesiredQuantityByPickupMethod(productCode, FulfillmentMethodConst.SHIP);
-                        var desiredPickupQuantity = GetDesiredQuantityByPickupMethod(productCode, FulfillmentMethodConst.PICKUP);
+                        var desiredPackageQuantity = GetDesiredQuantityByPickupMethod(productCode, CommerceDC.FulfillmentMethodConst.SHIP);
+                        var desiredPickupQuantity = GetDesiredQuantityByPickupMethod(productCode, CommerceDC.FulfillmentMethodConst.PICKUP);
                         var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
                         var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
 
@@ -244,7 +244,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                         ProductName = GetProductName(productCode),
                                         Weight = GetUnitWeight(productCode) * remainingQuantity,
                                         Quantity = remainingQuantity,
-                                        FulfillmentMethod = FulfillmentMethodConst.SHIP,
+                                        FulfillmentMethod = CommerceDC.FulfillmentMethodConst.SHIP,
                                         FulfillmentLocationCode = GetFulfillmentLocationCode(productCode)
                                     });
                             }
@@ -266,7 +266,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                         ProductCode = productCode,
                                         ProductName = GetProductName(productCode),
                                         Quantity = remainingQuantity,
-                                        FulfillmentMethod = FulfillmentMethodConst.PICKUP,
+                                        FulfillmentMethod = CommerceDC.FulfillmentMethodConst.PICKUP,
                                         FulfillmentLocationCode = GetFulfillmentLocationCode(productCode)
                                     });
                             }
@@ -647,6 +647,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<OrderPackageItem, ShippingDC.PackageItem>()
                 .ForMember(dc => dc.ProductCode, op => op.ResolveUsing(x => x.ProductCode))
                 .ForMember(dc => dc.Quantity, op => op.ResolveUsing(x => x.Quantity))
+                .ForMember(dc => dc.FulfillmentItemType, op => op.ResolveUsing(x => ShippingDC.FulfillmentItemTypeConst.PHYSICAL))
                 ;
         }
 
@@ -667,6 +668,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<OrderPickupItem, ShippingDC.PickupItem>()
                 .ForMember(dc => dc.ProductCode, op => op.ResolveUsing(x => x.ProductCode))
                 .ForMember(dc => dc.Quantity, op => op.ResolveUsing(x => x.Quantity))
+                //todo: do we need this on our model? - Greg Murray on 2014-05-19 
+                .ForMember(dc => dc.FulfillmentItemType, op => op.ResolveUsing(x => ShippingDC.FulfillmentItemTypeConst.PHYSICAL))
                 ;
         }
 
