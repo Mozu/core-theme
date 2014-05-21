@@ -1934,7 +1934,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Tests\helpers\Core.js" />
-    <None Include="Tests\HomePages\Mystic.cshtml" />
+    <Content Include="Tests\HomePages\Mystic.cshtml" />
     <Content Include="Tests\CheckinTests.html" />
     <Content Include="Tests\indexProduct.html" />
     <Content Include="Tests\index-no-ui.html" />
