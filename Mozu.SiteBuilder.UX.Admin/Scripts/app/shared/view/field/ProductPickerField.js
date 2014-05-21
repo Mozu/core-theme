@@ -39,8 +39,13 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
 
             if (me.rendered && toolbar && toolbar.rendered && !me.preserveScrollOnRefresh) {
                 me.el.appendChild(toolbar.el);
-                if (me.getStore().getTotalCount() <= me.pageSize) me.el.last().hide();
-                else me.el.last().show();
+                var store = me.getStore();
+                if (store.getTotalCount() <= store.pageSize) {
+                    me.el.last().hide();
+                }
+                else {
+                    me.el.last().show();
+                }
             }
         }
     },

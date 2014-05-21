@@ -1,12 +1,17 @@
 ﻿var Harness = Siesta.Harness.Browser.ExtJS,
+    protoCal = window.location.protocol,
     simAndSinPreloads = [
-    'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimXhr.js',
-    'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/Simlet.js',
-    'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/DataSimlet.js',
-    'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/JsonSimlet.js',
-    'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimManager.js',
+    protoCal+ '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimXhr.js',
+    protoCal + '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/Simlet.js',
+    protoCal + '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/DataSimlet.js',
+    protoCal + '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/JsonSimlet.js',
+    protoCal + '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimManager.js',
     '/admin/tests/sinon.js'
     ];
+
+
+
+
 Harness.configure({
     title: "Mozu Test Suite",
     waitForExtReady: true,
@@ -23,10 +28,14 @@ Harness.configure({
     //    }
     //},
     //setup: function (callback) {
-    //    var me = this;
-    //    setTimeout(function () {
-    //        callback();
-    //    }, 5000, this);
+    //    var protoCal = window.location.protocol;
+    //    Ext.Array.each(simAndSinPreloads, function (item, index, arr) {
+    //        if (item.indexOf("//") == 0) {
+    //            arr[index] = protoCal + item;
+    //        }
+    //    });
+    //    //debugger;
+    //    callback();
     //}
 });
 
