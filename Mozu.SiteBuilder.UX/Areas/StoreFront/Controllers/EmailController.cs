@@ -19,6 +19,7 @@ using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.UX.Models.Admin.Email;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 using Mozu.SiteBuilder.UX.TestData;
 using Mozu.Tenant.Contracts.Clients;
@@ -93,7 +94,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            },
                                        new EmailTypeInfo
                                            {
-                                               ModelType = typeof (Mozu.ProductRuntime.Contracts.Product),
+                                               ModelType = typeof (GiftCardEmailOrderCredit),
                                                Topic = Topics.GiftCardCreated
                                            }
                                    };
@@ -362,7 +363,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string ReturnClosed = "return.closed";
             public const string InStockNotification = "product.instock";
             public const string GiftCardCreated = "giftcard.created";
-            //public const string GiftCardUpdated = "giftcard.updated";
         }
 
         # region Mock Orders

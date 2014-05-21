@@ -14,12 +14,14 @@ using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Logging;
 using Mozu.Core.Messaging.Contracts;
+using Mozu.Core.Messaging.Contracts.Credit.Commands;
 using Mozu.Core.Messaging.Contracts.Notification;
 using Mozu.Core.Messaging.Contracts.Order.Commands;
 using Mozu.Core.Messaging.Contracts.Product.Commands;
 using Mozu.Core.Messaging.Contracts.User.Commands;
 using Mozu.Customer.Contracts;
 using Mozu.Customer.Contracts.Clients;
+using Mozu.SiteBuilder.UX.Models.Admin.Email;
 using Mozu.SiteBuilder.UX.TestData;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Newtonsoft.Json;
@@ -108,6 +110,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 case "order.changed":
                 {
                     OrderChanged(req.email);
+                    break;
+
+                }
+                case "giftcard.created":
+                {
+                    GiftCardCreated(req.email);
                     break;
 
                 }
@@ -207,6 +215,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
          
             }
         }
+
+        void  GiftCardCreated(string email)
+        {
+            var orderCredits = TestDataBroker.Default.GetFileContents<GiftCardEmailOrderCredit>("giftcard.created");
+            
+            foreach (var orderCredit in orderCredits)
+            {
+                SendGiftCardEmail(orderCredit, email);    
+            }
+        }
+
        void OrderChanged(string email)
         {
             var orders = TestDataBroker.Default.GetFileContents<Mozu.CommerceRuntime.Contracts.Orders.Order>("order.changed");
@@ -416,6 +435,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             _publisher.Publish(message);
         }
+        
+        /// <summary>
+        /// Send Gift Card email
+        /// </summary>
+        /// <param name="orderCredit">Walkens is using dynamic ExpandoObject, so had to create on our side</param>
+        /// <param name="email"></param>
+        public void SendGiftCardEmail(GiftCardEmailOrderCredit orderCredit, string email)
+        {
+            var message = new SendCreditEmail
+                          {
+                              CreditCode = orderCredit.Credit.Code,
+                              CreditMessage = orderCredit.Credit.CurrentBalance.ToString("C"),
+                              MessagePublishingContext = CreateMessagePublishingContext(orderCredit.Order),
+                              EmailData = new EmailData
+                                          {
+                                              RendererServiceId = ServiceIdRenderEmailTenant,
+                                              Topic = EmailTopics.Order.OrderGiftCardTopic,
+                                              Content = JsonConvert.SerializeObject(orderCredit),
+                                              To = new Dictionary<string, string> {{email, email}}
+                                          },
+                          };
+
+            SetSenderData(message.EmailData);
+
+            _publisher.Publish(message);
+        }
 
         /// <summary>
         ///     Send fulfillment info changed email
@@ -540,7 +585,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                       };
             return notificationContext;
         }
-
+        
         public static class EmailTopics
         {
             public static class Order
@@ -548,6 +593,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 public const string OrderShippedTopic = "order.shipped";
                 public const string OrderFulfillmentInfoChangedTopic = "order.fulfillmentinfochanged";
                 public const string OrderEmailTopic = "order.changed";
+                public const string OrderGiftCardTopic = "giftcard.created";
             }
 
             public static class Return

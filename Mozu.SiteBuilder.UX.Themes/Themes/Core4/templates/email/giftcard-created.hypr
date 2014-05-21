@@ -1,43 +1,39 @@
 ﻿  {% extends "email/email" %}
 
   {% block body-content %}
+    <br>
 
-	{% if user and user.firstName %}
-		{{ labels.emailOpening|string_format(user.firstName)|safe }}
+	<p>
+	{% if model.Order.billingInfo.billingContact.firstName %}
+		Hi {{ model.Order.billingInfo.billingContact.firstName }} {{ model.Order.billingInfo.billingContact.lastNameOrSurname }},
 	{% else %}
 		{{ labels.emailOpeningAlternative|safe }}
 	{% endif %}
+	</p>
 
-	{{ labels.giftCardBlob1|string_format(siteContext.generalSettings.websiteName)|safe }}
+	{{ labels.giftCardBlob1|string_format(siteContext.generalSettings.websiteName, domainName)|safe }}
+	
+	
+	<dl class="mz-orderheader">
+	
+		<dt>Gift Card Amount:</dt>
+		<dd>{{model.Credit.CurrentBalance|currency}}</dd>
 
-	<table class="mz-ordersummary">
-    <thead>
-        <tr>
-            <th class="mz-ordersummary-header-product">{{ labels.item }}</th>
-            <th class="mz-ordersummary-header-price">{{ labels.giftCardValue }}</th>
-        </tr>
-    </thead>
-	<tbody>
-		<tr>
-			<td>
-				{% if model.content.productShortDescription and themeSettings.showProductDetailShortDesc %}
-				<div class="mz-productdetail-shortdesc mz-l-stack-section">
-				  <span itemscope="description">{{ model.content.productShortDescription|safe }}</span>
-				</div>
-				{% endif %}
-				{% if model.options %}
-				<div class="mz-productdetail-options mz-l-stack-section">
-				  {% include "modules/product/product-options" %}
-				</div>
-				{% endif %}
-				{{model.productCode}}
-			</td>
-		</tr>
-	</tbody>
-	</table>
+		<dt>Claim Code:</dt>
+		<dd>{{model.Credit.Code}}</dd>
 
-	{{ labels.giftCardBlob2|string_format(domainName, model.productCode)|safe }}
+	</dl>
+	
+	<ul>To redeem your gift card, follow these steps:
+		<li>Visit <a href="http://{{domainName}}">{{domainName}}</a></li>
+		<li>Click Apply to Account and enter the Claim Code when prompted.</li>
+		<li>Gift card funds will be applied automatically to eligible orders during the checkout process.</li>
+		<li>You must pay for any remaining balance on your order with another payment method.</li>
+		<li>Your gift card claim code may also be entered when prompted during checkout.  To use your gift card you must first add the gift card funds to Your Account.</li>
+	</ul>
 
-	{{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+	<p>
+	If you have questions about redeeming your gift card, please visit <a href="http://{{domainName}}">{{domainName}}</a>
+	</p>
 
 {% endblock body-content %}

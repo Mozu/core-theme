@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="Mozu.ProductAdmin.Contracts.LocationInventory">
-    <Position X="10.25" Y="1.5" Width="2.5" />
+    <Position X="10.5" Y="0.5" Width="2.5" />
     <Members>
       <Method Name="LocationInventory" Hidden="true" />
     </Members>
@@ -88,42 +88,43 @@
     <TypeIdentifier />
   </Class>
   <Class Name="Mozu.Location.Contracts.Location">
-    <Position X="13.75" Y="3.5" Width="3.25" />
+    <Position X="13.25" Y="0.5" Width="3.25" />
     <Members>
       <Method Name="Location" Hidden="true" />
     </Members>
     <TypeIdentifier />
     <ShowAsCollectionAssociation>
-      <Property Name="FulfillmentTypes" />
       <Property Name="LocationTypes" />
+      <Property Name="FulfillmentTypes" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Mozu.Location.Contracts.FulfillmentType">
-    <Position X="18.5" Y="5.5" Width="2.25" />
+    <Position X="11.25" Y="5" Width="2.25" />
     <Members>
       <Method Name="FulfillmentType" Hidden="true" />
     </Members>
     <TypeIdentifier />
   </Class>
   <Class Name="Mozu.Location.Contracts.LocationType">
-    <Position X="18.5" Y="3.5" Width="2.25" />
+    <Position X="16.75" Y="4" Width="2.25" />
     <Members>
       <Method Name="LocationType" Hidden="true" />
     </Members>
     <TypeIdentifier />
   </Class>
   <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.LocationWithInventory">
-    <Position X="10.25" Y="4.5" Width="1.75" />
+    <Position X="10.5" Y="3.25" Width="1.75" />
     <Members>
       <Method Name="LocationWithInventory" Hidden="true" />
     </Members>
     <TypeIdentifier />
     <ShowAsAssociation>
       <Property Name="Location" />
+      <Property Name="Fulfillment" />
     </ShowAsAssociation>
   </Class>
   <Class Name="Mozu.Location.Contracts.LocationUsageType">
-    <Position X="9.5" Y="5.75" Width="3" />
+    <Position X="5.5" Y="6" Width="3" />
     <Members>
       <Method Name="LocationUsageType" Hidden="true" />
     </Members>

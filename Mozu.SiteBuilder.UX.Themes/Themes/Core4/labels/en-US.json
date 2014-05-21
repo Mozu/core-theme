@@ -220,8 +220,7 @@
   "customerAlreadyExists": "A customer is already registered as {0}. <a href=\"/user/login?returnUrl={1}\">Login as this customer</a>",
   "noPaymentRequired"    : "Your total is {0}, so no payment method is required.",
 
-  "giftCardBlob1"         : "<p>Thank you for shopping at {0}!  We have good news for you-- here is your gift card:</p>",
-  "giftCardBlob2"         : "<p>TO ADD THE ITEMS TO YOUR CART: <a href=\"http://{0}/p/{1}\">CLICK HERE</a>.</p>",
+  "giftCardBlob1"         : "<p>Thank you for purchasing a {0} Gift Card that can be redeemed towards a variety of items at <a href=\"http://{1}/\">{1}</a>.  Don't delete this message -- you'll need the gift card claim code below.  You may want to print a copy of this message for easy reference later.</p>",
   "giftCardValue"         : "Value",
   
 
