@@ -1,41 +1,48 @@
-﻿var Harness = Siesta.Harness.Browser.ExtJS;
-
+﻿var Harness = Siesta.Harness.Browser.ExtJS,
+    simAndSinPreloads = [
+    'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimXhr.js',
+    'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/Simlet.js',
+    'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/DataSimlet.js',
+    'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/JsonSimlet.js',
+    'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimManager.js',
+    '/admin/tests/sinon.js'
+    ];
 Harness.configure({
     title: "Mozu Test Suite",
     waitForExtReady: true,
     autoCheckGlobals: false,
     expectedGlobals: ['Ext', 'Taco'],
     testClass: Taco.TestClass.Core,
-    preload: [
-        'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimXhr.js',
-        'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/Simlet.js',
-        'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/DataSimlet.js',
-        'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/JsonSimlet.js',
-        'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimManager.js',
-        '/admin/tests/sinon.js'
-    ],
+    preload: simAndSinPreloads,
+
     //  loaderPath  : { 'Ext.ux': 'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux' },
-    hostPageUrl: 'homepages/Mystic.html',
+    hostPageUrl: 'homepages/Mystic.cshtml',
+    //listeners: {
+    //    testsuitestart:function (event, harness) {
+    //        debugger;
+    //    }
+    //},
+    //setup: function (callback) {
+    //    var me = this;
+    //    setTimeout(function () {
+    //        callback();
+    //    }, 5000, this);
+    //}
 });
 
-Harness.start({
+Harness.start(
+    {
 
 
         /*********** ADMIN COMPONENT INTEGRATION TEST ***********/
-        group: "Admin  (Integration tests)",
+        group: "Admin Integration",
         expanded: true,
-
+        runCore :'sequential',
      
         items: [
             {
-                alsoPreload: [
-                      'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimXhr.js',
-                      'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/Simlet.js',
-                      'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/DataSimlet.js',
-                      'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/JsonSimlet.js',
-                      'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimManager.js',
-                      '/admin/tests/sinon.js'
-                ],
+                runCore: 'sequential',
+                alsoPreload: simAndSinPreloads,
                 hostPageUrl: '/admin',
                 group: 'Products',
                 expanded: true,
@@ -62,11 +69,13 @@ Harness.start({
                 ]
             }
         ]
-    }, {
+    },
+
+    {
 
         // hostPageUrl: '/admin?testHarnessMode=true',
         /*********** ADMIN COMPONENT INTEGRATION TEST ***********/
-        group: "Admin Application (Functional tests)",
+        group: "Admin Functional",
         expanded: true,
         items: [
             {
@@ -85,11 +94,11 @@ Harness.start({
 
     /*********** UNIT TESTS ***********/
     {
-        group: 'Components (Unit tests)',
+        group: 'Components ',
         expanded: true,
         alsoPreload: [
             {
-                text: "Taco.showViewPort=false;"
+                text: "Taco.app.viewPort.removeAll(true)"
             }
         ],
         items: [
@@ -114,10 +123,22 @@ Harness.start({
             }, {
                 group: 'Tabs',
                 expanded: true,
+                alsoPreload: [
+           
+                ],
                 items: [
                     {
                         url: 'unit/tab/picker.t.js',
                         title: 'Tab Picker Tests'
+                    }
+                ]
+            }, {
+                group: 'WebSite',
+                expanded: true,
+                items: [
+                    {
+                        url: 'unit/website/settings/doc-seo.js',
+                        title: 'web-doc-seo'
                     }
                 ]
             }, {

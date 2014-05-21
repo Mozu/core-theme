@@ -1,5 +1,7 @@
 ﻿
-
+@{
+    var appJs = Context.Request.Cookies["debugext"].Value == "true" ? "app-dev.js" : "app.js";
+}
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,7 +18,7 @@
     </script>
     <script type="text/javascript" src="/Admin/Scripts/resources/lib/init.min.js"></script>
 
-    <script type="text/javascript" src="/Admin/Scripts/build/app.js?ver=1.7.1.29"></script>
+    <script type="text/javascript" src="/Admin/Scripts/build/@appJs"></script>
     <script src="/Admin/Scripts/build/locale/ext-lang-en.js"></script>
 
     <script type="text/javascript">
