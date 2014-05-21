@@ -15,7 +15,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         'Taco.core.ux.grid.ActionColumn',
         'Taco.view.order.modal.FulfillmentMethod'
     ],
-
+    
     mixins: {      
         //rowEditable: 'Taco.core.ux.mixins.RowEditable'
     },
@@ -63,7 +63,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         this.addEvents('save','saveFailure','saveSuccess');
         
         me.cls = [this.cls, editModeCls, Taco.baseCSSPrefix + 'orderform-orderitemgrid'].join(' ');
-
+        
         me.bodyCls = Taco.baseCSSPrefix + 'orderform-orderitemgrid-body'
         
         siteContext = Taco.app.context.getCurrent().urlToken;
@@ -195,13 +195,13 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
             plugins: [
                 Ext.create('Ext.grid.plugin.CellEditing', {
-                    clicksToEdit: 1
+                clicksToEdit: 1
                 })
             ],
 
             columns: [
 
-                {
+            {
                     text: 'Code',
                     draggable: false,
                     resizable: true,
@@ -215,113 +215,113 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
 
                 {
-                    text: 'Products',
-                    draggable: false,
+                text: 'Products',
+                draggable: false,
                     minWidth:80,
-                    xtype: 'templatecolumn',
-                    flex: 1,
-                    tdCls:"taco-product-column",
-                    sortable: false,
-                    resizable: false,
-                    menuDisabled: true,
+                xtype: 'templatecolumn',
+                flex: 1,
+                tdCls:"taco-product-column",
+                sortable: false,
+                resizable: false,
+                menuDisabled: true,
                    
                                        
-                    tpl: new Ext.XTemplate(
-                        '<tpl if="isDeleted">',
-                        '<span class="product-link-disabled" productCode="{productCode}">{productName}</span>',
-                        '<tpl else>',
-                        //'<a class="product-link" productCode="{productCode}" target="_blank" href="/admin/' + siteContext + '/products/edit/{productCode}">{productName}</a>',
-                        '<span class="product-link-disabled">{productName}</span>',
-                        '</tpl>',
-                        '<div class="product-options">',
-                            '<tpl for="options">',
-                                '<span class="option"><tpl if="xindex &gt; 1">, </tpl>{name}',
+                tpl: new Ext.XTemplate(
+                    '<tpl if="isDeleted">',
+                    '<span class="product-link-disabled" productCode="{productCode}">{productName}</span>',
+                    '<tpl else>',
+                    //'<a class="product-link" productCode="{productCode}" target="_blank" href="/admin/' + siteContext + '/products/edit/{productCode}">{productName}</a>',
+                    '<span class="product-link-disabled">{productName}</span>',
+                    '</tpl>',
+                    '<div class="product-options">',
+                        '<tpl for="options">',
+                            '<span class="option"><tpl if="xindex &gt; 1">, </tpl>{name}',
                                 ': {value}',
-                            '</span>',
-                            '</tpl>',
-                            '<tpl for="bundledProducts">',
-                                '<div class="bundledProduct">',
-                                    '{productCode} - {name} (Qty. {quantity})',
-                                '</div>',
-                            '</tpl>',
-                    
-                            '<div>',
-                                // if order item supports instore pickup and user is currently editing the order. make the fulfillment method a link;
-                                '<tpl if="this.isEditable() && supportsInStorePickup">',
-                                    'Fulfillment Method: <a class="fulfillment-link" href="#" fulfillmentMethod="{fulfillmentMethod}">{[this.getFulfillmentMethodText(values)]}</a>',
-                                '<tpl else>',
-                                    'Fulfillment Method: {[this.getFulfillmentMethodText(values)]}',
-                                '</tpl>',
+                        '</span>',
+                        '</tpl>',
+                        '<tpl for="bundledProducts">',
+                            '<div class="bundledProduct">',
+                                '{productCode} - {name} (Qty. {quantity})',
                             '</div>',
+                        '</tpl>',
+                    
+                        '<div>',
+                            // if order item supports instore pickup and user is currently editing the order. make the fulfillment method a link;
+                            '<tpl if="this.isEditable() && supportsInStorePickup">',
+                                'Fulfillment Method: <a class="fulfillment-link" href="#" fulfillmentMethod="{fulfillmentMethod}">{[this.getFulfillmentMethodText(values)]}</a>',
+                            '<tpl else>',
+                                'Fulfillment Method: {[this.getFulfillmentMethodText(values)]}',
+                            '</tpl>',
                         '</div>',
-                        {
-                            getFulfillmentMethodText: function (record) {                            
-                                var fulfillmentMethod = record.fulfillmentMethod;
-                                var fulfillmentLocation = " (" + record.fulfillmentLocationCode + ")";
-                                if (fulfillmentMethod == "Ship") {
-                                    return "Direct Ship" + fulfillmentLocation;
-                                } else {
-                                    return "In Store Pickup" + fulfillmentLocation;                                
+                    '</div>',
+                    {
+                        getFulfillmentMethodText: function (record) {                            
+                            var fulfillmentMethod = record.fulfillmentMethod;
+                            var fulfillmentLocation = " (" + record.fulfillmentLocationCode + ")";
+                            if (fulfillmentMethod == "Ship") {
+                                return "Direct Ship" + fulfillmentLocation;
+                            } else {
+                                return "In Store Pickup" + fulfillmentLocation;                                
+                            }
+                        },
+                        isEditable: function (values) {
+                            return me.getEditMode();
+                        }
+                    }
+                    ),
+                    dataIndex: 'productName',
+                    listeners: {
+                        click: {
+                            fn: function (view, cell, cellIndex, rowIndex, e, record, row, eOpt) {
+
+                                
+                                var editMode = view.ownerCt.editMode,
+                                    fulfillmentMethod = e.target.getAttribute("fulfillmentMethod"),
+                                    orderRecord = me.record
+
+                                
+
+                                // if user clicks the fulfillment method link. open the fulfillment Method Selector;
+                                if (editMode && fulfillmentMethod) {
+                                    me.editFulfillmentMethod(record,orderRecord);
                                 }
-                            },
-                            isEditable: function (values) {
-                                return me.getEditMode();
-                            }
-                        }
-                        ),
-                        dataIndex: 'productName',
-                        listeners: {
-                            click: {
-                                fn: function (view, cell, cellIndex, rowIndex, e, record, row, eOpt) {
 
-                                
-                                    var editMode = view.ownerCt.editMode,
-                                        fulfillmentMethod = e.target.getAttribute("fulfillmentMethod"),
-                                        orderRecord = me.record
-
-                                
-
-                                    // if user clicks the fulfillment method link. open the fulfillment Method Selector;
-                                    if (editMode && fulfillmentMethod) {
-                                        me.editFulfillmentMethod(record,orderRecord);
-                                    }
-
-                                    if (!editMode || e.target.tagName != "A") {
-                                        return;
-                                    }
-                                
-                                    //temporarily disabling while we add service support for updating the options and extras.
+                                if (!editMode || e.target.tagName != "A") {
                                     return;
-
-                                    // prevent the default link behavior
-                                    e.preventDefault();
+                                }
                                 
-                                    var productCode = record.get("productCode"),
-                                    isConfigurable = record.get("isConfigurable");
+                                //temporarily disabling while we add service support for updating the options and extras.
+                                return;
 
-                                    // determine if we need to show the configurator
-                                    //if (isConfigurable) {
+                                // prevent the default link behavior
+                                e.preventDefault();
                                 
-                                        var win = Ext.create('Taco.view.order.modal.ProductConfigurator', {
-                                            productCode: productCode,
-                                            configuredProduct: record,
-                                            listeners: {
-                                                'configureproduct': {
-                                                    fn: function (configurationData) {
-                                                        //this.addConfiguredProduct([configurationData]);
+                                var productCode = record.get("productCode"),
+                                isConfigurable = record.get("isConfigurable");
+
+                                // determine if we need to show the configurator
+                                //if (isConfigurable) {
+                                
+                                    var win = Ext.create('Taco.view.order.modal.ProductConfigurator', {
+                                        productCode: productCode,
+                                        configuredProduct: record,
+                                        listeners: {
+                                            'configureproduct': {
+                                                fn: function (configurationData) {
+                                                    //this.addConfiguredProduct([configurationData]);
                                                     
-                                                    },
-                                                    scope: this
-                                                }
+                                                },
+                                                scope: this
                                             }
-                                        });
-                                    //}
+                                        }
+                                    });
+                                //}
                                 
-                                },
-                                scope: this
-                            }
-                        
+                            },
+                            scope: this
                         }
+                        
+                    }
                 },
 
                 {
@@ -467,7 +467,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
         me.callParent(arguments);
     },
-
+    
     initAddProductToolbar: function () {
         var me = this;
 

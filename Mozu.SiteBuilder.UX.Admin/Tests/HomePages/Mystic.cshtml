@@ -1,6 +1,6 @@
 ﻿
 @{
-    var appJs = Context.Request.Cookies["debugext"].Value == "true" ? "app-dev.js" : "app.js";
+    var appJs = (Context.Request.Cookies["debugext"] != null && Context.Request.Cookies["debugext"].Value == "true") ? "app-dev.js" : "app.js";
 }
 <!DOCTYPE html>
 <html>

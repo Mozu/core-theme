@@ -1933,13 +1933,16 @@
     <Content Include="SetParameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Tests\CheckinTests.js" />
+    <Content Include="Tests\Functional\product\product-basic-edit-save.js" />
     <Content Include="Tests\helpers\Core.js" />
     <Content Include="Tests\HomePages\Mystic.cshtml" />
     <Content Include="Tests\CheckinTests.html" />
     <Content Include="Tests\indexProduct.html" />
     <Content Include="Tests\index-no-ui.html" />
+    <Content Include="Tests\integration\attributes\attribute-create.t.js" />
     <Content Include="Tests\integration\attribute\attribute-create.t.js" />
-    <Content Include="Tests\Functional\product\product-basic-edit-save.js" />
+    <Content Include="Tests\integration\product-basic-edit-save.js" />
     <Content Include="Tests\index.html" />
     <Content Include="Tests\integration\product\product-basic-edit-save.js" />
     <Content Include="Tests\mocha\basic\basic-mocha-bdd-test.js" />
@@ -1949,6 +1952,7 @@
     <Content Include="Tests\CheckinTests.js" />
     <Content Include="Tests\MozuTestSuiteProduct.js" />
     <Content Include="Tests\MozuTestSuite.js" />
+    <Content Include="Tests\noop.t.js" />
     <Content Include="Tests\sanity-test.t.js" />
     <Content Include="Tests\sinon.js" />
     <Content Include="Tests\mocha\requireJs\specs\admin\require-mocha-bdd-test.js">
@@ -1964,6 +1968,7 @@
     <Content Include="Tests\specs\admin\require-mocha-bdd-test.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Tests\specs\admin\_Chutzpah.a570f26a0dbaf311f26999a980496124.test.html" />
     <Content Include="Tests\specs\config.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1972,6 +1977,10 @@
     </Content>
     <Content Include="Tests\speed-test.t.js" />
     <Content Include="Tests\unit\app-state-matches-uri.t.js" />
+    <Content Include="Tests\unit\grid\grid-action-buttons.js" />
+    <Content Include="Tests\unit\scrolling-content-body-adds-scroll-class.js" />
+    <Content Include="Tests\unit\enabling-robots-txt-override-enabled-robots-field.js" />
+    <Content Include="Tests\unit\disabling-google-analytics-disables-ua-field.js" />
     <Content Include="Tests\unit\form\model-binds.t.js" />
     <Content Include="Tests\unit\grid\grid-action-buttons.js" />
     <Content Include="Tests\unit\tab\picker.t.js" />
@@ -2051,6 +2060,7 @@
     <Content Include="Tests\Mocks\ProductAdmin\Mystic1\ProductTypes1.json" />
     <Content Include="Tests\Mocks\ProductAdmin\Mystic1\Categories1.json" />
     <Content Include="Tests\HomePages\WebPage1.cshtml" />
+    <Content Include="Tests\specs\admin\chutzpah.json1" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />

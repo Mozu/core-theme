@@ -56,11 +56,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             int? qLimit = extFilter.SearchType == "global" ? (int?)3 : (int?)null;
             // if there is a q AND there is no filter, default qLimit to 50.
             if (String.IsNullOrWhiteSpace(filter) && !String.IsNullOrWhiteSpace(q) && !qLimit.HasValue)
-                qLimit = 50;
+                qLimit = pagingParams.pageSize.GetValueOrDefault(50) + 1;
 
 
 
-            ProductCollection res = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, sortBy: sort, responseGroups: responseGroups, filter: filter, q: q, qLimit: qLimit)).ReadAsSync();
+            ProductCollection res;
+            
+            // qLimit and pageSize do not work together.
+            // if q is specified and we are attempting to page beyond page 1, do not use qLimit.
+            if (!String.IsNullOrWhiteSpace(q) && pagingParams.pageIndex > 1)
+            {
+                res = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, sortBy: sort, responseGroups: responseGroups, filter: filter, q: q)).ReadAsSync();
+            }
+            else
+            {
+                res = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, sortBy: sort, responseGroups: responseGroups, filter: filter, q: q, qLimit: qLimit)).ReadAsSync();
+            }
 
             var mapped = res.Items.Map<List<Product>>();
             return List2(mapped, (int)res.TotalCount);
