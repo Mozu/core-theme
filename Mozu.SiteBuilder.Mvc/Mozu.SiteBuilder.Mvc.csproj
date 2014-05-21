@@ -232,7 +232,7 @@
     </Reference>
     <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.8.0-dev003\lib\net45\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.8.0-dev004\lib\net45\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts">
       <HintPath>..\packages\Mozu.Content.Contracts.1.7.0.2\lib\Mozu.Content.Contracts.dll</HintPath>
@@ -259,9 +259,9 @@
     <Reference Include="Mozu.Core.Messaging">
       <HintPath>..\packages\Mozu.Core.Messaging.1.7.0.5\lib\net451\Mozu.Core.Messaging.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Messaging.Contracts, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.Messaging.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Messaging.Contracts.1.7.0.3\lib\net45\Mozu.Core.Messaging.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Messaging.Contracts.1.8.0-dev008\lib\net45\Mozu.Core.Messaging.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Mongo, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Mozu.Core.Mongo.1.7.0.12\lib\net45\Mozu.Core.Mongo.dll</HintPath>
@@ -272,8 +272,9 @@
     <Reference Include="Mozu.Core.ThirdParty.Contracts">
       <HintPath>..\packages\Mozu.Core.ThirdParty.Contracts.1.7.0.4\lib\net45\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Customer.Contracts, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mozu.Customer.Contracts.1.7.0.4\lib\net45\Mozu.Customer.Contracts.dll</HintPath>
+    <Reference Include="Mozu.Customer.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Customer.Contracts.1.8.0-dev005\lib\net45\Mozu.Customer.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.InstalledApplications.Contracts, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -585,6 +586,7 @@
     <EmbeddedResource Include="TestData\product.instock\product1.json" />
     <EmbeddedResource Include="TestData\user.created\user1.json" />
     <EmbeddedResource Include="TestData\user.passwordreset\user1.json" />
+    <EmbeddedResource Include="TestData\giftcard.created\OrderCredit1.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tags\Data\" />

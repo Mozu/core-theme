@@ -19,7 +19,7 @@ namespace Mozu.SiteBuilder.UX.TestData
 
             //_names.GroupBy(x=> x.LastIndexOf())
         }
-        public   Stream GetFileContent(string path)
+        public Stream GetFileContent(string path)
         {
             var name = _names.FirstOrDefault(x => x.EndsWith(path, StringComparison.OrdinalIgnoreCase));
             if (name == null)
