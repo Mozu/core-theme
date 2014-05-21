@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterClassesMatchingInterfaceName(typeof(IShippingWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(ILocationRuntimeWebApiClient).Assembly);
              
-            builder.RegisterType<MozuVirtualPathProvider>().InstancePerApiRequest();
+            builder.RegisterType<MozuVirtualPathProvider>().InstancePerRequest();
             //   builder.RegisterType<WidgetProvider>().As<IWidgetProvider>();
             builder.RegisterType<Document>();
             // builder.RegisterType<WidgetInstanceData >();
@@ -46,11 +46,11 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<Post>();
 
 
-            builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.ClientApiContext>().InstancePerApiRequest();
-            builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.NavigationContext>().InstancePerApiRequest();
-            builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.PageContext>().InstancePerApiRequest();
-            builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.SiteContext>().InstancePerApiRequest();
-            builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.PageContext>().As<IEditableContext>().InstancePerApiRequest();
+            builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.ClientApiContext>().InstancePerRequest();
+            builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.NavigationContext>().InstancePerRequest();
+            builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.PageContext>().InstancePerRequest();
+            builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.SiteContext>().InstancePerRequest();
+            builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.PageContext>().As<IEditableContext>().InstancePerRequest();
         
             // builder.RegisterType<AuthenticationHelper>().InstancePerLifetimeScope();
             
@@ -61,20 +61,20 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
 
 
-            builder.RegisterType<HyprViewEngine>().InstancePerApiRequest();
+            builder.RegisterType<HyprViewEngine>().InstancePerRequest();
 
             //  builder.RegisterType<RoleWebApiClient>().As<IMultiScopeRoleWebApiClient>();
             //   builder.RegisterType<BehaviorWebApiClient>().As<IBehaviorWebApiClient>();
-            builder.RegisterType<PermissionsRepository>().As<IPermissionsRepository>().InstancePerApiRequest();
+            builder.RegisterType<PermissionsRepository>().As<IPermissionsRepository>().InstancePerRequest();
 
-            builder.RegisterType<ReferenceDataWebApiClient>().As<IReferenceDataWebApiClient>().InstancePerApiRequest();
+            builder.RegisterType<ReferenceDataWebApiClient>().As<IReferenceDataWebApiClient>().InstancePerRequest();
 
             //     builder.RegisterType<RoutableShippingWebApiClient>().As<IShippingWebApiClient>();
 
             // builder.RegisterType<ShippingRateWebApiClient>().As<IShippingRateWebApiClient>();
-            builder.RegisterType<ShippingSettingsWebApiClient>().As<IShippingSettingsWebApiClient>().InstancePerApiRequest();
+            builder.RegisterType<ShippingSettingsWebApiClient>().As<IShippingSettingsWebApiClient>().InstancePerRequest();
 
-            builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>().InstancePerApiRequest();
+            builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>().InstancePerRequest();
 
 
 
@@ -109,13 +109,13 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
 
 
-            builder.RegisterType<CmsHelper>().InstancePerApiRequest();
-            
-            builder.RegisterType<NavigationRepository>().As<INavigationRepository>().InstancePerApiRequest();
+            builder.RegisterType<CmsHelper>().InstancePerRequest();
 
-            builder.RegisterType<NavigationGandalfTheWhite>().As<INavigationGandalf>().InstancePerLifetimeScope().InstancePerApiRequest();
+            builder.RegisterType<NavigationRepository>().As<INavigationRepository>().InstancePerRequest();
 
-            builder.RegisterType<RuntimeCategoryTreeProvider>().As<ICategoryTreeProvider>().InstancePerApiRequest();
+            builder.RegisterType<NavigationGandalfTheWhite>().As<INavigationGandalf>().InstancePerLifetimeScope().InstancePerRequest();
+
+            builder.RegisterType<RuntimeCategoryTreeProvider>().As<ICategoryTreeProvider>().InstancePerRequest();
 
             builder.RegisterType<CmsServiceWrapper2>().As<ICmsServiceWrapper>().InstancePerDependency();
             builder.RegisterType<CmsTypeHelper>().As<ICmsTypeHelper>().InstancePerDependency();

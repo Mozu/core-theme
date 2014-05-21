@@ -19,6 +19,7 @@ Ext.define('Taco.view.order.subform.Payment', {
 
     tools: [{
         type: 'gear',
+        itemId: 'paymentGear',
         menu: {
             plain: true,
             shadow: false,
@@ -76,7 +77,8 @@ Ext.define('Taco.view.order.subform.Payment', {
                 me.bodyCont
             ]
         });
-        this.callParent(arguments); 
+        this.callParent(arguments);
+        this.on('render', function () { this.down('#paymentGear').setVisible(me.record.get('orderStatus') !== 'PendingReview') }, this);
     },
     
     getMenuActions: function () {

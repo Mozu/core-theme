@@ -224,10 +224,6 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
     validations: [
 
      
-      
-        //{ type: 'presence', name: 'productCode' },
-       // { type: 'length', name: 'productCode', min: 3, max: 30 },
-        { type: 'format', name: 'productCode', matcher: /^[A-z0-9\-]*$/ }
     ]
 
     

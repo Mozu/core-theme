@@ -142,6 +142,18 @@ Harness.start(
                     }
                 ]
             }, {
+                group: 'Orders',
+                expanded: true,
+                alsoPreload: [
+                       
+                ],
+                items: [
+                    {
+                        url: 'unit/order/pendingreview-should-not-allow-add-payment.js',
+                        title: 'PendingReview Should Not Allow Add Payment'
+                    }
+                ]
+            }, {
                 group: 'WebSite',
                 expanded: true,
                 items: [
