@@ -187,26 +187,13 @@ Ext.define('Taco.view.order.Index', {
         }, {
             stateId: 'fraudScore',
             text: 'Fraud Score',
-            dataIndex: 'attributes',
+            dataIndex: 'fraudScore',
+            itemId: 'fraudScore',
             flex: 1,
             minWidth: 100,
             width: 100,
             sortable: false,
-            hidden: true,
-            renderer: function (value, metaData, record) {
-                var attribute = Ext.Array.findBy(value, function (item, index) {
-                    return item.fullyQualifiedName === 'tenant~Kount Fraud Detection Results';
-                }, this);
-                var results = attribute ? attribute.values[0] : '';
-                var start;
-
-                if (attribute) {
-                    start = results.indexOf('FraudScore');
-                    results = Ext.String.splitWords(results.substr(start === -1 ? 0 : start))[1];
-                }
-
-                return results;
-            }
+            hidden: true
         }, {
             stateId: 'actions',
             xtype: 'taco.menucolumn',

@@ -116,6 +116,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                 .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))
 
+                .ForMember(x => x.ValidationResults, op => op.ResolveUsing(dc => dc.ValidationResults))
+                .ForMember(x => x.FraudScore, op => op.ResolveUsing(dc => {
+                    if (dc.ValidationResults != null)
+                    {
+                        var fraudScores =
+                            from message in dc.ValidationResults.SelectMany(vr => vr.Messages)
+                            where message != null && message.MessageType == OrdersDC.OrderValidationMessage.OrderValidatorMessageTypeConst.FRAUD_SCORE
+                            select message.Message;
+
+                        if (fraudScores != null && fraudScores.Any())
+                            return fraudScores.First();
+                    }
+
+                    return null;
+                }))
+
                 //todo: confirm 2 mappings - Greg Murray on 2014-01-31 
                 .ForMember(x => x.IsSameBillingShippingAddress, op => op.ResolveUsing(dc => (dc.BillingInfo != null) 
                     ? dc.BillingInfo.IsSameBillingShippingAddress : false))
