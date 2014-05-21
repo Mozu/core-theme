@@ -156,6 +156,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// </summary>
         public bool HasDraft { get; set; }
 
+        /// <summary>
+        /// A list of ValidationResults from the order service.
+        /// </summary>
+        public List<DC.OrderValidationResult> ValidationResults { get; set; }
+
+        /// <summary>
+        /// A fraud score, if one was included in the ValidationResults.
+        /// </summary>
+        public string FraudScore { get; set; }
+
         #region Totals
 
         /// <summary>

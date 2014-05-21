@@ -490,10 +490,18 @@ Ext.define('Taco.model.Order', {
             "name": "shippingMethodCode",
             "type": "string",
             persist: false
+        },
+        {
+            "name": "validationResults",
+            "type": "any",
+            persist: false
+        },
+        {
+            "name": "fraudScore",
+            "type": "int",
+            persist: false,
+            "useNull": true
         }
-
-        
-
     ],
     
     reload: function (config) {

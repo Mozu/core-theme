@@ -422,14 +422,19 @@
                 };
             },
             submit: function () {
-                var order = this.getOrder();
-                if (this.nonStoreCreditTotal() > 0 && this.validate()) return false;
-                var currentPayment = order.apiModel.getCurrentPayment();
-                if (currentPayment) {
-                    return order.apiVoidPayment(currentPayment.id).then(this.applyPayment);
-                } else {
-                    return this.applyPayment();
-                }
+                var self = this,
+                    order = this.getOrder();
+                if (self.nonStoreCreditTotal() > 0 && self.validate()) return false;
+                var currentBillingInfoState = this.toJSON();
+                order.apiGet().then(function(payments) {
+                    self.set(currentBillingInfoState);
+                    var currentPayment = order.apiModel.getCurrentPayment();
+                    if (currentPayment) {
+                        return order.apiVoidPayment(currentPayment.id).then(self.applyPayment);
+                    } else {
+                        return self.applyPayment();
+                    }
+                });
             },
             applyPayment: function () {
                 var self = this, order = this.getOrder();
@@ -454,7 +459,7 @@
                 this.isLoading(false);
                 this.getOrder().isReady(true);
             },
-            toJSON: function() {
+            toJSON: function(options) {
                 var j = CheckoutStep.prototype.toJSON.apply(this, arguments), loggedInEmail;
                 if (this.nonStoreCreditTotal() === 0 && j.billingContact) {
                     delete j.billingContact.address;
@@ -509,7 +514,8 @@
                 amountRemainingForPayment: Backbone.MozuModel.DataTypes.Float
             },
             initialize: function (data) {
-                var self = this;
+                var self = this,
+                    user = require.mozuData('user');
                 _.defer(function () {
                     var latestPayment = self.apiModel.getCurrentPayment(),
                         fulfillmentInfo = self.get('fulfillmentInfo'),
@@ -523,8 +529,14 @@
                         self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function (k) { return k.indexOf("fulfillment") === -1; }));
                     }
 
+                    self.get('billingInfo.billingContact').on('change:email', function(model, newVal) {
+                        self.set('email', newVal);
+                    });
+
+                    var billingEmail = billingInfo.get('billingContact.email');
+                    if (!billingEmail && user.email) billingInfo.set('billingContact.email', user.email);
+
                 });
-                var user = require.mozuData('user');
                 if (user.isAuthenticated) {
                     this.set('customer', { id: user.accountId });
                 }
@@ -700,8 +712,10 @@
                 api.steps(process).then(this.onCheckoutSuccess, this.onCheckoutError);
 
             },
-            update: function () {
-                return this.apiModel.update(this.toJSON());
+            update: function() {
+                var j = this.toJSON();
+                delete j.billingInfo;
+                return this.apiModel.update(j);
             },
             isReady: function (val) {
                 this.set("isReady", val);

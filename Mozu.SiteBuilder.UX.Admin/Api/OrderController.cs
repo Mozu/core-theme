@@ -80,7 +80,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                                x.ShopperNotes = null;
                                                x.Pickups = null;
                                                x.Shipments = null;
-                                               x.ValidationResults = null;
+                                               //x.ValidationResults = null;
                    
                 });
                 return List2(Mapper.Map<List<Order>>(dcOrders.Items), (int)dcOrders.TotalCount);
