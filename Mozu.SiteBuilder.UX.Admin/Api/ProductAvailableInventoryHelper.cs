@@ -22,6 +22,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Provide inventory by location based on following logic.  
         /// If location supports multiple fulfillment type
         ///     then duplicates LocationWithInventory with different FulfillmentType.
+        /// Sorts on Direct ship, 
         /// 
         /// manage stock    out of stock behavior                       inv         show
         /// ------------    ---------------------                       ---         ----
@@ -41,16 +42,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //converts to sb.
             var locationsWithInventory = inventories.Items.Map<List<LocationWithInventory>>();
 
-            var fulfillmentComparer = new FulfillmentComparer();
+            var fulfillmentComparer = new LocationWithInventoryFulfillmentComparer();
             
             locationsWithInventory.ForEach(lwi => lwi.Location = locations.FirstOrDefault(l => l.Code == lwi.LocationCode));
             var result = new List<LocationWithInventory>();
             foreach (var locWithInv in locationsWithInventory
-                    .Where(locWithInv => (!product.InventoryInfo.ManageStock.HasValue || !product.InventoryInfo.ManageStock.Value) 
-                        || (product.InventoryInfo.OutOfStockBehavior != ProductInventoryInfo.OutOfStockBehaviorConst.DisplayMessage && product.InventoryInfo.OutOfStockBehavior != ProductInventoryInfo.OutOfStockBehaviorConst.HideProduct) 
-                        || (locWithInv.StockAvailable + locWithInv.StockOnHand > 0)))
+                .Where(locWithInv => (!product.InventoryInfo.ManageStock.HasValue || !product.InventoryInfo.ManageStock.Value) 
+                                     || (product.InventoryInfo.OutOfStockBehavior != ProductInventoryInfo.OutOfStockBehaviorConst.DisplayMessage && product.InventoryInfo.OutOfStockBehavior != ProductInventoryInfo.OutOfStockBehaviorConst.HideProduct) 
+                                     || (locWithInv.StockAvailable > 0)).Where(locWithInv => locWithInv.Location != null && locWithInv.Location.FulfillmentTypes != null))
             {
-                locWithInv.Location.FulfillmentTypes.Sort(fulfillmentComparer);
                 result.AddRange(locWithInv.Location.FulfillmentTypes.Select(fulfillment => new LocationWithInventory
                 {
                     Location = locWithInv.Location, 
@@ -64,6 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     StockOnHand = locWithInv.StockOnHand
                 }));
             }
+            result.Sort(fulfillmentComparer);
             return result;
         }
     }
@@ -71,17 +72,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     /// <summary>
     /// used to sort 1. DirectShip, 2. Location, 3. Other
     /// </summary>
-    public class FulfillmentComparer : IComparer<FulfillmentType>
+    public class LocationWithInventoryFulfillmentComparer : IComparer<LocationWithInventory>
     {
-        public int Compare(FulfillmentType x, FulfillmentType y)
+        public int Compare(LocationWithInventory x, LocationWithInventory y)
         {
-            if (x.Code == y.Code)
+            if (x.Fulfillment.Code == y.Fulfillment.Code)
+            {
+                //could do secondary sort on Inv. desc.
                 return 0;
-            if (x.Code == FulfillmentTypeConstants.DirectShip.Code &&
-                y.Code == FulfillmentTypeConstants.InStorePickup.Code)
+            }
+            if (x.Fulfillment.Code == FulfillmentTypeConstants.DirectShip.Code &&
+                y.Fulfillment.Code == FulfillmentTypeConstants.InStorePickup.Code)
                 return -1;
-            if (x.Code == FulfillmentTypeConstants.InStorePickup.Code &&
-                y.Code == FulfillmentTypeConstants.DirectShip.Code)
+            if (x.Fulfillment.Code == FulfillmentTypeConstants.InStorePickup.Code &&
+                y.Fulfillment.Code == FulfillmentTypeConstants.DirectShip.Code)
                 return 1;
             return 1;
         }
