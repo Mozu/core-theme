@@ -1982,6 +1982,7 @@
     <Content Include="Tests\speed-test.t.js" />
     <Content Include="Tests\unit\app-state-matches-uri.t.js" />
     <Content Include="Tests\unit\grid\grid-action-buttons.js" />
+    <Content Include="Tests\unit\order\pendingreview-should-not-allow-add-payment.js" />
     <Content Include="Tests\unit\scrolling-content-body-adds-scroll-class.js" />
     <Content Include="Tests\unit\enabling-robots-txt-override-enabled-robots-field.js" />
     <Content Include="Tests\unit\disabling-google-analytics-disables-ua-field.js" />
