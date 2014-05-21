@@ -1944,9 +1944,7 @@
     <Content Include="Tests\CheckinTests.html" />
     <Content Include="Tests\indexProduct.html" />
     <Content Include="Tests\index-no-ui.html" />
-    <Content Include="Tests\integration\attributes\attribute-create.t.js" />
     <Content Include="Tests\integration\attribute\attribute-create.t.js" />
-    <Content Include="Tests\integration\product-basic-edit-save.js" />
     <Content Include="Tests\index.html" />
     <Content Include="Tests\integration\product\product-basic-edit-save.js" />
     <Content Include="Tests\mocha\basic\basic-mocha-bdd-test.js" />
