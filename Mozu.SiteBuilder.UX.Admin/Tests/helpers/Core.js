@@ -20,8 +20,16 @@
                     }
                     return false;
                 },
+                openRequest: function (method, url, options, async) {
+                    var xhr = this.callParent(arguments);
+                    if (xhr) {
+                        options.headers = {};
+                    }
+                    return xhr;
+                }
 
             });
+
 
             callback();
 
@@ -91,6 +99,10 @@
                 //  var fnComplete = function () {
 
                 var field = test.fieldFieldInForm(form, key);
+                if (!field) {
+                    test.fail('didnt find field' + key);
+                    return;
+                }
                 test.is(field.getValue(), value, ' field: "' + key + '" set propertly');
 
 
@@ -170,8 +182,8 @@
         },
         setOnlyMocks: function (value) {
             var sm = this.getExt().ux.ajax.SimManager;
-            
 
+            sm.init();
             sm.defaultSimlet = value == false ? null : this.getExt().create('Ext.ux.ajax.Simlet', {
                 status: 404,
                 statusText: 'Not Found',

@@ -19,6 +19,10 @@ Ext.define('Taco.view.website.settings.CmsBaseForm', {
    
     loadRecord: function (record, cascade) {
         var values = {};
+
+        values = Ext.apply(values, this.record.data);
+        delete (values.items);
+        
         Ext.Array.each(this.record.data.items, function (kvp) {
             
             values[kvp.key] = kvp.value;
