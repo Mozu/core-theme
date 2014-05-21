@@ -71,7 +71,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
         {
             //arrange
             var sut = new ProductAvailableInventoryHelper();
-            var inventories = CreateInventoriesWithDualLocation(stockAvailable, stockOnHand);
+            var inventories = CreateLocationInventoryCollection(stockAvailable, stockOnHand, new List<DCloc.Location>{location_both});
             var locations = new List<DCloc.Location> { location_both };
             var product = new DCprod.Product { InventoryInfo = new DCprod.ProductInventoryInfo
                 {
@@ -86,22 +86,58 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             Assert.That(actual.Count, Is.EqualTo(expectedCount), scenario);
         }
 
-        private static DCprod.LocationInventoryCollection CreateInventoriesWithDualLocation(int stockAvailable, int stockOnHand)
+        [TestCase("Sort", false, "HideProduct", 10, 10, 4)]
+        public void Should_Sort_Locations_By_DirectShip_And_Then_InstorePickup(string scenario, bool manageStock,
+            string outOfStockBehavior, int stockAvailable, int stockOnHand, int expectedCount)
         {
+            //arrange
+            var sut = new ProductAvailableInventoryHelper();
+            var inventories = CreateLocationInventoryCollection(stockAvailable, stockOnHand, 
+                new List<DCloc.Location>{location_both,location_pickup_only,location_ship_only});
+            var locations = new List<DCloc.Location> { location_both, location_pickup_only, location_ship_only };
+            var product = new DCprod.Product { 
+                InventoryInfo = new DCprod.ProductInventoryInfo
+                                {
+                                    ManageStock = manageStock, OutOfStockBehavior = outOfStockBehavior
+                                }
+            };
+
+            //act
+            var actual = sut.GetShipAndPickupLocationsWithInventory(inventories, locations, product);
+
+            //assert
+            Assert.That(actual[0].Fulfillment.Code, Is.EqualTo(ds.Code) );
+            Assert.That(actual[1].Fulfillment.Code, Is.EqualTo(ds.Code) );
+            Assert.That(actual[2].Fulfillment.Code, Is.EqualTo(sp.Code) );
+            Assert.That(actual[3].Fulfillment.Code, Is.EqualTo(sp.Code) );
+        }
+
+        private static DCprod.LocationInventoryCollection CreateLocationInventoryCollection(int stockAvailable, int stockOnHand, List<Mozu.Location.Contracts.Location> locations)
+        {
+            var items = new List<DCprod.LocationInventory>();
+            items.AddRange(locations.Select(x => CreateLocationWithInventory(stockAvailable, x)));
+
+
             return new DCprod.LocationInventoryCollection
             {
-                Items = new List<DCprod.LocationInventory>
-                {
-                    new LocationWithInventory
-                    {
-                        Location = location_both,  //from above
-                        ProductCode = product_code,
-                        ProductName = product_code,
-                        LocationCode = "location_both",
-                        StockAvailable = stockAvailable,
-                        StockOnHand = stockOnHand
-                    }
-                }
+                Items = items
+                //Items = new List<DCprod.LocationInventory>
+                //{
+                //    CreateLocationWithInventory(stockAvailable, location_both),
+                //}
+            };
+        }
+
+        private static LocationWithInventory CreateLocationWithInventory(int stockAvailable, Mozu.Location.Contracts.Location location)
+        {
+            return new LocationWithInventory
+            {
+                Location = location,
+                ProductCode = product_code,
+                ProductName = product_code,
+                LocationCode = location.Code,
+                StockAvailable = stockAvailable,
+                StockOnHand = stockAvailable
             };
         }
 
