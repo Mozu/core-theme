@@ -5,35 +5,19 @@
 
 	<p>
 	{% if model.Order.billingInfo.billingContact.firstName %}
-		Hi {{ model.Order.billingInfo.billingContact.firstName }} {{ model.Order.billingInfo.billingContact.lastNameOrSurname }},
+		{{ labels.giftCardGreeting|string_format(model.Order.billingInfo.billingContact.firstName, model.Order.billingInfo.billingContact.lastNameOrSurname)|safe }}
 	{% else %}
 		{{ labels.emailOpeningAlternative|safe }}
 	{% endif %}
 	</p>
 
-	{{ labels.giftCardBlob1|string_format(siteContext.generalSettings.websiteName, domainName)|safe }}
+	{{ labels.giftCardIntro|string_format(siteContext.generalSettings.websiteName, domainName)|safe }}
 	
-	
-	<dl class="mz-orderheader">
-	
-		<dt>Gift Card Amount:</dt>
-		<dd>{{model.Credit.CurrentBalance|currency}}</dd>
+	<p><b>{{ labels.giftCardAmount }}</b> <span class="mz-price">{{model.Credit.CurrentBalance|currency}}</span></p>
+    <p><b>{{ labels.giftCardClaimCode }}</b> {{model.Credit.Code}}</p>
 
-		<dt>Claim Code:</dt>
-		<dd>{{model.Credit.Code}}</dd>
+	{{ labels.giftCardInstructions|string_format(domainName, domainName)|safe }}
 
-	</dl>
-	
-	<ul>To redeem your gift card, follow these steps:
-		<li>Visit <a href="http://{{domainName}}">{{domainName}}</a></li>
-		<li>Click Apply to Account and enter the Claim Code when prompted.</li>
-		<li>Gift card funds will be applied automatically to eligible orders during the checkout process.</li>
-		<li>You must pay for any remaining balance on your order with another payment method.</li>
-		<li>Your gift card claim code may also be entered when prompted during checkout.  To use your gift card you must first add the gift card funds to Your Account.</li>
-	</ul>
-
-	<p>
-	If you have questions about redeeming your gift card, please visit <a href="http://{{domainName}}">{{domainName}}</a>
-	</p>
+	{{ labels.giftCardClosing|string_format(domainName, domainName)|safe }}
 
 {% endblock body-content %}

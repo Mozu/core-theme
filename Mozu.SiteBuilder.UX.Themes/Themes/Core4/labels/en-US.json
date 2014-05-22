@@ -220,10 +220,13 @@
   "customerAlreadyExists": "A customer is already registered as {0}. <a href=\"/user/login?returnUrl={1}\">Login as this customer</a>",
   "noPaymentRequired"    : "Your total is {0}, so no payment method is required.",
 
-  "giftCardBlob1"         : "<p>Thank you for purchasing a {0} Gift Card that can be redeemed towards a variety of items at <a href=\"http://{1}/\">{1}</a>.  Don't delete this message -- you'll need the gift card claim code below.  You may want to print a copy of this message for easy reference later.</p>",
-  "giftCardValue"         : "Value",
+  "giftCardGreeting"      : "Hi {0} {1},",
+  "giftCardIntro"         : "<p>Thank you for purchasing a {0} Gift Card that can be redeemed towards a variety of items at <a href=\"http://{1}/\">{1}</a>.  Don't delete this message -- you'll need the gift card claim code below.  You may want to print a copy of this message for easy reference later.</p>",
+  "giftCardAmount"		  : "Gift Card Amount:",
+  "giftCardClaimCode"	  : "Claim Code:",
+  "giftCardInstructions"         : "To redeem your gift card, follow these steps:<ul><li>Visit <a href=\"http://{0}\">{1}</a></li> <li>Click Apply to Account and enter the Claim Code when prompted.</li>	<li>Gift card funds will be applied automatically to eligible orders during the checkout process.</li> <li>You must pay for any remaining balance on your order with another payment method.</li> <li>Your gift card claim code may also be entered when prompted during checkout.  To use your gift card you must first add the gift card funds to Your Account.</li> </ul>",
+  "giftCardClosing"         : "<p> If you have questions about redeeming your gift card, please visit <a href=\"http://{0}\">{1}</a> </p>",
   
-
   "errorApology"         : "Sorry, an error occurred.",
   "errorDetail"          : "Our software encountered an error it couldn't resolve.",
 
