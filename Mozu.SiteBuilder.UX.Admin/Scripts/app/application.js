@@ -155,7 +155,7 @@ Ext.define('Taco.Application', {
     context: null,
     constructor: function (config) {
 
-        this.context = Ext.create('Taco.core.context.TaContext', Taco.user.taContext);
+        
 
         Ext.override(Ext.Component, {
             beforeRender: function () {
@@ -478,13 +478,40 @@ Ext.define('Taco.Application', {
     
     launch: function () {
 
-        //Taco.baseCSSPrefix = 'taco-';
-
         window.Taco.app = this;
-        // console.log('launching');
-        Ext.onReady(this.doTheNeedful, this, false);
-
+        
         Ext.state.Manager.setProvider(new Ext.state.LocalStorageProvider({ prefix: 'mozu-' }));
+        var me = this,
+            qs = Ext.Object.fromQueryString(window.location.search),
+            probeFn,
+            callbackFn,
+            cnt;
+       
+        if (qs.onBeforeLaunch) {
+            callbackFn = function () {
+                me.doTheNeedful();
+            };
+            cnt = 0;
+            probeFn = function () {
+                if (window[qs.onBeforeLaunch]) {
+                    window[qs.onBeforeLaunch](callbackFn);
+                } else {
+                    cnt++;
+                    if (cnt > 2000) {
+                        me.doTheNeedful();
+                    } else {
+                        setTimeout(probeFn, 100);
+                    }
+                    
+                }
+            }
+            probeFn();
+        } else {
+            Ext.onReady(this.doTheNeedful, this);
+        }
+        
+
+        
 
         // console.log('launched');
     },
@@ -517,6 +544,10 @@ Ext.define('Taco.Application', {
         }
     },
 
+    initContext: function () {
+        this.context = Ext.create('Taco.core.context.TaContext', Taco.user.taContext);
+    },
+
     doTheNeedful: function (state) {
 
 
@@ -524,6 +555,7 @@ Ext.define('Taco.Application', {
             //return;
         }
         var me = this;
+        this.initContext();
         this.initViewPort();
         this.initStateManager();
         this.initDocumentDragAndDrop();
