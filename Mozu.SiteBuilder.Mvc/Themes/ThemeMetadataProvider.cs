@@ -270,7 +270,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 }
                 else
                 {
-                    if (! Path.IsPathRooted(coreThemeDir))
+                    if (Path.GetPathRoot(coreThemeDir).Length <3  )
                     {
                         coreThemeDir = Path.GetFullPath(HostingEnvironment.MapPath(coreThemeDir));
 
