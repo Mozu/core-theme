@@ -45,13 +45,15 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
     },
 
     initComponent: function () {
-        var cfg = this.header.initialConfig;
+        var cfg;
+
+        this.callParent(arguments);
+
+        cfg = this.header.initialConfig;
 
         if (!this.originalTitle) {
             this.originalTitle = (cfg && cfg.title ? cfg.title : 'View ' + Ext.util.Inflector.pluralize(this.recordType));
         }
-
-        this.callParent(arguments);
     },
 
     /**
@@ -65,7 +67,7 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
         var prevMode = this.getMode() || this.config.mode;
 
         if (prevMode !== nextMode) {
-            this.fireEvent('modechange', nextMode, prevMode);
+            this.fireEvent('modechange', this, nextMode, prevMode);
             this.onModeChange(nextMode, prevMode);
         }
 
@@ -80,13 +82,18 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
      */
     bindActionsToForm: function () {
         var actions = this.header.actionsContainer;
-        var boundItems = this.getEast().down('form').getForm().getBoundItems();
+        var form = this.getEast().down('form');
+        var boundItems;
 
-        actions.items.each(function (item) {
-            if (item.formBind) {
-                boundItems.add(item);
-            }
-        });
+        if (form) {
+            boundItems = form.getForm().getBoundItems();
+
+            actions.items.each(function (item) {
+                if (item.formBind) {
+                    boundItems.add(item);
+                }
+            });
+        }
     },
 
     /**
@@ -94,14 +101,18 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
      * 
      * @param  {Ext.data.Model} record The new record to be bound to the form.
      */
-    changeRecord: function (record) {
-        var nextTitle = 'Create Product';
+    changeRecord: function (nextRecord) {
+        var recordType = this.recordType;
+        var nextTitle = 'Create ' + recordType;
 
-        if (record) {
+        if (nextRecord) {
             this.setMode('edit');
-            this.getEast().down('form').loadRecord(record);
-            nextTitle = 'Edit ' + (record.get('productName') || 'Product');
+            this.fireEvent('recordchange', this, nextRecord);
+            this.onRecordChange(nextRecord);
+
+            nextTitle = 'Edit ' + (nextRecord.get(this.recordNameField) || recordType);
         } else {
+            this.setMode('create');
             this.resetForm();
         }
 
@@ -119,6 +130,8 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
      * By default, this function resets the form and updates the collapsed state.
      */
     doCancel: function (e, t) {
+        this.getWest().down('grid').getSelectionModel().deselectAll(true);
+
         this.resetForm();
 
         this.setCollapsedState({
@@ -128,19 +141,20 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
     },
 
     /**
-     * Perform a create action.
+     * A template method for performing a create action.
      *
-     * By default, this function resets the grid selection and binds a null record to the form.
+     * By default, this function deselects all records in the grid.
      */
     doCreate: function () {
-        this.getWest().down('grid').getSelectionModel().deselectAll();
+        this.getWest().down('grid').getSelectionModel().deselectAll(true);
 
-        this.resetForm();
         this.changeRecord(null);
     },
 
     /**
-     * Perform a save action.
+     * A template method for performing a save action.
+     *
+     * By default, this function does nothing.
      */
     doSave: Ext.emptyFn,
 
@@ -168,15 +182,17 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
 
     /**
      * Updates the split editor's `mode` following a `collapsedState` change.
+     * 
      * @param {Object} nextState The next collapsed state.
      * @param {Object} prevState The previous collapsed state.
      */
     onCollapsedStateChange: function (nextState, prevState) {
-        var record = this.getEast().down('form').getForm().getRecord();
+        var form = this.getEast().down('form');
+        var record = form ? form.getForm().getRecord() : null;
 
         if (nextState.east === true) {
             this.setMode('view');
-        } else {
+        } else if (form) {
             this.setMode(record ? 'edit' : 'create');
         }
     },
@@ -186,14 +202,15 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
      *
      * By default, this function updates the header title.
      * 
-     * @param  {String} nextMode The next mode.
-     * @param  {String} prevMode The previous mode.
+     * @param {String} nextMode The next mode.
+     * @param {String} prevMode The previous mode.
      */
     onModeChange: function (nextMode, prevMode) {
         var isView = (nextMode === 'view');
         var recordType = this.recordType;
-        var record = this.getEast().down('form').getForm().getRecord();
-        var nextTitle = (isView ? 'Component Testing' : 'Create ' + recordType);
+        var form = this.getEast().down('form');
+        var record = form ? form.getForm().getRecord() : null;
+        var nextTitle = (isView ? this.originalTitle : 'Create ' + recordType);
 
         if (nextMode === 'edit') {
             nextTitle = 'Edit ' + (record ? record.get(this.recordNameField) || recordType : recordType);
@@ -203,10 +220,30 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
     },
 
     /**
+     * A template method for responding to a record change.
+     *
+     * By default, this function loads the new record into the form.
+     * 
+     * @param {Ext.data.Model} The next record.
+     */
+    onRecordChange: function (nextRecord) {
+        var form = this.getEast().down('form');
+
+        if (form) {
+            form.loadRecord(nextRecord);
+        }
+    },
+
+    /**
      * A helper function for resetting the form and unbinding its record.
+     * 
      * @param {Boolean} resetRecord False to not unbind the record from the form.
      */
     resetForm: function (resetRecord) {
-        this.getEast().down('form').getForm().reset(!(resetRecord === false));
+        var form = this.getEast().down('form');
+
+        if (form) {
+            form.getForm().reset(!(resetRecord === false));
+        }
     }
 });

@@ -3,6 +3,7 @@
  */
 Ext.define('Taco.view.order.Form', {
     extend: 'Taco.core.ux.form.NavForm2',
+    alias: 'widget.taco-orderform',
 
     topOffset: 38,
 

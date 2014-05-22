@@ -11,6 +11,9 @@ Ext.define('Taco.view.catalog.Index', {
         'Taco.core.ux.window.Modal'
     ],
 
+    recordNameField: 'productName',
+    recordType: 'Special Product',
+
     header: {
         title: 'Component Testing'
     },
@@ -79,6 +82,15 @@ Ext.define('Taco.view.catalog.Index', {
         }];
 
         this.callParent(arguments);
+
+        this.on({
+            recordchange: {
+                scope: this,
+                fn: function () {
+                    console.log('recordchange', arguments);
+                }
+            }
+        });
     },
 
     handleBeforeCollapseEast: function (panel, direction, animate) {
