@@ -3,7 +3,23 @@
     // @include background(radial-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 1)));
 }
 
-.#{$prefix}mask-light {
-    background: url('images/loading.gif') no-repeat scroll 50% 40% $color-neutral-white;
+.#{$prefix}mask-light {       
     opacity: 0.8;
+    @include background(
+        -webkit-radial-gradient(circle farthest-corner, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3)),
+        url('images/loading.gif') no-repeat scroll 50% 40% $color-neutral-white
+    );
 }
+
+// .#{$prefix}mask-light-msg {
+//     background: none transparent;
+//     border-width: 0px;
+//     padding: 0px;
+
+//     .#{$prefix}mask-msg-inner,
+//     .#{$prefix}mask-msg-text {
+//         background: none transparent;
+//         border-width: 0px;
+//         padding: 0px;
+//     }
+// }
