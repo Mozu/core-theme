@@ -8,7 +8,7 @@
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{3AC84F6C-74E6-4767-A80E-9FC022037F70}</ProjectGuid>
-    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Mozu.SiteBuilder.UX.Admin</RootNamespace>
@@ -1364,7 +1364,6 @@
     <Content Include="Scripts\.sencha\app\native.properties" />
     <Content Include="Scripts\.sencha\app\package.defaults.properties" />
     <Content Include="Scripts\.sencha\app\package.properties" />
-    <Content Include="ext-4.2.2-commercial.zip" />
     <Content Include="Scripts\.sencha\app\production.defaults.properties" />
     <Content Include="Scripts\bootstrap.json" />
     <Content Include="Scripts\makeTfsBuild.bat" />
