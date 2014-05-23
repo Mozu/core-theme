@@ -92,6 +92,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var emptyOrder = new DCo.Order();
 
+            // specify that order is an offline order.
+            emptyOrder.Type = DCo.Order.OrderTypeConst.OFFLINE;
+
             // fill in order ip address
             if (Request.Properties.ContainsKey("MS_HttpContext"))
             {
