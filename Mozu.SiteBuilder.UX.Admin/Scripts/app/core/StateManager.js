@@ -230,7 +230,7 @@ Ext.define('Taco.core.StateManager', {
     * This will attempt to call the controller and action, with the arguments list as parameters.
     */
     dispatchController: function (params) {
-        var controller,idx;
+        var controller, idx, ret;
         try {
             idx = Taco.app.controllers.findIndex('id', params.controller);
             if (idx) {
@@ -243,19 +243,27 @@ Ext.define('Taco.core.StateManager', {
             Taco.app.getController("Errors").Http404();
             //Taco.app.fireEvent('error', 'Error 404: No page or panel found.');
         }
-
-        for (var mem in controller) {
-            if (mem.toLowerCase() === params.action.toLowerCase()) {
-                params.action = mem;
-                break;
+        if (controller.performAction ) {
+            ret = controller.performAction(params.action, params.args, [params]);
+            if (ret !== false) {
+                return ret;
             }
-        }
-        if (controller && controller[params.action]) {
-            
-            return controller[params.action].apply(controller, Ext.Array.union(params.args , [params]));
         } else {
-            Taco.app.getController("Errors").Http404();
-            //Taco.app.fireEvent('error', 'Error 404: No page or panel found.');
+
+
+            for (var mem in controller) {
+                if (mem.toLowerCase() === params.action.toLowerCase()) {
+                    params.action = mem;
+                    break;
+                }
+            }
+            if (controller && controller[params.action]) {
+
+                return controller[params.action].apply(controller, Ext.Array.union(params.args, [params]));
+            } else {
+                return Taco.app.getController("Errors").Http404();
+                //Taco.app.fireEvent('error', 'Error 404: No page or panel found.');
+            }
         }
 
     },
