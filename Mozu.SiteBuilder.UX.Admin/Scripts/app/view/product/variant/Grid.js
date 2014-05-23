@@ -15,15 +15,16 @@ Ext.define('Taco.view.product.variant.Grid', {
     initComponent: function () {
         var optionColumns = [],
             staticColumns,
-            tplColumnHeader;
+            tplColumnHeader,
+            isPhysical = (this.productType.get('goodsType') === 'Physical'),
+            directShipData = { "id": "DirectShip", "name": "Direct Ship" },
+            inStoreData = { "id": "InStorePickup", "name": "In Store Pickup" },
+            digitalData = { "id": "Digital", "name": "Email" },
+            fulfillmentData = (isPhysical) ? [directShipData, inStoreData] : [digitalData];
 
         var fulfillmentTypeData = Ext.create('Ext.data.Store', {
             fields: ['id', 'name'],
-            data: [
-                { "id": "DirectShip", "name": "Direct Ship" },
-                { "id": "InStorePickup", "name": "In Store Pickup" },
-                { "id": "DigitalGiftCard", "name": "Digital Gift Card" }
-            ]
+            data: fulfillmentData
         });
 
         var fulfillmentEditor = {
