@@ -84,6 +84,6 @@ if($ScaleUnitId)
 	if( $automationResult -eq $false)
 	{
 		Write-Error "test result error"
-		exit 5
+		
 	}
 }
