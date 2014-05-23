@@ -17,6 +17,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public string ChannelCode { get; set; }
 
+        /// <summary>
+        /// Online or offline order.
+        /// Valid values are defined in Order.OrderTypeConst
+        /// </summary>
+        public string OrderType { get; set; }
+
         public int? SiteId { get; set; }
 
         /// <summary>
