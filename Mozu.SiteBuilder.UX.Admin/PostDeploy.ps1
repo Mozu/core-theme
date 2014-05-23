@@ -12,6 +12,36 @@ function Update-ScaleUnit-In-AppSettings ([string]$ConfigFilePath, [String] $sca
 	$xml.Save($ConfigFilePath)
 }
 
+function RunAutomationTests([string]$RootPath){
+
+	$junitFile=$RootPath +"\tests\postBuildTestResults.junit"
+	$exp=$RootPath +"\Tests\Automation\phantomjs.bat http://localhost/admin/tests/index.html --exclude integration --report-format JUnit --report-file " + $junitFile
+	iex $exp
+	if(Test-Path $junitFile)
+	{
+	
+		[xml]$junitReport = Get-Content $junitFile
+		if ($junitReport.testsuite.errors -ne 0 -or $junitReport.testsuite.failures -ne 0  )
+		{
+			Write-Host $junitReport.OuterXml
+			$msg = $junitReport.testsuite.errors + " Errors and "+ $junitReport.testsuite.failures + " failures occured runnit siesta tests"
+			Write-Error $msg
+		}
+		else
+		{
+			Write-Host "siesta tests passed"
+		}
+	}
+	else
+	{
+		Write-Host "siesta tests passed"
+	}
+
+
+
+
+}
+
 if($ScaleUnitId)
 {
 	$invocation = (Get-Variable MyInvocation).Value
@@ -38,4 +68,5 @@ if($ScaleUnitId)
 			Update-ScaleUnit-In-AppSettings $file.FullName $ScaleUnitId
 		}
 	}
+	RunAutomationTests $directorypath
 }
