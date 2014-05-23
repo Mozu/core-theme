@@ -35,11 +35,13 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
 
     initComponent: function () {
         var me = this,
-            fulfillmentTypes = this.product.get("fulfillmentTypesSupported");
+            fulfillmentTypes = this.product.get("fulfillmentTypesSupported"),
+            isPhysicalGood = true;
 
         me.record = this.product;
-        me.productTypeRecord = this.productType;
-        var isPhysicalGood = (this.productType.get('goodsType') === 'Physical');
+        if (this.productType) {
+            isPhysicalGood = (this.productType.get('goodsType') === 'Physical');
+        }
 
         this.directShipCheckbox = Ext.widget({
             xtype: 'checkboxfield',
