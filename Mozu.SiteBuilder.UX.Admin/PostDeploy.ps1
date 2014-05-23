@@ -25,6 +25,7 @@ function RunAutomationTests([string]$RootPath){
 		{
 			Write-Host $junitReport.OuterXml
 			$msg = $junitReport.testsuite.errors + " Errors and "+ $junitReport.testsuite.failures + " failures occured runnit siesta tests"
+			throw  $msg
 			Write-Error $msg
 		}
 		else
