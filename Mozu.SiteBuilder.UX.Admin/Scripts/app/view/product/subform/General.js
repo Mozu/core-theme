@@ -799,6 +799,7 @@ Ext.define('Taco.view.product.subform.General', {
         var me = this,
             productTypeRecord = selectField.store.getById(value),
             productUsages = productTypeRecord.get("productUsages"),
+            isTaxableProductType = (productTypeRecord.get("goodsType") != 'DigitalGiftCard'),
             productUsageField,
             parentForm,
             product;
@@ -843,6 +844,13 @@ Ext.define('Taco.view.product.subform.General', {
         if (me.optionsForm) {
             me.optionsForm.loadByProductTypeId(value);
         }
+
+        if (me.isTaxableField) {
+            if (isTaxableProductType != me.isTaxableField.getValue()) {
+                me.isTaxableField.setValue(isTaxableProductType);
+            }
+        }
+        
     },
 
     onDiscountRestrictedChange: function (source, isChecked) {
