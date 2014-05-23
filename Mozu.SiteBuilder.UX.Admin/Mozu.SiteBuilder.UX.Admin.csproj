@@ -1937,6 +1937,9 @@
     <Content Include="SetParameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Tests\Automation\binary\phantomjs-1.6.0-win32-static\phantomjs.exe" />
+    <Content Include="Tests\Automation\launcher-common.js" />
+    <Content Include="Tests\Automation\phantomjs-launcher.js" />
     <Content Include="Tests\CheckinTests.js" />
     <Content Include="Tests\Functional\product\product-basic-edit-save.js" />
     <Content Include="Tests\helpers\Core.js" />
@@ -2061,6 +2064,8 @@
     <Content Include="Tests\Mocks\ProductAdmin\Mystic1\Categories1.json" />
     <Content Include="Tests\HomePages\WebPage1.cshtml" />
     <Content Include="Tests\specs\admin\chutzpah.json1" />
+    <Content Include="Tests\Automation\phantomjs" />
+    <Content Include="Tests\Automation\phantomjs.bat" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />
