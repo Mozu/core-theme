@@ -104,6 +104,18 @@
 }
 
 @font-face {
+    font-family: 'SourceSansProRegular';
+    src: url('fonts/SourceSansPro-Light-webfont.eot');
+    src: url('fonts/SourceSansPro-Light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/SourceSansPro-Light-webfont.woff') format('woff'),
+         url('fonts/SourceSansPro-Light-webfont.ttf') format('truetype'),
+         url('fonts/SourceSansPro-Light-webfont.svg#SourceSansProLight') format('svg');
+    font-weight: 300;
+    font-style: normal;
+
+}
+
+@font-face {
     font-family: 'SourceSansProBold';
     src: url('fonts/SourceSansPro-Bold-webfont.eot');
     src: url('fonts/SourceSansPro-Bold-webfont.eot?#iefix') format('embedded-opentype'),

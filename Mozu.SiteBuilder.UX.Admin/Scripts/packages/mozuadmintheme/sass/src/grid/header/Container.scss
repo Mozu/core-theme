@@ -7,6 +7,10 @@
 }
 
 .#{$prefix}column-header-inner {
-    padding-bottom: 11px !important;
-    padding-top: 12px !important;
+    padding-bottom: 6px !important;
+    padding-top: 8px !important;
+}
+
+.#{$prefix}column-header-text {
+    font-weight: bold;
 }

@@ -202,17 +202,18 @@
   .#{$vprefix}menu-col-cell {
     .#{$prefix}grid-cell-inner {
       line-height: 0px;
-      padding-bottom: 4px;
-      padding-top: 4px;
+      // padding-bottom: 4px;
+      // padding-top: 4px;
     }
   }
 
   .#{$vprefix}grid-row-menu-trigger {
     cursor: pointer;
-    height: 30px;
+    height: 16px;
     visibility: hidden;
     width: 50px;
     @include icons-sprite(icon-rowactions); // icon is an <img>
+    background-position: 50% 50%;
   }
 
   // hide the action menu trigger image when its inside of the row editor. it causes a bunch of padding to be added;
