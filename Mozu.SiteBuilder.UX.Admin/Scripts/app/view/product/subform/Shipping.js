@@ -16,6 +16,10 @@ Ext.define('Taco.view.product.subform.Shipping', {
         var me = this;
         
         this.record = this.product;
+
+        me.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
+        me.productType = me.productTypeStore.getById(this.record.get('productTypeId'));
+
         this.items = [];
 
         //todo: create a bundle & a standard widget to reduce if/then complexity - Greg Murray on 2014-03-26 
@@ -81,6 +85,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
 
         fulfillmentContainer = Ext.create('Taco.view.product.widget.ProductFulfillmentTypes', {
             product: me.record,
+            productType: me.productType,
             isReadOnly: isBundle,
             allowBlank: isBundle
         });
