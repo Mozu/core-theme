@@ -1,5 +1,4 @@
 ﻿using System;
-using Mozu.SiteBuilder.Mvc.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -12,7 +11,6 @@ using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.Location.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 using Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers;
@@ -34,7 +32,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public LocationInventoryController(ILocationInventoryWebApiClient locationInventoryClient, IProductWebApiClient productInventoryClient, ILocationAdminWebApiClient locationWebApiClient, IProductAvailableInventoryHelper productAvailableInventoryHelper)
+        public LocationInventoryController(ILocationInventoryWebApiClient locationInventoryClient, IProductWebApiClient productInventoryClient, 
+            ILocationAdminWebApiClient locationWebApiClient, IProductAvailableInventoryHelper productAvailableInventoryHelper)
         {
             _locationInventoryClient = locationInventoryClient;
             _productClient = productInventoryClient;
@@ -156,18 +155,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// For a single productCode, merge the LocationInventory list returned by ProductAdmin with the Location information returned by Location.
         /// </summary>
         [HttpGetRoute(UriTemplate = "forproduct")]
-        public async Task<Response<List<LocationWithInventory>>> GetLocationsForProduct([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string productCode = null)
+        public async Task<Response<List<LocationWithInventory>>> GetLocationsForProduct([FromUri]PagingParamaters pagingParams,
+            [FromUri]FilterCollection extFilter, string productCode = null, string variationProductCode = null)
         {
-            productCode = productCode ?? extFilter.PopValue<string>("productcode");
-            if (productCode == null)
+            var prodOrVariantCode = (!string.IsNullOrEmpty(variationProductCode))
+                ? variationProductCode
+                :  (productCode ?? extFilter.PopValue<string>("productcode"));
+            if (prodOrVariantCode == null)
                 throw new ArgumentException("Missing product code.");
 
             var filterString = extFilter.ToFilterString();
-            var inventories = (await _productClient.GetLocationInventories(productCode: productCode, startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filterString)).ReadAsSync();
+            var inventories = (await _productClient.GetLocationInventories(productCode: prodOrVariantCode, startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filterString)).ReadAsSync();
+
             var product = (await _productClient.GetProduct(productCode)).ReadAsSync();
+
+            //SiteShippingSettings siteShippingSettings = (await _shippingSettingsClient.GetSiteShippingSettings()).ReadAsSync();
+
             var locationLookupTasks = inventories.Items.Select(i => i.LocationCode).Distinct().Select(lc => _locationWebApiClient.GetLocation(lc)).ToList();
             await Task.WhenAll(locationLookupTasks);
             var locations = locationLookupTasks.Select(t => t.Result.ReadAsSync()).ToList();
+
+            //need to find default location for direct ship.
+
 
             var locationsWithInventory = _productAvailableInventoryHelper.GetShipAndPickupLocationsWithInventory(inventories, locations, product);
 
