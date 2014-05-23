@@ -11,7 +11,7 @@ Ext.define('Taco.core.ux.content.Body', {
     componentCls: 'taco-content-body',
     layout: 'auto',
     overflowY: 'auto',
-    padding: '20 30 10',
+    padding: '20 20 10',
 
     initComponent: function () {
         this.callParent(arguments);

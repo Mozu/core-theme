@@ -26,15 +26,15 @@
   .#{$vprefix}content-container {
     .#{$vprefix}content-header {
       border-bottom: 1px solid border-for($color-neutral-95);
-      padding: 17px 30px;
+      padding: 10px 20px;
 
       &.#{$vprefix}has-message {
         padding-top: 80px;
       }
       
       h1 {
-        font-size: px-to-rem(24);
-        font-weight: normal;
+        font-size: px-to-rem(20);
+        font-weight: 300;
         line-height: px-to-rem(30);
         overflow: hidden;
         text-overflow: ellipsis;
@@ -65,7 +65,7 @@
     }
 
     .#{$vprefix}content-body {
-      padding: 20px 30px 10px;
+      padding: 20px 20px 10px;
 
       .#{$prefix}table-layout-cell {
         vertical-align: top;
