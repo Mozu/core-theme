@@ -140,7 +140,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// Is taxable
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(PropertyName = "isTaxable")]
         public bool IsTaxable { get; set; }
                 
         /// <summary>
