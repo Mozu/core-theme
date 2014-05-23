@@ -83,7 +83,7 @@ if($ScaleUnitId)
 	$automationResult = RunAutomationTests $directorypath
 	if( $automationResult -eq $false)
 	{
-		Write-Host "errors"
+		Write-Error "test result error"
 		exit 5
 	}
 }
