@@ -3,6 +3,8 @@
   {% block body-content %}
     <br>
 
+	{{ labels.giftCardBanner|string_format(domainName)|safe}}
+
 	<p>
 	{% if model.Order.billingInfo.billingContact.firstName %}
 		{{ labels.giftCardGreeting|string_format(model.Order.billingInfo.billingContact.firstName, model.Order.billingInfo.billingContact.lastNameOrSurname)|safe }}
@@ -13,8 +15,10 @@
 
 	{{ labels.giftCardIntro|string_format(siteContext.generalSettings.websiteName, domainName)|safe }}
 	
-	<p><b>{{ labels.giftCardAmount }}</b> <span class="mz-price">{{model.Credit.CurrentBalance|currency}}</span></p>
-    <p><b>{{ labels.giftCardClaimCode }}</b> {{model.Credit.Code}}</p>
+	{{ labels.giftCardImage|string_format(domainName)|safe}}
+
+	<p>{{ labels.giftCardAmount }} <b><span class="mz-price">{{model.Credit.CurrentBalance|currency}}</span></b></p>
+    <p>{{ labels.giftCardClaimCode }} <b>{{model.Credit.Code}}</b></p>
 
 	{{ labels.giftCardInstructions|string_format(domainName, domainName)|safe }}
 
