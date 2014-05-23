@@ -78,7 +78,15 @@ Ext.define('Taco.view.order.subform.Payment', {
             ]
         });
         this.callParent(arguments);
-        this.on('render', function () { this.down('#paymentGear').setVisible(me.record.get('orderStatus') !== 'PendingReview') }, this);
+        this.on('render', this.setGearVisibility, this);
+    },
+
+    setGearVisibility: function () {
+        var gear = this.down('#paymentGear');
+        if (gear) {
+            gear.setVisible(this.record.get('orderStatus') !== 'PendingReview');
+        }
+
     },
     
     getMenuActions: function () {
@@ -252,6 +260,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         me.initHeader();
         me.destroyPaymentsUI();
         me.initPaymentsUI();
+        me.setGearVisibility();
         Ext.resumeLayouts(true);
         //this.fireEvent('orderchange');
     },
