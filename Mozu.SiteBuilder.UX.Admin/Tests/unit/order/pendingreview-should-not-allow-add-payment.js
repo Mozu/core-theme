@@ -44,7 +44,7 @@
         function (next) {
             t.elementIsNotVisible(m.panel.down('#paymentGear').getEl(), 'gear shoul be hidden  on PendingReview');
 
-            t.fail('testing automation test fails');
+            
         }
         
     );
