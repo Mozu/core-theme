@@ -27,7 +27,7 @@ function RunAutomationTests([string]$RootPath){
 			$msg = $junitReport.testsuite.errors + " Errors and "+ $junitReport.testsuite.failures + " failures occured runnit siesta tests"
 		
 			Write-Error $msg
-			exit 5
+			return $false;
 		
 		}
 		else
@@ -39,6 +39,8 @@ function RunAutomationTests([string]$RootPath){
 	{
 		Write-Host "siesta tests passed"
 	}
+
+	return $true;
 
 
 
@@ -71,5 +73,10 @@ if($ScaleUnitId)
 			Update-ScaleUnit-In-AppSettings $file.FullName $ScaleUnitId
 		}
 	}
-	RunAutomationTests $directorypath
+	$succeeded = RunAutomationTests $directorypath
+	if( $succeeded -eq $false)
+	{
+		write-host "errors"
+		exit 5
+	}
 }
