@@ -645,6 +645,7 @@
     <Content Include="Scripts\.sencha\app\slice-impl.xml" />
     <Content Include="Scripts\.sencha\app\watch-impl.xml" />
     <Content Include="Scripts\app\app.js" />
+    <Content Include="Scripts\app\controller\Tests.js" />
     <Content Include="Scripts\app\controller\Capability.js" />
     <Content Include="Scripts\app\controller\Channels.js" />
     <Content Include="Scripts\app\controller\Provisioning.js" />

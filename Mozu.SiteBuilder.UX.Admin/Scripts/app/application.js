@@ -135,7 +135,7 @@ Ext.define('Taco.Application', {
         'Themesettings',
         'Account',
         'GeneralSettings',
-        
+        'Tests',
         'Orders',
         'OrderAttributes',
         'Errors',
