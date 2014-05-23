@@ -25,8 +25,15 @@ function RunAutomationTests([string]$RootPath){
 		{
 			Write-Host $junitReport.OuterXml
 			$msg = $junitReport.testsuite.errors + " Errors and "+ $junitReport.testsuite.failures + " failures occured runnit siesta tests"
-		
 			Write-Host $msg
+			
+			$failures=$junitReport.GetElementsByTagName("failure")
+			
+			foreach($failure in $failures)
+			{ 
+				write-host $failure.message; 
+				write-host $failure.innertext;
+			}
 			return $false;
 		
 		}
@@ -73,10 +80,10 @@ if($ScaleUnitId)
 			Update-ScaleUnit-In-AppSettings $file.FullName $ScaleUnitId
 		}
 	}
-	$succeeded = RunAutomationTests $directorypath
-	if( $succeeded -eq $false)
+	$automationResult = RunAutomationTests $directorypath
+	if( $automationResult -eq $false)
 	{
-		write-host "errors"
+		Write-Host "errors"
 		exit 5
 	}
 }
