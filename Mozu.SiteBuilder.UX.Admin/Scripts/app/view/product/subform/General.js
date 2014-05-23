@@ -30,6 +30,7 @@ Ext.define('Taco.view.product.subform.General', {
             visable,
             isMapEnabled = (this.product.get("map") != null),
             isDiscountRestricted = this.product.get("discountsRestricted"),
+            isTaxable = (this.product.get("isTaxable")),
             productUsage = this.product.get("productUsage"),
             invalidDateText = "{0} is not a valid date - it must be in the format mm/dd/yy";
             
@@ -179,9 +180,10 @@ Ext.define('Taco.view.product.subform.General', {
             });
 
             this.isTaxableField = Ext.widget({
-                name: 'isTaxable',
                 xtype: 'checkboxfield',
-                boxLabel: 'Taxable'
+                name: 'isTaxable',
+                boxLabel: 'Taxable',
+                checked: isTaxable
             });
 
             this.costField = Ext.widget({

@@ -137,25 +137,6 @@ Ext.define('Taco.view.productType.Form', {
             ]
         },
 
-
-
-        //{
-        //    xtype: "checkboxfield",
-        //    name: "goodsType",
-        //    boxLabel: "This Product Type is an Email Gift Card",
-        //    inputValue: "DigitalGiftCard",
-        //    handler: function(el, isChecked) {
-        //        if (isChecked) {
-        //            if (me.productBundleUsageType.getValue()) {
-        //                me.productBundleUsageType.setValue(false);
-        //            }
-        //            me.productBundleUsageType.disable();
-        //        } else {
-        //            me.productBundleUsageType.enable();
-        //        }
-        //    }
-        //},
-
         me.productUsagesCheckboxGroup,    
         {
             xtype: 'taco.producttype.attributegroup',
