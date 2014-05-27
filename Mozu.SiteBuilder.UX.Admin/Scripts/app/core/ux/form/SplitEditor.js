@@ -41,7 +41,9 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
          *
          * Defaults to `'view'`
          */
-        mode: 'view'
+        mode: 'view',
+
+        useSplit: true
     },
 
     initComponent: function () {
@@ -119,7 +121,7 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
         this.setTitle(nextTitle);
 
         this.setCollapsedState({
-            west: false,
+            west: !this.getUseSplit(),
             east: false
         });
     },
@@ -136,7 +138,7 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
 
         this.setCollapsedState({
             west: false,
-            east: true
+            east: !this.getUseSplit()
         });
     },
 
@@ -168,7 +170,7 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
      * @param {Ext.data.Model[]} selected The array of selected records.
      */
     handleSelectionChange: function (selModel, selected) {
-        this.changeRecord(selected[0]);
+        this.changeRecord(Ext.isArray(selected) ? selected[0] : selected);
     },
 
     /**
@@ -189,6 +191,13 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
     onCollapsedStateChange: function (nextState, prevState) {
         var form = this.getEast().down('form');
         var record = form ? form.getForm().getRecord() : null;
+
+        // determine whether to continue using the split
+        if (!nextState.east && !prevState.east) {
+            this.setUseSplit(!nextState.west);
+        } else if (!nextState.west && !prevState.west) {
+            this.setUseSplit(!nextState.east);
+        }
 
         if (nextState.east === true) {
             this.setMode('view');
