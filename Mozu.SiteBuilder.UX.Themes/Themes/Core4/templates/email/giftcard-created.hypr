@@ -13,12 +13,12 @@
 	{% endif %}
 	</p>
 
-	{{ labels.giftCardIntro|string_format(siteContext.generalSettings.websiteName, domainName)|safe }}
+	{{ labels.giftCardIntro|string_format(siteContext.generalSettings.websiteName)|safe }}
 	
 	{{ labels.giftCardImage|string_format(domainName)|safe}}
 
-	<p>{{ labels.giftCardAmount }} <b><span class="mz-price">{{model.Credit.CurrentBalance|currency}}</span></b></p>
-    <p>{{ labels.giftCardClaimCode }} <b>{{model.Credit.Code}}</b></p>
+	<p><b>{{ labels.giftCardAmount }}</b> <span class="mz-price">{{model.Credit.CurrentBalance|currency}}</span></p>
+    <p><b>{{ labels.giftCardClaimCode }}</b> {{model.Credit.Code}}</p>
 
 	{{ labels.giftCardInstructions|string_format(domainName, domainName)|safe }}
 
