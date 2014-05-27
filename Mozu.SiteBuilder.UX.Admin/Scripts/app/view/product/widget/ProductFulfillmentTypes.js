@@ -34,7 +34,7 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
             inputValue: 'DirectShip',
             checked: ((fulfillmentTypes.indexOf('DirectShip') != -1) && isPhysicalGood),
             readOnly: this.isReadOnly,
-            hidden: ! isPhysicalGood,
+            disabled: !isPhysicalGood,
             handler: (this.isReadOnly) ? '' : me.onFulfillmentChange,
             scope: me,
             fulfillmentType: 1
@@ -47,7 +47,7 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
             inputValue: 'InStorePickup',
             checked: ((fulfillmentTypes.indexOf('InStorePickup') != -1) && isPhysicalGood),
             readOnly: this.isReadOnly,
-            hidden: !isPhysicalGood,
+            disabled: !isPhysicalGood,
             handler: (this.isReadOnly) ? '' : me.onFulfillmentChange,
             scope: me,
             fulfillmentType: 1
@@ -60,7 +60,6 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
             inputValue: 'Digital',
             checked: ((fulfillmentTypes.indexOf('Digital') != -1) || !isPhysicalGood),
             readOnly: true,
-            disabled: true,
             hidden: isPhysicalGood,
             scope: me,
             fulfillmentType: 1
