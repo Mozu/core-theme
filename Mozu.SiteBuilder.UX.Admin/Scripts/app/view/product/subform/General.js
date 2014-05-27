@@ -852,7 +852,8 @@ Ext.define('Taco.view.product.subform.General', {
                 me.isTaxableField.setValue(isTaxableProductType);
             }
         }
-        
+
+        Taco.app.fireEvent('producttypechanged', productTypeRecord);
     },
 
     onDiscountRestrictedChange: function (source, isChecked) {
