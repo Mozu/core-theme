@@ -16,23 +16,7 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
     product: null,
     isReadOnly: false,
     allowBlank: false,
-    //listeners: {
-    //    onProductTypeChange : function(selectField, value) {
-    //        var me = this,
-    //            productTypeRecord = selectField.store.getById(value),
-    //            goodsType = productTypeRecord.get("goodsType");
-
-    //        if (goodsType === 'DigitalGiftCard') {
-    //            this.directShipCheckbox.setDisabled(true);
-    //            this.inStorePickupCheckbox.setDisabled(true);
-    //            this.digitalGiftCardCheckbox.show();
-    //            this.digitalGiftCardCheckbox.setValue(true);
-    //            this.digitalGiftCardCheckbox.setReadOnly();
-    //        }
-
-    //    }
-    //},
-
+   
     initComponent: function () {
         var me = this,
             fulfillmentTypes = this.product.get("fulfillmentTypesSupported"),
@@ -88,10 +72,37 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
             this.digitalGiftCardCheckbox
         ];
 
+        me.on('afterrender', function () {
+            //hook up listeners
+            me.mon(Taco.app, 'producttypechanged', me.onProductTypeChange, me);
+        });
+
         this.callParent(arguments);
 
     },
-    
+
+    onProductTypeChange: function (productTypeRecord) {
+        goodsType = productTypeRecord.get("goodsType");
+
+        if (goodsType === 'DigitalGiftCard') {
+            this.directShipCheckbox.setValue(false);
+            this.directShipCheckbox.disable();
+
+            this.inStorePickupCheckbox.setValue(false);
+            this.inStorePickupCheckbox.disable();
+
+            this.digitalGiftCardCheckbox.show();
+            this.digitalGiftCardCheckbox.enable();
+            this.digitalGiftCardCheckbox.setValue(true);
+        } else {
+            this.digitalGiftCardCheckbox.hide();
+            this.digitalGiftCardCheckbox.setValue(false);
+
+            this.directShipCheckbox.enable();
+            this.inStorePickupCheckbox.enable();
+        }
+    },
+
     onFulfillmentChange: function () {
         var me = this,
             fulfillmentTypeValue = [];
