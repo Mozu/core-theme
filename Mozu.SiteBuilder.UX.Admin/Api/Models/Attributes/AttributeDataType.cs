@@ -10,6 +10,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
         DateTime = 2,
         Number = 3,
         String = 4,
+        ProductCode = 5
     }
 
     //noAttrBefore but can't apply JsonIgnore to enum - Greg Murray on 2014-02-16 
