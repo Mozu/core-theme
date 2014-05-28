@@ -91,5 +91,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public string FulfillmentStatus { get; set; }
         #endregion
+
+        public string ParentProductCode { get; set; }
     }
 }
