@@ -18,12 +18,22 @@ Ext.define('Taco.core.ux.content.Container', {
     body: {},
     scopeActionHandlers: true,
 
+    // turn on default key listening
+    enableKeyMap: false,
+
     initComponent: function () {
         var me = this;
 
         if (me.scopeActionHandlers) me.setActionHandlerScope(me.scopeActionHandlers);
 
         me.arrangePanels();
+        
+        // Experimental code. 
+        if (me.enableKeyMap) {
+            me.mon(me, 'render', function () {
+                me.initKeyMap();
+            }, me)
+        }
 
         me.callParent(arguments);
 
@@ -31,6 +41,26 @@ Ext.define('Taco.core.ux.content.Container', {
 
         Taco.app.fireEvent("createpageview");
 
+    },
+
+    initKeyMap : function (){
+        var me = this;
+        // adding key listeners for dialogs
+        me.keyMap = new Ext.util.KeyMap({
+            target: me.el,
+            binding: [{
+                // Ctrl + Shift + S
+                key: Ext.EventObject.S,
+                ctrl: true,
+                shift: true,
+                fn: function () {
+                     console.log("save key press")
+                },
+                // prevents the event from bubbling past the modal;
+                //defaultEventAction: 'stopEvent',
+                scope: me
+            }]
+        });
     },
 
     setActionHandlerScope: function (scope) {

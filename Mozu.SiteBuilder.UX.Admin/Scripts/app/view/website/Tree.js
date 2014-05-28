@@ -387,12 +387,11 @@ Ext.define('Taco.view.website.Tree', {
 
         // hack to get around filtered store not working... todo spend 5 mins and figure it out
         // storeCopy = Ext.create('Taco.store.PageTypeDefinitions', { data: data });
-
-        dialog = Ext.create('Taco.core.ux.window.Modal', {
-            autoShow: true,
-            closeAction: 'destroy',
+        
+        dialog = Ext.create('Taco.core.ux.window.Modal', {            
             scale: 'medium',
             title: 'Add a Page',
+            autoShow: true,
             items: [{
                 xtype: 'form',
                 items: [{
@@ -464,6 +463,7 @@ Ext.define('Taco.view.website.Tree', {
 
                         cmsDoc.save({
                             success: function (cmsRecord) {
+                                
                                 var navRecord = Ext.create('Taco.model.NavigationTreeNode', {
                                     id: 'page^^' + cmsRecord.get('collectionName') + '^^' + cmsRecord.get('documentId'),
                                     editAction: 'move',
@@ -479,7 +479,7 @@ Ext.define('Taco.view.website.Tree', {
                                 //parentRecord
                                 me.fireEvent('pagecreate', navRecord);
 
-                                dialog.close();
+                                dialog.saveSuccess();
                             },
                             failure: function () {
                                 Taco.app.fireEvent('setmessage', "Error creating page", 'error');

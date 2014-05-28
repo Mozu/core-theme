@@ -96,3 +96,16 @@
         content: $glyph-calendar;
     }
 }
+
+
+
+// this is a custom addon to combo that can be used to disable an extra trigger;
+.x-form-trigger-disabled {
+    filter: alpha(opacity=30);
+    opacity: .3;
+    cursor: default;
+
+    &:focus {
+        background-color: $color-neutral-white;
+    }
+}

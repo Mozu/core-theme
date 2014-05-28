@@ -13,6 +13,7 @@ Ext.define('Taco.shared.view.modal.Wishlist', {
     title: 'Wishlist',
     formCfg: null,
     closable: true,
+    layout: "fit",
     actions: [{
         xtype: 'button',
         itemId: 'primaryAction',
@@ -39,15 +40,28 @@ Ext.define('Taco.shared.view.modal.Wishlist', {
 
         me.wishlistGrid = Ext.create('Ext.grid.Panel', {
             store: this.wishlistItemStore,
-            columns: [
-                { text: 'Product Code', dataIndex: 'product', renderer: function(product) { return product.productCode } },
-                { text: 'Name', dataIndex: 'product', renderer: function(product) { return product.name } },
-                { text: 'Price', dataIndex: 'product', renderer: function (product) { var value = product.price.price; return value ? Ext.util.Format.usMoney(value) : ""; } },
-                { text: 'Sale Price', dataIndex: 'product', renderer: function (product) { var value = product.price.saleprice; return value ? Ext.util.Format.usMoney(value) : ""; } },
-                { text: 'Quantity', dataIndex: 'quantity' },
-                { text: 'Purchasable', dataIndex: 'purchasableStatusType' },
-                { text: 'Date Added', dataIndex: 'auditInfo', renderer: function (auditinfo) { return Ext.util.Format.date(auditinfo.createDate, 'm/d/Y'); } }
-            ],
+            viewConfig: {
+                deferEmptyText: false,
+                stripeRows: false,
+                emptyText: '<div class="empty-grid-message">No items to display</div>'
+            },
+            columns: {
+                defaults: {
+                    draggable: false,
+                    resizable: true,
+                    sortable: false,
+                    menuDisabled: true
+                },
+                items: [
+                    { text: 'Product Code', dataIndex: 'product', renderer: function (product) { return product.productCode } },
+                    { text: 'Name', dataIndex: 'product', renderer: function (product) { return product.name }, flex:1 },
+                    { text: 'Price', dataIndex: 'product', renderer: function (product) { var value = product.price.price; return value ? Ext.util.Format.usMoney(value) : ""; } },
+                    { text: 'Sale Price', dataIndex: 'product', renderer: function (product) { var value = product.price.saleprice; return value ? Ext.util.Format.usMoney(value) : ""; } },
+                    { text: 'Quantity', dataIndex: 'quantity' },
+                    { text: 'Purchasable', dataIndex: 'purchasableStatusType' },
+                    { text: 'Date Added', dataIndex: 'auditInfo', renderer: function (auditinfo) { return Ext.util.Format.date(auditinfo.createDate, 'm/d/Y'); } }
+                ]
+            },
             scope: this
         });
 

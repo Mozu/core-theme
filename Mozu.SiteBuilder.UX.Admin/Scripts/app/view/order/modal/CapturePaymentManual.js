@@ -58,15 +58,9 @@ Ext.define('Taco.view.order.modal.CapturePaymentManual', {
 
         this.callParent(arguments);
 
-        this.on({
-            save: {
-                scope: this,
-                fn: 'save'
-            }
-        });
     },
 
-    save: function () {
+    doSave: function () {
         var me = this,
             formValues = this.form.getValues(),
             data,
@@ -80,18 +74,28 @@ Ext.define('Taco.view.order.modal.CapturePaymentManual', {
             interactionDate: formValues.interactionDate
         };
 
+        me.setLoading({
+            msg: "Saving"
+        }, me.body);
+
+
         // package up the data for the model to persist
         cfg = {
             jsonData: data,
             success: function (response) {
+                me.setLoading(false, me.body);
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didn't return data properly
                     return;
                 }
+                
                 me.order.reload();
+                me.saveSuccess(json);
             },
-            failure: Ext.emptyFn,
+            failure: function () {
+                me.setLoading(false, me.body);
+            },
             scope: this
         };
 

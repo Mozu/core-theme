@@ -138,10 +138,8 @@ Ext.define('Taco.view.fileManager.Associator', {
         return operations.update || operations.destroy;
     },
 
-    primaryHandler: function () {
-        if (this.fireEvent('beforesave', this) !== false) {
-            this.fireEvent('save', this, this.selected.getRange());
-            this.close();
-        }
+    doSave: function () {
+        var data = this.selected.getRange();
+        this.saveSuccess(data);
     }
 });

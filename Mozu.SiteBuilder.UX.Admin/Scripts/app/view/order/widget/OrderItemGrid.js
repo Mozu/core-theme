@@ -1,25 +1,24 @@
 ﻿/**
  * @class Taco.view.order.widget.OrderItemGrid
+ * This is both the readonly and editable version of the order details grid.
+ * It will be displayed in readOnly mode on the order details subForm and in editable mode in the EditOrderDetail.js Modal;
+ *
  */
 Ext.define('Taco.view.order.widget.OrderItemGrid', {
     extend: 'Ext.grid.Panel',
     requires: [
+        'Taco.view.order.widget.AddOrderItemToolbar',
         'Ext.MessageBox',
         'Taco.view.order.modal.ProductConfigurator',
         'Taco.shared.view.field.ProductPickerField',
         'Taco.view.order.widget.DiscountPickerField',
         'Taco.view.order.widget.DiscountRowBody',
         'Taco.view.order.widget.FulfillmentPickerField',
-      
         'Taco.core.ux.modal.Confirmation',
         'Taco.core.ux.grid.ActionColumn',
         'Taco.view.order.modal.FulfillmentMethod'
     ],
-    
-    mixins: {      
-        //rowEditable: 'Taco.core.ux.mixins.RowEditable'
-    },
-    
+
     config: {
         header: false,
         
@@ -60,86 +59,32 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             siteContext,
             editModeCls = (this.getEditMode()) ? " order-editable " : "";
         
+
+
+        // attribute names need to be looked up for each order item that contains an option. :(
+        this.attributeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Attributes');
+
+        // set tabIndex on the grid so that it can be tabbed too;
+        this.autoEl = {
+            tabIndex: 0
+        }
+
+        this.dockedItems = [];
+
         this.addEvents('save','saveFailure','saveSuccess');
         
-        me.cls = [this.cls, editModeCls, Taco.baseCSSPrefix + 'orderform-orderitemgrid'].join(' ');
-        
+        me.cls = [this.cls,"focus-grid", editModeCls, Taco.baseCSSPrefix + 'orderform-orderitemgrid'].join(' ');
+
         me.bodyCls = Taco.baseCSSPrefix + 'orderform-orderitemgrid-body'
         
         siteContext = Taco.app.context.getCurrent().urlToken;
 
+            
+            
         // if the grid is editable show the edit toolbar;
         if (this.getEditMode()) {
-            
-            
-
             // listen for changes to the amount and quantity fields and persist them
-            me.on('edit', me.onFieldEdit, me);
-
-            this.dockedItems = [
-                {
-                    xtype: "toolbar",
-                    dock: "top",
-                    componentCls: "title-toolbar",
-                    enableOverflow: true,
-                    weight: 1,
-                    items: [
-                        {
-                            xtype: "component",
-                            html: "Edit Order Details",
-                            cls: "title"
-                        },
-                        "->",
-                        {
-                            xtype: "button",
-                            scale: "medium",
-                            ui:"link",
-                            cls: "taco-toolbar-link",
-                            text: "Order Level Adjustment",
-                            handler: function() {
-                                this.toggleAddToolbar("orderAdjustment");
-                            },
-                            scope: this
-                        },
-                        {
-                            xtype: "button",
-                            scale: "medium",
-                            ui: "link",
-                            cls: "taco-toolbar-link",
-                            text: "Add Coupon",
-                            handler: function() {
-                                this.toggleAddToolbar("coupon");
-                            },
-                            scope: this
-                        },
-                        {
-                            xtype: "button",
-                            scale: "medium",
-                            ui: "link",
-                            cls: "taco-toolbar-link",
-                            text: "Add Product",
-                            handler: function() {
-                                this.toggleAddToolbar("product");
-                            },
-                            scope: this
-                        },
-                        {
-                            xtype: "button",                            
-                            scale: "medium",
-                            ui: "action",                            
-                            text: "+",
-                            handler: function () {                                
-                                this.onRowEditorCreate()
-                            },
-                            scope: this
-                        }
-                    ]
-                }
-            ];
-
-            
-
-
+            me.mon(me,'edit', me.onFieldEdit, me);
         } else {
             // if there is a draft version of this order we need to show a warning toolbar
             if (this.record.get("hasDraft")) {
@@ -147,19 +92,99 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             }
         };
 
-        
-   
-
-        this.on('beforeedit', function(plugin, edit) {
+        this.mon(this,'beforeedit', function (editorPlugin, e, eOpts) {
             // disable editing when the grid is not editMode:true
-            return this.editMode;
+            if (!this.editMode) {
+                return false;
+            }
+            var editor = e.column.getEditor(),
+                record = e.record;
+        
+            if (editor.$className == "Taco.view.order.widget.FulfillmentPickerField") {
+                // neeed to set the productCode on the fulfillmentCombo editor so that the store can use it in its filter when opened;
+                var productCode = record.get("productCode"),
+                    parentProductCode = record.get("parentProductCode"),
+                    fulfillmentConfig;
+
+                // if we have a parentProductCode, that means our productCode is really the code for the product varient; need to remamp these so that the service is happy.
+                if (parentProductCode) {
+                    fulfillmentConfig = {
+                        productCode: parentProductCode,
+                        variationProductCode: productCode
+                    }
+                } else {
+                    fulfillmentConfig = {
+                        productCode: productCode,
+                        variationProductCode: null
+                    }
+                }
+
+                //editor.setProductCode(productCode);
+                editor.setProductConfig(fulfillmentConfig);
+            }
+   
+            return true;
         }, this);
         
+        if (this.getEditMode()) {
+            // this is the combo box that shows in the fullment column when the user clicks in the grid
+            me.fulfillmentFieldComboEditor = Ext.widget({
+                xtype: "taco-fulfillmentpickerfield",
+                showBorder: (this.getEditMode()),
+                allowBlank: false,
+                typeAhead: false,
+                autoSelectFirstRecord: false,
+                msgTarget: "qtip",
+                listeners: {
+                    render: function (combo) {
+                        var me = this;
+                        // attach a listener to the ownerCt which is the Ext.grid.CellEditor class. This will let me fix an issue where the value in the combo is getting set to the display tpl text of the column.
+                        // will also allow me to auto load the combo store and expande the menu;                        
+                        var editor = combo.ownerCt;
+                        me.mon(editor, 'beforestartedit', function (cellEditor, el, value, eOpts) {
+        
+                            // reset the value for the field to empty text so that we get the full set of location options but still allow the user to type in search terms. This is the primary reason why I had to use the beforestartedit with canceled return; Criminy!
+                            value = "";
+                            
+                            // BEGIN COPIED CODE: from Ext.Editor.startEdit();
+                            // need to return false to cancel the edit and then do what the original method did but with the value reset to "", store loaded, and menu expanded;
+                            cellEditor.startValue = value;
+                            cellEditor.show();                                
+                            var field = cellEditor.field;
+                            // temporarily suspend events on field to prevent the "change" event from firing when reset() and setValue() are called
+                            field.suspendEvents();
+                            field.reset();
+                            field.setValue(value);
+                            field.resumeEvents();
+                            cellEditor.realign(true);
+                            field.focus([field.getRawValue().length]);
+                            if (field.autoSize) {
+                                field.autoSize();
+                            }
+                            cellEditor.editing = true;
+                            // end code copied from the Ext.Ediitor class
+
+                            // expand first so that the loading mask appears inside the expanded menu;
+                            field.expand();
+                            field.store.load();                            
+
+                            // cancel the default editor snerst since I am doing it here;
+                            return false;
+                        }, me)
+                    },
+                    select: this.onFulfillmentChange,
+                    scope: me
+                }
+            })
+        }
+
         
         Ext.apply(this, {
             features: [
                 {
                     ftype: 'discountrowbody'
+                },{
+                    ftype: 'rowwrap'
                 }
             ],
 
@@ -195,17 +220,18 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
             plugins: [
                 Ext.create('Ext.grid.plugin.CellEditing', {
-                clicksToEdit: 1
+                    pluginId: "cellEditing",
+                    clicksToEdit: 1
                 })
             ],
 
             columns: [
 
-            {
+                {
                     text: 'Code',
                     draggable: false,
                     resizable: true,
-                    width: 80,
+                    width: 140,
                     sortable: false,
                     menuDisabled: true,
                     hidden:false,
@@ -215,118 +241,131 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
 
                 {
-                text: 'Products',
-                draggable: false,
+                    text: 'Products',
+                    draggable: false,
                     minWidth:80,
-                xtype: 'templatecolumn',
-                flex: 1,
-                tdCls:"taco-product-column",
-                sortable: false,
-                resizable: false,
-                menuDisabled: true,
-                   
-                                       
-                tpl: new Ext.XTemplate(
-                    '<tpl if="isDeleted">',
-                    '<span class="product-link-disabled" productCode="{productCode}">{productName}</span>',
-                    '<tpl else>',
-                    //'<a class="product-link" productCode="{productCode}" target="_blank" href="/admin/' + siteContext + '/products/edit/{productCode}">{productName}</a>',
-                    '<span class="product-link-disabled">{productName}</span>',
-                    '</tpl>',
-                    '<div class="product-options">',
-                        '<tpl for="options">',
-                            '<span class="option"><tpl if="xindex &gt; 1">, </tpl>{name}',
+                    xtype: 'templatecolumn',
+                    flex: 1,
+                    //tdCls:"taco-product-column",
+                    sortable: false,
+                    resizable: false,
+                    menuDisabled: true,                                       
+                    tpl: new Ext.XTemplate(
+                        '<tpl if="isDeleted">',
+                        '<span class="product-link-disabled" productCode="{productCode}">{productName}</span>',
+                        '<tpl else>',
+                        //'<a class="product-link" productCode="{productCode}" target="_blank" href="/admin/' + siteContext + '/products/edit/{productCode}">{productName}</a>',
+                        '<span class="product-link-disabled">{productName}</span>',
+                        '</tpl>',
+
+                        '<div class="product-options">',
+                            '<tpl for="options">',
+                                '<span class="option"><tpl if="xindex &gt; 1">, </tpl>{[this.getAttributeName(values)]}',
                                 ': {value}',
-                        '</span>',
-                        '</tpl>',
-                        '<tpl for="bundledProducts">',
-                            '<div class="bundledProduct">',
-                                '{productCode} - {name} (Qty. {quantity})',
-                            '</div>',
-                        '</tpl>',
-                    
-                        '<div>',
-                            // if order item supports instore pickup and user is currently editing the order. make the fulfillment method a link;
-                            '<tpl if="this.isEditable() && supportsInStorePickup">',
-                                'Fulfillment Method: <a class="fulfillment-link" href="#" fulfillmentMethod="{fulfillmentMethod}">{[this.getFulfillmentMethodText(values)]}</a>',
-                            '<tpl else>',
-                                'Fulfillment Method: {[this.getFulfillmentMethodText(values)]}',
+                            '</span>',
                             '</tpl>',
+                            '<tpl for="bundledProducts">',
+                                '<div class="bundledProduct">',
+                                    '{productCode} - {name} (Qty. {quantity})',
+                                '</div>',
+                            '</tpl>',
+                    
+                            /*
+                            '<div>',
+                                // if order item supports instore pickup and user is currently editing the order. make the fulfillment method a link;
+                                '<tpl if="this.isEditable() && supportsInStorePickup">',
+                                    'Fulfillment Method: <a class="fulfillment-link" href="#" fulfillmentMethod="{fulfillmentMethod}">{[this.getFulfillmentMethodText(values)]}</a>',
+                                '<tpl else>',
+                                    'Fulfillment Method: {[this.getFulfillmentMethodText(values)]}',
+                                '</tpl>',
+                            '</div>',
+                            */
+
                         '</div>',
-                    '</div>',
-                    {
-                        getFulfillmentMethodText: function (record) {                            
-                            var fulfillmentMethod = record.fulfillmentMethod;
-                            var fulfillmentLocation = " (" + record.fulfillmentLocationCode + ")";
-                            if (fulfillmentMethod == "Ship") {
-                                return "Direct Ship" + fulfillmentLocation;
-                            } else {
-                                return "In Store Pickup" + fulfillmentLocation;                                
+                        {
+                            getAttributeName: function (val) {
+                                var rec = me.attributeStore.getById(val.attributeFQN)
+                                return (rec) ? rec.get("name") :  ""
                             }
-                        },
-                        isEditable: function (values) {
-                            return me.getEditMode();
                         }
-                    }
-                    ),
-                    dataIndex: 'productName',
-                    listeners: {
-                        click: {
-                            fn: function (view, cell, cellIndex, rowIndex, e, record, row, eOpt) {
-
-                                
-                                var editMode = view.ownerCt.editMode,
-                                    fulfillmentMethod = e.target.getAttribute("fulfillmentMethod"),
-                                    orderRecord = me.record
-
-                                
-
-                                // if user clicks the fulfillment method link. open the fulfillment Method Selector;
-                                if (editMode && fulfillmentMethod) {
-                                    me.editFulfillmentMethod(record,orderRecord);
+                        /*,
+                        {
+                            getFulfillmentMethodText: function (record) {                            
+                                var fulfillmentMethod = record.fulfillmentMethod;
+                                var fulfillmentLocation = " (" + record.fulfillmentLocationCode + ")";
+                                if (fulfillmentMethod == "Ship") {
+                                    return "Direct Ship" + fulfillmentLocation;
+                                } else {
+                                    return "In Store Pickup" + fulfillmentLocation;                                
                                 }
-
-                                if (!editMode || e.target.tagName != "A") {
-                                    return;
-                                }
-                                
-                                //temporarily disabling while we add service support for updating the options and extras.
-                                return;
-
-                                // prevent the default link behavior
-                                e.preventDefault();
-                                
-                                var productCode = record.get("productCode"),
-                                isConfigurable = record.get("isConfigurable");
-
-                                // determine if we need to show the configurator
-                                //if (isConfigurable) {
-                                
-                                    var win = Ext.create('Taco.view.order.modal.ProductConfigurator', {
-                                        productCode: productCode,
-                                        configuredProduct: record,
-                                        listeners: {
-                                            'configureproduct': {
-                                                fn: function (configurationData) {
-                                                    //this.addConfiguredProduct([configurationData]);
-                                                    
-                                                },
-                                                scope: this
-                                            }
-                                        }
-                                    });
-                                //}
-                                
                             },
-                            scope: this
+                            isEditable: function (values) {
+                                return me.getEditMode();
+                            }
                         }
+                        */
+
+                        ),
+                        dataIndex: 'productName',
+                        listeners: {
+                            click: {
+                                fn: function (view, cell, cellIndex, rowIndex, e, record, row, eOpt) {
+
+                                
+                                    var editMode = view.ownerCt.editMode,
+                                        fulfillmentMethod = e.target.getAttribute("fulfillmentMethod"),
+                                        orderRecord = me.record
+
+                                
+
+                                    // if user clicks the fulfillment method link. open the fulfillment Method Selector;
+                                    if (editMode && fulfillmentMethod) {
+                                        me.editFulfillmentMethod(record,orderRecord);
+                                    }
+
+                                    if (!editMode || e.target.tagName != "A") {
+                                        return;
+                                    }
+                                
+                                    //temporarily disabling while we add service support for updating the options and extras.
+                                    return;
+
+                                    // prevent the default link behavior
+                                    e.preventDefault();
+                                
+                                    var productCode = record.get("productCode"),
+                                    isConfigurable = record.get("isConfigurable");
+
+                                    // determine if we need to show the configurator
+                                    //if (isConfigurable) {
+                                
+                                        var win = Ext.create('Taco.view.order.modal.ProductConfigurator', {
+                                            productCode: productCode,
+                                            configuredProduct: record,
+                                            listeners: {
+                                        'savesuccess': {
+                                                    fn: function (configurationData) {
+                                                        //this.addConfiguredProduct([configurationData]);
+                                                    
+                                                    },
+                                                    scope: this
+                                                }
+                                            }
+                                        });
+                                    //}
+                                
+                                },
+                                scope: this
+                            }
                         
-                    }
+                        }
                 },
 
                 {
                     text: 'Fulfillment',
+                    editorId: "fulfillmentColumn",
                     xtype: 'templatecolumn',
+                    dataIndex: 'fulfillmentId',
                     draggable: false,
                     resizable: true,
                     //flex:1,
@@ -335,22 +374,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     menuDisabled: true,
                     align: "left",
                     tpl: [
-                        '{fulfillmentMethod}({fulfillmentLocationCode})'
-                    ]
-                    
-                    ,editor: (this.getEditMode()) ? {
-                        //xtype: 'textfield',
-                        xtype: "taco-fulfillmentpickerfield",
-                        showBorder: (this.getEditMode()),                        
-                        //fieldStyle: "text-align:right;padding-right:4px;",
-                        allowBlank: false
-                    } : null
-                    
-                    
-                },
-
-
-                {
+                        '{fulfillmentMethod} ({fulfillmentLocationCode})'
+                    ],
+                    editor : (this.getEditMode()) ? me.fulfillmentFieldComboEditor : null
+                }, {
                     text: 'Price',
                     draggable: false,
                     resizable: false,
@@ -375,8 +402,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         maxValue: 100000
                     } : null,
                     dataIndex: 'unitPrice'
-                },
-                {
+                }, {
                     text: 'Quantity',
                     draggable: false,
                     resizable: false,
@@ -385,12 +411,13 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     menuDisabled: true,
                     align: "right",
                     editor: {
-                        xtype: 'textfield',
+                        xtype: "numberfield",
                         showBorder: (this.getEditMode()),
                         fieldStyle: "text-align:right;",
                         selectOnFocus: true,
                         allowBlank: true,
-                        minValue: 0,
+                        hideTrigger:true,
+                        minValue: 1,
                         maxValue: 100000
                     },
                     dataIndex: 'quantity'
@@ -417,7 +444,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     resizable: false,
                     menuDisabled: true,
                     text: '',
-                    width: this.getActionColumnWidth(),
+                    width: this.actionColumnWidth,
                     // note: "x-action-col-icon" is required for the action column to call the handler;
                     //innerCls: "x-grid-cell-inner-action-col x-action-col-icon",
                     iconCls: Taco.baseCSSPrefix + 'grid-row-action-trigger ' + Taco.baseCSSPrefix + 'grid-row-action-trigger-remove',
@@ -463,239 +490,264 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         });
         
 
+
         this.initAddProductToolbar();
 
         me.callParent(arguments);
-    },
-    
-    initAddProductToolbar: function () {
-        var me = this;
 
-        if (!this.getEditMode()) {
-            return
+        if (this.getEditMode()) {
+
+            
+
+
+            // pass focus to the add product field; 
+            if (this.addProductToolbar) {
+                me.mon(me, 'boxready', function () {
+                    // need to listen for focus on the grid el.
+                    me.mon(me.el, 'focus', function () {
+                        if (me.store.getCount()) {
+                            me.focusGridTop()
+                        } else {
+                            // no grid items to focus. pass focus to the productPickerField;
+                            this.addProductToolbar.productPickerField.focus(null, 10);
         }
+                    }, this)
 
 
-        // todo: syncronize the width of columns that are resized
-        this.on({            
-            'columnresize': function (columnHeader, column, width, eOpts) {
-                // need to synchronize the width of the columns and the addProductToolbar fields when user resizes the columns                
-                var columnIndex = columnHeader.columnManager.columns.indexOf(column);
-                var cell = this.addProductToolbar.items.items[columnIndex]
-                cell.setWidth(width);
-            },
-            'cellkeydown': function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {                
-                var me=this,
-                    count = view.store.getCount()
+                    this.addProductToolbar.productPickerField.focus(null, 10);
+                }, this)
+            }
 
-                //if last row
-                if (rowIndex == count - 1 && e.getKey() == e.DOWN) {
+            // listening for a custom event added to the cellSelectionModel via override; this is a cancellable event; retun false to prevent the key navigation to get processed by the grid;
+            me.mon(this.view, "beforecellkeymove", function (view, pos, newPos, dir, e) {                
+                var me = this,
+                    rowCount = me.store.getCount(),
+                    cellCount = me.columns.length,
+                    cellIndex = pos.column,
+                    rowIndex = pos.row;
+
+                //console.log(dir);
+
+                // user clicks down arrow while in last row or user hits tab key when in last cell on last row
+                if ((rowIndex == rowCount - 1 && dir == "down") || (rowIndex == rowCount - 1 && cellIndex == cellCount - 1 && dir == "right")) {
                     // need to manually deselect the last selected grid cell to work around a bug in extjs;
                     me.view.onCellDeselect({
                         column: cellIndex,
                         row: rowIndex
                     });
                     
+                    me.view.getSelectionModel().deselectAll();
+
                     //set focus on product picker field
-                    this.productPickerField.focus();
+                    this.addProductToolbar.productPickerField.focus(null, 100);
+                    return false;
+                } else {
+                    return true;
                 }
-            }
-        })
+            }, me)
 
-        this.codeField = Ext.widget({
-            xtype: "displayfield",
-            fieldBodyCls: "order-addproducttoolbar-cell",
-            fieldStyle: "padding:0px 4px;",
-            fieldCls: "order-addproducttoolbar-field",
-            width : this.columns[0].width,            
-            value:""
-        })
 
-        this.priceField = Ext.widget({
-            xtype: "numberfield",
-            disabled:true,
-            fieldBodyCls: "order-addproducttoolbar-cell",
-            fieldStyle: "text-align:right;padding-right:4px;",
-            selectOnFocus: true,
-            forcePrecision: true,
-            hideTrigger: true,            
-            //fieldStyle: "text-align:right;padding-right:4px;",
-            mouseWheelEnabled: false,
 
-            allowBlank: false,
-            minValue: 0,
-            maxValue: 100000,
-            width: this.columns[3].width,
-            value: ""
-        })
 
-        this.quantityField = Ext.widget({
-            xtype: "numberfield",
-            disabled: true,
-            fieldBodyCls: "order-addproducttoolbar-cell",
-            fieldStyle: "text-align:right;padding-right:4px;",
-            //forcePrecision: true,
-            selectOnFocus:true,
-            hideTrigger: true,            
-            //fieldStyle: "text-align:right;padding-right:4px;",
-            mouseWheelEnabled: false,                       
             
-            allowBlank: false,
-            minValue: 0,
-            maxValue: 100000,
-            width: this.columns[4].width,
-            value: ""
+
+            /*
+                // this code should work but doesn't due to two bugs in Extjs related to keyEvents for grid.view;
+                bug 1. beforeKey events don't fire before the grid navigates to next cell;
+                bug 2. rowIndex is incorrect in the arguments that are passed when the events fire; this is working in the 4.2.3 nightly but not working in the 4.2.2 release;
+                Keep this code around so we can use it when the bugs are fixed and my override can be removed;
+                See "beforecellkeymove" which is a custom event that I added to the CellModel override to fix both issues above;
+
+                this.mon(this.view, 'beforecellkeydown', function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+                    var me = this,
+                        rowCount = me.store.getCount(),
+                        cellCount = me.columns.length;
+
+                    // user clicks down arrow while in last row or user hits tab key when in last cell on last row
+                    if ((rowIndex == rowCount - 1 && e.getKey() == e.DOWN) || (rowIndex == rowCount - 1 && cellIndex == cellCount -1 &&  e.getKey() == e.TAB)) {
+                        // need to manually deselect the last selected grid cell to work around a bug in extjs;
+                        me.view.onCellDeselect({
+                            column: cellIndex,
+                            row: rowIndex
+                        });
+                        me.view.getSelectionModel().deselectAll();
+                        //set focus on product picker field
+                        this.addProductToolbar.productPickerField.focus(null, 100);
+                    }
+
+                }, this);            
+            */
+
+
+
+                        }
+    },
+
+
+
+    // User selects a different location and or fulfillment method; Persistance call;
+    onFulfillmentChange: function (combo, records, eOpts) {
+        if (!records.length) {
+            return
+                        }
+        var me = this,
+            comboRecord = records[0],
+            editor = combo.ownerCt,
+            gridRecord = this.getSelectionModel().getSelection()[0],
+            plugin = me.getPlugin("cellEditing"),
+            fulfillmentMethod = comboRecord.get("fulfillmentMethod"),
+            fulfillmentLocationCode = comboRecord.get("locationCode"),
+            orderId = me.record.get("id"),
+            data= Ext.clone(gridRecord.data);
+
+        /*                
+        var mask = me.setLoading({
+            msg: "Saving"
+        }, me.body);
+        */
+            
+
+        /*
+        gridRecord.set("fulfillmentMethod", fulfillmentMethod);
+        gridRecord.set("fulfillmentLocationCode", fulfillmentLocationCode);
+        gridRecord.set("fulfillmentId", fulfillmentMethod + "(" + fulfillmentLocationCode + ")");
+        */
+        
+        Ext.apply(data, {
+            fulfillmentMethod: fulfillmentMethod,
+            fulfillmentLocationCode : fulfillmentLocationCode,
+            fulfillmentId: fulfillmentMethod + "(" + fulfillmentLocationCode + ")",
         })
 
-        this.rowTotalField = Ext.widget({
-            xtype: "displayfield",
-            fieldBodyCls: "order-addproducttoolbar-cell",
-            width: this.columns[5].width,
-            value: ""
-        })
+        plugin.completeEdit();
+        gridRecord.set("fulfillmentMethod", fulfillmentMethod);
+        gridRecord.set("fulfillmentLocationCode", fulfillmentLocationCode);
+        gridRecord.set("fulfillmentId", fulfillmentMethod + "(" + fulfillmentLocationCode + ")");
 
 
-
-        this.productPickerField = Ext.create('Taco.shared.view.field.ProductPickerField', {
-            width: this.columns[0].width,
-            style: "padding:5px",
-            cls: "simeon1",
-            fieldBodyCls: "order-addproducttoolbar-cell",
-            fieldCls: "toolbar-field",
-            pageSize: me.productsPerPage,
-            listeners: {
-                'specialkey': {
-                    fn: function (field, e) {                        
-
-                        // if field doesnt have a flyout menu expanded and hits key up. pass focus to grid's last row;
-                        if (e.getKey() == e.UP && !field.isExpanded) {
-                            //index of last row
-                            var index = me.store.getCount() - 1;
-                            me.getSelectionModel().select(index);
-
-                            // wierd bug in extjs. If you don't blur the trigger as well the field will not remove the focus css class;
-                            field.triggerBlur();
-                            field.blur();
-                        }
-
-                        // e.HOME, e.END, e.PAGE_UP, e.PAGE_DOWN,
-                        // e.TAB, e.ESC, arrow keys: e.LEFT, e.RIGHT, e.UP, e.DOWN
-                        if (e.getKey() == e.ESC) {
-
-
-                            //return false;
-                        }
+        me.record.editOrderItemFulfillmentMethod({
+            jsonData: {
+                orderId: orderId,
+                orderItems: [
+                    data
+                ]
                     },
-                    scope: me
+            failure: function (response) {
+                //me.setLoading(false, me.body);
+                gridRecord.reject();
                 },
-                beforeselect: {
-                    fn: function (combo, record, index, e) {
-                        var productCode = record.get("productCode"),
-                            isConfigurable = record.get("isConfigurable");
+            success: function (response) {
+                //me.setLoading(false, me.body);
 
-                        //var picker = combo.getPicker();
-                        combo.collapse();
-
-                        // determine if we need to show the configurator
-                        if (isConfigurable) {
-                            //debugger;
+                //gridRecord.commit();
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly                    
+                    gridRecord.reject();
                             return;
-                            var win = Ext.create('Taco.view.order.modal.ProductConfigurator', {
-                                productCode: productCode,
-                                listeners: {
-                                    'configureproduct': {
-                                        fn: function (configurationData) {
-                                            this.addConfiguredProduct([configurationData]);
+                }
+                gridRecord.commit();                
                                         },
                                         scope: this
-                                    }
-                                }
                             });
-                        } else {
-                            //debugger;
-                            return;
-                            // the product doesn't require configuration so just add it and skip opening the dialog;
-                            this.addConfiguredProduct([
-                                {
-                                    // always going to be 1 because they don't want to open the configurator for products without options or extras
-                                    quantity: 1,
+    },
 
-                                    productCode: productCode
-                                }
-                            ]);
-                        }
 
-                        // cancel the selection so that the same product can be reselected again;
-                        return false;
-                    },
-                    scope: this
+    initAddProductToolbar: function () {
+        var me = this;
+
+        if (!this.getEditMode()) {
+            return
                 }
-            }
-        });
 
 
-        this.fulfillmentPickerField = Ext.create('Taco.view.order.widget.FulfillmentPickerField', {
-            disabled: true,
-            fieldCls: "toolbar-field",
-            fieldBodyCls: "order-addproducttoolbar-cell",
-            width: this.columns[2].width,
-            pageSize: me.productsPerPage,
-            listeners: {
-                'specialkey': {
-                    fn: function (field, e) {
-                        // e.HOME, e.END, e.PAGE_UP, e.PAGE_DOWN,
-                        // e.TAB, e.ESC, arrow keys: e.LEFT, e.RIGHT, e.UP, e.DOWN
-                        if (e.getKey() == e.ESC) {
 
 
-                            //return false;
-                        }
-                    },
-                    scope: me
-                },
-                beforeselect: {
-                    fn: function (combo, record, index, e) {
-                        var productCode = record.get("productCode"),
-                            isConfigurable = record.get("isConfigurable");
 
-                        //var picker = combo.getPicker();
-                        combo.collapse();
 
-                        //debugger;                        
+        // todo: syncronize the width of columns that are resized
+        this.mon(this, 'columnresize', function (columnHeader, column, width, eOpts) {
+            // need to synchronize the width of the columns and the addProductToolbar fields when user resizes the columns                
+            var columnIndex = columnHeader.columnManager.columns.indexOf(column);
+            var cell = this.addProductToolbar.items.items[columnIndex]
+            cell.setWidth(width);
+        },this)
 
-                        // cancel the selection so that the same product can be reselected again;
-                        return false;
-                    },
-                    scope: this
-                }
-            }
-        });
+
+
+
+
+
+
 
         
-
-        this.addProductToolbar = new Ext.container.Container({
-            dock: "bottom",
-            layout: {
-                type: "hbox",
-                align: "middle"
-            },            
-            style: "border:1px solid #ccc;padding-top:2px;padding-bottom:2px;",
-            cls: "order-addproducttoolbar",
-            items: [
-                this.codeField,
-                this.productPickerField,
-                this.fulfillmentPickerField,
-                this.priceField,
-                this.quantityField,
-                this.rowTotalField,
-                {
-                    xtype: "component",
-                    width: this.columns[6].width
+        this.addProductToolbar = Ext.create('Taco.view.order.widget.AddOrderItemToolbar', {
+            grid : this,
+            listeners: {
+                save: {
+                    fn: function (toolbar, configuredProduct) {                        
+                        me.addConfiguredProduct([
+                            configuredProduct
+                        ])
+                    },
+                    scope:me
+                    },
+                focus: {
+                    fn: me.onGridBlur,
+                    scope: me
                 }
-            ]
+            }
         });
 
+        // when user keys up arrow pass focus back to grid;
+        this.mon(this.addProductToolbar, 'gridfocus', function (field, e) {
+            var me = this,
+                cellIndex = 1,
+                lastCellIndex = me.columns.length-1,
+                rowIndex = me.store.getCount() - 1;
+            
+            // no grid data;
+            if (rowIndex == -1) {
+                // nothing to pass focus to in the grid, so we need to pass focus back to the field
+                this.addProductToolbar.productPickerField.focus(null, 10);
+                return;
+            }
+
+            // if left key or or shift tab go to last cell in grid;
+            if (e.getKey() == e.LEFT || (e.getKey() == e.TAB && e.shiftKey)) {
+                // set the cell index to the last cell;
+                cellIndex = lastCellIndex;
+            }
+
+            // this line is required for extjs 4.2.2; not neaded for extjs 4.3 nightly;
+
+            me.getSelectionModel().setCurrentPosition({ row: rowIndex, column: cellIndex });
+            me.view.focusRow(rowIndex);
+        
+        },this);
+
         this.dockedItems.push(this.addProductToolbar);
+            },            
+    focusGridTop:function (){
+        var me = this;
+
+        if (me.store.getCount()) {
+            me.getSelectionModel().setCurrentPosition({ row: 0, column: 0 });
+            me.view.focusRow(0);
+                }
+    },
+
+    // manually deselects visually the current selection of the grid;
+    onGridBlur: function (){
+        //blur the grid
+        var selModel = this.getSelectionModel()
+        if (selModel.getSelection().length) {
+            // need to manually visually deselect the last cell due to extjs bug that leaves the css class on the sell when deselected;
+            var pos = selModel.getCurrentPosition();
+            this.view.onCellDeselect(pos);
+            selModel.deselectAll();
+        }
     },
 
     onRowEditorCreate: function () {
@@ -703,7 +755,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
         // check with the rowEditor to see if creation is allowed;
         
-        //debugger;
+        
         // Create a model instance
         var modelName = this.store.model.getName();
         var r = Ext.create(modelName, {});
@@ -770,388 +822,60 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     onFieldEdit : function(editor, e) {
         var me = this;
         
+        //e.record.commit();
+
+        // don't need to persist changes to this field as they are handled by the select of the combo;
+        if (e.field == "fulfillmentId") {            
+            return;
+        }
+
+        // persist the changes to the price and quantity field;
         if (e.record && e.record.dirty) {
             me.editOrderItem(e, {
                 data: [
                     e.record.getData()
                 ]
             });
-        }
+            }
     },
     
+    // after the grid reloads its data, the selection will be lost. this method restores a position if one is passed in;
+    restoreSelection: function (position) {
+        var me = this,
+            rowIndex,
+            cellIndex,
+            count= me.store.getCount();
+            
+        // if no position the grid didn't have a selection; could be the add item toolbar or the total panel fields;
+        if (position) {
+            rowIndex = position.row
+            cellIndex = position.column
+            // check to make sure the row is still there. It could have been deleted; 
+            if (count == 0) {
+                this.addProductToolbar.productPickerField.focus(null, 10);
+                return;
+            } else if (count == rowIndex) {
+                //deleted the last row need to select the row above it;
+                rowIndex--
+            }
+                    
+            me.getSelectionModel().setCurrentPosition({ row: rowIndex, column: cellIndex });
+            me.view.focusRow(rowIndex);
+            }
+            },
+            
     editOrder: function (animationTarget) {
-        
+
         // to avoid duplication, bubble up the component hierarchy looking for 
         // Taco.view.order.subform.Detail and call editOrder there;
-        
+            
         var me = this;
         var ct = this.up('taco-orderdetail');
         if (ct) {
             ct.editOrder(animationTarget);
-        }
-    },
-
-
-    toggleAddToolbar: function (toolbarType) {
-        var me=this,
-            tb;
-        
-        // if we have an existing toolbar we need to destroy it.
-        if (me.activeAddToolbar && !me.activeAddToolbar.isDestroyed) {
-            
-            me.activeAddToolbar.hide();
-            me.removeDocked(me.activeAddToolbar,true);
-            // if the type is the same as the currently active toolbar then just destroy it and end. this is the user toggling the toolbar close by clicking on the add product link again;
-            if (me.activeAddToolbar.toolbarType == toolbarType) {
-                return;
             }
-        }
-
-        // create the new toolbar and add it to the container;
-        switch (toolbarType) {
-            case "product":
-                tb = me.getAddProductToolbar();
-                break;
-            case "coupon":
-                tb = me.getAddCouponToolbar();
-                break;
-            case "orderAdjustment":
-                tb = me.getAddAdjustmentToolbar();
-                break;
-        }
-
-        me.activeAddToolbar = tb;
-        me.addDocked(tb);
     },
     
-    // pass focus to the active search field so the user can keep adding / searching after exiting a previous selection
-    focusActiveSearchField: function () {
-        if (this.activeSearchField && !this.activeSearchField.isDestroyed) {
-            // had to disable this since the focus is causing the field valiation to fire;
-            //this.activeSearchField.focus(true, 100);
-        }
-    },
-    
-    // creates and returns a toolbar for adding products;
-    getAddProductToolbar: function (config) {
-        var me = this,
-            tbConfig;
-
-        this.activeSearchField = Ext.create('Taco.shared.view.field.ProductPickerField', {
-            fieldCls: "toolbar-field",
-            pageSize: me.productsPerPage,
-            listeners: {
-                'specialkey':{
-                    fn: function(field, e) {
-                        // e.HOME, e.END, e.PAGE_UP, e.PAGE_DOWN,
-                        // e.TAB, e.ESC, arrow keys: e.LEFT, e.RIGHT, e.UP, e.DOWN
-                        if (e.getKey() == e.ESC) {
-                            
-                            
-                            //return false;
-                        }
-                    },
-                    scope: me
-                },     
-                beforeselect: {
-                    fn: function (combo, record, index, e) {
-                        var productCode = record.get("productCode"),
-                            isConfigurable = record.get("isConfigurable");
-                        
-                        //var picker = combo.getPicker();
-                        combo.collapse();
-                        
-
-                        // determine if we need to show the configurator
-                        if (isConfigurable) {
-                            var win = Ext.create('Taco.view.order.modal.ProductConfigurator', {
-                                productCode: productCode,
-                                listeners: {
-                                    'configureproduct': {
-                                        fn: function (configurationData) {
-                                            this.addConfiguredProduct([configurationData]);
-                                        },
-                                        scope: this
-                                    }
-                                }
-                            });
-                        } else {
-                            // the product doesn't require configuration so just add it and skip opening the dialog;
-                            this.addConfiguredProduct([
-                                {
-                                    // always going to be 1 because they don't want to open the configurator for products without options or extras
-                                    quantity: 1,
-                                
-                                    productCode: productCode
-                                }
-                            ]);
-                        }
-                        
-                        // cancel the selection so that the same product can be reselected again;
-                        return false;
-                    },
-                    scope: this
-                }
-            }
-        });
-                
-        tbConfig = Ext.apply({
-            toolbarType:"product",
-            items: [
-                {
-                    xtype: 'component',
-                    html: "Add Product",
-                    style: "padding:0px 10px 0px 10px;"
-                },
-                this.activeSearchField
-            ]
-        }, config);
-
-        return me.getAddItemToolbar(tbConfig);
-    },
-    
-    // creates and returns a toolbar for adding coupons;
-    getAddCouponToolbar: function (config) {
-        var me = this,
-            tbConfig;
-
-
-        this.activeSearchField = Ext.create('Taco.view.order.widget.DiscountPickerField', {
-            fieldCls: "toolbar-field",
-            
-            validOnDate : this.record.get("createDate"),
-            
-            store: Taco.core.data.StoreManager.getOrCreate({
-                type: 'Taco.store.Discounts',
-                pageSize: me.discountsPerPage,
-                autoLoad: true
-            }),
-            pageSize: me.discountsPerPage,
-            listeners: {
-                beforeselect: {
-                    fn: function (combo, record, index, e) {                        
-
-                        //var picker = combo.getPicker();
-                        combo.collapse();
-                        
-                        // the product doesn't require configuration so just add it and skip opening the dialog;
-                        this.addOrderCoupon([
-                           record.get("couponCode")
-                        ]);
-
-                        // cancel the selection so that the same product can be reselected again;
-                        return false;
-                    },
-                    scope: this
-                }
-            }
-        });
-
-        tbConfig = Ext.apply({
-            toolbarType: "coupon",
-            items: [
-                {
-                    xtype: 'component',
-                    html: "Add Coupon",
-                    style: "padding:0px 10px 0px 10px;"
-                },
-                this.activeSearchField
-            ]
-        }, config);
-
-        return me.getAddItemToolbar(tbConfig);
-    },
-    
-    // creates and returns a toolbar for adding adjustments;
-    getAddAdjustmentToolbar: function (config) {
-        var me = this,
-            tbConfig,
-            orderAdjustmentValue,
-            shippingAdjustmentValue;
-
-        orderAdjustmentValue = me.record.get("orderAdjustment").amount;
-        shippingAdjustmentValue = me.record.get("shippingAdjustment").amount;
-
-        //this.activeSearchField = Ext.create('Taco.core.ux.form.CurrencyField', {
-        this.activeSearchField = Ext.create('Ext.form.field.Number', {
-            label: "Order Adjustment",
-            itemId: "orderAdjustmentField",
-            width: 80,
-            fieldCls: "toolbar-field",
-            selectOnFocus: true,
-            forcePrecision:true,
-            listeners: {
-                /*
-                focus: {
-                    fn: function(field) {
-                        if (!field.getValue()) {
-                            field.setValue("-");
-                        }
-                    },
-                    scope:me
-                }
-                */
-
-            },
-            hideTrigger:true,
-            decimalPrecision: 2,
-            value: orderAdjustmentValue
-        });
-
-        tbConfig = Ext.apply({
-            toolbarType: "orderAdjustment",
-            items: [
-                {
-                    xtype: 'component',
-                    html: "Order Adjustment",
-                    style: "padding:0px 10px 0px 10px;"
-                },
-                this.activeSearchField,
-                {
-                    xtype: 'component',
-                    html: "Shipping Adjustment",
-                    style: "padding:0px 10px 0px 30px;"
-                },
-                {
-                    xtype: "numberfield",
-                    itemId: "shippingAdjustmentField",
-                    forcePrecision: true,
-                    width: 80,
-                    style: "margin:0px 10px 0px 10px;top:0px;",
-                    fieldCls: "toolbar-field",
-                    selectOnFocus: true,
-                    hideTrigger:true,
-                    decimalPrecision: 2,
-                    value: shippingAdjustmentValue
-                },
-                {
-                    xtype: "button",
-                    scale: "medium",
-                    ui:"action",
-                    text:"Apply",
-                    itemId: "applyadjustmentField",
-                    style: "margin:0px 20px 0px 10px;",
-                    handler:function(button,e) {
-                        
-                        var orderAdjustmentField = button.up('toolbar').getComponent('orderAdjustmentField');
-                        var shippingAdjustmentField = button.up('toolbar').getComponent('shippingAdjustmentField');
-                        
-                        // get the values from the fields and persist the adjustments;
-                        me.updateOrderAdjustment({
-                            data: {
-                                orderAdjustment: {
-                                    amount: orderAdjustmentField.getValue()
-                                },
-                                shippingAdjustment: {
-                                    amount: shippingAdjustmentField.getValue()
-                                }
-                            }
-                        })
-
-                    },
-                    scope:me
-                },
-                "->"
-            
-            ]
-        }, config);
-
-        return me.getAddItemToolbar(tbConfig);
-    },
-    
-    getAddItemToolbar: function (config) {
-        var tbConfig = Ext.apply({
-            dock: "top",
-            
-            layout: {
-                type: "hbox",
-                align: "middle"
-            },
-            
-            weight:2,
-            cls: "additem-toolbar",
-            //style: "border-color:#CCC;background-color:#f1f1f1;padding:5px;",
-            items: [],
-            listeners: {
-                /*
-                afterlayout: {
-                    fn: function () {
-                        this.focusActiveSearchField();
-                    },
-                    scope: this
-                } 
-                */
-            },
-            onDestroy: function() {
-            
-            }
-        }, config);
-
-        // add the closer;
-        tbConfig.items.push(
-            {
-                text: "X",
-                xtype: "button",
-                scale: "medium",
-                ui:"action",
-                style: "min-width:30px;margin-left:10px",
-                handler: function(button, evt) {
-                    var tb = button.up('toolbar');
-                    // destroy all the child components
-                    tb.removeAll(true);
-                    // need to hide the toolbar before deleting it to avoid a bug in hbox layout 
-                    
-                    tb.hide();
-                    
-                    // remove the toolbar from its owner container and destroy it.
-                    tb.ownerCt.removeDocked(tb, true);
-                },
-                scope: this
-            }
-        );
-    
-        return Ext.create('Ext.toolbar.Toolbar', tbConfig);
-    },
-    
-    // returns an array of field configs for the store of this grid
-    getFields: function() {
-        return [
-
-            {
-                "name": "orderItemId",
-                "type": "string",
-                "useNull": true
-            },
-            
-            {
-                "name": "productCode",
-                "type": "string",
-                "useNull": false
-            },
-            {
-                "name": "productName",
-                "type": "string",
-                "useNull": true
-            },
-
-            {
-                "name": "quantity",
-                "type": "int",
-                "useNull": true
-            },
-            
-            {
-                "name": "weight",
-                "type": "float",
-                "useNull": true,
-                "defaultValue": 1
-            }
-        ];
-    },
-    
-    handleError : function() {
-        
-    },
 
     // accepts an array of order coupons configuration data objects and calls the service to persist it.
     addOrderCoupon: function (coupons) {
@@ -1206,6 +930,9 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 }
                 
                 me.fireEvent('saveSuccess', json);
+                
+                this.addProductToolbar.reset();
+
                 // after a successful add, pass focus back to the searchfield;
                 //me.focusActiveSearchField();
             },
@@ -1238,6 +965,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
 //        
         
+
         if (!config.data) {
             return;
         }
@@ -1250,8 +978,6 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
         this.fireEvent('save');
 
-
-        
         this.record[updateMethodName]({
             jsonData: jsonData,
             success: function (response) {
@@ -1269,6 +995,20 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     return;
                 }
                 this.fireEvent('saveSuccess', json);
+                
+                // need to deselect the cell so it can be reselected and focused. shoot me now.
+                //me.focusGridTop()
+
+                //selModel.setCurrentPosition(pos);
+                //selModel.select(selected);
+                //me.view.focusRow(pos);
+                
+                //me.view.focusCell(pos,100);
+
+                //me.getSelectionModel().setCurrentPosition({ row: rowIndex, column: cellIndex });
+                //me.view.focusRow(rowIndex);
+
+
             },
             failure: function (response) {
                 // error handling here
@@ -1293,8 +1033,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         var me = this,
             jsonData = {
                 orderId: this.record.get('id'),
-                orderAdjustment: this.record.get("orderAdjustment"),
-                shippingAdjustment: this.record.get("shippingAdjustment")
+                orderAdjustment: Ext.clone(this.record.get("orderAdjustment")),
+                shippingAdjustment: Ext.clone(this.record.get("shippingAdjustment"))
             };
         
         if (!config.data) {
@@ -1490,7 +1230,9 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         });
     },
     
-
+    /**
+    * Deletes the draft order;
+    */
     removeDraftOrder: function () {
         var me = this;
         this.fireEvent('save');
@@ -1524,6 +1266,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         });
     },
     
+
+    /**
+    * Overwrites the original order with the draft order;
+    */
     saveDraftOrder: function () {
         var me = this;
         
@@ -1557,6 +1303,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         });
     },
     
+
     editFulfillmentMethod: function(orderItemRecord, orderRecord) {
         var me = this,
             editor;
@@ -1565,7 +1312,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             record: orderItemRecord,
             orderRecord: orderRecord,
             listeners: {
-                save: {
+                savsuccess: {
                     fn: function(view, data) {
                         
 

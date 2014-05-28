@@ -318,7 +318,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         });
 
         this.modal.on({
-            save: function (modal, values) {
+            savesuccess: function (modal, values) {
                 list.addValue(values);
             },
             scope: this
@@ -343,7 +343,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         });
 
         this.modal.on({
-            save: function (modal, values) {
+            savesuccess: function (modal, values) {
                 list.addValue(values);
             },
             scope: this

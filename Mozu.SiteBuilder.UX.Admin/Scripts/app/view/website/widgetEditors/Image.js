@@ -505,7 +505,7 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
 
             this.associatorListeners = this.mon(this.associator, {
                 destroyable: true,
-                save: {
+                savesuccess: {
                     scope: this,
                     fn: function (dialog, records) {
                         var urls;

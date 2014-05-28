@@ -37,11 +37,7 @@ Ext.define('Taco.view.order.modal.IssueCredit', {
 
         this.callParent(arguments);
 
-        this.on({
-            save: {
-                scope: this,
-                fn: 'save'
-            },
+        this.on({            
             show: {
                 scope: this,
                 fn: function () {
@@ -55,7 +51,7 @@ Ext.define('Taco.view.order.modal.IssueCredit', {
         });
     },
     
-    save: function () {
+    doSave: function () {
         var me = this,
             fmValues = this.form.getValues(),
             data = {
@@ -65,33 +61,23 @@ Ext.define('Taco.view.order.modal.IssueCredit', {
                 reason: fmValues.reason
             };
         
+        me.setLoading({
+            msg: "Saving"
+        }, me.body);
+
         this.order.issueCredit({
             jsonData: data,
             success: function (response) {
-                var json = Ext.decode(response.responseText, true),
-                    errorDialog;
-
+                me.setLoading(false, me.body);
+                var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
-                    Ext.message('error saving credit');
-                    
-                    errorDialog = Ext.create('Taco.core.ux.window.Alert', {
-                        html: 'Error saving credit'
-                    });
-                    errorDialog.show();
-
                     return;
                 }
-                this.fireEvent('aftersave');
+                
+                me.saveSuccess(json);
             },
             failure: function (response) {
-                var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : 'Error saving credit',
-                    errorDialog;
-                
-                errorDialog = Ext.create('Taco.core.ux.window.Alert', {
-                    html: msg
-                });
-                errorDialog.show();
+                me.setLoading(false, me.body);
             },
             scope: this
         });

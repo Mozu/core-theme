@@ -67,6 +67,9 @@ Ext.define('Taco.Application', {
     autoCreateViewport: false,
     requires: [
         'Taco.core.util.Common',
+        'Taco.overrides.dom.ElementAddons',
+        'Taco.overrides.selection.CellModel',
+        'Taco.overrides.ZIndexManager',
         'Taco.overrides.picker.Month',
         'Taco.overrides.data.AbstractStore',
         'Taco.overrides.form.Basic',
@@ -78,6 +81,7 @@ Ext.define('Taco.Application', {
         'Taco.overrides.grid.RowEditorButtons',
         'Taco.overrides.grid.plugin.RowEditing',
         'Taco.overrides.grid.plugin.CellEditing',
+        //'Taco.overrides.menu.Item',
         'Taco.overrides.menu.Menu',
         'Taco.overrides.panel.Tool',
         'Taco.overrides.toolbar.Paging',
@@ -133,6 +137,7 @@ Ext.define('Taco.Application', {
         'Tbd',
         'Themes',
         'Themesettings',
+        // Simeon: Thom told me to comment out the account ui and controller since it was only partially implemented;
         'Account',
         'GeneralSettings',
         'Tests',

@@ -332,9 +332,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             record: me.record,
             order: me.order,
             listeners: {
-                aftersave: function () {
+                savesuccess: function () {
                     me.order.reload();
-
                 },
                 scope: me
             }

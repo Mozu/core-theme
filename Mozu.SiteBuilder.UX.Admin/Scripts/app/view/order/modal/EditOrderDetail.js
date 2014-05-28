@@ -4,7 +4,9 @@
  */
 
 Ext.define('Taco.view.order.modal.EditOrderDetail', {
-    extend: 'Taco.core.ux.window.Drawer',
+    extend: 'Taco.core.ux.window.Drawer',    
+    //extend: 'Ext.window.Window',
+
     requires: [
         'Taco.view.order.widget.OrderItemGrid',
         'Taco.view.order.widget.OrderTotalPanelEditable'
@@ -20,7 +22,9 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     scale: 'large',
     title: 'Edit Order Details',
     width: '95%',
-    
+
+    actionColumnWidth: 50,
+
     actions: [{
         xtype: 'button',
         itemId: 'discardAction',
@@ -35,18 +39,23 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     }, {
         xtype: 'button',
         text:"Save Draft",
-        itemId: 'secondaryAction'
+        itemId: 'secondaryAction',
+        handler: function () {
+            // we just close the dialog since this ui is chatty save;
+            this.close();
+        }
     }, {
         xtype: 'button',
         itemId: 'primaryAction'
+        //this will call save() which will eventualy call doSave();
     }],
 
     config: {
         record: null,
-        dockTotalPanel: "inline", // possible values bottomm, right, inline
+        //dockTotalPanel: "inline", // possible values bottomm, right, inline
         rowTotalColumnWidth: 100,
         hasDraft: true,
-        actionColumnWidth: 30
+        
     },
 
     resizable: {
@@ -61,30 +70,11 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     
     initComponent: function (eOpts) {
         var me = this;
-        
 
-        if (this.getDockTotalPanel() == "bottom") {
-            
-            this.layout = {
-                type: 'vbox',
-                align: 'stretch'
-            }
-        } else if (this.getDockTotalPanel() == "inline") {
-            this.layout = {  
-                type: "auto"
-            }
-
-            //this.layout = {
-            //    type:"auto"
-            //}       
-        } else {
-
-
-
+        this.layout = {
+            type: 'fit'
         }
-            
         
-
         // Todo: Need to listen for a navigation (via backbutton) and cancel the navigation if editor is dirty or prompt user to cancel and navigate.
         // Todo: Create override/mixin/plugin for Ext.Window to add support for relative height and width with min max values.
 
@@ -97,66 +87,44 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         });
 
         this.callParent(arguments);
-        me.on('show', function (){
-            
-            this.keyNav = new Ext.util.KeyNav({
-                target: me.el,
-                up:function (e){
-                    //debugger;
-                },
-                down: function (e) {
-                    //debugger
-                },
-                left: function (e) {
-                    //debugger;
-                    //this.moveLeft(e.ctrlKey);
-                },
-                right: function (e) {
-                    //debugger;
-                    //this.moveRight(e.ctrlKey);
-                },
-                enter: function (e) {
-                    //debugger;
-                    //this.save();
 
-
-                },
-                /*
-                tab: function (e){
-                    debugger;
-                
-                },
-                */
-                // Binding may be a function specifiying fn, scope and defaultAction
-                /*
-                esc: {
-                    fn: this.onEsc,
-                    defaultEventAction: false
-                },
-                */
-                scope: this
-            });
-        }, this)
-
-        
-
-        /*
-        this.on({
-            save: {
-                scope: this,
-                fn: 'saveDraftOrder'
-            }
-        });
-        */
     },
 
     onEsc : Ext.emptyFn,
     
+    colapseDraftOrder: function (){
+    
+    },
+
+    onGridBlur : function (e,target){
+        
+        //if the eventTarget is inside of the grid then do nothing; otherwise clear the grid;
+        var t = Ext.fly(target);
+        var gridParent = t.findParent('.taco-orderform-orderitemgrid');
+        if (!gridParent) {
+            this.detailGrid.onGridBlur();
+        }
+    },
+
     /**
      * Show the loading mask while we wait for the service to respond with the draft record.
      */
-    show: function() {
+    show: function () {
+        var me = this;
+
         this.callParent(arguments);
+
+
+        // need to manually listen for events that might cause the grid to blur;
+        /*
+        me.mon(me.el, {
+            click: me.onGridBlur,
+            keypress: me.onGridBlur,
+            scope: me
+        });
+        */
+
+
 
         if (!this.record) {
             this.loadRecord();
@@ -173,7 +141,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     /**
      * Call the service to reload the data.
      */
-    reloadData: function () {
+    reloadData: function () {        
         this.loadRecord();
     },
 
@@ -210,7 +178,11 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     // when the draft record has loaded create and add the total and grid and hide the loading mask;
     onLoadRecord : function() {
         var me = this;
-        
+        // had to move this to the top so it doesn't cause the body to scroll after the focus El is scrolled into view;
+        me.setTitle(me.titleTemplate.apply({
+            orderNumber: me.record.get('orderNumber') || '<New>'
+        }));
+
         // initialize the ui when the record loads the first time.
         if (!this.totalRow) {
             me.initUi();
@@ -218,11 +190,6 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             // update the ui after the record has been reloaded
             me.updateUi();
         }
-        
-        
-        me.setTitle(me.titleTemplate.apply({
-            orderNumber: me.record.get('orderNumber') || '<New>'
-        }));
 
         this.setLoading(false, this.body);
     },
@@ -230,11 +197,26 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     // reloads the ui using new data
     updateUi: function () {
         var me = this;
+        
+        // update the record on the totalRow panel
+        me.totalRow.setRecord(me.record);
 
-        me.totalRow.setData(me.record.getData());
+        // need to determine the selection so it can be restored after updateing the records in the store;
+        var currentPosition = me.detailGrid.getSelectionModel().getCurrentPosition();
         me.detailGrid.getStore().loadRecords(me.record.itemsStore.getRange());
+
+        if (currentPosition) {
+            me.detailGrid.restoreSelection(currentPosition);
+        } else {
+            // field is focused; need to scroll to it if needed;
+            var activeFocusEl = Ext.fly(document.activeElement);
+            var isHidden = activeFocusEl.isHiddenByScroll(me.body)            
+            if (isHidden) {
+                activeFocusEl.scrollIntoView(me.body);
+            }
+        }
     },
-    
+
     // initialize the header and grid when the data load the first time
     initUi: function () {
         var me = this;
@@ -243,8 +225,28 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             data: me.record.getData(),
             record: me.record,
             totalColumnWidth: me.getRowTotalColumnWidth(),
-            actionColumnWidth: me.getActionColumnWidth(),            
+            actionColumnWidth: me.actionColumnWidth,
             listeners: {
+                'save': {
+                    fn: function () {
+                        me.setLoading(true, me.body);
+                    },
+                    scope: me
+                },
+                'savesuccess': {
+                    fn: function () {
+                        me.setLoading(false, me.body);
+                        me.reloadData();
+                    },
+                    scope: me
+                },
+                'savefailure': {
+                    fn: function () {
+                        me.setLoading(false, me.body);                        
+                    },
+                    scope: me
+                },
+
                 "clearShippingAdjustment":{
                     fn:function() {
                         me.detailGrid.updateOrderAdjustment({
@@ -296,10 +298,15 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         me.detailGrid = Ext.create('Taco.view.order.widget.OrderItemGrid', {
             editMode: true,
             flex: 1,
+            actionColumnWidth: me.actionColumnWidth,
             record: me.record,
             store: me.record.itemsStore,
             autoHeight: true,
             listeners: {
+                'selectionchange': function (selModel, selected) {                    
+                    //var pos = selModel.getCurrentPosition()
+                    //me.detailGrid.view.focusRow(pos.row);
+                },
                 'viewready': function (view, eOpts) {
                     // selects the first cell of the first row by default;
                     //me.detailGrid.getSelectionModel().select(0)
@@ -309,30 +316,31 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                     me.setLoading(false, me.body);
                     me.fireEvent('draftOrderSaved', data);
                     me.setHasDraft(false);
-                    me.close();
+                    //me.close();
+                    me.saveSuccess(data);
                 },
                 'draftOrderRemoved': function (data) {
                     
                     me.setLoading(false, me.body);
                     me.fireEvent('draftOrderRemoved', data);
                     me.setHasDraft(false);
-                    me.close();
+                    me.saveSuccess(data);
                 },
+                // this is the save draft button use case
                 'save': function () {
-                    
                      me.setLoading({
                          //maskCls: "x-mask taco-white-mask"
                      }, me.body);
-                    me.setHasDraft(true);
+                     me.setHasDraft(true);
+                     //me.close();
                 },
-                'saveSuccess': function (data) {
-                    
+                'saveSuccess': function (data) {                    
                     me.setLoading(false, me.body);
-                    me.fireEvent('saveSuccess', data);
+                    //me.fireEvent('saveSuccess', data);
                     me.reloadData();
+                    //me.saveSuccess(data)
                 },
-                'saveFailure': function (error) {
-                    
+                'saveFailure': function (error) {                    
                     me.setLoading(false, me.body);
                     me.fireEvent('saveFailure', error);
                 }
@@ -340,33 +348,44 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         });
 
 
+        // this is a fix for auto height grids that cause a scroll condition inside of another panel.
+        // focus change of a cell in a grid does not cause the containing panel to scroll. this fixes that problem.
+        // todo. make this a grid override so that this is fixed everywhere
+        var gridSelModel = me.detailGrid.getSelectionModel();
+        me.mon(gridSelModel, {
+            focuschange: function (cellmodel, oldFocused, newFocused) {
+                if (newFocused) {
+                    var row = me.detailGrid.view.getNode(newFocused, true)
+                    // check to see if the row is partially hidden from view within the scroll container;
+                    // if item was deleted;
+                    if (!row) {
+                        return;
+                    }
+                    var isHidden = Ext.fly(row).isHiddenByScroll(me.body)
+                    if (isHidden) {                        
+                        row.scrollIntoView(me.body);
+                    }
+                }
+            },
+            scope:me
+        })
 
-        var dockTotalPanel = this.getDockTotalPanel();
-        var items = [me.detailGrid];
-        var dockedItems = [];
-        
-        if (dockTotalPanel == "bottom") {
-            items.push(this.totalRow)
-        } else if (dockTotalPanel == "right") {
-            this.totalRow.dock = "right"
-            this.totalRow.width = 340;
-            this.addDocked(this.totalRow);
-        } else {
-            // inline            
-            items.push(this.totalRow)
-        }
-                
-        this.add(items);
+
+        // need to make a wrapping container to get the overflow handling working properly. when not nested, the grid gets its right edge clipped off; using a wrapping container provideds better overflow handling;
+        me.add(
+            Ext.create("Ext.container.Container",{                
+                items :  [
+                    me.detailGrid,
+                    me.totalRow
+                ]
+            })
+        )
         
     },
-
-    
-    primaryHandler: function () {
-        var me = this;
-
-        if (this.fireEvent('beforesave', this) !== false) {
-            me.saveDraftOrder();
-        }
+        
+    doSave: function () {
+        var me = this;        
+        me.saveDraftOrder();
     },
 
 
@@ -375,7 +394,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         me.detailGrid.removeDraftOrder();
     },
     
-    //save the draft order and close the editor;
+    //overwrites the original order with the draft order;
     saveDraftOrder: function () {
         var me = this;
         me.detailGrid.saveDraftOrder();

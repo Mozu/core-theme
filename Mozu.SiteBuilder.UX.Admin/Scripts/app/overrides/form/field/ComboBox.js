@@ -42,6 +42,76 @@ Ext.define('Taco.overrides.form.field.ComboBox', {
     },
 
     /*
+    * Override adds support to the extra triggers so that they can be navigated to via keyboard and triggered via the enter key and spacebar when the trigger has focus;    
+    */
+    initTrigger: function () {
+        var me = this,
+            triggerWrap = me.triggerWrap,
+            triggerEl = me.triggerEl,
+            len = triggerEl.getCount();
+
+        me.callParent(arguments);
+
+        // add a tabIndex to triggers except the first one; the first one is assumed to be handled by the field;
+        if (len) {
+            // need to also listen for enter key and space bar on the extra triggers
+            me.mon(triggerWrap, {
+                keydown: function (e) {
+                    var me = this;
+                    if (e.getKey() == e.ENTER || e.getKey() == e.SPACE) {
+                        me.onTriggerWrapClick(e)
+                    }
+                },
+                scope: me
+            });
+
+
+            //check for triggerConfig
+            triggerEl.each(function (element, origEl, index) {
+                if (index > 0) {
+                    
+                    var configName = "trigger" + (index + 1)  + "Config"; 
+                    var triggerXConfig = me[configName];
+                    var isEnabled = true;
+
+                    if (triggerXConfig && triggerXConfig.disabled) {
+                        element.addCls("x-form-trigger-disabled");
+                        isEnabled = false;
+                    }
+                    
+                    if(isEnabled){
+                        element.el.set({
+                            tabIndex: 0
+                        })
+                    }
+                    
+
+                }
+            })
+        }
+    },
+
+    enableExtraTrigger : function (index){
+        var me = this,
+            triggerWrap = me.triggerWrap,
+            triggerEl = me.triggerEl
+        
+        if (triggerEl && triggerEl[index]) {
+            triggerEl[index].enable()
+        }
+    },
+
+    disableExtraTrigger : function  (index){
+        var me = this,
+            triggerWrap = me.triggerWrap,
+            triggerEl = me.triggerEl
+        
+        if (triggerEl && triggerEl[index]) {
+            triggerEl[index].disable()
+        }
+    },
+
+    /*
     * combo enhanclement to hide paging toolbar when the result set is less than a single page;
     * hides the paging toolbar when there is a single page or less of results;
     */

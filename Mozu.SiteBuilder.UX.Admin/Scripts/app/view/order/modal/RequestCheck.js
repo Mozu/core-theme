@@ -13,53 +13,67 @@ Ext.define('Taco.view.order.modal.RequestCheck', {
     title: 'Request Check',
 
     initComponent: function () {
-        this.form = Ext.create('Ext.form.Panel', {
-            layout: {
-                type: 'hbox'
+        this.form = Ext.create('Ext.form.Panel', {            
+            items: [
+            {
+                xtype: "fieldcontainer",
+                layout: "hbox",
+                items:[
+                {
+                    xtype: 'textfield',
+                    name: 'firstName',
+                    //width: 170,
+                    flex:1,
+                    fieldLabel: 'First Name'
+                }, {
+                    xtype: 'textfield',
+                    name: 'lastName',
+                    margin:"0 0 0 10",
+                    //width: 170,
+                    flex: 1,
+                    fieldLabel: 'Last Name'
+                }]
             },
-            defaults: {
-                margin: '0 25 0 0',
-                width: 170
-            },
-            items: [{
-                xtype: 'textfield',
-                name: 'firstName',
-                fieldLabel: 'First Name'
-            }, {
-                xtype: 'textfield',
-                name: 'lastName',
-                fieldLabel: 'Last Name'
-            }, {
+
+            {
                 xtype: 'currencyfield',
                 name: 'amount',
+                width: 170,
                 fieldLabel: 'Amount Requested',
-                value: this.record.get('total'),
-                margin: '0 0 0 0'
+                value: this.record.get('total')
             }]
         });
 
         this.items = [this.form];
 
         this.callParent(arguments);
-
-        this.on({
-            save: {
-                scope: this,
-                fn: 'save'
-            }
-        });
     },
 
-    save: function () {
+    doSave: function () {
         var me = this,
             data = this.form.getValues();
 
         data.orderId = this.record.getId();
 
+        me.setLoading({
+            msg: "Saving"
+        }, me.body);
+
         this.record.requestCheck({
             jsonData: data,
-            success: function() {
+            success: function (response) {
+                me.setLoading(false, me.body);
+                var json = Ext.decode(response.responseText, true),
+                    data;
+
+                if (!json) { return }
+
+                data = json.items;
                 me.record.reload();
+                me.saveSuccess(data);
+            }, 
+            failure: function () {
+                me.setLoading(false, me.body);
             }
         });
     }

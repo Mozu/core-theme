@@ -17,7 +17,7 @@ Ext.define('Taco.view.order.subform.Detail', {
     itemId: 'orderDetailPanel',
     title: 'Order Details',
 
-    
+    /*
     tools:[{
         type: 'gear',
         itemId: 'actionTrigger',
@@ -35,6 +35,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             }
         }
     }],    
+    */
     
     config: {
 
@@ -44,8 +45,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         // determines whether the detailGrid allows field editing
         editMode: false,
         
-        // width of the actionColumn. used to align the grid total container
-        actionColumnWidth: 30,
+        
         
         totalColumnWidth: 100,
 
@@ -56,16 +56,21 @@ Ext.define('Taco.view.order.subform.Detail', {
         
     },
         
+
+    // width of the actionColumn. used to align the grid total container
+    actionColumnWidth: 30,
+
     initComponent: function (eOpts) {
         var me = this,
             orderItemStore;
         
         // after the record is reloaded we will need to refresh the ui
-        me.record.on("aftercommit", function () {
+
+        me.mon(me.record, "aftercommit", function () {            
             me.onRecordChange();
         }, me);
         
-        //me.tools = me.getButtonActions();
+        me.tools = me.getButtonActions();
         
         // var siteContext = Taco.app.context.getCurrent().urlToken;
 
@@ -122,7 +127,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             editMode: this.getEditMode(),
             record : this.record,
             store: orderItemStore,
-            actionColumnWidth: me.getActionColumnWidth(),
+            actionColumnWidth: me.actionColumnWidth,
             autoHeight: true,
             listeners: {
                 'draftOrderRemoved': {
@@ -144,9 +149,10 @@ Ext.define('Taco.view.order.subform.Detail', {
         
         // subtotals, orderlevel discounts, tax shipping, and totals
         this.totalRow = Ext.create('Taco.view.order.widget.OrderTotalPanel', {
-            data: me.record.getData(),
+            record: me.record,
+            //data: me.record.getData(),
             totalColumnWidth: me.getRowTotalColumnWidth(),
-            actionColumnWidth: me.getActionColumnWidth()
+            actionColumnWidth: me.actionColumnWidth
         });
         
         // customer notes class
@@ -308,8 +314,8 @@ Ext.define('Taco.view.order.subform.Detail', {
     },
     
     updateUi: function () {
-        var me = this;
-        me.totalRow.setData(me.record.getData());
+        var me = this;        
+        me.totalRow.setRecord(me.record);
         me.rebuildItems();
         me.updateHasDraftToolbar();
     },
@@ -343,7 +349,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         
     },
 
-    /*
+    
     // removed temporarily. due to designer snerst
 
     getButtonActions: function () {
@@ -383,7 +389,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         return buttons;
 
     },
-    */
+    
 
     /**
     * Do any class level cleanup. Destroy and null any scoped refs.     

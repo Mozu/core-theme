@@ -76,9 +76,9 @@ Ext.define('Taco.shared.view.modal.Address', {
             manageHeight: false,
             listeners: {                
                 savesuccess: {
-                    fn: function () {
-                        // need to wait for the form to finish saving before closing or the events won't fire.
-                        me.close();                        
+                    fn: function (form) {
+                        // need to wait for the form to finish saving before closing or the events won't fire.                        
+                        me.saveSuccess(form.record);
                     },
                     scope: me
                 }

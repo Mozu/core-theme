@@ -182,7 +182,7 @@ Ext.define('Taco.view.inventory.Index', {
         
         
         // auto select the first record in the grid so the location grid can get loaded;
-        this.store.on('load', function (store, records, success, eOpts) {
+        me.mon(this.store,'load', function (store, records, success, eOpts) {            
             if (records && records.length) {
                     this.gridPanel.selModel.select(records[0], false);
                 }

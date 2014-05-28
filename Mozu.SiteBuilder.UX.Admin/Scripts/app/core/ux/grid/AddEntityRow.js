@@ -112,7 +112,7 @@ Ext.define('Taco.core.ux.grid.AddEntityRow', {
             '<td class="{tdCls}" {tdAttr} {[Ext.aria ? "id=\\"" + Ext.id() + "\\"" : ""]} {ariaCellAttr}>',
             '<div {unselectableAttr} class="' + Ext.baseCSSPrefix + 'grid-cell-inner {innerCls}"',
                 'style="text-align:{align};<tpl if="style">{style}</tpl>" {ariaCellInnerAttr}>',
-                '{% if (values.record.isAddEntityRow){debugger;} %}',
+                '{% if (values.record.isAddEntityRow){;} %}',
                 '<tpl if="value==\'&nbsp;\'">',
                 'aaaa',
                 '</tpl>',

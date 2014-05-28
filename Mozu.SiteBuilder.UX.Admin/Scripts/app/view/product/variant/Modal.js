@@ -12,9 +12,7 @@ Ext.define('Taco.view.product.variant.Modal', {
     ],
 
     primaryText: 'Save',
-    primaryHandler: function () {
-        this.onSave();
-    },
+    
 
     secondaryHandler: function () {
         this.onCancel();
@@ -83,10 +81,10 @@ Ext.define('Taco.view.product.variant.Modal', {
         })
     },
 
-    onSave: function () {
+    doSave: function () {
         //saving on product form save
        // this.product.getVariations().sync();
-        this.hide();
+        this.close();
     },
 
     onCancel: function () {

@@ -282,7 +282,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                             scope: this,
                             fn: 'handleDialogClose'
                         },
-                        save: {
+                        savesuccess: {
                             scope: this,
                             fn: 'handleDialogSave'
                         }

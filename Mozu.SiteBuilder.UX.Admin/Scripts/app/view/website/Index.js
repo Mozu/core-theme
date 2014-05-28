@@ -647,8 +647,8 @@ Ext.define('Taco.view.website.Index', {
                 closeAction: 'destroy',
                 widgetData: cfg.config,
                 title: def.get('displayName'),
-                listeners: {
-                    save: function (modal) {
+                listeners: {                    
+                    savesuccess: function (modal) {
                         jsonData.config = modal.widgetData;
 
                         serverRenderFn(jsonData);
@@ -691,7 +691,7 @@ Ext.define('Taco.view.website.Index', {
                 widgetData: cfg.data.config,
                 title: def.get('displayName'),
                 listeners: {
-                    save: function (modal) {
+                    savesuccess: function (modal) {
                         jsonData.config = modal.widgetData;
                         Ext.fly(body).setStyle('cursor', 'wait');
                         Ext.Ajax.request({

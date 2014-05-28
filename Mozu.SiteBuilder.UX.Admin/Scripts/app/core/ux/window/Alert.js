@@ -37,11 +37,10 @@ Ext.define('Taco.core.ux.window.Alert', {
         action.focus();
     },
 
-    primaryHandler: function () {
+    doSave: function () {
         if (this.fireEvent('beforeconfirm', this) !== false) {
-           
             this.fireEvent('confirm', this);
-            this.close();
+            this.saveSuccess();
         }
     }
 });

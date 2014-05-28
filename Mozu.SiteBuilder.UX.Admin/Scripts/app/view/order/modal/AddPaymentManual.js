@@ -225,15 +225,9 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
 
         this.callParent(arguments);
 
-        this.on({
-            save: {
-                scope: this,
-                fn: 'save'
-            }
-        });
     },
 
-    save: function () {
+    doSave: function () {
         var me = this,
             formValues = this.form.getValues(),
             transactionId = formValues.gatewayTransactionId,
@@ -260,8 +254,17 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
                 gatewayInteractionId: interactionId,
                 actionName: actionName
             },
-            success: function () {
+            success: function (response) {
+                var json = Ext.decode(response.responseText, true),
+                    data;
+
+                if (!json || !json.success) {                    
+                    return;
+                }
+
+                data = json.items;
                 me.record.reload();
+                me.saveSuccess(data);
             }
         });
     },

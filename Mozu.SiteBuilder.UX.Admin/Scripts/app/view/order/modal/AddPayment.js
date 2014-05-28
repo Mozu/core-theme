@@ -338,22 +338,10 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
         this.createPciProcessor();
 
-        this.on({
-            save: {
-                scope: this,
-                fn: 'save'
-            }
-        });
-
         this.copyBillingInfo();
     },
 
-    primaryHandler: function () {
-        if (this.fireEvent('beforesave', this) !== false) {
-            this.fireEvent('save', this);
-            //this.close();
-        }
-    },
+    
 
     /**
      * Create a PCIaaS form field.
@@ -431,42 +419,32 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
                     billingInfo.paymentServiceCardId = me._hiddenCardId;
 
-                    me.setLoading(true,me.body);
-                    
-                                
+                    me.setLoading(true, me.body);
 
-                                
-                        order.addPayment({
-                            jsonData: {
-                                orderId: order.getId(),
-                                amount: amount,
-                                billingInfo: billingInfo,
-                                billingContact: contactInfo
-                            },
-                            success: function (response) {
-                                me.setLoading(false, me.body);
-                                var json = Ext.decode(response.responseText, true);
-                                if (!json || !json.success) {
-                                    Taco.app.fireEvent('setmessage', "Error adding payment", 'error');
-                                }
-
-                                order.reload();
-                                // close the dialog
-                                me.close();
-                            },
-                            failure: function (response) {
-                                var json = Ext.decode(response.responseText, true),
-                                    msg = (json && json.message) ? json.message : "Error adding payment";
-                                Taco.app.fireEvent('setmessage', msg, 'error');
-                                me.setLoading(false, me.body);
-
-                                order.reload();
-                                // close the dialog
-                                me.close();
+                    order.addPayment({
+                        jsonData: {
+                            orderId: order.getId(),
+                            amount: amount,
+                            billingInfo: billingInfo,
+                            billingContact: contactInfo
+                        },
+                        success: function (response) {
+                            me.setLoading(false, me.body);
+                            var json = Ext.decode(response.responseText, true);
+                            if (!json || !json.success) {
+                                return
                             }
-                        });
-
-                    // TODO: impl mask for our own form and also finish working.
+                                
+                            order.reload();
+                            me.saveSuccess(json);
+                        },
+                        failure: function (response) {                            
+                            me.setLoading(false, me.body);
+                            order.reload();
+                            // close the dialog
+                            me.close();
+                        }
+                    });
                 }
             },
             settings: {
@@ -524,9 +502,8 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         return retVal;
     },
 
-    save: function () {
-        this.setLoading(true, this.body);
-        
+    doSave: function () {
+        this.setLoading(true, this.body);        
         this.pciProcessor.process();
     },
 

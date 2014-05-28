@@ -450,8 +450,15 @@ Ext.define('Taco.core.data.Model', {
     // optional config paramters:
     //      success : function (response){}
     //      failure : function (response){}
+    //      scope: this,  //Note: this is the scope of the class to execute the success and failture. if none is provided, the scope of the success and failure will be the model.
     //      errorMsg : "Your error here"
     addErrorHandling: function (config) {
+        var me = this;
+
+        if (!config.scope) {
+            console.warn("addErrorHandling expects to have 'scope' as a member of the config;")
+        }
+
         if (config.showMask) {
             Taco.app.viewPort.setLoading(true);
         }
@@ -459,7 +466,7 @@ Ext.define('Taco.core.data.Model', {
         // store the passed in success method for use after the the error check runs;
         if (config.success) {
             config.success2 = config.success;
-            config.scope2 = config.scope;
+            config.scope2 = config.scope;            
         }
         
         // store the passed in failure method for use after the the error check runs;

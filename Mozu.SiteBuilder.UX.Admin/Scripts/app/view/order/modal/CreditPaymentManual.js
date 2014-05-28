@@ -10,45 +10,38 @@ Ext.define('Taco.view.order.modal.CreditPaymentManual', {
     ],
 
     autoShow: true,
-    scale: 'medium',
+    scale: 'medium',    
     title: 'Manual Transaction: Credit Payment',
 
     initComponent: function () {
-        this.form = Ext.create('Taco.core.ux.form.Form', {
-            layout: { type: 'hbox' },
-            defaults: {
-                margin: '0 25 0 0',
-                width: 170
-            },
-            items: [{
-                xtype: 'textfield',
-                name: 'gatewayInteractionId',
-                fieldLabel: 'Gateway Interaction Id'
-            }, {
-                xtype: 'currencyfield',
-                name: 'amount',
-                fieldLabel: 'Amount Captured',
-                value: this.record.data.amountAuthorized
-            }, {
-                xtype: 'datetime',
-                name: 'interactionDate',
-                fieldLabel: 'Transaction Date'
-            }]
+        this.form = Ext.create('Taco.core.ux.form.Form', {            
+            items: [
+                {
+                    xtype: 'textfield',
+                    name: 'gatewayInteractionId',
+                    anchor:'0',
+                    fieldLabel: 'Gateway Interaction Id'
+                }, {
+                    xtype: 'currencyfield',
+                    name: 'amount',
+                    width:200,
+                    fieldLabel: 'Amount Captured',
+                    value: this.record.data.amountAuthorized
+                }, {
+                    xtype: 'datetime',
+                    name: 'interactionDate',
+                    width: 200,
+                    fieldLabel: 'Transaction Date'
+                }
+            ]
         });
 
         this.items = [this.form];
 
         this.callParent(arguments);
-
-        this.on({
-            save: {
-                scope: this,
-                fn: 'save'
-            }
-        });
     },
 
-    save: function () {
+    doSave: function () {
         var me = this,
             formValues = this.form.getValues(),
             data,
@@ -62,17 +55,25 @@ Ext.define('Taco.view.order.modal.CreditPaymentManual', {
             interactionDate: formValues.interactionDate
         };
 
+        me.setLoading({
+            msg: "Saving"
+        }, me.body);
+
         cfg = {
             jsonData: data,
             success: function (response) {
-                var json = Ext.decode(response.responseText, true);
+                me.setLoading(false, me.body);
 
+                var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     return;
-                }
+                }                
                 me.order.reload();
+                me.saveSuccess(json)
             },
-            failure: Ext.emptyFn,
+            failure: function () {
+                me.setLoading(false, me.body);
+            },
             scope: this
         };
 

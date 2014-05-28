@@ -7,9 +7,11 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
     ],
     autoShow: true,
     width: 900,
+    minHeight:50,
     title: 'Store Credit',
     formCfg: null,
     closable: true,
+    layout:'fit',
     closeAction: 'destroy',
     actions: [{
         xtype: 'button',
@@ -24,48 +26,69 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
 
     initComponent: function () {
         var me = this;
-        me.cls += ' ' + Taco.baseCSSPrefix + 'address-editor';
+        //me.cls += ' ' + Taco.baseCSSPrefix + 'address-editor';
         
         this.storeCredits = this.record.getStoreCredits();
 
         me.grid = Ext.create('Ext.grid.Panel', {
             store: this.storeCredits ,
             selType: 'cellmodel',
+            viewConfig: {
+                deferEmptyText: false,
+                stripeRows: false,
+                emptyText: '<div class="empty-grid-message">No store credits to display</div>'
+            },
             plugins: [
                 Ext.create('Ext.grid.plugin.CellEditing', {
                     clicksToEdit: 1
                 })
             ],
-            columns: [
-                { text: 'Code', dataIndex: 'code'},
-                { text: 'Date Issued', dataIndex: 'activationDate' },
-                { text: 'Amount', dataIndex: 'initialBalance' },
-                { text: 'Issued By', dataIndex: 'issuedBy'},
-                {
-                    text: 'Expires', dataIndex: 'expirationDate'/*,
-                    editor: {
-                        emptyText: "Amount",
-                        msgTarget: "qtip",
-                        xtype: "datefield",
-                        selectOnFocus: true,
-                        allowBlank: false
-                    }*/
+            columns: {
+                defaults: {
+                    draggable: false,
+                    resizable: true,
+                    sortable: false,
+                    menuDisabled: true
                 },
-                {
-                    text: 'Balance',
-                    dataIndex: 'currentBalance'/*,
-                    editor: {
-                        emptyText: "Amount",
-                        msgTarget: "qtip",
-                        xtype: "numberfield",
-                        hideTrigger: true,
-                        defaultValue: 0,
-                        mouseWheelEnabled: false,
-                        selectOnFocus: true,
-                        allowBlank: false
-                    }*/
-                }
-            ],
+                items: [
+                    { text: 'Code', dataIndex: 'code', width: 140 },
+                    { text: 'Date Issued', dataIndex: 'activationDate', flex: 1 },
+                    { text: 'Amount', dataIndex: 'initialBalance', width: 80, align: "right", renderer: 'usMoney'},
+                    // no data for this column
+                    //{ text: 'Issued By', dataIndex: 'issuedBy', flex: 1 },
+                    {
+                        text: 'Expires',
+                        dataIndex: 'expirationDate',
+                        flex: 1
+                        /*,
+                        editor: {
+                            emptyText: "Amount",
+                            msgTarget: "qtip",
+                            xtype: "datefield",
+                            selectOnFocus: true,
+                            allowBlank: false
+                        }*/
+                    },
+                    {
+                        text: 'Balance',
+                        dataIndex: 'currentBalance',
+                        align: "right",
+                        renderer: 'usMoney',
+                        width: 100
+                        /*,
+                        editor: {
+                            emptyText: "Amount",
+                            msgTarget: "qtip",
+                            xtype: "numberfield",
+                            hideTrigger: true,
+                            defaultValue: 0,
+                            mouseWheelEnabled: false,
+                            selectOnFocus: true,
+                            allowBlank: false
+                        }*/
+                    }
+                ],
+            },
             scope: this
         });
 
