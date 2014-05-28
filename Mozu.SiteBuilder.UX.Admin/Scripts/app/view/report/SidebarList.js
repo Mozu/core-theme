@@ -113,8 +113,7 @@ Ext.define('Taco.view.report.SidebarList', {
             var firstDayOfLastMonth = new Date(lastDayOfLastMonth);     
             firstDayOfLastMonth.setDate(1);
 
-            var firstDayOfYear = new Date(now);
-            firstDayOfYear.setMonth(0);
+            var firstDayOfYear = new Date(now.getUTCFullYear(), 0, 1);
 
             var firstDayOfLastYear = new Date(now);
             firstDayOfLastYear.setYear(firstDayOfLastYear.getFullYear() - 1);
@@ -196,13 +195,13 @@ Ext.define('Taco.view.report.SidebarList', {
             var startDate = me.customDateRange.down('[name=startDate]').getValue();
             var endDate = me.customDateRange.down('[name=endDate]').getValue();
             if (startDate) {
-                filter += 'Days ge ' + Ext.Date.format(startDate, 'Y-m-d');
+                filter += 'days ge ' + Ext.Date.format(startDate, 'Y-m-d');
             }
             if (endDate) {
                 if (startDate) {
                     filter += ' and ';
                 }
-                filter += 'Days le ' + Ext.Date.format(endDate, 'Y-m-d');
+                filter += 'days le ' + Ext.Date.format(endDate, 'Y-m-d');
             }
 
             var req = {

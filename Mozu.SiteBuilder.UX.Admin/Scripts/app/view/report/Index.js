@@ -43,15 +43,15 @@ Ext.define('Taco.view.report.Index', {
                     var data = JSON.parse(object.responseText);
                     var summary = Ext.Array.map(data.metaData, function (item) {
                         var rv = {
-                            label: item.Column.Name,
-                            helpText: item.Column.HelpText,
-                            value: item.Value
+                            label: item.column.name,
+                            helpText: item.column.helpText,
+                            value: item.value
                         };
-                        if (item.Column.DisplayFormat == 'Currency')
+                        if (item.column.displayFormat == 'Currency')
                             rv.value = Ext.util.Format.usMoney(rv.value)
-                        else if (item.Column.DisplayFormat == 'Number')
+                        else if (item.column.displayFormat == 'Number')
                             rv.value = Ext.util.Format.number(rv.value, "0,000")
-                        else if (item.Column.DisplayFormat == 'Percent')
+                        else if (item.column.displayFormat == 'Percent')
                             rv.value = Ext.util.Format.number(rv.value, "0.000%")
                         return rv;
                     });
@@ -192,7 +192,7 @@ Ext.define('Taco.view.report.Index', {
                     reader: {
                         type: 'my-json',
                         root: 'items.items',
-                        totalProperty: 'Total',
+                        totalProperty: 'total',
                         successProperty: 'success'
                     },
                     xxreader: {
