@@ -11,20 +11,30 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
     config: {
     
     },
-    minChars :4,
-    productsPerPage: 30,
+
+    // this adds support to combos that have paged stores to use the pageup and pagedown keys to change the page in the store;
+    enableKeyboardPaging: true,
+
+    // hide the paging toolbar when there is less than a single page of results;
+    autoHidePagingToolbar: true,
+
+    // this property controls the type of products to return; "parent" returns the parent product. "inventory" returns the all variants for the parent product;    
     productType: 'parent',
+    productsPerPage: 10,
+    checkChangeBuffer: 5000,
+    minChars :1,
     displayField: 'name',
     hideLabel: true,
     hideTrigger: false,
-    emptyText: "Search",
+    emptyText: "Product Search",
     selectOnFocus: true,
     flex: 1,
-    //height: 24,
+    value: "",
+    
     listConfig: {
         loadingText: 'Searching...',
         cls : "product-picker-menu",
-        emptyText: 'No matching products found.',
+        emptyText: '<div style="padding:20px; 10px; ">No matching products found.</div>',
         // Custom rendering template for each item
         getInnerTpl: function () {
             return "<span class='product-name'>{productName}</span> <span class='product-code'>{productCode}</span>"
@@ -49,7 +59,7 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
             }
         }
     },
-    pageSize: 30,
+    pageSize: 10,
 
     // querystring parameter name that contains the search filter data;
     queryParam: "filter",
@@ -64,6 +74,10 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
         // need to format the search text from the combobox into a filter structure the service wants;
         // always force the query to match what's in the field.
         // after a selection the queryEvent.query is initially set to "" which is incorrect in this situation;
+
+        // delete the last query to force a new request; 
+        delete this.lastQuery;
+
         var queryText = queryEvent.combo.getValue() || "";
         if (queryText == "") {
             // need to force the load of the full list. just returning a value of "" causes the control to reload the last query;
@@ -88,6 +102,7 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
 
             if (me.productType == 'parent') {
                 me.store = Taco.core.data.StoreManager.getOrCreate({
+                    pageSize: me.productsPerPage,
                     type: 'Taco.store.ProductPicker'
                    
                 });
@@ -105,8 +120,7 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
             }
         }
         
-
-        me.on('beforequery', this.formatQuery, this);
+        me.mon(me, 'beforequery', this.formatQuery, this);
         me.callParent(arguments);
     }
 });

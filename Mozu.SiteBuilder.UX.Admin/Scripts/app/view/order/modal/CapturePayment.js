@@ -31,16 +31,9 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
         this.items = [this.form];
         
         this.callParent(arguments);
-
-        this.on({
-            save: {
-                scope: this,
-                fn: 'save'
-            }
-        });
     },
 
-    save: function () {
+    doSave: function () {
         var me = this,
             basic = this.form.getForm(),
             formValues = this.form.getValues(),
@@ -65,18 +58,20 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
                 if (!json || !json.success) {
                     return;
                 }
-                // me.setLoading(false, me.body);
+
+                me.setLoading(false, me.body);
                 me.order.reload();
+                me.saveSuccess(json);
             },
             failure: function () {
-                // me.setLoading(false, me.body);
+                 me.setLoading(false, me.body);
             },
             scope: this
         };
 
-        // me.setLoading({
-        //     msg: "Saving"
-        // }, me.body);
+        me.setLoading({
+             msg: "Saving"
+        }, me.body);
 
         this.order.capturePayment(cfg);
     }

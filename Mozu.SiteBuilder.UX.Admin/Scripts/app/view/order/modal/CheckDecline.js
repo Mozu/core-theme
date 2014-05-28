@@ -33,15 +33,9 @@ Ext.define('Taco.view.order.modal.CheckDecline', {
 
         this.callParent(arguments);
 
-        this.on({
-            save: {
-                scope: this,
-                fn: 'save'
-            }
-        });
     },
 
-    save: function () {
+    doSave: function () {
         var me = this,
             formValues = this.form.getValues(),
             data;
@@ -52,11 +46,23 @@ Ext.define('Taco.view.order.modal.CheckDecline', {
             checkNumber: formValues.checkNumber
         };
 
+        me.setLoading(true, me.body);
+
         this.order.declineCheck({
             jsonData: data,
-            success: function () {
+            success: function (response) {
+                me.setLoading(false, me.body);
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    return
+                }
                 me.order.reload();
-            }
+                me.saveSuccess(json);
+            },
+            failure: function (response) {             
+                me.setLoading(false, me.body);
+            },
+            scope: me
         });
     }
 });

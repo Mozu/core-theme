@@ -115,7 +115,7 @@ Ext.define('Taco.view.catalog.Index', {
                     html: 'Unsaved changes to this form will be lost.'
                 }],
                 listeners: {
-                    save: {
+                    savesuccess: {
                         scope: me,
                         fn: 'doCancel'
                     }

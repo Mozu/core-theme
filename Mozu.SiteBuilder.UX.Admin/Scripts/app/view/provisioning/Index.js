@@ -221,7 +221,7 @@ Ext.define('Taco.view.provisioning.Index', {
             modal = Ext.create('Taco.view.provisioning.SiteProvisionerModal', {
                 catalogStore: this.createCatalogStore(),
                 listeners: {
-                    save: function (site, request) {
+                    savesuccess: function (site, request) {
                         me.provision({ jsonData: request, itemType: 'site' });
 
                     }
@@ -232,12 +232,11 @@ Ext.define('Taco.view.provisioning.Index', {
     },
     showCatalogModal: function (config) {
         var me = this,
-            modal = Ext.create('Taco.view.provisioning.CatalogProvisionerModal', {
-                height:600,
+            modal = Ext.create('Taco.view.provisioning.CatalogProvisionerModal', {                
                 catalogType: config.itemType == config.itemType,
                 masterCatalogStore: this.createMasterCatalogStore(),
                 listeners: {
-                    save: function (site, request) {
+                    savesuccess: function (site, request) {
                         me.provision({ jsonData: request, itemType: request.itemType });
 
                     }
@@ -264,7 +263,7 @@ Ext.define('Taco.view.provisioning.Index', {
                 }]
             }],
             listeners: {
-                save: function (modal) {
+                savesuccess: function (modal) {
                     entity.name = modal.form.findField('name').getValue();
                     me.renameEntity(entity);
 

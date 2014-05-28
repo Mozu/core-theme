@@ -4,23 +4,9 @@
  */
 Ext.define('Taco.view.website.misc.ExternalLinkEditor', {
     extend: 'Taco.core.ux.window.Modal',
-    autoShow: true,
-    primaryHandler: function () {
-        if (this.fireEvent('beforesave', this) !== false) {
-            this.fireEvent('save', this);
-        }
-    },
-
+    autoShow: true,   
     initComponent: function () {
        
-        this.on('savesuccess', function () {
-            if (this.parentRecord && !Ext.Array.contains(this.parentRecord.childNodes, this.record)) {
-                this.parentRecord.appendChild(this.record);
-            }
-          
-            this.close();
-        }, this);
-
         this.record = this.record || Ext.create('Taco.model.NavigationTreeNode', {
             nodeType: 'link',
             iconCls: 'link',
@@ -50,7 +36,19 @@ Ext.define('Taco.view.website.misc.ExternalLinkEditor', {
                 }]
         });
         this.items = [this.form];
+
+        this.form.on('savesuccess', function () {            
+            if (this.parentRecord && !Ext.Array.contains(this.parentRecord.childNodes, this.record)) {
+                this.parentRecord.appendChild(this.record);
+            }
+            this.saveSuccess()
+        }, this);
+
         this.callParent(arguments);
-        this.on('save', this.form.save, this.form);
+
+    },
+    doSave: function () {
+        var me = this;
+        me.form.save()
     }
 });

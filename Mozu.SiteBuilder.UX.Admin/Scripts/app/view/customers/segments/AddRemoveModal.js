@@ -17,7 +17,7 @@ Ext.define('Taco.view.customers.Segments.AddRemoveModal', {
     closeAction: 'destroy',
     height: '95%',
     scale: 'large',
-    title: 'Edit Order Details',
+    //title: 'Edit Order Details',
     width: '95%',
     enableAutoSelect:false,
     
@@ -32,14 +32,7 @@ Ext.define('Taco.view.customers.Segments.AddRemoveModal', {
         });
     },
     
-    //initComponent: function () {
-    //    debugger;
-
-    //    //this.body = {
-    //    //    xtype: 'container'
-    //    //};
-    //    this.callParent(arguments);
-    //},
+    
     updateRecordTypeName:function() {
         
     },
@@ -186,7 +179,7 @@ Ext.define('Taco.view.customers.Segments.AddRemoveModal', {
         return false;
     },
 
-    primaryHandler: function () {
+    doSave: function () {
 
         var me = this,
             selected = this.gridPanel.getSelectionModel().getSelection(),
@@ -200,39 +193,34 @@ Ext.define('Taco.view.customers.Segments.AddRemoveModal', {
         Ext.Array.each(selected, function (record) {
             postData.customers.push(record.getId());
         });
-        if (this.fireEvent('beforesave', this) !== false) {
+
             
-            /*    public int SegmentId { get; set; }
-            public string Method { get; set; }
-            public List<int> Customers { get; set; }*/
+        /*    public int SegmentId { get; set; }
+        public string Method { get; set; }
+        public List<int> Customers { get; set; }*/
 
-            me.gridPanel.setLoading();
-            request= {
-                url: '/admin/app/customer/segments/batch' ,
-                method: "POST",
-                jsonData: postData,
-                success: function (response, opts) {
-                    me.gridPanel.setLoading(false);
-                    me.fireEvent('save', this);
-                    me.store.reload();
-                },
-                failure: function (response, opts) {
-                    var respObj = Ext.decode(response.responseText, true),
-                        errorMsg = respObj && respObj.message ? respObj.message : 'Failure';
+        me.gridPanel.setLoading();
+        request= {
+            url: '/admin/app/customer/segments/batch' ,
+            method: "POST",
+            jsonData: postData,
+            success: function (response, opts) {                
+                me.gridPanel.setLoading(false);                
+                me.store.reload();
+                me.saveSuccess();
+            },
+            failure: function (response, opts) {
+                var respObj = Ext.decode(response.responseText, true),
+                    errorMsg = respObj && respObj.message ? respObj.message : 'Failure';
 
-                    Taco.app.fireEvent('setmessage', errorMsg, 'error');
-                    me.gridPanel.setLoading(false);
-                }
-            };
+                Taco.app.fireEvent('setmessage', errorMsg, 'error');
+                me.gridPanel.setLoading(false);
+            }
+        };
 
-            Ext.Ajax.request(request);
-            
-
-            //do stuff.
-            
-            //this.close();
-        }
-    },
+        Ext.Ajax.request(request);
+        
+    }
 
     
 });

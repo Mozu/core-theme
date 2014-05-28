@@ -31,16 +31,9 @@ Ext.define('Taco.view.order.modal.AuthorizePayment', {
         this.items = [this.form];
         
         this.callParent(arguments);
-
-        this.on({
-            save: {
-                scope: this,
-                fn: 'save'
-            }
-        });
     },
 
-    save: function () {
+    doSave: function () {
         var me = this,
             basic = this.form.getForm(),
             formValues = this.form.getValues(),
@@ -53,10 +46,24 @@ Ext.define('Taco.view.order.modal.AuthorizePayment', {
             amount: formValues.amount
         };
 
+        me.setLoading({
+            msg: "Saving"
+        }, me.body);
+
         cfg = {
             jsonData: data,
-            callback: function() {
+            success: function (response) {
+                me.setLoading(false, me.body);
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    return;
+                }
+
                 me.order.reload();
+                me.saveSuccess(json);
+            },
+            failure: function (){
+                me.setLoading(false, me.body);
             },
             scope: this
         };

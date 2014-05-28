@@ -31,16 +31,9 @@ Ext.define('Taco.view.order.modal.AuthAndCapture', {
         this.items = [this.form];
         
         this.callParent(arguments);
-
-        this.on({
-            save: {
-                scope: this,
-                fn: 'save'
-            }
-        });
     },
 
-    save: function () {
+    doSave: function () {
         var me = this,
             basic = this.form.getForm(),
             formValues = this.form.getValues(),
@@ -55,12 +48,22 @@ Ext.define('Taco.view.order.modal.AuthAndCapture', {
 
         cfg = {
             jsonData: data,
-            callback: function() {
+            success: function (response) {
+                me.setLoading(false, me.body);
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    return;
+                }
                 me.order.reload();
+                me.saveSuccess(json);
+            },
+            failure: function (response) {             
+                me.setLoading(false, me.body);
             },
             scope: this
         };
-
+        
+        me.setLoading(true, me.body);
         this.order.authAndCapture(cfg);
     }
 });

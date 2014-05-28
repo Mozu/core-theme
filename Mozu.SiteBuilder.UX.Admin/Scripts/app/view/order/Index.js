@@ -229,26 +229,20 @@ Ext.define('Taco.view.order.Index', {
                                 paymentId: record.payments().getAt(0).getId(),
                                 amount: amount
                             },
-                            ajaxConfig = {
-                                jsonData: data,
-                                success: function (response) {
-                                    var json = Ext.decode(response.responseText, true);
-
-                                    if (!json || !json.success) {
-                                        Taco.app.fireEvent('setmessage', 'issue capturing payment on order# <a href="#" onclick="Taco.core.StateManager.attemptNavigate(\'/admin/orders/edit/' + record.getId() + '\')">' + record.get('orderNumber') + '</a>', 'error');
-                                    }
-                                   
-                                    record.reload();
-                                },
-                                failure: function () {
-                                    Taco.app.fireEvent('setmessage', 'issue capturing payment on order# <a href="#" onclick="Taco.core.StateManager.attemptNavigate(\'/admin/orders/edit/' + record.getId() + '\')">' + record.get('orderNumber') + '</a>', 'error');
-                                },
-                                scope: this
-                            };
+                            ajaxConfig,
+                            errorMsg = 'issue capturing payment on order# <a href="#" onclick="Taco.core.StateManager.attemptNavigate(\'/admin/orders/edit/' + record.getId() + '\')">' + record.get('orderNumber') + '</a>';
+                        
+                        
+                        ajaxConfig= {
+                            jsonData: data,
+                            errorMsg : errorMsg,
+                            success: function (response) {                                
+                                record.reload();
+                            },
+                            scope: this
+                        };
 
                         record.capturePayment(ajaxConfig);
-
-
                     }
                 }
             ,

@@ -39,6 +39,11 @@ Ext.define('Taco.model.OrderItem', {
             "useNull": false
         },
         {
+            "name": "parentProductCode",
+            "type": "string",
+            "useNull": false
+        },
+        {
             "name": "productName",
             "type": "string",
             "useNull": true
@@ -149,6 +154,15 @@ Ext.define('Taco.model.OrderItem', {
             "type": "string",
             "defaultValue": ""
         },
+
+        {
+            "name": "fulfillmentId",
+            "type": "string",
+            convert: function (v, record) {          
+                return record.get("fulfillmentMethod") + "_" + record.get("fulfillmentLocationCode")
+            }
+        },
+
         {
             "name": "supportsInStorePickup",
             "type": "boolean",

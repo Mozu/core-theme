@@ -73,11 +73,13 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
             });
         }
 
-        me.store.on('load', function() {
-            me.selectFirstRecord();
-        }, me, {
-            single:true
-        });
+        if (me.autoSelectFirstRecord) {
+            me.mon(me.store,'load', function () {                
+                me.selectFirstRecord();
+            }, me, {
+                single: true
+            });
+        }
         
         me.callParent(arguments);
     },

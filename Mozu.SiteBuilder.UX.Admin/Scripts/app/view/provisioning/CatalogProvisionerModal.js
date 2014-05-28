@@ -7,9 +7,9 @@ Ext.define('Taco.view.provisioning.CatalogProvisionerModal', {
     extend: 'Taco.core.ux.window.Modal',
     title:'Catalog Provisioning',
     requires: [],
+    scale:"large",
     autoShow: true,
-    itemType:'mastercatalog',
-    closeAction: 'destroy',
+    itemType:'mastercatalog',    
     
     initComponent: function () {
         var me = this;
@@ -112,20 +112,19 @@ Ext.define('Taco.view.provisioning.CatalogProvisionerModal', {
 
 
 
-    primaryHandler: function () {
+    doSave: function () {
         var me = this,
             data = me.form.getValues();
             //catalogIdField = me.form.findField('catalogId'),
             //catRecord = catalogIdField.findRecordByValue(catalogIdField.getValue());
-        if (this.fireEvent('beforesave', this) !== false) {
-            if (data.itemType == 'mastercatalog') {
-                delete data.masterCatalogId;
-            }
-           // data.masterCatalogId = catRecord.raw.masterCatalogId;
-            data.tenantId = Taco.app.context.getTenantId();
-            this.fireEvent('save', this, data);
-            this.close();
+        
+        if (data.itemType == 'mastercatalog') {
+            delete data.masterCatalogId;
         }
-    },
+        // data.masterCatalogId = catRecord.raw.masterCatalogId;
+        data.tenantId = Taco.app.context.getTenantId();
+
+        this.saveSuccess(data);
+    }
     
 });

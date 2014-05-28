@@ -314,71 +314,59 @@ Ext.define('Taco.view.order.modal.FulfillmentMethod', {
 
         me.saveButton.enable();
     },
-    
 
-    primaryHandler: function () {
+    doSave: function () {
         var me = this,
-            fulfillmentLocationCode="";
-        
-        if (this.fireEvent('beforesave', this) !== false) {
-            
-            var mask = me.setLoading({
-                msg: "Saving"
-            }, me.body);
-            
-            var fulfillmentMethod = (me.inStorePickupRadio.checked) ? "Pickup" : "Ship";
-            var selectedLocation = this.inStorePickupPanel.getSelectionModel().getSelection();
-            if (me.inStorePickupRadio.checked && selectedLocation.length) {
+            fulfillmentLocationCode = "";
 
-                selectedLocation = selectedLocation[0];
+        me.setLoading({
+            msg: "Saving"
+        }, me.body);
 
-                fulfillmentLocationCode = selectedLocation.get("locationCode");
-            } else {
-                fulfillmentLocationCode = me.locationData.code;
-            }
+        var fulfillmentMethod = (me.inStorePickupRadio.checked) ? "Pickup" : "Ship";
+        var selectedLocation = this.inStorePickupPanel.getSelectionModel().getSelection();
+        if (me.inStorePickupRadio.checked && selectedLocation.length) {
 
-            
-            
-            
-            me.record.set("fulfillmentMethod", fulfillmentMethod);
-            me.record.set("fulfillmentLocationCode", fulfillmentLocationCode);
+            selectedLocation = selectedLocation[0];
 
-            var orderId = me.orderRecord.get("id");
-
-
-            
-            me.orderRecord.editOrderItemFulfillmentMethod({
-                jsonData: {
-                    orderId: orderId,
-                    orderItems: [
-                        Ext.clone(me.record.data)
-                    ]
-                },
-                failure: function(response) {
-                    me.setLoading(false, me.body);
-                },
-                success: function (response) {
-                    me.setLoading(false, me.body);
-                    
-                    // success handling here
-                    var json = Ext.decode(response.responseText, true);
-                    if (!json || !json.success) {
-                        // service didnt' return data properly
-                        return;
-                    }
-                    
-                    this.fireEvent('save', json);
-                    this.close();
-                },
-                scope: this
-            });
+            fulfillmentLocationCode = selectedLocation.get("locationCode");
+        } else {
+            fulfillmentLocationCode = me.locationData.code;
         }
-    },
 
 
-    save: function () {
-        var me = this;
 
+
+        me.record.set("fulfillmentMethod", fulfillmentMethod);
+        me.record.set("fulfillmentLocationCode", fulfillmentLocationCode);
+
+        var orderId = me.orderRecord.get("id");
+
+        me.orderRecord.editOrderItemFulfillmentMethod({
+            jsonData: {
+                orderId: orderId,
+                orderItems: [
+                    Ext.clone(me.record.data)
+                ]
+            },
+            failure: function (response) {
+                me.setLoading(false, me.body);
+            },
+            success: function (response) {
+                var me = this;
+                me.setLoading(false, me.body);
+
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+                
+                me.saveSuccess(json);
+            },
+            scope: this
+        });
         
 
     }

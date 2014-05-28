@@ -146,7 +146,7 @@ Ext.define('Taco.view.customers.subform.Information', {
         this.modal = Ext.create('Taco.view.customers.segments.Modal', {
             store: gridStore,
             listeners: {
-                save: function(modal, values) {
+                savesuccess: function(modal, values) {
                     list.addValue(values);
                 },
                 scope: this

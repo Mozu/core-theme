@@ -32,11 +32,7 @@ Ext.define('Taco.view.order.modal.EditTrackingNumber', {
         
         this.callParent(arguments);
 
-        this.on({
-            save: {
-                scope: this,
-                fn: 'save'
-            },
+        this.on({        
             show: {
                 scope: this,
                 fn: function () {
@@ -50,45 +46,35 @@ Ext.define('Taco.view.order.modal.EditTrackingNumber', {
         });
     },
 
-    save: function () {
+    doSave: function () {
         var me = this,
             basic = this.form.getForm(),
             trackingNumber = basic.findField('trackingNumber').getValue();
 
         this.packageData.trackingNumber = trackingNumber;
 
-        Taco.app.viewPort.setLoading(true);
+        //Taco.app.viewPort.setLoading(true);
+
+        me.setLoading({
+            msg: "Saving"
+        }, me.body);
 
         this.record.changeTrackingNumber({
             jsonData: [this.packageData],
             success: function (response) {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
+                me.setLoading(false, me.body);
 
                 if (!json || !json.success) {
-                    // service didnt' return data properly
-                    Taco.app.viewPort.setLoading(false);
-                    
-                    var errorDialog = Ext.create('Taco.core.ux.window.Alert', {
-                        html: 'Error saving tracking number.'
-                    });
-                    errorDialog.show();
-                    
                     return;
-                }
+                };
                 
                 this.record.reload();
+                me.saveSuccess(json);
             },
             failure: function (response) {
-                // error handling here
-                var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : 'Error saving tracking number.';
-                
-                Taco.app.viewPort.setLoading(false);
-                var errorDialog = Ext.create('Taco.core.ux.window.Alert', {
-                    html: msg
-                });
-                errorDialog.show();
+                me.setLoading(false, me.body);
             },
             scope: this
         });

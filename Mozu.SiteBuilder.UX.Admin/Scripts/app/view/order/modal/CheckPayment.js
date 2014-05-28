@@ -19,35 +19,28 @@ Ext.define('Taco.view.order.modal.CheckPayment', {
                 type: 'hbox'
             },
             defaults: {
-                margin: '0 20 0 0',
-                width: 170
+                
+                flex: 1
             },
             items: [{
                 xtype: 'textfield',
                 name: 'checkNumber',
-                fieldLabel: 'Check Number'
+                fieldLabel: 'Check Number',
+                margin: '0 10 0 0'
             }, {
                 xtype: 'currencyfield',
                 name: 'amount',
                 fieldLabel: 'Amount Collected',
-                value: this.record.data.amountAuthorized,
-                margin: '0 0 0 0'
+                value: this.record.data.amountAuthorized
             }]
         });
 
         this.items = [this.form];
 
         this.callParent(arguments);
-
-        this.on({
-            save: {
-                scope: this,
-                fn: 'save'
-            }
-        });
     },
 
-    save: function () {
+    doSave: function () {
         var me = this,
             formValues = this.form.getValues(),
             data;
@@ -61,8 +54,17 @@ Ext.define('Taco.view.order.modal.CheckPayment', {
 
         this.order.applyCheck({
             jsonData: data,
-            success: function () {
+            success: function (response) {
+                var json = Ext.decode(response.responseText, true),
+                    data;
+
+                if (!json || !json.success) {                
+                    return;
+                }
+                
+                data = json.items;
                 me.order.reload();
+                me.saveSuccess(data);
             }
         });
     }

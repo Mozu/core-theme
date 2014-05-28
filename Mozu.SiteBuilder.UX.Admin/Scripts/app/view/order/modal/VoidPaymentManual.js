@@ -36,16 +36,9 @@ Ext.define('Taco.view.order.modal.VoidPaymentManual', {
         this.items = [this.form];
 
         this.callParent(arguments);
-
-        this.on({
-            save: {
-                scope: this,
-                fn: 'save'
-            }
-        });
     },
 
-    save: function () {
+    doSave: function () {
         var me = this,
             formValues = this.form.getValues(),
             data,
@@ -58,17 +51,27 @@ Ext.define('Taco.view.order.modal.VoidPaymentManual', {
             interactionDate: formValues.interactionDate
         };
 
+        me.setLoading({
+            msg: "Saving"
+        }, me.body);
+
         cfg = {
             jsonData: data,
             success: function (response) {
                 var json = Ext.decode(response.responseText, true);
+                me.setLoading(false, me.body);
 
                 if (!json || !json.success) {
                     return;
                 }
+
+                me.saveSuccess(json);
+
                 me.order.reload();
             },
-            failure: Ext.emptyFn,
+            failure: function () {
+                me.setLoading(false, me.body);
+            },
             scope: this
         };
 

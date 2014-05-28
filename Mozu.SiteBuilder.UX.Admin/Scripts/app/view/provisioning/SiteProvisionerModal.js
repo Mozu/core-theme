@@ -8,7 +8,7 @@ Ext.define('Taco.view.provisioning.SiteProvisionerModal', {
     title:'Site Provisioning',
     requires: [],
     autoShow: true,
-    closeAction : 'destroy',
+    scale: "large",    
     initComponent: function () {
         var me = this;
         
@@ -100,18 +100,16 @@ Ext.define('Taco.view.provisioning.SiteProvisionerModal', {
 
 
 
-    primaryHandler: function () {
+    doSave: function () {
         var me = this,
             data = me.form.getValues(),
             catalogIdField = me.form.findField('catalogId'),
             catRecord = catalogIdField.findRecordByValue(catalogIdField.getValue());
-        if (this.fireEvent('beforesave', this) !== false) {
+        
 
-            data.masterCatalogId = catRecord.raw.masterCatalogId;
-            data.tenantId = Taco.app.context.getTenantId();
-            this.fireEvent('save', this, data);
-            this.close();
-        }
-    },
-    
+
+        data.masterCatalogId = catRecord.raw.masterCatalogId;
+        data.tenantId = Taco.app.context.getTenantId();
+        this.saveSuccess(data);        
+    }
 });

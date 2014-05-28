@@ -209,6 +209,9 @@ Ext.define('Taco.model.Order', {
             "type": "float",
             "useNull": true
         },
+
+        
+
         {
             "name": "orderAdjustment",
             "type": "object",
@@ -218,6 +221,26 @@ Ext.define('Taco.model.Order', {
                 "internalComment":""
             }        
         },
+
+        // a helper member used to seperatly control whether the shipping adjustment is negative or positive;
+        {
+            "name": "orderAdjustmentIsNegative",
+            "type": "boolean",
+            "persist": false,
+            "convert": function (value, record) {                
+                // if set explicitly use the value
+                if (Ext.isBoolean(value)) {
+                    return value
+                }
+
+                // get the value from the field;
+                var adj = record.get("orderAdjustment");
+                if (adj && adj.amount && adj.amount > 0) {
+                    return false
+                }
+                return true
+            }
+        },
         
         {
             "name": "shippingAdjustment",
@@ -226,6 +249,24 @@ Ext.define('Taco.model.Order', {
                 "amount": 0,
                 "description": "",
                 "internalComment": ""
+            }
+        },
+
+        // a helper member used to seperatly control whether the shipping adjustment is negative or positive;
+        {
+            "name": "shippingAdjustmentIsNegative",
+            "type": "boolean",
+            "persist": false,
+            "convert": function (value, record) {
+                // if set explicitly use the value
+                if (Ext.isBoolean(value)) {
+                    return value
+                }
+                var adj = record.get("shippingAdjustment");
+                if (adj && adj.amount && adj.amount > 0) {
+                    return false
+                }
+                return true
             }
         },
 
@@ -654,6 +695,9 @@ Ext.define('Taco.model.Order', {
     
 
 
+
+
+
     /*
      ****************************************************
      *   Begin order payment service interaction methods
@@ -753,18 +797,13 @@ Ext.define('Taco.model.Order', {
     capturePayment: function (config) {
         Ext.applyIf(config, {
             url: '/admin/app/order/payment/capture',
-            method: "POST"
-            /*
-            // sample of what you pass in 
-            success: function(response) {
-                var json = Ext.decode(response.responseText,true);
-                if (!json || !json.success) {
-                    //error
-                }
-            },
-            failure : Ext.emptyFn
-            */            
+            method: "POST"            
         });
+
+        
+        config.errorMsg = config.errorMsg || "Error capturing payment";
+        this.addErrorHandling(config);
+        
 
         Ext.Ajax.request(config);
     },
@@ -775,6 +814,10 @@ Ext.define('Taco.model.Order', {
             method: 'POST'        
         });
 
+        // add in boilerplate error handling code;
+        config.errorMsg = config.errorMsg || "Error authorizing";
+        this.addErrorHandling(config);
+
         Ext.Ajax.request(config);
     },
 
@@ -783,6 +826,10 @@ Ext.define('Taco.model.Order', {
             url: '/admin/app/order/payment/authAndCapture',
             method: 'POST'
         });
+
+        // add in boilerplate error handling code;
+        config.errorMsg = config.errorMsg || "Error completing authorize and capture payment";
+        this.addErrorHandling(config);
 
         Ext.Ajax.request(config);
     },
@@ -819,6 +866,10 @@ Ext.define('Taco.model.Order', {
             url: '/admin/app/order/payment/create',
             method: "POST"            
         });
+        
+        // add in boilerplate error handling code;
+        config.errorMsg = config.errorMsg || "Error adding payment";
+        this.addErrorHandling(config);
 
         Ext.Ajax.request(config);
     },
@@ -828,6 +879,10 @@ Ext.define('Taco.model.Order', {
             url: '/admin/app/order/setbillinginfo',
             method: 'POST'
         });
+
+        // add in boilerplate error handling code;
+        config.errorMsg = config.errorMsg || "Error setting billing information;";
+        this.addErrorHandling(config);
 
         Ext.Ajax.request(config);
     },
@@ -864,6 +919,10 @@ Ext.define('Taco.model.Order', {
             method: "POST"
         });
 
+        // add in boilerplate error handling code;
+        config.errorMsg = config.errorMsg || "Error voiding transaction;";
+        this.addErrorHandling(config);
+
         Ext.Ajax.request(config);
     },
     
@@ -898,6 +957,9 @@ Ext.define('Taco.model.Order', {
             method: "POST"
         });
 
+        config.errorMsg = config.errorMsg || "Error requesting check";
+        this.addErrorHandling(config);
+
         Ext.Ajax.request(config);
     },
 
@@ -927,6 +989,9 @@ Ext.define('Taco.model.Order', {
             method: "POST"
         });
 
+        config.errorMsg = config.errorMsg || "Error capturing manual payment";
+        me.addErrorHandling(config);
+
         me.ensureDate(config, 'interactionDate');
         Ext.Ajax.request(config);
     },
@@ -937,6 +1002,9 @@ Ext.define('Taco.model.Order', {
             url: '/admin/app/order/payment/manual/void',
             method: "POST"
         });
+
+        config.errorMsg = config.errorMsg || "Error voiding manual payment";
+        me.addErrorHandling(config);
 
         me.ensureDate(config, 'interactionDate');
         Ext.Ajax.request(config);
@@ -949,6 +1017,9 @@ Ext.define('Taco.model.Order', {
             method: "POST"
         });
 
+        config.errorMsg = config.errorMsg || "Error crediting manual payment";
+        me.addErrorHandling(config);
+
         me.ensureDate(config, 'interactionDate');
         Ext.Ajax.request(config);
     },
@@ -960,6 +1031,9 @@ Ext.define('Taco.model.Order', {
             method: "POST"
         });
 
+        config.errorMsg = config.errorMsg || "Error rolling back transaction;";
+        me.addErrorHandling(config);
+
         Ext.Ajax.request(config);
     },
 
@@ -969,6 +1043,9 @@ Ext.define('Taco.model.Order', {
             url: '/admin/app/order/payment/manual/create',
             method: "POST"
         });
+
+        config.errorMsg = config.errorMsg || "Error adding manual payment";
+        me.addErrorHandling(config);
 
         me.ensureDate(config, 'interactionDate');
         Ext.Ajax.request(config);
@@ -1005,6 +1082,10 @@ Ext.define('Taco.model.Order', {
             url: '/admin/app/order/payment/credit',
             method: "POST"
         });
+
+        config.errorMsg = config.errorMsg || "Error issuing credit";
+        this.addErrorHandling(config);
+
         Ext.Ajax.request(config);
     },
 
@@ -1014,6 +1095,11 @@ Ext.define('Taco.model.Order', {
             url: '/admin/app/order/payment/applycheck',
             method: "POST"
         });
+
+        config.errorMsg = config.errorMsg || "Error applying check";
+        this.addErrorHandling(config);
+
+
         Ext.Ajax.request(config);
     },
 
@@ -1023,8 +1109,22 @@ Ext.define('Taco.model.Order', {
             url: '/admin/app/order/payment/declinecheck',
             method: "POST"
         });
+
+        config.errorMsg = config.errorMsg || "Error declining check";
+        this.addErrorHandling(config);
+
         Ext.Ajax.request(config);
     },
+
+
+
+
+    /*
+     ****************************************************
+     *   End order payment service interaction methods
+     ****************************************************
+     */
+
 
 
     /*
@@ -1265,7 +1365,6 @@ Ext.define('Taco.model.Order', {
         var me = this;
         
         config.errorMsg = "Error creating pickup";
-
         me.addErrorHandling(config);
         
         Ext.apply(config, {
@@ -1571,6 +1670,9 @@ Ext.define('Taco.model.Order', {
             method: "POST"
         });
 
+        config.errorMsg = config.errorMsg || "Error changing tracking number";
+        this.addErrorHandling(config);
+
         Ext.Ajax.request(config);
     },
     
@@ -1787,7 +1889,7 @@ Ext.define('Taco.model.Order', {
     editOrderItemFulfillmentMethod: function (config) {
         var me = this;
 
-        config.errorMsg = "Error changing fulfillment method";
+        config.errorMsg = config.errorMsg || "Error changing fulfillment method";
 
         me.addErrorHandling(config);
        

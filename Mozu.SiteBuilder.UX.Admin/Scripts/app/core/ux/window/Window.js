@@ -48,7 +48,8 @@ Ext.define('Taco.core.ux.window.Window', {
     shadow: false,
 
     bodyPadding: '11 19 19',
-    closeAction: 'hide',
+    //closeAction: 'hide',
+    closeAction: 'destroy',
     componentCls: Taco.baseCSSPrefix + 'window',
     overflowX: 'hidden',
     overflowY: 'auto',

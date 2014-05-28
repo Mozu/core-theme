@@ -192,12 +192,7 @@ Ext.define('Taco.view.order.modal.AddRefund', {
         
         this.callParent(arguments);
 
-        this.on({
-            save: {
-                scope: this,
-                fn: 'save'
-            }
-        });
+        
 
         this.storeCreditPanel.on({
            validitychange: {
@@ -237,7 +232,7 @@ Ext.define('Taco.view.order.modal.AddRefund', {
         }        
     },
     
-    save: function () {
+    doSave: function () {
         var me = this,
             payments = [];
 
@@ -264,9 +259,18 @@ Ext.define('Taco.view.order.modal.AddRefund', {
         }
         
         this.record.performPaymentAction(payments, {
-            success: function () {
+            success: function (response) {
                 // me.setLoading(false, me.body);
-            }
+                
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    // service didnt' return data properly
+                    return;
+                }
+                
+                this.saveSuccess(json);
+            },
+            scope:me
         });
     }
 });

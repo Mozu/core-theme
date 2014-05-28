@@ -27,7 +27,7 @@
                     labelAlign: 'left',
                     name: option.AttributeFQN,
                     value: option.Value,
-                    allowBlank: !option.isRequired,
+                    allowBlank: !option.IsRequired,
                     optionInputType: option.AttributeDetail.InputType
                 }
             },
@@ -345,10 +345,10 @@
         var description = '';
         var longDescription = this.record.get('productFullDescription');
         var shortDescription = this.record.get('productShortDescription');
-        
-        if (!longDescription.length || longDescription == '<br>') {
+
+        if (!longDescription || longDescription == '<br>') {
             // no long description. check for a short description
-            if (shortDescription.length && shortDescription != '<br>') {
+            if (shortDescription && shortDescription.length && shortDescription != '<br>') {
                 description = shortDescription;
             }
         } else {
@@ -380,7 +380,7 @@
         this.optionsContainer.removeAll();
         
         if (options.length) {
-            Ext.each(options, function (option) {
+            Ext.each(options, function (option) {                
                 items.push(this.buildOption(option));
             }, this);
             this.optionsContainer.add(items);

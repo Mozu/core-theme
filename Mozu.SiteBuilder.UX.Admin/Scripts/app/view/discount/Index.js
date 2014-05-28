@@ -169,7 +169,9 @@ Ext.define('Taco.view.discount.Index', {
         
         ]
     },
-    //ToDo: WTF is this used for
+
+
+    /*
     initComponent2: function (eOpts) {
         var me = this,
                 basegridview;
@@ -262,10 +264,16 @@ Ext.define('Taco.view.discount.Index', {
         basegridview = me.basegrid.view;
         basegridview.mon(basegridview, 'itemclick', me.onItemClick, me);
     },
+    */
+
 
     /**
     * Handler for when the user attempts to navigate away from this view
     */
+
+
+    // this code never gets executed.commenting it out    
+    /*
     onNavigatez: function (newState) {
         // navigation events that i can totes handle include: 
         var md = newState.getMetaData();
@@ -274,11 +282,17 @@ Ext.define('Taco.view.discount.Index', {
             return false;
         }
     },
+    */
+
+
+
 
     /**
     * When a list item is clicked, this method instatiates the editor view and initializes it with a {@link Taco.core.Model}
     * @param {Model} record The model associated with the list item that was selected
     */
+    // this code never gets executed. Commenting it out.
+    /*
     launchEditorz: function (record) {
         var me = this,
                 token = 'discounts/edit/',
@@ -323,6 +337,8 @@ Ext.define('Taco.view.discount.Index', {
 
         Taco.app.contentView.add(editorView);
     },
+
+    */
 
     /**
     * Handler for the list item click event

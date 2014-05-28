@@ -1,9 +1,14 @@
 ﻿/**
  * @class Taco.model.LocationPickup
+ * A fulfillment location. originally meant to represent a pickup location. Refactored to represent a pickup or a direct ship location.
+ * The proxy can return pickup locations, direct ship locations, or both by setting the extraparam "type"
  */
+
+// todo: rename this after the merge;
+
 Ext.define('Taco.model.LocationPickup', {
     extend: 'Taco.core.data.Model',
-    idProperty: "locationCode",
+    idProperty: "fulfillmentId",
 
     /*
     behaviors: {
@@ -15,23 +20,67 @@ Ext.define('Taco.model.LocationPickup', {
     */
 
     fields: [
+        // combines the fulfillmentMethod and locationCode to allow for unique identification of a location and fulfillment type. this is to support situation where a location is both direct ship and pickup
+
         {
-            name: "locationCode",  // this will be the locationCode
+            name: "fulfillment",
+            type: "object"
+        },
+
+
+
+        // Ship or Pickup
+        {
+            name: "fulfillmentMethodCode",
+            convert:function (value, record){
+                return record.get("fulfillment").code
+            }            
+        },
+
+        {
+            name: "fulfillmentMethod",
+            convert: function (value, record) {
+                return (record.get("fulfillment").code == "SP") ? "Pickup" : "Ship"
+            }
+        },
+
+
+        {
+            name: "fulfillmentId",
+            type: "string",
+            convert: function (value, record) {
+                return record.get("fulfillmentMethod") + "_" + record.get("locationCode");
+            }
+        },
+
+
+        {
+            name: "locationCode",  
             type: "string"
         },
         
-        // put the data from the location here
+        // The full data object for a location
         {
             "name": "location",
             "type": "auto"
         },
 
         // put the data from the locationInventory here
+        /*
+        deprecated;
         {
             "name": "locationInventory",
             "type": "auto"
         },
+        */
         
+        
+        {
+            "name": "auditInfo",
+            "type": "auto"
+        },
+        
+
         {
             "name": "productName",
             "type": "string"
@@ -59,8 +108,11 @@ Ext.define('Taco.model.LocationPickup', {
         type: 'ajaxproxy',
 
         api: {
-            read: '/admin/app/locationinventory/pickup'
-            //read: '/admin/app/locationPickup/list'
+            read: '/admin/app/locationinventory/forproduct'
+
+            // this still works. this is the older end point
+            //read: '/admin/app/locationinventory/pickup'
+            
         },
         reader: {
             type: 'json',

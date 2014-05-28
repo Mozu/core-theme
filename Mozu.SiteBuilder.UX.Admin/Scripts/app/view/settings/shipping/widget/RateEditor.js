@@ -94,10 +94,6 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
         //this.amountField = this.form.findField('amount');
         //window.amountField = this.amountField;
         this.on({
-            save: {
-                scope: this,
-                fn: 'save'
-            },
             show: {
                 scope: this,
                 fn: function () {
@@ -125,9 +121,12 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
         this.callParent(arguments);
     },
 
-    save: function () {
-        var me = this;
-        me.record.set(me.form.getValues());
+    doSave: function () {
+        var me = this,
+            data = me.form.getValues();
+
+        me.record.set(data);
+        me.saveSuccess(data);
     }
     
     //onDestroy: function () {

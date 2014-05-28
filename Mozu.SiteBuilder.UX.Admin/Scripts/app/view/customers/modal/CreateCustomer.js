@@ -90,43 +90,30 @@ Ext.define('Taco.view.customers.modal.CreateCustomer', {
 
         this.callParent(arguments);
 
-        this.on({
-            save: {
-                scope: this,
-                fn: 'save'
-            }
-        });
+        
     },
 
 
-    primaryHandler: function () {
+    doSave: function () {        
         var me = this,
         data = this.form.getValues();
-        
-        data.isAnonymous = !data.createAccount                
+
+        data.isAnonymous = !data.createAccount
 
         // udpate the record with the form data;
         this.record.setRawData(data);
 
-        if (this.fireEvent('beforesave', this) !== false) {
-            this.record.save({                
-                success: function (record, operation) {                    
-                    me.record.commit();
-                    me.fireEvent('savesuccess', me, record);
-                    me.close();
-                },
-                failure: function (record, operation) {
-                    //handle failure(s) here                
-                    Taco.app.fireEvent('setmessage', 'Error saving customer', 'error');
-                }
-            });
-
-
-        }
-    },
-
-    save: function () {        
         
+        this.record.save({
+            success: function (record, operation) {
+                me.record.commit();
+                me.saveSuccess(record);
+            },
+            failure: function (record, operation) {
+                //handle failure(s) here                
+                Taco.app.fireEvent('setmessage', 'Error saving customer', 'error');
+            }
+        });
     },
     
     onDestroy: function (destroy) {

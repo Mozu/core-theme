@@ -668,6 +668,7 @@
     <Content Include="Scripts\app\core\ux\content\SplitContainer.js" />
     <Content Include="Scripts\app\core\ux\content\ContextMenu.js" />
     <Content Include="Scripts\app\core\ux\form\field\AdminUser.js" />
+    <Content Include="Scripts\app\core\ux\form\field\plugins\InputMask.js" />
     <Content Include="Scripts\app\core\ux\form\field\SingleImageField.js" />
     <Content Include="Scripts\app\core\ux\form\field\EditableDisplayField.js" />
     <Content Include="Scripts\app\core\ux\form\field\InlinePicker.js" />
@@ -677,6 +678,7 @@
     <Content Include="Scripts\app\core\ux\form\SplitEditor.js" />
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\AddEntityRow.js" />
+    <Content Include="Scripts\app\core\ux\grid\plugins\AutoSelect.js" />
     <Content Include="Scripts\app\core\ux\mixins\Navigable.js" />
     <Content Include="Scripts\app\core\ux\mixins\RowEditable.js" />
     <Content Include="Scripts\app\core\ux\mixins\Searchable.js" />
@@ -707,19 +709,24 @@
     <Content Include="Scripts\app\model\ShippingMethod.js" />
     <Content Include="Scripts\app\model\Wishlist.js" />
     <Content Include="Scripts\app\overrides\data\AbstractStore.js" />
+    <Content Include="Scripts\app\overrides\dom\ElementAddons.js" />
     <Content Include="Scripts\app\overrides\form\Basic.js" />
     <Content Include="Scripts\app\overrides\form\FieldContainer.js" />
     <Content Include="Scripts\app\overrides\form\field\Base.js" />
     <Content Include="Scripts\app\overrides\form\field\ComboBox.js" />
+    <Content Include="Scripts\app\overrides\form\field\Display.js" />
     <Content Include="Scripts\app\overrides\form\field\Number.js" />
     <Content Include="Scripts\app\overrides\grid\plugin\CellEditing.js" />
+    <Content Include="Scripts\app\overrides\grid\plugin\RowEditing.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditorButtons.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditor.js" />
     <Content Include="Scripts\app\overrides\menu\Menu.js" />
     <Content Include="Scripts\app\overrides\picker\Month.js" />
+    <Content Include="Scripts\app\overrides\selection\CellModel.js" />
     <Content Include="Scripts\app\overrides\toolbar\Paging.js" />
     <Content Include="Scripts\app\overrides\window\MessageBox.js" />
     <Content Include="Scripts\app\overrides\window\Window.js" />
+    <Content Include="Scripts\app\overrides\ZIndexManager.js" />
     <Content Include="Scripts\app\shared\view\field\Address.js" />
     <Content Include="Scripts\app\shared\view\field\CountryField.js" />
     <Content Include="Scripts\app\shared\view\field\LocationPickerField.js" />
@@ -771,6 +778,7 @@
     <Content Include="Scripts\app\view\order\modal\CheckDecline.js" />
     <Content Include="Scripts\app\view\order\modal\FulfillmentMethod.js" />
     <Content Include="Scripts\app\view\order\subform\InstorePickup.js" />
+    <Content Include="Scripts\app\view\order\widget\AddOrderItemToolbar.js" />
     <Content Include="Scripts\app\view\order\widget\OrderTotalPanel.js" />
     <Content Include="Scripts\app\view\order\widget\OrderTotalPanelEditable.js" />
     <Content Include="Scripts\app\view\order\widget\PackagePickup.js" />
@@ -1428,6 +1436,8 @@
     <Content Include="Scripts\sass\src\view\Header.scss" />
     <Content Include="Scripts\sass\src\view\navigation\PrimaryMenu.scss" />
     <Content Include="Scripts\sass\src\core\ux\content\SplitContainer.scss" />
+    <Content Include="Scripts\sass\src\core\ux\form\field\plugins\InputMask.scss" />
+    <Content Include="Scripts\sass\src\view\order\widget\AddOrderItemToolbar.scss" />
     <Content Include="Scripts\Web.config" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />

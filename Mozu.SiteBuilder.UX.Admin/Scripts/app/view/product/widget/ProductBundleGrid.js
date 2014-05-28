@@ -149,8 +149,9 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
         var productSelector = Ext.create('Taco.view.product.Modal', {
             store: productStore,
             listeners: {
-                save: {
+                savesuccess: {
                     fn: function (modal, values) {
+                        
                         // add a default quantity of 1 to each selected record
                         var bundleStore = this.store;
                         var itemsToAdd = [];

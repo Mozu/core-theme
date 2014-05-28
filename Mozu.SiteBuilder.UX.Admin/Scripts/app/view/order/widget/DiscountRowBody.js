@@ -14,8 +14,9 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
     // need to add support for discount suppression and activation
 
     
-    rowBodyTrCls: "x-grid-row-adjustment x-grid-row x-grid-data-row x-grid-rowbody-tr",
-    rowBodyDivCls: "x-grid-cell-inner adustment-cell-inner",
+    //rowBodyTrCls: "x-grid-row-adjustment x-grid-row x-grid-data-row x-grid-rowbody-tr",
+    rowBodyTrCls: "x-grid-row-adjustment x-grid-row x-grid-rowbody-tr",
+    rowBodyDivCls: "x-grid-cell-inner adjustment-cell-inner",
     rowBodyTdCls: "adjustment-cell x-grid-cell x-grid-td x-unselectable ",
     onMouseDown: function (e) {
         var me = this;       
@@ -164,13 +165,15 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
                     
                 '</td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                    '<div style="text-align: right;" class="adustment-cell-inner-value ' + this.rowBodyDivCls + '">({unitPrice:usMoney})</div>',
+                    //'<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '">({unitPrice:usMoney})</div>',
+                    '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '"></div>',
                 '</td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">{quantity}</div>',
+                    //'<div style="text-align: right;" class="' + this.rowBodyDivCls + '">{quantity}</div>',
+                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '"></div>',
                 '</td>',
                 '<td role="gridcell"  class="' + this.rowBodyTdCls + '">',
-                    '<div style="text-align: right;" class="adustment-cell-inner-value ' + this.rowBodyDivCls + '">({total:usMoney})</div>',
+                    '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '">({total:usMoney})</div>',
                 '</td>',
                 '<td role="gridcell"  class="x-action-col-cell taco-menu-col-cell x-action-col-cell' + this.rowBodyTdCls + '">',
                     
@@ -202,13 +205,13 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
 
                 '</td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                    '<div style="text-align: right;" class="adustment-cell-inner-value ' + this.rowBodyDivCls + '">({unitPrice:usMoney})</div>',
+                    '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '">({unitPrice:usMoney})</div>',
                 '</td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
                     '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">{quantity}</div>',
                 '</td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                    '<div style="text-align: right;" class="adustment-cell-inner-value ' + this.rowBodyDivCls + '">({total:usMoney})</div>',
+                    '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '">({total:usMoney})</div>',
                 '</td>',
                 '<td role="gridcell"  class="x-action-col-cell taco-menu-col-cell x-action-col-cell' + this.rowBodyTdCls + '">',
                     '<div unselectable="on" class="x-grid-cell-inner x-grid-cell-inner-action-col">',

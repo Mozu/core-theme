@@ -128,8 +128,7 @@ Ext.define('Taco.view.location.subform.Location', {
                         close: function () {                            
                             me.shippingContextField.focus();
                         },
-                        save: function () {
-                            var data = modal.form.getForm().getValues();
+                        savesuccess: function (view, data) {                            
                             me.shippingContextField.setValue(data);
                         }
                     }

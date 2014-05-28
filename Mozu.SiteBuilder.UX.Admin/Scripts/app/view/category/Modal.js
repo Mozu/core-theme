@@ -92,13 +92,9 @@ Ext.define('Taco.view.category.Modal', {
             tree.selectPath(path);
         }, this);
     },
-
-    primaryHandler: function () {
+    
+    doSave: function (){
         var selection = this.selModel.getSelection();
-
-        if (this.fireEvent('beforesave', this) !== false) {
-            this.fireEvent('save', this, selection);
-            this.close();
-        }
+        this.saveSuccess(selection);
     }
 });

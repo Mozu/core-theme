@@ -8,7 +8,8 @@ Ext.define('Taco.view.order.subform.Payment', {
         'Taco.view.order.modal.IssueCredit',
         'Taco.view.order.modal.RequestCheck',
         'Taco.view.order.modal.CheckPayment',
-        'Taco.view.order.modal.ApplyStoreCredit',
+        // commenting out this unfinished code;
+        //'Taco.view.order.modal.ApplyStoreCredit',
         'Taco.view.order.widget.PaymentPanel',
         'Taco.view.order.modal.AddPayment',
         'Taco.view.order.modal.AddPaymentManual',
@@ -143,6 +144,11 @@ Ext.define('Taco.view.order.subform.Payment', {
         });
         actions.push(me.applyManualPayment);
 
+
+        /*
+        // commenting this out until it finishes gestating.
+        // deprecated. this code never gets executed and opens a modal dialog with no ui in it.
+
         me.applyStoreCredit = new Ext.Action({
             text: 'Apply Store Credit',
             handler: function() {
@@ -156,9 +162,16 @@ Ext.define('Taco.view.order.subform.Payment', {
             },
             scope: this
         });
+
+
+
         // 'Apply Store Credit' should NEVER show up as a menu option.
         if (false && canUseStoreCredit)
             actions.push(me.applyStoreCredit);
+
+
+        */
+
 
         return actions;
     },

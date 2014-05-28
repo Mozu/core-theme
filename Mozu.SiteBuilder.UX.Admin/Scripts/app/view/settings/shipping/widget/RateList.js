@@ -183,7 +183,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
             record: null
         });
         
-        editor.on('save', this.onRecordChange, this);
+        editor.on('savesuccess', this.onRecordChange, this);
     },
     
     editItem: function (record) {
@@ -191,7 +191,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
             record : record
         });
         
-        editor.on('save', this.onRecordChange, this);
+        editor.on('savesuccess', this.onRecordChange, this);
     },
     
     onRecordChange: function (view, e) {
