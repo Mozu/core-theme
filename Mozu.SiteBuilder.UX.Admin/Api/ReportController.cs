@@ -46,8 +46,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<HttpResponseMessage> Read([FromUri]PagingParamaters pagingParams, [FromUri]string filter, [FromUri] string groupBy, string name)
         {
             var client = _reportWebApiClient;
+            const int pgSize = 600;
 
-            var serviceResponse = (await client.GetReportAsync(name, pagingParams.startIndex, pagingParams.pageSize, null, filter, groupBy)).ReadAsSync();
+            var serviceResponse = (await client.GetReportAsync(name, pagingParams.startIndex, pgSize, null, filter, groupBy)).ReadAsSync();
             var rows = extractReportRows(serviceResponse);
 
             // return rows with meta data
