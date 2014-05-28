@@ -328,12 +328,13 @@
                 }
             },
             addStoreCredit: function () {
-                var self = this;
-                return self.getOrder().apiAddStoreCredit({
+                var self = this,
+                    order = self.getOrder();
+                return order.apiAddStoreCredit({
                     storeCreditCode: this.get('selectedCredit'),
                     amount: this.get('creditAmountToApply')
                 }).then(function (o) {
-                    self.set(o.data);
+                    order.set(o.data);
                     self.closeApplyCredit();
                     return o; // return order.get('customer').getCredits();
                 });
@@ -453,10 +454,15 @@
                 this.isLoading(false);
                 this.getOrder().isReady(true);
             },
-            toJSON: function () {
-                if (this.nonStoreCreditTotal() > 0) {
-                    return CheckoutStep.prototype.toJSON.apply(this, arguments);
+            toJSON: function(options) {
+                var j = CheckoutStep.prototype.toJSON.apply(this, arguments), loggedInEmail;
+                if (this.nonStoreCreditTotal() === 0 && j.billingContact) {
+                    delete j.billingContact.address;
                 }
+                if (j.billingContact && !j.billingContact.email) {
+                    j.billingContact.email = this.getOrder().get('customer.emailAddress');
+                }
+                return j;
             }
         });
 
@@ -503,22 +509,42 @@
                 amountRemainingForPayment: Backbone.MozuModel.DataTypes.Float
             },
             initialize: function (data) {
-                var self = this;
-                _.defer(function () {
+
+                var self = this,
+                    user = require.mozuData('user');
+                _.defer(function() {
                     var latestPayment = self.apiModel.getCurrentPayment(),
                         fulfillmentInfo = self.get('fulfillmentInfo'),
                         fulfillmentContact = fulfillmentInfo.get('fulfillmentContact'),
                         billingInfo = self.get('billingInfo'),
-                        isReady = ((fulfillmentInfo.stepStatus() + fulfillmentContact.stepStatus() + billingInfo.stepStatus()) === "completecompletecomplete") || 
+                        steps = [fulfillmentInfo, fulfillmentContact, billingInfo],
+                        allStepsComplete = function() {
+                            return _.reduce(steps, function(m, i) { return m + i.stepStatus(); }, '') === "completecompletecomplete";
+                        },
+                        isReady = allStepsComplete() ||
                                   (latestPayment && latestPayment.paymentType === "PaypalExpress" && window.location.href.indexOf('PaypalExpress=complete') !== -1);
                     self.isReady(isReady);
 
+                    _.each(steps, function(step) {
+                        self.listenTo(step, 'stepstatuschange', function() {
+                            _.defer(function() {
+                                self.isReady(allStepsComplete());
+                            });
+                        })
+                    });
+
                     if (!self.get("requiresFulfillmentInfo")) {
-                        self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function (k) { return k.indexOf("fulfillment") === -1; }));
+                        self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function(k) { return k.indexOf("fulfillment") === -1; }));
                     }
 
+                    self.get('billingInfo.billingContact').on('change:email', function(model, newVal) {
+                        self.set('email', newVal);
+                    });
+
+                    var billingEmail = billingInfo.get('billingContact.email');
+                    if (!billingEmail && user.email) billingInfo.set('billingContact.email', user.email);
+
                 });
-                var user = require.mozuData('user');
                 if (user.isAuthenticated) {
                     this.set('customer', { id: user.accountId });
                 }
@@ -527,6 +553,9 @@
                     self.set('acceptsMarketing', true);
                 }
                 _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'apiCheckout');
+
+
+
             },
             addCoupon: function () {
                 var me = this;
@@ -694,8 +723,10 @@
                 api.steps(process).then(this.onCheckoutSuccess, this.onCheckoutError);
 
             },
-            update: function () {
-                return this.apiModel.update(this.toJSON());
+            update: function() {
+                var j = this.toJSON();
+                delete j.billingInfo;
+                return this.apiModel.update(j);
             },
             isReady: function (val) {
                 this.set("isReady", val);

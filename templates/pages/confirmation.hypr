@@ -19,7 +19,7 @@
         <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.payments }}</h4>
             {% for payment in model.payments %}
-            {% if payment.status != "Voided" %}
+            {% if payment.status != "Voided" and payment.status != "Declined" %}
             {% include "modules/checkout/checkout-payment" with model=payment %}
             {% endif %}
             {% endfor %}

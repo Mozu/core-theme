@@ -14,10 +14,12 @@ define(['sdk', 'jquery', 'hyprlive'], function (Mozu, $, Hypr) {
              .AppClaims(headers['x-vol-app-claims'])
              .UserClaims(headers['x-vol-user-claims'])
              .api();
-    if (Hypr.getThemeSetting('useDebugScripts')) {
+    if (Hypr.getThemeSetting('useDebugScripts') || require.mozuData('pagecontext').isDebugMode) {
         api.on('error', function (badPromise, xhr, requestConf) {
             var e = "Error communicating with Mozu API";
             if (requestConf && requestConf.url) e += (" at " + requestConf.url);
+            var correlation = xhr && xhr.getResponseHeader && xhr.getResponseHeader('x-vol-correlation');
+            if (correlation) e += " --- Correlation ID: " + correlation;
             window && window.console && console.error(e, badPromise, xhr);
         });
     }
