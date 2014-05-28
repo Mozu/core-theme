@@ -43,7 +43,7 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
          */
         mode: 'view',
 
-        useSplit: true
+        useSplit: false
     },
 
     initComponent: function () {
