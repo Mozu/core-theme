@@ -25,7 +25,8 @@ Ext.define('Taco.store.ProductComboBox', {
             read: '/admin/app/Product/list'
         },
         extraParams: {
-            SearchType: 'picker'
+            SearchType: 'picker',
+            responseGroups: 'Min,Price'
         },
         reader: {
             type: 'json',

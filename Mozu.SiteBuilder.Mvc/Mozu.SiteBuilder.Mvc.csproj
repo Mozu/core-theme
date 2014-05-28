@@ -292,7 +292,7 @@
     </Reference>
     <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.8.0-dev008\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.8.0-dev012\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts">
       <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.7.0.3\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>

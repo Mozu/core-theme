@@ -3,27 +3,6 @@
  */
 
 Ext.define('Taco.core.ux.form.field.Product', {
-    extend: 'Ext.ux.form.field.BoxSelect',
-    alias: ['widget.taco.field.product','widget.taco-productfield'],
-    requires:[
-        'Taco.store.ProductComboBox'
-    ],
-
-    forceSelection: true,
-    minChars: 3,
-    triggerOnClick: false,
-    typeAhead: true,
-
-    displayField: 'productName',
-    fieldLabel: 'Select Products',
-    queryMode: 'remote',
-    valueField: 'productCode',
-    pageSize: 25,
-    initComponent : function () {
-        this.store = Taco.core.data.StoreManager.getOrCreate({
-           type: 'Taco.store.ProductComboBox'
-        });
-        
-        this.callParent(arguments);
-    }
+    extend: 'Taco.shared.view.field.Product',
+    alias: [ 'widget.taco-productfield-old'],
 });
