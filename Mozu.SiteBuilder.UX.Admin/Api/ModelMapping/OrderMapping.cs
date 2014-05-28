@@ -330,6 +330,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => (dc.Product != null) 
                       ? (dc.Product.VariationProductCode ?? dc.Product.ProductCode) 
                       : null))
+                      .ForMember(x => x.ParentProductCode, op => op.ResolveUsing(dc => (dc.Product != null && !string.IsNullOrEmpty(dc.Product.VariationProductCode))
+                      ? dc.Product.ProductCode 
+                      : null))
                   .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => (dc.Product != null) 
                       ? dc.Product.Name : null))
                   .ForMember(x => x.UnitPrice, op => op.ResolveUsing(dc => (dc.UnitPrice != null) 
