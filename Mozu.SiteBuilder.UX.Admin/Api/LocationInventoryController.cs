@@ -89,7 +89,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var locations = (await _locationWebApiClient.GetLocations(filter: locationFilter)).ReadAsSync().Items;
                 inventories.Items =
                     (from i in inventories.Items
-                     let loc = locations.First(l => l.Code == i.LocationCode)
+                     let loc = locations.First(l => l.Code.Equals(i.LocationCode, StringComparison.OrdinalIgnoreCase))
                      select new SuperchargedLocationInventory(i, loc.Name)
                     ).ToList<DC.LocationInventory>();
             }
