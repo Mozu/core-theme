@@ -25,6 +25,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         public bool IsLink { get { return _nodeType == NODE_TYPE_LINK; } }
         public bool IsPage { get { return _nodeType == NODE_TYPE_PAGE; } }
         public bool IsProduct { get { return _nodeType == NODE_TYPE_PRODUCT; } }
+        public bool IsGroup { get { return _nodeType == NODE_TYPE_GROUP; } }
 
         public static NavigationNodeType Category = new NavigationNodeType(NODE_TYPE_CATEGORY);
         public static NavigationNodeType Group = new NavigationNodeType(NODE_TYPE_GROUP);
@@ -171,5 +172,6 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
                 writer.WriteValue(value.ToString());
             }
         }
+
     }
 }
