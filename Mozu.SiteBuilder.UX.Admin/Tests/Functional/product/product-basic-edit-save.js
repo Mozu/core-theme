@@ -4,15 +4,15 @@
     t.simManager().register([
         {
             url: '/admin/app/Product/list',
-            jsonFile: '/admin/tests/mocks/productadmin/Mystic1/products1.json'
+            jsonFile: '/admin/tests/mocks/Mystic1/products1.json'
         },
         {
             url: '/admin/app/ProductType/read',
-            jsonFile: '/admin/tests/mocks/productadmin/Mystic1/ProductTypes1.json'
+            jsonFile: '/admin/tests/mocks/Mystic1/ProductTypes1.json'
         },
         {
             url: '/admin/app/category/read',
-            jsonFile: '/admin/tests/mocks/productadmin/Mystic1/Categories1.json'
+            jsonFile: '/admin/tests/mocks/Mystic1/Categories1.json'
         },
         {
             url: '/admin/app/Product/edit',

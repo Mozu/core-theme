@@ -88,32 +88,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             GenTestData(attributes);
 
-            try
-            {
-                IEnumerable<Attribute> createdAttributes = await _attributeHelper.CreateAttributes(attributes);
-                return List2(createdAttributes.ToList());
-            }
-            catch (AggregateException aggEx)
-            {
-                Exception simpleEx = aggEx.UnwrapAgg();
-                var mozuEx = simpleEx as MozuApplicationException;
-                if (mozuEx != null)
-                    return FriendlyMozuFailure<Attribute>(mozuEx);
 
-                return FailureList2<Attribute>(simpleEx.Message);
-            }
-            catch (AutoMapperMappingException mapEx)
-            {
-                Exception innerEx = mapEx.InnerException;
-                return FailureList2<Attribute>(innerEx.Message);
-            }
-            catch (ArgumentException argEx)
-            {
-                return FailureList2<Attribute>(argEx.Message);
-            }
+            IEnumerable<Attribute> createdAttributes = await _attributeHelper.CreateAttributes(attributes);
+            return List2(createdAttributes.ToList());
+
         }
 
-	    void GenTestData(List<Attribute> attributes)
+        void GenTestData(List<Attribute> attributes)
 	    {
 	        IEnumerable<string> vals;
 	        var tasks = new List<Task>();

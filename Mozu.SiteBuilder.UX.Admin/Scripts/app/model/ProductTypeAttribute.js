@@ -29,15 +29,16 @@ Ext.define('Taco.model.ProductTypeAttribute', {
         });
         return val;
     },
+
     idProperty: 'attributeFQN',
     proxy: {
         type: 'ajaxproxy',
-        api: {
-            create: '/admin/app/Test/testCreate',
-            read: '/admin/Scripts/app/mocks/producttypeattributes.json',
-            update: '/admin/app/Test/testUpdate',
-            destroy: '/admin/app/Test/testDestroy'
-        },
+        //api: {
+        //    create: '/admin/app/Test/testCreate',
+        //    read: '/admin/Scripts/app/mocks/producttypeattributes.json',
+        //    update: '/admin/app/Test/testUpdate',
+        //    destroy: '/admin/app/Test/testDestroy'
+        //},
         //api: {
         //    create: '/admin/app/Attribute/create',
         //    read: '/admin/app/Attribute/read',

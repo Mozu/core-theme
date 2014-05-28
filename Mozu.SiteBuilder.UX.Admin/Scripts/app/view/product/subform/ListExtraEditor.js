@@ -10,180 +10,267 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
     header: false,
     ignoreParentFormTracking: true,
 
-    layout: 'card',
-
+    //layout: {
+    //    type: 'vbox',
+    //    align: 'left'
+    //},
     initComponent: function () {
-        this.loadData();
 
-        this.listContainer = Ext.widget({
-            xtype: 'container'
+        var me = this,
+            dataType = me.productTypeAttribute.get('dataType'),
+            values = me.productExtra.getValues();
+        me.availableOptions = Ext.create('Ext.data.Store', {
+            fields: [
+                'id', 'value'
+            ],
+            data: me.productTypeAttribute.get('selectedValues')
         });
 
-        this.listEditor = Ext.widget({
-            xtype: 'container'
-        });
-
-        this.items = [this.listContainer, this.listEditor];
-
-        
-        this.callParent(arguments);
-
-        this.buildList();
-    },
-
-    loadData: function () {   
-        this.listItems = [];
-
-        Ext.each(this.productExtra.get('values'), function (value) {
-            this.listItems.push({
-                id: value.value,
-                value: value.value,
-                delta: value.delta
-            });
-        }, this);
-    },
-
-    buildList: function (values) {
-        var items = [],
-            existingValues = this.productExtra.get('values') || [],
-            newValues = [];
-
-        if (values) {
-            this.listItems = values;
-        }
-        
-        this.listContainer.removeAll();
-
-
-
-        Ext.each(this.listItems, function (li) {
-            items.push(this.buildListItem(existingValues, newValues, li));
-        }, this);
-
-        this.extraValues = newValues;
-        this.updateProductExtra();
-        
-        items.push({
-            xtype: 'action',
-            text: 'Add/Edit',
-            click: this.edit,
-            scope: this
-        });
-
-        this.listContainer.add(items);
-    },
-
-    buildListItem: function (existingValues, newValues, listItem) {
-        var value;
-
-        Ext.each(existingValues, function (val) {
-            if (val.value !== listItem.id) {
-                return;
-            }
-            value = val;
-            return false;  
-        });
-
-        if (!value) {
-            value = {
-                value: listItem.id,
-                delta: 0
-            };
-        }
-
-        newValues.push(value);
-
-        return {
-            xtype: 'container',
-            items: [{
-                xtype: 'component',
-                html: listItem.value,
-                width: 275
-            }, {
-                xtype: 'unitfield',
-                unitString: '$',
-                emptyText: '0',
-                forcePrecision: true,
-                unitAtEnd: false,
-                fieldLabel: 'Extra Cost',
-                value: value.delta || 0,
-                extraValueObj: value,
-                listeners: {
-                    change: this.onListItemChange,
-                    scope: this
+        me.availableOptions.addFilter([
+            new Ext.util.Filter({
+                filterFn: function (rec) {
+                    return !values.getById(rec.get('id'));
                 }
-            }]
-        };
-    },
+            })
+        ]);
 
-    onListItemChange: function (field, newValue) {
-        field.extraValueObj.delta = parseFloat(newValue) || 0;
-        this.updateProductExtra();
-    },
+        me.mon(values, 'add', me.loadProductExtraData, me);
 
-    updateProductExtra: function () {
-        this.productExtra.set('values', this.extraValues);
-    },
-
-    buildEditor: function () {
-        var multiSelect,
-            items = [],
-            possibleValues = [],
-            values;
-
-        Ext.each(this.productTypeAttribute.get('selectedValues'), function (value) {
-            possibleValues.push([value.id, value.value]);
-        });
-
-        this.listEditor.removeAll();
-
-        multiSelect = Ext.widget({
-            xtype: 'taco.field.multiselect',
-            store: possibleValues,
-            value: Ext.Array.pluck(this.listItems, 'id'),
-            minSelections: 1
-        });
-
-        this.doneButton = Ext.widget({
-            xtype: 'primarybutton',
-            text: 'Done',
-            setDirty:Ext.emptyFn,
-            click: function () {
-                var results = [];
-
-                Ext.each(multiSelect.getSelected(), function (value) {
-                    results.push({id: value.get('field1'), value: value.get('field2')});
-                });
-
-                this.buildList(results);
-                this.productExtra.set('values', this.extraValues);
-                this.getLayout().setActiveItem(0);
-            },
-            scope: this
-        });
-
-        items.push(multiSelect, {
-            xtype: 'container',
-            items: [{
-                xtype: 'action',
-                text: 'Cancel',
-                click: function () {
-                    this.getLayout().setActiveItem(0);
+        me.adderCfg = {
+            xtype: 'combo',
+            store: me.availableOptions,
+            valueField: 'id',
+            displayField: 'value',
+            emptyText: 'Add Item',
+            queryMode: 'local',
+            listeners: {
+                beforequery: function (qp) {
+                    qp.forceAll = true;
                 },
-                scope: this
+                select: function (field) {
+
+                    var val = field.getValue();
+                    me.down('grid').show();
+                    field.reset();
+                    me.productExtra.getValues().add({
+                        value: val
+                    });
+                    me.availableOptions.filter();
+
+                }
+            }
+        };
+
+        me.gridConfg = {
+            xtype: 'grid',
+            hidden: values.getCount()==0,
+            sortableColumns: false,
+            disableSelection: true,
+            flex:1,
+            hideHeaders: false,
+            enableColumnHide: false,
+            store: values,
+            plugins: [
+                {
+                    ptype: 'cellediting',
+                    clicksToEdit: 1
+                }
+            ],
+            viewConfig: {
+                stripeRows: false,
+                onRowFocus: Ext.emptyFn,
+                markDirty: false
             },
-            this.doneButton]
+
+           
+            columnConfigs: {
+                all: [
+                    {
+                        dataIndex: 'value',
+                        text: 'Value',
+                        flex: 1
+
+                    },
+                    {
+                        dataIndex: 'deltaPrice',
+                        text: 'Price',
+                        renderer: Ext.util.Format.usMoney,
+                        editor: {
+                            xtype: 'currencyfield',
+                            hideTrigger: true
+                        }
+
+                    },
+                    {
+                        dataIndex: 'deltaWeight',
+                        text: 'Weight',
+                        editor: {
+                            xtype: 'numberfield',
+                            hideTrigger: true
+                        }
+
+                    },
+                    {
+                        dataIndex: 'quantity',
+                        text: 'Quantity',
+                        editor: {
+                            xtype: 'numberfield',
+                            hideTrigger: true
+                        }
+
+                    },
+                    {
+                        dataIndex: 'isDefaulted',
+                        text: 'Defaulted',
+                        xtype: 'booleancolumn',
+
+                        trueText: 'Yes',
+                        falseText: 'No',
+
+                        editor: {
+                            xtype: 'checkbox'
+                        }
+
+                    }
+                ],
+                productcode: [
+                    {
+                        dataIndex: 'value',
+                        text: 'Code'
+//flex: 1,
+
+                    },
+                    {
+                        dataIndex: 'productName',
+                        text: 'Product Name',
+                        flex: 1
+
+                    },
+                    {
+                        dataIndex: 'price',
+                        text: 'Mast Catalog Price',
+                        //  flex: 1,
+                        renderer: Ext.util.Format.usMoney
+
+                    },
+                    {
+                        dataIndex: 'salePrice',
+                        text: 'Mast Catalog Sale Price',
+                        renderer: function (v) {
+                            return v ? Ext.util.Format.usMoney(v) : undefined;
+                        }
+
+                    },
+                    {
+                        dataIndex: 'deltaPrice',
+                        text: 'Price',
+                        renderer: Ext.util.Format.usMoney,
+                        editor: {
+                            xtype: 'currencyfield',
+                            hideTrigger: true
+                        }
+
+                    },
+                    {
+                        dataIndex: 'quantity',
+                        text: 'Quantity',
+                        editor: {
+                            xtype: 'numberfield',
+                            hideTrigger: true
+                        }
+
+                    },
+                    {
+                        dataIndex: 'isDefaulted',
+                        text: 'Defaulted',
+                        xtype: 'booleancolumn',
+                        trueText: 'Yes',
+                        falseText: 'No',
+                        editor: {
+                            xtype: 'checkbox'
+                        }
+
+                    }
+                ]
+
+            },
+            columns: [],
+            listeners: {
+                cellclick: function (view, td, cellIndex, record, tr, rowIndex, e) {
+
+                    if (e.getTarget('.taco-actioncolumn-icon-remove', 10)) {
+                        view.getStore().remove(record);
+                    }
+                    me.availableOptions.filter();
+                }
+            }
+
+        };
+        me.gridConfg.columns = [].concat(me.gridConfg.columnConfigs[dataType.toLowerCase()] || me.gridConfg.columnConfigs.all).concat([
+            {
+                xtype: 'templatecolumn',
+                // text: '',
+                tdCls: 'taco-actioncolumn',
+                width: 26,
+                tpl: ['<div class="taco-actioncolumn-icon taco-actioncolumn-icon-remove"></div>']
+            }
+        ]);
+
+        me.loadProductExtraData();
+
+
+        me.items = [me.adderCfg ,me.gridConfg];
+
+        me.callParent(arguments);
+
+
+    },
+
+    loadProductExtraData: function () {
+
+        var dataType = this.productTypeAttribute.get('dataType').toLowerCase(),
+            values = this.productExtra.getValues();
+
+        if (dataType != 'productcode') {
+            return;
+        }
+
+
+        var prodIds = [], productStore;
+        values.each(function (record) {
+            if (!record.get('productName')) {
+                prodIds.push(record.getId());
+            }
         });
 
-        this.listEditor.add(items);
-    },
 
-    bindExtra: function (extra) {
-        console.log('do stuff!');
-    },
-
-    edit: function () {
-        this.buildEditor();
-        this.getLayout().setActiveItem(1);
+        if (!prodIds.length) {
+            return;
+        }
+        productStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductComboBox');
+        productStore.load({
+            filters: [
+                {
+                    property: 'productcode',
+                    value: prodIds.join()
+                }
+            ],
+            callback: function (products) {
+                if (!products) {
+                    return;
+                }
+                Ext.Array.each(products, function (prod) {
+                    var valRec = values.getById(prod.getId());
+                    if (valRec) {
+                        valRec.set('productName', prod.get('productName'));
+                        valRec.set('price', prod.get('price'));
+                        valRec.set('salePrice', prod.get('salePrice'));
+                        valRec.commit();
+                    }
+                });
+            }
+        });
     }
-})
+
+
+});

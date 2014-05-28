@@ -5,6 +5,7 @@
 
 Ext.define('Taco.model.ProductExtra', {
     extend: 'Taco.core.data.Model',
+    requires:'Taco.model.ProductExtraValue',
     fields:
     [
         {
@@ -27,5 +28,11 @@ Ext.define('Taco.model.ProductExtra', {
         }
     ],
 
-    idProperty: 'attributeFQN'
+    idProperty: 'attributeFQN',
+    getValues: function () {
+        return this.getOrCreateHasManyStore({
+            model: 'Taco.model.ProductExtraValue',
+            associationKey: 'values'
+        });
+    },
 });
