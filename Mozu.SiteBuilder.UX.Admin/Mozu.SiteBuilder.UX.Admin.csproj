@@ -694,6 +694,7 @@
     <Content Include="Scripts\app\model\BundledProduct.js" />
     <Content Include="Scripts\app\model\CustomerSegment.js" />
     <Content Include="Scripts\app\model\LocationPickup.js" />
+    <Content Include="Scripts\app\model\ProductExtraValue.js" />
     <Content Include="Scripts\app\model\RedirectEntry.js" />
     <Content Include="Scripts\app\model\Provisionable.js" />
     <Content Include="Scripts\app\model\StoreCredit.js" />
@@ -2071,9 +2072,9 @@
     </Content>
     <Content Include="Tests\specs\chutzpahRequireJs.json" />
     <Content Include="Tests\package.json" />
-    <Content Include="Tests\Mocks\ProductAdmin\Mystic1\Products1.json" />
-    <Content Include="Tests\Mocks\ProductAdmin\Mystic1\ProductTypes1.json" />
-    <Content Include="Tests\Mocks\ProductAdmin\Mystic1\Categories1.json" />
+    <Content Include="Tests\Mocks\Mystic1\Products1.json" />
+    <Content Include="Tests\Mocks\Mystic1\ProductTypes1.json" />
+    <Content Include="Tests\Mocks\Mystic1\Categories1.json" />
     <Content Include="Tests\HomePages\WebPage1.cshtml" />
     <Content Include="Tests\specs\admin\chutzpah.json1" />
     <Content Include="Tests\Automation\phantomjs" />

@@ -32,6 +32,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "detail")]
         public AttributeVocabularyValue AttributeVocabularyValueDetail { get; set; }
+
+
+         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public int? Quantity { get; set; }
     }
 
     

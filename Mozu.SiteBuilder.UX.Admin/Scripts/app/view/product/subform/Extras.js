@@ -13,7 +13,10 @@ Ext.define('Taco.view.product.subform.Extras', {
     ],
 
     title: 'Extras',
-
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
     statics: {
         editors: {
             'List': function (ptAttribute, values) {
@@ -194,10 +197,19 @@ Ext.define('Taco.view.product.subform.Extras', {
         return Ext.widget({
             xtype: 'container',
             cls: 'taco-attribute-form',
-            items: items
+            items: items,
+            //width: '100%',
+            //anchor:'100%',
+            //layout: {
+            //    type: 'vbox',
+            //    align: 'stretch'
+            //},
         });
     },
 
+
+    
+    
     buildEditor: function (ptAttribute, extra, pExtra) {
         var list,
             value,

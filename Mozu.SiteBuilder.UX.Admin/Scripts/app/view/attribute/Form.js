@@ -113,7 +113,7 @@ Ext.define('Taco.view.attribute.Form', {
                     sortableColumns: false,
                     disableSelection: true,
                     hideHeaders: false,
-                    enableColumnHide: true,
+                    enableColumnHide: false,
                     store: this.valuesStore,
                     plugins: [
                         {
@@ -237,6 +237,7 @@ Ext.define('Taco.view.attribute.Form', {
                         xtype: 'checkboxgroup',
                         fieldLabel: 'Attribute Type',
                         hidden: !me.record.supportsAttributeType(),
+allowBlank:false,
                         vertical: true,
                         columns: 1,
                         items: [
@@ -265,7 +266,7 @@ Ext.define('Taco.view.attribute.Form', {
                         ignoreParentFormTracking: true,
                         submitValue: false,
                         maxLength: 50,
-                        width: 300,
+                        width: 600,
                         hideMode: 'display',
                         fieldLabel: 'Values',
                         emptyText: 'Add another',
@@ -316,7 +317,7 @@ Ext.define('Taco.view.attribute.Form', {
                         mouseWheelEnabled: false,
                         submitValue: false,
                         maxLength: 50,
-                        width: 300,
+                        width: 600,
                         hideMode: 'display',
                         fieldLabel: 'Values',
                         emptyText: 'Add another',
@@ -362,7 +363,7 @@ Ext.define('Taco.view.attribute.Form', {
 
                         ignoreParentFormTracking: true,
                         submitValue: false,
-                        width: 300,
+                        width: 600,
                         hideMode: 'display',
                         fieldLabel: 'Values',
                         //emptyText: 'Add another',
@@ -376,7 +377,7 @@ Ext.define('Taco.view.attribute.Form', {
                                 isValid = me.isValid();
                             if (isValid !== me.wasValid) {
                                 me.wasValid = isValid;
-                            }
+                            } 
                             return isValid;
                         },
                         listeners: {
