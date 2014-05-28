@@ -78,13 +78,13 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         public bool AllowDrag { get { return _allowDrag.HasValue ? _allowDrag.Value : !IsSystemNode; } set { _allowDrag = value; } }
 
         private bool? _allowDrop;
-        public bool AllowDrop { get { return _allowDrop.HasValue ? _allowDrop.Value : (!IsSystemNode && (NodeType == NavigationNodeType.Category || NodeType == NavigationNodeType.Group)); } set { _allowDrop = value; } }
+        public bool AllowDrop { get { return _allowDrop.HasValue ? _allowDrop.Value : (!IsSystemNode && (NodeType.IsCategory || NodeType.IsGroup || NodeType.IsPage)); } set { _allowDrop = value; } }
 
         private bool? _expanded;
         public bool Expanded { get { return _expanded.HasValue ? _expanded.Value : (Expandable && IsSystemNode); } set { _expanded = value; } }
 
         private bool? _expandable;
-        public bool Expandable { get { return _expandable.HasValue ? _expandable.Value : (NodeType == NavigationNodeType.Category || NodeType == NavigationNodeType.Group); } set { _expandable = value; } }
+        public bool Expandable { get { return _expandable.HasValue ? _expandable.Value : (NodeType.IsCategory || NodeType.IsGroup || NodeType.IsPage); } set { _expandable = value; } }
 
         private bool? _isLeaf;
         /// <summary>
