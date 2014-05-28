@@ -99,14 +99,17 @@
         isChecked: function() {
             var attributeDetail = this.get('attributeDetail'),
                 values = this.get('values');
-            return attributeDetail && attributeDetail.inputType === ProductOption.Constants.InputTypes.YesNo && values && values[0].isSelected;
+
+            return !!(attributeDetail && attributeDetail.inputType === ProductOption.Constants.InputTypes.YesNo && values && this.get('shopperEnteredValue'));
         },
         isValidValue: function() {
             var value = this.get('value') || this.get('shopperEnteredValue');
             return value !== undefined && value !== '' && (this.get('attributeDetail').valueType !== ProductOption.Constants.ValueTypes.Predefined || _.contains(this.legalValues, value));
         },
         isConfigured: function() {
-            return this.isChecked() || this.isValidValue();
+            var attributeDetail = this.get('attributeDetail');
+
+            return attributeDetail && attributeDetail.inputType === ProductOption.Constants.InputTypes.YesNo ? this.isChecked() : this.isValidValue();
         },
         toJSON: function(options) {
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
