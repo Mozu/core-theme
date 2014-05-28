@@ -20,6 +20,7 @@ Ext.define('Taco.view.order.widget.FulfillmentPickerField', {
     hideTrigger: false,
     emptyText: "Fulfillment Search",
     selectOnFocus: true,
+    autoSelect:true,
     //height: 24,
     matchFieldWidth:false,
     listConfig: {
@@ -137,6 +138,10 @@ Ext.define('Taco.view.order.widget.FulfillmentPickerField', {
             });
 
         }
+
+        me.mon(me.store, 'load', function () {
+            me.doAutoSelect();
+        },me)
         
         me.mon(me,'beforequery', this.formatQuery, this);
         me.callParent(arguments);
