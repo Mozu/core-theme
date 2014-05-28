@@ -33,9 +33,11 @@ Ext.define('Taco.view.report.Index', {
 
     createStoreFromReportDefinition: function (def, criteria) {
         var me = this;
+
         Ext.define('MyReader', {
             extend: 'Ext.data.reader.Json',
             alias: 'reader.report-json',
+            totalProperty: 'total',
             read: function (object) {
                 var rep = this.callParent([object]);
                 if (rep.success)
@@ -75,6 +77,7 @@ Ext.define('Taco.view.report.Index', {
             autoLoad: true,
             autoSync: true,
             fields: fields,
+            pageSize: 25,
             proxy: {
                 type: 'ajax',
                 url: '/admin/app/report/read/' + def.key,
@@ -103,6 +106,18 @@ Ext.define('Taco.view.report.Index', {
             return {
                 hidden: !(Ext.Array.contains(report.defaultFields, item.key) || item.key == req.criteria.groupBy),
                 text: item.name,
+                renderer: function (val) {
+                    var displayFormat = item.displayFormat;
+                    if (displayFormat == 'Number')
+                        return Ext.util.Format.number(val, "0,000");
+                    else if (displayFormat == 'Currency')
+                        return Ext.util.Format.usMoney(val);
+                    else if (displayFormat == 'ShortDate')
+                        return Ext.util.Format.date(val);
+                    else if (displayFormat == 'Percent' && Ext.isNumeric(val))
+                        return Ext.util.Format.number(val*100, "0.000%");
+                    return val;
+                },
                 dataIndex: item.key
             };
         });
@@ -118,7 +133,7 @@ Ext.define('Taco.view.report.Index', {
             columns: cols,
             dockedItems: [
                 Ext.create('Ext.toolbar.Paging', {
-                    store: this.store,
+                    store: store,
                     displayInfo: true,
                     dock: 'bottom'
                 })
