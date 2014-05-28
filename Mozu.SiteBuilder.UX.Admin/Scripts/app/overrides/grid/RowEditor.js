@@ -247,6 +247,6 @@ Ext.define('Taco.overrides.grid.RowEditor', {
 
     onRender: function () {        
         this.callParent(arguments);
-        this.setMargin('5 0 0 0');
+        // this.setMargin('5 0 0 0');
     }
 });
