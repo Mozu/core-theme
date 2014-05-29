@@ -25,7 +25,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
 
         this.items = [];
 
-        //todo: create a bundle & a standard widget to reduce if/then complexity - Greg Murray on 2014-03-26 
+        // todo: create a bundle & a standard widget to reduce if/then complexity - Greg Murray on 2014-03-26
         // only allow field persistance if the productUsage is not bundle;
         this.isNotBundle = (this.product.get("productUsage") != "Bundle");
 
@@ -38,6 +38,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
             me.mon(productForm, 'productusagechange', me.onProductUsageChange, me);
             // every change to the bundle items (add remove, quantity change) will cause a rerendering of the control
             me.mon(productForm, 'bundleItemChange', me.updateUI, me);
+            me.mon(Taco.app, 'producttypechanged', me.onProductTypeChange, me);
         });
 
         /*
@@ -80,11 +81,12 @@ Ext.define('Taco.view.product.subform.Shipping', {
     getFieldCollection: function (record,isBundle) {
         var me = this,
             fulfillmentContainer,
-            field;
+            field,
+            isPhysical = (!me.productType || me.productType.get('goodsType') === 'Physical');
         
         isBundle = (isBundle == true);
 
-        var packageFields = this.getPackageFields(record, isBundle);
+        var packageFields = this.getPackageFields(record, isBundle, isPhysical);
 
         fulfillmentContainer = Ext.create('Taco.view.product.widget.ProductFulfillmentTypes', {
             product: me.record,
@@ -142,8 +144,8 @@ Ext.define('Taco.view.product.subform.Shipping', {
         return Ext.widget(field);
     },
 
-    getPackageFields: function (record, isBundle) {
-        return [
+    getPackageFields: function (record, isBundle, isPhysical) {
+        var packages = [
             {
                 xtype: 'unitfield',
                 name: (isBundle) ? "" : 'packageWeight',
@@ -154,10 +156,11 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 unitString: ' lbs',
                 unitAtEnd: true,
                 decimalPrecision: 3,
-                minValue: .001,
+                minValue: (isPhysical ? .001 : 0),
                 hideTrigger: true,
-                value: record.get('packageWeight'),
+                value: (isPhysical ? record.get('packageWeight') : '0 lbs'),
                 keyNavEnabled: false,
+                disabled: ! isPhysical,
                 readOnly: (isBundle),
                 allowBlank: (isBundle),
                 mouseWheelEnabled: false,
@@ -168,6 +171,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 xtype: 'fieldcontainer',
                 fieldLabel: 'Package Dimensions',
                 labelClsExtra: 'x-form-item-required',
+                disabled: (!isPhysical),
                 width: 480,
                 layout: {
                     type: 'hbox',
@@ -182,6 +186,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
                     decimalPrecision: 3,
                     hideTrigger: true,
                     keyNavEnabled: false,
+                    disabled: (! isPhysical),
                     readOnly: (isBundle),
                     allowBlank: (isBundle),
                     mouseWheelEnabled: false
@@ -190,20 +195,27 @@ Ext.define('Taco.view.product.subform.Shipping', {
                     {
                         margin: 0,
                         name: (isBundle) ? "" : 'packageLength',
-                        value: record.get('packageLength'),
+                        value:  (isPhysical ? record.get('packageLength') : '0 in'),
                         emptyText: 'l'
                     }, {
                         name: (isBundle) ? "" : 'packageWidth',
-                        value: record.get('packageWidth'),
+                        value: (isPhysical ? record.get('packageWidth') : '0 in'),
                         emptyText: 'w'
                     }, {
                         name: (isBundle) ? "" : 'packageHeight',
-                        value: record.get('packageHeight'),
+                        value: (isPhysical ? record.get('packageHeight') : '0 in'),
                         emptyText: 'h'
                     }
                 ]
             }
         ];
+        if (! isPhysical) {
+            record.set('packageWeight', 0.001); //todo: put as 0 when service supports it. - Greg Murray on 2014-05-29 
+            record.set('packageLength', 0);
+            record.set('packageWidth', 0);
+            record.set('packageHeight', 0);
+        }
+        return packages;
     },
 
     getBundleFields: function () {
@@ -266,6 +278,17 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 this.isNotBundle = true;
                 this.updateUI();
             }
+        }
+    },
+    
+    onProductTypeChange: function (productTypeRecord) {
+        var me = this,
+            isPhysicalPrevious = (!me.productType || me.productType.get('goodsType') === 'Physical'),
+            isPhysicalNew = (!productTypeRecord || productTypeRecord.get('goodsType') === 'Physical');  
+        me.productType = productTypeRecord;
+
+        if (isPhysicalPrevious != isPhysicalNew) {
+            this.updateUI();
         }
     }
 
