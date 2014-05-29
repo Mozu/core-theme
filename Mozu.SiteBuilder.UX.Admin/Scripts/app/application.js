@@ -58,6 +58,7 @@ window.console = window.console || {
     }
 };
 
+
 //Ext.Loader.setPath('Taco', '/admin/Scripts/app');
 
 Ext.define('Taco.Application', {

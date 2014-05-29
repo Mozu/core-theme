@@ -43,20 +43,26 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
             valueField: 'id',
             itemId:'itemAdder',
             displayField: 'value',
-            emptyText: 'Add Item',
+            emptyText: 'Add Value',
             queryMode: 'local',
+            minWidth:200,
             listeners: {
                 beforequery: function (qp) {
                     qp.forceAll = true;
                 },
                 select: function (field) {
 
-                    var val = field.getValue();
+                    var val = field.getValue(),
+                        newRecord;
                     me.down('grid').show();
                     field.reset();
-                    me.productExtra.getValues().add({
-                        value: val
+                    newRecord= values.model.create({
+                        value: val,
+                        deltaPrice: 0
                     });
+                    newRecord.setDirty();
+
+                    me.productExtra.getValues().add(newRecord);
                     me.availableOptions.filter();
 
                 }
@@ -112,15 +118,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                         }
 
                     },
-                    {
-                        dataIndex: 'quantity',
-                        text: 'Quantity',
-                        editor: {
-                            xtype: 'numberfield',
-                            hideTrigger: true
-                        }
-
-                    },
+                  
                     {
                         dataIndex: 'isDefaulted',
                         text: 'Defaulted',

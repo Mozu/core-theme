@@ -23,9 +23,16 @@ Ext.define('Taco.model.ProductExtra', {
             persist: false
         }, {
             name: 'isRequired',
-            type: 'bool',
+            type: 'boolean',
+            defaultValue: false
+        },
+        {
+            name: 'isMultiSelect',
+            type: 'boolean',
             defaultValue: false
         }
+        
+
     ],
 
     idProperty: 'attributeFQN',

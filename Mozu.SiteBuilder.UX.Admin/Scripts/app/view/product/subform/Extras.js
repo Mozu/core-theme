@@ -26,10 +26,12 @@ Ext.define('Taco.view.product.subform.Extras', {
 
             },
             'YesNo': function (ptAttribute) {
-                return [{
-                    xtype: 'component',
-                    html: ''
-                }];
+                return [
+                    {
+                        xtype: 'component',
+                        html: ''
+                    }
+                ];
             }
         }
     },
@@ -39,7 +41,7 @@ Ext.define('Taco.view.product.subform.Extras', {
 
         this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
 
-        this.items = [this.getEmptyComponent()];
+        this.items = [];
 
         this.callParent(arguments);
 
@@ -51,25 +53,89 @@ Ext.define('Taco.view.product.subform.Extras', {
     },
 
     loadByProductTypeId: function (id) {
-        var items = [];
-        
-        if (!id || !Ext.isNumeric(id)) id = this.product.get('productTypeId');
+        var me = this,
+            items = [],
+            extraEditor;
 
-        if (!id) return;
-        
+        if (!id || !Ext.isNumeric(id)) {
+            id = this.product.get('productTypeId');
+        }
+
+        if (!id) {
+            return;
+        }
+
         this.productType = this.productTypeStore.getById(id);
-        
-        if (!this.productType) return;
+
+        if (!this.productType) {
+            return;
+        }
 
         this.productTypeExtras = this.productType.getExtras();
 
         this.productTypeExtras.each(function (ptAttribute) {
-            items.push(this.buildContainer(ptAttribute));
+            extraEditor = this.buildContainer(ptAttribute);
+            if (extraEditor) {
+                items.push(extraEditor);
+            }
+
         }, this);
 
-        if (!items.length) items.push(this.getEmptyComponent());
 
-        this.removeAll();
+        if (this.productTypeExtras.getCount() == 0) {
+            items.push(this.getEmptyComponent());
+        } else {
+
+
+            me.availableAttributes = Ext.create('Taco.store.ProductTypes', {
+                data: [].concat(me.productTypeExtras.data.items)
+            });
+
+            me.availableAttributes.addFilter([
+                new Ext.util.Filter({
+                    filterFn: function (rec) {
+
+                        return !me.findExtra(rec);
+                    }
+                })
+            ]);
+
+
+            me.adderCombo = Ext.widget({
+                xtype: 'combo',
+                store: me.availableAttributes,
+                editable: false,
+                typeAhead: false,
+                valueField: 'attributeFQN',
+                itemId: 'extraAdder',
+                displayField: 'attributeName',
+                emptyText: 'Add Extra',
+             
+                maxWidth:200,
+                queryMode: 'local',
+                listeners: {
+                    beforequery: function (qp) {
+                        qp.forceAll = true;
+                    },
+                    select: function (field, records) {
+
+                        extraEditor = me.buildContainer(records[0], true);
+                        if (extraEditor) {
+                            me.add(extraEditor);
+                        }
+
+                        field.reset();
+
+                        me.availableAttributes.filter();
+
+                    }
+                }
+            });
+
+
+            this.add(me.adderCombo);
+        }
+        // this.removeAll();
         this.add(items);
     },
 
@@ -92,10 +158,12 @@ Ext.define('Taco.view.product.subform.Extras', {
                 extra.list.bindExtra(pExtra);
             } else {
                 field = this.findField(extra.fieldName);
-                pExtra.set('values', [{
-                   value: extra.ptAttribute.get('attributeName'),
-                   deltaPrice: parseFloat(field.getValue()) || 0
-                }]);
+                pExtra.set('values', [
+                    {
+                        value: extra.ptAttribute.get('attributeName'),
+                        deltaPrice: parseFloat(field.getValue()) || 0
+                    }
+                ]);
             }
         }, this);
     },
@@ -111,10 +179,13 @@ Ext.define('Taco.view.product.subform.Extras', {
         return this.product.getExtras().findRecord('attributeFQN', ptAttribute.get('attributeFQN'));
     },
 
-    buildContainer: function (ptAttribute) {
+    buildContainer: function (ptAttribute, createIfMissing) {
         var items,
+            me = this,
             pExtra = this.findExtra(ptAttribute),
             checkbox,
+            isMultiSelect,
+            editor,
             extra = {
                 ptAttribute: ptAttribute,
                 fieldName: this.getFieldName(ptAttribute)
@@ -123,17 +194,35 @@ Ext.define('Taco.view.product.subform.Extras', {
 
 
         this.extras.push(extra);
-            
+        /*should add later */
         if (!pExtra) {
+            if (!createIfMissing) {
+                return null;
+            }
+
             pExtra = Ext.create('Taco.model.ProductExtra', {
                 attributeFQN: extra.ptAttribute.get('attributeFQN')
             });
+            pExtra.setDirty();
 
             this.product.getExtras().add(pExtra);
+
         }
 
         editorCfg = this.buildEditor(ptAttribute, extra, pExtra);
 
+        isMultiSelect = Ext.widget({
+            xtype: 'checkbox',
+            hidden: ptAttribute.get('inputType') !='List',
+            boxLabel: 'Allow Multi Select',
+            value: pExtra ? pExtra.get('isMultiSelect') : false,
+            checked: pExtra ? pExtra.get('isMultiSelect') : false,
+            listeners: {
+                change: function (checkbox, value) {
+                    pExtra.set('isMultiSelect', value);
+                }
+            }
+        });
         checkbox = Ext.widget({
             xtype: 'checkbox',
             boxLabel: 'Required by Shopper',
@@ -147,69 +236,55 @@ Ext.define('Taco.view.product.subform.Extras', {
         });
 
         extra.checkbox = checkbox;
+        extra.isMultiSelect = isMultiSelect;
 
-        items = [{
-            xtype: 'container',
-            cls: 'extra-header',
-            items: [{
-                xtype: 'component',
-                cls: 'extra-attribute',
-                html: ptAttribute.get('attributeName')
-            }/*, {  uncomment when the time comes from the larger story of things 
-                xtype: 'action',
-                text: 'Remove',
-                hidden: ptAttribute.get('isRequired'),
-                attributeFQN: ptAttribute.get('attributeFQN'),
-                listeners: {
-                    click: Ext.bind(function (it) {
-                        
-                        this.remove(it.up().up());
-                        var initLength = this.extras.length;
-                        for (var x = 0; x < initLength; x++) {
-                            if (this.extras[x].ptAttribute.internalId == it.attributeFQN) {
-                                this.extras.splice(x, 1);
-                                x--;
-                                initLength--;
-                            }
+        items = [
+            {
+                xtype: 'container',
+                cls: 'extra-header',
+                layout: {
+                    type:'hbox',
+                    align:'stretch'
+                },
+                items: [
+                    {
+                        xtype: 'component',
+                        cls: 'extra-attribute',
+                        html: ptAttribute.get('attributeName'),
+                        flex:1
+                    },
+               
+                    {
+                        xtype: 'tool',
+                        type: 'delete',
+                        hidden: ptAttribute.get('isRequired'),
+                        scope: this,
+                        handler: function () {
+                            console.log('delete');
+                            me.product.getExtras().remove(pExtra);
+                            me.availableAttributes.filter();
+                            editor.up().remove(editor);
                         }
-                        
-                        initLength = this.product.data.extras.length;
-                        for (var x = 0; x < initLength; x++) {
-                            if (this.product.data.extras[x].attributeFQN == it.attributeFQN) {
-                                this.product.data.extras.splice(x, 1);
-                                x--;
-                                initLength--;
-                            }
-                        }
-
-                    }, this)
-                }
-            }*/]
-        }, 
-        editorCfg, {
-            xtype: 'container',
-            cls: 'extra-required',
-            items: [checkbox]
-        }];
+                    }
+                ]
+            },
+            editorCfg, {
+                xtype: 'container',
+                cls: 'extra-required',
+                items: [checkbox, isMultiSelect],
+                
+            }
+        ];
         
 
-
-        return Ext.widget({
+        return editor =  Ext.widget({
             xtype: 'container',
             cls: 'taco-attribute-form',
-            items: items,
-            //width: '100%',
-            //anchor:'100%',
-            //layout: {
-            //    type: 'vbox',
-            //    align: 'stretch'
-            //},
+            items: items
         });
     },
 
 
-    
-    
     buildEditor: function (ptAttribute, extra, pExtra) {
         var list,
             value,
@@ -229,41 +304,45 @@ Ext.define('Taco.view.product.subform.Extras', {
         }
 
         //values = pExtra.get('values');
-        
+
         if (!pExtra.get('values').length) {
             // values.push({
-                
+
             // });
 
-            pExtra.set('values', [{
-                value: ptAttribute.get('attributeName'),
-                deltaPrice: 0,
-                createdByThom: true
-            }]);
+            pExtra.set('values', [
+                {
+                    value: ptAttribute.get('attributeName'),
+                    deltaPrice: 0,
+                    createdByThom: true
+                }
+            ]);
         }
 
         return {
             xtype: 'container',
             justify: false,
-            items: [{
-                xtype: 'component',
-                html: 'Store Label',
-                width: 300
-            }, {
-                xtype: 'unitfield',
-                unitString: '$',
-                emptyText: '0',
-                forcePrecision:true,
-                unitAtEnd: false,
-                name: this.getFieldName(ptAttribute),
-                fieldLabel: 'Extra Cost',
-                value: pExtra ? pExtra.get('values')[0].deltaPrice : null,
-                listeners: {
-                    change: function (field, value) {
-                        pExtra.get('values')[0].deltaPrice = value;
+            items: [
+                {
+                    xtype: 'component',
+                    html: 'Store Label',
+                    width: 300
+                }, {
+                    xtype: 'unitfield',
+                    unitString: '$',
+                    emptyText: '0',
+                    forcePrecision: true,
+                    unitAtEnd: false,
+                    name: this.getFieldName(ptAttribute),
+                    fieldLabel: 'Extra Cost',
+                    value: pExtra ? pExtra.get('values')[0].deltaPrice : null,
+                    listeners: {
+                        change: function (field, value) {
+                            pExtra.get('values')[0].deltaPrice = value;
+                        }
                     }
                 }
-            }]
+            ]
         };
     },
 

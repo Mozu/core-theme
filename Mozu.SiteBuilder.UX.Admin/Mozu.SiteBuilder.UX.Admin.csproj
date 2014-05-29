@@ -1954,7 +1954,7 @@
     <Content Include="Tests\CheckinTests.js" />
     <Content Include="Tests\Functional\product\product-basic-edit-save.js" />
     <Content Include="Tests\helpers\Core.js" />
-    <Content Include="Tests\HomePages\Mystic.cshtml" />
+    <None Include="Tests\HomePages\Mystic.cshtml" />
     <Content Include="Tests\CheckinTests.html" />
     <Content Include="Tests\indexProduct.html" />
     <Content Include="Tests\index-no-ui.html" />
@@ -1992,14 +1992,14 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Tests\speed-test.t.js" />
-    <Content Include="Tests\unit\app-state-matches-uri.t.js" />
-    <Content Include="Tests\unit\product\ListExtraEditor-t.js" />
-    <Content Include="Tests\unit\grid\grid-action-buttons.js" />
-    <Content Include="Tests\unit\order\pendingreview-should-not-allow-add-payment.js" />
-    <Content Include="Tests\unit\form\model-binds.t.js" />
-    <Content Include="Tests\unit\grid\grid-action-buttons.js" />
-    <Content Include="Tests\unit\tab\picker.t.js" />
-    <Content Include="Tests\unit\website\settings\doc-seo.js" />
+    <Content Include="Tests\unit\core\app-state-matches-uri.t.js" />
+    <Content Include="Tests\unit\view\product\ListExtraEditor.t.js" />
+    <Content Include="Tests\unit\core\ux\grid\grid-action-buttons.js" />
+    <Content Include="Tests\unit\view\order\pendingreview-should-not-allow-add-payment.js" />
+    <Content Include="Tests\unit\core\ux\form\model-binds.t.js" />
+    <Content Include="Tests\unit\core\ux\grid\grid-action-buttons.js" />
+    <Content Include="Tests\unit\core\ux\tab\picker.t.js" />
+    <Content Include="Tests\unit\view\website\settings\doc-seo.js" />
     <Content Include="Views\Home\Index_Compiled.cshtml">
       <SubType>Code</SubType>
     </Content>
