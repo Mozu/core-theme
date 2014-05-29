@@ -3,7 +3,7 @@
  */
 
 
-Ext.define('Taco.view.order.Index', {
+Ext.define('Taco.view.order.Split', {
     extend: 'Taco.core.ux.form.SplitEditor',
     alias: 'widget.orderindex',
     requires: [
@@ -53,6 +53,7 @@ Ext.define('Taco.view.order.Index', {
 
         this.store = Taco.core.data.StoreManager.getOrCreate('Taco.store.OrderGrid');
 
+
         actions = [{
             xtype: 'button',
             itemId: 'previous',
@@ -84,7 +85,7 @@ Ext.define('Taco.view.order.Index', {
             margin: '0 0 0 10',
             hidden: true,
             scope: this,
-            handler: this.doCancel
+            handler: this.cancel
         }, {
             xtype: 'button',
             itemId: 'save',
@@ -97,7 +98,7 @@ Ext.define('Taco.view.order.Index', {
             formBind: true,
             hidden: true,
             scope: this,
-            toggleHandler: this.doSave
+            toggleHandler: this.save
         }, {
             xtype: 'button',
             itemId: 'create',
@@ -105,7 +106,7 @@ Ext.define('Taco.view.order.Index', {
             scale: 'medium',
             text: 'Create',
             scope: this,
-            handler: this.doCreate
+            handler: this.create
         }];
 
         Ext.apply(this.header, {
@@ -426,7 +427,10 @@ Ext.define('Taco.view.order.Index', {
             }]
         }];
 
+        
+
         this.callParent(arguments);
+        
     },
 
     canNavigateToNext:function() {
@@ -478,6 +482,9 @@ Ext.define('Taco.view.order.Index', {
             }
 
         }
+        
+        
+
     },
 
     navigateToNext: function () {

@@ -7,6 +7,7 @@ Ext.define('Taco.controller.Orders', {
     modelName: 'Order',
     requires: [
         'Taco.view.order.Index',
+        'Taco.view.order.Split',
         'Taco.view.order.Edit'
     ],
     editorView: 'Taco.view.order.Edit',
@@ -24,7 +25,14 @@ Ext.define('Taco.controller.Orders', {
 
 
     },
+    split: function () {
+        this.createContentView("Taco.view.order.Split", {
+            record: null,
+            options: null
+        });
 
+        
+    },
     create: function () {
         var ctx = Taco.app.context.getCurrentContext(),
             record;

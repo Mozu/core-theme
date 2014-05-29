@@ -126,6 +126,28 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
         });
     },
 
+
+
+    /**
+     * @private
+     * The function to execute when the default cancel button is pressed     
+     */
+    cancel: function () {
+        var me = this;        
+
+        if (me.fireEvent('beforecancel', me) !== false) {
+            me.onCancel();
+            me.fireEvent('cancel', me);
+            me.doCancel();
+        }
+    },
+
+    /**
+    *  Template method called just before the cancel event is fired;
+    */
+    onCancel: Ext.emptyFn,
+
+
     /**
      * Perform a cancel action.
      *
@@ -142,6 +164,26 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
         });
     },
 
+
+    /**
+     * @private
+     * The function to execute when the default create button is pressed     
+     */
+    create: function () {
+        var me = this;
+
+        if (me.fireEvent('beforecreate', me) !== false) {
+            me.onCreate();
+            me.fireEvent('create', me);
+            me.doCreate();
+        }
+    },
+
+    /**
+    *  Template method called just before the create event is fired;
+    */
+    onCreate : Ext.emptyFn,
+
     /**
      * A template method for performing a create action.
      *
@@ -149,9 +191,33 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
      */
     doCreate: function () {
         this.getWest().down('grid').getSelectionModel().deselectAll(true);
-
         this.changeRecord(null);
     },
+
+
+    /**
+     * @private
+     * The function to execute when the default save button is pressed
+     * This is the beginning of the save process not the end. 
+     * Listen to the "savesuccess" event to get the final data after the save process completes
+     * Subclasses should NOT override this method with their own behavior. They should override the doSave()
+     */
+    save: function () {
+        var me = this;
+        debugger;
+
+        if (me.fireEvent('beforesave', me) !== false) {
+            me.onSave();
+            me.fireEvent('save', me);
+            me.doSave();
+        }
+    },
+
+    /**
+    *  Template method called just before the save event is fired;
+    */
+    onSave: Ext.emptyFn,
+
 
     /**
      * A template method for performing a save action.
