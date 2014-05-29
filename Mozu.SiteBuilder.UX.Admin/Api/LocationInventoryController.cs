@@ -28,16 +28,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IProductWebApiClient _productClient;
         private readonly ILocationAdminWebApiClient _locationWebApiClient;
         private readonly IProductAvailableInventoryHelper _productAvailableInventoryHelper;
+        private readonly ILocationSettingsWebApiClient _locationSettingsWebApiClient;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
         public LocationInventoryController(ILocationInventoryWebApiClient locationInventoryClient, IProductWebApiClient productInventoryClient, 
-            ILocationAdminWebApiClient locationWebApiClient, IProductAvailableInventoryHelper productAvailableInventoryHelper)
+            ILocationAdminWebApiClient locationWebApiClient, ILocationSettingsWebApiClient locationSettingsWebApiClient, IProductAvailableInventoryHelper productAvailableInventoryHelper)
         {
             _locationInventoryClient = locationInventoryClient;
             _productClient = productInventoryClient;
             _locationWebApiClient = locationWebApiClient;
+            _locationSettingsWebApiClient = locationSettingsWebApiClient;
             _productAvailableInventoryHelper = productAvailableInventoryHelper;
         }
 
@@ -165,7 +167,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 throw new ArgumentException("Missing product code.");
 
             var filterString = extFilter.ToFilterString();
-            var inventories = (await _productClient.GetLocationInventories(productCode: prodOrVariantCode, startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filterString)).ReadAsSync();
+            var inventories = (await _productClient.GetLocationInventories(productCode: prodOrVariantCode, startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, sortBy: null, filter: filterString)).ReadAsSync();
 
             var product = (await _productClient.GetProduct(productCode)).ReadAsSync();
 
@@ -176,10 +178,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var locations = locationLookupTasks.Select(t => t.Result.ReadAsSync()).ToList();
 
             //need to find default location for direct ship.
-
+            var locSettingsRes = (await _locationSettingsWebApiClient.GetLocationUsages()).ReadAsSync();
+            var siteShippingLocationCode = locSettingsRes.Items.Where(x => x.LocationUsageTypeCode == "DS").Select(x => x.LocationCodes != null && x.LocationCodes.Count > 0 ? x.LocationCodes.First() : null).FirstOrDefault();
 
             var locationsWithInventory = _productAvailableInventoryHelper.GetShipAndPickupLocationsWithInventory(inventories, locations, product);
 
+            // filter out directship options that are not from our site's DS location.
+            locationsWithInventory = locationsWithInventory.Where(lwi => lwi.Fulfillment.Code != "DS" || lwi.LocationCode == siteShippingLocationCode).ToList();
             return List2(locationsWithInventory);
         }
 

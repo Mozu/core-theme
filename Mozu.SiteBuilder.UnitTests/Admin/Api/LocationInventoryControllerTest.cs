@@ -39,9 +39,38 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
         [Test]
         public void When_Product_Has_One_Location_With_One_Fulfillment_Type_Should_Get_One_Entry()
         {
+            // arrange
             var controller = CreateController(location_ship_only);
-            var result = controller.GetLocationsForProduct(empty_paging_params, empty_filter_collection, product_code);
-            Assert.IsNotNull(result);
+
+            // act
+            var t = controller.GetLocationsForProduct(empty_paging_params, empty_filter_collection, product_code);
+            List<LocationWithInventory> result = t.Result.Items;
+
+            // assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.Not.Empty);
+        }
+
+        /// <summary>
+        /// Mozu currently supports a single shipping origin for all packages on an order.
+        /// The location inventory list should ONLY list the directship location configured
+        /// in Site Settings as a possible DirectShip source.
+        /// </summary>
+        [Test]
+        public void Should_Only_Display_One_Directship_Location() 
+        {
+            // arrange
+            var controller = CreateController(location_both, location_ship_only, location_pickup_only);
+
+            // act
+            var t = controller.GetLocationsForProduct(empty_paging_params, empty_filter_collection, product_code);
+            List<LocationWithInventory> result = t.Result.Items;
+
+            // assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.Not.Empty);
+            Assert.That(result.Count(lwi => lwi.Fulfillment == ds), Is.EqualTo(1), "should be exactly one directship location in this list.");
+            Assert.That(result.Count(lwi => lwi.Fulfillment == sp), Is.EqualTo(2), "should be two pickup locations in this list.");
         }
 
         //manage stock      out of stock behavior                       inv        show
@@ -58,7 +87,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
         [TestCase("managed stock, display msg, no stock", true, "DisplayMessage", 0, 0, 0)]
         //HideProduct
         [TestCase("unmanaged stock, hide product, has stock", false, "HideProduct", 10, 10, 2)]
-        [TestCase("unmanaged stock, hide product, no stock", true, "HideProduct", 0, 0, 0)]
+        [TestCase("unmanaged stock, hide product, no stock", false, "HideProduct", 0, 0, 2)]
         [TestCase("managed stock, hide product, has stock", true, "HideProduct", 10, 10, 2)]
         [TestCase("managed stock, hide product, no stock", true, "HideProduct", 0, 0, 0)]
         //AllowBackorder
@@ -146,6 +175,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             var locationInventoryClient = NSubstitute.Substitute.For<DCprod.Clients.ILocationInventoryWebApiClient>();
             var productWebApiClient = NSubstitute.Substitute.For<DCprod.Clients.IProductWebApiClient>();
             var locationAdminWebApiClient = NSubstitute.Substitute.For<DCloc.Clients.ILocationAdminWebApiClient>();
+            var locationSettingsWebApiClient = NSubstitute.Substitute.For<DCloc.Clients.ILocationSettingsWebApiClient>();
             var prodAvailInventoryHelper = new ProductAvailableInventoryHelper();
 
             var locationInventoryCollection = new DCprod.LocationInventoryCollection() {
@@ -154,20 +184,42 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
                     select new DCprod.LocationInventory {
                         LocationCode = l.Code,
                         ProductCode = product_code,
-                        StockAvailable = 100
+                        StockAvailable = 100,
+                        StockOnHand = 100
                     }
                 ).ToList()
             };
 
-            productWebApiClient.GetLocationInventories(product_code)
-                .Returns(locationInventoryCollection.AsServiceClientResponseAsync());
+            productWebApiClient.GetLocationInventories(Arg.Any<string>())
+                .ReturnsForAnyArgs(locationInventoryCollection.AsServiceClientResponseAsync());
+            productWebApiClient.GetProduct(product_code)
+                .ReturnsForAnyArgs(new DCprod.Product { 
+                    ProductCode = product_code,
+                    InventoryInfo = new DCprod.ProductInventoryInfo {
+                        ManageStock = true, OutOfStockBehavior = "HideProduct"
+                    }
+                }.AsServiceClientResponseAsync());
+
+            // location usage is what site settings uses to figure out which directship location is the site's default.
+            // the only thing it's looking for is the first child of the locationusage "DS".
+            var siteDirectShipLocation = locations.FirstOrDefault(l => l.FulfillmentTypes.Contains(ds));
+            var locationUsageList = new DCloc.LocationUsageCollection {
+                Items = new List<DCloc.LocationUsage> {
+                    new DCloc.LocationUsage {
+                        LocationUsageTypeCode = ds.Code,
+                        LocationCodes = siteDirectShipLocation != null ? new List<string> { siteDirectShipLocation.Code } : null
+                    }
+                }
+            };
+            locationSettingsWebApiClient.GetLocationUsages()
+                .Returns(locationUsageList.AsServiceClientResponseAsync());
 
             foreach (var loc in locations)
             {
                 locationAdminWebApiClient.GetLocation(loc.Code).Returns(loc.AsServiceClientResponseAsync());
             }
 
-            return new LocationInventoryController(locationInventoryClient, productWebApiClient, locationAdminWebApiClient, prodAvailInventoryHelper);
+            return new LocationInventoryController(locationInventoryClient, productWebApiClient, locationAdminWebApiClient, locationSettingsWebApiClient, prodAvailInventoryHelper);
         }
     }
 }
