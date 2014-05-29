@@ -255,7 +255,7 @@ Ext.define('Taco.view.product.subform.General', {
                 maxLength: 30,
                 enforceMaxLength: true,
                 required: false,
-                selectOnFocus: true,
+                selectOnFocus: true
             });
 
             this.upcField = Ext.widget({
@@ -277,7 +277,7 @@ Ext.define('Taco.view.product.subform.General', {
                 maxLength: 30,
                 enforceMaxLength: true,
                 required: false,
-                selectOnFocus: true,
+                selectOnFocus: true
             });
 
 
@@ -801,7 +801,9 @@ Ext.define('Taco.view.product.subform.General', {
         var me = this,
             productTypeRecord = selectField.store.getById(value),
             productUsages = productTypeRecord.get("productUsages"),
-            isTaxableProductType = (productTypeRecord.get("goodsType") != 'DigitalGiftCard'),
+            isGiftCardProductType = (productTypeRecord.get("goodsType") === 'DigitalGiftCard'),
+            isTaxableByDefault = !isGiftCardProductType,
+            isDiscountRestrictedByDefault = isGiftCardProductType,
             productUsageField,
             parentForm,
             product;
@@ -848,9 +850,21 @@ Ext.define('Taco.view.product.subform.General', {
         }
 
         if (me.isTaxableField) {
-            if (isTaxableProductType != me.isTaxableField.getValue()) {
-                me.isTaxableField.setValue(isTaxableProductType);
+            if (isTaxableByDefault != me.isTaxableField.getValue()) {
+                me.isTaxableField.setValue(isTaxableByDefault);
             }
+        }
+        if (me.discountsRestrictedField) {
+            if (isDiscountRestrictedByDefault != me.discountsRestrictedField.getValue()) {
+                me.discountsRestrictedField.setValue(isDiscountRestrictedByDefault);
+            }
+            if (isDiscountRestrictedByDefault) {
+                var restrictStartDate = new Date();
+                var restrictEndDate = new Date(restrictStartDate.getFullYear()+10, 11, 31);
+                this.discountsRestrictedStartField.setValue(restrictStartDate);
+                this.discountsRestrictedEndField.setValue(restrictEndDate);
+            }
+
         }
 
         Taco.app.fireEvent('producttypechanged', productTypeRecord);
