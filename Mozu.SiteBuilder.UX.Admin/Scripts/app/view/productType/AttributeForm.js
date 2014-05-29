@@ -273,7 +273,7 @@
                 name: 'isRequired',
                 checked: this.record.get('isRequired'),
                 boxLabel: 'Required by admin',
-                hidden: (this.type === 'extras')
+              //  hidden: (this.type === 'extras')
             }]
         });
 

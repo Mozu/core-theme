@@ -39,7 +39,7 @@
             var ret;
             depth = depth || 100;
             while (true) {
-                ret = seed + Math.floor((Math.random() * depth) + 1);
+                var ret = seed + Math.floor((Math.random() * depth) + 1);
                 if (ret != existing) {
                     return ret;
                 }
@@ -88,9 +88,7 @@
            
             test.click(target, function () {
                 var nodes = cmp.getPicker().getNodes(),
-                    idx = cmp.store.findBy(function (rec) {
-                         return rec.get(cmp.valueField) == value || rec.get(cmp.displayField) == value;
-                    });
+                    idx = cmp.store.findBy(function (rec) { return rec.get(cmp.valueField) == value || rec.get(cmp.displayField) == value; });
                 if (idx > -1) {
                     test.click(nodes[idx], next);
                     return;

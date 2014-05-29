@@ -218,6 +218,9 @@ Ext.define('Taco.core.Controller', {
     createContentView: function (view, cfg) {
         var viewClass = Ext.ClassManager.get(view);
         if (this.confirmContext(viewClass)) {
+
+            Ext.suspendLayouts();
+
             //removing initial view  to aviod events firing from the create of the view from messin with the 
             Taco.app.contentView.removeAll(true);
             view = view.$className ? view : Ext.create(view, cfg);
@@ -230,6 +233,7 @@ Ext.define('Taco.core.Controller', {
             }
 
             Taco.app.contentView.add(view);
+            Ext.resumeLayouts(true);
             return view;
         }
     },

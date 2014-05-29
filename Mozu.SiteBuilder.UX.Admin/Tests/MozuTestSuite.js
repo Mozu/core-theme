@@ -17,24 +17,8 @@ Harness.configure({
     expectedGlobals: ['Ext', 'Taco'],
     testClass: Taco.TestClass.Core,
     preload: simAndSinPreloads,
-
-    //  loaderPath  : { 'Ext.ux': 'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux' },
     hostPageUrl: 'homepages/Mystic.cshtml',
-    //listeners: {
-    //    testsuitestart:function (event, harness) {
-    //        debugger;
-    //    }
-    //},
-    //setup: function (callback) {
-    //    var protoCal = window.location.protocol;
-    //    Ext.Array.each(simAndSinPreloads, function (item, index, arr) {
-    //        if (item.indexOf("//") == 0) {
-    //            arr[index] = protoCal + item;
-    //        }
-    //    });
-    //    //debugger;
-    //    callback();
-    //}
+
 });
 
 Harness.start(
@@ -113,7 +97,7 @@ Harness.start(
                 expanded: true,
                 items: [
                     {
-                        url: 'unit/form/model-binds.t.js',
+                        url: 'unit/core/ux/form/model-binds.t.js',
                         title: 'Cascading Model Binding'
                     }
                 ]
@@ -122,7 +106,7 @@ Harness.start(
                 expanded: true,
                 items: [
                     {
-                        url: 'unit/grid/grid-action-buttons.js',
+                        url: 'unit/core/ux/grid/grid-action-buttons.js',
                         title: 'Inline row buttons are clickable'
                     }
                 ]
@@ -133,7 +117,7 @@ Harness.start(
                 ],
                 items: [
                     {
-                        url: 'unit/tab/picker.t.js',
+                        url: 'unit/core/ux/tab/picker.t.js',
                         title: 'Tab Picker Tests'
                     }
                 ]
@@ -144,7 +128,7 @@ Harness.start(
                 ],
                 items: [
                     {
-                        url: 'unit/order/pendingreview-should-not-allow-add-payment.js',
+                        url: 'unit/view/order/pendingreview-should-not-allow-add-payment.js',
                         title: 'PendingReview Should Not Allow Add Payment'
                     }
                 ]
@@ -153,7 +137,7 @@ Harness.start(
                 expanded: true,
                 items: [
                     {
-                        url: 'unit/product/ListExtraEditor-t.js',
+                        url: 'unit/view/product/ListExtraEditor.t.js',
                         title: 'product List Extra Tests'
                     }
                 ]
@@ -163,7 +147,7 @@ Harness.start(
                 expanded: true,
                 items: [
                     {
-                        url: 'unit/website/settings/doc-seo.js',
+                        url: 'unit/view/website/settings/doc-seo.js',
                         title: 'web-doc-seo'
                     }
                 ]
@@ -171,7 +155,7 @@ Harness.start(
                 group: 'StateManager',
                 items: [
                     {
-                        url: "unit/app-state-matches-uri.t.js",
+                        url: "unit/core/app-state-matches-uri.t.js",
                         waitForAppReady: false,
                         alsoPreload: [],
                         title: "App State Should Match URI"

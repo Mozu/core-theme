@@ -86,8 +86,8 @@
             
         },
         function (next) {
-            t.is(m.doc.get('name'), "seo-name2");
-            t.is(m.doc.get('meta_description'), "test meta descriptoin2");
+            t.is(m.doc.get('name'), "seo-name2",'the model name was set propertly');
+            t.is(m.doc.get('meta_description'), "test meta descriptoin2", 'the model description was set propertly');
 
         }
     );
