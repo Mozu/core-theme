@@ -94,7 +94,7 @@ Ext.define('Taco.view.product.subform.Extras', {
                 field = this.findField(extra.fieldName);
                 pExtra.set('values', [{
                    value: extra.ptAttribute.get('attributeName'),
-                   delta: parseFloat(field.getValue()) || 0
+                   deltaPrice: parseFloat(field.getValue()) || 0
                 }]);
             }
         }, this);
@@ -237,7 +237,7 @@ Ext.define('Taco.view.product.subform.Extras', {
 
             pExtra.set('values', [{
                 value: ptAttribute.get('attributeName'),
-                delta: 0,
+                deltaPrice: 0,
                 createdByThom: true
             }]);
         }
@@ -257,10 +257,10 @@ Ext.define('Taco.view.product.subform.Extras', {
                 unitAtEnd: false,
                 name: this.getFieldName(ptAttribute),
                 fieldLabel: 'Extra Cost',
-                value: pExtra ? pExtra.get('values')[0].delta : null,
+                value: pExtra ? pExtra.get('values')[0].deltaPrice : null,
                 listeners: {
                     change: function (field, value) {
-                        pExtra.get('values')[0].delta = value;
+                        pExtra.get('values')[0].deltaPrice = value;
                     }
                 }
             }]

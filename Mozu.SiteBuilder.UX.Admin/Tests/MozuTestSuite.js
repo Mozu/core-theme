@@ -1,15 +1,13 @@
 ﻿var Harness = Siesta.Harness.Browser.ExtJS,
     protoCal = window.location.protocol,
     simAndSinPreloads = [
-    protoCal+ '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimXhr.js',
-    protoCal + '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/Simlet.js',
-    protoCal + '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/DataSimlet.js',
-    protoCal + '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/JsonSimlet.js',
-    protoCal + '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimManager.js',
-    '/admin/tests/sinon.js'
+        protoCal + '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimXhr.js',
+        protoCal + '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/Simlet.js',
+        protoCal + '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/DataSimlet.js',
+        protoCal + '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/JsonSimlet.js',
+        protoCal + '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimManager.js',
+        '/admin/tests/sinon.js'
     ];
-
-
 
 
 Harness.configure({
@@ -46,8 +44,8 @@ Harness.start(
         /*********** ADMIN COMPONENT INTEGRATION TEST ***********/
         group: "Admin Integration",
         expanded: true,
-        runCore :'sequential',
-     
+        runCore: 'sequential',
+
         items: [
             {
                 runCore: 'sequential',
@@ -79,7 +77,6 @@ Harness.start(
             }
         ]
     },
-
     {
 
         // hostPageUrl: '/admin?testHarnessMode=true',
@@ -107,7 +104,7 @@ Harness.start(
         expanded: true,
         alsoPreload: [
             {
-                text: "Taco.app.viewPort.removeAll(true)"
+                text: "Taco.app.viewPort.removeAll(true);"
             }
         ],
         items: [
@@ -133,7 +130,6 @@ Harness.start(
                 group: 'Tabs',
                 expanded: true,
                 alsoPreload: [
-           
                 ],
                 items: [
                     {
@@ -145,7 +141,6 @@ Harness.start(
                 group: 'Orders',
                 expanded: true,
                 alsoPreload: [
-                       
                 ],
                 items: [
                     {
@@ -154,6 +149,16 @@ Harness.start(
                     }
                 ]
             }, {
+                group: 'Product',
+                expanded: true,
+                items: [
+                    {
+                        url: 'unit/product/ListExtraEditor-t.js',
+                        title: 'product List Extra Tests'
+                    }
+                ]
+            },
+            {
                 group: 'WebSite',
                 expanded: true,
                 items: [
