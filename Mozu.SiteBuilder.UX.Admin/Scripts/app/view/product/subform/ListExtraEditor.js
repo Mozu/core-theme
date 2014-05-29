@@ -6,7 +6,7 @@
 Ext.define('Taco.view.product.subform.ListExtraEditor', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco.product.listextraeditor',
-
+    
     header: false,
     ignoreParentFormTracking: true,
 
@@ -19,6 +19,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
         var me = this,
             dataType = me.productTypeAttribute.get('dataType'),
             values = me.productExtra.getValues();
+    
         me.availableOptions = Ext.create('Ext.data.Store', {
             fields: [
                 'id', 'value'
@@ -40,6 +41,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
             xtype: 'combo',
             store: me.availableOptions,
             valueField: 'id',
+            itemId:'itemAdder',
             displayField: 'value',
             emptyText: 'Add Item',
             queryMode: 'local',
@@ -150,7 +152,9 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                         dataIndex: 'price',
                         text: 'Mast Catalog Price',
                         //  flex: 1,
-                        renderer: Ext.util.Format.usMoney
+                        renderer: function (v) {
+                            return v ? Ext.util.Format.usMoney(v) : undefined;
+                        }
 
                     },
                     {
@@ -225,7 +229,10 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
 
 
     },
-
+  
+    //beforeSave:function () {
+    //    this.productExtra.getValues().commitChanges();
+    //},
     loadProductExtraData: function () {
 
         var dataType = this.productTypeAttribute.get('dataType').toLowerCase(),

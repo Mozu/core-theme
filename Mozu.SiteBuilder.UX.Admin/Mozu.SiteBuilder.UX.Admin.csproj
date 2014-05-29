@@ -1541,7 +1541,6 @@
     <Content Include="Scripts\app\model\ProductInCatalogInfo.js" />
     <Content Include="Scripts\app\model\LocalizedString.js" />
     <Content Include="Scripts\app\model\ProductType.js" />
-    <Content Include="Scripts\app\model\ProductExtraListItem.js" />
     <Content Include="Scripts\app\model\RuntimeProduct.js" />
     <Content Include="Scripts\app\model\RuntimeProductSearchResult.js" />
     <Content Include="Scripts\app\model\SimplegridColumn.js" />
@@ -1562,7 +1561,6 @@
     <Content Include="Scripts\app\store\LocalizedStrings.js" />
     <Content Include="Scripts\app\store\Orders.js" />
     <Content Include="Scripts\app\store\PageTypeDefinitions.js" />
-    <Content Include="Scripts\app\store\ProductExtraListItems.js" />
     <Content Include="Scripts\app\store\RuntimeProductSearch.js" />
     <Content Include="Scripts\app\store\Attributes.js" />
     <Content Include="Scripts\app\store\shared\ContainerStore.js" />
@@ -1995,6 +1993,7 @@
     </Content>
     <Content Include="Tests\speed-test.t.js" />
     <Content Include="Tests\unit\app-state-matches-uri.t.js" />
+    <Content Include="Tests\unit\product\ListExtraEditor-t.js" />
     <Content Include="Tests\unit\grid\grid-action-buttons.js" />
     <Content Include="Tests\unit\order\pendingreview-should-not-allow-add-payment.js" />
     <Content Include="Tests\unit\form\model-binds.t.js" />

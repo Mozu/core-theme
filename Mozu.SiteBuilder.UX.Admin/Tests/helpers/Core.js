@@ -36,9 +36,10 @@
 
         },
         randomStringSuffix: function (seed, existing, depth) {
+            var ret;
             depth = depth || 100;
             while (true) {
-                var ret = seed + Math.floor((Math.random() * depth) + 1);
+                ret = seed + Math.floor((Math.random() * depth) + 1);
                 if (ret != existing) {
                     return ret;
                 }
@@ -71,12 +72,25 @@
             if (!cmp) {
                 return;
             }
-            var test = this;
-            cmp.focus();
-            test.click(cmp.getEl(), function () {
+            var test = this,
+                target = cmp.el.query('.x-form-arrow-trigger');
+
+            //cmp.focus();
+
+
+            //#contentView .taco-formform .x-form-trigger.x-form-arrow-trigger.x-form-trigger-first
+            if (target && target.length) {
+                target = target[0];
+            } else {
+                target = cmp.getTrigger();
+            }
+
+           
+            test.click(target, function () {
                 var nodes = cmp.getPicker().getNodes(),
-                    idx = cmp.store.findBy(function (rec) { return rec.get(cmp.valueField) == value; }),
-                    node;
+                    idx = cmp.store.findBy(function (rec) {
+                         return rec.get(cmp.valueField) == value || rec.get(cmp.displayField) == value;
+                    });
                 if (idx > -1) {
                     test.click(nodes[idx], next);
                     return;
@@ -187,7 +201,7 @@
             sm.defaultSimlet = value == false ? null : this.getExt().create('Ext.ux.ajax.Simlet', {
                 status: 404,
                 statusText: 'Not Found',
-                manager: sm,
+                manager: sm
             });
         },
         simManager: function () {

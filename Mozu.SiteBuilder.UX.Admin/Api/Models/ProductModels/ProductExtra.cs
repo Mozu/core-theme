@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public object Value { get; set; }
 
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "delta")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal DeltaPrice { get; set; }
 
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
