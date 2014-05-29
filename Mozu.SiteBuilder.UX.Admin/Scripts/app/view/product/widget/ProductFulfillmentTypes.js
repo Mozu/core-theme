@@ -10,12 +10,13 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
     ],
     fieldLabel: 'Fulfillment Types',
     flex: 2,
-    bodypadding: 10,
+    bodyPadding: 10,
     hidden: false,
     columns: 3,
     product: null,
     isReadOnly: false,
     allowBlank: false,
+    productType: null,
    
     initComponent: function () {
         var me = this,
@@ -81,25 +82,35 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
     },
 
     onProductTypeChange: function (productTypeRecord) {
-        goodsType = productTypeRecord.get("goodsType");
+        var goodsType = productTypeRecord.get("goodsType");
 
-        if (goodsType === 'DigitalGiftCard') {
-            this.directShipCheckbox.setValue(false);
-            this.directShipCheckbox.disable();
+        if (goodsType != 'Physical') {
+            this.disableCheckbox(this.directShipCheckbox);
+            this.disableCheckbox(this.inStorePickupCheckbox);
 
-            this.inStorePickupCheckbox.setValue(false);
-            this.inStorePickupCheckbox.disable();
-
+            this.digitalGiftCardCheckbox.suspendEvents();
             this.digitalGiftCardCheckbox.show();
             this.digitalGiftCardCheckbox.enable();
             this.digitalGiftCardCheckbox.setValue(true);
+            this.digitalGiftCardCheckbox.resumeEvents();
+
         } else {
+            this.digitalGiftCardCheckbox.suspendEvents();
             this.digitalGiftCardCheckbox.hide();
             this.digitalGiftCardCheckbox.setValue(false);
+            this.digitalGiftCardCheckbox.resumeEvents();
 
             this.directShipCheckbox.enable();
             this.inStorePickupCheckbox.enable();
         }
+        this.onFulfillmentChange();
+    },
+
+    disableCheckbox: function(cb) {
+        cb.suspendEvents();
+        cb.setValue(false);
+        cb.disable();
+        cb.resumeEvents();
     },
 
     onFulfillmentChange: function () {
