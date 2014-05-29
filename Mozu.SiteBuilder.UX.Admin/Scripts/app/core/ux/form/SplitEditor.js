@@ -204,7 +204,7 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
      */
     save: function () {
         var me = this;
-        debugger;
+        
 
         if (me.fireEvent('beforesave', me) !== false) {
             me.onSave();
