@@ -185,7 +185,7 @@ Ext.define('Taco.view.category.Index', {
             buttons: Ext.Msg.YESNO,
             fn: function (val) {
                 if (val === 'yes') {
-                    debugger;
+                    
                     var store = grid.getStore();
                     grid.setLoading(true);
                     record.remove();
