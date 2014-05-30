@@ -2112,7 +2112,7 @@
     <ItemGroup>
       <AdminScriptsBuildSourceTempFiles Include="$(ProjectDir)Scripts\build\temp\**\*.*" />
     </ItemGroup>
-    <<Delete Files="@(AdminScriptsBuildSourceTempFiles)" />
+    <Delete Files="@(AdminScriptsBuildSourceTempFiles)" />
     
     <ItemGroup>
       <AdminScriptsBuildSourceFiles Include="$(AdminScriptsBuildSource)" />
