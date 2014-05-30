@@ -2525,8 +2525,12 @@
   <Target Name="AfterCompile">
     <Message Text="...$(BuildProperties)...$(OutDir)...$(DropLocation)...$(ProjectDir)...$(SolutionDir)" />
 
-    <AdminScriptsBuildSource>$(ProjectDir)Scripts\build</AdminScriptsBuildSource>
-    <AdminScriptsBuildOutput>$(OutDir)_PublishedWebsites\Mozu.SiteBuilder.UX.Admin\Scripts\build</AdminScriptsBuildOutput>
+    <PropertyGroup>
+
+      <AdminScriptsBuildSource>$(ProjectDir)Scripts\build</AdminScriptsBuildSource>
+      <AdminScriptsBuildOutput>$(OutDir)_PublishedWebsites\Mozu.SiteBuilder.UX.Admin\Scripts\build</AdminScriptsBuildOutput>
+    </PropertyGroup>
+    
     <Message Text="$(OutDir) -- $(AdminScriptsBuildSource) -- $(AdminScriptsBuildOutput)" />
     <Exec Command="makeTfsBuild.bat" CustomErrorRegularExpression=".*ERR.*" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
 
