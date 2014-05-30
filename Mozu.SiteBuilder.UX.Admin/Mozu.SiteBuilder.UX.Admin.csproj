@@ -2109,7 +2109,11 @@
       <AdminScriptsBuildSourceFiles Include="$(AdminScriptsBuildSource)" />
     </ItemGroup>
     <Message Text="thoms notes -- $(AdminScriptsBuildSource) -- $(AdminScriptsBuildOutput)" />
-    <Copy SourceFiles="@(AdminScriptsBuildSourceFiles)" DestinationFolder="$(AdminScriptsBuildOutput)" />
+    <Copy 
+      SourceFiles="@(AdminScriptsBuildSourceFiles)" 
+      DestinationFiles="@(AdminScriptsBuildSourceFiles->'$(AdminScriptsBuildOutput)\%(RecursiveDir)%(Filename)%(Extension)')"
+
+      />
   </Target>
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
