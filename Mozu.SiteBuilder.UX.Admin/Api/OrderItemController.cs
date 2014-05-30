@@ -19,6 +19,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             [JsonProperty(PropertyName = "quantity")]
             public int Quantity { get; set; }
+
+            [JsonProperty(PropertyName = "fulfillmentLocationCode")]
+            public string FulfillmentLocationCode { get; set; }
+
+            [JsonProperty(PropertyName = "fulfillmentMethod")]
+            public string FulfillmentMethod { get; set; }
         }
 
         public class AddOrderItemArgs
@@ -45,7 +51,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 var dcOrderItem = new DC.OrderItem {
                     Quantity = product.Quantity,
-                    Product = product
+                    Product = product,
+                    FulfillmentLocationCode = product.FulfillmentLocationCode,
+                    FulfillmentMethod = product.FulfillmentMethod
                 };
 
                 dcOrder = (await _orderWebApiClient.CreateOrderItem(args.OrderId, dcOrderItem, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
