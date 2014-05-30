@@ -57,6 +57,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? PackageWeight { get; set; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string[] FulfillmentTypesSupported { get; set; }
     }
 
 

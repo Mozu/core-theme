@@ -12,6 +12,9 @@
       <Class Name="Mozu.ProductAdmin.Contracts.ProductType.ProductUsageConst">
         <TypeIdentifier />
       </Class>
+      <Class Name="Mozu.ProductAdmin.Contracts.ProductType.GoodsTypeConst" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
     </NestedTypes>
     <TypeIdentifier />
   </Class>
@@ -31,6 +34,24 @@
         <TypeIdentifier />
       </Class>
       <Class Name="Mozu.ProductAdmin.Contracts.Product.StandAlonePackageTypeConst">
+        <TypeIdentifier />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="BundledProducts" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Mozu.ProductAdmin.Contracts.BundledProduct">
+    <Position X="12.25" Y="0.75" Width="2.75" />
+    <Members>
+      <Method Name="BundledProduct" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Mozu.ProductAdmin.Contracts.BundledProduct.FulfillmentTypeConst">
         <TypeIdentifier />
       </Class>
     </NestedTypes>

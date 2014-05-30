@@ -61,6 +61,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping.Perf
                 .ForMember(x => x.ProductCode, opt => opt.MapFrom(x => x.ProductCode))
                 .ForMember(x => x.Quantity, opt => opt.MapFrom(x => x.Quantity))
                 .ForMember(x => x.ProductName, opt => opt.MapFrom(x => x.ProductName));
+                //.ForMember(x => x.ProductTypeId, op => op.ResolveUsing(dc => dc.))
 
             Mapper.CreateMap<BundledProduct, ProductAdmin.Contracts.BundledProduct>()
                 .ForMember(x => x.ProductCode, opt => opt.MapFrom(x => x.ProductCode))

@@ -78,65 +78,85 @@ Ext.define('Taco.view.product.subform.Shipping', {
         }
     },
 
-    getFieldCollection: function (record,isBundle) {
+    getFieldCollection: function (record) {
         var me = this,
             fulfillmentContainer,
             field,
-            isPhysical = (!me.productType || me.productType.get('goodsType') === 'Physical');
-        
-        isBundle = (isBundle == true);
-
-        var packageFields = this.getPackageFields(record, isBundle, isPhysical);
+            isPhysical = (!me.productType || me.productType.get('goodsType') === 'Physical'),
+            fulfillmentTypes = (isPhysical ? me.product.get('fulfillmentTypesSupported') : ['Digital']),
+            packageFields = this.getPackageFields(record, false, isPhysical);
 
         fulfillmentContainer = Ext.create('Taco.view.product.widget.ProductFulfillmentTypes', {
             product: me.record,
-            productType: me.productType,
-            isReadOnly: isBundle,
-            allowBlank: isBundle
+            fulfillmentTypes: fulfillmentTypes,
+            isPhysical: isPhysical,
+            isReadOnly: false,
+            allowBlank: false
         });
 
-        if (isBundle) {
-            var productName = record.get("productName") + " (Qty " + record.get("quantity") + ")";
+        field = {
+            xtype: 'container',
+            width: '100%',
+            items: [
+                fulfillmentContainer,
+                {
+                    xtype: 'container',
+                    width: '100%',
+                    layout: 'hbox',
+                    items: packageFields
+                }
+            ]
+        };
+        
 
-            var productNameField = Ext.widget({
-                xtype: 'editabledisplayfield',
-                width: 200,
-                border: false,
-                value: productName,
-                style: {
-                    'margin-top': '41px',
-                    'margin-right': '5px'
-                },
-                fieldLabel: ''
-            });
-            field = {
-                xtype: 'container',
-                width: '100%',
-                layout: 'hbox',
-                items: [
-                    productNameField
-                ]
-            };
-            packageFields.forEach(function(pkg) {
-                field.items.push(pkg);
-            });
-            field.items.push(fulfillmentContainer);
+        // remove the productNameField if its null;
+        field.items = Taco.core.util.Common.filterNulls(field.items);
 
-        } else {
-            field = {
-                xtype: 'container',
-                width: '100%',
-                items: [
-                    fulfillmentContainer,
-                    {
-                        xtype: 'container',
-                        width: '100%',
-                        layout: 'hbox',
-                        items: packageFields
-                    }
-                ]
-            };
-        }
+        return Ext.widget(field);
+    },
+
+    getBundleFieldCollection: function (record) {
+        var me = this,
+            fulfillmentContainer,
+            field,
+            fulfillTypes = record.get('fulfillmentTypesSupported'),
+            isPhysicalFulfillmentType = (!fulfillTypes ? true : fulfillTypes.indexOf('Digital') == -1),
+            packageFields = this.getPackageFields(record, true, isPhysicalFulfillmentType);
+
+        fulfillmentContainer = Ext.create('Taco.view.product.widget.ProductFulfillmentTypes', {
+            product: me.record,
+            fulfillmentTypes: fulfillTypes,
+            isPhysical: isPhysicalFulfillmentType,
+            isReadOnly: true,
+            allowBlank: true,
+            isBundleComponent: true
+        });
+
+        var productName = record.get("productName") + " (Qty " + record.get("quantity") + ")";
+
+        var productNameField = Ext.widget({
+            xtype: 'editabledisplayfield',
+            width: 200,
+            border: false,
+            value: productName,
+            style: {
+                'margin-top': '41px',
+                'margin-right': '5px'
+            },
+            fieldLabel: ''
+        });
+        field = {
+            xtype: 'container',
+            width: '100%',
+            layout: 'hbox',
+            items: [
+                productNameField
+            ]
+        };
+        packageFields.forEach(function(pkg) {
+            field.items.push(pkg);
+        });
+        field.items.push(fulfillmentContainer);
 
         // remove the productNameField if its null;
         field.items = Taco.core.util.Common.filterNulls(field.items);
@@ -210,7 +230,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
             }
         ];
         if (! isPhysical) {
-            record.set('packageWeight', 0.001); //todo: put as 0 when service supports it. - Greg Murray on 2014-05-29 
+            record.set('packageWeight', 0);
             record.set('packageLength', 0);
             record.set('packageWidth', 0);
             record.set('packageHeight', 0);
@@ -230,13 +250,18 @@ Ext.define('Taco.view.product.subform.Shipping', {
                     html: "No bundle items selected"
                 }]
             },
-            store = me.product.getBundledProducts();
+            store = me.product.getBundledProducts(),
+            isPhysicalGood = (!me.productType || me.productType.get('goodsType') === 'Physical'),
+            fulfillType = (isPhysicalGood ? me.product.get('fulfillmentTypesSupported') : ['Digital']);
 
         if (store.count()) {
             // clear out the container;
 
             var fulfillment = Ext.create('Taco.view.product.widget.ProductFulfillmentTypes', {
-                product: me.product
+                product: me.product,
+                isPhysical: isPhysicalGood,
+                fulfillmentTypes: fulfillType,
+                productType: me.productType
             });
 
             bundleContainer.items = [fulfillment];
@@ -244,7 +269,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 
             // push a fieldset for each bundledProduct
             store.each(function (record) {
-                var field =  me.getFieldCollection(record,true);
+                var field =  me.getBundleFieldCollection(record);
                 bundleContainer.items.push(field);
                 totalWeight += record.get("packageWeight") * record.get("quantity");
             });         
