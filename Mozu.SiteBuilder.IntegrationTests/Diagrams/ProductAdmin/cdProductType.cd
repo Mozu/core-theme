@@ -12,11 +12,14 @@
       <Class Name="Mozu.ProductAdmin.Contracts.ProductType.ProductUsageConst">
         <TypeIdentifier />
       </Class>
+      <Class Name="Mozu.ProductAdmin.Contracts.ProductType.GoodsTypeConst">
+        <TypeIdentifier />
+      </Class>
     </NestedTypes>
     <TypeIdentifier />
     <ShowAsCollectionAssociation>
-      <Property Name="Extras" />
       <Property Name="Options" />
+      <Property Name="Extras" />
       <Property Name="Properties" />
     </ShowAsCollectionAssociation>
   </Class>
