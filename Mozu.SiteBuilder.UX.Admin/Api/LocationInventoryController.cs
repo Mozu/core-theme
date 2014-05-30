@@ -248,7 +248,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     /// </summary>
     public class FulfillmentTypeConstants
     {
-        public static readonly DCloc.FulfillmentType DirectShip = new DCloc.FulfillmentType { Code = "DS", Name = "Direct Ship" };
-        public static readonly DCloc.FulfillmentType InStorePickup = new DCloc.FulfillmentType { Code = "SP", Name = "In Store Pickup" };
+        public static readonly string DirectShipCode = "DS";
+        public static readonly string InStorePickupCode = "SP";
+
+        public static readonly DCloc.FulfillmentType DirectShip = new DCloc.FulfillmentType { Code = DirectShipCode, Name = "Direct Ship" };
+        public static readonly DCloc.FulfillmentType InStorePickup = new DCloc.FulfillmentType { Code = InStorePickupCode, Name = "In Store Pickup" };
     }
 }
