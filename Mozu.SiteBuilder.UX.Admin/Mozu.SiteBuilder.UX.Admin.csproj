@@ -1475,7 +1475,6 @@
     <Content Include="Scripts\app\core\ux\form\NavForm.js" />
     <Content Include="Scripts\app\core\ux\form\OnOffSliderButton.js" />
     <Content Include="Scripts\app\core\ux\GroupedView.js" />
-    <Content Include="Scripts\app\core\ux\modal\SidebarModal.js" />
     <Content Include="Scripts\app\core\ux\content\Sidebar.js" />
     <Content Include="Scripts\app\core\ux\TabBar.js" />
     <Content Include="Scripts\app\core\ux\form\field\MultiSelect.js" />
@@ -1911,7 +1910,6 @@
     <Content Include="Scripts\app\controller\Discounts.js" />
     <Content Include="Scripts\app\controller\Themesettings.js" />
     <Content Include="Scripts\app\core\ux\form\ColorField.js" />
-    <Content Include="Scripts\app\core\ux\modal\Mini.js" />
     <Content Include="Scripts\app\core\ux\TilePanel.js" />
     <Content Include="Scripts\app\core\ux\TileView.js" />
     <Content Include="Scripts\app\core\ux\form\ToggleGroup.js" />
@@ -1927,7 +1925,6 @@
     <Content Include="Scripts\app\core\StateManager.js" />
     <Content Include="Scripts\app\core\ux\form\RemovableColumn.js" />
     <Content Include="Scripts\app\core\ux\form\TextAlignment.js" />
-    <Content Include="Scripts\app\core\ux\modal\ContentWithActions.js" />
     <Content Include="Scripts\app\core\ux\PanelDD.js" />
     <Content Include="Scripts\app\core\ux\MultiImageField.js" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\var\layout\container\Border.scss" />
@@ -2209,10 +2206,6 @@
     <Content Include="Scripts\app\core\ux\form\SlugField.js" />
     <Content Include="Scripts\app\core\ux\GenEditor.js" />
     <Content Include="Scripts\app\core\ux\ListGridToggle.js" />
-    <Content Include="Scripts\app\core\ux\modal\Confirmation.js" />
-    <Content Include="Scripts\app\core\ux\modal\Content.js" />
-    <Content Include="Scripts\app\core\ux\modal\Cover.js" />
-    <Content Include="Scripts\app\core\ux\modal\Modal.js" />
     <Content Include="Scripts\app\core\ux\OptionComboBox.js" />
     <Content Include="Scripts\app\core\ux\OptionValueGrid.js" />
     <Content Include="Scripts\app\core\ux\QuickAdder.js" />
