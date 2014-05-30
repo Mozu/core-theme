@@ -80,7 +80,7 @@ Ext.define('Taco.view.product.subform.Categories', {
 
     /**
      * Populates the list with the selected values from the modal's TreePanel.
-     * @param  {Taco.core.ux.modal.Modal} modal The modal that fired the save event.
+     * @param  modal The modal that fired the save event.
      * @param  {Object} values An object with category data for the list.
      * @private
      */

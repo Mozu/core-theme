@@ -6,8 +6,7 @@
 
 Ext.define('Taco.view.product.subform.OverrideForm', {
     extend: 'Taco.core.ux.form.Form',
-    requires: [
-        'Taco.core.ux.modal.Confirmation',
+    requires: [        
         'Ext.container.Container',
         'Ext.form.field.Checkbox'
     ],
@@ -64,21 +63,27 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
                 checked: this.isOverridden,
                 handler: function (checkbox, isChecked) {
                     var overrideForm = this;
-                    if( checkbox.allowModal ) {
-                        Ext.create('Taco.core.ux.modal.Confirmation', {
-                            autoShow: true,
-                            text: isChecked ? '<h3 style="font-size: 20px">Override Global Values</h3><p style="margin: 1pc 0">You are about to override this section, are you sure you want to do that?</p>'
-                                            : '<h3 style="font-size: 20px">Remove Global Override</h3><p style="margin: 1pc 0">You are about to remove the global override for this section, are you sure you want to do that?</p>',
-                            listeners: {
-                                // *** If confirmed, enable/disable the underlying OverrideForm
-                                confirm: function () {
-                                    overrideForm.setOverride(isChecked, true, checkbox);
-                                },
+                    if (checkbox.allowModal) {
 
-                                // *** If cancelled, restore checkbox to previous stateOrProvince
-                                cancel: function () {
+                        
+                        var title = isChecked ? 'Override Global Values' : 'Remove Global Override',
+                            msg = isChecked ? 'You are about to override this section, are you sure you want to do that?' : 'You are about to remove the global override for this section, are you sure you want to do that?';
+
+                        Ext.MessageBox.show({
+                            title: title,
+                            // pushes the buttons to the right to be consistant with our dialog ux.
+                            rightJustifyButtons: true,
+                            // reverses the order of the buttons
+                            reverseOrder: true,
+                            msg: msg,
+                            closable: false,
+                            buttons: Ext.Msg.YESNO,
+                            fn: function (val) {
+                                if (val === 'yes') {                                    
+                                    overrideForm.setOverride(isChecked, true, checkbox);
+                                } else {                                    
                                     checkbox.allowModal = false;
-                                    checkbox.setValue( !isChecked );
+                                    checkbox.setValue(!isChecked);
                                     checkbox.allowModal = true;
                                 }
                             }

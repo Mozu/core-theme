@@ -1,15 +1,17 @@
-Ext.define('Taco.core.ux.form.EditorLayout', {
+//Ext.define('Taco.core.ux.form.EditorLayout', {
 
-    actions: null,
-    form: null,
-    title: '',
+// deprecated
 
-    type: 'page',
+//    actions: null,
+//    form: null,
+//    title: '',
 
-    constructor: function (config) {
+//    type: 'page',
 
-        if (!(this.actions instanceof Array)) {
-            this.actions = [];
-        }
-    }
-});
+//    constructor: function (config) {
+
+//        if (!(this.actions instanceof Array)) {
+//            this.actions = [];
+//        }
+//    }
+//});

@@ -39,10 +39,12 @@ Ext.define('Taco.core.ux.mixins.Pageable', {
         }
 
         this.gridPager = Ext.create('Ext.toolbar.Paging', {
+            componentCls: 'x-grid-paging-toolbar',
             store: this.store,
             displayInfo: true,
             dock: 'bottom',
-            inputItemWidth: 45
+            inputItemWidth: 45,
+            border: '0 1 1'
         });
 
         this.dockedItems = Ext.Array.clone(this.dockedItems || []);

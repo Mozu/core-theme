@@ -1,6 +1,11 @@
 ﻿/**
  * @class Taco.core.ux.modal.Mini
  */
+
+/*
+
+//NOTE: This class is not in use and has been deprecated;
+
 Ext.define('Taco.core.ux.modal.Mini', {
     extend: 'Taco.core.ux.modal.Modal',
     alias: 'widget.minimodal',
@@ -108,4 +113,4 @@ Ext.define('Taco.core.ux.modal.Mini', {
         this.hidden = false
         this.fireEvent('show')
     }
-})
+})*/

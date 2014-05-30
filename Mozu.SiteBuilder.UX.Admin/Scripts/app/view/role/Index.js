@@ -68,17 +68,23 @@ Ext.define('Taco.view.role.Index', {
    
 
     onDeleteRole: function (view, index, idx, action, e, record) {
-        Ext.create('Taco.core.ux.modal.Confirmation', {
-            autoShow: true,
-            content: {
-                html: 'Are you sure you want to delete this role?'
-            },
-            listeners: {
-                confirm: function () {
+
+
+
+        Ext.MessageBox.show({
+            title: 'Confirm',
+            // pushes the buttons to the right to be consistant with our dialog ux.
+            rightJustifyButtons: true,
+            // reverses the order of the buttons
+            reverseOrder: true,
+            msg: "Are you sure you want to delete this role?",
+            closable: false,
+            buttons: Ext.Msg.YESNO,
+            fn: function (val) {
+                if (val === 'yes') {
                     this.store.remove(record);
                     this.store.sync();
-                },
-                scope: this
+                }
             }
         });
     }
