@@ -2102,7 +2102,7 @@
     <Message Text="...$(BuildProperties)...$(OutDir)...$(DropLocation)...$(ProjectDir)...$(SolutionDir)" />
     <Exec Command="makeTfsBuild.bat" CustomErrorRegularExpression=".*ERR.*" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <PropertyGroup>
-      <AdminScriptsBuildSource>$(ProjectDir)Scripts\build\**</AdminScriptsBuildSource>
+      <AdminScriptsBuildSource>$(ProjectDir)Scripts\build\**\*.*</AdminScriptsBuildSource>
       <AdminScriptsBuildOutput>$(OutDir)_PublishedWebsites\Mozu.SiteBuilder.UX.Admin\Scripts\build</AdminScriptsBuildOutput>
     </PropertyGroup>
     <ItemGroup>
@@ -2114,6 +2114,7 @@
       DestinationFiles="@(AdminScriptsBuildSourceFiles->'$(AdminScriptsBuildOutput)\%(RecursiveDir)%(Filename)%(Extension)')"
 
       />
+    
   </Target>
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
