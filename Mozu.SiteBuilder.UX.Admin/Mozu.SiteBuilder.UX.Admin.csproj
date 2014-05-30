@@ -1951,13 +1951,9 @@
     <Content Include="Tests\Automation\binary\phantomjs-1.6.0-win32-static\phantomjs.exe" />
     <Content Include="Tests\Automation\launcher-common.js" />
     <Content Include="Tests\Automation\phantomjs-launcher.js" />
-    <Content Include="Tests\CheckinTests.js" />
     <Content Include="Tests\Functional\product\product-basic-edit-save.js" />
     <Content Include="Tests\helpers\Core.js" />
     <None Include="Tests\HomePages\Mystic.cshtml" />
-    <Content Include="Tests\CheckinTests.html" />
-    <Content Include="Tests\indexProduct.html" />
-    <Content Include="Tests\index-no-ui.html" />
     <Content Include="Tests\integration\attribute\attribute-create.t.js" />
     <Content Include="Tests\index.html" />
     <Content Include="Tests\integration\product\product-basic-edit-save.js" />
@@ -1965,12 +1961,7 @@
     <Content Include="Tests\mocha\requireJs\config.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Tests\CheckinTests.js" />
-    <Content Include="Tests\MozuTestSuiteProduct.js" />
     <Content Include="Tests\MozuTestSuite.js" />
-    <Content Include="Tests\noop.t.js" />
-    <Content Include="Tests\sanity-test.t.js" />
-    <Content Include="Tests\sinon.js" />
     <Content Include="Tests\mocha\requireJs\specs\admin\require-mocha-bdd-test.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1978,6 +1969,7 @@
     <Content Include="Tests\mocha\basic\lib\chai.js" />
     <Content Include="Tests\mocha\basic\lib\sinon-chai.js" />
     <Content Include="Tests\mocha\basic\lib\sinon.js" />
+    <Content Include="Tests\sinon.js" />
     <Content Include="Tests\specs\admin\basic-mocha-bdd-test.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1991,9 +1983,8 @@
     <Content Include="Tests\specs\TestBootstrapper.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Tests\speed-test.t.js" />
     <Content Include="Tests\unit\core\app-state-matches-uri.t.js" />
-    <Content Include="Tests\unit\view\product\ListExtraEditor.t.js" />
+    <Content Include="Tests\unit\view\product\subforms\ListExtraEditor.t.js" />
     <Content Include="Tests\unit\core\ux\grid\grid-action-buttons.js" />
     <Content Include="Tests\unit\view\order\pendingreview-should-not-allow-add-payment.js" />
     <Content Include="Tests\unit\core\ux\form\model-binds.t.js" />
@@ -2070,7 +2061,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Tests\specs\chutzpahRequireJs.json" />
-    <Content Include="Tests\package.json" />
     <Content Include="Tests\Mocks\Mystic1\Products1.json" />
     <Content Include="Tests\Mocks\Mystic1\ProductTypes1.json" />
     <Content Include="Tests\Mocks\Mystic1\Categories1.json" />
@@ -2078,6 +2068,7 @@
     <Content Include="Tests\specs\admin\chutzpah.json1" />
     <Content Include="Tests\Automation\phantomjs" />
     <Content Include="Tests\Automation\phantomjs.bat" />
+    <Content Include="Tests\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />
