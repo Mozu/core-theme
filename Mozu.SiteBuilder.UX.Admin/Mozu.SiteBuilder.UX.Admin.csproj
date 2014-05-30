@@ -2105,15 +2105,26 @@
       <AdminScriptsBuildSource>$(ProjectDir)Scripts\build\**\*.*</AdminScriptsBuildSource>
       <AdminScriptsBuildOutput>$(OutDir)_PublishedWebsites\Mozu.SiteBuilder.UX.Admin\Scripts\build</AdminScriptsBuildOutput>
     </PropertyGroup>
+
+
+    <Message Text="thoms notes-- deleting temp files $(ProjectDir)Scripts\build\temp" />
+
+    <ItemGroup>
+      <AdminScriptsBuildSourceTempFiles Include="$(ProjectDir)Scripts\build\temp\**\*.*" />
+    </ItemGroup>
+    <<Delete Files="@(AdminScriptsBuildSourceTempFiles)" />
+    
     <ItemGroup>
       <AdminScriptsBuildSourceFiles Include="$(AdminScriptsBuildSource)" />
     </ItemGroup>
-    <Message Text="thoms notes -- $(AdminScriptsBuildSource) -- $(AdminScriptsBuildOutput)" />
+      
+    <Message Text="thoms notes-- copy from  $(AdminScriptsBuildSource) to  $(AdminScriptsBuildOutput)" />
+    
     <Copy 
       SourceFiles="@(AdminScriptsBuildSourceFiles)" 
       DestinationFiles="@(AdminScriptsBuildSourceFiles->'$(AdminScriptsBuildOutput)\%(RecursiveDir)%(Filename)%(Extension)')"
 
-      />
+      /> 
     
   </Target>
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
