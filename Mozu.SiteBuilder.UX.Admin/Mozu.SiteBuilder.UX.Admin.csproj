@@ -2524,7 +2524,17 @@
   </Target>
   <Target Name="AfterCompile">
     <Message Text="...$(BuildProperties)...$(OutDir)...$(DropLocation)...$(ProjectDir)...$(SolutionDir)" />
+
+    <AdminScriptsBuildSource>$(ProjectDir)Scripts\build</AdminScriptsBuildSource>
+    <AdminScriptsBuildOutput>$(OutDir)_PublishedWebsites\Mozu.SiteBuilder.UX.Admin\Scripts\build</AdminScriptsBuildOutput>
+    <Message Text="$(OutDir) -- $(AdminScriptsBuildSource) -- $(AdminScriptsBuildOutput)" />
     <Exec Command="makeTfsBuild.bat" CustomErrorRegularExpression=".*ERR.*" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+
+    <Copy SourceFiles="$(AdminScriptsBuildSource)" 
+        DestinationFolder="$(AdminScriptsBuildOutput)"
+        
+          
+       />
   </Target>
  
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
