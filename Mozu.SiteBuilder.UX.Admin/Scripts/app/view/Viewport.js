@@ -85,7 +85,7 @@ Ext.define('Taco.view.Viewport', {
                 'boxready': {
                     fn: function () {
                         this.mon(Ext.getBody(), 'click', function (el, e) {
-                            debugger;
+                            
                             this.close(this.closeAction);
                         }, this, { delegate: '.x-mask' });
                     },
