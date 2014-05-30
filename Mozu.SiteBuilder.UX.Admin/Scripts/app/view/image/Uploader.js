@@ -1,116 +1,119 @@
-﻿/**
- * @class Taco.view.image.Uploader
- */
-    Ext.define('Taco.view.image.Uploader', {
-        extend: 'Taco.core.ux.form.Editor',
-        alias: 'widget.imageuploader',
-        requires: ['Taco.core.ux.DragDropZone', 'Taco.view.image.UploadItem', 'Taco.model.ProductImageDocument'],
-        title: 'Upload images',
-        dropZone: undefined,
-        displayArea: undefined,
-        uploadRequests: undefined,
+﻿///**
+// * @class Taco.view.image.Uploader
+// */
 
-        initComponent: function () {
-            var me = this;
+// deprecated
 
-            me.uploadRequests = new Ext.util.MixedCollection();
+//    Ext.define('Taco.view.image.Uploader', {
+//        extend: 'Taco.core.ux.form.Editor',
+//        alias: 'widget.imageuploader',
+//        requires: ['Taco.core.ux.DragDropZone', 'Taco.view.image.UploadItem', 'Taco.model.ProductImageDocument'],
+//        title: 'Upload images',
+//        dropZone: undefined,
+//        displayArea: undefined,
+//        uploadRequests: undefined,
 
-            Taco.core.util.UploadManager.on({
-                complete: me.onDocumentComplete,
-                scope: me
-            });
+//        initComponent: function () {
+//            var me = this;
 
-            me.actions = [{
-                xtype: 'secondarybutton',
-                text: 'Cancel',
-                listeners: {
-                    click: {
-                        fn: this.close,
-                        scope: this
-                    }
-                }
-            }, {
-                xtype: 'primarybutton',
-                text: 'Save',
-                listeners: {
-                    click: {
-                        fn: this.save,
-                        scope: this
-                    }
-                }
-            }];
+//            me.uploadRequests = new Ext.util.MixedCollection();
 
-            me.displayArea = Ext.create('Ext.container.Container', {
-                cls: 'taco-upload-preview',
-                border: true,
-                width: 600
-            });
+//            Taco.core.util.UploadManager.on({
+//                complete: me.onDocumentComplete,
+//                scope: me
+//            });
 
-            me.dropZone = Ext.create('Taco.core.ux.DragDropZone', {
-                width: 600,
-                listeners: {
-                    filedrop: me.handleFiles,
-                    scope: me
-                }
-            });
+//            me.actions = [{
+//                xtype: 'secondarybutton',
+//                text: 'Cancel',
+//                listeners: {
+//                    click: {
+//                        fn: this.close,
+//                        scope: this
+//                    }
+//                }
+//            }, {
+//                xtype: 'primarybutton',
+//                text: 'Save',
+//                listeners: {
+//                    click: {
+//                        fn: this.save,
+//                        scope: this
+//                    }
+//                }
+//            }];
 
-            me.tabs = [{
-                title: 'From computer',
-                items: [me.dropZone, me.displayArea]
-            }, {
-                title: 'Image library',
-                items: [Ext.create('Taco.core.ux.DragDropZone')]
-            }];
+//            me.displayArea = Ext.create('Ext.container.Container', {
+//                cls: 'taco-upload-preview',
+//                border: true,
+//                width: 600
+//            });
 
-            me.callParent(arguments);
-        },
+//            me.dropZone = Ext.create('Taco.core.ux.DragDropZone', {
+//                width: 600,
+//                listeners: {
+//                    filedrop: me.handleFiles,
+//                    scope: me
+//                }
+//            });
 
-        // We don't need the editor to do any saving stuff for us
-        save: function () {
-            var me = this;
-            me.fireEvent('save');
-        },
+//            me.tabs = [{
+//                title: 'From computer',
+//                items: [me.dropZone, me.displayArea]
+//            }, {
+//                title: 'Image library',
+//                items: [Ext.create('Taco.core.ux.DragDropZone')]
+//            }];
 
-        handleFiles: function (files) {
-            var me = this;
+//            me.callParent(arguments);
+//        },
 
-            Ext.each(files, function (file) {
-                var imageType = /image.*/;
+//        // We don't need the editor to do any saving stuff for us
+//        save: function () {
+//            var me = this;
+//            me.fireEvent('save');
+//        },
 
-                if (file.type.match(imageType)) {
+//        handleFiles: function (files) {
+//            var me = this;
 
-                    var uploadRequest = Taco.core.util.UploadManager.requestUpload({
-                        document: Ext.create('Taco.model.ProductImageDocument', {
-                            fileName: file.name,
-                            altText: 'Alt text goes here',
-                            caption: 'I am a product image caption'
-                        }),
-                        file: file,
-                        url: '/admin/app/image/{docid}/create'
-                    });
+//            Ext.each(files, function (file) {
+//                var imageType = /image.*/;
 
-                    // Add this request to the collection so we can monitor it
-                    me.uploadRequests.add(uploadRequest.id, {
-                        completed: false,
-                        request: uploadRequest
-                    });
+//                if (file.type.match(imageType)) {
 
-                    me.displayArea.add(Ext.create('Taco.view.image.UploadItem', {
-                        file: file,
-                        uploadRequest: uploadRequest
-                    }));
-                }
-            });
-        },
+//                    var uploadRequest = Taco.core.util.UploadManager.requestUpload({
+//                        document: Ext.create('Taco.model.ProductImageDocument', {
+//                            fileName: file.name,
+//                            altText: 'Alt text goes here',
+//                            caption: 'I am a product image caption'
+//                        }),
+//                        file: file,
+//                        url: '/admin/app/image/{docid}/create'
+//                    });
 
-        onDocumentComplete: function (e) {
-            var me = this;
-            var request = me.uploadRequests.get(e.id);
+//                    // Add this request to the collection so we can monitor it
+//                    me.uploadRequests.add(uploadRequest.id, {
+//                        completed: false,
+//                        request: uploadRequest
+//                    });
 
-            if (request) {
-                request.completed = true;
-                request.docId = e.docId;
-                console.log("Uploader detected completion for transaction " + e.id);
-            }
-        }
-    });
+//                    me.displayArea.add(Ext.create('Taco.view.image.UploadItem', {
+//                        file: file,
+//                        uploadRequest: uploadRequest
+//                    }));
+//                }
+//            });
+//        },
+
+//        onDocumentComplete: function (e) {
+//            var me = this;
+//            var request = me.uploadRequests.get(e.id);
+
+//            if (request) {
+//                request.completed = true;
+//                request.docId = e.docId;
+//                console.log("Uploader detected completion for transaction " + e.id);
+//            }
+//        }
+//    });

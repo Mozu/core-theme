@@ -27,6 +27,7 @@
 
 Ext.define('Taco.core.ux.mixins.Searchable', {
     requires: [
+        'Taco.core.ux.form.FilterContainer',
         'Taco.core.util.ExceptionWhiner',
         'Ext.toolbar.Spacer',
         'Taco.core.ux.ComboFilter'
@@ -107,6 +108,7 @@ Ext.define('Taco.core.ux.mixins.Searchable', {
                 height: 30,
                 margin: '0 0 10',
                 items: [
+                    /*
                     {
                         xtype: "tbspacer",
                         flex: 1,
@@ -133,11 +135,39 @@ Ext.define('Taco.core.ux.mixins.Searchable', {
                             unit: 'records'
                         }
                     }
+                    */
                 ]
             };
 
 
             if (me.enableSearch) {
+                
+                me.searchBox = Ext.widget({
+                    xtype: 'taco-filtercontainer',
+                    width: '100%',
+                    flex: 1,
+                    quickFilterData: me.advancedSearchConfig.quickFilterData,
+                    advancedForm: me.advancedSearchConfig.form,
+                    advancedFormCls: me.advancedSearchConfig.advancedFormCls,
+                    //store: me.createItemStore(),
+                    store: me.store,
+                    filterStores: me.advancedSearchConfig.stores,
+                    value: this.options && this.options.query ?  this.options.query : undefined 
+                });
+                    //conf.items.unshift(me.searchBox);
+                
+
+
+
+
+
+
+
+
+
+
+
+                /*
 
                 me.searchBox = Ext.widget({
                     xtype: 'taco.combofilter',
@@ -147,13 +177,15 @@ Ext.define('Taco.core.ux.mixins.Searchable', {
                     filterForm: me.filterFormConf,
                     filterProperties: me.filterProperties
                 });
+                */
+
 
                 //todo: need to figure out where this is set and why;
-                if (this.options && this.options.query) {
-                    me.on('afterrender', function () {
-                        me.searchBox.setValue([this.options.query]);
-                    });
-                }
+                //if (this.options && this.options.query) {
+                //    me.on('afterrender', function () {
+                //        me.searchBox.setValue([this.options.query]);
+                //    });
+                //}
 
                 conf.items.unshift(
                     me.searchBox

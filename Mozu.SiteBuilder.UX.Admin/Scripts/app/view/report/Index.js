@@ -10,8 +10,7 @@ Ext.define('Taco.view.report.Index', {
         'Ext.form.Panel',
         'Ext.tip.QuickTipManager',
         'Taco.core.ux.TextFilter',
-        'Taco.core.ux.FilterableDataView',
-        'Taco.core.ux.modal.Confirmation',
+        'Taco.core.ux.FilterableDataView',        
         'Taco.core.ux.browser.ItemBrowser',
         'Ext.selection.CheckboxModel',
         'Taco.core.ux.browser.FilterList'

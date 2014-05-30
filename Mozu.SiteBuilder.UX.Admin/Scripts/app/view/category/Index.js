@@ -171,33 +171,36 @@ Ext.define('Taco.view.category.Index', {
 
     destroyMenuColumnHandler: function (item, eventData) {
         var grid = eventData.grid,
-            record = eventData.record,
-            modal;
+            record = eventData.record;
 
-        modal = Ext.create('Taco.core.ux.modal.Confirmation', {
-            autoShow: true,
-            content: {
-                html: 'Are you sure you want to delete this?'
-            },
-            listeners: {
-                cancel: Ext.emptyFn,
-                confirm: function () {
+
+        Ext.MessageBox.show({
+            title: 'Delete',
+            // pushes the buttons to the right to be consistant with our dialog ux.
+            rightJustifyButtons: true,
+            // reverses the order of the buttons
+            reverseOrder: true,
+            msg: "Are you sure you want to delete this",
+            closable: false,
+            buttons: Ext.Msg.YESNO,
+            fn: function (val) {
+                if (val === 'yes') {
+                    debugger;
                     var store = grid.getStore();
                     grid.setLoading(true);
                     record.remove();
-                    
+
                     store.sync({
                         success: function (m) {
                             grid.setLoading(false);
                         },
                         failure: function (m) {
-                           
+
                             grid.setLoading(false);
                         }
 
                     });
-                },
-                scope: this
+                }
             }
         });
     },

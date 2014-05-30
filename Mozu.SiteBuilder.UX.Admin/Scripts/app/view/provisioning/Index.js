@@ -8,8 +8,7 @@ Ext.define('Taco.view.provisioning.Index', {
         'Taco.core.context.StoreItem',
         'Taco.model.Provisionable',
         'Taco.view.provisioning.SiteProvisionerModal',
-        'Taco.view.provisioning.CatalogProvisionerModal',
-        'Taco.core.ux.modal.Confirmation'
+        'Taco.view.provisioning.CatalogProvisionerModal'
     ],
 
    

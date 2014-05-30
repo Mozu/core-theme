@@ -1,176 +1,179 @@
-/**
- * @class Taco.core.ux.modal.Content
- */
+///**
+// * @class Taco.core.ux.modal.Content
+// */
 
-Ext.define('Taco.core.ux.modal.Content', {
-    extend: 'Taco.core.ux.modal.Modal',
-    alias: 'widget.contentmodal',
 
-    cls: 'taco-content',
+// deprecated;
 
-    marginTop: 74,
-    autoSize: false,
-    contentPadding: 30,
+//Ext.define('Taco.core.ux.modal.Content', {
+//    extend: 'Taco.core.ux.modal.Modal',
+//    alias: 'widget.contentmodal',
 
-    constructor: function (cfg) {
-        var me = this;
+//    cls: 'taco-content',
 
-        cfg = cfg || {};
+//    marginTop: 74,
+//    autoSize: false,
+//    contentPadding: 30,
 
-        // WTF?? Hacky...
-        if (cfg.items) {
-            if (cfg.items.length && !cfg.content) {
-                cfg.content = {
-                    items: cfg.items
-                };
-                cfg.items = null;
-            }
-        }
-        else {
-            if (!cfg.content) {
-                cfg.content = {
-                    items: this.items
-                };
+//    constructor: function (cfg) {
+//        var me = this;
 
-                cfg.items = null;
-            }
-        }
+//        cfg = cfg || {};
 
-        this.callParent(arguments);
+//        // WTF?? Hacky...
+//        if (cfg.items) {
+//            if (cfg.items.length && !cfg.content) {
+//                cfg.content = {
+//                    items: cfg.items
+//                };
+//                cfg.items = null;
+//            }
+//        }
+//        else {
+//            if (!cfg.content) {
+//                cfg.content = {
+//                    items: this.items
+//                };
 
-        this.mon(Taco.app.viewPort,{
-            resize: {
-                fn: me.setPosition,
-                scope: me
-            }
-        });
-    },
+//                cfg.items = null;
+//            }
+//        }
 
-    initComponent: function () {
+//        this.callParent(arguments);
 
-        var me = this,
-            actionItems, contentContainer;
+//        this.mon(Taco.app.viewPort,{
+//            resize: {
+//                fn: me.setPosition,
+//                scope: me
+//            }
+//        });
+//    },
 
-        //Ext.each(items, )
-        if (me.items && me.items.length && !(me.content.items && me.content.items.length)) {
-            me.content.items = me.items.splice(0);
-            me.items = [];
-        }
+//    initComponent: function () {
 
-        me.callParent(arguments);
+//        var me = this,
+//            actionItems, contentContainer;
 
-        contentContainer = me.down('contentcontainer');
+//        //Ext.each(items, )
+//        if (me.items && me.items.length && !(me.content.items && me.content.items.length)) {
+//            me.content.items = me.items.splice(0);
+//            me.items = [];
+//        }
 
-        if (contentContainer && contentContainer.header && contentContainer.header.actionsContainer) {
-            actionItems = contentContainer.header.actionsContainer.items.items.slice(0);
-            Ext.each(actionItems, function (item) {
+//        me.callParent(arguments);
 
-                me.actions.add(item);
-                contentContainer.header.actionsContainer.remove(item);
-            });
+//        contentContainer = me.down('contentcontainer');
 
-            contentContainer.header.actionsContainer.hide();
-        }
+//        if (contentContainer && contentContainer.header && contentContainer.header.actionsContainer) {
+//            actionItems = contentContainer.header.actionsContainer.items.items.slice(0);
+//            Ext.each(actionItems, function (item) {
 
-        if (this.autoSize) {
-            this.cls += ' taco-auto-size';
-        }
+//                me.actions.add(item);
+//                contentContainer.header.actionsContainer.remove(item);
+//            });
 
-        this.getContentContainer = function () {
-            return contentContainer;
-        };
+//            contentContainer.header.actionsContainer.hide();
+//        }
 
-        this.getHeader = function () {
-            return contentContainer.header;
-        };
+//        if (this.autoSize) {
+//            this.cls += ' taco-auto-size';
+//        }
 
-        this.getContent = function () {
-            return contentContainer.body;
-        };
+//        this.getContentContainer = function () {
+//            return contentContainer;
+//        };
 
-    },
+//        this.getHeader = function () {
+//            return contentContainer.header;
+//        };
 
-    show: function () {
-        this.el.setStyle({
-            display: 'block'
-        });
+//        this.getContent = function () {
+//            return contentContainer.body;
+//        };
 
-        this.isHidden = false;
+//    },
 
-        this.doTheNeedful();
+//    show: function () {
+//        this.el.setStyle({
+//            display: 'block'
+//        });
 
-        if (this.autoSize) {
-            this.setAutoHeight();
-        }
+//        this.isHidden = false;
 
-        this.callParent(arguments);
+//        this.doTheNeedful();
 
-        // TODO: Fix hack
-        //Ext.defer(this.doLayout, 3000, this);
-    },
+//        if (this.autoSize) {
+//            this.setAutoHeight();
+//        }
 
-    /**
-     * @private
-     */
-    doTheNeedful: function () {
-        var bodyHeight = Ext.getBody().getViewSize().height;
+//        this.callParent(arguments);
 
-        if (this.isHidden) {
-            return;
-        }
+//        // TODO: Fix hack
+//        //Ext.defer(this.doLayout, 3000, this);
+//    },
 
-        this.setContentHeight(bodyHeight - 200);
+//    /**
+//     * @private
+//     */
+//    doTheNeedful: function () {
+//        var bodyHeight = Ext.getBody().getViewSize().height;
 
-        return bodyHeight;
-    },
+//        if (this.isHidden) {
+//            return;
+//        }
 
-    setMargins: function () {
-        var margins = this.callParent(arguments);
+//        this.setContentHeight(bodyHeight - 200);
 
-        margins.marginTop = -this.contentHeight / 2;
+//        return bodyHeight;
+//    },
 
-        return margins;
-    },
+//    setMargins: function () {
+//        var margins = this.callParent(arguments);
 
-    /**
-     * @private
-     */
-    setAutoHeight: function () {
-        var contentHeight = this.content.getHeight(),
-            headerHeight = this.down('contentheader').getHeight(),
-            itemsHeight = 2,
-            contentBody = this.down('contentbody'),
-            contentBodyEl = contentBody.getEl();
+//        margins.marginTop = -this.contentHeight / 2;
 
-        itemsHeight += parseInt(contentBodyEl.getStyle('padding-top')) || 0;
-        itemsHeight += parseInt(contentBodyEl.getStyle('padding-bottom')) || 0;
+//        return margins;
+//    },
 
-        contentBody.items.each(function (item) {
-            itemsHeight += item.getHeight();
-        });
+//    /**
+//     * @private
+//     */
+//    setAutoHeight: function () {
+//        var contentHeight = this.content.getHeight(),
+//            headerHeight = this.down('contentheader').getHeight(),
+//            itemsHeight = 2,
+//            contentBody = this.down('contentbody'),
+//            contentBodyEl = contentBody.getEl();
 
-        this.contentHeight = contentHeight;
+//        itemsHeight += parseInt(contentBodyEl.getStyle('padding-top')) || 0;
+//        itemsHeight += parseInt(contentBodyEl.getStyle('padding-bottom')) || 0;
 
-        //  Check to see if the content modal will be larder than the screen
-        if (contentHeight <= headerHeight + itemsHeight) {
-            return;
-        }
+//        contentBody.items.each(function (item) {
+//            itemsHeight += item.getHeight();
+//        });
 
-        this.setContentHeight(headerHeight + itemsHeight);
-    },
+//        this.contentHeight = contentHeight;
 
-    /**
-     * @private
-     */
-    setContentHeight: function (height) {
-        var contentContainer = this.down('contentcontainer');
+//        //  Check to see if the content modal will be larder than the screen
+//        if (contentHeight <= headerHeight + itemsHeight) {
+//            return;
+//        }
 
-        this.content.setHeight(height);
+//        this.setContentHeight(headerHeight + itemsHeight);
+//    },
 
-        this.contentHeight = height;
+//    /**
+//     * @private
+//     */
+//    setContentHeight: function (height) {
+//        var contentContainer = this.down('contentcontainer');
 
-        if (contentContainer && contentContainer.setHeight) {
-            contentContainer.setHeight(height);
-        }
-    }
-});
+//        this.content.setHeight(height);
+
+//        this.contentHeight = height;
+
+//        if (contentContainer && contentContainer.setHeight) {
+//            contentContainer.setHeight(height);
+//        }
+//    }
+//});
