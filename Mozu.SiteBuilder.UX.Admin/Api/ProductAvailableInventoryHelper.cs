@@ -6,6 +6,7 @@ using Mozu.Location.Contracts;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
+using Product = Mozu.ProductAdmin.Contracts.Product;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -44,7 +45,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var locationsWithInventory = inventories.Items.Map<List<LocationWithInventory>>();
 
             var fulfillmentComparer = new LocationWithInventoryFulfillmentComparer();
-            
+            var prodFulfillmentCodes = GetProductFulfillmentCodes(product);
+
+
             locationsWithInventory.ForEach(lwi => lwi.Location = locations.FirstOrDefault(l => l.Code == lwi.LocationCode));
             var result = new List<LocationWithInventory>();
             foreach (var locWithInv in locationsWithInventory
@@ -52,7 +55,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                      || (product.InventoryInfo.OutOfStockBehavior != ProductInventoryInfo.OutOfStockBehaviorConst.DisplayMessage && product.InventoryInfo.OutOfStockBehavior != ProductInventoryInfo.OutOfStockBehaviorConst.HideProduct) 
                                      || (locWithInv.StockAvailable > 0)).Where(locWithInv => locWithInv.Location != null && locWithInv.Location.FulfillmentTypes != null))
             {
-                result.AddRange(locWithInv.Location.FulfillmentTypes.Select(fulfillment => new LocationWithInventory
+                result.AddRange(locWithInv.Location.FulfillmentTypes.Where(x => prodFulfillmentCodes.Contains(x.Code))
+                    .Select(fulfillment => new LocationWithInventory
                 {
                     Location = locWithInv.Location, 
                     AuditInfo = locWithInv.AuditInfo, 
@@ -86,11 +90,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public List<LocationWithInventory> GetAllShipAndPickupLocationsForUnmanagedProducts(List<Location.Contracts.Location> locations, ProductAdmin.Contracts.Product product)
         {
             var fulfillmentComparer = new LocationWithInventoryFulfillmentComparer();
-            
+            var prodFulfillmentCodes = GetProductFulfillmentCodes(product);
+
             var result = new List<LocationWithInventory>();
             foreach (var location in locations.Where(loc => loc.FulfillmentTypes != null))
             {
-                result.AddRange(location.FulfillmentTypes.Select(fulfillment => new LocationWithInventory
+                result.AddRange(location.FulfillmentTypes.Where(x => prodFulfillmentCodes.Contains(x.Code))
+                    .Select(fulfillment => new LocationWithInventory
                 {
                     Location = location, 
                     AuditInfo = location.AuditInfo, 
@@ -105,6 +111,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             result.Sort(fulfillmentComparer);
             return result;
+        }
+
+        private static List<string> GetProductFulfillmentCodes(Product product)
+        {
+            var prodFulfillmentCodes = new List<string>();
+            if (product.FulfillmentTypesSupported.Contains("DirectShip"))
+                prodFulfillmentCodes.Add(FulfillmentTypeConstants.DirectShipCode);
+            if (product.FulfillmentTypesSupported.Contains("InStorePickup"))
+                prodFulfillmentCodes.Add(FulfillmentTypeConstants.InStorePickupCode);
+            return prodFulfillmentCodes;
         }
     }
 

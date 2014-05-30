@@ -79,26 +79,25 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
         //  true            AllowBackorder                              0          true
 
         //DisplayMessage
-        [TestCase("managed stock, display msg, has stock", "DisplayMessage", 10, 10, 2)]
-        [TestCase("managed stock, display msg, no stock", "DisplayMessage", 0, 0, 0)]
+        [TestCase("display msg, has stock, DS & SP", new[] { "DirectShip", "InStorePickup" }, "DisplayMessage", 10, 10, 2)]
+        [TestCase("display msg, has stock, DS", new[] { "DirectShip" }, "DisplayMessage", 10, 10, 1)]
+        [TestCase("display msg, no stock, DS & SP", new[] { "DirectShip", "InStorePickup" }, "DisplayMessage", 0, 0, 0)]
         //HideProduct
-        [TestCase("managed stock, hide product, has stock", "HideProduct", 10, 10, 2)]
-        [TestCase("managed stock, hide product, no stock", "HideProduct", 0, 0, 0)]
+        [TestCase("hide product, has stock, DS & SP", new[] { "DirectShip", "InStorePickup" }, "HideProduct", 10, 10, 2)]
+        [TestCase("hide product, has stock, DS", new[] { "DirectShip" }, "HideProduct", 10, 10, 1)]
+        [TestCase("hide product, no stock, DS & SP", new[] { "DirectShip", "InStorePickup" }, "HideProduct", 0, 0, 0)]
         //AllowBackorder
-        [TestCase("managed stock, allow backorder, no stock", "AllowBackorder", 0, 0, 2)]
-        [TestCase("managed stock, allow backorder, has stock", "AllowBackorder", 10, 10, 2)]
-        public void When_Location_Has_Both_DirectShip_And_Pickup_Location_Then_Should_Return_Expected_Quantity(string scenario, string outOfStockBehavior, 
-            int stockAvailable, int stockOnHand, int expectedCount)
+        [TestCase("allow backorder, no stock, DS & SP", new[] { "DirectShip", "InStorePickup" }, "AllowBackorder", 0, 0, 2)]
+        [TestCase("allow backorder, has stock, DS & SP", new[] { "DirectShip", "InStorePickup" }, "AllowBackorder", 10, 10, 2)]
+        [TestCase("allow backorder, has stock, DS", new[] { "DirectShip" }, "AllowBackorder", 10, 10, 1)]
+        public void Given_Managed_Stock_When_Location_Has_Both_DirectShip_And_Pickup_Location_Then_Should_Return_As_Separate_Records(string scenario, 
+            string[] fulfillmentTypes, string outOfStockBehavior, int stockAvailable, int stockOnHand, int expectedCount)
         {
             //arrange
             var sut = new ProductAvailableInventoryHelper();
             var inventories = CreateLocationInventoryCollection(stockAvailable, stockOnHand, new List<DCloc.Location>{location_both});
             var locations = new List<DCloc.Location> { location_both };
-            var product = new DCprod.Product { InventoryInfo = new DCprod.ProductInventoryInfo
-                {
-                    ManageStock = true, OutOfStockBehavior = outOfStockBehavior
-                }
-            };
+            var product = CreateProduct(true, outOfStockBehavior, fulfillmentTypes);
 
             //act
             var actual = sut.GetShipAndPickupLocationsWithInventory(inventories, locations, product);
@@ -110,24 +109,15 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
         //manage stock      out of stock behavior                       inv        show
         //  false           DisplayMsg, HideProduct, AllowBack          >0         true
         //  false           DisplayMsg, HideProduct, AllowBack          0          true
-        [TestCase("unmanaged stock", 2)]
-        public void When_Unmanaged_Shows_All_Pickup_Locations_With_No_Inventory_Shown(string scenario, int expectedCount)
+        [TestCase("unmanaged stock", new[]{"DirectShip"}, 1)]
+        [TestCase("unmanaged stock", new[]{"DirectShip","InStorePickup"}, 2)]
+        public void When_Unmanaged_Shows_All_Pickup_Locations_With_No_Inventory_Shown(string scenario, string[] fulfillmentTypes, int expectedCount)
         {
             //arrange
             var sut = new ProductAvailableInventoryHelper();
             var locations = new List<DCloc.Location> { location_both };
-            var product = new DCprod.Product { 
-                InventoryInfo = new DCprod.ProductInventoryInfo
-                    {
-                        ManageStock = false,
-                    },
-                ProductCode = "UNMGD_INV",
-                Content = new DCprod.ProductLocalizedContent
-                {
-                    ProductName = "Unmanaged Inventory"
-                }
-            };
-
+            var product = CreateProduct(false, "DisplayProduct", fulfillmentTypes, "UNMGD_INV", "Unmanaged Inventory");
+            
             //act
             var actual = sut.GetAllShipAndPickupLocationsForUnmanagedProducts(locations, product);
 
@@ -144,13 +134,8 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             var inventories = CreateLocationInventoryCollection(stockAvailable, stockOnHand, 
                 new List<DCloc.Location>{location_both,location_pickup_only,location_ship_only});
             var locations = new List<DCloc.Location> { location_both, location_pickup_only, location_ship_only };
-            var product = new DCprod.Product { 
-                InventoryInfo = new DCprod.ProductInventoryInfo
-                                {
-                                    ManageStock = manageStock, OutOfStockBehavior = outOfStockBehavior
-                                }
-            };
-
+            var product = CreateProduct(manageStock, outOfStockBehavior, new[] {"DirectShip", "InStorePickup"});
+            
             //act
             var actual = sut.GetShipAndPickupLocationsWithInventory(inventories, locations, product);
 
@@ -159,6 +144,25 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             Assert.That(actual[1].Fulfillment.Code, Is.EqualTo(ds.Code) );
             Assert.That(actual[2].Fulfillment.Code, Is.EqualTo(sp.Code) );
             Assert.That(actual[3].Fulfillment.Code, Is.EqualTo(sp.Code) );
+        }
+
+        private static DCprod.Product CreateProduct(bool manageStock, string outOfStockBehavior, string[] fulfillmentTypes, string code = "prodCode", string name = "hat")
+        {
+            var product = new DCprod.Product
+            {
+                InventoryInfo = new DCprod.ProductInventoryInfo
+                {
+                    ManageStock = manageStock,
+                    OutOfStockBehavior = outOfStockBehavior
+                },
+                ProductCode = code,
+                Content = new DCprod.ProductLocalizedContent
+                {
+                    ProductName = name
+                },
+                FulfillmentTypesSupported = fulfillmentTypes
+            };
+            return product;
         }
 
         private static DCprod.LocationInventoryCollection CreateLocationInventoryCollection(int stockAvailable, int stockOnHand, List<Mozu.Location.Contracts.Location> locations)
@@ -217,7 +221,8 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
                     ProductCode = product_code,
                     InventoryInfo = new DCprod.ProductInventoryInfo {
                         ManageStock = true, OutOfStockBehavior = "HideProduct"
-                    }
+                    },
+                    FulfillmentTypesSupported = new []{"DirectShip","InStorePickup"}
                 }.AsServiceClientResponseAsync());
 
             // location usage is what site settings uses to figure out which directship location is the site's default.
