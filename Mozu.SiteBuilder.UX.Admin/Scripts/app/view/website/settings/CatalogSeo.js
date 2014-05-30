@@ -13,7 +13,7 @@ Ext.define('Taco.view.website.settings.CatalogSeo', {
 
     initComponent: function () {
         this.items = [{
-                xtype: 'textfield',
+            xtype: 'taco-slugfield',
                 name: 'slug',
                 fieldLabel: 'Slug',
                 width: '95%'

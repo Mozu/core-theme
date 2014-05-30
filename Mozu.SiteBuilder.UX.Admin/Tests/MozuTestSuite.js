@@ -137,7 +137,7 @@ Harness.start(
                 expanded: true,
                 items: [
                     {
-                        url: 'unit/view/product/ListExtraEditor.t.js',
+                        url: 'unit/view/product/subforms/ListExtraEditor.t.js',
                         title: 'product List Extra Tests'
                     }
                 ]
