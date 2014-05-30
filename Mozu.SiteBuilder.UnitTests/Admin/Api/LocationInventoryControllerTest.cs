@@ -77,26 +77,18 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
         //  true            DisplayMsg, HideProduct                     0          false
         //  true            DisplayMsg, HideProduct, AllowBack         > 0         true
         //  true            AllowBackorder                              0          true
-        //  false           DisplayMsg, HideProduct, AllowBack          >0         true
-        //  false           DisplayMsg, HideProduct, AllowBack          0          true
 
         //DisplayMessage
-        [TestCase("unmanaged stock, display msg, has stock", false, "DisplayMessage", 10, 10, 2)]
-        [TestCase("unmanaged stock, display msg, no stock", false, "DisplayMessage", 0, 0, 2)]
-        [TestCase("managed stock, display msg, has stock", true, "DisplayMessage", 10, 10, 2)]
-        [TestCase("managed stock, display msg, no stock", true, "DisplayMessage", 0, 0, 0)]
+        [TestCase("managed stock, display msg, has stock", "DisplayMessage", 10, 10, 2)]
+        [TestCase("managed stock, display msg, no stock", "DisplayMessage", 0, 0, 0)]
         //HideProduct
-        [TestCase("unmanaged stock, hide product, has stock", false, "HideProduct", 10, 10, 2)]
-        [TestCase("unmanaged stock, hide product, no stock", false, "HideProduct", 0, 0, 2)]
-        [TestCase("managed stock, hide product, has stock", true, "HideProduct", 10, 10, 2)]
-        [TestCase("managed stock, hide product, no stock", true, "HideProduct", 0, 0, 0)]
+        [TestCase("managed stock, hide product, has stock", "HideProduct", 10, 10, 2)]
+        [TestCase("managed stock, hide product, no stock", "HideProduct", 0, 0, 0)]
         //AllowBackorder
-        [TestCase("managed stock, allow backorder, no stock", true, "AllowBackorder", 0, 0, 2)]
-        [TestCase("managed stock, allow backorder, has stock", true, "AllowBackorder", 10, 10, 2)]
-        [TestCase("unmanaged stock, allow backorder, no stock", false, "AllowBackorder", 0, 0, 2)]
-        [TestCase("unmanaged stock, allow backorder, has stock", false, "AllowBackorder", 10, 10, 2)]
-        public void When_Location_Has_Both_DirectShip_And_Pickup_Location_Then_Should_Return_Expected_Quantity(string scenario, bool manageStock,
-            string outOfStockBehavior, int stockAvailable, int stockOnHand, int expectedCount)
+        [TestCase("managed stock, allow backorder, no stock", "AllowBackorder", 0, 0, 2)]
+        [TestCase("managed stock, allow backorder, has stock", "AllowBackorder", 10, 10, 2)]
+        public void When_Location_Has_Both_DirectShip_And_Pickup_Location_Then_Should_Return_Expected_Quantity(string scenario, string outOfStockBehavior, 
+            int stockAvailable, int stockOnHand, int expectedCount)
         {
             //arrange
             var sut = new ProductAvailableInventoryHelper();
@@ -104,12 +96,40 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             var locations = new List<DCloc.Location> { location_both };
             var product = new DCprod.Product { InventoryInfo = new DCprod.ProductInventoryInfo
                 {
-                    ManageStock = manageStock, OutOfStockBehavior = outOfStockBehavior
+                    ManageStock = true, OutOfStockBehavior = outOfStockBehavior
                 }
             };
 
             //act
             var actual = sut.GetShipAndPickupLocationsWithInventory(inventories, locations, product);
+
+            //assert
+            Assert.That(actual.Count, Is.EqualTo(expectedCount), scenario);
+        }
+
+        //manage stock      out of stock behavior                       inv        show
+        //  false           DisplayMsg, HideProduct, AllowBack          >0         true
+        //  false           DisplayMsg, HideProduct, AllowBack          0          true
+        [TestCase("unmanaged stock", 2)]
+        public void When_Unmanaged_Shows_All_Pickup_Locations_With_No_Inventory_Shown(string scenario, int expectedCount)
+        {
+            //arrange
+            var sut = new ProductAvailableInventoryHelper();
+            var locations = new List<DCloc.Location> { location_both };
+            var product = new DCprod.Product { 
+                InventoryInfo = new DCprod.ProductInventoryInfo
+                    {
+                        ManageStock = false,
+                    },
+                ProductCode = "UNMGD_INV",
+                Content = new DCprod.ProductLocalizedContent
+                {
+                    ProductName = "Unmanaged Inventory"
+                }
+            };
+
+            //act
+            var actual = sut.GetAllShipAndPickupLocationsForUnmanagedProducts(locations, product);
 
             //assert
             Assert.That(actual.Count, Is.EqualTo(expectedCount), scenario);
