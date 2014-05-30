@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using Mozu.Core.Exceptions;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -166,26 +167,65 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (prodOrVariantCode == null)
                 throw new ArgumentException("Missing product code.");
 
-            var filterString = extFilter.ToFilterString();
-            var inventories = (await _productClient.GetLocationInventories(productCode: prodOrVariantCode, startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, sortBy: null, filter: filterString)).ReadAsSync();
-
             var product = (await _productClient.GetProduct(productCode)).ReadAsSync();
+            if (product == null) 
+                throw new VaeItemNotFoundException(string.Format("Could not find product code {0}", prodOrVariantCode));
 
-            //SiteShippingSettings siteShippingSettings = (await _shippingSettingsClient.GetSiteShippingSettings()).ReadAsSync();
+            List<LocationWithInventory> result;
+            if (product.InventoryInfo.ManageStock.GetValueOrDefault(true))
+            {
+                result = await GetManagedInventory(pagingParams, extFilter, prodOrVariantCode, product);
+            }
+            else
+            {
+                result = await GetUnmanagedInventory(product);
+            }
 
-            var locationLookupTasks = inventories.Items.Select(i => i.LocationCode).Distinct().Select(lc => _locationWebApiClient.GetLocation(lc)).ToList();
+            var siteShippingLocationCode = await GetDefaultDirectShipLocation();
+
+            // filter out directship options that are not from our site's DS location.
+            result =
+                result.Where(lwi => lwi.Fulfillment.Code != "DS" || lwi.LocationCode == siteShippingLocationCode)
+                    .ToList();
+            return List2(result);
+            
+        }
+
+        private async Task<List<LocationWithInventory>> GetManagedInventory(PagingParamaters pagingParams, FilterCollection extFilter, string prodOrVariantCode,
+            DC.Product product)
+        {
+            var filterString = extFilter.ToFilterString();
+            var inventories =
+                (await
+                    _productClient.GetLocationInventories(productCode: prodOrVariantCode, startIndex: pagingParams.startIndex,
+                        pageSize: pagingParams.pageSize, sortBy: null, filter: filterString)).ReadAsSync();
+
+            var locationLookupTasks =
+                inventories.Items.Select(i => i.LocationCode)
+                    .Distinct()
+                    .Select(lc => _locationWebApiClient.GetLocation(lc))
+                    .ToList();
             await Task.WhenAll(locationLookupTasks);
             var locations = locationLookupTasks.Select(t => t.Result.ReadAsSync()).ToList();
 
-            //need to find default location for direct ship.
+            return  _productAvailableInventoryHelper.GetShipAndPickupLocationsWithInventory(inventories,
+                locations, product);
+        }
+        
+        private async Task<List<LocationWithInventory>> GetUnmanagedInventory(DC.Product product)
+        {
+            var locations = (await _locationWebApiClient.GetLocations()).ReadAsSync();
+            return _productAvailableInventoryHelper.GetAllShipAndPickupLocationsForUnmanagedProducts(locations.Items, product);
+        }
+
+        private async Task<string> GetDefaultDirectShipLocation()
+        {
             var locSettingsRes = (await _locationSettingsWebApiClient.GetLocationUsages()).ReadAsSync();
-            var siteShippingLocationCode = locSettingsRes.Items.Where(x => x.LocationUsageTypeCode == "DS").Select(x => x.LocationCodes != null && x.LocationCodes.Count > 0 ? x.LocationCodes.First() : null).FirstOrDefault();
-
-            var locationsWithInventory = _productAvailableInventoryHelper.GetShipAndPickupLocationsWithInventory(inventories, locations, product);
-
-            // filter out directship options that are not from our site's DS location.
-            locationsWithInventory = locationsWithInventory.Where(lwi => lwi.Fulfillment.Code != "DS" || lwi.LocationCode == siteShippingLocationCode).ToList();
-            return List2(locationsWithInventory);
+            var siteShippingLocationCode =
+                locSettingsRes.Items.Where(x => x.LocationUsageTypeCode == "DS")
+                    .Select(x => x.LocationCodes != null && x.LocationCodes.Count > 0 ? x.LocationCodes.First() : null)
+                    .FirstOrDefault();
+            return siteShippingLocationCode;
         }
 
 

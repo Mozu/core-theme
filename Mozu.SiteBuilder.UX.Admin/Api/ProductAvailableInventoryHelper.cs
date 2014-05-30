@@ -14,6 +14,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         List<LocationWithInventory> GetShipAndPickupLocationsWithInventory(
             ProductAdmin.Contracts.LocationInventoryCollection inventories, List<Location.Contracts.Location> locations,
             ProductAdmin.Contracts.Product product);
+
+        List<LocationWithInventory> GetAllShipAndPickupLocationsForUnmanagedProducts(
+            List<Location.Contracts.Location> locations, ProductAdmin.Contracts.Product product);
     }
 
     public class ProductAvailableInventoryHelper : IProductAvailableInventoryHelper
@@ -29,12 +32,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //  true            DisplayMsg, HideProduct                     0           false
         //  true            DisplayMsg, HideProduct, AllowBack          > 0         true
         //  true            AllowBackorder                              0           true
-        //  false           DisplayMsg, HideProduct, AllowBack          >0          true
-        //  false           DisplayMsg, HideProduct, AllowBack          0           true
         //
         /// </summary>
-        /// <param name="inventories"></param>
-        /// <param name="locations"></param>
+        /// <param name="inventories">for given product</param>
+        /// <param name="locations">locations for inventory</param>
         /// <param name="product"></param>
         /// <returns></returns>
         public List<LocationWithInventory> GetShipAndPickupLocationsWithInventory(ProductAdmin.Contracts.LocationInventoryCollection inventories, List<Location.Contracts.Location> locations, ProductAdmin.Contracts.Product product)
@@ -62,6 +63,44 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     StockAvailable = locWithInv.StockAvailable, 
                     StockOnBackOrder = locWithInv.StockOnBackOrder, 
                     StockOnHand = locWithInv.StockOnHand
+                }));
+            }
+            result.Sort(fulfillmentComparer);
+            return result;
+        }
+    
+        /// <summary>
+        /// Provide inventory by location based on following logic.  
+        /// If location supports multiple fulfillment type
+        ///     then duplicates LocationWithInventory with different FulfillmentType.
+        /// Sorts on Direct ship
+        /// 
+        /// manage stock    out of stock behavior                       inv         show
+        /// ------------    ---------------------                       ---         ----
+        //  false           DisplayMsg, HideProduct, AllowBack          >0          true
+        //  false           DisplayMsg, HideProduct, AllowBack          0           true
+        //
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
+        public List<LocationWithInventory> GetAllShipAndPickupLocationsForUnmanagedProducts(List<Location.Contracts.Location> locations, ProductAdmin.Contracts.Product product)
+        {
+            var fulfillmentComparer = new LocationWithInventoryFulfillmentComparer();
+            
+            var result = new List<LocationWithInventory>();
+            foreach (var location in locations.Where(loc => loc.FulfillmentTypes != null))
+            {
+                result.AddRange(location.FulfillmentTypes.Select(fulfillment => new LocationWithInventory
+                {
+                    Location = location, 
+                    AuditInfo = location.AuditInfo, 
+                    Fulfillment = fulfillment, 
+                    LocationCode = location.Code, 
+                    ProductCode = product.ProductCode,
+                    ProductName = product.Content.ProductName, 
+                    StockAvailable = null, 
+                    StockOnBackOrder = null, 
+                    StockOnHand = null
                 }));
             }
             result.Sort(fulfillmentComparer);
