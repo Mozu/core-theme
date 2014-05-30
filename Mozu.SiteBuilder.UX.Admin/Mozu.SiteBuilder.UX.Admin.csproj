@@ -1953,7 +1953,7 @@
     <Content Include="Tests\Automation\phantomjs-launcher.js" />
     <Content Include="Tests\Functional\product\product-basic-edit-save.js" />
     <Content Include="Tests\helpers\Core.js" />
-    <None Include="Tests\HomePages\Mystic.cshtml" />
+    <Content Include="Tests\HomePages\Mystic.cshtml" />
     <Content Include="Tests\integration\attribute\attribute-create.t.js" />
     <Content Include="Tests\index.html" />
     <Content Include="Tests\integration\product\product-basic-edit-save.js" />
