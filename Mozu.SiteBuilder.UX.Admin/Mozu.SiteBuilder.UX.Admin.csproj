@@ -2118,17 +2118,7 @@
       <Content Include="Scripts\build\**\*.*"  />
     </ItemGroup>
     
-    <!--<ItemGroup>
-      <AdminScriptsBuildSourceFiles Include="$(AdminScriptsBuildSource)" />
-    </ItemGroup>
-      
-    <Message Text="thoms notes-- copy from  $(AdminScriptsBuildSource) to  $(AdminScriptsBuildOutput)" />
-    
-    <Copy 
-      SourceFiles="@(AdminScriptsBuildSourceFiles)" 
-      DestinationFiles="@(AdminScriptsBuildSourceFiles->'$(AdminScriptsBuildOutput)\%(RecursiveDir)%(Filename)%(Extension)')"
-
-      />--> 
+   
     
   </Target>
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
