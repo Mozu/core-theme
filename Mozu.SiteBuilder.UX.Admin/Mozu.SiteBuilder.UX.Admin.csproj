@@ -2115,6 +2115,10 @@
     <Delete Files="@(AdminScriptsBuildSourceTempFiles)" />
     
     <ItemGroup>
+      <Content Include="Scripts\build\**\*.*"  />
+    </ItemGroup>
+    
+    <!--<ItemGroup>
       <AdminScriptsBuildSourceFiles Include="$(AdminScriptsBuildSource)" />
     </ItemGroup>
       
@@ -2124,7 +2128,7 @@
       SourceFiles="@(AdminScriptsBuildSourceFiles)" 
       DestinationFiles="@(AdminScriptsBuildSourceFiles->'$(AdminScriptsBuildOutput)\%(RecursiveDir)%(Filename)%(Extension)')"
 
-      /> 
+      />--> 
     
   </Target>
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
