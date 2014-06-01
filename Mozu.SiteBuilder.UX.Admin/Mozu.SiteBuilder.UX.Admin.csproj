@@ -2103,7 +2103,7 @@
   <Target Name="AfterCompile">
  
     <Exec Command="makeTfsBuild.bat" CustomErrorRegularExpression=".*ERR.*" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Exec Command="CIRunner.bat" CustomErrorRegularExpression=".*[FAIL].*" WorkingDirectory="$(ProjectDir)\Tests\Automation" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <Exec Command="CIRunner.bat" CustomErrorRegularExpression=".*[FAIL].*" WorkingDirectory="$(ProjectDir)\Tests\Automation" Condition="'$(BuildingInsideVisualStudio)' != 'true'"  IgnoreExitCode="true"  StandardErrorImportance="Low" LogStandardErrorAsError="false" />
     
       
       
