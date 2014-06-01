@@ -1521,6 +1521,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Tests\Automation\binary\phantomjs-1.6.0-win32-static\phantomjs.exe" />
+    <Content Include="Tests\Automation\CIRunner.js" />
     <Content Include="Tests\Automation\launcher-common.js" />
     <Content Include="Tests\Automation\phantomjs-launcher.js" />
     <Content Include="Tests\Functional\product\product-basic-edit-save.js" />
@@ -1641,6 +1642,7 @@
     <Content Include="Tests\Automation\phantomjs" />
     <Content Include="Tests\Automation\phantomjs.bat" />
     <Content Include="Tests\Web.config" />
+    <Content Include="Tests\Automation\CIRunner.bat" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />
@@ -2099,27 +2101,25 @@
     <AjaxMin JsSourceFiles="@(JS)" JsCombinedFileName="$(ProjectDir)\Scripts\resources\lib\init.min.js" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
   </Target>
   <Target Name="AfterCompile">
-    <Message Text="...$(BuildProperties)...$(OutDir)...$(DropLocation)...$(ProjectDir)...$(SolutionDir)" />
+ 
     <Exec Command="makeTfsBuild.bat" CustomErrorRegularExpression=".*ERR.*" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <Exec Command="CIRunner.bat" CustomErrorRegularExpression=".*[FAIL].*" WorkingDirectory="$(ProjectDir)\Tests\Automation" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    
+      
+      
+    
     <PropertyGroup>
       <AdminScriptsBuildSource>$(ProjectDir)Scripts\build\**\*.*</AdminScriptsBuildSource>
       <AdminScriptsBuildOutput>$(OutDir)_PublishedWebsites\Mozu.SiteBuilder.UX.Admin\Scripts\build</AdminScriptsBuildOutput>
     </PropertyGroup>
-
-
     <Message Text="thoms notes-- deleting temp files $(ProjectDir)Scripts\build\temp" />
-
     <ItemGroup>
       <AdminScriptsBuildSourceTempFiles Include="$(ProjectDir)Scripts\build\temp\**\*.*" />
     </ItemGroup>
     <Delete Files="@(AdminScriptsBuildSourceTempFiles)" />
-    
     <ItemGroup>
-      <Content Include="Scripts\build\**\*.*"  />
+      <Content Include="Scripts\build\**\*.*" />
     </ItemGroup>
-    
-   
-    
   </Target>
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
