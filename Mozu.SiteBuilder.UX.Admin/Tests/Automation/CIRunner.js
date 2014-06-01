@@ -100,6 +100,6 @@ siestaProcess.stderr.on('data', function (data) {
 });
 
 siestaProcess.on('close', function (code) {
-
+    code = code > 0 ? code : 0;
     process.exit(code);
 });
