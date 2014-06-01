@@ -1523,6 +1523,8 @@
     <Content Include="Tests\Automation\binary\phantomjs-1.6.0-win32-static\phantomjs.exe" />
     <Content Include="Tests\Automation\CIRunner.js" />
     <Content Include="Tests\Automation\launcher-common.js" />
+    <Content Include="Tests\Automation\NUnitTfs.exe" />
+    <Content Include="Tests\Automation\NUnitToMSTest.xslt" />
     <Content Include="Tests\Automation\phantomjs-launcher.js" />
     <Content Include="Tests\Functional\product\product-basic-edit-save.js" />
     <Content Include="Tests\helpers\Core.js" />
@@ -2101,13 +2103,13 @@
     <AjaxMin JsSourceFiles="@(JS)" JsCombinedFileName="$(ProjectDir)\Scripts\resources\lib\init.min.js" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
   </Target>
   <Target Name="AfterCompile">
- 
     <Exec Command="makeTfsBuild.bat" CustomErrorRegularExpression=".*ERR.*" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Exec Command="CIRunner.bat" CustomErrorRegularExpression=".*\[FAIL\].*" WorkingDirectory="$(ProjectDir)\Tests\Automation"   IgnoreExitCode="true"    />
+    <Exec Command="CIRunner.bat" CustomErrorRegularExpression=".*\[FAIL\].*" WorkingDirectory="$(ProjectDir)\Tests\Automation" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <Message Text="thom notes-- NUnitTFS.exe -n jUnit.xml -t &quot;$(TeamProject)&quot; -b &quot;$(BuildNumber)&quot; -f &quot;%(ConfigurationToBuild.FlavorToBuild)&quot; -p &quot;%(ConfigurationToBuild.PlatformToBuild)&quot; -x NUnitToMSTest.xslt"/>
     
-      
-      
-    
+    <Exec Command="NUnitTFS.exe -n jUnit.xml -t &quot;$(TeamProject)&quot; -b &quot;$(BuildNumber)&quot; -f &quot;%(ConfigurationToBuild.FlavorToBuild)&quot; -p &quot;%(ConfigurationToBuild.PlatformToBuild)&quot; -x NUnitToMSTest.xslt" 
+           WorkingDirectory="$(ProjectDir)\Tests\Automation"
+          />
     <PropertyGroup>
       <AdminScriptsBuildSource>$(ProjectDir)Scripts\build\**\*.*</AdminScriptsBuildSource>
       <AdminScriptsBuildOutput>$(OutDir)_PublishedWebsites\Mozu.SiteBuilder.UX.Admin\Scripts\build</AdminScriptsBuildOutput>
@@ -2119,6 +2121,8 @@
     <Delete Files="@(AdminScriptsBuildSourceTempFiles)" />
     <ItemGroup>
       <Content Include="Scripts\build\**\*.*" />
+      <Content Include="Tests\Automation\*.xml" />
+
     </ItemGroup>
   </Target>
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
