@@ -8,7 +8,7 @@
     "grunt-contrib-jshint": "~0.8",
     "grunt-contrib-watch": "~0.6",
     "grunt-jsonlint": "*",
-    "zubat": "git://github.com/zetlen/mozu-zubat.git#master",
+    "zubat": "*",
     "async": "~0.2.10"
   },
   "engines": {
