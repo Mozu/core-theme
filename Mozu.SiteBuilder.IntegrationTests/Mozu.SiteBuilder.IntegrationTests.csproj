@@ -459,6 +459,8 @@
     <None Include="Diagrams\ProductAdmin\cdProductLocation.cd" />
     <None Include="Diagrams\ProductAdmin\cdProduct.cd" />
     <None Include="Diagrams\ProductAdmin\cdProductType.cd" />
+    <None Include="Diagrams\ProductAdmin\cdProductVariant.cd" />
+    <None Include="Diagrams\ProductRuntime\cdProductRuntime.cd" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
