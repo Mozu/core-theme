@@ -2112,15 +2112,16 @@
     <ItemGroup>
       <LocalJUnitLogFiles Include="$(ProjectDir)\Tests\Automation\*.xml"  />
     </ItemGroup>
-    <PublishJUnit 
-          Condition="'$(BuildingInsideVisualStudio)' != 'true'" 
+    
+    <!--<PublishJUnit 
+          
           BuildUri="$(BuildUri)"
           Files="@(LocalJUnitLogFiles)"
           Flavor="%(ConfigurationToBuild.FlavorToBuild)"
           Platform="%(ConfigurationToBuild.PlatformToBuild)"
           Style="$(JUnitTrxConversionStyle)"
           TeamProjectCollectionUrl="$(TeamFoundationServerUrl)"
-          TestResultsRoot="$(TestResultsRoot)" />
+          TestResultsRoot="$(TestResultsRoot)" />-->
 
 
     <PropertyGroup>
@@ -2150,8 +2151,10 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="..\packages\OctoPack.2.0.52\build\OctoPack.targets" Condition="Exists('..\packages\OctoPack.2.0.52\build\OctoPack.targets')" />
+  <Import Project="..\packages\OctoPack.2.0.52\build\OctoPack.targets" Condition="Exists('..\packages\OctoPack.2.0.52\build\OctoPack.targets')"  />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!--
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\BuildExtensions\Microsoft.TeamFoundation.Build.Extensions.Ant.targets" />
+  -->
 
 </Project>
