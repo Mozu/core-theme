@@ -405,6 +405,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Api\AccountControllerTests.cs" />
+    <Compile Include="Admin\Api\ApiUtil.cs" />
     <Compile Include="Admin\Api\CmsPublishingControllerTests.cs" />
     <Compile Include="Admin\Api\LocationInventoryControllerTests.cs" />
     <Compile Include="Admin\Api\Models\Attributes\AttributeValidationRangeTests.cs" />
@@ -443,7 +444,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Mobile\Default.aspx" />
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="appSettings.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
