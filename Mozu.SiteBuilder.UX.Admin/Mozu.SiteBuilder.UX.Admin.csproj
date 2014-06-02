@@ -2105,9 +2105,9 @@
   <Target Name="AfterCompile">
     <Exec Command="makeTfsBuild.bat" CustomErrorRegularExpression=".*ERR.*" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="CIRunner.bat" CustomErrorRegularExpression=".*\[FAIL\].*" WorkingDirectory="$(ProjectDir)\Tests\Automation" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Message Text="thom notes-- NUnitTFS.exe -n jUnit.xml -t &quot;$(TeamProject)&quot; -b &quot;$(BuildNumber)&quot; -f &quot;%Debug&quot; -p &quot;%AnyCPU&quot; -x NUnitToMSTest.xslt"/>
+    <Message Text="thom notes-- NUnitTFS.exe -n jUnit.xml -t Mozu -b &quot;$(BuildNumber)&quot; -f &quot;$(Configuration)&quot; -p &quot;$(Platform)&quot; -x NUnitToMSTest.xslt"/>
     
-    <Exec Command="NUnitTFS.exe -n jUnit.xml -t &quot;$(Mozu)&quot; -b &quot;$(BuildNumber)&quot; -f &quot;%(ConfigurationToBuild.FlavorToBuild)&quot; -p &quot;%(ConfigurationToBuild.PlatformToBuild)&quot; -x NUnitToMSTest.xslt" 
+    <Exec Command="NUnitTFS.exe -n jUnit.xml -t Mozu -b &quot;$(BuildNumber)&quot; -f &quot;$(Configuration)&quot; -p &quot;$(Platform)&quot; -x NUnitToMSTest.xslt" 
            WorkingDirectory="$(ProjectDir)\Tests\Automation"
            IgnoreExitCode="true" 
           />
