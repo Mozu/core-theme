@@ -149,6 +149,13 @@
       <Method Name="CommerceItem" Hidden="true" />
     </Members>
     <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="UnitPrice" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Mozu.CommerceRuntime.Contracts.Commerce.CommerceUnitPrice">
+    <Position X="1" Y="12.25" Width="2.5" />
+    <TypeIdentifier />
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
