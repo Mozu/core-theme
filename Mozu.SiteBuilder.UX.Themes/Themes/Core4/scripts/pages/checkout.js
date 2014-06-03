@@ -286,7 +286,7 @@
         });
 
         var $reviewPanel = $('#step-review');
-        checkoutModel.on('change:isReady',function (isReady) {
+        checkoutModel.on('change:isReady',function (model, isReady) {
             if (isReady) {
                 setTimeout(function () { window.scrollTo(0, $reviewPanel.offset().top); }, 750);
             }
