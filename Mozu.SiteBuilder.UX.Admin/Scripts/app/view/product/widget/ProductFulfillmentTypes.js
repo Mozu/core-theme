@@ -32,7 +32,7 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
             checked: ((this.fulfillmentTypes.indexOf('DirectShip') != -1) && this.isPhysical),
             readOnly: this.isReadOnly,
             disabled: !this.isPhysical,
-            handler: (this.isReadOnly) ? '' : me.onFulfillmentChange,
+            handler: (this.isReadOnly) ? '' : me.updateFulfillmentRecord,
             scope: me,
             fulfillmentType: 1
         });
@@ -45,7 +45,7 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
             checked: ((this.fulfillmentTypes.indexOf('InStorePickup') != -1) && this.isPhysical),
             readOnly: this.isReadOnly,
             disabled: !this.isPhysical,
-            handler: (this.isReadOnly) ? '' : me.onFulfillmentChange,
+            handler: (this.isReadOnly) ? '' : me.updateFulfillmentRecord,
             scope: me,
             fulfillmentType: 1
         });
