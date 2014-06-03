@@ -92,20 +92,6 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin
             CollectionAssert.AreEqual(timeZones.Select(x => x.Id), zones.Select(x => x.Id));
         }
 
-        [Test]
-        public void UpdateGeneralSettings_should_update_and_return_mapped()
-        {
-            GeneralSettingWrapper wrapper = GetWrapper();
-            string websiteName = "¡Mexipani Candy Bueno 感嘆符!";
-            var serviceSettings = new MozuGeneralSettings {WebsiteName = websiteName};
-
-            _generalSettingsWebApiClient.WithAny(x => x.UpdateGeneralSettings(null), serviceSettings);
-
-            var generalSettings = new GeneralSettings {WebsiteName = websiteName};
-
-            GeneralSettings settings = wrapper.UpdateGeneralSettings(generalSettings);
-
-            Assert.NotNull(settings);
-        }
+     
     }
 }

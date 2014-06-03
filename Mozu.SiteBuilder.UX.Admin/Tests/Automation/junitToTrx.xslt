@@ -157,7 +157,7 @@
               <xsl:value-of select="$testName"/>
             </xsl:attribute>
             <xsl:attribute name="computerName">
-              <xsl:value-of select="/testsuite/@hostname"/>
+              <xsl:value-of select="'buildserver'"/>
             </xsl:attribute>
             <xsl:attribute name="duration">
               <xsl:call-template name="secondsToDuration">
