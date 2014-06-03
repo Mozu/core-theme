@@ -152,7 +152,7 @@ Ext.define('Taco.view.attribute.Form', {
                         string: [
                             {
                                 dataIndex: 'value',
-                                text: 'Caption',
+                                text: 'Label',
                                 flex: 2,
                                 editor: {
                                     xtype: 'textfield',
@@ -207,6 +207,13 @@ Ext.define('Taco.view.attribute.Form', {
                             if (e.getTarget('.taco-actioncolumn-icon-remove', 10)) {
                                 view.getStore().remove(record);
                             }
+                        },
+                        validateedit:function (editor, e) {
+                            if (e.field == 'id' && e.grid.store.getById(e.value)) {
+
+                                return false;
+                            }
+                            return true;
                         }
                     }
                 };
