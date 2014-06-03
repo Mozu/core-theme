@@ -924,9 +924,6 @@
   <ItemGroup>
     <Content Include="Themes\Core4\templates\email\giftcard-created.hypr" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="compileCore4.bat" />
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -985,7 +982,7 @@
   <Target Name="AfterCompile">
     <Exec Command="attrib -r &quot;$(ProjectDir)ThemeTemplates\*.zip&quot; /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="DevCenterThemeTemplatizer.exe core4 &quot;$(ProjectDir)Themes\Core4&quot; &quot;$(ProjectDir)ThemeTemplates&quot;" WorkingDirectory="$(ProjectDir)tools" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-   <!--  commenting out for now to get a few bulids out
+    <!--  commenting out for now to get a few bulids out
     <Exec Command="npm cache clean" WorkingDirectory="$(ProjectDir)Themes\Core4" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="attrib -r &quot;$(ProjectDir)Themes\Core4&quot; /D /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="npm install" WorkingDirectory="$(ProjectDir)Themes\Core4" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
@@ -995,6 +992,5 @@
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
 </Exec>
     -->
-    
   </Target>
 </Project>
