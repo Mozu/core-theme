@@ -693,6 +693,7 @@
     <Content Include="Scripts\app\model\CheckoutSettings.js" />
     <Content Include="Scripts\app\model\Capability.js" />
     <Content Include="Scripts\app\model\BundledProduct.js" />
+    <Content Include="Scripts\app\model\CustomerAccountPicker.js" />
     <Content Include="Scripts\app\model\CustomerSegment.js" />
     <Content Include="Scripts\app\model\LocationPickup.js" />
     <Content Include="Scripts\app\model\ProductExtraValue.js" />
@@ -742,6 +743,7 @@
     <Content Include="Scripts\app\store\Capability.js" />
     <Content Include="Scripts\app\store\ChannelPicker.js" />
     <Content Include="Scripts\app\store\Channels.js" />
+    <Content Include="Scripts\app\store\CustomersPicker.js" />
     <Content Include="Scripts\app\store\OrderGrid.js" />
     <Content Include="Scripts\app\store\ProductGrid.js" />
     <Content Include="Scripts\app\store\ProductPicker.js" />
