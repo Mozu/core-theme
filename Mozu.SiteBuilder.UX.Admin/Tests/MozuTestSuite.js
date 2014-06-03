@@ -140,8 +140,19 @@ Harness.start(
                         url: 'unit/view/product/subforms/ListExtraEditor.t.js',
                         title: 'product List Extra Tests'
                     }
+
                 ]
             },
+            //{
+            //    group: 'Product Type',
+            //    expanded: true,
+            //    items: [                    
+            //        {
+            //            url: 'unit/view/productType/Form.t.js',
+            //            title: 'Product Type Tests'
+            //        }
+            //    ]
+            //},
             {
                 group: 'WebSite',
                 expanded: true,

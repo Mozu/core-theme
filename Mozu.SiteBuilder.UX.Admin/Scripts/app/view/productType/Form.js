@@ -91,6 +91,7 @@ Ext.define('Taco.view.productType.Form', {
 
         me.items = [{
             xtype: 'textfield',
+            itemId: 'nameItemId',
             fieldLabel: 'Name',
             labelPosition: 'top',
             labelSeparator: '',
@@ -121,8 +122,9 @@ Ext.define('Taco.view.productType.Form', {
                 {
                     xtype: "checkboxfield",
                     name: "goodsTypeField",
+                    itemId: 'digitalCreditItemId',
                     boxLabel: "This Product Type is an Email Gift Card",
-                    inputValue: "DigitalGiftCard"
+                    inputValue: "DigitalCredit"
                 }
             ]
         },

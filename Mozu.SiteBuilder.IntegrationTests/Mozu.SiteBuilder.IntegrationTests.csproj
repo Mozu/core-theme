@@ -222,7 +222,7 @@
     </Reference>
     <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.8.0-dev004\lib\net45\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.8.0-dev006\lib\net45\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts">
       <HintPath>..\packages\Mozu.Content.Contracts.1.7.0.2\lib\Mozu.Content.Contracts.dll</HintPath>
@@ -283,10 +283,11 @@
     </Reference>
     <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.8.0-dev013\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.8.0-dev015\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ProductRuntime.Contracts">
-      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.7.0.3\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
+    <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.8.0-dev008\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Provisioning.Contracts">
       <HintPath>..\packages\Mozu.Provisioning.Contracts.1.7.0.3\lib\Mozu.Provisioning.Contracts.dll</HintPath>
@@ -453,14 +454,18 @@
       <SubType>Designer</SubType>
     </Content>
     <None Include="Diagrams\CommerceRuntime\Fulfillment\cdDigitalFulfillment.cd" />
+    <None Include="Diagrams\CommerceRuntime\Orders\cdOrderService_GiftCardView.cd" />
     <None Include="Diagrams\CommerceRuntime\Orders\cdOrderServicePayments.cd" />
     <None Include="Diagrams\CommerceRuntime\Orders\cdOrderService.cd" />
+    <None Include="Diagrams\Customer\cdCustomer_GiftCardView.cd" />
     <None Include="Diagrams\EmailTemplates\cdGiftCardEmail.cd" />
     <None Include="Diagrams\Location\cdLocation.cd" />
     <None Include="Diagrams\ProductAdmin\cdProductLocation.cd" />
     <None Include="Diagrams\ProductAdmin\cdProduct.cd" />
     <None Include="Diagrams\ProductAdmin\cdProductType.cd" />
+    <None Include="Diagrams\ProductAdmin\cdProductAdmin_GiftCardView.cd" />
     <None Include="Diagrams\ProductAdmin\cdProductVariant.cd" />
+    <None Include="Diagrams\ProductRuntime\cdProductRuntime_GiftCardView.cd" />
     <None Include="Diagrams\ProductRuntime\cdProductRuntime.cd" />
     <None Include="packages.config">
       <SubType>Designer</SubType>

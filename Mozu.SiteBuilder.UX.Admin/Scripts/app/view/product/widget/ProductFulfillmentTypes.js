@@ -50,10 +50,10 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
             fulfillmentType: 1
         });
 
-        this.digitalGiftCardCheckbox = Ext.widget({
+        this.digitalCreditCheckbox = Ext.widget({
             xtype: 'checkboxfield',
             boxLabel: 'Email',
-            name: 'digitalGiftCardCb',
+            name: 'digitalCreditCb',
             inputValue: 'Digital',
             checked: ((this.fulfillmentTypes.indexOf('Digital') != -1) || !this.isPhysical),
             readOnly: true,
@@ -65,7 +65,7 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
         this.items = [
             this.directShipCheckbox,
             this.inStorePickupCheckbox,
-            this.digitalGiftCardCheckbox
+            this.digitalCreditCheckbox
         ];
 
         this.callParent(arguments);
@@ -85,8 +85,8 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
         if (me.inStorePickupCheckbox.getValue())
             fulfillmentTypeValue.push(me.inStorePickupCheckbox.inputValue);
 
-        if (me.digitalGiftCardCheckbox.getValue())
-            fulfillmentTypeValue.push(me.digitalGiftCardCheckbox.inputValue);
+        if (me.digitalCreditCheckbox.getValue())
+            fulfillmentTypeValue.push(me.digitalCreditCheckbox.inputValue);
 
         me.record.set("fulfillmentTypesSupported", fulfillmentTypeValue);
     }

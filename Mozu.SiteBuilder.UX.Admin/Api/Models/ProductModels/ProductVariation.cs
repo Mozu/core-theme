@@ -34,6 +34,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "deltaMsrp")]
         public Decimal? DeltaMSRP { get; set; }
 
+        /// <summary>
+        /// Gift Card value or credit value.
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public decimal? CreditValue { get; set; }
+
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Decimal? DeltaWeight { get; set; }
 

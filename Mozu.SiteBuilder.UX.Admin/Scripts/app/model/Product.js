@@ -325,6 +325,11 @@ Ext.define('Taco.model.Product', {
             dateFormat: 'c'
         },
         {
+            name: "creditValue",
+            type: "float",
+            useNull: true
+        },
+        {
             name: "mfgPartNumber",
             type: "string",
             useNull: true,

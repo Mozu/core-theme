@@ -801,9 +801,9 @@ Ext.define('Taco.view.product.subform.General', {
         var me = this,
             productTypeRecord = selectField.store.getById(value),
             productUsages = productTypeRecord.get("productUsages"),
-            isGiftCardProductType = (productTypeRecord.get("goodsType") === 'DigitalGiftCard'),
-            isTaxableByDefault = !isGiftCardProductType,
-            isDiscountRestrictedByDefault = isGiftCardProductType,
+            isDigitalCreditProductType = (productTypeRecord.get("goodsType") === 'DigitalCredit'),
+            isTaxableByDefault = !isDigitalCreditProductType,
+            isDiscountRestrictedByDefault = isDigitalCreditProductType,
             productUsageField,
             parentForm,
             product;

@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// <summary>
         /// The price.
         /// </summary>
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? Price { get; set; }
 		
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -188,6 +188,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "mapEndDate")]
         public DateTime? MAPEndDate { get; set; }
 
+        /// <summary>
+        /// Gift Card value or credit value.
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public decimal? CreditValue { get; set; }
+
         #endregion
 
 
@@ -327,7 +333,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         public decimal? PackageHeight { get; set; }
 
         /// <summary>
-        /// Fulfillment Types Supported: DirectShip, InStorePickup, DigitalGiftCard, and/or Digital (in future)
+        /// Fulfillment Types Supported: DirectShip, InStorePickup, Digital
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string[] FulfillmentTypesSupported { get; set; }

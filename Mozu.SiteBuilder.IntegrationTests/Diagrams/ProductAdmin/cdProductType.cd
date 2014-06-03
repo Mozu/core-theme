@@ -23,19 +23,6 @@
       <Property Name="Properties" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="Mozu.ProductAdmin.Contracts.AttributeInProductType">
-    <Position X="7.25" Y="0.5" Width="4.5" />
-    <Members>
-      <Method Name="AttributeInProductType" Hidden="true" />
-    </Members>
-    <TypeIdentifier />
-    <ShowAsAssociation>
-      <Property Name="AttributeDetail" />
-    </ShowAsAssociation>
-    <ShowAsCollectionAssociation>
-      <Property Name="VocabularyValues" />
-    </ShowAsCollectionAssociation>
-  </Class>
   <Class Name="Mozu.ProductAdmin.Contracts.Attribute">
     <Position X="7.25" Y="3" Width="3.5" />
     <Compartments>
@@ -54,6 +41,19 @@
     </NestedTypes>
     <TypeIdentifier />
   </Class>
+  <Class Name="Mozu.ProductAdmin.Contracts.AttributeInProductType">
+    <Position X="7.25" Y="0.5" Width="4.5" />
+    <Members>
+      <Method Name="AttributeInProductType" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="AttributeDetail" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="VocabularyValues" />
+    </ShowAsCollectionAssociation>
+  </Class>
   <Class Name="Mozu.ProductAdmin.Contracts.AttributeVocabularyValueInProductType">
     <Position X="12" Y="3" Width="3.5" />
     <Members>
@@ -64,6 +64,13 @@
       <Property Name="VocabularyValueDetail" />
     </ShowAsAssociation>
   </Class>
+  <Class Name="Mozu.ProductAdmin.Contracts.AttributeVocabularyValueLocalizedContent">
+    <Position X="12" Y="7" Width="3" />
+    <Members>
+      <Method Name="AttributeVocabularyValueLocalizedContent" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
   <Class Name="Mozu.ProductAdmin.Contracts.AttributeVocabularyValue">
     <Position X="12.5" Y="5" Width="2" />
     <Members>
@@ -73,13 +80,6 @@
     <ShowAsAssociation>
       <Property Name="Content" />
     </ShowAsAssociation>
-  </Class>
-  <Class Name="Mozu.ProductAdmin.Contracts.AttributeVocabularyValueLocalizedContent">
-    <Position X="12" Y="7" Width="3" />
-    <Members>
-      <Method Name="AttributeVocabularyValueLocalizedContent" Hidden="true" />
-    </Members>
-    <TypeIdentifier />
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
