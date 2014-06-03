@@ -242,11 +242,12 @@
 
   <xsl:template name="getTestName">
     <xsl:param name="nunitName" />
-    <xsl:call-template name="string-replace-all">
+    <xsl:value-of select="$nunitName" />
+    <!--<xsl:call-template name="string-replace-all">
       <xsl:with-param name="text" select="$nunitName" />
       <xsl:with-param name="replace" select="'/'" />
       <xsl:with-param name="by" select="'-'" />
-    </xsl:call-template>
+    </xsl:call-template>-->
     <!--<xsl:choose>
       <xsl:when test="contains($nunitName, '(')">
         -->

@@ -31,27 +31,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected override void Configure()
         {
-            
+
 
             Mapper.CreateMap<MSC.CustomTableRate, CustomTableRate>()
-                  .ForMember(x => x.Name, opt => opt.ResolveUsing(x => (x.Content != null) 
-                      ? x.Content.Name : null))
-                  .ForMember(x => x.Id, opt => opt.ResolveUsing(x => x.Id))
-                  .ForMember(x => x.Amount, opt => opt.ResolveUsing(x => x.RateType == CUSTOM_PERCENTAGE_PER_ORDER 
-                      ? (x.Value * 100) : x.Value))
-                  .ForMember(x => x.RateType, opt => opt.ResolveUsing(x => x.RateType))
-                  .ForMember(x => x.ConfiguredCountries, opt => opt.ResolveUsing(x => x.CountryCodes));
+                .ForMember(x => x.Name, opt => opt.ResolveUsing(x => (x.Content != null)
+                    ? x.Content.Name : null))
+                .ForMember(x => x.Id, opt => opt.ResolveUsing(x => x.Id))
+                .ForMember(x => x.Amount, opt => opt.ResolveUsing(x => x.RateType == CUSTOM_PERCENTAGE_PER_ORDER
+                    ? (x.Value*100) : x.Value))
+                .ForMember(x => x.RateType, opt => opt.ResolveUsing(x => x.RateType));
 
             Mapper.CreateMap<CustomTableRate, MSC.CustomTableRate>()
-               .ForMember(x => x.Content, opt => opt.ResolveUsing(x => new MSC.CustomTableRateContent()
-                   {
-                       LocaleCode = "en-US", Name= x.Name
-                   }))
-               .ForMember(x => x.Id, opt => opt.ResolveUsing(x => x.Id))
-               .ForMember(x => x.Value, opt => opt.ResolveUsing(x => x.RateType == CUSTOM_PERCENTAGE_PER_ORDER 
-                   ? ( x.Amount / 100 ) : x.Amount ))
-               .ForMember(x => x.RateType, opt => opt.ResolveUsing(x => x.RateType))
-               .ForMember(x => x.CountryCodes, opt => opt.ResolveUsing(x => x.ConfiguredCountries));  
+                .ForMember(x => x.Content, opt => opt.ResolveUsing(x => new MSC.CustomTableRateContent()
+                                                                        {
+                                                                            LocaleCode = "en-US", Name = x.Name
+                                                                        }))
+                .ForMember(x => x.Id, opt => opt.ResolveUsing(x => x.Id))
+                .ForMember(x => x.Value, opt => opt.ResolveUsing(x => x.RateType == CUSTOM_PERCENTAGE_PER_ORDER
+                    ? (x.Amount/100) : x.Amount))
+                .ForMember(x => x.RateType, opt => opt.ResolveUsing(x => x.RateType));
 
 
             Mapper.CreateMap<CarrierConfiguration, Mozu.ShippingAdmin.Contracts.CarrierConfiguration>().ConvertUsing(
@@ -61,8 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                        {
                                            Id = x.id,
                                            Settings = new List<Mozu.ShippingAdmin.Contracts.Setting>(),
-                                           ConfiguredServiceTypes = new List<Mozu.ShippingAdmin.Contracts.ServiceType>(),
-                                           ConfiguredCountries = x.ConfiguredCountries 
+                                           Enabled = x.Enabled
                                            
                                        };
                         foreach (var carSet in x.Settings)
@@ -73,23 +70,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                       Value = (string) carSet.Value
                                                   });
                         }
-                        foreach (var rate in x.Rates)
-                        {
-                            dest.ConfiguredServiceTypes.Add(new Mozu.ShippingAdmin.Contracts.ServiceType()
-                                                                {
-                                                                    Code = rate,
-                                                                    IsActive = true
-                                                                });
-                        }
-                        if (x.PreviousValue != null)
-                        {
-                            foreach (var rate in x.PreviousValue.ConfiguredServiceTypes.Where(_ => x.Rates.IndexOf(_.Code) == -1))
-                            {
-                                rate.IsActive = false;
-                                dest.ConfiguredServiceTypes.Add(rate);
-                            }
-                            
-                        }
+                        
+                        
                         return dest;
                     });
 
@@ -101,20 +83,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         var dest = new CarrierConfiguration()
                                        {
                                            id = x.Id,
-                                           Rates = new List<string>(),
+                                            Enabled = x.Enabled,
                                            Settings = new JObject(),
-                                           IsConfigured = true ,
-                                           ConfiguredCountries = x.ConfiguredCountries 
+                                           IsConfigured = true 
 
                                        };
                         foreach (var setting in x.Settings)
                         {
                             dest.Settings[setting.Key] = setting.Value;
                         }
-                        foreach (var rate in x.ConfiguredServiceTypes.Where( _=> _.IsActive.GetValueOrDefault( true ) ) )
-                        {
-                            dest.Rates.Add(rate.Code);
-                        }
+                        
                         return dest;
                     });
             
