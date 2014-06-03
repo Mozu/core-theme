@@ -986,7 +986,7 @@
     <Exec Command="DevCenterThemeTemplatizer.exe core4 &quot;$(ProjectDir)Themes\Core4&quot; &quot;$(ProjectDir)ThemeTemplates&quot;" WorkingDirectory="$(ProjectDir)tools" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
 
     <Exec Command="npm cache clean" WorkingDirectory="$(ProjectDir)Themes\Core4" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Exec Command="attrib -r &quot;$(ProjectDir)Themes\Core4&quot; /D /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <Exec Command="attrib -r &quot;$(ProjectDir)Themes\Core4\compiled&quot; /D /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="npm install" WorkingDirectory="$(ProjectDir)Themes\Core4" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\Core4" ConsoleToMSBuild="true" Condition="'$(BuildingInsideVisualStudio)' != 
     'true'">
