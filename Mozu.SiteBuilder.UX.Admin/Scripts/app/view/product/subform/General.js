@@ -31,9 +31,12 @@ Ext.define('Taco.view.product.subform.General', {
             isMapEnabled = (this.product.get("map") != null),
             isDiscountRestricted = this.product.get("discountsRestricted"),
             isTaxable = (this.product.get("isTaxable")),
+            isDigitalCredit = false,
             productUsage = this.product.get("productUsage"),
+            productTypeId = this.product.get('productTypeId'),
+            productTypeRecord = null,
             invalidDateText = "{0} is not a valid date - it must be in the format mm/dd/yy";
-            
+
         me.record = this.product;
 
         //used for data range validation key value lookup, since multiple pair of fields
@@ -60,6 +63,11 @@ Ext.define('Taco.view.product.subform.General', {
             }
         ]);
 
+        if (productTypeId) {
+            productTypeRecord = this.productTypeStore.getById(productTypeId);
+            if (productTypeRecord)
+                isDigitalCredit = (productTypeRecord.get("goodsType") === 'DigitalCredit');
+        }
 
         this.defaults = {
             width: 200,
@@ -102,7 +110,7 @@ Ext.define('Taco.view.product.subform.General', {
                 }
             ]
         });
-    
+
 
         // remove for multi site;
         if (this.isGlobal || this.isSingleSite) {
@@ -172,6 +180,14 @@ Ext.define('Taco.view.product.subform.General', {
                     change: function(view, value) {
                         // update the record immediately;
                         me.product.set("productUsage", value);
+
+                        var prodTypeId = me.productTypeField.getValue();
+                        if (prodTypeId) {
+                            var prodTypeRecord = me.productTypeStore.getById(prodTypeId);
+                            var isDigitalCreditProdType = (prodTypeRecord.get("goodsType") === 'DigitalCredit');
+                            me.setDigitalCreditDefaults(isDigitalCreditProdType, value);
+                        }
+
                         // kick of the visibility snerst for the subForms;
                         var parentForm = me.up('productsiteform, productglobalform');
                         parentForm.onProductUsageChange(me, value);
@@ -316,6 +332,19 @@ Ext.define('Taco.view.product.subform.General', {
             selectOnFocus: true
         };
 
+        this.creditValueField = Ext.widget({
+            xtype: 'currencyfield',
+            fieldLabel: 'Gift Card/Credit Value',
+            name: 'creditValue',
+            hidden: !isDigitalCredit,
+            allowBlank: (!isDigitalCredit || (productUsage === "Configurable")),
+            //minValue: .25,
+            hideTrigger: true,
+            mouseWheelEnabled: false,
+            selectOnFocus: true
+            //emptyText: "Gift Card/Credit Value"
+        });
+
         this.rollupBundleSalePriceField = Ext.widget({
             xtype: "editabledisplayfield",
             itemId: "rollupBundleSalePrice",
@@ -404,7 +433,6 @@ Ext.define('Taco.view.product.subform.General', {
         readOnly = this.isEdit() || !(this.isSingleSite || this.isGlobal);
         visable = !readOnly || this.isEdit();
         requiredContent = this.isSingleSite || this.isGlobal;
-
 
         this.items = [
             {
@@ -534,6 +562,7 @@ Ext.define('Taco.view.product.subform.General', {
                                 items: [
                                     priceField,
                                     salePriceField,
+                                    me.creditValueField,
                                     {
                                         xtype: 'container',
                                         flex: 1,
@@ -663,9 +692,7 @@ Ext.define('Taco.view.product.subform.General', {
         // if we already have a product type selected; we need to filter the productUsage combo
         // we will not have to tdo this if there is no productUsage field (siteForm in a multi site configuration)
         if (this.productUsageField) {
-            var productTypeId = this.product.get('productTypeId');
-            if (productTypeId) {
-                var productTypeRecord = this.productTypeStore.getById(productTypeId);
+            if (productTypeId && productTypeRecord) {
                 me.filterProductUsageField(productTypeRecord.get("productUsages"));
             }
         }
@@ -797,13 +824,47 @@ Ext.define('Taco.view.product.subform.General', {
 
     },
 
+    setDigitalCreditDefaults: function (isDigitalCredit, productUsage) {
+        var me = this,
+            isTaxable = !isDigitalCredit,
+            isDiscountRestricted = isDigitalCredit,
+            isConfigurable = (productUsage === 'Configurable');
+
+        if (me.isTaxableField) {
+            if (isTaxable != me.isTaxableField.getValue())
+            {
+                me.isTaxableField.setValue(isTaxable);
+            }
+        }
+
+        if (me.discountsRestrictedField) {
+            if (isDiscountRestricted != me.discountsRestrictedField.getValue()) {
+                me.discountsRestrictedField.setValue(isDiscountRestricted);
+                if (isDiscountRestricted) {
+                    var restrictStartDate = new Date();
+                    var restrictEndDate = new Date(restrictStartDate.getFullYear() + 10, 11, 31);
+                    me.discountsRestrictedStartField.setValue(restrictStartDate);
+                    me.discountsRestrictedEndField.setValue(restrictEndDate);
+                }
+            }
+        }
+        if (me.creditValueField) {
+            if (isDigitalCredit) {
+                me.creditValueField.show();
+                me.creditValueField.allowBlank = isConfigurable;
+            } else {
+                me.creditValueField.hide();
+                me.creditValueField.allowBlank = true;
+            }
+            me.creditValueField.validate();
+        }
+    },
+
     onProductTypeChange: function (selectField, value) {
         var me = this,
             productTypeRecord = selectField.store.getById(value),
             productUsages = productTypeRecord.get("productUsages"),
             isDigitalCreditProductType = (productTypeRecord.get("goodsType") === 'DigitalCredit'),
-            isTaxableByDefault = !isDigitalCreditProductType,
-            isDiscountRestrictedByDefault = isDigitalCreditProductType,
             productUsageField,
             parentForm,
             product;
@@ -849,23 +910,8 @@ Ext.define('Taco.view.product.subform.General', {
             me.optionsForm.loadByProductTypeId(value);
         }
 
-        if (me.isTaxableField) {
-            if (isTaxableByDefault != me.isTaxableField.getValue()) {
-                me.isTaxableField.setValue(isTaxableByDefault);
-            }
-        }
-        if (me.discountsRestrictedField) {
-            if (isDiscountRestrictedByDefault != me.discountsRestrictedField.getValue()) {
-                me.discountsRestrictedField.setValue(isDiscountRestrictedByDefault);
-            }
-            if (isDiscountRestrictedByDefault) {
-                var restrictStartDate = new Date();
-                var restrictEndDate = new Date(restrictStartDate.getFullYear()+10, 11, 31);
-                this.discountsRestrictedStartField.setValue(restrictStartDate);
-                this.discountsRestrictedEndField.setValue(restrictEndDate);
-            }
-
-        }
+        // gift card behavior.
+        me.setDigitalCreditDefaults(isDigitalCreditProductType, productUsageField.getValue());
 
         Taco.app.fireEvent('producttypechanged', productTypeRecord);
     },
