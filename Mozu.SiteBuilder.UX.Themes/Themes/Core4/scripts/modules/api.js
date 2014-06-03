@@ -18,7 +18,7 @@ define(['sdk', 'jquery', 'hyprlive'], function(Mozu, $, Hypr) {
         api.on('error', function (badPromise, xhr, requestConf) {
             var e = "Error communicating with Mozu web services";
             if (requestConf && requestConf.url) e += (" at " + requestConf.url);
-            var correlation = xhr.getResponseHeader('x-vol-correlation');
+            var correlation = xhr && xhr.getResponseHeader && xhr.getResponseHeader('x-vol-correlation');
             if (correlation) e += " --- Correlation ID: " + correlation;
             window && window.console && console.error(e, badPromise, xhr);
         });

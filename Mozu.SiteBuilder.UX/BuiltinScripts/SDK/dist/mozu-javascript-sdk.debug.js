@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-05-05
+ * Mozu JavaScript SDK - v0.3.0 - 2014-05-27
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -4437,10 +4437,15 @@ module.exports = (function () {
             });
         },
         checkout: function() {
-            var availableActions = this.prop('availableActions');
+            var self = this,
+                availableActions = this.prop('availableActions');
             if (!this.isComplete()) {
                 for (var i = availableActions.length - 1; i >= 0; i--) {
-                    if (availableActions[i] in OrderStatus2IsReady) return this.performOrderAction(availableActions[i]);
+                    if (availableActions[i] in OrderStatus2IsReady) return this.performOrderAction(availableActions[i]).otherwise(function(e) {
+                        return self.get().ensure(function() {
+                            throw e;
+                        })
+                    });
                 }
             }
             errors.throwOnObject(this, 'ORDER_CANNOT_SUBMIT');
