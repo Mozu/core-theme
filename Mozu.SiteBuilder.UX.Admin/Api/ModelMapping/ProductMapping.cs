@@ -90,7 +90,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.MAP, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).MAP))
                 .ForMember(x => x.MAPStartDate, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).MAPStartDate))
                 .ForMember(x => x.MAPEndDate, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).MAPEndDate))
-
+                .ForMember(x => x.CreditValue, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).CreditValue))
+                
                 //todo:what?
                 // .ForMember(x => x.IsHiddenWhenOutOfStock, op => op.ResolveUsing(dc => dc.i))
                 .ForMember(x => x.ProductTypeId, op => op.ResolveUsing(dc => dc.ProductTypeId))
@@ -188,7 +189,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         MSRP = p.MSRP,
                         MAP = p.MAP,
                         MAPStartDate = p.MAPStartDate,
-                        MAPEndDate = p.MAPEndDate
+                        MAPEndDate = p.MAPEndDate,
+                        CreditValue = p.CreditValue
                     }
                 ))
                 .ForMember(dc => dc.SupplierInfo, op => op.ResolveUsing(x =>
@@ -345,15 +347,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                           return ppv;
                       }).ToList();
                   }));
-
-
-            Mapper.CreateMap<ProductVariation, DC.ProductVariation>();
-            Mapper.CreateMap<DC.ProductVariation, ProductVariation>()
-                //todo: confirm as only referenced by ignores Greg Murray on 2014-01-24 Do we need to remove from contracts?
-                .ForMember(x => x.StockOnHand, op => op.Ignore())
-                .ForMember(x => x.StockOnOrder, op => op.Ignore())
-                ;
-
 
             Mapper.CreateMap<ProductVariationOption, DC.ProductVariationOption>()
                 //todo: confirm if need to add Content (AttributeVocabularyValueLocalizedContent) Greg Murray on 2014-01-24 
@@ -534,6 +527,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //.ForMember(x => x.Options, op => op.ResolveUsing(x => x.Options))
                 .ForMember(x => x.DeltaPriceValue, op => op.ResolveUsing(dc => (dc.DeltaPrice ?? NULLPRODVARPRICE).Value))
                 .ForMember(x => x.DeltaMSRP, op => op.ResolveUsing(dc => (dc.DeltaPrice ?? NULLPRODVARPRICE).MSRP))
+                .ForMember(x => x.CreditValue, op => op.ResolveUsing(dc => (dc.DeltaPrice ?? NULLPRODVARPRICE).CreditValue))
                 .ForMember(x => x.DistPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).DistPartNumber))
                 .ForMember(x => x.MfgPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).MfgPartNumber))
                 .ForMember(x => x.CostCurrencyCode, op => op.ResolveUsing(dc => (dc.SupplierInfo != null && dc.SupplierInfo.Cost != null)
@@ -542,14 +536,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DeltaCost, op => op.ResolveUsing(dc => (dc.SupplierInfo != null && dc.SupplierInfo.Cost != null)
                     ? dc.SupplierInfo.Cost.Cost
                     : NULLCOST.Cost))
-                      ;
+                .ForMember(x => x.StockOnHand, op => op.Ignore())
+                .ForMember(x => x.StockOnOrder, op => op.Ignore())
+                ;
+
             Mapper.CreateMap<ProductVariation, DC.ProductVariation>()
                 .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => x.DeltaPriceValue.HasValue
                     ? new DC.ProductVariationDeltaPrice()
                     {
                         CurrencyCode = DEFAULT_CURRENCY_CODE,
                         Value = x.DeltaPriceValue,
-                        MSRP = x.DeltaMSRP
+                        MSRP = x.DeltaMSRP,
+                        CreditValue = x.CreditValue
                     } : null))
                 .ForMember(dc => dc.SupplierInfo, op => op.ResolveUsing(x => new DC.ProductSupplierInfo()
                 {
@@ -561,11 +559,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         Cost = x.DeltaCost
                     }
                 }))
-                    ;
-
-            Mapper.CreateMap<DC.ProductVariationOption, ProductVariationOption>();
-            Mapper.CreateMap<ProductVariationOption, DC.ProductVariationOption>();
-
+                ;
 
             Mapper.CreateMap<Mozu.ProductAdmin.Contracts.LocationInventory, LocationWithInventory>()
                 .ForMember(x => x.Location, op => op.Ignore())

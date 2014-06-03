@@ -214,8 +214,7 @@
       <HintPath>..\packages\Mozu.AdminUser.Contracts.1.7.0.3\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.8.0-dev004\lib\net45\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.8.0-dev006\lib\net45\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts">
       <HintPath>..\packages\Mozu.Content.Contracts.1.7.0.2\lib\Mozu.Content.Contracts.dll</HintPath>
@@ -276,10 +275,11 @@
     </Reference>
     <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.8.0-dev013\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.8.0-dev015\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ProductRuntime.Contracts">
-      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.7.0.3\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
+    <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.8.0-dev008\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Provisioning.Contracts">
       <HintPath>..\packages\Mozu.Provisioning.Contracts.1.7.0.3\lib\Mozu.Provisioning.Contracts.dll</HintPath>
@@ -1558,6 +1558,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Tests\unit\core\app-state-matches-uri.t.js" />
+    <Content Include="Tests\unit\view\productType\Form.t.js" />
     <Content Include="Tests\unit\view\product\subforms\ListExtraEditor.t.js" />
     <Content Include="Tests\unit\core\ux\grid\grid-action-buttons.js" />
     <Content Include="Tests\unit\view\order\pendingreview-should-not-allow-add-payment.js" />
@@ -2051,6 +2052,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

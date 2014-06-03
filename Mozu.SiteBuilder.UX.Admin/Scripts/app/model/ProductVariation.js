@@ -33,6 +33,11 @@ Ext.define('Taco.model.ProductVariation', {
             "useNull": true
         },
         {
+            name: "creditValue",
+            type: "float",
+            useNull: true
+        },
+        {
             "name": "isActive",
             "type": "boolean",
             "useNull": true
