@@ -111,10 +111,15 @@ Ext.define('Taco.view.report.Index', {
                         return Ext.util.Format.number(val, "0,000");
                     else if (displayFormat == 'Currency')
                         return Ext.util.Format.usMoney(val);
-                    else if (displayFormat == 'ShortDate')
-                        return Ext.util.Format.date(val);
-                    else if (displayFormat == 'Percent' && Ext.isNumeric(val))
-                        return Ext.util.Format.number(val*100, "0.000%");
+                    else if (displayFormat == 'ShortDate') {
+                        if (!val || Ext.isNumeric(val)) {
+                            return val;
+                        }
+                        var cstDt = new Date(val);
+                        var utcDt = new Date(cstDt.getUTCFullYear(), cstDt.getUTCMonth(), cstDt.getUTCDate(), cstDt.getUTCHours(), cstDt.getUTCMinutes(), cstDt.getUTCSeconds());
+                        return Ext.util.Format.date(utcDt, "m/d/Y");
+                    } else if (displayFormat == 'Percent' && Ext.isNumeric(val))
+                        return Ext.util.Format.number(val * 100, "0.000%");
                     return val;
                 },
                 dataIndex: item.key
