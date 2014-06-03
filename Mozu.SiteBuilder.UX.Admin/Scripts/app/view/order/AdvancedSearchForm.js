@@ -66,6 +66,10 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                         }, {
                             name: "Pending",
                             id: "Pending"
+                        },
+                        {
+                            name: "Pending Review",
+                            id: "PendingReview"
                         }, {
                             name: 'Accepted',
                             id: 'Accepted'
@@ -97,25 +101,15 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                 store: Ext.create('Ext.data.Store', {
                     fields: ['id', "name"],
                     data: [
-                    {
-                        name: "Not Set",
-                        id: "Null"
-                    },
                         {
-                            name: "AwaitingCheck",
-                            id: "AwaitingCheck"
-                        }, {
-                            name: "AwaitingPayment",
-                            id: "AwaitingPayment"
-                        }, {
                             name: "Paid",
                             id: "Paid"
                         }, {
-                            name: 'Authorized',
-                            id: 'Authorized'
+                            name: "Unpaid",
+                            id: "Unpaid"
                         }, {
-                            name: "Void",
-                            id: "Void"
+                            name: "Pending",
+                            id: "Pending"
                         }
                     ]
                 })
