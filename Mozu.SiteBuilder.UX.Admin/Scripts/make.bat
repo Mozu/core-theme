@@ -1,4 +1,4 @@
-echo off
+
 if not exist C:\sitebuilder\devstuff\ExtVersions\ext-4.2.2.1144 (
 	echo "missing C:\sitebuilder\devstuff\ExtVersions\ext-4.2.2.1144  get from $/Mozu/UI/Dev/LocalDevStuff/ExtVersions/ext-4.2.2.1144"
 	EXIT /B
