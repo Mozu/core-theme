@@ -5,8 +5,7 @@ Ext.define('Taco.view.settings.shipping.Form', {
     extend: 'Taco.core.ux.form.NavForm2',
     requires: [
         'Taco.view.settings.shipping.subform.ShippingFrom',
-        'Taco.view.settings.shipping.subform.MethodsAndRates',
-        'Taco.view.settings.shipping.subform.ShippingPreferences'
+        'Taco.view.settings.shipping.subform.MethodsAndRates'
     ],
     title: 'Shipping Settings',
 
@@ -21,21 +20,19 @@ Ext.define('Taco.view.settings.shipping.Form', {
             record: me.record
         });
         
-        me.shippingPreferences = Ext.create('Taco.view.settings.shipping.subform.ShippingPreferences', {
-            record: me.record
-        });
+       
         
         me.navStore = Ext.create('Ext.data.Store', {
             fields: ['title'],
-            data: [me.shippingFrom, me.methodsAndRates, me.shippingPreferences]
+            data: [me.shippingFrom, me.methodsAndRates]
         });
 
         me.mon(me.record,'afteredit', Ext.emptyFn, me); // used to check savable state here
         
         me.items = [
             me.shippingFrom,
-            me.methodsAndRates,
-            me.shippingPreferences
+            me.methodsAndRates
+          
         ];
 
         this.callParent(arguments);

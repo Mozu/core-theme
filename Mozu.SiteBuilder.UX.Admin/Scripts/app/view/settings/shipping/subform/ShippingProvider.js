@@ -22,26 +22,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
         //p.getLayout().setActiveItem(1);
 
 
-        this.allRates = Taco.core.data.StoreManager.getOrCreate({
-            id: 'carrierRates' + me.providerId,
-            model: 'Taco.model.KeyValuePair',
-            autoLoad: true,
-            proxy: {
-                type: 'ajax',
-                extraParams: {
-                    id: me.providerId
-                },
-                api: {
-                    read: '/admin/app/shipping/carrierRates'
-                },
-                reader: {
-                    type: 'json',
-                    root: 'items',
-                    successProperty: 'success',
-                    messageProperty: "message"
-                }
-            }
-        });
+       
 
 
         this.configFields = Ext.widget({
@@ -74,98 +55,28 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                             width: 240,
                             html: me.configureCopy
                         },
-                        {
-                            xtype: 'action',
-                            text: 'Configure Rates',
-                            click: function () {
-                                me.getLayout().setActiveItem(1);
-                            }
-                        }
+                        
                     ]
                 }
             ]
         });
 
 
-        this.ratesSelect = Ext.widget({
-            xtype: 'boxselect',
-            name: 'rates',
-            value: this.record.get('rates'),
-            store: this.allRates,
-            queryMode: 'local',
-            width: 400,
-            triggerOnClick: true,
-            forceSelection: true,
-            disableKeyFilter: true,
-            typeAhead: true,
-            displayField: 'Value',
-            fieldLabel: 'Select Shipping Methods',
-            valueField: 'Key'
-        });
-        this.countrySelector = Ext.widget('boxselect', {
-            fieldLabel: 'Choose Countries',
-            name: 'configuredCountries',
-            queryMode: 'local',
-            width: 400,
-            displayField: 'name',
-            valueField: 'code',
-            store: { type: 'Taco.store.Countries' }
-        });
-
-        this.ratesContainer = Ext.widget({
-            xtype: 'container',
-            autoScroll: true,
-
-            layout: {
-                type: 'hbox'
-            },
-            items: [
-                {
-                    xtype: 'container',
-                    padding: '40 40 40 40',
-                    items: [
-                        this.ratesSelect,
-                        this.countrySelector
-                    ]
-                },
-                {
-                    xtype: 'container',
-                    padding: '40 40 40 40',
-                    items: [
-                        {
-                            height: 340,
-                            width: 240,
-                            html: me.ratesCopy
-                        },
-                        {
-                            xtype: 'action',
-                            text: 'Configure Credentials',
-                            click: function () {
-                                me.getLayout().setActiveItem(0);
-                            }
-                        }
-                    ]
-                }
-            ]
-        });
+        
 
         this.items = [
-            this.configContainer,
-            this.ratesContainer
+            this.configContainer
         ];
 
         this.callParent(arguments);
-        if (this.record.get('isConfigured')) {
-            me.getLayout().setActiveItem(1);
-        }
+       
     },
     beforeSave: function () {
-        if (this.configFields.isDirty() || this.ratesSelect.isDirty() || this.countrySelector.isDirty()) {            
-            var settings = this.configFields.getForm().getValues(false, false, false, true),
-                rates = this.ratesSelect.getValue();
+        if (this.configFields.isDirty() ) {
+            var settings = this.configFields.getForm().getValues(false, false, false, true);
             this.record.set('settings', settings);
-            this.record.set('rates', rates);
-            this.record.set('configuredCountries', this.countrySelector.getValue());
+           
         }
     }
+    
 });

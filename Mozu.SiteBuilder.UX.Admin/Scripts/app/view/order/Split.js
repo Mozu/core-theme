@@ -525,15 +525,31 @@ Ext.define('Taco.view.order.Split', {
     },
 
     resetForm: function () {
+
         this.updateEast('placeholder');
     },
 
     updateEast: function (key, config) {
         var east = this.getEast();
-        var defaults = this.statics().eastConfigs[key];
+        var defaults = this.statics().eastConfigs[key],
+            url = "orders/split";
 
         east.removeAll(true);
 
-        if (defaults) east.add(Ext.apply({}, config || {}, defaults));
+        if (defaults) {
+            config = Ext.apply({}, config || {}, defaults);
+        }
+        //uriOrState, metadata, useReplace
+        if (config&& config.record) {
+            url = "orders/edit/" + config.record.getId();
+        }
+        if (key == "form") {
+            Taco.core.StateManager.attemptNavigate(url, { complexMetaData: { container: east } });
+        } else {
+            east.removeAll();
+            east.add(config);
+        }
+       
+       
     }
 });
