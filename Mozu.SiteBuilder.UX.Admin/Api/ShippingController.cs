@@ -84,9 +84,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var res = (await _siteShippingSettingsClient.GetSiteShippingSettings()).ReadAsSync();
 		    var locRes = (await _locationSettingsWebApiClient.GetLocationUsages()).ReadAsSync();
-
-            var custSettings = (await _carrierConfigurationWebApiClient.GetConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId)).ReadAsSync();
-            var settings = Mapper.Map<SiteShippingSettings>(res);
+		    DC.CarrierConfiguration custSettings = null;
+		    try
+		    {
+		        custSettings = (await _carrierConfigurationWebApiClient.GetConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId)).ReadAsSync();
+		    }
+		    catch
+		    {
+		        custSettings = new DC.CarrierConfiguration();
+		    }
+		    var settings = Mapper.Map<SiteShippingSettings>(res);
             settings.CustomRates = Mapper.Map<List<CustomTableRate>>(custSettings.CustomTableRates );
             
 		    settings.ShippingLocationCode = locRes.Items.Where(x => x.LocationUsageTypeCode == "DS").Select(x => x.LocationCodes != null && x.LocationCodes.Count > 0 ? x.LocationCodes.First() : null).FirstOrDefault();
@@ -171,7 +178,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var key = FeatureDic.Where(x => string.Equals(x.Value, rp, StringComparison.OrdinalIgnoreCase)).Select(x => x.Key).First();
                 var configuration = configurations.Items.FirstOrDefault(conf => conf.Id == key);
-                if (configuration == null )//till stew does a thing|| !configuration.Enabled)
+                if (configuration == null  || !configuration.Enabled)
                     continue;
                 var cConfig = (await _carrierConfigurationGlobalWebApiClient.GetCarrierServiceTypes(key, "en-US")).ReadAsSync();
                
