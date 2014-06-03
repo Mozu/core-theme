@@ -988,7 +988,7 @@
     <Exec Command="npm cache clean" WorkingDirectory="$(ProjectDir)Themes\Core4" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="attrib -r &quot;$(ProjectDir)Themes\Core4\compiled&quot; /D /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="npm install" WorkingDirectory="$(ProjectDir)Themes\Core4" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\Core4" ConsoleToMSBuild="true" Condition="'$(BuildingInsideVisualStudio)' != 
+    <Exec Command="grunt -v notfs" WorkingDirectory="$(ProjectDir)Themes\Core4" ConsoleToMSBuild="true" Condition="'$(BuildingInsideVisualStudio)' != 
     'true'">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
 </Exec>
