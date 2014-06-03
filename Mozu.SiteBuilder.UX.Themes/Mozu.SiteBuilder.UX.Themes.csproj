@@ -988,7 +988,8 @@
     <Exec Command="npm cache clean" WorkingDirectory="$(ProjectDir)Themes\Core4" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="attrib -r &quot;$(ProjectDir)Themes\Core4&quot; /D /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="npm install" WorkingDirectory="$(ProjectDir)Themes\Core4" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Exec Command="grunt zubat" WorkingDirectory="$(ProjectDir)Themes\Core4" ConsoleToMSBuild="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
+    <Exec Command="grunt zubat" WorkingDirectory="$(ProjectDir)Themes\Core4" ConsoleToMSBuild="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" 
+          IgnoreExitCode="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
   </Target>
