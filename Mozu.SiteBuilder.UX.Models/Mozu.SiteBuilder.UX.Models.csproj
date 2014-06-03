@@ -293,8 +293,9 @@
     <Reference Include="Mozu.Reference.Contracts">
       <HintPath>..\packages\Mozu.Reference.Contracts.1.7.0.3\lib\net45\Mozu.Reference.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ShippingAdmin.Contracts">
-      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.7.0.3\lib\Mozu.ShippingAdmin.Contracts.dll</HintPath>
+    <Reference Include="Mozu.ShippingAdmin.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.8.0-dev008\lib\Mozu.ShippingAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ShippingRuntime.Contracts">
       <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.7.0.2\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>

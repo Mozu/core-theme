@@ -22,9 +22,6 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
         //p.getLayout().setActiveItem(1);
 
 
-       
-
-
         this.configFields = Ext.widget({
             xtype: 'formform',
             autoScroll: true,
@@ -35,6 +32,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                 align: 'stretch'
             },
             items: me.customFileds
+
         });
         this.configFields.getForm().setValues(this.record.get("settings") || {});
 
@@ -44,39 +42,44 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
             layout: {
                 type: 'hbox'
             },
-            items: [
-                this.configFields,
+                items: [
+                {
+                    xtype:'container',
+                                    items: [].concat(this.configFields, [{
+                                xtype: 'checkbox',  name: 'enabled', boxLabel: 'enabled'}])
+                }
+               ,
                 {
                     xtype: 'container',
                     padding: '40 40 40 40',
-                    items: [
+
+                        items: [
+                            
                         {
-                            height: 340,
+                            height: 400,
                             width: 240,
                             html: me.configureCopy
-                        },
-                        
+                        }
+                       
                     ]
                 }
             ]
         });
 
 
-        
-
         this.items = [
             this.configContainer
         ];
 
         this.callParent(arguments);
-       
+
     },
     beforeSave: function () {
-        if (this.configFields.isDirty() ) {
+        if (this.configFields.isDirty()) {
             var settings = this.configFields.getForm().getValues(false, false, false, true);
             this.record.set('settings', settings);
-           
+
         }
     }
-    
+
 });

@@ -50,7 +50,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
         [JsonProperty(PropertyName = "settings")]
         public Newtonsoft.Json.Linq.JObject Settings { get; set; }
 
-        public List<string> Rates { get; set; }
 
         public bool? IsConfigured { get; set; }
 
@@ -58,10 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
         public Mozu.ShippingAdmin.Contracts.CarrierConfiguration PreviousValue { get; set; }
 
 
-        /// <summary>
-        /// The countries configured for this carrier
-        /// </summary>
-        public List<string> ConfiguredCountries { get; set; }
+        public bool Enabled { get; set; }
 
     }
 
@@ -78,7 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
         [JsonProperty(PropertyName = "type")]
         public string RateType { get; set; }
 
-        public List<string> ConfiguredCountries { get; set; }
+       
 
         
 

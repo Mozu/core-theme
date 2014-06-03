@@ -290,8 +290,9 @@
     <Reference Include="Mozu.Reporting.Contracts">
       <HintPath>..\packages\Mozu.Reporting.Contracts.1.7.0.3\lib\Mozu.Reporting.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ShippingAdmin.Contracts">
-      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.7.0.3\lib\Mozu.ShippingAdmin.Contracts.dll</HintPath>
+    <Reference Include="Mozu.ShippingAdmin.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.8.0-dev008\lib\Mozu.ShippingAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ShippingRuntime.Contracts">
       <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.7.0.2\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
@@ -1237,7 +1238,6 @@
     <Content Include="Scripts\app\view\settings\shipping\subform\ShippingProvider.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\Custom.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\MethodsAndRates.js" />
-    <Content Include="Scripts\app\view\settings\shipping\subform\ShippingPreferences.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\ShippingFrom.js" />
     <Content Include="Scripts\app\view\settings\tax\Edit.js" />
     <Content Include="Scripts\app\view\settings\tax\Form.js" />
@@ -2105,7 +2105,7 @@
     <Exec Command="makeTfsBuild.bat" CustomErrorRegularExpression=".*ERR.*" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="CIRunner.bat" CustomErrorRegularExpression=".*\[FAIL\].*" WorkingDirectory="$(ProjectDir)\Tests\Automation" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Message Text="thoms notes-- mstest /publish:$(TeamFoundationServerUrl) /publishbuild:&quot;$(BuildNumber)&quot; /teamproject:Mozu /platform:&quot;Any CPU&quot; /flavor:$(Configuration) /publishresultsfile:junit.trx" />
-    <Exec Command="&quot;C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\mstest.exe&quot; /publish:$(TeamFoundationServerUrl) /publishbuild:&quot;$(BuildNumber)&quot; /teamproject:Mozu /platform:quot;Any CPU&quot; /flavor:$(Configuration) /publishresultsfile:junit.trx" WorkingDirectory="$(ProjectDir)\Tests\Automation" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <Exec Command="&quot;C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\mstest.exe&quot; /publish:$(TeamFoundationServerUrl) /publishbuild:&quot;$(BuildNumber)&quot; /teamproject:Mozu /platform:&quot;Any CPU&quot; /flavor:$(Configuration) /publishresultsfile:junit.trx" WorkingDirectory="$(ProjectDir)\Tests\Automation" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <ItemGroup>
       <LocalJUnitLogFiles Include="$(ProjectDir)\Tests\Automation\*.trx" />
     </ItemGroup>

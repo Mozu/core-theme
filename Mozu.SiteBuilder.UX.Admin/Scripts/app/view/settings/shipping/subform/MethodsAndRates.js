@@ -28,7 +28,7 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
 
         this.tabs = Ext.create('Ext.tab.Panel', {
             width: "100%",
-            height: 500,
+            height: 550,
             
             //border: '1px',
             style: {

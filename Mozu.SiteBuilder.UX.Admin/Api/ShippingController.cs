@@ -8,6 +8,7 @@ using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Burrows.Exceptions;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Routing;
@@ -153,27 +154,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 		[HttpGetRoute(UriTemplate = "carrierRates")]
         public async Task<Response<List<KeyValuePair<string, string>>>> GetAllCarrierRates(string id = null )
-        {
-            if (!string.IsNullOrEmpty(id))
-            {
-                var res = (await _carrierConfigurationGlobalWebApiClient.GetServiceTypes(id, "en-US")).ReadAsSync();
-
-                var ret = res.Select(x => new KeyValuePair<string, string>(x.Code, x.Content != null ? x.Content.Name : x.Code)).ToList();
-                return List2(ret);
-            }
-            else
-            {
-                var ret = new List<KeyValuePair<string, string>>();
-                foreach (var rp in Mozu.SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.GetAll() )
-                {
-                    var key = FeatureDic.Where(x => string.Equals(x.Value, rp, StringComparison.OrdinalIgnoreCase)).Select(x => x.Key).First();
-                    var cConfig = (await _carrierConfigurationGlobalWebApiClient.GetServiceTypes(key, "en-US")).ReadAsSync();
-
-                    ret.AddRange(cConfig.Select(x => new KeyValuePair<string, string>(x.Code, x.Content != null ? x.Content.Name : x.Code)));
-                }
-               return List2(ret);
-            }
-        }
+		{
+		    throw new NotImplementedByDesignException("go away");
+		}
 
         /// <summary>
         /// Gets a list of configured carrier rates. This is used to build the "available shipment methods" for orders.
@@ -188,10 +171,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var key = FeatureDic.Where(x => string.Equals(x.Value, rp, StringComparison.OrdinalIgnoreCase)).Select(x => x.Key).First();
                 var configuration = configurations.Items.FirstOrDefault(conf => conf.Id == key);
-                if (configuration == null)
+                if (configuration == null )//till stew does a thing|| !configuration.Enabled)
                     continue;
-                var cConfig = (await _carrierConfigurationGlobalWebApiClient.GetServiceTypes(key, "en-US")).ReadAsSync();
-
+                var cConfig = (await _carrierConfigurationGlobalWebApiClient.GetCarrierServiceTypes(key, "en-US")).ReadAsSync();
+               
                 if (key == "custom")
                 {
                     var cheese =
@@ -213,16 +196,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     var cheese =
                         from st in cConfig
-                        let isConfigured = configuration.ConfiguredServiceTypes != null && configuration.ConfiguredServiceTypes.Any(other => other.Code == st.Code && other.IsActive.GetValueOrDefault())
+                        let isConfigured = true
                         select new
                         {
                             Code = st.Code,
                             Name = st.Content != null ? st.Content.Name : st.Code,
                             IsProvider = true,
                             RateProvider = key,
-                            IsActive = st.IsActive,
-                            IsInternational = st.IsInternational,
-                            Sequence = st.Sequence,
+                            IsActive = true,
+                            IsInternational = true,
+                            Sequence = 0,
                             IsConfigured = isConfigured
                         };
                     ret.AddRange(cheese);
@@ -230,16 +213,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             return List2(ret);
+           
         }
     
 
 		[HttpGetRoute(UriTemplate = "configuredRates")]
         public async Task<Response<List<KeyValuePair<string, string>>>> GetConfiguredRates()
         {
-            var res = (await _carrierConfigurationWebApiClient .GetConfigurations(startIndex:0,pageSize:600)).ReadAsSync();
-            
-            var ret = res.Items.SelectMany( x=> x.ConfiguredServiceTypes ).Select(x => new KeyValuePair<string, string>(x.Code , x.Content != null ? x.Content.Name: x.Code)).ToList();
-            return List2(ret);
+            throw new NotImplementedByDesignException("go away");
 
         }
 
