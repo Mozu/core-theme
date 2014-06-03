@@ -20,8 +20,8 @@
 	<p><b>{{ labels.giftCardAmount }}</b> <span class="mz-price">{{model.Credit.CurrentBalance|currency}}</span></p>
     <p><b>{{ labels.giftCardClaimCode }}</b> {{model.Credit.Code}}</p>
 
-	{{ labels.giftCardInstructions|string_format(domainName, domainName)|safe }}
+	{{ labels.giftCardInstructions|string_format(domainName)|safe }}
 
-	{{ labels.giftCardClosing|string_format(domainName, domainName)|safe }}
+	{{ labels.giftCardClosing|string_format(domainName)|safe }}
 
 {% endblock body-content %}
