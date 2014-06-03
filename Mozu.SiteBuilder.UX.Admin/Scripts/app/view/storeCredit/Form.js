@@ -4,7 +4,6 @@
 Ext.define('Taco.view.storeCredit.Form', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
-        'Taco.store.Customers',
         'Taco.shared.view.field.Customer'
     ],
     ui: 'subform',

@@ -6,6 +6,7 @@
 Ext.define('Taco.shared.view.field.Customer', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.taco-customerfield',
+    requires: ['Taco.model.CustomerAccount', 'Taco.store.CustomersPicker'],
 
   //  displayField: 'primaryEmail',
     valueField: 'id',
@@ -64,7 +65,7 @@ Ext.define('Taco.shared.view.field.Customer', {
         
         if (!this.store) {
             this.store = Taco.core.data.StoreManager.getOrCreate({
-                type: 'Taco.store.Customers',
+                type: 'Taco.store.CustomersPicker',
                 pageSize: this.pageSize,
                 autoLoad: true
             });

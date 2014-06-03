@@ -1,11 +1,11 @@
 ﻿
 	/**
-	 * @class Taco.store.Customers
+	 * @class Taco.store.CustomersPicker
 	 */
-    Ext.define('Taco.store.Customers', {
+    Ext.define('Taco.store.CustomersPicker', {
         extend: 'Ext.data.Store',
-        model: 'Taco.model.CustomerAccount',
-        pageSize: 50,
+        model: 'Taco.model.CustomerAccountPicker',
+        pageSize: 10,
         remoteSort: true,
         remoteFilter: true,
         storeManagerConfig: {
