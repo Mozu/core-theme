@@ -111,12 +111,13 @@
                 <xsl:value-of select="concat(//environment/@cwd,'\',/test-results/test-suite/@name)"/>
               </xsl:attribute>
               <xsl:attribute name="className">
-                <xsl:variable name="testClassName">
+                <xsl:value-of select ="'fred'"/>
+                <!--<xsl:variable name="testClassName">
                   <xsl:call-template name="getTestClassName">
                     <xsl:with-param name="nunitName" select="@name"/>
                   </xsl:call-template>
                 </xsl:variable>
-                <xsl:value-of select="concat(@name, ', ', $testClassName)" />
+                <xsl:value-of select="concat(@name, ', ', $testClassName)" />-->
               </xsl:attribute>
             </TestMethod>
           </UnitTest>
@@ -156,7 +157,7 @@
               <xsl:value-of select="$testName"/>
             </xsl:attribute>
             <xsl:attribute name="computerName">
-              <xsl:value-of select="//environment/@machine-name"/>
+              <xsl:value-of select="/testsuite/@hostname"/>
             </xsl:attribute>
             <xsl:attribute name="duration">
               <xsl:call-template name="secondsToDuration">
@@ -241,30 +242,62 @@
 
   <xsl:template name="getTestName">
     <xsl:param name="nunitName" />
-
-    <xsl:choose>
+    <xsl:call-template name="string-replace-all">
+      <xsl:with-param name="text" select="$nunitName" />
+      <xsl:with-param name="replace" select="'/'" />
+      <xsl:with-param name="by" select="'-'" />
+    </xsl:call-template>
+    <!--<xsl:choose>
       <xsl:when test="contains($nunitName, '(')">
-        <!-- NUnit name contains an open bracket; must be a test case name, e.g. MyTest("MyParameter"). Do a substring-after-last
+        -->
+    <!-- NUnit name contains an open bracket; must be a test case name, e.g. MyTest("MyParameter"). Do a substring-after-last
                      on everything before the '(' to get the method name. -->
+    <!--
         <xsl:variable name="MethodName">
           <xsl:call-template name="substring-after-last">
             <xsl:with-param name="string" select="substring-before($nunitName, '(')" />
             <xsl:with-param name="delimiter" select="'.'" />
           </xsl:call-template>
         </xsl:variable>
-        <!-- Now we need to append the stuff after the bracket. Normalize and trim to 255 characters at the same time. -->
+        -->
+    <!-- Now we need to append the stuff after the bracket. Normalize and trim to 255 characters at the same time. -->
+    <!--
         <xsl:value-of select="substring(normalize-space(concat($MethodName, '(', substring-after($nunitName, '('))), 0, 255)" />
       </xsl:when>
       <xsl:otherwise>
-        <!-- No open bracket, method name is everything after the last '.'. -->
+        -->
+    <!-- No open bracket, method name is everything after the last '.'. -->
+    <!--
         <xsl:variable name="MethodName">
           <xsl:call-template name="substring-after-last">
             <xsl:with-param name="string" select="$nunitName" />
-            <xsl:with-param name="delimiter" select="'.'" />
+            <xsl:with-param name="delimiter" select="'/'" />
           </xsl:call-template>
         </xsl:variable>
-        <!-- Trim the name to 255 characters and return. -->
+        -->
+    <!-- Trim the name to 255 characters and return. -->
+    <!--
         <xsl:value-of select="substring($MethodName, 0, 255)" />
+      </xsl:otherwise>
+    </xsl:choose>-->
+  </xsl:template>
+  <xsl:template name="string-replace-all">
+    <xsl:param name="text" />
+    <xsl:param name="replace" />
+    <xsl:param name="by" />
+    <xsl:choose>
+      <xsl:when test="contains($text, $replace)">
+        <xsl:value-of select="substring-before($text,$replace)" />
+        <xsl:value-of select="$by" />
+        <xsl:call-template name="string-replace-all">
+          <xsl:with-param name="text"
+          select="substring-after($text,$replace)" />
+          <xsl:with-param name="replace" select="$replace" />
+          <xsl:with-param name="by" select="$by" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$text" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
