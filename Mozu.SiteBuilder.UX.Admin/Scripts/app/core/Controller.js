@@ -124,6 +124,11 @@ Ext.define('Taco.core.Controller', {
     edit: function (id, additionalParams, appState) {
         var record = appState ? appState.record : null,
             options = appState ? appState.options : null;
+        if (appState && appState.container) {
+            options = options || {};
+            options.container = appState.container;
+        }
+            
         if (record) {
             Taco.app.setLoading();
             record.reload({
@@ -216,13 +221,13 @@ Ext.define('Taco.core.Controller', {
      * @return {Taco.core.ux.content.Container}      The view created or passed.
      */
     createContentView: function (view, cfg) {
-        var viewClass = Ext.ClassManager.get(view);
+        var viewClass = Ext.ClassManager.get(view), container;
         if (this.confirmContext(viewClass)) {
-
+            container = cfg && cfg.options && cfg.options.container ? cfg.options.container : Taco.app.contentView;
             Ext.suspendLayouts();
 
             //removing initial view  to aviod events firing from the create of the view from messin with the 
-            Taco.app.contentView.removeAll(true);
+           
             view = view.$className ? view : Ext.create(view, cfg);
             if (view.contextConfig && view.contextConfig.requiresContextOfType) {
                 view.mon(Taco.app.context, "beforecontextchange", function (newContext) {
@@ -231,8 +236,8 @@ Ext.define('Taco.core.Controller', {
                     return works;
                 }, this);
             }
-
-            Taco.app.contentView.add(view);
+            container.removeAll(true);
+            container.add(view);
             Ext.resumeLayouts(true);
             return view;
         }
