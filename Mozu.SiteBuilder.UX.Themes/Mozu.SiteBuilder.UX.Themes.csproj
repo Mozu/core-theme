@@ -993,8 +993,8 @@
     'true'" 
           IgnoreExitCode="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
-
+</Exec>
     -->
-    </Exec>
+    
   </Target>
 </Project>
