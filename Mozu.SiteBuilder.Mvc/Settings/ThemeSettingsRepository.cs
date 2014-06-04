@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         private readonly SiteContext _siteContext;
         private readonly JsonSerializer  _serializer;
    
-        private readonly IStorefrontCache _cache;
+     //   private readonly IStorefrontCache _cache;
       
         /// <summary>
         /// Constructor.
@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             _docWebApiClient = docWebApiClient;
             _cmsService = cmsService;
             _siteContext = siteContext;
-            _cache = cache;
+          //  _cache = cache;
         }
 
 
@@ -142,20 +142,22 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         public Task<JObject> GetInstanceValues(string themeId)
         {
 
-            var key = typeof(List<ThemeRuntimeSetting>) + themeId;
+            //todo: add back to cache when cms is added.
 
-            var cachedResult = _cache.Get<Tuple<DateTime, JObject, byte[]>>(key);
-            if (cachedResult != null )
-            {
-                var tcs = new TaskCompletionSource<JObject>();
-                this.Etag = cachedResult.Item3;
-                tcs.SetResult(cachedResult.Item2 ?? new JObject());
-                _ts = cachedResult.Item1;
-                return tcs.Task  ;
-            }
+            //var key = typeof(List<ThemeRuntimeSetting>) + themeId;
 
-            if (_getInstanceValues == null)
-            {
+            //var cachedResult = _cache.Get<Tuple<DateTime, JObject, byte[]>>(key);
+            //if (cachedResult != null )
+            //{
+            //    var tcs = new TaskCompletionSource<JObject>();
+            //    this.Etag = cachedResult.Item3;
+            //    tcs.SetResult(cachedResult.Item2 ?? new JObject());
+            //    _ts = cachedResult.Item1;
+            //    return tcs.Task  ;
+            //}
+
+            //if (_getInstanceValues == null)
+            //{
                 _getInstanceValues = _cmsService.GetByPath2("settings", this.GetFileName(themeId)).ContinueWith<JObject>(
                     res =>
                     {
@@ -163,6 +165,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                         if (res.Result.ResponseMessage.IsSuccessStatusCode)
                         {
                             this.Etag = res.Result.ETagBytes();
+                           
                             var doc = res.Result.ReadAsSync();
 
                             _ts = doc.UpdateDate.GetValueOrDefault(DateTime.Today);
@@ -178,18 +181,18 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                                     value = new JObject();
                                 }
                             }
-                            _cache.Set(key,new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, this.Etag ));
+                          //  _cache.Set(key,new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, this.Etag ));
                         }
                         else
                         {
                             _ts = DateTime.Today;
                             this.Etag = new byte[0];
-                              _cache.Set(key,new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, this.Etag));
+                          //    _cache.Set(key,new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, this.Etag));
 
                         }
                         return value ?? new JObject();
                     });
-            }
+          //  }
             return _getInstanceValues;
 
         }
