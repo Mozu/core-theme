@@ -22,6 +22,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public int? ProductReservationId { get; set; }
      
         public decimal? UnitWeight { get; set; }
+
+        /// <summary>
+        /// Physical, DigitalCredit, Digital
+        /// </summary>
+        public string GoodsType { get; set; }
+
+        /// <summary>
+        /// Gift Card Value
+        /// </summary>
+        public decimal? CreditValue { get; set; }
     }
 
 

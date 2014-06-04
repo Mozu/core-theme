@@ -214,7 +214,8 @@
       <HintPath>..\packages\Mozu.AdminUser.Contracts.1.7.0.3\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.8.0-dev006\lib\net45\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.8.0-dev008\lib\net45\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts">
       <HintPath>..\packages\Mozu.Content.Contracts.1.7.0.2\lib\Mozu.Content.Contracts.dll</HintPath>
@@ -275,11 +276,11 @@
     </Reference>
     <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.8.0-dev015\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.8.0-dev016\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.8.0-dev008\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.8.0-dev009\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Provisioning.Contracts">
       <HintPath>..\packages\Mozu.Provisioning.Contracts.1.7.0.3\lib\Mozu.Provisioning.Contracts.dll</HintPath>
@@ -2110,28 +2111,18 @@
     <AjaxMin JsSourceFiles="@(JS)" JsCombinedFileName="$(ProjectDir)\Scripts\resources\lib\init.min.js" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
   </Target>
   <Target Name="AfterCompile" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
-  
-    
     <Exec Command="makeTfsBuild.bat" CustomErrorRegularExpression=".*ERR.*" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Exec Command="CIRunner.bat"  WorkingDirectory="$(ProjectDir)\Tests\Automation" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'"  />
+    <Exec Command="CIRunner.bat" WorkingDirectory="$(ProjectDir)\Tests\Automation" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Message Text="thoms notes- mstest /publish:$(TeamFoundationServerUrl) /publishbuild:&quot;$(BuildNumber)&quot; /teamproject:Mozu /platform:&quot;Any CPU&quot; /flavor:$(Configuration) /publishresultsfile:junit.trx" />
     <Exec Command="&quot;C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\mstest.exe&quot; /publish:$(TeamFoundationServerUrl) /publishbuild:&quot;$(BuildNumber)&quot; /teamproject:Mozu /platform:&quot;Any CPU&quot; /flavor:$(Configuration) /publishresultsfile:junit.trx" WorkingDirectory="$(ProjectDir)\Tests\Automation" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-
-    <XmlPeek XmlInputPath="$(ProjectDir)\Tests\Automation\junit.trx" Query="/*/x:ResultSummary/@outcome" 
-     Namespaces="&lt;Namespace Prefix='x' Uri='http://microsoft.com/schemas/VisualStudio/TeamTest/2010' /&gt;"        > 
-   
+    <XmlPeek XmlInputPath="$(ProjectDir)\Tests\Automation\junit.trx" Query="/*/x:ResultSummary/@outcome" Namespaces="&lt;Namespace Prefix='x' Uri='http://microsoft.com/schemas/VisualStudio/TeamTest/2010' /&gt;">
       <Output TaskParameter="Result" PropertyName="JSTestOutcom" />
     </XmlPeek>
-    <XmlPeek XmlInputPath="$(ProjectDir)\Tests\Automation\junit.trx" Query="//x:UnitTestResult[@outcome='Failed']/@testName" 
-     Namespaces="&lt;Namespace Prefix='x' Uri='http://microsoft.com/schemas/VisualStudio/TeamTest/2010' /&gt;"        > 
-   
+    <XmlPeek XmlInputPath="$(ProjectDir)\Tests\Automation\junit.trx" Query="//x:UnitTestResult[@outcome='Failed']/@testName" Namespaces="&lt;Namespace Prefix='x' Uri='http://microsoft.com/schemas/VisualStudio/TeamTest/2010' /&gt;">
       <Output TaskParameter="Result" PropertyName="JSTestUnitTests" />
     </XmlPeek>
-    
-    
-    <Error  Text="JS tests failed [$(JSTestUnitTests)]" Condition="'$(JSTestOutcom)'=='Failed'" />
-    <Message Text="thom notes result is $(ProjectDir)\Tests\Automation\junit.trx is $(JSTestOutcom) "/>
-    
+    <Error Text="JS tests failed [$(JSTestUnitTests)]" Condition="'$(JSTestOutcom)'=='Failed'" />
+    <Message Text="thom notes result is $(ProjectDir)\Tests\Automation\junit.trx is $(JSTestOutcom) " />
     <!--<PublishJUnit 
           
           BuildUri="$(BuildUri)"
@@ -2149,7 +2140,7 @@
     <ItemGroup>
       <AdminScriptsBuildSourceTempFiles Include="$(ProjectDir)Scripts\build\temp\**\*.*" />
     </ItemGroup>
-    <Delete Files="@(AdminScriptsBuildSourceTempFiles)"  />
+    <Delete Files="@(AdminScriptsBuildSourceTempFiles)" />
     <ItemGroup>
       <Content Include="Scripts\build\**\*.*" />
       <Content Include="Tests\Automation\*.xml" />
