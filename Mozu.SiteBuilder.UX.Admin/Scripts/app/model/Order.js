@@ -2,7 +2,11 @@
  * @class Taco.model.Order
  */
 Ext.define('Taco.model.Order', {
-    requires: ['Taco.model.Return', 'Taco.model.ShippingMethod', 'Taco.store.ShippingMethods'],
+    requires: [
+        'Taco.model.Return',
+        'Taco.model.ShippingMethod',
+        'Taco.store.ShippingMethods'
+    ],
     
     extend: 'Taco.core.data.Model',
     /**********************************************************    
@@ -226,7 +230,7 @@ Ext.define('Taco.model.Order', {
             }        
         },
 
-        // a helper member used to seperatly control whether the shipping adjustment is negative or positive;
+        // a helper member used to separately control whether the shipping adjustment is negative or positive;
         {
             "name": "orderAdjustmentIsNegative",
             "type": "boolean",
@@ -256,7 +260,7 @@ Ext.define('Taco.model.Order', {
             }
         },
 
-        // a helper member used to seperatly control whether the shipping adjustment is negative or positive;
+        // a helper member used to separately control whether the shipping adjustment is negative or positive;
         {
             "name": "shippingAdjustmentIsNegative",
             "type": "boolean",
@@ -600,6 +604,23 @@ Ext.define('Taco.model.Order', {
             foreignProperty: 'account'
         });
     },
+
+    getCustomer: function(success, failure, callback) {
+        var me = this;
+
+        Taco.model.CustomerAccount.load(this.get('customerId'), {
+            success: function(record, op) {
+                me.customer = record;
+                if (success) success(record, op);
+            },
+            failure: function(record, op) {
+                if (failure) failure(record, op);
+            },
+            callback: function(record, op, suc) {
+                if (callback) callback(record, op, suc);
+            }
+        });
+    },
     
     /*
     getPayments: function () {
@@ -681,7 +702,7 @@ Ext.define('Taco.model.Order', {
             getResponseData: function (response) {
                 // this is a temporary hack to get the proxy to use defaultValue for members that don't exist in the response
                 var data = Ext.decode(response.responseText);
-                if (data.items[0]) {
+                if (data.items  && data.items[0]) {
                     data.items[0].packages = data.items[0].packages || [];
                     data.items[0].unpackagedItems = data.items[0].unpackagedItems || undefined;
                 }
