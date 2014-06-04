@@ -14,10 +14,10 @@
         <xsl:value-of select="concat($guidStub,'30db1d215203')"/>
       </xsl:attribute>
       <xsl:attribute name="runUser">
-        <xsl:value-of select="concat(//environment/@machine-name,'\',//environment/@user)"/>
+        <xsl:value-of select="/testsuite/@hostname"/>
       </xsl:attribute>
       <xsl:attribute name="name">
-        <xsl:value-of select="concat(/testsuite/@hostname,'@',/testsuite/@timestamp )"/>
+        <xsl:value-of select="/testsuite/@name"/>
       </xsl:attribute>
       <TestSettings name="Default Test Settings" id="8dfb34aa-91bc-45e3-8609-d0a4e732d982">
         <Deployment>
