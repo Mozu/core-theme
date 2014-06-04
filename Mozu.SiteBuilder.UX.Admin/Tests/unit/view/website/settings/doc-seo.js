@@ -90,7 +90,7 @@
 
             t.is(m.doc.get('meta_description'), "test meta descriptoin2", 'the model description was set propertly');
 
-            t.is(1,2,'I am a test failure');
+            
 
         }
     );

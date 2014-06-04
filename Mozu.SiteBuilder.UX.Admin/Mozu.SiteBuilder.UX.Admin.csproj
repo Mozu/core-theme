@@ -2129,7 +2129,7 @@
     </XmlPeek>
     
     
-    <Error  Text="JS tests failed [$(JSTestUnitTests)]" Condition="'$(JSTestOutcom)'=='Failed'" File="$(ProjectDir)\Tests\Automation\junit.trx"/>
+    <Error  Text="JS tests failed [$(JSTestUnitTests)]" Condition="'$(JSTestOutcom)'=='Failed'" />
     <Message Text="thom notes result is $(ProjectDir)\Tests\Automation\junit.trx is $(JSTestOutcom) "/>
     
     <!--<PublishJUnit 
