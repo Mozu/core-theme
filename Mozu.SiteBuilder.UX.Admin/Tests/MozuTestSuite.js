@@ -124,12 +124,14 @@ Harness.start(
             }, {
                 group: 'Orders',
                 expanded: true,
-                alsoPreload: [
-                ],
                 items: [
+                    // {
+                    //     url: 'unit/view/order/pendingreview-should-not-allow-add-payment.js',
+                    //     title: 'PendingReview Should Not Allow Add Payment'
+                    // },
                     {
-                        url: 'unit/view/order/pendingreview-should-not-allow-add-payment.js',
-                        title: 'PendingReview Should Not Allow Add Payment'
+                        url: 'unit/view/order/header.t.js',
+                        title: 'Order Header Unit Tests'
                     }
                 ]
             }, {
