@@ -53,9 +53,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             builder.RegisterHttpRequestMessage(GlobalConfiguration.Configuration);
 
-            builder.RegisterType<SiteBuilderApiContext>().As<Mozu.Core.IApiContext>().As<ISiteBuilderApiContext>().InstancePerApiRequest();
+            builder.RegisterType<SiteBuilderApiContext>().As<Mozu.Core.IApiContext>().As<ISiteBuilderApiContext>().InstancePerRequest();
             // builder.RegisterType<Mozu.SiteBuilder.Mvc.Security.AuthenticationHelper>().InstancePerHttpRequest();
-            builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>().InstancePerApiRequest();
+            builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>().InstancePerRequest();
             builder.RegisterType<SbApiContextBuilder>().As<IApiContextBuilder>();
 
         //    builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteBuilder.Mvc.Customers.CustomerRepository).Assembly);
@@ -73,19 +73,19 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Shipping.Contracts.Clients.ShippingSettingsWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Order.Contracts.CheckoutSettings).Assembly);
 
-            builder.RegisterType<ThemeSettingsRepository>().As<IThemeSettingsRepository>().InstancePerApiRequest();
+            builder.RegisterType<ThemeSettingsRepository>().As<IThemeSettingsRepository>().InstancePerRequest();
 
-            builder.RegisterType<FiftyOneDegreesMobileDetectionProvider>().As<IMobileDetectionProvider>().InstancePerApiRequest();
+            builder.RegisterType<FiftyOneDegreesMobileDetectionProvider>().As<IMobileDetectionProvider>().InstancePerRequest();
 
 
             //  builder.RegisterType<BehaviorWebApiClient>().As<IBehaviorWebApiClient>();
-            builder.RegisterType<PermissionsRepository>().As<IPermissionsRepository>().InstancePerApiRequest();
+            builder.RegisterType<PermissionsRepository>().As<IPermissionsRepository>().InstancePerRequest();
 
 
 
             // TODO: this is an old cache implementation that needs to be deleted
-          //builder.RegisterType<DefaultStorefrontCache>().As<Mozu.SiteBuilder.Mvc.IStorefrontCache>().InstancePerApiRequest();
-            builder.RegisterType<ServiceClientMessageHandler>().InstancePerApiRequest();
+          //builder.RegisterType<DefaultStorefrontCache>().As<Mozu.SiteBuilder.Mvc.IStorefrontCache>().InstancePerRequest();
+            builder.RegisterType<ServiceClientMessageHandler>().InstancePerRequest();
 
             //builder.Register(c => new GeneralSettingsWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IGeneralSettingsWebApiClient>().InstancePerLifetimeScope();
             //builder.Register(c => new DocumentWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IDocumentListWebApiClient>().InstancePerLifetimeScope();
@@ -96,21 +96,21 @@ namespace Mozu.SiteBuilder.UX.Configuration
             //builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>().As<IViewEngine>().InstancePerLifetimeScope();
 
             // TODO: is this necessary
-            builder.RegisterType<RuntimeCategoryTreeProvider>().As<ICategoryTreeProvider>().InstancePerApiRequest();
+            builder.RegisterType<RuntimeCategoryTreeProvider>().As<ICategoryTreeProvider>().InstancePerRequest();
 
             // builder.RegisterType<MozuServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
 
-            builder.RegisterType<DocumentListWebApiClient>().As<IDocumentListWebApiClient>().InstancePerApiRequest();
-            builder.RegisterType<GeneralSettingsWebApiClient>().As<IGeneralSettingsWebApiClient>().InstancePerApiRequest();
+            builder.RegisterType<DocumentListWebApiClient>().As<IDocumentListWebApiClient>().InstancePerRequest();
+            builder.RegisterType<GeneralSettingsWebApiClient>().As<IGeneralSettingsWebApiClient>().InstancePerRequest();
 
-            builder.RegisterType<DocumentListWebApiClient>().As<IDocumentListWebApiClient>().InstancePerApiRequest();
-            builder.RegisterType<GeneralSettingsWebApiClient>().As<IGeneralSettingsWebApiClient>().InstancePerApiRequest();
+            builder.RegisterType<DocumentListWebApiClient>().As<IDocumentListWebApiClient>().InstancePerRequest();
+            builder.RegisterType<GeneralSettingsWebApiClient>().As<IGeneralSettingsWebApiClient>().InstancePerRequest();
 
 
-            builder.RegisterType<PropertyTypeWebApiClient>().As<IPropertyTypeWebApiClient>().InstancePerApiRequest();
-            builder.RegisterType<DocumentTypeWebApiClient>().As<IDocumentTypeWebApiClient>().InstancePerApiRequest();
+            builder.RegisterType<PropertyTypeWebApiClient>().As<IPropertyTypeWebApiClient>().InstancePerRequest();
+            builder.RegisterType<DocumentTypeWebApiClient>().As<IDocumentTypeWebApiClient>().InstancePerRequest();
 
-            builder.RegisterType<GeneralSettingsWebApiClient>().As<IGeneralSettingsWebApiClient>().InstancePerApiRequest();
+            builder.RegisterType<GeneralSettingsWebApiClient>().As<IGeneralSettingsWebApiClient>().InstancePerRequest();
 
             // set up a MemoryCache just for us
             builder.Register(c => new System.Runtime.Caching.MemoryCache("sfcache")).Named<System.Runtime.Caching.ObjectCache>("sfcache").SingleInstance();
@@ -121,14 +121,14 @@ namespace Mozu.SiteBuilder.UX.Configuration
             //         // resolve it using this named service
             //         (p,c) => c.ResolveNamed<System.Runtime.Caching.ObjectCache>("sfcache")
             //     )
-            //     .InstancePerApiRequest()
+            //     .InstancePerRequest()
             // ;
 
             // add these two logging context providers for loggers provided by the DI framework.
             builder.RegisterType<CurrentRequestLoggingContextProvider>().As<ILoggingContextProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", ApplicationConstants.APPLICATION_NAME).InstancePerLifetimeScope();
 
-            builder.RegisterType<VisitEventPublisher>().AsSelf().InstancePerApiRequest();
+            builder.RegisterType<VisitEventPublisher>().AsSelf().InstancePerRequest();
             builder.RegisterType<CacheItemsInvalidConsumer>().AsSelf();
            // builder.RegisterType<CacheItemsInvalidConsumer2>().AsSelf();
 

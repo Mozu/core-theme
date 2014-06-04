@@ -160,7 +160,13 @@ Ext.define('Taco.model.Location', {
             name: "tags",
             type: "auto",
             defaultValue: []
-        }
+        },
+          {
+              "name": "auditInfo",
+              "type": "auto",
+              "useNull": true,
+              "persist": false
+          }
     ],
     proxy: {
         type: 'ajaxproxy',

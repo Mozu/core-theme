@@ -19,7 +19,17 @@ Ext.define('Taco.model.AdminUser', {
         }},
          { name: 'firstName', type: 'string' },
          { name: 'lastName', type: 'string' },
-        { name: 'roles', type: 'auto' , defaultValue:[]},
+        { name: 'roles', type: 'auto', defaultValue: [] },
+        { name: 'localeCode', type: 'string' },
+        {
+            name: 'systemData',
+            persist:false
+        }, {
+            name: 'isActive',
+            type: 'boolean',
+            persist: false
+        }
+
     ],
 
 

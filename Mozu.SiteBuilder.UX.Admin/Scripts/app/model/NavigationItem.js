@@ -13,7 +13,10 @@ Ext.define('Taco.model.NavigationItem', {
         name: 'showBreadCrumbs',
         type: "boolean",
         defaultValue: true
-    }],
+    }, {
+        name: 'behaviorIds'
+       
+    }, 'items'],
     // belongsTo: 'NavigationItem',
     hasMany: [{
         model: 'Taco.model.NavigationItem',

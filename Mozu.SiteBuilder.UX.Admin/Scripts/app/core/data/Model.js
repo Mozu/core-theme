@@ -8,19 +8,25 @@ Ext.define('Taco.core.data.Model', {
     extend: 'Ext.data.Model',
     requires: ['Taco.core.data.AjaxProxy', 'Ext.data.BelongsToAssociation', 'Ext.data.HasManyAssociation'],
     setPhantomOnIdChange: false,
-    constructor: function () {
-        var me = this;
-
-        if (Taco.app && Ext.state.Manager.get('useMocks') && me.mockApi) {
-            Ext.apply(me.getProxy().api, me.mockApi);
-        }
-
-        return me.callParent(arguments);
-    },
+    logMissMappedFields :true,
     statics: {
         nullIfEmpty: function (v) {
             return v || null;
         },
+    },
+    init:function () {
+        if (this.raw && this.logMissMappedFields) {
+            Ext.Object.each(this.raw, function (key,value) {
+                if (!this.fields.getByKey(key)) {
+                    var unmappedFields = this.fields.unmappedFields = this.fields.unmappedFields || {};
+
+                    if (!unmappedFields[key]) {
+                        unmappedFields[key] = true;
+                        Ext.log({  level: 'warn' , dump:value }, 'unmapped field of [' + key + '] found in ' + this.modelName);
+                    }
+                }
+            }, this);
+        }
     },
     inheritableStatics: {
         allowMethod: function (method) {
