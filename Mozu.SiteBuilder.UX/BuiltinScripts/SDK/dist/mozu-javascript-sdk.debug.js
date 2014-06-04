@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-05-27
+ * Mozu JavaScript SDK - v0.3.0 - 2014-06-03
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -2669,7 +2669,7 @@ var ApiContextConstructor = function(conf) {
         ApiContextConstructor.__debug__ = require('when/monitor/console');
     }
 },
-    mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale'], //, 'bypass-cache'],
+    mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale','dataview-mode'], //, 'bypass-cache'],
     immutableAccessors = ['tenant', 'site', 'master-catalog'],
     immutableAccessorLength = immutableAccessors.length,
     allAccessors = mutableAccessors.concat(immutableAccessors),
