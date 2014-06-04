@@ -362,13 +362,13 @@
       <xsl:value-of select="substring($date,9,2)"/>
     </xsl:variable>
     <xsl:variable name="hour">
-      <xsl:value-of select="substring($time,1,2)"/>
+      <xsl:value-of select="substring($date,12,2)"/>
     </xsl:variable>
     <xsl:variable name="minute">
-      <xsl:value-of select="substring($time,4,2)"/>
+      <xsl:value-of select="substring($date,15,2)"/>
     </xsl:variable>
     <xsl:variable name="second">
-      <xsl:value-of select="substring($time,7,2)"/>
+      <xsl:value-of select="substring($date,18,2)"/>
     </xsl:variable>
     <xsl:variable name="hexYear">
       <xsl:call-template name="dec_to_hex">
