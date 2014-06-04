@@ -94,6 +94,10 @@ Ext.define('Taco.model.Order', {
             "type": "auto"
         },
         {
+            "name": "orderSummary",
+            "type": "auto"
+        },
+        {
             "name": "orderNumber",
             "type": "int",
             "useNull": true
