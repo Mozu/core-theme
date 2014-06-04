@@ -304,6 +304,7 @@ Ext.define('Taco.view.product.subform.General', {
             fieldLabel: 'Price',
             name: 'price',
             required: true,
+            allowBlank: false,
             hideTrigger: true,
             mouseWheelEnabled: false,
             selectOnFocus: true,
@@ -339,10 +340,11 @@ Ext.define('Taco.view.product.subform.General', {
             hidden: !isDigitalCredit,
             disabled: (!isDigitalCredit || !(this.isGlobal || this.isSingleSite)),
             allowBlank: (!isDigitalCredit || (productUsage === "Configurable")),
+            required: (isDigitalCredit && (productUsage != "Configurable")),
             //minValue: .25,
             hideTrigger: true,
             mouseWheelEnabled: false,
-            selectOnFocus: true
+            selectOnFocus: false
         });
 
         this.rollupBundleSalePriceField = Ext.widget({
@@ -852,9 +854,11 @@ Ext.define('Taco.view.product.subform.General', {
             if (isDigitalCredit) {
                 me.creditValueField.show();
                 me.creditValueField.allowBlank = isConfigurable;
+                me.creditValueField.enable();
             } else {
                 me.creditValueField.hide();
                 me.creditValueField.allowBlank = true;
+                me.creditValueField.disable();
             }
             me.creditValueField.validate();
         }
