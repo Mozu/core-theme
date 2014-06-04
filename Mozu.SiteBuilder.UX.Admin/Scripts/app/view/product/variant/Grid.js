@@ -16,11 +16,11 @@ Ext.define('Taco.view.product.variant.Grid', {
         var optionColumns = [],
             staticColumns,
             tplColumnHeader,
-            isPhysical = (this.productType.get('goodsType') === 'Physical'),
-            directShipData = { "id": "DirectShip", "name": "Direct Ship" },
-            inStoreData = { "id": "InStorePickup", "name": "In Store Pickup" },
-            digitalData = { "id": "Digital", "name": "Email" },
-            fulfillmentData = (isPhysical) ? [directShipData, inStoreData] : [digitalData];
+            goodsType = this.productType.get('goodsType'),
+            isPhysical = (goodsType === 'Physical'),
+            isDigitalCredit = (goodsType === 'DigitalCredit'),
+            fulfillmentData = (isPhysical) ? [{ "id": "DirectShip", "name": "Direct Ship" }, { "id": "InStorePickup", "name": "In Store Pickup" }]
+            : [{ "id": "Digital", "name": "Email" }];
 
         var fulfillmentTypeData = Ext.create('Ext.data.Store', {
             fields: ['id', 'name'],
@@ -50,6 +50,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             dataIndex: 'deltaPrice',
             editor: {
                 xtype: 'currencyfield',
+                allowBlank: !isDigitalCredit,
                 decimalPrecision: 2,
                 hideTrigger: true,
                 keyNavEnabled: false,
@@ -80,8 +81,24 @@ Ext.define('Taco.view.product.variant.Grid', {
                 mouseWheelEnabled: false
             }
         }, {
+            text: 'Gift Card/Credit Value',
+            dataIndex: 'creditValue',
+            hideable: isDigitalCredit,
+            hidden: !isDigitalCredit,
+            required: !isDigitalCredit,
+            width: 185,
+            editor: {
+                xtype: 'currencyfield',
+                allowBlank: !isDigitalCredit,
+                decimalPrecision: 2,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            }
+        }, {
             text: 'Extra Weight',
             dataIndex: 'deltaWeight',
+            hidden: isDigitalCredit,
             editor: {
                 xtype: 'numberfield',
                 decimalPrecision: 2,
@@ -93,7 +110,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             text: 'Fulfillment Types',
             dataIndex: 'fulfillmentTypesSupported',
             hideable: true,
-            hidden: true,
+            hidden: !isDigitalCredit,
             width: 185,
             editor: fulfillmentEditor
             
