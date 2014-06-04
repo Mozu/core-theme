@@ -105,9 +105,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         /// <summary>
         /// Denormalization of payment summary data for UI.
+        /// obsolete, supplanted by OrderAuthorizationInfo
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public OrderAuthorizationInfo AuthorizationInfo { get; set; }
+
+        /// <summary>
+        /// Denormalization of payment summary data for UI.
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public OrderSummary OrderSummary { get; set; }
 
         /// <summary>
         /// Total quantity of things ordered.

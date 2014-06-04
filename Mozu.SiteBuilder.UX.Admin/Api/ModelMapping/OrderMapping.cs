@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.Core.Api.Contracts;
-using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using CommerceDC = Mozu.CommerceRuntime.Contracts.Commerce;
 using DiscountDC = Mozu.CommerceRuntime.Contracts.Discounts;
@@ -143,6 +141,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.UnpackagedItems, op => op.Ignore())
                 .ForMember(x => x.UnpickedupItems, op => op.Ignore())
                 .ForMember(x => x.AuthorizationInfo, op => op.Ignore())
+                .ForMember(x => x.OrderSummary, op => op.Ignore())
                 .ForMember(x => x.ItemsOrdered, op => op.Ignore())
                 .ForMember(x => x.ItemsNotShipped, op => op.Ignore())
                 .ForMember(x => x.ItemsShipped, op => op.Ignore())
@@ -171,9 +170,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 })
                 .AfterMap((dc, order) =>
                 {
-                    // fill out AuthorizationInfo object
-                    if (order.Payments == null)
-                        return;
+                    // fill out OrderSummary and AuthorizationInfo object
+
+                    decimal totalAmount, amountCollected, balance;
+                    int totalItemCount, fulfilledItemCount, unfulfilledItemCount;
+
+                    totalAmount = order.Total;
+                    amountCollected = order.Payments != null ? order.Payments.Sum(p => p.AmountCollected) - order.Payments.Sum(p => p.AmountCredited) : 0;
+                    balance = totalAmount - amountCollected;
 
                     order.AuthorizationInfo = new OrderAuthorizationInfo
                     {
@@ -182,6 +186,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     };
                     order.AuthorizationInfo.CaptureAmount = order.AuthorizationInfo.TotalAmount - order.AuthorizationInfo.AmountCollected;
 
+                    totalItemCount =
+                        (from i in order.Items
+                         let itemsPerBundle = i.BundledProducts != null && i.BundledProducts.Count > 0 ? (int?)i.BundledProducts.Sum(bp => bp.Quantity) : (int?)null
+                         let actualQuantity = itemsPerBundle.HasValue ? itemsPerBundle.Value * i.Quantity : i.Quantity
+                         select actualQuantity
+                        ).Sum();
+
+                    fulfilledItemCount = order.Packages != null ? order.Packages.SelectMany(p => p.Items.Select(i => i.Quantity)).Sum() : 0;
+
+                    unfulfilledItemCount = Math.Max(0, totalItemCount - fulfilledItemCount);
+
+                    order.OrderSummary = new OrderSummary {
+                        TotalAmount = totalAmount,
+                        AmountCollected = amountCollected,
+                        Balance = balance,
+                        TotalItemCount = totalItemCount,
+                        FulfilledItemCount = fulfilledItemCount,
+                        UnfulfilledItemCount = unfulfilledItemCount
+                    };
+
+                    // authorizationInfo duplicates OrderSummary and should go away soon.
+                    order.AuthorizationInfo = new OrderAuthorizationInfo {
+                        TotalAmount = totalAmount,
+                        AmountCollected = amountCollected,
+                        CaptureAmount = balance
+                    };
                 })
                 .AfterMap((dc, order) =>
                 {
