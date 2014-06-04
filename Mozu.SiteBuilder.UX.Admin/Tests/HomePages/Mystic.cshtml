@@ -14,9 +14,10 @@
     </script>
     @if (System.Configuration.ConfigurationManager.AppSettings["use_compiled_taco"] != "true")
     {
-        Html.Raw("<scr" + "ipt>useExtLoader = true;</scr" + "ipt>");
-    }
 
+        @Html.Raw("<scr" + "ipt>useExtLoader = true;</scr" + "ipt>");
+    }
+    
     <script>
         var devCodes = "    <scr" + "ipt type='text/javascr" + "ipt' src='/admin/scr" + "ipts/resources/lib/polyfills.js'></scr" + "ipt>                   \n" +
     "    <scr" + "ipt type='text/javascr" + "ipt' src='/admin/scr" + "ipts/resources/lib/json2.js'></scr" + "ipt>                       \n" +
