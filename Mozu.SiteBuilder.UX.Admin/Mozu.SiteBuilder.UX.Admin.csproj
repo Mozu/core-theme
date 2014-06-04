@@ -2111,11 +2111,11 @@
   </Target>
   <Target Name="AfterCompile">
     <Exec Command="makeTfsBuild.bat" CustomErrorRegularExpression=".*ERR.*" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Exec Command="CIRunner.bat" CustomErrorRegularExpression=".*\[FAIL\].*" WorkingDirectory="$(ProjectDir)\Tests\Automation" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <Exec Command="CIRunner.bat"  WorkingDirectory="$(ProjectDir)\Tests\Automation" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'"  />
     <Message Text="thoms notes-- mstest /publish:$(TeamFoundationServerUrl) /publishbuild:&quot;$(BuildNumber)&quot; /teamproject:Mozu /platform:&quot;Any CPU&quot; /flavor:$(Configuration) /publishresultsfile:junit.trx" />
     <Exec Command="&quot;C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\mstest.exe&quot; /publish:$(TeamFoundationServerUrl) /publishbuild:&quot;$(BuildNumber)&quot; /teamproject:Mozu /platform:&quot;Any CPU&quot; /flavor:$(Configuration) /publishresultsfile:junit.trx" WorkingDirectory="$(ProjectDir)\Tests\Automation" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <ItemGroup>
-      <LocalJUnitLogFiles Include="$(ProjectDir)\Tests\Automation\*.trx" />
+      <Content Include="$(ProjectDir)\Tests\Automation\*.trx" />
     </ItemGroup>
     <!--<PublishJUnit 
           
@@ -2134,7 +2134,7 @@
     <ItemGroup>
       <AdminScriptsBuildSourceTempFiles Include="$(ProjectDir)Scripts\build\temp\**\*.*" />
     </ItemGroup>
-    <Delete Files="@(AdminScriptsBuildSourceTempFiles)" />
+    <Delete Files="@(AdminScriptsBuildSourceTempFiles)"  />
     <ItemGroup>
       <Content Include="Scripts\build\**\*.*" />
       <Content Include="Tests\Automation\*.xml" />
