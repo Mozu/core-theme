@@ -11,7 +11,7 @@
 
 
 Harness.configure({
-    title: "Mozu Test Suite",
+    title: "SBAdmin Siesta Tests",
     waitForExtReady: true,
     autoCheckGlobals: false,
     expectedGlobals: ['Ext', 'Taco'],
