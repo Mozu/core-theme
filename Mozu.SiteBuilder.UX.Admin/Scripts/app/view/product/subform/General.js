@@ -322,7 +322,7 @@ Ext.define('Taco.view.product.subform.General', {
                 "</tpl>"
             ]
         });
-
+        
         var salePriceField = {
             xtype: 'currencyfield',
             fieldLabel: 'Sale Price',
@@ -337,12 +337,12 @@ Ext.define('Taco.view.product.subform.General', {
             fieldLabel: 'Gift Card/Credit Value',
             name: 'creditValue',
             hidden: !isDigitalCredit,
+            disabled: (!isDigitalCredit || !(this.isGlobal || this.isSingleSite)),
             allowBlank: (!isDigitalCredit || (productUsage === "Configurable")),
             //minValue: .25,
             hideTrigger: true,
             mouseWheelEnabled: false,
             selectOnFocus: true
-            //emptyText: "Gift Card/Credit Value"
         });
 
         this.rollupBundleSalePriceField = Ext.widget({
