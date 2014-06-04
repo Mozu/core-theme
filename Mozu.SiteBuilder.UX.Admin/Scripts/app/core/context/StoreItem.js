@@ -5,6 +5,7 @@
 
 Ext.define('Taco.core.context.StoreItem', {
     extend: 'Taco.core.data.Model',
+    logMissMappedFields:false,
     fields: [
         'name',
         'contextType',

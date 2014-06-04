@@ -141,7 +141,22 @@ Ext.define('Taco.model.Discount', {
         }, {
             name: 'status',
             type: 'string'
-        }],
+        },
+        {
+            name: 'minimumQuantityProductsRequiredInCategories',
+            type:'int',
+            defaultValue:0
+        },{
+            name: 'minimumQuantityRequiredProducts',
+            type:'int',
+            defaultValue:0
+        },{
+            name: 'minimumCategorySubtotalBeforeDiscounts',
+            type:'int',
+            defaultValue:0
+        }
+
+    ],
 
     getProductStore: function () {
         var me = this;

@@ -123,6 +123,10 @@ Ext.define('Taco.model.Category', {
             "type": "array",
             "defaultValue":[],
             "useNull": true
+        }, {
+            name: 'catalogId',
+            type: 'int',
+            persist: false
         }
     ],
 

@@ -12,6 +12,7 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.ModelMapping
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
+            Mapper.Reset();
             Mapper.AddProfile<CartMapping>();
             Mapper.AddProfile<CmsPagesMapping>();
             Mapper.AddProfile<GeneralSettingsMapping>();

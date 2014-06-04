@@ -145,6 +145,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         /// </summary>
         public string Status { get; set; }
 
-      
+
+
+        public int? MinimumQuantityProductsRequiredInCategories { get; set; }
+        public int? MinimumQuantityRequiredProducts { get; set; }
+        public decimal? MinimumCategorySubtotalBeforeDiscounts { get; set; }
     }
 }

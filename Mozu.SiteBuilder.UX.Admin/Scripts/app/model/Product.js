@@ -458,7 +458,17 @@ Ext.define('Taco.model.Product', {
             name: "bundledProducts",
             type: "auto",
             defaultValue: []
-        }        
+        },
+        {
+            name: "baseProductCode",
+            type: "string",
+            persist:false
+        }, {
+            name: 'masterCatalogId',
+            type: 'int',
+            persist:false
+        }
+
     ],
     loadRuntimeProduct: function (cfg) {
 

@@ -92,7 +92,20 @@ Ext.define('Taco.model.LocationInventory', {
         "type": "string",
         "useNull": true,
         "persist":false
-        }
+    },
+    {
+        "name": "stockOnBackOrder",
+        "type": "int",
+        "useNull": true,
+        "persist": false
+    },
+    {
+        "name": "auditInfo",
+        "type": "auto",
+        "useNull": true,
+        "persist": false
+    }
+
     ],
     
     idProperty: 'id',
