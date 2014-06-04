@@ -80,10 +80,5 @@ if($ScaleUnitId)
 			Update-ScaleUnit-In-AppSettings $file.FullName $ScaleUnitId
 		}
 	}
-	$automationResult = RunAutomationTests $directorypath
-	if( $automationResult -eq $false)
-	{
-		Write-Error "test result error"
-		
-	}
+	
 }
