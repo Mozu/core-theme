@@ -40,10 +40,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public Contact BillingContact { get; set; }
 
-        public bool? IsSameBillingShippingAddress { get; set; }
-
-        public DCpay.PaymentCard BillingCard { get; set; }
-
         public Contact FulfillmentContact { get; set; }
 
         public string IpAddress { get; set; }

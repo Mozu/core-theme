@@ -48,7 +48,12 @@ Ext.define('Taco.model.Order', {
             name: 'tenantId',
             type: 'int'
         },
-        
+
+        {
+            name: 'orderType',
+            type: 'string'
+        },
+
         {
             name: 'channelCode',
             type: 'string'
