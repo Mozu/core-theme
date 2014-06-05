@@ -38,9 +38,13 @@ Ext.define('Taco.model.LocationPickup', {
         },
 
         {
+        // todo: move to service - Greg Murray on 2014-06-04    
             name: "fulfillmentMethod",
             convert: function (value, record) {
-                return (record.get("fulfillment").code == "SP") ? "Pickup" : "Ship"
+                var fulfillCode = record.get("fulfillment").code;
+                if (fulfillCode === "SP") return "Pickup";
+                if (fulfillCode === "DS") return "Ship";
+                return "Digital";
             }
         },
 
