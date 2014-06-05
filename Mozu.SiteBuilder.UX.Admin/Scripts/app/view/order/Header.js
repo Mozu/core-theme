@@ -2,169 +2,120 @@
  * @class Taco.view.order.Header
  */
 Ext.define('Taco.view.order.Header', {
-    extend: 'Ext.Container',
-
+    extend: 'Ext.Component',
+    requires: [
+        'Taco.model.CustomerAccount'
+    ],
+    
     title: 'Overview',
 
-    border: 1,
-    padding: 5,
-    margin: 20,
-    style: {
-        borderColor: 'red',
-        borderStyle: 'solid'
-    },
+    tpl: new Ext.XTemplate(
 
-    initComponent: function() {
+        '<tpl if="values.loading==true">',
+            '<div style="padding:20px;">loading Customer Information...</div>',
+        '<tpl else>',
+        '<div class="taco-order-detail-header-section order-data">',
+            '<label>Order Amount</label>',
+            '<h2>{total:usMoney}</h2>',
+            '<div class="status">{orderStatus}</div>',
+        '</div>',
+        '<div class="taco-order-detail-header-section customer-data">',
+            '<label>Customer</label>',
+            '<h2><a href="\#customers/edit/{customerId}\">{billingContact.firstName:htmlEncode} {billingContact.lastName:htmlEncode}</a></h2>',
+            '<div class="company">{billingContact.companyName:htmlEncode}</div>',
+        '<tpl if="billingContact.address1">',
+            '<div class="address">{billingContact.address1:htmlEncode} {billingContact.address2:htmlEncode} {billingContact.address3:htmlEncode} {billingContact.address4:htmlEncode} {billingContact.cityOrTown:htmlEncode}, {billingContact.stateOrProvince} {billingContact.postalOrZipCode} {billingContact.countryCode}</div>',
+        '</tpl>',
+        '</div>',
+        '<div class="taco-order-detail-header-section history-data">',
+            '<label>Customer Profile</label>',
+            '<div>Customer Since: <strong>{[this.convertDate(values.customer.createDate, "F j, Y")]}</strong></div>',
+            '<div>Fulfilled Orders: <strong>{customer.orderCount}</strong></div>',
+            '<div>Lifetime Value: <strong>{[Ext.util.Format.usMoney(values.customer.totalSpent || 0)]}</strong></div>',
+        '</div>',
+        '<div class="taco-order-detail-header-section origin-data">',
+            'Created: {[this.convertDate(values.createDate)]}',
         
+            '<tpl if="updateDate">',
+                ' | Updated: {[this.convertDate(values.updateDate)]}',
+            '</tpl>',
+        
+            '<tpl if="ipAddress">',
+                ' | IP address: {ipAddress}',
+            '</tpl>',
+        
+            '<tpl if="channelName">',
+                '<span style="float:right;" class="origin-data-item"> Channel: {channelName}</span>',
+            '</tpl>',
+        
+            
+        '</div>',
+        '<tpl if="customerNote">',
+            '<div class="taco-order-detail-header-section customer-note  origin-data" style="float:none;border-top:1px solid #ccc;">',
+                '<span class="label">Customer Note:</span> {customerNote}',
+            '</div>',
+        '</tpl>',
+        '</tpl>',
+        {
+            convertDate: function(date, format) {
+                return Ext.Date.format(date, format || 'F j, Y, g:i a');
+            }
+        }
+    ),
+    
+    initComponent: function () {
+        var me = this;
+        me.cls += ' ' + Taco.baseCSSPrefix + 'order-detail-header';
+
+        /*
+        if (me.record) {
+            me.data = me.record.getData();
+        }
+        */
+        // initialize the header tpl
+        this.update({
+            loading: true
+        });
+
+        me.updateUI();
+        
+        // after the record is reloaded we will need to refresh the ui
+        me.mon( me.record, "aftercommit", function () {
+            me.onRecordChange();
+        }, me);
 
         this.callParent(arguments);
 
-        this.loadCustomer();
-
+        this.on({
+            click: {
+                fn: function(e) {
+                    if (e.target.href && e.target.href > 2 && e.target.href.indexOf('#') > -1) {
+                        Taco.core.StateManager.attemptNavigate(e.target.href.substring(e.target.href.indexOf('#') + 1));
+                        e.stopEvent();
+                    }
+                },
+                element: 'el',
+                scope: this
+            }
+        });
     },
-
-    loadCustomer: function() {
+    
+    updateUI: function () {
         var me = this;
-
-        this.record.getCustomer(function() {
-            me.loadItems();
-        }, function() {
-            alert('shit\'s broke yo');
+        Taco.model.CustomerAccount.load(me.record.get('customerId'), {
+            success: function (record) {
+                me.customerData = record.getData();
+                var data = Ext.apply({}, me.record.getData(), { customer: me.customerData });
+                this.update(data);
+            },
+            failure: function (response) {            
+                console.log("Error getting customer information");                
+            },
+            scope: me
         });
     },
 
-    loadItems: function() {
-        this.customerCmp = Ext.widget({
-            xtype: 'component',
-            itemId: 'customerCmp',
-            tpl: ['Account ', '<a href="/admin/customers/{id}">', '{name}', '</a>'],
-            data: this.record.customer.getData()
-        });
-
-
-        this.detailCmp = Ext.widget({
-            xtype: 'component',
-            itemId: 'detailCmp',
-            flex: 1,
-            tpl: ['<div>', 'Order # {orderNumber}', '</div>',
-
-                '<div>', 'Order Date: {createDate:date("m/d/Y h:i a")}', '</div>',
-
-                '<div>', 'Last Updated: {updateDate:date("m/d/Y h:i a")}', '</div>',
-
-                '<div>', 'Site: <a href="http://{siteName}">{siteName}</a>', '</div>',
-
-                '<div>', 'Channel: <span data-field="channelName">{channelName}', '</div>',
-
-                '<div>', 'IP Address: ', '<a href="http://whatismyipaddress.com/ip/{ipAddress}">', '{ipAddress}', '</a>', '</div>',
-
-                '<div>', '', '</div>',
-
-                '<div>', '', '</div>'
-            ],
-            data: this.record.getData()
-        });
-
-        this.statusCmp = Ext.widget({
-            xtype: 'component',
-            itemId: 'statusCmp',
-            flex: 1,
-            tpl: ['<table class="taco-order-header-status">',
-
-                '<tr>', '<td colspan="2">Order Status: <span data-field="orderStatus">{orderStatus}</span></td>', '</tr>',
-
-                '<tr>', '<td>Payment</td>', '<td>Fulfillment</td>', '</tr>',
-
-                '<tr>', '<td><div class="taco-justify">', '<span>Order Total:</span>', '<span>{orderTotal:currency}</span>', '</div></td>', '<td><div class="taco-justify">', '<span>Items:</span>', '<span>{itemsTotal}</span>', '</div></td>', '</tr>',
-
-                '<tr>', '<td><div class="taco-justify">', '<span>Collected:</span>', '<span>{collected:currency}</span>', '</div></td>', '<td><div class="taco-justify">', '<span>Shipped:</span>', '<span>{shipped}</span>', '</div></td>', '</tr>',
-
-                '<tr>', '<td><div class="taco-justify">', '<span>Balance:</span>', '<span>{balance:currency}</span>', '</div></td>', '<td><div class="taco-justify">', '<span>Remaining:</span>', '<span>{remaining}</span>', '</div></td>', '</tr>',
-
-                '</table>'
-            ],
-            data: this.record.getData()
-        });
-
-
-        this.addressesCmp = Ext.widget({
-            xtype: 'component',
-            itemId: 'addressesCmp',
-            flex: 2,
-            hidden: this.record.customer === null,
-            tpl: [
-                '<div>Order Addresses <a href="#">(Change)</a>',
-
-                '<table><tr><td>Billing Address</td><td>Shipping Address</td></tr>',
-
-
-                '<tr>',
-
-                '<tpl if="billingContact">',
-
-                '<td>{billingContact.firstName} {billingContact.lastName}<br>',
-
-                '{billingContact.address1}<br>',
-
-                '<tpl if="billingContract.address2">{billingContact.address2}<br></tpl>',
-
-                '{billingContact.cityOrTown}, {billingContact.stateOrProvince} {billingContact.postalOrZipCode} {billingContact.countryCode}<br>',
-
-                '',
-
-                '<tplelse>',
-
-                '</tpl>',
-
-                '</td><td>',
-
-                '<tpl if="fulfillmentContact">',
-
-                '{fulfillmentContact.firstName} {fulfillmentContact.lastName}<br>',
-
-                '{fulfillmentContact.address1}<br>',
-
-                '<tpl if="fulfillmentContact.address2">{fulfillmentContact.address2}<br></tpl>',
-
-                '{fulfillmentContact.cityOrTown}, {fulfillmentContact.stateOrProvince} {fulfillmentContact.postalOrZipCode} {fulfillmentContact.countryCode}<br>',
-
-                '</tpl>',
-
-                '</td></tr></table>'
-            ],
-            data: this.record.getData()
-        });
-
-        this.customerSelectionContainer = Ext.widget({
-            xtype: 'container',
-            itemId: 'customerSelectionContainer',
-            flex: 2,
-            hidden: this.record.customer !== null,
-            items: [{
-                xtype: 'component',
-                html: 'stuff'
-            }]
-        });
-
-        this.dataContainer = Ext.create('Ext.Container', {
-            layout: {
-                type: 'hbox',
-                align: 'stretch'
-            },
-            padding: 5,
-            items: [
-                this.detailCmp,
-                this.statusCmp,
-                this.addressesCmp,
-                this.customerSelectionContainer
-            ]
-        });
-
-        this.removeAll();
-        
-        this.add([
-            this.customerCmp,
-            this.dataContainer
-        ]);
+    onRecordChange: function () {
+        this.updateUI();
     }
 });

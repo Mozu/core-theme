@@ -278,12 +278,6 @@
             });
 
             return store;
-        },
-
-        isField: function(cmp, field, expected, desc) {
-            var el = cmp.getEl().down('[data-field="' + field + '"]');
-
-            this.is(el.getHTML(), expected, desc);
         }
     }
 });
