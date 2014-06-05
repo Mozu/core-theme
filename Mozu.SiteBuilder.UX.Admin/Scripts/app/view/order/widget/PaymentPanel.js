@@ -16,6 +16,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         'Taco.view.order.modal.VoidPaymentManual',
         'Taco.view.order.modal.CreditPaymentManual',
         'Taco.view.order.modal.CheckDecline',
+        'Taco.core.ux.form.CurrencyField',
         'Ext.window.MessageBox'
     ],
     cls: 'orderform-payment-transaction',
@@ -24,68 +25,151 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
         me.initStatusRow();
         me.initPaymentDetails();
+        me.initCaptureAmountField();
         me.initTransactionList();
 
         me.items = [
                 me.statusRow,
-                me.paymentDetails,
+                {
+                    xtype: 'container',
+                    layout: 'column',
+                    items: [
+                        me.paymentDetails,
+                        {
+                            xtype: 'container',
+                            width: 180,
+                            margin: '2 0 0 0',
+                            items: [
+                                me.captureAmountField
+                            ]
+                        }
+                    ]
+                },
                 me.transactionList
         ];
 
         this.callParent(arguments);
     },
 
-    getAvailableActionsStore: function () {
+    getAvailableActions: function() {
+
         var me = this,
-            retval = [];
 
-        var labels = {
-            'ApplyCheck': 'Receive Check',
-            'DeclineCheck': 'Decline Check',
-            'DeclinePayment': 'Decline Payment',
-            'CapturePayment': 'Capture Payment',
-            'CreditPayment': 'Credit Payment',
-            'VoidPayment': 'Void Payment',
-            'AuthorizePayment': 'Authorize Payment',
-            'AuthAndCapture': 'Auth And Capture',
+            rollBack = function() {
+                me.rollBackTransaction(me.getValue());
+            },
 
-            'Rollback': 'Rollback',
-            'RollbackCapture': 'Rollback Capture',
-            'RollbackCredit': 'Rollback Credit',
-            'RollbackVoid': 'Rollback Void',
-            'ManualCapturePayment': 'Capture Payment (Manual)',
-            'ManualCreditPayment': 'Credit Payment (Manual)',
-            'ManualVoidPayment': 'Void Payment (Manual)',
-            'ManualDeclinePayment': 'Decline Payment (Manual)',
-            _createFromAction: function (action) {
-                var label = '';
-                for (var i = 0; i < action.length; i++) {
-                    c = action[i];
-                    if (c == c.toUpperCase() && i > 0)
-                        c = ' ' + c;
-                    label += c;
-                }
-                return label;
+            availableActions = me.record.data.availableActions;
+
+        me.paymentActions = {};
+
+        return Ext.Array.map([
+            {
+                text: 'Apply Check',
+                itemId: 'ApplyCheck',
+                handler: me.applyCheck,
+                scope: me
+            },
+            {
+                text: 'Decline Check',
+                itemId: 'DeclineCheck',
+                handler: me.declineCheck,
+                scope: me
+            },
+            {
+                text: 'Decline Payment',
+                itemId: 'DeclinePayment',
+                handler: me.declineCheck,
+                scope: me
+            },
+            {
+                text: 'Credit Payment',
+                itemId: 'CreditPayment',
+                handler: me.issueCredit,
+                scope: me
+            },
+            {
+                text: 'Authorize Payment',
+                itemId: 'AuthorizePayment',
+                handler: me.authorize,
+                scope: me
+            },
+            {
+                text: 'Auth and Capture',
+                itemId: 'AuthAndCapture',
+                handler: me.authAndCapture,
+                scope: me
+            },
+            {
+                text: 'Rollback',
+                itemId: 'Rollback',
+                handler: me.voidTransaction,
+                scope: rollBack,
+                scope: me
+            },
+            {
+                text: 'Rollback',
+                itemId: 'Rollback',
+                handler: me.voidTransaction,
+                scope: rollBack,
+                scope: me
+            },
+            {
+                text: 'Rollback Capture',
+                itemId: 'RollbackCapture',
+                handler: rollBack,
+                scope: me
+            },
+            {
+                text: 'Rollback Credit',
+                itemId: 'RollbackCredit',
+                handler: rollBack,
+                scope: me
+            },
+            {
+                text: 'Rollback Void',
+                itemId: 'RollbackVoid',
+                handler: rollBack,
+                scope: me
+            },
+            {
+                text: 'Capture Payment (Manual)',
+                itemId: 'ManualCapturePayment',
+                handler: me.capturePaymentManual,
+                scope: me
+            },
+            {
+                text: 'Credit Payment (Manual)',
+                itemId: 'ManualCreditPayment',
+                handler: me.creditPaymentManual,
+                scope: me
+            },
+            {
+                text: 'Void Payment',
+                itemId: 'VoidPayment',
+                handler: me.voidTransaction,
+                scope: me
+            },
+            {
+                text: 'Void Payment (Manual)',
+                itemId: 'ManualVoidPayment',
+                handler: me.creditPaymentManual,
+                scope: me
             }
-        };
-
-        this.reorderActions();
-
-        var availableActions = Ext.Array.filter(me.record.data.availableActions, function (action) { return !Ext.Array.contains(['CreatePayment', 'RequestCheck', 'ManualAuthorizePayment', 'ManualAuthAndCapture', 'ManualCreatePayment'], action) });
-        var actionsWithLabels = Ext.Array.map(availableActions, function (action) {
-            var label = labels[action];
-            if (!label) {
-                label = labels._createFromAction(action);
-                if (console && console.error)
-                    console.error("unmapped action: " + action);
-            }
-            return { "val": action, "lbl": label };
+        ], function(actionConf) {
+            actionConf.hidden = !Ext.Array.contains(availableActions, actionConf.itemId);
+            return me.paymentActions[actionConf.itemId] = new Ext.Action(actionConf);
         });
 
-        return Ext.create('Ext.data.Store', {
-            fields: ['val', 'lbl'],
-            data: actionsWithLabels
-        });
+    },
+
+    // text field below actions for entering in actual capture dollar amount
+    initCaptureAmountField: function() {
+        this.captureAmountField = Ext.widget('currencyfield', {
+            width: 180,
+            value: Math.min(this.record.data.amountAuthorized, this.order.data.authorizationInfo.captureAmount),
+            disabled: true
+        })
     },
 
     // shows status and action buttons and field depending on the state of the entity
@@ -99,9 +183,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             canCapture = authReady && captureAmount && captureAmount > 0,
             // order is awaiting approval
             pendingReview = (me.record.get('status') === 'New' && me.order.get('orderStatus') === 'PendingReview');
-
-
-        
 
         me.statusRow = Ext.create('Ext.container.Container', {
             cls: "orderform-payment-statusRow",
@@ -119,8 +200,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     flex: 1,
                     itemId: "statusField",
                     cls: "statusField",
-                    tpl: '{.}',
-                    data: me.record.data.status
+                    html: 'Status: ' + me.record.data.status
                 }, {
                     xtype: 'component',
                     html: 'Order must be approved first',
@@ -129,23 +209,29 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     style: {
                         'font-size': '14px'
                     }
+                },
+                {
+                    xtype: 'button',
+                    ui: 'action',
+                    scale: 'medium',
+                    margin: '0 2 0 0',
+                    text: 'More Actions',
+                    menu: me.getAvailableActions()
                 }, {
-                    xtype: 'combo',
-                    store: me.getAvailableActionsStore(),
-                    disabled: !(me.record.data.availableActions.length > 0) || pendingReview,
-                    displayField: 'lbl',
-                    valueField: 'val',
-                    forceSelection: true,
-                    editable:false,
-                    emptyText: 'Actions',
-                    handler: me.addTransaction,
-                    transId: 1,
-                    record: me.record,
-                    parent: this,
-                    listeners: {
-                        select: me.handleAction
+                    xtype: 'button',
+                    ui: 'action',
+                    scale: 'medium',
+                    text: 'Capture',
+                    width: 180,
+                    handler: function() {
+                        if (me.record.get('paymentType') == 'Check') {
+                            me.applyCheck();
+                        }
+                        else {
+                            me.capturePayment();
+                        }
                     },
-                    scope: me
+                    disabled: !canCapture && !pendingReview
                 }
             ]
         });
@@ -216,64 +302,44 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         var me = this,
             data = Ext.apply({ billingContact: me.order.data.billingContact }, me.record.data);
 
+
         me.paymentDetails = Ext.create('Ext.Component', {
             cls: "orderform-payment-paymentDetails",
+            columnWidth: 1,
+            margin: '10 0 0 0',
             tpl: [
 
                     '<tpl if="paymentType == \'Check\'">',
-                        '<div class="paymentTypeCheck">Check</div>',
+                        '<div class="paymentTypeCheck">',
+                        '<h3 class="paymentDetailsHeader">Method:</h3>',
+                        '<div class="check">Check</div>',
+                        '</div>',
                     '<tpl else>',
                         '<div class="authorizedCreditCard">',
-                                '<span class="creditCard">{cardType} {cardNumber}</span>',
+                        '<h4 class="paymentDetailsHeader">Method:</h4>',
+                                '<div class="creditCard">{cardType}</div>',
+                                '<div class="creditCard">{cardNumber}</div>',
                             // if the auth data has an id than its been authorized
                             '<tpl if="id">',
-                                '<span class="seperator">|</span>',
-                                    '<span class="authorization">Authorization ID: {id}</span>',
+                                    '<div class="authorization">Authorization ID: {id}</div>',
                             '</tpl>',
                         '</div>',
                     '</tpl>',
 
 
                 '<div class="billingInformation">',
-                    '<span class="fullName">Bill to: {billingContact.firstName} {billingContact.lastName}</span>',
-                    '<span class="seperator">|</span>',
-                    '<span class="address">{billingContact.address1} {billingContact.address2} {billingContact.cityOrTown} {billingContact.stateOrProvince}  {billingContact.postalOrZipCode} {billingContact.countryCode}  </span>',
-                    '<span class="seperator">|</span>',
-                    '<span class="phoneNumber">{[ values.billingContact.workPhone ? values.billingContact.workPhone : values.billingContact.homePhone ]}</span>',
+                    '<h4 class="paymentDetailsHeader">Bill To:</h4>',
+                    '<div class="fullName">{billingContact.firstName} {billingContact.lastName}</div>',
+                    '<div class="address">{billingContact.address1}</div>',
+                    '<div class="address">{billingContact.address2}</div>',
+                    '<div class="address">{billingContact.cityOrTown}, {billingContact.stateOrProvince}  {billingContact.postalOrZipCode}</div>',
+                    '<div class="address">{billingContact.countryCode}</div>',
+                    '<div class="phoneNumber">{[ values.billingContact.workPhone ? values.billingContact.workPhone : values.billingContact.homePhone ]}</div>',
                 '</div>'
             ],
             data: data
         });
 
-    },
-
-    // reorder actions: Capture payment should be first in the list,
-    // void payment should be last. Manual* is at the bottom.
-    reorderActions: function () {
-        var actions = this.record.get('availableActions'),
-            capturePayment = 'CapturePayment',
-            voidPayment = 'VoidPayment';
-
-        if (!Ext.isArray(actions)) return;
-
-        Ext.Array.sort(actions, function (action1,action2) {
-            if (action1 === capturePayment)
-                return -1;
-            if (action2 === capturePayment)
-                return 1;
-            if (action1 === voidPayment)
-                return action2.match(/^Manual/) ? -1 : 1;
-            if (action1.match(/^Manual/) && !action2.match(/^Manual/))
-                return 1;
-            else {
-                if (action1 === 'Manual'+capturePayment)
-                    return -1;
-                if (action1 === 'Manual'+voidPayment)
-                    return 1;
-            }
-
-            return 0;
-        });
     },
 
     // removes the authorized transaction (first item in the payments collection). Will call service, reload the record, and update the ui;
@@ -343,64 +409,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     },
 
 
-    handleAction: function (config) {
-        var me = this;
-
-        /*
-         * 'ApplyCheck'
-         * 'DeclineCheck'
-         *  'VoidPayment'
-         *  'IssueCredit'
-         */
-        switch (me.getValue()) {
-            case 'DeclineCheck':
-            case 'DeclinePayment':
-                me.parent.declineCheck();
-                break;
-            case 'ApplyCheck':
-            case 'CapturePayment':
-                if (me.record.get('paymentType') == 'Check') {
-                    me.parent.applyCheck();
-                }
-                else {
-                    me.parent.capturePayment();
-                }
-                break;
-            case 'VoidPayment':
-                me.parent.voidTransaction();
-                break;
-            case 'CreditPayment':
-                me.parent.issueCredit();
-                break;
-            case 'ManualCapturePayment':
-                me.parent.capturePaymentManual();
-                break;
-            case 'ManualVoidPayment':
-                me.parent.voidPaymentManual();
-                break;
-            case 'ManualCreditPayment':
-                me.parent.creditPaymentManual();
-                break;
-            case 'ManualDeclinePayment':
-                alert('not implemented.');
-                break;
-
-            case 'AuthorizePayment':
-                me.parent.authorize();
-                break;
-            case 'AuthAndCapture':
-                me.parent.authAndCapture();
-                break;
-            case 'Rollback':
-            case 'RollbackCapture':
-            case 'RollbackCredit':
-            case 'RollbackVoid':
-                me.parent.rollBackTransaction(me.getValue());
-                break;
-        }
-
-        me.clearValue();
-    },
     rollBackTransaction: function (actionName) {
         var me = this,
             actionSimpleName = actionName.replace('Rollback', '');
