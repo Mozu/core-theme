@@ -131,12 +131,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     return null;
                 }))
 
-                //todo: confirm 2 mappings - Greg Murray on 2014-01-31 
-                .ForMember(x => x.IsSameBillingShippingAddress, op => op.ResolveUsing(dc => (dc.BillingInfo != null) 
-                    ? dc.BillingInfo.IsSameBillingShippingAddress : false))
-                .ForMember(x => x.BillingCard, op => op.ResolveUsing(dc => (dc.BillingInfo != null) ? dc.BillingInfo.Card : null))
-
-
                 //ignores, handled in aftermap
                 .ForMember(x => x.UnpackagedItems, op => op.Ignore())
                 .ForMember(x => x.UnpickedupItems, op => op.Ignore())
