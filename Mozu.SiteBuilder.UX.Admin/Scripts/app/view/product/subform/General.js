@@ -308,7 +308,19 @@ Ext.define('Taco.view.product.subform.General', {
             hideTrigger: true,
             mouseWheelEnabled: false,
             selectOnFocus: true,
-            emptyText: 'Enter price'
+            emptyText: 'Enter price',
+            listeners: {
+                blur: {
+                    scope: me,
+                    fn: function onPriceBlurSetDefaultGiftCardValue (el) {
+                        if (! me.creditValueField.isDisabled())
+                        {
+                            var price = el.getValue();
+                            me.creditValueField.setValue(price);
+                        }
+                    }
+                }
+            }
         };
 
         this.rollupBundlePriceField = Ext.widget({
@@ -344,7 +356,7 @@ Ext.define('Taco.view.product.subform.General', {
             //minValue: .25,
             hideTrigger: true,
             mouseWheelEnabled: false,
-            selectOnFocus: false
+            selectOnFocus: true
         });
 
         this.rollupBundleSalePriceField = Ext.widget({
