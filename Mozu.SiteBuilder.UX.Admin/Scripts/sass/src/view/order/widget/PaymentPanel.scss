@@ -36,10 +36,18 @@
     padding: 3px;
   }
 
+
+
   .orderform-payment-paymentDetails{
-        .authorizedCreditCard{        
-      .creditCard{}
-            .authorization{}
+	.authorizedCreditCard {        
+		.creditCard {}
+        .authorization{}
+	}
+	> div {
+		float: left;
+		width: 50%;
+		box-sizing: border-box;
+		padding-right: 20px;
     }
                     
         .orderSummary{

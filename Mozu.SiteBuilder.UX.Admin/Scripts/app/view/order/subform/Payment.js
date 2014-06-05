@@ -18,24 +18,6 @@ Ext.define('Taco.view.order.subform.Payment', {
 
     title: 'Payment & Billing Information',
 
-    tools: [{
-        type: 'gear',
-        itemId: 'paymentGear',
-        menu: {
-            plain: true,
-            shadow: false,
-            items: []
-        },
-        callback: function (owner, tool, e) {
-            var menu = tool.menu;
-
-            if (tool.hasVisibleMenu()) {
-                menu.removeAll();
-                menu.add(owner.getMenuActions());
-            }
-        }
-    }],
-
     config : {
         // order model
         originalRecord : null,
@@ -46,12 +28,18 @@ Ext.define('Taco.view.order.subform.Payment', {
     initComponent: function (eOpts) {
         var me = this;
 
+        this.tools = Ext.Array.map(me.getNewPaymentActions(), function(action) {
+            var button = Ext.widget('button',action);
+            button.setUI('action');
+            button.setScale('medium');
+            button.setMargin('0 2px 0 0');
+            return button;
+        });
+
         this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-payment'].join(' ');
 
         // after the record is reloaded we will need to refresh the ui
-        this.mon( this.record,"aftercommit", function () {
-            this.onRecordChange();
-        }, this);
+        this.mon( this.record,"aftercommit", this.onRecordChange, this);
         
         // initialize the ui
         // this will be called every time the record is updated
@@ -72,115 +60,35 @@ Ext.define('Taco.view.order.subform.Payment', {
                 scope: me
             });
         }
-
-        Ext.apply(me, {
-            items: [
-                me.bodyCont
-            ]
-        });
+        me.items = [me.bodyCont];
         this.callParent(arguments);
-        this.on('render', this.setGearVisibility, this);
     },
 
-    setGearVisibility: function () {
-        var gear = this.down('#paymentGear');
-        if (gear) {
-            gear.setVisible(this.record.get('orderStatus') !== 'PendingReview');
+    getNewPaymentActions: function() {
+
+        function makeAction(text, cls) {
+            return Ext.create('Ext.Action', {
+                text: text,
+                handler: function() {
+                    Ext.create(cls, { record: me.record }).show();
+                }
+            });
         }
 
-    },
-    
-    getMenuActions: function () {
         var me = this,
-            actions = [],
-            canAddPayment = me.record.get('orderStatus') !== 'Completed',
-            canUseStoreCredit = me.availableCredits && me.availableCredits.length;
-        
-        me.addPaymentAction = new Ext.Action({
-            text: 'Add Payment',
-            handler: function() {
-                var me = this;
-        
-                var modal = Ext.create('Taco.view.order.modal.AddPayment', {
-                    record: me.record                    
-                });
-        
-                modal.show();
-            },
-            disabled: !canAddPayment,
-            scope: this
-        });
-        actions.push(me.addPaymentAction);
+            actions = me.paymentActions = {
+                addPayment: makeAction('Add Payment', 'Taco.view.order.modal.AddPayment'),
+                requestCheck: makeAction('Request Check', 'Taco.view.order.modal.RequestCheck'),
+                addManualPayment: makeAction('Add Manual Payment', 'Taco.view.order.modal.AddPaymentManual')
+            };
 
-        me.requestCheckAction = new Ext.Action({
-            text: 'Request Check',
-            handler: function () {
-                var me = this;
-        
-                var modal = Ext.create('Taco.view.order.modal.RequestCheck', {
-                    record: me.record
-                });
-        
-                modal.show();
-            },
-            scope: this,
-            disabled: !canAddPayment
-        });
-        actions.push(me.requestCheckAction);
-
-        me.applyManualPayment = new Ext.Action({
-            text: 'Add Manual Payment',
-            handler: function () {
-                var me = this;
-        
-                var modal = Ext.create('Taco.view.order.modal.AddPaymentManual', {
-                    record: me.record
-                });
-        
-                modal.show();
-            },
-            scope: this,
-            disabled: !canAddPayment
-        });
-        actions.push(me.applyManualPayment);
-
-
-        /*
-        // commenting this out until it finishes gestating.
-        // deprecated. this code never gets executed and opens a modal dialog with no ui in it.
-
-        me.applyStoreCredit = new Ext.Action({
-            text: 'Apply Store Credit',
-            handler: function() {
-                var me = this;
-
-                var modal = Ext.create('Taco.view.order.modal.ApplyStoreCredit', {
-                    record: me.record
-                });
-
-                modal.show();
-            },
-            scope: this
-        });
-
-
-
-        // 'Apply Store Credit' should NEVER show up as a menu option.
-        if (false && canUseStoreCredit)
-            actions.push(me.applyStoreCredit);
-
-
-        */
-
-
-        return actions;
+        return [actions.addPayment, actions.requestCheck, actions.addManualPayment];
     },
     
     // initialize the views and actions menu
     initUI: function () {
         var me = this;
 
-        // me.initActionsMenu();
         me.initHeader();
         me.initPaymentsUI();
     },
@@ -217,44 +125,21 @@ Ext.define('Taco.view.order.subform.Payment', {
 
     initHeader: function (){
         var me = this,
-           data = this.record.getData();
+           orderStatus = me.record.get('orderStatus'),
+           canAddPayment = orderStatus !== 'Completed' && orderStatus !== "PendingReview",
+           paymentAuthInfo = me.record.get('authorizationInfo'),
+           total = me.record.get('total'),
+           amountCollected = paymentAuthInfo && paymentAuthInfo.amountCollected,
+           paymentStatus = "Unpaid";
 
-        me.headerDetails = Ext.create('Ext.Component', {
-           // cls: "orderform-payment-paymentDetails",
-            tpl: [
-                '<div class="statusField">',
-                    //'<span class="orderTotal">Partially Collected</span>',
-                    '<tpl if="authorizationInfo.amountCollected &gt; 0 && authorizationInfo.amountCollected &lt; total">',
-                        '<span class="orderTotal">Partially Collected</span>',
-                    '</tpl>',
-                    '<tpl if="authorizationInfo.amountCollected == 0">',
-                        '<span class="orderTotal">None Collected</span>',
-                    '</tpl>',
-                    '<tpl if="authorizationInfo.amountCollected &gt;= total">',
-                        '<span class="orderTotal">Fully Collected</span>',
-                    '</tpl>',
-                '</div>',
-                '<div class="orderSummary">',
-                    '<span class="orderTotal">Order Total: {total:usMoney}</span>',
-                    '<span class="seperator">|</span>',
-                    '<span class="Received">Received: {authorizationInfo.amountCollected:usMoney}</span>',
-                    '<span class="seperator">|</span>',
-                    '<span class="balance">Balance: {authorizationInfo.captureAmount:usMoney}</span>',
-                '</div>'
-            ],
-            data: data
+        if (amountCollected >= total) paymentStatus = "Fully Paid";
+        if (amountCollected < total && amountCollected > 0) paymentStatus = "Partially Paid";
+
+        me.setTitle('Status: ' + paymentStatus);
+
+        Ext.Object.each(me.paymentActions, function(k, paymentAction) {
+            paymentAction.setDisabled(!canAddPayment);
         });
-
-        me.bodyCont.add(me.headerDetails);
-    },
-
-    destroyHeader: function() {
-        var me = this;
-
-        if (me.headerDetails) {
-            me.headerDetails.destroy();
-            delete me.headerDetails;
-        }
     },
 
     // called when the record has been updated
@@ -269,11 +154,11 @@ Ext.define('Taco.view.order.subform.Payment', {
 
         
         //re-build the ui components
-        me.destroyHeader();
+        //me.destroyHeader();
         me.initHeader();
         me.destroyPaymentsUI();
         me.initPaymentsUI();
-        me.setGearVisibility();
+        //me.setActionsMenuVisibility();
         Ext.resumeLayouts(true);
         //this.fireEvent('orderchange');
     },
