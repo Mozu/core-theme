@@ -22,6 +22,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
         private static string product_code = "SOMEPROD-001";
         private static DCloc.FulfillmentType sp = FulfillmentTypeConstants.InStorePickup;
         private static DCloc.FulfillmentType ds = FulfillmentTypeConstants.DirectShip;
+        private static DCloc.FulfillmentType dg = FulfillmentTypeConstants.DigitalFulfillmentType;
         private static DCloc.Location location_ship_only = new DCloc.Location { Code = "location_ship_only", FulfillmentTypes = new List<DCloc.FulfillmentType> { ds } };
         private static DCloc.Location location_pickup_only = new DCloc.Location { Code = "location_pickup_only", FulfillmentTypes = new List<DCloc.FulfillmentType> { sp } };
         private static DCloc.Location location_both = new DCloc.Location { Code = "location_both", FulfillmentTypes = new List<DCloc.FulfillmentType> { sp, ds } };
@@ -40,7 +41,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
         public void When_Product_Has_One_Location_With_One_Fulfillment_Type_Should_Get_One_Entry()
         {
             // arrange
-            var controller = CreateController(location_ship_only);
+            var controller = CreateController(new []{"DirectShip","InStorePickup"}, location_ship_only);
 
             // act
             var t = controller.GetLocationsForProduct(empty_paging_params, empty_filter_collection, product_code);
@@ -60,7 +61,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
         public void Should_Only_Display_One_Directship_Location() 
         {
             // arrange
-            var controller = CreateController(location_both, location_ship_only, location_pickup_only);
+            var controller = CreateController(new []{"DirectShip","InStorePickup"}, location_both, location_ship_only, location_pickup_only);
 
             // act
             var t = controller.GetLocationsForProduct(empty_paging_params, empty_filter_collection, product_code);
@@ -71,6 +72,27 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             Assert.That(result, Is.Not.Empty);
             Assert.That(result.Count(lwi => lwi.Fulfillment == ds), Is.EqualTo(1), "should be exactly one directship location in this list.");
             Assert.That(result.Count(lwi => lwi.Fulfillment == sp), Is.EqualTo(2), "should be two pickup locations in this list.");
+        }
+
+        /// <summary>
+        /// Mozu currently supports a single shipping origin for all packages on an order.
+        /// The location inventory list should ONLY list the directship location configured
+        /// in Site Settings as a possible DirectShip source.
+        /// </summary>
+        [Test]
+        public void Given_Digital_Product_Should_Return_One_Digital_Location()
+        {
+            // arrange
+            var controller = CreateController(new[] { "Digital" }, location_both, location_ship_only, location_pickup_only);
+
+            // act
+            var t = controller.GetLocationsForProduct(empty_paging_params, empty_filter_collection, product_code);
+            List<LocationWithInventory> result = t.Result.Items;
+
+            // assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.Not.Empty);
+            Assert.That(result.Count(lwi => lwi.Fulfillment == dg), Is.EqualTo(1), "should be exactly one directship location in this list.");
         }
 
         //manage stock      out of stock behavior                       inv        show
@@ -124,7 +146,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             //assert
             Assert.That(actual.Count, Is.EqualTo(expectedCount), scenario);
         }
-
+        
         [TestCase("Sort", false, "HideProduct", 10, 10, 4)]
         public void Should_Sort_Locations_By_DirectShip_And_Then_InstorePickup(string scenario, bool manageStock,
             string outOfStockBehavior, int stockAvailable, int stockOnHand, int expectedCount)
@@ -194,7 +216,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             };
         }
 
-        private LocationInventoryController CreateController(params DCloc.Location[] locations)
+        private LocationInventoryController CreateController(string[] fulfillmentTypesSupported, params DCloc.Location[] locations)
         {
             var locationInventoryClient = NSubstitute.Substitute.For<DCprod.Clients.ILocationInventoryWebApiClient>();
             var productWebApiClient = NSubstitute.Substitute.For<DCprod.Clients.IProductWebApiClient>();
@@ -219,10 +241,11 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             productWebApiClient.GetProduct(product_code)
                 .ReturnsForAnyArgs(new DCprod.Product { 
                     ProductCode = product_code,
+                    Content = new DCprod.ProductLocalizedContent{ LocaleCode = "en-US", ProductName = product_code + " name"},
                     InventoryInfo = new DCprod.ProductInventoryInfo {
                         ManageStock = true, OutOfStockBehavior = "HideProduct"
                     },
-                    FulfillmentTypesSupported = new []{"DirectShip","InStorePickup"}
+                    FulfillmentTypesSupported = fulfillmentTypesSupported
                 }.AsServiceClientResponseAsync());
 
             // location usage is what site settings uses to figure out which directship location is the site's default.

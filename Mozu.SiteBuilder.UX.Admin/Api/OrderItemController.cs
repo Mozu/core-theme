@@ -44,6 +44,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 if (product == null)
                     continue;
+                // todo: Need ProductType added to GetProducts, or do this differently when Digital downloads enabled. - Greg Murray on 2014-06-05 
+                if (string.IsNullOrEmpty(product.GoodsType))
+                {
+                    product.GoodsType = (product.FulfillmentLocationCode == "Digital")
+                        ? "DigitalCredit"
+                        : "Physical";
+                }
 
                 // scrub the product.
                 product.Options = (product.Options ?? Enumerable.Empty<DCp.ProductOption>()).Where(o => o.Value != null || o.ShopperEnteredValue != null).ToList();

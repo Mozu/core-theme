@@ -171,15 +171,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (product == null) 
                 throw new VaeItemNotFoundException(string.Format("Could not find product code {0}", prodOrVariantCode));
 
-            List<LocationWithInventory> result;
-            if (product.InventoryInfo.ManageStock.GetValueOrDefault(true))
+            if (product.FulfillmentTypesSupported.Contains("Digital"))
             {
-                result = await GetManagedInventory(pagingParams, extFilter, prodOrVariantCode, product);
+                return CreateVirtualDigitalLocationWithInventory(product);
             }
-            else
-            {
-                result = await GetUnmanagedInventory(product);
-            }
+
+            List<LocationWithInventory> result = product.InventoryInfo.ManageStock.GetValueOrDefault(true)
+                ? await GetManagedInventory(pagingParams, extFilter, prodOrVariantCode, product)
+                : await GetUnmanagedInventory(product);
 
             var siteShippingLocationCode = await GetDefaultDirectShipLocation();
 
@@ -189,6 +188,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     .ToList();
             return List2(result);
             
+        }
+
+        private Response<List<LocationWithInventory>> CreateVirtualDigitalLocationWithInventory(DC.Product product)
+        {
+            return List2(new List<LocationWithInventory>
+            {
+                new LocationWithInventory
+                {
+                    Fulfillment = FulfillmentTypeConstants.DigitalFulfillmentType,
+                    Location = new DCloc.Location
+                    {
+                        Code = "Digital",
+                        LocationTypes = new List<DCloc.LocationType>{ new DCloc.LocationType{Code = "DS", Name = "Digital"}},
+                        FulfillmentTypes =
+                            new List<DCloc.FulfillmentType> {FulfillmentTypeConstants.DigitalFulfillmentType}
+                            
+                                
+                    },
+                    ProductCode = product.ProductCode,
+                    ProductName = product.Content.ProductName,
+                    LocationCode = "Digital",
+                    StockAvailable = 10000
+                }
+            });
         }
 
         private async Task<List<LocationWithInventory>> GetManagedInventory(PagingParamaters pagingParams, FilterCollection extFilter, string prodOrVariantCode,
@@ -250,8 +273,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         public static readonly string DirectShipCode = "DS";
         public static readonly string InStorePickupCode = "SP";
+        public static readonly string DigitalCode = "DG";
 
         public static readonly DCloc.FulfillmentType DirectShip = new DCloc.FulfillmentType { Code = DirectShipCode, Name = "Direct Ship" };
         public static readonly DCloc.FulfillmentType InStorePickup = new DCloc.FulfillmentType { Code = InStorePickupCode, Name = "In Store Pickup" };
+        public static readonly DCloc.FulfillmentType DigitalFulfillmentType = new DCloc.FulfillmentType { Code = DigitalCode, Name = "Digital" };
     }
 }
