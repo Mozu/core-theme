@@ -669,7 +669,6 @@
     <Content Include="Scripts\app\core\data\cache\ProxyCache.js" />
     <Content Include="Scripts\app\core\util\Common.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
-    <Content Include="Scripts\app\core\ux\action\LabeledTool.js" />
     <Content Include="Scripts\app\core\ux\browser\SearchList.js" />
     <Content Include="Scripts\app\core\ux\content\SplitContainer.js" />
     <Content Include="Scripts\app\core\ux\content\ContextMenu.js" />
@@ -1025,7 +1024,6 @@
     <Content Include="Scripts\sass\src\core\ux\form\field\plugins\InputMask.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\AddOrderItemToolbar.scss" />
     <Content Include="Scripts\Web.config" />
-    <Content Include="Scripts\sass\src\core\ux\action\LabeledTool.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
