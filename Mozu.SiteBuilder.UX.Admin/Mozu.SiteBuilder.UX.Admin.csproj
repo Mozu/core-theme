@@ -1566,6 +1566,7 @@
     </Content>
     <Content Include="Tests\unit\core\app-state-matches-uri.t.js" />
     <Content Include="Tests\unit\view\productType\Form.t.js" />
+    <Content Include="Tests\unit\view\product\subforms\General.t.js" />
     <Content Include="Tests\unit\view\product\subforms\ListExtraEditor.t.js" />
     <Content Include="Tests\unit\core\ux\grid\grid-action-buttons.js" />
     <Content Include="Tests\unit\view\order\pendingreview-should-not-allow-add-payment.js" />

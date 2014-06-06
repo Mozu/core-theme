@@ -710,12 +710,14 @@ Ext.define('Taco.view.product.subform.General', {
                 me.filterProductUsageField(productTypeRecord.get("productUsages"));
             }
         }
-
+        
         // listend for changes to the productUsage and bundleItem changes on the main form;
         me.on('afterrender', function () {
             var productForm = me.up("productform");
-            me.mon(productForm, 'productusagechange', me.updatePriceUI, me);
-            me.mon(productForm, 'bundleItemChange', me.updatePriceUI, me);
+            if (productForm) {
+                me.mon(productForm, 'productusagechange', me.updatePriceUI, me);
+                me.mon(productForm, 'bundleItemChange', me.updatePriceUI, me);
+            }
 
         }, me);
 
