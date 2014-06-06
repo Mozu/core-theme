@@ -1,4 +1,4 @@
-﻿StartTest(function (t) {
+﻿StartTest(function(t) {
     var m = {};
 
     //Bug 28406:SEO fields missing for CMS pages in Site Builder
@@ -7,16 +7,15 @@
         "id": "abc",
         "orderNumber": 2,
         "name": "seo-name",
-        "orderStatus":"Processing"
+        "orderStatus": "Processing"
     });
-    
-    t.setOnlyMocks();
 
+    t.setOnlyMocks();
 
 
     t.chain(
 
-        function (next) {
+        function(next) {
             Taco.app.viewPort.removeAll(true);
             m.panel = Ext.create(
                 'Taco.view.order.subform.Payment', { record: m.record, width: 500 }
@@ -26,11 +25,18 @@
             t.waitForComponentVisible(m.panel, next);
 
         },
-        function (next) {
+        function(next) {
 
-            
 
-            t.elementIsVisible(m.panel.down('#paymentGear').getEl(), 'gear shoul be visable on Processing');
+            t.diag("payment actions should be available when order is processing");
+
+            Ext.Object.each(m.panel.paymentActions, function(k, action) {
+                t.notOk(action.isDisabled(), k + " is enabled");
+            });
+
+
+
+            //t.elementIsVisible(m.panel.down('#paymentGear').getEl(), 'gear shoul be visable on Processing');
 
             m.record.set('orderStatus', 'PendingReview');
             Taco.app.viewPort.removeAll(true);
@@ -41,13 +47,17 @@
 
             t.waitForComponentVisible(m.panel, next);
         },
-        function (next) {
-            t.elementIsNotVisible(m.panel.down('#paymentGear').getEl(), 'gear shoul be hidden  on PendingReview');
+        function(next) {
 
-            
+            t.diag("payment actions should be unavailable when order is pending review");
+            Ext.Object.each(m.panel.paymentActions, function(k, action) {
+                t.ok(action.isDisabled(), k + " is disabled");
+            });
+            //t.elementIsNotVisible(m.panel.down('#paymentGear').getEl(), 'gear shoul be hidden  on PendingReview');
+
+
         }
-        
-    );
 
+    );
 
 });
