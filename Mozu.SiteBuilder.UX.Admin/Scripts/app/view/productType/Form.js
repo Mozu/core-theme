@@ -123,7 +123,7 @@ Ext.define('Taco.view.productType.Form', {
                     xtype: "checkboxfield",
                     name: "goodsTypeField",
                     itemId: 'digitalCreditItemId',
-                    boxLabel: "This Product Type is an Email Gift Card",
+                    boxLabel: "This Product Type is a Digital Gift Card",
                     inputValue: "DigitalCredit"
                 }
             ]
@@ -556,8 +556,9 @@ Ext.define('Taco.view.productType.Form', {
         this.record.set("productUsages", productUsagesGroupData);
 
         var goodsTypeData = form.findField("goodsTypeGroup").getValue().goodsTypeField;
-        this.record.set('goodsType', goodsTypeData);
-        
+        if (goodsTypeData) {
+            this.record.set('goodsType', goodsTypeData);
+        }
         return true;
     }
 });
