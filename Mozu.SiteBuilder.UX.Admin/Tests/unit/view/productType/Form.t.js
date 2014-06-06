@@ -51,6 +51,41 @@
                     }
                 );
             });
+
+            t.it("Should default goods type to 'Physical' for non-gift card product types.", function (t) {
+
+                m = {};
+
+                t.chain(
+
+                    function setup (next) {
+                        Taco.app.viewPort.removeAll(true);
+                        m.record = Ext.create('Taco.model.ProductType', { });
+                        m.form = Ext.create('Taco.view.productType.Form', {
+                            record: m.record
+                        });
+                        Taco.app.viewPort.add(m.form);
+                        t.waitForComponentVisible(m.form, next);
+                    },
+
+                    function setName (next) {
+                        m.name = m.form.down('#nameItemId');
+                        t.type(m.name, 'Physical Product Type', next);
+                    },
+
+                    function saveForm (next) {
+                        t.is(m.record.get('goodsType'), 'Physical', "Before save, goods type should be default 'Physical'");
+                        m.form.save();
+                        next();
+                    },
+
+                    function assert (next) {
+                        t.is(m.record.get('goodsType'), 'Physical', "After save, goods type should be 'Physical'");
+                    }
+                );
+            });
+
+
         });
 
     });
