@@ -210,9 +210,8 @@
     <Reference Include="Mozu.BuildSupport.GetAssemblyFileVersionTask">
       <HintPath>..\packages\Mozu.BuildSupport.GetAssemblyFileVersionTask.1.0.0\lib\Mozu.BuildSupport.GetAssemblyFileVersionTask.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.8.0-dev008\lib\net45\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+    <Reference Include="Mozu.CommerceRuntime.Contracts">
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.8.0.1\lib\net45\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts">
       <HintPath>..\packages\Mozu.Content.Contracts.1.7.0.2\lib\Mozu.Content.Contracts.dll</HintPath>
@@ -986,7 +985,6 @@
   <Target Name="AfterCompile">
     <Exec Command="attrib -r &quot;$(ProjectDir)ThemeTemplates\*.zip&quot; /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="DevCenterThemeTemplatizer.exe core4 &quot;$(ProjectDir)Themes\Core4&quot; &quot;$(ProjectDir)ThemeTemplates&quot;" WorkingDirectory="$(ProjectDir)tools" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    
     <Exec Command="attrib -r &quot;$(ProjectDir)Themes\Core4\compiled\*.*&quot; /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="npm install" WorkingDirectory="$(ProjectDir)Themes\Core4" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="grunt -v notfs" WorkingDirectory="$(ProjectDir)Themes\Core4" ConsoleToMSBuild="true" Condition="'$(BuildingInsideVisualStudio)' != &#xD;&#xA;    'true'">
