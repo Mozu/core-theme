@@ -241,9 +241,8 @@
     <Reference Include="Mozu.Core.Messaging">
       <HintPath>..\packages\Mozu.Core.Messaging.1.7.0.5\lib\net451\Mozu.Core.Messaging.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Messaging.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Messaging.Contracts.1.8.0-dev008\lib\net45\Mozu.Core.Messaging.Contracts.dll</HintPath>
+    <Reference Include="Mozu.Core.Messaging.Contracts">
+      <HintPath>..\packages\Mozu.Core.Messaging.Contracts.1.8.0.1\lib\net45\Mozu.Core.Messaging.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Mongo, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
