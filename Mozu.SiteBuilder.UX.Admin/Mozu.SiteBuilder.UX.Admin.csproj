@@ -1534,6 +1534,7 @@
     <Content Include="Tests\mocha\requireJs\config.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Tests\makeadmintests.js" />
     <Content Include="Tests\MozuTestSuite.js" />
     <Content Include="Tests\mocha\requireJs\specs\admin\require-mocha-bdd-test.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1556,16 +1557,17 @@
     <Content Include="Tests\specs\TestBootstrapper.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Tests\unit\core\app-state-matches-uri.t.js" />
-    <Content Include="Tests\unit\view\productType\Form.t.js" />
-    <Content Include="Tests\unit\view\product\subforms\General.t.js" />
-    <Content Include="Tests\unit\view\product\subforms\ListExtraEditor.t.js" />
-    <Content Include="Tests\unit\core\ux\grid\grid-action-buttons.js" />
-    <Content Include="Tests\unit\view\order\pendingreview-should-not-allow-add-payment.js" />
-    <Content Include="Tests\unit\core\ux\form\model-binds.t.js" />
-    <Content Include="Tests\unit\core\ux\grid\grid-action-buttons.js" />
-    <Content Include="Tests\unit\core\ux\tab\picker.t.js" />
-    <Content Include="Tests\unit\view\website\settings\doc-seo.js" />
+    <Content Include="Tests\customunit\core\app-state-matches-uri.t.js" />
+    <Content Include="Tests\customunit\view\productType\Form.t.js" />
+	<Content Include="Tests\customunit\view\product\subforms\General.t.js" />
+    <Content Include="Tests\customunit\view\product\subforms\ListExtraEditor.t.js" />
+    <Content Include="Tests\customunit\core\ux\grid\grid-action-buttons.js" />
+    <Content Include="Tests\customunit\view\order\pendingreview-should-not-allow-add-payment.js" />
+    <Content Include="Tests\customunit\core\ux\form\model-binds.t.js" />
+    <Content Include="Tests\customunit\core\ux\grid\grid-action-buttons.js" />
+    <Content Include="Tests\customunit\core\ux\tab\picker.t.js" />
+    <Content Include="Tests\customunit\view\website\settings\doc-seo.js" />
+    <Content Include="Tests\unit\view\order\subform\Payment.js" />
     <Content Include="Views\Home\Index_Compiled.cshtml">
       <SubType>Code</SubType>
     </Content>
