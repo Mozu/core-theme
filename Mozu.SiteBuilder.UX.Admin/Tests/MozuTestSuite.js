@@ -83,8 +83,9 @@ Harness.start(
     },
 
     /*********** UNIT TESTS ***********/
+    window.AllMozuUnitTests,
     {
-        group: 'Components ',
+        group: 'Custom Unit',
         expanded: true,
         alsoPreload: [
             {
@@ -97,7 +98,7 @@ Harness.start(
                 expanded: true,
                 items: [
                     {
-                        url: 'unit/core/ux/form/model-binds.t.js',
+                        url: 'customunit/core/ux/form/model-binds.t.js',
                         title: 'Cascading Model Binding'
                     }
                 ]
@@ -106,7 +107,7 @@ Harness.start(
                 expanded: true,
                 items: [
                     {
-                        url: 'unit/core/ux/grid/grid-action-buttons.js',
+                        url: 'customunit/core/ux/grid/grid-action-buttons.js',
                         title: 'Inline row buttons are clickable'
                     }
                 ]
@@ -117,7 +118,7 @@ Harness.start(
                 ],
                 items: [
                     {
-                        url: 'unit/core/ux/tab/picker.t.js',
+                        url: 'customunit/core/ux/tab/picker.t.js',
                         title: 'Tab Picker Tests'
                     }
                 ]
@@ -128,7 +129,7 @@ Harness.start(
                 ],
                 items: [
                     {
-                        url: 'unit/view/order/pendingreview-should-not-allow-add-payment.js',
+                        url: 'customunit/view/order/pendingreview-should-not-allow-add-payment.js',
                         title: 'PendingReview Should Not Allow Add Payment'
                     }
                 ]
@@ -137,12 +138,12 @@ Harness.start(
                 expanded: true,
                 items: [
                     {
-                        url: 'unit/view/product/subforms/ListExtraEditor.t.js',
+                        url: 'customunit/view/product/subforms/ListExtraEditor.t.js',
                         title: 'product List Extra Tests'
                     }
                     //,
                     //{
-                    //    url: 'unit/view/product/subforms/General.t.js',
+                    //    url: 'customunit/view/product/subforms/General.t.js',
                     //    title: 'Gift Cards'
                     //}
                 ]
@@ -152,7 +153,7 @@ Harness.start(
                 expanded: true,
                 items: [                    
                     {
-                        url: 'unit/view/productType/Form.t.js',
+                        url: 'customunit/view/productType/Form.t.js',
                         title: 'Product Type Tests'
                     }
                 ]
@@ -162,7 +163,7 @@ Harness.start(
                 expanded: true,
                 items: [
                     {
-                        url: 'unit/view/website/settings/doc-seo.js',
+                        url: 'customunit/view/website/settings/doc-seo.js',
                         title: 'web-doc-seo'
                     }
                 ]
@@ -170,7 +171,7 @@ Harness.start(
                 group: 'StateManager',
                 items: [
                     {
-                        url: "unit/core/app-state-matches-uri.t.js",
+                        url: "customunit/core/app-state-matches-uri.t.js",
                         waitForAppReady: false,
                         alsoPreload: [],
                         title: "App State Should Match URI"

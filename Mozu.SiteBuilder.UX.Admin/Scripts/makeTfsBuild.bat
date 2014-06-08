@@ -12,6 +12,8 @@ if exist .sencha\workspace (
 	attrib -r bootstrap.json
 	sencha app build -c
 	sencha ant testing js
+	cd ..\Tests
+	admintests.bat
 ) else (
 	attrib -r bootstrap.js
 	attrib -r bootstrap.json
@@ -24,5 +26,7 @@ if exist .sencha\workspace (
 
 	sencha app build -c
 	sencha ant testing js
+	cd ..\Tests
+	admintests.bat
 
 )
