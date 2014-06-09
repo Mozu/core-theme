@@ -373,7 +373,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       : null))
                   .ForMember(x => x.Discounts, op => op.ResolveUsing(dc => dc.ProductDiscounts))
                   .ForMember(x => x.ActiveShippingDiscount, op => op.ResolveUsing(dc => dc.ShippingDiscounts != null 
-                      ? dc.ShippingDiscounts.FirstOrDefault(d => d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value) 
+                      ? dc.ShippingDiscounts.FirstOrDefault(d => d.Excluded.HasValue && !d.Excluded.Value) 
                       : null))
                   .ForMember(x => x.ShippingDiscounts, op => op.ResolveUsing(dc => dc.ShippingDiscounts))
                   .ForMember(x => x.Options, op => op.ResolveUsing(dc => (dc.Product != null) 
