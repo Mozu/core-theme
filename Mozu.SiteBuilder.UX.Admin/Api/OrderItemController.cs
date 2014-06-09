@@ -10,6 +10,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using Newtonsoft.Json;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
 using DCp = Mozu.CommerceRuntime.Contracts.Products;
+using DCd = Mozu.CommerceRuntime.Contracts.Discounts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -135,7 +136,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             DC.Order dcOrder = null;
             DC.OrderItem dcOrderItem = (await _orderWebApiClient.GetOrderItem(args.OrderId, args.OrderItemId, draft)).ReadAsSync();
 
-            var discount = dcOrderItem.ProductDiscounts.FirstOrDefault(d => d.Discount.Id == args.DiscountId) ?? dcOrderItem.ShippingDiscounts.Select(sd => sd.Discount).FirstOrDefault(d => d.Discount.Id == args.DiscountId);
+            DCd.AppliedLineItemDiscount discount = dcOrderItem.ProductDiscounts.FirstOrDefault(d => d.Discount.Id == args.DiscountId) as DCd.AppliedLineItemDiscount ?? dcOrderItem.ShippingDiscounts.FirstOrDefault(d => d.Discount.Id == args.DiscountId) as DCd.AppliedLineItemDiscount;
 
             if (discount != null)
             {
@@ -156,7 +157,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             DC.Order dcOrder = null;
             DC.OrderItem dcOrderItem = (await _orderWebApiClient.GetOrderItem(args.OrderId, args.OrderItemId, draft)).ReadAsSync();
 
-            var discount = dcOrderItem.ProductDiscounts.FirstOrDefault(d => d.Discount.Id == args.DiscountId) ?? dcOrderItem.ShippingDiscounts.Select(sd => sd.Discount).FirstOrDefault(d => d.Discount.Id == args.DiscountId);
+            DCd.AppliedDiscount discount = dcOrderItem.ProductDiscounts.FirstOrDefault(d => d.Discount.Id == args.DiscountId) as DCd.AppliedDiscount ?? dcOrderItem.ShippingDiscounts.FirstOrDefault(d => d.Discount.Id == args.DiscountId) as DCd.AppliedDiscount;
 
             if (discount != null)
             {
