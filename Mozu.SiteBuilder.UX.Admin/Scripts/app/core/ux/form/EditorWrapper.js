@@ -136,8 +136,8 @@
         this.updateTitle(this.form.title);
     },
 
-    updateTitle: function (title) {
-        if (!this.form.title) {
+    updateTitle: function (title) {        
+        if (!title) {
             return;
         }
         this.setTitle(title);

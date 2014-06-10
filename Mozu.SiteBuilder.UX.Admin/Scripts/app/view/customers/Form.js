@@ -18,10 +18,11 @@ Ext.define('Taco.view.customers.Form', {
             me = this,
             profile, contacts, orderGrid, shipingInfo, notes;
 
+        
         this.title = [
-            data.primaryFirstName,
-            data.primaryMiddleName,
-            data.primaryLastName
+            data.firstName,
+            data.middleName,
+            data.lastName
         ].join(' ');
 
         this.store = this.record.getContacts();
