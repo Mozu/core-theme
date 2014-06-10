@@ -4,11 +4,27 @@
     t.describe("Product Type", function(t) {
         var m = {};
 
-        t.requireOk('Taco.view.productType.Form', 'Taco.core.ux.form.field.MultiSelect',
-            'Taco.core.ux.BoxReorderer',
-            'Taco.model.ProductTypeAttribute',
-            'Taco.model.ProductType',
-            'Taco.view.productType.AttributeGroup');
+        var setUp = function(data, next) {
+            Taco.app.viewPort.removeAll(true);
+            m.record = Ext.create('Taco.model.ProductType', data);
+            m.form = Ext.create('Taco.view.productType.Form', {
+                record: m.record
+            });
+            Taco.app.viewPort.add(m.form);
+            t.waitForComponentVisible(m.form, next);
+        };
+
+        var selectDigitalCreditCheckbox = function(next) {
+            m.digitalCreditCheckbox = m.form.down('#digitalCreditItemId');
+            t.click(m.digitalCreditCheckbox, next);
+        };
+
+        var setName = function(name, next) {
+            m.name = m.form.down('#nameItemId');
+            t.type(m.name, name, next);
+        };
+
+        
 
         t.describe('To increase revenue and profits, as a merchant, I want to offer Gift Cards', function(t) {
 
@@ -18,36 +34,23 @@
 
                 t.chain(
 
-                    function setup (next) {
-                        Taco.app.viewPort.removeAll(true);
-                        m.record = Ext.create('Taco.model.ProductType', { });
-                        m.form = Ext.create('Taco.view.productType.Form', {
-                            record: m.record
-                        });
-                        Taco.app.viewPort.add(m.form);
-                        t.waitForComponentVisible(m.form, next);
+                    function arrange (next) {
+                        setUp({}, next);
                     },
 
-                    function setName (next) {
-                        m.name = m.form.down('#nameItemId');
-                        t.type(m.name, 'MyFirstSiesta_Olay!', next);
+                    function makeSelections (next) {
+                        setName('Gift Card');
+                        selectDigitalCreditCheckbox(next);
                     },
 
-                    function selectDigitalCreditCheckbox (next) {
-                        m.digitalCreditCheckbox = m.form.down('#digitalCreditItemId');
-                        t.click(m.digitalCreditCheckbox, next);
-                    },
-
-                    function saveForm (next) {
-                        t.is(m.record.get('goodsType'), 'Physical', "Before save, goods type should be default 'Physical'");
-                        //t.expect(m.record.get('goodsType')).toBe('Physical'); //default expected
+                    function saveForm(next) {
+                        t.is(m.record.get('goodsType'), 'Physical', "Before save, goods type should be 'Physical'");
                         m.form.save();
                         next();
                     },
 
                     function assert (next) {
                         t.is(m.record.get('goodsType'), 'DigitalCredit', "After save, goods type should be 'DigitalCredit'");
-                        //t.expect(m.record.get('goodsType')).toBe('DigitalCredit');
                     }
                 );
             });
@@ -58,19 +61,12 @@
 
                 t.chain(
 
-                    function setup (next) {
-                        Taco.app.viewPort.removeAll(true);
-                        m.record = Ext.create('Taco.model.ProductType', { });
-                        m.form = Ext.create('Taco.view.productType.Form', {
-                            record: m.record
-                        });
-                        Taco.app.viewPort.add(m.form);
-                        t.waitForComponentVisible(m.form, next);
+                    function arrange(next) {
+                        setUp({}, next);
                     },
 
-                    function setName (next) {
-                        m.name = m.form.down('#nameItemId');
-                        t.type(m.name, 'Physical Product Type', next);
+                    function enterName (next) {
+                        setName('Physical Product Type', next);
                     },
 
                     function saveForm (next) {
@@ -86,12 +82,48 @@
             });
 
 
+            t.it("Should disable gift card designation after saving", function(t) {
+
+                m = {};
+
+                t.chain(
+                    function arrange(next) {
+                        var data = {
+                            id: 1,
+                            name: 'Existing',
+                            goodsType: 'Physical',
+                            numberOfProducts: 1,
+                            productUsages: ["Standard", "Configurable", "Component"]
+                        };
+                        setUp(data, next);
+                    },
+
+                    function verifyDigitalCheckboxIsDisabled (next) {
+                        m.digitalCreditCheckbox = m.form.down('#digitalCreditItemId');
+                        t.is(m.digitalCreditCheckbox.isDisabled(), true, 'Digital Credit checkbox should be disabled.');
+                        next();
+                    },
+
+                    function saveForm(next) {
+                        t.is(m.record.get('goodsType'), 'Physical', "Before save, goods type should be 'Physical'");
+                        m.form.save();
+                        next();
+                    },
+
+                    function assert(next) {
+                        t.is(m.record.get('goodsType'), 'Physical', "Should not be able to change goodsType after creation");
+                    }
+                );
+            });
+
+
         });
 
     });
 });
 
-function RegisterMocks (t, next, m) {
+
+function SetupMocks (t, next, m) {
     t.simManager().register([
             //{
             //    url: '/admin/app/ProductType/read',

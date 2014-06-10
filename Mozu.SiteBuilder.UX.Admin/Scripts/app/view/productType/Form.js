@@ -25,10 +25,12 @@ Ext.define('Taco.view.productType.Form', {
     ],
 
     initComponent: function () {
-        var me=this,
+        var me = this,
             options = me.record.get('options'),
             extras = me.record.get('extras'),
-            properties = me.record.get('properties');
+            properties = me.record.get('properties'),
+            prodTypeId = me.record.get('id'),
+            isExisting = Ext.isNumeric(prodTypeId);
 
         me.stores = me.stores || [];
         me.stores.push(me.record.getOptions(), me.record.getExtras(), me.record.getProperties());
@@ -108,6 +110,7 @@ Ext.define('Taco.view.productType.Form', {
             layout: {
                 layout: "hbox"
             },
+            
             //listeners: {
             //    change: {
             //        fn: function(group, newValue, oldValue, eOpts) {
@@ -118,6 +121,9 @@ Ext.define('Taco.view.productType.Form', {
             //},
             allowBlank: true,
             columns: 1,
+            defaults: {
+                disabled: isExisting
+            },
             items: [
                 {
                     xtype: "checkboxfield",
