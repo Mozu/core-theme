@@ -1,8 +1,8 @@
 ﻿/**
  * The discount editor view
  */
-Ext.define('Taco.view.discount.Form', {
-    extend: 'Taco.core.ux.form.Form',
+Ext.define('Taco.view.discount.Form', {   
+    extend: 'Taco.core.ux.form.NavForm2',
     requires: [
         'Taco.store.ConfiguredShippingRates',
         'Ext.ux.form.field.BoxSelect',
@@ -15,19 +15,8 @@ Ext.define('Taco.view.discount.Form', {
         'Taco.view.discount.CriteriaForm'
     ],
 
-    mixins: {
-        navigable: 'Taco.core.ux.mixins.Navigable'
-    },
-
     createTitle: 'Create Discount',
     editTitle: '{[values.record.data.name]}',
-
-    constructor: function () {
-        
-        this.callParent(arguments);
-
-        this.mixins.navigable.constructor.call(this);
-    },
 
     initComponent: function () {
         this.items = [{
@@ -58,6 +47,8 @@ Ext.define('Taco.view.discount.Form', {
             afterrender: this.onAfterRender,
             scope: this
         });
+
+        this.loadNavItems();
     },
 
     setFieldVisibility: function () {
@@ -66,6 +57,7 @@ Ext.define('Taco.view.discount.Form', {
 
         this.criteria.setFieldVisibility(isLineItem, appliesToShipping);
         this.conditions.setFieldVisibility(isLineItem, appliesToShipping);
+        this.loadNavItems();
     },
 
     onAfterRender: function () {

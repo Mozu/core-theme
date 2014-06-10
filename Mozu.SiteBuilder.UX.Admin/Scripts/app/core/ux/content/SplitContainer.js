@@ -10,16 +10,17 @@
  * This class extends the base class for content containers, {@link Taco.core.ux.content.Container}.
  */
 
-Ext.define('Taco.core.ux.content.SplitContainer', {
-    extend: 'Taco.core.ux.content.Container',
+Ext.define('Taco.core.ux.content.SplitContainer', {    
+    extend: 'Ext.panel.Panel',
     alias: 'widget.taco-splitcontainer',
 
-    body: {
-        layout: {
-            type: 'hbox',
-            align: 'stretch'
-        }
-    },
+    // this is required since the contentView is border layout.
+    region:'center',
+
+    layout: {
+        type: 'hbox',
+        align: 'stretch'
+    },    
 
     /**
      * @cfg {Boolean} preventCollapsedStateChange
@@ -72,8 +73,12 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
         west: 'Ext.panel.Panel'
     },
 
+    title: "Split Container Title",
+
     initComponent: function () {
-        Ext.apply(this.body, {
+
+
+        Ext.apply(this,{
             items: [
                 this.getWest(),
                 this.getSplitter(),
@@ -81,7 +86,7 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
             ]
         });
 
-        this.callParent(arguments);
+        this.callParent(arguments);        
     },
 
     /**
@@ -118,6 +123,7 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
      */
     applyEast: function (config) {
         var defaults = this.getDefaultEastConfig();
+
 
         if (config.isComponent) {
             // if config is an instantiated component, return it directly

@@ -16,7 +16,7 @@
         initComponent: function (){
 
             //initialize the grid paging toolbar
-            this.mixins.searchable.constructor.apply(this, arguments);
+            this.mixins.searchable.constructor.apply(this);
 
             this.callParent(arguments)
         }
@@ -44,6 +44,7 @@ Ext.define('Taco.core.ux.mixins.Searchable', {
         
         Ext.applyIf(me, {
             searchToolbar: null,
+            enableQuickFilters:true,
             hideSearchToolbar: false,
             enableSearch: true
         });
@@ -100,13 +101,13 @@ Ext.define('Taco.core.ux.mixins.Searchable', {
     createSearchToolbar: function () {
         var me = this,
             conf;
-
+        
         if (!me.hideSearchToolbar) {
             
             conf = {
-                dock: 'top',
-                height: 30,
-                margin: '0 0 10',
+                dock: 'top',                
+                minHeight:30,
+                padding: '0px 0px 10px 0px',
                 items: [
                     /*
                     {
@@ -141,55 +142,33 @@ Ext.define('Taco.core.ux.mixins.Searchable', {
 
 
             if (me.enableSearch) {
-                
+
                 me.searchBox = Ext.widget({
                     xtype: 'taco-filtercontainer',
                     width: '100%',
                     flex: 1,
+                    enableQuickFilters : this.enableQuickFilters,
                     quickFilterData: me.advancedSearchConfig.quickFilterData,
                     advancedForm: me.advancedSearchConfig.form,
-                    advancedFormCls: me.advancedSearchConfig.advancedFormCls,
-                    //store: me.createItemStore(),
+                    advancedFormCls: me.advancedSearchConfig.advancedFormCls,                    
                     store: me.store,
                     filterStores: me.advancedSearchConfig.stores,
-                    value: this.options && this.options.query ?  this.options.query : undefined 
+                    value: this.options && this.options.query ? this.options.query : undefined
                 });
-                    //conf.items.unshift(me.searchBox);
-                
-
-
-
-
-
-
-
-
-
-
-
-                /*
-
-                me.searchBox = Ext.widget({
-                    xtype: 'taco.combofilter',
-                    flex: 1,
-                    hidden: !me.enableSearch,
-                    itemStore: me.store,
-                    filterForm: me.filterFormConf,
-                    filterProperties: me.filterProperties
-                });
-                */
-
-
-                //todo: need to figure out where this is set and why;
-                //if (this.options && this.options.query) {
-                //    me.on('afterrender', function () {
-                //        me.searchBox.setValue([this.options.query]);
-                //    });
-                //}
 
                 conf.items.unshift(
                     me.searchBox
                 );
+            } else {
+                
+                // need a spacer to force the bar to have the correct height
+                conf.items.unshift(
+                    {
+                        xtype: "tbspacer",
+                        height:30
+                    }
+                );
+                
             }
 
             me.searchToolbar = Ext.widget('toolbar', conf);

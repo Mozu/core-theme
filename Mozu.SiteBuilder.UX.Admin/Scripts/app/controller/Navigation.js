@@ -6,8 +6,16 @@
 
 Ext.define('Taco.controller.Navigation', {
     extend: 'Taco.core.Controller',
-    stores: ['Navigation'],
-    requires:['Taco.store.Navigation','Taco.model.Navigation'],
+    stores: ['Navigation', 'Navigation2'],
+    requires: [
+        'Taco.store.Navigation', 
+        'Taco.model.Navigation',
+
+        // this is a prototype version that will be used by ui nav components and the keyboard navigation; Will eventually be renamed to Navigation when solid;
+        'Taco.store.Navigation2',
+        'Taco.model.NavigationItem2'
+    ],
+    
     views: ['navigation.PrimaryMenu'],
 
     refs: [{
@@ -17,6 +25,7 @@ Ext.define('Taco.controller.Navigation', {
 
     init: function () {
         var store = this.getNavigationStore();
+
         if (!store.getCount()) return store.on('load', this.init, this);
 
         this.bindPrimaryMenu();

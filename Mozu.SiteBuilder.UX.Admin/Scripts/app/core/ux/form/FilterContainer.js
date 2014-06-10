@@ -27,7 +27,9 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      */
     defaultFieldName: 'keyword',
 
-    initFromStateManager:true,
+    initFromStateManager: true,
+
+    enableQuickFilters: true,
 
     initialValue: null,
 
@@ -59,10 +61,22 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             this.initialValue = this.currentFilterString = this.serializeFilterValue(this.getAdvancedSearchFromStore());
         }
 
-        this.items = [{
+        this.items = [
+            {
+                xtype: 'button',
+                itemId: 'advancedFilter',
+                ui: 'action',
+                scale: 'medium',
+                glyph: 'XE010@mozicons',
+                width: 57,
+                margin: '0 10 20 0',
+                enableToggle: true,
+                scope: this,
+                toggleHandler: this.handleButtonToggle
+            },{
                 xtype: 'textfield',
                 itemId: 'textFilter',
-                margin: '0 10 20 0',
+                margin: '0 0 20 0',
                 msgTarget: 'qtip',
                 flex: 1,
                 
@@ -73,25 +87,15 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                         fn: this.handleFieldSubmit
                     }
                 }
-            }, {
-                xtype: 'button',
-                itemId: 'advancedFilter',
-                ui: 'action',
-                scale: 'medium',
-                glyph: 'XE010@mozicons',
-                width: 57,
-                enableToggle: true,
-                scope: this,
-                toggleHandler: this.handleButtonToggle
-            }
+            } 
         ];
 
-        if (this.quickFilterData) {
+        if (this.quickFilterData && this.enableQuickFilters) {
    
             this.items.push(
             {
                 xtype: 'combo',
-                margin: '0 0 0 50',
+                margin: '0 0 0 20',
                 itemId: 'quickFilter',
                 queryMode: 'local',
                 typeAhead: false,
@@ -293,7 +297,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                 this.add(this.modal);
             }
 
-            this.modal.showBy(this.down('#textFilter'), 'tr-br?', [0, 10]);
+            this.modal.showBy(this.down('#textFilter'), 'tl-bl?', [0, 10]);
         } else {
             if (this.modal) {
                 this.modal.close();

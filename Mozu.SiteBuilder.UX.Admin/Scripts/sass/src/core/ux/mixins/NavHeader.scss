@@ -1,0 +1,34 @@
+.taco-content-navcontainer {
+    border-width: 0px;
+    background-color:#e6e6e6;
+    padding: 0px;
+
+    .taco-content-navcontainer-body {                
+        background-color:#e6e6e6;
+    }
+
+    .x-grid-body {
+        background-color:#fff;
+    }
+
+}
+
+.taco-content-navcontainer-padding {
+    padding: 20px 20px 10px 20px;
+}
+
+
+.taco-navheader {
+    .taco-navheader-toolbar{        
+        padding: 10px 20px 10px 20px;        
+        border-bottom: 1px solid #bfbfbf !important;
+        .taco-content-header-title{
+            font-size: 2rem;
+            font-weight: 300;
+            line-height: 3rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+}

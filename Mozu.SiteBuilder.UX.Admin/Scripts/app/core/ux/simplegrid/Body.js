@@ -1,173 +1,174 @@
-/**
- * Taco.core.ux.simplegrid.Body
- * @deprecated
- */
-Ext.define('Taco.core.ux.simplegrid.Body', {
-    extend: 'Ext.view.View',
-    alias: 'widget.simplegridbody',
+///**
+// * Taco.core.ux.simplegrid.Body
+// * @deprecated
+// */
 
-    autoEl: { tag: 'tbody' },
-    componentCls: Taco.baseCSSPrefix + 'simplegrid-body',
-    selectedItemCls: 'taco-simplegrid-row-selected',
-    selModel: { mode: 'SIMPLE' },
-    bubbleEvents: ['roweditstart'],
+//Ext.define('Taco.core.ux.simplegrid.Body', {
+//    extend: 'Ext.view.View',
+//    alias: 'widget.simplegridbody',
 
-    cellCls: Taco.baseCSSPrefix + 'simplegrid-cell',
-    rowCls: Taco.baseCSSPrefix + 'simplegrid-row',
+//    autoEl: { tag: 'tbody' },
+//    componentCls: Taco.baseCSSPrefix + 'simplegrid-body',
+//    selectedItemCls: 'taco-simplegrid-row-selected',
+//    selModel: { mode: 'SIMPLE' },
+//    bubbleEvents: ['roweditstart'],
 
-    initComponent: function () {
-        var me  = this,
-            sm = {};
+//    cellCls: Taco.baseCSSPrefix + 'simplegrid-cell',
+//    rowCls: Taco.baseCSSPrefix + 'simplegrid-row',
 
-        if (!this.editors) {
-            this.editors = new Ext.util.MixedCollection();
-        }
+//    initComponent: function () {
+//        var me  = this,
+//            sm = {};
 
-        this.tplFragments = [];
+//        if (!this.editors) {
+//            this.editors = new Ext.util.MixedCollection();
+//        }
 
-        this.tpl = this.getViewTpl();
+//        this.tplFragments = [];
 
-        this.callParent(arguments);
+//        this.tpl = this.getViewTpl();
 
-        sm = this.getSelectionModel();
+//        this.callParent(arguments);
 
-        // checkbox override
-        Ext.apply(sm, {
-            selectWithEvent: function (record, e, keepExisting) {
-                var me = this,
-                    cb = e.getTarget('input.taco-simplegrid-checkbox', 10);
+//        sm = this.getSelectionModel();
 
-                if (cb) {
-                    switch (me.selectionMode) {
-                        case 'MULTI':
-                            if (e.ctrlKey && me.isSelected(record)) {
-                                me.doDeselect(record, false);
-                            } else if (e.shiftKey && me.lastFocused) {
-                                me.selectRange(me.lastFocused, record, e.ctrlKey);
-                            } else if (e.ctrlKey) {
-                                me.doSelect(record, true, false);
-                            } else if (me.isSelected(record) && !e.shiftKey && !e.ctrlKey && me.selected.getCount() > 1) {
-                                me.doSelect(record, keepExisting, false);
-                            } else {
-                                me.doSelect(record, false);
-                            }
-                            break;
-                        case 'SIMPLE':
-                            if (me.isSelected(record)) {
-                                me.doDeselect(record);
-                            } else {
-                                me.doSelect(record, true);
-                            }
-                            break;
-                        case 'SINGLE':
-                            // if allowDeselect is on and this record isSelected, deselect it
-                            if (me.allowDeselect && me.isSelected(record)) {
-                                me.doDeselect(record);
-                            // select the record and do NOT maintain existing selections
-                            } else {
-                                me.doSelect(record, false);
-                            }
-                            break;
-                    }
-                }
-            },
-            preventFocus: true
-        });
+//        // checkbox override
+//        Ext.apply(sm, {
+//            selectWithEvent: function (record, e, keepExisting) {
+//                var me = this,
+//                    cb = e.getTarget('input.taco-simplegrid-checkbox', 10);
 
-        this.on({
-            select: function (dvModel, record) {
-                var cb = Ext.select('input.taco-simplegrid-checkbox', false, this.getNode(record));
+//                if (cb) {
+//                    switch (me.selectionMode) {
+//                        case 'MULTI':
+//                            if (e.ctrlKey && me.isSelected(record)) {
+//                                me.doDeselect(record, false);
+//                            } else if (e.shiftKey && me.lastFocused) {
+//                                me.selectRange(me.lastFocused, record, e.ctrlKey);
+//                            } else if (e.ctrlKey) {
+//                                me.doSelect(record, true, false);
+//                            } else if (me.isSelected(record) && !e.shiftKey && !e.ctrlKey && me.selected.getCount() > 1) {
+//                                me.doSelect(record, keepExisting, false);
+//                            } else {
+//                                me.doSelect(record, false);
+//                            }
+//                            break;
+//                        case 'SIMPLE':
+//                            if (me.isSelected(record)) {
+//                                me.doDeselect(record);
+//                            } else {
+//                                me.doSelect(record, true);
+//                            }
+//                            break;
+//                        case 'SINGLE':
+//                            // if allowDeselect is on and this record isSelected, deselect it
+//                            if (me.allowDeselect && me.isSelected(record)) {
+//                                me.doDeselect(record);
+//                            // select the record and do NOT maintain existing selections
+//                            } else {
+//                                me.doSelect(record, false);
+//                            }
+//                            break;
+//                    }
+//                }
+//            },
+//            preventFocus: true
+//        });
 
-                cb.set({ "aria-checked": "true" }).addCls('taco-simplegrid-checkbox-checked');
-            },
-            deselect: function (dvModel, record) {
-                var cb = Ext.select('input.taco-simplegrid-checkbox', false, this.getNode(record));
+//        this.on({
+//            select: function (dvModel, record) {
+//                var cb = Ext.select('input.taco-simplegrid-checkbox', false, this.getNode(record));
 
-                cb.set({ "aria-checked": "false" }).removeCls('taco-simplegrid-checkbox-checked');
-            },
-            refresh: function (view) {
-                console.log('body refresh');
-            },
-            itemclick: function (view, record, item, index, e) {
-                if (e.getTarget('span.edit', 10)) {
-                    view.fireEvent('roweditstart', view, record, item, index, e);
-                }
-            }
-        });
-    },
+//                cb.set({ "aria-checked": "true" }).addCls('taco-simplegrid-checkbox-checked');
+//            },
+//            deselect: function (dvModel, record) {
+//                var cb = Ext.select('input.taco-simplegrid-checkbox', false, this.getNode(record));
 
-    getTplFragments: function (cols) {
-        var output = [];
+//                cb.set({ "aria-checked": "false" }).removeCls('taco-simplegrid-checkbox-checked');
+//            },
+//            refresh: function (view) {
+//                console.log('body refresh');
+//            },
+//            itemclick: function (view, record, item, index, e) {
+//                if (e.getTarget('span.edit', 10)) {
+//                    view.fireEvent('roweditstart', view, record, item, index, e);
+//                }
+//            }
+//        });
+//    },
 
-        cols = this.cols.getRange();
+//    getTplFragments: function (cols) {
+//        var output = [];
 
-        Ext.Array.each(cols, function (col) {
-            var value = col.get('dataIndex') || Ext.emptyString,
-                colIndex = col.get('colIndex'),
-                cellTpl;
+//        cols = this.cols.getRange();
 
-            cellTpl = '<td class="taco-simplegrid-cell taco-simplegrid-cell-align-' + col.get('align') + '" data-column="' + col.get('id') + '" data-index="' + value + '"><div class="innards">{[' + col.get('renderer') + '.apply(this, [values.' + value + ', values])]}</div></td>';
+//        Ext.Array.each(cols, function (col) {
+//            var value = col.get('dataIndex') || Ext.emptyString,
+//                colIndex = col.get('colIndex'),
+//                cellTpl;
 
-            if (Ext.isNumeric(colIndex)) {
-                output[colIndex] = cellTpl;
-            }
-        }, this);
+//            cellTpl = '<td class="taco-simplegrid-cell taco-simplegrid-cell-align-' + col.get('align') + '" data-column="' + col.get('id') + '" data-index="' + value + '"><div class="innards">{[' + col.get('renderer') + '.apply(this, [values.' + value + ', values])]}</div></td>';
 
-        return output;
-    },
+//            if (Ext.isNumeric(colIndex)) {
+//                output[colIndex] = cellTpl;
+//            }
+//        }, this);
 
-    insertCheckboxes: function (tplFragments) {
-        return tplFragments.unshift('<td class="taco-simplegrid-cell taco-check-column"><input type="button" role="checkbox" aria-checked="false" class="taco-simplegrid-checkbox" /></td>');
-    },
+//        return output;
+//    },
 
-    insertActions: function (tplFragments) {
-        return tplFragments.push('<td class="taco-simplegrid-cell taco-actions-column"><span class="edit">Edit</span></td>');
-    },
+//    insertCheckboxes: function (tplFragments) {
+//        return tplFragments.unshift('<td class="taco-simplegrid-cell taco-check-column"><input type="button" role="checkbox" aria-checked="false" class="taco-simplegrid-checkbox" /></td>');
+//    },
 
-    getViewTpl: function (cols) {
-        var me = this,
-            fragments, tpl;
+//    insertActions: function (tplFragments) {
+//        return tplFragments.push('<td class="taco-simplegrid-cell taco-actions-column"><span class="edit">Edit</span></td>');
+//    },
 
-        if (Ext.isEmpty(cols)) cols = this.cols;
+//    getViewTpl: function (cols) {
+//        var me = this,
+//            fragments, tpl;
 
-        fragments = this.getTplFragments(cols);
+//        if (Ext.isEmpty(cols)) cols = this.cols;
 
-        this.insertCheckboxes(fragments);
-        this.insertActions(fragments);
+//        fragments = this.getTplFragments(cols);
 
-        tpl = new Ext.XTemplate(
-            '<tpl for=".">',
-                '<tr class="' + me.rowCls + '">' + fragments.join('') + '</tr>',
-            '</tpl>'
-        );
+//        this.insertCheckboxes(fragments);
+//        this.insertActions(fragments);
 
-        return tpl;
-    },
+//        tpl = new Ext.XTemplate(
+//            '<tpl for=".">',
+//                '<tr class="' + me.rowCls + '">' + fragments.join('') + '</tr>',
+//            '</tpl>'
+//        );
 
-    sort: function (dataIndex) {
-        var sm = this.getSelectionModel(),
-            store = this.getStore(),
-            sorters = store.sorters,
-            sorterIndex = Ext.Array.indexOf(sorters.keys, dataIndex),
-            isSorted = false;
+//        return tpl;
+//    },
 
-        sm.deselectAll(false);
+//    sort: function (dataIndex) {
+//        var sm = this.getSelectionModel(),
+//            store = this.getStore(),
+//            sorters = store.sorters,
+//            sorterIndex = Ext.Array.indexOf(sorters.keys, dataIndex),
+//            isSorted = false;
 
-        if (sorterIndex >= 0) {
-            store.sort(sorters.items[sorterIndex].toggle());
-            isSorted = true;
-        } else {
-            store.sort(dataIndex, 'ASC');
-        }
+//        sm.deselectAll(false);
 
-        return isSorted;
-    },
+//        if (sorterIndex >= 0) {
+//            store.sort(sorters.items[sorterIndex].toggle());
+//            isSorted = true;
+//        } else {
+//            store.sort(dataIndex, 'ASC');
+//        }
 
-    bufferRender : function(records, index){
-        var me = this,
-            div = me.renderBuffer || (me.renderBuffer = document.createElement('tbody'));
+//        return isSorted;
+//    },
 
-        me.tpl.overwrite(div, me.collectData(records, index));
-        return Ext.query(me.getItemSelector(), div);
-    }
-});
+//    bufferRender : function(records, index){
+//        var me = this,
+//            div = me.renderBuffer || (me.renderBuffer = document.createElement('tbody'));
+
+//        me.tpl.overwrite(div, me.collectData(records, index));
+//        return Ext.query(me.getItemSelector(), div);
+//    }
+//});

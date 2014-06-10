@@ -33,6 +33,9 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
     showProductColumns: false,
     showLocationColumns: true,
     
+    enableAutoSelect: false,
+
+
     secondToolbarItems: [
         {
             xtype:"component",

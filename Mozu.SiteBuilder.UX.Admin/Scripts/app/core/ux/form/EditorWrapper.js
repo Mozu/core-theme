@@ -38,6 +38,7 @@
     saveHidden: false,
     cancelHidden: false,
 
+    // is this used anywhere?
     actionsCfg: null,
 
     formCfg: null,
@@ -56,65 +57,30 @@
         ]);
         this.originalId = this.record ? this.record.getId() : null;
 
+
         if (!this.form && this.formCls) {
-            this.formCfg = Ext.applyIf({
+            this.formCfg = Ext.applyIf({                
                 autoTitle: this.autoTitle,
                 record: this.record,
                 overflowY: 'auto'
+                
             }, this.formCfg);
 
+            
             this.form = Ext.create(this.formCls, this.formCfg);
-        }
-
-        if (!this.actions) {
-            this.actions = [{
-                xtype: 'button',
-                itemId: 'cancel',
-                ui: 'action',
-                scale: 'medium',
-                text: this.cancelText,
-                margin: '0 0 0 10',
-                hidden: this.cancelHidden || !this.allowCreate(),
-                scope: this,
-                handler: this.cancel
-            }, {
-                xtype: 'button',
-                itemId: 'save',
-                ui: 'action-primary',
-                scale: 'medium',
-                text: this.saveText,
-                margin: '0 0 0 10',
-                allowDepress: false,
-                enableToggle: this.enableSaveActionToggle,
-                formBind: true,
-                hidden: this.saveHidden || !this.allowCreate(),
-                scope: this,
-                toggleHandler: this.save
-            }];
-        }
-
-        Ext.each(this.additionalActions, function (additionalAction) {
-            var beforeItemId = additionalAction.beforeItemId,
-                insertIndex;
-
-            if (beforeItemId) {
-                Ext.each(this.actions, function (action, index) {
-                    if (action.itemId !== beforeItemId) return;
-                    insertIndex = index + 1;
-                    return false;
-                });
+            if (!this.items) {
+                this.items = [];
             }
 
-            if (insertIndex) {
-                this.actions = Ext.Array.insert(this.actions, insertIndex, [additionalAction]);
-            } else {
-                this.actions.unshift(additionalAction);
-            }
-        }, this);
-
-        // if (this.additionalActions && this.additionalActions.length) {
-        //     this.actions = this.additionalActions.concat(this.actions);
-        // }
+            
+            this.items.push(
+                {
+                    xtype: "container",
+                    padding:20,
+                    items: [this.form]
+                }
+            );
+        }
 
         this.on({
             beforerender: this.onBeforeRender,
@@ -123,43 +89,7 @@
 
         this.relayEvents(this.form, ['beforeload', 'afterload', 'change']);
     },
-    allowCreate: function () {
-        return this.allowMethod('create');
-    },
-
-    allowDestroy: function () {
-        return this.allowMethod('destroy');
-    },
-
-    allowUpdate: function () {
-        return this.allowMethod('update');
-    },
-
-    allowRead: function () {
-        return this.allowMethod('read');
-    },
-    allowMethod: function (method) {
-        var me = this,
-            res = true,
-            model;
-
-        if (me.behaviors && me.behaviors[method]) {
-            Ext.each(me.behaviors[method], function (behavior) {
-                if (Taco.user.behaviors.indexOf(behavior) == -1) {
-                    res = false;
-                    return false;
-                }
-                return true;
-            });
-        } else if (me.record && me.record.modelName) {
-            model = Ext.ModelManager.getModel(me.record.modelName);
-            res = model.allowMethod(method);
-
-        }
-
-        return res;
-    },
-
+    
     onBeforeRender: function () {
         this.dirtybutton = this.down('button#save');
 
@@ -167,30 +97,29 @@
             return;
         }
 
-        this.form.on({
-            // savablestatechange: function (form, isSavable) {
-            //     this.dirtybutton.setDirty(this.checkSavable(isSavable));
-            // },
+        this.form.on({            
             savesuccess: function () {
                 this.onComplete();
-                this.fireEvent('aftersave', this, this.record, this.isEdit());
+                this.fireEvent('aftersave', this, this.record, this.isEdit());                
                 if (this.record && this.record.getId() != this.originalId) {
                     this.fireEvent('idchange', this, this.record, this.originalId);
                 }
+
+                this.saveSuccess(this.record);
 
             },
             // fire when the client code cancels save during a call to the beforeSave method on the form class;
             // Typically this is a client side validation error; 
             // The form is responsible to call setMessage to display the errors or update the form fields with error messaging where appropriate;
-            beforesavefailure: function (view, errors) {                
-                this.resetDirtyButton()
+            beforesavefailure: function (view, errors) {                                
+                this.saveFailure()
             },
             // fire when a service returns an error saving the record;
-            savefailure: function (view, errors) {                
-                this.resetDirtyButton()
+            savefailure: function (view, errors) {                                
+                this.saveFailure()
             },
             savecomplete: function () {
-                this.resetDirtyButton()
+
             },
             titlechange: function (panel, newTitle) {
                 this.updateTitle(newTitle);
@@ -207,33 +136,10 @@
         this.updateTitle(this.form.title);
     },
 
-    resetDirtyButton :function (){
-        if (this.dirtybutton) {
-            this.dirtybutton.toggle(false);
-            this.dirtybutton.removeCls('taco-button-processing');
-            this.dirtybutton.setText('Save');
-        }
-    },
-
-    checkSavable: function (isSavable) {
-        console.log('unimplemented function: checkSavable');
-        // if (isSavable && this.validateSavableStateChange) {
-        //     Ext.each(this.query('form.form'), function (childForm) {
-        //         if (!childForm.isValid()) {
-        //             isSavable = false;
-        //             return;
-        //         }
-        //     });
-        // }
-        // return isSavable;
-    },
-
     updateTitle: function (title) {
         if (!this.form.title) {
             return;
         }
-        // this.title = this.form.title;
-        // this.getHeader().setTitle(title);
         this.setTitle(title);
     },
 
@@ -255,51 +161,7 @@
             return this.form.isEdit();
         }
         return this.record && !this.record.phantom;
-    },
-
-    addAction: function (action) {
-        //  add action
-    },
-
-    /**
-     * Initialize the save process on the form
-     */
-    save: function () {
-        if (this.dirtybutton && this.dirtybutton.pressed == false) {
-            return;
-        }
-        if (this.dirtybutton) {
-            this.dirtybutton.addCls('taco-button-processing');
-            this.dirtybutton.setText('Saving...');
-        }
-        this.form.save();
-    },
-    destroyRecord: function () {
-        var me = this;
-        // me.dirtybutton.setLoading(true);
-        me.record.destroy({
-            callback: function (records, operation, success) {
-                if (operation.success) {
-                    me.fireEvent('destroyrecord', this, records, operation);
-                }
-            }
-        });
-    },
-    /**
-     * Cancels the form
-     */
-    cancel: function () {
-        //do stuff
-        this.onComplete();
-        this.fireEvent('cancel', this, this.record);
-    },
-
-    /**
-     * Runs whenever the save or cancel operations have completed.
-     */
-    onComplete: function () {
-        // go back to index page
-    }
+    }    
 });
 
 

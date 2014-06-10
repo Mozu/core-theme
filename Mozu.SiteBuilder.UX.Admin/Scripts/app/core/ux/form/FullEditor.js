@@ -1,33 +1,42 @@
 ﻿Ext.define('Taco.core.ux.form.FullEditor', {
-    extend: 'Taco.core.ux.content.Container',
-
+    //extend: 'Taco.core.ux.content.Container',
+    extend: 'Ext.panel.Panel',
     mixins: {
-        editorwrapper: 'Taco.core.ux.form.EditorWrapper'
+        editorwrapper: 'Taco.core.ux.form.EditorWrapper',
+        navHeader: 'Taco.core.ux.mixins.NavHeader',
+        permissions: 'Taco.core.ux.mixins.Permissions'
     },
-    
+
+    alias: 'widget.fulleditor',
+
+    enableNavHeader: true,
+
     autoTitle :true,
-    bodyLayout: { type: 'auto' },
+    
     showIndexOnCancel: true,
 
-    constructor: function (config) {
-        this.callParent(arguments);
-        this.mixins.editorwrapper.constructor.call(this, config);
-    },
+    autoScroll: true,
     
     initComponent: function () {
+        var me = this;
+        
+        this.cls = this.cls || "";
+        this.cls += " taco-fulleditor ";
+
+        if (this.enableNavHeader) {
+            //initialize the content navigation toolbar.
+            this.mixins.navHeader.init.apply(this);
+        }
+
+
+        this.mixins.editorwrapper.constructor.call(this, {});
+
+        
+
+
         var model = this.record ? Ext.ModelManager.getModel(this.record.modelName) : null;
         this.initWrapper();
-
-        this.body = {
-            layout: this.bodyLayout,
-            items: [this.form]
-        };
-
-        this.header = {
-            actions: this.actions,
-            title: this.title
-        };
-
+        
         this.callParent(arguments);
         
         if (model && !model.allowUpdate()) {
@@ -38,10 +47,10 @@
                     field.setReadOnly(true);
                 }
             });
-            //setReadOnly(
+        
         }
 
-        this.bindActionsToForm();
+        
 
         this.on('idchange', function(editor, record) {
             // Don't navigate if the record has yet to be persisted
@@ -68,12 +77,12 @@
         }, this, { delay: 10, single: true, scope: this });
     },
 
-    bindActionsToForm: function () {
-        var actions = this.header.query('[formBind]'),
-            form = this.form;
+    doSave: function () {
         
-        if (form && form.isComponent) {
-            form.getForm().getBoundItems().add(actions);
+        if (this.form && this.form.save) {
+            this.form.save();
+        } else {
+            console.log("Warning: this class expects a doSave method if there is no form defined;")
         }
-    }
+    }    
 });

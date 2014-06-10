@@ -23,8 +23,12 @@ Ext.define('Taco.core.ContentView' , {
     isContentView: function (obj) {
         return obj instanceof Taco.core.ux.content.Container;
     },
-    add:function() {
+    add: function (view) {        
         this.removeAll();
+        // need to make sure the view has a region set to avoid unpleasant weirdness; specifically grids that don't work right;
+        if (!view.region) {
+            view.region = "center";
+        }
         this.callParent(arguments);
     }
    

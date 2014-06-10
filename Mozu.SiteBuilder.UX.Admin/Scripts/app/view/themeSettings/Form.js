@@ -3,11 +3,8 @@
  */
 
 Ext.define('Taco.view.themesettings.Form', {
-    extend: 'Taco.core.ux.form.Form',
-    mixins: {
-        navigable: 'Taco.core.ux.mixins.Navigable'
-    },
-
+    //extend: 'Taco.core.ux.form.Form',
+    extend: 'Taco.core.ux.form.NavForm2',
     requires: [
         'Taco.core.ux.form.field.MultiSelect', 
         'Taco.core.ux.BoxReorderer',
@@ -15,16 +12,7 @@ Ext.define('Taco.view.themesettings.Form', {
         'Taco.model.ProductType',
         'Taco.view.productType.AttributeGroup'
     ],
-
-    defaults: {
-        ui: 'subform',
-        //flex: 1,
-        style: {
-            margin:'10px'
-        }
-
-    },
-
+    
     title: 'Theme Settings',
     //themeInfo: {
     //    formConfig: fieldContainerCfg,
@@ -33,22 +21,27 @@ Ext.define('Taco.view.themesettings.Form', {
     //    settingsValues: values
     //},
 
-    constructor: function () {
-        this.callParent(arguments);
-
-        this.mixins.navigable.constructor.call(this);
-    },
 
     initComponent: function () {
         this.title = "Theme Settings"; //tbd get theme name
-
+        
         Ext.apply(this, this.themeInfo.formConfig);
 
-        console.log('items', this.items);
+        Ext.Array.each(this.items, function (item) {
+            Ext.apply(item, {
+                ui: 'subform',                
+                style: {
+                    margin: '0px 0px 10px 0px'
+                }
+            })
+        })
 
         this.callParent(arguments);
 
         this.getForm().setValues(this.themeInfo.settingsValues);
+
+        this.loadNavItems();
+
     },
 
     addSaveTasks: function (tasks, updateRecord, saveRecord) {
@@ -70,7 +63,7 @@ Ext.define('Taco.view.themesettings.Form', {
                     method: "POST",
                     jsonData: values,
                     success: Ext.emptyFn,
-                    callback: function (options, success, response) {
+                    callback: function (options, success, response) {                        
                         task.callback();
                     },
                     failure: function (response) {

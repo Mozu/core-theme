@@ -8,6 +8,7 @@ Ext.define('Taco.controller.Orders', {
     requires: [
         'Taco.view.order.Index',
         'Taco.view.order.Split',
+        'Taco.view.order.Grid',
         'Taco.view.order.Edit'
     ],
     editorView: 'Taco.view.order.Edit',
@@ -25,6 +26,28 @@ Ext.define('Taco.controller.Orders', {
 
 
     },
+    splitcontainer: function () {
+
+        this.createContentView("Taco.core.ux.content.SplitContainer", {
+            record: null,
+            options: null
+        });
+    },
+    spliteditor: function () {
+
+        this.createContentView("Taco.core.ux.form.SplitEditor", {
+            record: null,
+            options: null
+        });
+    },
+    orderlist: function () {
+        
+        this.createContentView("Taco.view.order.Grid", {
+            record: null,
+            options: null
+        });
+    },
+
     split: function () {
         this.createContentView("Taco.view.order.Split", {
             record: null,
@@ -33,22 +56,23 @@ Ext.define('Taco.controller.Orders', {
 
         
     },
+
     create: function () {
         var ctx = Taco.app.context.getCurrentContext(),
             record;
 
 
         if (ctx.contextType !== 's') {
-            Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', 's').raw );
+            Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', 's').raw);
             return;
         }
-        
+
         Taco.app.setLoading();
 
         record = Ext.create('Taco.model.Order');
 
         record.save({
-            callback: function (records, operation, success) {               
+            callback: function (records, operation, success) {
 
                 //changing the path to be edit instead of create so that the user can refresh the page and get back to it if they accidently navigate away;
                 Taco.core.StateManager.attemptNavigate('s-' + record.data.siteId + '/orders/edit/' + record.data.id);

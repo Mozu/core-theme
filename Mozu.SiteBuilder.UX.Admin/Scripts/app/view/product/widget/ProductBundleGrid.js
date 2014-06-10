@@ -19,6 +19,8 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
     enableSearch: false,
     enablePaging: false,
     enableRowEditing: false,
+    enableAutoSelect:false,
+
     hideSearchToolbar: true,
     selType: 'cellmodel',
     width: "100%",

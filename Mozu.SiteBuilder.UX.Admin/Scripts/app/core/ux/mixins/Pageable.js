@@ -17,7 +17,7 @@
             initComponent: function (){
 
                 //initialize the grid paging toolbar
-                this.mixins.pageable.constructor.apply(this, arguments);
+                this.mixins.pageable.constructor.apply(this);
 
                 this.callParent(arguments)
             }
